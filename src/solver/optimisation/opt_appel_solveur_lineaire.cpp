@@ -100,10 +100,10 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 }
 
 // Returns a shared_ptr to the solver
-std::shared_ptr<MPSolver> fillMpSolver(FillContext& fillCtx,
-                                       const PROBLEME_HEBDO* problemeHebdo,
-                                       OptimEntityContainer& optimEntityContainer,
-                                       bool namedProblems)
+void fillLinearProblem(FillContext& fillCtx,
+                       const PROBLEME_HEBDO* problemeHebdo,
+                       OptimEntityContainer& optimEntityContainer,
+                       bool namedProblems)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -169,7 +169,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    fillMpSolver(fillCtx, problemeHebdo, optimEntityContainer, problemeHebdo->NamedProblems);
+    fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, problemeHebdo->NamedProblems);
     auto solver = ortoolsProblem.getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
@@ -326,7 +326,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        fillMpSolver(fillCtx, problemeHebdo, optimEntityContainer, true);
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true);
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
@@ -334,7 +334,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                             problemeHebdo->exportMPSOnError,
                                             optimizationNumber,
-                                            &infeasibleProblem);
+                                            MPproblem.get());
 
         // Since MpProblem must have named vars and constraints in case of infeasibility, we must
         // use the updated MPSolver

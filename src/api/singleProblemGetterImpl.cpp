@@ -365,8 +365,8 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
                                                             modelerDataSeries,
                                                             modelerScenarioGroupRepository);
 
-    fillAndGetMpSolver(problem, fillCtx, &pb_, optimEntityContainer,
-                       true); // TODO
+    fillLinearProblem(fillCtx, &pb_, optimEntityContainer,
+                      true); // TODO
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)

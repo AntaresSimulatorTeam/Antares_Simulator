@@ -1,11 +1,11 @@
 #include <fstream>
-#include <iostream>
 #include <mutex>
 
 #include "yuni/core/getopt/parser.h"
 
 #include <antares/logs/logs.h>
 #include "antares/api/singleProblemGetter.h"
+#include "antares/io/outputs/MPSGenerator.h"
 
 using namespace Antares::Solver;
 constexpr int kMaxDisplay = 10'000;
@@ -88,9 +88,12 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
                   const std::filesystem::path& outputPath,
                   const WeeklyProblemId& id)
 {
-    std::string mps;
-    weekly.linearProblem->ExportModelAsMpsFormat(false, false, &mps);
-    logs.info() << "Printing problem: " << problemName(id) << '\n';
+    auto name = problemName(id);
+
+    IO::Outputs::MPSGenerator mpsGenerator(*weekly.linearProblem, name);
+    const std::string mps = mpsGenerator.run();
+
+    logs.info() << "Printing problem: " << name << '\n';
 
     logs.info() << "******************************** BEGIN MPS ********************************";
     logs.info() << '\n' << mps;
@@ -99,11 +102,7 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
     {
         static std::once_flag once;
         std::call_once(once, [&outputPath] { std::filesystem::create_directories(outputPath); });
-
-        std::filesystem::path mpsFile = outputPath / (problemName(id) + ".mps");
-        std::ofstream ofs(mpsFile);
-        ofs << mps;
-        ofs.close();
+        IO::Outputs::MPSFileWriter::write(outputPath / (name + ".mps"), mps);
     }
 }
 
@@ -140,8 +139,11 @@ void printProblems(const ApiOptions& options)
             logs.info() << " week: " << week << '\n';
             const WeeklyProblemId id = {year, week};
             auto weekly = getter.getWeeklyData(id, true);
-            // printWeekLPData(constant, weekly);
-            writeWeekMPS(weekly, options.outputFolder, id);
+            printWeekLPData(constant, weekly);
+            if (options.writeMps)
+            {
+                writeWeekMPS(weekly, options.outputFolder, id);
+            }
         }
     }
 }

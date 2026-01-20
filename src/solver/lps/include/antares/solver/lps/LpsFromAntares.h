@@ -83,7 +83,7 @@ struct WeeklyDataFromAntares
     std::vector<double> RHS; // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
     std::string name;
-    std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> linearProblem;
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> linearProblem;
 
     auto operator<=>(const WeeklyDataFromAntares& other) const = default;
 };
