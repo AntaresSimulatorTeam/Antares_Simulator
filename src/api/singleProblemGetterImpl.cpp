@@ -336,22 +336,22 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
                                                                    constraintsMemo_,
                                                                    week);
         }
-        ret.solver_.reset(getSolver());
+        SingleOptimOptions options;
+
+        ret.linearProblem = std::make_unique<Antares::Optimization::LegacyOrtoolsLinearProblem>(
+          pb_.ProblemeAResoudre->isMIP(),
+          options.solverName);
+        fillProblem(*ret.linearProblem);
     }
     return ret;
 }
 
-MPSolver* SingleProblemGetter::getSolver()
+void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
 {
-    const auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
-
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     // OptimizationStatistics& optimizationStatistics = pb_.optimizationStatistics[opt];
     // TIME_MEASURE timeMeasure;
-    SingleOptimOptions options;
-    Antares::Optimization::LegacyOrtoolsLinearProblem ortoolsProblem(pb_.ProblemeAResoudre->isMIP(),
-                                                                     options.solverName);
     Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
                                                                            numeroDeLIntervalle);
     const auto& modelerData = pb_.modelerData;
@@ -361,12 +361,12 @@ MPSolver* SingleProblemGetter::getSolver()
     const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
       = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-    Optimisation::OptimEntityContainer optimEntityContainer(ortoolsProblem,
+    Optimisation::OptimEntityContainer optimEntityContainer(problem,
                                                             modelerDataSeries,
                                                             modelerScenarioGroupRepository);
 
-    return fillAndGetMpSolver(ortoolsProblem, fillCtx, &pb_, optimEntityContainer,
-                              true); // TODO
+    fillAndGetMpSolver(problem, fillCtx, &pb_, optimEntityContainer,
+                       true); // TODO
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)

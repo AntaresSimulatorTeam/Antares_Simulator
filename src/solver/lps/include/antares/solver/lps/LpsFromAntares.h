@@ -3,14 +3,13 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <array>
 #include <fmt/format.h>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "ortools/linear_solver/linear_solver.h"
+#include "antares/optimisation/linear-problem-api/linearProblem.h"
 
 namespace Antares::Solver
 {
@@ -84,7 +83,7 @@ struct WeeklyDataFromAntares
     std::vector<double> RHS; // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
     std::string name;
-    std::unique_ptr<operations_research::MPSolver> solver_;
+    std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> linearProblem;
 
     auto operator<=>(const WeeklyDataFromAntares& other) const = default;
 };

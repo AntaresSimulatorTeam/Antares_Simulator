@@ -49,7 +49,7 @@ private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
-    operations_research::MPSolver* getSolver();
+    void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem) const;
     std::vector<NameMemo> buildMemo(const std::vector<std::string>& names) const;
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;

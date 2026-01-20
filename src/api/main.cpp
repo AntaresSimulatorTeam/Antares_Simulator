@@ -89,7 +89,7 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
                   const WeeklyProblemId& id)
 {
     std::string mps;
-    weekly.solver_->ExportModelAsMpsFormat(false, false, &mps);
+    weekly.linearProblem->ExportModelAsMpsFormat(false, false, &mps);
     logs.info() << "Printing problem: " << problemName(id) << '\n';
 
     logs.info() << "******************************** BEGIN MPS ********************************";

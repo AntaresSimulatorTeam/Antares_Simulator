@@ -113,8 +113,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
                                                              int NumIntervalle);
-operations_research::MPSolver* fillAndGetMpSolver(
-  Optimization::LegacyOrtoolsLinearProblem& ortoolsProblem,
+std::shared_ptr<operations_research::MPSolver> fillMpSolver(
   Optimisation::LinearProblemApi::FillContext& fillCtx,
   const PROBLEME_HEBDO* problemeHebdo,
   Optimisation::OptimEntityContainer& optimEntityContainer,
