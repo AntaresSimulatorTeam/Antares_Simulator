@@ -68,7 +68,7 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
     }
 }
 
-void SetData::addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study)
+void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
 {
     for (const auto* area: set_)
     {
@@ -139,7 +139,7 @@ void DynamicAggregation::addResultsToSets(const PROBLEME_HEBDO& pb)
 {
     for (auto& [_, setData]: setsData_)
     {
-        setData.addResultsToSet(pb, study_);
+        setData.addResultsToSet(pb);
     }
 }
 

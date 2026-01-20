@@ -33,7 +33,7 @@ class SetData
 public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-    void addResultsToSet(const PROBLEME_HEBDO& pb, const Data::Study& study);
+    void addResultsToSet(const PROBLEME_HEBDO& pb);
 
     // TODO rm tests
     void writeResultsToFolder(const std::string& folderName) const;
