@@ -263,12 +263,6 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
     Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
 
     const auto hourInTheYear = 168 * week; // TODO
-    SIM_RenseignementProblemeHebdo(*study_,
-                                   pb_,
-                                   week,
-                                   hourInTheYear,
-                                   ventilationResults,
-                                   scratchmap_);
 
     // Apply hydro levels
     for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
@@ -280,6 +274,13 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
             pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
         }
     }
+
+    SIM_RenseignementProblemeHebdo(*study_,
+                                   pb_,
+                                   week,
+                                   hourInTheYear,
+                                   ventilationResults,
+                                   scratchmap_);
 
     // required at least for OPT_SommeDesPminThermiques (RHS)
     Antares::Solver::Simulation::BuildThermalPartOfWeeklyProblem(

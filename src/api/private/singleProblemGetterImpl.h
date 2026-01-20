@@ -11,7 +11,7 @@
 namespace Antares::Solver::Implementation
 {
 
-using HydroLevels = std::map<const Antares::Data::Area*, std::array<double, 53 /* TODO */>>;
+using HydroLevels = std::map<const Antares::Data::Area*, std::array<double, 54 /* TODO */>>;
 
 struct YearlyData
 {
