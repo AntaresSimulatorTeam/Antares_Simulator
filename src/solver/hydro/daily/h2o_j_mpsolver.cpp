@@ -4,6 +4,7 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <string>
@@ -124,57 +125,74 @@ void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
                                       MPSolver& solver,
                                       const std::vector<MPVariable*>& variables)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
+    (void)NumeroDeProbleme; // not needed here
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe
-      = ProblemeHydraulique.ProblemeLineairePartieFixe[NumeroDeProbleme];
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
+    const int NbPdt = DonneesMensuelles->NombreDeJoursDuMois;
+    if (NbPdt <= 0)
+    {
+        return;
+    }
 
-    const int NombreDeContraintes = ProblemeLineairePartieFixe.NombreDeContraintes;
+    // Variable layout mirrors H2O_j_ConstruireLesVariables
+    const int offsetXi = NbPdt;
+    const int indexXiPlus = offsetXi + NbPdt;
+    const int indexXiMoins = indexXiPlus + 1;
 
     const double inf = MPSolver::infinity();
 
-    for (int row = 0; row < NombreDeContraintes; ++row)
+    // --- Contrainte somme des turbines = somme des cibles (clamped) ---
+    double turbineMinSum = 0.0;
+    double turbineMaxSum = 0.0;
+
+    for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
-        const double rhs = ProblemeLineairePartieVariable.SecondMembre[row];
-        const char sens = ProblemeLineairePartieFixe.Sens[row];
+        turbineMinSum += DonneesMensuelles->TurbineMin[pdt];
+        turbineMaxSum += DonneesMensuelles->TurbineMax[pdt];
+    }
 
-        double lb = -inf;
-        double ub = inf;
+    const double turbineDuMois = DonneesMensuelles->TurbineDuMois;
+    const double energyTarget
+      = std::clamp(turbineDuMois, turbineMinSum, turbineMaxSum);
 
-        switch (sens)
-        {
-        case '=':
-            lb = rhs;
-            ub = rhs;
-            break;
-        case '>':
-            lb = rhs;
-            break;
-        case '<':
-            ub = rhs;
-            break;
-        default:
-            // Fallback: treat as free row with no bounds
-            break;
-        }
+    auto* const energyConstraint
+      = solver.MakeRowConstraint(energyTarget, energyTarget, "energy_month");
 
-        const std::string rowName = std::string("row[") + std::to_string(row) + "]";
-        auto* const constraint = solver.MakeRowConstraint(lb, ub, rowName);
+    for (int pdt = 0; pdt < NbPdt; ++pdt)
+    {
+        // turbine variables are at indices [0, NbPdt[
+        energyConstraint->SetCoefficient(variables[pdt], 1.0);
+    }
 
-        const int start = ProblemeLineairePartieFixe.IndicesDebutDeLigne[row];
-        const int count = ProblemeLineairePartieFixe.NombreDeTermesDesLignes[row];
+    // --- turbine[t] + Xi[t] >= cible[t] ---
+    for (int pdt = 0; pdt < NbPdt; ++pdt)
+    {
+        auto* const c = solver.MakeRowConstraint(DonneesMensuelles->TurbineCible[pdt], inf);
+        c->SetCoefficient(variables[pdt], 1.0);
+        c->SetCoefficient(variables[offsetXi + pdt], 1.0);
+    }
 
-        for (int idx = 0; idx < count; ++idx)
-        {
-            const int matrixIndex = start + idx;
-            const int col = ProblemeLineairePartieFixe.IndicesColonnes[matrixIndex];
-            const double coeff
-              = ProblemeLineairePartieFixe.CoefficientsDeLaMatriceDesContraintes[matrixIndex];
+    // --- -turbine[t] + Xi[t] >= -cible[t] ---
+    for (int pdt = 0; pdt < NbPdt; ++pdt)
+    {
+        auto* const c = solver.MakeRowConstraint(-DonneesMensuelles->TurbineCible[pdt], inf);
+        c->SetCoefficient(variables[pdt], -1.0);
+        c->SetCoefficient(variables[offsetXi + pdt], 1.0);
+    }
 
-            constraint->SetCoefficient(variables[col], coeff);
-        }
+    // --- turbine[t] + xi_plus >= cible[t] ---
+    for (int pdt = 0; pdt < NbPdt; ++pdt)
+    {
+        auto* const c = solver.MakeRowConstraint(DonneesMensuelles->TurbineCible[pdt], inf);
+        c->SetCoefficient(variables[pdt], 1.0);
+        c->SetCoefficient(variables[indexXiPlus], 1.0);
+    }
+
+    // --- -turbine[t] + xi_moins >= -cible[t] ---
+    for (int pdt = 0; pdt < NbPdt; ++pdt)
+    {
+        auto* const c = solver.MakeRowConstraint(-DonneesMensuelles->TurbineCible[pdt], inf);
+        c->SetCoefficient(variables[pdt], -1.0);
+        c->SetCoefficient(variables[indexXiMoins], 1.0);
     }
 }
 
