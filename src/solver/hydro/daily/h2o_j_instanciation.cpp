@@ -134,24 +134,9 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
           CorrespondanceDesContraintes[i]);
 
         const int NbPdt = NbJoursDUnProbleme[i];
-        for (int j = 0; j < ProblemeLineairePartieFixe[i].NombreDeVariables; j++)
-        {
-            ProblemeLineairePartieFixe[i].CoutLineaire[j] = 0.0;
-        }
-
-        for (int pdt = 0; pdt < NbPdt; pdt++)
-        {
-            ProblemeLineairePartieFixe[i]
-              .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi[pdt]]
-              = 1.0;
-        }
-
-        ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiPlus]
-          = 1.0;
-        ProblemeLineairePartieFixe[i]
-          .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXiMoins]
-          = 1.0;
+        // Legacy SPX path keeps CoutLineaire initialised to zero. The cost
+        // structure for the MPSolver-based implementation is defined in
+        // H2O_J_MPSolver_SetObjectiveCoefficients.
     }
 
     return DonneesMensuelles;

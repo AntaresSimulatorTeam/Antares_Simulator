@@ -48,21 +48,18 @@ void H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES*,
                                     operations_research::MPSolver&,
                                     std::vector<operations_research::MPVariable*>& allVariables);
 
+// Objective builder: minimize the sum of xi[t] and the two
+// global deviation variables (xiPlus, xiMoins).
 void H2O_J_MPSolver_SetObjectiveCoefficients(
-  DONNEES_MENSUELLES*,
-  int,
-  operations_research::MPSolver&,
-  const std::vector<operations_research::MPVariable*>& allVariables);
+  const H2O_J_MPSOLVER_VARIABLES&,
+  operations_research::MPSolver&);
 
 // Build constraints directly from DONNEES_MENSUELLES and the typed
 // variable pointers, without relying on internal matrix structures or
 // variable indices.
 void H2O_J_MPSolver_CreateConstraints(
   DONNEES_MENSUELLES*,
-  const std::vector<operations_research::MPVariable*>& turbineVariables,
-  const std::vector<operations_research::MPVariable*>& xiVariables,
-  operations_research::MPVariable* xiPlus,
-  operations_research::MPVariable* xiMoins,
+  const H2O_J_MPSOLVER_VARIABLES&,
   operations_research::MPSolver&);
 
 void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,

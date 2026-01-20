@@ -95,30 +95,30 @@ void H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* DonneesMensuelles,
     }
 }
 
-void H2O_J_MPSolver_SetObjectiveCoefficients(DONNEES_MENSUELLES* DonneesMensuelles,
-                                             int NumeroDeProbleme,
-                                             MPSolver& solver,
-                                             const std::vector<MPVariable*>& variables)
+void H2O_J_MPSolver_SetObjectiveCoefficients(const H2O_J_MPSOLVER_VARIABLES& variables,
+                                             MPSolver& solver)
 {
-    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe
-                                                                    [NumeroDeProbleme];
-
-    const int NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
-
     MPObjective* objective = solver.MutableObjective();
     objective->Clear();
     objective->SetMinimization();
 
-    for (int var = 0; var < NombreDeVariables; ++var)
+    // Cost structure mirrors the legacy instanciation:
+    // - objective is the sum of all xi[t]
+    // - plus the two global deviation variables xiPlus and xiMoins.
+    const int NbPdt = static_cast<int>(variables.xi.size());
+
+    for (const auto* xi: variables.xi)
     {
-        const double coeff = ProblemeLineairePartieFixe.CoutLineaire[var];
-        if (coeff != 0.0)
-        {
-            objective->SetCoefficient(variables[var], coeff);
-        }
+        objective->SetCoefficient(xi, 1.0);
+    }
+
+    if (variables.xiPlus)
+    {
+        objective->SetCoefficient(variables.xiPlus, 1.0);
+    }
+    if (variables.xiMoins)
+    {
+        objective->SetCoefficient(variables.xiMoins, 1.0);
     }
 }
 
