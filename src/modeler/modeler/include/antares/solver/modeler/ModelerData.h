@@ -28,4 +28,22 @@ struct ModelerData
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 
+// Operator for printing ResolutionMode in logs and tests
+inline std::ostream& operator<<(std::ostream& os, ResolutionMode mode)
+{
+    switch (mode)
+    {
+    case ResolutionMode::SEQUENTIAL_SUBPROBLEMS:
+        os << "SEQUENTIAL_SUBPROBLEMS";
+        break;
+    case ResolutionMode::BENDERS_DECOMPOSITION:
+        os << "BENDERS_DECOMPOSITION";
+        break;
+    default:
+        os << "UNKNOWN";
+        break;
+    }
+    return os;
+}
+
 } // namespace Antares::Solver

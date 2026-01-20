@@ -392,7 +392,7 @@ models:
     createOptimConfigFile(yamlContent);
 
     auto [_, resolutionMode] = loadLibraries(studyFolder);
-    BOOST_CHECK_EQUAL(resolutionMode, Antares::Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_resolution_mode_benders_decomposition,
@@ -423,7 +423,7 @@ models:
     createOptimConfigFile(yamlContent);
 
     auto [_, resolutionMode] = loadLibraries(studyFolder);
-    BOOST_CHECK_EQUAL(resolutionMode, Antares::Modeler::ResolutionMode::BENDERS_DECOMPOSITION);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_default_resolution_mode, CreateInputFileFixture)
@@ -450,7 +450,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_default_resolution_mode, CreateInputFi
 
     // Act & Assert - default mode should be SEQUENTIAL_SUBPROBLEMS
     auto [libraries, resolutionMode] = loadLibraries(studyFolder);
-    BOOST_CHECK_EQUAL(resolutionMode, Antares::Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_multiple_models_and_resolution_mode,
@@ -493,7 +493,7 @@ models:
 
     // Act & Assert
     auto [libraries, resolutionMode] = loadLibraries(studyFolder);
-    BOOST_CHECK_EQUAL(resolutionMode, Antares::Modeler::ResolutionMode::BENDERS_DECOMPOSITION);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
     BOOST_REQUIRE_EQUAL(libraries.size(), 1);
     const auto& models = libraries[0].Models();
     BOOST_REQUIRE_EQUAL(models.size(), 2);

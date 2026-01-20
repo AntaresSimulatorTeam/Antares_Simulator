@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <fmt/format.h>
 #include <string>
 #include <yaml-cpp/yaml.h>
 
@@ -148,23 +149,23 @@ void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
 
 namespace
 {
-Modeler::ResolutionMode convertResolutionMode(std::string ymlMode)
+Solver::ResolutionMode convertResolutionMode(std::string ymlMode)
 {
     ;
     if (ymlMode == "benders-decomposition")
     {
-        return Modeler::ResolutionMode::BENDERS_DECOMPOSITION;
+        return Solver::ResolutionMode::BENDERS_DECOMPOSITION;
     }
     if (ymlMode == "sequential-subproblems" || ymlMode.empty())
     {
-        return Modeler::ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
+        return Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
     }
     throw Error::InvalidArgumentError(
       fmt::format("Invalid resolution mode in optim-config.yaml: {}", ymlMode));
 }
 } // namespace
 
-std::pair<std::vector<SystemModel::Library>, Modeler::ResolutionMode> loadLibraries(
+std::pair<std::vector<SystemModel::Library>, Solver::ResolutionMode> loadLibraries(
   const fs::path& studyPath)
 {
     auto ymlLibraries = loadLibrariesFromYaml(studyPath);
