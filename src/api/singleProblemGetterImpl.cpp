@@ -59,15 +59,7 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
                                     pb_,
                                     /* NombreDePasDeTemps = */ 168,
                                     numSpace);
-    if (!study_->initializeRuntimeInfos())
-    {
-        throw Error::RuntimeInfoInitialization();
-    }
 
-    // Apply transformations needed by the solver only (and not the interface for example)
-    study_->performTransformationsBeforeLaunchingSimulation();
-
-    ScenarioBuilderOwner(*study_).callScenarioBuilder();
     Antares::Solver::Simulation::regenerateTimeSeries(*study_, gResultWriter, gDurationCollector);
 
     study_->computePThetaInfForThermalClusters(); // PthetaInf
@@ -277,7 +269,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
     }
 
     const auto hourInTheYear = 168 * week; // TODO
-
+    pb_.HeureDansLAnnee = hourInTheYear;
     // Apply hydro levels
     for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
     {
