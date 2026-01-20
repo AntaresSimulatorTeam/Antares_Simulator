@@ -58,14 +58,14 @@ void ComponentToAreaConnectionFiller::addVariables(const FillContext&)
 static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Component& component,
                                         const std::string& portId)
 {
-    auto field = component.getModel()->Ports().at(portId).Type().areaConnection();
-    if (!field.has_value())
+    auto area_connection = component.getModel()->Ports().at(portId).Type().areaConnection();
+    if (!area_connection.has_value())
     {
         throw Error::RuntimeError("Component \"" + component.Id()
                                   + "\" is connected to an area using a port type that has no "
                                     "area-connection field defined.");
     }
-    return field->injection;
+    return area_connection->injection;
 }
 
 IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
@@ -126,8 +126,8 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
 {
     std::string injectionFieldId = getConnectionFieldId(component, portId);
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
-    auto linearExpression = visitor.visitMergeDuplicates(
-      component.nodeAtPortField(portId, injectionFieldId));
+    Nodes::Node* expression = component.nodeAtPortField(portId, injectionFieldId);
+    auto linearExpression = visitor.visitMergeDuplicates(expression);
     addExpressionToConstraint(pb, linearExpression, ctx, areaId);
 }
 

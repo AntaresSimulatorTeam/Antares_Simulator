@@ -1,6 +1,7 @@
+#include "antares/study/system-model/portType.h"
+
 #include <algorithm>
 #include <stdexcept>
-#include "antares/study/system-model/portType.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
