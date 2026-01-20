@@ -39,10 +39,10 @@ struct Model
 
 struct OptimConfig
 {
-    // Mode de résolution demandé dans le YAML. Valeur par défaut : sequential-subproblems
+    // Resolution mode requested in the YAML file. Default value: sequential-subproblems
     std::string resolution_mode = "sequential-subproblems";
 
-    // Liste des modèles présents dans le fichier optim-config.yaml
+    // List of models defined in the optim-config.yaml file
     std::vector<Model> models;
 };
 
