@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define BOOST_TEST_MODULE test_api
 #define WIN32_LEAN_AND_MEAN
@@ -130,7 +112,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[1], -1);
 
     const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
-    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-0-1.txt");
+    BOOST_CHECK_EQUAL(firstWeekData.name, "problem-1-1--optim-nb-1");
 
     // COST
     BOOST_CHECK_CLOSE(firstWeekData.LinearCost[dispatchableVariable],
@@ -211,7 +193,7 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                       3048.5130614352684,
                       EPSILON); // random initial level
 
-    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-0-2.txt");
+    BOOST_CHECK_EQUAL(secondWeekData.name, "problem-1-2--optim-nb-1");
 }
 BOOST_AUTO_TEST_SUITE_END()
 
@@ -307,6 +289,7 @@ BOOST_AUTO_TEST_CASE(single_link_ntc_ts_numbers)
     Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
 
     // Erase TS numbers for repeatability (no randomness)
+    link->timeseriesNumbers.reset(5);
     for (int ii = 0; ii < 5; ii++)
     {
         link->timeseriesNumbers[ii] = ii % 3;

@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "singleProblemGetterImpl.h"
 
@@ -25,7 +7,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
@@ -58,7 +39,7 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
 
 std::string problemName(const WeeklyProblemId& id)
 {
-    return fmt::format("problem-{}-{}.txt", id.year, id.week);
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
 }
 } // namespace
 
@@ -105,7 +86,6 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
     initializeRandomNumbers();
-    ScenarioBuilderOwner(*study_).callScenarioBuilder();
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
@@ -145,7 +125,8 @@ void SingleProblemGetter::initializeRandomNumbers()
 
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
-    randomForParallelYears_->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
+    const unsigned int finalYear = 1 + study_->runtime.rangeLimits.year[Data::rangeEnd];
+    randomForParallelYears_->compute(*study_, finalYear, isYearPerformed, randomHydroGenerator);
 }
 
 void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& outputDir)
@@ -183,6 +164,8 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     // IntercoGereeAvecDesCouts needs to be initialized
     // before building variable list and the common matrix
     fillLinksProperties(pb_, *study_);
+
+    OPT_NumeroDeJourDuPasDeTemps(&pb_);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(&pb_);
 

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <yuni/core/system/suspend.h>
 
 #include <antares/antares/fatal-error.h>
@@ -33,7 +16,7 @@ namespace
 {
 
 const char* const MPL_ANNOUNCEMENT
-  = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
+  = "Copyright 2007-2025 RTE  - Authors: The Antares_Simulator Team \n"
     "\n"
     "Antares_Simulator is free software : you can redistribute it and / or modify\n"
     "it under the terms of the Mozilla Public Licence 2.0 as published by\n"
@@ -106,26 +89,32 @@ int main(int argc, const char** argv)
 {
     try
     {
-        logs.info(ANTARES_LOGO);
-        logs.info(MPL_ANNOUNCEMENT);
-        // Name of the running application for the logger
-        logs.applicationName("solver");
-
-        if (not memory.initializeTemporaryFolder())
-        {
-            throw FatalError("Could not initialize temporary folder");
-        }
-
-        // locale
-        InitializeDefaultLocale();
-
-        // Getting real UTF8 arguments
-        IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
-        std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
         Antares::Solver::Application application;
-        application.prepare(argc, argv);
-        application.execute();
-        application.writeExectutionInfo();
+        auto& durationCollector = application.getDurationCollector();
+
+        durationCollector("full_exec") << [&application, &argc, &argv]
+        {
+            logs.info(ANTARES_LOGO);
+            logs.info(MPL_ANNOUNCEMENT);
+            // Name of the running application for the logger
+            logs.applicationName("solver");
+
+            if (not memory.initializeTemporaryFolder())
+            {
+                throw FatalError("Could not initialize temporary folder");
+            }
+
+            // locale
+            InitializeDefaultLocale();
+
+            // Getting real UTF8 arguments
+            IntoUTF8ArgsTranslator toUTF8ArgsTranslator(argc, argv);
+            std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
+            application.prepare(argc, argv);
+            application.execute();
+        };
+
+        application.writeExecutionInfo();
 
         return EXIT_SUCCESS;
     }

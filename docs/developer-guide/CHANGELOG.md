@@ -4,7 +4,72 @@ toc_depth: 2
 
 # Antares Changelog
 
-## Branch 9.3.x
+### 9.3.5
+#### Improvements
+* New option Adequacy patch debug files [ANT-4034] (#3297)
+* Add time infos to API [ANT-4261] (#3315)
+* Add more details for steps durations [ANT-4263] (#3319)
+* APIv2 - Fix initial hydro levels (#3326)
+#### CI
+
+* Bump actions/cache from 4 to 5 (#3293)
+* Bump actions/upload-artifact from 5 to 6 (#3294)
+
+### 9.3.4
+#### Improvements
+* Various fixes for the "single problem API" (#3313, #3311, #3312, #3309)
+* Bump SonarSource/sonarqube-scan-action from 6.0.0 to 7.0.0 (#3295)
+
+### 9.3.3
+
+#### New features
+* Add support for Gurobi-specific solver parameters (#3264)
+
+#### Improvements
+* Add error handling to antlr parsing [ANT-4032] (#3254)
+* Small improvements for slack analysis (#3255)
+* setObjectiveOffset API [ANT-4168] (#3251)
+
+#### Bugfixes
+* Additional constraints : bad unexpected input management [ANT-4297]
+* Add week number to additional constraint name (#3300)
+
+#### Modeler
+* Modeler 6.5: valid location [ANT-4045] (#3258)
+* Consistency in Node Composition for Modeler (#3242)
+* Modeler scenarized constant parameter [ANT-3800] (#3275)
+* Time dependent objective is not supported (#3257)
+
+#### CI
+* Fix: sonar hit ccache properly (#3196)
+
+#### Build
+* Add a few missing install directives (#3266)
+
+#### Doc
+* Fix on readthedoc rendering (#3245)
+* FunctionNode doc (#3270)
+
+#### Code quality
+* refactor: TimeIndex -> TimeScenarioVariability (#3261)
+* Expose studyPath instead of study (#3267)
+* Add SingleProblemGetter::getProblemIds() for problem IDs (#3268)
+* Single problem getter - Truncate variable & constraint vectors if needed (#3272)
+* fix: build std::type\_index is not constexpr (#3277)
+* Single problem getter - Week indexing starts at 1 (#3271)
+* Single problem API (#3280) (#3279) (#3286)
+* Fix Mdeb's trailing zeroes [ANT-2334] (#3303)
+
+#### Technical cleaning
+Modeler : restore models as const [ANT-4051] (#3273)
+Remove useless if/else for links loop-flow (#3262)
+Remove unused LpsFromAntares data members (#3289)
+
+#### Tests
+Storage remix tests : trial for improvement [ANT-4022] (#3244)
+Expressions : tests sum operator (#3260)
+collectRemixDebugInfo (#3278)
+
 
 ### 9.3.2
 

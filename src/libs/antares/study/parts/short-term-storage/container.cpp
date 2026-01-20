@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 // clang-format off
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 // clang-format on
@@ -100,7 +83,7 @@ static std::vector<SingleAdditionalConstraint> makeConstraints(std::string& hour
 
 static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
 {
-    const bool ret = loadFile(rhsPath, rhsSeries, /*.average =*/false);
+    const bool ret = loadFile(rhsPath, rhsSeries);
     if (ret)
     {
         fillIfEmpty(rhsSeries, 0.0);
@@ -142,13 +125,19 @@ static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additiona
                 return false;
             }
         }
+        else
+        {
+            logs.error() << "Constraint " << additionalConstraints->name << " : "
+                         << "has a wrong key : " << key;
+            return false;
+        }
     }
     return true;
 }
 
-bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+bool STStorageInput::loadAdditionalConstraintsFromIni(const fs::path& parentPath)
 {
-    for (const auto& sts: storagesByIndex)
+    for (auto& sts: storagesByIndex)
     {
         auto data_path = parentPath / sts.id;
         IniFile ini;
@@ -156,7 +145,7 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
         if (!ini.open(pathIni, false))
         {
             logs.info() << "There is no: " << pathIni;
-            return true;
+            continue;
         }
 
         for (auto* section = ini.firstSection; section; section = section->next)
@@ -171,19 +160,11 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 return false;
             }
 
-            // We don't want load RHS and link the STS time if the constraint is disabled
             if (!additionalConstraints->enabled)
             {
                 logs.info() << "Additional constraints disabled for ST "
                             << additionalConstraints->cluster_id;
-                return true;
-            }
-
-            if (const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
-                !readRHS(rhsPath, additionalConstraints->rhs()))
-            {
-                logs.error() << "Error while reading rhs file: " << rhsPath;
-                return false;
+                continue;
             }
 
             if (auto [ok, error_msg] = ShortTermStorage::validate(*additionalConstraints); !ok)
@@ -193,30 +174,35 @@ bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
                 return false;
             }
 
-            auto it = std::ranges::find_if(storagesByIndex,
-                                           [&additionalConstraints](const STStorageCluster& cluster)
-                                           {
-                                               return cluster.id
-                                                      == additionalConstraints->cluster_id;
-                                           });
-            if (it == storagesByIndex.end())
+            logs.info() << "Loaded ST additional constraint " << additionalConstraints->cluster_id
+                        << "/" << additionalConstraints->name;
+            sts.additionalConstraints.push_back(additionalConstraints);
+        }
+    }
+    return true;
+}
+
+bool STStorageInput::loadAdditionalConstraintsRHS(const fs::path& parentPath)
+{
+    for (auto& sts: storagesByIndex)
+    {
+        auto data_path = parentPath / sts.id;
+        for (auto& additionalConstraints: sts.additionalConstraints)
+        {
+            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
+            if (!readRHS(rhsPath, additionalConstraints->rhs()))
             {
-                logs.warning() << " from file " << pathIni;
-                logs.warning() << "Constraint " << section->name
-                               << " does not reference an existing cluster";
+                logs.error() << "Error while reading rhs file: " << rhsPath;
                 return false;
-            }
-            else
-            {
-                logs.info() << "Loaded ST additional constraint "
-                            << additionalConstraints->cluster_id << "/"
-                            << additionalConstraints->name;
-                it->additionalConstraints.push_back(additionalConstraints);
             }
         }
     }
-
     return true;
+}
+
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+{
+    return loadAdditionalConstraintsFromIni(parentPath) && loadAdditionalConstraintsRHS(parentPath);
 }
 
 bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion studyVersion) const
