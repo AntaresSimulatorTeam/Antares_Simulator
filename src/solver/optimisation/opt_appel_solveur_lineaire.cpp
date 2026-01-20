@@ -178,7 +178,6 @@ struct MasterProblemResult
 static MasterProblemResult buildMasterProblem(
   const SingleOptimOptions& options,
   PROBLEME_HEBDO* problemeHebdo,
-  const int NumIntervalle,
   FillContext& fillCtx,
   const ILinearProblemData* modelerDataSeries,
   const ScenarioGroupRepository* modelerScenarioGroupRepository)
@@ -235,7 +234,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     auto [master, bendersDecomposition, master_problem] = buildMasterProblem(
       options,
       problemeHebdo,
-      NumIntervalle,
       fillCtx,
       modelerDataSeries,
       modelerScenarioGroupRepository);
@@ -260,7 +258,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           subOptimEntityContainer,
                                           problemeHebdo->NamedProblems,
                                           Modeler::Config::Location::SUBPROBLEMS,
-                                          bendersDecomposition,
+                                          bendersDecomposition.get(),
                                           true);
     logProblemSize(subproblem, "subproblem");
 
