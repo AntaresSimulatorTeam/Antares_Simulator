@@ -614,7 +614,7 @@ var hierarchy =
     [ "HydroPowerData", "structHydroPowerData.html", null ],
     [ "Antares::Solver::Variable::Economy::HydroTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html", null ],
     [ "I_MPS_writer", "classI__MPS__writer.html", [
-      [ "fullOrToolsMPSwriter", "classfullOrToolsMPSwriter.html", null ],
+      [ "MPSwriter", "classMPSwriter.html", null ],
       [ "nullMPSwriter", "classnullMPSwriter.html", null ]
     ] ],
     [ "Antares::I_mtx_to_buffer_dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1I__mtx__to__buffer__dumper.html", [
