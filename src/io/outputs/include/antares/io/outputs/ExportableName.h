@@ -19,39 +19,26 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 #pragma once
+#include <string>
+#include <unordered_set>
 
-#include <antares/expressions/nodes/FunctionNode.h>
-#include <antares/expressions/visitors/NodeVisitor.h>
-
-namespace Antares::Expressions::Visitors
+namespace Antares::IO::Outputs
 {
+std::string MakeExportableName(const std::string& name,
+                               const std::string& forbiddenFirstChars,
+                               const std::string& forbiddenChars,
+                               bool* foundForbiddenChar);
 
-template<typename T>
-concept HasSizeMethod = requires(const T& t) {
-    { t.size() } -> std::convertible_to<std::size_t>;
+class NameManager
+{
+public:
+    std::string MakeUniqueName(const std::string& name);
+
+private:
+    std::unordered_set<std::string> names_;
+    int lastN_ = 1;
 };
 
-template<HasSizeMethod T>
-std::size_t getMaxSize(const std::vector<T>& elements)
-{
-    std::size_t maxSize = 0;
-    for (const auto& element: elements)
-    {
-        maxSize = std::max(maxSize, element.size());
-    }
-    return maxSize;
-}
+std::string MakeMpsSafeUniqueName(const std::string& originalName, NameManager& nameManager);
 
-template<class R>
-std::vector<R> variadicFunction(NodeVisitor<R>& visitor, const Nodes::FunctionNode* node)
-{
-    const auto& operands = node->getOperands();
-    std::vector<R> result;
-    result.reserve(operands.size());
-    for (const auto* operand: operands)
-    {
-        result.push_back(visitor.dispatch(operand));
-    }
-    return result;
-}
-} // namespace Antares::Expressions::Visitors
+} // namespace Antares::IO::Outputs

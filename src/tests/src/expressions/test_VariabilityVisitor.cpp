@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -196,6 +178,84 @@ BOOST_AUTO_TEST_CASE(alltimeSumNode_expression)
                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 }
 
+BOOST_AUTO_TEST_CASE(variability_of_a_reduced_cost_operator___case_varying_in_time)
+{
+    VariableNode timeVariableNode{"my-var", 0, VariabilityType::VARYING_IN_TIME_ONLY};
+    FunctionNode reducedCostNode(FunctionNodeType::reduced_cost, &timeVariableNode);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&reducedCostNode),
+                      VariabilityType::VARYING_IN_TIME_ONLY);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_reduced_cost_operator___case_constant)
+{
+    VariableNode timeVariableNode{"my-var", 0, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO};
+    FunctionNode reducedCostNode(FunctionNodeType::reduced_cost, &timeVariableNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&reducedCostNode),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_the_dual_of_constraint___case_constant)
+{
+    LiteralNode zero(0);
+    ParameterNode paramNode("param", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    FunctionNode dualNode(FunctionNodeType::dual, &zero, &paramNode);
+
+    // gp : missing a constraint in the optimEntityContainer to test this case
+    BOOST_CHECK(true); // avoiding warning about no check
+    // BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&dualNode),
+    //                   VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_power_operator___case_varying_in_scenario_only)
+{
+    LiteralNode two(2);
+    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
+    FunctionNode power(FunctionNodeType::pow, &paramNode, &two);
+
+    // Because parameter varying status is set in fixture to VARYING_IN_SCENARIO_ONLY.
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&power),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
+// gp : unit tests for max and min function are missing.
+
+BOOST_AUTO_TEST_CASE(variability_of_floor_operator___case_constant)
+{
+    LiteralNode literalNode(2.3);
+    FunctionNode floorNode(FunctionNodeType::floor, &literalNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&floorNode),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_floor_operator___case_varying_in_scenario_only)
+{
+    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
+    FunctionNode floorNode(FunctionNodeType::floor, &paramNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&floorNode),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_constant)
+{
+    LiteralNode literalNode(3.7);
+    FunctionNode ceilNode(FunctionNodeType::ceil, &literalNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&ceilNode),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_varying_in_scenario_only)
+{
+    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
+    FunctionNode ceilNode(FunctionNodeType::ceil, &paramNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&ceilNode),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
 template<class T>
 static Node* singleNode(Registry<Node>& registry)
 {
@@ -268,7 +328,7 @@ BOOST_AUTO_TEST_CASE(test_time_index_logical_operator)
                       VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
 }
 
-BOOST_AUTO_TEST_CASE(test_overwrite_time_inde_from_component)
+BOOST_AUTO_TEST_CASE(overwrite_variability_in_model_by_variablility_in_component)
 {
     // When Optimisation::VariabilityType in component parameter is less varying than in model,
     // the

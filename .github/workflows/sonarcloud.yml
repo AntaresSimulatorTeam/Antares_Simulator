@@ -25,6 +25,7 @@ jobs:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
       CCACHE_SLOPPINESS: time_macros,include_file_mtime
+      PYTHON_VERSION: "3.12"
 
     steps:
     # Disk space on / is insufficient, leading to errors
@@ -103,7 +104,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: 3.12
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install gcovr
       run: sudo pip install gcovr==5.0 #5.1 generate issues with sonarcloud report parsing

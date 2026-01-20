@@ -93,7 +93,8 @@ private:
            {"param_m5", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "-5."},
            {"param_ts", VariabilityType::VARYING_IN_TIME_ONLY, "0_1_2"},
            {"param1", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "-2."},
-           {"param2", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "8."}});
+           {"param2", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "8."},
+           {"four.five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "4.5"}});
     }
 
     SystemModel::Component setComponentParameterValues(
@@ -107,13 +108,16 @@ private:
               .id = std::get<0>(value),
               .type = std::get<1>(value),
               .value = std::get<2>(value)};
+
             SystemModel::Parameter parameter{std::get<0>(value),
                                              SystemModel::TimeDependent::YES,
                                              SystemModel::ScenarioDependent::YES};
             parameters.push_back(parameter);
         }
+
         SystemModel::ModelBuilder modelBuilder;
         m = modelBuilder.withId("model").withParameters(std::move(parameters)).build();
+
         SystemModel::ComponentBuilder componentBuilder;
         return componentBuilder.withId("compo")
           .withModel(&m)

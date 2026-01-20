@@ -1,28 +1,15 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
+
+#include <algorithm>
+#include <ranges>
 #include <typeindex>
 #include <unordered_map>
 
 #include <antares/expressions/IName.h>
+#include <antares/expressions/nodes/FunctionNode.h>
 #include <antares/expressions/nodes/Node.h>
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/InvalidNode.h>
@@ -303,6 +290,19 @@ public:
      * @return The result of processing the DualNode.
      */
     virtual R visit(const Nodes::FunctionNode*, Args... args) = 0;
+
+protected:
+    std::vector<R> visitChildrenNodes(const Nodes::ParentNode* node);
 };
+
+template<class R, class... Args>
+std::vector<R> NodeVisitor<R, Args...>::visitChildrenNodes(const Nodes::ParentNode* node)
+{
+    std::vector<R> result;
+    std::ranges::transform(node->getOperands(),
+                           std::back_inserter(result),
+                           [this](auto& arg) { return dispatch(arg); });
+    return result;
+}
 
 } // namespace Antares::Expressions::Visitors

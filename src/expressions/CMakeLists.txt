@@ -16,7 +16,6 @@ set(SRC_Expressions
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
         visitors/InvalidNode.cpp
-        visitors/LinearityVisitor.cpp
         visitors/NodeVisitor.cpp
         visitors/PrintVisitor.cpp
         visitors/VariabilityVisitor.cpp
@@ -55,11 +54,10 @@ set(SRC_Expressions
         include/antares/expressions/visitors/EvalVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
         include/antares/expressions/visitors/LinearStatus.h
-        include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h
         include/antares/expressions/visitors/PrintVisitor.h
         include/antares/expressions/visitors/VariabilityVisitor.h
-        include/antares/expressions/visitors/VariadicNodeFunctionVisit.h
+        include/antares/expressions/visitors/HelpVisitNode.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h
