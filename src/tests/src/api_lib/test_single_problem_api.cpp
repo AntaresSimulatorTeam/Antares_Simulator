@@ -356,6 +356,19 @@ BOOST_AUTO_TEST_CASE(about_the_study_directory_structure)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
+
+    // Create the folderSettings directory structure with generaldata.ini
+    auto folderSettings = std::filesystem::temp_directory_path() / "study" / "settings";
+
+    // In-memory studies normally have no input files
+    study->folderSettings = folderSettings;
+
+    std::filesystem::create_directories(folderSettings);
+    std::ofstream settingsFile(folderSettings / "generaldata.ini");
+    settingsFile << "; Test settings file\n";
+    settingsFile << "general.mode = 0\n";
+    settingsFile.close();
+
     Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
@@ -416,8 +429,8 @@ BOOST_AUTO_TEST_CASE(about_the_study_links_content)
     BOOST_REQUIRE(links);
     std::string content((std::istreambuf_iterator<char>(links)), std::istreambuf_iterator<char>());
 
-    BOOST_CHECK(content.find("AREA_A") != std::string::npos);
-    BOOST_CHECK(content.find("AREA_B") != std::string::npos);
+    BOOST_CHECK(content.find("area_a") != std::string::npos);
+    BOOST_CHECK(content.find("area_b") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(about_the_study_parameters_file)
@@ -431,6 +444,15 @@ BOOST_AUTO_TEST_CASE(about_the_study_parameters_file)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
+
+    // Create the folderSettings directory structure with generaldata.ini
+    auto folderSettings = std::filesystem::temp_directory_path() / "study" / "settings";
+    std::filesystem::create_directories(folderSettings);
+    std::ofstream settingsFile(folderSettings / "generaldata.ini");
+    settingsFile << "; Test settings file\n";
+    settingsFile << "general.mode = 0\n";
+    settingsFile.close();
+
     Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
