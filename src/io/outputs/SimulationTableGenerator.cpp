@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/io/outputs/SimulationTableGenerator.h"
 
 #include <optional>
@@ -30,13 +13,13 @@
 #include "antares/logs/logs.h"
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 #include "antares/optimisation/linear-problem-api/mipConstraint.h"
-#include "antares/solver/modeler/data.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/utils/utils.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 
-namespace Antares::IO
+namespace Antares::IO::Outputs
 {
 TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
@@ -95,7 +78,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
     for (std::size_t varIndex = 0; varIndex < variables.size(); ++varIndex)
     {
         const auto& modelVar = variables[varIndex];
-        if (modelVar.location() != Modeler::Config::Location::SUBPROBLEMS)
+        if (modelVar.location() != Solver::Config::Location::SUBPROBLEMS)
         {
             continue;
         }
@@ -206,7 +189,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     unsigned constraintLocalIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
-        if (modelConstr.location() != Modeler::Config::Location::SUBPROBLEMS)
+        if (modelConstr.location() != Solver::Config::Location::SUBPROBLEMS)
         {
             continue;
         }
@@ -389,7 +372,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
 void FillSimulationTable(ISimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
-                         const Modeler::Data& modelerData,
+                         const Solver::ModelerData& modelerData,
                          const OptimEntityContainer& optimEntityContainer,
                          const FillContext& fillContext,
                          unsigned currentBlock,
@@ -443,4 +426,4 @@ void FillSimulationTable(ISimulationTable& simulationTable,
     measure.tick();
     logs.info() << "Simulation Table is generated in " << measure.toString();
 }
-} // namespace Antares::IO
+} // namespace Antares::IO::Outputs

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <fmt/format.h>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
@@ -25,6 +8,8 @@
 #include "antares/study/study.h"
 #include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
+
+#include "include/antares/study/fwd.h"
 
 namespace fs = std::filesystem;
 
@@ -49,11 +34,13 @@ bool Study::internalLoadHeader(const fs::path& path)
     return true;
 }
 
-bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
+bool Study::loadFromFolder(const std::string& path,
+                           const StudyLoadOptions& options,
+                           Benchmarking::DurationCollector& durationCollector)
 {
     fs::path normPath = path;
     normPath = normPath.lexically_normal();
-    return internalLoadFromFolder(normPath, options);
+    return internalLoadFromFolder(normPath, options, durationCollector);
 }
 
 bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& options)
@@ -163,11 +150,10 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const fs::path& path,
+                                   const StudyLoadOptions& options,
+                                   Benchmarking::DurationCollector& durationCollector)
 {
-    // IO statistics
-    Statistics::LogsDumper statisticsDumper;
-
     // Check if the path is correct
     if (!fs::exists(path))
     {
@@ -189,36 +175,41 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
         return false;
     }
 
-    // -------------------------
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
+    bool ret = true;
 
-    // In case parallel mode was not chosen, only 1 core is allowed
-    if (!options.enableParallel && !options.forceParallel)
+    durationCollector("study_loading") << [this, &options, &ret]
     {
-        maxNbYearsInParallel = 1;
-    }
+        // -------------------------
+        // Logical cores
+        // -------------------------
+        // Getting the number of logical cores to use before loading and creating the areas :
+        // Areas need this number to be up-to-date at construction.
+        getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
-    // End logical core --------
+        // In case parallel mode was not chosen, only 1 core is allowed
+        if (!options.enableParallel && !options.forceParallel)
+        {
+            maxNbYearsInParallel = 1;
+        }
 
-    // Areas - Raw Data
-    bool ret = areas.loadFromFolder(options);
+        // End logical core --------
 
-    logs.info() << "Loading correlation matrices...";
-    // Correlation matrices
-    ret = internalLoadCorrelationMatrices(options) && ret;
-    // Binding constraints
-    ret = internalLoadBindingConstraints(options) && ret;
-    // Sets of areas & links
-    ret = internalLoadSets() && ret;
+        // Areas - Raw Data
+        ret = areas.loadFromFolder(options) && ret;
 
-    parameterFiller(options);
+        logs.info() << "Loading correlation matrices...";
+        // Correlation matrices
+        ret = internalLoadCorrelationMatrices(options) && ret;
+        // Binding constraints
+        ret = internalLoadBindingConstraints(options) && ret;
+        // Sets of areas & links
+        ret = internalLoadSets() && ret;
+
+        parameterFiller(options);
+    };
 
     // Modeler components for hybrid studies
-    loadModelerComponents();
+    durationCollector("modeler_loading") << [this] { loadModelerComponents(); };
 
     return ret;
 }
@@ -227,7 +218,7 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
+        modelerInput_ = std::make_unique<Solver::ModelerData>(Solver::LoadFiles::loadAll(folder));
         checkModelerDataCompatibility();
     }
     catch (const Error::LoadingError& e)

@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_STUDY_H__
 #define __ANTARES_LIBS_STUDY_STUDY_H__
 
@@ -27,9 +10,10 @@
 #include <yuni/core/noncopyable.h>
 #include <yuni/job/queue/service.h>
 
+#include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
 #include <antares/date/date.h>
-#include <antares/solver/modeler/data.h>
+#include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/runtime/runtime.h>
 #include <antares/writer/i_writer.h>
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"
@@ -143,7 +127,9 @@ public:
     ** \param path The path where data are located
     ** \return True if succeeded, false otherwise
     */
-    bool loadFromFolder(const std::string& path, const StudyLoadOptions& options);
+    bool loadFromFolder(const std::string& path,
+                        const StudyLoadOptions& options,
+                        Benchmarking::DurationCollector& durationCollector);
 
     /*!
     ** \brief Clear all ressources held by the study
@@ -617,7 +603,7 @@ public:
     */
     const bool usedByTheSolver;
 
-    Antares::Modeler::Data* getModelerData() const
+    Solver::ModelerData* getModelerData() const
     {
         return modelerInput_.get();
     }
@@ -626,7 +612,9 @@ protected:
     //! \name Loading
     //@{
     //! Load a study from a folder
-    bool internalLoadFromFolder(const std::filesystem::path& path, const StudyLoadOptions& options);
+    bool internalLoadFromFolder(const std::filesystem::path& path,
+                                const StudyLoadOptions& options,
+                                Benchmarking::DurationCollector& durationCollector);
     //! Load the study header
     bool internalLoadHeader(const std::filesystem::path& folder);
     //! Load all correlation matrices
@@ -652,7 +640,7 @@ protected:
     //@}
 
 private:
-    std::unique_ptr<Modeler::Data> modelerInput_;
+    std::unique_ptr<Solver::ModelerData> modelerInput_;
 }; // class Study
 
 /*!
