@@ -134,7 +134,6 @@ void fillLinearProblem(FillContext& fillCtx,
     measure.tick();
 
     logs.debug() << "Modeler build took " << measure.toStringInSeconds();
-
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
