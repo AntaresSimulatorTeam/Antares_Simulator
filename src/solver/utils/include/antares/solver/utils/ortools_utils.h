@@ -27,10 +27,6 @@ using namespace operations_research;
 // This is a temporary workaround for Windows
 double getObjectiveValue(const MPSolver* solver);
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter& writer,
-                                                   const std::string& filename);
-
 /*!
  *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
  *

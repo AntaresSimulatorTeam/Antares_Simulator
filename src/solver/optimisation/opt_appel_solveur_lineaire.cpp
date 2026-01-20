@@ -179,14 +179,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
-                                        solver.get());
+                                        ortoolsProblem);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
     measure.tick();
     timeMeasure.updateTime = measure.duration_ms();
-    optimizationStatistics.addSolveTime(timeMeasure.updateTime);
+    optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
     measure.reset();
 
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver.get(), options);
@@ -333,8 +333,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                             problemeHebdo->exportMPSOnError,
                                             optimizationNumber,
-                                            MPproblem.get());
-
+                                            infeasibleProblem);
         // Since MpProblem must have named vars and constraints in case of infeasibility, we must
         // use the updated MPSolver
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
