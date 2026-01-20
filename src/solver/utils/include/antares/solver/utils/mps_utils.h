@@ -41,12 +41,12 @@ class MPSwriter: public I_MPS_writer
 {
 public:
     virtual ~MPSwriter() = default;
-    MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem* linearProblem,
+    MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
               uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
-    const Optimisation::LinearProblemApi::ILinearProblem* linear_problem_;
+    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
 };
 
 class nullMPSwriter: public I_MPS_writer
@@ -68,7 +68,7 @@ public:
     mpsWriterFactory(Data::mpsExportStatus exportMPS,
                      bool exportMPSOnError,
                      int current_optim_number,
-                     const Optimisation::LinearProblemApi::ILinearProblem* linearProblem);
+                     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem);
 
     std::unique_ptr<I_MPS_writer> create();
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
@@ -81,6 +81,6 @@ private:
     // Member data...
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    const Optimisation::LinearProblemApi::ILinearProblem* linearProblem_;
+    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
     uint current_optim_number_;
 };

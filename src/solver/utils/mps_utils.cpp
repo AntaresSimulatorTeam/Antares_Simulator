@@ -44,10 +44,10 @@ using namespace Antares::Data;
 // ---------------------------------
 // Full mps writing
 // ---------------------------------
-MPSwriter::MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem* linearProblem,
+MPSwriter::MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
                      uint optNumber):
     I_MPS_writer(optNumber),
-    linear_problem_(linearProblem)
+    linearProblem_(linearProblem)
 {
 }
 
@@ -57,7 +57,7 @@ void MPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& fi
     logs.info() << "Writing MPS File: `" << filename << "'";
 
     // 1. Write MPS
-    auto mps = Antares::IO::Outputs::MPSGenerator(*linear_problem_, filename).run();
+    auto mps = Antares::IO::Outputs::MPSGenerator(linearProblem_, filename).run();
 
     // 2. add the mps
     writer.addEntryFromBuffer(filename, mps);
@@ -67,7 +67,7 @@ mpsWriterFactory::mpsWriterFactory(
   Data::mpsExportStatus exportMPS,
   bool exportMPSOnError,
   const int current_optim_number,
-  const Optimisation::LinearProblemApi::ILinearProblem* linearProblem):
+  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem):
     export_mps_(exportMPS),
     export_mps_on_error_(exportMPSOnError),
     linearProblem_(linearProblem),

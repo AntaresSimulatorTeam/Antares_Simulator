@@ -186,7 +186,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
-                                        &ortoolsProblem);
+                                        ortoolsProblem);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
@@ -344,7 +344,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                             problemeHebdo->exportMPSOnError,
                                             optimizationNumber,
-                                            &infeasibleProblem);
+                                            infeasibleProblem);
         // Since MpProblem must have named vars and constraints in case of infeasibility, we must
         // use the updated MPSolver
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
