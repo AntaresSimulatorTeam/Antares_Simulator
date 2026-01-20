@@ -4,6 +4,12 @@
 #ifndef __SOLVER_H2O_J_FONCTIONS__
 #define __SOLVER_H2O_J_FONCTIONS__
 
+namespace operations_research
+{
+class MPSolver;
+class MPVariable;
+} // namespace operations_research
+
 namespace DoneesOptimisationJournaliere
 {
 DONNEES_MENSUELLES H2O_J_Instanciation(void);
@@ -34,5 +40,27 @@ void H2O_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES*, int, const std::string
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES*, int);
 void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES&);
+
+// OR-Tools MPSolver helpers for the daily hydro problem.
+void H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES*,
+                                    int,
+                                    operations_research::MPSolver&,
+                                    std::vector<operations_research::MPVariable*>&);
+
+void H2O_J_MPSolver_SetObjectiveCoefficients(DONNEES_MENSUELLES*,
+                                             int,
+                                             operations_research::MPSolver&,
+                                             const std::vector<operations_research::MPVariable*>&);
+
+void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES*,
+                                      int,
+                                      operations_research::MPSolver&,
+                                      const std::vector<operations_research::MPVariable*>&);
+
+void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,
+                                     int,
+                                     operations_research::MPSolver&,
+                                     const std::vector<operations_research::MPVariable*>&);
 } // namespace DoneesOptimisationJournaliere
+
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */
