@@ -6,7 +6,7 @@ target_sources(modeler-lib
         include/antares/solver/modeler/Modeler.h
         include/antares/solver/modeler/ILoader.h
         include/antares/solver/modeler/IWriter.h
-        include/antares/solver/modeler/data.h
+        include/antares/solver/modeler/ModelerData.h
 )
 
 target_link_libraries(modeler-lib
