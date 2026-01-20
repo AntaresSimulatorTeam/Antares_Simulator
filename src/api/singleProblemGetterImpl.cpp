@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 
+#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -58,7 +59,15 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
                                     pb_,
                                     /* NombreDePasDeTemps = */ 168,
                                     numSpace);
+    if (!study_->initializeRuntimeInfos())
+    {
+        throw Error::RuntimeInfoInitialization();
+    }
 
+    // Apply transformations needed by the solver only (and not the interface for example)
+    study_->performTransformationsBeforeLaunchingSimulation();
+
+    ScenarioBuilderOwner(*study_).callScenarioBuilder();
     Antares::Solver::Simulation::regenerateTimeSeries(*study_, gResultWriter, gDurationCollector);
 
     study_->computePThetaInfForThermalClusters(); // PthetaInf
@@ -85,6 +94,7 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
     }
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
+
     initializeRandomNumbers();
 }
 
@@ -260,7 +270,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
     uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
     // TODO
-    if (auto [_, seen] = randomPrepared_.insert(year); !seen)
+    if (auto [_, unseen] = randomPrepared_.insert(year); unseen)
     {
         // TODO once per year, not every week
         Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
