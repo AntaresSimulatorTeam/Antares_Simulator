@@ -34,11 +34,12 @@ public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
+    void mergeAnother(const SetData& toMerge, double ratio);
 
     // TODO rm tests
     void writeResultsToFolder(const std::string& folderName) const;
 
-private:
+protected:
     std::vector<std::vector<long double>> thermalResults_;
     std::vector<std::vector<long double>> renewableResults_;
 
@@ -63,10 +64,10 @@ public:
     explicit DynamicAggregation(Data::Study& study);
 
     void initializeSetsData();
+    void addResultsToSets(const PROBLEME_HEBDO& pb);
+    void mergeAnother(const DynamicAggregation& toMerge, double ratio);
 
     // TODO rm tests
-    void addResultsToSets(const PROBLEME_HEBDO& pb);
-
     void writeAllResults(const std::string& baseFolder) const;
 
 private:
