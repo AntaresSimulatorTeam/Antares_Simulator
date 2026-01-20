@@ -123,10 +123,7 @@ void H2O_J_MPSolver_SetObjectiveCoefficients(DONNEES_MENSUELLES* DonneesMensuell
 }
 
 void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
-                                      const std::vector<MPVariable*>& turbineVariables,
-                                      const std::vector<MPVariable*>& xiVariables,
-                                      MPVariable* xiPlus,
-                                      MPVariable* xiMoins,
+                                      const H2O_J_MPSOLVER_VARIABLES& variables,
                                       MPSolver& solver)
 {
     const int NbPdt = DonneesMensuelles->NombreDeJoursDuMois;
@@ -163,32 +160,32 @@ void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
     for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
         auto* const c = solver.MakeRowConstraint(DonneesMensuelles->TurbineCible[pdt], inf);
-        c->SetCoefficient(turbineVariables[pdt], 1.0);
-        c->SetCoefficient(xiVariables[pdt], 1.0);
+        c->SetCoefficient(variables.turbine[pdt], 1.0);
+        c->SetCoefficient(variables.xi[pdt], 1.0);
     }
 
     // --- -turbine[t] + Xi[t] >= -cible[t] ---
     for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
         auto* const c = solver.MakeRowConstraint(-DonneesMensuelles->TurbineCible[pdt], inf);
-        c->SetCoefficient(turbineVariables[pdt], -1.0);
-        c->SetCoefficient(xiVariables[pdt], 1.0);
+        c->SetCoefficient(variables.turbine[pdt], -1.0);
+        c->SetCoefficient(variables.xi[pdt], 1.0);
     }
 
     // --- turbine[t] + xi_plus >= cible[t] ---
     for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
         auto* const c = solver.MakeRowConstraint(DonneesMensuelles->TurbineCible[pdt], inf);
-        c->SetCoefficient(turbineVariables[pdt], 1.0);
-        c->SetCoefficient(xiPlus, 1.0);
+        c->SetCoefficient(variables.turbine[pdt], 1.0);
+        c->SetCoefficient(variables.xiPlus, 1.0);
     }
 
     // --- -turbine[t] + xi_moins >= -cible[t] ---
     for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
         auto* const c = solver.MakeRowConstraint(-DonneesMensuelles->TurbineCible[pdt], inf);
-        c->SetCoefficient(turbineVariables[pdt], -1.0);
-        c->SetCoefficient(xiMoins, 1.0);
+        c->SetCoefficient(variables.turbine[pdt], -1.0);
+        c->SetCoefficient(variables.xiMoins, 1.0);
     }
 }
 
