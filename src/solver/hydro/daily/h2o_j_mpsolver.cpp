@@ -188,4 +188,29 @@ void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES* DonneesMensuelles,
     }
 }
 
+void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
+{
+    if (!DonneesMensuelles)
+    {
+        return;
+    }
+
+    // Create a fresh MPSolver instance for the daily problem. We use the
+    // Sirius LP backend by default as requested.
+    MPSolver solver("hydro_daily", MPSolver::SIRIUS_LINEAR_PROGRAMMING);
+
+    // 1) Create variables and wire them to the legacy data structures.
+    H2O_J_MPSOLVER_VARIABLES vars
+      = H2O_J_MPSolver_CreateVariables(DonneesMensuelles, NumeroDeProbleme, solver);
+
+    // 2) Set objective coefficients.
+    H2O_J_MPSolver_SetObjectiveCoefficients(vars, solver);
+
+    // 3) Create constraints.
+    H2O_J_MPSolver_CreateConstraints(DonneesMensuelles, vars, solver);
+
+    // 4) Solve and recover the solution into DONNEES_MENSUELLES.
+    H2O_J_MPSolver_SolveAndRecover(DonneesMensuelles, NumeroDeProbleme, solver, vars);
+}
+
 } // namespace DoneesOptimisationJournaliere

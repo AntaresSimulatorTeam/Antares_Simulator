@@ -64,6 +64,14 @@ void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,
                                     int,
                                     operations_research::MPSolver&,
                                     const H2O_J_MPSOLVER_VARIABLES&);
+
+// Convenience function that builds an MPSolver instance and runs the
+// full daily optimisation pipeline for a given problem index:
+//  - create variables
+//  - set objective coefficients
+//  - create constraints
+//  - solve and recover solution values into DONNEES_MENSUELLES.
+void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES*, int);
 } // namespace DoneesOptimisationJournaliere
 
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */
