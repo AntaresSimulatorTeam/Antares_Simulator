@@ -41,12 +41,10 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES*, int);
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES&);
 
 // OR-Tools MPSolver helpers for the daily hydro problem.
-// Build the full list of variables in the same order as the legacy
-// PROBLEME_LINEAIRE_PARTIE_FIXE / VARIABLE arrays.
-void H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES*,
-                                    int,
-                                    operations_research::MPSolver&,
-                                    std::vector<operations_research::MPVariable*>& allVariables);
+// Build the OR-Tools variables used by the daily heuristic.
+H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES*,
+                                                        int,
+                                                        operations_research::MPSolver&);
 
 // Objective builder: minimize the sum of xi[t] and the two
 // global deviation variables (xiPlus, xiMoins).
@@ -65,7 +63,7 @@ void H2O_J_MPSolver_CreateConstraints(
 void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,
                                     int,
                                     operations_research::MPSolver&,
-                                    const std::vector<operations_research::MPVariable*>&);
+                                    const H2O_J_MPSOLVER_VARIABLES&);
 } // namespace DoneesOptimisationJournaliere
 
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */

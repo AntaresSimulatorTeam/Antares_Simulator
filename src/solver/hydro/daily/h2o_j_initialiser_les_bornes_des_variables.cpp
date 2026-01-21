@@ -23,23 +23,15 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
                                                                        .CorrespondanceDesVariables
                                                                          [NumeroDeProbleme];
 
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
-
-    std::vector<double>& Xmin = ProblemeLineairePartieVariable.Xmin;
-    std::vector<double>& Xmax = ProblemeLineairePartieVariable.Xmax;
-    std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = ProblemeLineairePartieVariable.AdresseOuPlacerLaValeurDesVariablesOptimisees;
-
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
-    {
-        int Var = CorrespondanceDesVariables.NumeroDeVariableTurbine[Pdt];
-        Xmax[Var] = TurbineMax[Pdt];
-
-        Xmin[Var] = std::min(TurbineMax[Pdt], TurbineMin[Pdt]);
-
-        AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(Turbine[Pdt]);
-    }
+    // Bounds and result pointers are now initialised directly when creating
+    // MPSolver variables (H2O_J_MPSolver_CreateVariables). This function is
+    // kept for compatibility but no longer performs any work.
+    (void)ProblemeHydraulique;
+    (void)CorrespondanceDesVariables;
+    (void)TurbineMax;
+    (void)TurbineMin;
+    (void)Turbine;
+    (void)NbPdt;
 
     return;
 }

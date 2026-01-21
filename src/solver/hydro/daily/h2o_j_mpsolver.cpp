@@ -7,9 +7,10 @@
 #include <string>
 #include <vector>
 
-#include <antares/solver/utils/ortools_utils.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
+
+#include "ortools/linear_solver/linear_solver.h"
 
 namespace DoneesOptimisationJournaliere
 {
@@ -17,39 +18,13 @@ using operations_research::MPObjective;
 using operations_research::MPSolver;
 using operations_research::MPVariable;
 
-namespace
-{
-inline double toOrtoolsLowerBound(double value, double linf)
-{
-    if (value <= -linf / 2.)
-    {
-        return -MPSolver::infinity();
-    }
-    return value;
-}
-
-inline double toOrtoolsUpperBound(double value, double linf)
-{
-    if (value >= linf / 2.)
-    {
-        return MPSolver::infinity();
-    }
-    return value;
-}
-} // namespace
-
-void H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* DonneesMensuelles,
-                                    int NumeroDeProbleme,
-                                    MPSolver& solver,
-                                    std::vector<MPVariable*>& variables)
+H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* DonneesMensuelles,
+                                                        int NumeroDeProbleme,
+                                                        MPSolver& solver)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
     const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
-
-    const CORRESPONDANCE_DES_VARIABLES& CorrespondanceDesVariables = ProblemeHydraulique
-                                                                       .CorrespondanceDesVariables
-                                                                         [NumeroDeProbleme];
 
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
                                                                   .ProblemeLineairePartieFixe
@@ -59,40 +34,40 @@ void H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* DonneesMensuelles,
 
     const int NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
 
-    variables.clear();
-    variables.resize(NombreDeVariables, nullptr);
+    H2O_J_MPSOLVER_VARIABLES vars(NbPdt);
 
-    std::vector<std::string> variableNames(NombreDeVariables);
+    const std::vector<double>& TurbineMax = DonneesMensuelles->TurbineMax;
+    const std::vector<double>& TurbineMin = DonneesMensuelles->TurbineMin;
 
+    // Expected variable ordering for the daily problem:
+    //  - first NbPdt variables: turbine[pdt]
+    //  - next NbPdt variables:  xi[pdt]
+    //  - last 2 variables:      xi_plus, xi_moins
+    // We set both names and bounds in a single pass, without relying on
+    // CORRESPONDANCE_DES_VARIABLES.
+
+    // Turbine and xi variables.
     for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
-        const int varTurbine = CorrespondanceDesVariables.NumeroDeVariableTurbine[pdt];
-        variableNames[varTurbine] = "turbine[" + std::to_string(pdt) + "]";
+        // Turbine bounds from physical min/max.
+        const double xmax = TurbineMax[pdt];
+        const double xmin = std::min(TurbineMax[pdt], TurbineMin[pdt]);
 
-        const int varXi = CorrespondanceDesVariables.NumeroDeLaVariableXi[pdt];
-        variableNames[varXi] = "xi[" + std::to_string(pdt) + "]";
+        const std::string nameTurbine = "turbine[" + std::to_string(pdt) + "]";
+        vars.turbine[pdt] = solver.MakeNumVar(xmin, xmax, nameTurbine);
     }
 
-    variableNames[CorrespondanceDesVariables.NumeroDeLaVariableXiPlus] = "xi_plus";
-    variableNames[CorrespondanceDesVariables.NumeroDeLaVariableXiMoins] = "xi_moins";
-
-    for (int var = 0; var < NombreDeVariables; ++var)
+    // Xi variables are non-negative slacks with no explicit upper bound.
+    for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
-        if (variableNames[var].empty())
-        {
-            variableNames[var] = "x[" + std::to_string(var) + "]";
-        }
+        const std::string nameXi = "xi[" + std::to_string(pdt) + "]";
+        vars.xi[pdt] = solver.MakeNumVar(0.0, MPSolver::infinity(), nameXi);
     }
 
-    const double linf = LINFINI;
+    vars.xiPlus = solver.MakeNumVar(0.0, MPSolver::infinity(), "xi_plus");
+    vars.xiMoins = solver.MakeNumVar(0.0, MPSolver::infinity(), "xi_moins");
 
-    for (int var = 0; var < NombreDeVariables; ++var)
-    {
-        double lb = toOrtoolsLowerBound(ProblemeLineairePartieVariable.Xmin[var], linf);
-        double ub = toOrtoolsUpperBound(ProblemeLineairePartieVariable.Xmax[var], linf);
-
-        variables[var] = solver.MakeNumVar(lb, ub, variableNames[var]);
-    }
+    return vars;
 }
 
 void H2O_J_MPSolver_SetObjectiveCoefficients(const H2O_J_MPSOLVER_VARIABLES& variables,
@@ -110,14 +85,8 @@ void H2O_J_MPSolver_SetObjectiveCoefficients(const H2O_J_MPSOLVER_VARIABLES& var
         objective->SetCoefficient(xi, 1.0);
     }
 
-    if (variables.xiPlus)
-    {
-        objective->SetCoefficient(variables.xiPlus, 1.0);
-    }
-    if (variables.xiMoins)
-    {
-        objective->SetCoefficient(variables.xiMoins, 1.0);
-    }
+    objective->SetCoefficient(variables.xiPlus, 1.0);
+    objective->SetCoefficient(variables.xiMoins, 1.0);
 }
 
 void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
@@ -151,7 +120,7 @@ void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
 
     for (int pdt = 0; pdt < NbPdt; ++pdt)
     {
-        energyConstraint->SetCoefficient(turbineVariables[pdt], 1.0);
+        energyConstraint->SetCoefficient(variables.turbine[pdt], 1.0);
     }
 
     // --- turbine[t] + Xi[t] >= cible[t] ---
@@ -190,17 +159,12 @@ void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
 void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES* DonneesMensuelles,
                                     int NumeroDeProbleme,
                                     MPSolver& solver,
-                                    const std::vector<MPVariable*>& variables)
+                                    const H2O_J_MPSOLVER_VARIABLES& variables)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe
-                                                                    [NumeroDeProbleme];
     PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
       = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
-
-    const int NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
 
     const auto status = solver.Solve();
 
@@ -209,17 +173,12 @@ void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES* DonneesMensuelles,
         DonneesMensuelles->ResultatsValides = OUI;
         ProblemeLineairePartieVariable.ExistenceDUneSolution = OUI_SPX;
 
-        for (int var = 0; var < NombreDeVariables; ++var)
+        // Recover turbine values directly from the corresponding MPVariables.
+        const int NbPdt = DonneesMensuelles->NombreDeJoursDuMois;
+        for (int pdt = 0; pdt < NbPdt; ++pdt)
         {
-            const double value = variables[var]->solution_value();
-            ProblemeLineairePartieVariable.X[var] = value;
-
-            double* const pt = ProblemeLineairePartieVariable
-                                 .AdresseOuPlacerLaValeurDesVariablesOptimisees[var];
-            if (pt)
-            {
-                *pt = value;
-            }
+            const double value = variables.turbine[pdt]->solution_value();
+            DonneesMensuelles->Turbine[pdt] = value;
         }
     }
     else

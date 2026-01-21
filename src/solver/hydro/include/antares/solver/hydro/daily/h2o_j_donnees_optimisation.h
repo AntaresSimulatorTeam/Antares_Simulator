@@ -53,8 +53,6 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
     /* Donnees variables de la matrice des contraintes */
     /* On met quand-meme les bornes dans la partie variable pour le cas ou on voudrait avoir
              un jour des bornes min et max variables dans le temps et en fonction des reservoirs */
-    std::vector<double> Xmin;
-    std::vector<double> Xmax;
     std::vector<double> SecondMembre;
     /* Tableau de pointeur a des doubles. Ce tableau est parallele a X, il permet
        de renseigner directement les structures de description du reseau avec les
@@ -109,6 +107,12 @@ struct CORRESPONDANCE_DES_VARIABLES
 // Group of OR-Tools variables used in the daily hydro problem.
 struct H2O_J_MPSOLVER_VARIABLES
 {
+    H2O_J_MPSOLVER_VARIABLES(int NbPdt):
+        turbine(NbPdt, nullptr),
+        xi(NbPdt, nullptr)
+    {
+    }
+
     // One turbine variable per day of the month.
     std::vector<operations_research::MPVariable*> turbine;
     // One xi variable per day of the month.
