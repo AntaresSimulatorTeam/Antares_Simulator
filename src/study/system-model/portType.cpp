@@ -33,18 +33,17 @@ void checkNonEmptyFieldExist(const std::string& field,
 
 bool operator==(const std::optional<AreaConnection>& a, const std::optional<AreaConnection>& b)
 {
-    if (!a.has_value() && !b.has_value())
-    {
-        return true;
-    }
-
-    if (!(a.has_value() || b.has_value()))
+    if (a.has_value() != b.has_value())
     {
         return false;
     }
+    
+    if (a.has_value())
+    {
+        return *a == *b;
+    }
 
-    return a->injection == b->injection && a->to_area_bound == b->to_area_bound
-           && a->from_area_bound == b->from_area_bound;
+    return true; // both are std::nullopt
 }
 
 // -------------------
