@@ -133,8 +133,6 @@ public:
         Progression::Task progression(study, y, Solver::Progression::sectYear);
 
         Variable::DynamicAggregation dynamicAggregationForTheYear(study);
-        dynamicAggregationForTheYear.initializeSetsData();
-
         // Index of the current year in the list of structures
         uint indexYear = randomForParallelYears.yearNumberToIndex[y];
 
@@ -206,12 +204,15 @@ public:
         // 9 - Write results for the current year
         if (yearByYear)
         {
-            pDurationCollector("yby_export") << [this, &numSpace, &state]
+            pDurationCollector("yby_export")
+              << [this, &numSpace, &state, &dynamicAggregationForTheYear]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
+
+                /*dynamicAggregationForTheYear.writeAllResults(study.folderOutput);*/
             };
         }
 
@@ -222,7 +223,8 @@ public:
 
         yearsFailed[y] = yearFailed;
 
-        pDurationCollector("synthesis_compute") << [this, &numSpace, &state]
+        pDurationCollector("synthesis_compute")
+          << [this, &numSpace, &state, &dynamicAggregationForTheYear]
         {
             simulation_->variables.computeSummary(y, numSpace);
 
@@ -234,6 +236,11 @@ public:
             // Computes statistics on annual (system and solution) costs, to be printed in output
             // into separate files
             simulation_->computeAnnualCostsStatistics(state);
+
+            double ratio = study.parameters.getYearsWeight()[y]
+                           / study.parameters.getYearsWeightSum();
+            simulation_->dynamicAggregationAllYears.mergeAnother(dynamicAggregationForTheYear,
+                                                                 ratio);
         };
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
@@ -357,6 +364,7 @@ void ISimulation<ImplementationType>::run()
             pDurationCollector("mc_years")
               << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
         }
+        ImplementationType::dynamicAggregationAllYears.writeAllResults(study.folderOutput);
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         TSGenerator::DestroyAll(study);

@@ -152,10 +152,6 @@ void SetData::mergeAnother(const SetData& toMerge, double ratio)
 DynamicAggregation::DynamicAggregation(Data::Study& study):
     study_(study)
 {
-}
-
-void DynamicAggregation::initializeSetsData()
-{
     for (const auto& set: study_.setsOfAreas)
     {
         setsData_.try_emplace(set.first, *set.second);

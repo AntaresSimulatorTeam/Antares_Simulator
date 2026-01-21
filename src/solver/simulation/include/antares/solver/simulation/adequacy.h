@@ -70,6 +70,8 @@ public:
     //! Prepro only
     bool preproOnly = false;
 
+    Solver::Variable::DynamicAggregation dynamicAggregationAllYears;
+
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
     std::string getSimulationTableHeader() const;

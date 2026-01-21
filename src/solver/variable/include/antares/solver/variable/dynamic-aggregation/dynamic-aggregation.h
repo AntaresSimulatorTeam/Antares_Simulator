@@ -63,7 +63,6 @@ class DynamicAggregation
 public:
     explicit DynamicAggregation(Data::Study& study);
 
-    void initializeSetsData();
     void addResultsToSets(const PROBLEME_HEBDO& pb);
     void mergeAnother(const DynamicAggregation& toMerge, double ratio);
 

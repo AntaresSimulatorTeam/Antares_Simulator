@@ -35,6 +35,7 @@ Adequacy::Adequacy(Data::Study& study,
                    IResultWriter& resultWriter,
                    Simulation::ISimulationObserver& simulationObserver):
     study(study),
+    dynamicAggregationAllYears(study),
     resultWriter(resultWriter),
     simulationObserver_(simulationObserver),
     simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
