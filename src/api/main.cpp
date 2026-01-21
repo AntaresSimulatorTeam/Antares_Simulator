@@ -90,7 +90,7 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
 {
     auto name = problemName(id);
 
-    IO::Outputs::MPSGenerator mpsGenerator(*weekly.linearProblem, name);
+    IO::Outputs::MPSGenerator mpsGenerator(*weekly.linearProblem, name + ".mps");
     const std::string mps = mpsGenerator.run();
 
     logs.info() << "Printing problem: " << name << '\n';
