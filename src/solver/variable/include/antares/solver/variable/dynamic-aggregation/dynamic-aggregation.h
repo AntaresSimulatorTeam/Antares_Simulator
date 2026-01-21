@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/solver/variable/storage/minmax-data.h"
 
 namespace Antares::Solver::Variable
 {
@@ -34,7 +35,7 @@ public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
-    void mergeAnother(const SetData& toMerge, double ratio);
+    void mergeAnother(const SetData& toMerge, double ratio, Data::Study& study);
 
     // TODO rm tests
     void writeResultsToFolder(const std::string& folderName) const;
@@ -56,6 +57,9 @@ protected:
     std::set<std::string> stsGroupNames_;
     std::map<std::string, unsigned int> stsGroupToNumbers_;
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
+
+    R::AllYears::MinMaxData min;
+    R::AllYears::MinMaxData max;
 };
 
 class DynamicAggregation

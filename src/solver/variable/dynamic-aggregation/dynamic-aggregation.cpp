@@ -66,6 +66,9 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
         stsWithdrawalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
         stsLevelResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
     }
+
+    min.resetInf();
+    max.resetSup();
 }
 
 void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
@@ -122,7 +125,7 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-void SetData::mergeAnother(const SetData& toMerge, double ratio)
+void SetData::mergeAnother(const SetData& toMerge, double ratio, Data::Study& study)
 {
     for (unsigned int i = 0; i < thermalResults_.size(); i++)
     {
@@ -147,6 +150,16 @@ void SetData::mergeAnother(const SetData& toMerge, double ratio)
             stsLevelResults_[i][h] += toMerge.stsLevelResults_[i][h] * ratio;
         }
     }
+
+    IntermediateValues values;
+    values.initializeFromStudy(study);
+    for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
+    {
+        values.hour[h] = toMerge.thermalResults_[0][h] * ratio;
+    }
+    values.computeStatisticsForTheCurrentYear();
+    min.mergeInf(0, values);
+    max.mergeSup(0, values);
 }
 
 DynamicAggregation::DynamicAggregation(Data::Study& study):
@@ -174,7 +187,7 @@ void DynamicAggregation::mergeAnother(const DynamicAggregation& toMerge, double 
         if (toMergeSetDataIt != toMerge.setsData_.end())
         {
             const SetData& toMergeSetData = toMergeSetDataIt->second;
-            setData.mergeAnother(toMergeSetData, ratio);
+            setData.mergeAnother(toMergeSetData, ratio, study_);
         }
     }
 }
@@ -207,7 +220,7 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         {
             for (size_t h = 0; h < thermalResults_[index].size(); ++h)
             {
-                outFile << thermalResults_[index][h] << std::endl;
+                outFile << min.hourly[h].value << std::endl;
             }
             outFile.close();
         }
