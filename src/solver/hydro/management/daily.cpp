@@ -384,7 +384,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 dayMonth++;
             }
 
-            H2O_J_MPSolver_Solve(&problem, 0); // TODO
+            H2O_J_MPSolver_Solve(&problem); // TODO check
             switch (problem.ResultatsValides)
             {
             case OUI:

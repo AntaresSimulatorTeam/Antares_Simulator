@@ -12,11 +12,6 @@
 
 #include "ortools/linear_solver/linear_solver.h"
 
-namespace
-{
-const int NbJoursDUnProbleme[] = {28, 29, 30, 31};
-}
-
 namespace DoneesOptimisationJournaliere
 {
 using operations_research::MPObjective;
@@ -24,20 +19,11 @@ using operations_research::MPSolver;
 using operations_research::MPVariable;
 
 H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* DonneesMensuelles,
-                                                        int NumeroDeProbleme,
                                                         MPSolver& solver)
 {
+    const int NbPdt = DonneesMensuelles->NombreDeJoursDuMois;
+
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-
-    const int NbPdt = NbJoursDUnProbleme[NumeroDeProbleme];
-
-    PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
-                                                                  .ProblemeLineairePartieFixe
-                                                                    [NumeroDeProbleme];
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
-
-    const int NombreDeVariables = ProblemeLineairePartieFixe.NombreDeVariables;
 
     H2O_J_MPSOLVER_VARIABLES vars(NbPdt);
 
@@ -161,23 +147,15 @@ void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
     }
 }
 
-void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES* DonneesMensuelles,
-                                    int NumeroDeProbleme,
+bool H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES* DonneesMensuelles,
                                     MPSolver& solver,
                                     const H2O_J_MPSOLVER_VARIABLES& variables)
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
-
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE& ProblemeLineairePartieVariable
-      = ProblemeHydraulique.ProblemeLineairePartieVariable[NumeroDeProbleme];
-
     const auto status = solver.Solve();
 
     if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
     {
-        DonneesMensuelles->ResultatsValides = OUI;
-        ProblemeLineairePartieVariable.ExistenceDUneSolution = OUI_SPX;
-
         // Recover turbine values directly from the corresponding MPVariables.
         const int NbPdt = DonneesMensuelles->NombreDeJoursDuMois;
         for (int pdt = 0; pdt < NbPdt; ++pdt)
@@ -185,15 +163,15 @@ void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES* DonneesMensuelles,
             const double value = variables.turbine[pdt]->solution_value();
             DonneesMensuelles->Turbine[pdt] = value;
         }
+        return true;
     }
     else
     {
-        DonneesMensuelles->ResultatsValides = NON;
-        ProblemeLineairePartieVariable.ExistenceDUneSolution = NON_SPX;
+        return false;
     }
 }
 
-void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
+void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles)
 {
     if (!DonneesMensuelles)
     {
@@ -202,21 +180,21 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDePro
 
     // Create a fresh MPSolver instance for the daily problem. We use the
     // Sirius LP backend by default as requested.
-    MPSolver solver("hydro_daily", MPSolver::SIRIUS_LINEAR_PROGRAMMING);
+
+    MPSolver* solver = MPSolver::CreateSolver("sirius");
 
     // 1) Create variables and wire them to the legacy data structures.
-    H2O_J_MPSOLVER_VARIABLES vars = H2O_J_MPSolver_CreateVariables(DonneesMensuelles,
-                                                                   NumeroDeProbleme,
-                                                                   solver);
+    H2O_J_MPSOLVER_VARIABLES vars = H2O_J_MPSolver_CreateVariables(DonneesMensuelles, *solver);
 
     // 2) Set objective coefficients.
-    H2O_J_MPSolver_SetObjectiveCoefficients(vars, solver);
+    H2O_J_MPSolver_SetObjectiveCoefficients(vars, *solver);
 
     // 3) Create constraints.
-    H2O_J_MPSolver_CreateConstraints(DonneesMensuelles, vars, solver);
+    H2O_J_MPSolver_CreateConstraints(DonneesMensuelles, vars, *solver);
 
     // 4) Solve and recover the solution into DONNEES_MENSUELLES.
-    H2O_J_MPSolver_SolveAndRecover(DonneesMensuelles, NumeroDeProbleme, solver, vars);
+    H2O_J_MPSolver_SolveAndRecover(DonneesMensuelles, *solver, vars);
+    delete solver;
 }
 
 } // namespace DoneesOptimisationJournaliere

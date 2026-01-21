@@ -16,6 +16,16 @@ DONNEES_MENSUELLES H2O_J_Instanciation()
     DonneesMensuelles.TurbineMin.assign(maxProblemSize, 0.);
     DonneesMensuelles.TurbineCible.assign(maxProblemSize, 0.);
     DonneesMensuelles.Turbine.assign(maxProblemSize, 0.);
+
+    PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles.ProblemeHydraulique;
+
+    // TODO Ok this is stupid
+    ProblemeHydraulique.NombreDeProblemes = 4;
+    int NombreDeProblemes = ProblemeHydraulique.NombreDeProblemes;
+
+    ProblemeHydraulique.ProblemeLineairePartieFixe.resize(NombreDeProblemes);
+    ProblemeHydraulique.ProblemeLineairePartieVariable.resize(NombreDeProblemes);
+
     return DonneesMensuelles;
 }
 } // namespace DoneesOptimisationJournaliere

@@ -16,7 +16,6 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void);
 // OR-Tools MPSolver helpers for the daily hydro problem.
 // Build the OR-Tools variables used by the daily heuristic.
 H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES*,
-                                                        int,
                                                         operations_research::MPSolver&);
 
 // Objective builder: minimize the sum of xi[t] and the two
@@ -31,8 +30,7 @@ void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES*,
                                       const H2O_J_MPSOLVER_VARIABLES&,
                                       operations_research::MPSolver&);
 
-void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,
-                                    int,
+bool H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,
                                     operations_research::MPSolver&,
                                     const H2O_J_MPSOLVER_VARIABLES&);
 
@@ -42,7 +40,7 @@ void H2O_J_MPSolver_SolveAndRecover(DONNEES_MENSUELLES*,
 //  - set objective coefficients
 //  - create constraints
 //  - solve and recover solution values into DONNEES_MENSUELLES.
-void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES*, int);
+void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES*);
 } // namespace DoneesOptimisationJournaliere
 
 #endif /* __SOLVER_H2O_J_FONCTIONS__ */
