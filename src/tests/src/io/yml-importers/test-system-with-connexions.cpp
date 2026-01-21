@@ -13,6 +13,7 @@ using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
 using namespace Antares::ModelerStudy;
 
+BOOST_AUTO_TEST_SUITE(readYamlInput)
 // This yaml lib contains only a port type.
 // Note that : an empty model is added to prevent parser from failing when reading the lib
 static const auto onlyPortTypeYmlLib = R"(
@@ -234,3 +235,4 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     BOOST_CHECK_EQUAL(component_NL->areaConnectedToPort("injection_port").value(),
                       "some_other_area");
 }
+BOOST_AUTO_TEST_SUITE_END()

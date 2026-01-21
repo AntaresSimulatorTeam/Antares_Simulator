@@ -37,10 +37,11 @@ bool operator==(const std::optional<AreaConnection>& a, const std::optional<Area
     {
         return false;
     }
-    
+
     if (a.has_value())
     {
-        return *a == *b;
+        return a->injection == b->injection && a->to_area_bound == b->to_area_bound
+               && a->from_area_bound == b->from_area_bound;
     }
 
     return true; // both are std::nullopt
