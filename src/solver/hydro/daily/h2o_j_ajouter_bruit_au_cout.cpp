@@ -6,6 +6,11 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
+namespace
+{
+const int NbJoursDUnProbleme[] = {28, 29, 30, 31};
+}
+
 namespace DoneesOptimisationJournaliere
 {
 void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
@@ -28,7 +33,7 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES& donnesMensuelles)
                                                              * Antares::Constants::noiseAmplitude;
         }
 
-        for (int pdt = 0; pdt < donnesMensuelles.ProblemeHydraulique.NbJoursDUnProbleme[i]; pdt++)
+        for (int pdt = 0; pdt < NbJoursDUnProbleme[i]; pdt++)
         {
             ProblemeLineairePartieFixe[i]
               .CoutLineaire[CorrespondanceDesVariables[i].NumeroDeLaVariableXi[pdt]]

@@ -12,6 +12,11 @@
 
 #include "ortools/linear_solver/linear_solver.h"
 
+namespace
+{
+const int NbJoursDUnProbleme[] = {28, 29, 30, 31};
+}
+
 namespace DoneesOptimisationJournaliere
 {
 using operations_research::MPObjective;
@@ -24,7 +29,7 @@ H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* Donn
 {
     PROBLEME_HYDRAULIQUE& ProblemeHydraulique = DonneesMensuelles->ProblemeHydraulique;
 
-    const int NbPdt = ProblemeHydraulique.NbJoursDUnProbleme[NumeroDeProbleme];
+    const int NbPdt = NbJoursDUnProbleme[NumeroDeProbleme];
 
     PROBLEME_LINEAIRE_PARTIE_FIXE& ProblemeLineairePartieFixe = ProblemeHydraulique
                                                                   .ProblemeLineairePartieFixe
@@ -200,8 +205,9 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDePro
     MPSolver solver("hydro_daily", MPSolver::SIRIUS_LINEAR_PROGRAMMING);
 
     // 1) Create variables and wire them to the legacy data structures.
-    H2O_J_MPSOLVER_VARIABLES vars
-      = H2O_J_MPSolver_CreateVariables(DonneesMensuelles, NumeroDeProbleme, solver);
+    H2O_J_MPSOLVER_VARIABLES vars = H2O_J_MPSolver_CreateVariables(DonneesMensuelles,
+                                                                   NumeroDeProbleme,
+                                                                   solver);
 
     // 2) Set objective coefficients.
     H2O_J_MPSolver_SetObjectiveCoefficients(vars, solver);

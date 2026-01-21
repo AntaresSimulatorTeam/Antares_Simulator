@@ -1,17 +1,7 @@
 project(hydro)
 
 set(SRC_EXT_SOLVER_H2O_DAILY
-        daily/h2o_j_construire_les_contraintes.cpp
-        daily/h2o_j_construire_les_variables.cpp
-        include/antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h
-        include/antares/solver/hydro/daily/h2o_j_donnees_optimisation.h
-        include/antares/solver/hydro/daily/h2o_j_fonctions.h
-        daily/h2o_j_initialiser_les_bornes_des_variables.cpp
-        daily/h2o_j_initialiser_les_second_membre.cpp
         daily/h2o_j_instanciation.cpp
-        daily/h2o_j_optimiser_un_mois.cpp
-        daily/h2o_j_resoudre_le_probleme_lineaire.cpp
-        daily/h2o_j_ajouter_bruit_au_cout.cpp
         daily/h2o_j_mpsolver.cpp
 )
 

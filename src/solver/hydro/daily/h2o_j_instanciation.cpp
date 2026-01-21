@@ -4,11 +4,18 @@
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
+constexpr int maxProblemSize = 31;
+
 namespace DoneesOptimisationJournaliere
 {
 DONNEES_MENSUELLES H2O_J_Instanciation()
 {
     DONNEES_MENSUELLES DonneesMensuelles{};
+
+    DonneesMensuelles.TurbineMax.assign(maxProblemSize, 0.);
+    DonneesMensuelles.TurbineMin.assign(maxProblemSize, 0.);
+    DonneesMensuelles.TurbineCible.assign(maxProblemSize, 0.);
+    DonneesMensuelles.Turbine.assign(maxProblemSize, 0.);
     return DonneesMensuelles;
 }
 } // namespace DoneesOptimisationJournaliere
