@@ -9,8 +9,8 @@
 
 #include <antares/solver/hydro/probleme_spx_wrapper.h>
 
-#include "spx_definition_arguments.h"
-
+// Legacy constant still used to translate infinite bounds into
+// OR-Tools infinities.
 #define LINFINI 1.e+80
 
 namespace operations_research
@@ -58,27 +58,19 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
        de renseigner directement les structures de description du reseau avec les
        resultats contenus dans X */
     std::vector<double*> AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    /* Resultat */
+    /* Resultat (optional: keeps the original layout but is no longer
+       required by the MPSolver implementation). */
     std::vector<double> X;
-    /* En Entree ou en Sortie */
-    int ExistenceDUneSolution{NON_SPX}; /* En sortie, vaut :
-                              OUI_SPX s'il y a une solution,
-                                                      NON_SPX s'il n'y a pas de solution
-                              admissible SPX_ERREUR_INTERNE si probleme a l'execution
-                              (saturation memoire par exemple), et dans ce cas il n'y a pas de
-                              solution SPX_MATRICE_DE_BASE_SINGULIERE si on n'a pas pu
-                              construire de matrice de base reguliere, et dans ce cas il n'y a
-                              pas de solution
-                                             */
 
-    std::vector<int>
-      PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<int>
-      ComplementDeLaBase; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
-    std::vector<double>
-      CoutsReduits; /* Vecteur a passer au Simplexe pour recuperer les couts reduits */
-    std::vector<double> CoutsMarginauxDesContraintes; /* Vecteur a passer au Simplexe pour recuperer
-                                         les couts marginaux */
+    // 1 if a solution was found with MPSolver, 0 otherwise.
+    int ExistenceDUneSolution{0};
+
+    // Basis and marginal information are not used any more by the
+    // daily heuristic and are kept only for backward compatibility.
+    std::vector<int> PositionDeLaVariable;
+    std::vector<int> ComplementDeLaBase;
+    std::vector<double> CoutsReduits;
+    std::vector<double> CoutsMarginauxDesContraintes;
 };
 
 /* Les correspondances fixes des contraintes */

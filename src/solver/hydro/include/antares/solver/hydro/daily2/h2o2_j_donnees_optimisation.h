@@ -5,6 +5,7 @@
 #define __SOLVER_H2O2_J_STRUCTURE_INTERNE__
 
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <antares/solver/hydro/probleme_spx_wrapper.h>
 #include <antares/study/study.h>
 
 #include "../daily/h2o_j_donnees_optimisation.h"

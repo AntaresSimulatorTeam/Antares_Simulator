@@ -8,6 +8,9 @@ namespace DoneesOptimisationJournaliere
 {
 void H2O_J_ResoudreLeProblemeLineaire(DONNEES_MENSUELLES* DonneesMensuelles, int NumeroDeProbleme)
 {
-    return;
+    // Delegate the actual optimisation work to the OR-Tools based
+    // MPSolver helper. This keeps the public API unchanged while
+    // moving the implementation away from the legacy SPX layer.
+    H2O_J_MPSolver_Solve(DonneesMensuelles, NumeroDeProbleme);
 }
 } // namespace DoneesOptimisationJournaliere
