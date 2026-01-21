@@ -105,8 +105,6 @@ void H2O_J_MPSolver_SetObjectiveCoefficients(const H2O_J_MPSOLVER_VARIABLES& var
     // Cost structure mirrors the legacy instanciation:
     // - objective is the sum of all xi[t]
     // - plus the two global deviation variables xiPlus and xiMoins.
-    const int NbPdt = static_cast<int>(variables.xi.size());
-
     for (const auto* xi: variables.xi)
     {
         objective->SetCoefficient(xi, 1.0);
