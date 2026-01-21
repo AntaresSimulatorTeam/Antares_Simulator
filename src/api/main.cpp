@@ -95,9 +95,9 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
 
     logs.info() << "Printing problem: " << name << '\n';
 
-    logs.info() << "******************************** BEGIN MPS ********************************";
-    logs.info() << '\n' << mps;
-    logs.info() << "******************************** END MPS ********************************";
+    // logs.info() << "******************************** BEGIN MPS ********************************";
+    // logs.info() << '\n' << mps;
+    // logs.info() << "******************************** END MPS ********************************";
     if (!outputPath.empty())
     {
         static std::once_flag once;
@@ -139,7 +139,7 @@ void printProblems(const ApiOptions& options)
             logs.info() << " week: " << week << '\n';
             const WeeklyProblemId id = {year, week};
             auto weekly = getter.getWeeklyData(id, true);
-            printWeekLPData(constant, weekly);
+            // printWeekLPData(constant, weekly);
             if (options.writeMps)
             {
                 writeWeekMPS(weekly, options.outputFolder, id);

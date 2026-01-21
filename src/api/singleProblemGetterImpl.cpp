@@ -278,7 +278,6 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
         {
             double initialLevel = hydroLevels.at(area)[week];
             pb_.previousSimulationFinalLevel[areaIndex] = initialLevel;
-            // pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
         }
     }
 
