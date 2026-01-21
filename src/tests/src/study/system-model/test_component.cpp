@@ -428,12 +428,13 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_
                    .withPortFieldDefinitions(std::move(portFieldDefs))
                    .build();
 
-    // Make a component with the model
+    // Make a component from the model
     auto component = component_builder.withId("my-component")
                        .withModel(&model)
                        .withScenarioGroupId("scenario-group")
                        .build();
 
+    // Now checking what we have
     BOOST_CHECK(not component.areaConnectedToPort("balance-port").has_value());
 
     std::string errMsg = "Cannot connect area 'some-area' to port 'balance-port' of component "
@@ -473,12 +474,13 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
                    .withPortFieldDefinitions(std::move(portFieldDefs))
                    .build();
 
-    // Make a component with the model
+    // Make a component from the model
     auto component = component_builder.withId("my-component")
                        .withModel(&model)
                        .withScenarioGroupId("scenario-group")
                        .build();
 
+    // Now checking what we have
     BOOST_CHECK(not component.areaConnectedToPort("balance-port").has_value());
     component.addAreaConnection("balance-port", "some-area");
     BOOST_CHECK(component.areaConnectedToPort("balance-port").has_value());
