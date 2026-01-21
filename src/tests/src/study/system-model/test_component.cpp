@@ -301,8 +301,8 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_unexisting_port)
     BOOST_CHECK_EXCEPTION(
       component.addAreaConnection("wrongPort", "area1"),
       std::invalid_argument,
-      checkMessage("Cannot connect area \"area1\" to port \"wrongPort\" of component "
-                   "\"myComponent\": port does not exist in the component's model \"myModel\""));
+      checkMessage("Cannot connect area 'area1' to port 'wrongPort' of component "
+                   "'myComponent': port does not exist in the component's model 'myModel'"));
     BOOST_CHECK(component.portToAreaConnections().empty());
 }
 
@@ -326,8 +326,8 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_port_with_no_area_connection_f
       component.addAreaConnection("portNoAC", "area1"),
       std::invalid_argument,
       checkMessage(
-        "Cannot connect area \"area1\" to port \"portNoAC\" of component \"myComponent\": port "
-        "type \"portType1\" has no area-connection field ID defined"));
+        "Cannot connect area 'area1' to port 'portNoAC' of component 'myComponent': port "
+        "type 'portType1' has no area-connection field ID defined"));
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portNoAC").has_value(), false);
     BOOST_CHECK(component.portToAreaConnections().empty());
 }
@@ -351,9 +351,8 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
     BOOST_CHECK_EXCEPTION(
       component.addAreaConnection("portACNoDef", "area1"),
       std::invalid_argument,
-      checkMessage(
-        "Cannot connect area \"area1\" to port \"portACNoDef\" of component \"myComponent\": "
-        "port field \"field2\" is not defined in the component's model \"myModel\""));
+      checkMessage("Cannot connect area 'area1' to port 'portACNoDef' of component 'myComponent': "
+                   "port field 'field2' is not defined in the component's model 'myModel'"));
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACNoDef").has_value(), false);
     BOOST_CHECK(component.portToAreaConnections().empty());
 }
@@ -388,8 +387,8 @@ BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
     BOOST_CHECK_EXCEPTION(component.addAreaConnection("portACDef", "area2"),
                           std::invalid_argument,
                           checkMessage(
-                            "Cannot connect area \"area2\" to port \"portACDef\" of component "
-                            "\"myComponent\": port is already connected to \"area1\""));
+                            "Cannot connect area 'area2' to port 'portACDef' of component "
+                            "'myComponent': port is already connected to 'area1'"));
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").has_value(), true);
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACDef").value(), "area1");
     BOOST_CHECK_EQUAL(component.portToAreaConnections().size(), 1);

@@ -142,31 +142,31 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
 
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
-    std::string exceptionPrefix = "Cannot connect area \"" + areaId + "\" to port \"" + localPortId
-                                  + "\" of component \"" + data_.id + "\": ";
+    std::string exceptionPrefix = "Cannot connect area '" + areaId + "' to port '" + localPortId
+                                  + "' of component '" + data_.id + "': ";
     if (!data_.model->Ports().contains(localPortId))
     {
         throw std::invalid_argument(exceptionPrefix
-                                    + "port does not exist in the component's model \""
-                                    + data_.model->Id() + "\"");
+                                    + "port does not exist in the component's model '"
+                                    + data_.model->Id() + "'");
     }
     Port port = getModel()->Ports().at(localPortId);
     if (!port.Type().areaConnection().has_value())
     {
-        throw std::invalid_argument(exceptionPrefix + "port type \"" + port.Type().Id()
-                                    + "\" has no area-connection field ID defined");
+        throw std::invalid_argument(exceptionPrefix + "port type '" + port.Type().Id()
+                                    + "' has no area-connection field ID defined");
     }
     PortFieldKey key(localPortId, port.Type().areaConnection()->injection);
     if (!data_.model->PortFieldDefinitions().contains(key))
     {
         throw std::invalid_argument(
-          exceptionPrefix + "port field \"" + port.Type().areaConnection()->injection
-          + "\" is not defined in the component's model \"" + data_.model->Id() + "\"");
+          exceptionPrefix + "port field '" + port.Type().areaConnection()->injection
+          + "' is not defined in the component's model '" + data_.model->Id() + "'");
     }
     if (portToAreaConnections_.contains(localPortId))
     {
-        throw std::invalid_argument(exceptionPrefix + "port is already connected to \""
-                                    + portToAreaConnections_.at(localPortId) + "\"");
+        throw std::invalid_argument(exceptionPrefix + "port is already connected to '"
+                                    + portToAreaConnections_.at(localPortId) + "'");
     }
     portToAreaConnections_[localPortId] = areaId;
 }
