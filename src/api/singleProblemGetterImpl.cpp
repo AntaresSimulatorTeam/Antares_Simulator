@@ -147,6 +147,8 @@ void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path
                                       nullptr, // not needed
                                       gDurationCollector);
     OPT_ExportStructures(&pb_, *writer);
+    // Ensure study metadata is exported (about-the-study directory)
+    study_->saveAboutTheStudy(*writer);
 }
 
 void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)

@@ -345,4 +345,126 @@ BOOST_AUTO_TEST_CASE(single_link_structure_files)
         BOOST_CHECK_EQUAL(content, expected);
     }
 }
+
+BOOST_AUTO_TEST_CASE(about_the_study_directory_structure)
+{
+    StudyBuilder builder;
+
+    auto* a1 = builder.addAreaToStudy("AREA1");
+    auto* a2 = builder.addAreaToStudy("AREA2");
+    auto link = AreaAddLinkBetweenAreas(a1, a2);
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+
+    // Create the folderSettings directory structure with generaldata.ini
+    auto folderSettings = std::filesystem::temp_directory_path() / "study" / "settings";
+
+    // In-memory studies normally have no input files
+    study->folderSettings = folderSettings;
+
+    std::filesystem::create_directories(folderSettings);
+    std::ofstream settingsFile(folderSettings / "generaldata.ini");
+    settingsFile << "; Test settings file\n";
+    settingsFile << "general.mode = 0\n";
+    settingsFile.close();
+
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+
+    auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
+    getter.writeStudyDescriptionFiles(output_dir);
+
+    // Verify about-the-study directory exists
+    BOOST_CHECK(std::filesystem::exists(output_dir / "about-the-study"));
+    BOOST_CHECK(std::filesystem::is_directory(output_dir / "about-the-study"));
+
+    // Verify key files exist
+    BOOST_CHECK(std::filesystem::exists(output_dir / "about-the-study" / "study.ini"));
+    BOOST_CHECK(std::filesystem::exists(output_dir / "about-the-study" / "parameters.ini"));
+    BOOST_CHECK(std::filesystem::exists(output_dir / "info.antares-output"));
+}
+
+BOOST_AUTO_TEST_CASE(about_the_study_area_names)
+{
+    StudyBuilder builder;
+
+    auto* a1 = builder.addAreaToStudy("POWER_PLANT_A");
+    auto* a2 = builder.addAreaToStudy("GRID_B");
+    auto* a3 = builder.addAreaToStudy("INDUSTRIAL_ZONE_C");
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+
+    auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
+    getter.writeStudyDescriptionFiles(output_dir);
+
+    // Check areas.txt contains all area names
+    std::ifstream areas(output_dir / "about-the-study" / "areas.txt");
+    BOOST_REQUIRE(areas);
+    std::string content((std::istreambuf_iterator<char>(areas)), std::istreambuf_iterator<char>());
+
+    BOOST_CHECK(content.find("POWER_PLANT_A") != std::string::npos);
+    BOOST_CHECK(content.find("GRID_B") != std::string::npos);
+    BOOST_CHECK(content.find("INDUSTRIAL_ZONE_C") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(about_the_study_links_content)
+{
+    StudyBuilder builder;
+
+    auto* a1 = builder.addAreaToStudy("AREA_A");
+    auto* a2 = builder.addAreaToStudy("AREA_B");
+    auto link = AreaAddLinkBetweenAreas(a1, a2);
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+
+    auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
+    getter.writeStudyDescriptionFiles(output_dir);
+
+    // Check links.txt contains link information
+    std::ifstream links(output_dir / "about-the-study" / "links.txt");
+    BOOST_REQUIRE(links);
+    std::string content((std::istreambuf_iterator<char>(links)), std::istreambuf_iterator<char>());
+
+    BOOST_CHECK(content.find("area_a") != std::string::npos);
+    BOOST_CHECK(content.find("area_b") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(about_the_study_parameters_file)
+{
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 7);
+    builder.setNumberMCyears(1);
+
+    auto* area = builder.addAreaToStudy("TEST_AREA");
+    area->hydro.reservoirManagement = false;
+
+    auto study = std::move(builder.study);
+    study->initializeRuntimeInfos();
+
+    // Create the folderSettings directory structure with generaldata.ini
+    auto folderSettings = std::filesystem::temp_directory_path() / "study" / "settings";
+    std::filesystem::create_directories(folderSettings);
+    std::ofstream settingsFile(folderSettings / "generaldata.ini");
+    settingsFile << "; Test settings file\n";
+    settingsFile << "general.mode = 0\n";
+    settingsFile.close();
+
+    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+
+    auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
+    getter.writeStudyDescriptionFiles(output_dir);
+
+    // Check parameters.ini file exists and is readable
+    std::ifstream params(output_dir / "about-the-study" / "parameters.ini");
+    BOOST_REQUIRE(params);
+    std::string content((std::istreambuf_iterator<char>(params)), std::istreambuf_iterator<char>());
+
+    // Parameters file should not be empty
+    BOOST_CHECK(!content.empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

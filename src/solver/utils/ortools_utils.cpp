@@ -205,26 +205,6 @@ void removeTemporaryFile(const std::string& tmpPath)
     }
 }
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter& writer,
-                                                   const std::string& filename)
-{
-    // 0. Logging file name
-    logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
-
-    // 1. Determine filename
-    const auto tmpPath = generateTempPath(filename);
-
-    // 2. Write MPS to temporary file
-    solver->Write(tmpPath);
-
-    // 3. Copy to real output using generic writer
-    writer.addEntryFromFile(filename, tmpPath);
-
-    // 4. Remove tmp file
-    removeTemporaryFile(tmpPath);
-}
-
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
     auto status = solver->Solve(params);

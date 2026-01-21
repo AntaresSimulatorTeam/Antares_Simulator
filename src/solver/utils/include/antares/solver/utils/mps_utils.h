@@ -7,6 +7,11 @@
 
 #include "ortools_utils.h"
 
+namespace Antares::Optimisation::LinearProblemApi
+{
+class ILinearProblem;
+}
+
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Antares::Optimization;
@@ -32,15 +37,16 @@ protected:
     uint current_optim_number_ = 0;
 };
 
-class fullOrToolsMPSwriter: public I_MPS_writer
+class MPSwriter: public I_MPS_writer
 {
 public:
-    virtual ~fullOrToolsMPSwriter() = default;
-    fullOrToolsMPSwriter(MPSolver* solver, uint currentOptimNumber);
+    virtual ~MPSwriter() = default;
+    MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+              uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
-    MPSolver* solver_ = nullptr;
+    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
 };
 
 class nullMPSwriter: public I_MPS_writer
@@ -62,7 +68,7 @@ public:
     mpsWriterFactory(Data::mpsExportStatus exportMPS,
                      bool exportMPSOnError,
                      int current_optim_number,
-                     MPSolver* solver);
+                     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem);
 
     std::unique_ptr<I_MPS_writer> create();
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
@@ -75,6 +81,6 @@ private:
     // Member data...
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    MPSolver* solver_ = nullptr;
+    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
     uint current_optim_number_;
 };
