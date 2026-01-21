@@ -5,6 +5,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <numeric>
+#include <vector>
+
 #include <boost/test/unit_test.hpp>
 
 #include "antares/antares/constants.h"
@@ -122,6 +125,45 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
     BOOST_CHECK_CLOSE(intermediate.month[0], (10. + 20.) / (31 * 24), TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.day[0], (10. + 20.) / 24, TOLERANCE);
 }
+
+BOOST_FIXTURE_TEST_CASE(hourToWeekAggregationWithStatistics, FullYearStudyFixture)
+{
+    Antares::Solver::Variable::IntermediateValues intermediate;
+    intermediate.initializeFromStudy(*study);
+
+    const auto& range = study->runtime.rangeLimits;
+    const auto& calendar = study->calendarOutput;
+
+    const unsigned firstDay = range.day[Antares::Data::rangeBegin];
+    const unsigned lastDay = range.day[Antares::Data::rangeEnd];
+    const unsigned firstWeekIndex = calendar.days[firstDay].week;
+
+    unsigned hourIndex = range.hour[Antares::Data::rangeBegin];
+    double expectedWeekSum = 0.0;
+
+    for (unsigned day = firstDay; day <= lastDay; ++day)
+    {
+        const bool isFirstWeek = (calendar.days[day].week == firstWeekIndex);
+
+        for (unsigned h = 0; h != HOURS_PER_DAY; ++h)
+        {
+            const double value = isFirstWeek ? 1.0 : 0.0;
+            intermediate[hourIndex] = value;
+            expectedWeekSum += isFirstWeek ? value : 0.0;
+            ++hourIndex;
+        }
+    }
+
+    intermediate.computeStatisticsForTheCurrentYear();
+
+    const unsigned firstMonthIndex = range.month[Antares::Data::rangeBegin];
+
+    BOOST_CHECK_CLOSE(intermediate.day[firstDay], static_cast<double>(HOURS_PER_DAY), TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.week[firstWeekIndex], expectedWeekSum, TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.month[firstMonthIndex], expectedWeekSum, TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.year, expectedWeekSum, TOLERANCE);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(aggregation)

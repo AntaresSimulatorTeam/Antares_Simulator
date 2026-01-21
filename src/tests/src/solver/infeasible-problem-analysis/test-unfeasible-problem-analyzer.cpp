@@ -328,15 +328,13 @@ struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
 struct NullWriterExtension final: Solver::NullResultWriter
 {
     // hack to read variables and constraints names
-    void addEntryFromFile(const std::filesystem::path& entryPath,
-                          const std::filesystem::path&) override
+    void addEntryFromBuffer(const std::filesystem::path& entryPath,
+                            std::string& mpsToWrite) override
     {
-        const std::ifstream mps(std::filesystem::temp_directory_path() / entryPath);
-        mpsContent.str("");
-        mpsContent << mps.rdbuf();
+        mps = mpsToWrite;
     }
 
-    std::ostringstream mpsContent;
+    std::string mps;
 };
 enum class ProblemFeasibility
 {
@@ -461,24 +459,26 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
                                             writer,
                                             &simulationTableCsv);
 
-    const auto expectedMps = R"(* Number of variables:   1
+    const auto expectedMps = R"(* Antares Simulator
+* Number of variables: 1
 * Number of constraints: 2
-NAME          Pb Solve
+NAME problem-myTest--optim-nb-1.mps
 ROWS
- N  OBJECTIF
- L  c0
- L  c1
+    N  OBJ
+    L  c0
+    L  c1
 COLUMNS
-    x0  c0  1.0000000000
-    x0  c1  1.0000000000
+    x0  c0  1
+    x0  c1  1
 RHS
-    RHSVAL    c0  5.000000000
-    RHSVAL    c1  10.000000000
+    RHS1  c0  5
+    RHS1  c1  10
+RANGES
 BOUNDS
- UP BNDVALUE  x0  10.000000000
+    UP BND1 x0 10
 ENDATA
 )";
-    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
+    BOOST_CHECK_EQUAL(expectedMps, writer.mps);
 }
 
 /**
@@ -522,24 +522,26 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer,
                                             &simulationTableCsv);
-    const auto expectedMps = R"(* Number of variables:   1
+    const auto expectedMps = R"(* Antares Simulator
+* Number of variables: 1
 * Number of constraints: 2
-NAME          Pb Solve
+NAME problem-myTest--optim-nb-1.mps
 ROWS
- N  OBJECTIF
- L  firstConstraint
- G  secondConstraint
+    N  OBJ
+    L  firstConstraint
+    G  secondConstraint
 COLUMNS
-    var  firstConstraint  1.0000000000
-    var  secondConstraint  1.0000000000
+    var  firstConstraint  1
+    var  secondConstraint  1
 RHS
-    RHSVAL    firstConstraint  5.000000000
-    RHSVAL    secondConstraint  10.000000000
+    RHS1  firstConstraint  5
+    RHS1  secondConstraint  10
+RANGES
 BOUNDS
- UP BNDVALUE  var  10.000000000
+    UP BND1 var 10
 ENDATA
 )";
-    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
+    BOOST_CHECK_EQUAL(expectedMps, writer.mps);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
