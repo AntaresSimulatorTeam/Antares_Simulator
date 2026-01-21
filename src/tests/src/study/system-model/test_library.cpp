@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(port_type_basic)
     PortField field1("field1");
     PortField field2("field2");
     std::vector fields = {field1, field2};
-    PortType portType("myId", std::move(fields), "");
+    PortType portType("myId", std::move(fields));
     BOOST_CHECK_EQUAL(portType.Id(), "myId");
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "field1");
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
     PortField field1("firstField");
     PortField field2("secondField");
     std::vector fields = {field1, field2};
-    PortType portType("portTypeId", std::move(fields), "secondField");
+    PortType portType("portTypeId", std::move(fields), {"secondField", "", ""});
     BOOST_CHECK_EQUAL(portType.Id(), "portTypeId");
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "firstField");
@@ -198,12 +198,33 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
     {
         PortField field1("firstField");
         std::vector fields = {field1};
-        return PortType("portTypeId", std::move(fields), "secondField");
+        return PortType("portTypeId", std::move(fields), {"secondField", "", ""});
     };
-    BOOST_CHECK_EXCEPTION(shouldThrow(),
-                          std::invalid_argument,
-                          checkMessage("Field \"secondField\" selected for area connections was "
-                                       "not defined in PortType \"portTypeId\"."));
+    std::string err_msg = "In PortType portTypeId, area connexion field 'secondField' undefined.";
+    BOOST_CHECK_EXCEPTION(shouldThrow(), std::invalid_argument, checkMessage(err_msg));
 }
 
+BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_last_field_undefined__exception_raised)
+{
+    auto shouldThrow = []
+    {
+        std::vector fields = {PortField("field-1"), PortField("field-2")};
+        return PortType("portTypeId", std::move(fields), {"field-1", "field-2", "field-3"});
+    };
+    std::string err_msg = "In PortType portTypeId, area connexion field 'field-3' undefined.";
+    BOOST_CHECK_EXCEPTION(shouldThrow(), std::invalid_argument, checkMessage(err_msg));
+}
+
+BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_all_fields_defined)
+{
+    std::vector fields = {PortField("field-1"), PortField("field-2"), PortField("field-3")};
+    PortType portType("portTypeId", std::move(fields), {"field-3", "field-2", "field-1"});
+
+    BOOST_CHECK(portType.areaConnection().has_value());
+
+    AreaConnection areaConnection = portType.areaConnection().value();
+    BOOST_CHECK_EQUAL(areaConnection.injection, "field-3");
+    BOOST_CHECK_EQUAL(areaConnection.to_area_bound, "field-2");
+    BOOST_CHECK_EQUAL(areaConnection.from_area_bound, "field-1");
+}
 BOOST_AUTO_TEST_SUITE_END()

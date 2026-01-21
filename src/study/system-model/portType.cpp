@@ -5,39 +5,30 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
-PortType::PortType(const std::string& id,
-                   std::vector<PortField>&& fields,
-                   const std::string& areaConnectionFieldId):
-    id_(id),
-    fields_(std::move(fields))
+// -----------------
+// Help functions
+// -----------------
+bool isEmpty(const AreaConnection& ac)
 {
-    if (!areaConnectionFieldId.empty())
+    return ac.injection.empty() && ac.to_area_bound.empty() && ac.from_area_bound.empty();
+}
+
+void checkNonEmptyFieldExist(const std::string& field,
+                             const std::vector<PortField>& portFields,
+                             const std::string& portTypeId)
+{
+    if (field.empty())
     {
-        if (!std::ranges::any_of(fields_,
-                                 [areaConnectionFieldId](const auto& field)
-                                 { return field.Id() == areaConnectionFieldId; }))
-        {
-            throw std::invalid_argument(
-              "Field \"" + areaConnectionFieldId
-              + "\" selected for area connections was not defined in PortType \"" + id_ + "\".");
-        }
-        areaConnection_ = {areaConnectionFieldId, "", ""};
+        return;
     }
-}
 
-const std::string& PortType::Id() const
-{
-    return id_;
-}
-
-const std::vector<PortField>& PortType::Fields() const
-{
-    return fields_;
-}
-
-const std::optional<AreaConnection>& PortType::areaConnection() const
-{
-    return areaConnection_;
+    if (std::ranges::all_of(portFields,
+                            [&](const auto& portField) { return portField.Id() != field; }))
+    {
+        std::string err_msg = "In PortType " + portTypeId + ", area connexion field '" + field
+                              + "' undefined.";
+        throw std::invalid_argument(err_msg);
+    }
 }
 
 bool operator==(const std::optional<AreaConnection>& a, const std::optional<AreaConnection>& b)
@@ -54,6 +45,41 @@ bool operator==(const std::optional<AreaConnection>& a, const std::optional<Area
 
     return a->injection == b->injection && a->to_area_bound == b->to_area_bound
            && a->from_area_bound == b->from_area_bound;
+}
+
+// -------------------
+// PortType methods
+// -------------------
+PortType::PortType(const std::string& id,
+                   std::vector<PortField>&& portFields,
+                   const AreaConnection& areaConnection):
+    id_(id),
+    fields_(std::move(portFields))
+{
+    if (isEmpty(areaConnection))
+    {
+        return;
+    }
+
+    checkNonEmptyFieldExist(areaConnection.injection, fields_, id_);
+    checkNonEmptyFieldExist(areaConnection.to_area_bound, fields_, id_);
+    checkNonEmptyFieldExist(areaConnection.from_area_bound, fields_, id_);
+    areaConnection_ = areaConnection;
+}
+
+const std::string& PortType::Id() const
+{
+    return id_;
+}
+
+const std::vector<PortField>& PortType::Fields() const
+{
+    return fields_;
+}
+
+const std::optional<AreaConnection>& PortType::areaConnection() const
+{
+    return areaConnection_;
 }
 
 bool PortType::operator==(const PortType& other) const

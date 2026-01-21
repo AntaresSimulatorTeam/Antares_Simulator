@@ -157,6 +157,11 @@ static ForbiddenNodes ForbiddenInExtraOutput()
     return forbidden;
 }
 
+AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
+{
+    return {ac.injection, ac.to_area_bound, ac.from_area_bound};
+}
+
 std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 {
     std::vector<PortType> out;
@@ -180,7 +185,9 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
             throw PortTypeWithThisIdAlreadyExists(ymlPortType.id);
         }
 
-        PortType portType(ymlPortType.id, std::move(fields), ymlPortType.area_connection.injection);
+        PortType portType(ymlPortType.id,
+                          std::move(fields),
+                          convert_to_system(ymlPortType.area_connection));
         out.emplace_back(std::move(portType));
     }
     return out;

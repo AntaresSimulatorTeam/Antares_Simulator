@@ -40,7 +40,7 @@ class PortType final
 public:
     PortType(const std::string& id,
              std::vector<PortField>&& fields,
-             const std::string& areaConnectionFieldId = "");
+             const AreaConnection& areaConnection = {});
 
     const std::string& Id() const;
     const std::vector<PortField>& Fields() const;

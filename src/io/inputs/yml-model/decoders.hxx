@@ -241,14 +241,30 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         }
         if (node["area-connection"].IsDefined())
         {
-            if (node["area-connection"].size() != 1)
+            if (node["area-connection"].size() == 0 || node["area-connection"].size() > 3)
             {
-                // Must have exactly one area connection field definition
                 return false;
             }
-            for (const auto& field: node["area-connection"])
+
+            for (auto& field: node["area-connection"])
             {
-                rhs.area_connection.injection = field["injection-field"].as<std::string>("");
+                if (auto value = field["injection-field"].as<std::string>(""); !value.empty())
+                {
+                    rhs.area_connection.injection = value;
+                    continue;
+                }
+
+                if (auto value = field["to-area-bound-field"].as<std::string>(""); !value.empty())
+                {
+                    rhs.area_connection.to_area_bound = value;
+                    continue;
+                }
+
+                if (auto value = field["from-area-bound-field"].as<std::string>(""); !value.empty())
+                {
+                    rhs.area_connection.from_area_bound = value;
+                    continue;
+                }
             }
         }
         return true;
