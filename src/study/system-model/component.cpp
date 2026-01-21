@@ -140,65 +140,47 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
     }
 }
 
+void Component::checkPortFieldDefinitionExists(const std::string& portName,
+                                               const std::string& fieldName,
+                                               const std::string& errMsgPrefix)
+{
+    if (!fieldName.empty())
+    {
+        PortFieldKey key(portName, fieldName);
+        if (!getModel()->PortFieldDefinitions().contains(key))
+        {
+            std::string errMsg = errMsgPrefix + "port field '" + fieldName
+                                 + "' is not defined in the component's model '" + getModel()->Id()
+                                 + "'";
+            throw std::invalid_argument(errMsg);
+        }
+    }
+}
+
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
-    std::string exceptionPrefix = "Cannot connect area '" + areaId + "' to port '" + localPortId
-                                  + "' of component '" + data_.id + "': ";
+    std::string errMsgPrefix = "Cannot connect area '" + areaId + "' to port '" + localPortId
+                               + "' of component '" + data_.id + "': ";
     if (!getModel()->Ports().contains(localPortId))
     {
-        throw std::invalid_argument(exceptionPrefix
-                                    + "port does not exist in the component's model '"
+        throw std::invalid_argument(errMsgPrefix + "port does not exist in the component's model '"
                                     + getModel()->Id() + "'");
     }
     Port port = getModel()->Ports().at(localPortId);
-    if (!port.Type().areaConnection().has_value())
+    const auto& area_connection = port.Type().areaConnection();
+    if (!area_connection.has_value())
     {
-        throw std::invalid_argument(exceptionPrefix + "port type '" + port.Type().Id()
+        throw std::invalid_argument(errMsgPrefix + "port type '" + port.Type().Id()
                                     + "' has no area-connection field ID defined");
     }
 
-    std::string injection_field = port.Type().areaConnection()->injection;
-    if (!injection_field.empty())
-    {
-        PortFieldKey key(localPortId, injection_field);
-        if (!getModel()->PortFieldDefinitions().contains(key))
-        {
-            std::string errMsg = exceptionPrefix + "port field '" + injection_field
-                                 + "' is not defined in the component's model '" + getModel()->Id()
-                                 + "'";
-            throw std::invalid_argument(errMsg);
-        }
-    }
-
-    std::string to_area_bound = port.Type().areaConnection()->to_area_bound;
-    if (!to_area_bound.empty())
-    {
-        PortFieldKey key(localPortId, to_area_bound);
-        if (!getModel()->PortFieldDefinitions().contains(key))
-        {
-            std::string errMsg = exceptionPrefix + "port field '" + to_area_bound
-                                 + "' is not defined in the component's model '" + getModel()->Id()
-                                 + "'";
-            throw std::invalid_argument(errMsg);
-        }
-    }
-
-    std::string from_area_bound = port.Type().areaConnection()->from_area_bound;
-    if (!to_area_bound.empty())
-    {
-        PortFieldKey key(localPortId, from_area_bound);
-        if (!getModel()->PortFieldDefinitions().contains(key))
-        {
-            std::string errMsg = exceptionPrefix + "port field '" + from_area_bound
-                                 + "' is not defined in the component's model '" + getModel()->Id()
-                                 + "'";
-            throw std::invalid_argument(errMsg);
-        }
-    }
+    checkPortFieldDefinitionExists(localPortId, area_connection->injection, errMsgPrefix);
+    checkPortFieldDefinitionExists(localPortId, area_connection->to_area_bound, errMsgPrefix);
+    checkPortFieldDefinitionExists(localPortId, area_connection->from_area_bound, errMsgPrefix);
 
     if (portToAreaConnections_.contains(localPortId))
     {
-        throw std::invalid_argument(exceptionPrefix + "port is already connected to '"
+        throw std::invalid_argument(errMsgPrefix + "port is already connected to '"
                                     + portToAreaConnections_.at(localPortId) + "'");
     }
     portToAreaConnections_[localPortId] = areaId;

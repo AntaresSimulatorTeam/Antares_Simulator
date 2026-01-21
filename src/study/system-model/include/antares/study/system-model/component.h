@@ -122,6 +122,10 @@ public:
     }
 
 private:
+    void checkPortFieldDefinitionExists(const std::string& portName,
+                                        const std::string& fieldName,
+                                        const std::string& errMsgPrefix);
+
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
