@@ -145,12 +145,16 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
     averageStsWithdrawal.resize(stsGroupNames_.size());
     averageStsLevel.resize(stsGroupNames_.size());
 
+    stdDevThermal.resize(thermalGroupNames_.size());
+
     for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
     {
         minThermal[i].resetInf();
         maxThermal[i].resetSup();
         averageThermal[i].initializeFromStudy(study);
         averageThermal[i].reset();
+        stdDevThermal[i].initializeFromStudy(study);
+        stdDevThermal[i].reset();
     }
     for (size_t i = 0; i < renewableGroupNames_.size(); ++i)
     {
@@ -189,6 +193,7 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
         minThermal[i].mergeInf(0, values);
         maxThermal[i].mergeSup(0, values);
         averageThermal[i].merge(0, values);
+        stdDevThermal[i].merge(0, values);
     }
 
     // Renewable
@@ -277,6 +282,19 @@ void DynamicAggregationSingleYear::writeAllResults(const std::string& baseFolder
 }
 
 // TODO  remove tests purpose
+void DynamicAggregationAllYears::writeAllResults(const std::string& baseFolder) const
+{
+    namespace fs = std::filesystem;
+    fs::create_directories(baseFolder);
+
+    for (const auto& [setName, setData]: setsData_)
+    {
+        std::string folderPath = baseFolder + "/" + setName + "_allYears";
+        setData.writeResultsToFolder(folderPath);
+    }
+}
+
+// TODO  remove tests purpose
 void SetDataSingleYear::writeResultsToFolder(const std::string& folderName) const
 {
     namespace fs = std::filesystem;
@@ -355,6 +373,72 @@ void SetDataSingleYear::writeResultsToFolder(const std::string& folderName) cons
             }
             out.close();
         }
+        ++index;
+    }
+}
+
+void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
+{
+    namespace fs = std::filesystem;
+    fs::create_directories(folderName);
+
+    unsigned index = 0;
+    for (const auto& group: thermalGroupNames_)
+    {
+        std::string filePath = folderName + "/" + group + "min_.txt";
+        std::ofstream outFile(filePath);
+        if (outFile.is_open())
+        {
+            for (const auto& min: minThermal[index].hourly)
+            {
+                outFile << min.value << std::endl;
+            }
+            outFile.close();
+        }
+        filePath = folderName + "/" + group + "max_.txt";
+        outFile.open(filePath);
+        if (outFile.is_open())
+        {
+            for (const auto& max: maxThermal[index].hourly)
+            {
+                outFile << max.value << std::endl;
+            }
+            outFile.close();
+        }
+        filePath = folderName + "/" + group + "exp_.txt";
+        outFile.open(filePath);
+        if (outFile.is_open())
+        {
+            for (const auto& average: averageThermal[index].hourly)
+            {
+                outFile << average << std::endl;
+            }
+            outFile.close();
+        }
+        filePath = folderName + "/" + group + "std_.txt";
+        outFile.open(filePath);
+        if (outFile.is_open())
+        {
+            for (const auto& std: stdDevThermal[index].stdDeviationHourly)
+            {
+                outFile << std << std::endl;
+            }
+            outFile.close();
+        }
+
+        ++index;
+    }
+
+    index = 0;
+    // Write renewable results
+    for (const auto& group: renewableGroupNames_)
+    {
+        ++index;
+    }
+    index = 0;
+    // Write STS results
+    for (const auto& group: stsGroupNames_)
+    {
         ++index;
     }
 }

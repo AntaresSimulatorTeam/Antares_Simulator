@@ -25,8 +25,8 @@
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/variable/storage/averagedata.h"
-#include "antares/solver/variable/storage/stdDeviation.h"
 #include "antares/solver/variable/storage/minmax-data.h"
+#include "antares/solver/variable/storage/stdDeviation.h"
 
 namespace Antares::Solver::Variable
 {
@@ -75,6 +75,9 @@ public:
 
     void merge(const SetDataSingleYear& toMerge, Data::Study& study);
 
+    // TODO  remove tests purpose
+    void writeResultsToFolder(const std::string& folderName) const;
+
 protected:
     std::vector<R::AllYears::MinMaxData> minThermal;
     std::vector<R::AllYears::MinMaxData> maxThermal;
@@ -96,6 +99,8 @@ protected:
     std::vector<R::AllYears::AverageData> averageStsInjection;
     std::vector<R::AllYears::AverageData> averageStsWithdrawal;
     std::vector<R::AllYears::AverageData> averageStsLevel;
+
+    std::vector<R::AllYears::StdDeviation<>> stdDevThermal;
 };
 
 class DynamicAggregationSingleYear

@@ -57,7 +57,6 @@ public:
         return "std deviation";
     }
 
-protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
         stdDeviationHourly.assign(HOURS_PER_YEAR, 0.);
