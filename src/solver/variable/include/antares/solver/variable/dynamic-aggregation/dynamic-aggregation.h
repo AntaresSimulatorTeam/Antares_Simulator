@@ -44,7 +44,6 @@ public:
 protected:
     std::vector<std::vector<long double>> thermalResults_;
     std::vector<std::vector<long double>> renewableResults_;
-
     std::vector<std::vector<long double>> stsInjectionResults_;
     std::vector<std::vector<long double>> stsWithdrawalResults_;
     std::vector<std::vector<long double>> stsLevelResults_;
@@ -59,26 +58,26 @@ protected:
     std::map<std::string, unsigned int> stsGroupToNumbers_;
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
 
-    R::AllYears::MinMaxData minThermal;
-    R::AllYears::MinMaxData maxThermal;
+    std::vector<R::AllYears::MinMaxData> minThermal;
+    std::vector<R::AllYears::MinMaxData> maxThermal;
 
-    R::AllYears::MinMaxData minRenewable;
-    R::AllYears::MinMaxData maxRenewable;
+    std::vector<R::AllYears::MinMaxData> minRenewable;
+    std::vector<R::AllYears::MinMaxData> maxRenewable;
 
-    R::AllYears::MinMaxData minStsInjection;
-    R::AllYears::MinMaxData maxStsInjection;
+    std::vector<R::AllYears::MinMaxData> minStsInjection;
+    std::vector<R::AllYears::MinMaxData> maxStsInjection;
 
-    R::AllYears::MinMaxData minStsWithdrawal;
-    R::AllYears::MinMaxData maxStsWithdrawal;
+    std::vector<R::AllYears::MinMaxData> minStsWithdrawal;
+    std::vector<R::AllYears::MinMaxData> maxStsWithdrawal;
 
-    R::AllYears::MinMaxData minStsLevel;
-    R::AllYears::MinMaxData maxStsLevel;
+    std::vector<R::AllYears::MinMaxData> minStsLevel;
+    std::vector<R::AllYears::MinMaxData> maxStsLevel;
 
-    R::AllYears::AverageData averageThermal;
-    R::AllYears::AverageData averageRenewable;
-    R::AllYears::AverageData averageStsInjection;
-    R::AllYears::AverageData averageStsWithdrawal;
-    R::AllYears::AverageData averageStsLevel;
+    std::vector<R::AllYears::AverageData> averageThermal;
+    std::vector<R::AllYears::AverageData> averageRenewable;
+    std::vector<R::AllYears::AverageData> averageStsInjection;
+    std::vector<R::AllYears::AverageData> averageStsWithdrawal;
+    std::vector<R::AllYears::AverageData> averageStsLevel;
 };
 
 class DynamicAggregation
