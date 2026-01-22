@@ -75,8 +75,7 @@ private:
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const std::string& areaId) const;
-    void addComponentPortContributionToArea(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                            const Optimisation::LinearProblemApi::FillContext& ctx,
+    void addComponentPortContributionToArea(const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,
                                             const std::string& portId,
                                             const std::string& areaId);

@@ -118,7 +118,6 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 }
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
-  ILinearProblem& pb,
   const FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
@@ -128,7 +127,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
     Nodes::Node* expression = component.nodeAtPortField(portId, injectionFieldId);
     auto linearExpression = visitor.visitMergeDuplicates(expression);
-    addExpressionToConstraint(pb, linearExpression, ctx, areaId);
+    addExpressionToConstraint(optimEntityContainer_.Problem(), linearExpression, ctx, areaId);
 }
 
 void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
@@ -137,11 +136,7 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            addComponentPortContributionToArea(optimEntityContainer_.Problem(),
-                                               ctx,
-                                               component,
-                                               portId,
-                                               areaId);
+            addComponentPortContributionToArea(ctx, component, portId, areaId);
         }
     }
 }
