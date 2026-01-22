@@ -73,7 +73,7 @@ class SetDataAllYears: public SetDataBase
 public:
     SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
 
-    void merge(const SetDataSingleYear& toMerge, Data::Study& study);
+    void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
 
     // TODO  remove tests purpose
     void writeResultsToFolder(const std::string& folderName) const;
@@ -129,7 +129,7 @@ class DynamicAggregationAllYears
 public:
     explicit DynamicAggregationAllYears(Data::Study& study);
 
-    void merge(const DynamicAggregationSingleYear& toMerge);
+    void merge(const DynamicAggregationSingleYear& toMerge, unsigned year);
 
     // TODO rm tests
     void writeAllResults(const std::string& baseFolder) const;

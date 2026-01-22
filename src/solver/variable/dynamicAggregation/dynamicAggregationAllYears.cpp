@@ -33,7 +33,7 @@ DynamicAggregationAllYears::DynamicAggregationAllYears(Data::Study& study):
     }
 }
 
-void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMerge)
+void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMerge, unsigned year)
 {
     for (auto& [setName, setData]: setsData_)
     {
@@ -41,7 +41,7 @@ void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMer
         if (toMergeSetDataIt != toMerge.setsData_.end())
         {
             const SetDataSingleYear& toMergeSetData = toMergeSetDataIt->second;
-            setData.merge(toMergeSetData, study_);
+            setData.merge(toMergeSetData, study_, year);
         }
     }
 }

@@ -94,7 +94,7 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
     }
 }
 
-void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study)
+void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year)
 {
     IntermediateValues values;
     values.initializeFromStudy(study);
@@ -104,10 +104,10 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     {
         std::ranges::copy(toMerge.thermalResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minThermal[i].mergeInf(0, values);
-        maxThermal[i].mergeSup(0, values);
-        averageThermal[i].merge(0, values);
-        stdDevThermal[i].merge(0, values);
+        minThermal[i].mergeInf(year, values);
+        maxThermal[i].mergeSup(year, values);
+        averageThermal[i].merge(year, values);
+        stdDevThermal[i].merge(year, values);
     }
 
     // Renewable
@@ -115,10 +115,10 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     {
         std::ranges::copy(toMerge.renewableResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minRenewable[i].mergeInf(0, values);
-        maxRenewable[i].mergeSup(0, values);
-        averageRenewable[i].merge(0, values);
-        stdDevRenewable[i].merge(0, values);
+        minRenewable[i].mergeInf(year, values);
+        maxRenewable[i].mergeSup(year, values);
+        averageRenewable[i].merge(year, values);
+        stdDevRenewable[i].merge(year, values);
     }
 
     // STS Injection
@@ -126,24 +126,24 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     {
         std::ranges::copy(toMerge.stsInjectionResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minStsInjection[i].mergeInf(0, values);
-        maxStsInjection[i].mergeSup(0, values);
-        averageStsInjection[i].merge(0, values);
-        stdDevStsInjection[i].merge(0, values);
+        minStsInjection[i].mergeInf(year, values);
+        maxStsInjection[i].mergeSup(year, values);
+        averageStsInjection[i].merge(year, values);
+        stdDevStsInjection[i].merge(year, values);
 
         std::ranges::copy(toMerge.stsWithdrawalResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minStsWithdrawal[i].mergeInf(0, values);
-        maxStsWithdrawal[i].mergeSup(0, values);
-        averageStsWithdrawal[i].merge(0, values);
-        stdDevStsWithdrawal[i].merge(0, values);
+        minStsWithdrawal[i].mergeInf(year, values);
+        maxStsWithdrawal[i].mergeSup(year, values);
+        averageStsWithdrawal[i].merge(year, values);
+        stdDevStsWithdrawal[i].merge(year, values);
 
         std::ranges::copy(toMerge.stsLevelResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minStsLevel[i].mergeInf(0, values);
-        maxStsLevel[i].mergeSup(0, values);
-        averageStsLevel[i].merge(0, values);
-        stdDevStsLevel[i].merge(0, values);
+        minStsLevel[i].mergeInf(year, values);
+        maxStsLevel[i].mergeSup(year, values);
+        averageStsLevel[i].merge(year, values);
+        stdDevStsLevel[i].merge(year, values);
     }
 }
 
@@ -162,7 +162,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& min: minThermal[index].hourly)
             {
-                outFile << min.value << std::endl;
+                outFile << min.index << "  " << min.value << std::endl;
             }
             outFile.close();
         }
@@ -172,7 +172,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& max: maxThermal[index].hourly)
             {
-                outFile << max.value << std::endl;
+                outFile << max.index << "   " << max.value << std::endl;
             }
             outFile.close();
         }
@@ -210,7 +210,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& min: minRenewable[index].hourly)
             {
-                outFile << min.value << std::endl;
+                outFile << min.index << "  " << min.value << std::endl;
             }
             outFile.close();
         }
@@ -220,7 +220,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& max: maxRenewable[index].hourly)
             {
-                outFile << max.value << std::endl;
+                outFile << max.index << "   " << max.value << std::endl;
             }
             outFile.close();
         }
@@ -257,7 +257,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& min: minStsInjection[index].hourly)
             {
-                outFile << min.value << std::endl;
+                outFile << min.index << "  " << min.value << std::endl;
             }
             outFile.close();
         }
@@ -267,7 +267,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& max: maxStsInjection[index].hourly)
             {
-                outFile << max.value << std::endl;
+                outFile << max.index << "   " << max.value << std::endl;
             }
             outFile.close();
         }
@@ -299,7 +299,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& min: minStsWithdrawal[index].hourly)
             {
-                outFile << min.value << std::endl;
+                outFile << min.index << "  " << min.value << std::endl;
             }
             outFile.close();
         }
@@ -309,7 +309,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& max: maxStsWithdrawal[index].hourly)
             {
-                outFile << max.value << std::endl;
+                outFile << max.index << "   " << max.value << std::endl;
             }
             outFile.close();
         }
@@ -341,7 +341,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& min: minStsLevel[index].hourly)
             {
-                outFile << min.value << std::endl;
+                outFile << min.index << "  " << min.value << std::endl;
             }
             outFile.close();
         }
@@ -351,7 +351,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
         {
             for (const auto& max: maxStsLevel[index].hourly)
             {
-                outFile << max.value << std::endl;
+                outFile << max.index << "   " << max.value << std::endl;
             }
             outFile.close();
         }

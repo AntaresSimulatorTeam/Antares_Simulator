@@ -239,7 +239,7 @@ public:
 
             double ratio = study.parameters.getYearsWeight()[y]
                            / study.parameters.getYearsWeightSum();
-            simulation_->dynamicAggregationAllYears.merge(dynamicAggregationForTheYear);
+            simulation_->dynamicAggregationAllYears.merge(dynamicAggregationForTheYear, y);
         };
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
