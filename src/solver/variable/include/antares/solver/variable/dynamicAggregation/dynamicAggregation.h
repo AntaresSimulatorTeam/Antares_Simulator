@@ -61,11 +61,11 @@ public:
     void writeResultsToFolder(const std::string& folderName) const;
 
 private:
-    std::vector<std::vector<long double>> thermalResults_;
-    std::vector<std::vector<long double>> renewableResults_;
-    std::vector<std::vector<long double>> stsInjectionResults_;
-    std::vector<std::vector<long double>> stsWithdrawalResults_;
-    std::vector<std::vector<long double>> stsLevelResults_;
+    std::vector<std::vector<HighPrecision>> thermalResults_;
+    std::vector<std::vector<HighPrecision>> renewableResults_;
+    std::vector<std::vector<HighPrecision>> stsInjectionResults_;
+    std::vector<std::vector<HighPrecision>> stsWithdrawalResults_;
+    std::vector<std::vector<HighPrecision>> stsLevelResults_;
 };
 
 class SetDataAllYears: public SetDataBase
