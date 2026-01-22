@@ -55,14 +55,14 @@ void ComponentToAreaConnectionFiller::addVariables(const FillContext&)
     // nothing to do
 }
 
-static std::string getConnectionFieldId(const ModelerStudy::SystemModel::Component& component,
-                                        const std::string& portId)
+static std::string componentInjectionField(const ModelerStudy::SystemModel::Component& component,
+                                           const std::string& portId)
 {
     auto area_connection = component.getModel()->Ports().at(portId).Type().areaConnection();
     if (!area_connection.has_value())
     {
-        throw Error::RuntimeError("Component \"" + component.Id()
-                                  + "\" is connected to an area using a port type that has no "
+        throw Error::RuntimeError("Component '" + component.Id()
+                                  + "' is connected to an area using a port type that has no "
                                     "area-connection field defined.");
     }
     return area_connection->injection;
@@ -124,7 +124,7 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
   const std::string& portId,
   const std::string& areaId)
 {
-    std::string injectionFieldId = getConnectionFieldId(component, portId);
+    std::string injectionFieldId = componentInjectionField(component, portId);
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
     Nodes::Node* expression = component.nodeAtPortField(portId, injectionFieldId);
     auto linearExpression = visitor.visitMergeDuplicates(expression);
