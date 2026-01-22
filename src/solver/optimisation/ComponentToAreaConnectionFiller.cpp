@@ -22,7 +22,6 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/regex.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
@@ -32,6 +31,17 @@
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::ModelerStudy::SystemModel;
+
+ std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* problemeHebdo_)
+ {
+     std::map<std::string, unsigned> areaIndices;
+     unsigned index = 0;
+     for (auto name: problemeHebdo_->NomsDesPays)
+     {
+         areaIndices.insert({name, index++});
+     }
+     return areaIndices;
+ }
 
 namespace Antares::Optimization
 {
@@ -44,10 +54,24 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer)
 {
-    int i = 0;
-    for (auto name: problemeHebdo_->NomsDesPays)
+    areaIndices_ = associateIndicesToAreas(problemeHebdo_);
+    checkAreasFromConnexionsExist();
+}
+
+void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
+{
+    for (const auto& component: modelerSystem_->Components())
     {
-        areaIndices_[name] = i++;
+        for (auto [portId, areaId]: component.portToAreaConnections())
+        {
+            boost::algorithm::to_lower(areaId);
+            if (const auto it = areaIndices_.find(areaId); it == areaIndices_.end())
+            {
+                std::string errMsg = "Component '" + component.Id() + "' is connected";
+                errMsg += "to a non exsiting area : " + areaId;
+                throw Error::RuntimeError(errMsg);
+            }
+        }
     }
 }
 
@@ -56,6 +80,11 @@ void ComponentToAreaConnectionFiller::increaseAreaSpillageBound(const FillContex
                                                                 const std::string& portId,
                                                                 const std::string& areaId)
 {
+    // 1. Fetch upper bound of spillage variable
+
+    // 2. Fetch vector of values to be added to spillage bound
+
+    // 3. Add values to spillage bound
 }
 
 void ComponentToAreaConnectionFiller::increaseAreaUnsuppliedEnergyBound(const FillContext& ctx,
@@ -63,6 +92,8 @@ void ComponentToAreaConnectionFiller::increaseAreaUnsuppliedEnergyBound(const Fi
                                                                         const std::string& portId,
                                                                         const std::string& areaId)
 {
+    // Specifications may change for unsupplied energy.
+    // Wise to do nothing for now.
 }
 
 void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
@@ -82,20 +113,17 @@ static std::string componentInjectionField(const Component& component, const std
     return component.getModel()->Ports().at(portId).Type().areaConnection()->injection;
 }
 
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
-  Optimisation::LinearProblemApi::ILinearProblem& pb,
-  const std::string& areaId,
-  unsigned ts) const
+IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
+                                                                      const std::string& areaId,
+                                                                      unsigned ts) const
 {
     auto pdt = ts % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-    if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
+    unsigned areaIndex = areaIndices_.at(areaId);
+    auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
+                            .NumeroDeContrainteDesBilansPays[areaIndex];
+    if (auto* ct = pb.getConstraint(contraintIndex))
     {
-        auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
-                                .NumeroDeContrainteDesBilansPays[it->second];
-        if (auto* ct = pb.getConstraint(contraintIndex))
-        {
-            return ct;
-        }
+        return ct;
     }
     throw Error::RuntimeError("A component is connected to area \"" + areaId
                               + "\", that does not have a balance constraint defined for timestep "
@@ -103,8 +131,8 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
-  Optimisation::LinearProblemApi::ILinearProblem& pb,
-  const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
+  ILinearProblem& pb,
+  const TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
   const std::string& areaId) const
 {
@@ -115,17 +143,17 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     boost::algorithm::to_lower(lowerAreaId);
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
-    for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
-         ++localIndex)
+    for (auto localHour(ctx.getLocalFirstTimeStep()); localHour <= ctx.getLocalLastTimeStep();
+         ++localHour)
     {
-        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localIndex);
+        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, lowerAreaId, localHour);
 
-        for (const auto& [index, coef]: linearExpression[localIndex])
+        for (const auto& [index, coef]: linearExpression[localHour])
         {
             areaBalanceConstraint->setCoefficient(solverVariables.at(index).get(), -coef);
         }
 
-        double constant = linearExpression[localIndex].constant();
+        double constant = linearExpression[localHour].constant();
         areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + constant,
                                          areaBalanceConstraint->getUb() + constant);
     }

@@ -60,21 +60,26 @@ public:
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
+    // Data members
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     Optimisation::OptimEntityContainer& optimEntityContainer_;
-
     std::map<std::string, unsigned> areaIndices_;
+
+    // Function members
+    void checkAreasFromConnexionsExist();
 
     Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const std::string& areaId,
       unsigned ts) const;
+
     void addExpressionToConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const std::string& areaId) const;
+
     void addComponentPortContributionToArea(const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,
                                             const std::string& portId,
