@@ -172,30 +172,35 @@ void SetData::mergeAnother(const SetData& toMerge, double ratio, Data::Study& st
     values.computeStatisticsForTheCurrentYear();
     minThermal.mergeInf(0, values);
     maxThermal.mergeSup(0, values);
+    averageThermal.merge(0, values);
 
     // Renewable
     std::ranges::copy(toMerge.renewableResults_[0], values.hour);
     values.computeStatisticsForTheCurrentYear();
     minRenewable.mergeInf(0, values);
     maxRenewable.mergeSup(0, values);
+    averageRenewable.merge(0, values);
 
     // STS Injection
     std::ranges::copy(toMerge.stsInjectionResults_[0], values.hour);
     values.computeStatisticsForTheCurrentYear();
     minStsInjection.mergeInf(0, values);
     maxStsInjection.mergeSup(0, values);
+    averageStsInjection.merge(0, values);
 
     // STS Withdrawal
     std::ranges::copy(toMerge.stsWithdrawalResults_[0], values.hour);
     values.computeStatisticsForTheCurrentYear();
     minStsWithdrawal.mergeInf(0, values);
     maxStsWithdrawal.mergeSup(0, values);
+    averageStsWithdrawal.merge(0, values);
 
     // STS Level
     std::ranges::copy(toMerge.stsLevelResults_[0], values.hour);
     values.computeStatisticsForTheCurrentYear();
     minStsLevel.mergeInf(0, values);
     maxStsLevel.mergeSup(0, values);
+    averageStsLevel.merge(0, values);
 };
 
 DynamicAggregation::DynamicAggregation(Data::Study& study):
