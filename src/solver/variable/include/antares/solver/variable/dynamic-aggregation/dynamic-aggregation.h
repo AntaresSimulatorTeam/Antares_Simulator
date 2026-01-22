@@ -33,7 +33,7 @@ namespace Antares::Solver::Variable
 class SetDataBase
 {
 public:
-    SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
+    SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
 protected:
     std::set<std::string> thermalGroupNames_;

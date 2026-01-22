@@ -30,8 +30,7 @@
 namespace Antares::Solver::Variable
 {
 
-SetDataBase::SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set,
-                         Data::Study& study):
+SetDataBase::SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set):
     set_(set)
 {
     for (auto& area: set_)
@@ -57,7 +56,7 @@ SetDataBase::SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set
 
 SetDataSingleYear::SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set,
                                      Data::Study& study):
-    SetDataBase(set, study)
+    SetDataBase(set)
 {
     for (unsigned int i = 0; i < thermalGroupNames_.size(); i++)
     {
@@ -129,7 +128,7 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
 
 SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set,
                                  Data::Study& study):
-    SetDataBase(set, study)
+    SetDataBase(set)
 {
     minThermal.resize(thermalGroupNames_.size());
     maxThermal.resize(thermalGroupNames_.size());
