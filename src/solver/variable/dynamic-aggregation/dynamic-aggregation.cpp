@@ -67,8 +67,8 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
         stsLevelResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
     }
 
-    min.resetInf();
-    max.resetSup();
+    minThermal.resetInf();
+    maxThermal.resetSup();
 }
 
 void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
@@ -153,14 +153,36 @@ void SetData::mergeAnother(const SetData& toMerge, double ratio, Data::Study& st
 
     IntermediateValues values;
     values.initializeFromStudy(study);
-    for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-    {
-        values.hour[h] = toMerge.thermalResults_[0][h] * ratio;
-    }
+
+    std::ranges::copy(toMerge.thermalResults_[0], values.hour);
     values.computeStatisticsForTheCurrentYear();
-    min.mergeInf(0, values);
-    max.mergeSup(0, values);
-}
+    minThermal.mergeInf(0, values);
+    maxThermal.mergeSup(0, values);
+
+    // Renewable
+    std::ranges::copy(toMerge.renewableResults_[0], values.hour);
+    values.computeStatisticsForTheCurrentYear();
+    minRenewable.mergeInf(0, values);
+    maxRenewable.mergeSup(0, values);
+
+    // STS Injection
+    std::ranges::copy(toMerge.stsInjectionResults_[0], values.hour);
+    values.computeStatisticsForTheCurrentYear();
+    minStsInjection.mergeInf(0, values);
+    maxStsInjection.mergeSup(0, values);
+
+    // STS Withdrawal
+    std::ranges::copy(toMerge.stsWithdrawalResults_[0], values.hour);
+    values.computeStatisticsForTheCurrentYear();
+    minStsWithdrawal.mergeInf(0, values);
+    maxStsWithdrawal.mergeSup(0, values);
+
+    // STS Level
+    std::ranges::copy(toMerge.stsLevelResults_[0], values.hour);
+    values.computeStatisticsForTheCurrentYear();
+    minStsLevel.mergeInf(0, values);
+    maxStsLevel.mergeSup(0, values);
+};
 
 DynamicAggregation::DynamicAggregation(Data::Study& study):
     study_(study)
@@ -220,7 +242,7 @@ void SetData::writeResultsToFolder(const std::string& folderName) const
         {
             for (size_t h = 0; h < thermalResults_[index].size(); ++h)
             {
-                outFile << min.hourly[h].value << std::endl;
+                outFile << thermalResults_[index][h] << std::endl;
             }
             outFile.close();
         }

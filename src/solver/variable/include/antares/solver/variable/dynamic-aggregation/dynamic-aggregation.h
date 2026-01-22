@@ -58,8 +58,20 @@ protected:
     std::map<std::string, unsigned int> stsGroupToNumbers_;
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
 
-    R::AllYears::MinMaxData min;
-    R::AllYears::MinMaxData max;
+    R::AllYears::MinMaxData minThermal;
+    R::AllYears::MinMaxData maxThermal;
+
+    R::AllYears::MinMaxData minRenewable;
+    R::AllYears::MinMaxData maxRenewable;
+
+    R::AllYears::MinMaxData minStsInjection;
+    R::AllYears::MinMaxData maxStsInjection;
+
+    R::AllYears::MinMaxData minStsWithdrawal;
+    R::AllYears::MinMaxData maxStsWithdrawal;
+
+    R::AllYears::MinMaxData minStsLevel;
+    R::AllYears::MinMaxData maxStsLevel;
 };
 
 class DynamicAggregation
