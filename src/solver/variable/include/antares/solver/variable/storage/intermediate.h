@@ -57,8 +57,6 @@ public:
 
     void initializeFromStudy(Data::Study& study);
 
-    void testOtherName(Data::Study& study);
-
     /*!
     ** \brief Reset all values
     */

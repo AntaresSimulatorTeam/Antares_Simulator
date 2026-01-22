@@ -49,13 +49,6 @@ void IntermediateValues::initializeFromStudy(Data::Study& study)
     pRuntimeInfo = &study.runtime;
 }
 
-void IntermediateValues::testOtherName(Data::Study& study)
-{
-    pRange = &study.runtime.rangeLimits;
-    calendar = &study.calendarOutput;
-    pRuntimeInfo = &study.runtime;
-}
-
 void IntermediateValues::computeStatisticsAdequacyForTheCurrentYear()
 {
     year = 0.;

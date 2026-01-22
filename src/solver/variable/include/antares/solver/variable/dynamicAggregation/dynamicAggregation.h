@@ -34,7 +34,7 @@ namespace Antares::Solver::Variable
 class SetDataBase
 {
 public:
-    SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
+    explicit SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
 protected:
     std::set<std::string> thermalGroupNames_;
@@ -53,14 +53,14 @@ class SetDataSingleYear: public SetDataBase
 public:
     friend class SetDataAllYears;
 
-    SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set);
+    explicit SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
 
     // TODO  remove tests purpose
     void writeResultsToFolder(const std::string& folderName) const;
 
-protected:
+private:
     std::vector<std::vector<long double>> thermalResults_;
     std::vector<std::vector<long double>> renewableResults_;
     std::vector<std::vector<long double>> stsInjectionResults_;
@@ -71,14 +71,15 @@ protected:
 class SetDataAllYears: public SetDataBase
 {
 public:
-    SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
+    explicit SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set,
+                             Data::Study& study);
 
     void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
 
     // TODO  remove tests purpose
     void writeResultsToFolder(const std::string& folderName) const;
 
-protected:
+private:
     std::vector<R::AllYears::MinMaxData> minThermal;
     std::vector<R::AllYears::MinMaxData> maxThermal;
 
