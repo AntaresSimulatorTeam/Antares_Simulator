@@ -166,32 +166,8 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-void SetData::mergeAnother(const SetData& toMerge, double ratio, Data::Study& study)
+void SetData::merge(const SetData& toMerge, Data::Study& study)
 {
-    for (unsigned int i = 0; i < thermalResults_.size(); i++)
-    {
-        for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-        {
-            thermalResults_[i][h] += toMerge.thermalResults_[i][h] * ratio;
-        }
-    }
-    for (unsigned int i = 0; i < renewableResults_.size(); i++)
-    {
-        for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-        {
-            renewableResults_[i][h] += toMerge.renewableResults_[i][h] * ratio;
-        }
-    }
-    for (unsigned int i = 0; i < stsInjectionResults_.size(); i++)
-    {
-        for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-        {
-            stsInjectionResults_[i][h] += toMerge.stsInjectionResults_[i][h] * ratio;
-            stsWithdrawalResults_[i][h] += toMerge.stsWithdrawalResults_[i][h] * ratio;
-            stsLevelResults_[i][h] += toMerge.stsLevelResults_[i][h] * ratio;
-        }
-    }
-
     IntermediateValues values;
     values.initializeFromStudy(study);
 
@@ -252,7 +228,7 @@ void DynamicAggregation::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
-void DynamicAggregation::mergeAnother(const DynamicAggregation& toMerge, double ratio)
+void DynamicAggregation::merge(const DynamicAggregation& toMerge)
 {
     for (auto& [setName, setData]: setsData_)
     {
@@ -260,7 +236,7 @@ void DynamicAggregation::mergeAnother(const DynamicAggregation& toMerge, double 
         if (toMergeSetDataIt != toMerge.setsData_.end())
         {
             const SetData& toMergeSetData = toMergeSetDataIt->second;
-            setData.mergeAnother(toMergeSetData, ratio, study_);
+            setData.merge(toMergeSetData, study_);
         }
     }
 }

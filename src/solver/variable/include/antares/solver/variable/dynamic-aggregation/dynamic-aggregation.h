@@ -36,7 +36,7 @@ public:
     SetData(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
-    void mergeAnother(const SetData& toMerge, double ratio, Data::Study& study);
+    void merge(const SetData& toMerge, Data::Study& study);
 
     // TODO rm tests
     void writeResultsToFolder(const std::string& folderName) const;
@@ -86,7 +86,7 @@ public:
     explicit DynamicAggregation(Data::Study& study);
 
     void addResultsToSets(const PROBLEME_HEBDO& pb);
-    void mergeAnother(const DynamicAggregation& toMerge, double ratio);
+    void merge(const DynamicAggregation& toMerge);
 
     // TODO rm tests
     void writeAllResults(const std::string& baseFolder) const;
