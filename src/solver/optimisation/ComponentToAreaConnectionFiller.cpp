@@ -31,6 +31,7 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Optimization
 {
@@ -50,13 +51,33 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(const FillContext&)
+void ComponentToAreaConnectionFiller::increaseAreaSpillageBound(const FillContext& ctx,
+                                                                const Component& component,
+                                                                const std::string& portId,
+                                                                const std::string& areaId)
 {
-    // nothing to do
 }
 
-static std::string componentInjectionField(const ModelerStudy::SystemModel::Component& component,
-                                           const std::string& portId)
+void ComponentToAreaConnectionFiller::increaseAreaUnsuppliedEnergyBound(const FillContext& ctx,
+                                                                        const Component& component,
+                                                                        const std::string& portId,
+                                                                        const std::string& areaId)
+{
+}
+
+void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
+{
+    for (const auto& component: modelerSystem_->Components())
+    {
+        for (const auto& [portId, areaId]: component.portToAreaConnections())
+        {
+            increaseAreaSpillageBound(ctx, component, portId, areaId);
+            increaseAreaUnsuppliedEnergyBound(ctx, component, portId, areaId);
+        }
+    }
+}
+
+static std::string componentInjectionField(const Component& component, const std::string& portId)
 {
     return component.getModel()->Ports().at(portId).Type().areaConnection()->injection;
 }
@@ -110,11 +131,10 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     }
 }
 
-void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(
-  const FillContext& ctx,
-  const ModelerStudy::SystemModel::Component& component,
-  const std::string& portId,
-  const std::string& areaId)
+void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(const FillContext& ctx,
+                                                                         const Component& component,
+                                                                         const std::string& portId,
+                                                                         const std::string& areaId)
 {
     std::string injectionFieldId = componentInjectionField(component, portId);
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);

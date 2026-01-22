@@ -79,6 +79,14 @@ private:
                                             const ModelerStudy::SystemModel::Component& component,
                                             const std::string& portId,
                                             const std::string& areaId);
+    void increaseAreaSpillageBound(const Optimisation::LinearProblemApi::FillContext& ctx,
+                                   const ModelerStudy::SystemModel::Component& component,
+                                   const std::string& portId,
+                                   const std::string& areaId);
+    void increaseAreaUnsuppliedEnergyBound(const Optimisation::LinearProblemApi::FillContext& ctx,
+                                           const ModelerStudy::SystemModel::Component& component,
+                                           const std::string& portId,
+                                           const std::string& areaId);
 };
 
 } // namespace Antares::Optimization
