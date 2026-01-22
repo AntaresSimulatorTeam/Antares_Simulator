@@ -24,7 +24,6 @@
 // TODO  remove tests purpose
 #include <filesystem>
 #include <fstream>
-#include <memory>
 #include <vector>
 
 namespace Antares::Solver::Variable
@@ -54,8 +53,7 @@ SetDataBase::SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set
     stsGroupToNumbers_ = Utils::giveNumbersToStrings(stsGroupNames_);
 }
 
-SetDataSingleYear::SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set,
-                                     Data::Study& study):
+SetDataSingleYear::SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set):
     SetDataBase(set)
 {
     for (unsigned int i = 0; i < thermalGroupNames_.size(); i++)
@@ -231,7 +229,7 @@ DynamicAggregationSingleYear::DynamicAggregationSingleYear(Data::Study& study):
 {
     for (const auto& set: study_.setsOfAreas)
     {
-        setsData_.try_emplace(set.first, *set.second, study_);
+        setsData_.try_emplace(set.first, *set.second);
     }
 }
 

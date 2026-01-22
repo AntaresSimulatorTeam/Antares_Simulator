@@ -25,6 +25,7 @@
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/variable/storage/averagedata.h"
+#include "antares/solver/variable/storage/stdDeviation.h"
 #include "antares/solver/variable/storage/minmax-data.h"
 
 namespace Antares::Solver::Variable
@@ -52,7 +53,7 @@ class SetDataSingleYear: public SetDataBase
 public:
     friend class SetDataAllYears;
 
-    SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
+    SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
 

@@ -24,6 +24,8 @@
 #include <cmath>
 #include <float.h>
 
+#include "antares/solver/variable/storage/empty.h"
+
 using HighPrecision = long double;
 
 namespace Antares::Solver::Variable::R::AllYears
