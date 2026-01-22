@@ -101,6 +101,10 @@ protected:
     std::vector<R::AllYears::AverageData> averageStsLevel;
 
     std::vector<R::AllYears::StdDeviation<>> stdDevThermal;
+    std::vector<R::AllYears::StdDeviation<>> stdDevRenewable;
+    std::vector<R::AllYears::StdDeviation<>> stdDevStsInjection;
+    std::vector<R::AllYears::StdDeviation<>> stdDevStsWithdrawal;
+    std::vector<R::AllYears::StdDeviation<>> stdDevStsLevel;
 };
 
 class DynamicAggregationSingleYear
