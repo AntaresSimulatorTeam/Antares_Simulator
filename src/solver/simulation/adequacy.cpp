@@ -347,6 +347,8 @@ bool Adequacy::year(Progression::Task& progression,
 
         updatingWeeklyFinalHydroLevel(study.areas, currentProblem);
 
+        dynamicAggregation.addResultsToSets(currentProblem);
+
         variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
 
@@ -407,6 +409,8 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Adequacy::simulationEnd()
 {
+    // TODO rm debug
+    dynamicAggregationAllYears.writeAllResults(study.folderOutput.string());
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);

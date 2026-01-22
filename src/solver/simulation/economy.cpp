@@ -28,7 +28,6 @@
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver_utils.h"
-#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -276,7 +275,8 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Economy::simulationEnd()
 {
-    dynamicAggregationAllYears.writeAllResults(study.folderOutput);
+    // TODO rm debug
+    dynamicAggregationAllYears.writeAllResults(study.folderOutput.string());
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
