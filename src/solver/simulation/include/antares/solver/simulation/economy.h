@@ -70,7 +70,7 @@ public:
     //! Prepro only
     bool preproOnly;
 
-    Solver::Variable::DynamicAggregation dynamicAggregationAllYears;
+    Solver::Variable::DynamicAggregationAllYears dynamicAggregationAllYears;
 
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
@@ -86,7 +86,7 @@ protected:
               OptimizationStatisticsWriter& optWriter,
               Benchmarking::DurationCollector& durationCollector,
               const Antares::Data::Area::ScratchMap& scratchmap,
-              Solver::Variable::DynamicAggregation& dynamicAggregation);
+              Solver::Variable::DynamicAggregationSingleYear& dynamicAggregation);
 
     void incrementProgression(Progression::Task& progression);
 

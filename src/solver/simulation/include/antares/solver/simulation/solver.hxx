@@ -132,7 +132,7 @@ public:
     {
         Progression::Task progression(study, y, Solver::Progression::sectYear);
 
-        Variable::DynamicAggregation dynamicAggregationForTheYear(study);
+        Variable::DynamicAggregationSingleYear dynamicAggregationForTheYear(study);
         // Index of the current year in the list of structures
         uint indexYear = randomForParallelYears.yearNumberToIndex[y];
 
@@ -363,7 +363,7 @@ void ISimulation<ImplementationType>::run()
             pDurationCollector("mc_years")
               << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
         }
-        ImplementationType::dynamicAggregationAllYears.writeAllResults(study.folderOutput);
+
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         TSGenerator::DestroyAll(study);

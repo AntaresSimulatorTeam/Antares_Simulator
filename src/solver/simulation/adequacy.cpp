@@ -143,7 +143,7 @@ bool Adequacy::year(Progression::Task& progression,
                     OptimizationStatisticsWriter& optWriter,
                     Benchmarking::DurationCollector& durationCollector,
                     const Antares::Data::Area::ScratchMap& scratchmap,
-                    Solver::Variable::DynamicAggregation& dynamicAggregation)
+                    Solver::Variable::DynamicAggregationSingleYear& dynamicAggregation)
 {
     // No failed week at year start
     failedWeekList.clear();

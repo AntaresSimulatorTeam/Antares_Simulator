@@ -24,12 +24,14 @@
 // TODO  remove tests purpose
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include <vector>
 
 namespace Antares::Solver::Variable
 {
 
-SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study):
+SetDataBase::SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set,
+                         Data::Study& study):
     set_(set)
 {
     for (auto& area: set_)
@@ -51,7 +53,12 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::
     thermalGroupToNumbers_ = Utils::giveNumbersToStrings(thermalGroupNames_);
     renewableGroupToNumbers_ = Utils::giveNumbersToStrings(renewableGroupNames_);
     stsGroupToNumbers_ = Utils::giveNumbersToStrings(stsGroupNames_);
+}
 
+SetDataSingleYear::SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set,
+                                     Data::Study& study):
+    SetDataBase(set, study)
+{
     for (unsigned int i = 0; i < thermalGroupNames_.size(); i++)
     {
         thermalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
@@ -66,53 +73,9 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::
         stsWithdrawalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
         stsLevelResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
     }
+}
 
-    minThermal.resize(thermalGroupNames_.size());
-    maxThermal.resize(thermalGroupNames_.size());
-    minRenewable.resize(renewableGroupNames_.size());
-    maxRenewable.resize(renewableGroupNames_.size());
-    minStsInjection.resize(stsGroupNames_.size());
-    maxStsInjection.resize(stsGroupNames_.size());
-    minStsWithdrawal.resize(stsGroupNames_.size());
-    maxStsWithdrawal.resize(stsGroupNames_.size());
-    minStsLevel.resize(stsGroupNames_.size());
-    maxStsLevel.resize(stsGroupNames_.size());
-
-    averageThermal.resize(thermalGroupNames_.size());
-    averageRenewable.resize(renewableGroupNames_.size());
-    averageStsInjection.resize(stsGroupNames_.size());
-    averageStsWithdrawal.resize(stsGroupNames_.size());
-    averageStsLevel.resize(stsGroupNames_.size());
-
-    for (size_t i = 0; i < thermalGroupNames_.size(); ++i) {
-        minThermal[i].resetInf();
-        maxThermal[i].resetSup();
-        averageThermal[i].initializeFromStudy(study);
-        averageThermal[i].reset();
-    }
-    for (size_t i = 0; i < renewableGroupNames_.size(); ++i) {
-        minRenewable[i].resetInf();
-        maxRenewable[i].resetSup();
-        averageRenewable[i].initializeFromStudy(study);
-        averageRenewable[i].reset();
-    }
-    for (size_t i = 0; i < stsGroupNames_.size(); ++i) {
-        minStsInjection[i].resetInf();
-        maxStsInjection[i].resetSup();
-        minStsWithdrawal[i].resetInf();
-        maxStsWithdrawal[i].resetSup();
-        minStsLevel[i].resetInf();
-        maxStsLevel[i].resetSup();
-        averageStsInjection[i].initializeFromStudy(study);
-        averageStsInjection[i].reset();
-        averageStsWithdrawal[i].initializeFromStudy(study);
-        averageStsWithdrawal[i].reset();
-        averageStsLevel[i].initializeFromStudy(study);
-        averageStsLevel[i].reset();
-    }
-};
-
-void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
+void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
 {
     for (const auto* area: set_)
     {
@@ -139,8 +102,6 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
             {
                 unsigned realHour = h + pb.HeureDansLAnnee;
-                // Extract renewable value for this cluster, area, and hour
-                // This assumes cluster->valueAtTimeStep is available and correct
                 renewableResults_[index][realHour] += cluster->valueAtTimeStep(pb.year, realHour);
             }
         }
@@ -166,13 +127,66 @@ void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-void SetData::merge(const SetData& toMerge, Data::Study& study)
+SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set,
+                                 Data::Study& study):
+    SetDataBase(set, study)
+{
+    minThermal.resize(thermalGroupNames_.size());
+    maxThermal.resize(thermalGroupNames_.size());
+    minRenewable.resize(renewableGroupNames_.size());
+    maxRenewable.resize(renewableGroupNames_.size());
+    minStsInjection.resize(stsGroupNames_.size());
+    maxStsInjection.resize(stsGroupNames_.size());
+    minStsWithdrawal.resize(stsGroupNames_.size());
+    maxStsWithdrawal.resize(stsGroupNames_.size());
+    minStsLevel.resize(stsGroupNames_.size());
+    maxStsLevel.resize(stsGroupNames_.size());
+
+    averageThermal.resize(thermalGroupNames_.size());
+    averageRenewable.resize(renewableGroupNames_.size());
+    averageStsInjection.resize(stsGroupNames_.size());
+    averageStsWithdrawal.resize(stsGroupNames_.size());
+    averageStsLevel.resize(stsGroupNames_.size());
+
+    for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
+    {
+        minThermal[i].resetInf();
+        maxThermal[i].resetSup();
+        averageThermal[i].initializeFromStudy(study);
+        averageThermal[i].reset();
+    }
+    for (size_t i = 0; i < renewableGroupNames_.size(); ++i)
+    {
+        minRenewable[i].resetInf();
+        maxRenewable[i].resetSup();
+        averageRenewable[i].initializeFromStudy(study);
+        averageRenewable[i].reset();
+    }
+    for (size_t i = 0; i < stsGroupNames_.size(); ++i)
+    {
+        minStsInjection[i].resetInf();
+        maxStsInjection[i].resetSup();
+        minStsWithdrawal[i].resetInf();
+        maxStsWithdrawal[i].resetSup();
+        minStsLevel[i].resetInf();
+        maxStsLevel[i].resetSup();
+        averageStsInjection[i].initializeFromStudy(study);
+        averageStsInjection[i].reset();
+        averageStsWithdrawal[i].initializeFromStudy(study);
+        averageStsWithdrawal[i].reset();
+        averageStsLevel[i].initializeFromStudy(study);
+        averageStsLevel[i].reset();
+    }
+}
+
+void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study)
 {
     IntermediateValues values;
     values.initializeFromStudy(study);
 
     // Thermal
-    for (size_t i = 0; i < thermalResults_.size(); ++i) {
+    for (size_t i = 0; i < toMerge.thermalResults_.size(); ++i)
+    {
         std::ranges::copy(toMerge.thermalResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
         minThermal[i].mergeInf(0, values);
@@ -181,7 +195,8 @@ void SetData::merge(const SetData& toMerge, Data::Study& study)
     }
 
     // Renewable
-    for (size_t i = 0; i < renewableResults_.size(); ++i) {
+    for (size_t i = 0; i < toMerge.renewableResults_.size(); ++i)
+    {
         std::ranges::copy(toMerge.renewableResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
         minRenewable[i].mergeInf(0, values);
@@ -190,7 +205,8 @@ void SetData::merge(const SetData& toMerge, Data::Study& study)
     }
 
     // STS Injection
-    for (size_t i = 0; i < stsInjectionResults_.size(); ++i) {
+    for (size_t i = 0; i < toMerge.stsInjectionResults_.size(); ++i)
+    {
         std::ranges::copy(toMerge.stsInjectionResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
         minStsInjection[i].mergeInf(0, values);
@@ -209,9 +225,9 @@ void SetData::merge(const SetData& toMerge, Data::Study& study)
         maxStsLevel[i].mergeSup(0, values);
         averageStsLevel[i].merge(0, values);
     }
-};
+}
 
-DynamicAggregation::DynamicAggregation(Data::Study& study):
+DynamicAggregationSingleYear::DynamicAggregationSingleYear(Data::Study& study):
     study_(study)
 {
     for (const auto& set: study_.setsOfAreas)
@@ -220,7 +236,7 @@ DynamicAggregation::DynamicAggregation(Data::Study& study):
     }
 }
 
-void DynamicAggregation::addResultsToSets(const PROBLEME_HEBDO& pb)
+void DynamicAggregationSingleYear::addResultsToSets(const PROBLEME_HEBDO& pb)
 {
     for (auto& [_, setData]: setsData_)
     {
@@ -228,21 +244,30 @@ void DynamicAggregation::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
-void DynamicAggregation::merge(const DynamicAggregation& toMerge)
+DynamicAggregationAllYears::DynamicAggregationAllYears(Data::Study& study):
+    study_(study)
+{
+    for (const auto& set: study_.setsOfAreas)
+    {
+        setsData_.try_emplace(set.first, *set.second, study_);
+    }
+}
+
+void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMerge)
 {
     for (auto& [setName, setData]: setsData_)
     {
         const auto& toMergeSetDataIt = toMerge.setsData_.find(setName);
         if (toMergeSetDataIt != toMerge.setsData_.end())
         {
-            const SetData& toMergeSetData = toMergeSetDataIt->second;
+            const SetDataSingleYear& toMergeSetData = toMergeSetDataIt->second;
             setData.merge(toMergeSetData, study_);
         }
     }
 }
 
 // TODO  remove tests purpose
-void DynamicAggregation::writeAllResults(const std::string& baseFolder) const
+void DynamicAggregationSingleYear::writeAllResults(const std::string& baseFolder) const
 {
     namespace fs = std::filesystem;
     fs::create_directories(baseFolder);
@@ -255,7 +280,7 @@ void DynamicAggregation::writeAllResults(const std::string& baseFolder) const
 }
 
 // TODO  remove tests purpose
-void SetData::writeResultsToFolder(const std::string& folderName) const
+void SetDataSingleYear::writeResultsToFolder(const std::string& folderName) const
 {
     namespace fs = std::filesystem;
     fs::create_directories(folderName);

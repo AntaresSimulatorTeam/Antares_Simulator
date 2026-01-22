@@ -30,24 +30,12 @@
 namespace Antares::Solver::Variable
 {
 
-class SetData
+class SetDataBase
 {
 public:
-    SetData(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
-
-    void addResultsToSet(const PROBLEME_HEBDO& pb);
-    void merge(const SetData& toMerge, Data::Study& study);
-
-    // TODO rm tests
-    void writeResultsToFolder(const std::string& folderName) const;
+    SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
 
 protected:
-    std::vector<std::vector<long double>> thermalResults_;
-    std::vector<std::vector<long double>> renewableResults_;
-    std::vector<std::vector<long double>> stsInjectionResults_;
-    std::vector<std::vector<long double>> stsWithdrawalResults_;
-    std::vector<std::vector<long double>> stsLevelResults_;
-
     std::set<std::string> thermalGroupNames_;
     std::map<std::string, unsigned int> thermalGroupToNumbers_;
 
@@ -57,7 +45,36 @@ protected:
     std::set<std::string> stsGroupNames_;
     std::map<std::string, unsigned int> stsGroupToNumbers_;
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
+};
 
+class SetDataSingleYear: public SetDataBase
+{
+public:
+    friend class SetDataAllYears;
+
+    SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
+
+    void addResultsToSet(const PROBLEME_HEBDO& pb);
+
+    // TODO  remove tests purpose
+    void writeResultsToFolder(const std::string& folderName) const;
+
+protected:
+    std::vector<std::vector<long double>> thermalResults_;
+    std::vector<std::vector<long double>> renewableResults_;
+    std::vector<std::vector<long double>> stsInjectionResults_;
+    std::vector<std::vector<long double>> stsWithdrawalResults_;
+    std::vector<std::vector<long double>> stsLevelResults_;
+};
+
+class SetDataAllYears: public SetDataBase
+{
+public:
+    SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study);
+
+    void merge(const SetDataSingleYear& toMerge, Data::Study& study);
+
+protected:
     std::vector<R::AllYears::MinMaxData> minThermal;
     std::vector<R::AllYears::MinMaxData> maxThermal;
 
@@ -80,20 +97,36 @@ protected:
     std::vector<R::AllYears::AverageData> averageStsLevel;
 };
 
-class DynamicAggregation
+class DynamicAggregationSingleYear
 {
 public:
-    explicit DynamicAggregation(Data::Study& study);
+    friend class DynamicAggregationAllYears;
+
+    explicit DynamicAggregationSingleYear(Data::Study& study);
 
     void addResultsToSets(const PROBLEME_HEBDO& pb);
-    void merge(const DynamicAggregation& toMerge);
 
     // TODO rm tests
     void writeAllResults(const std::string& baseFolder) const;
 
 private:
     Data::Study& study_;
-    std::map<std::string, SetData> setsData_;
+    std::map<std::string, SetDataSingleYear> setsData_;
+};
+
+class DynamicAggregationAllYears
+{
+public:
+    explicit DynamicAggregationAllYears(Data::Study& study);
+
+    void merge(const DynamicAggregationSingleYear& toMerge);
+
+    // TODO rm tests
+    void writeAllResults(const std::string& baseFolder) const;
+
+private:
+    Data::Study& study_;
+    std::map<std::string, SetDataAllYears> setsData_;
 };
 
 } // namespace Antares::Solver::Variable
