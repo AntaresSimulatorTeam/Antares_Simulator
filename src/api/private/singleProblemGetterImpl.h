@@ -50,7 +50,6 @@ private:
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
     void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem) const;
-    std::vector<NameMemo> buildMemo(const std::vector<std::string>& names) const;
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
     std::unique_ptr<Antares::Data::Study> study_;

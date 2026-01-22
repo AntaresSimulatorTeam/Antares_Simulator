@@ -165,6 +165,45 @@ void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
     }
 }
 
+struct Tag
+{
+    std::string_view name;
+    unsigned base;
+};
+
+// logically day should also be shifted, somehow antares does not do that
+constexpr std::array<Tag, 2> tags = {{{"::hour<", 168}, /*{"::day<", 7},*/ {"::week<", 1}}};
+
+std::vector<NameMemo> buildMemo(const std::vector<std::string>& names)
+{
+    std::vector<NameMemo> mem;
+    // Build memo once
+    for (std::size_t i = 0; i < names.size(); ++i)
+    {
+        const std::string& s = names[i];
+        for (const auto& [tag, base]: tags)
+        {
+            const size_t tagLen = tag.size();
+            std::size_t tagPos = s.find(tag);
+            if (tagPos == std::string::npos)
+            {
+                continue;
+            }
+
+            std::size_t numStart = tagPos + tagLen;
+            std::size_t end = s.find('>', numStart);
+            if (end == std::string::npos)
+            {
+                continue;
+            }
+
+            mem.emplace_back(numStart, end, std::stoi(s.substr(numStart, end - numStart)), i, base);
+        }
+    }
+
+    return mem;
+}
+
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
 {
     // IntercoGereeAvecDesCouts needs to be initialized
@@ -185,50 +224,6 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     variablesName_ = PbAResoudre->NomDesVariables;
     constraintsName_ = PbAResoudre->NomDesContraintes;
     return translator_.commonProblemData(PbAResoudre);
-}
-
-struct Tag
-{
-    std::string_view name;
-    unsigned base;
-};
-
-constexpr std::array<Tag, 3> tags = {{{"::hour<", 168}, {"::day<", 7}, {"::week<", 1}}};
-
-std::vector<NameMemo> SingleProblemGetter::buildMemo(const std::vector<std::string>& names) const
-{
-    std::vector<NameMemo> mem;
-    // Build memo once
-    for (std::size_t i = 0; i < names.size(); ++i)
-    {
-        const std::string& s = names[i];
-        for (const auto& [tag, base]: tags)
-        {
-            auto tagLen = tag.size();
-            std::size_t tagPos = s.find(tag);
-            if (tagPos == std::string::npos)
-            {
-                continue;
-            }
-
-            std::size_t numStart = tagPos + tagLen;
-            std::size_t end = s.find('>', numStart);
-            if (end == std::string::npos)
-            {
-                continue;
-            }
-
-            NameMemo m;
-            m.index = i;
-            m.left_end = numStart;
-            m.right_begin = end;
-            m.baseTime = std::stoi(s.substr(numStart, end - numStart));
-            m.base = base;
-            mem.push_back(m);
-        }
-    }
-
-    return mem;
 }
 
 std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
