@@ -29,7 +29,7 @@
 namespace Antares::Solver::Variable
 {
 
-SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
+SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set, Data::Study& study):
     set_(set)
 {
     for (auto& area: set_)
@@ -69,6 +69,20 @@ SetData::SetData(const std::set<Data::Area*, Data::CompareAreaName>& set):
 
     minThermal.resetInf();
     maxThermal.resetSup();
+    minRenewable.resetInf();
+    maxRenewable.resetSup();
+    minStsInjection.resetInf();
+    maxStsInjection.resetSup();
+    minStsWithdrawal.resetInf();
+    maxStsWithdrawal.resetSup();
+    minStsLevel.resetInf();
+    maxStsLevel.resetSup();
+
+    averageThermal.initializeFromStudy(study);
+    averageRenewable.initializeFromStudy(study);
+    averageStsInjection.initializeFromStudy(study);
+    averageStsWithdrawal.initializeFromStudy(study);
+    averageStsLevel.initializeFromStudy(study);
 }
 
 void SetData::addResultsToSet(const PROBLEME_HEBDO& pb)
@@ -189,7 +203,7 @@ DynamicAggregation::DynamicAggregation(Data::Study& study):
 {
     for (const auto& set: study_.setsOfAreas)
     {
-        setsData_.try_emplace(set.first, *set.second);
+        setsData_.try_emplace(set.first, *set.second, study_);
     }
 }
 
