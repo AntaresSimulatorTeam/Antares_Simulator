@@ -36,7 +36,7 @@
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-#include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
+#include "antares/solver/variable/dynamicAggregation/dynamic-aggregation.h"
 #include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation

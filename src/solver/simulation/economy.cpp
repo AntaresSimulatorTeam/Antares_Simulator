@@ -28,7 +28,7 @@
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver_utils.h"
-#include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
+#include "antares/solver/variable/dynamicAggregation/dynamic-aggregation.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

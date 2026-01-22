@@ -19,7 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/variable/dynamic-aggregation/dynamic-aggregation.h"
+#include "antares/solver/variable/dynamicAggregation/dynamic-aggregation.h"
 
 // TODO  remove tests purpose
 #include <filesystem>
