@@ -209,7 +209,7 @@ struct ComponentToAreaConnectionFillerFixture
         }
     }
 
-    void addEmptyConstraints(std::vector<std::string>& constraintNames,
+    void addEmptyConstraintsToLP(std::vector<std::string>& constraintNames,
                              bool useNamedProblems,
                              double rhs)
     {
@@ -228,14 +228,6 @@ struct ComponentToAreaConnectionFillerFixture
             }
             addEmptyConstraintsToLinearProblem(lpConstraintNames, rhs);
         }
-    }
-
-    // gp : remove ths ugly parameter 'useNamedProblems' and make 2 functions with good names.
-    // gp : move out the first line to the caller, or better : it's useless for these tests, remove it.
-    void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
-    {
-        problemeHebdo->NamedProblems = useNamedProblems;
-        addEmptyConstraints(constraintNames, useNamedProblems, rhs);
     }
 
     void addConstraintsFromConnectionsToPb(const FillContext& fillCtx,
@@ -264,7 +256,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
-    setUpLegacyLp(constraints, true, 10);
+    addEmptyConstraintsToLP(constraints, true, 10);
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
@@ -308,7 +300,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     // Legacy indexing of TS always starts at 1
     std::vector<std::string> constraints(
       {"whatever", "AreaBalance::area<area1>::hour<0>", "AreaBalance::area<area1>::hour<1>"});
-    setUpLegacyLp(constraints, false, -100);
+    addEmptyConstraintsToLP(constraints, false, -100);
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
