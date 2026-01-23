@@ -67,8 +67,8 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
             boost::algorithm::to_lower(areaId);
             if (const auto it = areaIndices_.find(areaId); it == areaIndices_.end())
             {
-                std::string errMsg = "Component '" + component.Id() + "' is connected";
-                errMsg += "to a non exsiting area : " + areaId;
+                std::string errMsg = "Component '" + component.Id() + "' is connected ";
+                errMsg += "to a non existing area : " + areaId;
                 throw Error::RuntimeError(errMsg);
             }
         }
@@ -121,13 +121,9 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
     unsigned areaIndex = areaIndices_.at(areaId);
     auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
                             .NumeroDeContrainteDesBilansPays[areaIndex];
-    if (auto* ct = pb.getConstraint(contraintIndex))
-    {
-        return ct;
-    }
-    throw Error::RuntimeError("A component is connected to area \"" + areaId
-                              + "\", that does not have a balance constraint defined for timestep "
-                              + std::to_string(ts));
+    // Searching a legacy (balance) constraint by index is not supposed to fail.
+    // Legacy problem was made from problem hebdo (see above) and is supposed to be well formed.
+    return pb.getConstraint(contraintIndex);
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(

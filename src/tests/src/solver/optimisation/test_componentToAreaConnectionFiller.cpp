@@ -230,13 +230,16 @@ struct ComponentToAreaConnectionFillerFixture
         }
     }
 
+    // gp : remove ths ugly parameter 'useNamedProblems' and make 2 functions with good names.
+    // gp : move out the first line to the caller, or better : it's useless for these tests, remove it.
     void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
     {
         problemeHebdo->NamedProblems = useNamedProblems;
         addEmptyConstraints(constraintNames, useNamedProblems, rhs);
     }
 
-    void fillProblem(const FillContext& fillCtx, OptimEntityContainer& optimEntityContainer)
+    void addConstraintsFromConnectionsToPb(const FillContext& fillCtx,
+                                           OptimEntityContainer& optimEntityContainer)
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
 
@@ -265,7 +268,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
-    fillProblem({0, 0, 0, 0, 0}, optimEntityContainer);
+    addConstraintsFromConnectionsToPb({0, 0, 0, 0, 0}, optimEntityContainer);
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(linearProblem.lookupVariable(
@@ -311,7 +314,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[1].NumeroDeContrainteDesBilansPays.push_back(2);
-    fillProblem({0, 1, 10, 11, 0}, optimEntityContainer);
+    addConstraintsFromConnectionsToPb({0, 1, 10, 11, 0}, optimEntityContainer);
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
@@ -360,20 +363,15 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     BOOST_CHECK_EQUAL(balance_ct_t11->getUb(), -100 + 2 * 8.3 - 6);
 }
 
-BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
+BOOST_AUTO_TEST_CASE(failure_if_a_connection_references_a_not_existing_area)
 {
-    setData({4.0});
-
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
-    optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
-    setUpModelerVariables(0, 0, optimEntityContainer);
-    std::vector<std::string> constraints({"whatever"});
-    setUpLegacyLp(constraints, true, 0);
-    BOOST_CHECK_EXCEPTION(fillProblem({0, 0, 0, 0, 0}, optimEntityContainer),
+    std::string errMsg = "Component 'connected_component_var' is connected to a non existing area ";
+    errMsg += ": area1";
+    BOOST_CHECK_EXCEPTION(addConstraintsFromConnectionsToPb({0, 0, 0, 0, 0}, optimEntityContainer),
                           std::runtime_error,
-                          checkMessage("A component is connected to area \"area1\", that does not "
-                                       "have a balance constraint defined for timestep 0"));
+                          checkMessage(errMsg));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
