@@ -80,8 +80,8 @@ public:
     void Overflow(unsigned varIndex);
     void FinalStorage(unsigned varIndex);
     void LayerStorage(unsigned varIndex, int layerIndex);
-    void PositiveUnsuppliedEnergy(unsigned varIndex);
-    void NegativeUnsuppliedEnergy(unsigned varIndex);
+    void UnsuppliedEnergy(unsigned varIndex);
+    void Spillage(unsigned varIndex);
     void AreaBalance(unsigned varIndex);
 
 private:

@@ -32,16 +32,16 @@ using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::ModelerStudy::SystemModel;
 
- std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* problemeHebdo_)
- {
-     std::map<std::string, unsigned> areaIndices;
-     unsigned index = 0;
-     for (auto name: problemeHebdo_->NomsDesPays)
-     {
-         areaIndices.insert({name, index++});
-     }
-     return areaIndices;
- }
+std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* problemeHebdo_)
+{
+    std::map<std::string, unsigned> areaIndices;
+    unsigned index = 0;
+    for (auto name: problemeHebdo_->NomsDesPays)
+    {
+        areaIndices.insert({name, index++});
+    }
+    return areaIndices;
+}
 
 namespace Antares::Optimization
 {
@@ -121,7 +121,7 @@ IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearPro
     unsigned areaIndex = areaIndices_.at(areaId);
     auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[pdt]
                             .NumeroDeContrainteDesBilansPays[areaIndex];
-    // Searching a legacy (balance) constraint by index is not supposed to fail.
+    // Fetching a legacy (balance) constraint by index in LP is not supposed to fail.
     // Legacy problem was made from problem hebdo (see above) and is supposed to be well formed.
     return pb.getConstraint(contraintIndex);
 }

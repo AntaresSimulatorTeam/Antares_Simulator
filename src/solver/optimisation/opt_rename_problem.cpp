@@ -266,13 +266,15 @@ void VariableNamer::FinalStorage(unsigned varIndex)
     SetAreaElementNameHour(varIndex, "FinalStorage");
 }
 
-void VariableNamer::PositiveUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
 {
     SetAreaElementNameHour(varIndex, "PositiveUnsuppliedEnergy");
 }
 
-void VariableNamer::NegativeUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::Spillage(unsigned varIndex)
 {
+    // TODO : "NegativeUnsuppliedEnergy" means nothing. 
+    // Should be replaced with "Spillage".
     SetAreaElementNameHour(varIndex, "NegativeUnsuppliedEnergy");
 }
 

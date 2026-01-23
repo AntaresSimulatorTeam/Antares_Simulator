@@ -106,7 +106,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                                         .ReserveHoraireJMoins1[pdtHebdo];
             }
 
-            int var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
+            int var = variableManager.UnsuppliedEnergy(pays, pdtJour);
             Xmin[var] = 0.0;
 
             double MaxAllMustRunGenerationOfArea = 0.;
@@ -464,7 +464,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
 
             {
-                var = variableManager.NegativeUnsuppliedEnergy(pays, pdtJour);
+                var = variableManager.Spillage(pays, pdtJour);
 
                 Xmin[var] = 0.0;
 
