@@ -89,7 +89,7 @@ if (ENABLE_CLANG_TIDY)
         message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
         set(_clang_tidy_available TRUE)
     else ()
-        message(WARNING "ENABLE_CLANG_TIDY is ON but clang-tidy was not found. Static analysis will be skipped.")
+        message(FATAL_ERROR "ENABLE_CLANG_TIDY is ON but clang-tidy was not found. Please install clang-tidy (>=17) or set -DENABLE_CLANG_TIDY=OFF.")
     endif ()
 endif ()
 
