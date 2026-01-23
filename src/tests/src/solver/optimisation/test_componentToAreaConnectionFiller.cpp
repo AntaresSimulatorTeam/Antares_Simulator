@@ -209,28 +209,34 @@ struct ComponentToAreaConnectionFillerFixture
         }
     }
 
-    void addEmptyConstraintsToLP(std::vector<std::string>& constraintNames,
-                             bool useNamedProblems,
-                             double rhs)
+    std::vector<std::string> makeAutomaticConstraintNames(unsigned nb_of_constraints)
+    {
+        std::vector<std::string> constraintNames;
+        for (unsigned i = 0; i < nb_of_constraints; ++i)
+        {
+            constraintNames.push_back("c" + std::to_string(i));
+        }
+        return constraintNames;
+    }
+
+    void addEmptyConstraintsToLP(unsigned nb_of_constraints, const double rhs)
+    {
+        problemeHebdo->ProblemeAResoudre->NombreDeContraintes = nb_of_constraints;
+        auto constraintNames = makeAutomaticConstraintNames(nb_of_constraints);
+        problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
+
+        addEmptyConstraintsToLinearProblem(constraintNames, rhs);
+    }
+
+    void addEmptyNamedConstraintsToLP(std::vector<std::string>& constraintNames, double rhs)
     {
         problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
-        if (useNamedProblems)
-        {
-            addEmptyConstraintsToLinearProblem(constraintNames, rhs);
-        }
-        else
-        {
-            std::vector<std::string> lpConstraintNames;
-            for (unsigned int i = 0; i < constraintNames.size(); ++i)
-            {
-                lpConstraintNames.push_back("c" + std::to_string(i));
-            }
-            addEmptyConstraintsToLinearProblem(lpConstraintNames, rhs);
-        }
+
+        addEmptyConstraintsToLinearProblem(constraintNames, rhs);
     }
 
-    void addConstraintsFromConnectionsToPb(const FillContext& fillCtx,
+    void addConstraintsFromConnectionsToLP(const FillContext& fillCtx,
                                            OptimEntityContainer& optimEntityContainer)
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
@@ -256,11 +262,11 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
-    addEmptyConstraintsToLP(constraints, true, 10);
+    addEmptyNamedConstraintsToLP(constraints, 10);
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
-    addConstraintsFromConnectionsToPb({0, 0, 0, 0, 0}, optimEntityContainer);
+    addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer);
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(linearProblem.lookupVariable(
@@ -298,15 +304,13 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(10, 11, optimEntityContainer);
     // Legacy indexing of TS always starts at 1
-    std::vector<std::string> constraints(
-      {"whatever", "AreaBalance::area<area1>::hour<0>", "AreaBalance::area<area1>::hour<1>"});
-    addEmptyConstraintsToLP(constraints, false, -100);
+    addEmptyConstraintsToLP(3 /* nb of constraints */, -100);
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[1].NumeroDeContrainteDesBilansPays.push_back(2);
-    addConstraintsFromConnectionsToPb({0, 1, 10, 11, 0}, optimEntityContainer);
+    addConstraintsFromConnectionsToLP({0, 1, 10, 11, 0}, optimEntityContainer);
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
@@ -361,7 +365,7 @@ BOOST_AUTO_TEST_CASE(failure_if_a_connection_references_a_not_existing_area)
 
     std::string errMsg = "Component 'connected_component_var' is connected to a non existing area ";
     errMsg += ": area1";
-    BOOST_CHECK_EXCEPTION(addConstraintsFromConnectionsToPb({0, 0, 0, 0, 0}, optimEntityContainer),
+    BOOST_CHECK_EXCEPTION(addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer),
                           std::runtime_error,
                           checkMessage(errMsg));
 }
