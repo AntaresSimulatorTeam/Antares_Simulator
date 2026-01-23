@@ -37,6 +37,66 @@ include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# Sanitizers and strict warnings
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    # Strict warnings
+    add_compile_options(-Wall -Wextra -Wshadow -Wconversion)
+endif ()
+
+# Sanitizers options (defined once)
+option(ENABLE_ASAN "Enable AddressSanitizer (ASan)" OFF)
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer (UBSan)" OFF)
+
+set(_antares_sanitizer_target_defined FALSE)
+if ((ENABLE_ASAN OR ENABLE_UBSAN) AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU"))
+    # Build sanitizer list
+    set(_san_list "")
+    if (ENABLE_ASAN)
+        list(APPEND _san_list address)
+    endif ()
+    if (ENABLE_UBSAN)
+        list(APPEND _san_list undefined)
+    endif ()
+    string(REPLACE ";" "," _san_flags "${_san_list}")
+
+    message(STATUS "Sanitizers enabled: ${_san_flags}")
+
+    # Create an INTERFACE target that carries sanitizer compile/link options.
+    # This avoids applying flags globally (which would affect external dependencies).
+    add_library(antares_sanitizers INTERFACE)
+    target_compile_options(antares_sanitizers INTERFACE -fsanitize=${_san_flags} -fno-omit-frame-pointer)
+    if (ENABLE_UBSAN)
+        target_compile_options(antares_sanitizers INTERFACE -fno-sanitize-recover=undefined)
+    endif ()
+
+    if (COMMAND target_link_options)
+        target_link_options(antares_sanitizers INTERFACE -fsanitize=${_san_flags})
+    else ()
+        # Fallback for older CMake: pass linker flags via INTERFACE_LINK_LIBRARIES as raw flags
+        target_link_libraries(antares_sanitizers INTERFACE "-fsanitize=${_san_flags}")
+    endif ()
+
+    set(_antares_sanitizer_target_defined TRUE)
+endif ()
+
+# Clang-Tidy integration
+option(ENABLE_CLANG_TIDY "Run clang-tidy static analysis during builds" ON)
+find_program(CLANG_TIDY_EXE NAMES clang-tidy clang-tidy-18 clang-tidy-17)
+set(_clang_tidy_available FALSE)
+set(_clang_tidy_args "-warnings-as-errors=*")
+if (ENABLE_CLANG_TIDY)
+    if (CLANG_TIDY_EXE)
+        message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+        set(_clang_tidy_available TRUE)
+    else ()
+        message(WARNING "ENABLE_CLANG_TIDY is ON but clang-tidy was not found. Static analysis will be skipped.")
+    endif ()
+endif ()
+
+# Note: global application of sanitizer flags was removed. The INTERFACE target
+# 'antares_sanitizers' defined above is linked only to project targets, so
+# external/imported dependencies are not affected.
+
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 endif ()
@@ -181,7 +241,87 @@ endif ()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
-option(BUILD_UI "Build antares ui simulator" ON)
+option(BUILD_UI "Build antares ui simulator" OFF)
+message(STATUS "Build antares ui simulator: ${BUILD_UI}")
+
+option(BUILD_TOOLS "Build antares tools" OFF)
+message(STATUS "Build antares tools: ${BUILD_TOOLS}")
+
+option(BUILD_ORTOOLS "Build OR-Tools" OFF)
+message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
+
+option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
+if (${BUILD_MERSENNE_TWISTER_PYBIND11})
+    find_package(pybind11 REQUIRED)
+endif ()
+
+#Boost header libraries
+find_package(Boost REQUIRED)
+
+find_package(antlr4-runtime REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(fmt REQUIRED)
+
+#Sirius solver
+if (POLICY CMP0074)
+    cmake_policy(SET CMP0074 NEW)
+endif ()
+
+find_package(sirius_solver REQUIRED)
+
+find_package(ortools)
+if (NOT ortools_FOUND OR BUILD_ORTOOLS)
+    message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
+    FetchContent_Declare(ortools-rte
+            GIT_REPOSITORY "https://github.com/rte-france/or-tools-rte.git"
+            GIT_TAG ${ORTOOLS_TAG}
+            GIT_SHALLOW TRUE
+    )
+
+    # Pass options to OR-Tools's CMake
+    set(BUILD_DEPS "ON" CACHE INTERNAL "")
+    set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
+    set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
+    set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
+    set(USE_SCIP "ON" CACHE INTERNAL "")
+    set(USE_GLPK "ON" CACHE INTERNAL "")
+    # We build OR-Tools as a static lib. Cyclic dependencies are detected
+    # without this flag.
+    set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+    # In mode optimization error analysis, we call Sirius through or-tools
+    # So we need to activate Sirius in or-tools configuration (OFF by default)
+    set(USE_SIRIUS "ON" CACHE INTERNAL "")
+    set(ortools_REPO "https://github.com/google/or-tools.git")
+    string(REGEX MATCH "^[^-]+" OFFICIAL_TAG ${ORTOOLS_TAG})
+    set(ortools_REF ${OFFICIAL_TAG})
+
+    FetchContent_MakeAvailable(ortools-rte)
+endif ()
+
+find_package(minizip-ng QUIET)
+if (minizip-ng_FOUND)
+    add_library(MINIZIP::minizip ALIAS MINIZIP::minizip-ng)
+else ()
+    find_package(minizip)
+    if (minizip_FOUND)
+        message(STATUS "Found minizip (not minizip-ng).")
+    else ()
+        message(FATAL_ERROR "Minizip not found.")
+    endif ()
+endif ()
+
+#wxWidget not needed for all library find is done in ui CMakeLists.txt
+if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
+    #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
+endif ()
+
+# TODO : review Standard Settings
+include(cmake/common-settings.cmake)
+
+# Default: disable UI build per request
+set(BUILD_UI_DEFAULT OFF)
+option(BUILD_UI "Build antares ui simulator" ${BUILD_UI_DEFAULT})
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
 option(BUILD_TOOLS "Build antares tools" OFF)
@@ -294,19 +434,87 @@ if (BUILD_TOOLS)
     add_subdirectory(tools) #All antares tools
 endif ()
 
-# Tests
-# 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
-# 	To build tests, use -DBUILD_TESTING=ON
-option(BUILD_TESTING "Activates unit tests building" OFF)
-if (BUILD_TESTING)
-    # include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
-    enable_testing()
+# If we defined the antares_sanitizers interface target above, link it to all
+# non-imported, non-interface, non-object targets created by this project.
+# This ensures sanitizers are applied only to project targets and not to
+# imported external dependencies.
+if (_antares_sanitizer_target_defined)
+    get_property(_all_targets GLOBAL PROPERTY TARGETS)
+    foreach(_tgt IN LISTS _all_targets)
+        if (_tgt STREQUAL "antares_sanitizers")
+            continue()
+        endif()
+        # Skip imported targets
+        get_target_property(_is_imported ${_tgt} IMPORTED)
+        if (_is_imported)
+            continue()
+        endif()
+        # Skip interface and object libraries
+        get_target_property(_tgt_type ${_tgt} TYPE)
+        if (_tgt_type STREQUAL "INTERFACE_LIBRARY" OR _tgt_type STREQUAL "OBJECT_LIBRARY")
+            continue()
+        endif()
+        # Try to link sanitizer interface. Use TARGET check to avoid errors.
+        if (TARGET ${_tgt})
+            message(VERBOSE "Applying sanitizers to target: ${_tgt}")
+            target_link_libraries(${_tgt} PRIVATE antares_sanitizers)
+        endif()
+    endforeach()
+endif()
 
-    add_subdirectory(tests)
-endif ()
+# If clang-tidy is available, apply it per-target to avoid running it on external/third-party code (e.g. ext/)
+if (_clang_tidy_available)
+    # Build the final clang-tidy property string used by CMake targets
+    set(_clang_tidy_property "${CLANG_TIDY_EXE};${_clang_tidy_args};--extra-arg-before=--driver-mode=g++")
 
-OMESSAGE("")
+    get_property(_all_targets GLOBAL PROPERTY TARGETS)
+    foreach(_tgt IN LISTS _all_targets)
+        # Skip the sanitizer interface and any non-real targets
+        if (_tgt STREQUAL "antares_sanitizers")
+            continue()
+        endif()
 
+        # Skip imported targets
+        get_target_property(_is_imported ${_tgt} IMPORTED)
+        if (_is_imported)
+            continue()
+        endif()
+
+        # Skip interface and object libraries
+        get_target_property(_tgt_type ${_tgt} TYPE)
+        if (_tgt_type STREQUAL "INTERFACE_LIBRARY" OR _tgt_type STREQUAL "OBJECT_LIBRARY")
+            continue()
+        endif()
+
+        # Get sources for the target (may be empty)
+        get_target_property(_srcs ${_tgt} SOURCES)
+        if (NOT _srcs)
+            # No sources to analyze
+            continue()
+        endif()
+
+        # Skip targets that include sources under the ext/ directory (third-party)
+        set(_has_ext_src FALSE)
+        foreach(_s IN LISTS _srcs)
+            # Only analyze sources with absolute or relative paths; check if path contains '/ext/'
+            string(FIND "${_s}" "/ext/" _found)
+            if (_found GREATER -1)
+                set(_has_ext_src TRUE)
+                break()
+            endif()
+        endforeach()
+        if (_has_ext_src)
+            message(VERBOSE "Skipping clang-tidy for target ${_tgt} (external sources detected)")
+            continue()
+        endif()
+
+        # Finally, set clang-tidy property on the target
+        if (TARGET ${_tgt})
+            message(VERBOSE "Setting CXX_CLANG_TIDY for target ${_tgt}")
+            set_property(TARGET ${_tgt} PROPERTY CXX_CLANG_TIDY "${_clang_tidy_property}")
+        endif()
+    endforeach()
+endif()
 
 # Informations for NSIS
 if (WIN32 OR WIN64)

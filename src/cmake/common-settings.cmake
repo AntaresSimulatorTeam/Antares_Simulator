@@ -3,7 +3,7 @@
 #
 set(CMAKE_CXX_STANDARD 20)
 
-set(COMMON_GCC_FLAGS "-Wall -W -Wextra -Wfatal-errors")
+set(COMMON_GCC_FLAGS "-Wall -W -Wextra -Wshadow -Wconversion -Wfatal-errors")
 if (NOT WIN32)
     # These flags are incompatible with non-x86 architectures (e.g ARM)
     # TODO remove
