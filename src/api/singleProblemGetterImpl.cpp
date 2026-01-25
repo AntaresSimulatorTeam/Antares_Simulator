@@ -241,6 +241,8 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(&pb_);
     }
 
+    OPT_RestaurerLesDonnees(&pb_);
+
     OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(&pb_,
                                                            PremierPdtDeLIntervalle,
                                                            DernierPdtDeLIntervalle,
