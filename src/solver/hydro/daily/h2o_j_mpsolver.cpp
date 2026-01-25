@@ -183,6 +183,12 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles)
 
     MPSolver* solver = MPSolver::CreateSolver("sirius");
 
+    if (!solver)
+    {
+        DonneesMensuelles->ResultatsValides = NON;
+        return;
+    }
+
     // 1) Create variables and wire them to the legacy data structures.
     H2O_J_MPSOLVER_VARIABLES vars = H2O_J_MPSolver_CreateVariables(DonneesMensuelles, *solver);
 
@@ -193,7 +199,17 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles)
     H2O_J_MPSolver_CreateConstraints(DonneesMensuelles, vars, *solver);
 
     // 4) Solve and recover the solution into DONNEES_MENSUELLES.
-    H2O_J_MPSolver_SolveAndRecover(DonneesMensuelles, *solver, vars);
+    bool success = H2O_J_MPSolver_SolveAndRecover(DonneesMensuelles, *solver, vars);
+
+    if (success)
+    {
+        DonneesMensuelles->ResultatsValides = OUI;
+    }
+    else
+    {
+        DonneesMensuelles->ResultatsValides = NON;
+    }
+
     delete solver;
 }
 
