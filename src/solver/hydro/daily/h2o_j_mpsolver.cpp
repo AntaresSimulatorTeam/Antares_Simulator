@@ -181,7 +181,7 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles)
     // Create a fresh MPSolver instance for the daily problem. We use the
     // Sirius LP backend by default as requested.
 
-    MPSolver* solver = MPSolver::CreateSolver("sirius");
+    auto solver = std::unique_ptr<MPSolver>(MPSolver::CreateSolver("sirius"));
 
     if (!solver)
     {
@@ -201,16 +201,7 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles)
     // 4) Solve and recover the solution into DONNEES_MENSUELLES.
     bool success = H2O_J_MPSolver_SolveAndRecover(DonneesMensuelles, *solver, vars);
 
-    if (success)
-    {
-        DonneesMensuelles->ResultatsValides = OUI;
-    }
-    else
-    {
-        DonneesMensuelles->ResultatsValides = NON;
-    }
-
-    delete solver;
+    DonneesMensuelles->ResultatsValides = success ? OUI : NON;
 }
 
 } // namespace DoneesOptimisationJournaliere
