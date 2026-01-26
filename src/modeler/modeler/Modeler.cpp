@@ -252,4 +252,30 @@ void Modeler::run()
         logs.error() << "Problem during linear optimization";
     }
 }
+
+Modeler::ProblemEntity Modeler::buildMasterProblem(
+  const ModelerData& data,
+  Optimisation::BendersDecomposition& bendersDecomposition,
+  const FillContext& fillContext,
+  const std::string& solver)
+{
+    auto [hasCompatibleVariable, isMip] = analyzeLocation(data, Config::Location::MASTER);
+    if (!hasCompatibleVariable)
+    {
+        return {nullptr, nullptr};
+    }
+    auto problem = std::make_unique<OrtoolsLinearProblem>(isMip, solver);
+    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
+      *problem,
+      data.dataSeries.get(),
+      &data.scenarioGroupRepository);
+    SystemLinearProblemBuilder builder(data.system.get(),
+                                       data.scenarioGroupRepository,
+                                       &bendersDecomposition,
+                                       *optimEntityContainer);
+
+    bendersDecomposition.setCurrentProblemId("master");
+    builder.build(fillContext, Config::Location::MASTER);
+    return {std::move(problem), std::move(optimEntityContainer)};
+}
 } // namespace Antares::Solver

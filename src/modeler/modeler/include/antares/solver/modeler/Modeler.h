@@ -5,6 +5,7 @@
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/parameters/modelerParameters.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 
 #include "ModelerData.h"
 
@@ -43,6 +44,18 @@ public:
     {
         return subproblems_;
     }
+
+    struct ProblemEntity
+    {
+        std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> problem;
+        std::unique_ptr<Optimisation::OptimEntityContainer> optimEntityContainer;
+    };
+
+    static ProblemEntity buildMasterProblem(
+      const ModelerData& data,
+      Optimisation::BendersDecomposition& bendersDecomposition,
+      const Optimisation::LinearProblemApi::FillContext& fillContext = {0, 167, 0, 167, 0},
+      const std::string& solver = "SCIP");
 
 private:
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;

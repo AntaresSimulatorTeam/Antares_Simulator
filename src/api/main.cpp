@@ -6,6 +6,9 @@
 #include <antares/logs/logs.h>
 #include "antares/api/singleProblemGetter.h"
 #include "antares/io/outputs/MPSGenerator.h"
+#include "antares/solver/modeler/Modeler.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 
 using namespace Antares::Solver;
 constexpr int kMaxDisplay = 10'000;
@@ -106,6 +109,46 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
     }
 }
 
+void writeMasterAndStructure(const std::filesystem::path& studyPath,
+                             const std::filesystem::path& outputDir)
+{
+    using namespace Antares::Solver;
+    using namespace Antares::Optimisation;
+    using namespace Antares::Optimisation::LinearProblemApi;
+    namespace fs = std::filesystem;
+
+    logs.info() << "Building master problem and Benders decomposition...";
+
+    if (!outputDir.empty())
+    {
+        static std::once_flag once;
+        std::call_once(once, [&outputDir] { std::filesystem::create_directories(outputDir); });
+    }
+
+    ModelerData data = LoadFiles::loadAll(studyPath);
+    logs.info() << "Modeler data loaded";
+
+    BendersDecomposition bendersDecomposition;
+    FillContext fillContext = {0, 167, 0, 167, 0};
+
+    auto master = Modeler::buildMasterProblem(data, bendersDecomposition, fillContext);
+
+    if (!master.problem)
+    {
+        logs.warning() << "Master problem is empty - not writing master.mps or structure.txt";
+        return;
+    }
+
+    auto mps = IO::Outputs::MPSGenerator(*master.problem, "master").run();
+    IO::Outputs::MPSFileWriter::write(outputDir / "master.mps", mps);
+    logs.info() << "Written: " << (outputDir / "master.mps").string();
+
+    BendersDecompositionWriter writer(bendersDecomposition);
+    std::ofstream of(outputDir / "structure.txt");
+    writer.write(of);
+    logs.info() << "Written: " << (outputDir / "structure.txt").string();
+}
+
 void printWeekLPData(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly)
 {
     print_side_by_side(constant.VariablesCount,
@@ -145,6 +188,11 @@ void printProblems(const ApiOptions& options)
                 writeWeekMPS(weekly, options.outputFolder, id);
             }
         }
+    }
+
+    if (options.writeMps)
+    {
+        writeMasterAndStructure(options.studyFolder, options.outputFolder);
     }
 }
 
