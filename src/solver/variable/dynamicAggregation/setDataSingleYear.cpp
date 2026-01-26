@@ -97,7 +97,67 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-// TODO  remove tests purpose
+void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>& results,
+                                     const std::set<std::string>& groupNames,
+                                     const Category::Precision& precision,
+                                     const std::string& suffix,
+                                     Data::Study& study,
+                                     SurveyResults& survey) const
+{
+    unsigned int index = 0;
+    for (const auto& group: groupNames)
+    {
+        survey.captions[0][survey.data.columnIndex] = group + suffix;
+        survey.captions[1][survey.data.columnIndex] = "MWh";
+        survey.captions[2][survey.data.columnIndex] = "";
+        survey.variableCaption = group + suffix;
+        survey.variableUnit = "MWh";
+
+        IntermediateValues values;
+        values.initializeFromStudy(study);
+        values.reset();
+        std::ranges::copy(results[index], values.hour);
+        values.computeStatisticsForTheCurrentYear();
+
+        struct VCardStub
+        {
+            enum
+            {
+                decimal = 0,
+            };
+        };
+
+        values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                  Category::FileLevel::va,
+                                                  precision);
+        ++index;
+    }
+}
+
+void SetDataSingleYear::processWithPrecision(Category::Precision precision,
+                                             Data::Study& study,
+                                             SurveyResults& survey) const
+{
+    survey.data.columnIndex = 0;
+    processGroup(thermalResults_, thermalGroupNames_, precision, "", study, survey);
+    processGroup(renewableResults_, renewableGroupNames_, precision, "", study, survey);
+    processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
+    processGroup(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
+    processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey);
+}
+
+void SetDataSingleYear::processAndSave(Category::Precision precision,
+                                       const std::string& filename,
+                                       Data::Study& study,
+                                       SurveyResults& survey) const
+{
+    processWithPrecision(precision, study, survey);
+    survey.data.filename = filename;
+    survey.saveToFile(Category::DataLevel::setOfAreas,
+                      Category::FileLevel::va,
+                      precision);
+}
+
 void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
                                              Data::Study& study,
                                              IResultWriter& writer) const
@@ -113,64 +173,11 @@ void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
     survey.isCurrentVarNA = nonApplicable;
     survey.isPrinted = printed;
 
-    struct VCardStub
-    {
-        enum
-        {
-            decimal = 0,
-        };
-    };
-
-    survey.data.columnIndex = 0;
-
-    auto processGroup = [&](const std::vector<std::vector<long double>>& results,
-                            const std::set<std::string>& groupNames,
-                            const Category::Precision& precision,
-                            const std::string& suffix = "") {
-        unsigned int index = 0;
-        for (const auto& group: groupNames)
-        {
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            IntermediateValues values;
-            values.initializeFromStudy(study);
-            values.reset();
-            std::ranges::copy(results[index], values.hour);
-            values.computeStatisticsForTheCurrentYear();
-
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      precision);
-            ++index;
-        }
-    };
-
-    auto processWithPrecision = [&](Category::Precision precision) {
-        survey.data.columnIndex = 0;
-        processGroup(thermalResults_, thermalGroupNames_, precision);
-        processGroup(renewableResults_, renewableGroupNames_, precision);
-        processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION");
-        processGroup(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL");
-        processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL");
-    };
-
-    auto processAndSave = [&](Category::Precision precision, const std::string& filename) {
-        processWithPrecision(precision);
-        survey.data.filename = filename;
-        survey.saveToFile(Category::DataLevel::setOfAreas,
-                          Category::FileLevel::va,
-                          precision);
-    };
-
-    processAndSave(Category::Precision::hourly, "hourly.txt");
-    processAndSave(Category::Precision::daily, "daily.txt");
-    processAndSave(Category::Precision::weekly, "weekly.txt");
-    processAndSave(Category::Precision::monthly, "monthly.txt");
-    processAndSave(Category::Precision::annual, "annual.txt");
+    processAndSave(Category::Precision::hourly, "hourly.txt", study, survey);
+    processAndSave(Category::Precision::daily, "daily.txt", study, survey);
+    processAndSave(Category::Precision::weekly, "weekly.txt", study, survey);
+    processAndSave(Category::Precision::monthly, "monthly.txt", study, survey);
+    processAndSave(Category::Precision::annual, "annual.txt", study, survey);
     survey.data.columnIndex = 0;
 }
 

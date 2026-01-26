@@ -61,6 +61,21 @@ public:
     void writeResultsToFolder(const std::string& folderName,
                               Data::Study& study,
                               IResultWriter& writer) const;
+    void processGroup(const std::vector<std::vector<long double>>& results,
+                      const std::set<std::string>& groupNames,
+                      const Category::Precision& precision,
+                      const std::string& suffix,
+                      Data::Study& study,
+                      SurveyResults& survey) const;
+
+    void processWithPrecision(Category::Precision precision,
+                              Data::Study& study,
+                              SurveyResults& survey) const;
+
+    void processAndSave(Category::Precision precision,
+                        const std::string& filename,
+                        Data::Study& study,
+                        SurveyResults& survey) const;
 
 private:
     std::vector<std::vector<HighPrecision>> thermalResults_;
