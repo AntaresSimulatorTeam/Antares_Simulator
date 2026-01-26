@@ -1604,7 +1604,7 @@ var namespaces_dup =
           [ "extractSTSforRemix", "common-hydro-remix_8cpp.html#aca4ae031bccefe00cbd6fd74b6bc173e", null ],
           [ "extractSTSinflows", "common-hydro-remix_8cpp.html#a56fc00873da3157a62111767ea63c601", null ],
           [ "extractSTSlowRuleCurve", "common-hydro-remix_8cpp.html#ae1041bd39443f5e83ad4216942375d73", null ],
-          [ "extractSTSpmax", "common-hydro-remix_8cpp.html#a311bb828fd4a5ea4bbf36e0fecfe72a6", null ],
+          [ "extractSTSpmax", "common-hydro-remix_8cpp.html#aaacb88470d649878819af73f4edfc319", null ],
           [ "extractSTSupRuleCurve", "common-hydro-remix_8cpp.html#a04ce4d5763f6c22f3e87393be18a6777", null ],
           [ "finalizeOptimizationStatistics", "common-eco-adq_8cpp.html#a11dfb84267c82f2f802941ba9861c8a3", null ],
           [ "interpolateWaterValue", "common-hydro-levels_8cpp.html#a771c320a359d85099c258f03801f797a", null ],
