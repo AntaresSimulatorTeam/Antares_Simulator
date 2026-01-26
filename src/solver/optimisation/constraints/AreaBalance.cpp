@@ -59,10 +59,7 @@ void AreaBalance::add(int pdt, int pays)
     }
 
     ExportPaliers(data.PaliersThermiquesDuPays[pays], builder);
-    builder.HydProd(pays, -1.0)
-      .Pumping(pays, 1.0)
-      .UnsuppliedEnergy(pays, -1.0)
-      .Spillage(pays, 1.0);
+    builder.HydProd(pays, -1.0).Pumping(pays, 1.0).UnsuppliedEnergy(pays, -1.0).Spillage(pays, 1.0);
 
     shortTermStorageBalance(data.ShortTermStorage[pays], builder);
 

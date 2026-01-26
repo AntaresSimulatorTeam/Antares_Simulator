@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_read_correctly)
 }
 
 // This yaml lib contains only a port type, but with a more complete area connection.
-// Note that : as previusly (and for same reason), an empty model is added.
+// Note that : as previously (and for same reason), an empty model is added.
 static const auto onlyPortTypeYmlLib2 = R"(
 library:
   id: my_lib

@@ -25,12 +25,24 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Expressions::Visitors;
+
+std::string componentInjectionField(const Component& component, const std::string& portId)
+{
+    return component.getModel()->Ports().at(portId).Type().areaConnection()->injection;
+}
+
+std::string componentToAreaBoundField(const Component& component, const std::string& portId)
+{
+    return component.getModel()->Ports().at(portId).Type().areaConnection()->to_area_bound;
+}
 
 std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* problemeHebdo_)
 {
@@ -80,11 +92,33 @@ void ComponentToAreaConnectionFiller::increaseAreaSpillageBound(const FillContex
                                                                 const std::string& portId,
                                                                 const std::string& areaId)
 {
-    // 1. Fetch upper bound of spillage variable
+    // 1. Fetch spillage variable numbers in LP
+    std::vector<unsigned> spillageNumbersInLP(ctx.getLocalNumberOfTimeSteps());
+    std::vector<double>& Xmax = problemeHebdo_->ProblemeAResoudre->Xmax;
+    unsigned areaIndex = areaIndices_.at(areaId);
+    for (unsigned h = 0; h < ctx.getLocalNumberOfTimeSteps(); ++h)
+    {
+        // Number associated to spillage variable in LP (given an area and an hour)
+        spillageNumbersInLP[h] = problemeHebdo_->CorrespondanceVarNativesVarOptim[h]
+                                   .NumeroDeVariableDefaillanceNegative[areaIndex];
+    }
 
     // 2. Fetch vector of values to be added to spillage bound
+    auto toAreaBoundField = componentToAreaBoundField(component, portId);
+    Nodes::Node* expression = component.nodeAtPortField(portId, toAreaBoundField);
+    EvalVisitor visitor(optimEntityContainer_, ctx, component);
+    EvaluationResult result = visitor.dispatch(expression);
+    std::vector<double> toBeAddedToSpillageBound = result.asVector(ctx.getLocalNumberOfTimeSteps());
 
     // 3. Add values to spillage bound
+    auto& pb = optimEntityContainer_.Problem();
+    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    {
+        unsigned var_number = spillageNumbersInLP[h];
+        auto var = pb.getVariable(var_number);
+        double new_upper_bound = var->getUb() + toBeAddedToSpillageBound[h];
+        var->setUb(new_upper_bound);
+    }
 }
 
 void ComponentToAreaConnectionFiller::increaseAreaUnsuppliedEnergyBound(const FillContext& ctx,
@@ -106,11 +140,6 @@ void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
             increaseAreaUnsuppliedEnergyBound(ctx, component, portId, areaId);
         }
     }
-}
-
-static std::string componentInjectionField(const Component& component, const std::string& portId)
-{
-    return component.getModel()->Ports().at(portId).Type().areaConnection()->injection;
 }
 
 IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
