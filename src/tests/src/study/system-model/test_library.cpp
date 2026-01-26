@@ -184,8 +184,8 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
     };
     BOOST_CHECK_EXCEPTION(shouldThrow(),
                           std::invalid_argument,
-                          checkMessage("Field \"secondField\" selected for area connections was "
-                                       "not defined in PortType \"portTypeId\"."));
+                          checkMessage("Field 'secondField' selected for area connections was "
+                                       "not defined in PortType 'portTypeId'."));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -108,7 +108,10 @@ public:
         std::string clusterId;
     };
 
-    const std::map<std::string, std::string>& portToThermalConnections() const;
+    const std::map<std::string, ThermalConnection>& portToThermalConnections() const;
+
+    std::optional<::Antares::ModelerStudy::SystemModel::Component::ThermalConnection>
+    thermalCapacityConnectedToPort(const std::string& portId) const;
 
     unsigned int Index() const
     {
