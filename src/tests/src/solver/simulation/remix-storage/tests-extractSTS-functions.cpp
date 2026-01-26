@@ -84,18 +84,19 @@ BOOST_AUTO_TEST_CASE(extract_week_with_nominal_capacity_200)
     BOOST_CHECK_CLOSE(result[19], 200.0, TOLERANCE);
 }
 
-BOOST_AUTO_TEST_CASE(extract_week_starting_at_hour_168)
+BOOST_AUTO_TEST_CASE(extract_week_starting_at_hour_168_non_constant)
 {
     PROPERTIES props;
     auto stsSeries = std::make_shared<Antares::Data::ShortTermStorage::Series>();
     stsSeries->maxWithdrawalModulation.assign(8760, 1.0);
+    stsSeries->maxWithdrawalModulation[168] = 0.5; // test non-constant
     props.series = stsSeries;
     props.withdrawalNominalCapacity = 100.0;
 
     auto result = extractSTSpmax(props, 168);
 
     BOOST_CHECK_EQUAL(result.size(), 168);
-    BOOST_CHECK_CLOSE(result[0], 100.0, TOLERANCE);
+    BOOST_CHECK_CLOSE(result[0], 50.0, TOLERANCE);
     BOOST_CHECK_CLOSE(result[167], 100.0, TOLERANCE);
 }
 
@@ -119,9 +120,9 @@ BOOST_AUTO_TEST_CASE(modulation_factors_of_0_return_zero_capacity)
 {
     PROPERTIES props;
     auto stsSeries = std::make_shared<Antares::Data::ShortTermStorage::Series>();
-    stsSeries->maxWithdrawalModulation.assign(8760, 1.0);
+    stsSeries->maxWithdrawalModulation.assign(8760, 0.0);
     props.series = stsSeries;
-    props.withdrawalNominalCapacity = 0.0;
+    props.withdrawalNominalCapacity = 50.0;
 
     auto result = extractSTSpmax(props, 0);
 
