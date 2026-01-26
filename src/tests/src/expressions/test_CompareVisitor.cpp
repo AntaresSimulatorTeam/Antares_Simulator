@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -280,6 +262,66 @@ BOOST_FIXTURE_TEST_CASE(compare_max, ComparisonFixture)
     const auto clone = clone_visitor.dispatch(max1);
     BOOST_CHECK(compareVisitor.dispatch(max1, clone));
     BOOST_CHECK(!compareVisitor.dispatch(max1, max2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_itself, ComparisonFixture)
+{
+    Node* floorNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                     registry_.create<ParameterNode>("p"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(floorNode, floorNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_its_clone, ComparisonFixture)
+{
+    Node* floorNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                     registry_.create<ParameterNode>("p"));
+    const auto clonedFloorNode = CloneVisitor(registry_).dispatch(floorNode);
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(floorNode, clonedFloorNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_a_different_floor_node, ComparisonFixture)
+{
+    Node* floorNode1 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p1"));
+    Node* floorNode2 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p2"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(!compareVisitor.dispatch(floorNode1, floorNode2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_ceil_node_to_itself, ComparisonFixture)
+{
+    Node* ceilNode = registry_.create<FunctionNode>(FunctionNodeType::ceil,
+                                                    registry_.create<ParameterNode>("p"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(ceilNode, ceilNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_ceil_node_to_its_clone, ComparisonFixture)
+{
+    Node* ceilNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                    registry_.create<ParameterNode>("p"));
+    const auto clonedCeilNode = CloneVisitor(registry_).dispatch(ceilNode);
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(ceilNode, clonedCeilNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_ceil_node_to_a_different_floor_node, ComparisonFixture)
+{
+    Node* floorNode1 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p1"));
+    Node* floorNode2 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p2"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(!compareVisitor.dispatch(floorNode1, floorNode2));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

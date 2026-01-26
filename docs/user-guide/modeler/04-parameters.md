@@ -48,10 +48,18 @@ The modeler parameters are currently held in a **parameters.yml** file under the
 ## Outputs
 
 ### no-output
+
 - **Expected value:** `true` or `false`
 - **Required:** no
 - **Default value:** `false`
 - **Usage:** whether to generate [output files](03-outputs.md) at the end of the simulation
+
+### export-mps
+
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** whether to generate mps and _structure_ files at the end of the simulation
 
 
 ## Full example
@@ -60,6 +68,7 @@ solver: xpress
 solver-logs: false
 solver-parameters: THREADS 1
 no-output: false
+export-mps: false
 first-time-step: 0
 last-time-step: 2
 ~~~

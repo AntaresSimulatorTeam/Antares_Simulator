@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 
@@ -109,7 +92,7 @@ protected:
                                                                                  avgdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
+                InternalExportValues<1, VCardT, Category::annual>(report, {avgdata.year});
                 break;
             }
         }
@@ -143,7 +126,7 @@ protected:
             report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
               VCardT::decimal>::Value();
             // Value
-            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.allYears;
+            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.year;
             // Non applicability
             report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
               = *report.isCurrentVarNA;
@@ -213,13 +196,7 @@ private:
         }
         case Category::annual:
         {
-            double& target = *(report.values[report.data.columnIndex]);
-            target = 0;
-            for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
-            {
-                target += array[i];
-            }
-            avgdata.allYears = target;
+            *(report.values[report.data.columnIndex]) = array[0];
             break;
         }
 

@@ -6,7 +6,7 @@ add_boost_test(test-expressions
         test_PrintAndEvalVisitors.cpp
         test_VariabilityVisitor.cpp
         test_evaluate-sum-operators.cpp
-        test_LinearVisitor.cpp
+        test_evaluate-function-operators.cpp
         test_CompareVisitor.cpp
         test_CloneVisitor.cpp
         test_DeepWideTrees.cpp
