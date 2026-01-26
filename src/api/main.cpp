@@ -149,19 +149,6 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
     logs.info() << "Written: " << (outputDir / "structure.txt").string();
 }
 
-void printWeekLPData(const ConstantDataFromAntares& constant, const WeeklyDataFromAntares& weekly)
-{
-    print_side_by_side(constant.VariablesCount,
-                       constant.VariablesMeaning,
-                       weekly.Xmin,
-                       weekly.Xmax,
-                       weekly.LinearCost);
-    print_side_by_side(constant.ConstraintesCount,
-                       constant.ConstraintsMeaning,
-                       weekly.Direction,
-                       weekly.RHS);
-}
-
 void printProblems(const ApiOptions& options)
 {
     Antares::Solver::SingleProblemGetter getter(options.studyFolder);
@@ -182,7 +169,6 @@ void printProblems(const ApiOptions& options)
             logs.info() << " week: " << week << '\n';
             const WeeklyProblemId id = {year, week};
             auto weekly = getter.getWeeklyData(id, true);
-            // printWeekLPData(constant, weekly);
             if (options.writeMps)
             {
                 writeWeekMPS(weekly, options.outputFolder, id);
