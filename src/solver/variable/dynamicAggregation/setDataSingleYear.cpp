@@ -19,9 +19,9 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <fstream>
-
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
+
+namespace fs = std::filesystem;
 
 namespace Antares::Solver::Variable
 {
@@ -127,9 +127,7 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
             };
         };
 
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  precision);
+        values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
         ++index;
     }
 }
@@ -153,19 +151,17 @@ void SetDataSingleYear::processAndSave(Category::Precision precision,
 {
     processWithPrecision(precision, study, survey);
     survey.data.filename = filename;
-    survey.saveToFile(Category::DataLevel::setOfAreas,
-                      Category::FileLevel::va,
-                      precision);
+    survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
 
-void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
+void SetDataSingleYear::writeResultsToFolder(const fs::path& folder,
                                              Data::Study& study,
                                              IResultWriter& writer) const
 {
     unsigned int nbVariables = thermalGroupNames_.size() + renewableGroupNames_.size()
                                + stsGroupNames_.size() * 3;
 
-    SurveyResults survey(study, nbVariables, "out", writer);
+    SurveyResults survey(study, nbVariables, folder.string(), writer);
 
     bool nonApplicable[2] = {false, false};
     bool printed[2] = {true, true};
@@ -173,11 +169,11 @@ void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
     survey.isCurrentVarNA = nonApplicable;
     survey.isPrinted = printed;
 
-    processAndSave(Category::Precision::hourly, "hourly.txt", study, survey);
-    processAndSave(Category::Precision::daily, "daily.txt", study, survey);
-    processAndSave(Category::Precision::weekly, "weekly.txt", study, survey);
-    processAndSave(Category::Precision::monthly, "monthly.txt", study, survey);
-    processAndSave(Category::Precision::annual, "annual.txt", study, survey);
+    processAndSave(Category::Precision::hourly, folder / "hourly.txt", study, survey);
+    processAndSave(Category::Precision::daily, folder / "daily.txt", study, survey);
+    processAndSave(Category::Precision::weekly, folder / "weekly.txt", study, survey);
+    processAndSave(Category::Precision::monthly, folder / "monthly.txt", study, survey);
+    processAndSave(Category::Precision::annual, folder / "annual.txt", study, survey);
     survey.data.columnIndex = 0;
 }
 

@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <vector>
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -57,8 +58,7 @@ public:
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
 
-    // TODO  remove tests purpose
-    void writeResultsToFolder(const std::string& folderName,
+    void writeResultsToFolder(const std::filesystem::path& folder,
                               Data::Study& study,
                               IResultWriter& writer) const;
     void processGroup(const std::vector<std::vector<long double>>& results,
@@ -137,7 +137,7 @@ public:
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
     // TODO rm tests
-    void writeAllResults(const std::string& baseFolder, IResultWriter& writer) const;
+    void writeAllResults(const std::filesystem::path& folder, IResultWriter& writer) const;
 
 private:
     Data::Study& study_;

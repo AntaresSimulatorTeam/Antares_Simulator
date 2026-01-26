@@ -195,8 +195,10 @@ public:
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
 
-                dynamicAggregationForTheYear.writeAllResults(study.folderOutput.string(),
-                                                             pResultWriter);
+                std::ostringstream oss;
+                oss << std::setw(5) << std::setfill('0') << y + 1;
+                fs::path output = fs::path(simulation_->Name()) / "mc-ind" / oss.str() / "areas";
+                dynamicAggregationForTheYear.writeAllResults(output, pResultWriter);
             };
         }
 

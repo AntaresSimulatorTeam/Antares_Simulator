@@ -19,6 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
+#include <filesystem>
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 
 namespace Antares::Solver::Variable
@@ -42,7 +43,7 @@ void DynamicAggregationSingleYear::addResultsToSets(const PROBLEME_HEBDO& pb)
 }
 
 // TODO  remove tests purpose
-void DynamicAggregationSingleYear::writeAllResults(const std::string& baseFolder,
+void DynamicAggregationSingleYear::writeAllResults(const std::filesystem::path& baseFolder,
                                                    IResultWriter& writer) const
 {
     namespace fs = std::filesystem;
@@ -50,8 +51,8 @@ void DynamicAggregationSingleYear::writeAllResults(const std::string& baseFolder
 
     for (const auto& [setName, setData]: setsData_)
     {
-        std::string folderPath = baseFolder + "/" + setName;
-        setData.writeResultsToFolder(folderPath, study_, writer);
+        std::filesystem::path folder = baseFolder / ("@ " + setName);
+        setData.writeResultsToFolder(folder, study_, writer);
     }
 }
 
