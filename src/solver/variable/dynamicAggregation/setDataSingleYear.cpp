@@ -122,96 +122,37 @@ void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
         };
     };
 
-    unsigned int index = 0;
-    for (const auto& group: thermalGroupNames_)
-    {
-        survey.captions[0][survey.data.columnIndex] = group;
-        survey.captions[1][survey.data.columnIndex] = "MWh";
-        survey.captions[2][survey.data.columnIndex] = "";
-        survey.variableCaption = group;
-        survey.variableUnit = "MWh";
+    auto processGroup = [&](const std::vector<std::vector<long double>>& results,
+                            const std::set<std::string>& groupNames,
+                            const std::string& suffix = "") {
+        unsigned int index = 0;
+        for (const auto& group: groupNames)
+        {
+            survey.captions[0][survey.data.columnIndex] = group + suffix;
+            survey.captions[1][survey.data.columnIndex] = "MWh";
+            survey.captions[2][survey.data.columnIndex] = "";
+            survey.variableCaption = group + suffix;
+            survey.variableUnit = "MWh";
 
-        IntermediateValues values;
-        values.initializeFromStudy(study);
-        values.reset();
-        std::ranges::copy(thermalResults_[index], values.hour);
-        values.computeStatisticsForTheCurrentYear();
+            IntermediateValues values;
+            values.initializeFromStudy(study);
+            values.reset();
+            std::ranges::copy(results[index], values.hour);
+            values.computeStatisticsForTheCurrentYear();
 
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
-        ++index;
-    }
+            values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                      Category::FileLevel::va,
+                                                      Category::Precision::hourly);
+            ++index;
+        }
+    };
 
-    index = 0;
-    for (const auto& group: renewableGroupNames_)
-    {
-        survey.captions[0][survey.data.columnIndex] = group;
-        survey.captions[1][survey.data.columnIndex] = "MWh";
-        survey.captions[2][survey.data.columnIndex] = "";
-        survey.variableCaption = group;
-        survey.variableUnit = "MWh";
+    processGroup(thermalResults_, thermalGroupNames_);
+    processGroup(renewableResults_, renewableGroupNames_);
+    processGroup(stsInjectionResults_, stsGroupNames_, "_INJECTION");
+    processGroup(stsWithdrawalResults_, stsGroupNames_, "_WITHDRAWAL");
+    processGroup(stsLevelResults_, stsGroupNames_, "_LEVEL");
 
-        IntermediateValues values;
-        values.initializeFromStudy(study);
-        values.reset();
-        std::ranges::copy(renewableResults_[index], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
-        ++index;
-    }
-
-    index = 0;
-    for (const auto& group: stsGroupNames_)
-    {
-        survey.captions[0][survey.data.columnIndex] = group + "_INJECTION";
-        survey.captions[1][survey.data.columnIndex] = "MWh";
-        survey.captions[2][survey.data.columnIndex] = "";
-        survey.variableCaption = group;
-        survey.variableUnit = "MWh";
-
-        IntermediateValues values;
-        values.initializeFromStudy(study);
-        values.reset();
-        std::ranges::copy(stsInjectionResults_[index], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
-
-        survey.captions[0][survey.data.columnIndex] = group + "_WITHDRAWAL";
-        survey.captions[1][survey.data.columnIndex] = "MWh";
-        survey.captions[2][survey.data.columnIndex] = "";
-        survey.variableCaption = group;
-        survey.variableUnit = "MWh";
-
-        values.reset();
-        std::ranges::copy(stsWithdrawalResults_[index], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
-
-        survey.captions[0][survey.data.columnIndex] = group + "_LEVEL";
-        survey.captions[1][survey.data.columnIndex] = "MWh";
-        survey.captions[2][survey.data.columnIndex] = "";
-        survey.variableCaption = group;
-        survey.variableUnit = "MWh";
-
-        values.reset();
-        std::ranges::copy(stsLevelResults_[index], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
-        ++index;
-    }
 
     survey.data.filename = "hourly.txt";
     survey.saveToFile(Category::DataLevel::setOfAreas,
