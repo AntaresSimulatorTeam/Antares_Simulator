@@ -42,7 +42,8 @@ void DynamicAggregationSingleYear::addResultsToSets(const PROBLEME_HEBDO& pb)
 }
 
 // TODO  remove tests purpose
-void DynamicAggregationSingleYear::writeAllResults(const std::string& baseFolder) const
+void DynamicAggregationSingleYear::writeAllResults(const std::string& baseFolder,
+                                                   IResultWriter& writer) const
 {
     namespace fs = std::filesystem;
     fs::create_directories(baseFolder);
@@ -50,7 +51,7 @@ void DynamicAggregationSingleYear::writeAllResults(const std::string& baseFolder
     for (const auto& [setName, setData]: setsData_)
     {
         std::string folderPath = baseFolder + "/" + setName;
-        setData.writeResultsToFolder(folderPath);
+        setData.writeResultsToFolder(folderPath, study_, writer);
     }
 }
 

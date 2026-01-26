@@ -58,7 +58,9 @@ public:
     void addResultsToSet(const PROBLEME_HEBDO& pb);
 
     // TODO  remove tests purpose
-    void writeResultsToFolder(const std::string& folderName) const;
+    void writeResultsToFolder(const std::string& folderName,
+                              Data::Study& study,
+                              IResultWriter& writer) const;
 
 private:
     std::vector<std::vector<HighPrecision>> thermalResults_;
@@ -120,7 +122,7 @@ public:
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
     // TODO rm tests
-    void writeAllResults(const std::string& baseFolder) const;
+    void writeAllResults(const std::string& baseFolder, IResultWriter& writer) const;
 
 private:
     Data::Study& study_;

@@ -195,7 +195,8 @@ public:
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
 
-                dynamicAggregationForTheYear.writeAllResults(study.folderOutput.string());
+                dynamicAggregationForTheYear.writeAllResults(study.folderOutput.string(),
+                                                             pResultWriter);
             };
         }
 

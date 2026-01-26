@@ -98,12 +98,40 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
 }
 
 // TODO  remove tests purpose
-void SetDataSingleYear::writeResultsToFolder(const std::string& folderName) const
+void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
+                                             Data::Study& study,
+                                             IResultWriter& writer) const
 {
+    unsigned int nbVariables = thermalGroupNames_.size() + renewableGroupNames_.size()
+                               + stsGroupNames_.size() * 3;
+
+    unsigned int index = 0;
+    SurveyResults survey(study, nbVariables, "out", writer);
+    survey.data.columnIndex = nbVariables;
+
+    for (const auto& group: thermalGroupNames_)
+    {
+        survey.captions[0][index] = group;
+        survey.captions[1][index] = "MWh";
+        survey.captions[2][index] = "";
+
+        std::ranges::copy(thermalResults_[index], survey.values[index]);
+
+        ++index;
+    }
+
+    const std::string filename = "hourly.txt";
+    survey.data.filename = filename;
+    survey.saveToFile(Category::DataLevel::setOfAreas,
+                      Category::FileLevel::va,
+                      Category::Precision::hourly);
+
+    ///////////////// OLD DEBUG
+    ///
     namespace fs = std::filesystem;
     fs::create_directories(folderName);
 
-    unsigned index = 0;
+    index = 0;
     for (const auto& group: thermalGroupNames_)
     {
         std::string filePath = folderName + "/" + group + ".txt";
