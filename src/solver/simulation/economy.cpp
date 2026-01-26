@@ -275,8 +275,6 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Economy::simulationEnd()
 {
-    // TODO rm debug
-    dynamicAggregationAllYears.writeAllResults(study.folderOutput.string());
     if (!preproOnly && study.runtime.interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);

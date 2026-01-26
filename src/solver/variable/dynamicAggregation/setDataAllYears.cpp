@@ -148,8 +148,12 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
 }
 
 // TODO  remove tests purpose
-void SetDataAllYears::writeResultsToFolder(const std::string& folderName) const
+void SetDataAllYears::writeResultsToFolder(const std::string& folderName,
+                                           Data::Study& study,
+                                           IResultWriter& writer) const
 {
+
+
     namespace fs = std::filesystem;
     fs::create_directories(folderName);
 

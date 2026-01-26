@@ -165,7 +165,6 @@ public:
                                                         precision);
     }
 
-public:
     std::vector<HighPrecision> stdDeviationMonthly;
     std::vector<HighPrecision> stdDeviationWeekly;
     std::vector<HighPrecision> stdDeviationDaily;

@@ -371,6 +371,8 @@ void ISimulation<ImplementationType>::run()
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
+        ImplementationType::dynamicAggregationAllYears.writeAllResults(study.folderOutput.string(), pResultWriter);
+
         ImplementationType::variables.simulationEnd();
 
         // Spatial clusters
