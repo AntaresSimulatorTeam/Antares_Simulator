@@ -95,9 +95,20 @@ public:
 
     void addAreaConnection(const std::string& localPortId, const std::string& areaId);
 
+    void addThermalCapacityConnection(const std::string& portId,
+                                      const std::string& areaId,
+                                      const std::string& clusterId);
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
+
+    struct ThermalConnection
+    {
+        std::string areaId;
+        std::string clusterId;
+    };
+
+    const std::map<std::string, std::string>& portToThermalConnections() const;
 
     unsigned int Index() const
     {
@@ -110,6 +121,7 @@ private:
     explicit Component(const ComponentData& component_data);
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
+    std::map<std::string, ThermalConnection> portToThermalConnections_;
     ComponentData data_;
 };
 
@@ -128,4 +140,7 @@ private:
     ComponentData data_;
 };
 
+const Port& findPort(const Component& component,
+                     const std::string& portId,
+                     const std::string& prefixMessage);
 } // namespace Antares::ModelerStudy::SystemModel

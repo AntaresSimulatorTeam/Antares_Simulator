@@ -164,7 +164,8 @@ std::vector<PortType> convertTypes(const ::YmlModel::Library& library)
 
         PortType portTypeModel(portType.id,
                                std::move(fields),
-                               portType.area_connection_injection_field);
+                               portType.area_connection_injection_field,
+                               portType.thermal_capacity_connection_field);
         out.emplace_back(std::move(portTypeModel));
     }
     return out;

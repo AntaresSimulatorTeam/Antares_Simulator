@@ -209,6 +209,41 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
+    static bool processAreaInjectionField(const Node& node,
+                                          Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        if (node["area-connection"].IsDefined())
+        {
+            if (node["area-connection"].size() != 1)
+            {
+                // Must have exactly one area connection field definition
+                return false;
+            }
+            for (const auto& field: node["area-connection"])
+            {
+                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
+            }
+        }
+        return true;
+    }
+
+    static bool processThermalCapacityField(const Node& node,
+                                            Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        if (node["thermal-capacity-connection"].IsDefined())
+        {
+            if (node["thermal-capacity-connection"].size() != 1)
+            {
+                return false;
+            }
+            for (const auto& field: node["thermal-capacity-connection"])
+            {
+                rhs.thermal_capacity_connection_field = field["capacity-field"].as<std::string>("");
+            }
+        }
+        return true;
+    }
+
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
         if (!node.IsMap())
@@ -221,17 +256,13 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             rhs.fields.push_back(field["id"].as<std::string>());
         }
-        if (node["area-connection"].IsDefined())
+        if (!processAreaInjectionField(node, rhs))
         {
-            if (node["area-connection"].size() != 1)
-            {
-                // Must have exactly one area connection field definition
-                return false;
-            }
-            for (const auto& field: node["area-connection"])
-            {
-                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
-            }
+            return false;
+        }
+        if (!processThermalCapacityField(node, rhs))
+        {
+            return false;
         }
         return true;
     }
