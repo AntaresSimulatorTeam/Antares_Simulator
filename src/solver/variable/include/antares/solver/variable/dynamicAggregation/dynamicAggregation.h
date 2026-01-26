@@ -77,7 +77,9 @@ public:
     void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
 
     // TODO  remove tests purpose
-    void writeResultsToFolder(const std::string& folderName) const;
+    void writeResultsToFolder(const std::string& folderName,
+                              Data::Study& study,
+                              IResultWriter& writer) const;
 
 private:
     std::vector<R::AllYears::MinMaxData> minThermal;
@@ -133,7 +135,7 @@ public:
     void merge(const DynamicAggregationSingleYear& toMerge, unsigned year);
 
     // TODO rm tests
-    void writeAllResults(const std::string& baseFolder) const;
+    void writeAllResults(const std::string& baseFolder, IResultWriter& writer) const;
 
 private:
     Data::Study& study_;

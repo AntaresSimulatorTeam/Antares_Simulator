@@ -252,33 +252,6 @@ private:
         ++report.data.columnIndex;
     }
 
-    template<class S, unsigned int Size, class VCardT, int PrecisionT, class A>
-    void InternalExportValuesMC(SurveyResults& report, const S& /*results*/, const A& array) const
-    {
-        if (not(PrecisionT & Category::annual))
-        {
-            return;
-        }
-        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-        // Caption
-        report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = report.variableUnit;
-        report.captions[2][report.data.columnIndex] = "std";
-
-        // Precision
-        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
-
-        // Non applicability
-        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-        (void)::memcpy(report.data.matrix[report.data.columnIndex], array, Size * sizeof(double));
-
-        // Next column index
-        ++report.data.columnIndex;
-    }
-
 private:
     std::vector<float> yearsWeight;
     float yearsWeightSum;
