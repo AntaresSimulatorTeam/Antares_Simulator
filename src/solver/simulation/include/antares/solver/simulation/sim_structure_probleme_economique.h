@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/opt_constants.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/utils/optimization_statistics.h"
@@ -586,5 +587,6 @@ public:
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
     Solver::ModelerData* modelerData = nullptr;
+    Optimisation::BendersDecomposition* bendersDecomposition = nullptr;
 };
 #endif

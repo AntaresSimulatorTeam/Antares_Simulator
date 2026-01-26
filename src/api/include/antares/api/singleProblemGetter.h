@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "antares/solver/lps/LpsFromAntares.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/study/study.h"
 
 namespace Antares::Solver::Implementation
@@ -36,6 +37,7 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     std::set<int> playedYears() const;
+    void setBendersDecomposition(Optimisation::BendersDecomposition* bd);
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

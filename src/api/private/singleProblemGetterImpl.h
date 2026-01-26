@@ -1,9 +1,9 @@
 
-
 #pragma once
 
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/lps/LpsFromAntares.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/simulation/random.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -44,12 +44,14 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     std::set<int> playedYears() const;
+    void setBendersDecomposition(Optimisation::BendersDecomposition* bd);
 
 private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
     void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem) const;
+
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
     std::unique_ptr<Antares::Data::Study> study_;
@@ -60,6 +62,7 @@ private:
                                // building
     std::set<int> playedYears_;
     int nbWeeks_;
+    Optimisation::BendersDecomposition* bendersDecomposition_ = nullptr;
 
     std::vector<std::string> variablesName_;
     std::vector<std::string> constraintsName_;

@@ -110,7 +110,8 @@ void writeWeekMPS(const WeeklyDataFromAntares& weekly,
 }
 
 void writeMasterAndStructure(const std::filesystem::path& studyPath,
-                             const std::filesystem::path& outputDir)
+                             const std::filesystem::path& outputDir,
+                             Antares::Optimisation::BendersDecomposition& bendersDecomposition)
 {
     using namespace Antares::Solver;
     using namespace Antares::Optimisation;
@@ -128,7 +129,6 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
     ModelerData data = LoadFiles::loadAll(studyPath);
     logs.info() << "Modeler data loaded";
 
-    BendersDecomposition bendersDecomposition;
     FillContext fillContext = {0, 167, 0, 167, 0};
 
     auto master = Modeler::buildMasterProblem(data, bendersDecomposition, fillContext, "xpress");
@@ -143,7 +143,7 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
     IO::Outputs::MPSFileWriter::write(outputDir / "master.mps", mps);
     logs.info() << "Written: " << (outputDir / "master.mps").string();
 
-    BendersDecompositionWriter writer(bendersDecomposition);
+    Antares::Optimisation::BendersDecompositionWriter writer(bendersDecomposition);
     std::ofstream of(outputDir / "structure.txt");
     writer.write(of);
     logs.info() << "Written: " << (outputDir / "structure.txt").string();
@@ -151,7 +151,9 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
 
 void printProblems(const ApiOptions& options)
 {
+    Antares::Optimisation::BendersDecomposition bendersDecomposition;
     Antares::Solver::SingleProblemGetter getter(options.studyFolder);
+    getter.setBendersDecomposition(&bendersDecomposition);
     auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
@@ -168,7 +170,9 @@ void printProblems(const ApiOptions& options)
         {
             logs.info() << " week: " << week << '\n';
             const WeeklyProblemId id = {year, week};
+            bendersDecomposition.setCurrentProblemId(problemName(id));
             auto weekly = getter.getWeeklyData(id, true);
+
             if (options.writeMps)
             {
                 writeWeekMPS(weekly, options.outputFolder, id);
@@ -178,7 +182,7 @@ void printProblems(const ApiOptions& options)
 
     if (options.writeMps)
     {
-        writeMasterAndStructure(options.studyFolder, options.outputFolder);
+        writeMasterAndStructure(options.studyFolder, options.outputFolder, bendersDecomposition);
     }
 }
 
