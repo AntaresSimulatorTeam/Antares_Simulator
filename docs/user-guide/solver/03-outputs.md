@@ -89,6 +89,7 @@ The area files that belong to the "values" class display fields corresponding to
 | PSP                                    | User-defined settings for pumping and subsequent generating                                                                                                                               |
 | MISC. NDG                              | Miscellaneous non dispatchable generation                                                                                                                                                 |
 | LOAD                                   | Demand (including DSM potential if relevant)                                                                                                                                              |
+| RES LOAD                               | Residual load, formula:  **load - allMustRunGeneration** with *allMustRunGeneration = wind + solar + miscGen + ROR + mustRunSum* and *mustRunSum = total production of thermal clusters must-run and enabled*    |
 | H.ROR                                  | Hydro generation, Run-of-river share                                                                                                                                                      |
 | WIND                                   | Wind generation (only when using aggregated _Renewable generation modeling_)                                                                                                              |
 | SOLAR                                  | Solar generation (thermal and PV) (only when using aggregated _Renewable generation modeling_)                                                                                            |
@@ -258,5 +259,33 @@ The following table contains a list of new output variables in recent versions.
 | 9.2.0 | MIN DTG by plant | details-\*.txt | yes |
 | 9.2.1, 9.3.0 | NPCAP HOURS | values-\*.txt | yes |
 | 9.3 | Use dynamic groups for thermal dispatchable generation and renewable generation, instead of static groups. 
+
+
+
+### execution\_info.ini
+
+Each simulation produces a file "execution\_info.ini" at the root of the output folder. This file contains information about the execution of the simulation, such as version of Antares used, options selected in generaldata.ini, information about the study (nb of areas...) and different steps duration.
+
+The section [duration\_ms] contains the following fields:
+
+**full_exec**: total duration
+- **loading**: loading of all files
+    - **study_loading**: loading of legacy solver files
+    - **modeler_loading**: loading and parsing of files related to modeler: models, system, optim-config
+- **simulation**:
+    - **tsgen_thermal, tsgen_wind, tsgen_solar, tsgen_load, tsgen_hydro**: if we need to generate time series for a type
+    - **mc_years**: all monte-carlo years
+        - **hydro_ventilation**: running hydro heuristics
+        - **problem_build_time**: building of the optmimization problem (legacy + modeler)
+        - **solve_time**: solver resolution
+        - **export_simulation_tables**: modeler related, creation and writing of simulation tables
+        - **post_processing**: balance and flow quad
+        - **yby_export**: export and writing of results for a year (year-by-year parameter)
+        - **synthesis_compute**: results aggregation for mc-all
+    - **synthesis_export**: export and writing of mc-all results
+
+
+**problem_build_time** and **solve_time** are totals for each week of each year, more detailed values can be found in output folder: optimization/week-by-week/year\_**n**.txt
+
 
 [^16] : this output variable was introduced both in **8.8** and **9.2**, meaning that **9.0** and **9.1** don't have it.

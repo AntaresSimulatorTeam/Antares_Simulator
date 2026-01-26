@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define WIN32_LEAN_AND_MEAN
 #define BOOST_TEST_MODULE unfeasible_problem_analyzer
 
@@ -48,6 +31,7 @@ using Antares::Optimization::UnfeasibilityAnalysis;
 using Antares::Optimization::UnfeasiblePbAnalyzer;
 using Antares::Optimization::VariableBounds;
 using Antares::Optimization::VariablesBoundsConsistency;
+using namespace Antares::IO::Outputs;
 
 bool variableEquals(const VariableBounds& lhs, const VariableBounds& rhs)
 {
@@ -344,15 +328,13 @@ struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
 struct NullWriterExtension final: Solver::NullResultWriter
 {
     // hack to read variables and constraints names
-    void addEntryFromFile(const std::filesystem::path& entryPath,
-                          const std::filesystem::path&) override
+    void addEntryFromBuffer(const std::filesystem::path& entryPath,
+                            std::string& mpsToWrite) override
     {
-        const std::ifstream mps(std::filesystem::temp_directory_path() / entryPath);
-        mpsContent.str("");
-        mpsContent << mps.rdbuf();
+        mps = mpsToWrite;
     }
 
-    std::ostringstream mpsContent;
+    std::string mps;
 };
 enum class ProblemFeasibility
 {
@@ -423,7 +405,7 @@ public:
     {
     }
 
-    std::string buffer() const override
+    [[nodiscard]] std::string buffer() const override
     {
         return "";
     }
@@ -477,24 +459,26 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
                                             writer,
                                             &simulationTableCsv);
 
-    const auto expectedMps = R"(* Number of variables:   1
+    const auto expectedMps = R"(* Antares Simulator
+* Number of variables: 1
 * Number of constraints: 2
-NAME          Pb Solve
+NAME problem-myTest--optim-nb-1.mps
 ROWS
- N  OBJECTIF
- L  c0
- L  c1
+    N  OBJ
+    L  c0
+    L  c1
 COLUMNS
-    x0  c0  1.0000000000
-    x0  c1  1.0000000000
+    x0  c0  1
+    x0  c1  1
 RHS
-    RHSVAL    c0  5.000000000
-    RHSVAL    c1  10.000000000
+    RHS1  c0  5
+    RHS1  c1  10
+RANGES
 BOUNDS
- UP BNDVALUE  x0  10.000000000
+    UP BND1 x0 10
 ENDATA
 )";
-    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
+    BOOST_CHECK_EQUAL(expectedMps, writer.mps);
 }
 
 /**
@@ -538,24 +522,26 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer,
                                             &simulationTableCsv);
-    const auto expectedMps = R"(* Number of variables:   1
+    const auto expectedMps = R"(* Antares Simulator
+* Number of variables: 1
 * Number of constraints: 2
-NAME          Pb Solve
+NAME problem-myTest--optim-nb-1.mps
 ROWS
- N  OBJECTIF
- L  firstConstraint
- G  secondConstraint
+    N  OBJ
+    L  firstConstraint
+    G  secondConstraint
 COLUMNS
-    var  firstConstraint  1.0000000000
-    var  secondConstraint  1.0000000000
+    var  firstConstraint  1
+    var  secondConstraint  1
 RHS
-    RHSVAL    firstConstraint  5.000000000
-    RHSVAL    secondConstraint  10.000000000
+    RHS1  firstConstraint  5
+    RHS1  secondConstraint  10
+RANGES
 BOUNDS
- UP BNDVALUE  var  10.000000000
+    UP BND1 var 10
 ENDATA
 )";
-    BOOST_CHECK_EQUAL(expectedMps, writer.mpsContent.str());
+    BOOST_CHECK_EQUAL(expectedMps, writer.mps);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

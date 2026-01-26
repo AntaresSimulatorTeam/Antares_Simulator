@@ -2,7 +2,7 @@ add_library(modeler-parameters
         include/antares/solver/modeler/parameters/modelerParameters.h
         include/antares/solver/modeler/parameters/parseModelerParameters.h
         parseModelerParameters.cpp
-        encoder.hxx)
+        decoder.hxx)
 
 add_library(Antares::modeler-parameters ALIAS modeler-parameters)
 

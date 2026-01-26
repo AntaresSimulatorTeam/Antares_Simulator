@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "singleProblemGetterImpl.h"
 
@@ -143,7 +125,8 @@ void SingleProblemGetter::initializeRandomNumbers()
 
     MersenneTwister randomHydroGenerator;
     randomHydroGenerator.reset(study_->parameters.seed[Data::seedHydroManagement]);
-    randomForParallelYears_->compute(*study_, 1, isYearPerformed, randomHydroGenerator);
+    const unsigned int finalYear = 1 + study_->runtime.rangeLimits.year[Data::rangeEnd];
+    randomForParallelYears_->compute(*study_, finalYear, isYearPerformed, randomHydroGenerator);
 }
 
 void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& outputDir)
@@ -164,6 +147,8 @@ void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path
                                       nullptr, // not needed
                                       gDurationCollector);
     OPT_ExportStructures(&pb_, *writer);
+    // Ensure study metadata is exported (about-the-study directory)
+    study_->saveAboutTheStudy(*writer);
 }
 
 void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
@@ -255,6 +240,8 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(&pb_);
     }
+
+    OPT_RestaurerLesDonnees(&pb_);
 
     OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(&pb_,
                                                            PremierPdtDeLIntervalle,

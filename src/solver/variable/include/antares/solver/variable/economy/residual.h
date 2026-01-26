@@ -1,35 +1,19 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
-#pragma once
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
+#ifndef __SOLVER_VARIABLE_ECONOMY_Residual_H__
+#define __SOLVER_VARIABLE_ECONOMY_Residual_H__
 
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Economy
 {
-struct VCardUnsupliedEnergyCSR
+struct VCardResidualLoad
 {
     //! Caption
     static std::string Caption()
     {
-        return "UNSP. ENRG CSR";
+        return "RES LOAD";
     }
 
     //! Unit
@@ -41,10 +25,10 @@ struct VCardUnsupliedEnergyCSR
     //! The short description of the variable
     static std::string Description()
     {
-        return "Unsuplied Energy after CSR (demand that cannot be satisfied)";
+        return "Residual load";
     }
 
-    //! The expecte results
+    //! The expected results
     typedef Results<R::AllYears::Average< // The average values throughout all years
       R::AllYears::StdDeviation<          // The standard deviation values throughout all years
         R::AllYears::Min<                 // The minimum values throughout all years
@@ -53,7 +37,9 @@ struct VCardUnsupliedEnergyCSR
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardUnsupliedEnergyCSR VCardForSpatialAggregate;
+    typedef VCardResidualLoad VCardForSpatialAggregate;
+
+    //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
@@ -83,17 +69,19 @@ struct VCardUnsupliedEnergyCSR
 
 }; // class VCard
 
+/*!
+** \brief ResidualLoad
+*/
 template<class NextT = Container::EndOfList>
-class UnsupliedEnergyCSR
-    : public Variable::IVariable<UnsupliedEnergyCSR<NextT>, NextT, VCardUnsupliedEnergyCSR>
+class ResidualLoad: public Variable::IVariable<ResidualLoad<NextT>, NextT, VCardResidualLoad>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardUnsupliedEnergyCSR VCardType;
+    typedef VCardResidualLoad VCardType;
     //! Ancestor
-    typedef Variable::IVariable<UnsupliedEnergyCSR<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ResidualLoad<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -124,7 +112,6 @@ public:
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
 
-        // Intermediate values
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
@@ -145,6 +132,7 @@ public:
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
+        pArea = area;
         // Next
         NextType::initializeFromArea(study, area);
     }
@@ -167,6 +155,7 @@ public:
 
     void simulationEnd()
     {
+        // Next
         NextType::simulationEnd();
     }
 
@@ -187,7 +176,7 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
+        // Compute all statistics for the current year (daily, weekly, monthly, annual).
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
 
         // Next variable
@@ -211,8 +200,11 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek];
+        // Retrieving the ResidualLoad
+        pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
+          = state.problemeHebdo->ConsommationsAbattues[state.hourInTheWeek]
+              .ConsommationAbattueDuPays[pArea->index];
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
@@ -243,10 +235,14 @@ public:
     }
 
 private:
+    //! The attached area
+    Antares::Data::Area* pArea;
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class UnsupliedEnergyCSR
+}; // class ResidualLoad
 
 } // namespace Antares::Solver::Variable::Economy
+
+#endif // __SOLVER_VARIABLE_ECONOMY_Residual_H__

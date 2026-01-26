@@ -61,3 +61,5 @@ venv/
 vcpkg_installed
 
 src/CMakeUserPresets.json
+.cache/
+build-debug/

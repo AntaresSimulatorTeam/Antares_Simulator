@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/variable/storage/averagedata.h"
 
@@ -25,17 +7,6 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-
-AverageData::AverageData() = default;
-
-AverageData::AverageData(unsigned size):
-    yearsWeightSum(size)
-{
-    yearsWeight.assign(size, 1.);
-    reset();
-}
-
-AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {
@@ -50,11 +21,6 @@ void AverageData::initializeFromStudy(Data::Study& study)
 {
     yearsWeight = study.parameters.getYearsWeight();
     yearsWeightSum = study.parameters.getYearsWeightSum();
-}
-
-void AverageData::merge(const IntermediateValues& rhs)
-{
-    merge(0, rhs);
 }
 
 void AverageData::merge(unsigned int y, const IntermediateValues& rhs)
