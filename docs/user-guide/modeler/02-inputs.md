@@ -330,6 +330,75 @@ by [antares-modeler](08-command-line.md).
 For more information on hybrid
 studies, [see the relevant documentation](../solver/08-hybrid-studies.md#connecting-modeler-components-to-legacy-areas).
 
+## Optim-config file
+
+The `optim-config.yml` file is an optional configuration file used in hybrid studies to specify how models are decomposed 
+and which resolution mode to use. When present, it should be placed in the `input/` directory alongside other modeler files.
+
+The file contains two main sections:
+
+### Resolution mode
+
+The **resolution-mode** field specifies the optimization resolution mode to use. This field is optional and defaults to 
+`sequential-subproblems` if not specified.
+
+**Available values:**
+- `sequential-subproblems` (default): Each Monte-Carlo year is optimized separately. This mode does not support 
+  scenario-independent variables.
+- `benders-decomposition`: Uses Benders decomposition method to solve the optimization problem. This mode is designed 
+  for investment studies and allows the use of scenario-independent variables in the master problem.
+
+Example:
+
+~~~yaml
+resolution-mode: benders-decomposition
+~~~
+
+### Model decomposition
+
+The **models** section lists the models from your libraries that require explicit decomposition configuration. Each model 
+specification can override the default locations for variables, constraints, and objective contributions.
+
+Example:
+
+~~~yaml
+models:
+  - id: lib_thermal_invest.thermal_candidate
+    model-decomposition:
+      variables:
+        - id: nb_units
+          location: master
+        - id: pmax_cluster
+          location: master-and-subproblems
+      constraints:
+        - id: constr1
+          location: master
+      objective-contributions:
+        - id: invest_objective
+          location: master
+        - id: operational_objective
+          location: subproblems
+~~~
+
+**Fields:**
+
+- **id**: The model identifier in the format `library_id.model_id` as defined in the model library.
+- **model-decomposition**: Configuration for how the model's elements are distributed across the optimization.
+  - **variables** (optional): Override default locations for variables. Each entry specifies:
+    - **id**: Variable ID as defined in the model.
+    - **location**: Where this variable appears. Options: `master`, `subproblems`, or `master-and-subproblems`.
+  - **constraints** (optional): Override default locations for constraints. Same structure as variables.
+  - **objective-contributions** (optional): Override default locations for objective contributions. Same structure as variables.
+
+**Location types:**
+
+- `master`: Element appears only in the master problem (typically used for investment decisions).
+- `subproblems`: Element appears only in the subproblems (typically used for operational decisions).
+- `master-and-subproblems`: Element appears in both the master and subproblems.
+
+For investment studies using `benders-decomposition` mode, it's common to place investment variables and their 
+associated constraints in the master, while operational variables and constraints are placed in the subproblems.
+
 ## Data series
 
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define
