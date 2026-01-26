@@ -151,7 +151,6 @@ namespace
 {
 Solver::ResolutionMode convertResolutionMode(std::string ymlMode)
 {
-    ;
     if (ymlMode == "benders-decomposition")
     {
         return Solver::ResolutionMode::BENDERS_DECOMPOSITION;
