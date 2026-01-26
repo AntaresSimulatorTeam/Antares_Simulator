@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_donnees_optimisation.h"
 
 namespace DoneesOptimisationJournaliere
@@ -18,9 +19,15 @@ DONNEES_MENSUELLES H2O_J_Instanciation(void);
 H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES*,
                                                         operations_research::MPSolver&);
 
+// Initialize the persistent noise generator for MPSolver objective coefficients.
+// This mimics H2O_J_AjouterBruitAuCout but sets up the noise generator
+// in DONNEES_MENSUELLES instead of modifying CoutLineaire.
+void H2O_J_InitialiserLeGenerateurDeBruitPourMPSolver(DONNEES_MENSUELLES*);
+
 // Objective builder: minimize the sum of xi[t] and the two
 // global deviation variables (xiPlus, xiMoins).
-void H2O_J_MPSolver_SetObjectiveCoefficients(const H2O_J_MPSOLVER_VARIABLES&,
+void H2O_J_MPSolver_SetObjectiveCoefficients(DONNEES_MENSUELLES*,
+                                             const H2O_J_MPSOLVER_VARIABLES&,
                                              operations_research::MPSolver&);
 
 // Build constraints directly from DONNEES_MENSUELLES and the typed

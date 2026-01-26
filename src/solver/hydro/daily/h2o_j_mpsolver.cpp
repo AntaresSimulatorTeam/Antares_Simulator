@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include <antares/antares/constants.h>
+#include <antares/mersenne-twister/mersenne-twister.h>
 #include "antares/solver/hydro/daily/h2o_j_donnees_mensuelles.h"
 #include "antares/solver/hydro/daily/h2o_j_fonctions.h"
 
@@ -17,6 +19,11 @@ namespace DoneesOptimisationJournaliere
 using operations_research::MPObjective;
 using operations_research::MPSolver;
 using operations_research::MPVariable;
+
+void H2O_J_InitialiserLeGenerateurDeBruitPourMPSolver(DONNEES_MENSUELLES* DonneesMensuelles)
+{
+    DonneesMensuelles->costNoiseGenerator.reset(0x79686a64);
+}
 
 H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* DonneesMensuelles,
                                                         MPSolver& solver)
@@ -61,23 +68,45 @@ H2O_J_MPSOLVER_VARIABLES H2O_J_MPSolver_CreateVariables(DONNEES_MENSUELLES* Donn
     return vars;
 }
 
-void H2O_J_MPSolver_SetObjectiveCoefficients(const H2O_J_MPSOLVER_VARIABLES& variables,
+void H2O_J_MPSolver_SetObjectiveCoefficients(DONNEES_MENSUELLES* DonneesMensuelles,
+                                             const H2O_J_MPSOLVER_VARIABLES& variables,
                                              MPSolver& solver)
 {
     MPObjective* objective = solver.MutableObjective();
     objective->Clear();
     objective->SetMinimization();
 
+    // Add noise to objective coefficients to match legacy behavior.
+    // Use the persistent noise generator from DONNEES_MENSUELLES.
+    auto& noiseGenerator = DonneesMensuelles->costNoiseGenerator;
+
     // Cost structure mirrors the legacy instanciation:
     // - objective is the sum of all xi[t]
     // - plus the two global deviation variables xiPlus and xiMoins.
-    for (const auto* xi: variables.xi)
+    // The legacy code adds noise to ALL variables (including turbines and xi),
+    // then OVERWRITES xi coefficients to exactly 1.0 and adds MORE noise.
+    // So effectively, xi variables get: 1.0 + second_noise (first noise is ignored).
+    // Turbines are not in objective, so their noise is irrelevant.
+
+    // First, skip noise calls for all variables (turbines + xi + xi_plus + xi_moins)
+    const int NbPdt = variables.xi.size();
+    for (int i = 0; i < 2 * NbPdt + 2; i++)
     {
-        objective->SetCoefficient(xi, 1.0);
+        noiseGenerator();
     }
 
-    objective->SetCoefficient(variables.xiPlus, 1.0);
-    objective->SetCoefficient(variables.xiMoins, 1.0);
+    // Now add actual noise to xi variables (the second noise call in legacy)
+    for (const auto* xi: variables.xi)
+    {
+        const double noise = noiseGenerator() * Antares::Constants::noiseAmplitude;
+        objective->SetCoefficient(xi, 1.0 + noise);
+    }
+
+    const double noiseXiPlus = noiseGenerator() * Antares::Constants::noiseAmplitude;
+    objective->SetCoefficient(variables.xiPlus, 1.0 + noiseXiPlus);
+
+    const double noiseXiMoins = noiseGenerator() * Antares::Constants::noiseAmplitude;
+    objective->SetCoefficient(variables.xiMoins, 1.0 + noiseXiMoins);
 }
 
 void H2O_J_MPSolver_CreateConstraints(DONNEES_MENSUELLES* DonneesMensuelles,
@@ -179,9 +208,9 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles)
     }
 
     // Create a fresh MPSolver instance for the daily problem. We use the
-    // Sirius LP backend by default as requested.
+    // GLOP backend by default.
 
-    auto solver = std::unique_ptr<MPSolver>(MPSolver::CreateSolver("sirius"));
+    auto solver = std::unique_ptr<MPSolver>(MPSolver::CreateSolver("GLOP"));
 
     if (!solver)
     {
@@ -193,7 +222,7 @@ void H2O_J_MPSolver_Solve(DONNEES_MENSUELLES* DonneesMensuelles)
     H2O_J_MPSOLVER_VARIABLES vars = H2O_J_MPSolver_CreateVariables(DonneesMensuelles, *solver);
 
     // 2) Set objective coefficients.
-    H2O_J_MPSolver_SetObjectiveCoefficients(vars, *solver);
+    H2O_J_MPSolver_SetObjectiveCoefficients(DonneesMensuelles, vars, *solver);
 
     // 3) Create constraints.
     H2O_J_MPSolver_CreateConstraints(DonneesMensuelles, vars, *solver);

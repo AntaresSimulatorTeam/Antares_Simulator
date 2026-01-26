@@ -8,6 +8,8 @@
 #define NON 0
 #define EMERGENCY_SHUT_DOWN 2
 
+#include <antares/mersenne-twister/mersenne-twister.h>
+
 #include "h2o_j_donnees_optimisation.h"
 
 /*************************************************************************************************/
@@ -34,7 +36,11 @@ struct DONNEES_MENSUELLES
 
     /******************************************************************************************/
     /* Problemes internes (utilise uniquement par l'optimisation) */
-    PROBLEME_HYDRAULIQUE ProblemeHydraulique{};
+    PROBLEME_HYDRAULIQUE ProblemeHydraulique;
+
+    /* Noise generator for objective coefficients - must persist across all monthly solves
+     * to ensure deterministic noise sequence matching legacy behavior */
+    Antares::MersenneTwister costNoiseGenerator;
 };
 } // namespace DoneesOptimisationJournaliere
 

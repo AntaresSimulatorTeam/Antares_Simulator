@@ -372,6 +372,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
             uint endDay = firstDay + daysPerMonth;
 
             auto problem = DoneesOptimisationJournaliere::H2O_J_Instanciation();
+            H2O_J_InitialiserLeGenerateurDeBruitPourMPSolver(&problem);
             problem.NombreDeJoursDuMois = (int)daysPerMonth;
             problem.TurbineDuMois = hydro_specific.monthly[realmonth].MOG;
 
