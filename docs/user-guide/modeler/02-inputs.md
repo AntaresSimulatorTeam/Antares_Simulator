@@ -332,10 +332,8 @@ studies, [see the relevant documentation](../solver/08-hybrid-studies.md#connect
 
 ## Optim-config file
 
-The `optim-config.yml` file is an optional configuration file used in hybrid studies to specify how models are decomposed 
-and which resolution mode to use. When present, it should be placed in the `input/` directory alongside other modeler files.
-
-The file contains two main sections:
+The `optim-config.yml` file is an optional configuration file used in hybrid studies to specify the optimization 
+resolution mode. When present, it should be placed in the `input/` directory alongside other modeler files.
 
 ### Resolution mode
 
@@ -354,10 +352,11 @@ Example:
 resolution-mode: benders-decomposition
 ~~~
 
-### Model decomposition
+### Model decomposition configuration
 
-The **models** section lists the models from your libraries that require explicit decomposition configuration. Each model 
-specification can override the default locations for variables, constraints, and objective contributions.
+The **models** section allows you to explicitly configure where model elements (variables, constraints, objective contributions) 
+appear in the optimization hierarchy (`master`, `subproblems`, or `master-and-subproblems`). This overrides the default 
+behavior determined by variable and parameter properties (such as `scenario-dependent` flags).
 
 Example:
 
@@ -380,24 +379,25 @@ models:
           location: subproblems
 ~~~
 
-**Fields:**
+**Configuration keys:**
 
-- **id**: The model identifier in the format `library_id.model_id` as defined in the model library.
-- **model-decomposition**: Configuration for how the model's elements are distributed across the optimization.
-  - **variables** (optional): Override default locations for variables. Each entry specifies:
-    - **id**: Variable ID as defined in the model.
-    - **location**: Where this variable appears. Options: `master`, `subproblems`, or `master-and-subproblems`.
-  - **constraints** (optional): Override default locations for constraints. Same structure as variables.
-  - **objective-contributions** (optional): Override default locations for objective contributions. Same structure as variables.
+- **id**: Model identifier in the format `library_id.model_id` (referencing a model from your [model libraries](#model-libraries))
+- **model-decomposition**:
+  - **variables** (optional): Override default variable locations
+  - **constraints** (optional): Override default constraint locations  
+  - **objective-contributions** (optional): Override default objective contribution locations
+  - Each entry requires:
+    - **id**: Element ID as defined in the [model library](#models)
+    - **location**: One of `master`, `subproblems`, or `master-and-subproblems`
 
-**Location types:**
+**Location semantics:**
 
-- `master`: Element appears only in the master problem (typically used for investment decisions).
-- `subproblems`: Element appears only in the subproblems (typically used for operational decisions).
-- `master-and-subproblems`: Element appears in both the master and subproblems.
+- `master`: Element appears only in the master problem (investment decisions)
+- `subproblems`: Element appears only in subproblems (operational decisions, per scenario)
+- `master-and-subproblems`: Element appears in both master and subproblems
 
-For investment studies using `benders-decomposition` mode, it's common to place investment variables and their 
-associated constraints in the master, while operational variables and constraints are placed in the subproblems.
+For investment studies with `benders-decomposition`, it's common to place investment decisions in `master` and operational 
+decisions in `subproblems`.
 
 ## Data series
 
