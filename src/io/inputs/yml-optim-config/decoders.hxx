@@ -88,4 +88,27 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
     }
 };
 
+template<>
+struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+
+        // Parse resolution-mode (optional, defaults to sequential-subproblems)
+        if (node["resolution-mode"])
+        {
+            rhs.resolution_mode = node["resolution-mode"].as<std::string>();
+        }
+
+        // Parse models list
+        rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlOptimConfig::Model>>();
+
+        return true;
+    }
+};
+
 } // namespace YAML
