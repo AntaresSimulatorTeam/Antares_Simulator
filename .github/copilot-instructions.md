@@ -1,5 +1,8 @@
 # GitHub Copilot Instructions for Antares Simulator
 
+// Ajout : référence au prompt Tech Lead C++ réutilisable
+// Voir `.github/prompts/techlead.prompt.md` pour un prompt concis destiné aux demandes d'implémentation C++ (C++20, clang-format v18, Boost tests, preset Debug-vcpkg).
+
 ## Overview
 This file specifies comprehensive coding standards and practices for the Antares Simulator project. All generated code must follow these guidelines to maintain state-of-the-art code quality, consistency, and project integrity.
 
@@ -9,7 +12,7 @@ This file specifies comprehensive coding standards and practices for the Antares
 
 ### Build Process - Always Execute After Changes
 - **Always use the CMake preset**: `Debug-vcpkg`
-- Build command: `cmake --preset Debug-vcpkg && cmake --build --preset Debug-vcpkg`
+- Build command: `cd <project>/src && cmake --preset Debug-vcpkg && cd /home/jmarechal/CLionProjects/build_simulator && cmake --build .`
 - All code must build **without any warnings** on `clang++`, `g++`, and `MSVC`
 - **After EVERY code change, IMMEDIATELY build and fix errors before proceeding**
 - No incomplete code or "to-be-fixed-later" commits

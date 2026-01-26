@@ -240,4 +240,114 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
         "'model2': In expression 'var1': Error for variable 'var1': Location doesn't match the "
         "expression location (variable location: master, expression location: subproblems)"));
 }
+
+BOOST_FIXTURE_TEST_CASE(check_model_validates_constraints, Fixture)
+{
+    Node* varNode = registry.create<VariableNode>("var1", 0);
+    Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry));
+    Expression expr("var1", std::move(node_registry));
+
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::SUBPROBLEMS});
+
+    std::vector<Constraint> constraints;
+    constraints.push_back({"constraint1", expr, Location::SUBPROBLEMS});
+
+    auto model = modelBuilder.withVariables(std::move(variables))
+                   .withConstraints(std::move(constraints))
+                   .withId("test_model")
+                   .build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
+
+    // Should not throw as locations match.
+    BOOST_CHECK_NO_THROW(checkModel(model, system));
+}
+
+BOOST_FIXTURE_TEST_CASE(check_model_validates_objectives, Fixture)
+{
+    Node* varNode = registry.create<VariableNode>("var1", 0);
+    Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry));
+    Expression expr("var1", std::move(node_registry));
+
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::SUBPROBLEMS});
+
+    std::vector<Objective> objectives;
+    objectives.push_back({expr, Location::SUBPROBLEMS});
+
+    auto model = modelBuilder.withVariables(std::move(variables))
+                   .withObjectives(std::move(objectives))
+                   .withId("test_model")
+                   .build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
+
+    // Should not throw as locations match.
+    BOOST_CHECK_NO_THROW(checkModel(model, system));
+}
+
+BOOST_FIXTURE_TEST_CASE(check_model_validates_extra_outputs, Fixture)
+{
+    Node* varNode = registry.create<VariableNode>("var1", 0);
+    Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry));
+    Expression expr("var1", std::move(node_registry));
+
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::SUBPROBLEMS});
+
+    std::map<std::string, ExtraOutput> extraOutputs;
+    extraOutputs.emplace("output1", ExtraOutput("output1", expr));
+
+    auto model = modelBuilder.withVariables(std::move(variables))
+                   .withExtraOutputs(std::move(extraOutputs))
+                   .withId("test_model")
+                   .build();
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
+
+    // Should not throw as extra outputs must be in subproblems.
+    BOOST_CHECK_NO_THROW(checkModel(model, system));
+}
+
+BOOST_FIXTURE_TEST_CASE(check_locations_validates_all_models, Fixture)
+{
+    Node* varNode = registry.create<VariableNode>("var1", 0);
+    Antares::Expressions::NodeRegistry node_registry(varNode, std::move(registry));
+    Expression expr("var1", std::move(node_registry));
+
+    std::vector<Variable> variables;
+    variables.push_back({"var1", {}, {}, ValueType::FLOAT, {}, {}, Location::SUBPROBLEMS});
+
+    auto model = modelBuilder.withVariables(std::move(variables))
+                   .withConstraints({{"constraint1", expr, Location::SUBPROBLEMS}})
+                   .withId("test_model")
+                   .build();
+
+    Library library("test_lib");
+    library.AddModel(model);
+
+    auto system = systemBuilder
+                    .withComponents(
+                      {componentBuilder.withModel(&model).withId("component").build()})
+                    .withId("system")
+                    .build();
+
+    Solver::ModelerData data;
+    data.libraries.push_back(library);
+    data.system = std::make_unique<System>(system);
+
+    // Should not throw as all locations are valid.
+    BOOST_CHECK_NO_THROW(checkLocations(data));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
