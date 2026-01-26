@@ -20,6 +20,7 @@
  */
 
 #include <filesystem>
+
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 
 namespace Antares::Solver::Variable

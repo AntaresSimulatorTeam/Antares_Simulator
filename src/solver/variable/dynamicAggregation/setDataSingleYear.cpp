@@ -169,11 +169,11 @@ void SetDataSingleYear::writeResultsToFolder(const fs::path& folder,
     survey.isCurrentVarNA = nonApplicable;
     survey.isPrinted = printed;
 
-    processAndSave(Category::Precision::hourly, folder / "hourly.txt", study, survey);
-    processAndSave(Category::Precision::daily, folder / "daily.txt", study, survey);
-    processAndSave(Category::Precision::weekly, folder / "weekly.txt", study, survey);
-    processAndSave(Category::Precision::monthly, folder / "monthly.txt", study, survey);
-    processAndSave(Category::Precision::annual, folder / "annual.txt", study, survey);
+    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), study, survey);
+    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), study, survey);
+    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
+    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
+    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
     survey.data.columnIndex = 0;
 }
 
