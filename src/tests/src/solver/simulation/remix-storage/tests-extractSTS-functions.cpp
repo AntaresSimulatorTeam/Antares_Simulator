@@ -10,16 +10,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/solver/simulation/common-hydro-remix.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/parts/short-term-storage/series.h"
-
-namespace Antares::Solver::Simulation
-{
-std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firstHourOfWeek);
-std::vector<double> extractSTSpmax(const PROPERTIES& sts_properties,
-                                   const unsigned firstHourOfWeek);
-} // namespace Antares::Solver::Simulation
 
 using namespace Antares::Solver::Simulation;
 
