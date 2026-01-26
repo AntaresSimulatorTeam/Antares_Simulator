@@ -54,8 +54,8 @@ public:
     static ProblemEntity buildMasterProblem(
       const ModelerData& data,
       Optimisation::BendersDecomposition& bendersDecomposition,
-      const Optimisation::LinearProblemApi::FillContext& fillContext = {0, 167, 0, 167, 0},
-      const std::string& solver = "SCIP");
+      const Optimisation::LinearProblemApi::FillContext& fillContext,
+      const std::string& solver);
 
 private:
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
