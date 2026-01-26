@@ -279,7 +279,7 @@ std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firs
 std::vector<double> extractSTSpmax(const PROPERTIES& sts_properties, const unsigned firstHourOfWeek)
 {
     auto subrange = weekSubRange(sts_properties.series->maxWithdrawalModulation, firstHourOfWeek);
-    return subrange * sts_properties.withdrawalEfficiency;
+    return subrange * sts_properties.withdrawalNominalCapacity;
 }
 
 std::vector<double> extractSTSlowRuleCurve(const PROPERTIES& sts_properties,

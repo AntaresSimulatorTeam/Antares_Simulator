@@ -37,6 +37,13 @@ struct Model
     std::vector<Objective> objectives;
 };
 
-using OptimConfig = std::vector<Model>;
+struct OptimConfig
+{
+    // Resolution mode requested in the YAML file. Default value: sequential-subproblems
+    std::string resolution_mode = "sequential-subproblems";
+
+    // List of models defined in the optim-config.yaml file
+    std::vector<Model> models;
+};
 
 } // namespace Antares::IO::Inputs::YmlOptimConfig
