@@ -106,7 +106,6 @@ void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
                                + stsGroupNames_.size() * 3;
 
     SurveyResults survey(study, nbVariables, "out", writer);
-    survey.data.columnIndex = 0;
 
     bool nonApplicable[2] = {false, false};
     bool printed[2] = {true, true};
@@ -122,8 +121,11 @@ void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
         };
     };
 
+    survey.data.columnIndex = 0;
+
     auto processGroup = [&](const std::vector<std::vector<long double>>& results,
                             const std::set<std::string>& groupNames,
+                            const Category::Precision& precision,
                             const std::string& suffix = "") {
         unsigned int index = 0;
         for (const auto& group: groupNames)
@@ -142,22 +144,34 @@ void SetDataSingleYear::writeResultsToFolder(const std::string& folderName,
 
             values.buildAnnualSurveyReport<VCardStub>(survey,
                                                       Category::FileLevel::va,
-                                                      Category::Precision::hourly);
+                                                      precision);
             ++index;
         }
     };
 
-    processGroup(thermalResults_, thermalGroupNames_);
-    processGroup(renewableResults_, renewableGroupNames_);
-    processGroup(stsInjectionResults_, stsGroupNames_, "_INJECTION");
-    processGroup(stsWithdrawalResults_, stsGroupNames_, "_WITHDRAWAL");
-    processGroup(stsLevelResults_, stsGroupNames_, "_LEVEL");
+    auto processWithPrecision = [&](Category::Precision precision) {
+        survey.data.columnIndex = 0;
+        processGroup(thermalResults_, thermalGroupNames_, precision);
+        processGroup(renewableResults_, renewableGroupNames_, precision);
+        processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION");
+        processGroup(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL");
+        processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL");
+    };
 
+    auto processAndSave = [&](Category::Precision precision, const std::string& filename) {
+        processWithPrecision(precision);
+        survey.data.filename = filename;
+        survey.saveToFile(Category::DataLevel::setOfAreas,
+                          Category::FileLevel::va,
+                          precision);
+    };
 
-    survey.data.filename = "hourly.txt";
-    survey.saveToFile(Category::DataLevel::setOfAreas,
-                      Category::FileLevel::va,
-                      Category::Precision::hourly);
+    processAndSave(Category::Precision::hourly, "hourly.txt");
+    processAndSave(Category::Precision::daily, "daily.txt");
+    processAndSave(Category::Precision::weekly, "weekly.txt");
+    processAndSave(Category::Precision::monthly, "monthly.txt");
+    processAndSave(Category::Precision::annual, "annual.txt");
+    survey.data.columnIndex = 0;
 }
 
 } // namespace Antares::Solver::Variable
