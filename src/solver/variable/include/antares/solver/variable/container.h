@@ -180,7 +180,8 @@ public:
     void exportSurveyResults(bool global,
                              const Yuni::String& output,
                              unsigned int numSpace,
-                             IResultWriter& writer);
+                             IResultWriter& writer,
+                             const SurveyResults::LegacySimulationTableOptions* legacyOptions = nullptr);
 
     /*!
     ** \brief Ask to all variables to fullfil the digest

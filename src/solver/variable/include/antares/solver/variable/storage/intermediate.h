@@ -117,7 +117,7 @@ public:
     Type year;
 
     template<uint Size, class VCardT, class A>
-    void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;
+    void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual, int precision) const;
 
     void computeDailyAveragesForCurrentYear();
     void computeWeeklyAveragesForCurrentYear();

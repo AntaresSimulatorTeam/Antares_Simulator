@@ -7,6 +7,8 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
+#include <optional>
+
 #include <antares/study/study.h>
 #include <antares/study/variable-print-info.h>
 #include <antares/writer/i_writer.h>
@@ -14,6 +16,8 @@
 
 #include "../categories.h"
 #include "data.h"
+
+namespace Antares::IO::Outputs { class ISimulationTable; }
 
 namespace Antares::Solver::Variable
 {
@@ -86,6 +90,27 @@ public:
 
     void exportDigestMatrix(const char* title, std::string& buffer);
 
+    enum class LegacyTimeConversionMode
+    {
+        SingleBlock,
+        DailyBlocks,
+        WeeklyBlocks
+    };
+
+    struct LegacySimulationTableOptions
+    {
+        Antares::IO::Outputs::ISimulationTable* simulationTable = nullptr;
+        std::optional<unsigned int> scenarioIndex;
+        LegacyTimeConversionMode timeConversionMode = LegacyTimeConversionMode::SingleBlock;
+    };
+
+    void configureLegacySimulationTable(const LegacySimulationTableOptions& options);
+    void clearLegacySimulationTable();
+    void exportLegacySimulationTableValues(const double* values,
+                                           unsigned int count,
+                                           int precision,
+                                           bool annual);
+
 public:
     //! Data (not related to the template parameter)
     Solver::Variable::Private::SurveyResultsData data;
@@ -93,6 +118,7 @@ public:
     //! Caption for the current variable
     CaptionType variableCaption;
     std::string variableUnit;
+    std::string setOfAreasName;
 
     //! Matrix where to store all results
     double** values;
@@ -135,6 +161,9 @@ public:
     IResultWriter& pResultWriter;
 
 private:
+    std::optional<LegacySimulationTableOptions> legacySimulationTableOptions_;
+    std::optional<std::string> legacyComponentId() const;
+
     template<class StringT, class ConvertT, class PrecisionT>
     void AppendDoubleValue(uint& error,
                            const double v,

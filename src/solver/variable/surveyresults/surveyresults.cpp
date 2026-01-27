@@ -8,6 +8,7 @@
 #include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
+#include "antares/io/outputs/ISimulationTable.h"
 #include <antares/solver/variable/print.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
@@ -575,6 +576,92 @@ SurveyResults::~SurveyResults()
         delete[] digestNonApplicableStatus[i];
     }
     delete[] digestNonApplicableStatus;
+}
+
+void SurveyResults::configureLegacySimulationTable(
+  const LegacySimulationTableOptions& options)
+{
+    legacySimulationTableOptions_ = options;
+}
+
+void SurveyResults::clearLegacySimulationTable()
+{
+    legacySimulationTableOptions_.reset();
+}
+
+std::optional<std::string> SurveyResults::legacyComponentId() const
+{
+    if (!setOfAreasName.empty())
+    {
+        return setOfAreasName;
+    }
+    if (data.link)
+    {
+        return data.link->getName().to<std::string>();
+    }
+    if (data.thermalCluster && data.area)
+    {
+        return data.area->id.to<std::string>() + "." + data.thermalCluster->id();
+    }
+    if (data.area)
+    {
+        return data.area->id.to<std::string>();
+    }
+    return std::nullopt;
+}
+
+void SurveyResults::exportLegacySimulationTableValues(const double* values,
+                                                      unsigned int count,
+                                                      int precision,
+                                                      bool annual)
+{
+    if (!legacySimulationTableOptions_
+        || !legacySimulationTableOptions_->simulationTable)
+    {
+        return;
+    }
+    if (annual || precision != Category::hourly)
+    {
+        return;
+    }
+    if (isCurrentVarNA && *isCurrentVarNA)
+    {
+        return;
+    }
+
+    auto* table = legacySimulationTableOptions_->simulationTable;
+    const std::optional<std::string> component = legacyComponentId();
+    const std::string output = variableCaption.c_str();
+
+    for (unsigned int index = 0; index < count; ++index)
+    {
+        unsigned int block = 1;
+        unsigned int blockTimeIndex = index + 1;
+
+        switch (legacySimulationTableOptions_->timeConversionMode)
+        {
+        case LegacyTimeConversionMode::WeeklyBlocks:
+            block = index / 168 + 1;
+            blockTimeIndex = index % 168 + 1;
+            break;
+        case LegacyTimeConversionMode::DailyBlocks:
+            block = index / 24 + 1;
+            blockTimeIndex = index % 24 + 1;
+            break;
+        case LegacyTimeConversionMode::SingleBlock:
+        default:
+            break;
+        }
+
+        table->addEntry({.block = block,
+                         .component = component,
+                         .output = output,
+                         .absolute_time_index = index + 1,
+                         .block_time_index = blockTimeIndex,
+                         .scenario_index = legacySimulationTableOptions_->scenarioIndex,
+                         .value = values[index],
+                         .status = std::nullopt});
+    }
 }
 
 void SurveyResults::resetValuesAtLine(uint j)

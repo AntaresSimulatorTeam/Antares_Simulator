@@ -20,6 +20,7 @@
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
 #include "antares/solver/variable/print.h"
+#include "antares/solver/variable/surveyresults/surveyresults.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -157,15 +158,6 @@ public:
                                              optWriter,
                                              pDurationCollector,
                                              scratchmap);
-        if (!study.parameters.noOutput)
-        {
-            auto& simTable = simulation_->getSimulationTable(numSpace);
-
-            auto buffers = simTable.moveBuffers();
-
-            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
-        }
-
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
@@ -191,6 +183,15 @@ public:
                 // writing the results for the current year into the output
                 simulation_->writeResults(false, y, numSpace); // false for synthesis
             };
+        }
+
+        if (!study.parameters.noOutput)
+        {
+            auto& simTable = simulation_->getSimulationTable(numSpace);
+
+            auto buffers = simTable.moveBuffers();
+
+            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
         }
 
         // 10 - Synthesis results
@@ -397,11 +398,27 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
             newPath.overwriteRight(tmp);
         }
 
+        Antares::Solver::Variable::SurveyResults::LegacySimulationTableOptions legacyOptions;
+        const Antares::Solver::Variable::SurveyResults::LegacySimulationTableOptions* legacyOptionsPtr
+          = nullptr;
+        if (!synthesis && study.getModelerData())
+        {
+            legacyOptions.simulationTable
+              = ImplementationType::getSimulationTable(numSpace).firstOptimSimulationTable();
+            legacyOptions.scenarioIndex = year;
+            legacyOptions.timeConversionMode
+              = (study.parameters.simplexOptimizationRange == Data::sorWeek)
+                  ? Antares::Solver::Variable::SurveyResults::LegacyTimeConversionMode::WeeklyBlocks
+                  : Antares::Solver::Variable::SurveyResults::LegacyTimeConversionMode::DailyBlocks;
+            legacyOptionsPtr = &legacyOptions;
+        }
+
         // Dumping
         ImplementationType::variables.exportSurveyResults(synthesis,
                                                           newPath,
                                                           numSpace,
-                                                          pResultWriter);
+                                                          pResultWriter,
+                                                          legacyOptionsPtr);
     }
 }
 

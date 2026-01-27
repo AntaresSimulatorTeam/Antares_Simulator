@@ -258,6 +258,8 @@ private:
     {
         using namespace Yuni;
 
+        results.setOfAreasName.clear();
+
         // No need to do anything for any area here if no zonal variables were selected.
         uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo
                                         .getNbSelectedZonalVars();
@@ -347,6 +349,8 @@ private:
     static void RunForEachLink(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
         using namespace Yuni;
+
+        results.setOfAreasName.clear();
 
         // No need to do anything for any link here if no link variables were selected.
         uint selectedLinkVarsCount = results.data.study.parameters.variablesPrintInfo
@@ -441,6 +445,7 @@ private:
 
             results.data.output = path.string();
             results.data.setOfAreasIndex = indx++;
+            results.setOfAreasName = sets.nameByIndex(i).to<std::string>();
 
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
@@ -451,6 +456,8 @@ private:
                                             unsigned int numSpace)
     {
         using namespace Yuni;
+
+        results.setOfAreasName.clear();
 
         // Generating the report for each binding constraint
         if (CDataLevel & Category::DataLevel::bindingConstraint)

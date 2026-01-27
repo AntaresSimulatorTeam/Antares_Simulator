@@ -272,7 +272,8 @@ template<class NextT>
 void List<NextT>::exportSurveyResults(bool global,
                                       const Yuni::String& output,
                                       unsigned int numSpace,
-                                      IResultWriter& writer)
+                                      IResultWriter& writer,
+                                      const SurveyResults::LegacySimulationTableOptions* legacyOptions)
 {
     using namespace Antares;
 
@@ -294,6 +295,10 @@ void List<NextT>::exportSurveyResults(bool global,
 
     // Year by year ?
     survey.yearByYearResults = !global;
+    if (!global && legacyOptions && legacyOptions->simulationTable)
+    {
+        survey.configureLegacySimulationTable(*legacyOptions);
+    }
 
     if (global)
     {
