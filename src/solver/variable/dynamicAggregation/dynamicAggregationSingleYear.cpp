@@ -19,8 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <filesystem>
-
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 
 namespace Antares::Solver::Variable
@@ -43,7 +41,6 @@ void DynamicAggregationSingleYear::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
-// TODO  remove tests purpose
 void DynamicAggregationSingleYear::writeAllResults(const std::filesystem::path& baseFolder,
                                                    IResultWriter& writer) const
 {

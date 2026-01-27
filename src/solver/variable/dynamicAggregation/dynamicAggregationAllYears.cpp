@@ -46,8 +46,7 @@ void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMer
     }
 }
 
-// TODO  remove tests purpose
-void DynamicAggregationAllYears::writeAllResults(const std::string& baseFolder,
+void DynamicAggregationAllYears::writeAllResults(const std::filesystem::path& baseFolder,
                                                  IResultWriter& writer) const
 {
     namespace fs = std::filesystem;
@@ -55,7 +54,8 @@ void DynamicAggregationAllYears::writeAllResults(const std::string& baseFolder,
 
     for (const auto& [setName, setData]: setsData_)
     {
-        setData.writeResultsToFolder(baseFolder, study_, writer);
+        std::filesystem::path folder = baseFolder / ("@ " + setName);
+        setData.writeResultsToFolder(folder, study_, writer);
     }
 }
 

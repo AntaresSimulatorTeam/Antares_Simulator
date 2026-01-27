@@ -357,8 +357,8 @@ void ISimulation<ImplementationType>::run()
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
 
-        ImplementationType::dynamicAggregationAllYears.writeAllResults(study.folderOutput.string(),
-                                                                       pResultWriter);
+        fs::path output = fs::path(ImplementationType::Name()) / "mc-all" / "areas";
+        ImplementationType::dynamicAggregationAllYears.writeAllResults(output, pResultWriter);
 
         ImplementationType::variables.simulationEnd();
 

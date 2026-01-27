@@ -147,19 +147,16 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     }
 }
 
-void SetDataAllYears::writeResultsToFolder(const std::string& folderName,
+void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
                                            Data::Study& study,
                                            IResultWriter& writer) const
 {
-    namespace fs = std::filesystem;
-    fs::create_directories(folderName);
-
     // Calculate total number of variables (4 columns per group: exp, std, min, max)
     unsigned int nbVariables = (thermalGroupNames_.size() + renewableGroupNames_.size()
                                 + stsGroupNames_.size() * 3)
                                * 4;
 
-    SurveyResults survey(study, nbVariables, folderName, writer);
+    SurveyResults survey(study, nbVariables, folder.string(), writer);
 
     bool nonApplicable[2] = {false, false};
     bool printed[2] = {true, true};
@@ -280,7 +277,7 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName,
                  "_LEVEL");
 
     // Save the results
-    survey.data.filename = folderName + "/results.txt";
+    survey.data.filename = (folder / "hourly.txt").string();
     survey.saveToFile(Category::DataLevel::setOfAreas,
                       Category::FileLevel::va,
                       Category::Precision::hourly);
