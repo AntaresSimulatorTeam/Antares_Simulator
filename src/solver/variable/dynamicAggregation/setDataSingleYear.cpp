@@ -138,6 +138,7 @@ void SetDataSingleYear::processWithPrecision(Category::Precision precision,
                                              SurveyResults& survey) const
 {
     survey.data.columnIndex = 0;
+
     processGroup(thermalResults_, thermalGroupNames_, precision, "", study, survey);
     processGroup(renewableResults_, renewableGroupNames_, precision, "", study, survey);
     processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
@@ -175,7 +176,6 @@ void SetDataSingleYear::writeResultsToFolder(const fs::path& folder,
     processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
     processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
     processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
-    survey.data.columnIndex = 0;
 }
 
 } // namespace Antares::Solver::Variable
