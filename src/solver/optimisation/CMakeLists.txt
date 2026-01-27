@@ -180,7 +180,8 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacyFiller.h
         LegacyFiller.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
-        ComponentToAreaConnectionFiller.cpp
+        include/antares/solver/optimisation/ComponentToThermalCapacityConnectionFiller.h
+        ComponentToThermalCapacityConnectionFiller.cpp
         include/antares/solver/optimisation/OptimisationsSimulationTable.h
         OptimisationsSimulationTable.cpp
 )

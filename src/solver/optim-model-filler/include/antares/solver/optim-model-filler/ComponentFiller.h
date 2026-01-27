@@ -71,6 +71,7 @@ public:
 
     void addConstraints(const LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const LinearProblemApi::FillContext& ctx) override;
+    void updateUpperBound(unsigned int index, double newUp) override;
 
 private:
     void addStaticConstraint(const LinearConstraint& linear_constraint,

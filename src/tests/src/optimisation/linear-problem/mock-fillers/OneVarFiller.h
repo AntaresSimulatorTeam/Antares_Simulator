@@ -17,6 +17,7 @@ public:
     void addVariables(const FillContext& ctx) override;
     void addConstraints(const FillContext& ctx) override;
     void addObjectives(const FillContext& ctx) override;
+    void updateUpperBound(unsigned int index, double newUp) override;
 
 private:
     std::string added_var_name_ = "var-by-OneVarFiller";
@@ -36,6 +37,11 @@ void OneVarFiller::addObjectives([[maybe_unused]] const FillContext& ctx)
 {
     auto* var = optimEntityContainer_.Problem().lookupVariable(added_var_name_);
     optimEntityContainer_.Problem().setObjectiveCoefficient(var, 1);
+}
+
+inline void OneVarFiller::updateUpperBound(unsigned int index, double newUp)
+{
+    // keep empty
 }
 
 } // namespace Antares::Optimisation::LinearProblemApi

@@ -38,6 +38,11 @@ void LegacyFiller::addObjectives(const FillContext&)
     // nothing to do: objective coefficients are set along with variables definition
 }
 
+void LegacyFiller::updateUpperBound(unsigned int index, double newUp)
+{
+    // keep empty
+}
+
 void LegacyFiller::CopyMatrix() const
 {
     for (int idxRow = 0; idxRow < problemeAResoudre_->NombreDeContraintes; ++idxRow)

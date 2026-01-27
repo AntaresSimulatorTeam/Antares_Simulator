@@ -17,6 +17,7 @@ public:
     virtual void addVariables(const FillContext& ctx) = 0;
     virtual void addConstraints(const FillContext& ctx) = 0;
     virtual void addObjectives(const FillContext& ctx) = 0;
+    virtual void updateUpperBound(unsigned int index, double newUp) = 0;
     virtual ~LinearProblemFiller() = default;
 };
 

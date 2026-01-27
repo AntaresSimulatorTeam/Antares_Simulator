@@ -17,6 +17,7 @@ public:
     void addVariables(const FillContext& ctx) override;
     void addConstraints(const FillContext& ctx) override;
     void addObjectives(const FillContext& ctx) override;
+    void updateUpperBound(unsigned int index, double newUp) override;
     OptimEntityContainer& optimEntityContainer_;
 };
 
@@ -31,6 +32,11 @@ void OneConstraintFiller::addConstraints([[maybe_unused]] const FillContext& ctx
 
 void OneConstraintFiller::addObjectives([[maybe_unused]] const FillContext& ctx)
 {
+}
+
+inline void OneConstraintFiller::updateUpperBound(unsigned int index, double newUp)
+{
+    // keep empty
 }
 
 } // namespace Antares::Optimisation::LinearProblemApi
