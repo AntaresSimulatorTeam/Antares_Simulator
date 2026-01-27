@@ -102,7 +102,7 @@ struct convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::ThermalComponent& rhs)
     {
-        if (!node.IsMap() || node.size() != 2)
+         if (!node.IsMap() || node.size() != 2)
         {
             return false;
         }
