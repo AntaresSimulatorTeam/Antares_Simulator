@@ -97,6 +97,15 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
+
+struct VCardStub
+{
+    enum
+    {
+        decimal = 0,
+    };
+};
+
 void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>& results,
                                      const std::set<std::string>& groupNames,
                                      const Category::Precision& precision,
@@ -118,14 +127,6 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
         values.reset();
         std::ranges::copy(results[index], values.hour);
         values.computeStatisticsForTheCurrentYear();
-
-        struct VCardStub
-        {
-            enum
-            {
-                decimal = 0,
-            };
-        };
 
         values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
         ++index;

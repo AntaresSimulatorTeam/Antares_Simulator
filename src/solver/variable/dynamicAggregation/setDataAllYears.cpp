@@ -147,6 +147,15 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     }
 }
 
+
+struct VCardStub
+{
+    enum
+    {
+        decimal = 0
+    };
+};
+
 void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
                                            Data::Study& study,
                                            IResultWriter& writer) const
@@ -165,14 +174,6 @@ void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
     survey.isPrinted = printed;
 
     survey.data.columnIndex = 0;
-
-    struct VCardStub
-    {
-        enum
-        {
-            decimal = 0
-        };
-    };
 
     // Helper lambda to process a group
     auto processGroup = [&](const auto& avgVec,
