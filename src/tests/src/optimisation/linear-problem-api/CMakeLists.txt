@@ -4,4 +4,5 @@ add_boost_test(test_structured_linear_problem
         SRC
         test_structured_linear_problem.cpp
         LIBS
-        linear-problem-api)
+        linear-problem-api
+        structured-linear-problem)

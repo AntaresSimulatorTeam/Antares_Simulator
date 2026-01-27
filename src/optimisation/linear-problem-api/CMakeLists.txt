@@ -13,14 +13,27 @@ set(SRC_API
         include/antares/optimisation/linear-problem-api/mipSolution.h
         include/antares/optimisation/linear-problem-api/mipVariable.h
         linearProblemBuilder.cpp
-	# partial implementation of the ILinearProblem (store problem, no resolution)
-	# TODO move to new CMake target
-	include/antares/optimisation/linear-problem-api/StructuredLinearProblem.h
-	StructuredLinearProblem.cpp
 )
 
 add_library(${PROJ} ${SRC_API})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
+
+# StructuredLinearProblem - partial implementation of ILinearProblem (store problem, no resolution)
+add_library(structured-linear-problem
+        StructuredLinearProblem.cpp
+        include/antares/optimisation/linear-problem-api/StructuredLinearProblem.h
+)
+add_library(Antares::structured-linear-problem ALIAS structured-linear-problem)
+
+target_include_directories(structured-linear-problem
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(structured-linear-problem
+        PUBLIC
+        Antares::linear-problem-api
+)
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
 
