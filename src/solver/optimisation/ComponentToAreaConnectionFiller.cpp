@@ -148,23 +148,18 @@ void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
     // }
 }
 
-IMipConstraint* ComponentToAreaConnectionFiller::getBalanceConstraint(ILinearProblem& pb,
-                                                                      const std::string& areaId,
-                                                                      unsigned ts) const
+unsigned ComponentToAreaConnectionFiller::balanceConstraintIndex(const unsigned& areaIndex,
+                                                                 unsigned ts) const
 {
-    unsigned areaIndex = areaIndices_.at(areaId);
-    auto contraintIndex = problemeHebdo_->CorrespondanceCntNativesCntOptim[ts]
-                            .NumeroDeContrainteDesBilansPays[areaIndex];
-    // Fetching a legacy (balance) constraint by index in LP is not supposed to fail.
-    // Legacy problem was made from problem hebdo (see above) and is supposed to be well formed.
-    return pb.getConstraint(contraintIndex);
+    return problemeHebdo_->CorrespondanceCntNativesCntOptim[ts]
+      .NumeroDeContrainteDesBilansPays[areaIndex];
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   ILinearProblem& pb,
   const TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
-  const std::string& areaId) const
+  const unsigned& areaIndex) const
 {
     // Contribution is added to the left-hand side of the constraint
     // We invert the sign bc modeler is in "gen>0, load<0" convention
@@ -174,31 +169,40 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         auto ts = h % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-        IMipConstraint* areaBalanceConstraint = getBalanceConstraint(pb, areaId, ts);
+        unsigned constraintIndex = balanceConstraintIndex(areaIndex, ts);
+
+        // Fetching a legacy (balance) constraint by index in LP is not supposed to fail.
+        // Legacy problem was made from problem hebdo (see above) and is supposed to be well formed.
+        IMipConstraint* balanceConstraint = pb.getConstraint(constraintIndex);
 
         for (const auto& [index, coef]: linearExpression[h])
         {
-            areaBalanceConstraint->setCoefficient(solverVariables.at(index).get(), -coef);
+            balanceConstraint->setCoefficient(solverVariables.at(index).get(), -coef);
         }
 
         double constant = linearExpression[h].constant();
-        areaBalanceConstraint->setBounds(areaBalanceConstraint->getLb() + constant,
-                                         areaBalanceConstraint->getUb() + constant);
+        balanceConstraint->setBounds(balanceConstraint->getLb() + constant,
+                                     balanceConstraint->getUb() + constant);
     }
 }
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(const FillContext& ctx,
                                                                          const Component& component,
                                                                          const std::string& portId,
-                                                                         const std::string& areaId)
+                                                                         const unsigned& areaIndex)
 {
     std::string injectionFieldId = componentInjectionField(component, portId);
+    if (injectionFieldId.empty())
+    {
+        return;
+    }
+
     Nodes::Node* expression = component.nodeAtPortField(portId, injectionFieldId);
 
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
     auto linearExpression = visitor.visitMergeDuplicates(expression);
 
-    addExpressionToConstraint(optimEntityContainer_.Problem(), linearExpression, ctx, areaId);
+    addExpressionToConstraint(optimEntityContainer_.Problem(), linearExpression, ctx, areaIndex);
 }
 
 void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
@@ -208,7 +212,8 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
         for (auto [portId, areaId]: component.portToAreaConnections())
         {
             boost::algorithm::to_lower(areaId);
-            addComponentPortContributionToArea(ctx, component, portId, areaId);
+            auto areaIndex = areaIndices_.at(areaId);
+            addComponentPortContributionToArea(ctx, component, portId, areaIndex);
         }
     }
 }

@@ -69,21 +69,18 @@ private:
     // Function members
     void checkAreasFromConnexionsExist();
 
-    Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
-      const std::string& areaId,
-      unsigned ts) const;
+    unsigned balanceConstraintIndex(const unsigned& areaIndex, unsigned ts) const;
 
     void addExpressionToConstraint(
       Optimisation::LinearProblemApi::ILinearProblem& pb,
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
-      const std::string& areaId) const;
+      const unsigned& areaIndex) const;
 
     void addComponentPortContributionToArea(const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,
                                             const std::string& portId,
-                                            const std::string& areaId);
+                                            const unsigned& areaIndex);
     void increaseAreaSpillageBound(const Optimisation::LinearProblemApi::FillContext& ctx,
                                    const ModelerStudy::SystemModel::Component& component,
                                    const std::string& portId,
