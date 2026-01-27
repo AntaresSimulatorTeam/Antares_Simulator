@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include <antares/logs/logs.h>
+#include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
@@ -17,8 +18,8 @@
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
 
-using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
+using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -134,7 +135,7 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
     {
         return {nullptr, nullptr};
     }
-    auto problem = std::make_unique<OrtoolsLinearProblem>(isMip, solver);
+    auto problem = std::make_unique<StructuredLinearProblem>();
     auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
       *problem,
       data.dataSeries.get(),
@@ -256,15 +257,14 @@ void Modeler::run()
 Modeler::ProblemEntity Modeler::buildMasterProblem(
   const ModelerData& data,
   Optimisation::BendersDecomposition& bendersDecomposition,
-  const FillContext& fillContext,
-  const std::string& solver)
+  const FillContext& fillContext)
 {
-    auto [hasCompatibleVariable, isMip] = analyzeLocation(data, Config::Location::MASTER);
+    auto [hasCompatibleVariable, _] = analyzeLocation(data, Config::Location::MASTER);
     if (!hasCompatibleVariable)
     {
         return {nullptr, nullptr};
     }
-    auto problem = std::make_unique<OrtoolsLinearProblem>(isMip, solver);
+    auto problem = std::make_unique<StructuredLinearProblem>();
     auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
       *problem,
       data.dataSeries.get(),

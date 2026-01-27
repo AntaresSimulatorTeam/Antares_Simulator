@@ -131,7 +131,7 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
 
     FillContext fillContext = {0, 167, 0, 167, 0};
 
-    auto master = Modeler::buildMasterProblem(data, bendersDecomposition, fillContext, "xpress");
+    auto master = Modeler::buildMasterProblem(data, bendersDecomposition, fillContext);
 
     if (!master.problem)
     {

@@ -13,6 +13,8 @@ set(SRC_API
         include/antares/optimisation/linear-problem-api/mipSolution.h
         include/antares/optimisation/linear-problem-api/mipVariable.h
         linearProblemBuilder.cpp
+	# partial implementation of the ILinearProblem (store problem, no resolution)
+	# TODO move to new CMake target
 	include/antares/optimisation/linear-problem-api/StructuredLinearProblem.h
 	StructuredLinearProblem.cpp
 )
