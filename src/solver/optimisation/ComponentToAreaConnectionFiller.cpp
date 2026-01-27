@@ -92,9 +92,21 @@ void ComponentToAreaConnectionFiller::increaseAreaSpillageBound(const FillContex
                                                                 const std::string& portId,
                                                                 const std::string& areaId)
 {
-    // 1. Fetch spillage variable numbers in LP
+    // 0. check if component's area-connection.to-area-bound exists, otherwise, exit.
+    auto toAreaBoundField = componentToAreaBoundField(component, portId);
+    if (toAreaBoundField.empty())
+    {
+        return;
+    }
+
+    // 1. Fetch vector of values to be added to spillage bound
+    Nodes::Node* expression = component.nodeAtPortField(portId, toAreaBoundField);
+    EvalVisitor visitor(optimEntityContainer_, ctx, component);
+    EvaluationResult result = visitor.dispatch(expression);
+    std::vector<double> toBeAddedToSpillageBound = result.asVector(ctx.getLocalNumberOfTimeSteps());
+
+    // 2. Fetch spillage variable numbers in LP
     std::vector<unsigned> spillageNumbersInLP(ctx.getLocalNumberOfTimeSteps());
-    std::vector<double>& Xmax = problemeHebdo_->ProblemeAResoudre->Xmax;
     unsigned areaIndex = areaIndices_.at(areaId);
     for (unsigned h = 0; h < ctx.getLocalNumberOfTimeSteps(); ++h)
     {
@@ -102,13 +114,6 @@ void ComponentToAreaConnectionFiller::increaseAreaSpillageBound(const FillContex
         spillageNumbersInLP[h] = problemeHebdo_->CorrespondanceVarNativesVarOptim[h]
                                    .NumeroDeVariableDefaillanceNegative[areaIndex];
     }
-
-    // 2. Fetch vector of values to be added to spillage bound
-    auto toAreaBoundField = componentToAreaBoundField(component, portId);
-    Nodes::Node* expression = component.nodeAtPortField(portId, toAreaBoundField);
-    EvalVisitor visitor(optimEntityContainer_, ctx, component);
-    EvaluationResult result = visitor.dispatch(expression);
-    std::vector<double> toBeAddedToSpillageBound = result.asVector(ctx.getLocalNumberOfTimeSteps());
 
     // 3. Add values to spillage bound
     auto& pb = optimEntityContainer_.Problem();
@@ -134,8 +139,9 @@ void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components())
     {
-        for (const auto& [portId, areaId]: component.portToAreaConnections())
+        for (auto [portId, areaId]: component.portToAreaConnections())
         {
+            boost::algorithm::to_lower(areaId);
             increaseAreaSpillageBound(ctx, component, portId, areaId);
             increaseAreaUnsuppliedEnergyBound(ctx, component, portId, areaId);
         }

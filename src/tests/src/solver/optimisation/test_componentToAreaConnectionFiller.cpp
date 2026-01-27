@@ -142,14 +142,15 @@ struct ComponentToAreaConnectionFillerFixture
     {
         problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
-        setUpModelerSystem();
+        modelerData = buildModelerSystem();
+        problemeHebdo->modelerData = modelerData.get();
 
         auto scenarioPtr = std::make_unique<Scenario>("SG");
         scenarioPtr->setTimeSerieNumber(0, 1);
         scenarioGroupRepository.addScenario("SG", std::move(scenarioPtr));
     }
 
-    void setData(const std::vector<double>& some_param_value)
+    void setLinearProblemData(const std::vector<double>& some_param_value)
     {
         auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
         tss->add(some_param_value);
@@ -159,21 +160,23 @@ struct ComponentToAreaConnectionFillerFixture
         data = std::move(d);
     }
 
-    void setUpModelerSystem()
+    std::unique_ptr<Modeler::Data> buildModelerSystem()
     {
         IO::Inputs::YmlModel::Parser parserModel;
         libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
+
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml);
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-        modelerData = std::make_unique<Modeler::Data>();
-        modelerData->system = std::make_unique<System>(std::move(system));
-        problemeHebdo->modelerData = modelerData.get();
+
+        auto data = std::make_unique<Modeler::Data>();
+        data->system = std::make_unique<System>(std::move(system));
+        return data;
     }
 
-    void setUpModelerVariables(unsigned int ts_start,
-                               unsigned int ts_end,
-                               OptimEntityContainer& optimEntityContainer)
+    void addModelerVariablesToLP(unsigned int ts_start,
+                                 unsigned int ts_end,
+                                 OptimEntityContainer& optimEntityContainer)
     {
         const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
         for (const auto& component: modelerData->system->Components())
@@ -255,17 +258,19 @@ BOOST_FIXTURE_TEST_SUITE(_ComponentToAreaConnectionFiller_, ComponentToAreaConne
 
 BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
-    setData({4.0});
+    setLinearProblemData({4.0});
 
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
-    setUpModelerVariables(0, 0, optimEntityContainer);
+    addModelerVariablesToLP(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
     addEmptyNamedConstraintsToLP(constraints, 10);
+
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
+
     addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer);
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
@@ -297,12 +302,12 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 
 BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 {
-    setData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
+    setLinearProblemData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
-    setUpModelerVariables(10, 11, optimEntityContainer);
+    addModelerVariablesToLP(10, 11, optimEntityContainer);
     // Legacy indexing of TS always starts at 1
     addEmptyConstraintsToLP(3 /* nb of constraints */, -100);
     problemeHebdo->NomsDesPays.push_back("area1");
