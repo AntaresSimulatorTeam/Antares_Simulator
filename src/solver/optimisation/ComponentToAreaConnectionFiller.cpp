@@ -168,7 +168,7 @@ void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const Fill
                                                                       const unsigned& areaIndex)
 {
     std::string portField = componentInjectionField(component, portId);
-    if (!portField.empty()) // area connection does not know this port field
+    if (portField.empty()) // area connection does not know this port field
     {
         return;
     }
