@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "antares/solver/lps/LpsFromAntares.h"
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/study/study.h"
 
 namespace Antares::Solver::Implementation

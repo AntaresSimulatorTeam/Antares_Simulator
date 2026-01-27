@@ -3,7 +3,7 @@
 
 #include "antares/api/singleProblemGetter.h"
 
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 
 #include "singleProblemGetterImpl.h"
 

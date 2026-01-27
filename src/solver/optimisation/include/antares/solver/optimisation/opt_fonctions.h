@@ -9,7 +9,7 @@
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/study/parameters/adq-patch-params.h"

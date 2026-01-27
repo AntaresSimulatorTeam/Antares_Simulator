@@ -8,12 +8,9 @@
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 
 using namespace Antares::Solver;
-constexpr int kMaxDisplay = 10'000;
-
-// This is a temporary client for singleProblemGetter.h for testing & debugging purposes
 
 // Helper: convert any value to string
 template<typename T>

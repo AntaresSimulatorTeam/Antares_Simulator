@@ -3,7 +3,7 @@
 
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/lps/LpsFromAntares.h"
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/simulation/random.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
