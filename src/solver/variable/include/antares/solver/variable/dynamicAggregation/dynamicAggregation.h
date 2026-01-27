@@ -73,6 +73,10 @@ public:
                               Data::Study& study,
                               SurveyResults& survey) const;
 
+    void appendToSurvey(SurveyResults& survey,
+                        Category::Precision precision,
+                        Data::Study& study) const;
+
     void processAndSave(Category::Precision precision,
                         const std::string& filename,
                         Data::Study& study,
@@ -137,6 +141,10 @@ public:
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
     void writeAllResults(const std::filesystem::path& folder, IResultWriter& writer) const;
+
+    void appendToSurveyForSet(const std::string& setName,
+                              SurveyResults& survey,
+                              Category::Precision precision) const;
 
 private:
     Data::Study& study_;

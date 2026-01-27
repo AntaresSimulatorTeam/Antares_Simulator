@@ -97,7 +97,6 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-
 struct VCardStub
 {
     enum
@@ -176,6 +175,13 @@ void SetDataSingleYear::writeResultsToFolder(const fs::path& folder,
     processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
     processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
     processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
+}
+
+void SetDataSingleYear::appendToSurvey(SurveyResults& survey,
+                                       Category::Precision precision,
+                                       Data::Study& study) const
+{
+    processWithPrecision(precision, study, survey);
 }
 
 } // namespace Antares::Solver::Variable

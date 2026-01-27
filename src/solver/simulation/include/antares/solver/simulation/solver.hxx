@@ -192,8 +192,10 @@ public:
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
-                // writing the results for the current year into the output
-                simulation_->writeResults(false, y, numSpace); // false for synthesis
+
+                study.runtime.dynamicAggregationSingleYear = &dynamicAggregationForTheYear;
+                simulation_->writeResults(false, y, numSpace);
+                study.runtime.dynamicAggregationSingleYear = nullptr;
 
                 std::ostringstream oss;
                 oss << std::setw(5) << std::setfill('0') << y + 1;
@@ -301,7 +303,7 @@ void ISimulation<ImplementationType>::run()
 
     // Computing max number of columns a report of any kind can contain, depending on number of
     // selected variables. The less variables are selected, smallest this count is.
-    ImplementationType::variables.computeMaxColumnsCountInReports();
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
     logs.info() << "Allocating resources...";
 

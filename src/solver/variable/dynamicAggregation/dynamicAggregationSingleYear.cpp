@@ -54,4 +54,15 @@ void DynamicAggregationSingleYear::writeAllResults(const std::filesystem::path& 
     }
 }
 
+void DynamicAggregationSingleYear::appendToSurveyForSet(const std::string& setName,
+                                                        SurveyResults& survey,
+                                                        Category::Precision precision) const
+{
+    auto it = setsData_.find(setName);
+    if (it != setsData_.end())
+    {
+        it->second.appendToSurvey(survey, precision, study_);
+    }
+}
+
 } // namespace Antares::Solver::Variable
