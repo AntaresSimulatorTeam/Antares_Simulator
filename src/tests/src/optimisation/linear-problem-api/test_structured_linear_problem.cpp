@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
+#define BOOST_TEST_MODULE test api structured linear problem
 
 #include <cmath>
 
