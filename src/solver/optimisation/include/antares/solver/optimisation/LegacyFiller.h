@@ -16,7 +16,6 @@ public:
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
-    void updateUpperBound(unsigned int index, double newUp) override;
 
 private:
     const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;

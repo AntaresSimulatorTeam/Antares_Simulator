@@ -41,11 +41,6 @@ public:
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
-    void updateUpperBound(unsigned int index, double newUp) override
-    {
-        // keep empty
-    }
-
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;

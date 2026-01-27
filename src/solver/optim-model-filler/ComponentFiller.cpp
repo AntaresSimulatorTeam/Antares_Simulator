@@ -412,11 +412,6 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
     pb.setObjectiveOffset(objectiveOffset);
 }
 
-void ComponentFiller::updateUpperBound(unsigned int index, double newUp)
-{
-    // keep empty
-}
-
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const
 {
     Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component);

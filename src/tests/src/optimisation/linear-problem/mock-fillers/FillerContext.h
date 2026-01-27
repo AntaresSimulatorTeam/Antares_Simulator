@@ -17,7 +17,6 @@ public:
     void addVariables(const FillContext& ctx) override;
     void addConstraints(const FillContext& ctx) override;
     void addObjectives(const FillContext& ctx) override;
-    void updateUpperBound(unsigned int index, double newUp) override;
 
     std::array<std::array<int, 3>, 5> timeseries = {
       {{1, 3, 5}, {2, 4, 6}, {7, 9, 11}, {8, 10, 12}, {13, 15, 17}}};
@@ -45,11 +44,6 @@ void VarFillerContext::addConstraints([[maybe_unused]] const FillContext& ctx)
 
 void VarFillerContext::addObjectives([[maybe_unused]] const FillContext& ctx)
 {
-}
-
-inline void VarFillerContext::updateUpperBound(unsigned int index, double newUp)
-{
-    // keep empty
 }
 
 } // namespace Antares::Optimisation::LinearProblemApi
