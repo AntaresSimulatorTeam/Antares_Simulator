@@ -55,8 +55,7 @@ void DynamicAggregationAllYears::writeAllResults(const std::string& baseFolder,
 
     for (const auto& [setName, setData]: setsData_)
     {
-        std::string folderPath = baseFolder + "/" + setName + "_allYears";
-        setData.writeResultsToFolder(folderPath, study_, writer);
+        setData.writeResultsToFolder(baseFolder, study_, writer);
     }
 }
 

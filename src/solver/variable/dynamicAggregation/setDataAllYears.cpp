@@ -147,7 +147,6 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     }
 }
 
-// TODO  remove tests purpose
 void SetDataAllYears::writeResultsToFolder(const std::string& folderName,
                                            Data::Study& study,
                                            IResultWriter& writer) const
@@ -155,231 +154,136 @@ void SetDataAllYears::writeResultsToFolder(const std::string& folderName,
     namespace fs = std::filesystem;
     fs::create_directories(folderName);
 
-    unsigned index = 0;
-    for (const auto& group: thermalGroupNames_)
+    // Calculate total number of variables (4 columns per group: exp, std, min, max)
+    unsigned int nbVariables = (thermalGroupNames_.size() + renewableGroupNames_.size()
+                                + stsGroupNames_.size() * 3)
+                               * 4;
+
+    SurveyResults survey(study, nbVariables, folderName, writer);
+
+    bool nonApplicable[2] = {false, false};
+    bool printed[2] = {true, true};
+
+    survey.isCurrentVarNA = nonApplicable;
+    survey.isPrinted = printed;
+
+    survey.data.columnIndex = 0;
+
+    struct VCardStub
     {
-        std::string filePath = folderName + "/" + group + "min_.txt";
-        std::ofstream outFile(filePath);
-        if (outFile.is_open())
+        enum
         {
-            for (const auto& min: minThermal[index].hourly)
-            {
-                outFile << min.index << "  " << min.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "max_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& max: maxThermal[index].hourly)
-            {
-                outFile << max.index << "   " << max.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "exp_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& average: averageThermal[index].hourly)
-            {
-                outFile << average << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "std_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& std: stdDevThermal[index].stdDeviationHourly)
-            {
-                outFile << std << std::endl;
-            }
-            outFile.close();
-        }
+            decimal = 0
+        };
+    };
 
-        ++index;
-    }
-
-    index = 0;
-    // Write renewable results
-    for (const auto& group: renewableGroupNames_)
+    // Helper lambda to process a group
+    auto processGroup = [&](const auto& avgVec,
+                            const auto& stdVec,
+                            const auto& minVec,
+                            const auto& maxVec,
+                            const std::set<std::string>& groupNames,
+                            const std::string& suffix)
     {
-        std::string filePath = folderName + "/" + group + "min_.txt";
-        std::ofstream outFile(filePath);
-        if (outFile.is_open())
+        unsigned int index = 0;
+        for (const auto& group: groupNames)
         {
-            for (const auto& min: minRenewable[index].hourly)
-            {
-                outFile << min.index << "  " << min.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "max_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& max: maxRenewable[index].hourly)
-            {
-                outFile << max.index << "   " << max.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "exp_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& average: averageRenewable[index].hourly)
-            {
-                outFile << average << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "std_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& std: stdDevRenewable[index].stdDeviationHourly)
-            {
-                outFile << std << std::endl;
-            }
-            outFile.close();
-        }
+            survey.captions[0][survey.data.columnIndex] = group + suffix;
+            survey.captions[1][survey.data.columnIndex] = "MWh";
+            survey.captions[2][survey.data.columnIndex] = "exp";
+            survey.variableCaption = group + suffix;
+            survey.variableUnit = "MWh";
 
-        ++index;
-    }
-    index = 0;
-    // Write STS results
-    for (const auto& group: stsGroupNames_)
-    {
-        std::string filePath = folderName + "/" + group + "inj_min_.txt";
-        std::ofstream outFile(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& min: minStsInjection[index].hourly)
-            {
-                outFile << min.index << "  " << min.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "inj_max_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& max: maxStsInjection[index].hourly)
-            {
-                outFile << max.index << "   " << max.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "inj_exp_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& average: averageStsInjection[index].hourly)
-            {
-                outFile << average << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "inj_std_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& std: stdDevStsInjection[index].stdDeviationHourly)
-            {
-                outFile << std << std::endl;
-            }
-            outFile.close();
-        }
+            IntermediateValues values;
+            values.initializeFromStudy(study);
 
-        // Withdrawal
-        filePath = folderName + "/" + group + "wtd_min_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& min: minStsWithdrawal[index].hourly)
-            {
-                outFile << min.index << "  " << min.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "wtd_max_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& max: maxStsWithdrawal[index].hourly)
-            {
-                outFile << max.index << "   " << max.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "wtd_exp_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& average: averageStsWithdrawal[index].hourly)
-            {
-                outFile << average << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "wtd_std_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& std: stdDevStsWithdrawal[index].stdDeviationHourly)
-            {
-                outFile << std << std::endl;
-            }
-            outFile.close();
-        }
+            values.reset();
+            std::ranges::copy(avgVec[index].hourly, values.hour);
+            values.computeStatisticsForTheCurrentYear();
+            values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                      Category::FileLevel::va,
+                                                      Category::Precision::hourly);
 
-        // Level
-        filePath = folderName + "/" + group + "lvl_min_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& min: minStsLevel[index].hourly)
-            {
-                outFile << min.index << "  " << min.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "lvl_max_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& max: maxStsLevel[index].hourly)
-            {
-                outFile << max.index << "   " << max.value << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "lvl_exp_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& average: averageStsLevel[index].hourly)
-            {
-                outFile << average << std::endl;
-            }
-            outFile.close();
-        }
-        filePath = folderName + "/" + group + "lvl_std_.txt";
-        outFile.open(filePath);
-        if (outFile.is_open())
-        {
-            for (const auto& std: stdDevStsLevel[index].stdDeviationHourly)
-            {
-                outFile << std << std::endl;
-            }
-            outFile.close();
-        }
+            survey.captions[0][survey.data.columnIndex] = group + suffix;
+            survey.captions[1][survey.data.columnIndex] = "MWh";
+            survey.captions[2][survey.data.columnIndex] = "std";
+            survey.variableCaption = group + suffix;
+            survey.variableUnit = "MWh";
 
-        ++index;
-    }
+            values.reset();
+            std::ranges::copy(stdVec[index].stdDeviationHourly, values.hour);
+            values.computeStatisticsForTheCurrentYear();
+            values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                      Category::FileLevel::va,
+                                                      Category::Precision::hourly);
+
+            survey.captions[0][survey.data.columnIndex] = group + suffix;
+            survey.captions[1][survey.data.columnIndex] = "MWh";
+            survey.captions[2][survey.data.columnIndex] = "min";
+            survey.variableCaption = group + suffix;
+            survey.variableUnit = "MWh";
+
+            values.reset();
+            for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
+            {
+                values.hour[h] = minVec[index].hourly[h].value;
+            }
+            values.computeStatisticsForTheCurrentYear();
+            values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                      Category::FileLevel::va,
+                                                      Category::Precision::hourly);
+
+            survey.captions[0][survey.data.columnIndex] = group + suffix;
+            survey.captions[1][survey.data.columnIndex] = "MWh";
+            survey.captions[2][survey.data.columnIndex] = "max";
+            survey.variableCaption = group + suffix;
+            survey.variableUnit = "MWh";
+
+            values.reset();
+            for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
+            {
+                values.hour[h] = maxVec[index].hourly[h].value;
+            }
+
+            values.computeStatisticsForTheCurrentYear();
+            values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                      Category::FileLevel::va,
+                                                      Category::Precision::hourly);
+            ++index;
+        }
+    };
+
+    processGroup(averageThermal, stdDevThermal, minThermal, maxThermal, thermalGroupNames_, "");
+    processGroup(averageRenewable,
+                 stdDevRenewable,
+                 minRenewable,
+                 maxRenewable,
+                 renewableGroupNames_,
+                 "");
+    processGroup(averageStsInjection,
+                 stdDevStsInjection,
+                 minStsInjection,
+                 maxStsInjection,
+                 stsGroupNames_,
+                 "_INJECTION");
+    processGroup(averageStsWithdrawal,
+                 stdDevStsWithdrawal,
+                 minStsWithdrawal,
+                 maxStsWithdrawal,
+                 stsGroupNames_,
+                 "_WITHDRAWAL");
+    processGroup(averageStsLevel,
+                 stdDevStsLevel,
+                 minStsLevel,
+                 maxStsLevel,
+                 stsGroupNames_,
+                 "_LEVEL");
+
+    // Save the results
+    survey.data.filename = folderName + "/results.txt";
+    survey.saveToFile(Category::DataLevel::setOfAreas,
+                      Category::FileLevel::va,
+                      Category::Precision::hourly);
 }
 
 } // namespace Antares::Solver::Variable
