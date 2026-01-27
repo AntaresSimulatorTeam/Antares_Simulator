@@ -632,9 +632,20 @@ void SurveyResults::exportLegacySimulationTableValues(const double* values,
     auto* table = legacySimulationTableOptions_->simulationTable;
     const std::optional<std::string> component = legacyComponentId();
     const std::string output = variableCaption.c_str();
+    const auto& rangeLimits = data.study.runtime.rangeLimits;
+    const unsigned int rangeBegin = rangeLimits.hour[Data::rangeBegin];
+    const unsigned int rangeEnd = rangeLimits.hour[Data::rangeEnd];
 
     for (unsigned int index = 0; index < count; ++index)
     {
+        if (index < rangeBegin || index > rangeEnd)
+        {
+            continue;
+        }
+        if (Utils::isZero(values[index]))
+        {
+            continue;
+        }
         unsigned int block = 1;
         unsigned int blockTimeIndex = index + 1;
 
