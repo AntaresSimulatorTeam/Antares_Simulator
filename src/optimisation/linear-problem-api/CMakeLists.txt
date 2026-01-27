@@ -13,6 +13,8 @@ set(SRC_API
         include/antares/optimisation/linear-problem-api/mipSolution.h
         include/antares/optimisation/linear-problem-api/mipVariable.h
         linearProblemBuilder.cpp
+	include/antares/optimisation/linear-problem-api/StructuredLinearProblem.h
+	StructuredLinearProblem.cpp
 )
 
 add_library(${PROJ} ${SRC_API})

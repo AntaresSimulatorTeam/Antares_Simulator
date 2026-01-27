@@ -130,7 +130,7 @@ private:
     double objectiveOffset_ = 0.0;
     bool minimize_ = true;
     bool isMip_ = false;
-    double infinity_ = 1e20;
+    double infinity_ = std::numeric_limits<double>::infinity();
 };
 
 } // namespace Antares::Optimisation::LinearProblemApi
