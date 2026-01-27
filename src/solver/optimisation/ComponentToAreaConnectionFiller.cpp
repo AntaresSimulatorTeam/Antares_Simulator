@@ -87,65 +87,8 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
     }
 }
 
-void ComponentToAreaConnectionFiller::increaseAreaSpillageBound(const FillContext& ctx,
-                                                                const Component& component,
-                                                                const std::string& portId,
-                                                                const std::string& areaId)
-{
-    // 0. check if component's area-connection.to-area-bound exists, otherwise, exit.
-    auto toAreaBoundField = componentToAreaBoundField(component, portId);
-    if (toAreaBoundField.empty())
-    {
-        return;
-    }
-
-    // 1. Fetch vector of values to be added to spillage bound
-    Nodes::Node* expression = component.nodeAtPortField(portId, toAreaBoundField);
-    EvalVisitor visitor(optimEntityContainer_, ctx, component);
-    EvaluationResult result = visitor.dispatch(expression);
-    std::vector<double> toBeAddedToSpillageBound = result.asVector(ctx.getLocalNumberOfTimeSteps());
-
-    // 2. Fetch spillage variable numbers in LP
-    std::vector<unsigned> spillageNumbersInLP(ctx.getLocalNumberOfTimeSteps());
-    unsigned areaIndex = areaIndices_.at(areaId);
-    for (unsigned h = 0; h < ctx.getLocalNumberOfTimeSteps(); ++h)
-    {
-        // Number associated to spillage variable in LP (given an area and an hour)
-        spillageNumbersInLP[h] = problemeHebdo_->CorrespondanceVarNativesVarOptim[h]
-                                   .NumeroDeVariableDefaillanceNegative[areaIndex];
-    }
-
-    // 3. Add values to spillage bound
-    auto& pb = optimEntityContainer_.Problem();
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
-    {
-        unsigned var_number = spillageNumbersInLP[h];
-        auto var = pb.getVariable(var_number);
-        double new_upper_bound = var->getUb() + toBeAddedToSpillageBound[h];
-        var->setUb(new_upper_bound);
-    }
-}
-
-void ComponentToAreaConnectionFiller::increaseAreaUnsuppliedEnergyBound(const FillContext& ctx,
-                                                                        const Component& component,
-                                                                        const std::string& portId,
-                                                                        const std::string& areaId)
-{
-    // Specifications may change for unsupplied energy.
-    // Wise to do nothing for now.
-}
-
 void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
 {
-    // for (const auto& component: modelerSystem_->Components())
-    //{
-    //     for (auto [portId, areaId]: component.portToAreaConnections())
-    //     {
-    //         boost::algorithm::to_lower(areaId);
-    //         increaseAreaSpillageBound(ctx, component, portId, areaId);
-    //         increaseAreaUnsuppliedEnergyBound(ctx, component, portId, areaId);
-    //     }
-    // }
 }
 
 unsigned ComponentToAreaConnectionFiller::balanceConstraintIndex(const unsigned& areaIndex,
@@ -156,24 +99,19 @@ unsigned ComponentToAreaConnectionFiller::balanceConstraintIndex(const unsigned&
 }
 
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
-  ILinearProblem& pb,
   const TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
-  const unsigned& areaIndex) const
+  const std::vector<unsigned>& constraintIndices) const
 {
     // Contribution is added to the left-hand side of the constraint
     // We invert the sign bc modeler is in "gen>0, load<0" convention
     // legacy constraint is in "gen<0, load>0" convention
+    auto& pb = optimEntityContainer_.Problem();
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
-        auto ts = h % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-        unsigned constraintIndex = balanceConstraintIndex(areaIndex, ts);
-
-        // Fetching a legacy (balance) constraint by index in LP is not supposed to fail.
-        // Legacy problem was made from problem hebdo (see above) and is supposed to be well formed.
-        IMipConstraint* balanceConstraint = pb.getConstraint(constraintIndex);
+        IMipConstraint* balanceConstraint = pb.getConstraint(constraintIndices[h]);
 
         for (const auto& [index, coef]: linearExpression[h])
         {
@@ -184,6 +122,19 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
         balanceConstraint->setBounds(balanceConstraint->getLb() + constant,
                                      balanceConstraint->getUb() + constant);
     }
+}
+
+std::vector<unsigned> ComponentToAreaConnectionFiller::balanceConstraintsIndices(
+  const FillContext& ctx,
+  const unsigned& areaIndex)
+{
+    std::vector<unsigned> constraintIndices(ctx.getLocalLastTimeStep() + 1);
+    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    {
+        auto ts = h % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
+        constraintIndices[h] = balanceConstraintIndex(areaIndex, ts);
+    }
+    return constraintIndices;
 }
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(const FillContext& ctx,
@@ -202,7 +153,9 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(const F
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
     auto linearExpression = visitor.visitMergeDuplicates(expression);
 
-    addExpressionToConstraint(optimEntityContainer_.Problem(), linearExpression, ctx, areaIndex);
+    std::vector<unsigned> constraintIndices = balanceConstraintsIndices(ctx, areaIndex);
+
+    addExpressionToConstraint(linearExpression, ctx, constraintIndices);
 }
 
 void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)

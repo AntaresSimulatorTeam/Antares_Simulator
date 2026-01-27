@@ -69,26 +69,21 @@ private:
     // Function members
     void checkAreasFromConnexionsExist();
 
+    std::vector<unsigned> balanceConstraintsIndices(
+      const Optimisation::LinearProblemApi::FillContext& ctx,
+      const unsigned& areaIndex);
+
     unsigned balanceConstraintIndex(const unsigned& areaIndex, unsigned ts) const;
 
     void addExpressionToConstraint(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
-      const unsigned& areaIndex) const;
+      const std::vector<unsigned>& constraintIndices) const;
 
     void addComponentPortContributionToArea(const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,
                                             const std::string& portId,
                                             const unsigned& areaIndex);
-    void increaseAreaSpillageBound(const Optimisation::LinearProblemApi::FillContext& ctx,
-                                   const ModelerStudy::SystemModel::Component& component,
-                                   const std::string& portId,
-                                   const std::string& areaId);
-    void increaseAreaUnsuppliedEnergyBound(const Optimisation::LinearProblemApi::FillContext& ctx,
-                                           const ModelerStudy::SystemModel::Component& component,
-                                           const std::string& portId,
-                                           const std::string& areaId);
 };
 
 } // namespace Antares::Optimization
