@@ -101,40 +101,48 @@ unsigned ComponentToAreaConnectionFiller::balanceConstraintIndex(const unsigned&
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   const TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
-  const std::vector<unsigned>& constraintIndices) const
+  const std::vector<IMipConstraint*>& constraints) const
 {
-    // Contribution is added to the left-hand side of the constraint
-    // We invert the sign bc modeler is in "gen>0, load<0" convention
-    // legacy constraint is in "gen<0, load>0" convention
-    auto& pb = optimEntityContainer_.Problem();
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
-        IMipConstraint* balanceConstraint = pb.getConstraint(constraintIndices[h]);
-
+        IMipConstraint* constraint = constraints[h];
         for (const auto& [index, coef]: linearExpression[h])
         {
-            balanceConstraint->setCoefficient(solverVariables.at(index).get(), -coef);
+            constraint->setCoefficient(solverVariables.at(index).get(), -coef);
         }
 
-        double constant = linearExpression[h].constant();
-        balanceConstraint->setBounds(balanceConstraint->getLb() + constant,
-                                     balanceConstraint->getUb() + constant);
+        double c = linearExpression[h].constant();
+        constraint->setBounds(constraint->getLb() + c, constraint->getUb() + c);
     }
 }
 
-std::vector<unsigned> ComponentToAreaConnectionFiller::balanceConstraintsIndices(
+std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::balanceConstraints(
   const FillContext& ctx,
   const unsigned& areaIndex)
 {
-    std::vector<unsigned> constraintIndices(ctx.getLocalLastTimeStep() + 1);
+    auto& pb = optimEntityContainer_.Problem();
+    std::vector<IMipConstraint*> constraints(ctx.getLocalLastTimeStep() + 1);
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         auto ts = h % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-        constraintIndices[h] = balanceConstraintIndex(areaIndex, ts);
+        unsigned constraintIndex = balanceConstraintIndex(areaIndex, ts);
+        constraints[h] = pb.getConstraint(constraintIndex);
     }
-    return constraintIndices;
+    return constraints;
+}
+
+TimeDependentLinearExpression ComponentToAreaConnectionFiller::linearExpressionAtPortField(
+  const std::string& portId,
+  const std::string& fieldId,
+  const Component& component,
+  const FillContext& ctx)
+{
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
+
+    Nodes::Node* expression = component.nodeAtPortField(portId, fieldId);
+    return visitor.visitMergeDuplicates(expression);
 }
 
 void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(const FillContext& ctx,
@@ -142,20 +150,18 @@ void ComponentToAreaConnectionFiller::addComponentPortContributionToArea(const F
                                                                          const std::string& portId,
                                                                          const unsigned& areaIndex)
 {
-    std::string injectionFieldId = componentInjectionField(component, portId);
-    if (injectionFieldId.empty())
+    std::string portFieldId = componentInjectionField(component, portId);
+    if (portFieldId.empty())
     {
         return;
     }
 
-    Nodes::Node* expression = component.nodeAtPortField(portId, injectionFieldId);
-
-    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
-    auto linearExpression = visitor.visitMergeDuplicates(expression);
-
-    std::vector<unsigned> constraintIndices = balanceConstraintsIndices(ctx, areaIndex);
-
-    addExpressionToConstraint(linearExpression, ctx, constraintIndices);
+    // 1. Get time-dependent linear expression at a component port field
+    auto linearExpression = linearExpressionAtPortField(portId, portFieldId, component, ctx);
+    // 2. Get the set of LP constraints to be modified with previous linear expression
+    auto constraints = balanceConstraints(ctx, areaIndex);
+    // 3. Add the linear expression to LP constraints
+    addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
 void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)

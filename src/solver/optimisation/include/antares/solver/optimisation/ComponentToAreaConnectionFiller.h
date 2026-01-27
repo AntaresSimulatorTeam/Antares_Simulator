@@ -69,7 +69,7 @@ private:
     // Function members
     void checkAreasFromConnexionsExist();
 
-    std::vector<unsigned> balanceConstraintsIndices(
+    std::vector<Optimisation::LinearProblemApi::IMipConstraint*> balanceConstraints(
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const unsigned& areaIndex);
 
@@ -78,7 +78,13 @@ private:
     void addExpressionToConstraint(
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
-      const std::vector<unsigned>& constraintIndices) const;
+      const std::vector<Optimisation::LinearProblemApi::IMipConstraint*>& constraintIndices) const;
+
+    TimeDependentLinearExpression linearExpressionAtPortField(
+      const std::string& portId,
+      const std::string& fieldId,
+      const ModelerStudy::SystemModel::Component& component,
+      const Optimisation::LinearProblemApi::FillContext& ctx);
 
     void addComponentPortContributionToArea(const Optimisation::LinearProblemApi::FillContext& ctx,
                                             const ModelerStudy::SystemModel::Component& component,
