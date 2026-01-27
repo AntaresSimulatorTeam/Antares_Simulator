@@ -53,3 +53,17 @@ add_boost_test(tests-on-multi-storage-remix
         test_utils_unit)
 
 set_target_properties(tests-on-multi-storage-remix PROPERTIES FOLDER Unit-tests/storage-remix)
+
+#-----------------------------
+# Unit tests on extractSTS-functions
+#-----------------------------
+add_boost_test(tests-on-extractSTS-functions
+        SRC
+        tests-extractSTS-functions.cpp
+        INCLUDE
+        ${include_dir}
+        LIBS
+        antares-solver-simulation
+        test_utils_unit)
+
+set_target_properties(tests-on-extractSTS-functions PROPERTIES FOLDER Unit-tests/storage-remix)
