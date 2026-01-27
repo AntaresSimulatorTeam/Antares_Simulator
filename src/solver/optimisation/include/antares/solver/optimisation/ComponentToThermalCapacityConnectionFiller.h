@@ -33,7 +33,7 @@ class ComponentToThermalCapacityConnectionFiller final
 {
 public:
     explicit ComponentToThermalCapacityConnectionFiller(
-      const PROBLEME_HEBDO* problemeHebdo,
+      PROBLEME_HEBDO* problemeHebdo,
       Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
@@ -63,6 +63,11 @@ private:
                                             const ModelerStudy::SystemModel::Component& component,
                                             const std::string& portId,
                                             const std::string& areaId);
+    void updateDispatchableProductionUpperBound(const std::string areaId,
+                                                const std::string& clusterId,
+                                                double newUp) override;
+    VariableManager variableManager_;
+    std::map<std::string, int> areaToIndex_;
 };
 
 } // namespace Antares::Optimization

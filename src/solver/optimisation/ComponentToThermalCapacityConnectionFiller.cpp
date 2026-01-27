@@ -17,13 +17,17 @@ using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::Optimization
 {
 ComponentToThermalCapacityConnectionFiller::ComponentToThermalCapacityConnectionFiller(
-  const PROBLEME_HEBDO* problemeHebdo,
+  PROBLEME_HEBDO* problemeHebdo,
   OptimEntityContainer& optimEntityContainer,
   const ILinearProblemData& linearProblemData,
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    optimEntityContainer_(optimEntityContainer)
+    optimEntityContainer_(optimEntityContainer),
+    variableManager_(problemeHebdo->CorrespondanceVarNativesVarOptim,
+                     problemeHebdo->NumeroDeVariableStockFinal,
+                     problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+                     problemeHebdo->NombreDePasDeTempsPourUneOptimisation)
 {
     int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
@@ -113,6 +117,16 @@ void ComponentToThermalCapacityConnectionFiller::addComponentPortContributionToA
     // auto linearExpression = visitor.visitMergeDuplicates(
     //   component.nodeAtPortField(portId, injectionFieldId));
     // addExpressionToConstraint(pb, linearExpression, ctx, areaId);
+}
+
+void ComponentToThermalCapacityConnectionFiller::updateDispatchableProductionUpperBound(
+  const std::string areaId,
+  const std::string& clusterId,
+  double newUp)
+{
+    int pays = ;
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
+                                                          ->PaliersThermiquesDuPays[pays];
 }
 
 void ComponentToThermalCapacityConnectionFiller::addConstraints(const FillContext& ctx)
