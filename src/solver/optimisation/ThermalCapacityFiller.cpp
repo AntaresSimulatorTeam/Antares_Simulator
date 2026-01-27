@@ -90,6 +90,7 @@ void ThermalCapacityFiller::setDispatchableProductionUpperBoundToInf(const std::
         auto& linearProblem = optimEntityContainer_.Problem();
         auto* dispatchableProduction = linearProblem.getVariable(index);
         dispatchableProduction->setUb(linearProblem.infinity());
+        linearProblem.
     }
 }
 } // namespace Antares::Optimization
