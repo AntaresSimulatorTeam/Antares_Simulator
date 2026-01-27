@@ -98,9 +98,21 @@ std::vector<unsigned> ComponentToAreaConnectionFiller::balanceConstraintIndices(
     std::vector<unsigned> indices(ctx.getLocalNumberOfTimeSteps());
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
-        auto ts = h % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-        indices[h] = problemeHebdo_->CorrespondanceCntNativesCntOptim[ts]
+        indices[h] = problemeHebdo_->CorrespondanceCntNativesCntOptim[h]
                        .NumeroDeContrainteDesBilansPays[areaIndex];
+    }
+    return indices;
+}
+
+std::vector<unsigned> ComponentToAreaConnectionFiller::fictitiousLoadConstraintIndices(
+  const FillContext& ctx,
+  const unsigned& areaIndex) const
+{
+    std::vector<unsigned> indices(ctx.getLocalNumberOfTimeSteps());
+    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    {
+        indices[h] = problemeHebdo_->CorrespondanceCntNativesCntOptim[h]
+                       .NumeroDeContraintePourEviterLesChargesFictives[areaIndex];
     }
     return indices;
 }
@@ -130,7 +142,7 @@ std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::fetchConstraints(
   const std::vector<unsigned>& constraintsIndices)
 {
     auto& pb = optimEntityContainer_.Problem();
-    std::vector<IMipConstraint*> constraints(ctx.getLocalLastTimeStep() + 1);
+    std::vector<IMipConstraint*> constraints(ctx.getLocalNumberOfTimeSteps());
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         constraints[h] = pb.getConstraint(constraintsIndices[h]);
@@ -156,7 +168,7 @@ void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const Fill
                                                                       const unsigned& areaIndex)
 {
     std::string portField = componentInjectionField(component, portId);
-    if (portField.empty()) // area connection does not know this port field
+    if (!portField.empty()) // area connection does not know this port field
     {
         return;
     }
@@ -170,7 +182,7 @@ void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const Fill
     addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
-void ComponentToAreaConnectionFiller::addToAreaBoundPortToLinearProblem(const FillContext& ctx,
+void ComponentToAreaConnectionFiller::addToAreaBoundPortInLinearProblem(const FillContext& ctx,
                                                                         const Component& component,
                                                                         const std::string& portId,
                                                                         const unsigned& areaIndex)
@@ -180,6 +192,14 @@ void ComponentToAreaConnectionFiller::addToAreaBoundPortToLinearProblem(const Fi
     {
         return;
     }
+
+    // 1. Get time-dependent linear expression at a component port field
+    auto linearExpression = linearExpressionAtPortField(portId, portField, component, ctx);
+    // 2. Get the set of LP constraints to be modified with previous linear expression
+    std::vector<unsigned> constaintsIndices = fictitiousLoadConstraintIndices(ctx, areaIndex);
+    auto constraints = fetchConstraints(ctx, constaintsIndices);
+    // 3. Add the linear expression to LP constraints
+    addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
 void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
@@ -191,7 +211,7 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
             boost::algorithm::to_lower(areaId);
             auto areaIndex = areaIndices_.at(areaId);
             addInjectionPortToLinearProblem(ctx, component, portId, areaIndex);
-            addToAreaBoundPortToLinearProblem(ctx, component, portId, areaIndex);
+            addToAreaBoundPortInLinearProblem(ctx, component, portId, areaIndex);
         }
     }
 }

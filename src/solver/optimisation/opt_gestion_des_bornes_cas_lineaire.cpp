@@ -467,7 +467,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 var = variableManager.Spillage(pays, pdtJour);
 
                 Xmin[var] = 0.0;
-
                 Xmax[var] = LINFINI_ANTARES;
 
                 problemeHebdo->ResultatsHoraires[pays]
