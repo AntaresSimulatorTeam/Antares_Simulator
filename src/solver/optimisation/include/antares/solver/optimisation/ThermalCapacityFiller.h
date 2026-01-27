@@ -8,7 +8,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/system-model/system.h"
 
-#include "../../../../variables/VariableManagement.h"
+#include "variables/VariableManagement.h"
 
 namespace Antares::Optimisation
 {
@@ -33,11 +33,8 @@ namespace Antares::Optimization
 class ThermalCapacityFiller final: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit ThermalCapacityFiller(
-      PROBLEME_HEBDO* problemeHebdo,
-      Optimisation::OptimEntityContainer& variableContainer,
-      const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
+    explicit ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
+                                   Optimisation::OptimEntityContainer& variableContainer);
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -46,10 +43,18 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     Optimisation::OptimEntityContainer& optimEntityContainer_;
-    void setDispatchableProductionUpperBoundToInf(
-      const std::string& areaId,
-      const std::string& clusterId,
+    void processThermalCapacityField(
+      const TimeDependentLinearExpression& linearExpression,
+      const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection,
       const Optimisation::LinearProblemApi::FillContext& ctx);
+
+    void addComponentPortContributionToThermalCapacity(
+      const Optimisation::LinearProblemApi::FillContext& ctx,
+      const ModelerStudy::SystemModel::Component& component,
+      const std::string& portId,
+      const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection);
+    Optimisation::LinearProblemApi::IMipVariable* getDispatchableProductionVariable(int palier,
+                                                                                    unsigned pdt);
     std::map<std::string, unsigned> areaIndices_;
     std::map<std::string, std::map<std::string, unsigned>> clusters_;
     VariableManagement::VariableManager variableManager_;
