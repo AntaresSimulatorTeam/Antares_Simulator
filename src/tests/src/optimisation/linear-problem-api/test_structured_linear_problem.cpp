@@ -15,7 +15,7 @@ using namespace Antares::Optimisation::LinearProblemApi;
 
 BOOST_AUTO_TEST_SUITE(StructuredLinearProblemTests)
 
-BOOST_AUTO_TEST_CASE(create_simple_problem)
+BOOST_AUTO_TEST_CASE(create_empty_problem)
 {
     StructuredLinearProblem lp;
 
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(create_simple_problem)
     BOOST_CHECK(lp.isMinimization());
 }
 
-BOOST_AUTO_TEST_CASE(add_variables)
+BOOST_AUTO_TEST_CASE(add_mixed_variables)
 {
     StructuredLinearProblem lp;
 
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(add_constraints)
     BOOST_CHECK_EQUAL(lp.lookupConstraint("nonexistent"), nullptr);
 }
 
-BOOST_AUTO_TEST_CASE(set_coefficients)
+BOOST_AUTO_TEST_CASE(set_constraint_coefficients)
 {
     StructuredLinearProblem lp;
     auto* x = lp.addNumVariable(0.0, 10.0, "x");
