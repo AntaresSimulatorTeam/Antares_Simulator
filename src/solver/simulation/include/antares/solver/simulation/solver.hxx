@@ -288,8 +288,20 @@ void ISimulation<ImplementationType>::run()
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
-    // Computing the max number columns a report of any kind can contain.
-    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+
+    // Compute max columns for dynamic aggregation
+    unsigned int dynamicAggregationMaxColumns = Antares::Solver::Variable::
+      computeDynamicAggregationMaxColumns(study);
+    if (dynamicAggregationMaxColumns > 0)
+    {
+        logs.info() << "Adding " << dynamicAggregationMaxColumns
+                    << " extra columns for dynamic aggregation";
+        study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns);
+    }
+
+    // Computing max number of columns a report of any kind can contain, depending on number of
+    // selected variables. The less variables are selected, smallest this count is.
+    ImplementationType::variables.computeMaxColumnsCountInReports();
 
     logs.info() << "Allocating resources...";
 

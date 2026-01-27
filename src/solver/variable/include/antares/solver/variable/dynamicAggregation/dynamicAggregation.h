@@ -157,4 +157,6 @@ private:
     std::map<std::string, SetDataAllYears> setsData_;
 };
 
+unsigned int computeDynamicAggregationMaxColumns(const Data::Study& study);
+
 } // namespace Antares::Solver::Variable
