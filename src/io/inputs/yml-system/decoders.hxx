@@ -106,6 +106,7 @@ struct convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
         {
             return false;
         }
+
         rhs.areaId = node["area"].as<std::string>();
         rhs.clusterId = node["cluster-id"].as<std::string>();
         return true;
