@@ -47,6 +47,14 @@ add_boost_test(test-handle-errors
         test_utils_unit
 )
 
+add_boost_test(test-modeler-run
+        SRC
+        testModelerRun.cpp
+        LIBS
+        Antares::modeler-lib
+        test_utils_unit
+)
+
 add_library(mock-modeler-objects
         mockModelerObjects.cpp
         mockModelerObjects.h
@@ -69,4 +77,3 @@ target_include_directories(
         )
 
 set_target_properties(mock-modeler-objects PROPERTIES FOLDER Unit-tests)
-

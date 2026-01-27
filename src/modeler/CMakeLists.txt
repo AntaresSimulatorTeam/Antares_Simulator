@@ -31,3 +31,13 @@ install(TARGETS antares-modeler EXPORT antares-modeler DESTINATION bin)
 INSTALL(EXPORT antares-modeler
         FILE antares-modelerConfig.cmake
         DESTINATION cmake)
+
+# Unit tests for modeler
+include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+
+add_boost_test(test_modeler_basics
+    SRC
+        tests/test_modeler_basics.cpp
+    LIBS
+        Antares::modeler-lib
+)

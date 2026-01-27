@@ -39,3 +39,8 @@ function(add_boost_test)
     # Give the IDE some directions to display tests in a "Unit-tests" folder
     set_target_properties(${TEST_NAME} PROPERTIES FOLDER Unit-tests)
 endfunction()
+
+# Ensure Boost Unit Test Framework is available for tests
+if(NOT TARGET Boost::unit_test_framework)
+    find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+endif()
