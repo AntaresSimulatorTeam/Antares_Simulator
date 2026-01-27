@@ -223,8 +223,6 @@ public:
             // into separate files
             simulation_->computeAnnualCostsStatistics(state);
 
-            double ratio = study.parameters.getYearsWeight()[y]
-                           / study.parameters.getYearsWeightSum();
             simulation_->dynamicAggregationAllYears.merge(dynamicAggregationForTheYear, y);
         };
 

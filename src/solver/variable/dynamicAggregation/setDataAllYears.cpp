@@ -139,7 +139,7 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
         stdDevStsWithdrawal[i].merge(year, values);
 
         std::ranges::copy(toMerge.stsLevelResults_[i], values.hour);
-        values.computeStatisticsForTheCurrentYear();
+        values.computeAveragesForCurrentYearFromHourlyResults();
         minStsLevel[i].mergeInf(year, values);
         maxStsLevel[i].mergeSup(year, values);
         averageStsLevel[i].merge(year, values);
