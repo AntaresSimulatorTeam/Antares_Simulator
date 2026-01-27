@@ -24,18 +24,22 @@ ThermalCapacityFiller::ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
     optimEntityContainer_(optimEntityContainer),
     variableManager_(VariableManagerFromProblemHebdo(problemeHebdo))
 {
-    int i = 0;
+    unsigned int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
     {
         int j = 0;
         const auto& palierThermiques = problemeHebdo_->PaliersThermiquesDuPays[i];
+        std::map<std::string, unsigned int> clusters;
         for (const auto& nomPalier: palierThermiques.NomsDesPaliersThermiques)
         {
-            clusters_[name].try_emplace(nomPalier, j);
-            j++;
+            clusters[nomPalier] = j;
+            ++j;
         }
-
-        areaIndices_[name] = i++;
+        if (!clusters.empty())
+        {
+            areasAndClusters_.try_emplace(name, AreaAndClusters{i, clusters});
+        }
+        ++i;
     }
 }
 
@@ -124,34 +128,37 @@ void ThermalCapacityFiller::processThermalCapacityField(
     //--- area
     auto areaId = thermalConnection.areaId;
     boost::algorithm::to_lower(areaId);
-    if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
+    const auto it = areasAndClusters_.find(areaId);
+    if (it == areasAndClusters_.end())
     {
-        int pays = it->second;
-        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                              ->PaliersThermiquesDuPays[pays];
-        //--- cluster
-        auto clusterId = thermalConnection.clusterId;
-        boost::algorithm::to_lower(clusterId);
-        if (auto itc = clusters_.find(areaId); itc != clusters_.end())
-        {
-            if (auto itv = itc->second.find(clusterId); itv != itc->second.end())
-            {
-                auto index = itv->second;
+        throw Error::RuntimeError(
+          fmt::format("unknown area '{}', is found in thermal-connection-capacity ", areaId));
+    }
 
-                const int palier = PaliersThermiquesDuPays
-                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+    auto pays = it->second.areaIndex;
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
+                                                          ->PaliersThermiquesDuPays[pays];
+    //--- cluster
+    auto clusterId = thermalConnection.clusterId;
+    auto& clusters = it->second.clusters;
 
-                addCapacityFieldConstraint(linearExpression, ctx, palier);
-            }
-            throw Error::RuntimeError(
-              fmt::format(" area '{}' has not thermal cluster by the name '{}' ",
-                          areaId,
-                          clusterId));
-        }
+    if (clusters.empty())
+    {
         throw Error::RuntimeError(fmt::format(" area '{}' has not thermal clusters ", areaId));
     }
-    throw Error::RuntimeError(
-      fmt::format("unknown area '{}', is found in thermal-connection-capacity ", areaId));
+    auto itv = clusters.find(clusterId);
+    if (itv == clusters.end())
+    {
+        throw Error::RuntimeError(
+          fmt::format(" area '{}' has not thermal cluster by the name '{}' ", areaId, clusterId));
+    }
+
+    auto index = itv->second;
+
+    const int palier = PaliersThermiquesDuPays
+                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+
+    addCapacityFieldConstraint(linearExpression, ctx, palier);
 }
 
 void ThermalCapacityFiller::addComponentPortContributionToThermalCapacity(

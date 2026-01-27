@@ -58,8 +58,15 @@ private:
     void addCapacityFieldConstraint(const TimeDependentLinearExpression& linearExpression,
                                     const Optimisation::LinearProblemApi::FillContext& ctx,
                                     int palier);
-    std::map<std::string, unsigned> areaIndices_;
-    std::map<std::string, std::map<std::string, unsigned>> clusters_;
+
+    struct AreaAndClusters
+    {
+        unsigned int areaIndex;
+        std::map<std::string, unsigned> clusters;
+    };
+
+    std::map<std::string, AreaAndClusters> areasAndClusters_;
+
     VariableManagement::VariableManager variableManager_;
 };
 
