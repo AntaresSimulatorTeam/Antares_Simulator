@@ -68,6 +68,14 @@ std::string Economy::getSimulationTableHeader() const
     return "";
 }
 
+void Economy::writeSimulationTable(uint numSpace)
+{
+    if (!simulationTables_.empty() && numSpace < simulationTables_.size())
+    {
+        simulationTables_[numSpace].write();
+    }
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -150,14 +158,9 @@ bool Economy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-        auto* currentSimTable = simulationTables_.empty() ? nullptr : &simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
-            if (currentSimTable)
-            {
-                currentSimTable->write();
-            }
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);

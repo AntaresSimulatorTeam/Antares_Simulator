@@ -76,6 +76,8 @@ protected:
 
     OptimisationsSimulationTable& getSimulationTable(uint numSpace);
 
+    void writeSimulationTable(uint numSpace);
+
 private:
     bool simplexIsRequired(uint hourInTheYear,
                            uint numSpace,

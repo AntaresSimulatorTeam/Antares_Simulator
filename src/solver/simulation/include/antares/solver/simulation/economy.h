@@ -75,6 +75,7 @@ protected:
     void initializeState(Variable::State& state, uint numSpace);
     OptimisationsSimulationTable& getSimulationTable(uint numSpace);
     std::string getSimulationTableHeader() const;
+    void writeSimulationTable(uint numSpace);
 
 private:
     uint pNbWeeks;

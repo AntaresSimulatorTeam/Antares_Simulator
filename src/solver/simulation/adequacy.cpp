@@ -65,6 +65,14 @@ std::string Adequacy::getSimulationTableHeader() const
     return "";
 }
 
+void Adequacy::writeSimulationTable(uint numSpace)
+{
+    if (!simulationTables_.empty() && numSpace < simulationTables_.size())
+    {
+        simulationTables_[numSpace].write();
+    }
+}
+
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
 bool Adequacy::simulationBegin()
 {
@@ -209,10 +217,7 @@ bool Adequacy::year(Progression::Task& progression,
                                                      resultWriter,
                                                      simulationObserver_.get(),
                                                      currentSimTable);
-                if (currentSimTable)
-                {
-                    currentSimTable->write();
-                }
+                writeSimulationTable(numSpace);
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,

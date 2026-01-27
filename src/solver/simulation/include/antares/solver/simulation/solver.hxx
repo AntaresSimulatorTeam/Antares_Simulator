@@ -419,6 +419,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
                                                           numSpace,
                                                           pResultWriter,
                                                           legacyOptionsPtr);
+        ImplementationType::writeSimulationTable(numSpace);
     }
 }
 
