@@ -19,8 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <fstream>
-
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 
 namespace Antares::Solver::Variable
@@ -146,7 +144,6 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
         stdDevStsLevel[i].merge(year, values);
     }
 }
-
 
 struct VCardStub
 {

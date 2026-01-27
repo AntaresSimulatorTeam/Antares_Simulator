@@ -97,7 +97,6 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-
 struct VCardStub
 {
     enum
