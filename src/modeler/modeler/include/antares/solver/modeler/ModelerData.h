@@ -7,7 +7,7 @@
 
 #include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
-#include <antares/solver/optim-model-filler/ComponentFiller.h>
+#include <antares/solver/optim-model-filler/BendersDecomposition.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
