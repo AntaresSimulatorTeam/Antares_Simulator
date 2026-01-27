@@ -27,9 +27,9 @@ ThermalCapacityFiller::ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
     unsigned int i = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
     {
-        int j = 0;
+        unsigned int j = 0;
         const auto& palierThermiques = problemeHebdo_->PaliersThermiquesDuPays[i];
-        std::map<std::string, unsigned int> clusters;
+        std::unordered_map<std::string, unsigned int> clusters;
         for (const auto& nomPalier: palierThermiques.NomsDesPaliersThermiques)
         {
             clusters[nomPalier] = j;
@@ -114,6 +114,53 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
     }
 }
 
+ThermalCapacityFiller::AreaAndClusters* ThermalCapacityFiller::areaClusters(
+  const std::string& areaId)
+{
+    const auto it = areasAndClusters_.find(areaId);
+    if (it == areasAndClusters_.end())
+    {
+        throw Error::RuntimeError(
+          fmt::format("unknown area '{}', is found in thermal-connection-capacity ", areaId));
+    }
+    return &it->second;
+}
+
+unsigned int getClusterLocalIndex(const std::string& areaId,
+                                  const std::string& clusterId,
+                                  const std::unordered_map<std::string, unsigned>& clusters)
+{
+    if (clusters.empty())
+    {
+        throw Error::RuntimeError(fmt::format(" area '{}' has not thermal clusters ", areaId));
+    }
+    const auto itv = clusters.find(clusterId);
+    if (itv == clusters.end())
+    {
+        throw Error::RuntimeError(
+          fmt::format(" area '{}' has not thermal cluster by the name '{}' ", areaId, clusterId));
+    }
+    return itv->second;
+}
+
+int ThermalCapacityFiller::getClusterIndex(
+  const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection)
+{
+    //--- area
+    auto areaId = thermalConnection.areaId;
+    boost::algorithm::to_lower(areaId);
+    const auto& [pays, clusters] = *areaClusters(areaId);
+
+    //--- cluster
+    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
+                                                          ->PaliersThermiquesDuPays[pays];
+    const auto clusterLocalIndex = getClusterLocalIndex(areaId,
+                                                        thermalConnection.clusterId,
+                                                        clusters);
+    return PaliersThermiquesDuPays
+      .NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterLocalIndex];
+}
+
 // set up DispatchableProduction up to max and add
 // DispatchableProduction[t] <= component.port.capacity-field (qui vaut
 // my_thermal_invest.capacity_port.
@@ -125,40 +172,8 @@ void ThermalCapacityFiller::processThermalCapacityField(
   const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection,
   const FillContext& ctx)
 {
-    //--- area
-    auto areaId = thermalConnection.areaId;
-    boost::algorithm::to_lower(areaId);
-    const auto it = areasAndClusters_.find(areaId);
-    if (it == areasAndClusters_.end())
-    {
-        throw Error::RuntimeError(
-          fmt::format("unknown area '{}', is found in thermal-connection-capacity ", areaId));
-    }
-
-    auto pays = it->second.areaIndex;
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                          ->PaliersThermiquesDuPays[pays];
-    //--- cluster
-    auto clusterId = thermalConnection.clusterId;
-    auto& clusters = it->second.clusters;
-
-    if (clusters.empty())
-    {
-        throw Error::RuntimeError(fmt::format(" area '{}' has not thermal clusters ", areaId));
-    }
-    auto itv = clusters.find(clusterId);
-    if (itv == clusters.end())
-    {
-        throw Error::RuntimeError(
-          fmt::format(" area '{}' has not thermal cluster by the name '{}' ", areaId, clusterId));
-    }
-
-    auto index = itv->second;
-
-    const int palier = PaliersThermiquesDuPays
-                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-
-    addCapacityFieldConstraint(linearExpression, ctx, palier);
+    const int clusterIndex = getClusterIndex(thermalConnection);
+    addCapacityFieldConstraint(linearExpression, ctx, clusterIndex);
 }
 
 void ThermalCapacityFiller::addComponentPortContributionToThermalCapacity(

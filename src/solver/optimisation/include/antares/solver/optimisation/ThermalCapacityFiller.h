@@ -62,10 +62,14 @@ private:
     struct AreaAndClusters
     {
         unsigned int areaIndex;
-        std::map<std::string, unsigned> clusters;
+        std::unordered_map<std::string, unsigned> clusters;
     };
 
-    std::map<std::string, AreaAndClusters> areasAndClusters_;
+    AreaAndClusters* areaClusters(const std::string& areaId);
+    int getClusterIndex(
+      const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection);
+
+    std::unordered_map<std::string, AreaAndClusters> areasAndClusters_;
 
     VariableManagement::VariableManager variableManager_;
 };
