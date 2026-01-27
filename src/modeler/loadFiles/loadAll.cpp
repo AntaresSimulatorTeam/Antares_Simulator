@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <filesystem>
+#include <fmt/format.h>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/ModelerData.h>
@@ -20,7 +21,7 @@ ModelerData loadAll(const std::filesystem::path& studyPath)
     logs.info() << "Loading modeler files...";
     ModelerData data;
 
-    data.libraries = loadLibraries(studyPath);
+    std::tie(data.libraries, data.resolutionMode) = loadLibraries(studyPath);
     logs.info() << "Libraries loaded";
 
     data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));
@@ -32,6 +33,7 @@ ModelerData loadAll(const std::filesystem::path& studyPath)
     data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
     measure.tick();
     logs.info() << "Scenario groups loaded";
+
     logs.info() << "Modeler loaded in " << measure.toStringInSeconds();
 
     Checks::checkLocations(data);
