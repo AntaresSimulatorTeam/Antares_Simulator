@@ -83,33 +83,13 @@ IMipVariable* ThermalCapacityFiller::getDispatchableProductionVariable(int palie
     return optimEntityContainer_.Problem().getVariable(varIndex);
 }
 
-// set up DispatchableProduction up to max and add
-// DispatchableProduction[t] <= component.port.capacity-field (qui vaut
-// my_thermal_invest.capacity_port.
-// capacity = availability_factor * invested_capacity + already_installed_availability_factor *
-// already_installed_capacity
-void ThermalCapacityFiller::processThermalCapacityField(
+void ThermalCapacityFiller::addCapacityFieldConstraint(
   const TimeDependentLinearExpression& linearExpression,
-  const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection,
-  const FillContext& ctx)
+  const FillContext& ctx,
+  const int palier)
 {
-    //--- area
-    auto areaId = thermalConnection.areaId;
-    boost::algorithm::to_lower(areaId);
-    auto pays = areaIndices_[areaId];
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                          ->PaliersThermiquesDuPays[pays];
-    //--- cluster
-    auto clusterId = thermalConnection.clusterId;
-    boost::algorithm::to_lower(clusterId);
-    auto index = clusters_[areaId][clusterId];
-
-    const int palier = PaliersThermiquesDuPays
-                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
     auto& linearProblem = optimEntityContainer_.Problem();
     const auto& solverVariables = optimEntityContainer_.getVariables();
-
-    // TODO check size == 1 or == ctx.getLocalLastTimeStep() - ctx.getLocalFirstTimeStep() + 1
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
@@ -128,6 +108,50 @@ void ThermalCapacityFiller::processThermalCapacityField(
             ct->setCoefficient(solverVariables[varIndex].get(), -coef);
         }
     }
+}
+
+// set up DispatchableProduction up to max and add
+// DispatchableProduction[t] <= component.port.capacity-field (qui vaut
+// my_thermal_invest.capacity_port.
+// capacity = availability_factor * invested_capacity + already_installed_availability_factor *
+// already_installed_capacity
+// TODO
+void ThermalCapacityFiller::processThermalCapacityField(
+  const TimeDependentLinearExpression& linearExpression,
+  const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection,
+  const FillContext& ctx)
+{
+    //--- area
+    auto areaId = thermalConnection.areaId;
+    boost::algorithm::to_lower(areaId);
+    if (const auto it = areaIndices_.find(areaId); it != areaIndices_.end())
+    {
+        int pays = it->second;
+        const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
+                                                              ->PaliersThermiquesDuPays[pays];
+        //--- cluster
+        auto clusterId = thermalConnection.clusterId;
+        boost::algorithm::to_lower(clusterId);
+        if (auto itc = clusters_.find(areaId); itc != clusters_.end())
+        {
+            if (auto itv = itc->second.find(clusterId); itv != itc->second.end())
+            {
+                auto index = itv->second;
+
+                const int palier = PaliersThermiquesDuPays
+                                     .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+
+                addCapacityFieldConstraint(linearExpression, ctx, palier);
+            }
+            throw Error::RuntimeError(
+              fmt::format(" area '{}' has not thermal cluster by the name '{}' ",
+                          areaId,
+                          clusterId));
+        }
+        throw Error::RuntimeError(fmt::format(" area '{}' has not thermal clusters ", areaId));
+    }
+    throw Error::RuntimeError(
+      fmt::format("unknown area '{}', is found in thermal-connection-capacity ", areaId));
 }
 
 void ThermalCapacityFiller::addComponentPortContributionToThermalCapacity(

@@ -55,6 +55,9 @@ private:
       const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection);
     Optimisation::LinearProblemApi::IMipVariable* getDispatchableProductionVariable(int palier,
                                                                                     unsigned pdt);
+    void addCapacityFieldConstraint(const TimeDependentLinearExpression& linearExpression,
+                                    const Optimisation::LinearProblemApi::FillContext& ctx,
+                                    int palier);
     std::map<std::string, unsigned> areaIndices_;
     std::map<std::string, std::map<std::string, unsigned>> clusters_;
     VariableManagement::VariableManager variableManager_;
