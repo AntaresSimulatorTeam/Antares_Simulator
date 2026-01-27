@@ -1,32 +1,29 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#pragma once
+#ifndef __SOLVER_VARIABLE_ADEQUACY_OverallCost_H__
+#define __SOLVER_VARIABLE_ADEQUACY_OverallCost_H__
 
 #include "antares/solver/variable/variable.h"
-
-#include <string_view>
-#include <vector>
-#include <memory>
 
 namespace Antares::Solver::Variable::Adequacy
 {
 struct VCardOverallCost
 {
     //! Caption
-    [[nodiscard]] static constexpr std::string_view Caption() noexcept
+    static std::string Caption()
     {
         return "OV. COST";
     }
 
     //! Unit
-    [[nodiscard]] static constexpr std::string_view Unit() noexcept
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    [[nodiscard]] static constexpr std::string_view Description() noexcept
+    static std::string Description()
     {
         return "Overall Cost throughout all MC years";
     }
@@ -274,3 +271,4 @@ private:
 
 } // namespace Antares::Solver::Variable::Adequacy
 
+#endif // __SOLVER_VARIABLE_ADEQUACY_OverallCost_H__
