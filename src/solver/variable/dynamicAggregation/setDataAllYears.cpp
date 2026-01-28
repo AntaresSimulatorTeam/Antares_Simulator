@@ -190,11 +190,12 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
           precision);
 
         setSurvey(group);
-        /*stdDev[index].buildSurveyReport<VCardStub>(survey,*/
-        /*                                 average[index],*/
-        /*                                 Category::DataLevel::setOfAreas,*/
-        /*                                 Category::FileLevel::va,*/
-        /*                                 precision);*/
+        stdDev[index].buildSurveyReport<R::AllYears::Average<>, VCardStub>(
+          survey,
+          average[index],
+          Category::DataLevel::setOfAreas,
+          Category::FileLevel::va,
+          precision);
 
         setSurvey(group);
         values.reset();
