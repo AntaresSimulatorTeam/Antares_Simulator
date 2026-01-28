@@ -60,7 +60,7 @@ library:
   models:
     - id: model_with_vars
       variables:
-        - id: not_connected_var
+        - id: no_connect_var
           lower-bound: 0
           upper-bound: 1000
           variable-type: continuous
@@ -78,7 +78,7 @@ library:
       port-field-definitions:
         - port: connection_port_var
           field: some_field
-          definition: not_connected_var
+          definition: no_connect_var
         - port: connection_port_var
           field: connected_field
           definition: 5 * var_1 - 37 * var_2
@@ -174,9 +174,9 @@ struct ComponentToAreaConnectionFillerFixture
         return data;
     }
 
-    void addModelerVariablesToLP(unsigned int ts_start,
-                                 unsigned int ts_end,
-                                 OptimEntityContainer& optimEntityContainer)
+    void addAllComponentsVariablesToLP(unsigned int ts_start,
+                                       unsigned int ts_end,
+                                       OptimEntityContainer& optimEntityContainer)
     {
         const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
         for (const auto& component: modelerData->system->Components())
@@ -231,7 +231,7 @@ struct ComponentToAreaConnectionFillerFixture
         addConstraintsToLinearProblem(constraintNames, rhs);
     }
 
-    void addEmptyNamedConstraintsToLP(std::vector<std::string>& constraintNames, double rhs)
+    void addNamedConstraintsToLP(std::vector<std::string>& constraintNames, double rhs)
     {
         problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
@@ -263,9 +263,10 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
-    addModelerVariablesToLP(0, 0, optimEntityContainer);
+    addAllComponentsVariablesToLP(0, 0, optimEntityContainer);
+
     std::vector<std::string> constraints({"whatever", "AreaBalance::area<area1>::hour<0>"});
-    addEmptyNamedConstraintsToLP(constraints, 10);
+    addNamedConstraintsToLP(constraints, 10);
 
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
@@ -274,20 +275,20 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer);
 
     const auto* balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
-    const auto* var = linearProblem.lookupVariable("component_with_vars.not_connected_var_t0");
-    const auto* var1 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
-    const auto* var2 = linearProblem.lookupVariable("component_with_vars.var_2_t0");
+    const auto* nc_var_t0 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t0");
+    const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
+    const auto* var2_t0 = linearProblem.lookupVariable("component_with_vars.var_2_t0");
 
-    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var), 0);
-    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var1), -5);
-    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var2), 37);
+    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(nc_var_t0), 0);
+    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var1_t0), -5);
+    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var2_t0), 37);
     BOOST_CHECK_EQUAL(balance_ct->getLb(), 10 + 2 * 4 - 6);
     BOOST_CHECK_EQUAL(balance_ct->getUb(), 10 + 2 * 4 - 6);
 
     auto other_ct = linearProblem.lookupConstraint("whatever");
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var), 0);
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var1), 0);
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var2), 0);
+    BOOST_CHECK_EQUAL(other_ct->getCoefficient(nc_var_t0), 0);
+    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var1_t0), 0);
+    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var2_t0), 0);
     BOOST_CHECK_EQUAL(other_ct->getLb(), 10);
     BOOST_CHECK_EQUAL(other_ct->getUb(), 10);
 }
@@ -299,7 +300,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
-    addModelerVariablesToLP(10, 11, optimEntityContainer);
+    addAllComponentsVariablesToLP(10, 11, optimEntityContainer);
     // Legacy indexing of TS always starts at 1
     addConstraintsToLP(3 /* nb of constraints */, -100);
     problemeHebdo->NomsDesPays.push_back("area1");
@@ -311,29 +312,28 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
-    const auto* var = linearProblem.lookupVariable("component_with_vars.not_connected_var_t10");
-    const auto* var1 = linearProblem.lookupVariable("component_with_vars.var_1_t10");
-    const auto* var2 = linearProblem.lookupVariable("component_with_vars.var_2_t10");
-    const auto* var_nc_11 = linearProblem.lookupVariable(
-      "component_with_vars.not_connected_var_t11");
-    const auto* var_c_11 = linearProblem.lookupVariable("component_with_vars.var_1_t11");
-    const auto* var_c_211 = linearProblem.lookupVariable("component_with_vars.var_2_t11");
+    const auto* nc_var_t10 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t10");
+    const auto* var1_t10 = linearProblem.lookupVariable("component_with_vars.var_1_t10");
+    const auto* var2_t10 = linearProblem.lookupVariable("component_with_vars.var_2_t10");
+    const auto* nc_var_t11 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t11");
+    const auto* var1_t11 = linearProblem.lookupVariable("component_with_vars.var_1_t11");
+    const auto* var2_t11 = linearProblem.lookupVariable("component_with_vars.var_2_t11");
 
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var), 0);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var1), -5);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var2), 37);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var_nc_11), 0);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var_c_11), 0);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var_c_211), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(nc_var_t10), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var1_t10), -5);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var2_t10), 37);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(nc_var_t11), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var1_t11), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var2_t11), 0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getLb(), -100 + 2 * -51 - 6);
     BOOST_CHECK_EQUAL(balance_ct_t10->getUb(), -100 + 2 * -51 - 6);
 
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var), 0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var1), 0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var2), 0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var_nc_11), 0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var_c_11), -5);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var_c_211), 37);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(nc_var_t10), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var1_t10), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var2_t10), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(nc_var_t11), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var1_t11), -5);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var2_t11), 37);
     BOOST_CHECK_EQUAL(balance_ct_t11->getLb(), -100 + 2 * 8.3 - 6);
     BOOST_CHECK_EQUAL(balance_ct_t11->getUb(), -100 + 2 * 8.3 - 6);
 }
