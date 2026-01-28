@@ -75,52 +75,65 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     IntermediateValues values;
     values.initializeFromStudy(study);
 
-    // Thermal
-    for (size_t i = 0; i < toMerge.thermalResults_.size(); ++i)
+    // Helper function to process results
+    auto processResults = [&values, &year](const auto& sourceResults,
+                                           auto& minResults,
+                                           auto& maxResults,
+                                           auto& avgResults,
+                                           auto& stdDevResults,
+                                           auto computeFunc)
     {
-        std::ranges::copy(toMerge.thermalResults_[i], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-        minThermal[i].merge(year, values);
-        maxThermal[i].merge(year, values);
-        averageThermal[i].merge(year, values);
-        stdDevThermal[i].merge(year, values);
-    }
+        for (size_t i = 0; i < sourceResults.size(); ++i)
+        {
+            std::ranges::copy(sourceResults[i], values.hour);
+            computeFunc(values);
+            minResults[i].merge(year, values);
+            maxResults[i].merge(year, values);
+            avgResults[i].merge(year, values);
+            stdDevResults[i].merge(year, values);
+        }
+    };
+
+    // Thermal
+    processResults(toMerge.thermalResults_,
+                   minThermal,
+                   maxThermal,
+                   averageThermal,
+                   stdDevThermal,
+                   [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
     // Renewable
-    for (size_t i = 0; i < toMerge.renewableResults_.size(); ++i)
-    {
-        std::ranges::copy(toMerge.renewableResults_[i], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-        minRenewable[i].merge(year, values);
-        maxRenewable[i].merge(year, values);
-        averageRenewable[i].merge(year, values);
-        stdDevRenewable[i].merge(year, values);
-    }
+    processResults(toMerge.renewableResults_,
+                   minRenewable,
+                   maxRenewable,
+                   averageRenewable,
+                   stdDevRenewable,
+                   [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
     // STS Injection
-    for (size_t i = 0; i < toMerge.stsInjectionResults_.size(); ++i)
-    {
-        std::ranges::copy(toMerge.stsInjectionResults_[i], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-        minStsInjection[i].merge(year, values);
-        maxStsInjection[i].merge(year, values);
-        averageStsInjection[i].merge(year, values);
-        stdDevStsInjection[i].merge(year, values);
+    processResults(toMerge.stsInjectionResults_,
+                   minStsInjection,
+                   maxStsInjection,
+                   averageStsInjection,
+                   stdDevStsInjection,
+                   [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
-        std::ranges::copy(toMerge.stsWithdrawalResults_[i], values.hour);
-        values.computeStatisticsForTheCurrentYear();
-        minStsWithdrawal[i].merge(year, values);
-        maxStsWithdrawal[i].merge(year, values);
-        averageStsWithdrawal[i].merge(year, values);
-        stdDevStsWithdrawal[i].merge(year, values);
+    // STS Withdrawal
+    processResults(toMerge.stsWithdrawalResults_,
+                   minStsWithdrawal,
+                   maxStsWithdrawal,
+                   averageStsWithdrawal,
+                   stdDevStsWithdrawal,
+                   [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
-        std::ranges::copy(toMerge.stsLevelResults_[i], values.hour);
-        values.computeAveragesForCurrentYearFromHourlyResults();
-        minStsLevel[i].merge(year, values);
-        maxStsLevel[i].merge(year, values);
-        averageStsLevel[i].merge(year, values);
-        stdDevStsLevel[i].merge(year, values);
-    }
+    // STS Level: we compute averages instead of sum
+    processResults(toMerge.stsLevelResults_,
+                   minStsLevel,
+                   maxStsLevel,
+                   averageStsLevel,
+                   stdDevStsLevel,
+                   [](IntermediateValues& v)
+                   { v.computeAveragesForCurrentYearFromHourlyResults(); });
 }
 
 void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& average,
