@@ -25,14 +25,14 @@ void PathList::clear()
 
 size_t PathList::totalSizeInBytes() const
 {
-    size_t size = 0;
+    size_t totalSize = 0;
 
-    const ItemList::const_iterator end = item.end();
-    for (ItemList::const_iterator i = item.begin(); i != end; ++i)
+    const ItemList::const_iterator endIter = item.end();
+    for (ItemList::const_iterator i = item.begin(); i != endIter; ++i)
     {
-        size += i->second.size;
+        totalSize += i->second.size;
     }
-    return size;
+    return totalSize;
 }
 
 // TODO VP: remove with tools
@@ -46,8 +46,8 @@ uint PathList::internalDeleteAllEmptyFolders()
     Clob buffer;
     uint count = 0;
 
-    const ItemList::const_reverse_iterator end = item.rend();
-    for (ItemList::const_reverse_iterator i = item.rbegin(); i != end; ++i)
+    const ItemList::const_reverse_iterator endIter = item.rend();
+    for (ItemList::const_reverse_iterator i = item.rbegin(); i != endIter; ++i)
     {
         // The item must be flagged as a folder
         if (i->second.options & pathListOptFolder)
@@ -107,6 +107,7 @@ public:
     PathListIterator(PathList& l, const PathList& e, std::function<bool(uint)>& progress):
         list(l),
         exclude(e),
+        offset(0),
         onProgress(progress)
     {
     }

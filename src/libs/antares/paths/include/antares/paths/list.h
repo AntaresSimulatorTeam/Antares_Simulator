@@ -144,8 +144,8 @@ public:
         {
             return;
         }
-        const ItemList::const_iterator end = toDelete.item.end();
-        for (ItemList::const_iterator i = toDelete.item.begin(); i != end; ++i)
+        const ItemList::const_iterator endIter = toDelete.item.end();
+        for (ItemList::const_iterator i = toDelete.item.begin(); i != endIter; ++i)
         {
             this->remove(i->first);
         }
