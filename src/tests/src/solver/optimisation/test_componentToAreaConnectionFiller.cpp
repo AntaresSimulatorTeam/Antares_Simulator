@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     addAllComponentsVariablesToLP(10, 11, optimEntityContainer);
-    
+
     addAutomaticConstraintsToLP(3 /* nb of constraints */, -100);
 
     problemeHebdo->NomsDesPays.push_back("area1");

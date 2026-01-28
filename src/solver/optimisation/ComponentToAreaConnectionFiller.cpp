@@ -3,8 +3,6 @@
 
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 
-#include <boost/algorithm/string/case_conv.hpp>
-
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/visitors/EvalVisitor.h"
@@ -58,7 +56,6 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
     {
         for (auto [portId, areaId]: component.portToAreaConnections())
         {
-            boost::algorithm::to_lower(areaId);
             if (const auto it = areaIndices_.find(areaId); it == areaIndices_.end())
             {
                 std::string errMsg = "Component '" + component.Id() + "' is connected ";
@@ -190,7 +187,6 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
     {
         for (auto [portId, areaId]: component.portToAreaConnections())
         {
-            boost::algorithm::to_lower(areaId);
             auto areaIndex = areaIndices_.at(areaId);
             addInjectionPortToLinearProblem(ctx, component, portId, areaIndex);
             addToAreaBoundPortInLinearProblem(ctx, component, portId, areaIndex);

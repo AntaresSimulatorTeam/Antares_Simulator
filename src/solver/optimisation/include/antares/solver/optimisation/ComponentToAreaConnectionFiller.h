@@ -65,7 +65,6 @@ private:
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const unsigned& areaIndex) const;
 
-
     void addExpressionToConstraint(
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,

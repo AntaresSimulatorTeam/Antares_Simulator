@@ -3,6 +3,8 @@
 
 #include <fmt/format.h>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/study/system-model/component.h>
 
 using namespace Antares::Expressions::Nodes;
@@ -139,7 +141,7 @@ void Component::checkPortFieldDefinitionExists(const std::string& portName,
     }
 }
 
-void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
+void Component::addAreaConnection(const std::string& localPortId, std::string areaId)
 {
     std::string errMsgPrefix = "Cannot connect area '" + areaId + "' to port '" + localPortId
                                + "' of component '" + data_.id + "': ";
@@ -165,6 +167,7 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
         throw std::invalid_argument(errMsgPrefix + "port is already connected to '"
                                     + portToAreaConnections_.at(localPortId) + "'");
     }
+    boost::algorithm::to_lower(areaId);
     portToAreaConnections_[localPortId] = areaId;
 }
 
