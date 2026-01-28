@@ -145,12 +145,6 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     }
 }
 
-struct VCardStub
-{
-    static constexpr uint8_t decimal = 0;
-    static constexpr uint8_t categoryFileLevel = Category::FileLevel::va;
-};
-
 void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& average,
                                    const std::vector<R::AllYears::StdDeviation<>>& stdDev,
                                    const std::vector<R::AllYears::MinMaxBase<true>>& min,
@@ -158,17 +152,9 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
                                    const std::set<std::string>& groupNames,
                                    const Category::Precision& precision,
                                    const std::string& suffix,
-                                   Data::Study& study,
                                    SurveyResults& survey) const
 {
     size_t index = 0;
-
-    auto buildReport = [&](IntermediateValues& values)
-    {
-        // TODO handle LEVEL average
-        values.computeStatisticsForTheCurrentYear();
-        values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
-    };
 
     for (const auto& group: groupNames)
     {
@@ -176,31 +162,29 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
         survey.variableUnit = "MWh";
 
         IntermediateValues values;
-        /*values.initializeFromStudy(study);*/
-        /*values.reset();*/
 
-        average[index].buildSurveyReport<IntermediateValues, VCardStub>(
+        average[index].buildSurveyReport<IntermediateValues, VCardDynamic>(
           survey,
           values, // not used, placeholder for templates
           Category::DataLevel::setOfAreas,
           Category::FileLevel::va,
           precision);
 
-        stdDev[index].buildSurveyReport<R::AllYears::Average<>, VCardStub>(
+        stdDev[index].buildSurveyReport<R::AllYears::Average<>, VCardDynamic>(
           survey,
           average[index],
           Category::DataLevel::setOfAreas,
           Category::FileLevel::va,
           precision);
 
-        min[index].buildSurveyReport<IntermediateValues, VCardStub>(
+        min[index].buildSurveyReport<IntermediateValues, VCardDynamic>(
           survey,
           values, // not used, placeholder for templates
           Category::DataLevel::setOfAreas,
           Category::FileLevel::va,
           precision);
 
-        max[index].buildSurveyReport<IntermediateValues, VCardStub>(
+        max[index].buildSurveyReport<IntermediateValues, VCardDynamic>(
           survey,
           values, // not used, placeholder for templates
           Category::DataLevel::setOfAreas,
@@ -213,7 +197,6 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
 
 void SetDataAllYears::processAndSave(Category::Precision precision,
                                      const std::string& filename,
-                                     Data::Study& study,
                                      SurveyResults& survey) const
 {
     survey.data.columnIndex = 0;
@@ -225,7 +208,6 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  thermalGroupNames_,
                  precision,
                  "",
-                 study,
                  survey);
     processGroup(averageRenewable,
                  stdDevRenewable,
@@ -234,7 +216,6 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  renewableGroupNames_,
                  precision,
                  "",
-                 study,
                  survey);
     processGroup(averageStsInjection,
                  stdDevStsInjection,
@@ -243,7 +224,6 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  stsGroupNames_,
                  precision,
                  "_INJECTION",
-                 study,
                  survey);
     processGroup(averageStsWithdrawal,
                  stdDevStsWithdrawal,
@@ -252,7 +232,6 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  stsGroupNames_,
                  precision,
                  "_WITHDRAWAL",
-                 study,
                  survey);
 
     processGroup(averageStsWithdrawal,
@@ -262,7 +241,6 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  stsGroupNames_,
                  precision,
                  "_LEVEL",
-                 study,
                  survey);
 
     survey.data.filename = filename;
@@ -287,10 +265,10 @@ void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
     survey.isPrinted = printed;
 
     // Save for all precisions
-    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), study, survey);
-    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), study, survey);
-    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
-    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
-    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
+    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), survey);
+    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), survey);
+    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), survey);
+    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), survey);
+    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), survey);
 }
 } // namespace Antares::Solver::Variable

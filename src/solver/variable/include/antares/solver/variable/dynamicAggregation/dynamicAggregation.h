@@ -47,6 +47,13 @@ protected:
     std::set<std::string> stsGroupNames_;
     std::map<std::string, unsigned int> stsGroupToNumbers_;
     const std::set<Data::Area*, Data::CompareAreaName>& set_;
+
+    // used for survey results
+    struct VCardDynamic
+    {
+        static constexpr uint8_t decimal = 0;
+        static constexpr uint8_t categoryFileLevel = Category::FileLevel::va;
+    };
 };
 
 class SetDataSingleYear: public SetDataBase
@@ -69,10 +76,6 @@ private:
                       const std::string& suffix,
                       Data::Study& study,
                       SurveyResults& survey) const;
-
-    void processWithPrecision(Category::Precision precision,
-                              Data::Study& study,
-                              SurveyResults& survey) const;
 
     void processAndSave(Category::Precision precision,
                         const std::string& filename,
@@ -106,16 +109,10 @@ private:
                       const std::set<std::string>& groupNames,
                       const Category::Precision& precision,
                       const std::string& suffix,
-                      Data::Study& study,
                       SurveyResults& survey) const;
-
-    void processWithPrecision(Category::Precision precision,
-                              Data::Study& study,
-                              SurveyResults& survey) const;
 
     void processAndSave(Category::Precision precision,
                         const std::string& filename,
-                        Data::Study& study,
                         SurveyResults& survey) const;
 
     std::vector<R::AllYears::MinMaxBase<true>> minThermal;

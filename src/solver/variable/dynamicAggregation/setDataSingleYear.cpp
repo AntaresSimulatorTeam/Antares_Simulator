@@ -97,14 +97,6 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-struct VCardStub
-{
-    enum
-    {
-        decimal = 0,
-    };
-};
-
 void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>& results,
                                      const std::set<std::string>& groupNames,
                                      const Category::Precision& precision,
@@ -124,14 +116,15 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
         std::ranges::copy(results[index], values.hour);
         // TODO handle LEVEL average
         values.computeStatisticsForTheCurrentYear();
-        values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
+        values.buildAnnualSurveyReport<VCardDynamic>(survey, Category::FileLevel::va, precision);
         ++index;
     }
 }
 
-void SetDataSingleYear::processWithPrecision(Category::Precision precision,
-                                             Data::Study& study,
-                                             SurveyResults& survey) const
+void SetDataSingleYear::processAndSave(Category::Precision precision,
+                                       const std::string& filename,
+                                       Data::Study& study,
+                                       SurveyResults& survey) const
 {
     survey.data.columnIndex = 0;
 
@@ -140,14 +133,7 @@ void SetDataSingleYear::processWithPrecision(Category::Precision precision,
     processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
     processGroup(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
     processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey);
-}
 
-void SetDataSingleYear::processAndSave(Category::Precision precision,
-                                       const std::string& filename,
-                                       Data::Study& study,
-                                       SurveyResults& survey) const
-{
-    processWithPrecision(precision, study, survey);
     survey.data.filename = filename;
     survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
