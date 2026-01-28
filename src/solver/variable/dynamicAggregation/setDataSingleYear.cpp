@@ -97,7 +97,7 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>& results,
+void SetDataSingleYear::processGroups(const std::vector<std::vector<long double>>& results,
                                      const std::set<std::string>& groupNames,
                                      const Category::Precision& precision,
                                      const std::string& suffix,
@@ -133,20 +133,19 @@ void SetDataSingleYear::processAndSave(Category::Precision precision,
 {
     survey.data.columnIndex = 0;
 
-    processGroup(thermalResults_, thermalGroupNames_, precision, "", study, survey);
-    processGroup(renewableResults_, renewableGroupNames_, precision, "", study, survey);
-    processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
-    processGroup(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
-    processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
+    processGroups(thermalResults_, thermalGroupNames_, precision, "", study, survey);
+    processGroups(renewableResults_, renewableGroupNames_, precision, "", study, survey);
+    processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
+    processGroups(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
+    processGroups(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
 
     survey.data.filename = filename;
     survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
 
-size_t SetDataSingleYear::numberOfVariables() const 
+size_t SetDataSingleYear::numberOfVariables() const
 {
-    return thermalGroupNames_.size() + renewableGroupNames_.size()
-                               + stsGroupNames_.size() * 3;
+    return thermalGroupNames_.size() + renewableGroupNames_.size() + stsGroupNames_.size() * 3;
 }
 
 } // namespace Antares::Solver::Variable

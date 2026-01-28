@@ -47,7 +47,11 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
     };
 
     // Thermal
-    initAndReset(averageThermal_, stdDevThermal_, minThermal_, maxThermal_, thermalGroupNames_.size());
+    initAndReset(averageThermal_,
+                 stdDevThermal_,
+                 minThermal_,
+                 maxThermal_,
+                 thermalGroupNames_.size());
 
     // Renewable
     initAndReset(averageRenewable_,
@@ -67,7 +71,11 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
                  minStsWithdrawal_,
                  maxStsWithdrawal_,
                  stsGroupNames_.size());
-    initAndReset(averageStsLevel_, stdDevStsLevel_, minStsLevel_, maxStsLevel_, stsGroupNames_.size());
+    initAndReset(averageStsLevel_,
+                 stdDevStsLevel_,
+                 minStsLevel_,
+                 maxStsLevel_,
+                 stsGroupNames_.size());
 }
 
 void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year)
@@ -136,7 +144,7 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
                    { v.computeAveragesForCurrentYearFromHourlyResults(); });
 }
 
-void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& average,
+void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average<>>& average,
                                    const std::vector<R::AllYears::StdDeviation<>>& stdDev,
                                    const std::vector<R::AllYears::MinMaxBase<true>>& min,
                                    const std::vector<R::AllYears::MinMaxBase<false>>& max,
@@ -193,7 +201,7 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
 {
     survey.data.columnIndex = 0;
 
-    processGroup(averageThermal_,
+    processGroups(averageThermal_,
                  stdDevThermal_,
                  minThermal_,
                  maxThermal_,
@@ -201,7 +209,7 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  precision,
                  "",
                  survey);
-    processGroup(averageRenewable_,
+    processGroups(averageRenewable_,
                  stdDevRenewable_,
                  minRenewable_,
                  maxRenewable_,
@@ -209,7 +217,7 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  precision,
                  "",
                  survey);
-    processGroup(averageStsInjection_,
+    processGroups(averageStsInjection_,
                  stdDevStsInjection_,
                  minStsInjection_,
                  maxStsInjection_,
@@ -217,7 +225,7 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  precision,
                  "_INJECTION",
                  survey);
-    processGroup(averageStsWithdrawal_,
+    processGroups(averageStsWithdrawal_,
                  stdDevStsWithdrawal_,
                  minStsWithdrawal_,
                  maxStsWithdrawal_,
@@ -226,7 +234,7 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
                  "_WITHDRAWAL",
                  survey);
 
-    processGroup(averageStsWithdrawal_,
+    processGroups(averageStsWithdrawal_,
                  stdDevStsWithdrawal_,
                  minStsWithdrawal_,
                  maxStsWithdrawal_,
@@ -238,7 +246,6 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
     survey.data.filename = filename;
     survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
-
 
 size_t SetDataAllYears::numberOfVariables() const
 {

@@ -86,7 +86,7 @@ protected:
                         SurveyResults& survey) const override;
 
 private:
-    void processGroup(const std::vector<std::vector<long double>>& results,
+    void processGroups(const std::vector<std::vector<long double>>& results,
                       const std::set<std::string>& groupNames,
                       const Category::Precision& precision,
                       const std::string& suffix,
@@ -118,7 +118,7 @@ protected:
                         SurveyResults& survey) const override;
 
 private:
-    void processGroup(const std::vector<R::AllYears::Average<>>& average,
+    void processGroups(const std::vector<R::AllYears::Average<>>& average,
                       const std::vector<R::AllYears::StdDeviation<>>& stdDev,
                       const std::vector<R::AllYears::MinMaxBase<true>>& min,
                       const std::vector<R::AllYears::MinMaxBase<false>>& max,
