@@ -1,0 +1,188 @@
+================================================================================
+COMPILATION WARNINGS - ORGANIZED BY FILE
+================================================================================
+
+CRITICAL WARNINGS
+=================
+
+src/ext/yuni/src/yuni/core/charset/charset.cpp
+  Line 25: strcpy(toBuf, Charset::TypeAsString[(int)toCS]);
+  Issue:   Buffer overflow risk - unbounded strcpy()
+  Fix:     Replace with strncpy(), strlcpy(), or std::string
+  Status:  REQUIRES IMMEDIATE FIX
+
+src/ext/yuni/src/yuni/uuid/uuid.cpp
+  Line 57: ::strcpy_s(cstring, 36, "000000000-0000-0000-0000-00000000000");
+  Issue:   Microsoft-specific function - non-portable to Unix/Linux
+  Fix:     Use platform-independent string handling or add #ifdef guards
+  Status:  REQUIRES IMMEDIATE FIX
+
+
+HIGH PRIORITY WARNINGS
+======================
+
+src/libs/antares/study/runtime/runtime.cpp
+  Issue:   size_t to uint conversion
+  Code:    return static_cast<uint>(areaLink.size());
+  Risk:    64-bit to 32-bit truncation on 64-bit systems
+  Fix:     Change return type to size_t or audit for overflow risk
+
+src/libs/antares/study/xcast/xcast.cpp
+  Issues:  Multiple signed/unsigned conversions and type casts
+  Examples:
+    - assert((int)use < 3);           // Enum to int
+    - assert((int)d < dtMax);         // Enum to int (multiple)
+    - data.resize((uint)dataMax, 12); // size_t to uint
+    - for (uint x = 1; x < conversion.width - 1; ++x) // Mixed unsigned
+  Risk:    Potential data loss and integer overflow
+  Fix:     Use appropriate types, avoid implicit conversions
+
+src/libs/antares/study/load-options.cpp
+  Issues:  Boolean to unsigned integer implicit conversions
+  Code:    
+    - static_cast<uint>(forceExpansion)
+    - static_cast<uint>(forceEconomy)
+    - static_cast<uint>(forceAdequacy)
+  Problem: Semantically unclear - mixing bool and uint
+  Fix:     Use ternary operators or dedicated conversion functions
+
+src/libs/antares/study/UnfeasibleProblemBehavior.cpp
+  Issues:  Unnecessary enum to unsigned long conversions (4 occurrences)
+  Code:    std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior))
+  Problem: Redundant explicit casting
+  Fix:     Simplify conversion logic
+
+
+MEDIUM PRIORITY WARNINGS
+========================
+
+src/solver/hydro/monthly/h2o_m_resoudre_le_probleme_lineaire.cpp
+  Issue:   Use of goto statement
+  Code:    goto RESOLUTION;
+  Problem: Violates structured programming principles
+  Fix:     Refactor using loops, conditionals, or exceptions
+
+src/solver/hydro/daily2/h2o2_j_resoudre_le_probleme_lineaire.cpp
+  Issue:   Use of goto statement
+  Code:    goto RESOLUTION;
+  Problem: Violates structured programming principles
+  Fix:     Refactor using loops, conditionals, or exceptions
+
+src/solver/hydro/daily/h2o_j_resoudre_le_probleme_lineaire.cpp
+  Issue:   Use of goto statement
+  Code:    goto RESOLUTION;
+  Problem: Violates structured programming principles
+  Fix:     Refactor using loops, conditionals, or exceptions
+
+src/solver/variable/surveyresults/surveyresults.cpp
+  Lines:   68, 354, 648
+  Code:    ::sprintf_s(conversionBuffer + 1, sizeof(conversionBuffer) - 2, "%.0f", v);
+  Status:  ACCEPTABLE - Has #ifdef YUNI_OS_MSVC guard with snprintf fallback
+  Note:    Code correctly uses conditional compilation for portability
+
+
+LOW PRIORITY WARNINGS
+=====================
+
+src/api/private/singleProblemGetterImpl.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/api/private/API.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+  Also:    Forward declaration: class Study;
+
+src/api/private/SimulationObserver.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/api/include/antares/api/SimulationResults.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/api/include/antares/api/singleProblemGetter.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+  Also:    Forward declaration: class SingleProblemGetter;
+
+src/api/include/antares/api/solver.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/lold_base.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/renewableGeneration.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/overallCostCsr.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/STStorageLevelsByCluster.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/economy_base.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/loldCsr.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/lolp_base.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/economy/all.h
+  Issue:   #pragma once in main file (non-POSIX standard)
+
+src/solver/variable/include/antares/solver/variable/storage/results.h
+  Issue:   Forward declaration: class Results;
+
+src/solver/variable/include/antares/solver/variable/storage/minmax.h
+  Issue:   Forward declarations: class Min;, class Max;
+
+src/solver/utils/basis_status_impl.h
+  Issue:   Forward declaration: class BasisStatus;
+
+src/solver/utils/include/antares/solver/utils/basis_status.h
+  Issue:   Multiple forward declarations
+
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+WARNINGS BY SEVERITY:
+  Critical:      2 warnings (2 files)
+  High Priority: 4 warnings (4 files)
+  Medium Priority: 4 warnings (4 files)
+  Low Priority:  8 warnings (8+ files)
+  Acceptable:    1 warning (1 file - has proper guards)
+
+WARNINGS BY CATEGORY:
+  Unsafe String Functions:  3 warnings
+  Type Conversions:         4 warnings
+  GOTO Statements:          3 warnings
+  pragma once:              14 warnings
+  Forward Declarations:     6+ warnings
+
+TOTAL FILES WITH WARNINGS: ~20 files
+TOTAL WARNINGS IDENTIFIED: 30+ specific issues
+
+
+================================================================================
+QUICK FIX GUIDE
+================================================================================
+
+1. IMMEDIATE (Critical - Do First):
+   □ Fix strcpy() in charset.cpp line 25
+   □ Fix/guard strcpy_s() in uuid.cpp line 57
+
+2. SHORT-TERM (High Priority):
+   □ Review and fix xcast.cpp conversions
+   □ Review and fix runtime.cpp size_t conversion
+   □ Review and fix load-options.cpp bool conversions
+   □ Review and fix UnfeasibleProblemBehavior.cpp enum conversions
+
+3. MEDIUM-TERM:
+   □ Refactor GOTO statements in 3 hydro files
+   □ Standardize header guards (14 files with pragma once)
+
+4. OPTIONAL (Code Quality):
+   □ Review forward declarations for circular dependencies
+
+
+================================================================================
