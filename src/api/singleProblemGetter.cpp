@@ -21,9 +21,15 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     return impl_->getConstantData();
 }
 
-WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, bool withSolver)
+WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
-    return impl_->getWeeklyData(id, withSolver);
+    return impl_->getWeeklyData(id);
+}
+
+std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+{
+    return impl_->getWeeklyProblem(id);
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
