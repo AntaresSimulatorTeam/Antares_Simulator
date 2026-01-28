@@ -26,7 +26,7 @@
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/variable/storage/average.h"
-#include "antares/solver/variable/storage/minmax-data.h"
+#include "antares/solver/variable/storage/minmax.h"
 #include "antares/solver/variable/storage/stdDeviation.h"
 
 namespace Antares::Solver::Variable
@@ -99,10 +99,10 @@ public:
                               IResultWriter& writer) const;
 
 private:
-    void processGroup(const std::vector<R::AllYears::Average<>>& avgVec,
-                      const std::vector<R::AllYears::StdDeviation<>>& stdVec,
-                      const std::vector<R::AllYears::MinMaxData>& minVec,
-                      const std::vector<R::AllYears::MinMaxData>& maxVec,
+    void processGroup(const std::vector<R::AllYears::Average<>>& average,
+                      const std::vector<R::AllYears::StdDeviation<>>& stdDev,
+                      const std::vector<R::AllYears::MinMaxBase<true>>& min,
+                      const std::vector<R::AllYears::MinMaxBase<false>>& max,
                       const std::set<std::string>& groupNames,
                       const Category::Precision& precision,
                       const std::string& suffix,
@@ -118,20 +118,20 @@ private:
                         Data::Study& study,
                         SurveyResults& survey) const;
 
-    std::vector<R::AllYears::MinMaxData> minThermal;
-    std::vector<R::AllYears::MinMaxData> maxThermal;
+    std::vector<R::AllYears::MinMaxBase<true>> minThermal;
+    std::vector<R::AllYears::MinMaxBase<false>> maxThermal;
 
-    std::vector<R::AllYears::MinMaxData> minRenewable;
-    std::vector<R::AllYears::MinMaxData> maxRenewable;
+    std::vector<R::AllYears::MinMaxBase<true>> minRenewable;
+    std::vector<R::AllYears::MinMaxBase<false>> maxRenewable;
 
-    std::vector<R::AllYears::MinMaxData> minStsInjection;
-    std::vector<R::AllYears::MinMaxData> maxStsInjection;
+    std::vector<R::AllYears::MinMaxBase<true>> minStsInjection;
+    std::vector<R::AllYears::MinMaxBase<false>> maxStsInjection;
 
-    std::vector<R::AllYears::MinMaxData> minStsWithdrawal;
-    std::vector<R::AllYears::MinMaxData> maxStsWithdrawal;
+    std::vector<R::AllYears::MinMaxBase<true>> minStsWithdrawal;
+    std::vector<R::AllYears::MinMaxBase<false>> maxStsWithdrawal;
 
-    std::vector<R::AllYears::MinMaxData> minStsLevel;
-    std::vector<R::AllYears::MinMaxData> maxStsLevel;
+    std::vector<R::AllYears::MinMaxBase<true>> minStsLevel;
+    std::vector<R::AllYears::MinMaxBase<false>> maxStsLevel;
 
     std::vector<R::AllYears::Average<>> averageThermal;
     std::vector<R::AllYears::Average<>> averageRenewable;

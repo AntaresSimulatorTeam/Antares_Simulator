@@ -53,8 +53,8 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
 
     for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
     {
-        minThermal[i].resetInf();
-        maxThermal[i].resetSup();
+        minThermal[i].reset();
+        maxThermal[i].reset();
         averageThermal[i].initializeFromStudy(study);
         averageThermal[i].reset();
         stdDevThermal[i].initializeFromStudy(study);
@@ -62,8 +62,8 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
     }
     for (size_t i = 0; i < renewableGroupNames_.size(); ++i)
     {
-        minRenewable[i].resetInf();
-        maxRenewable[i].resetSup();
+        minRenewable[i].reset();
+        maxRenewable[i].reset();
         averageRenewable[i].initializeFromStudy(study);
         averageRenewable[i].reset();
         stdDevRenewable[i].initializeFromStudy(study);
@@ -71,12 +71,12 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
     }
     for (size_t i = 0; i < stsGroupNames_.size(); ++i)
     {
-        minStsInjection[i].resetInf();
-        maxStsInjection[i].resetSup();
-        minStsWithdrawal[i].resetInf();
-        maxStsWithdrawal[i].resetSup();
-        minStsLevel[i].resetInf();
-        maxStsLevel[i].resetSup();
+        minStsInjection[i].reset();
+        maxStsInjection[i].reset();
+        minStsWithdrawal[i].reset();
+        maxStsWithdrawal[i].reset();
+        minStsLevel[i].reset();
+        maxStsLevel[i].reset();
         averageStsInjection[i].initializeFromStudy(study);
         averageStsInjection[i].reset();
         averageStsWithdrawal[i].initializeFromStudy(study);
@@ -102,8 +102,8 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     {
         std::ranges::copy(toMerge.thermalResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minThermal[i].mergeInf(year, values);
-        maxThermal[i].mergeSup(year, values);
+        minThermal[i].merge(year, values);
+        maxThermal[i].merge(year, values);
         averageThermal[i].merge(year, values);
         stdDevThermal[i].merge(year, values);
     }
@@ -113,8 +113,8 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     {
         std::ranges::copy(toMerge.renewableResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minRenewable[i].mergeInf(year, values);
-        maxRenewable[i].mergeSup(year, values);
+        minRenewable[i].merge(year, values);
+        maxRenewable[i].merge(year, values);
         averageRenewable[i].merge(year, values);
         stdDevRenewable[i].merge(year, values);
     }
@@ -124,22 +124,22 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     {
         std::ranges::copy(toMerge.stsInjectionResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minStsInjection[i].mergeInf(year, values);
-        maxStsInjection[i].mergeSup(year, values);
+        minStsInjection[i].merge(year, values);
+        maxStsInjection[i].merge(year, values);
         averageStsInjection[i].merge(year, values);
         stdDevStsInjection[i].merge(year, values);
 
         std::ranges::copy(toMerge.stsWithdrawalResults_[i], values.hour);
         values.computeStatisticsForTheCurrentYear();
-        minStsWithdrawal[i].mergeInf(year, values);
-        maxStsWithdrawal[i].mergeSup(year, values);
+        minStsWithdrawal[i].merge(year, values);
+        maxStsWithdrawal[i].merge(year, values);
         averageStsWithdrawal[i].merge(year, values);
         stdDevStsWithdrawal[i].merge(year, values);
 
         std::ranges::copy(toMerge.stsLevelResults_[i], values.hour);
         values.computeAveragesForCurrentYearFromHourlyResults();
-        minStsLevel[i].mergeInf(year, values);
-        maxStsLevel[i].mergeSup(year, values);
+        minStsLevel[i].merge(year, values);
+        maxStsLevel[i].merge(year, values);
         averageStsLevel[i].merge(year, values);
         stdDevStsLevel[i].merge(year, values);
     }
@@ -153,8 +153,8 @@ struct VCardStub
 
 void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& average,
                                    const std::vector<R::AllYears::StdDeviation<>>& stdDev,
-                                   const std::vector<R::AllYears::MinMaxData>& min,
-                                   const std::vector<R::AllYears::MinMaxData>& max,
+                                   const std::vector<R::AllYears::MinMaxBase<true>>& min,
+                                   const std::vector<R::AllYears::MinMaxBase<false>>& max,
                                    const std::set<std::string>& groupNames,
                                    const Category::Precision& precision,
                                    const std::string& suffix,
@@ -163,11 +163,6 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
 {
     size_t index = 0;
 
-    auto setSurvey = [&](const std::string& group)
-    {
-        survey.variableCaption = group + suffix;
-        survey.variableUnit = "MWh";
-    };
     auto buildReport = [&](IntermediateValues& values)
     {
         // TODO handle LEVEL average
@@ -177,19 +172,20 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
 
     for (const auto& group: groupNames)
     {
-        IntermediateValues values;
-        values.initializeFromStudy(study);
-        values.reset();
+        survey.variableCaption = group + suffix;
+        survey.variableUnit = "MWh";
 
-        setSurvey(group);
+        IntermediateValues values;
+        /*values.initializeFromStudy(study);*/
+        /*values.reset();*/
+
         average[index].buildSurveyReport<IntermediateValues, VCardStub>(
-          survey, // not used, placeholder for templates
-          values,
+          survey,
+          values, // not used, placeholder for templates
           Category::DataLevel::setOfAreas,
           Category::FileLevel::va,
           precision);
 
-        setSurvey(group);
         stdDev[index].buildSurveyReport<R::AllYears::Average<>, VCardStub>(
           survey,
           average[index],
@@ -197,21 +193,19 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
           Category::FileLevel::va,
           precision);
 
-        setSurvey(group);
-        values.reset();
-        for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
-        {
-            values.hour[h] = min[index].hourly[h].value;
-        }
-        buildReport(values);
+        min[index].buildSurveyReport<IntermediateValues, VCardStub>(
+          survey,
+          values, // not used, placeholder for templates
+          Category::DataLevel::setOfAreas,
+          Category::FileLevel::va,
+          precision);
 
-        setSurvey(group);
-        values.reset();
-        for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
-        {
-            values.hour[h] = max[index].hourly[h].value;
-        }
-        buildReport(values);
+        max[index].buildSurveyReport<IntermediateValues, VCardStub>(
+          survey,
+          values, // not used, placeholder for templates
+          Category::DataLevel::setOfAreas,
+          Category::FileLevel::va,
+          precision);
 
         ++index;
     }
