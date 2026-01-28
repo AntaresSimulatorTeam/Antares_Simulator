@@ -54,7 +54,7 @@ void UUID::writeToCString(char cstring[42]) const
     size_t converted = 0;
     // we should have something like {000000000-0000-0000-0000-00000000000} in buffer
     if (::wcstombs_s(&converted, cstring, 42, buffer + 1, 36) != 0)
-        ::strcpy_s(cstring, 36, "000000000-0000-0000-0000-00000000000");
+        ::strcpy_s(cstring, 42, "000000000-0000-0000-0000-00000000000");
 #endif // YUNI_OS_MINGW
     else
     {

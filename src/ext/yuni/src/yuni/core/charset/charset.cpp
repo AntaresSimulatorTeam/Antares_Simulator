@@ -22,16 +22,17 @@ Converter::Converter(Charset::Type fromCS, Charset::Type toCS, Charset::Unconver
     // 64 Should be sufficient to hold ISO-8859-15//IGNORE//TRANSLIT
     char toBuf[64];
 
-    strcpy(toBuf, Charset::TypeAsString[(int)toCS]);
+    strncpy(toBuf, Charset::TypeAsString[(int)toCS], sizeof(toBuf) - 1);
+    toBuf[sizeof(toBuf) - 1] = '\0';
 
     if (opts == Charset::uncTranslit || opts == Charset::uncTranslitIgnore)
     {
-        strcat(toBuf, "//TRANSLIT");
+        strncat(toBuf, "//TRANSLIT", sizeof(toBuf) - strlen(toBuf) - 1);
     }
 
     if (opts == Charset::uncTranslitIgnore || opts == Charset::uncIgnore)
     {
-        strcat(toBuf, "//IGNORE");
+        strncat(toBuf, "//IGNORE", sizeof(toBuf) - strlen(toBuf) - 1);
     }
 
     // Open the conversion context using our generated charset strings.
