@@ -27,7 +27,7 @@ namespace Antares::Solver::Variable
 SetDataBase::SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set):
     set_(set)
 {
-    for (auto& area: set_)
+    for (auto* area: set_)
     {
         for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {

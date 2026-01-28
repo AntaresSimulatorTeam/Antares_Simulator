@@ -98,12 +98,12 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
 }
 
 void SetDataSingleYear::processGroups(const std::vector<std::vector<long double>>& results,
-                                     const std::set<std::string>& groupNames,
-                                     const Category::Precision& precision,
-                                     const std::string& suffix,
-                                     Data::Study& study,
-                                     SurveyResults& survey,
-                                     bool doWeAverage) const
+                                      const std::set<std::string>& groupNames,
+                                      const Category::Precision& precision,
+                                      const std::string& suffix,
+                                      Data::Study& study,
+                                      SurveyResults& survey,
+                                      bool doWeAverage) const
 {
     size_t index = 0;
 
@@ -118,8 +118,8 @@ void SetDataSingleYear::processGroups(const std::vector<std::vector<long double>
         std::ranges::copy(results[index], values.hour);
 
         // average is only used for STS level
-        (doWeAverage) ? values.computeAveragesForCurrentYearFromHourlyResults()
-                      : values.computeStatisticsForTheCurrentYear();
+        doWeAverage ? values.computeAveragesForCurrentYearFromHourlyResults()
+                    : values.computeStatisticsForTheCurrentYear();
 
         values.buildAnnualSurveyReport<VCardDynamic>(survey, Category::FileLevel::va, precision);
         ++index;
