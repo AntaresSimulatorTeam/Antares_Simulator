@@ -171,8 +171,7 @@ struct Tag
     unsigned base;
 };
 
-// logically day should also be shifted, somehow antares does not do that
-constexpr std::array<Tag, 2> tags = {{{"::hour<", 168}, /*{"::day<", 7},*/ {"::week<", 1}}};
+constexpr std::array<Tag, 3> tags = {{{"::hour<", 168}, {"::day<", 7}, {"::week<", 1}}};
 
 std::vector<NameMemo> buildMemo(const std::vector<std::string>& names)
 {
@@ -198,6 +197,7 @@ std::vector<NameMemo> buildMemo(const std::vector<std::string>& names)
             }
 
             mem.emplace_back(numStart, end, std::stoi(s.substr(numStart, end - numStart)), i, base);
+            break;
         }
     }
 
