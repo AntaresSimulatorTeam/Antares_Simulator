@@ -28,68 +28,46 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
                                  Data::Study& study):
     SetDataBase(set)
 {
-    minThermal.resize(thermalGroupNames_.size());
-    maxThermal.resize(thermalGroupNames_.size());
-    minRenewable.resize(renewableGroupNames_.size());
-    maxRenewable.resize(renewableGroupNames_.size());
-    minStsInjection.resize(stsGroupNames_.size());
-    maxStsInjection.resize(stsGroupNames_.size());
-    minStsWithdrawal.resize(stsGroupNames_.size());
-    maxStsWithdrawal.resize(stsGroupNames_.size());
-    minStsLevel.resize(stsGroupNames_.size());
-    maxStsLevel.resize(stsGroupNames_.size());
-
-    averageThermal.resize(thermalGroupNames_.size());
-    averageRenewable.resize(renewableGroupNames_.size());
-    averageStsInjection.resize(stsGroupNames_.size());
-    averageStsWithdrawal.resize(stsGroupNames_.size());
-    averageStsLevel.resize(stsGroupNames_.size());
-
-    stdDevThermal.resize(thermalGroupNames_.size());
-    stdDevRenewable.resize(renewableGroupNames_.size());
-    stdDevStsInjection.resize(stsGroupNames_.size());
-    stdDevStsWithdrawal.resize(stsGroupNames_.size());
-    stdDevStsLevel.resize(stsGroupNames_.size());
-
-    for (size_t i = 0; i < thermalGroupNames_.size(); ++i)
+    auto initAndReset =
+      [&study](auto& avgVec, auto& stdDevVec, auto& minVec, auto& maxVec, size_t size)
     {
-        minThermal[i].reset();
-        maxThermal[i].reset();
-        averageThermal[i].initializeFromStudy(study);
-        averageThermal[i].reset();
-        stdDevThermal[i].initializeFromStudy(study);
-        stdDevThermal[i].reset();
-    }
-    for (size_t i = 0; i < renewableGroupNames_.size(); ++i)
-    {
-        minRenewable[i].reset();
-        maxRenewable[i].reset();
-        averageRenewable[i].initializeFromStudy(study);
-        averageRenewable[i].reset();
-        stdDevRenewable[i].initializeFromStudy(study);
-        stdDevRenewable[i].reset();
-    }
-    for (size_t i = 0; i < stsGroupNames_.size(); ++i)
-    {
-        minStsInjection[i].reset();
-        maxStsInjection[i].reset();
-        minStsWithdrawal[i].reset();
-        maxStsWithdrawal[i].reset();
-        minStsLevel[i].reset();
-        maxStsLevel[i].reset();
-        averageStsInjection[i].initializeFromStudy(study);
-        averageStsInjection[i].reset();
-        averageStsWithdrawal[i].initializeFromStudy(study);
-        averageStsWithdrawal[i].reset();
-        averageStsLevel[i].initializeFromStudy(study);
-        averageStsLevel[i].reset();
-        stdDevStsInjection[i].initializeFromStudy(study);
-        stdDevStsInjection[i].reset();
-        stdDevStsWithdrawal[i].initializeFromStudy(study);
-        stdDevStsWithdrawal[i].reset();
-        stdDevStsLevel[i].initializeFromStudy(study);
-        stdDevStsLevel[i].reset();
-    }
+        avgVec.resize(size);
+        stdDevVec.resize(size);
+        minVec.resize(size);
+        maxVec.resize(size);
+        for (size_t i = 0; i < size; ++i)
+        {
+            minVec[i].reset();
+            maxVec[i].reset();
+            avgVec[i].initializeFromStudy(study);
+            avgVec[i].reset();
+            stdDevVec[i].initializeFromStudy(study);
+            stdDevVec[i].reset();
+        }
+    };
+
+    // Thermal
+    initAndReset(averageThermal, stdDevThermal, minThermal, maxThermal, thermalGroupNames_.size());
+
+    // Renewable
+    initAndReset(averageRenewable,
+                 stdDevRenewable,
+                 minRenewable,
+                 maxRenewable,
+                 renewableGroupNames_.size());
+
+    // STS
+    initAndReset(averageStsInjection,
+                 stdDevStsInjection,
+                 minStsInjection,
+                 maxStsInjection,
+                 stsGroupNames_.size());
+    initAndReset(averageStsWithdrawal,
+                 stdDevStsWithdrawal,
+                 minStsWithdrawal,
+                 maxStsWithdrawal,
+                 stsGroupNames_.size());
+    initAndReset(averageStsLevel, stdDevStsLevel, minStsLevel, maxStsLevel, stsGroupNames_.size());
 }
 
 void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year)
@@ -271,4 +249,5 @@ void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
     processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), survey);
     processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), survey);
 }
+
 } // namespace Antares::Solver::Variable
