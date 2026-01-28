@@ -130,8 +130,6 @@ void SetDataSingleYear::processWithPrecision(Category::Precision precision,
                                        Data::Study& study,
                                        SurveyResults& survey) const
 {
-    survey.data.columnIndex = 0;
-
     processGroups(thermalResults_, thermalGroupNames_, precision, "", study, survey);
     processGroups(renewableResults_, renewableGroupNames_, precision, "", study, survey);
     processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);

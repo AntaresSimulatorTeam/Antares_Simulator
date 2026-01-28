@@ -65,4 +65,48 @@ void DynamicAggregationSingleYear::appendToSurveyForSet(const std::string& setNa
     }
 }
 
+unsigned int computeDynamicAggregationMaxColumns(const Data::Study& study)
+{
+    using SetType = std::set<Data::Area*, Data::CompareAreaName>;
+
+    unsigned int maxCols = 0;
+
+    for (const auto& [setName, setPtr]: study.setsOfAreas)
+    {
+        const SetType& setAreas = *setPtr;
+
+        std::set<std::string> thermalGroupNames;
+        std::set<std::string> renewableGroupNames;
+        std::set<std::string> stsGroupNames;
+
+        for (auto* area: setAreas)
+        {
+            for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
+            {
+                thermalGroupNames.insert(cluster->getGroup());
+            }
+
+            for (const auto& cluster: area->renewable.list.each_enabled())
+            {
+                renewableGroupNames.insert(cluster->getGroup());
+            }
+
+            for (const auto& sts: area->shortTermStorage.storagesByIndex)
+            {
+                stsGroupNames.insert(sts.properties.groupName);
+            }
+        }
+
+        unsigned int colsForSet = thermalGroupNames.size() + renewableGroupNames.size()
+                                  + 3 * stsGroupNames.size();
+
+        if (colsForSet > maxCols)
+        {
+            maxCols = colsForSet;
+        }
+    }
+
+    return maxCols;
+}
+
 } // namespace Antares::Solver::Variable
