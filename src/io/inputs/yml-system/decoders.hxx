@@ -56,9 +56,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::Component>
         rhs.id = node["id"].as<std::string>();
         rhs.model = node["model"].as<std::string>();
         rhs.scenarioGroup = node["scenario-group"].as<std::string>("");
-        rhs
-          .parameters = as_fallback_default<std::vector<Antares::IO::Inputs::YmlSystem::Parameter>>(
-          node["parameters"]);
+        rhs.parameters = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::Parameter>>(node["parameters"]);
         return true;
     }
 };
@@ -106,7 +105,6 @@ struct convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
         {
             return false;
         }
-
         rhs.areaId = node["area"].as<std::string>();
         rhs.clusterId = node["cluster-id"].as<std::string>();
         return true;
@@ -125,9 +123,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>
         }
         rhs.componentId = node["component"].as<std::string>();
         rhs.portId = node["port"].as<std::string>();
-        rhs
-          .thermalComponent = as_fallback_default<Antares::IO::Inputs::YmlSystem::ThermalComponent>(
-          node["thermal-component"]);
+        rhs.thermalComponent = as_fallback_default<
+          Antares::IO::Inputs::YmlSystem::ThermalComponent>(node["thermal-component"]);
         return true;
     }
 };
@@ -139,9 +136,8 @@ struct convert<Antares::IO::Inputs::YmlSystem::System>
     {
         rhs.id = node["id"].as<std::string>();
         rhs.libraries = as_fallback_default<std::vector<std::string>>(node["model-libraries"]);
-        rhs
-          .components = as_fallback_default<std::vector<Antares::IO::Inputs::YmlSystem::Component>>(
-          node["components"]);
+        rhs.components = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::Component>>(node["components"]);
         rhs.connections = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::Connection>>(node["connections"]);
         rhs.areaConnections = as_fallback_default<

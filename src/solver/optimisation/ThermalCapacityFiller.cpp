@@ -90,7 +90,8 @@ IMipVariable* ThermalCapacityFiller::getDispatchableProductionVariable(int palie
 void ThermalCapacityFiller::addCapacityFieldConstraint(
   const TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
-  const int palier)
+  const int clusterIndex,
+  const std::string& namePrefix)
 {
     auto& linearProblem = optimEntityContainer_.Problem();
     const auto& solverVariables = optimEntityContainer_.getVariables();
@@ -98,13 +99,13 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
          ++localIndex)
     {
         auto pdt = localIndex % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
-        IMipVariable* dispatchableProduction = getDispatchableProductionVariable(palier, pdt);
+        IMipVariable* dispatchableProduction = getDispatchableProductionVariable(clusterIndex, pdt);
         double infinity = linearProblem.infinity();
         dispatchableProduction->setUb(infinity);
-        // TODO the name
+
         auto* ct = linearProblem.addConstraint(-infinity,
                                                linearExpression[localIndex].constant(),
-                                               fmt::format("ThermalCapacity_{}", pdt));
+                                               namePrefix + fmt::format("::hour<{}>", pdt));
         ct->setCoefficient(dispatchableProduction, 1.0);
 
         for (const auto& [varIndex, coef]: linearExpression[localIndex])
@@ -143,20 +144,15 @@ unsigned int getClusterLocalIndex(const std::string& areaId,
     return itv->second;
 }
 
-int ThermalCapacityFiller::getClusterIndex(
-  const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection)
+int ThermalCapacityFiller::getClusterIndex(const std::string& areaId, const std::string& clusterId)
 {
     //--- area
-    auto areaId = thermalConnection.areaId;
-    boost::algorithm::to_lower(areaId);
     const auto& [pays, clusters] = *areaClusters(areaId);
 
     //--- cluster
     const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
                                                           ->PaliersThermiquesDuPays[pays];
-    const auto clusterLocalIndex = getClusterLocalIndex(areaId,
-                                                        thermalConnection.clusterId,
-                                                        clusters);
+    const auto clusterLocalIndex = getClusterLocalIndex(areaId, clusterId, clusters);
     return PaliersThermiquesDuPays
       .NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterLocalIndex];
 }
@@ -172,8 +168,17 @@ void ThermalCapacityFiller::processThermalCapacityField(
   const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection,
   const FillContext& ctx)
 {
-    const int clusterIndex = getClusterIndex(thermalConnection);
-    addCapacityFieldConstraint(linearExpression, ctx, clusterIndex);
+    auto areaId = thermalConnection.areaId;
+    boost::algorithm::to_lower(areaId);
+
+    const int clusterIndex = getClusterIndex(areaId, thermalConnection.clusterId);
+    addCapacityFieldConstraint(
+      linearExpression,
+      ctx,
+      clusterIndex,
+      fmt::format("MaxGenerationFromCapacity::area<{}>::ThermalCluster<{}>",
+                  areaId,
+                  thermalConnection.clusterId));
 }
 
 void ThermalCapacityFiller::addComponentPortContributionToThermalCapacity(

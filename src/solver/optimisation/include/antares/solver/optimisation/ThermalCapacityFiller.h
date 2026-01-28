@@ -57,7 +57,8 @@ private:
                                                                                     unsigned pdt);
     void addCapacityFieldConstraint(const TimeDependentLinearExpression& linearExpression,
                                     const Optimisation::LinearProblemApi::FillContext& ctx,
-                                    int palier);
+                                    int clusterIndex,
+                                    const std::string& namePrefix);
 
     struct AreaAndClusters
     {
@@ -66,8 +67,7 @@ private:
     };
 
     AreaAndClusters* areaClusters(const std::string& areaId);
-    int getClusterIndex(
-      const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection);
+    int getClusterIndex(const std::string& areaId, const std::string& clusterId);
 
     std::unordered_map<std::string, AreaAndClusters> areasAndClusters_;
 
