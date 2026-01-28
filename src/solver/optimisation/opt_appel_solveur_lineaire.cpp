@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <mutex>
+#include <optional>
+#include <string_view>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
@@ -54,6 +56,112 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
     logs.info();
 }
+
+namespace
+{
+constexpr std::string_view kLegacyNameSeparator = "::";
+constexpr std::string_view kLegacyHourTag = "hour";
+
+struct LegacyVariableInfo
+{
+    std::string output;
+    std::string component;
+    unsigned timeIndex;
+};
+
+std::optional<LegacyVariableInfo> parseLegacyVariableName(const std::string& name)
+{
+    const auto firstSep = name.find(kLegacyNameSeparator);
+    const auto lastSep = name.rfind(kLegacyNameSeparator);
+    if (firstSep == std::string::npos || lastSep == std::string::npos || firstSep == lastSep)
+    {
+        return std::nullopt;
+    }
+
+    const std::string output = name.substr(0, firstSep);
+    const std::string timePart = name.substr(lastSep + kLegacyNameSeparator.size());
+    const std::string location = name.substr(firstSep + kLegacyNameSeparator.size(),
+                                             lastSep - firstSep - kLegacyNameSeparator.size());
+    if (output.empty() || timePart.empty())
+    {
+        return std::nullopt;
+    }
+
+    const auto lt = timePart.find('<');
+    const auto gt = timePart.rfind('>');
+    if (lt == std::string::npos || gt == std::string::npos || gt <= lt + 1)
+    {
+        return std::nullopt;
+    }
+
+    const std::string unit = timePart.substr(0, lt);
+    if (unit != kLegacyHourTag)
+    {
+        return std::nullopt;
+    }
+
+    const std::string value = timePart.substr(lt + 1, gt - lt - 1);
+    unsigned timeIndex = 0;
+    try
+    {
+        timeIndex = static_cast<unsigned>(std::stoul(value));
+    }
+    catch (const std::exception&)
+    {
+        return std::nullopt;
+    }
+
+    return LegacyVariableInfo{output, location, timeIndex};
+}
+
+void FillLegacySimulationTable(ISimulationTable& simulationTable,
+                               const PROBLEME_ANTARES_A_RESOUDRE& problem,
+                               const FillContext& fillContext,
+                               unsigned currentBlock,
+                               unsigned scenario)
+{
+    const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
+    const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
+    const unsigned int block = currentBlock + 1;
+
+    for (int index = 0; index < problem.NombreDeVariables; ++index)
+    {
+        if (index < 0 || index >= static_cast<int>(problem.NomDesVariables.size())
+            || index >= static_cast<int>(problem.X.size()))
+        {
+            continue;
+        }
+
+        const auto& name = problem.NomDesVariables[index];
+        if (name.empty())
+        {
+            continue;
+        }
+
+        const auto parsed = parseLegacyVariableName(name);
+        if (!parsed)
+        {
+            continue;
+        }
+
+        std::optional<unsigned> blockTimeIndex;
+        if (parsed->timeIndex >= globalFirstTimeStep && parsed->timeIndex <= globalLastTimeStep)
+        {
+            blockTimeIndex = parsed->timeIndex - globalFirstTimeStep + 1;
+        }
+
+        simulationTable.addEntry(
+          {.block = block,
+           .component = parsed->component,
+           .output = parsed->output,
+           .absolute_time_index = parsed->timeIndex + 1,
+           .block_time_index = blockTimeIndex,
+           .scenario_index = scenario,
+           .value = problem.X[static_cast<std::size_t>(index)],
+           .status = std::nullopt});
+    }
+}
+} // namespace
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
@@ -225,7 +333,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (simulationTable && modelerData)
+    if (simulationTable)
     {
         unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
                                   ? problemeHebdo->weekInTheYear
@@ -234,16 +342,24 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
         measure.reset();
-        FillSimulationTable(*simulationTable,
-                            ortoolsProblem,
-                            ::getObjectiveValue(solver.get()),
+        if (modelerData)
+        {
+            FillSimulationTable(*simulationTable,
+                                ortoolsProblem,
+                                ::getObjectiveValue(solver.get()),
+                                *modelerData,
+                                optimEntityContainer,
+                                fillCtx,
+                                currentBlock,
+                                timeConversionMode,
+                                true);
+        }
 
-                            *modelerData,
-                            optimEntityContainer,
-                            fillCtx,
-                            currentBlock,
-                            timeConversionMode,
-                            true);
+        FillLegacySimulationTable(*simulationTable,
+                                  *ProblemeAResoudre,
+                                  fillCtx,
+                                  currentBlock,
+                                  fillCtx.getYear());
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();

@@ -398,27 +398,12 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
             newPath.overwriteRight(tmp);
         }
 
-        Antares::Solver::Variable::SurveyResults::LegacySimulationTableOptions legacyOptions;
-        const Antares::Solver::Variable::SurveyResults::LegacySimulationTableOptions* legacyOptionsPtr
-          = nullptr;
-        if (!synthesis && study.getModelerData())
-        {
-            legacyOptions.simulationTable
-              = ImplementationType::getSimulationTable(numSpace).firstOptimSimulationTable();
-            legacyOptions.scenarioIndex = year;
-            legacyOptions.timeConversionMode
-              = (study.parameters.simplexOptimizationRange == Data::sorWeek)
-                  ? Antares::Solver::Variable::SurveyResults::LegacyTimeConversionMode::WeeklyBlocks
-                  : Antares::Solver::Variable::SurveyResults::LegacyTimeConversionMode::DailyBlocks;
-            legacyOptionsPtr = &legacyOptions;
-        }
-
         // Dumping
         ImplementationType::variables.exportSurveyResults(synthesis,
                                                           newPath,
                                                           numSpace,
                                                           pResultWriter,
-                                                          legacyOptionsPtr);
+                                                          nullptr);
         ImplementationType::writeSimulationTable(numSpace);
     }
 }
