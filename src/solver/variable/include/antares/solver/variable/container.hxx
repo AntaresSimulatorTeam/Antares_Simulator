@@ -217,6 +217,17 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     // Ask to all variables
     NextT::buildSurveyReport(results, dataLevel, fileLevel, precision);
 
+    // Append dynamic aggregation columns for sets of areas
+    if (dataLevel == Category::DataLevel::setOfAreas
+        && pStudy->runtime.dynamicAggregationAllYears)
+    {
+        for (const auto& [setName, _]: pStudy->setsOfAreas)
+        {
+            pStudy->runtime.dynamicAggregationAllYears
+              ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+        }
+    }
+
     // If the column index is still equals to 0, that would mean we have nothing
     // to do (there is no data to write)
     if (results.data.columnIndex > 0)

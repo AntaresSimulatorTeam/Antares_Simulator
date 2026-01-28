@@ -92,11 +92,7 @@ public:
 
     void addExtraColumns(uint extra)
     {
-        if (extra > extraColumnsCount_)
-        {
-            extraColumnsCount_ = extra;
-            totalMaxColumnsCount_ += (extra - extraColumnsCount_);
-        }
+        totalMaxColumnsCount_ += extra;
     }
 
     std::string name_of(unsigned int index) const;

@@ -59,6 +59,10 @@ public:
 
     void writeAllResults(const std::filesystem::path& folder, IResultWriter& writer) const;
 
+    void appendToSurveyForSet(const std::string& setName,
+                              SurveyResults& survey,
+                              Category::Precision precision) const;
+
 private:
     Data::Study& study_;
     std::map<std::string, SetDataAllYears> setsData_;

@@ -187,8 +187,7 @@ public:
         // 9 - Write results for the current year
         if (yearByYear)
         {
-            pDurationCollector("yby_export")
-              << [this, &numSpace, &dynamicAggregationForTheYear]
+            pDurationCollector("yby_export") << [this, &numSpace, &dynamicAggregationForTheYear]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
@@ -291,6 +290,8 @@ void ISimulation<ImplementationType>::run()
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
 
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+
     // Compute max columns for dynamic aggregation
     unsigned int dynamicAggregationMaxColumns = Antares::Solver::Variable::
       computeDynamicAggregationMaxColumns(study);
@@ -298,12 +299,11 @@ void ISimulation<ImplementationType>::run()
     {
         logs.info() << "Adding " << dynamicAggregationMaxColumns
                     << " extra columns for dynamic aggregation";
-        study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns * 4);
+        study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns * 5);
     }
 
     // Computing max number of columns a report of any kind can contain, depending on number of
     // selected variables. The less variables are selected, smallest this count is.
-    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
     logs.info() << "Allocating resources...";
 

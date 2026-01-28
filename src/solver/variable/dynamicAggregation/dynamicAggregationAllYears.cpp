@@ -46,6 +46,17 @@ void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMer
     }
 }
 
+void DynamicAggregationAllYears::appendToSurveyForSet(const std::string& setName,
+                                                        SurveyResults& survey,
+                                                        Category::Precision precision) const
+{
+    auto it = setsData_.find(setName);
+    if (it != setsData_.end())
+    {
+        it->second.appendToSurvey(survey, precision);
+    }
+}
+
 void DynamicAggregationAllYears::writeAllResults(const std::filesystem::path& baseFolder,
                                                  IResultWriter& writer) const
 {

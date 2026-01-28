@@ -13,7 +13,8 @@
 namespace Antares::Solver::Variable
 {
 class DynamicAggregationSingleYear;
-}
+class DynamicAggregationAllYears;
+} // namespace Antares::Solver::Variable
 
 namespace Antares::Data
 {
@@ -122,6 +123,7 @@ public:
     bool quadraticOptimizationHasFailed;
 
     Antares::Solver::Variable::DynamicAggregationSingleYear* dynamicAggregationSingleYear = nullptr;
+    Antares::Solver::Variable::DynamicAggregationAllYears* dynamicAggregationAllYears = nullptr;
 
     std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 
