@@ -188,7 +188,7 @@ public:
         if (yearByYear)
         {
             pDurationCollector("yby_export")
-              << [this, &numSpace, &state, &dynamicAggregationForTheYear]
+              << [this, &numSpace, &dynamicAggregationForTheYear]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);

@@ -148,6 +148,7 @@ set(SRC_VARIABLE_ECONOMY
         dynamicAggregation/dynamicAggregationSingleYear.cpp
         dynamicAggregation/dynamicAggregationAllYears.cpp
         include/antares/solver/variable/dynamicAggregation/dynamicAggregation.h
+        include/antares/solver/variable/dynamicAggregation/setData.h
 )
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 

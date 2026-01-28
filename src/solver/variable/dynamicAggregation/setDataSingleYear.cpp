@@ -19,7 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
+#include "antares/solver/variable/dynamicAggregation/setData.h"
 
 namespace fs = std::filesystem;
 
@@ -97,22 +97,16 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
     }
 }
 
-struct VCardStub
-{
-    enum
-    {
-        decimal = 0,
-    };
-};
-
-void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>& results,
-                                     const std::set<std::string>& groupNames,
-                                     const Category::Precision& precision,
-                                     const std::string& suffix,
-                                     Data::Study& study,
-                                     SurveyResults& survey) const
+void SetDataSingleYear::processGroups(const std::vector<std::vector<long double>>& results,
+                                      const std::set<std::string>& groupNames,
+                                      const Category::Precision& precision,
+                                      const std::string& suffix,
+                                      Data::Study& study,
+                                      SurveyResults& survey,
+                                      bool doWeAverage) const
 {
     size_t index = 0;
+
     for (const auto& group: groupNames)
     {
         survey.variableCaption = group + suffix;
@@ -122,24 +116,27 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
         values.initializeFromStudy(study);
         values.reset();
         std::ranges::copy(results[index], values.hour);
-        // TODO handle LEVEL average
-        values.computeStatisticsForTheCurrentYear();
-        values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
+
+        // average is only used for STS level
+        doWeAverage ? values.computeAveragesForCurrentYearFromHourlyResults()
+                    : values.computeStatisticsForTheCurrentYear();
+
+        values.buildAnnualSurveyReport<VCardDynamic>(survey, Category::FileLevel::va, precision);
         ++index;
     }
 }
 
 void SetDataSingleYear::processWithPrecision(Category::Precision precision,
-                                             Data::Study& study,
-                                             SurveyResults& survey) const
+                                       Data::Study& study,
+                                       SurveyResults& survey) const
 {
     survey.data.columnIndex = 0;
 
-    processGroup(thermalResults_, thermalGroupNames_, precision, "", study, survey);
-    processGroup(renewableResults_, renewableGroupNames_, precision, "", study, survey);
-    processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
-    processGroup(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
-    processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey);
+    processGroups(thermalResults_, thermalGroupNames_, precision, "", study, survey);
+    processGroups(renewableResults_, renewableGroupNames_, precision, "", study, survey);
+    processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
+    processGroups(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
+    processGroups(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
 }
 
 void SetDataSingleYear::processAndSave(Category::Precision precision,
@@ -147,31 +144,21 @@ void SetDataSingleYear::processAndSave(Category::Precision precision,
                                        Data::Study& study,
                                        SurveyResults& survey) const
 {
-    processWithPrecision(precision, study, survey);
+    survey.data.columnIndex = 0;
+
+    processGroups(thermalResults_, thermalGroupNames_, precision, "", study, survey);
+    processGroups(renewableResults_, renewableGroupNames_, precision, "", study, survey);
+    processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
+    processGroups(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
+    processGroups(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
+
     survey.data.filename = filename;
     survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
 
-void SetDataSingleYear::writeResultsToFolder(const fs::path& folder,
-                                             Data::Study& study,
-                                             IResultWriter& writer) const
+size_t SetDataSingleYear::numberOfVariables() const
 {
-    unsigned int nbVariables = thermalGroupNames_.size() + renewableGroupNames_.size()
-                               + stsGroupNames_.size() * 3;
-
-    SurveyResults survey(study, nbVariables, folder.string(), writer);
-
-    bool nonApplicable[2] = {false, false};
-    bool printed[2] = {true, true};
-
-    survey.isCurrentVarNA = nonApplicable;
-    survey.isPrinted = printed;
-
-    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), study, survey);
-    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), study, survey);
-    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
-    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
-    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
+    return thermalGroupNames_.size() + renewableGroupNames_.size() + stsGroupNames_.size() * 3;
 }
 
 void SetDataSingleYear::appendToSurvey(SurveyResults& survey,

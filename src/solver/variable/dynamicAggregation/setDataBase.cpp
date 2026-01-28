@@ -21,6 +21,7 @@
 
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 #include "antares/study/study.h"
+#include "antares/solver/variable/dynamicAggregation/setData.h"
 
 namespace Antares::Solver::Variable
 {
@@ -28,7 +29,7 @@ namespace Antares::Solver::Variable
 SetDataBase::SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set):
     set_(set)
 {
-    for (auto& area: set_)
+    for (auto* area: set_)
     {
         for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
@@ -91,6 +92,28 @@ unsigned int computeDynamicAggregationMaxColumns(const Data::Study& study)
     }
 
     return maxCols;
+}
+
+void SetDataBase::writeResultsToFolder(const std::filesystem::path& folder,
+                                       Data::Study& study,
+                                       IResultWriter& writer) const
+{
+    const size_t nbVariables = numberOfVariables();
+
+    SurveyResults survey(study, nbVariables, folder.string(), writer);
+
+    bool nonApplicable[2] = {false, false};
+    bool printed[2] = {true, true};
+
+    survey.isCurrentVarNA = nonApplicable;
+    survey.isPrinted = printed;
+
+    // Save for all precisions
+    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), study, survey);
+    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), study, survey);
+    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
+    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
+    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
 }
 
 } // namespace Antares::Solver::Variable

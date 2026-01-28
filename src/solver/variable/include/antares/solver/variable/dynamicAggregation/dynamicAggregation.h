@@ -22,133 +22,13 @@
 #pragma once
 
 #include <filesystem>
-#include <vector>
+#include <map>
+#include <string>
 
-#include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/variable/storage/average.h"
-#include "antares/solver/variable/storage/minmax-data.h"
-#include "antares/solver/variable/storage/stdDeviation.h"
+#include "antares/solver/variable/dynamicAggregation/setData.h"
 
 namespace Antares::Solver::Variable
 {
-
-class SetDataBase
-{
-public:
-    explicit SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
-
-protected:
-    std::set<std::string> thermalGroupNames_;
-    std::map<std::string, unsigned int> thermalGroupToNumbers_;
-
-    std::set<std::string> renewableGroupNames_;
-    std::map<std::string, unsigned int> renewableGroupToNumbers_;
-
-    std::set<std::string> stsGroupNames_;
-    std::map<std::string, unsigned int> stsGroupToNumbers_;
-    const std::set<Data::Area*, Data::CompareAreaName>& set_;
-};
-
-class SetDataSingleYear: public SetDataBase
-{
-public:
-    friend class SetDataAllYears;
-
-    explicit SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set);
-
-    void addResultsToSet(const PROBLEME_HEBDO& pb);
-
-    void writeResultsToFolder(const std::filesystem::path& folder,
-                              Data::Study& study,
-                              IResultWriter& writer) const;
-
-private:
-    void processGroup(const std::vector<std::vector<long double>>& results,
-                      const std::set<std::string>& groupNames,
-                      const Category::Precision& precision,
-                      const std::string& suffix,
-                      Data::Study& study,
-                      SurveyResults& survey) const;
-
-    void processWithPrecision(Category::Precision precision,
-                              Data::Study& study,
-                              SurveyResults& survey) const;
-
-    void appendToSurvey(SurveyResults& survey,
-                        Category::Precision precision,
-                        Data::Study& study) const;
-
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        Data::Study& study,
-                        SurveyResults& survey) const;
-
-    std::vector<std::vector<HighPrecision>> thermalResults_;
-    std::vector<std::vector<HighPrecision>> renewableResults_;
-    std::vector<std::vector<HighPrecision>> stsInjectionResults_;
-    std::vector<std::vector<HighPrecision>> stsWithdrawalResults_;
-    std::vector<std::vector<HighPrecision>> stsLevelResults_;
-};
-
-class SetDataAllYears: public SetDataBase
-{
-public:
-    explicit SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set,
-                             Data::Study& study);
-
-    void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
-
-    void writeResultsToFolder(const std::filesystem::path& folder,
-                              Data::Study& study,
-                              IResultWriter& writer) const;
-
-private:
-    void processGroup(const std::vector<R::AllYears::Average<>>& avgVec,
-                      const std::vector<R::AllYears::StdDeviation<>>& stdVec,
-                      const std::vector<R::AllYears::MinMaxData>& minVec,
-                      const std::vector<R::AllYears::MinMaxData>& maxVec,
-                      const std::set<std::string>& groupNames,
-                      const Category::Precision& precision,
-                      const std::string& suffix,
-                      Data::Study& study,
-                      SurveyResults& survey) const;
-
-    void processWithPrecision(Category::Precision precision,
-                              Data::Study& study,
-                              SurveyResults& survey) const;
-
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        Data::Study& study,
-                        SurveyResults& survey) const;
-
-    std::vector<R::AllYears::MinMaxData> minThermal;
-    std::vector<R::AllYears::MinMaxData> maxThermal;
-
-    std::vector<R::AllYears::MinMaxData> minRenewable;
-    std::vector<R::AllYears::MinMaxData> maxRenewable;
-
-    std::vector<R::AllYears::MinMaxData> minStsInjection;
-    std::vector<R::AllYears::MinMaxData> maxStsInjection;
-
-    std::vector<R::AllYears::MinMaxData> minStsWithdrawal;
-    std::vector<R::AllYears::MinMaxData> maxStsWithdrawal;
-
-    std::vector<R::AllYears::MinMaxData> minStsLevel;
-    std::vector<R::AllYears::MinMaxData> maxStsLevel;
-
-    std::vector<R::AllYears::Average<>> averageThermal;
-    std::vector<R::AllYears::Average<>> averageRenewable;
-    std::vector<R::AllYears::Average<>> averageStsInjection;
-    std::vector<R::AllYears::Average<>> averageStsWithdrawal;
-    std::vector<R::AllYears::Average<>> averageStsLevel;
-
-    std::vector<R::AllYears::StdDeviation<>> stdDevThermal;
-    std::vector<R::AllYears::StdDeviation<>> stdDevRenewable;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsInjection;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsWithdrawal;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsLevel;
-};
 
 class DynamicAggregationSingleYear
 {
