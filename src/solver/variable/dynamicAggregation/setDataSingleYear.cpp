@@ -115,9 +115,6 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
     size_t index = 0;
     for (const auto& group: groupNames)
     {
-        survey.captions[0][survey.data.columnIndex] = group + suffix;
-        survey.captions[1][survey.data.columnIndex] = "MWh";
-        survey.captions[2][survey.data.columnIndex] = "";
         survey.variableCaption = group + suffix;
         survey.variableUnit = "MWh";
 

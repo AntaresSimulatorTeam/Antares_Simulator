@@ -147,16 +147,14 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
 
 struct VCardStub
 {
-    enum
-    {
-        decimal = 0
-    };
+    static constexpr uint8_t decimal = 0;
+    static constexpr uint8_t categoryFileLevel = Category::FileLevel::va;
 };
 
-void SetDataAllYears::processGroup(const std::vector<R::AllYears::AverageData>& avgVec,
-                                   const std::vector<R::AllYears::StdDeviation<>>& stdVec,
-                                   const std::vector<R::AllYears::MinMaxData>& minVec,
-                                   const std::vector<R::AllYears::MinMaxData>& maxVec,
+void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& average,
+                                   const std::vector<R::AllYears::StdDeviation<>>& stdDev,
+                                   const std::vector<R::AllYears::MinMaxData>& min,
+                                   const std::vector<R::AllYears::MinMaxData>& max,
                                    const std::set<std::string>& groupNames,
                                    const Category::Precision& precision,
                                    const std::string& suffix,
@@ -165,11 +163,8 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::AverageData>& 
 {
     size_t index = 0;
 
-    auto setSurvey = [&](const std::string& group, const std::string& type)
+    auto setSurvey = [&](const std::string& group)
     {
-        survey.captions[0][survey.data.columnIndex] = group + suffix;
-        survey.captions[1][survey.data.columnIndex] = "MWh";
-        survey.captions[2][survey.data.columnIndex] = type;
         survey.variableCaption = group + suffix;
         survey.variableUnit = "MWh";
     };
@@ -184,30 +179,36 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::AverageData>& 
     {
         IntermediateValues values;
         values.initializeFromStudy(study);
-
-        setSurvey(group, "exp");
         values.reset();
-        std::ranges::copy(avgVec[index].hourly, values.hour);
-        buildReport(values);
 
-        setSurvey(group, "std");
-        values.reset();
-        std::ranges::copy(stdVec[index].stdDeviationHourly, values.hour);
-        buildReport(values);
+        setSurvey(group);
+        average[index].buildSurveyReport<IntermediateValues, VCardStub>(
+          survey, // not used, placeholder for templates
+          values,
+          Category::DataLevel::setOfAreas,
+          Category::FileLevel::va,
+          precision);
 
-        setSurvey(group, "min");
+        setSurvey(group);
+        /*stdDev[index].buildSurveyReport<VCardStub>(survey,*/
+        /*                                 average[index],*/
+        /*                                 Category::DataLevel::setOfAreas,*/
+        /*                                 Category::FileLevel::va,*/
+        /*                                 precision);*/
+
+        setSurvey(group);
         values.reset();
         for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
         {
-            values.hour[h] = minVec[index].hourly[h].value;
+            values.hour[h] = min[index].hourly[h].value;
         }
         buildReport(values);
 
-        setSurvey(group, "max");
+        setSurvey(group);
         values.reset();
         for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
         {
-            values.hour[h] = maxVec[index].hourly[h].value;
+            values.hour[h] = max[index].hourly[h].value;
         }
         buildReport(values);
 

@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/variable/storage/averagedata.h"
+#include "antares/solver/variable/storage/average.h"
 #include "antares/solver/variable/storage/minmax-data.h"
 #include "antares/solver/variable/storage/stdDeviation.h"
 
@@ -99,7 +99,7 @@ public:
                               IResultWriter& writer) const;
 
 private:
-    void processGroup(const std::vector<R::AllYears::AverageData>& avgVec,
+    void processGroup(const std::vector<R::AllYears::Average<>>& avgVec,
                       const std::vector<R::AllYears::StdDeviation<>>& stdVec,
                       const std::vector<R::AllYears::MinMaxData>& minVec,
                       const std::vector<R::AllYears::MinMaxData>& maxVec,
@@ -133,11 +133,11 @@ private:
     std::vector<R::AllYears::MinMaxData> minStsLevel;
     std::vector<R::AllYears::MinMaxData> maxStsLevel;
 
-    std::vector<R::AllYears::AverageData> averageThermal;
-    std::vector<R::AllYears::AverageData> averageRenewable;
-    std::vector<R::AllYears::AverageData> averageStsInjection;
-    std::vector<R::AllYears::AverageData> averageStsWithdrawal;
-    std::vector<R::AllYears::AverageData> averageStsLevel;
+    std::vector<R::AllYears::Average<>> averageThermal;
+    std::vector<R::AllYears::Average<>> averageRenewable;
+    std::vector<R::AllYears::Average<>> averageStsInjection;
+    std::vector<R::AllYears::Average<>> averageStsWithdrawal;
+    std::vector<R::AllYears::Average<>> averageStsLevel;
 
     std::vector<R::AllYears::StdDeviation<>> stdDevThermal;
     std::vector<R::AllYears::StdDeviation<>> stdDevRenewable;
