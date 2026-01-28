@@ -51,14 +51,14 @@ def pytest_collection_modifyitems(config, items):
     """
     Hook to skip specific failing studies.
     """
-    skipped_studies = ["025_mps-day", "025_mps-week", "AreaHydroLevel"]
-
-    for item in items:
-        for study_name in skipped_studies:
-            if study_name in item.name:
-                item.add_marker(
-                    pytest.mark.skip(
-                        reason=f"Study '{study_name}' temporarily disabled in feature/print-mps-in-apiV2-mode"
+    skipped_studies = ["AreaHydroLevel", "FinalStockEquivalent-cnt", "reservoir-Min-MaxHydroPower", ]
+    if config.getoption("--api-exe-path"):
+        for item in items:
+            for study_name in skipped_studies:
+                if study_name in item.name:
+                    item.add_marker(
+                        pytest.mark.skip(
+                            reason=f"Study 'api can not run {study_name}' because it has not independent weeks"
+                        )
                     )
-                )
-                break
+                    break
