@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <string>
 
@@ -131,7 +113,7 @@ system:
 struct ComponentToAreaConnectionFillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
-    std::unique_ptr<Modeler::Data> modelerData;
+    std::unique_ptr<Solver::ModelerData> modelerData;
     std::vector<Library> libraries;
     LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
     ScenarioGroupRepository scenarioGroupRepository;
@@ -160,7 +142,7 @@ struct ComponentToAreaConnectionFillerFixture
         data = std::move(d);
     }
 
-    std::unique_ptr<Modeler::Data> buildModelerSystem()
+    std::unique_ptr<Solver::ModelerData> buildModelerSystem()
     {
         IO::Inputs::YmlModel::Parser parserModel;
         libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
@@ -168,8 +150,9 @@ struct ComponentToAreaConnectionFillerFixture
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml);
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
+        modelerData = std::make_unique<Solver::ModelerData>();
 
-        auto data = std::make_unique<Modeler::Data>();
+        auto data = std::make_unique<Solver::ModelerData>();
         data->system = std::make_unique<System>(std::move(system));
         return data;
     }
@@ -222,7 +205,7 @@ struct ComponentToAreaConnectionFillerFixture
         return constraintNames;
     }
 
-    void addConstraintsToLP(unsigned nb_of_constraints, const double rhs)
+    void addAutomaticConstraintsToLP(unsigned nb_of_constraints, const double rhs)
     {
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes = nb_of_constraints;
         auto constraintNames = makeAutomaticConstraintNames(nb_of_constraints);
@@ -275,6 +258,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer);
 
     const auto* balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
+
     const auto* nc_var_t0 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t0");
     const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
     const auto* var2_t0 = linearProblem.lookupVariable("component_with_vars.var_2_t0");
@@ -301,17 +285,20 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     addAllComponentsVariablesToLP(10, 11, optimEntityContainer);
-    // Legacy indexing of TS always starts at 1
-    addConstraintsToLP(3 /* nb of constraints */, -100);
+    
+    addAutomaticConstraintsToLP(3 /* nb of constraints */, -100);
+
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[1].NumeroDeContrainteDesBilansPays.push_back(2);
+
     addConstraintsFromConnectionsToLP({0, 1, 10, 11, 0}, optimEntityContainer);
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
+
     const auto* nc_var_t10 = linearProblem.lookupVariable("component_with_vars.no_connect_var_t10");
     const auto* var1_t10 = linearProblem.lookupVariable("component_with_vars.var_1_t10");
     const auto* var2_t10 = linearProblem.lookupVariable("component_with_vars.var_2_t10");

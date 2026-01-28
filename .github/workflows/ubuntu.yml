@@ -32,6 +32,7 @@ env:
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   triplet: x64-linux
   WX_CONFIG: /usr/bin/wx-config
+  PYTHON_VERSION: "3.12"
 
 jobs:
 
@@ -105,7 +106,7 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: ${{env.PYTHON_VERSION}}
 
     - name: Install dependencies
       run: |

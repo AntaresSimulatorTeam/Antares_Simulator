@@ -1,28 +1,16 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/fwd.h"
 
 #include "ortools_utils.h"
+
+namespace Antares::Optimisation::LinearProblemApi
+{
+class ILinearProblem;
+}
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -49,15 +37,16 @@ protected:
     uint current_optim_number_ = 0;
 };
 
-class fullOrToolsMPSwriter: public I_MPS_writer
+class MPSwriter: public I_MPS_writer
 {
 public:
-    virtual ~fullOrToolsMPSwriter() = default;
-    fullOrToolsMPSwriter(MPSolver* solver, uint currentOptimNumber);
+    virtual ~MPSwriter() = default;
+    MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+              uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
-    MPSolver* solver_ = nullptr;
+    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
 };
 
 class nullMPSwriter: public I_MPS_writer
@@ -79,7 +68,7 @@ public:
     mpsWriterFactory(Data::mpsExportStatus exportMPS,
                      bool exportMPSOnError,
                      int current_optim_number,
-                     MPSolver* solver);
+                     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem);
 
     std::unique_ptr<I_MPS_writer> create();
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
@@ -92,6 +81,6 @@ private:
     // Member data...
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    MPSolver* solver_ = nullptr;
+    const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
     uint current_optim_number_;
 };

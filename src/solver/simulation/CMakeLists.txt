@@ -34,6 +34,7 @@ set(SRC_SIMULATION
         simulation-run.cpp
         include/antares/solver/simulation/common-eco-adq.h
         common-eco-adq.cpp
+	include/antares/solver/simulation/common-hydro-remix.h
         common-hydro-remix.cpp
         common-hydro-levels.cpp
         include/antares/solver/simulation/adequacy.h

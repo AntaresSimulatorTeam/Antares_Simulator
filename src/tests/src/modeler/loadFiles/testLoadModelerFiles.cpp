@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <fstream>
@@ -55,9 +38,9 @@ struct FixtureLoadFile
 BOOST_AUTO_TEST_CASE(files_not_existing)
 {
     fs::path studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
 
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
+    std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
                       std::runtime_error);
 }
@@ -74,14 +57,14 @@ BOOST_FIXTURE_TEST_CASE(read_one_lib_treile, FixtureLoadFile)
     )";
     libStream.close();
 
-    auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_CHECK_EQUAL(libraries[0].Id(), "lib_id");
 }
 
 BOOST_FIXTURE_TEST_CASE(dont_read_bad_extension, FixtureLoadFile)
 {
     createFile(libraryDirPath.string(), "abc.txt");
-    auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_CHECK(libraries.empty());
 }
 
@@ -145,7 +128,7 @@ BOOST_FIXTURE_TEST_CASE(read_several_lib_file, FixtureLoadFile)
     )";
     libStream3.close();
 
-    auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
 
     auto checkLibIdInVector = [&libraries](const std::string& libId)
     {
@@ -187,7 +170,7 @@ BOOST_FIXTURE_TEST_CASE(read_system_file, FixtureLoadFile)
     )";
     systemStream.close();
 
-    auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_CHECK_NO_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries));
 }
 
@@ -212,7 +195,7 @@ BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
     )";
     systemStream.close();
 
-    auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
                       std::runtime_error);
 }
@@ -246,7 +229,7 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
     )";
     systemStream.close();
 
-    auto libraries = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     auto system = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries);
     const auto compoK = std::ranges::find_if(system.Components(),
                                              [](const auto& comp) { return comp.Id() == "K"; });

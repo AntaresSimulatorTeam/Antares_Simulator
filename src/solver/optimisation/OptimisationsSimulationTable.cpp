@@ -1,6 +1,7 @@
 #include "include/antares/solver/optimisation/OptimisationsSimulationTable.h"
 
 #include "antares/writer/i_writer.h"
+using namespace Antares::IO::Outputs;
 
 void OptimisationsSimulationTable::clear()
 {

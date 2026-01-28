@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <mutex>
 
@@ -49,6 +31,7 @@ using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::IO;
+using namespace Antares::IO::Outputs;
 
 using Solver::IResultWriter;
 using Solver::Optimization::SingleOptimOptions;
@@ -74,7 +57,7 @@ static void logProblemSize(const MPSolver* mpSolver)
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
-  Modeler::Data* modelerData,
+  Solver::ModelerData* modelerData,
   OptimEntityContainer& optimEntityContainer)
 {
     const auto& components = modelerData->system->Components();
@@ -85,7 +68,7 @@ static void fillModelerComponents(
           std::make_unique<ComponentFiller>(component,
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
-                                            Modeler::Config::Location::SUBPROBLEMS,
+                                            Solver::Config::Location::SUBPROBLEMS,
                                             nullptr));
     }
 }
@@ -203,14 +186,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,
-                                        solver.get());
+                                        ortoolsProblem);
 
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(writer, filename);
 
     measure.tick();
     timeMeasure.updateTime = measure.duration_ms();
-    optimizationStatistics.addSolveTime(timeMeasure.updateTime);
+    optimizationStatistics.addUpdateTime(timeMeasure.updateTime);
     measure.reset();
 
     ORTOOLS_Simplexe(ProblemeAResoudre.get(), solver.get(), options);
@@ -361,8 +344,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                             problemeHebdo->exportMPSOnError,
                                             optimizationNumber,
-                                            MPproblem.get());
-
+                                            infeasibleProblem);
         // Since MpProblem must have named vars and constraints in case of infeasibility, we must
         // use the updated MPSolver
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();

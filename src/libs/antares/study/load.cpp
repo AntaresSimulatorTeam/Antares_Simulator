@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <fmt/format.h>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
@@ -235,7 +218,7 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
+        modelerInput_ = std::make_unique<Solver::ModelerData>(Solver::LoadFiles::loadAll(folder));
         checkModelerDataCompatibility();
     }
     catch (const Error::LoadingError& e)
@@ -257,10 +240,18 @@ void Study::loadModelerComponents()
 /**
  * Checks that the modeler data is compatible with the solver for hybrid studies.
  * Currently, unsupported cases in the solver are :
- * - variables that are not scenario dependent
+ * - variables that are not scenario dependent (allowed only in benders-decomposition mode)
  */
 void Study::checkModelerDataCompatibility() const
 {
+    // Scenario-independent variables are allowed in benders-decomposition mode for investment
+    // studies
+    if (modelerInput_->resolutionMode == Solver::ResolutionMode::BENDERS_DECOMPOSITION)
+    {
+        return;
+    }
+
+    // For sequential-subproblems mode, scenario-independent variables are not supported
     for (auto& component: modelerInput_->system->Components())
     {
         for (auto& variable: component.getModel()->Variables())
@@ -268,8 +259,10 @@ void Study::checkModelerDataCompatibility() const
             if (!variable.IsScenarioDependent())
             {
                 throw Error::LoadingError(fmt::format(
-                  "Scenario-independent variables are not supported in hybrid studies. "
-                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\").",
+                  "Scenario-independent variables are not supported in hybrid studies with "
+                  "sequential-subproblems resolution mode. "
+                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\"). "
+                  "Use resolution-mode: benders-decomposition for investment studies.",
                   variable.Id(),
                   component.getModel()->Id(),
                   component.Id()));

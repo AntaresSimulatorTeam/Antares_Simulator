@@ -4,6 +4,8 @@
 
 #include "antares/io/outputs/columns.h"
 
+namespace Antares::IO::Outputs
+{
 class ColumnBasedStorage
 {
 public:
@@ -46,7 +48,7 @@ public:
         }
         else if constexpr (is_optional_v<T>)
         {
-            using Inner = typename T::value_type;
+            using Inner = T::value_type;
             getColumn<OptionalColumn<Inner>>(column_name).add(value);
         }
         else
@@ -55,17 +57,17 @@ public:
         }
     }
 
-    size_t rowCount() const
+    [[nodiscard]] size_t rowCount() const
     {
         return columns_.empty() ? 0 : (*columns_.begin())->size();
     }
 
-    const std::unordered_map<std::string, size_t>& columnsNameToIndex() const
+    [[nodiscard]] const std::unordered_map<std::string, size_t>& columnsNameToIndex() const
     {
         return name_to_index_;
     }
 
-    const IColumn& getColumn(const std::string& name) const
+    [[nodiscard]] const IColumn& getColumn(const std::string& name) const
     {
         const auto it = name_to_index_.find(name);
         if (it == name_to_index_.end())
@@ -136,3 +138,4 @@ private:
     std::vector<std::string> columnNames_;
     std::unordered_map<std::string, size_t> name_to_index_;
 };
+} // namespace Antares::IO::Outputs

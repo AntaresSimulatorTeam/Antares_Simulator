@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -70,41 +52,41 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_REQUIRE_EQUAL(config.size(), 2);
+    BOOST_REQUIRE_EQUAL(config.models.size(), 2);
 
     // First model
-    BOOST_CHECK_EQUAL(config[0].id, "lib_thermal_invest.thermal_candidate");
-    BOOST_REQUIRE_EQUAL(config[0].variables.size(), 2);
-    BOOST_CHECK_EQUAL(config[0].variables[0].id, "nb_units");
-    BOOST_CHECK(config[0].variables[0].location == "master");
-    BOOST_CHECK_EQUAL(config[0].variables[1].id, "pmax_cluster");
-    BOOST_CHECK(config[0].variables[1].location == "master-and-subproblems");
+    BOOST_CHECK_EQUAL(config.models[0].id, "lib_thermal_invest.thermal_candidate");
+    BOOST_REQUIRE_EQUAL(config.models[0].variables.size(), 2);
+    BOOST_CHECK_EQUAL(config.models[0].variables[0].id, "nb_units");
+    BOOST_CHECK(config.models[0].variables[0].location == "master");
+    BOOST_CHECK_EQUAL(config.models[0].variables[1].id, "pmax_cluster");
+    BOOST_CHECK(config.models[0].variables[1].location == "master-and-subproblems");
 
-    BOOST_REQUIRE_EQUAL(config[0].objectives.size(), 2);
-    BOOST_CHECK_EQUAL(config[0].objectives[0].id, "invest_objective");
-    BOOST_CHECK(config[0].objectives[0].location == "master");
-    BOOST_CHECK_EQUAL(config[0].objectives[1].id, "operational_objective");
-    BOOST_CHECK(config[0].objectives[1].location == "subproblems");
+    BOOST_REQUIRE_EQUAL(config.models[0].objectives.size(), 2);
+    BOOST_CHECK_EQUAL(config.models[0].objectives[0].id, "invest_objective");
+    BOOST_CHECK(config.models[0].objectives[0].location == "master");
+    BOOST_CHECK_EQUAL(config.models[0].objectives[1].id, "operational_objective");
+    BOOST_CHECK(config.models[0].objectives[1].location == "subproblems");
 
-    BOOST_REQUIRE_EQUAL(config[0].constraints.size(), 2);
-    BOOST_CHECK_EQUAL(config[0].constraints[0].id, "constr1");
-    BOOST_CHECK(config[0].constraints[0].location == "master-and-subproblems");
-    BOOST_CHECK_EQUAL(config[0].constraints[1].id, "constr2");
-    BOOST_CHECK(config[0].constraints[1].location == "master");
+    BOOST_REQUIRE_EQUAL(config.models[0].constraints.size(), 2);
+    BOOST_CHECK_EQUAL(config.models[0].constraints[0].id, "constr1");
+    BOOST_CHECK(config.models[0].constraints[0].location == "master-and-subproblems");
+    BOOST_CHECK_EQUAL(config.models[0].constraints[1].id, "constr2");
+    BOOST_CHECK(config.models[0].constraints[1].location == "master");
 
     // Second model
-    BOOST_CHECK_EQUAL(config[1].id, "lib_thermal_invest.my_other_model");
-    BOOST_REQUIRE_EQUAL(config[1].variables.size(), 1);
-    BOOST_CHECK_EQUAL(config[1].variables[0].id, "var1");
-    BOOST_CHECK(config[1].variables[0].location == "subproblems");
+    BOOST_CHECK_EQUAL(config.models[1].id, "lib_thermal_invest.my_other_model");
+    BOOST_REQUIRE_EQUAL(config.models[1].variables.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[1].variables[0].id, "var1");
+    BOOST_CHECK(config.models[1].variables[0].location == "subproblems");
 
-    BOOST_REQUIRE_EQUAL(config[1].objectives.size(), 1);
-    BOOST_CHECK_EQUAL(config[1].objectives[0].id, "obj1");
-    BOOST_CHECK(config[1].objectives[0].location == "master");
+    BOOST_REQUIRE_EQUAL(config.models[1].objectives.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[1].objectives[0].id, "obj1");
+    BOOST_CHECK(config.models[1].objectives[0].location == "master");
 
-    BOOST_REQUIRE_EQUAL(config[1].constraints.size(), 1);
-    BOOST_CHECK_EQUAL(config[1].constraints[0].id, "constr1");
-    BOOST_CHECK(config[1].constraints[0].location == "master");
+    BOOST_REQUIRE_EQUAL(config.models[1].constraints.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[1].constraints[0].id, "constr1");
+    BOOST_CHECK(config.models[1].constraints[0].location == "master");
 }
 
 BOOST_AUTO_TEST_CASE(parse_single_model)
@@ -127,14 +109,14 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_REQUIRE_EQUAL(config.size(), 1);
-    BOOST_CHECK_EQUAL(config[0].id, "single_model");
-    BOOST_REQUIRE_EQUAL(config[0].variables.size(), 1);
-    BOOST_CHECK_EQUAL(config[0].variables[0].id, "single_var");
-    BOOST_REQUIRE_EQUAL(config[0].objectives.size(), 1);
-    BOOST_CHECK_EQUAL(config[0].objectives[0].id, "single_obj");
-    BOOST_REQUIRE_EQUAL(config[0].constraints.size(), 1);
-    BOOST_CHECK_EQUAL(config[0].constraints[0].id, "single_constr");
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].id, "single_model");
+    BOOST_REQUIRE_EQUAL(config.models[0].variables.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].variables[0].id, "single_var");
+    BOOST_REQUIRE_EQUAL(config.models[0].objectives.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].objectives[0].id, "single_obj");
+    BOOST_REQUIRE_EQUAL(config.models[0].constraints.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].constraints[0].id, "single_constr");
 }
 
 BOOST_AUTO_TEST_CASE(parse_empty_models_list)
@@ -146,7 +128,7 @@ models: []
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_CHECK_EQUAL(config.size(), 0);
+    BOOST_CHECK_EQUAL(config.models.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(parse_model_with_empty_variables)
@@ -164,9 +146,9 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_REQUIRE_EQUAL(config.size(), 1);
-    BOOST_CHECK_EQUAL(config[0].variables.size(), 0);
-    BOOST_REQUIRE_EQUAL(config[0].objectives.size(), 1);
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].variables.size(), 0);
+    BOOST_REQUIRE_EQUAL(config.models[0].objectives.size(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(parse_model_with_empty_objectives)
@@ -184,9 +166,9 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_REQUIRE_EQUAL(config.size(), 1);
-    BOOST_REQUIRE_EQUAL(config[0].variables.size(), 1);
-    BOOST_CHECK_EQUAL(config[0].objectives.size(), 0);
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(config.models[0].variables.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].objectives.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(parse_model_with_empty_constraints)
@@ -203,9 +185,9 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_REQUIRE_EQUAL(config.size(), 1);
-    BOOST_REQUIRE_EQUAL(config[0].variables.size(), 1);
-    BOOST_CHECK_EQUAL(config[0].constraints.size(), 0);
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(config.models[0].variables.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].constraints.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(parse_all_location_types)
@@ -240,21 +222,21 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_REQUIRE_EQUAL(config.size(), 1);
-    BOOST_REQUIRE_EQUAL(config[0].variables.size(), 3);
-    BOOST_CHECK(config[0].variables[0].location == "master");
-    BOOST_CHECK(config[0].variables[1].location == "subproblems");
-    BOOST_CHECK(config[0].variables[2].location == "master-and-subproblems");
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(config.models[0].variables.size(), 3);
+    BOOST_CHECK(config.models[0].variables[0].location == "master");
+    BOOST_CHECK(config.models[0].variables[1].location == "subproblems");
+    BOOST_CHECK(config.models[0].variables[2].location == "master-and-subproblems");
 
-    BOOST_REQUIRE_EQUAL(config[0].objectives.size(), 3);
-    BOOST_CHECK(config[0].objectives[0].location == "master");
-    BOOST_CHECK(config[0].objectives[1].location == "subproblems");
-    BOOST_CHECK(config[0].objectives[2].location == "master-and-subproblems");
+    BOOST_REQUIRE_EQUAL(config.models[0].objectives.size(), 3);
+    BOOST_CHECK(config.models[0].objectives[0].location == "master");
+    BOOST_CHECK(config.models[0].objectives[1].location == "subproblems");
+    BOOST_CHECK(config.models[0].objectives[2].location == "master-and-subproblems");
 
-    BOOST_REQUIRE_EQUAL(config[0].constraints.size(), 3);
-    BOOST_CHECK(config[0].constraints[0].location == "master");
-    BOOST_CHECK(config[0].constraints[1].location == "subproblems");
-    BOOST_CHECK(config[0].constraints[2].location == "master-and-subproblems");
+    BOOST_REQUIRE_EQUAL(config.models[0].constraints.size(), 3);
+    BOOST_CHECK(config.models[0].constraints[0].location == "master");
+    BOOST_CHECK(config.models[0].constraints[1].location == "subproblems");
+    BOOST_CHECK(config.models[0].constraints[2].location == "master-and-subproblems");
 }
 
 BOOST_AUTO_TEST_CASE(parse_missing_models_key_throws)
@@ -371,7 +353,7 @@ models:
 
 BOOST_AUTO_TEST_CASE(parse_empty_string_throws)
 {
-    std::string yaml_content = "";
+    std::string yaml_content;
 
     Parser parser;
     BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
@@ -410,18 +392,78 @@ models:
     Parser parser;
     OptimConfig config = parser.parse(yaml_content);
 
-    BOOST_REQUIRE_EQUAL(config.size(), 3);
+    BOOST_REQUIRE_EQUAL(config.models.size(), 3);
 
-    BOOST_CHECK_EQUAL(config[0].id, "model1");
-    BOOST_CHECK_EQUAL(config[0].variables.size(), 2);
-    BOOST_CHECK_EQUAL(config[0].objectives.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].id, "model1");
+    BOOST_CHECK_EQUAL(config.models[0].variables.size(), 2);
+    BOOST_CHECK_EQUAL(config.models[0].objectives.size(), 1);
 
-    BOOST_CHECK_EQUAL(config[1].id, "model2");
-    BOOST_CHECK_EQUAL(config[1].variables.size(), 1);
-    BOOST_CHECK_EQUAL(config[1].objectives.size(), 2);
-    BOOST_CHECK_EQUAL(config[2].id, "model3");
-    BOOST_CHECK_EQUAL(config[2].variables.size(), 0);
-    BOOST_CHECK_EQUAL(config[2].objectives.size(), 0);
+    BOOST_CHECK_EQUAL(config.models[1].id, "model2");
+    BOOST_CHECK_EQUAL(config.models[1].variables.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[1].objectives.size(), 2);
+    BOOST_CHECK_EQUAL(config.models[2].id, "model3");
+    BOOST_CHECK_EQUAL(config.models[2].variables.size(), 0);
+    BOOST_CHECK_EQUAL(config.models[2].objectives.size(), 0);
+}
+
+// Tests for resolution-mode field
+BOOST_AUTO_TEST_CASE(parse_resolution_mode_default)
+{
+    std::string yaml_content = R"(
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    // By default, resolution_mode should be SequentialSubproblems
+    BOOST_CHECK_EQUAL(config.resolution_mode, "sequential-subproblems");
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(parse_resolution_mode_sequential_subproblems)
+{
+    std::string yaml_content = R"(
+resolution-mode: sequential-subproblems
+models:
+  - id: model1
+    model-decomposition:
+      variables: []
+      objective-contributions: []
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_CHECK_EQUAL(config.resolution_mode, "sequential-subproblems");
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(parse_resolution_mode_benders_decomposition)
+{
+    std::string yaml_content = R"(
+resolution-mode: benders-decomposition
+models:
+  - id: model1
+    model-decomposition:
+      variables:
+        - id: var1
+          location: master
+      objective-contributions:
+        - id: obj1
+          location: master
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_CHECK_EQUAL(config.resolution_mode, "benders-decomposition");
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].id, "model1");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
