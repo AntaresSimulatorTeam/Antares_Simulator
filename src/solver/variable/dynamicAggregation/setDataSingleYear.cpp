@@ -126,17 +126,6 @@ void SetDataSingleYear::processGroups(const std::vector<std::vector<long double>
     }
 }
 
-void SetDataSingleYear::processWithPrecision(Category::Precision precision,
-                                       Data::Study& study,
-                                       SurveyResults& survey) const
-{
-    processGroups(thermalResults_, thermalGroupNames_, precision, "", study, survey);
-    processGroups(renewableResults_, renewableGroupNames_, precision, "", study, survey);
-    processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
-    processGroups(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
-    processGroups(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
-}
-
 void SetDataSingleYear::processAndSave(Category::Precision precision,
                                        const std::string& filename,
                                        Data::Study& study,
@@ -163,7 +152,11 @@ void SetDataSingleYear::appendToSurvey(SurveyResults& survey,
                                        Category::Precision precision,
                                        Data::Study& study) const
 {
-    processWithPrecision(precision, study, survey);
+    processGroups(thermalResults_, thermalGroupNames_, precision, "", study, survey);
+    processGroups(renewableResults_, renewableGroupNames_, precision, "", study, survey);
+    processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
+    processGroups(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
+    processGroups(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
 }
 
 } // namespace Antares::Solver::Variable

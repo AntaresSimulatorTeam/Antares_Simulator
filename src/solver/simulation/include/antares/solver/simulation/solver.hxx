@@ -298,7 +298,7 @@ void ISimulation<ImplementationType>::run()
     {
         logs.info() << "Adding " << dynamicAggregationMaxColumns
                     << " extra columns for dynamic aggregation";
-        study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns);
+        study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns * 4);
     }
 
     // Computing max number of columns a report of any kind can contain, depending on number of

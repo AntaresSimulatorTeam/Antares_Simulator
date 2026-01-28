@@ -84,10 +84,6 @@ public:
                         Category::Precision precision,
                         Data::Study& study) const;
 
-    void processWithPrecision(Category::Precision precision,
-                              Data::Study& study,
-                              SurveyResults& survey) const;
-
 protected:
     void processAndSave(Category::Precision precision,
                         const std::string& filename,
@@ -119,6 +115,9 @@ public:
     void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
 
     size_t numberOfVariables() const override;
+
+    void appendToSurvey(SurveyResults& survey,
+                        Category::Precision precision) const;
 
 protected:
     void processAndSave(Category::Precision precision,
