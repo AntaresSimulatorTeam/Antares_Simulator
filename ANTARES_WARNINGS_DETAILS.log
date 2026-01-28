@@ -1,0 +1,5 @@
+src/libs/antares/exception/include/antares/exception/LoadingError.hpp:39:5: style: Class 'Duplicates' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+src/libs/antares/paths/include/antares/paths/list.h:147:40: style: Local variable 'end' shadows outer function [shadowFunction]
+src/libs/antares/paths/list.cpp:107:5: warning: Member variable 'PathListIterator::offset' is not initialized in the constructor. [uninitMemberVar]
+src/libs/antares/paths/list.cpp:28:12: style: Local variable 'size' shadows outer function [shadowFunction]
+src/libs/antares/paths/list.cpp:49:44: style: Local variable 'end' shadows outer function [shadowFunction]
