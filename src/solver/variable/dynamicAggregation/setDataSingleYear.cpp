@@ -53,7 +53,7 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
         for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
         {
             const std::string& groupName = cluster->getGroup();
-            unsigned index = thermalGroupToNumbers_[groupName];
+            size_t index = thermalGroupToNumbers_[groupName];
 
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
             {
@@ -67,7 +67,7 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
         for (const auto& cluster: area->renewable.list.each_enabled())
         {
             const std::string& groupName = cluster->getGroup();
-            unsigned index = renewableGroupToNumbers_[groupName];
+            size_t index = renewableGroupToNumbers_[groupName];
 
             for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
             {
@@ -80,7 +80,7 @@ void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
         for (const auto& sts: area->shortTermStorage.storagesByIndex)
         {
             const std::string& groupName = sts.properties.groupName;
-            unsigned index = stsGroupToNumbers_[groupName];
+            size_t index = stsGroupToNumbers_[groupName];
 
             const auto& stsResults = pb.ResultatsHoraires[area->index]
                                        .ShortTermStorage[clusterIndex];
@@ -112,7 +112,7 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
                                      Data::Study& study,
                                      SurveyResults& survey) const
 {
-    unsigned int index = 0;
+    size_t index = 0;
     for (const auto& group: groupNames)
     {
         survey.captions[0][survey.data.columnIndex] = group + suffix;

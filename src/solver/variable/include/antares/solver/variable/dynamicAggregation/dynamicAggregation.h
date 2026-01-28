@@ -62,6 +62,7 @@ public:
                               Data::Study& study,
                               IResultWriter& writer) const;
 
+private:
     void processGroup(const std::vector<std::vector<long double>>& results,
                       const std::set<std::string>& groupNames,
                       const Category::Precision& precision,
@@ -78,7 +79,6 @@ public:
                         Data::Study& study,
                         SurveyResults& survey) const;
 
-private:
     std::vector<std::vector<HighPrecision>> thermalResults_;
     std::vector<std::vector<HighPrecision>> renewableResults_;
     std::vector<std::vector<HighPrecision>> stsInjectionResults_;
@@ -99,6 +99,16 @@ public:
                               IResultWriter& writer) const;
 
 private:
+    template<typename AvgVec, typename StdVec, typename MinVec, typename MaxVec>
+    void processGroup(const AvgVec& avgVec,
+                      const StdVec& stdVec,
+                      const MinVec& minVec,
+                      const MaxVec& maxVec,
+                      const std::set<std::string>& groupNames,
+                      const std::string& suffix,
+                      Data::Study& study,
+                      SurveyResults& survey) const;
+
     std::vector<R::AllYears::MinMaxData> minThermal;
     std::vector<R::AllYears::MinMaxData> maxThermal;
 

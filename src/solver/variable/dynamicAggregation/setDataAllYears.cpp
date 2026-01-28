@@ -153,14 +153,85 @@ struct VCardStub
     };
 };
 
+void SetDataAllYears::processGroup(const auto& avgVec,
+                                   const auto& stdVec,
+                                   const auto& minVec,
+                                   const auto& maxVec,
+                                   const std::set<std::string>& groupNames,
+                                   const std::string& suffix,
+                                   Data::Study& study,
+                                   SurveyResults& survey) const
+{
+    size_t index = 0;
+
+    auto setSurvey = [&](const std::string& group, const std::string& type)
+    {
+        survey.captions[0][survey.data.columnIndex] = group + suffix;
+        survey.captions[1][survey.data.columnIndex] = "MWh";
+        survey.captions[2][survey.data.columnIndex] = type;
+        survey.variableCaption = group + suffix;
+        survey.variableUnit = "MWh";
+    };
+
+    for (const auto& group: groupNames)
+    {
+        IntermediateValues values;
+        values.initializeFromStudy(study);
+
+        // exp
+        setSurvey(group, "exp");
+        values.reset();
+        std::ranges::copy(avgVec[index].hourly, values.hour);
+        values.computeStatisticsForTheCurrentYear();
+        values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                  Category::FileLevel::va,
+                                                  Category::Precision::hourly);
+
+        // std
+        setSurvey(group, "std");
+        values.reset();
+        std::ranges::copy(stdVec[index].stdDeviationHourly, values.hour);
+        values.computeStatisticsForTheCurrentYear();
+        values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                  Category::FileLevel::va,
+                                                  Category::Precision::hourly);
+
+        // min
+        setSurvey(group, "min");
+        values.reset();
+        for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
+        {
+            values.hour[h] = minVec[index].hourly[h].value;
+        }
+        values.computeStatisticsForTheCurrentYear();
+        values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                  Category::FileLevel::va,
+                                                  Category::Precision::hourly);
+
+        // max
+        setSurvey(group, "max");
+        values.reset();
+        for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
+        {
+            values.hour[h] = maxVec[index].hourly[h].value;
+        }
+        values.computeStatisticsForTheCurrentYear();
+        values.buildAnnualSurveyReport<VCardStub>(survey,
+                                                  Category::FileLevel::va,
+                                                  Category::Precision::hourly);
+
+        ++index;
+    }
+}
+
 void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
                                            Data::Study& study,
                                            IResultWriter& writer) const
 {
     // Calculate total number of variables (4 columns per group: exp, std, min, max)
-    unsigned int nbVariables = (thermalGroupNames_.size() + renewableGroupNames_.size()
-                                + stsGroupNames_.size() * 3)
-                               * 4;
+    const std::size_t nbVariables = (thermalGroupNames_.size() + renewableGroupNames_.size()
+                                     + stsGroupNames_.size() * 3)
+                                    * 4;
 
     SurveyResults survey(study, nbVariables, folder.string(), writer);
 
@@ -172,107 +243,38 @@ void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
 
     survey.data.columnIndex = 0;
 
-    // Helper lambda to process a group
-    auto processGroup = [&](const auto& avgVec,
-                            const auto& stdVec,
-                            const auto& minVec,
-                            const auto& maxVec,
-                            const std::set<std::string>& groupNames,
-                            const std::string& suffix)
-    {
-        unsigned int index = 0;
-        for (const auto& group: groupNames)
-        {
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "exp";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            IntermediateValues values;
-            values.initializeFromStudy(study);
-
-            values.reset();
-            std::ranges::copy(avgVec[index].hourly, values.hour);
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "std";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            values.reset();
-            std::ranges::copy(stdVec[index].stdDeviationHourly, values.hour);
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "min";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            values.reset();
-            for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-            {
-                values.hour[h] = minVec[index].hourly[h].value;
-            }
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "max";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            values.reset();
-            for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-            {
-                values.hour[h] = maxVec[index].hourly[h].value;
-            }
-
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-            ++index;
-        }
-    };
-
-    processGroup(averageThermal, stdDevThermal, minThermal, maxThermal, thermalGroupNames_, "");
+    processGroup(averageThermal,
+                 stdDevThermal,
+                 minThermal,
+                 maxThermal,
+                 thermalGroupNames_,
+                 "",
+                 study,
+                 survey);
     processGroup(averageRenewable,
                  stdDevRenewable,
                  minRenewable,
                  maxRenewable,
                  renewableGroupNames_,
-                 "");
+                 "",
+                 study,
+                 survey);
     processGroup(averageStsInjection,
                  stdDevStsInjection,
                  minStsInjection,
                  maxStsInjection,
                  stsGroupNames_,
-                 "_INJECTION");
+                 "_INJECTION",
+                 study,
+                 survey);
     processGroup(averageStsWithdrawal,
                  stdDevStsWithdrawal,
                  minStsWithdrawal,
                  maxStsWithdrawal,
                  stsGroupNames_,
-                 "_WITHDRAWAL");
-    processGroup(averageStsLevel,
-                 stdDevStsLevel,
-                 minStsLevel,
-                 maxStsLevel,
-                 stsGroupNames_,
-                 "_LEVEL");
+                 "_WITHDRAWAL",
+                 study,
+                 survey);
 
     // Save the results
     survey.data.filename = (folder / "hourly.txt").string();
