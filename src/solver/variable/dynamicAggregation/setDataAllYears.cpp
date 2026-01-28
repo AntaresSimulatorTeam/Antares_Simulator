@@ -47,27 +47,27 @@ SetDataAllYears::SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaNa
     };
 
     // Thermal
-    initAndReset(averageThermal, stdDevThermal, minThermal, maxThermal, thermalGroupNames_.size());
+    initAndReset(averageThermal_, stdDevThermal_, minThermal_, maxThermal_, thermalGroupNames_.size());
 
     // Renewable
-    initAndReset(averageRenewable,
-                 stdDevRenewable,
-                 minRenewable,
-                 maxRenewable,
+    initAndReset(averageRenewable_,
+                 stdDevRenewable_,
+                 minRenewable_,
+                 maxRenewable_,
                  renewableGroupNames_.size());
 
     // STS
-    initAndReset(averageStsInjection,
-                 stdDevStsInjection,
-                 minStsInjection,
-                 maxStsInjection,
+    initAndReset(averageStsInjection_,
+                 stdDevStsInjection_,
+                 minStsInjection_,
+                 maxStsInjection_,
                  stsGroupNames_.size());
-    initAndReset(averageStsWithdrawal,
-                 stdDevStsWithdrawal,
-                 minStsWithdrawal,
-                 maxStsWithdrawal,
+    initAndReset(averageStsWithdrawal_,
+                 stdDevStsWithdrawal_,
+                 minStsWithdrawal_,
+                 maxStsWithdrawal_,
                  stsGroupNames_.size());
-    initAndReset(averageStsLevel, stdDevStsLevel, minStsLevel, maxStsLevel, stsGroupNames_.size());
+    initAndReset(averageStsLevel_, stdDevStsLevel_, minStsLevel_, maxStsLevel_, stsGroupNames_.size());
 }
 
 void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year)
@@ -94,44 +94,44 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
         }
     };
 
-    // Thermal
+    // Thermal_
     processResults(toMerge.thermalResults_,
-                   minThermal,
-                   maxThermal,
-                   averageThermal,
-                   stdDevThermal,
+                   minThermal_,
+                   maxThermal_,
+                   averageThermal_,
+                   stdDevThermal_,
                    [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
-    // Renewable
+    // Renewable_
     processResults(toMerge.renewableResults_,
-                   minRenewable,
-                   maxRenewable,
-                   averageRenewable,
-                   stdDevRenewable,
+                   minRenewable_,
+                   maxRenewable_,
+                   averageRenewable_,
+                   stdDevRenewable_,
                    [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
-    // STS Injection
+    // STS Injection_
     processResults(toMerge.stsInjectionResults_,
-                   minStsInjection,
-                   maxStsInjection,
-                   averageStsInjection,
-                   stdDevStsInjection,
+                   minStsInjection_,
+                   maxStsInjection_,
+                   averageStsInjection_,
+                   stdDevStsInjection_,
                    [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
-    // STS Withdrawal
+    // STS Withdrawal_
     processResults(toMerge.stsWithdrawalResults_,
-                   minStsWithdrawal,
-                   maxStsWithdrawal,
-                   averageStsWithdrawal,
-                   stdDevStsWithdrawal,
+                   minStsWithdrawal_,
+                   maxStsWithdrawal_,
+                   averageStsWithdrawal_,
+                   stdDevStsWithdrawal_,
                    [](IntermediateValues& v) { v.computeStatisticsForTheCurrentYear(); });
 
-    // STS Level: we compute averages instead of sum
+    // STS Level_: we compute averages instead of sum
     processResults(toMerge.stsLevelResults_,
-                   minStsLevel,
-                   maxStsLevel,
-                   averageStsLevel,
-                   stdDevStsLevel,
+                   minStsLevel_,
+                   maxStsLevel_,
+                   averageStsLevel_,
+                   stdDevStsLevel_,
                    [](IntermediateValues& v)
                    { v.computeAveragesForCurrentYearFromHourlyResults(); });
 }
@@ -188,47 +188,48 @@ void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& av
 
 void SetDataAllYears::processAndSave(Category::Precision precision,
                                      const std::string& filename,
+                                     Data::Study&,
                                      SurveyResults& survey) const
 {
     survey.data.columnIndex = 0;
 
-    processGroup(averageThermal,
-                 stdDevThermal,
-                 minThermal,
-                 maxThermal,
+    processGroup(averageThermal_,
+                 stdDevThermal_,
+                 minThermal_,
+                 maxThermal_,
                  thermalGroupNames_,
                  precision,
                  "",
                  survey);
-    processGroup(averageRenewable,
-                 stdDevRenewable,
-                 minRenewable,
-                 maxRenewable,
+    processGroup(averageRenewable_,
+                 stdDevRenewable_,
+                 minRenewable_,
+                 maxRenewable_,
                  renewableGroupNames_,
                  precision,
                  "",
                  survey);
-    processGroup(averageStsInjection,
-                 stdDevStsInjection,
-                 minStsInjection,
-                 maxStsInjection,
+    processGroup(averageStsInjection_,
+                 stdDevStsInjection_,
+                 minStsInjection_,
+                 maxStsInjection_,
                  stsGroupNames_,
                  precision,
                  "_INJECTION",
                  survey);
-    processGroup(averageStsWithdrawal,
-                 stdDevStsWithdrawal,
-                 minStsWithdrawal,
-                 maxStsWithdrawal,
+    processGroup(averageStsWithdrawal_,
+                 stdDevStsWithdrawal_,
+                 minStsWithdrawal_,
+                 maxStsWithdrawal_,
                  stsGroupNames_,
                  precision,
                  "_WITHDRAWAL",
                  survey);
 
-    processGroup(averageStsWithdrawal,
-                 stdDevStsWithdrawal,
-                 minStsWithdrawal,
-                 maxStsWithdrawal,
+    processGroup(averageStsWithdrawal_,
+                 stdDevStsWithdrawal_,
+                 minStsWithdrawal_,
+                 maxStsWithdrawal_,
                  stsGroupNames_,
                  precision,
                  "_LEVEL",
@@ -238,29 +239,12 @@ void SetDataAllYears::processAndSave(Category::Precision precision,
     survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
 
-void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
-                                           Data::Study& study,
-                                           IResultWriter& writer) const
+
+size_t SetDataAllYears::numberOfVariables() const
 {
-    // Calculate total number of variables (4 columns per group: exp, std, min, max)
-    const std::size_t nbVariables = (thermalGroupNames_.size() + renewableGroupNames_.size()
-                                     + stsGroupNames_.size() * 3)
-                                    * 4;
-
-    SurveyResults survey(study, nbVariables, folder.string(), writer);
-
-    bool nonApplicable[2] = {false, false};
-    bool printed[2] = {true, true};
-
-    survey.isCurrentVarNA = nonApplicable;
-    survey.isPrinted = printed;
-
-    // Save for all precisions
-    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), survey);
-    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), survey);
-    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), survey);
-    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), survey);
-    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), survey);
+    // total number of variables (4 columns per group: exp, std, min, max)
+    return (thermalGroupNames_.size() + renewableGroupNames_.size() + stsGroupNames_.size() * 3)
+           * 4;
 }
 
 } // namespace Antares::Solver::Variable

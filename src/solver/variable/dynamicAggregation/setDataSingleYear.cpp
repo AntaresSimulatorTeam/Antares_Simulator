@@ -106,6 +106,7 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
                                      bool doWeAverage) const
 {
     size_t index = 0;
+
     for (const auto& group: groupNames)
     {
         survey.variableCaption = group + suffix;
@@ -142,26 +143,10 @@ void SetDataSingleYear::processAndSave(Category::Precision precision,
     survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
 
-void SetDataSingleYear::writeResultsToFolder(const fs::path& folder,
-                                             Data::Study& study,
-                                             IResultWriter& writer) const
+size_t SetDataSingleYear::numberOfVariables() const 
 {
-    unsigned int nbVariables = thermalGroupNames_.size() + renewableGroupNames_.size()
+    return thermalGroupNames_.size() + renewableGroupNames_.size()
                                + stsGroupNames_.size() * 3;
-
-    SurveyResults survey(study, nbVariables, folder.string(), writer);
-
-    bool nonApplicable[2] = {false, false};
-    bool printed[2] = {true, true};
-
-    survey.isCurrentVarNA = nonApplicable;
-    survey.isPrinted = printed;
-
-    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), study, survey);
-    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), study, survey);
-    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
-    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
-    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
 }
 
 } // namespace Antares::Solver::Variable

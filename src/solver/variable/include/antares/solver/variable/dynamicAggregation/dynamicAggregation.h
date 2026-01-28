@@ -37,7 +37,19 @@ class SetDataBase
 public:
     explicit SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
+    void writeResultsToFolder(const std::filesystem::path& folder,
+                              Data::Study& study,
+                              IResultWriter& writer) const;
+
+    virtual size_t numberOfVariables() const = 0; // 4 variables for mc-all: exp std min max
+
 protected:
+    virtual void processAndSave(Category::Precision precision,
+                                const std::string& filename,
+                                Data::Study& study,
+                                SurveyResults& survey) const
+      = 0;
+
     std::set<std::string> thermalGroupNames_;
     std::map<std::string, unsigned int> thermalGroupToNumbers_;
 
@@ -65,9 +77,13 @@ public:
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
 
-    void writeResultsToFolder(const std::filesystem::path& folder,
-                              Data::Study& study,
-                              IResultWriter& writer) const;
+    size_t numberOfVariables() const override;
+
+protected:
+    void processAndSave(Category::Precision precision,
+                        const std::string& filename,
+                        Data::Study& study,
+                        SurveyResults& survey) const override;
 
 private:
     void processGroup(const std::vector<std::vector<long double>>& results,
@@ -77,11 +93,6 @@ private:
                       Data::Study& study,
                       SurveyResults& survey,
                       bool doWeAverage = false) const; // average for level
-
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        Data::Study& study,
-                        SurveyResults& survey) const;
 
     std::vector<std::vector<HighPrecision>> thermalResults_;
     std::vector<std::vector<HighPrecision>> renewableResults_;
@@ -98,9 +109,13 @@ public:
 
     void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
 
-    void writeResultsToFolder(const std::filesystem::path& folder,
-                              Data::Study& study,
-                              IResultWriter& writer) const;
+    size_t numberOfVariables() const override;
+
+protected:
+    void processAndSave(Category::Precision precision,
+                        const std::string& filename,
+                        Data::Study& study,
+                        SurveyResults& survey) const override;
 
 private:
     void processGroup(const std::vector<R::AllYears::Average<>>& average,
@@ -112,36 +127,32 @@ private:
                       const std::string& suffix,
                       SurveyResults& survey) const;
 
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        SurveyResults& survey) const;
+    std::vector<R::AllYears::MinMaxBase<true>> minThermal_;
+    std::vector<R::AllYears::MinMaxBase<false>> maxThermal_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minThermal;
-    std::vector<R::AllYears::MinMaxBase<false>> maxThermal;
+    std::vector<R::AllYears::MinMaxBase<true>> minRenewable_;
+    std::vector<R::AllYears::MinMaxBase<false>> maxRenewable_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minRenewable;
-    std::vector<R::AllYears::MinMaxBase<false>> maxRenewable;
+    std::vector<R::AllYears::MinMaxBase<true>> minStsInjection_;
+    std::vector<R::AllYears::MinMaxBase<false>> maxStsInjection_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minStsInjection;
-    std::vector<R::AllYears::MinMaxBase<false>> maxStsInjection;
+    std::vector<R::AllYears::MinMaxBase<true>> minStsWithdrawal_;
+    std::vector<R::AllYears::MinMaxBase<false>> maxStsWithdrawal_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minStsWithdrawal;
-    std::vector<R::AllYears::MinMaxBase<false>> maxStsWithdrawal;
+    std::vector<R::AllYears::MinMaxBase<true>> minStsLevel_;
+    std::vector<R::AllYears::MinMaxBase<false>> maxStsLevel_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minStsLevel;
-    std::vector<R::AllYears::MinMaxBase<false>> maxStsLevel;
+    std::vector<R::AllYears::Average<>> averageThermal_;
+    std::vector<R::AllYears::Average<>> averageRenewable_;
+    std::vector<R::AllYears::Average<>> averageStsInjection_;
+    std::vector<R::AllYears::Average<>> averageStsWithdrawal_;
+    std::vector<R::AllYears::Average<>> averageStsLevel_;
 
-    std::vector<R::AllYears::Average<>> averageThermal;
-    std::vector<R::AllYears::Average<>> averageRenewable;
-    std::vector<R::AllYears::Average<>> averageStsInjection;
-    std::vector<R::AllYears::Average<>> averageStsWithdrawal;
-    std::vector<R::AllYears::Average<>> averageStsLevel;
-
-    std::vector<R::AllYears::StdDeviation<>> stdDevThermal;
-    std::vector<R::AllYears::StdDeviation<>> stdDevRenewable;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsInjection;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsWithdrawal;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsLevel;
+    std::vector<R::AllYears::StdDeviation<>> stdDevThermal_;
+    std::vector<R::AllYears::StdDeviation<>> stdDevRenewable_;
+    std::vector<R::AllYears::StdDeviation<>> stdDevStsInjection_;
+    std::vector<R::AllYears::StdDeviation<>> stdDevStsWithdrawal_;
+    std::vector<R::AllYears::StdDeviation<>> stdDevStsLevel_;
 };
 
 class DynamicAggregationSingleYear
