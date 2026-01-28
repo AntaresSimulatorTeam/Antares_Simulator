@@ -642,10 +642,6 @@ void SurveyResults::exportLegacySimulationTableValues(const double* values,
         {
             continue;
         }
-        if (Utils::isZero(values[index]))
-        {
-            continue;
-        }
         unsigned int block = 1;
         unsigned int blockTimeIndex = index + 1;
 
