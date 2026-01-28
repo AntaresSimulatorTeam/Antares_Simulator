@@ -102,7 +102,8 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
                                      const Category::Precision& precision,
                                      const std::string& suffix,
                                      Data::Study& study,
-                                     SurveyResults& survey) const
+                                     SurveyResults& survey,
+                                     bool doWeAverage) const
 {
     size_t index = 0;
     for (const auto& group: groupNames)
@@ -114,8 +115,11 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
         values.initializeFromStudy(study);
         values.reset();
         std::ranges::copy(results[index], values.hour);
-        // TODO handle LEVEL average
-        values.computeStatisticsForTheCurrentYear();
+
+        // average is only used for STS level
+        (doWeAverage) ? values.computeAveragesForCurrentYearFromHourlyResults()
+                      : values.computeStatisticsForTheCurrentYear();
+
         values.buildAnnualSurveyReport<VCardDynamic>(survey, Category::FileLevel::va, precision);
         ++index;
     }
@@ -132,7 +136,7 @@ void SetDataSingleYear::processAndSave(Category::Precision precision,
     processGroup(renewableResults_, renewableGroupNames_, precision, "", study, survey);
     processGroup(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
     processGroup(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
-    processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey);
+    processGroup(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
 
     survey.data.filename = filename;
     survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);

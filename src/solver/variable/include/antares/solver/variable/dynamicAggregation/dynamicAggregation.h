@@ -75,7 +75,8 @@ private:
                       const Category::Precision& precision,
                       const std::string& suffix,
                       Data::Study& study,
-                      SurveyResults& survey) const;
+                      SurveyResults& survey,
+                      bool doWeAverage = false) const; // average for level
 
     void processAndSave(Category::Precision precision,
                         const std::string& filename,
