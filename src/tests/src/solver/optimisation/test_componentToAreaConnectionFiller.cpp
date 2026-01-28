@@ -58,17 +58,17 @@ library:
         - injection-field: connected_field
 
   models:
-    - id: connected_model_through_vars
+    - id: model_with_vars
       variables:
         - id: not_connected_var
           lower-bound: 0
           upper-bound: 1000
           variable-type: continuous
-        - id: connected_var_1
+        - id: var_1
           lower-bound: 0
           upper-bound: 1000
           variable-type: continuous
-        - id: connected_var_2
+        - id: var_2
           lower-bound: 0
           upper-bound: 1000
           variable-type: continuous
@@ -81,9 +81,9 @@ library:
           definition: not_connected_var
         - port: connection_port_var
           field: connected_field
-          definition: 5 * connected_var_1 - 37 * connected_var_2
+          definition: 5 * var_1 - 37 * var_2
 
-    - id: connected_model_through_param
+    - id: model_with_param
       parameters:
         - id: some_param
           time-dependent: true
@@ -107,11 +107,11 @@ system:
   model-libraries: my_lib
 
   components:
-  - id: connected_component_var
-    model: my_lib.connected_model_through_vars
+  - id: component_with_vars
+    model: my_lib.model_with_vars
     scenario-group: sg
   - id: connected_component_param
-    model: my_lib.connected_model_through_param
+    model: my_lib.model_with_param
     scenario-group: sg
     parameters:
     - id: some_param
@@ -120,7 +120,7 @@ system:
       value: some_param_value
 
   area-connections:
-    - component: connected_component_var
+    - component: component_with_vars
       port: connection_port_var
       area: Area1
     - component: connected_component_param
@@ -204,7 +204,7 @@ struct ComponentToAreaConnectionFillerFixture
         }
     }
 
-    void addEmptyConstraintsToLinearProblem(std::vector<std::string>& names, double rhs)
+    void addConstraintsToLinearProblem(std::vector<std::string>& names, double rhs)
     {
         for (const auto& name: names)
         {
@@ -222,13 +222,13 @@ struct ComponentToAreaConnectionFillerFixture
         return constraintNames;
     }
 
-    void addEmptyConstraintsToLP(unsigned nb_of_constraints, const double rhs)
+    void addConstraintsToLP(unsigned nb_of_constraints, const double rhs)
     {
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes = nb_of_constraints;
         auto constraintNames = makeAutomaticConstraintNames(nb_of_constraints);
         problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
 
-        addEmptyConstraintsToLinearProblem(constraintNames, rhs);
+        addConstraintsToLinearProblem(constraintNames, rhs);
     }
 
     void addEmptyNamedConstraintsToLP(std::vector<std::string>& constraintNames, double rhs)
@@ -236,7 +236,7 @@ struct ComponentToAreaConnectionFillerFixture
         problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
         problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
 
-        addEmptyConstraintsToLinearProblem(constraintNames, rhs);
+        addConstraintsToLinearProblem(constraintNames, rhs);
     }
 
     void addConstraintsFromConnectionsToLP(const FillContext& fillCtx,
@@ -273,29 +273,21 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 
     addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer);
 
-    auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
-    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.not_connected_var_t0")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(
-                        linearProblem.lookupVariable("connected_component_var.connected_var_1_t0")),
-                      -5);
-    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(
-                        linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
-                      37);
+    const auto* balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
+    const auto* var = linearProblem.lookupVariable("component_with_vars.not_connected_var_t0");
+    const auto* var1 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
+    const auto* var2 = linearProblem.lookupVariable("component_with_vars.var_2_t0");
+
+    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var), 0);
+    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var1), -5);
+    BOOST_CHECK_EQUAL(balance_ct->getCoefficient(var2), 37);
     BOOST_CHECK_EQUAL(balance_ct->getLb(), 10 + 2 * 4 - 6);
     BOOST_CHECK_EQUAL(balance_ct->getUb(), 10 + 2 * 4 - 6);
 
     auto other_ct = linearProblem.lookupConstraint("whatever");
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.not_connected_var_t0")),
-                      0);
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(
-                        linearProblem.lookupVariable("connected_component_var.connected_var_1_t0")),
-                      0);
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(
-                        linearProblem.lookupVariable("connected_component_var.connected_var_2_t0")),
-                      0);
+    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var), 0);
+    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var1), 0);
+    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var2), 0);
     BOOST_CHECK_EQUAL(other_ct->getLb(), 10);
     BOOST_CHECK_EQUAL(other_ct->getUb(), 10);
 }
@@ -309,7 +301,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     addModelerVariablesToLP(10, 11, optimEntityContainer);
     // Legacy indexing of TS always starts at 1
-    addEmptyConstraintsToLP(3 /* nb of constraints */, -100);
+    addConstraintsToLP(3 /* nb of constraints */, -100);
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
@@ -319,47 +311,29 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
+    const auto* var = linearProblem.lookupVariable("component_with_vars.not_connected_var_t10");
+    const auto* var1 = linearProblem.lookupVariable("component_with_vars.var_1_t10");
+    const auto* var2 = linearProblem.lookupVariable("component_with_vars.var_2_t10");
+    const auto* var_nc_11 = linearProblem.lookupVariable(
+      "component_with_vars.not_connected_var_t11");
+    const auto* var_c_11 = linearProblem.lookupVariable("component_with_vars.var_1_t11");
+    const auto* var_c_211 = linearProblem.lookupVariable("component_with_vars.var_2_t11");
 
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.not_connected_var_t10")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_1_t10")),
-                      -5);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_2_t10")),
-                      37);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.not_connected_var_t11")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_1_t11")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_2_t11")),
-                      0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var1), -5);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var2), 37);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var_nc_11), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var_c_11), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t10->getCoefficient(var_c_211), 0);
     BOOST_CHECK_EQUAL(balance_ct_t10->getLb(), -100 + 2 * -51 - 6);
     BOOST_CHECK_EQUAL(balance_ct_t10->getUb(), -100 + 2 * -51 - 6);
-    ;
 
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.not_connected_var_t10")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_1_t10")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_2_t10")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.not_connected_var_t11")),
-                      0);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_1_t11")),
-                      -5);
-    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(linearProblem.lookupVariable(
-                        "connected_component_var.connected_var_2_t11")),
-                      37);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var1), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var2), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var_nc_11), 0);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var_c_11), -5);
+    BOOST_CHECK_EQUAL(balance_ct_t11->getCoefficient(var_c_211), 37);
     BOOST_CHECK_EQUAL(balance_ct_t11->getLb(), -100 + 2 * 8.3 - 6);
     BOOST_CHECK_EQUAL(balance_ct_t11->getUb(), -100 + 2 * 8.3 - 6);
 }
@@ -368,7 +342,7 @@ BOOST_AUTO_TEST_CASE(failure_if_a_connection_references_a_not_existing_area)
 {
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
-    std::string errMsg = "Component 'connected_component_var' is connected to a non existing area ";
+    std::string errMsg = "Component 'component_with_vars' is connected to a non existing area ";
     errMsg += ": area1";
     BOOST_CHECK_EXCEPTION(addConstraintsFromConnectionsToLP({0, 0, 0, 0, 0}, optimEntityContainer),
                           std::runtime_error,
