@@ -4,6 +4,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_main.cpp
         adequacy_patch.cpp
         test_componentToAreaConnectionFiller.cpp
+        test_area_connections--spillage--unsupE.cpp
         LIBS
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl
