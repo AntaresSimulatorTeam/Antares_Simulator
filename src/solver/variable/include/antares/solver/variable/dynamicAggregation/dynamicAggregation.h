@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/solver/variable/storage/averagedata.h"
+#include "antares/solver/variable/storage/average.h"
 #include "antares/solver/variable/storage/minmax-data.h"
 #include "antares/solver/variable/storage/stdDeviation.h"
 
@@ -62,6 +62,7 @@ public:
                               Data::Study& study,
                               IResultWriter& writer) const;
 
+private:
     void processGroup(const std::vector<std::vector<long double>>& results,
                       const std::set<std::string>& groupNames,
                       const Category::Precision& precision,
@@ -82,7 +83,6 @@ public:
                         Data::Study& study,
                         SurveyResults& survey) const;
 
-private:
     std::vector<std::vector<HighPrecision>> thermalResults_;
     std::vector<std::vector<HighPrecision>> renewableResults_;
     std::vector<std::vector<HighPrecision>> stsInjectionResults_;
@@ -103,6 +103,25 @@ public:
                               IResultWriter& writer) const;
 
 private:
+    void processGroup(const std::vector<R::AllYears::Average<>>& avgVec,
+                      const std::vector<R::AllYears::StdDeviation<>>& stdVec,
+                      const std::vector<R::AllYears::MinMaxData>& minVec,
+                      const std::vector<R::AllYears::MinMaxData>& maxVec,
+                      const std::set<std::string>& groupNames,
+                      const Category::Precision& precision,
+                      const std::string& suffix,
+                      Data::Study& study,
+                      SurveyResults& survey) const;
+
+    void processWithPrecision(Category::Precision precision,
+                              Data::Study& study,
+                              SurveyResults& survey) const;
+
+    void processAndSave(Category::Precision precision,
+                        const std::string& filename,
+                        Data::Study& study,
+                        SurveyResults& survey) const;
+
     std::vector<R::AllYears::MinMaxData> minThermal;
     std::vector<R::AllYears::MinMaxData> maxThermal;
 
@@ -118,11 +137,11 @@ private:
     std::vector<R::AllYears::MinMaxData> minStsLevel;
     std::vector<R::AllYears::MinMaxData> maxStsLevel;
 
-    std::vector<R::AllYears::AverageData> averageThermal;
-    std::vector<R::AllYears::AverageData> averageRenewable;
-    std::vector<R::AllYears::AverageData> averageStsInjection;
-    std::vector<R::AllYears::AverageData> averageStsWithdrawal;
-    std::vector<R::AllYears::AverageData> averageStsLevel;
+    std::vector<R::AllYears::Average<>> averageThermal;
+    std::vector<R::AllYears::Average<>> averageRenewable;
+    std::vector<R::AllYears::Average<>> averageStsInjection;
+    std::vector<R::AllYears::Average<>> averageStsWithdrawal;
+    std::vector<R::AllYears::Average<>> averageStsLevel;
 
     std::vector<R::AllYears::StdDeviation<>> stdDevThermal;
     std::vector<R::AllYears::StdDeviation<>> stdDevRenewable;

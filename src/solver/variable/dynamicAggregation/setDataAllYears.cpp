@@ -19,8 +19,6 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include <fstream>
-
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 
 namespace Antares::Solver::Variable
@@ -147,23 +145,144 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
     }
 }
 
-
 struct VCardStub
 {
-    enum
-    {
-        decimal = 0
-    };
+    static constexpr uint8_t decimal = 0;
+    static constexpr uint8_t categoryFileLevel = Category::FileLevel::va;
 };
+
+void SetDataAllYears::processGroup(const std::vector<R::AllYears::Average<>>& average,
+                                   const std::vector<R::AllYears::StdDeviation<>>& stdDev,
+                                   const std::vector<R::AllYears::MinMaxData>& min,
+                                   const std::vector<R::AllYears::MinMaxData>& max,
+                                   const std::set<std::string>& groupNames,
+                                   const Category::Precision& precision,
+                                   const std::string& suffix,
+                                   Data::Study& study,
+                                   SurveyResults& survey) const
+{
+    size_t index = 0;
+
+    auto setSurvey = [&](const std::string& group)
+    {
+        survey.variableCaption = group + suffix;
+        survey.variableUnit = "MWh";
+    };
+    auto buildReport = [&](IntermediateValues& values)
+    {
+        // TODO handle LEVEL average
+        values.computeStatisticsForTheCurrentYear();
+        values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
+    };
+
+    for (const auto& group: groupNames)
+    {
+        IntermediateValues values;
+        values.initializeFromStudy(study);
+        values.reset();
+
+        setSurvey(group);
+        average[index].buildSurveyReport<IntermediateValues, VCardStub>(
+          survey, // not used, placeholder for templates
+          values,
+          Category::DataLevel::setOfAreas,
+          Category::FileLevel::va,
+          precision);
+
+        setSurvey(group);
+        stdDev[index].buildSurveyReport<R::AllYears::Average<>, VCardStub>(
+          survey,
+          average[index],
+          Category::DataLevel::setOfAreas,
+          Category::FileLevel::va,
+          precision);
+
+        setSurvey(group);
+        values.reset();
+        for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
+        {
+            values.hour[h] = min[index].hourly[h].value;
+        }
+        buildReport(values);
+
+        setSurvey(group);
+        values.reset();
+        for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
+        {
+            values.hour[h] = max[index].hourly[h].value;
+        }
+        buildReport(values);
+
+        ++index;
+    }
+}
+
+void SetDataAllYears::processAndSave(Category::Precision precision,
+                                     const std::string& filename,
+                                     Data::Study& study,
+                                     SurveyResults& survey) const
+{
+    survey.data.columnIndex = 0;
+
+    processGroup(averageThermal,
+                 stdDevThermal,
+                 minThermal,
+                 maxThermal,
+                 thermalGroupNames_,
+                 precision,
+                 "",
+                 study,
+                 survey);
+    processGroup(averageRenewable,
+                 stdDevRenewable,
+                 minRenewable,
+                 maxRenewable,
+                 renewableGroupNames_,
+                 precision,
+                 "",
+                 study,
+                 survey);
+    processGroup(averageStsInjection,
+                 stdDevStsInjection,
+                 minStsInjection,
+                 maxStsInjection,
+                 stsGroupNames_,
+                 precision,
+                 "_INJECTION",
+                 study,
+                 survey);
+    processGroup(averageStsWithdrawal,
+                 stdDevStsWithdrawal,
+                 minStsWithdrawal,
+                 maxStsWithdrawal,
+                 stsGroupNames_,
+                 precision,
+                 "_WITHDRAWAL",
+                 study,
+                 survey);
+
+    processGroup(averageStsWithdrawal,
+                 stdDevStsWithdrawal,
+                 minStsWithdrawal,
+                 maxStsWithdrawal,
+                 stsGroupNames_,
+                 precision,
+                 "_LEVEL",
+                 study,
+                 survey);
+
+    survey.data.filename = filename;
+    survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
+}
 
 void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
                                            Data::Study& study,
                                            IResultWriter& writer) const
 {
     // Calculate total number of variables (4 columns per group: exp, std, min, max)
-    unsigned int nbVariables = (thermalGroupNames_.size() + renewableGroupNames_.size()
-                                + stsGroupNames_.size() * 3)
-                               * 4;
+    const std::size_t nbVariables = (thermalGroupNames_.size() + renewableGroupNames_.size()
+                                     + stsGroupNames_.size() * 3)
+                                    * 4;
 
     SurveyResults survey(study, nbVariables, folder.string(), writer);
 
@@ -173,115 +292,11 @@ void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
     survey.isCurrentVarNA = nonApplicable;
     survey.isPrinted = printed;
 
-    survey.data.columnIndex = 0;
-
-    // Helper lambda to process a group
-    auto processGroup = [&](const auto& avgVec,
-                            const auto& stdVec,
-                            const auto& minVec,
-                            const auto& maxVec,
-                            const std::set<std::string>& groupNames,
-                            const std::string& suffix)
-    {
-        unsigned int index = 0;
-        for (const auto& group: groupNames)
-        {
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "exp";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            IntermediateValues values;
-            values.initializeFromStudy(study);
-
-            values.reset();
-            std::ranges::copy(avgVec[index].hourly, values.hour);
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "std";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            values.reset();
-            std::ranges::copy(stdVec[index].stdDeviationHourly, values.hour);
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "min";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            values.reset();
-            for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-            {
-                values.hour[h] = minVec[index].hourly[h].value;
-            }
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-
-            survey.captions[0][survey.data.columnIndex] = group + suffix;
-            survey.captions[1][survey.data.columnIndex] = "MWh";
-            survey.captions[2][survey.data.columnIndex] = "max";
-            survey.variableCaption = group + suffix;
-            survey.variableUnit = "MWh";
-
-            values.reset();
-            for (unsigned h = 0; h < HOURS_PER_YEAR; ++h)
-            {
-                values.hour[h] = maxVec[index].hourly[h].value;
-            }
-
-            values.computeStatisticsForTheCurrentYear();
-            values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                      Category::FileLevel::va,
-                                                      Category::Precision::hourly);
-            ++index;
-        }
-    };
-
-    processGroup(averageThermal, stdDevThermal, minThermal, maxThermal, thermalGroupNames_, "");
-    processGroup(averageRenewable,
-                 stdDevRenewable,
-                 minRenewable,
-                 maxRenewable,
-                 renewableGroupNames_,
-                 "");
-    processGroup(averageStsInjection,
-                 stdDevStsInjection,
-                 minStsInjection,
-                 maxStsInjection,
-                 stsGroupNames_,
-                 "_INJECTION");
-    processGroup(averageStsWithdrawal,
-                 stdDevStsWithdrawal,
-                 minStsWithdrawal,
-                 maxStsWithdrawal,
-                 stsGroupNames_,
-                 "_WITHDRAWAL");
-    processGroup(averageStsLevel,
-                 stdDevStsLevel,
-                 minStsLevel,
-                 maxStsLevel,
-                 stsGroupNames_,
-                 "_LEVEL");
-
-    // Save the results
-    survey.data.filename = (folder / "hourly.txt").string();
-    survey.saveToFile(Category::DataLevel::setOfAreas,
-                      Category::FileLevel::va,
-                      Category::Precision::hourly);
+    // Save for all precisions
+    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), study, survey);
+    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), study, survey);
+    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
+    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
+    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
 }
-
 } // namespace Antares::Solver::Variable
