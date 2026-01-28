@@ -19,7 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
+#include "antares/solver/variable/dynamicAggregation/setData.h"
 
 namespace fs = std::filesystem;
 
