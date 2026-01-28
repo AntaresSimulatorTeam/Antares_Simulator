@@ -99,15 +99,24 @@ public:
                               IResultWriter& writer) const;
 
 private:
-    template<typename AvgVec, typename StdVec, typename MinVec, typename MaxVec>
-    void processGroup(const AvgVec& avgVec,
-                      const StdVec& stdVec,
-                      const MinVec& minVec,
-                      const MaxVec& maxVec,
+    void processGroup(const std::vector<R::AllYears::AverageData>& avgVec,
+                      const std::vector<R::AllYears::StdDeviation<>>& stdVec,
+                      const std::vector<R::AllYears::MinMaxData>& minVec,
+                      const std::vector<R::AllYears::MinMaxData>& maxVec,
                       const std::set<std::string>& groupNames,
+                      const Category::Precision& precision,
                       const std::string& suffix,
                       Data::Study& study,
                       SurveyResults& survey) const;
+
+    void processWithPrecision(Category::Precision precision,
+                              Data::Study& study,
+                              SurveyResults& survey) const;
+
+    void processAndSave(Category::Precision precision,
+                        const std::string& filename,
+                        Data::Study& study,
+                        SurveyResults& survey) const;
 
     std::vector<R::AllYears::MinMaxData> minThermal;
     std::vector<R::AllYears::MinMaxData> maxThermal;

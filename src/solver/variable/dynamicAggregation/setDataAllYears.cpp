@@ -153,11 +153,12 @@ struct VCardStub
     };
 };
 
-void SetDataAllYears::processGroup(const auto& avgVec,
-                                   const auto& stdVec,
-                                   const auto& minVec,
-                                   const auto& maxVec,
+void SetDataAllYears::processGroup(const std::vector<R::AllYears::AverageData>& avgVec,
+                                   const std::vector<R::AllYears::StdDeviation<>>& stdVec,
+                                   const std::vector<R::AllYears::MinMaxData>& minVec,
+                                   const std::vector<R::AllYears::MinMaxData>& maxVec,
                                    const std::set<std::string>& groupNames,
+                                   const Category::Precision& precision,
                                    const std::string& suffix,
                                    Data::Study& study,
                                    SurveyResults& survey) const
@@ -172,56 +173,104 @@ void SetDataAllYears::processGroup(const auto& avgVec,
         survey.variableCaption = group + suffix;
         survey.variableUnit = "MWh";
     };
+    auto buildReport = [&](IntermediateValues& values)
+    {
+        // TODO handle LEVEL average
+        values.computeStatisticsForTheCurrentYear();
+        values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
+    };
 
     for (const auto& group: groupNames)
     {
         IntermediateValues values;
         values.initializeFromStudy(study);
 
-        // exp
         setSurvey(group, "exp");
         values.reset();
         std::ranges::copy(avgVec[index].hourly, values.hour);
-        values.computeStatisticsForTheCurrentYear();
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
+        buildReport(values);
 
-        // std
         setSurvey(group, "std");
         values.reset();
         std::ranges::copy(stdVec[index].stdDeviationHourly, values.hour);
-        values.computeStatisticsForTheCurrentYear();
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
+        buildReport(values);
 
-        // min
         setSurvey(group, "min");
         values.reset();
         for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
         {
             values.hour[h] = minVec[index].hourly[h].value;
         }
-        values.computeStatisticsForTheCurrentYear();
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
+        buildReport(values);
 
-        // max
         setSurvey(group, "max");
         values.reset();
         for (size_t h = 0; h < HOURS_PER_YEAR; ++h)
         {
             values.hour[h] = maxVec[index].hourly[h].value;
         }
-        values.computeStatisticsForTheCurrentYear();
-        values.buildAnnualSurveyReport<VCardStub>(survey,
-                                                  Category::FileLevel::va,
-                                                  Category::Precision::hourly);
+        buildReport(values);
 
         ++index;
     }
+}
+
+void SetDataAllYears::processAndSave(Category::Precision precision,
+                                     const std::string& filename,
+                                     Data::Study& study,
+                                     SurveyResults& survey) const
+{
+    survey.data.columnIndex = 0;
+
+    processGroup(averageThermal,
+                 stdDevThermal,
+                 minThermal,
+                 maxThermal,
+                 thermalGroupNames_,
+                 precision,
+                 "",
+                 study,
+                 survey);
+    processGroup(averageRenewable,
+                 stdDevRenewable,
+                 minRenewable,
+                 maxRenewable,
+                 renewableGroupNames_,
+                 precision,
+                 "",
+                 study,
+                 survey);
+    processGroup(averageStsInjection,
+                 stdDevStsInjection,
+                 minStsInjection,
+                 maxStsInjection,
+                 stsGroupNames_,
+                 precision,
+                 "_INJECTION",
+                 study,
+                 survey);
+    processGroup(averageStsWithdrawal,
+                 stdDevStsWithdrawal,
+                 minStsWithdrawal,
+                 maxStsWithdrawal,
+                 stsGroupNames_,
+                 precision,
+                 "_WITHDRAWAL",
+                 study,
+                 survey);
+
+    processGroup(averageStsWithdrawal,
+                 stdDevStsWithdrawal,
+                 minStsWithdrawal,
+                 maxStsWithdrawal,
+                 stsGroupNames_,
+                 precision,
+                 "_LEVEL",
+                 study,
+                 survey);
+
+    survey.data.filename = filename;
+    survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
 }
 
 void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
@@ -241,46 +290,11 @@ void SetDataAllYears::writeResultsToFolder(const std::filesystem::path& folder,
     survey.isCurrentVarNA = nonApplicable;
     survey.isPrinted = printed;
 
-    survey.data.columnIndex = 0;
-
-    processGroup(averageThermal,
-                 stdDevThermal,
-                 minThermal,
-                 maxThermal,
-                 thermalGroupNames_,
-                 "",
-                 study,
-                 survey);
-    processGroup(averageRenewable,
-                 stdDevRenewable,
-                 minRenewable,
-                 maxRenewable,
-                 renewableGroupNames_,
-                 "",
-                 study,
-                 survey);
-    processGroup(averageStsInjection,
-                 stdDevStsInjection,
-                 minStsInjection,
-                 maxStsInjection,
-                 stsGroupNames_,
-                 "_INJECTION",
-                 study,
-                 survey);
-    processGroup(averageStsWithdrawal,
-                 stdDevStsWithdrawal,
-                 minStsWithdrawal,
-                 maxStsWithdrawal,
-                 stsGroupNames_,
-                 "_WITHDRAWAL",
-                 study,
-                 survey);
-
-    // Save the results
-    survey.data.filename = (folder / "hourly.txt").string();
-    survey.saveToFile(Category::DataLevel::setOfAreas,
-                      Category::FileLevel::va,
-                      Category::Precision::hourly);
+    // Save for all precisions
+    processAndSave(Category::Precision::hourly, (folder / "hourly.txt").string(), study, survey);
+    processAndSave(Category::Precision::daily, (folder / "daily.txt").string(), study, survey);
+    processAndSave(Category::Precision::weekly, (folder / "weekly.txt").string(), study, survey);
+    processAndSave(Category::Precision::monthly, (folder / "monthly.txt").string(), study, survey);
+    processAndSave(Category::Precision::annual, (folder / "annual.txt").string(), study, survey);
 }
-
 } // namespace Antares::Solver::Variable

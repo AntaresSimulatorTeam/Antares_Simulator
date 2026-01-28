@@ -125,8 +125,8 @@ void SetDataSingleYear::processGroup(const std::vector<std::vector<long double>>
         values.initializeFromStudy(study);
         values.reset();
         std::ranges::copy(results[index], values.hour);
+        // TODO handle LEVEL average
         values.computeStatisticsForTheCurrentYear();
-
         values.buildAnnualSurveyReport<VCardStub>(survey, Category::FileLevel::va, precision);
         ++index;
     }
