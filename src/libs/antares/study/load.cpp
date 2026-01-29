@@ -240,10 +240,18 @@ void Study::loadModelerComponents()
 /**
  * Checks that the modeler data is compatible with the solver for hybrid studies.
  * Currently, unsupported cases in the solver are :
- * - variables that are not scenario dependent
+ * - variables that are not scenario dependent (allowed only in benders-decomposition mode)
  */
 void Study::checkModelerDataCompatibility() const
 {
+    // Scenario-independent variables are allowed in benders-decomposition mode for investment
+    // studies
+    if (modelerInput_->resolutionMode == Solver::ResolutionMode::BENDERS_DECOMPOSITION)
+    {
+        return;
+    }
+
+    // For sequential-subproblems mode, scenario-independent variables are not supported
     for (auto& component: modelerInput_->system->Components())
     {
         for (auto& variable: component.getModel()->Variables())
@@ -251,8 +259,10 @@ void Study::checkModelerDataCompatibility() const
             if (!variable.IsScenarioDependent())
             {
                 throw Error::LoadingError(fmt::format(
-                  "Scenario-independent variables are not supported in hybrid studies. "
-                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\").",
+                  "Scenario-independent variables are not supported in hybrid studies with "
+                  "sequential-subproblems resolution mode. "
+                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\"). "
+                  "Use resolution-mode: benders-decomposition for investment studies.",
                   variable.Id(),
                   component.getModel()->Id(),
                   component.Id()));

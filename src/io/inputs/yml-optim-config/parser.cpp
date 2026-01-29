@@ -11,7 +11,8 @@ OptimConfig Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
 
-    OptimConfig optimConfig = root["models"].as<std::vector<Model>>();
+    // Parse the entire OptimConfig structure including resolution-mode
+    auto optimConfig = root.as<OptimConfig>();
 
     return optimConfig;
 }
