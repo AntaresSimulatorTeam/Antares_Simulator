@@ -92,7 +92,7 @@ void addVariableEntries(ISimulationTable& simulationTable,
         auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
         {
             TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(
-                                        *timeStep + fillContext.getGlobalFirstTimeStep(),
+                                        *timeStep,
                                         timeConversionMode,
                                         currentBlock)
                                     : TimeBlock{.block = currentBlock + 1,
@@ -208,7 +208,7 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         {
             const auto& c = componentConstraints[ts.value_or(0)];
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
-                                  *ts + fillContext.getGlobalFirstTimeStep(),
+                                  *ts,
                                   timeConversionMode,
                                   currentBlock)
                               : TimeBlock{.block = currentBlock + 1,
