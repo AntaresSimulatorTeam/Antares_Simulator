@@ -11,6 +11,7 @@
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/state.h"
+#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 #include "antares/solver/variable/variable.h"
 
 #include "base_post_process.h"

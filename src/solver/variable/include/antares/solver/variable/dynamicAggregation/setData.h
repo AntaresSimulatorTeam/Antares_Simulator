@@ -38,19 +38,9 @@ class SetDataBase
 public:
     explicit SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-    void writeResultsToFolder(const std::filesystem::path& folder,
-                              Data::Study& study,
-                              IResultWriter& writer) const;
-
     virtual size_t numberOfVariables() const = 0; // 4 variables for mc-all: exp std min max
 
 protected:
-    virtual void processAndSave(Category::Precision precision,
-                                const std::string& filename,
-                                Data::Study& study,
-                                SurveyResults& survey) const
-      = 0;
-
     std::set<std::string> thermalGroupNames_;
     std::map<std::string, unsigned int> thermalGroupToNumbers_;
 
@@ -84,12 +74,6 @@ public:
                         Category::Precision precision,
                         Data::Study& study) const;
 
-protected:
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        Data::Study& study,
-                        SurveyResults& survey) const override;
-
 private:
     void processGroups(const std::vector<std::vector<long double>>& results,
                        const std::set<std::string>& groupNames,
@@ -118,12 +102,6 @@ public:
 
     void appendToSurvey(SurveyResults& survey,
                         Category::Precision precision) const;
-
-protected:
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        Data::Study& study,
-                        SurveyResults& survey) const override;
 
 private:
     void processGroups(const std::vector<R::AllYears::Average<>>& average,

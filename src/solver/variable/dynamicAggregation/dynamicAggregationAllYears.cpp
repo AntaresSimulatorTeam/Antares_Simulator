@@ -57,17 +57,4 @@ void DynamicAggregationAllYears::appendToSurveyForSet(const std::string& setName
     }
 }
 
-void DynamicAggregationAllYears::writeAllResults(const std::filesystem::path& baseFolder,
-                                                 IResultWriter& writer) const
-{
-    namespace fs = std::filesystem;
-    fs::create_directories(baseFolder);
-
-    for (const auto& [setName, setData]: setsData_)
-    {
-        std::filesystem::path folder = baseFolder / ("@ " + setName);
-        setData.writeResultsToFolder(folder, study_, writer);
-    }
-}
-
 } // namespace Antares::Solver::Variable

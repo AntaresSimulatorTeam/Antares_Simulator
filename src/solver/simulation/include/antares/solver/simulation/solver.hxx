@@ -195,11 +195,6 @@ public:
                 study.runtime.dynamicAggregationSingleYear = &dynamicAggregationForTheYear;
                 simulation_->writeResults(false, y, numSpace);
                 study.runtime.dynamicAggregationSingleYear = nullptr;
-
-                std::ostringstream oss;
-                oss << std::setw(5) << std::setfill('0') << y + 1;
-                fs::path output = fs::path(simulation_->Name()) / "mc-ind" / oss.str() / "areas";
-                dynamicAggregationForTheYear.writeAllResults(output, pResultWriter);
             };
         }
 
@@ -368,9 +363,6 @@ void ISimulation<ImplementationType>::run()
 
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
-
-        fs::path output = fs::path(ImplementationType::Name()) / "mc-all" / "areas";
-        ImplementationType::dynamicAggregationAllYears.writeAllResults(output, pResultWriter);
 
         ImplementationType::variables.simulationEnd();
 

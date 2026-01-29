@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <filesystem>
 #include <map>
 #include <string>
 
@@ -39,8 +38,6 @@ public:
 
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
-    void writeAllResults(const std::filesystem::path& folder, IResultWriter& writer) const;
-
     void appendToSurveyForSet(const std::string& setName,
                               SurveyResults& survey,
                               Category::Precision precision) const;
@@ -56,8 +53,6 @@ public:
     explicit DynamicAggregationAllYears(Data::Study& study);
 
     void merge(const DynamicAggregationSingleYear& toMerge, unsigned year);
-
-    void writeAllResults(const std::filesystem::path& folder, IResultWriter& writer) const;
 
     void appendToSurveyForSet(const std::string& setName,
                               SurveyResults& survey,

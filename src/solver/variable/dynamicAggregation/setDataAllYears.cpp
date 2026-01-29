@@ -194,59 +194,6 @@ void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average<>>& a
     }
 }
 
-void SetDataAllYears::processAndSave(Category::Precision precision,
-                                     const std::string& filename,
-                                     Data::Study&,
-                                     SurveyResults& survey) const
-{
-    survey.data.columnIndex = 0;
-
-    processGroups(averageThermal_,
-                  stdDevThermal_,
-                  minThermal_,
-                  maxThermal_,
-                  thermalGroupNames_,
-                  precision,
-                  "",
-                  survey);
-    processGroups(averageRenewable_,
-                  stdDevRenewable_,
-                  minRenewable_,
-                  maxRenewable_,
-                  renewableGroupNames_,
-                  precision,
-                  "",
-                  survey);
-    processGroups(averageStsInjection_,
-                  stdDevStsInjection_,
-                  minStsInjection_,
-                  maxStsInjection_,
-                  stsGroupNames_,
-                  precision,
-                  "_INJECTION",
-                  survey);
-    processGroups(averageStsWithdrawal_,
-                  stdDevStsWithdrawal_,
-                  minStsWithdrawal_,
-                  maxStsWithdrawal_,
-                  stsGroupNames_,
-                  precision,
-                  "_WITHDRAWAL",
-                  survey);
-
-    processGroups(averageStsWithdrawal_,
-                  stdDevStsWithdrawal_,
-                  minStsWithdrawal_,
-                  maxStsWithdrawal_,
-                  stsGroupNames_,
-                  precision,
-                  "_LEVEL",
-                  survey);
-
-    survey.data.filename = filename;
-    survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
-}
-
 void SetDataAllYears::appendToSurvey(SurveyResults& survey,
                                      Category::Precision precision) const
 {

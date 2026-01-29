@@ -41,19 +41,6 @@ void DynamicAggregationSingleYear::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
-void DynamicAggregationSingleYear::writeAllResults(const std::filesystem::path& baseFolder,
-                                                   IResultWriter& writer) const
-{
-    namespace fs = std::filesystem;
-    fs::create_directories(baseFolder);
-
-    for (const auto& [setName, setData]: setsData_)
-    {
-        std::filesystem::path folder = baseFolder / ("@ " + setName);
-        setData.writeResultsToFolder(folder, study_, writer);
-    }
-}
-
 void DynamicAggregationSingleYear::appendToSurveyForSet(const std::string& setName,
                                                         SurveyResults& survey,
                                                         Category::Precision precision) const
