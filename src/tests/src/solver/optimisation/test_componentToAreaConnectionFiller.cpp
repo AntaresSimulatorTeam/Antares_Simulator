@@ -145,7 +145,7 @@ struct ComponentToAreaConnectionFillerFixture
     std::unique_ptr<Solver::ModelerData> buildModelerSystem()
     {
         auto to_return = std::make_unique<Solver::ModelerData>();
-        
+
         IO::Inputs::YmlModel::Parser parserModel;
         libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
 
