@@ -65,7 +65,7 @@ unsigned int DynamicAggregationAllYears::computeDynamicAggregationMaxColumns() c
     {
         maxCols += setData.numberOfVariables();
     }
-    return maxCols; // 4 for exp, std, min, max
+    return maxCols /* *4 */; // TODO: 4 for exp, std, min, max ?
 }
 
 } // namespace Antares::Solver::Variable
