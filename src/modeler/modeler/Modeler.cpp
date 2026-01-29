@@ -156,6 +156,72 @@ ProblemEntity buildProblem(const ModelerData& data,
     return {std::move(problem), (std::move(optimEntityContainer))};
 }
 
+IMipSolution* Modeler::solveSubproblem()
+{
+    Utils::TimeMeasurement measure;
+    logs.info() << "Launching resolution...";
+    measure.reset();
+    auto& subproblem_1_1 = subproblems_[0];
+    auto* solution = subproblem_1_1->solve(parameters_.solverLogs);
+    measure.tick();
+    logs.info() << "Solved in " << measure.toStringInSeconds();
+    return solution;
+}
+
+void Modeler::writeSubProblemSimulationTable(
+  const IMipSolution* solution,
+  const OptimEntityContainer& subproblemOptimEntityContainer,
+  const FillContext& timeScenarioCtx) const
+{
+    switch (solution->getStatus())
+    {
+    case MipStatus::OPTIMAL:
+    case MipStatus::FEASIBLE:
+    {
+        if (!parameters_.noOutput)
+        {
+            auto& subproblem_1_1 = subproblems_[0];
+            writer_.writeSimulationTable(*subproblem_1_1,
+                                         *solution,
+                                         data_,
+                                         subproblemOptimEntityContainer,
+                                         timeScenarioCtx);
+        }
+    }
+    break;
+    default:
+        logs.error() << "Problem during linear optimization";
+    }
+}
+
+void Modeler::exportMps() const
+{
+    const auto& output = writer_.outputPath();
+
+    // 1-1.mps
+    if (auto& subproblem_1_1 = subproblems_[0])
+    {
+        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
+        Antares::IO::Outputs::MPSFileWriter::write(output / "1-1.mps", mps);
+    }
+    // master.mps
+    if (masterProblem_)
+    {
+        const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
+        Antares::IO::Outputs::MPSFileWriter::write(output / "master.mps", mps);
+    }
+}
+
+void Modeler::exportStructureFile(const BendersDecomposition& bendersDecomposition) const
+{
+    const auto& output = writer_.outputPath();
+
+    // structure.txt
+    const BendersDecompositionWriter writer(bendersDecomposition);
+    std::ofstream of(output / "structure.txt");
+    writer.write(of);
+}
+
 void Modeler::run()
 {
     Utils::TimeMeasurement measure;
@@ -216,49 +282,13 @@ void Modeler::run()
     }
     if (parameters_.exportMps)
     {
-        auto output = writer_.outputPath();
-
-        // 1-1.mps
-        if (subproblem_1_1)
-        {
-            auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
-            Antares::IO::Outputs::MPSFileWriter::write(output / "1-1.mps", mps);
-        }
-        // master.mps
-        if (masterProblem_)
-        {
-            auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
-            Antares::IO::Outputs::MPSFileWriter::write(output / "master.mps", mps);
-        }
-        // structure.txt
-        BendersDecompositionWriter writer(bendersDecomposition);
-        std::ofstream of(output / "structure.txt");
-        writer.write(of);
+        exportMps();
+        exportStructureFile(bendersDecomposition);
     }
-
-    logs.info() << "Launching resolution...";
-    measure.reset();
-    auto* solution = subproblem_1_1->solve(parameters_.solverLogs);
-    measure.tick();
-    logs.info() << "Solved in " << measure.toStringInSeconds();
-
-    switch (solution->getStatus())
+    if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-    case MipStatus::OPTIMAL:
-    case MipStatus::FEASIBLE:
-    {
-        if (!parameters_.noOutput)
-        {
-            writer_.writeSimulationTable(*subproblem_1_1,
-                                         *solution,
-                                         data_,
-                                         *subproblemOptimEntityContainer,
-                                         timeScenarioCtx);
-        }
-    }
-    break;
-    default:
-        logs.error() << "Problem during linear optimization";
+        auto* solution = solveSubproblem();
+        writeSubProblemSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
     }
 }
 

@@ -19,6 +19,7 @@ namespace LinearProblemApi
  * Contains temporal information
  */
 class FillContext;
+class IMipSolution;
 } // namespace LinearProblemApi
 } // namespace Antares::Optimisation
 
@@ -45,6 +46,7 @@ class Modeler final
 {
 public:
     Modeler(ILoader& loader, IWriter& writer);
+
     void run();
 
     class ModelerError: public std::runtime_error
@@ -73,6 +75,14 @@ public:
     }
 
 private:
+    Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
+
+    void writeSubProblemSimulationTable(
+      const Optimisation::LinearProblemApi::IMipSolution* solution,
+      const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
+      const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
+    void exportMps() const;
+    void exportStructureFile(const Optimisation::BendersDecomposition& bendersDecomposition) const;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     ModelerParameters parameters_;
