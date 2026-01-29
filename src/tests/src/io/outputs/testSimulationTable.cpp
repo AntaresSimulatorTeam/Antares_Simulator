@@ -932,6 +932,32 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
     BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
 }
 
+BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,var1,None,None,None,") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,1,1,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,2,2,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,1,1,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,2,2,0") != std::string::npos);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(EdgeCaseStressTests)
