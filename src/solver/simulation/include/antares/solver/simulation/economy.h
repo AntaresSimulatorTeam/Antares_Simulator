@@ -9,6 +9,7 @@
 #include "antares/solver/optimisation/weekly_optimization.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
+#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/state.h"
 #include "antares/solver/variable/variable.h"

@@ -145,13 +145,13 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
 }
 
 void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average<>>& average,
-                                   const std::vector<R::AllYears::StdDeviation<>>& stdDev,
-                                   const std::vector<R::AllYears::MinMaxBase<true>>& min,
-                                   const std::vector<R::AllYears::MinMaxBase<false>>& max,
-                                   const std::set<std::string>& groupNames,
-                                   const Category::Precision& precision,
-                                   const std::string& suffix,
-                                   SurveyResults& survey) const
+                                    const std::vector<R::AllYears::StdDeviation<>>& stdDev,
+                                    const std::vector<R::AllYears::MinMaxBase<true>>& min,
+                                    const std::vector<R::AllYears::MinMaxBase<false>>& max,
+                                    const std::set<std::string>& groupNames,
+                                    const Category::Precision& precision,
+                                    const std::string& suffix,
+                                    SurveyResults& survey) const
 {
     size_t index = 0;
 
@@ -194,57 +194,49 @@ void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average<>>& a
     }
 }
 
-void SetDataAllYears::processAndSave(Category::Precision precision,
-                                     const std::string& filename,
-                                     Data::Study&,
-                                     SurveyResults& survey) const
+void SetDataAllYears::appendToSurvey(SurveyResults& survey, Category::Precision precision) const
 {
-    survey.data.columnIndex = 0;
-
     processGroups(averageThermal_,
-                 stdDevThermal_,
-                 minThermal_,
-                 maxThermal_,
-                 thermalGroupNames_,
-                 precision,
-                 "",
-                 survey);
+                  stdDevThermal_,
+                  minThermal_,
+                  maxThermal_,
+                  thermalGroupNames_,
+                  precision,
+                  "",
+                  survey);
     processGroups(averageRenewable_,
-                 stdDevRenewable_,
-                 minRenewable_,
-                 maxRenewable_,
-                 renewableGroupNames_,
-                 precision,
-                 "",
-                 survey);
+                  stdDevRenewable_,
+                  minRenewable_,
+                  maxRenewable_,
+                  renewableGroupNames_,
+                  precision,
+                  "",
+                  survey);
     processGroups(averageStsInjection_,
-                 stdDevStsInjection_,
-                 minStsInjection_,
-                 maxStsInjection_,
-                 stsGroupNames_,
-                 precision,
-                 "_INJECTION",
-                 survey);
+                  stdDevStsInjection_,
+                  minStsInjection_,
+                  maxStsInjection_,
+                  stsGroupNames_,
+                  precision,
+                  "_INJECTION",
+                  survey);
     processGroups(averageStsWithdrawal_,
-                 stdDevStsWithdrawal_,
-                 minStsWithdrawal_,
-                 maxStsWithdrawal_,
-                 stsGroupNames_,
-                 precision,
-                 "_WITHDRAWAL",
-                 survey);
+                  stdDevStsWithdrawal_,
+                  minStsWithdrawal_,
+                  maxStsWithdrawal_,
+                  stsGroupNames_,
+                  precision,
+                  "_WITHDRAWAL",
+                  survey);
 
     processGroups(averageStsWithdrawal_,
-                 stdDevStsWithdrawal_,
-                 minStsWithdrawal_,
-                 maxStsWithdrawal_,
-                 stsGroupNames_,
-                 precision,
-                 "_LEVEL",
-                 survey);
-
-    survey.data.filename = filename;
-    survey.saveToFile(Category::DataLevel::setOfAreas, Category::FileLevel::va, precision);
+                  stdDevStsWithdrawal_,
+                  minStsWithdrawal_,
+                  maxStsWithdrawal_,
+                  stsGroupNames_,
+                  precision,
+                  "_LEVEL",
+                  survey);
 }
 
 size_t SetDataAllYears::numberOfVariables() const

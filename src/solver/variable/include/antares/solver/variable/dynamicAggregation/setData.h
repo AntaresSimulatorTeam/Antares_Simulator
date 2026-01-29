@@ -38,19 +38,9 @@ class SetDataBase
 public:
     explicit SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
-    void writeResultsToFolder(const std::filesystem::path& folder,
-                              Data::Study& study,
-                              IResultWriter& writer) const;
-
     virtual size_t numberOfVariables() const = 0; // 4 variables for mc-all: exp std min max
 
 protected:
-    virtual void processAndSave(Category::Precision precision,
-                                const std::string& filename,
-                                Data::Study& study,
-                                SurveyResults& survey) const
-      = 0;
-
     std::set<std::string> thermalGroupNames_;
     std::map<std::string, unsigned int> thermalGroupToNumbers_;
 
@@ -80,11 +70,9 @@ public:
 
     size_t numberOfVariables() const override;
 
-protected:
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        Data::Study& study,
-                        SurveyResults& survey) const override;
+    void appendToSurvey(SurveyResults& survey,
+                        Category::Precision precision,
+                        Data::Study& study) const;
 
 private:
     void processGroups(const std::vector<std::vector<long double>>& results,
@@ -112,11 +100,7 @@ public:
 
     size_t numberOfVariables() const override;
 
-protected:
-    void processAndSave(Category::Precision precision,
-                        const std::string& filename,
-                        Data::Study& study,
-                        SurveyResults& survey) const override;
+    void appendToSurvey(SurveyResults& survey, Category::Precision precision) const;
 
 private:
     void processGroups(const std::vector<R::AllYears::Average<>>& average,

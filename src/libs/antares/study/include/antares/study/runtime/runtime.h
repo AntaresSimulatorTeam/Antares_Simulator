@@ -10,8 +10,15 @@
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/parameters.h>
 
+namespace Antares::Solver::Variable
+{
+class DynamicAggregationSingleYear;
+class DynamicAggregationAllYears;
+} // namespace Antares::Solver::Variable
+
 namespace Antares::Data
 {
+class Study;
 
 class Study;
 
@@ -99,21 +106,24 @@ public:
     bool thermalTSRefresh = false;
 
     /*!
-    ** \brief The number of simulation days per month
-    */
+     ** \brief The number of simulation days per month
+     */
     uint simulationDaysPerMonth[12];
 
     /*!
-    ** \brief The number of simulation days per week
-    */
+     ** \brief The number of simulation days per week
+     */
     uint simulationDaysPerWeek[53];
 
     /*!
-    ** \brief Flag to know if at least one error occured during the quadratic optimization
-    **
-    ** In this case, error on NaN should be disabled
-    */
+     ** \brief Flag to know if at least one error occured during quadratic optimization
+     **
+     ** In this case, error on `DynamicAggregationSingleYear` should be disabled
+     */
     bool quadraticOptimizationHasFailed;
+
+    Antares::Solver::Variable::DynamicAggregationSingleYear* dynamicAggregationSingleYear = nullptr;
+    Antares::Solver::Variable::DynamicAggregationAllYears* dynamicAggregationAllYears = nullptr;
 
     std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 

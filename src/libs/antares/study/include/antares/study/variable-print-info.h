@@ -88,8 +88,13 @@ public:
 
     void setPrintStatus(std::string varname, bool printStatus);
     void setPrintStatus(unsigned int index, bool printStatus);
-
     void setMaxColumns(std::string varname, uint maxColumnsNumber);
+
+    void addExtraColumns(uint extra)
+    {
+        totalMaxColumnsCount_ += extra;
+    }
+
     std::string name_of(unsigned int index) const;
 
     void prepareForSimulation(bool isThematicTrimmingEnabled,
@@ -134,6 +139,9 @@ private:
     // Max columns count a report of any kind can contain, depending on the number of selected
     // variables. The less variables are selected, the smallest this count is.
     uint totalMaxColumnsCount_ = 0;
+
+    // Extra columns for dynamic aggregation
+    uint extraColumnsCount_ = 0;
 
     // Number of selected zonal variables
     uint numberSelectedAreaVariables = 0;

@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <filesystem>
 #include <map>
 #include <string>
 
@@ -39,7 +38,9 @@ public:
 
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
-    void writeAllResults(const std::filesystem::path& folder, IResultWriter& writer) const;
+    void appendToSurveyForSet(const std::string& setName,
+                              SurveyResults& survey,
+                              Category::Precision precision) const;
 
 private:
     Data::Study& study_;
@@ -53,11 +54,17 @@ public:
 
     void merge(const DynamicAggregationSingleYear& toMerge, unsigned year);
 
-    void writeAllResults(const std::filesystem::path& folder, IResultWriter& writer) const;
+    void appendToSurveyForSet(const std::string& setName,
+                              SurveyResults& survey,
+                              Category::Precision precision) const;
+
+    unsigned int computeDynamicAggregationMaxColumns() const;
 
 private:
     Data::Study& study_;
     std::map<std::string, SetDataAllYears> setsData_;
 };
+
+unsigned int computeDynamicAggregationMaxColumns(const Data::Study& study);
 
 } // namespace Antares::Solver::Variable

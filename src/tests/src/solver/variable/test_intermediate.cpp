@@ -126,6 +126,83 @@ BOOST_FIXTURE_TEST_CASE(averageFromHourlyPartialYear, PartialYearStudyFixture)
     BOOST_CHECK_CLOSE(intermediate.day[0], (10. + 20.) / 24, TOLERANCE);
 }
 
+// This test illustrates how to aggregate hourly values to daily values then format to a 2 column
+// report (CSV-like file)
+BOOST_FIXTURE_TEST_CASE(intermediate_buildAnnualSurveyReport_to_surveyresults, FullYearStudyFixture)
+{
+    using namespace Antares::Solver::Variable;
+
+    const auto getIntermediate = [&](double value)
+    {
+        IntermediateValues intermediate;
+        intermediate.initializeFromStudy(*study);
+
+        // Fill first day hourly values with 1.0, others remain 0.0
+        for (unsigned int h = 0; h != HOURS_PER_DAY; ++h)
+        {
+            intermediate[h] = value;
+        }
+        return intermediate;
+    };
+
+    auto var1 = getIntermediate(1.);
+    auto var2 = getIntermediate(2.);
+
+    // Compute aggregated statistics (day/week/month/year)
+    var1.computeStatisticsForTheCurrentYear();
+    var2.computeStatisticsForTheCurrentYear();
+
+    // Prepare SurveyResults for manual use
+    survey.data.columnIndex = 0;
+
+    bool nonApplicable[2] = {false, false};
+    bool printed[2] = {true, true};
+    survey.isCurrentVarNA = nonApplicable;
+    survey.isPrinted = printed;
+
+    struct VCardStub
+    {
+        enum
+        {
+            decimal = 0,
+        };
+    };
+
+    // First column: variable 1
+    survey.variableCaption = "variable1";
+    survey.variableUnit = "unit1";
+    var1.buildAnnualSurveyReport<VCardStub>(survey,
+                                            Category::FileLevel::va,
+                                            Category::Precision::daily);
+
+    // Second column: variable 2
+    survey.variableCaption = "variable2";
+    survey.variableUnit = "unit2";
+    var2.buildAnnualSurveyReport<VCardStub>(survey,
+                                            Category::FileLevel::va,
+                                            Category::Precision::daily);
+
+    const std::string filename = "daily.txt";
+    survey.data.filename = filename;
+
+    // Write report to file
+    survey.saveToFile(Category::DataLevel::area,
+                      Category::FileLevel::va,
+                      Category::Precision::daily);
+
+    // Check the contents of the file
+    const auto& map = writer.getMap();
+    BOOST_REQUIRE(map.contains(filename));
+    const auto& content = map.at(filename);
+
+    // Captions from both buildAnnualSurveyReport calls must be present
+    BOOST_CHECK_NE(content.find("system	daily			variable1	variable2"),
+                   std::string::npos);
+    BOOST_CHECK_NE(content.find("				unit1	unit2"), std::string::npos);
+    // The value for the first day must be present
+    BOOST_CHECK_NE(content.find("	1	01	JAN	24	48"), std::string::npos);
+}
+
 BOOST_FIXTURE_TEST_CASE(hourToWeekAggregationWithStatistics, FullYearStudyFixture)
 {
     Antares::Solver::Variable::IntermediateValues intermediate;

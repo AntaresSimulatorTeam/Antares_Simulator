@@ -187,18 +187,14 @@ public:
         // 9 - Write results for the current year
         if (yearByYear)
         {
-            pDurationCollector("yby_export")
-              << [this, &numSpace, &dynamicAggregationForTheYear]
+            pDurationCollector("yby_export") << [this, &numSpace, &dynamicAggregationForTheYear]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
-                // writing the results for the current year into the output
-                simulation_->writeResults(false, y, numSpace); // false for synthesis
 
-                std::ostringstream oss;
-                oss << std::setw(5) << std::setfill('0') << y + 1;
-                fs::path output = fs::path(simulation_->Name()) / "mc-ind" / oss.str() / "areas";
-                dynamicAggregationForTheYear.writeAllResults(output, pResultWriter);
+                study.runtime.dynamicAggregationSingleYear = &dynamicAggregationForTheYear;
+                simulation_->writeResults(false, y, numSpace);
+                study.runtime.dynamicAggregationSingleYear = nullptr;
             };
         }
 
@@ -288,8 +284,21 @@ void ISimulation<ImplementationType>::run()
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
-    // Computing the max number columns a report of any kind can contain.
+
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+
+    // Compute max columns for dynamic aggregation
+    unsigned int dynamicAggregationMaxColumns = ImplementationType::dynamicAggregationAllYears
+                                                  .computeDynamicAggregationMaxColumns();
+    if (dynamicAggregationMaxColumns > 0)
+    {
+        logs.info() << "Adding " << dynamicAggregationMaxColumns
+                    << " extra columns for dynamic aggregation";
+        study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns * 5);
+    }
+
+    // Computing max number of columns a report of any kind can contain, depending on number of
+    // selected variables. The less variables are selected, smallest this count is.
 
     logs.info() << "Allocating resources...";
 
@@ -354,9 +363,6 @@ void ISimulation<ImplementationType>::run()
 
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };
-
-        fs::path output = fs::path(ImplementationType::Name()) / "mc-all" / "areas";
-        ImplementationType::dynamicAggregationAllYears.writeAllResults(output, pResultWriter);
 
         ImplementationType::variables.simulationEnd();
 

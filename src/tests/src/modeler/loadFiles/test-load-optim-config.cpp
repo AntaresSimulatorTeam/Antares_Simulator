@@ -7,6 +7,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/study/system-model/optimConfig.h"
 
 using namespace Antares::Solver::LoadFiles;
@@ -93,7 +94,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_variable_decomposition, CreateInp
     createOptimConfigFile(yamlContent);
 
     // Act part
-    auto libraries = loadLibraries(studyFolder);
+    auto [libraries, _] = loadLibraries(studyFolder);
 
     // Assert part
     const auto& modelVariables = libraries[0].Models().at("some-model").Variables();
@@ -142,7 +143,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateI
     createOptimConfigFile(yamlContent);
 
     // Act part
-    auto libraries = loadLibraries(studyFolder);
+    auto [libraries, _] = loadLibraries(studyFolder);
 
     // Assert part
     const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
@@ -191,7 +192,7 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
     createOptimConfigFile(yamlContent);
 
     // Act part
-    auto libraries = loadLibraries(studyFolder);
+    auto [libraries, _] = loadLibraries(studyFolder);
 
     // Assert part
     const auto& modelObjectives = libraries[0].Models().at("some-model").Objectives();
@@ -363,4 +364,167 @@ BOOST_AUTO_TEST_CASE(locationsCompatibleForExpressions)
                                                       Location::MASTER_AND_SUBPROBLEMS));
     BOOST_CHECK(!AreLocationsCompatibleForExpressions(Location::SUBPROBLEMS, Location::MASTER));
     BOOST_CHECK(!AreLocationsCompatibleForExpressions(Location::MASTER, Location::SUBPROBLEMS));
+}
+
+// Tests for resolution-mode field
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_resolution_mode_sequential_subproblems,
+                        CreateInputFileFixture)
+{
+    // Arrange part
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(resolution-mode: sequential-subproblems
+models:
+  - id: my-lib.test-model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    auto [_, resolutionMode] = loadLibraries(studyFolder);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
+}
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_resolution_mode_benders_decomposition,
+                        CreateInputFileFixture)
+{
+    // Arrange part
+    std::string yamlContent = R"(library:
+  id: lib_thermal_invest
+  description: investment-lib
+  models:
+    - id: thermal_candidate
+      variables:
+        - id: p_max
+        - id: power)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(resolution-mode: benders-decomposition
+models:
+  - id: lib_thermal_invest.thermal_candidate
+    model-decomposition:
+      variables:
+        - id: p_max
+          location: master
+        - id: power
+          location: master-and-subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    auto [_, resolutionMode] = loadLibraries(studyFolder);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
+}
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_default_resolution_mode, CreateInputFileFixture)
+{
+    // Arrange part - no resolution-mode specified, should default to sequential-subproblems
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+  - id: my-lib.test-model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master-and-subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    // Act & Assert - default mode should be SEQUENTIAL_SUBPROBLEMS
+    auto [libraries, resolutionMode] = loadLibraries(studyFolder);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
+}
+
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_multiple_models_and_resolution_mode,
+                        CreateInputFileFixture)
+{
+    // Arrange part - multiple models with benders decomposition mode
+    std::string yamlContent = R"(library:
+  id: lib_invest
+  description: investment-library
+  models:
+    - id: thermal
+      variables:
+        - id: capacity
+        - id: dispatch
+    - id: renewable
+      variables:
+        - id: installed_capacity
+        - id: generation)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(resolution-mode: benders-decomposition
+models:
+  - id: lib_invest.thermal
+    model-decomposition:
+      variables:
+        - id: capacity
+          location: master
+        - id: dispatch
+          location: master-and-subproblems
+  - id: lib_invest.renewable
+    model-decomposition:
+      variables:
+        - id: installed_capacity
+          location: master
+        - id: generation
+          location: master-and-subproblems)";
+
+    createOptimConfigFile(yamlContent);
+
+    // Act & Assert
+    auto [libraries, resolutionMode] = loadLibraries(studyFolder);
+    BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
+    BOOST_REQUIRE_EQUAL(libraries.size(), 1);
+    const auto& models = libraries[0].Models();
+    BOOST_REQUIRE_EQUAL(models.size(), 2);
+    BOOST_CHECK(models.find("thermal") != models.end());
+    BOOST_CHECK(models.find("renewable") != models.end());
+}
+
+// Invalid resolution mode
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_invalid_resolution_mode, CreateInputFileFixture)
+{
+    // Arrange part - invalid resolution-mode should cause an error
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(resolution-mode: invalid-mode-value
+models:
+  - id: my-lib.test-model
+    model-decomposition:
+      variables:
+        - id: x
+          location: master)";
+
+    createOptimConfigFile(yamlContent);
+
+    // Act & Assert - invalid resolution mode should throw an exception
+    BOOST_CHECK_THROW(loadLibraries(studyFolder), Antares::Error::InvalidArgumentError);
 }

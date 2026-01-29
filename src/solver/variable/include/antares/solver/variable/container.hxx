@@ -6,6 +6,7 @@
 
 #include <yuni/core/static/types.h>
 
+#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 #include "antares/solver/variable/surveyresults/reportbuilder.hxx"
 
 namespace Antares::Solver::Variable::Container
@@ -216,6 +217,16 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     // Ask to all variables
     NextT::buildSurveyReport(results, dataLevel, fileLevel, precision);
 
+    // Append dynamic aggregation columns for sets of areas
+    if (dataLevel == Category::DataLevel::setOfAreas && pStudy->runtime.dynamicAggregationAllYears)
+    {
+        for (const auto& [setName, _]: pStudy->setsOfAreas)
+        {
+            pStudy->runtime.dynamicAggregationAllYears
+              ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+        }
+    }
+
     // If the column index is still equals to 0, that would mean we have nothing
     // to do (there is no data to write)
     if (results.data.columnIndex > 0)
@@ -245,6 +256,17 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     // Ask to all variables
     NextT::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+
+    // Append dynamic aggregation columns for sets of areas
+    if (dataLevel == Category::DataLevel::setOfAreas
+        && pStudy->runtime.dynamicAggregationSingleYear)
+    {
+        for (const auto& [setName, _]: pStudy->setsOfAreas)
+        {
+            pStudy->runtime.dynamicAggregationSingleYear
+              ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+        }
+    }
 
     // If the column index is still equals to 0, that would mean we have nothing
     // to do (there is no data to write)

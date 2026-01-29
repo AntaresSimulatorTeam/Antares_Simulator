@@ -46,17 +46,26 @@ void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMer
     }
 }
 
-void DynamicAggregationAllYears::writeAllResults(const std::filesystem::path& baseFolder,
-                                                 IResultWriter& writer) const
+void DynamicAggregationAllYears::appendToSurveyForSet(const std::string& setName,
+                                                      SurveyResults& survey,
+                                                      Category::Precision precision) const
 {
-    namespace fs = std::filesystem;
-    fs::create_directories(baseFolder);
-
-    for (const auto& [setName, setData]: setsData_)
+    auto it = setsData_.find(setName);
+    if (it != setsData_.end())
     {
-        std::filesystem::path folder = baseFolder / ("@ " + setName);
-        setData.writeResultsToFolder(folder, study_, writer);
+        it->second.appendToSurvey(survey, precision);
     }
+}
+
+unsigned int DynamicAggregationAllYears::computeDynamicAggregationMaxColumns() const
+{
+    unsigned int maxCols = 0;
+
+    for (const auto& [_, setData]: setsData_)
+    {
+        maxCols += setData.numberOfVariables();
+    }
+    return maxCols * 4; // 4 for exp, std, min, max
 }
 
 } // namespace Antares::Solver::Variable

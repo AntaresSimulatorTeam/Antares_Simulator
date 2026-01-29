@@ -16,7 +16,7 @@
  * Mozilla Public Licence 2.0 for more details.
  *
  * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+ * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2.0/>.
  */
 
 #include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
@@ -41,16 +41,14 @@ void DynamicAggregationSingleYear::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
-void DynamicAggregationSingleYear::writeAllResults(const std::filesystem::path& baseFolder,
-                                                   IResultWriter& writer) const
+void DynamicAggregationSingleYear::appendToSurveyForSet(const std::string& setName,
+                                                        SurveyResults& survey,
+                                                        Category::Precision precision) const
 {
-    namespace fs = std::filesystem;
-    fs::create_directories(baseFolder);
-
-    for (const auto& [setName, setData]: setsData_)
+    auto it = setsData_.find(setName);
+    if (it != setsData_.end())
     {
-        std::filesystem::path folder = baseFolder / ("@ " + setName);
-        setData.writeResultsToFolder(folder, study_, writer);
+        it->second.appendToSurvey(survey, precision, study_);
     }
 }
 
