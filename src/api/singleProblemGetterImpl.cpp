@@ -326,6 +326,7 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
 
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
+    setWeeklyData(id);
     return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
 }
 
