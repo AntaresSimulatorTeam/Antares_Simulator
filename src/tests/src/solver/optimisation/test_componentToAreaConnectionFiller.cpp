@@ -228,7 +228,6 @@ struct ComponentToAreaConnectionFillerFixture
 
         ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
                                                optimEntityContainer,
-                                               data,
                                                scenarioGroupRepository);
         filler.addVariables(fillCtx);
         filler.addConstraints(fillCtx);

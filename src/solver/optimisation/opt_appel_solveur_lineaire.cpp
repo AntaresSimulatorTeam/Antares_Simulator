@@ -120,7 +120,6 @@ std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortools
         fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
           problemeHebdo,
           optimEntityContainer,
-          *problemeHebdo->modelerData->dataSeries,
           problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
