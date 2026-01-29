@@ -171,8 +171,7 @@ struct Tag
     unsigned base;
 };
 
-// logically day should also be shifted, somehow antares does not do that
-constexpr std::array<Tag, 2> tags = {{{"::hour<", 168}, /*{"::day<", 7},*/ {"::week<", 1}}};
+constexpr std::array<Tag, 3> tags = {{{"::hour<", 168}, {"::day<", 7}, {"::week<", 1}}};
 
 std::vector<NameMemo> buildMemo(const std::vector<std::string>& names)
 {
@@ -198,6 +197,7 @@ std::vector<NameMemo> buildMemo(const std::vector<std::string>& names)
             }
 
             mem.emplace_back(numStart, end, std::stoi(s.substr(numStart, end - numStart)), i, base);
+            break;
         }
     }
 
@@ -239,31 +239,35 @@ std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
     return names;
 }
 
-WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, bool withSolver)
+void updateWeekId(WeeklyProblemId& id)
 {
-    auto [year, week] = id;
+    auto& [year, week] = id;
     // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
     if (week == 0)
     {
         throw std::out_of_range("Invalid week number 0 detected, week number must be >=1");
     }
     week--;
+}
 
-    pb_.year = year;
-    pb_.weekInTheYear = week;
+void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
+{
+    updateWeekId(id);
+    pb_.year = id.year;
+    pb_.weekInTheYear = id.week;
 
-    const auto [hydroLevels, ventilationResults] = getYearlyData(year);
+    const auto [hydroLevels, ventilationResults] = getYearlyData(id.year);
 
-    uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
+    uint indexYear = randomForParallelYears_->yearNumberToIndex[id.year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
     // TODO
-    if (auto [_, unseen] = randomPrepared_.insert(year); unseen)
+    if (auto [_, unseen] = randomPrepared_.insert(id.year); unseen)
     {
         // TODO once per year, not every week
         Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
     }
 
-    const auto hourInTheYear = 168 * week; // TODO
+    const auto hourInTheYear = 168 * id.week; // TODO
     pb_.HeureDansLAnnee = hourInTheYear;
     // Apply hydro levels
     for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
@@ -271,14 +275,14 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
         const auto* area = study_->areas.byIndex[areaIndex];
         if (area->hydro.reservoirManagement)
         {
-            double initialLevel = hydroLevels.at(area)[week];
+            double initialLevel = hydroLevels.at(area)[id.week];
             pb_.previousSimulationFinalLevel[areaIndex] = initialLevel;
         }
     }
 
     SIM_RenseignementProblemeHebdo(*study_,
                                    pb_,
-                                   week,
+                                   id.week,
                                    hourInTheYear,
                                    ventilationResults,
                                    scratchmap_);
@@ -289,7 +293,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
       pb_,
       hourInTheYear,
       randomForCurrentYear.pThermalNoisesByArea,
-      year);
+      id.year);
 
     OPT_VerifierPresenceReserveJmoins1(&pb_);
 
@@ -318,34 +322,41 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id, boo
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+}
 
-    auto ret = translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
-    if (withSolver)
+WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+{
+    setWeeklyData(id);
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
+}
+
+std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+{
+    setWeeklyData(id);
+    auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+
+    if (id.week == 0 && id.year != 0)
     {
-        auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
-
-        if (week == 0 && year != 0)
-        {
-            ProblemeAResoudre->NomDesVariables = variablesName_;
-            ProblemeAResoudre->NomDesContraintes = constraintsName_;
-        }
-        if (week != 0)
-        {
-            ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_,
-                                                                 variablesMemo_,
-                                                                 week);
-            ProblemeAResoudre->NomDesContraintes = applyTimeOffset(constraintsName_,
-                                                                   constraintsMemo_,
-                                                                   week);
-        }
-        SingleOptimOptions options;
-
-        ret.linearProblem = std::make_unique<Antares::Optimization::LegacyOrtoolsLinearProblem>(
-          pb_.ProblemeAResoudre->isMIP(),
-          options.solverName);
-        fillProblem(*ret.linearProblem);
+        ProblemeAResoudre->NomDesVariables = variablesName_;
+        ProblemeAResoudre->NomDesContraintes = constraintsName_;
     }
-    return ret;
+    if (id.week != 0)
+    {
+        ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_,
+                                                             variablesMemo_,
+                                                             id.week);
+        ProblemeAResoudre->NomDesContraintes = applyTimeOffset(constraintsName_,
+                                                               constraintsMemo_,
+                                                               id.week);
+    }
+    SingleOptimOptions options;
+
+    std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
+      Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.ProblemeAResoudre->isMIP(),
+                                                         options.solverName);
+    fillProblem(*linearProblem);
+
+    return linearProblem;
 }
 
 void SingleProblemGetter::fillProblem(ILinearProblem& problem) const

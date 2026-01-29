@@ -84,13 +84,13 @@ void ValidateOptions(const ApiOptions& options)
     }
 }
 
-void writeWeekMPS(const WeeklyDataFromAntares& weekly,
+void writeWeekMPS(const std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>& weekly,
                   const std::filesystem::path& outputPath,
                   const WeeklyProblemId& id)
 {
     auto name = problemName(id);
 
-    IO::Outputs::MPSGenerator mpsGenerator(*weekly.linearProblem, name + ".mps");
+    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps");
     const std::string mps = mpsGenerator.run();
 
     logs.info() << "Printing problem: " << name << '\n';
@@ -168,8 +168,7 @@ void printProblems(const ApiOptions& options)
             logs.info() << " week: " << week << '\n';
             const WeeklyProblemId id = {year, week};
             bendersDecomposition.setCurrentProblemId(problemName(id));
-            auto weekly = getter.getWeeklyData(id, true);
-
+            auto weekly = getter.getWeeklyProblem(id);
             if (options.writeMps)
             {
                 writeWeekMPS(weekly, options.outputFolder, id);
