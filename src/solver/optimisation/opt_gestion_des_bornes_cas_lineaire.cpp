@@ -66,13 +66,17 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
+    // gp : to remove
     const bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
     const bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
+
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
+        
+        // gp : to remove
         const ALL_MUST_RUN_GENERATION& AllMustRunGeneration = problemeHebdo
                                                                 ->AllMustRunGeneration[pdtHebdo];
         const CONSOMMATIONS_ABATTUES& ConsommationsAbattues = problemeHebdo
@@ -80,16 +84,19 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
 
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
+            int var = variableManager.UnsuppliedEnergy(pays, pdtJour);
+            Xmin[var] = 0.0;
 
+            // Unsupplied energy lower bound
+            // ---------------------------------
+            // Xmax[var] = LINFINI_ANTARES; // gp : to be added back
+
+            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
             if (reserveJm1 && opt1)
             {
                 ResidualLoadInArea += problemeHebdo->ReserveJMoins1[pays]
                                         .ReserveHoraireJMoins1[pdtHebdo];
             }
-
-            int var = variableManager.UnsuppliedEnergy(pays, pdtJour);
-            Xmin[var] = 0.0;
 
             double MaxAllMustRunGenerationOfArea = 0.;
             if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.)
@@ -108,6 +115,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                 Xmax[var] = 0.;
             }
 
+            // Unsuplied energy results after optimization
             problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive[pdtHebdo]
               = 0.0;
 

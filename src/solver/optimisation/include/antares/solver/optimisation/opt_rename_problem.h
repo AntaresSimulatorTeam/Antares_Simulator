@@ -82,6 +82,7 @@ public:
     void FlowDissociation(unsigned constrIndex);
     void AreaBalance(unsigned constrIndex);
     void FictiveLoads(unsigned constrIndex);
+    void MaxUnsuppliedEnergy(unsigned constrIndex);
     void HydroPower(unsigned constrIndex);
     void HydroPowerSmoothingUsingVariationSum(unsigned constrIndex);
     void HydroPowerSmoothingUsingVariationMaxDown(unsigned constrIndex);

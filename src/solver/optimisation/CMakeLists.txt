@@ -76,6 +76,8 @@ set(RTESOLVER_OPT
         constraints/AreaBalance.cpp
         include/antares/solver/optimisation/constraints/FictitiousLoad.h
         constraints/FictitiousLoad.cpp
+        include/antares/solver/optimisation/constraints/MaxUnsuppliedEnergy.h
+        constraints/MaxUnsuppliedEnergy.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageLevel.h
         constraints/ShortTermStorageLevel.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h

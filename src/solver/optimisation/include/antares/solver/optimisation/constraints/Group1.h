@@ -6,6 +6,7 @@
 #include "BindingConstraintHour.h"
 #include "ConstraintGroup.h"
 #include "FictitiousLoad.h"
+#include "MaxUnsuppliedEnergy.h"
 #include "FlowDissociation.h"
 #include "ShortTermStorageLevel.h"
 
@@ -19,10 +20,9 @@ public:
 private:
     AreaBalanceData GetAreaBalanceData();
     FictitiousLoadData GetFictitiousLoadData();
+    MaxUnsupEnergyData GetMaxUnsupEnergyData();
     ShortTermStorageData GetShortTermStorageData();
-
     ShortTermStorageCumulativeConstraintData GetShortTermStorageCumulativeConstraintData();
-
     FlowDissociationData GetFlowDissociationData();
     BindingConstraintHourData GetBindingConstraintHourData();
 };
