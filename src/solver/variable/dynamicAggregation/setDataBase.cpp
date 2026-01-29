@@ -20,7 +20,6 @@
  */
 
 #include "antares/solver/variable/dynamicAggregation/setData.h"
-#include "antares/study/study.h"
 
 namespace Antares::Solver::Variable
 {

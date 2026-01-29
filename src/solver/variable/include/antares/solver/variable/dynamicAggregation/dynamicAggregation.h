@@ -29,6 +29,10 @@
 namespace Antares::Solver::Variable
 {
 
+/// Used at the end of each week by adding problem results to SetDataSingleYear
+/// SetDataSingleYear contains vectors<long double> for each group for each type of results
+/// results: thermal, renewable, sts injection, sts withdrawal, sts level
+/// Exporting is only 1 column per group, we handle calendar with IntermediateValues
 class DynamicAggregationSingleYear
 {
 public:
@@ -47,6 +51,10 @@ private:
     std::map<std::string, SetDataSingleYear> setsData_;
 };
 
+/// Used at the end of each year to aggregate DynamicAggregationSingleYear results
+/// Contains Average, StdDev, Min, Max for each group for each type of results
+/// results: thermal, renewable, sts injection, sts withdrawal, sts level
+/// Exporting is only 4 column per group
 class DynamicAggregationAllYears
 {
 public:

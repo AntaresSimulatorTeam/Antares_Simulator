@@ -21,8 +21,6 @@
 
 #include "antares/solver/variable/dynamicAggregation/setData.h"
 
-namespace fs = std::filesystem;
-
 namespace Antares::Solver::Variable
 {
 
@@ -135,11 +133,6 @@ void SetDataSingleYear::appendToSurvey(SurveyResults& survey,
     processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
     processGroups(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
     processGroups(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);
-}
-
-size_t SetDataSingleYear::numberOfVariables() const
-{
-    return thermalGroupNames_.size() + renewableGroupNames_.size() + stsGroupNames_.size() * 3;
 }
 
 } // namespace Antares::Solver::Variable

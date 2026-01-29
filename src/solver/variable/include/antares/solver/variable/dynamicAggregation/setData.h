@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <filesystem>
 #include <set>
 #include <vector>
 
@@ -33,12 +32,11 @@
 namespace Antares::Solver::Variable
 {
 
+/// Contains common data: group names and areas sets
 class SetDataBase
 {
 public:
     explicit SetDataBase(const std::set<Data::Area*, Data::CompareAreaName>& set);
-
-    virtual size_t numberOfVariables() const = 0; // 4 variables for mc-all: exp std min max
 
 protected:
     std::set<std::string> thermalGroupNames_;
@@ -59,6 +57,7 @@ protected:
     };
 };
 
+/// Used at the end for each week by adding problem results to Results_ vectors
 class SetDataSingleYear: public SetDataBase
 {
 public:
@@ -67,8 +66,6 @@ public:
     explicit SetDataSingleYear(const std::set<Data::Area*, Data::CompareAreaName>& set);
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
-
-    size_t numberOfVariables() const override;
 
     void appendToSurvey(SurveyResults& survey,
                         Category::Precision precision,
@@ -90,6 +87,7 @@ private:
     std::vector<std::vector<HighPrecision>> stsLevelResults_;
 };
 
+/// Used at the end of each with merge()
 class SetDataAllYears: public SetDataBase
 {
 public:
@@ -98,7 +96,7 @@ public:
 
     void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
 
-    size_t numberOfVariables() const override;
+    size_t numberOfVariables() const;
 
     void appendToSurvey(SurveyResults& survey, Category::Precision precision) const;
 
