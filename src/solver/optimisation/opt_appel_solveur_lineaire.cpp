@@ -177,7 +177,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                       problemeHebdo,
                       optimEntityContainer,
                       problemeHebdo->NamedProblems,
-                      problemeHebdo->modelerData->bendersDecomposition);
+                      &problemeHebdo->modelerData->bendersDecomposition);
     auto solver = ortoolsProblem.getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
@@ -338,7 +338,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                           problemeHebdo,
                           optimEntityContainer,
                           true,
-                          problemeHebdo->modelerData->bendersDecomposition);
+                          &problemeHebdo->modelerData->bendersDecomposition);
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

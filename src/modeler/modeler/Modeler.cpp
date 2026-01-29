@@ -212,12 +212,12 @@ void Modeler::exportMps() const
     }
 }
 
-void Modeler::exportStructureFile(const BendersDecomposition& bendersDecomposition) const
+void Modeler::exportStructureFile() const
 {
     const auto& output = writer_.outputPath();
 
     // structure.txt
-    const BendersDecompositionWriter writer(bendersDecomposition);
+    const BendersDecompositionWriter writer(data_.bendersDecomposition);
     std::ofstream of(output / "structure.txt");
     writer.write(of);
 }
@@ -238,14 +238,13 @@ void Modeler::run()
       0};
 
     // Sub problem
-    BendersDecomposition bendersDecomposition;
 
     // Master
 
     auto masterEntities = buildProblem(data_,
                                        Config::Location::MASTER,
                                        "master",
-                                       &bendersDecomposition,
+                                       &data_.bendersDecomposition,
                                        timeScenarioCtx,
                                        ResolutionMode::BENDERS_DECOMPOSITION,
                                        std::nullopt);
@@ -254,7 +253,7 @@ void Modeler::run()
     auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
                                                                      Config::Location::SUBPROBLEMS,
                                                                      "1-1",
-                                                                     &bendersDecomposition,
+                                                                     &data_.bendersDecomposition,
                                                                      timeScenarioCtx,
                                                                      data_.resolutionMode,
                                                                      parameters_.solver);
@@ -283,7 +282,7 @@ void Modeler::run()
     if (parameters_.exportMps)
     {
         exportMps();
-        exportStructureFile(bendersDecomposition);
+        exportStructureFile();
     }
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {

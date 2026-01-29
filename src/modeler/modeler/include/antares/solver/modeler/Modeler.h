@@ -82,7 +82,7 @@ private:
       const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
     void exportMps() const;
-    void exportStructureFile(const Optimisation::BendersDecomposition& bendersDecomposition) const;
+    void exportStructureFile() const;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     ModelerParameters parameters_;

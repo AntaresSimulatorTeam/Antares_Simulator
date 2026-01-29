@@ -27,7 +27,7 @@ struct ModelerData
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
-    Optimisation::BendersDecomposition* bendersDecomposition = nullptr;
+    Optimisation::BendersDecomposition bendersDecomposition;
 };
 
 // Operator for printing ResolutionMode in logs and tests
