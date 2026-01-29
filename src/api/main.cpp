@@ -123,20 +123,27 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
         std::call_once(once, [&outputDir] { std::filesystem::create_directories(outputDir); });
     }
 
-    ModelerData data = LoadFiles::loadAll(studyPath);
+    const ModelerData data = LoadFiles::loadAll(studyPath);
     logs.info() << "Modeler data loaded";
 
     FillContext fillContext = {0, 167, 0, 167, 0};
 
-    auto master = Modeler::buildMasterProblem(data, bendersDecomposition, fillContext);
+    auto [masterProblem, optimEntityContainer] = Antares::Solver::buildProblem(
+      data,
+      Config::Location::MASTER,
+      "master",
+      &bendersDecomposition,
+      fillContext,
+      ResolutionMode::BENDERS_DECOMPOSITION,
+      std::nullopt);
 
-    if (!master.problem)
+    if (!masterProblem)
     {
         logs.warning() << "Master problem is empty - not writing master.mps or structure.txt";
         return;
     }
 
-    auto mps = IO::Outputs::MPSGenerator(*master.problem, "master").run();
+    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master").run();
     IO::Outputs::MPSFileWriter::write(outputDir / "master.mps", mps);
     logs.info() << "Written: " << (outputDir / "master.mps").string();
 

@@ -9,10 +9,37 @@
 
 #include "ModelerData.h"
 
+namespace Antares::Optimisation
+{
+class BendersDecomposition;
+
+namespace LinearProblemApi
+{
+/** \brief Context for filling linear problem data.
+ * Contains temporal information
+ */
+class FillContext;
+} // namespace LinearProblemApi
+} // namespace Antares::Optimisation
+
 namespace Antares::Solver
 {
 class ILoader;
 class IWriter;
+
+struct ProblemEntity
+{
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> problem;
+    std::unique_ptr<Optimisation::OptimEntityContainer> optimEntityContainer;
+};
+
+ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
+                           const Config::Location& location,
+                           const std::string& problemId,
+                           Optimisation::BendersDecomposition* bendersDecomposition,
+                           const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx,
+                           const ResolutionMode& resolutionMode,
+                           const std::optional<std::string>& solver);
 
 class Modeler final
 {
@@ -44,17 +71,6 @@ public:
     {
         return subproblems_;
     }
-
-    struct ProblemEntity
-    {
-        std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> problem;
-        std::unique_ptr<Optimisation::OptimEntityContainer> optimEntityContainer;
-    };
-
-    static ProblemEntity buildMasterProblem(
-      const ModelerData& data,
-      Optimisation::BendersDecomposition& bendersDecomposition,
-      const Optimisation::LinearProblemApi::FillContext& fillContext);
 
 private:
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;

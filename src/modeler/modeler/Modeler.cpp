@@ -117,25 +117,31 @@ LocationAnalysis analyzeLocation(const ModelerData& data, const Config::Location
     return result;
 }
 
-struct ProblemEntity
+std::unique_ptr<ILinearProblem> getProblem(bool isMip,
+                                           const ResolutionMode& resolutionMode,
+                                           const std::optional<std::string>& solver)
 {
-    std::unique_ptr<ILinearProblem> problem;
-    std::unique_ptr<OptimEntityContainer> optimEntityContainer;
-};
+    if (resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
+    {
+        return std::make_unique<OrtoolsLinearProblem>(isMip, solver.value());
+    }
+    return std::make_unique<StructuredLinearProblem>();
+}
 
-ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
+ProblemEntity buildProblem(const ModelerData& data,
                            const Config::Location& location,
                            const std::string& problemId,
                            BendersDecomposition* bendersDecomposition,
                            const FillContext& timeScenarioCtx,
-                           const std::string& solver)
+                           const ResolutionMode& resolutionMode,
+                           const std::optional<std::string>& solver)
 {
     auto [hasCompatibleVariable, isMip] = analyzeLocation(data, location);
     if (!hasCompatibleVariable)
     {
         return {nullptr, nullptr};
     }
-    auto problem = std::make_unique<StructuredLinearProblem>();
+    auto problem = getProblem(isMip, resolutionMode, solver);
     auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
       *problem,
       data.dataSeries.get(),
@@ -175,7 +181,8 @@ void Modeler::run()
                                        "master",
                                        &bendersDecomposition,
                                        timeScenarioCtx,
-                                       parameters_.solver);
+                                       ResolutionMode::BENDERS_DECOMPOSITION,
+                                       std::nullopt);
     masterProblem_ = std::move(masterEntities.problem);
     // Subproblem
     auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
@@ -183,6 +190,7 @@ void Modeler::run()
                                                                      "1-1",
                                                                      &bendersDecomposition,
                                                                      timeScenarioCtx,
+                                                                     data_.resolutionMode,
                                                                      parameters_.solver);
     subproblems_.emplace_back(std::move(subproblem));
 
@@ -254,28 +262,4 @@ void Modeler::run()
     }
 }
 
-Modeler::ProblemEntity Modeler::buildMasterProblem(
-  const ModelerData& data,
-  Optimisation::BendersDecomposition& bendersDecomposition,
-  const FillContext& fillContext)
-{
-    auto [hasCompatibleVariable, _] = analyzeLocation(data, Config::Location::MASTER);
-    if (!hasCompatibleVariable)
-    {
-        return {nullptr, nullptr};
-    }
-    auto problem = std::make_unique<StructuredLinearProblem>();
-    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
-      *problem,
-      data.dataSeries.get(),
-      &data.scenarioGroupRepository);
-    SystemLinearProblemBuilder builder(data.system.get(),
-                                       data.scenarioGroupRepository,
-                                       &bendersDecomposition,
-                                       *optimEntityContainer);
-
-    bendersDecomposition.setCurrentProblemId("master");
-    builder.build(fillContext, Config::Location::MASTER);
-    return {std::move(problem), std::move(optimEntityContainer)};
-}
 } // namespace Antares::Solver
