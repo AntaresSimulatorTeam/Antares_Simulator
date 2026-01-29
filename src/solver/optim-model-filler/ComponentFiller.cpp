@@ -232,6 +232,7 @@ ComponentFiller::ComponentFiller(const Component& component,
                                  BendersDecomposition* bendersDecomposition):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
+    // gp : scenario group repo unused for now
     scenarioGroupRepository_(scenarioGroupRepository),
     targetLocation_(targetLocation),
     bendersDecomposition_(bendersDecomposition)

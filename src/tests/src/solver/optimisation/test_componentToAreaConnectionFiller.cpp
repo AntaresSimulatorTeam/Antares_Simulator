@@ -144,24 +144,23 @@ struct ComponentToAreaConnectionFillerFixture
 
     std::unique_ptr<Solver::ModelerData> buildModelerSystem()
     {
+        auto to_return = std::make_unique<Solver::ModelerData>();
+        
         IO::Inputs::YmlModel::Parser parserModel;
         libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
 
         IO::Inputs::YmlSystem::Parser parserSystem;
         auto ymlSystem = parserSystem.parse(systemYaml);
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-        modelerData = std::make_unique<Solver::ModelerData>();
 
-        auto data = std::make_unique<Solver::ModelerData>();
-        data->system = std::make_unique<System>(std::move(system));
-        return data;
+        to_return->system = std::make_unique<System>(std::move(system));
+        return to_return;
     }
 
     void addAllComponentsVariablesToLP(unsigned int ts_start,
                                        unsigned int ts_end,
                                        OptimEntityContainer& optimEntityContainer)
     {
-        const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
         for (const auto& component: modelerData->system->Components())
         {
             for (const auto& variable: component.getModel()->Variables())
