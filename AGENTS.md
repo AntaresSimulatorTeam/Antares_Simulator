@@ -5,7 +5,10 @@ This document provides essential information for agentic coding agents working o
 ## Build Commands
 
 ```bash
-# Configure build (from src/ directory)
+# If ../_build exists do
+cmake --build ../_build -j$(nproc)
+
+# Else configure build (from src/ directory)
 cmake -B ../build-debug -DCMAKE_BUILD_TYPE=Debug
 cmake -B ../build-release -DCMAKE_BUILD_TYPE=Release
 
