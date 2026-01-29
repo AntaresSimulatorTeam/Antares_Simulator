@@ -100,8 +100,7 @@ public:
 
     size_t numberOfVariables() const override;
 
-    void appendToSurvey(SurveyResults& survey,
-                        Category::Precision precision) const;
+    void appendToSurvey(SurveyResults& survey, Category::Precision precision) const;
 
 private:
     void processGroups(const std::vector<R::AllYears::Average<>>& average,

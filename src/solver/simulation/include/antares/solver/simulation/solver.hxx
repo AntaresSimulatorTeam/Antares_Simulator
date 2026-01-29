@@ -288,8 +288,8 @@ void ISimulation<ImplementationType>::run()
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
     // Compute max columns for dynamic aggregation
-    unsigned int dynamicAggregationMaxColumns = Antares::Solver::Variable::
-      computeDynamicAggregationMaxColumns(study);
+    unsigned int dynamicAggregationMaxColumns = ImplementationType::dynamicAggregationAllYears
+                                                  .computeDynamicAggregationMaxColumns();
     if (dynamicAggregationMaxColumns > 0)
     {
         logs.info() << "Adding " << dynamicAggregationMaxColumns

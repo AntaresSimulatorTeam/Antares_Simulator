@@ -218,8 +218,7 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     NextT::buildSurveyReport(results, dataLevel, fileLevel, precision);
 
     // Append dynamic aggregation columns for sets of areas
-    if (dataLevel == Category::DataLevel::setOfAreas
-        && pStudy->runtime.dynamicAggregationAllYears)
+    if (dataLevel == Category::DataLevel::setOfAreas && pStudy->runtime.dynamicAggregationAllYears)
     {
         for (const auto& [setName, _]: pStudy->setsOfAreas)
         {

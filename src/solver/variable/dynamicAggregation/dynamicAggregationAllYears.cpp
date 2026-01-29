@@ -47,14 +47,25 @@ void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMer
 }
 
 void DynamicAggregationAllYears::appendToSurveyForSet(const std::string& setName,
-                                                        SurveyResults& survey,
-                                                        Category::Precision precision) const
+                                                      SurveyResults& survey,
+                                                      Category::Precision precision) const
 {
     auto it = setsData_.find(setName);
     if (it != setsData_.end())
     {
         it->second.appendToSurvey(survey, precision);
     }
+}
+
+unsigned int DynamicAggregationAllYears::computeDynamicAggregationMaxColumns() const
+{
+    unsigned int maxCols = 0;
+
+    for (const auto& [_, setData]: setsData_)
+    {
+        maxCols += setData.numberOfVariables();
+    }
+    return maxCols * 4; // 4 for exp, std, min, max
 }
 
 } // namespace Antares::Solver::Variable

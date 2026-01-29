@@ -194,8 +194,7 @@ void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average<>>& a
     }
 }
 
-void SetDataAllYears::appendToSurvey(SurveyResults& survey,
-                                     Category::Precision precision) const
+void SetDataAllYears::appendToSurvey(SurveyResults& survey, Category::Precision precision) const
 {
     processGroups(averageThermal_,
                   stdDevThermal_,

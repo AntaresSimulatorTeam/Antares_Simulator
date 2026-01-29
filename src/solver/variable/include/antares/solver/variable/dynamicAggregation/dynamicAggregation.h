@@ -58,6 +58,8 @@ public:
                               SurveyResults& survey,
                               Category::Precision precision) const;
 
+    unsigned int computeDynamicAggregationMaxColumns() const;
+
 private:
     Data::Study& study_;
     std::map<std::string, SetDataAllYears> setsData_;
