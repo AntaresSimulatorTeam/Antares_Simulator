@@ -82,7 +82,7 @@ struct AreaConnectionFixture
     std::unique_ptr<Solver::ModelerData> modelerData;
     std::vector<Library> libraries;
     // ... GEMS paramaters
-    FillContext ctx = {0, 0, 0, 0, 0};
+    FillContext fill_ctx = {0, 0, 0, 0, 0};
     LinearProblemData data;                          // Empty
     ScenarioGroupRepository scenarioGroupRepository; // Empty
 
@@ -96,8 +96,7 @@ private:
 };
 
 AreaConnectionFixture::AreaConnectionFixture():
-    linearProblem(true, "scip") //,
-    // optimEntityContainer(linearProblem, &data, &scenarioGroupRepository)
+    linearProblem(true, "scip")
 {
     modelerData = buildModelerSystem();
 
@@ -107,7 +106,9 @@ AreaConnectionFixture::AreaConnectionFixture():
 
     auto scenario = std::make_unique<Scenario>("SG");
     scenarioGroupRepository.addScenario("SG", std::move(scenario));
-    optimContainer = std::make_unique<OptimEntityContainer>(linearProblem, &data, &scenarioGroupRepository);
+    optimContainer = std::make_unique<OptimEntityContainer>(linearProblem,
+                                                            &data,
+                                                            &scenarioGroupRepository);
     optimContainer->addFromSystemComponents(modelerData->system->Components());
 }
 
@@ -136,7 +137,7 @@ void AreaConnectionFixture::addComponentsVariablesToLP()
             optimContainer->addStartColumn();
 
             // All variables are time-dependent here
-            for (auto t = 0; t <= ctx.getLocalLastTimeStep(); ++t)
+            for (auto t = 0; t <= fill_ctx.getLocalLastTimeStep(); ++t)
             {
                 auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
                 linearProblem.addVariable(-999, 999, false, name);
@@ -167,23 +168,44 @@ BOOST_AUTO_TEST_SUITE(_area_connections___spillage_)
 
 BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
 {
-    
     // Linear problem before addition from GEMS
     // ------------------------------------------
-    // LP is filled with constraints before GEMS comes into play.
-    std::vector<std::string> constraintNames({"dummy constaint", "AreaBalance::area<area1>::hour<0>"});
+    // 1. LP is filled with constraints before GEMS comes into play.
+    std::vector<std::string> constraintNames;
+    constraintNames.push_back("dummy constaint");
+    constraintNames.push_back("FictiveLoads::area<area1>::hour<0>");
+
     addNamedConstraintsToLP(constraintNames, 10 /* rhs */);
 
-    // Contraints numbering in linear problem before GEMS commes into play. 
+    // 2. Contraints numbering in linear problem before GEMS commes into play.
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
-    problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
+    // In LP, fictive loads constraints are contiguous. The start number for them is 1.
+    problemeHebdo->CorrespondanceCntNativesCntOptim[0]
+      .NumeroDeContraintePourEviterLesChargesFictives.push_back(1);
 
-
-    // Adding GEMS variables (replaces the work of ComponentFiller, for variables only)
+    // Adding GEMS variables and constraints to linear problem
+    // -------------------------------------------------------
+    // 1. Adding variables (replaces the work of ComponentFiller, but for variables)
     addComponentsVariablesToLP();
 
-    BOOST_CHECK(true);
+    // 2. Adding constraints from GEMS area connections
+    ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
+                                           *optimContainer,
+                                           scenarioGroupRepository);
+    filler.addConstraints(fill_ctx);
+
+    // ---------
+    // Checks
+    // ---------
+    const auto* fictive_ct_t0 = linearProblem.lookupConstraint(
+      "FictiveLoads::area<area1>::hour<0>");
+    const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
+
+    BOOST_CHECK_EQUAL(fictive_ct_t0->getCoefficient(var1_t0), -2.);
+
+    auto other_ct = linearProblem.lookupConstraint("dummy constaint");
+    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var1_t0), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
