@@ -192,7 +192,8 @@ public:
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
 
-                study.runtime.dynamicAggregationSingleYear[numSpace] = &dynamicAggregationForTheYear;
+                study.runtime.dynamicAggregationSingleYear[numSpace]
+                  = &dynamicAggregationForTheYear;
                 simulation_->writeResults(false, y, numSpace);
                 study.runtime.dynamicAggregationSingleYear[numSpace] = nullptr;
             };
@@ -287,7 +288,7 @@ void ISimulation<ImplementationType>::run()
 
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
-    // Compute max columns for dynamic aggregation
+    // Compute max extra columns for dynamic aggregation
     unsigned int dynamicAggregationMaxColumns = ImplementationType::dynamicAggregationAllYears
                                                   .computeDynamicAggregationMaxColumns();
     if (dynamicAggregationMaxColumns > 0)
@@ -296,9 +297,6 @@ void ISimulation<ImplementationType>::run()
                     << " extra columns for dynamic aggregation";
         study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns);
     }
-
-    // Computing max number of columns a report of any kind can contain, depending on number of
-    // selected variables. The less variables are selected, smallest this count is.
 
     logs.info() << "Allocating resources...";
 
