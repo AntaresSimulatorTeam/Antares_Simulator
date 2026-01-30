@@ -360,7 +360,7 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
     return linearProblem;
 }
 
-void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
+void SingleProblemGetter::fillProblem(ILinearProblem& problem)
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
