@@ -33,8 +33,10 @@ library:
       description: some port type for area connection
       fields:
         - id: to-area-bound
+        - id: from-area-bound
       area-connection:
         - to-area-bound-field: to-area-bound
+        - from-area-bound-field: from-area-bound
 
   models:
     - id: model_with_vars
@@ -50,6 +52,9 @@ library:
         - port: area_conn_port
           field: to-area-bound
           definition: 2 * var_1
+        - port: area_conn_port
+          field: from-area-bound
+          definition: var_1 / 2
 )"s;
 
 static const auto systemYaml = R"(
@@ -172,17 +177,26 @@ BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
     // ------------------------------------------
     // 1. LP is filled with constraints before GEMS comes into play.
     std::vector<std::string> constraintNames;
+    std::string fictiveLoadsConstrName = "FictiveLoads::area<area1>::hour<0>";
+    std::string maxUnsupEconstrName = "MaxUnsupEnergy::area<area1>::hour<0>";
+
     constraintNames.push_back("dummy constaint");
-    constraintNames.push_back("FictiveLoads::area<area1>::hour<0>");
+    constraintNames.push_back(fictiveLoadsConstrName);
+    constraintNames.push_back("another dummy constaint");
+    constraintNames.push_back(maxUnsupEconstrName);
 
     addNamedConstraintsToLP(constraintNames, 10 /* rhs */);
 
-    // 2. Contraints numbering in linear problem before GEMS commes into play.
+    // 2. Contraints numbering in linear problem before GEMS comes into play.
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
-    // In LP, fictive loads constraints are contiguous. The start number for them is 1.
+    // ... In LP, fictive loads constraints are contiguous. 
+    //     The start number for fictive loads is 1.
     problemeHebdo->CorrespondanceCntNativesCntOptim[0]
       .NumeroDeContraintePourEviterLesChargesFictives.push_back(1);
+    // ... The start number for upper-bounding the unsupplied energy is 3.
+    problemeHebdo->CorrespondanceCntNativesCntOptim[0]
+      .NumeroDeContraintePourBornerLaDefaillance.push_back(3);
 
     // Adding GEMS variables and constraints to linear problem
     // -------------------------------------------------------
@@ -198,14 +212,18 @@ BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
     // ---------
     // Checks
     // ---------
-    const auto* fictive_ct_t0 = linearProblem.lookupConstraint(
-      "FictiveLoads::area<area1>::hour<0>");
+    const auto* fictive_load_ct_t0 = linearProblem.lookupConstraint(fictiveLoadsConstrName);
+    const auto* max_unsupE_ct_t0 = linearProblem.lookupConstraint(maxUnsupEconstrName);
+
     const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
 
-    BOOST_CHECK_EQUAL(fictive_ct_t0->getCoefficient(var1_t0), -2.);
+    BOOST_CHECK_EQUAL(fictive_load_ct_t0->getCoefficient(var1_t0), -2.);
+    BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getCoefficient(var1_t0), -0.5);
 
-    auto other_ct = linearProblem.lookupConstraint("dummy constaint");
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var1_t0), 0);
+    auto dummy_ct = linearProblem.lookupConstraint("dummy constaint");
+    auto other_dummy_ct = linearProblem.lookupConstraint("dummy constaint");
+    BOOST_CHECK_EQUAL(dummy_ct->getCoefficient(var1_t0), 0);
+    BOOST_CHECK_EQUAL(other_dummy_ct->getCoefficient(var1_t0), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

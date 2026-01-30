@@ -23,6 +23,11 @@ std::string componentToAreaBoundField(const Component& component, const std::str
     return component.getModel()->Ports().at(portId).Type().areaConnection()->to_area_bound;
 }
 
+std::string componentFromAreaBoundField(const Component& component, const std::string& portId)
+{
+    return component.getModel()->Ports().at(portId).Type().areaConnection()->from_area_bound;
+}
+
 std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* problemeHebdo_)
 {
     std::map<std::string, unsigned> areaIndices;
@@ -94,6 +99,19 @@ std::vector<unsigned> ComponentToAreaConnectionFiller::fictitiousLoadConstraintI
     return indices;
 }
 
+std::vector<unsigned> ComponentToAreaConnectionFiller::maxUnsupEnergyConstraintIndices(
+  const FillContext& ctx,
+  const unsigned& areaIndex) const
+{
+    std::vector<unsigned> indices(ctx.getLocalNumberOfTimeSteps());
+    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    {
+        indices[h] = problemeHebdo_->CorrespondanceCntNativesCntOptim[h]
+                       .NumeroDeContraintePourBornerLaDefaillance[areaIndex];
+    }
+    return indices;
+}
+
 void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   const TimeDependentLinearExpression& linearExpression,
   const FillContext& ctx,
@@ -145,14 +163,15 @@ void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const Fill
                                                                       const unsigned& areaIndex)
 {
     std::string portField = componentInjectionField(component, portId);
-    if (portField.empty()) // area connection does not know this port field
+    if (portField.empty())
     {
+        // area connection does not specify this port field
         return;
     }
 
-    // 1. Get time-dependent linear expression at a component port field
+    // 1. GEMS side : get time-dependent linear expression at a component port field
     auto linearExpression = linearExpressionAtPortField(portId, portField, component, ctx);
-    // 2. Get the set of LP constraints to be modified with previous linear expression
+    // 2. Legacy LP side : get the set of LP constraints to be modified
     std::vector<unsigned> constaintsIndices = balanceConstraintIndices(ctx, areaIndex);
     auto constraints = fetchConstraints(ctx, constaintsIndices);
     // 3. Add the linear expression to LP constraints
@@ -165,17 +184,40 @@ void ComponentToAreaConnectionFiller::addToAreaBoundPortInLinearProblem(const Fi
                                                                         const unsigned& areaIndex)
 {
     std::string portField = componentToAreaBoundField(component, portId);
-    if (portField.empty()) // area connection does not know this field
+    if (portField.empty())
     {
+        // area connection does not specify this port field
         return;
     }
 
-    // 1. Get time-dependent linear expression at a component port field
+    // 1. GEMS side : get time-dependent linear expression at a component port field
     auto linearExpression = linearExpressionAtPortField(portId, portField, component, ctx);
-    // 2. Get the set of LP constraints to be modified with previous linear expression
+    // 2. Legacy LP side : get the set of LP constraints to be modified
     std::vector<unsigned> constaintsIndices = fictitiousLoadConstraintIndices(ctx, areaIndex);
     auto constraints = fetchConstraints(ctx, constaintsIndices);
     // 3. Add the linear expression to LP constraints
+    addExpressionToConstraint(linearExpression, ctx, constraints);
+}
+
+void ComponentToAreaConnectionFiller::addFromAreaBoundPortToLinearProblem(
+  const FillContext& ctx,
+  const Component& component,
+  const std::string& portId,
+  const unsigned& areaIndex)
+{
+    std::string portField = componentFromAreaBoundField(component, portId);
+    if (portField.empty())
+    {
+        // area connection does not specify this port field
+        return;
+    }
+
+    // 1. GEMS side : get time-dependent linear expression at a component port field
+    auto linearExpression = linearExpressionAtPortField(portId, portField, component, ctx);
+    // 2. Legacy LP side : get the set of LP constraints to be modified
+    std::vector<unsigned> constaintsIndices = maxUnsupEnergyConstraintIndices(ctx, areaIndex);
+    auto constraints = fetchConstraints(ctx, constaintsIndices);
+    // 3. Add the linear expression to Legacy LP constraints
     addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
@@ -188,6 +230,7 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
             auto areaIndex = areaIndices_.at(areaId);
             addInjectionPortToLinearProblem(ctx, component, portId, areaIndex);
             addToAreaBoundPortInLinearProblem(ctx, component, portId, areaIndex);
+            addFromAreaBoundPortToLinearProblem(ctx, component, portId, areaIndex);
         }
     }
 }

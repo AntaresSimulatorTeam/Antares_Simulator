@@ -63,6 +63,10 @@ private:
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const unsigned& areaIndex) const;
 
+    std::vector<unsigned> maxUnsupEnergyConstraintIndices(
+      const Optimisation::LinearProblemApi::FillContext& ctx,
+      const unsigned& areaIndex) const;
+
     void addExpressionToConstraint(
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
@@ -82,6 +86,10 @@ private:
                                            const ModelerStudy::SystemModel::Component& component,
                                            const std::string& portId,
                                            const unsigned& areaIndex);
+    void addFromAreaBoundPortToLinearProblem(const Optimisation::LinearProblemApi::FillContext& ctx,
+                                             const ModelerStudy::SystemModel::Component& component,
+                                             const std::string& portId,
+                                             const unsigned& areaIndex);
 };
 
 } // namespace Antares::Optimization
