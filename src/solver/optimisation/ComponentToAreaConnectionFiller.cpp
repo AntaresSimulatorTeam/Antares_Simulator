@@ -5,7 +5,6 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
-#include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
@@ -30,7 +29,7 @@ std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* pr
     unsigned index = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
     {
-        areaIndices.insert({name, index++});
+        areaIndices.try_emplace(name, index++);
     }
     return areaIndices;
 }

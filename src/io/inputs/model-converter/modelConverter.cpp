@@ -161,8 +161,8 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
         }
 
         // Can't have port types with the same ID
-        if (std::ranges::find_if(out, [&](const auto& p) { return p.Id() == ymlPortType.id; })
-            != out.end())
+        auto predicate = [&ymlPortType](const auto& p) { return p.Id() == ymlPortType.id; };
+        if (std::ranges::find_if(out, predicate) != out.end())
         {
             throw PortTypeWithThisIdAlreadyExists(ymlPortType.id);
         }

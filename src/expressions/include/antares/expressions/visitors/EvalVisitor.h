@@ -147,8 +147,6 @@ public:
         throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
-    std::vector<double> asVector(const unsigned& size) const;
-
     [[nodiscard]] double getValueInVector(unsigned index) const
     {
         if (const auto* v = std::get_if<std::vector<double>>(&value_))
