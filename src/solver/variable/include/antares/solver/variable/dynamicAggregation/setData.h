@@ -53,6 +53,12 @@ public:
                         Category::Precision precision,
                         Data::Study& study) const;
 
+    // Getter functions for testing
+    const std::vector<std::vector<HighPrecision>>& getThermalResults() const
+    {
+        return thermalResults_;
+    }
+
 private:
     void processGroups(const std::vector<std::vector<long double>>& results,
                        const std::set<std::string>& groupNames,

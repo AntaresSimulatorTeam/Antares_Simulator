@@ -14,3 +14,9 @@ add_boost_test(test-residual-load
   SRC test_residual_load.cpp
   LIBS
   antares-solver-variable)
+
+add_boost_test(test-dynamic-aggregation
+    SRC test_dynamic.cpp
+    LIBS
+    antares-solver-variable
+    in-memory-study)
