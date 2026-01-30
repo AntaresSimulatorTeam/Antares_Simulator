@@ -145,6 +145,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1eb140845344d0eca8786f1af22d87ba"><td class="memItemLeft" align="right" valign="top"><a id="a1eb140845344d0eca8786f1af22d87ba"></a>
 <a class="el" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getWeeklyData</b> (<a class="el" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> id)</td></tr>
 <tr class="separator:a1eb140845344d0eca8786f1af22d87ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fbb19ce62bea314e64799592f4762f1"><td class="memItemLeft" align="right" valign="top"><a id="a8fbb19ce62bea314e64799592f4762f1"></a>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getWeeklyProblem</b> (<a class="el" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> id)</td></tr>
+<tr class="separator:a8fbb19ce62bea314e64799592f4762f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e614ec25c94cf43622437ba1e163a2"><td class="memItemLeft" align="right" valign="top"><a id="a57e614ec25c94cf43622437ba1e163a2"></a>
 std::vector&lt; <a class="el" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getProblemIds</b> () const</td></tr>
 <tr class="separator:a57e614ec25c94cf43622437ba1e163a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,6 +157,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>writeNTCTimeSeries</b
 <tr class="memitem:a1238d3e0992688df9a9662a99e654d75"><td class="memItemLeft" align="right" valign="top"><a id="a1238d3e0992688df9a9662a99e654d75"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>writeStudyDescriptionFiles</b> (const std::filesystem::path &amp;outputDir)</td></tr>
 <tr class="separator:a1238d3e0992688df9a9662a99e654d75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7972c72806991c1b022abbcb36d0bb1a"><td class="memItemLeft" align="right" valign="top"><a id="a7972c72806991c1b022abbcb36d0bb1a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>nbYears</b> () const</td></tr>
+<tr class="separator:a7972c72806991c1b022abbcb36d0bb1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab74a63ccf14af598667171e29c41cdb8"><td class="memItemLeft" align="right" valign="top"><a id="ab74a63ccf14af598667171e29c41cdb8"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>nbWeeks</b> () const</td></tr>
+<tr class="separator:ab74a63ccf14af598667171e29c41cdb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1afd3a5fb3f44c198d621c9a5494803"><td class="memItemLeft" align="right" valign="top"><a id="af1afd3a5fb3f44c198d621c9a5494803"></a>
+std::set&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>playedYears</b> () const</td></tr>
+<tr class="separator:af1afd3a5fb3f44c198d621c9a5494803"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/api/private/<a class="el" href="singleProblemGetterImpl_8h_source.html">singleProblemGetterImpl.h</a></li>

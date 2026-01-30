@@ -132,111 +132,119 @@ $(document).ready(function(){initNavTree('LpsFromAntares_8h_source.html',''); in
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fmt/format.h&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/linearProblem.h&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">   18</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year = 0;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> week = 0;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="comment">// Order of comparison is order of member declaration</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// Type de données inutile car les matrices de tous les pbs Weekly sont</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// identiques. Cela pourra changer à l&#39;avenir si des coefficients de contraintes</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// couplantes peuvent varier au cours du temps (ex: rendement d&#39;une pompe à</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// chaleur qui varie selon la température, FlowBased ?, etc)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">   35</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">unsigned</span> VariablesCount = 0; <span class="comment">// Mathématiquement : Nb colonnes de la matrice,</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// Informatiquement = TypeDeVariable.size()</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">unsigned</span> ConstraintesCount = 0; <span class="comment">// Mathématiqument : Nb lignes de la matrice,</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Informatiquement = Mdeb.size()</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">unsigned</span> CoeffCount = 0; <span class="comment">// Mathématiquement : Nb coeffs non nuls de la</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// matrice, Informatiquement = Nbterm.size() =</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// IndicesColonnes.size()=</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// CoefficientsDeLaMatriceDesContraintes.size()</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    std::vector&lt;unsigned&gt; Mdeb; <span class="comment">// Indique dans les indices dans le vecteur IndicesColonnes qui</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// correspondent au début de chaque ligne. Ex : Mdeb[3] = 8 et</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// Mdeb[4] = 13 -&gt; Les termes IndicesColonnes[8] à</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="comment">// IndicesColonnes[12] correspondent à des Id de colonnes de la</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// ligne 3 de la matrice (en supposant que les lignes sont indexées</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">// à partir de 0)</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::vector&lt;unsigned&gt; ColumnIndexes; <span class="comment">// Id des colonnes des termes de</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// CoefficientsDeLaMatriceDesContraintes : Ex</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// IndicesColonnes[3] = 8 -&gt;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">// CoefficientsDeLaMatriceDesContraintes[8] donne la</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// valeur du terme de la colonne 8, et de la ligne i où</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// i est tel que Mdeb[i] &lt;= 3 &lt; Mdeb[i+1]</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    std::vector&lt;double&gt; ConstraintsMatrixCoeff; <span class="comment">// Coefficients de la matrice</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    std::vector&lt;std::string&gt; VariablesMeaning;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    std::vector&lt;std::string&gt; ConstraintsMeaning;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">   21</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year = 0;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> week = 0;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="comment">// Order of comparison is order of member declaration</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// Type de données inutile car les matrices de tous les pbs Weekly sont</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// identiques. Cela pourra changer à l&#39;avenir si des coefficients de contraintes</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// couplantes peuvent varier au cours du temps (ex: rendement d&#39;une pompe à</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// chaleur qui varie selon la température, FlowBased ?, etc)</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">   38</a></span>&#160;<span class="comment"></span><span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">unsigned</span> VariablesCount = 0; <span class="comment">// Mathématiquement : Nb colonnes de la matrice,</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// Informatiquement = TypeDeVariable.size()</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">unsigned</span> ConstraintesCount = 0; <span class="comment">// Mathématiqument : Nb lignes de la matrice,</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// Informatiquement = Mdeb.size()</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">unsigned</span> CoeffCount = 0; <span class="comment">// Mathématiquement : Nb coeffs non nuls de la</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="comment">// matrice, Informatiquement = Nbterm.size() =</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// IndicesColonnes.size()=</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// CoefficientsDeLaMatriceDesContraintes.size()</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::vector&lt;unsigned&gt; Mdeb; <span class="comment">// Indique dans les indices dans le vecteur IndicesColonnes qui</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// correspondent au début de chaque ligne. Ex : Mdeb[3] = 8 et</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">// Mdeb[4] = 13 -&gt; Les termes IndicesColonnes[8] à</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">// IndicesColonnes[12] correspondent à des Id de colonnes de la</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// ligne 3 de la matrice (en supposant que les lignes sont indexées</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="comment">// à partir de 0)</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::vector&lt;unsigned&gt; ColumnIndexes; <span class="comment">// Id des colonnes des termes de</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// CoefficientsDeLaMatriceDesContraintes : Ex</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// IndicesColonnes[3] = 8 -&gt;</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">// CoefficientsDeLaMatriceDesContraintes[8] donne la</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">// valeur du terme de la colonne 8, et de la ligne i où</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="comment">// i est tel que Mdeb[i] &lt;= 3 &lt; Mdeb[i+1]</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    std::vector&lt;double&gt; ConstraintsMatrixCoeff; <span class="comment">// Coefficients de la matrice</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::vector&lt;std::string&gt; VariablesMeaning;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::vector&lt;std::string&gt; ConstraintsMeaning;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">   70</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::vector&lt;char&gt; Direction; <span class="comment">// Sens de la contrainte : &lt; ou &gt; ou =, taille =</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">// NombreDeContraintes</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    std::vector&lt;double&gt; Xmax; <span class="comment">// Borne max des variables de la semaine</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// considérée, taille = NombreDeVariables</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    std::vector&lt;double&gt; Xmin; <span class="comment">// Borne min des variables de la semaine</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// considérée, taille =  NombreDeVariables</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    std::vector&lt;double&gt; LinearCost; <span class="comment">// Coefficients du vecteur de coût de la fonction objectif,</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// taille = NombreDeVariables</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    std::vector&lt;double&gt; RHS; <span class="comment">// Vecteur des second membre des contraintes, taille =</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// NombreDeContraintes</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    std::string name;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">using</span> WeeklyDataByYearWeek = std::map&lt;WeeklyProblemId, WeeklyDataFromAntares&gt;;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1LpsFromAntares.html">   94</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1LpsFromAntares.html">LpsFromAntares</a> final</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">     * @brief Checks if the LpsFromAntares object is empty.</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">     * Emptiness is defined by either the constant data or the weekly data being empty.</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> empty() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">     * @brief Replaces the constant data in the LpsFromAntares object.</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">     * Copy happens</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">void</span> setConstantData(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a>&amp; data);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">     * @brief Adds weekly data to the LpsFromAntares object.</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">   73</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;{</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    std::vector&lt;char&gt; Direction; <span class="comment">// Sens de la contrainte : &lt; ou &gt; ou =, taille =</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// NombreDeContraintes</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::vector&lt;double&gt; Xmax; <span class="comment">// Borne max des variables de la semaine</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// considérée, taille = NombreDeVariables</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::vector&lt;double&gt; Xmin; <span class="comment">// Borne min des variables de la semaine</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// considérée, taille =  NombreDeVariables</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::vector&lt;double&gt; LinearCost; <span class="comment">// Coefficients du vecteur de coût de la fonction objectif,</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// taille = NombreDeVariables</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    std::vector&lt;double&gt; RHS; <span class="comment">// Vecteur des second membre des contraintes, taille =</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// NombreDeContraintes</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    std::string name;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    std::unique_ptr&lt;Optimisation::LinearProblemApi::ILinearProblem&gt; linearProblem;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&amp; other) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;};</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">using</span> WeeklyDataByYearWeek = std::map&lt;WeeklyProblemId, WeeklyDataFromAntares&gt;;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1LpsFromAntares.html">   98</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1LpsFromAntares.html">LpsFromAntares</a> final</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;{</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">/*</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">     * @brief Checks if the LpsFromAntares object is empty.</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">     * Emptiness is defined by either the constant data or the weekly data being empty.</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> empty() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="comment">/*</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">     * @brief Replaces the constant data in the LpsFromAntares object.</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">     * Copy happens</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> addWeeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>, <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&amp;&amp; data);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> setConstantData(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a>&amp; data);</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">     * @brief Retrieves weekly data from the LpsFromAntares object.</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">     * @brief Adds weekly data to the LpsFromAntares object.</span></div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&amp; weeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordtype">void</span> addWeeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>, <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&amp;&amp; data);</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">/*</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">     * @brief Retrieves the number of weeks in the LpsFromAntares object.</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">     * @brief Retrieves weekly data from the LpsFromAntares object.</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment">     */</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    [[nodiscard]] <span class="keywordtype">size_t</span> weekCount() <span class="keyword">const</span> noexcept;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a> constantProblemData;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    WeeklyDataByYearWeek weeklyProblems;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;};</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&amp; weeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">/*</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">     * @brief Retrieves the number of weeks in the LpsFromAntares object.</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">     */</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    [[nodiscard]] <span class="keywordtype">size_t</span> weekCount() <span class="keyword">const</span> noexcept;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1LpsFromAntares_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1LpsFromAntares.html">Antares::Solver::LpsFromAntares</a></div><div class="ttdoc">The LpsFromAntares class is used to manage the constant and weekly data for Antares problems.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:95</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1ConstantDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">Antares::Solver::ConstantDataFromAntares</a></div><div class="ttdoc">The ConstantDataFromAntares class is used to store constant data across all weeks of Antares problems...</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:36</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1WeeklyDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">Antares::Solver::WeeklyDataFromAntares</a></div><div class="ttdoc">The WeeklyDataFromAntares class is used to store weekly data for an Antares Problem.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:71</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1WeeklyProblemId_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1WeeklyProblemId.html">Antares::Solver::WeeklyProblemId</a></div><div class="ttdoc">The WeeklyProblemId struct is used to identify a weekly problem by year and week.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:19</div></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a> constantProblemData;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    WeeklyDataByYearWeek weeklyProblems;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;};</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="keyword">inline</span> std::string problemName(<span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a>&amp; <span class="keywordtype">id</span>)</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;{</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> fmt::format(<span class="stringliteral">&quot;problem-{}-{}--optim-nb-1&quot;</span>, <span class="keywordtype">id</span>.year + 1, <span class="keywordtype">id</span>.week);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1LpsFromAntares_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1LpsFromAntares.html">Antares::Solver::LpsFromAntares</a></div><div class="ttdoc">The LpsFromAntares class is used to manage the constant and weekly data for Antares problems.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:99</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1ConstantDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">Antares::Solver::ConstantDataFromAntares</a></div><div class="ttdoc">The ConstantDataFromAntares class is used to store constant data across all weeks of Antares problems...</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:39</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1WeeklyDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">Antares::Solver::WeeklyDataFromAntares</a></div><div class="ttdoc">The WeeklyDataFromAntares class is used to store weekly data for an Antares Problem.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:74</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1WeeklyProblemId_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1WeeklyProblemId.html">Antares::Solver::WeeklyProblemId</a></div><div class="ttdoc">The WeeklyProblemId struct is used to identify a weekly problem by year and week.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

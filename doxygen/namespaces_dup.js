@@ -1503,10 +1503,16 @@ var namespaces_dup =
         ] ],
         [ "Implementation", null, [
           [ "YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData" ],
+          [ "NameMemo", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo" ],
           [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter" ],
+          [ "Tag", "structAntares_1_1Solver_1_1Implementation_1_1Tag.html", "structAntares_1_1Solver_1_1Implementation_1_1Tag" ],
           [ "AllData", "singleProblemGetterImpl_8h.html#a2b9ca4b32a64c5d8437d4c350a5785e3", null ],
-          [ "HydroLevels", "singleProblemGetterImpl_8h.html#afe2acc563fb1a49f02e132fab30bfa79", null ],
-          [ "fillLinksProperties", "singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa", null ]
+          [ "HydroLevels", "singleProblemGetterImpl_8h.html#a617e072aea936398b0eba0dce3c844d3", null ],
+          [ "applyTimeOffset", "singleProblemGetterImpl_8cpp.html#aebf5a59bcdfc9b83bc37307b9c7bbe27", null ],
+          [ "buildMemo", "singleProblemGetterImpl_8cpp.html#ae3127a02ee96b5741ca4ee9dfe73b0a7", null ],
+          [ "fillLinksProperties", "singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa", null ],
+          [ "updateWeekId", "singleProblemGetterImpl_8cpp.html#a82c11a08d823fab6631bb50c211c1ca5", null ],
+          [ "tags", "singleProblemGetterImpl_8cpp.html#a1e92fd112582108e456dee0757bbc61b", null ]
         ] ],
         [ "Initialization", null, [
           [ "Error", null, [
@@ -2038,6 +2044,7 @@ var namespaces_dup =
         [ "MatrixDPMake", "matrix-dp-make_8hxx.html#a0ba3dc459a637b4d4c17d0b7867fe889", null ],
         [ "MatrixDPMake", "matrix-dp-make_8h.html#a974a844fb3ae602605d9249096df967b", null ],
         [ "operator<<", "ModelerData_8h.html#ae589ebe159662ac9534f60b58140872a", null ],
+        [ "problemName", "LpsFromAntares_8h.html#a4d52985d43d59ef854f3a608e0ab4032", null ],
         [ "randomReservoirLevel", "solver_2hydro_2include_2antares_2solver_2hydro_2management_2management_8h.html#a61fe8e29c1c9060a07d6e3a496d50908", null ],
         [ "resultWriterFactory", "writer__factory_8h.html#a63ba6455aa38a7d4e78e0968833366a8", null ],
         [ "runSimulation", "simulation-run_8cpp.html#a2b9f17dd0707f6fb3abf8b7d80660842", null ],
@@ -2637,6 +2644,9 @@ var namespaces_dup =
       [ "OnStudyUpdatePlaylist", "ui_2simulator_2application_2study_8cpp.html#ab0fcbeb3c476bb08dede962044192921", null ],
       [ "SystemParameterHaveChanged", "ui_2simulator_2application_2study_8cpp.html#aef7b41bc50798319e185b3947e5e9df1", null ]
     ] ],
+    [ "api_run", null, [
+      [ "api_run", "classapi__run_1_1api__run.html", "classapi__run_1_1api__run" ]
+    ] ],
     [ "assertions", null, [
       [ "assert_double_close", "cucumber_2features_2steps_2common__steps_2assertions_8py.html#acd3c2265c9f98c73603fbf713bdcb362", null ],
       [ "check", "run-study-tests_2utils_2assertions_8py.html#a12484173019ff38ad11b727adc616565", null ],
@@ -2682,16 +2692,21 @@ var namespaces_dup =
       [ "check_no_mps", "classcheck__no__mps_1_1check__no__mps.html", "classcheck__no__mps_1_1check__no__mps" ]
     ] ],
     [ "compare_mps_files", null, [
-      [ "compare_mps_files", "classcompare__mps__files_1_1compare__mps__files.html", "classcompare__mps__files_1_1compare__mps__files" ]
+      [ "compare_mps_files", "classcompare__mps__files_1_1compare__mps__files.html", "classcompare__mps__files_1_1compare__mps__files" ],
+      [ "tol", "compare__mps__files_8py.html#acefb1d07624d65725d6b0ab19f415120", null ]
     ] ],
     [ "conftest", null, [
       [ "antares_simu_path", "run-study-tests_2conftest_8py.html#a75aa74dbf5a8cc876d721a29b81cf470", null ],
+      [ "api_exe_path", "run-study-tests_2conftest_8py.html#a8433334825bfc384954e23a990a50094", null ],
       [ "named_mps_problems", "run-study-tests_2conftest_8py.html#ab14b209de745d00c3dea31b7fc8b55be", null ],
       [ "ortools_solver", "examples_2conftest_8py.html#a54ae42864d0cd3a8e733dfdf653f8274", null ],
+      [ "output_dir", "run-study-tests_2conftest_8py.html#a7f02383910754721c73ddb04e8380681", null ],
       [ "parallel", "run-study-tests_2conftest_8py.html#a9740f129861e2a7c9214e69368a0a87f", null ],
       [ "pytest_addoption", "examples_2conftest_8py.html#ab0ebca4c0bae417023a405900453603d", null ],
+      [ "pytest_collection_modifyitems", "run-study-tests_2conftest_8py.html#abe907f64aa904cebe2c9198b2f2caf91", null ],
       [ "solver_name", "run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7", null ],
-      [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ]
+      [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ],
+      [ "write_mps", "run-study-tests_2conftest_8py.html#a8fdb5ae32f4a50b407f1ab8617bbad9a", null ]
     ] ],
     [ "create_checks", null, [
       [ "create_check_hydro_level", "create__checks_8py.html#a16cc70ab9aa97d6e3dba3c4acebf30a5", null ],
@@ -2758,18 +2773,20 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
+    [ "fixtures", null, [
+      [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
+      [ "api", "fixtures_8py.html#aa6e3dd2012e60e4c1d738d16a29d2c54", null ],
+      [ "check_runner", "fixtures_8py.html#a5f063c637460ed79230cc66b4d988687", null ],
+      [ "is_api", "fixtures_8py.html#af2069f6d90808dca08fcfc2990f7419a", null ],
+      [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
+      [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
+      [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
     [ "Fixtures", null, [
       [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
       [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
       [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
       [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
-    [ "fixtures", null, [
-      [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
-      [ "check_runner", "fixtures_8py.html#a40228dc2652833ab5cc3c0d688ec0613", null ],
-      [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
-      [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
-      [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
@@ -2846,11 +2863,12 @@ var namespaces_dup =
       [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
     ] ],
     [ "mps_utils", null, [
-      [ "extract_variables", "mps__utils_8py.html#afe5b3b74e45a7e1fc32ba6e781e5dd13", null ],
-      [ "get_constraint_bounds", "mps__utils_8py.html#a3f7d0a1908874a68cebdc0ccfc1d929f", null ],
-      [ "get_constraint_matrix", "mps__utils_8py.html#a97f4c2a5289656f432f5d11592fa282b", null ],
-      [ "get_objective_coeffs", "mps__utils_8py.html#a49c1b5c25ce891812129fdb23caee006", null ],
-      [ "load_problem", "mps__utils_8py.html#aaa844d6ec400fa621cc09f830a74ac88", null ]
+      [ "extract_variables", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#afe5b3b74e45a7e1fc32ba6e781e5dd13", null ],
+      [ "extract_variables", "run-study-tests_2check__on__results_2mps__utils_8py.html#ad7d2400c813cae7eaff0c4a7e4f450b3", null ],
+      [ "get_constraint_bounds", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#a29a8042a0acad246c43a432e16c6c990", null ],
+      [ "get_constraint_matrix", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#a35181eb77127b78978728ae66253cb10", null ],
+      [ "get_objective_coeffs", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#a62ee24a111d79ec22f28415720ff2590", null ],
+      [ "load_problem", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#ab9142458563fb0cf75c5cf2134d0b723", null ]
     ] ],
     [ "OperatingSystem", null, [
       [ "FindAntaresLocalAppData", "appdata_8h.html#af4149dcd70b39c611b24064d32cfa6ac", null ],

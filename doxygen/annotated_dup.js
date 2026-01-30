@@ -721,7 +721,9 @@ var annotated_dup =
         ] ],
         [ "Implementation", null, [
           [ "YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData" ],
-          [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter" ]
+          [ "NameMemo", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo" ],
+          [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter" ],
+          [ "Tag", "structAntares_1_1Solver_1_1Implementation_1_1Tag.html", "structAntares_1_1Solver_1_1Implementation_1_1Tag" ]
         ] ],
         [ "Initialization", null, [
           [ "Error", null, [
@@ -1339,6 +1341,9 @@ var annotated_dup =
       [ "StudyUpdateLocker", "classAntares_1_1StudyUpdateLocker.html", "classAntares_1_1StudyUpdateLocker" ],
       [ "MemoryFlushLocker", "classAntares_1_1MemoryFlushLocker.html", "classAntares_1_1MemoryFlushLocker" ]
     ] ],
+    [ "api_run", null, [
+      [ "api_run", "classapi__run_1_1api__run.html", "classapi__run_1_1api__run" ]
+    ] ],
     [ "benchmark", null, [
       [ "StudyList", "classbenchmark_1_1StudyList.html", "classbenchmark_1_1StudyList" ]
     ] ],
@@ -1512,6 +1517,7 @@ var annotated_dup =
     [ "AnalysisMock", "classAnalysisMock.html", "classAnalysisMock" ],
     [ "AntaresStudy", "classAntaresStudy.html", "classAntaresStudy" ],
     [ "AntaresStudyAnalyzerJob", "classAntaresStudyAnalyzerJob.html", "classAntaresStudyAnalyzerJob" ],
+    [ "ApiOptions", "structApiOptions.html", "structApiOptions" ],
     [ "AreaBalance", "classAreaBalance.html", "classAreaBalance" ],
     [ "AreaBalanceData", "structAreaBalanceData.html", "structAreaBalanceData" ],
     [ "AreaHydroLevel", "classAreaHydroLevel.html", "classAreaHydroLevel" ],
@@ -1535,8 +1541,8 @@ var annotated_dup =
     [ "build_eval_visitor_fixture", "structbuild__eval__visitor__fixture.html", "structbuild__eval__visitor__fixture" ],
     [ "CellColumnData", "classCellColumnData.html", "classCellColumnData" ],
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", "structCmdLineOptionsFixture" ],
-    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "commonFixture", "structcommonFixture.html", "structcommonFixture" ],
+    [ "CommonFixture", "structCommonFixture.html", "structCommonFixture" ],
     [ "ComparisonFixture", "structComparisonFixture.html", "structComparisonFixture" ],
     [ "ComponentBuilderCreationFixture", "structComponentBuilderCreationFixture.html", "structComponentBuilderCreationFixture" ],
     [ "ComponentToAreaConnectionFillerFixture", "structComponentToAreaConnectionFillerFixture.html", "structComponentToAreaConnectionFillerFixture" ],
