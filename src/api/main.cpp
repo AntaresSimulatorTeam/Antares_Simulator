@@ -106,9 +106,7 @@ void writeWeekMPS(const std::unique_ptr<Optimisation::LinearProblemApi::ILinearP
     }
 }
 
-void writeMasterAndStructure(const std::filesystem::path& studyPath,
-                             const std::filesystem::path& outputDir,
-                             Antares::Optimisation::BendersDecomposition& bendersDecomposition)
+void writeMasterAndStructure(ModelerData* data, const std::filesystem::path& outputDir)
 {
     using namespace Antares::Solver;
     using namespace Antares::Optimisation;
@@ -123,16 +121,13 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
         std::call_once(once, [&outputDir] { std::filesystem::create_directories(outputDir); });
     }
 
-    const ModelerData data = LoadFiles::loadAll(studyPath);
-    logs.info() << "Modeler data loaded";
-
     FillContext fillContext = {0, 167, 0, 167, 0};
 
     auto [masterProblem, optimEntityContainer] = Antares::Solver::buildProblem(
-      data,
+      *data,
       Config::Location::MASTER,
       "master",
-      &bendersDecomposition,
+      &data->bendersDecomposition,
       fillContext,
       ResolutionMode::BENDERS_DECOMPOSITION,
       std::nullopt);
@@ -147,7 +142,7 @@ void writeMasterAndStructure(const std::filesystem::path& studyPath,
     IO::Outputs::MPSFileWriter::write(outputDir / "master.mps", mps);
     logs.info() << "Written: " << (outputDir / "master.mps").string();
 
-    Antares::Optimisation::BendersDecompositionWriter writer(bendersDecomposition);
+    Antares::Optimisation::BendersDecompositionWriter writer(data->bendersDecomposition);
     std::ofstream of(outputDir / "structure.txt");
     writer.write(of);
     logs.info() << "Written: " << (outputDir / "structure.txt").string();
@@ -183,9 +178,9 @@ void printProblems(const ApiOptions& options)
         }
     }
 
-    if (options.writeMps)
+    if (options.writeMps && getter.modelerData())
     {
-        writeMasterAndStructure(options.studyFolder, options.outputFolder, bendersDecomposition);
+        writeMasterAndStructure(getter.modelerData(), options.outputFolder);
     }
 }
 

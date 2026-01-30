@@ -495,6 +495,11 @@ void SingleProblemGetter::setBendersDecomposition(Optimisation::BendersDecomposi
     bendersDecomposition_ = bd;
 }
 
+ModelerData* SingleProblemGetter::modelerData()
+{
+    return pb_.modelerData;
+}
+
 int SingleProblemGetter::nbWeeks() const
 {
     return nbWeeks_;

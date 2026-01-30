@@ -40,6 +40,7 @@ public:
     int nbWeeks() const;
     std::set<int> playedYears() const;
     void setBendersDecomposition(Optimisation::BendersDecomposition* bd);
+    ModelerData* modelerData();
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

@@ -69,4 +69,9 @@ void SingleProblemGetter::setBendersDecomposition(Optimisation::BendersDecomposi
     impl_->setBendersDecomposition(bd);
 }
 
+ModelerData* SingleProblemGetter::modelerData()
+{
+    return impl_->modelerData();
+}
+
 } // namespace Antares::Solver
