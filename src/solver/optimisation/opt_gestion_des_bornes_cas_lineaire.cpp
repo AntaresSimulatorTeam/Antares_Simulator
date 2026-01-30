@@ -75,7 +75,6 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        
         // gp : to remove
         const ALL_MUST_RUN_GENERATION& AllMustRunGeneration = problemeHebdo
                                                                 ->AllMustRunGeneration[pdtHebdo];

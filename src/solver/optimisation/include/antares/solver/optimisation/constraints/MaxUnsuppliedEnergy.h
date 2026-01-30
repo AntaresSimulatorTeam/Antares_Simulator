@@ -33,6 +33,3 @@ public:
 private:
     MaxUnsupEnergyData& data;
 };
-
-
-

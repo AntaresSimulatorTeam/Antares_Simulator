@@ -173,6 +173,8 @@ struct ConstraintBuilderFixture: public STScumulativeConstaintFixture,
 {
 };
 
+BOOST_AUTO_TEST_SUITE(_constraint_builder_test_suite_)
+
 BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 {
     ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
@@ -714,3 +716,5 @@ BOOST_AUTO_TEST_CASE(TestMultipleStoragesSameArea)
         BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint_index], expected_rhs, 0.001);
     }
 }
+
+BOOST_AUTO_TEST_SUITE_END()

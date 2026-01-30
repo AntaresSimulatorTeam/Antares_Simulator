@@ -6,8 +6,8 @@
 #include "BindingConstraintHour.h"
 #include "ConstraintGroup.h"
 #include "FictitiousLoad.h"
-#include "MaxUnsuppliedEnergy.h"
 #include "FlowDissociation.h"
+#include "MaxUnsuppliedEnergy.h"
 #include "ShortTermStorageLevel.h"
 
 class Group1 final: public ConstraintGroup
