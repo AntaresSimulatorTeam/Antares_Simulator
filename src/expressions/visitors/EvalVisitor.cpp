@@ -343,16 +343,6 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-std::vector<double> EvaluationResult::asVector(const unsigned& size) const
-{
-    if (std::holds_alternative<double>(value_))
-    {
-        return std::get<std::vector<double>>(value_);
-    }
-    double value = std::get<double>(value_);
-    return std::vector(size, value);
-}
-
 double shift(double value, int)
 {
     return value;
