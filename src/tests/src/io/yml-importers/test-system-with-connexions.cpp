@@ -27,7 +27,7 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
+        injection-field: flow
   models:
     - id: empty model
       description: we need this empty model, otherwise parser fails !
@@ -68,9 +68,9 @@ library:
         - id: to-area-bound
         - id: from-area-bound
       area-connection:
-        - injection-field: flow
-        - to-area-bound-field: to-area-bound
-        - from-area-bound-field: from-area-bound
+        injection-field: flow
+        to-area-bound-field: to-area-bound
+        from-area-bound-field: from-area-bound
 
   models:
     - id: empty model
@@ -110,7 +110,7 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
+        injection-field: flow
 
   models:
     - id: balance_node

@@ -34,7 +34,7 @@ library:
       fields:
         - id: to-area-bound
       area-connection:
-        - to-area-bound-field: to-area-bound
+        to-area-bound-field: to-area-bound
 
   models:
     - id: model_with_vars

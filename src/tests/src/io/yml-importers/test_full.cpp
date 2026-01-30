@@ -80,7 +80,7 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
+        injection-field: flow
 
   models:
     - id: generator

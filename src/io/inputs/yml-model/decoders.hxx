@@ -206,20 +206,6 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
     }
 };
 
-std::string findValue(const std::string& key, const YAML::Node& node)
-{
-    std::string value;
-    for (auto& field: node["area-connection"])
-    {
-        value = field[key].as<std::string>("");
-        if (!value.empty())
-        {
-            return value;
-        }
-    }
-    return value; // Should be empty
-}
-
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
@@ -235,15 +221,18 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             rhs.fields.push_back(field["id"].as<std::string>());
         }
-        if (node["area-connection"].IsDefined())
+
+        auto ac_node = node["area-connection"];
+        if (ac_node.IsDefined())
         {
-            if (node["area-connection"].size() == 0 || node["area-connection"].size() > 3)
+            if (!ac_node.IsMap())
             {
                 return false;
             }
-            rhs.area_connection.injection = findValue("injection-field", node);
-            rhs.area_connection.to_area_bound = findValue("to-area-bound-field", node);
-            rhs.area_connection.from_area_bound = findValue("from-area-bound-field", node);
+            rhs.area_connection.injection = ac_node["injection-field"].as<std::string>("");
+            rhs.area_connection.to_area_bound = ac_node["to-area-bound-field"].as<std::string>("");
+            rhs.area_connection.from_area_bound = ac_node["from-area-bound-field"].as<std::string>(
+              "");
         }
         return true;
     }
