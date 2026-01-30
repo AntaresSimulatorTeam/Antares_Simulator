@@ -113,17 +113,18 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                                                 ->AllMustRunGeneration[pdtHebdo];
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-
+            // Useful variables for the current scope
+            // --------------------------------------
             double reserveHoraireJmoins1 = 0;
             if (reserveJm1 && opt1)
             {
                 reserveHoraireJmoins1 = problemeHebdo->ReserveJMoins1[pays]
                                           .ReserveHoraireJMoins1[pdtHebdo];
             }
-
+            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
             double mustRunGenOfArea = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
             double MaxMustRunGenOfArea = std::max(0., mustRunGenOfArea);
+            double MaxMoinsConsoBrute = -std::min(0., ResidualLoadInArea + mustRunGenOfArea);
 
             // ---------------------------------------
             // RHS for area balance constraint set
@@ -141,9 +142,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             // ---------------------------------------
             cnt = CorrespondanceCntNativesCntOptim
                     .NumeroDeContraintePourEviterLesChargesFictives[pays];
-            SecondMembre[cnt] = 0.0;
-
-            double MaxMoinsConsoBrute = -std::min(0., ResidualLoadInArea + mustRunGenOfArea);
 
             SecondMembre[cnt] = DefaillanceNegativeUtiliserConsoAbattue[pays]
                                 * (MaxMustRunGenOfArea + MaxMoinsConsoBrute);
@@ -153,21 +151,18 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                 SecondMembre[cnt] -= OPT_SommeDesPminThermiques(problemeHebdo, pays, pdtHebdo);
             }
 
+            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+
             // ---------------------------------------
             // RHS for maximizing unsupplied energy
             // ---------------------------------------
-            // cnt =
-            // CorrespondanceCntNativesCntOptim.NumeroDeContraintePourBornerLaDefaillance[pays];
-            // SecondMembre[cnt] = 0.;
+            ResidualLoadInArea += MaxMustRunGenOfArea + reserveHoraireJmoins1;
 
-            // ResidualLoadInArea += MaxMustRunGenOfArea + reserveHoraireJmoins1;
-            // if (ResidualLoadInArea >= 0.)
-            // {
-            //     SecondMembre[cnt] = ResidualLoadInArea + 1e-5;
-            // }
-            //  ---------------------------------------
-
-            AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+            cnt = CorrespondanceCntNativesCntOptim.NumeroDeContraintePourBornerLaDefaillance[pays];
+            if (ResidualLoadInArea >= 0.)
+            {
+                SecondMembre[cnt] = ResidualLoadInArea + 1e-5;
+            }
         }
 
         int hourInTheYear = weekFirstHour + pdtHebdo;
