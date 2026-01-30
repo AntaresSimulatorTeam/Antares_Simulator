@@ -56,15 +56,13 @@ PortType::PortType(const std::string& id,
     id_(id),
     fields_(std::move(portFields))
 {
-    if (isEmpty(areaConnection))
+    if (!isEmpty(areaConnection))
     {
-        return;
+        checkNonEmptyFieldExist(areaConnection.injection, fields_, id_);
+        checkNonEmptyFieldExist(areaConnection.to_area_bound, fields_, id_);
+        checkNonEmptyFieldExist(areaConnection.from_area_bound, fields_, id_);
+        areaConnection_ = areaConnection;
     }
-
-    checkNonEmptyFieldExist(areaConnection.injection, fields_, id_);
-    checkNonEmptyFieldExist(areaConnection.to_area_bound, fields_, id_);
-    checkNonEmptyFieldExist(areaConnection.from_area_bound, fields_, id_);
-    areaConnection_ = areaConnection;
 }
 
 const std::string& PortType::Id() const
