@@ -23,7 +23,6 @@
 
 #include "fmt/format.h"
 using namespace Optimisation::LinearProblemApi;
-using namespace operations_research;
 
 namespace
 {
