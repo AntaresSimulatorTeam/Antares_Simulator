@@ -7,9 +7,12 @@
 #include <stdexcept>
 #include <string>
 
+#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
+#include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
+#include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -19,6 +22,8 @@
 #include "antares/writer/i_writer.h"
 
 #include "fmt/format.h"
+using namespace Optimisation::LinearProblemApi;
+using namespace operations_research;
 
 namespace
 {
@@ -37,10 +42,6 @@ std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& stu
     return study;
 }
 
-std::string problemName(const WeeklyProblemId& id)
-{
-    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
-}
 } // namespace
 
 namespace Antares::Solver::Implementation
@@ -85,6 +86,7 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
     }
 
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
+
     initializeRandomNumbers();
 }
 
@@ -110,6 +112,7 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
 void SingleProblemGetter::initializeRandomNumbers()
 {
     int nbYears = 0;
+    nbWeeks_ = study_->parameters.simulationDays.numberOfWeeks();
     std::map<unsigned int, bool> isYearPerformed; // TODO check year number
     for (uint year = 0; year < study_->parameters.nbYears; ++year)
     {
@@ -117,6 +120,7 @@ void SingleProblemGetter::initializeRandomNumbers()
         if (study_->parameters.yearsFilter[year])
         {
             ++nbYears;
+            playedYears_.insert(year);
         }
     }
 
@@ -161,6 +165,45 @@ void fillLinksProperties(PROBLEME_HEBDO& pb, const Antares::Data::Study& study)
     }
 }
 
+struct Tag
+{
+    std::string_view name;
+    unsigned base;
+};
+
+constexpr std::array<Tag, 3> tags = {{{"::hour<", 168}, {"::day<", 7}, {"::week<", 1}}};
+
+std::vector<NameMemo> buildMemo(const std::vector<std::string>& names)
+{
+    std::vector<NameMemo> mem;
+    // Build memo once
+    for (std::size_t i = 0; i < names.size(); ++i)
+    {
+        const std::string& s = names[i];
+        for (const auto& [tag, base]: tags)
+        {
+            const size_t tagLen = tag.size();
+            std::size_t tagPos = s.find(tag);
+            if (tagPos == std::string::npos)
+            {
+                continue;
+            }
+
+            std::size_t numStart = tagPos + tagLen;
+            std::size_t end = s.find('>', numStart);
+            if (end == std::string::npos)
+            {
+                continue;
+            }
+
+            mem.emplace_back(numStart, end, std::stoi(s.substr(numStart, end - numStart)), i, base);
+            break;
+        }
+    }
+
+    return mem;
+}
+
 ConstantDataFromAntares SingleProblemGetter::getConstantData()
 {
     // IntercoGereeAvecDesCouts needs to be initialized
@@ -175,50 +218,74 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     ConstraintBuilder builder(builder_data);
     LinearProblemMatrix linearProblemMatrix(&pb_, builder);
     linearProblemMatrix.Run();
-
-    return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
+    auto* PbAResoudre = pb_.ProblemeAResoudre.get();
+    variablesMemo_ = buildMemo(PbAResoudre->NomDesVariables);
+    constraintsMemo_ = buildMemo(PbAResoudre->NomDesContraintes);
+    variablesName_ = PbAResoudre->NomDesVariables;
+    constraintsName_ = PbAResoudre->NomDesContraintes;
+    return translator_.commonProblemData(PbAResoudre);
 }
 
-WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
+                                         const std::vector<NameMemo>& mem,
+                                         unsigned week)
 {
-    auto [year, week] = id;
+    auto names = in;
+    for (const auto& [left_end, right_begin, baseTime, index, base]: mem)
+    {
+        std::string& s = names[index];
+        s = s.substr(0, left_end) + std::to_string(baseTime + week * base) + s.substr(right_begin);
+    }
+    return names;
+}
+
+void updateWeekId(WeeklyProblemId& id)
+{
+    auto& [year, week] = id;
     // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
     if (week == 0)
     {
         throw std::out_of_range("Invalid week number 0 detected, week number must be >=1");
     }
     week--;
+}
 
-    pb_.year = year;
-    pb_.weekInTheYear = week;
+void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
+{
+    updateWeekId(id);
+    pb_.year = id.year;
+    pb_.weekInTheYear = id.week;
 
-    const auto [hydroLevels, ventilationResults] = getYearlyData(year);
+    const auto [hydroLevels, ventilationResults] = getYearlyData(id.year);
 
-    // TODO
-    uint indexYear = randomForParallelYears_->yearNumberToIndex[year];
+    uint indexYear = randomForParallelYears_->yearNumberToIndex[id.year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
+    // TODO
+    if (auto [_, unseen] = randomPrepared_.insert(id.year); unseen)
+    {
+        // TODO once per year, not every week
+        Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
+    }
 
-    // TODO once per year, not every week
-    Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
-
-    const auto hourInTheYear = 168 * week; // TODO
-    SIM_RenseignementProblemeHebdo(*study_,
-                                   pb_,
-                                   week,
-                                   hourInTheYear,
-                                   ventilationResults,
-                                   scratchmap_);
-
+    const auto hourInTheYear = 168 * id.week; // TODO
+    pb_.HeureDansLAnnee = hourInTheYear;
     // Apply hydro levels
     for (uint areaIndex = 0; areaIndex < study_->areas.size(); ++areaIndex)
     {
         const auto* area = study_->areas.byIndex[areaIndex];
         if (area->hydro.reservoirManagement)
         {
-            double initialLevel = hydroLevels.at(area)[week];
-            pb_.CaracteristiquesHydrauliques[areaIndex].NiveauInitialReservoir = initialLevel;
+            double initialLevel = hydroLevels.at(area)[id.week];
+            pb_.previousSimulationFinalLevel[areaIndex] = initialLevel;
         }
     }
+
+    SIM_RenseignementProblemeHebdo(*study_,
+                                   pb_,
+                                   id.week,
+                                   hourInTheYear,
+                                   ventilationResults,
+                                   scratchmap_);
 
     // required at least for OPT_SommeDesPminThermiques (RHS)
     Antares::Solver::Simulation::BuildThermalPartOfWeeklyProblem(
@@ -226,7 +293,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
       pb_,
       hourInTheYear,
       randomForCurrentYear.pThermalNoisesByArea,
-      year);
+      id.year);
 
     OPT_VerifierPresenceReserveJmoins1(&pb_);
 
@@ -255,7 +322,65 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
                                                     optimizationNumber);
 
     OPT_InitialiserLesCoutsLineaire(&pb_, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
-    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
+}
+
+WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
+{
+    setWeeklyData(id);
+    // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
+}
+
+std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+{
+    setWeeklyData(id);
+    auto& ProblemeAResoudre = pb_.ProblemeAResoudre;
+
+    if (id.week == 0 && id.year != 0)
+    {
+        ProblemeAResoudre->NomDesVariables = variablesName_;
+        ProblemeAResoudre->NomDesContraintes = constraintsName_;
+    }
+    if (id.week != 0)
+    {
+        ProblemeAResoudre->NomDesVariables = applyTimeOffset(variablesName_,
+                                                             variablesMemo_,
+                                                             id.week);
+        ProblemeAResoudre->NomDesContraintes = applyTimeOffset(constraintsName_,
+                                                               constraintsMemo_,
+                                                               id.week);
+    }
+    SingleOptimOptions options;
+
+    std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
+      Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.ProblemeAResoudre->isMIP(),
+                                                         options.solverName);
+    fillProblem(*linearProblem);
+
+    return linearProblem;
+}
+
+void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
+{
+    const int opt = optimizationNumber - 1;
+    assert(opt >= 0 && opt < 2);
+    // OptimizationStatistics& optimizationStatistics = pb_.optimizationStatistics[opt];
+    // TIME_MEASURE timeMeasure;
+    Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
+                                                                           numeroDeLIntervalle);
+    const auto& modelerData = pb_.modelerData;
+    bool hasModelerData = modelerData != nullptr;
+    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
+                                                                 : nullptr;
+    const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
+      = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
+
+    Optimisation::OptimEntityContainer optimEntityContainer(problem,
+                                                            modelerDataSeries,
+                                                            modelerScenarioGroupRepository);
+
+    fillLinearProblem(fillCtx, &pb_, optimEntityContainer,
+                      true); // TODO
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -355,5 +480,20 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
         areaIndex++;
     }
     return {hydroLevels, ventilationResults};
+}
+
+int SingleProblemGetter::nbYears() const
+{
+    return playedYears_.size();
+}
+
+std::set<int> SingleProblemGetter::playedYears() const
+{
+    return playedYears_;
+}
+
+int SingleProblemGetter::nbWeeks() const
+{
+    return nbWeeks_;
 }
 } // namespace Antares::Solver::Implementation
