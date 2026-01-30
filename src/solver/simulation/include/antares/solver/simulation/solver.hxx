@@ -192,9 +192,9 @@ public:
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
 
-                study.runtime.dynamicAggregationSingleYear = &dynamicAggregationForTheYear;
+                study.runtime.dynamicAggregationSingleYear[numSpace] = &dynamicAggregationForTheYear;
                 simulation_->writeResults(false, y, numSpace);
-                study.runtime.dynamicAggregationSingleYear = nullptr;
+                study.runtime.dynamicAggregationSingleYear[numSpace] = nullptr;
             };
         }
 

@@ -20,8 +20,6 @@ namespace Antares::Data
 {
 class Study;
 
-class Study;
-
 enum RangeLimitsIndex
 {
     rangeBegin = 0,
@@ -122,8 +120,8 @@ public:
      */
     bool quadraticOptimizationHasFailed;
 
-    Antares::Solver::Variable::DynamicAggregationSingleYear* dynamicAggregationSingleYear = nullptr;
-    Antares::Solver::Variable::DynamicAggregationAllYears* dynamicAggregationAllYears = nullptr;
+    Solver::Variable::DynamicAggregationAllYears* dynamicAggregationAllYears = nullptr;
+    std::vector<Solver::Variable::DynamicAggregationSingleYear*> dynamicAggregationSingleYear;
 
     std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 

@@ -259,11 +259,11 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     // Append dynamic aggregation columns for sets of areas
     if (dataLevel == Category::DataLevel::setOfAreas
-        && pStudy->runtime.dynamicAggregationSingleYear)
+        && pStudy->runtime.dynamicAggregationSingleYear[numSpace])
     {
         for (const auto& [setName, _]: pStudy->setsOfAreas)
         {
-            pStudy->runtime.dynamicAggregationSingleYear
+            pStudy->runtime.dynamicAggregationSingleYear[numSpace]
               ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
         }
     }

@@ -27,6 +27,7 @@ Economy::Economy(Data::Study& study,
     simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
     study.runtime.dynamicAggregationAllYears = &dynamicAggregationAllYears;
+    study.runtime.dynamicAggregationSingleYear.resize(study.maxNbYearsInParallel);
 }
 
 Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
