@@ -123,6 +123,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             }
 
             double mustRunGenOfArea = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
+            double MaxMustRunGenOfArea = std::max(0., mustRunGenOfArea);
 
             // ---------------------------------------
             // RHS for area balance constraint set
@@ -142,16 +143,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                     .NumeroDeContraintePourEviterLesChargesFictives[pays];
             SecondMembre[cnt] = 0.0;
 
-            double MaxAllMustRunGeneration = 0.0;
-            if (mustRunGenOfArea > 0.0)
-            {
-                MaxAllMustRunGeneration = mustRunGenOfArea;
-            }
-
-            double MaxMoinsConsommationBrute = -std::min(0., ResidualLoadInArea + mustRunGenOfArea);
+            double MaxMoinsConsoBrute = -std::min(0., ResidualLoadInArea + mustRunGenOfArea);
 
             SecondMembre[cnt] = DefaillanceNegativeUtiliserConsoAbattue[pays]
-                                * (MaxAllMustRunGeneration + MaxMoinsConsommationBrute);
+                                * (MaxMustRunGenOfArea + MaxMoinsConsoBrute);
 
             if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
             {
@@ -164,8 +159,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             // cnt =
             // CorrespondanceCntNativesCntOptim.NumeroDeContraintePourBornerLaDefaillance[pays];
             // SecondMembre[cnt] = 0.;
-
-            // double MaxMustRunGenOfArea = std::max(0, mustRunGenOfArea);
 
             // ResidualLoadInArea += MaxMustRunGenOfArea + reserveHoraireJmoins1;
             // if (ResidualLoadInArea >= 0.)
