@@ -327,7 +327,8 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
     setWeeklyData(id);
-    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName(id));
+    // by convention, weeks start at 1 from the caller's POV, but at 0 in Simulator
+    return translator_.translate(pb_.ProblemeAResoudre.get(), problemName({id.year, id.week + 1}));
 }
 
 std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
