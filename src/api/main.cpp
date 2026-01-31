@@ -100,8 +100,7 @@ void writeWeekMPS(const std::unique_ptr<Optimisation::LinearProblemApi::ILinearP
     // logs.info() << "******************************** END MPS ********************************";
     if (!outputPath.empty())
     {
-        static std::once_flag once;
-        std::call_once(once, [&outputPath] { std::filesystem::create_directories(outputPath); });
+        std::filesystem::create_directories(outputPath);
         IO::Outputs::MPSFileWriter::write(outputPath / (name + ".mps"), mps);
     }
 }
@@ -117,8 +116,7 @@ void writeMasterAndStructure(ModelerData* data, const std::filesystem::path& out
 
     if (!outputDir.empty())
     {
-        static std::once_flag once;
-        std::call_once(once, [&outputDir] { std::filesystem::create_directories(outputDir); });
+        std::filesystem::create_directories(outputDir);
     }
 
     FillContext fillContext = {0, 167, 0, 167, 0};
