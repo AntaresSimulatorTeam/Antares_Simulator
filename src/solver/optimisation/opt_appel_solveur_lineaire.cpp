@@ -165,9 +165,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
     const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
-                                                                       ? &modelerData
-                                                                            ->scenarioGroupRepository
-                                                                       : nullptr;
+                                                                      ? &modelerData
+                                                                           ->scenarioGroupRepository
+                                                                      : nullptr;
 
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
                                               modelerDataSeries,
@@ -344,11 +344,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                                           ->bendersDecomposition
                                                                      : nullptr;
 
-        fillLinearProblem(fillCtx,
-                          problemeHebdo,
-                          optimEntityContainer,
-                          true,
-                          bendersDecomposition);
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
