@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <limits>
 
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>

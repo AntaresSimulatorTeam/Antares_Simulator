@@ -165,19 +165,24 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
     const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
-                                                                      ? &modelerData
-                                                                           ->scenarioGroupRepository
-                                                                      : nullptr;
+                                                                       ? &modelerData
+                                                                            ->scenarioGroupRepository
+                                                                       : nullptr;
 
     OptimEntityContainer optimEntityContainer(ortoolsProblem,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
+    Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
+                                                                 ? &modelerData
+                                                                      ->bendersDecomposition
+                                                                 : nullptr;
+
     fillLinearProblem(fillCtx,
                       problemeHebdo,
                       optimEntityContainer,
                       problemeHebdo->NamedProblems,
-                      &problemeHebdo->modelerData->bendersDecomposition);
+                      bendersDecomposition);
     auto solver = ortoolsProblem.getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
@@ -334,11 +339,16 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
+        Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
+                                                                     ? &modelerData
+                                                                          ->bendersDecomposition
+                                                                     : nullptr;
+
         fillLinearProblem(fillCtx,
                           problemeHebdo,
                           optimEntityContainer,
                           true,
-                          &problemeHebdo->modelerData->bendersDecomposition);
+                          bendersDecomposition);
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

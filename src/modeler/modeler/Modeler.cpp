@@ -4,6 +4,7 @@
 #include "antares/solver/modeler/Modeler.h"
 
 #include <fstream>
+#include <stdexcept>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
@@ -123,6 +124,11 @@ std::unique_ptr<ILinearProblem> getProblem(bool isMip,
 {
     if (resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
+        if (!solver)
+        {
+            throw std::invalid_argument(
+              "Please provide a solver for sequential subproblem resolution");
+        }
         return std::make_unique<OrtoolsLinearProblem>(isMip, solver.value());
     }
     return std::make_unique<StructuredLinearProblem>();
