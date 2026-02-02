@@ -19,7 +19,6 @@
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 #include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation
@@ -189,7 +188,8 @@ public:
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
-                simulation_->writeResults(false, y, numSpace);
+                // writing the results for the current year into the output
+                simulation_->writeResults(false, y, numSpace); // false for synthesis
             };
         }
 
@@ -212,8 +212,6 @@ public:
             // Computes statistics on annual (system and solution) costs, to be printed in output
             // into separate files
             simulation_->computeAnnualCostsStatistics(state);
-
-            // simulation_->dynamicAggregationAllYears.merge(dynamicAggregationForTheYear, y);
         };
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
