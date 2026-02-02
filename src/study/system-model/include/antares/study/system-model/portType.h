@@ -14,8 +14,8 @@ namespace Antares::ModelerStudy::SystemModel
 struct AreaConnection
 {
     std::string injection;
-    std::string to_area_bound;
-    std::string from_area_bound;
+    std::string spillage_bound;
+    std::string unsupplied_energy_bound;
 };
 
 class PortType final

@@ -35,8 +35,8 @@ library:
         - id: to-area-bound
         - id: from-area-bound
       area-connection:
-        - to-area-bound-field: to-area-bound
-        - from-area-bound-field: from-area-bound
+        - spillage-bound: to-area-bound
+        - unsupplied-energy-bound: from-area-bound
 
   models:
     - id: model_with_vars

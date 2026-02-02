@@ -20,12 +20,17 @@ std::string componentInjectionField(const Component& component, const std::strin
 
 std::string componentToAreaBoundField(const Component& component, const std::string& portId)
 {
-    return component.getModel()->Ports().at(portId).Type().areaConnection()->to_area_bound;
+    return component.getModel()->Ports().at(portId).Type().areaConnection()->spillage_bound;
 }
 
 std::string componentFromAreaBoundField(const Component& component, const std::string& portId)
 {
-    return component.getModel()->Ports().at(portId).Type().areaConnection()->from_area_bound;
+    return component.getModel()
+      ->Ports()
+      .at(portId)
+      .Type()
+      .areaConnection()
+      ->unsupplied_energy_bound;
 }
 
 std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* problemeHebdo_)
