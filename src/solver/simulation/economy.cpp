@@ -218,6 +218,7 @@ bool Economy::year(Progression::Task& progression,
         }
 
         hourInTheYear += nbHoursInAWeek;
+
         ++progression;
     }
 

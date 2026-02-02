@@ -12,6 +12,7 @@
 
 namespace Antares::Data
 {
+
 class Study;
 
 enum RangeLimitsIndex
@@ -98,20 +99,20 @@ public:
     bool thermalTSRefresh = false;
 
     /*!
-     ** \brief The number of simulation days per month
-     */
+    ** \brief The number of simulation days per month
+    */
     uint simulationDaysPerMonth[12];
 
     /*!
-     ** \brief The number of simulation days per week
-     */
+    ** \brief The number of simulation days per week
+    */
     uint simulationDaysPerWeek[53];
 
     /*!
-     ** \brief Flag to know if at least one error occured during quadratic optimization
-     **
-     ** In this case, error on `DynamicAggregationSingleYear` should be disabled
-     */
+    ** \brief Flag to know if at least one error occured during the quadratic optimization
+    **
+    ** In this case, error on NaN should be disabled
+    */
     bool quadraticOptimizationHasFailed;
 
     std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;

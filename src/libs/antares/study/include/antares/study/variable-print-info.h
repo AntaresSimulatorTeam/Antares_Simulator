@@ -90,8 +90,8 @@ public:
 
     void setPrintStatus(std::string varname, bool printStatus);
     void setPrintStatus(unsigned int index, bool printStatus);
-    void setMaxColumns(std::string varname, uint maxColumnsNumber);
 
+    void setMaxColumns(std::string varname, uint maxColumnsNumber);
     std::string name_of(unsigned int index) const;
 
     void prepareForSimulation(bool isThematicTrimmingEnabled,
