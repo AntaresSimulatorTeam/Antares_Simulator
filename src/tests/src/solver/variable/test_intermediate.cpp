@@ -39,7 +39,7 @@ std::unique_ptr<Antares::Data::Study> studyHelper(unsigned FirstDay, unsigned La
     }
 
     study->parameters.variablesPrintInfo.setAllPrintStatusesTo(true);
-    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+    study->parameters.variablesPrintInfo.computeMaxColumnsCountInReports({});
 
     return study;
 }

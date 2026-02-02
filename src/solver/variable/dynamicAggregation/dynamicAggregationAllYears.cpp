@@ -19,6 +19,7 @@ void DynamicAggregationAllYears::merge(const DynamicAggregationSingleYear& toMer
 {
     for (auto& [setName, setData]: setsData_)
     {
+        // TODO many lookups may be expensive
         const auto& toMergeSetDataIt = toMerge.setsData_.find(setName);
         if (toMergeSetDataIt != toMerge.setsData_.end())
         {
@@ -32,22 +33,11 @@ void DynamicAggregationAllYears::appendToSurveyForSet(const std::string& setName
                                                       SurveyResults& survey,
                                                       Category::Precision precision) const
 {
+    // TODO many lookups may be expensive
     auto it = setsData_.find(setName);
     if (it != setsData_.end())
     {
         it->second.appendToSurvey(survey, precision);
     }
 }
-
-unsigned int DynamicAggregationAllYears::computeDynamicAggregationMaxColumns() const
-{
-    unsigned int maxCols = 0;
-
-    for (const auto& [_, setData]: setsData_)
-    {
-        maxCols += setData.numberOfVariables();
-    }
-    return maxCols /* *4 */; // TODO: 4 for exp, std, min, max ?
-}
-
 } // namespace Antares::Solver::Variable

@@ -279,17 +279,7 @@ void ISimulation<ImplementationType>::run()
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
 
-    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
-
-    // Compute max extra columns for dynamic aggregation
-    unsigned int dynamicAggregationMaxColumns = ImplementationType::dynamicAggregationAllYears
-                                                  .computeDynamicAggregationMaxColumns();
-    if (dynamicAggregationMaxColumns > 0)
-    {
-        logs.info() << "Adding " << dynamicAggregationMaxColumns
-                    << " extra columns for dynamic aggregation";
-        study.parameters.variablesPrintInfo.addExtraColumns(dynamicAggregationMaxColumns);
-    }
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
 
     logs.info() << "Allocating resources...";
 

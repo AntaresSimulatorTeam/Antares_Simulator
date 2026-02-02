@@ -14,6 +14,8 @@
 
 namespace Antares::Data
 {
+class Sets;
+
 // Represents an output variable (wears the same name) and mainly answers the question :
 // Is the real variable printed in all output reports ? Or is it not printed in any report ?
 class VariablePrintInfo final
@@ -90,11 +92,6 @@ public:
     void setPrintStatus(unsigned int index, bool printStatus);
     void setMaxColumns(std::string varname, uint maxColumnsNumber);
 
-    void addExtraColumns(uint extra)
-    {
-        totalMaxColumnsCount_ += extra;
-    }
-
     std::string name_of(unsigned int index) const;
 
     void prepareForSimulation(bool isThematicTrimmingEnabled,
@@ -118,7 +115,7 @@ public:
         return numberSelectedLinkVariables;
     }
 
-    void computeMaxColumnsCountInReports();
+    void computeMaxColumnsCountInReports(const Sets&);
     void setAllPrintStatusesTo(bool b);
     void reverseAll();
 

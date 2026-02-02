@@ -220,12 +220,4 @@ void SetDataAllYears::appendToSurvey(SurveyResults& survey, Category::Precision 
                   "_LEVEL",
                   survey);
 }
-
-size_t SetDataAllYears::numberOfVariables() const
-{
-    // total number of variables (4 columns per group: exp, std, min, max)
-    return (thermalGroupNames_.size() + renewableGroupNames_.size() + stsGroupNames_.size() * 3)
-           * 4;
-}
-
 } // namespace Antares::Solver::Variable

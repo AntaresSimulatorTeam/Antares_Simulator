@@ -81,11 +81,7 @@ class SetDataAllYears: public SetDataBase
 public:
     explicit SetDataAllYears(const std::set<Data::Area*, Data::CompareAreaName>& set,
                              Data::Study& study);
-
     void merge(const SetDataSingleYear& toMerge, Data::Study& study, unsigned year);
-
-    size_t numberOfVariables() const;
-
     void appendToSurvey(SurveyResults& survey, Category::Precision precision) const;
 
 private:
