@@ -140,9 +140,6 @@ private:
     // variables. The less variables are selected, the smallest this count is.
     uint totalMaxColumnsCount_ = 0;
 
-    // Extra columns for dynamic aggregation
-    uint extraColumnsCount_ = 0;
-
     // Number of selected zonal variables
     uint numberSelectedAreaVariables = 0;
     // Number of selected link variables
