@@ -29,9 +29,11 @@ Hybrid studies offer the following features.
 
 ### Connecting modeler components to legacy areas
 One of the most useful use cases is the added ability to define new types of system components with custom behavior, 
-using the new [modelling language](../modeler/05-model.md), and inserting them into existing studies, 
-by connecting them to "areas". This has the effect of adding generation or consumption to an existing area, thus 
-modifying its [balance constraint](05-model.md#balance-between-load-and-generation).  
+using the new [modelling language](../modeler/05-model.md), and inserting these system components into existing studies, 
+by connecting them to "areas". 
+Such connections allow : 
+- adding generation or consumption to an existing area, thus modifying its [balance constraint](05-model.md#balance-between-load-and-generation).
+- bounding unsupplied energy or spillage with linear expressions coming from modeler components.
 
 This is implemented in Antares thanks to the [ports](../modeler/05-model.md#ports-and-connections) concept.  
 In order to connect new components to existing areas, you must follow two steps:
@@ -43,23 +45,23 @@ In order to connect new components to existing areas, you must follow two steps:
 To connect a component to an area, you must define a connection in the **area-connections** section of the 
 [system file](../modeler/02-inputs.md#system-file). 
 This section has been specifically created for this use case. Every element in this section represents a connection 
-between a component defined in the same system file, and an existing area defined in the antares-solver study.  
+between a component (defined in the same system file) and an existing area defined in the antares-solver study.  
 
 Example:
 ~~~yaml
 area-connections:
  - component: generator1
-   port: injection
+   port: injection-port
    area: area1
  - component: generator2
-   port: injection
+   port: injection-port
    area: area1
  - component: consumer1
-   port: consumption
+   port: consumption-port
    area: area2
 ~~~
 
-- **component1**: the IDs of the component to connect to the area, as defined in the [components section](../modeler/02-inputs.md#components)
+- **component**: the IDs of the component to connect to the area, as defined in the [components section](../modeler/02-inputs.md#components)
 - **port**: the ID of the component's port to connect to the area (as defined by the model of the component). This port 
   must be of a type that defines an area-connection injection field (see [next paragraph](#selecting-the-area-connection-port-fields))
 - **area**: the ID of the area to connect the component to, as defined in the [antares-solver input files](02-inputs.md).
@@ -77,15 +79,28 @@ port-type:
    fields:
       - id: flow
       - id: angle
+	  - id: to-area-bound
+      - id: from-area-bound
    area-connection:
       - injection-field: flow
+	  - spillage-bound: to-area-bound
+      - unsupplied-energy-bound: from-area-bound
 ~~~
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
-connect modeler components to solver areas.  
-
-  - **injection-field**: the field to use when adding the contribution of this port bearer to a connected area, were the 
-    component to be connected to an area
+connect modeler components to solver areas.
+Here we describe the role of each field the **area-connection** can contain. The value for each of them
+must be an existing port name in the same port type.
+All components connected to this port and area (via an **area-connections** system section entry, 
+see previous paragraph [Defining the connections](#defining-the-connections)) will have their corresponding linear 
+expression contributing to a constraint of the linear problem.
+The nature of this contribution depends on the field : 
+  - **injection-field**: the linear expression is injected in the balance constraint of the area.
+	This is done with respect to a convention (see next [Optimization model](#optimization-model)).
+	
+  - **spillage-bound**: the linear expression is added to the sum of all variables or linear expressions already used 
+    to bound the spillage in the constraint called "fictitious load".
+  - **unsupplied-energy-bound** : the linear expression is added to any linear expression already used to bound the unsupplied ennergy.
 
 #### Optimization model
 The linear expression defined by the connected component's port field definition is simply added to the **left-hand side** 
