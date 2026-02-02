@@ -173,11 +173,16 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
+    Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
+                                                                 ? &modelerData
+                                                                      ->bendersDecomposition
+                                                                 : nullptr;
+
     fillLinearProblem(fillCtx,
                       problemeHebdo,
                       optimEntityContainer,
                       problemeHebdo->NamedProblems,
-                      &problemeHebdo->modelerData->bendersDecomposition);
+                      bendersDecomposition);
     auto solver = ortoolsProblem.getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
@@ -334,11 +339,12 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        fillLinearProblem(fillCtx,
-                          problemeHebdo,
-                          optimEntityContainer,
-                          true,
-                          &problemeHebdo->modelerData->bendersDecomposition);
+        Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
+                                                                     ? &modelerData
+                                                                          ->bendersDecomposition
+                                                                     : nullptr;
+
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
