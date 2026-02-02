@@ -264,8 +264,8 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports(const Sets& setsOfAr
             totalMaxColumnsCount_ = std::max(totalMaxColumnsCount_, currentColumnsCount);
         }
     }
-    totalMaxColumnsCount_ = std::max(totalMaxColumnsCount_,
-                                     computeMaxColumnsForDynamicDistricts(setsOfAreas));
+    // Dynamic variables for sets of areas (districts)
+    totalMaxColumnsCount_ += computeMaxColumnsForDynamicDistricts(setsOfAreas);
 }
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
