@@ -103,6 +103,7 @@ inline void List<NextT>::computeSpatialAggregatesSummary(V& allVars,
                                                          unsigned int year,
                                                          unsigned int numSpace)
 {
+    dynamicAggregationAllYears_->merge(dynamicAggregationSingleYear_[numSpace], year);
     // Next variable
     NextT::computeSpatialAggregatesSummary(allVars, year, numSpace);
 }

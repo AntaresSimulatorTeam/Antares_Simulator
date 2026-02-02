@@ -213,7 +213,7 @@ public:
             // into separate files
             simulation_->computeAnnualCostsStatistics(state);
 
-            simulation_->dynamicAggregationAllYears.merge(dynamicAggregationForTheYear, y);
+            // simulation_->dynamicAggregationAllYears.merge(dynamicAggregationForTheYear, y);
         };
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
