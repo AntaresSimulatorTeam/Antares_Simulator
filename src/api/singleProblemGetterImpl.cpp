@@ -499,11 +499,14 @@ int SingleProblemGetter::nbWeeks() const
 
 bool SingleProblemGetter::areWeeksIndependent() const
 {
-    return std::ranges::all_of(study_->areas | std::views::values, [](const auto& area)
-    {
-        if (!area->hydro.reservoirManagement)
-            return true;
-        return area->hydro.useHeuristicTarget && !area->hydro.useLeeway;
-    });
+    return std::ranges::all_of(study_->areas | std::views::values,
+                               [](const auto& area)
+                               {
+                                   if (!area->hydro.reservoirManagement)
+                                   {
+                                       return true;
+                                   }
+                                   return area->hydro.useHeuristicTarget && !area->hydro.useLeeway;
+                               });
 }
 } // namespace Antares::Solver::Implementation
