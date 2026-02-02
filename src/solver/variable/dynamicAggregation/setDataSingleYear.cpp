@@ -11,17 +11,17 @@ SetDataSingleYear::SetDataSingleYear(const std::set<Data::Area*, Data::CompareAr
 {
     for (unsigned int i = 0; i < thermalGroupNames_.size(); ++i)
     {
-        thermalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+        thermalResults_.emplace_back(HOURS_PER_YEAR, 0);
     }
     for (unsigned int i = 0; i < renewableGroupNames_.size(); ++i)
     {
-        renewableResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+        renewableResults_.emplace_back(HOURS_PER_YEAR, 0);
     }
     for (unsigned int i = 0; i < stsGroupNames_.size(); ++i)
     {
-        stsInjectionResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
-        stsWithdrawalResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
-        stsLevelResults_.push_back(std::vector<long double>(HOURS_PER_YEAR, 0));
+        stsInjectionResults_.emplace_back(HOURS_PER_YEAR, 0);
+        stsWithdrawalResults_.emplace_back(HOURS_PER_YEAR, 0);
+        stsLevelResults_.emplace_back(HOURS_PER_YEAR, 0);
     }
 }
 
