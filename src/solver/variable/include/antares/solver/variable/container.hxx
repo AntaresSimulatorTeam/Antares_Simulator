@@ -225,8 +225,9 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     // Ask to all variables
     NextT::buildSurveyReport(results, dataLevel, fileLevel, precision);
 
-    // Append dynamic aggregation columns for sets of areas
-    if (dataLevel == Category::DataLevel::setOfAreas && dynamicAggregationAllYears_)
+    // Append dynamic aggregation columns for sets of areas, values files only
+    if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va
+        && dynamicAggregationAllYears_)
     {
         for (const auto& [setName, _]: pStudy->setsOfAreas)
         {
@@ -265,8 +266,8 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     // Ask to all variables
     NextT::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
 
-    // Append dynamic aggregation columns for sets of areas
-    if (dataLevel == Category::DataLevel::setOfAreas)
+    // Append dynamic aggregation columns for sets of areas, values files only
+    if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va)
     {
         for (const auto& [setName, _]: pStudy->setsOfAreas)
         {
