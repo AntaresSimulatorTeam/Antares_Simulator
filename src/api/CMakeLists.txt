@@ -75,8 +75,8 @@ target_link_libraries(single_problem_api
         Antares::lps)
 
 # TODO move
-add_executable(api_test main.cpp)
-target_link_libraries(api_test
+add_executable(antares-api main.cpp)
+target_link_libraries(antares-api
 	single_problem_api)
 
 install(DIRECTORY include/antares

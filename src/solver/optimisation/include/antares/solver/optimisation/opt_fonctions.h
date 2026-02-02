@@ -15,6 +15,11 @@
 
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 
+namespace Antares::Optimisation
+{
+class OptimEntityContainer;
+}
+
 using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 using OptimizationOptions = Antares::Solver::Optimization::OptimizationOptions;
 using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
@@ -96,5 +101,10 @@ void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
-
+Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
+                                                             int NumIntervalle);
+void fillLinearProblem(Optimisation::LinearProblemApi::FillContext& fillCtx,
+                       const PROBLEME_HEBDO* problemeHebdo,
+                       Optimisation::OptimEntityContainer& optimEntityContainer,
+                       bool namedProblems);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */
