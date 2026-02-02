@@ -62,4 +62,9 @@ std::set<int> SingleProblemGetter::playedYears() const
     return impl_->playedYears();
 }
 
+bool SingleProblemGetter::areWeeksIndependent() const
+{
+    return impl_->areWeeksIndependent();
+}
+
 } // namespace Antares::Solver

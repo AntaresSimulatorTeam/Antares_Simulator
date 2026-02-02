@@ -128,13 +128,13 @@ void printProblems(const ApiOptions& options)
     logs.info() << " * Number of years: " << nbYears;
     logs.info() << " * Number of weeks per year: " << nbWeeks;
 
-    int firstWeek = options.week == -1 ? 1 : options.week;
-    int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
+    unsigned int firstWeek = options.week == -1 ? 1 : options.week;
+    unsigned int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
 
-    for (int year: getter.playedYears())
+    for (unsigned int year: getter.playedYears())
     {
         logs.info() << " year: " << year << '\n';
-        for (int week = firstWeek; week < lastWeek; ++week)
+        for (unsigned int week = firstWeek; week < lastWeek; ++week)
         {
             logs.info() << " week: " << week << '\n';
             const WeeklyProblemId id = {year, week};

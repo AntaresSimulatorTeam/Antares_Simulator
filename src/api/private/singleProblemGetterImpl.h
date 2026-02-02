@@ -45,6 +45,7 @@ public:
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
     int nbYears() const;
     int nbWeeks() const;
+    bool areWeeksIndependent() const;
     std::set<int> playedYears() const;
 
 private:
