@@ -193,10 +193,6 @@ Alike Input data, output results can be filtered so as to include only items tha
 - **Unknown** displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has changed since the last simulation)
 
 ### Dynamic Aggregation for Sets of Areas (Districts)
-Dynamic district variables are handled differently from other variables for technical reasons
-- They cannot be enabled/disabled with thematic trimming
-- They cannot be enabled/disabled with geographic trimming
-
 #### Overview
 
 - **Thermal groups**: dispatchable production of the group
@@ -241,7 +237,11 @@ The following group types can be used for dynamic aggregation:
 
 #### Notes
 
-- For short-term storage `LEVEL` columns, values represent **averages** (not hourly values) computed over the year
+- Dynamic district variables are handled differently from other variables for technical reasons
+  - They cannot be enabled/disabled with thematic trimming
+  - They cannot be enabled/disabled with geographic trimming
+
+- For short-term storage `LEVEL` columns, values represent **averages** (not hourly values) computed over the period of time (day, week, month or year)
 - The number of columns generated scales with the number of districts and groups defined in your study
 - To enable dynamic aggregation, define [sets of areas](02-inputs.md) in your study input
 
