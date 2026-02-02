@@ -16,6 +16,7 @@ inline void List<NextT>::initializeFromStudy(Data::Study& study)
 {
     // Store a pointer to the current study
     pStudy = &study;
+    dynamicAggregationSingleYear_.resize(study.maxNbYearsInParallel);
     // Next
     NextT::initializeFromStudy(study);
 }
@@ -218,11 +219,11 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     NextT::buildSurveyReport(results, dataLevel, fileLevel, precision);
 
     // Append dynamic aggregation columns for sets of areas
-    if (dataLevel == Category::DataLevel::setOfAreas && pStudy->runtime.dynamicAggregationAllYears)
+    if (dataLevel == Category::DataLevel::setOfAreas && dynamicAggregationAllYears_)
     {
         for (const auto& [setName, _]: pStudy->setsOfAreas)
         {
-            pStudy->runtime.dynamicAggregationAllYears
+            dynamicAggregationAllYears_
               ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
         }
     }
@@ -258,13 +259,12 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     NextT::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
 
     // Append dynamic aggregation columns for sets of areas
-    if (dataLevel == Category::DataLevel::setOfAreas
-        && pStudy->runtime.dynamicAggregationSingleYear[numSpace])
+    if (dataLevel == Category::DataLevel::setOfAreas)
     {
         for (const auto& [setName, _]: pStudy->setsOfAreas)
         {
-            pStudy->runtime.dynamicAggregationSingleYear[numSpace]
-              ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+            dynamicAggregationSingleYear_[numSpace]
+              .appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
         }
     }
 

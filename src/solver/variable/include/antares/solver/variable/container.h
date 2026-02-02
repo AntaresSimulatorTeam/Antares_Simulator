@@ -188,9 +188,19 @@ public:
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
     //@}
 
+    void setDynamicAggregationAllYears(Solver::Variable::DynamicAggregationAllYears* ptr);
+
+    void resizeDynamicAggregationSingleYear(std::size_t size);
+
+    void setDynamicAggregationSingleYear(std::size_t index,
+                                         Solver::Variable::DynamicAggregationSingleYear* ptr);
+
 private:
     //! Pointer to the current study
     Data::Study* pStudy;
+
+    Solver::Variable::DynamicAggregationAllYears dynamicAggregationAllYears_;
+    std::vector<Solver::Variable::DynamicAggregationSingleYear> dynamicAggregationSingleYear_;
 
 }; // class List
 

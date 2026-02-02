@@ -10,12 +10,6 @@
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/parameters.h>
 
-namespace Antares::Solver::Variable
-{
-class DynamicAggregationSingleYear;
-class DynamicAggregationAllYears;
-} // namespace Antares::Solver::Variable
-
 namespace Antares::Data
 {
 class Study;
@@ -119,9 +113,6 @@ public:
      ** In this case, error on `DynamicAggregationSingleYear` should be disabled
      */
     bool quadraticOptimizationHasFailed;
-
-    Solver::Variable::DynamicAggregationAllYears* dynamicAggregationAllYears = nullptr;
-    std::vector<Solver::Variable::DynamicAggregationSingleYear*> dynamicAggregationSingleYear;
 
     std::vector<std::vector<double>> transitMoyenInterconnexionsRecalculQuadratique;
 
