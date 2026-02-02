@@ -115,7 +115,6 @@ public:
     {
         Progression::Task progression(study, y, Solver::Progression::sectYear);
 
-        Variable::DynamicAggregationSingleYear dynamicAggregationForTheYear(study);
         // Index of the current year in the list of structures
         uint indexYear = randomForParallelYears.yearNumberToIndex[y];
 
@@ -158,8 +157,7 @@ public:
                                              hydroManagement.ventilationResults(),
                                              optWriter,
                                              pDurationCollector,
-                                             scratchmap,
-                                             dynamicAggregationForTheYear);
+                                             scratchmap);
         if (!study.parameters.noOutput)
         {
             auto& simTable = simulation_->getSimulationTable(numSpace);
@@ -187,15 +185,11 @@ public:
         // 9 - Write results for the current year
         if (yearByYear)
         {
-            pDurationCollector("yby_export") << [this, &numSpace, &dynamicAggregationForTheYear]
+            pDurationCollector("yby_export") << [this, &numSpace]
             {
                 // Before writing, some variable may require minor modifications
                 simulation_->variables.beforeYearByYearExport(y, numSpace);
-
-                simulation_->variables.setDynamicAggregationSingleYear(
-                  numSpace, &dynamicAggregationForTheYear);
                 simulation_->writeResults(false, y, numSpace);
-                simulation_->variables.setDynamicAggregationSingleYear(numSpace, nullptr);
             };
         }
 
@@ -206,8 +200,7 @@ public:
 
         yearsFailed[y] = yearFailed;
 
-        pDurationCollector("synthesis_compute")
-          << [this, &numSpace, &state, &dynamicAggregationForTheYear]
+        pDurationCollector("synthesis_compute") << [this, &numSpace, &state]
         {
             simulation_->variables.computeSummary(y, numSpace);
 

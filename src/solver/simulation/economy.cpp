@@ -21,7 +21,6 @@ Economy::Economy(Data::Study& study,
                  Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
-    dynamicAggregationAllYears(study),
     resultWriter_(resultWriter),
     simulationObserver_(simulationObserver),
     simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
@@ -115,8 +114,7 @@ bool Economy::year(Progression::Task& progression,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
                    Benchmarking::DurationCollector& durationCollector,
-                   const Antares::Data::Area::ScratchMap& scratchmap,
-                   Solver::Variable::DynamicAggregationSingleYear& dynamicAggregation)
+                   const Antares::Data::Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
     failedWeekList.clear();

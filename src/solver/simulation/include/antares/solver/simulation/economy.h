@@ -9,7 +9,6 @@
 #include "antares/solver/optimisation/weekly_optimization.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
-#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/state.h"
 #include "antares/solver/variable/variable.h"
@@ -54,8 +53,6 @@ public:
     //! Prepro only
     bool preproOnly;
 
-    Solver::Variable::DynamicAggregationAllYears dynamicAggregationAllYears;
-
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
 
@@ -69,8 +66,7 @@ protected:
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
               Benchmarking::DurationCollector& durationCollector,
-              const Antares::Data::Area::ScratchMap& scratchmap,
-              Solver::Variable::DynamicAggregationSingleYear& dynamicAggregation);
+              const Antares::Data::Area::ScratchMap& scratchmap);
 
     void incrementProgression(Progression::Task& progression);
 

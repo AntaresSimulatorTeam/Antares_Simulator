@@ -53,8 +53,6 @@ public:
     //! Prepro only
     bool preproOnly = false;
 
-    Solver::Variable::DynamicAggregationAllYears dynamicAggregationAllYears;
-
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
     std::string getSimulationTableHeader() const;
@@ -68,8 +66,7 @@ protected:
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
               Benchmarking::DurationCollector& durationCollector,
-              const Antares::Data::Area::ScratchMap& scratchmap,
-              Solver::Variable::DynamicAggregationSingleYear& dynamicAggregation);
+              const Antares::Data::Area::ScratchMap& scratchmap);
 
     void incrementProgression(Progression::Task& progression) const;
 

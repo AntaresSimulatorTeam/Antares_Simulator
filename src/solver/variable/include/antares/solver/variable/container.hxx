@@ -16,7 +16,12 @@ inline void List<NextT>::initializeFromStudy(Data::Study& study)
 {
     // Store a pointer to the current study
     pStudy = &study;
-    dynamicAggregationSingleYear_.resize(study.maxNbYearsInParallel);
+    dynamicAggregationAllYears_ = std::make_unique<DynamicAggregationAllYears>(study);
+    dynamicAggregationSingleYear_.reserve(study.maxNbYearsInParallel);
+    for (size_t y = 0; y < study.maxNbYearsInParallel; ++y)
+    {
+        dynamicAggregationSingleYear_.emplace_back(study);
+    }
     // Next
     NextT::initializeFromStudy(study);
 }
