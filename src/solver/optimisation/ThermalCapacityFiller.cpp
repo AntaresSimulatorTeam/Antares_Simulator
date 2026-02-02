@@ -103,9 +103,10 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
         double infinity = linearProblem.infinity();
         dispatchableProduction->setUb(infinity);
 
-        auto* ct = linearProblem.addConstraint(-infinity,
-                                               linearExpression[localIndex].constant(),
-                                               namePrefix + fmt::format("::hour<{}>", pdt));
+        auto* ct = linearProblem.addConstraint(
+          -infinity,
+          linearExpression[localIndex].constant(),
+          namePrefix + fmt::format("::hour<{}>", pdt + problemeHebdo_->weekInTheYear * 168));
         ct->setCoefficient(dispatchableProduction, 1.0);
 
         for (const auto& [varIndex, coef]: linearExpression[localIndex])

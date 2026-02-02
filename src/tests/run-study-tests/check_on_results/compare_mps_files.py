@@ -6,7 +6,7 @@ from check_on_results.check_general import check_interface
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_dated_output_folder, find_simulation_folder
 from utils.assertions import check
-from check_on_results.mps_utils import *
+from shared_utils.mps_utils import *
 
 tol = 1e-12
 @printNameDecorator
