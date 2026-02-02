@@ -50,7 +50,6 @@ BOOST_AUTO_TEST_CASE(multiple_components_offsets_should_accumulate)
     buildLinearProblem();
 
     // Expected: 10 + 20 = 30
-    // Bug: will give only 20 (last offset overwrites previous)
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 30);
 }
 
@@ -78,7 +77,6 @@ BOOST_AUTO_TEST_CASE(mixed_components_with_and_without_offset)
     buildLinearProblem();
 
     // Expected: 0 + 42 + 0 = 42
-    // Bug: will give only 42 but accidentally correct in this case
     BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 42);
 }
 
