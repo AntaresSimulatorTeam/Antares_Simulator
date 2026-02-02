@@ -110,8 +110,8 @@ void SetDataSingleYear::appendToSurvey(SurveyResults& survey,
                                        Category::Precision precision,
                                        Data::Study& study) const
 {
-    processGroups(thermalResults_, thermalGroupNames_, precision, "", study, survey);
-    processGroups(renewableResults_, renewableGroupNames_, precision, "", study, survey);
+    processGroups(thermalResults_, thermalGroupNames_, precision, "_TH_PROD", study, survey);
+    processGroups(renewableResults_, renewableGroupNames_, precision, "_RES_PROD", study, survey);
     processGroups(stsInjectionResults_, stsGroupNames_, precision, "_INJECTION", study, survey);
     processGroups(stsWithdrawalResults_, stsGroupNames_, precision, "_WITHDRAWAL", study, survey);
     processGroups(stsLevelResults_, stsGroupNames_, precision, "_LEVEL", study, survey, true);

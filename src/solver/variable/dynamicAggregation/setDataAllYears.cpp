@@ -184,7 +184,7 @@ void SetDataAllYears::appendToSurvey(SurveyResults& survey, Category::Precision 
                   maxThermal_,
                   thermalGroupNames_,
                   precision,
-                  "",
+                  "_TH_PROD",
                   survey);
     processGroups(averageRenewable_,
                   stdDevRenewable_,
@@ -192,7 +192,7 @@ void SetDataAllYears::appendToSurvey(SurveyResults& survey, Category::Precision 
                   maxRenewable_,
                   renewableGroupNames_,
                   precision,
-                  "",
+                  "_RES_PROD",
                   survey);
     processGroups(averageStsInjection_,
                   stdDevStsInjection_,
