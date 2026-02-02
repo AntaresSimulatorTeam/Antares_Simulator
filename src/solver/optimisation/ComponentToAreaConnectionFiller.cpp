@@ -178,10 +178,10 @@ void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const Fill
     addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
-void ComponentToAreaConnectionFiller::addToAreaBoundPortInLinearProblem(const FillContext& ctx,
-                                                                        const Component& component,
-                                                                        const std::string& portId,
-                                                                        const unsigned& areaIndex)
+void ComponentToAreaConnectionFiller::addToLinearPbSpillageBound(const FillContext& ctx,
+                                                                 const Component& component,
+                                                                 const std::string& portId,
+                                                                 const unsigned& areaIndex)
 {
     std::string portField = componentToAreaBoundField(component, portId);
     if (portField.empty())
@@ -199,11 +199,10 @@ void ComponentToAreaConnectionFiller::addToAreaBoundPortInLinearProblem(const Fi
     addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
-void ComponentToAreaConnectionFiller::addFromAreaBoundPortToLinearProblem(
-  const FillContext& ctx,
-  const Component& component,
-  const std::string& portId,
-  const unsigned& areaIndex)
+void ComponentToAreaConnectionFiller::addToLinearPbUnsupEnergyBound(const FillContext& ctx,
+                                                                    const Component& component,
+                                                                    const std::string& portId,
+                                                                    const unsigned& areaIndex)
 {
     std::string portField = componentFromAreaBoundField(component, portId);
     if (portField.empty())
@@ -229,8 +228,8 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
         {
             auto areaIndex = areaIndices_.at(areaId);
             addInjectionPortToLinearProblem(ctx, component, portId, areaIndex);
-            addToAreaBoundPortInLinearProblem(ctx, component, portId, areaIndex);
-            addFromAreaBoundPortToLinearProblem(ctx, component, portId, areaIndex);
+            addToLinearPbSpillageBound(ctx, component, portId, areaIndex);
+            addToLinearPbUnsupEnergyBound(ctx, component, portId, areaIndex);
         }
     }
 }

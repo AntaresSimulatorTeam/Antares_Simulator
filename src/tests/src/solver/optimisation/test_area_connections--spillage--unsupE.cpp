@@ -169,10 +169,11 @@ void AreaConnectionFixture::addConstraintsToLinearProblem(std::vector<std::strin
     }
 }
 
-BOOST_AUTO_TEST_SUITE(_area_connections___spillage_)
+BOOST_AUTO_TEST_SUITE(_area_connections___injecting_spillage_and_unsupplied_energy_bounds)
 
 BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
 {
+    // ------------------------------------------
     // Linear problem before addition from GEMS
     // ------------------------------------------
     // 1. LP is filled with constraints before GEMS comes into play.
@@ -198,6 +199,7 @@ BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
     problemeHebdo->CorrespondanceCntNativesCntOptim[0]
       .NumeroDeContraintePourBornerLaDefaillance.push_back(3);
 
+    // -------------------------------------------------------
     // Adding GEMS variables and constraints to linear problem
     // -------------------------------------------------------
     // 1. Adding variables (replaces the work of ComponentFiller, but for variables)
