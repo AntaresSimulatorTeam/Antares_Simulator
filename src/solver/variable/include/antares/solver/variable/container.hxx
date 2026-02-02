@@ -132,6 +132,7 @@ inline void List<NextT>::hourBegin(unsigned int hourInTheYear)
 template<class NextT>
 inline void List<NextT>::weekBegin(State& state)
 {
+    dynamicAggregationSingleYear_[state.numSpace].addResultsToSets(*state.problemeHebdo);
     NextT::weekBegin(state);
 }
 

@@ -327,8 +327,6 @@ bool Adequacy::year(Progression::Task& progression,
 
         updatingWeeklyFinalHydroLevel(study.areas, currentProblem);
 
-        dynamicAggregation.addResultsToSets(currentProblem);
-
         variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
 
