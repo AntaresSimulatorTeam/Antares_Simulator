@@ -5,6 +5,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+from idlelib.debugobj import dispatch
 from pathlib import Path
 
 import numpy as np
@@ -601,7 +602,7 @@ def extract_time_step(name) -> int:
 
 
 @then('for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps.')
-def check_max_generation_from_capacity_constraint(context):
+def check_max_generation_from_capacity_exists(context):
     for mps_file in context.soh.get_mps_files():
         mps_problem = mpu.load_problem(str(mps_file))
         week_time_step = get_week_time_steps_from_mps_file_name(mps_file)
@@ -614,3 +615,25 @@ def check_max_generation_from_capacity_constraint(context):
             f"MaxGenerationFromCapacity constraint not found for all time steps in {mps_file}"
         assert week_time_step == list(
             time_step_constraint.keys()), f"MaxGenerationFromCapacity constraint does not match time steps [{week_time_step[0]}, {week_time_step[-1]}] in {mps_file}"
+
+
+@then(
+    'enforces: "DispatchableProduction-thermal_add_on.p_max<0" for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area "area".')
+def check_max_generation_from_capacity_constraint(context):
+    for mps_file in context.soh.get_mps_files():
+        mps_problem = mpu.load_problem(str(mps_file))
+
+        for constr_name, row in mpu.get_constraint_matrix(mps_problem).items():
+            if constr_name.startswith("MaxGenerationFromCapacity"):
+                time_step = extract_time_step(constr_name)
+                assert len(
+                    row) == 2, f"{constr_name} must have exactly two non null coefficients: DispatchableProduction-thermal_add_on.p_max<0"
+                # Check coefficients
+                for var_name, ref_coef in row.items():
+                    coef = row[var_name]
+                    dispatchable_production = f"DispatchableProduction::area<area>::ThermalCluster<continuous_generator_candidate>::hour<{time_step}>"
+
+                    if var_name == dispatchable_production:
+                        assert coef == 1.0, f"the coefficient of {dispatchable_production} in {constr_name} must  = 1"
+                    elif var_name == "thermal_add_on.p_max":
+                        assert coef == -1.0, f"the coefficient of thermal_add_on.p_max in {constr_name} must  = -1"

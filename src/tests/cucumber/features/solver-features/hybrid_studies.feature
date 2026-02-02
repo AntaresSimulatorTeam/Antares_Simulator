@@ -104,4 +104,4 @@ Feature: hybrid (simulator+modeler) studies
     Then the simulation succeeds
     And the simulation takes less than 15 seconds
     Then for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps.
-    #And enforces: "DispatchableProduction-thermal_add_on.p_max<0" for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area "area".
+    And enforces: "DispatchableProduction-thermal_add_on.p_max<0" for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area "area".
