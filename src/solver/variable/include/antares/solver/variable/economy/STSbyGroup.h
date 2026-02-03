@@ -278,8 +278,8 @@ public:
                 results.variableCaption = caption(column);
                 results.variableUnit = unit(column);
                 AncestorType::pResults[column].template buildDigest<VCardType>(results,
-                                                                        digestLevel,
-                                                                        dataLevel);
+                                                                               digestLevel,
+                                                                               dataLevel);
             }
         }
         // Ask to build the digest to the next variable

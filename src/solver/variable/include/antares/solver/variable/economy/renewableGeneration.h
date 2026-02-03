@@ -228,8 +228,8 @@ public:
                 results.variableCaption = groupNames_[column];
                 results.variableUnit = VCardType::Unit();
                 AncestorType::pResults[column].template buildDigest<VCardType>(results,
-                                                                        digestLevel,
-                                                                        dataLevel);
+                                                                               digestLevel,
+                                                                               dataLevel);
             }
         }
         // Ask to build the digest to next variable

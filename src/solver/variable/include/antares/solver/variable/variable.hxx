@@ -311,8 +311,8 @@ inline void IVariable<ChildT, NextT, VCardT>::buildAnnualSurveyReport(SurveyResu
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results,
-                                                           int digestLevel,
-                                                           int dataLevel) const
+                                                          int digestLevel,
+                                                          int dataLevel) const
 {
     // Generate the Digest for the local results (areas part)
     if (VCardType::columnCount != 0
@@ -331,9 +331,9 @@ inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results
         results.isCurrentVarNA = isNonApplicable;
 
         VariableAccessorType::template BuildDigest<VCardT>(results,
-                                                            pResults,
-                                                            digestLevel,
-                                                            dataLevel);
+                                                           pResults,
+                                                           digestLevel,
+                                                           dataLevel);
     }
     // Ask to build the digest to the next variable
     NextType::buildDigest(results, digestLevel, dataLevel);
