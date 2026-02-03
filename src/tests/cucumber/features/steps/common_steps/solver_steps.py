@@ -13,12 +13,12 @@ from common_steps.assertions import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
 
-from features.steps.common_steps.assertions import assert_double_close
-from features.steps.common_steps.modeler_output_handler import modeler_output_handler
-from features.steps.common_steps.table_compare import *
+from common_steps.assertions import assert_double_close
+from common_steps.modeler_output_handler import modeler_output_handler
+from common_steps.table_compare import *
 from shared_utils import mps_utils as mpu
 
-from src.tests.cucumber.features.steps.common_steps.parse_linear_expression import parse_linear_expression
+from common_steps.parse_linear_expression import parse_linear_expression
 
 NB_HOURS_IN_WEEK = 168
 NB_DAYS_IN_WEEK = 7
