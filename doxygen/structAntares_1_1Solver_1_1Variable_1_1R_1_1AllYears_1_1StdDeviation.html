@@ -125,9 +125,9 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Solver::Variable::R::AllYears::StdDeviation&lt; NextT, FileFilter &gt; Struct Template Reference</div>  </div>
@@ -159,6 +159,27 @@ typedef NextT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
  }</td></tr>
 <tr class="separator:a06d5de268910eacdcf7889690aa4eafd inherit pub_types_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a622ac0eef11558ca6d7597d63495651f"><td class="memItemLeft" align="right" valign="top"><a id="a622ac0eef11558ca6d7597d63495651f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromStudy</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &amp;study)</td></tr>
+<tr class="separator:a622ac0eef11558ca6d7597d63495651f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada37935b4e18bad9341852d49456baf0"><td class="memItemLeft" align="right" valign="top"><a id="ada37935b4e18bad9341852d49456baf0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
+<tr class="separator:ada37935b4e18bad9341852d49456baf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a259a2d881d92d9432aa0133343e9a273"><td class="memItemLeft" align="right" valign="top"><a id="a259a2d881d92d9432aa0133343e9a273"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>merge</b> (unsigned int year, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;rhs)</td></tr>
+<tr class="separator:a259a2d881d92d9432aa0133343e9a273"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3ac30a527c9f15bc40503e58added6b"><td class="memTemplParams" colspan="2"><a id="ae3ac30a527c9f15bc40503e58added6b"></a>
+template&lt;class S , class VCardT &gt; </td></tr>
+<tr class="memitem:ae3ac30a527c9f15bc40503e58added6b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;report, const S &amp;results, int dataLevel, int fileLevel, int precision) const</td></tr>
+<tr class="separator:ae3ac30a527c9f15bc40503e58added6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Empty.html">Antares::Solver::Variable::Empty</a></td></tr>
+<tr class="memitem:af09b400c19dced6f209c4c3c5de88f91 inherit pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="memItemLeft" align="right" valign="top"><a id="af09b400c19dced6f209c4c3c5de88f91"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91">Name</a> ()</td></tr>
+<tr class="memdesc:af09b400c19dced6f209c4c3c5de88f91 inherit pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the filter. <br /></td></tr>
+<tr class="separator:af09b400c19dced6f209c4c3c5de88f91 inherit pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ab973f246221dc6ccec8c9e36c9186d85"><td class="memItemLeft" align="right" valign="top"><a id="ab973f246221dc6ccec8c9e36c9186d85"></a>
@@ -184,29 +205,8 @@ std::vector&lt; HighPrecision &gt;&#160;</td><td class="memItemRight" valign="bo
 HighPrecision&#160;</td><td class="memItemRight" valign="bottom"><b>stdDeviationYear</b> = 0</td></tr>
 <tr class="separator:a7eced0a5c80c17d3b3fd318d40662509"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a622ac0eef11558ca6d7597d63495651f"><td class="memItemLeft" align="right" valign="top"><a id="a622ac0eef11558ca6d7597d63495651f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromStudy</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &amp;study)</td></tr>
-<tr class="separator:a622ac0eef11558ca6d7597d63495651f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada37935b4e18bad9341852d49456baf0"><td class="memItemLeft" align="right" valign="top"><a id="ada37935b4e18bad9341852d49456baf0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
-<tr class="separator:ada37935b4e18bad9341852d49456baf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a259a2d881d92d9432aa0133343e9a273"><td class="memItemLeft" align="right" valign="top"><a id="a259a2d881d92d9432aa0133343e9a273"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>merge</b> (unsigned int year, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;rhs)</td></tr>
-<tr class="separator:a259a2d881d92d9432aa0133343e9a273"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3ac30a527c9f15bc40503e58added6b"><td class="memTemplParams" colspan="2"><a id="ae3ac30a527c9f15bc40503e58added6b"></a>
-template&lt;class S , class VCardT &gt; </td></tr>
-<tr class="memitem:ae3ac30a527c9f15bc40503e58added6b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;report, const S &amp;results, int dataLevel, int fileLevel, int precision) const</td></tr>
-<tr class="separator:ae3ac30a527c9f15bc40503e58added6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Empty.html">Antares::Solver::Variable::Empty</a></td></tr>
-<tr class="memitem:af09b400c19dced6f209c4c3c5de88f91 inherit pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="memItemLeft" align="right" valign="top"><a id="af09b400c19dced6f209c4c3c5de88f91"></a>
-const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91">Name</a> ()</td></tr>
-<tr class="memdesc:af09b400c19dced6f209c4c3c5de88f91 inherit pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the filter. <br /></td></tr>
-<tr class="separator:af09b400c19dced6f209c4c3c5de88f91 inherit pub_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td colspan="2" onclick="javascript:toggleInherit('pro_static_methods_structAntares_1_1Solver_1_1Variable_1_1Empty')"><img src="closed.png" alt="-"/>&#160;Static Protected Member Functions inherited from <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Empty.html">Antares::Solver::Variable::Empty</a></td></tr>
 <tr class="memitem:a3ca65cd5c075dd2cda7a2316151c640f inherit pro_static_methods_structAntares_1_1Solver_1_1Variable_1_1Empty"><td class="memItemLeft" align="right" valign="top"><a id="a3ca65cd5c075dd2cda7a2316151c640f"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromStudy</b> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;)</td></tr>

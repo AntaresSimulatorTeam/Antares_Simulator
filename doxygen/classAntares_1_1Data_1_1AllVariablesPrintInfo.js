@@ -4,7 +4,7 @@ var classAntares_1_1Data_1_1AllVariablesPrintInfo =
     [ "~AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#a19eea2f25ae45b62add703115fc54de7", null ],
     [ "add", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#aa726a48f65de98b11e4bac5b1cad2f7a", null ],
     [ "clear", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#a06e8d2606d1f9e2b7c0a9db74fc9e759", null ],
-    [ "computeMaxColumnsCountInReports", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#a374c9c9fae647b072d3d9161125b4533", null ],
+    [ "computeMaxColumnsCountInReports", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#ad7889af66aae989fdda12e81ece8d8b2", null ],
     [ "exists", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#a62211be73fae171951dd68e9064f205a", null ],
     [ "getNbSelectedLinkVars", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#a9aeb630c4ae122c6709e53c41c22ac35", null ],
     [ "getNbSelectedZonalVars", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html#a0ddae4ed2476e75d5fbdb3e6d66e9e15", null ],

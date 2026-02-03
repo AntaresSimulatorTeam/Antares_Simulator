@@ -1,7 +1,7 @@
 var classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData =
 [
-    [ "AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a0d886740a6d460b0c730495e8486efba", null ],
-    [ "~AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#ad3f81b2ee01eea94a6c34f33e479fb3c", null ],
+    [ "AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a0ab884d07d0a105fd6eaefbda1677c4f", null ],
+    [ "~AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a36ad906b77d222ed29158f2aa8f7b370", null ],
     [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a8c1a989ef194a15d2760602b716bfa17", null ],
     [ "merge", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#a6c37c3ba7dbc7ebc27f5421c0ea1b2f3", null ],
     [ "reset", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html#acea8d4486f5aa610fc67fbc3be2b5735", null ],

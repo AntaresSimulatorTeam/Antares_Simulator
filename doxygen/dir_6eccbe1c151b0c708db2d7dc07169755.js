@@ -2,6 +2,7 @@ var dir_6eccbe1c151b0c708db2d7dc07169755 =
 [
     [ "adequacy", "dir_6eee0dfdd066b044c69bdb740ef62e26.html", "dir_6eee0dfdd066b044c69bdb740ef62e26" ],
     [ "commons", "dir_975cde24ce853807f10143515c4f97c7.html", "dir_975cde24ce853807f10143515c4f97c7" ],
+    [ "dynamicAggregation", "dir_1751b60604f9f8f8ee518ebd72119054.html", "dir_1751b60604f9f8f8ee518ebd72119054" ],
     [ "economy", "dir_11a0355828d5552f473d70dc684a09d4.html", "dir_11a0355828d5552f473d70dc684a09d4" ],
     [ "storage", "dir_578523f16a34cb320c312a1ca44976fb.html", "dir_578523f16a34cb320c312a1ca44976fb" ],
     [ "surveyresults", "dir_78b16d83f19ed5108ba7d586f55397e6.html", "dir_78b16d83f19ed5108ba7d586f55397e6" ],

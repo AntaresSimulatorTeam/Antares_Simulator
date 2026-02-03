@@ -362,6 +362,8 @@ var hierarchy =
     [ "DONNEES_MENSUELLES_ETENDUES", "structDONNEES__MENSUELLES__ETENDUES.html", null ],
     [ "Antares::Map::DrawingContext", "classAntares_1_1Map_1_1DrawingContext.html", null ],
     [ "Benchmarking::DurationCollector", "classBenchmarking_1_1DurationCollector.html", null ],
+    [ "Antares::Solver::Variable::DynamicAggregationAllYears", "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html", null ],
+    [ "Antares::Solver::Variable::DynamicAggregationSingleYear", "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html", null ],
     [ "Antares::Data::EconomicInputData", "classAntares_1_1Data_1_1EconomicInputData.html", null ],
     [ "Antares::Solver::Simulation::Economy", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html", [
       [ "Antares::Solver::Simulation::ISimulation< Economy >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
@@ -369,6 +371,7 @@ var hierarchy =
     [ "Antares::Graph::Edge< NodeT >", "classAntares_1_1Graph_1_1Edge.html", null ],
     [ "Antares::Solver::Variable::Empty", "structAntares_1_1Solver_1_1Variable_1_1Empty.html", [
       [ "Antares::Solver::Variable::R::AllYears::Average< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html", null ],
+      [ "Antares::Solver::Variable::R::AllYears::MinMaxBase< OpInferior, NextT >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html", null ],
       [ "Antares::Solver::Variable::R::AllYears::StdDeviation< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html", null ]
     ] ],
     [ "Antares::Solver::Variable::Container::EndOfList", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html", [
@@ -1270,7 +1273,6 @@ var hierarchy =
         [ "Antares::Solver::Variable::R::AllYears::Min< NextT >", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< ChildT, NextT, VCardT >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", null ],
-      [ "Antares::Solver::Variable::R::AllYears::MinMaxBase< OpInferior, NextT >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html", null ],
       [ "Antares::Solver::Variable::R::AllYears::Raw< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html", null ]
     ] ],
     [ "Antares::Component::Datagrid::Renderer::NoCheck", "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html", null ],
@@ -1637,6 +1639,10 @@ var hierarchy =
     [ "Antares::Component::Datagrid::SelectionRect", "classAntares_1_1Component_1_1Datagrid_1_1SelectionRect.html", null ],
     [ "Antares::Data::ShortTermStorage::Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html", null ],
     [ "Antares::Map::Item::SetCompare", "structAntares_1_1Map_1_1Item_1_1SetCompare.html", null ],
+    [ "Antares::Solver::Variable::SetDataBase", "classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html", [
+      [ "Antares::Solver::Variable::SetDataAllYears", "classAntares_1_1Solver_1_1Variable_1_1SetDataAllYears.html", null ],
+      [ "Antares::Solver::Variable::SetDataSingleYear", "classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html", null ]
+    ] ],
     [ "Antares::Data::SetHandlerAreas", "classAntares_1_1Data_1_1SetHandlerAreas.html", null ],
     [ "Antares::Solver::Simulation::setOfParallelYears", "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html", null ],
     [ "Antares::Data::Sets", "classAntares_1_1Data_1_1Sets.html", null ],
@@ -2045,6 +2051,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardDomesticUnsuppliedEnergy", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardDtgMarginCsr", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html", null ],
     [ "Antares::Solver::Variable::VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", null ],
+    [ "Antares::Solver::Variable::SetDataBase::VCardDynamic", "structAntares_1_1Solver_1_1Variable_1_1SetDataBase_1_1VCardDynamic.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardFlowLinear", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardFlowLinearAbs", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinearAbs.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardFlowQuad", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowQuad.html", null ],
