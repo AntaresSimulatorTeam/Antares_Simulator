@@ -52,6 +52,15 @@ docker run -d \
     "$DOCKER_IMAGE" \
     sleep infinity
 
+# Check if container was created successfully
+if ! docker inspect "$CONTAINER_NAME" > /dev/null 2>&1; then
+    echo "Error: Failed to create Docker container" >&2
+    exit 1
+fi
+
+# Wait a moment for the container to be ready
+sleep 2
+
 # Install clang-format 18 in the container via LLVM PPA
 echo "Installing clang-format 18 in container..."
 docker exec "$CONTAINER_NAME" bash -c "apt-get update && apt-get install -y wget software-properties-common && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && apt-get update && apt-get install -y clang-format-18"
