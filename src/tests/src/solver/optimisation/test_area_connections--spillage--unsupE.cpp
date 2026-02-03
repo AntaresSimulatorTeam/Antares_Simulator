@@ -51,10 +51,10 @@ library:
       port-field-definitions:
         - port: area_conn_port
           field: to-area-bound
-          definition: 2 * var_1
+          definition: 2 * var_1 + 30
         - port: area_conn_port
           field: from-area-bound
-          definition: var_1 / 2
+          definition: var_1 / 2 - 10
 )"s;
 
 static const auto systemYaml = R"(
@@ -79,7 +79,9 @@ struct AreaConnectionFixture
     AreaConnectionFixture();
     std::unique_ptr<Solver::ModelerData> buildModelerSystem();
     void addComponentsVariablesToLP();
-    void addNamedConstraintsToLP(std::vector<std::string>& constraintNames, double rhs);
+    void addNamedConstraintsToLP(std::vector<std::string>& constraintNames,
+                                 const double low_bound,
+                                 const double up_bound);
 
     // public data members :
     // -------------------
@@ -97,7 +99,9 @@ struct AreaConnectionFixture
     std::unique_ptr<OptimEntityContainer> optimContainer;
 
 private:
-    void addConstraintsToLinearProblem(std::vector<std::string>& names, double rhs);
+    void addConstraintsToLinearProblem(std::vector<std::string>& names,
+                                       const double low_bound,
+                                       const double up_bound);
 };
 
 AreaConnectionFixture::AreaConnectionFixture():
@@ -151,26 +155,28 @@ void AreaConnectionFixture::addComponentsVariablesToLP()
 }
 
 void AreaConnectionFixture::addNamedConstraintsToLP(std::vector<std::string>& constraintNames,
-                                                    double rhs)
+                                                    const double low_bound,
+                                                    const double up_bound)
 {
     problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
     problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
 
-    addConstraintsToLinearProblem(constraintNames, rhs);
+    addConstraintsToLinearProblem(constraintNames, low_bound, up_bound);
 }
 
 void AreaConnectionFixture::addConstraintsToLinearProblem(std::vector<std::string>& names,
-                                                          double rhs)
+                                                          const double low_bound,
+                                                          const double up_bound)
 {
     for (const auto& name: names)
     {
-        linearProblem.addConstraint(rhs, rhs, name);
+        linearProblem.addConstraint(low_bound, up_bound, name);
     }
 }
 
 BOOST_AUTO_TEST_SUITE(_area_connections___injecting_spillage_and_unsupplied_energy_bounds)
 
-BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
+BOOST_FIXTURE_TEST_CASE(injecting_spillage_and_unsupplied_energy_bounds, AreaConnectionFixture)
 {
     // ------------------------------------------
     // Linear problem before addition from GEMS
@@ -185,12 +191,12 @@ BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
     constraintNames.push_back("another dummy constaint");
     constraintNames.push_back(maxUnsupEconstrName);
 
-    addNamedConstraintsToLP(constraintNames, 10 /* rhs */);
+    addNamedConstraintsToLP(constraintNames, 0. /* low rhs */, 50. /* up rhs */);
 
     // 2. Contraints numbering in linear problem before GEMS comes into play.
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
-    // ... In LP, fictive loads constraints are contiguous. 
+    // ... In LP, fictive loads constraints are contiguous.
     //     The start number for fictive loads is 1.
     problemeHebdo->CorrespondanceCntNativesCntOptim[0]
       .NumeroDeContraintePourEviterLesChargesFictives.push_back(1);
@@ -213,13 +219,17 @@ BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
     // ---------
     // Checks
     // ---------
-    const auto* fictive_load_ct_t0 = linearProblem.lookupConstraint(fictiveLoadsConstrName);
-    const auto* max_unsupE_ct_t0 = linearProblem.lookupConstraint(maxUnsupEconstrName);
-
     const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
-
+    
+    const auto* fictive_load_ct_t0 = linearProblem.lookupConstraint(fictiveLoadsConstrName);
     BOOST_CHECK_EQUAL(fictive_load_ct_t0->getCoefficient(var1_t0), -2.);
+    BOOST_CHECK_EQUAL(fictive_load_ct_t0->getLb(), 0. + 30.);
+    BOOST_CHECK_EQUAL(fictive_load_ct_t0->getUb(), 50. + 30.);
+
+    const auto* max_unsupE_ct_t0 = linearProblem.lookupConstraint(maxUnsupEconstrName);
     BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getCoefficient(var1_t0), -0.5);
+    BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getLb(), 0. - 10.);
+    BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getUb(), 50. - 10.);
 
     auto dummy_ct = linearProblem.lookupConstraint("dummy constaint");
     auto other_dummy_ct = linearProblem.lookupConstraint("dummy constaint");
