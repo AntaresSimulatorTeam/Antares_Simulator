@@ -38,7 +38,6 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     std::set<int> playedYears() const;
-    bool areWeeksIndependent() const;
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;
