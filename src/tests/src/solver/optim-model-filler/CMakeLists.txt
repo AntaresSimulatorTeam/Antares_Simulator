@@ -15,6 +15,7 @@ add_boost_test(unit-tests-for-component-filler
         test_componentFiller_addVariables.cpp
         test_componentFiller_addConstraints.cpp
         test_componentFiller_addObjective.cpp
+        test_componentFiller_multiple_components_offset.cpp
         test-component-filler-to-master-pb.cpp
         test_linearExpression.cpp
         test_readLinearExpressionVisitor.cpp
