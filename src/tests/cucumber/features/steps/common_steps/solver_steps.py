@@ -60,7 +60,7 @@ def set_quadratic_solver(context, solver_name):
 
 
 def parse_options(context, options):
-    if options.count("--named-mps-problems") > 0 or options.count("-s") > 0:
+    if options is not None and (options.count("--named-mps-problems") > 0 or options.count("-s") > 0):
         context.named_mps_problems = True
     else:
         context.named_mps_problems = False
