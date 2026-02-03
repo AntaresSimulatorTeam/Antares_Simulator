@@ -1,85 +1,139 @@
 #!/bin/bash
 
-set -u
+set -euo pipefail
 
-# Configure
+# Configuration
 CLANG_FORMAT_IMAGE="antares/clang-format:18"
 REBUILD_IMAGE=false
+REQUIRED_CLANG_FORMAT_VERSION="18.1.3"
 
-# Resolve script dir and project root
+# Resolve locations
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-# Use a single Dockerfile located in the project's docker/ directory
 DOCKERFILE="$PROJECT_ROOT/docker/clang-format.Dockerfile"
 
-# Move to script dir so relative paths and find behave consistently
-cd "$SCRIPT_DIR" || exit 1
-
-# Parse flags
-if [ "$#" -gt 0 ]; then
-  if [ "$1" = "--rebuild-image" ] || [ "$1" = "-r" ]; then
-    REBUILD_IMAGE=true
-    shift
-  fi
-fi
-
-# Build file list
+# Globals
 FILES=()
-if [ "$#" -eq 0 ]; then
-  SOURCE_DIRS=(libs/ solver/ tools/ config/ tests/ packaging/ api/ io/ optimisation/ expressions/ study/ modeler/)
-  while IFS= read -r f; do
-    [ -n "$f" ] && FILES+=("$f")
-  done < <(find "${SOURCE_DIRS[@]}" -regextype egrep -regex ".*/*\.(c|cxx|cpp|cc|h|hxx|hpp)$" ! -path '*/additionalConstraintRhsExpression/*' ! -path '*/scenarioBuilderExpression/*' ! -path '*/antlr-interface/*' 2>/dev/null)
-else
-  for a in "$@"; do
-    # normalize to path relative to src
-    if [[ "$a" = /* ]] && [[ "$a" == "$PROJECT_ROOT"/* ]]; then
-      rel="${a#$PROJECT_ROOT/}"
-    else
-      rel="$a"
-    fi
-    if [[ "$rel" == src/* ]]; then
-      rel="${rel#src/}"
-    fi
-    FILES+=("$rel")
-  done
-fi
-
-# If no files, nothing to do
-if [ ${#FILES[@]} -eq 0 ]; then
-  echo "No files to format."
-  exit 0
-fi
-
-# Normalize line endings if possible
-if command -v dos2unix >/dev/null 2>&1; then
-  printf '%s\n' "${FILES[@]}" | xargs -r dos2unix
-else
-  echo "Warning: dos2unix not found; skipping line-ending normalization" >&2
-fi
-
-# Check local clang-format
 USE_DOCKER=true
-if command -v clang-format >/dev/null 2>&1; then
-  CLANG_FORMAT_VERSION=$(clang-format --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+') || CLANG_FORMAT_VERSION=""
-  if [ "$CLANG_FORMAT_VERSION" = "18.1.3" ]; then
-    echo "✓ clang-format 18.1.3 found locally"
-    USE_DOCKER=false
+ARGS=()
+
+# ---------------------- helpers ----------------------
+usage() {
+  cat <<'USAGE'
+Usage: bash src/format-code.sh [--rebuild-image|-r] [files...]
+
+Options:
+  --rebuild-image, -r   Force rebuild of the clang-format Docker image before formatting
+  --help, -h            Show this help message
+
+If no files are provided, the script finds sources under a set of src/ subdirectories.
+USAGE
+}
+
+parse_args() {
+  ARGS=()
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --rebuild-image|-r)
+        REBUILD_IMAGE=true
+        shift
+        ;;
+      --help|-h)
+        usage
+        exit 0
+        ;;
+      --)
+        shift
+        while [ "$#" -gt 0 ]; do ARGS+=("$1"); shift; done
+        ;;
+      -* )
+        echo "Unknown option: $1" >&2; usage; exit 1
+        ;;
+      *)
+        ARGS+=("$1")
+        shift
+        ;;
+    esac
+  done
+}
+
+# Gather files to format into FILES[]
+gather_files() {
+  FILES=()
+  if [ ${#ARGS[@]} -eq 0 ]; then
+    SOURCE_DIRS=(libs/ solver/ tools/ config/ tests/ packaging/ api/ io/ optimisation/ expressions/ study/ modeler/)
+    # Run find from SCRIPT_DIR so results are relative to src
+    while IFS= read -r f; do
+      [ -n "$f" ] && FILES+=("$f")
+    done < <(cd "$SCRIPT_DIR" && find "${SOURCE_DIRS[@]}" -regextype egrep -regex ".*\\.(c|cxx|cpp|cc|h|hxx|hpp)$" \
+                 ! -path '*/additionalConstraintRhsExpression/*' ! -path '*/scenarioBuilderExpression/*' ! -path '*/antlr-interface/*' 2>/dev/null)
   else
-    echo "✗ Found clang-format version ${CLANG_FORMAT_VERSION:-unknown} (need 18.1.3). Will use Docker image $CLANG_FORMAT_IMAGE"
+    for a in "${ARGS[@]}"; do
+      if [[ "$a" = /* ]] && [[ "$a" == "$PROJECT_ROOT"/* ]]; then
+        rel="${a#$PROJECT_ROOT/}"
+      else
+        rel="$a"
+      fi
+      if [[ "$rel" == src/* ]]; then
+        rel="${rel#src/}"
+      fi
+      FILES+=("$rel")
+    done
   fi
-else
-  echo "✗ clang-format not found locally. Will use Docker image $CLANG_FORMAT_IMAGE"
-fi
 
-if [ "$USE_DOCKER" = true ]; then
+  if [ ${#FILES[@]} -eq 0 ]; then
+    echo "No files to format."
+    exit 0
+  fi
+}
+
+# Normalize CRLF -> LF when dos2unix is available
+normalize_line_endings() {
+  if command -v dos2unix >/dev/null 2>&1; then
+    printf '%s\n' "${FILES[@]}" | xargs -r -I{} dos2unix "{}" || true
+  fi
+}
+
+# Check local clang-format version
+check_local_clang() {
+  USE_DOCKER=true
+  if command -v clang-format >/dev/null 2>&1; then
+    CLANG_FORMAT_VERSION=$(clang-format --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+    if [ "$CLANG_FORMAT_VERSION" = "$REQUIRED_CLANG_FORMAT_VERSION" ]; then
+      echo "✓ clang-format $REQUIRED_CLANG_FORMAT_VERSION found locally"
+      USE_DOCKER=false
+    else
+      echo "✗ Found clang-format version ${CLANG_FORMAT_VERSION:-unknown} (need $REQUIRED_CLANG_FORMAT_VERSION). Will try Docker image $CLANG_FORMAT_IMAGE"
+    fi
+  else
+    echo "✗ clang-format not found locally. Will try Docker image $CLANG_FORMAT_IMAGE"
+  fi
+}
+
+# Ensure docker is accessible; if not, fallback to local clang-format when available
+ensure_docker_access() {
   if ! command -v docker >/dev/null 2>&1; then
-    echo "Error: docker not available and local clang-format is unsuitable" >&2
-    exit 1
+    # docker not installed -> try local clang-format
+    if command -v clang-format >/dev/null 2>&1; then
+      CLANG_FORMAT_VERSION_LOCAL=$(clang-format --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+      echo "Warning: docker not installed; using local clang-format (version ${CLANG_FORMAT_VERSION_LOCAL:-unknown})." >&2
+      USE_DOCKER=false
+      return 0
+    fi
+    echo "Error: docker not installed and no local clang-format found." >&2
+    return 1
   fi
 
-  # Verify access to docker daemon to avoid permission denied during build
   if ! docker info >/dev/null 2>&1; then
+    # docker daemon inaccessible -> try local clang-format
+    if command -v clang-format >/dev/null 2>&1; then
+      CLANG_FORMAT_VERSION_LOCAL=$(clang-format --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+      echo "Warning: docker daemon not accessible; falling back to local clang-format (version ${CLANG_FORMAT_VERSION_LOCAL:-unknown})." >&2
+      echo "Note: project requires clang-format $REQUIRED_CLANG_FORMAT_VERSION; consider installing that version or enabling Docker." >&2
+      USE_DOCKER=false
+      return 0
+    fi
+
     cat >&2 <<'MSG'
 Error: docker appears installed but cannot access the docker daemon (permission denied or daemon not running).
 Possible fixes:
@@ -89,20 +143,21 @@ Possible fixes:
   - Or run this script with sudo: sudo bash src/format-code.sh [files]
   - Ensure the Docker daemon is running: sudo systemctl start docker (or start your Docker Desktop on Windows)
   - On WSL2, ensure Docker Desktop integration for your distro is enabled and the daemon running.
-After fixing, re-run this script. The script will now exit to avoid a partially-built image.
+After fixing, re-run this script.
 MSG
-    exit 1
+    return 1
   fi
 
-  # Select Dockerfile
-  if [ -f "$DOCKERFILE" ]; then
-    : # dockerfile found, DOCKERFILE already set
-  else
+  return 0
+}
+
+# Build image if needed
+select_and_build_image() {
+  if [ ! -f "$DOCKERFILE" ]; then
     echo "Error: Dockerfile not found at $DOCKERFILE" >&2
-    exit 1
+    return 1
   fi
 
-  # Rebuild image if requested
   if [ "$REBUILD_IMAGE" = true ]; then
     if docker image inspect "$CLANG_FORMAT_IMAGE" >/dev/null 2>&1; then
       echo "Forcing rebuild: removing existing image $CLANG_FORMAT_IMAGE"
@@ -110,58 +165,94 @@ MSG
     fi
   fi
 
-  # Build image if missing
   if ! docker image inspect "$CLANG_FORMAT_IMAGE" >/dev/null 2>&1; then
     echo "Building image $CLANG_FORMAT_IMAGE using $DOCKERFILE..."
-    docker build -t "$CLANG_FORMAT_IMAGE" -f "$DOCKERFILE" "$SCRIPT_DIR"
+    docker build -t "$CLANG_FORMAT_IMAGE" -f "$DOCKERFILE" "$PROJECT_ROOT"
   else
     echo "Docker image $CLANG_FORMAT_IMAGE already present"
   fi
+}
 
-  # --- NEW: Verify clang-format version inside the Docker image ---
-  if command -v docker >/dev/null 2>&1; then
-    echo "Verifying clang-format version inside Docker image $CLANG_FORMAT_IMAGE..."
-    IMAGE_CLANG_VER=$(docker run --rm "$CLANG_FORMAT_IMAGE" clang-format --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
-    if [ -z "$IMAGE_CLANG_VER" ]; then
-      # Could not determine version: show hint and exit
-      cat >&2 <<'MSG'
-Error: could not determine clang-format version inside Docker image $CLANG_FORMAT_IMAGE.
-This may be due to inability to run containers (permissions) or the image missing clang-format.
-Possible actions:
-  - Ensure you can run containers (test: docker run --rm $CLANG_FORMAT_IMAGE clang-format --version)
-  - Rebuild the image locally with the Dockerfile: bash src/format-code.sh --rebuild-image
-MSG
-      exit 1
-    fi
-
-    if [ "$IMAGE_CLANG_VER" != "18.1.3" ]; then
-      cat >&2 <<MSG
-Error: clang-format inside Docker image $CLANG_FORMAT_IMAGE is version $IMAGE_CLANG_VER but the project requires 18.1.3.
-Options:
-  1) Rebuild the image so it contains the required version:
-       bash src/format-code.sh --rebuild-image
-  2) Install clang-format 18.1.3 locally and run the script without Docker.
-After fixing, re-run this script.
-MSG
-      exit 1
-    else
-      echo "✓ clang-format inside Docker image is $IMAGE_CLANG_VER"
-    fi
+# Verify clang-format inside image
+verify_image_clang_version() {
+  echo "Verifying clang-format version inside Docker image $CLANG_FORMAT_IMAGE..."
+  IMAGE_CLANG_VER=$(docker run --rm "$CLANG_FORMAT_IMAGE" clang-format --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+  if [ -z "$IMAGE_CLANG_VER" ]; then
+    echo "Error: could not determine clang-format version inside Docker image $CLANG_FORMAT_IMAGE." >&2
+    return 1
   fi
-  # --- END new verification ---
 
-  # Write file list to a temporary file inside src so it is visible in the container
+  if [ "$IMAGE_CLANG_VER" != "$REQUIRED_CLANG_FORMAT_VERSION" ]; then
+    echo "Error: clang-format inside Docker image $CLANG_FORMAT_IMAGE is version $IMAGE_CLANG_VER but required is $REQUIRED_CLANG_FORMAT_VERSION." >&2
+    echo "Please rebuild the image to include the required version or install it locally." >&2
+    return 1
+  fi
+
+  echo "✓ clang-format inside Docker image is $IMAGE_CLANG_VER"
+  return 0
+}
+
+# Formatting functions
+format_with_docker() {
+  if [ -f "$SCRIPT_DIR/.clang-format" ]; then
+    STYLE_DOCKER="-style=file:/workspace/.clang-format"
+  else
+    STYLE_DOCKER=""
+  fi
+
   TMP_LIST=$(mktemp "$SCRIPT_DIR/format-list.XXXXXX")
   trap 'rm -f "$TMP_LIST"' EXIT
   printf '%s\n' "${FILES[@]}" > "$TMP_LIST"
   INSIDE_LIST="/workspace/src/$(basename "$TMP_LIST")"
 
   echo "Formatting ${#FILES[@]} files using Docker image $CLANG_FORMAT_IMAGE..."
-  docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format -style=file:/workspace/.clang-format -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
+  if [ -n "$STYLE_DOCKER" ]; then
+    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format $STYLE_DOCKER -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
+  else
+    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
+  fi
+}
 
-else
+format_with_local() {
   echo "Formatting ${#FILES[@]} files using local clang-format..."
-  printf '%s\n' "${FILES[@]}" | xargs -r clang-format -style=file:"$SCRIPT_DIR/.clang-format" -i --verbose
-fi
+  if [ -f "$SCRIPT_DIR/.clang-format" ]; then
+    STYLE_LOCAL="-style=file:$SCRIPT_DIR/.clang-format"
+  else
+    STYLE_LOCAL=""
+  fi
+  for f in "${FILES[@]}"; do
+    echo "Formatting: $f"
+    if [ -n "$STYLE_LOCAL" ]; then
+      clang-format $STYLE_LOCAL -i --verbose "$f" || true
+    else
+      clang-format -i --verbose "$f" || true
+    fi
+  done
+}
 
-echo "Formatting complete!"
+# ---------------------- main ----------------------
+main() {
+  parse_args "$@"
+  gather_files
+  normalize_line_endings
+  check_local_clang
+
+  if [ "$USE_DOCKER" = true ]; then
+    if ! ensure_docker_access; then
+      echo "Docker unavailable and no local clang-format: aborting." >&2
+      exit 1
+    fi
+
+    if [ "$USE_DOCKER" = true ]; then
+      select_and_build_image || exit 1
+      verify_image_clang_version || exit 1
+      format_with_docker
+      exit 0
+    fi
+  fi
+
+  # fallback: use local clang-format
+  format_with_local
+}
+
+main "$@"
