@@ -122,6 +122,14 @@ void printWeekLPData(const ConstantDataFromAntares& constant, const WeeklyDataFr
 void printProblems(const ApiOptions& options)
 {
     Antares::Solver::SingleProblemGetter getter(options.studyFolder);
+    if (getter.areWeeksIndependent())
+    {
+        logs.info() << "Weeks are independent";
+    }
+    else
+    {
+        logs.info() << "Weeks are dependent";
+    }
     auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
@@ -131,13 +139,13 @@ void printProblems(const ApiOptions& options)
     unsigned int firstWeek = options.week == -1 ? 1 : options.week;
     unsigned int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
 
-    for (auto year : getter.playedYears())
+    for (auto year: getter.playedYears())
     {
         logs.info() << " year: " << year << '\n';
         for (unsigned int week = firstWeek; week < lastWeek; ++week)
         {
             logs.info() << " week: " << week << '\n';
-            const WeeklyProblemId id = {year, week};
+            const WeeklyProblemId id = {static_cast<unsigned int>(year), week};
             auto weekly = getter.getWeeklyProblem(id);
             // printWeekLPData(constant, weekly);
             if (options.writeMps)
