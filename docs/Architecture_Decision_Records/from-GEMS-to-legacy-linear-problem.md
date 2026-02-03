@@ -1,9 +1,9 @@
 # Adding expressions from GEMS into legacy LP constraints
 
-Every time we want to add an expressions from GEMS into an existing legacy LP constaint, this expression 
+Every time we want to add an expression from GEMS into an existing legacy LP constaint, this expression 
 is evaluated into a time-dependent linear expression.
 A time-dependent linear expression is a vector of linear expressions (one for each time step).
-A linear expression is comprises a linear combination of variables and a unique constant term.
+A linear expression comprises a linear combination of variables and a unique constant term.
 In a linear expression, each variable is associated to a constant coefficient.
 
 So when adding an expression from GEMS into a LP constraint, we merely add coefficients or constants to the constraint.

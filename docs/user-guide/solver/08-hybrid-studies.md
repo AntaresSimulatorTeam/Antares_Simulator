@@ -106,8 +106,7 @@ The nature of this contribution depends on the field :
 #### Adding a linear expreesion in optimization model
 
 For more details about how to add a contribution of a component from GEMS to the leagcy linear problem, and 
-which sign (positive / negative) to give them in the constraint, please downlaod the Antares repository and read file :
-**docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md**
+which sign (positive / negative) to give them in the constraint, read [this article](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md)
 
 ## Limitations
 

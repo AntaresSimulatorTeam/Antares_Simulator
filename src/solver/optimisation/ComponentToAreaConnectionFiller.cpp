@@ -159,7 +159,7 @@ TimeDependentLinearExpression ComponentToAreaConnectionFiller::linearExpressionA
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
 
     Nodes::Node* expression = component.nodeAtPortField(portId, fieldId);
-    return visitor.visitMergeDuplicates(expression);
+    return visitor.visitMergeDuplicates(expression).expandToSize(ctx.getLocalNumberOfTimeSteps());
 }
 
 void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const FillContext& ctx,

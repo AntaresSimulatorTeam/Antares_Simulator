@@ -20,6 +20,7 @@ public:
     explicit TimeDependentLinearExpression(LinearExpression&& expr);
     explicit TimeDependentLinearExpression(const std::vector<std::pair<int, double>>& coefs,
                                            double constant);
+    explicit TimeDependentLinearExpression(std::vector<LinearExpression>&& linearExpressions);
 
     std::vector<double> constant() const;
 
@@ -39,6 +40,8 @@ public:
 
     LinearExpression& operator[](std::size_t idx);
     const LinearExpression& operator[](std::size_t idx) const;
+
+    TimeDependentLinearExpression expandToSize(unsigned size);
 
     TimeDependentLinearExpression& operator+=(const TimeDependentLinearExpression& other);
     TimeDependentLinearExpression& operator-=(const TimeDependentLinearExpression& other);
