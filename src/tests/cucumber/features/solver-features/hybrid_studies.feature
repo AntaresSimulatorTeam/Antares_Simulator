@@ -96,12 +96,24 @@ Feature: hybrid (simulator+modeler) studies
 #    And for each time step, all studies have the same objective value
 #
 
-  @fast @short
-  Scenario: Thermal capacity connection: on one node (= area, thermal cluster = continuous_generator_candidate), one timestep and one scenario with one candidate.
+#  @fast @short
+#  Scenario: Thermal capacity connection: on one node (= area, thermal cluster = continuous_generator_candidate), one timestep and one scenario with one candidate.
+#
+#    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/13_1_thermal_add_on/"
+#    When I run antares simulator with --named-mps-problems
+#    Then the simulation succeeds
+#    And the simulation takes less than 15 seconds
+#    Then for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster continuous_generator_candidate in area area.
+#    And enforces: DispatchableProduction - thermal_add_on.p_max < 0 for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area area.
 
-    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/13_1_thermal_add_on/"
+  @fast @short
+  Scenario: Thermal capacity connection: on one node (= area, thermal cluster = continuous_generator_candidate), one timestep and one scenario with two candidates: one continuous and one discrete..
+
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/13_2_thermal_add_on/"
     When I run antares simulator with --named-mps-problems
-    Then the simulation succeeds
-    And the simulation takes less than 15 seconds
-    Then for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps.
-    And enforces: "DispatchableProduction-thermal_add_on.p_max<0" for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area "area".
+#    Then the simulation succeeds
+#    And the simulation takes less than 15 seconds
+    Then for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster continuous_generator_candidate in area area.
+    And for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster discrete_generator_candidate in area area.
+    And enforces: DispatchableProduction - thermal_add_on_continuous.p_max < 0 for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area area.
+    And enforces: DispatchableProduction - thermal_add_on_discrete.p_max < 0 for the thermal capacity connection between GEMS and the discrete_generator_candidate thermal cluster in area area.

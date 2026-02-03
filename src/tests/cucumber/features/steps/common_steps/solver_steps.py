@@ -5,7 +5,6 @@ import re
 import shutil
 import subprocess
 import tempfile
-from idlelib.debugobj import dispatch
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +17,9 @@ from features.steps.common_steps.assertions import assert_double_close
 from features.steps.common_steps.modeler_output_handler import modeler_output_handler
 from features.steps.common_steps.table_compare import *
 from shared_utils import mps_utils as mpu
+
+from src.tests.cucumber.features.steps.common_steps.parse_linear_expression import parse_linear_expression
+
 NB_HOURS_IN_WEEK = 168
 NB_DAYS_IN_WEEK = 7
 
@@ -601,39 +603,44 @@ def extract_time_step(name) -> int:
     return int(name.split("hour<")[1].split(">")[0])
 
 
-@then('for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps.')
-def check_max_generation_from_capacity_exists(context):
+@then(
+    'for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster {cluster} in area {area}.')
+def check_max_generation_from_capacity_exists(context, area, cluster):
     for mps_file in context.soh.get_mps_files():
         mps_problem = mpu.load_problem(str(mps_file))
         week_time_step = get_week_time_steps_from_mps_file_name(mps_file)
         time_step_constraint: dict[int, str] = {}
         for c in mps_problem.get_linear_constraints():
-            if c.name.startswith("MaxGenerationFromCapacity"):
+            if c.name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
                 time_step = extract_time_step(c.name)
                 time_step_constraint[time_step] = c.name
         assert len(week_time_step) == len(time_step_constraint), \
-            f"MaxGenerationFromCapacity constraint not found for all time steps in {mps_file}"
+            f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
         assert week_time_step == list(
-            time_step_constraint.keys()), f"MaxGenerationFromCapacity constraint does not match time steps [{week_time_step[0]}, {week_time_step[-1]}] in {mps_file}"
+            time_step_constraint.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_time_step[0]}, {week_time_step[-1]}] in {mps_file}"
 
 
 @then(
-    'enforces: "DispatchableProduction-thermal_add_on.p_max<0" for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area "area".')
-def check_max_generation_from_capacity_constraint(context):
+    'enforces: DispatchableProduction {expression} < {rhs} for the thermal capacity connection between GEMS and the {cluster} thermal cluster in area {area}.')
+def check_max_generation_from_capacity_constraint(context, expression, rhs, cluster, area):
     for mps_file in context.soh.get_mps_files():
         mps_problem = mpu.load_problem(str(mps_file))
-
+        parsed_expression = parse_linear_expression(expression)
+        rhs = float(rhs)
         for constr_name, row in mpu.get_constraint_matrix(mps_problem).items():
-            if constr_name.startswith("MaxGenerationFromCapacity"):
+            if constr_name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
                 time_step = extract_time_step(constr_name)
                 assert len(
                     row) == 2, f"{constr_name} must have exactly two non null coefficients: DispatchableProduction-thermal_add_on.p_max<0"
                 # Check coefficients
-                for var_name, ref_coef in row.items():
-                    coef = row[var_name]
-                    dispatchable_production = f"DispatchableProduction::area<area>::ThermalCluster<continuous_generator_candidate>::hour<{time_step}>"
+                for var_name, coeff in row.items():
+                    dispatchable_production = f"DispatchableProduction::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>"
 
                     if var_name == dispatchable_production:
-                        assert coef == 1.0, f"the coefficient of {dispatchable_production} in {constr_name} must  = 1"
-                    elif var_name == "thermal_add_on.p_max":
-                        assert coef == -1.0, f"the coefficient of thermal_add_on.p_max in {constr_name} must  = -1"
+                        assert coeff == 1.0, f"the coefficient of {dispatchable_production} in {constr_name} must be = 1"
+                    elif var_name in parsed_expression:
+                        assert coeff == parsed_expression[
+                            var_name], f"the coefficient of {var_name} in {constr_name} must be = {coeff}"
+                    else:
+                        raise ValueError(
+                            f"{var_name} should not have coefficient in MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>")
