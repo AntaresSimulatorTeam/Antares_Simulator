@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Docker image to use for formatting
+DOCKER_IMAGE="ubuntu:22.04"
+CONTAINER_NAME="clang-format-runner"
+
+# Ensure we're in the src directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 if [ $# -eq 0 ]
 then
     # No arguments: format all
@@ -7,7 +15,7 @@ then
     SOURCE_FILES=$(find $SOURCE_DIRS -regextype egrep -regex ".*/*\.(c|cxx|cpp|cc|h|hxx|hpp)$" ! -path '*/additionalConstraintRhsExpression/*' ! -path '*/scenarioBuilderExpression/*' ! -path '*/antlr-interface/*')
 else
     # Format files provided as arguments
-    SOURCE_FILES="$@"
+    SOURCE_FILES="$*"
 fi
 
 # Remove ^M, etc.
@@ -17,8 +25,44 @@ else
     echo "$SOURCE_FILES" | xargs dos2unix
 fi
 
-if ! [ -x "$(command -v clang-format)" ]; then
-    echo 'Warning: clang-format is not installed. Skipping' >&2
-else
-    echo "$SOURCE_FILES" | xargs clang-format  -style=file:../.clang-format -i --verbose
+# Check if Docker is available
+if ! [ -x "$(command -v docker)" ]; then
+    echo 'Error: docker is not installed. Please install Docker to use this script.' >&2
+    exit 1
 fi
+
+# Pull the Ubuntu 22.04 image if not present
+echo "Checking for Docker image $DOCKER_IMAGE..."
+if ! docker image inspect "$DOCKER_IMAGE" > /dev/null 2>&1; then
+    echo "Pulling $DOCKER_IMAGE..."
+    docker pull "$DOCKER_IMAGE"
+fi
+
+# Create a temporary container with clang-format installed
+echo "Setting up container with clang-format..."
+docker run --rm -d \
+    --name "$CONTAINER_NAME" \
+    -v "$PROJECT_ROOT:/workspace" \
+    -w /workspace/src \
+    "$DOCKER_IMAGE" \
+    sleep infinity
+
+# Install clang-format in the container
+echo "Installing clang-format in container..."
+docker exec "$CONTAINER_NAME" bash -c "apt-get update && apt-get install -y clang-format"
+
+# Run clang-format on the files
+if [ -n "$SOURCE_FILES" ]; then
+    echo "Formatting files..."
+    echo "$SOURCE_FILES" | xargs -I {} docker exec "$CONTAINER_NAME" \
+        clang-format -style=file:/workspace/.clang-format -i --verbose {}
+else
+    echo "No files to format."
+fi
+
+# Clean up: stop and remove the container
+echo "Cleaning up container..."
+docker stop "$CONTAINER_NAME" > /dev/null 2>&1
+
+echo "Formatting complete!"
+
