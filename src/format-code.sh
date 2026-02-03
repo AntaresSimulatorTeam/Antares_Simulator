@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Docker image to use for formatting
-DOCKER_IMAGE="ubuntu:22.04"
+DOCKER_IMAGE="ubuntu:24.04"
 CONTAINER_NAME="clang-format-runner"
 
 # Ensure we're in the src directory
@@ -63,13 +63,13 @@ sleep 2
 
 # Install clang-format 18 in the container via LLVM PPA
 echo "Installing clang-format 18 in container..."
-docker exec "$CONTAINER_NAME" bash -c "apt-get update && apt-get install -y wget software-properties-common && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && apt-get update && apt-get install -y clang-format-18"
+docker exec "$CONTAINER_NAME" bash -c "apt-get update && apt-get install -y clang-format"
 
 # Run clang-format on the files
 if [ -n "$SOURCE_FILES" ]; then
     echo "Formatting files..."
     echo "$SOURCE_FILES" | xargs -I {} docker exec "$CONTAINER_NAME" \
-        clang-format-18 -style=file:/workspace/.clang-format -i --verbose {}
+        clang-format -style=file:/workspace/.clang-format -i --verbose {}
 else
     echo "No files to format."
 fi
