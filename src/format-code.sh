@@ -4,10 +4,22 @@
 DOCKER_IMAGE="ubuntu:24.04"
 CONTAINER_NAME="clang-format-runner"
 USE_DOCKER=false
+# Name/tag for the prebuilt image that contains clang-format
+CLANG_FORMAT_IMAGE="antares/clang-format:18"
+# Force rebuild the image if --rebuild-image is passed or env var is set
+REBUILD_IMAGE=false
 
 # Ensure we're in the src directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Parse optional flag for rebuilding the image
+if [ "$#" -gt 0 ]; then
+    if [ "$1" = "--rebuild-image" ] || [ "$1" = "-r" ]; then
+        REBUILD_IMAGE=true
+        shift
+    fi
+fi
 
 if [ $# -eq 0 ]
 then
@@ -29,7 +41,7 @@ fi
 # Check if clang-format is available locally
 echo "Checking for clang-format locally..."
 if command -v clang-format &> /dev/null; then
-    CLANG_FORMAT_VERSION=$(clang-format --version 2>&1 | grep -oP '\d+\.\d+\.\d+')
+    CLANG_FORMAT_VERSION=$(clang-format --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+')
     if [ "$CLANG_FORMAT_VERSION" = "18.1.3" ]; then
         echo "✓ clang-format 18.1.3 found locally"
         USE_DOCKER=false
@@ -49,46 +61,40 @@ if [ "$USE_DOCKER" = true ]; then
         exit 1
     fi
 
-    # Pull the Ubuntu image if not present
-    echo "Checking for Docker image $DOCKER_IMAGE..."
-    if ! docker image inspect "$DOCKER_IMAGE" > /dev/null 2>&1; then
-        echo "Pulling $DOCKER_IMAGE..."
-        docker pull "$DOCKER_IMAGE"
+    # If requested, remove the existing image to force rebuild
+    if [ "$REBUILD_IMAGE" = true ]; then
+        if docker image inspect "$CLANG_FORMAT_IMAGE" > /dev/null 2>&1; then
+            echo "Forcing rebuild: removing existing image $CLANG_FORMAT_IMAGE"
+            docker rmi "$CLANG_FORMAT_IMAGE" || true
+        fi
     fi
 
-    # Clean up any existing container with the same name
-    echo "Cleaning up any existing container..."
-    docker stop "$CONTAINER_NAME" > /dev/null 2>&1
-    docker rm "$CONTAINER_NAME" > /dev/null 2>&1
-
-    # Create a temporary container with clang-format installed
-    echo "Setting up container with clang-format..."
-    docker run -d \
-        --name "$CONTAINER_NAME" \
-        -v "$PROJECT_ROOT:/workspace" \
-        -w /workspace/src \
-        "$DOCKER_IMAGE" \
-        sleep infinity
-
-    # Check if container was created successfully
-    if ! docker inspect "$CONTAINER_NAME" > /dev/null 2>&1; then
-        echo "Error: Failed to create Docker container" >&2
-        exit 1
+    # Build the image only if it doesn't exist
+    if ! docker image inspect "$CLANG_FORMAT_IMAGE" > /dev/null 2>&1; then
+        echo "Building Docker image $CLANG_FORMAT_IMAGE with clang-format 18..."
+        docker build -t "$CLANG_FORMAT_IMAGE" - <<'DOCKERFILE'
+FROM ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y wget gnupg software-properties-common ca-certificates apt-transport-https \
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
+    && add-apt-repository 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main' \
+    && apt-get update && apt-get install -y clang-format-18 \
+    && ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /workspace
+DOCKERFILE
+        if [ $? -ne 0 ]; then
+            echo "Error: docker build failed" >&2
+            exit 1
+        fi
+    else
+        echo "Docker image $CLANG_FORMAT_IMAGE already present."
     fi
-
-    # Wait a moment for the container to be ready
-    sleep 2
-
-    # Install clang-format 18 in the container via LLVM PPA
-    echo "Installing clang-format 18 in container..."
-    docker exec "$CONTAINER_NAME" bash -c "apt-get update && apt-get install -y wget software-properties-common && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && add-apt-repository 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main' && apt-get update && apt-get install -y clang-format-18 && ln -sf /usr/bin/clang-format-18 /usr/bin/clang-format"
 
     if [ -n "$SOURCE_FILES" ]; then
-        echo "Formatting files (using Docker)..."
-        # Create a temporary script to format all files at once inside the container
-        TEMP_SCRIPT=$(mktemp)
-        cat > "$TEMP_SCRIPT" << 'EOF'
-#!/bin/bash
+        echo "Formatting files (using Docker image $CLANG_FORMAT_IMAGE)..."
+        # Run a disposable container and feed the list of files to a small shell snippet
+        echo "$SOURCE_FILES" | docker run -i --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -s -- <<'EOF'
 while IFS= read -r file; do
     if [ -n "$file" ]; then
         echo "Formatting: $file"
@@ -96,22 +102,9 @@ while IFS= read -r file; do
     fi
 done
 EOF
-        chmod +x "$TEMP_SCRIPT"
-
-        # Copy script to container and execute it
-        docker cp "$TEMP_SCRIPT" "$CONTAINER_NAME:/tmp/format_files.sh"
-        echo "$SOURCE_FILES" | docker exec -i "$CONTAINER_NAME" bash /tmp/format_files.sh
-
-        # Clean up temporary script
-        rm "$TEMP_SCRIPT"
     else
         echo "No files to format."
     fi
-
-    # Clean up: stop and remove the container
-    echo "Cleaning up container..."
-    docker stop "$CONTAINER_NAME" > /dev/null 2>&1
-    docker rm "$CONTAINER_NAME" > /dev/null 2>&1
 else
     # Use local clang-format
     if [ -n "$SOURCE_FILES" ]; then
@@ -123,4 +116,3 @@ else
 fi
 
 echo "Formatting complete!"
-
