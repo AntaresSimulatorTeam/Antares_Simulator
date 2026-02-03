@@ -119,7 +119,6 @@ MSG
   fi
 
   # --- NEW: Verify clang-format version inside the Docker image ---
-  # Allow an explicit override with env var ALLOW_DIFFERENT_CLANG_FORMAT=1
   if command -v docker >/dev/null 2>&1; then
     echo "Verifying clang-format version inside Docker image $CLANG_FORMAT_IMAGE..."
     IMAGE_CLANG_VER=$(docker run --rm "$CLANG_FORMAT_IMAGE" clang-format --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
@@ -136,21 +135,15 @@ MSG
     fi
 
     if [ "$IMAGE_CLANG_VER" != "18.1.3" ]; then
-      if [ "${ALLOW_DIFFERENT_CLANG_FORMAT:-0}" != "1" ]; then
-        cat >&2 <<MSG
+      cat >&2 <<MSG
 Error: clang-format inside Docker image $CLANG_FORMAT_IMAGE is version $IMAGE_CLANG_VER but the project requires 18.1.3.
 Options:
   1) Rebuild the image so it contains the required version:
        bash src/format-code.sh --rebuild-image
   2) Install clang-format 18.1.3 locally and run the script without Docker.
-  3) If you understand the risk and want to proceed with this version, set:
-       export ALLOW_DIFFERENT_CLANG_FORMAT=1
-     and re-run the script.
+After fixing, re-run this script.
 MSG
-        exit 1
-      else
-        echo "Warning: running with clang-format version $IMAGE_CLANG_VER inside image (override via ALLOW_DIFFERENT_CLANG_FORMAT=1)"
-      fi
+      exit 1
     else
       echo "✓ clang-format inside Docker image is $IMAGE_CLANG_VER"
     fi
