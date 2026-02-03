@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <numeric>
 #include <ranges>
 #include <stdexcept>
 #include <variant>
@@ -21,10 +20,7 @@ std::optional<T> buildOptional(bool condition, T value)
     {
         return value;
     }
-    else
-    {
-        return {};
-    }
+    return {};
 }
 } // namespace
 
@@ -409,7 +405,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
         objectiveOffset += linearExpression.constant();
     }
     auto& pb = optimEntityContainer_.Problem();
-    pb.setObjectiveOffset(objectiveOffset);
+    pb.setObjectiveOffset(pb.getObjectiveOffset() + objectiveOffset);
 }
 
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const
