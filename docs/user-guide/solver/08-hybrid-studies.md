@@ -89,7 +89,7 @@ port-type:
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
 connect modeler components to solver areas.
-Here we describe the role of each field the **area-connection** can contain. The value for each of them
+Here we describe the role of each field contained in **area-connection**. The value for each of them
 must be an existing port name in the same port type.
 All components connected to this port and area (via an **area-connections** system section entry, 
 see previous paragraph [Defining the connections](#defining-the-connections)) will have their corresponding linear 
@@ -100,18 +100,14 @@ The nature of this contribution depends on the field :
 	
   - **spillage-bound**: the linear expression is added to the sum of all variables or linear expressions already used 
     to bound the spillage in the constraint called "fictitious load".
-  - **unsupplied-energy-bound** : the linear expression is added to any linear expression already used to bound the unsupplied ennergy.
+	
+  - **unsupplied-energy-bound** : the linear expression is added to any linear expression already used to bound the unsupplied energy.
 
-#### Optimization model
-The linear expression defined by the connected component's port field definition is simply added to the **left-hand side** 
-of the area's [balance constraint](05-model.md#balance-between-load-and-generation).  
+#### Adding a linear expreesion in optimization model
 
-???+ warning
-    
-    The current convention of this constraint is:  
-      - Generation contributions to the balance should be **positive**  
-      - Load contributions to the balance should be **negative**  
-    Take this into account when defining the connection port value.
+For more details about how to add a contribution of a component from GEMS to the leagcy linear problem, and 
+which sign (positive / negative) to give them in the constraint, please downlaod the Antares repository and read file :
+**docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md**
 
 ## Limitations
 

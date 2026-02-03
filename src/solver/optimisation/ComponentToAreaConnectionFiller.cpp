@@ -225,6 +225,13 @@ void ComponentToAreaConnectionFiller::addToLinearPbUnsupEnergyBound(const FillCo
     addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
+// This function is used to add terms (from GEMS modeler) to legacy linear problem constraints.
+// For each constraint involved we add variable terms as negative terms
+// and constant terms as positive terms.
+// For details on reason why, see file :
+//   docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md
+// Please update this file in case of change.
+
 void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components())
