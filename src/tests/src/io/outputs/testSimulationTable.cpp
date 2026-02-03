@@ -556,9 +556,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
                                                                       // dependent
         };
         auto var1_node = variable("var1", 0);
-        auto var4_node = variable("var4",
-                                  8954,
-                                  VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
+        auto var4_node = variable("var4", 8954, VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
         auto three = literal(3);
         auto ct1_node = nodeRegistry.create<Nodes::LessThanOrEqualNode>(var1_node, three);
         auto ct2_node = nodeRegistry.create<Nodes::GreaterThanOrEqualNode>(multiply(var1_node,
