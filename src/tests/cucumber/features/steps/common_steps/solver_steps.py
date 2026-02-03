@@ -60,15 +60,14 @@ def set_quadratic_solver(context, solver_name):
 
 
 def parse_options(context, options):
-    if options is not None and (options.count("--named-mps-problems") > 0 or options.count("-s") > 0):
-        context.named_mps_problems = True
-    else:
-        context.named_mps_problems = False
+    context.named_mps_problems = False
+    context.parallel = False
+    if options is not None:
+        if options.count("--named-mps-problems") > 0 or options.count("-s") > 0:
+            context.named_mps_problems = True
 
-    if options.count("--parallel") > 0:
-        context.parallel = True
-    else:
-        context.parallel = False
+        if options.count("--parallel") > 0:
+            context.parallel = True
 
 @when('I run antares simulator')
 @when('I run antares simulator with {options}')
