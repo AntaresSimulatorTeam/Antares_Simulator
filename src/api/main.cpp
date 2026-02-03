@@ -131,7 +131,7 @@ void printProblems(const ApiOptions& options)
     unsigned int firstWeek = options.week == -1 ? 1 : options.week;
     unsigned int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
 
-    for (unsigned int year: getter.playedYears())
+    for (auto year : getter.playedYears())
     {
         logs.info() << " year: " << year << '\n';
         for (unsigned int week = firstWeek; week < lastWeek; ++week)
