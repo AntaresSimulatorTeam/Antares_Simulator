@@ -167,11 +167,12 @@ $(document).ready(function(){initNavTree('singleProblemGetter_8h_source.html',''
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">int</span> nbYears() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">int</span> nbWeeks() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::set&lt;int&gt; playedYears() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::unique_ptr&lt;Implementation::SingleProblemGetter&gt; impl_;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;};</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> areWeeksIndependent() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::unique_ptr&lt;Implementation::SingleProblemGetter&gt; impl_;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1SingleProblemGetter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1SingleProblemGetter.html">Antares::Solver::SingleProblemGetter</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetter.h:21</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1ConstantDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">Antares::Solver::ConstantDataFromAntares</a></div><div class="ttdoc">The ConstantDataFromAntares class is used to store constant data across all weeks of Antares problems...</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:39</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1WeeklyDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">Antares::Solver::WeeklyDataFromAntares</a></div><div class="ttdoc">The WeeklyDataFromAntares class is used to store weekly data for an Antares Problem.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:74</div></div>
