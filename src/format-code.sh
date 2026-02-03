@@ -99,7 +99,7 @@ else
     # Use local clang-format
     if [ -n "$SOURCE_FILES" ]; then
         echo "Formatting files (using local clang-format)..."
-        echo "$SOURCE_FILES" | xargs clang-format -style=file:/workspace/.clang-format -i --verbose {}
+        echo "$SOURCE_FILES" | xargs clang-format -style=file:"$SCRIPT_DIR/.clang-format" -i --verbose
     else
         echo "No files to format."
     fi
