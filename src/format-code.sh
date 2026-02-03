@@ -38,24 +38,29 @@ if ! docker image inspect "$DOCKER_IMAGE" > /dev/null 2>&1; then
     docker pull "$DOCKER_IMAGE"
 fi
 
+# Clean up any existing container with the same name
+echo "Cleaning up any existing container..."
+docker stop "$CONTAINER_NAME" > /dev/null 2>&1
+docker rm "$CONTAINER_NAME" > /dev/null 2>&1
+
 # Create a temporary container with clang-format installed
 echo "Setting up container with clang-format..."
-docker run --rm -d \
+docker run -d \
     --name "$CONTAINER_NAME" \
     -v "$PROJECT_ROOT:/workspace" \
     -w /workspace/src \
     "$DOCKER_IMAGE" \
     sleep infinity
 
-# Install clang-format in the container
-echo "Installing clang-format in container..."
-docker exec "$CONTAINER_NAME" bash -c "apt-get update && apt-get install -y clang-format"
+# Install clang-format 18 in the container via LLVM PPA
+echo "Installing clang-format 18 in container..."
+docker exec "$CONTAINER_NAME" bash -c "apt-get update && apt-get install -y wget software-properties-common && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && add-apt-repository 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main' && apt-get update && apt-get install -y clang-format-18"
 
 # Run clang-format on the files
 if [ -n "$SOURCE_FILES" ]; then
     echo "Formatting files..."
     echo "$SOURCE_FILES" | xargs -I {} docker exec "$CONTAINER_NAME" \
-        clang-format -style=file:/workspace/.clang-format -i --verbose {}
+        clang-format-18 -style=file:/workspace/.clang-format -i --verbose {}
 else
     echo "No files to format."
 fi
@@ -63,6 +68,7 @@ fi
 # Clean up: stop and remove the container
 echo "Cleaning up container..."
 docker stop "$CONTAINER_NAME" > /dev/null 2>&1
+docker rm "$CONTAINER_NAME" > /dev/null 2>&1
 
 echo "Formatting complete!"
 
