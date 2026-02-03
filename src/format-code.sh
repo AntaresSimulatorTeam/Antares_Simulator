@@ -85,8 +85,25 @@ if [ "$USE_DOCKER" = true ]; then
 
     if [ -n "$SOURCE_FILES" ]; then
         echo "Formatting files (using Docker)..."
-        echo "$SOURCE_FILES" | xargs -I {} docker exec "$CONTAINER_NAME" \
-            clang-format -style=file:/workspace/.clang-format -i --verbose {}
+        # Create a temporary script to format all files at once inside the container
+        TEMP_SCRIPT=$(mktemp)
+        cat > "$TEMP_SCRIPT" << 'EOF'
+#!/bin/bash
+while IFS= read -r file; do
+    if [ -n "$file" ]; then
+        echo "Formatting: $file"
+        clang-format -style=file:/workspace/.clang-format -i --verbose "$file"
+    fi
+done
+EOF
+        chmod +x "$TEMP_SCRIPT"
+
+        # Copy script to container and execute it
+        docker cp "$TEMP_SCRIPT" "$CONTAINER_NAME:/tmp/format_files.sh"
+        echo "$SOURCE_FILES" | docker exec -i "$CONTAINER_NAME" bash /tmp/format_files.sh
+
+        # Clean up temporary script
+        rm "$TEMP_SCRIPT"
     else
         echo "No files to format."
     fi
