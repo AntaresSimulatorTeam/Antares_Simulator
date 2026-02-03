@@ -129,7 +129,6 @@ std::unique_ptr<Solver::ModelerData> AreaConnectionFixture::buildModelerSystem()
     auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
 
     to_return->system = std::make_unique<System>(std::move(system));
-    // std::string id = to_return->system->Id();
     return to_return;
 }
 
