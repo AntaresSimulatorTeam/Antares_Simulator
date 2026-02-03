@@ -220,7 +220,7 @@ BOOST_FIXTURE_TEST_CASE(injecting_spillage_and_unsupplied_energy_bounds, AreaCon
     // Checks
     // ---------
     const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
-    
+
     const auto* fictive_load_ct_t0 = linearProblem.lookupConstraint(fictiveLoadsConstrName);
     BOOST_CHECK_EQUAL(fictive_load_ct_t0->getCoefficient(var1_t0), -2.);
     BOOST_CHECK_EQUAL(fictive_load_ct_t0->getLb(), 0. + 30.);
