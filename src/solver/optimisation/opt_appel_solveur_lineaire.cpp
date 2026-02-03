@@ -100,11 +100,10 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 }
 
 // Returns a shared_ptr to the solver
-std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
-                                             FillContext& fillCtx,
-                                             const PROBLEME_HEBDO* problemeHebdo,
-                                             OptimEntityContainer& optimEntityContainer,
-                                             bool namedProblems)
+void fillLinearProblem(FillContext& fillCtx,
+                       const PROBLEME_HEBDO* problemeHebdo,
+                       OptimEntityContainer& optimEntityContainer,
+                       bool namedProblems)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -135,8 +134,6 @@ std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortools
     measure.tick();
 
     logs.debug() << "Modeler build took " << measure.toStringInSeconds();
-
-    return ortoolsProblem.getMpSolver();
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
@@ -171,12 +168,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    auto solver = fillAndGetMpSolver(ortoolsProblem,
-                                     fillCtx,
-                                     problemeHebdo,
-                                     optimEntityContainer,
-                                     problemeHebdo->NamedProblems);
-
+    fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, problemeHebdo->NamedProblems);
+    auto solver = ortoolsProblem.getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
     std::call_once(logProblemSizeFlag, logProblemSize, solver.get());
@@ -332,12 +325,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        auto MPproblem = fillAndGetMpSolver(infeasibleProblem,
-                                            fillCtx,
-                                            problemeHebdo,
-                                            optimEntityContainer,
-                                            true);
-
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true);
+        auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();

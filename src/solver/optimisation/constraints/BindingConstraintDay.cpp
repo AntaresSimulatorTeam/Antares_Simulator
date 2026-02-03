@@ -63,8 +63,9 @@ void BindingConstraintDay::add(int cntCouplante)
 
         builder.SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
         {
+            const auto dayInTheYear = builder.data.weekInTheYear * 7 + jour;
             ConstraintNamer namer(builder.data.NomDesContraintes);
-            namer.UpdateTimeStep(jour);
+            namer.UpdateTimeStep(dayInTheYear);
             namer.BindingConstraintDay(builder.data.nombreDeContraintes,
                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
         }
