@@ -102,8 +102,10 @@ Node* Component::nodeAtPortField(const std::string& portId, const std::string& f
     }
     catch (const std::out_of_range&)
     {
-        throw std::invalid_argument("Port field '" + portId + "." + fieldId
-                                    + "' not found in component '" + data_.id + "'");
+        throw std::invalid_argument(fmt::format("Port field '{}.{}' not found in component '{}'",
+                                                portId,
+                                                fieldId,
+                                                data_.id));
     }
 }
 
@@ -117,38 +119,46 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
     }
     catch (const std::out_of_range&)
     {
-        throw std::invalid_argument("Port field '" + portId + "." + fieldId
-                                    + "' not found in component '" + data_.id + "'");
+        throw std::invalid_argument(fmt::format("Port field '{}.{}' not found in component '{}'",
+                                                portId,
+                                                fieldId,
+                                                data_.id));
     }
 }
 
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
-    std::string exceptionPrefix = "Cannot connect area \"" + areaId + "\" to port \"" + localPortId
-                                  + "\" of component \"" + data_.id + "\": ";
+    std::string exceptionPrefix = fmt::format("Cannot connect area \"{}\" to port \"{}\" of component \"{}\": ",
+                                              areaId,
+                                              localPortId,
+                                              data_.id);
     if (!data_.model->Ports().contains(localPortId))
     {
-        throw std::invalid_argument(exceptionPrefix
-                                    + "port does not exist in the component's model \""
-                                    + data_.model->Id() + "\"");
+        throw std::invalid_argument(fmt::format("{}port does not exist in the component's model \"{}\"",
+                                                exceptionPrefix,
+                                                data_.model->Id()));
     }
     Port port = getModel()->Ports().at(localPortId);
     if (!port.Type().AreaConnectionFieldId().has_value())
     {
-        throw std::invalid_argument(exceptionPrefix + "port type \"" + port.Type().Id()
-                                    + "\" has no area-connection field ID defined");
+        throw std::invalid_argument(fmt::format("{}port type \"{}\" has no area-connection field ID defined",
+                                                exceptionPrefix,
+                                                port.Type().Id()));
     }
     PortFieldKey key(localPortId, port.Type().AreaConnectionFieldId().value());
     if (!data_.model->PortFieldDefinitions().contains(key))
     {
         throw std::invalid_argument(
-          exceptionPrefix + "port field \"" + port.Type().AreaConnectionFieldId().value()
-          + "\" is not defined in the component's model \"" + data_.model->Id() + "\"");
+          fmt::format("{}port field \"{}\" is not defined in the component's model \"{}\"",
+                      exceptionPrefix,
+                      port.Type().AreaConnectionFieldId().value(),
+                      data_.model->Id()));
     }
     if (portToAreaConnections_.contains(localPortId))
     {
-        throw std::invalid_argument(exceptionPrefix + "port is already connected to \""
-                                    + portToAreaConnections_.at(localPortId) + "\"");
+        throw std::invalid_argument(fmt::format("{}port is already connected to \"{}\"",
+                                                exceptionPrefix,
+                                                portToAreaConnections_.at(localPortId)));
     }
     portToAreaConnections_[localPortId] = areaId;
 }
