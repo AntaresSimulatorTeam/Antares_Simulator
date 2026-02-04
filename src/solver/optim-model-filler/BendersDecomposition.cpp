@@ -11,8 +11,8 @@ void BendersDecomposition::setCurrentProblemId(std::string id)
     currentProblemId_ = id;
 }
 
-void BendersDecomposition::collectConnectionVariables(std::vector<std::string>&& varnames,
-                                                      unsigned varsCountInPb)
+void BendersDecomposition::collectCouplingVariables(std::vector<std::string>&& varnames,
+                                                    unsigned varsCountInPb)
 {
     std::vector<std::string> names = std::move(varnames);
     unsigned nbVars = names.size();
@@ -32,7 +32,7 @@ BendersDecompositionWriter::BendersDecompositionWriter(const BendersDecompositio
 
 void BendersDecompositionWriter::write(std::ostream& os) const
 {
-    for (const auto& [problemId, v]: bd_.connections())
+    for (const auto& [problemId, v]: bd_.couplings())
     {
         for (const auto& [variableName, variableIndex]: v)
         {

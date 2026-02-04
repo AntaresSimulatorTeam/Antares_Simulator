@@ -11,7 +11,7 @@
 namespace Antares::Optimisation
 {
 
-struct ConnectionVariable
+struct CouplingVariable
 {
     std::string name;
     unsigned indexInProblem;
@@ -22,15 +22,15 @@ class BendersDecomposition
 public:
     BendersDecomposition() = default;
     void setCurrentProblemId(std::string id);
-    void collectConnectionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
+    void collectCouplingVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
 
-    const std::map<std::string, std::vector<ConnectionVariable>>& connections() const
+    const std::map<std::string, std::vector<CouplingVariable>>& couplings() const
     {
         return connectionVars_;
     }
 
 private:
-    std::map<std::string, std::vector<ConnectionVariable>> connectionVars_;
+    std::map<std::string, std::vector<CouplingVariable>> connectionVars_;
     std::string currentProblemId_ = "master";
 };
 

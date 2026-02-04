@@ -272,8 +272,8 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         if (bendersDecomposition_
             && variable.location() == Solver::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
-            bendersDecomposition_->collectConnectionVariables(variableNames.names(),
-                                                              pb.variableCount());
+            bendersDecomposition_->collectCouplingVariables(variableNames.names(),
+                                                            pb.variableCount());
         }
     }
 }
