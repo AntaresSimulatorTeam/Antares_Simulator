@@ -64,6 +64,8 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
 
     study_->computePThetaInfForThermalClusters(); // PthetaInf
 
+    study_->resizeAllTimeseriesNumbers(1 + study_->runtime.rangeLimits.year[Data::rangeEnd]);
+
     // TODO duplication
     if (!pb_.LeProblemeADejaEteInstancie)
     {
