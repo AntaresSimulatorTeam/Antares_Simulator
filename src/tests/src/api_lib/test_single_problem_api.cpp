@@ -74,6 +74,9 @@ std::unique_ptr<Study> buildStudy(bool thermal, bool hydro)
     // more specifically, this resize is usually done when loading from files. It's all good, except
     // when you DON'T LOAD FILES.
     area->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
+    builder.study->resizeAllTimeseriesNumbers(
+      1 + builder.study->runtime.rangeLimits.year[Antares::Data::rangeEnd]);
+
     return std::move(builder.study);
 }
 BOOST_AUTO_TEST_SUITE(in_memory_check_problem_contents)
