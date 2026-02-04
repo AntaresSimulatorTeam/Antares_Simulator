@@ -1,6 +1,4 @@
 from ortools.linear_solver.python import model_builder
-from ortools.linear_solver.python.model_builder import FlatExpr
-
 
 def load_problem(path: str):
     """

@@ -6,6 +6,7 @@
 
 #include <chrono>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -47,6 +48,7 @@ double floor(double d);
 bool isPathValid(const std::string& path);
 
 std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::string>& strs);
+std::map<std::string, unsigned> giveNumbersToStrings(const std::set<std::string>& strs);
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
 
