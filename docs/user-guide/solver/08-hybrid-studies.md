@@ -75,14 +75,14 @@ This is done in the [model library](../modeler/02-inputs.md#model-libraries), in
 Example:
 ~~~yaml
 port-type:
-   id: ac_link
+   id: port-to-area
    fields:
-      - id: flow
+      - id: field_to_balance
       - id: angle
 	  - id: to-area-bound
       - id: from-area-bound
    area-connection:
-      - injection-field: flow
+      - injection-field: field_to_balance
 	  - spillage-bound: to-area-bound
       - unsupplied-energy-bound: from-area-bound
 ~~~
@@ -95,6 +95,7 @@ All components connected to this port and area (via an **area-connections** syst
 see previous paragraph [Defining the connections](#defining-the-connections)) will have their corresponding linear 
 expression contributing to a constraint of the linear problem.
 The nature of this contribution depends on the field : 
+
   - **injection-field**: the linear expression is injected in the balance constraint of the area.
 	This is done with respect to a convention (see next [Optimization model](#optimization-model)).
 	
@@ -103,10 +104,108 @@ The nature of this contribution depends on the field :
 	
   - **unsupplied-energy-bound** : the linear expression is added to any linear expression already used to bound the unsupplied energy.
 
+These fields are independent : you don't have to define the 3 of them at the same time, you can define only one (as long as its value is an existing port in the same port type).
+ 
 #### Adding a linear expression in optimization model
+When you connect a component to an area via a port (containing an **area-connection** section), you must respect conventions on the GEMS side.
 
-For more details about how to add a contribution of a component from GEMS to the leagcy linear problem, and 
-which sign (positive / negative) to give them in the constraint, read [this article](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md)
+In examples below, for simplicity, we make productions and loads expressions some paramaters with a constant value.
+  
+- **Connecting to balance constraint**
+
+If you need to involve a production (defined in a component), make it positive and don't prefix it with a - sign.
+Typically, you would defined it like this : 
+~~~yaml
+  # library.yml
+  port-type:
+     id: port-to-area
+     fields:
+       - id: field_to_balance
+     area-connection:
+       - injection-field: field_to_balance
+
+  models:
+    - id: my-production
+      parameters:
+        - id: flat_production # Here is positive production
+      ports:
+        - id: balance_port
+          type: port-to-area
+      port-field-definitions:
+        - port: balance_port
+          field: field_to_balance
+          definition: flat_production
+~~~
+
+Reversely, if you need to involve a load in the balance constaint, make it negative :
+~~~yaml
+  models:
+    - id: my-load
+      parameters:
+        - id: flat_load # Here is positive load
+      ports:
+        - id: port-to-area
+          type: field_to_balance
+      port-field-definitions:
+        - port: port-to-area
+          field: field_to_balance
+          definition: -flat_load
+~~~
+
+- **Connecting to fictitious load constraint**
+
+This kind of connection is specifically made to connect a production from a GEMS component, because it's about limiting spillage optimization variable.
+The convention is the same as the connection to balance constraint : make the production positive and don't prefix it with a - sign.
+~~~yaml
+  # library.yml
+  port-type:
+     id: port-to-area
+     fields:
+       - id: to-area-bound
+     area-connection:
+       - spillage-bound: to-area-bound
+
+  models:
+    - id: my-production
+      parameters:
+        - id: flat_production # Here is positive production
+      ports:
+        - id: spillage_port
+          type: port-to-area
+      port-field-definitions:
+        - port: spillage_port
+          field: to-area-bound
+          definition: flat_production
+~~~
+
+- **Connectiong to bounding unsupplied energy constraint**
+
+This kind of connection is specifically made to connect a loads from a GEMS component, because it's about limiting the unsupplied energy optimization variable.
+The convention is to make the loads positive and don't prefix it with a - sign.
+~~~yaml
+  # library.yml
+  port-type:
+     id: port-to-area
+     fields:
+       - id: from-area-bound
+     area-connection:
+       - unsupplied-energy-bound: from-area-bound
+
+  models:
+    - id: my-load
+      parameters:
+        - id: flat_load # Here is positive load
+      ports:
+        - id: unsup_energy_port
+          type: port-to-area
+      port-field-definitions:
+        - port: unsup_energy_port
+          field: from-area-bound
+          definition: flat_production
+~~~
+
+
+For more details why we adpot these conventions, please read [this article](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md)
 
 ## Limitations
 

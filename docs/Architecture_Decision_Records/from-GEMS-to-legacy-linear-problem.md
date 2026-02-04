@@ -16,7 +16,7 @@ and variable terms to the LHS.
 In Antares legacy modeler code, balance constraint is actually written as follows :
  **-P = -(L-Fatal)**, with **P** being productions, **L** being loads and **L-Fatal** being the residual load.
 An equivalent form is : **L - P = Fatal**.
-Now, let's break P into Pv (production given as a variable of optimization) and Pc (production as parameter, e.g. fatal production) :
+Now, let's break **P** into **Pv** (production given as a variable of optimization) and **Pc** (production as parameter, e.g. fatal production) :
 **L - Pv = Fatal + Pc**
 As a consequence, variable productions from GEMS are added negatively, and constant productions are added positively.
 
