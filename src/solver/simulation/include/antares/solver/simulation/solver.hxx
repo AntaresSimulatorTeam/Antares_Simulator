@@ -265,9 +265,7 @@ inline void ISimulation<ImplementationType>::checkWriter() const
 }
 
 template<class ImplementationType>
-inline ISimulation<ImplementationType>::~ISimulation()
-{
-}
+inline ISimulation<ImplementationType>::~ISimulation() = default;
 
 template<class ImplementationType>
 void ISimulation<ImplementationType>::run()
@@ -276,8 +274,8 @@ void ISimulation<ImplementationType>::run()
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
-    // Computing the max number columns a report of any kind can contain.
-    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
 
     logs.info() << "Allocating resources...";
 

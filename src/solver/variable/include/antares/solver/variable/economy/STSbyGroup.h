@@ -269,6 +269,19 @@ public:
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
+        if (AncestorType::isPrinted[0])
+        {
+            results.isCurrentVarNA = AncestorType::isNonApplicable;
+
+            for (unsigned int column = 0; column < nbColumns_; column++)
+            {
+                results.variableCaption = caption(column);
+                results.variableUnit = unit(column);
+                AncestorType::pResults[column].template buildDigest<VCardType>(results,
+                                                                               digestLevel,
+                                                                               dataLevel);
+            }
+        }
         // Ask to build the digest to the next variable
         NextType::buildDigest(results, digestLevel, dataLevel);
     }

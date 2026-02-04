@@ -151,23 +151,30 @@ void printProblems(const ApiOptions& options)
     Antares::Optimisation::BendersDecomposition bendersDecomposition;
     Antares::Solver::SingleProblemGetter getter(options.studyFolder);
     getter.setBendersDecomposition(&bendersDecomposition);
+    if (getter.areWeeksIndependent())
+    {
+        logs.info() << "Weeks are independent";
+    }
+    else
+    {
+        logs.info() << "Weeks are dependent";
+    }
     auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
     logs.info() << " * Number of years: " << nbYears;
     logs.info() << " * Number of weeks per year: " << nbWeeks;
 
-    int firstWeek = options.week == -1 ? 1 : options.week;
-    int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
+    unsigned int firstWeek = options.week == -1 ? 1 : options.week;
+    unsigned int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
 
-    for (int year: getter.playedYears())
+    for (auto year: getter.playedYears())
     {
         logs.info() << " year: " << year << '\n';
-        for (int week = firstWeek; week < lastWeek; ++week)
+        for (unsigned int week = firstWeek; week < lastWeek; ++week)
         {
             logs.info() << " week: " << week << '\n';
-            const WeeklyProblemId id = {year, week};
-            bendersDecomposition.setCurrentProblemId(problemName(id));
+            const WeeklyProblemId id = {static_cast<unsigned int>(year), week};
             auto weekly = getter.getWeeklyProblem(id);
             if (options.writeMps)
             {
