@@ -227,8 +227,8 @@ void Study::loadModelerComponents()
     }
     catch (const std::exception& e)
     {
-        logs.info() << "No modeler inputs were loaded";
-        logs.info() << "Modeler inputs error: " << e.what();
+        logs.error() << "No modeler inputs were loaded";
+        logs.error() << "Modeler inputs error: " << e.what();
     }
 
     if (fs::exists(folder / "parameters.yml"))
