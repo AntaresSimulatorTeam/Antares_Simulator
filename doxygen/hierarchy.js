@@ -157,8 +157,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "Antares::IO::Outputs::ColumnBasedStorage", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html", null ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
+    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],
@@ -186,7 +186,6 @@ var hierarchy =
     [ "Antares::IO::Inputs::YmlSystem::Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ConnectionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", null ],
-    [ "Antares::Optimisation::ConnectionVariable", "structAntares_1_1Optimisation_1_1ConnectionVariable.html", null ],
     [ "CONSOMMATIONS_ABATTUES", "structCONSOMMATIONS__ABATTUES.html", null ],
     [ "Antares::Solver::ConstantDataFromAntares", "structAntares_1_1Solver_1_1ConstantDataFromAntares.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html", null ],
@@ -301,6 +300,7 @@ var hierarchy =
       [ "Antares::Data::ScenarizedCostProvider", "classAntares_1_1Data_1_1ScenarizedCostProvider.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::costStatistics", "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html", null ],
+    [ "Antares::Optimisation::CouplingVariable", "structAntares_1_1Optimisation_1_1CouplingVariable.html", null ],
     [ "COUTS_DE_TRANSPORT", "structCOUTS__DE__TRANSPORT.html", null ],
     [ "CreateAST", "structCreateAST.html", [
       [ "eval_function_op_fixture", "structeval__function__op__fixture.html", null ]
@@ -856,10 +856,12 @@ var hierarchy =
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::IHasBounds", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html", [
       [ "Antares::Optimisation::LinearProblemApi::IMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipConstraint.html", [
+        [ "Antares::Optimisation::LinearProblemApi::StructuredMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipConstraint.html", null ],
         [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipConstraint", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipConstraint.html", null ],
         [ "MockMipConstraint", "classMockMipConstraint.html", null ]
       ] ],
       [ "Antares::Optimisation::LinearProblemApi::IMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipVariable.html", [
+        [ "Antares::Optimisation::LinearProblemApi::StructuredMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html", null ],
         [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipVariable", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipVariable.html", null ],
         [ "MockMipVariable", "classMockMipVariable.html", null ]
       ] ]
@@ -913,6 +915,7 @@ var hierarchy =
       [ "JobFileReader", "classJobFileReader.html", null ]
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::ILinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html", [
+      [ "Antares::Optimisation::LinearProblemApi::StructuredLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem.html", null ],
       [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsLinearProblem.html", [
         [ "Antares::Optimization::LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", null ]
       ] ],

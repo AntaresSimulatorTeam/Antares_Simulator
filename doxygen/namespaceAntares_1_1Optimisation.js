@@ -22,7 +22,7 @@ var namespaceAntares_1_1Optimisation =
     [ "DefaultScenario", "classAntares_1_1Optimisation_1_1DefaultScenario.html", "classAntares_1_1Optimisation_1_1DefaultScenario" ],
     [ "VariableNames", "classAntares_1_1Optimisation_1_1VariableNames.html", "classAntares_1_1Optimisation_1_1VariableNames" ],
     [ "AddVariableVisitor", "classAntares_1_1Optimisation_1_1AddVariableVisitor.html", "classAntares_1_1Optimisation_1_1AddVariableVisitor" ],
-    [ "ConnectionVariable", "structAntares_1_1Optimisation_1_1ConnectionVariable.html", "structAntares_1_1Optimisation_1_1ConnectionVariable" ],
+    [ "CouplingVariable", "structAntares_1_1Optimisation_1_1CouplingVariable.html", "structAntares_1_1Optimisation_1_1CouplingVariable" ],
     [ "BendersDecomposition", "classAntares_1_1Optimisation_1_1BendersDecomposition.html", "classAntares_1_1Optimisation_1_1BendersDecomposition" ],
     [ "BendersDecompositionWriter", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter.html", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter" ],
     [ "ComponentFiller", "classAntares_1_1Optimisation_1_1ComponentFiller.html", "classAntares_1_1Optimisation_1_1ComponentFiller" ],
