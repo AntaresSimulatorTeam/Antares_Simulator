@@ -8,7 +8,7 @@ In a linear expression, each variable is associated to a constant coefficient.
 
 So when adding an expression from GEMS into a LP constraint, we merely add coefficients or constants to the constraint.
 
-In the following, writting constraints often implies gathering constant-in-time terms in the RHS, 
+In the following, writing constraints often implies gathering constant terms in the RHS, 
 and variable terms to the LHS.
 
 ## Balance constraint
@@ -16,24 +16,22 @@ and variable terms to the LHS.
 In Antares legacy modeler code, balance constraint is actually written as follows :
  **-P = -(L-Fatal)**, with **P** being productions, **L** being loads and **L-Fatal** being the residual load.
 An equivalent form is : **L - P = Fatal**.
-Now, let's break P into Pv (production variable in time) and Pc (production constant in time) :
+Now, let's break P into Pv (production given as a variable of optimization) and Pc (production as parameter, e.g. fatal production) :
 **L - Pv = Fatal + Pc**
-As a consequence, variable productions from GEMS are added negatively, and constant productions are added positively. 
-
+As a consequence, variable productions from GEMS are added negatively, and constant productions are added positively.
 
 ## Fictitious load constraint
 
 This constraint can be written as follows : 
 
-**Spillage - Thermal - Hydro < Fatal**.  
+**Spillage - Thermal - Hydro < Fatal**.
 
-As previously, adding time-variable productions from GEMS is done negatively, and adding time-constant production is done positively.
+As previously, adding variable productions from GEMS is done negatively, and adding constant production is done positively.
 
-## Bounding unsupplied enegy constraint
+## Bounding unsupplied energy constraint
 
 This constraint can be written as follows :
 
 **unsupE - Lv < Lc + Fatal**, **Lv** being variables loads, **Lc** being constant loads.
 
-
-adding time-variable loads from GEMS is done negatively, and adding time-constant loads is done positively.
+adding variable loads from GEMS is done negatively, and adding constant loads is done positively.

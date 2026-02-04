@@ -103,7 +103,7 @@ The nature of this contribution depends on the field :
 	
   - **unsupplied-energy-bound** : the linear expression is added to any linear expression already used to bound the unsupplied energy.
 
-#### Adding a linear expreesion in optimization model
+#### Adding a linear expression in optimization model
 
 For more details about how to add a contribution of a component from GEMS to the leagcy linear problem, and 
 which sign (positive / negative) to give them in the constraint, read [this article](https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/Architecture_Decision_Records/from-GEMS-to-legacy-linear-preblem.md)
