@@ -5,16 +5,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/io/inputs/yml-system/converter.h>
-#include "antares/io/inputs/model-converter/modelConverter.h"
-#include "antares/io/inputs/yml-model/parser.h"
-#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
-#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
-#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
-#include "antares/solver/optim-model-filler/ComponentFiller.h"
-#include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
-#include "antares/study/system-model/library.h"
-
+#include "FillerFixture.h"
 #include "unit_test_utils.h"
 
 using namespace std::string_literals;
@@ -110,132 +101,11 @@ system:
       area: Area1
     )"s;
 
-struct ComponentToAreaConnectionFillerFixture
-{
-    std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
-    std::unique_ptr<Solver::ModelerData> modelerData;
-    std::vector<Library> libraries;
-    LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
-    ScenarioGroupRepository scenarioGroupRepository;
-    std::remove_reference_t<LinearProblemData&> data;
-
-    ComponentToAreaConnectionFillerFixture():
-        linearProblem(true, "scip")
-    {
-        problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
-        problemeHebdo->ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
-        setUpModelerSystem();
-
-        auto scenarioPtr = std::make_unique<Scenario>("SG");
-        scenarioPtr->setTimeSerieNumber(0, 1);
-        scenarioGroupRepository.addScenario("SG", std::move(scenarioPtr));
-    }
-
-    void setData(const std::vector<double>& some_param_value)
-    {
-        auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
-        tss->add(some_param_value);
-        DataSeriesRepository ds;
-        ds.addDataSeries(std::move(tss));
-        LinearProblemData d(std::move(ds));
-        data = std::move(d);
-    }
-
-    void setUpModelerSystem()
-    {
-        IO::Inputs::YmlModel::Parser parserModel;
-        libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
-        IO::Inputs::YmlSystem::Parser parserSystem;
-        auto ymlSystem = parserSystem.parse(systemYaml);
-        auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
-        modelerData = std::make_unique<Solver::ModelerData>();
-        modelerData->system = std::make_unique<System>(std::move(system));
-        problemeHebdo->modelerData = modelerData.get();
-    }
-
-    void setUpModelerVariables(unsigned int ts_start,
-                               unsigned int ts_end,
-                               OptimEntityContainer& optimEntityContainer)
-    {
-        const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
-        for (const auto& component: modelerData->system->Components())
-        {
-            for (const auto& variable: component.getModel()->Variables())
-            {
-                optimEntityContainer.addStartColumn();
-                if (variable.isTimeDependent())
-                {
-                    for (auto t = ts_start; t <= ts_end; ++t)
-                    {
-                        auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
-                        linearProblem.addVariable(-999, 999, false, name);
-                    }
-                }
-                else
-                {
-                    auto name = buildVariableName(component.Id(),
-                                                  variable.Id(),
-                                                  std::nullopt,
-                                                  std::nullopt);
-                    linearProblem.addVariable(-999, 999, false, name);
-                }
-            }
-        }
-    }
-
-    void addEmptyConstraintsToLinearProblem(std::vector<std::string>& names, double rhs)
-    {
-        for (const auto& name: names)
-        {
-            linearProblem.addConstraint(rhs, rhs, name);
-        }
-    }
-
-    void addEmptyConstraints(std::vector<std::string>& constraintNames,
-                             bool useNamedProblems,
-                             double rhs)
-    {
-        problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
-        problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
-        if (useNamedProblems)
-        {
-            addEmptyConstraintsToLinearProblem(constraintNames, rhs);
-        }
-        else
-        {
-            std::vector<std::string> lpConstraintNames;
-            for (unsigned int i = 0; i < constraintNames.size(); ++i)
-            {
-                lpConstraintNames.push_back("c" + std::to_string(i));
-            }
-            addEmptyConstraintsToLinearProblem(lpConstraintNames, rhs);
-        }
-    }
-
-    void setUpLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs)
-    {
-        problemeHebdo->NamedProblems = useNamedProblems;
-        addEmptyConstraints(constraintNames, useNamedProblems, rhs);
-    }
-
-    void fillProblem(const FillContext& fillCtx, OptimEntityContainer& optimEntityContainer)
-    {
-        problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
-
-        ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
-                                               optimEntityContainer,
-                                               data,
-                                               scenarioGroupRepository);
-        filler.addVariables(fillCtx);
-        filler.addConstraints(fillCtx);
-        filler.addObjectives(fillCtx);
-    }
-};
-
-BOOST_FIXTURE_TEST_SUITE(_ComponentToAreaConnectionFiller_, ComponentToAreaConnectionFillerFixture)
+BOOST_FIXTURE_TEST_SUITE(_ComponentToAreaConnectionFiller_, FillerFixture)
 
 BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
+    init(systemYaml, libraryYaml);
     setData({4.0});
 
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
@@ -278,6 +148,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 
 BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 {
+    init(systemYaml, libraryYaml);
     setData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
@@ -344,6 +215,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
 BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
 {
+    init(systemYaml, libraryYaml);
     setData({4.0});
 
     OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);

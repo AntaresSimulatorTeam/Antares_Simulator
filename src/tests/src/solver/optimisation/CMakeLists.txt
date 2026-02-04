@@ -3,7 +3,10 @@ add_boost_test(unit-tests-for-solver-optimisation
         SRC
         test_main.cpp
         adequacy_patch.cpp
+        FillerFixture.cpp
+        FillerFixture.h
         test_componentToAreaConnectionFiller.cpp
+        test_ThermalCapacityFiller.cpp
         LIBS
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl
