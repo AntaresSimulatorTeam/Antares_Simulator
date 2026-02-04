@@ -18,12 +18,12 @@ std::string componentInjectionField(const Component& component, const std::strin
     return component.getModel()->Ports().at(portId).Type().areaConnection()->injection;
 }
 
-std::string componentToAreaBoundField(const Component& component, const std::string& portId)
+std::string componentSpillageBound(const Component& component, const std::string& portId)
 {
     return component.getModel()->Ports().at(portId).Type().areaConnection()->spillage_bound;
 }
 
-std::string componentFromAreaBoundField(const Component& component, const std::string& portId)
+std::string componentUnsupEnergyBound(const Component& component, const std::string& portId)
 {
     return component.getModel()
       ->Ports()
@@ -188,7 +188,7 @@ void ComponentToAreaConnectionFiller::addToLinearPbSpillageBound(const FillConte
                                                                  const std::string& portId,
                                                                  const unsigned& areaIndex)
 {
-    std::string portField = componentToAreaBoundField(component, portId);
+    std::string portField = componentSpillageBound(component, portId);
     if (portField.empty())
     {
         // area connection does not specify this port field
@@ -209,7 +209,7 @@ void ComponentToAreaConnectionFiller::addToLinearPbUnsupEnergyBound(const FillCo
                                                                     const std::string& portId,
                                                                     const unsigned& areaIndex)
 {
-    std::string portField = componentFromAreaBoundField(component, portId);
+    std::string portField = componentUnsupEnergyBound(component, portId);
     if (portField.empty())
     {
         // area connection does not specify this port field
