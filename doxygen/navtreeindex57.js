@@ -1,10 +1,5 @@
 var NAVTREEINDEX57 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[8,0,0,18,6,4,88,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[8,0,0,18,6,4,86,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[8,0,0,18,6,4,90,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr_1_1Statistics.html":[8,0,0,18,6,4,94,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[8,0,0,18,6,4,92,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[8,0,0,18,6,4,96,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[8,0,0,18,6,4,15,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR_1_1Statistics.html":[8,0,0,18,6,4,100,0],
@@ -249,5 +244,10 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html#ae23399b4ff79346552479965ffd43140":[8,0,0,18,6,4,105,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProfitByPlant.html#af703e07601eafa7bc6fce9858d95782f":[8,0,0,18,6,4,105,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html":[8,0,0,18,6,4,107],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a05bc220458fb3c7403fdb12057a2d570":[8,0,0,18,6,4,107,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a05bc220458fb3c7403fdb12057a2d570":[8,0,0,18,6,4,107,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a2873f3dcadf41b22a48d666b1ad8f509":[8,0,0,18,6,4,107,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a3fbb3343d9334207cd4db86d4c836427":[8,0,0,18,6,4,107,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a88cac487a15cf0b4c793ab47588e9852":[8,0,0,18,6,4,107,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#adaf31d1027688f7e96d0781dc0a0041f":[8,0,0,18,6,4,107,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html":[8,0,0,18,6,4,109]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX30 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#ae1e32c8c628019e8d034b769926a1339":[8,0,0,18,6,4,88,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html#ae7a5908063de113cf2ce39500bb46da3":[8,0,0,18,6,4,88,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html":[8,0,0,18,6,4,90],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html#a094871d39866c40a48282ec2fe3c2794":[8,0,0,18,6,4,90,16],
@@ -249,5 +248,6 @@ var NAVTREEINDEX30 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a6bf8581f168801554633fd2d4c889b74":[8,0,0,18,6,4,112,16],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a7a37b1be588a576ffc90b1d0fc4c0f84":[8,0,0,18,6,4,112,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#a7b871596b68c6473d1a1c76480b42541":[8,0,0,18,6,4,112,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#aa4858e9f2b392c36f4ee083be250db16":[8,0,0,18,6,4,112,10]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#aa4858e9f2b392c36f4ee083be250db16":[8,0,0,18,6,4,112,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html#aaf8510c3073a6f1d1bc43ad59d6f142c":[8,0,0,18,6,4,112,1]
 };

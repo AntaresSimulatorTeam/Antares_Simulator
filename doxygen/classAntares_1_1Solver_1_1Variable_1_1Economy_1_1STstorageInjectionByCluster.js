@@ -6,7 +6,6 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#ae9db13aef63a14fd61a617f69ea1c1e9", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a8c74c806719441949bc46d767b25eb07", null ],
     [ "VCardType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a840461b989c3b0c0dc37b8dff695ac04", null ],
-    [ "buildDigest", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a1469bfefd6d09501d08e32076af05b59", null ],
     [ "computeSummary", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a96d2a6cf0832b84da12d582766376d4a", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a5def8857b712efdea7b6e1f13203f1e6", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html#a164b4a45119c4163a74c821c8a2a84ed", null ],

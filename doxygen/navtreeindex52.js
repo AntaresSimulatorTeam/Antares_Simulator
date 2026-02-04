@@ -1,10 +1,5 @@
 var NAVTREEINDEX52 =
 {
-"loadFiles_8h.html#a0090c27f5dec990dc65e6482653feb99":[7,0,0,24,4,14],
-"loadFiles_8h.html#a33a4abfd0fc7d8e50b06ec3bc672e8d9":[7,0,0,24,4,16],
-"loadFiles_8h.html#a7c8dcb75b3a0a9db822ee1e01fe507c5":[7,0,0,24,4,8],
-"loadFiles_8h.html#ac03dad1f9b8202a6c224fa4f1b9d6e81":[7,0,0,24,4,5],
-"loadFiles_8h.html#ae7e06ed8aa17a4652bbe2c62205c3496":[7,0,0,24,4,6],
 "loadFiles_8h.html#aefa634dcb9ba9c6ba4ec4ac55065fe3b":[7,0,0,24,4,13],
 "loadFiles_8h_source.html":[9,0,0,5,2,0,0,0,0,0,1],
 "load_2prepro_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,2,2],
@@ -249,5 +244,10 @@ var NAVTREEINDEX52 =
 "namespacemembers_type.html":[7,1,3],
 "namespacemembers_vars.html":[7,1,2],
 "namespaces.html":[7,0],
-"nbOfDispatchedUnitsByPlant_8h_source.html":[9,0,0,8,12,0,0,0,0,3,26]
+"nbOfDispatchedUnitsByPlant_8h_source.html":[9,0,0,8,12,0,0,0,0,3,26],
+"nbOfDispatchedUnits_8h_source.html":[9,0,0,8,12,0,0,0,0,3,25],
+"nearPriceCap_8h.html#a9bc81019a96355ed256af3134ff28fc3":[7,0,0,24,8,4,162],
+"nearPriceCap_8h.html#ae4c312a5614cd3dabec99918aab0459c":[7,0,0,24,8,4,161],
+"nearPriceCap_8h_source.html":[9,0,0,8,12,0,0,0,0,3,27],
+"new__check_8hxx.html#af621f5a9f76d218541543ce2a2156f9c":[7,0,0,17,0]
 };

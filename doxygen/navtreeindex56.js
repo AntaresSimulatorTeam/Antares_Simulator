@@ -1,10 +1,5 @@
 var NAVTREEINDEX56 =
 {
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html#afaae8fd70c7f29200e0f25594441d726":[8,0,0,12,0,5,1,3],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html":[8,0,0,12,0,5,6],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#a0a03b236c4b53d1b8fa02b85b7858efc":[8,0,0,12,0,5,6,3],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#a106daa73ce010711478b4a63889e9183":[8,0,0,12,0,5,6,2],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#ac87166ab4d9a6f882e8c7deab3bb2c65":[8,0,0,12,0,5,6,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#ad10a45d534b4eb0e1574369798e2bbed":[8,0,0,12,0,5,6,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#af6b2aa247121bfcef6673985c323a830":[8,0,0,12,0,5,6,4],
 "structAntares_1_1IO_1_1Outputs_1_1MpsColumnEntry.html":[8,0,0,12,1,13],
@@ -249,5 +244,10 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html":[8,0,0,18,6,4,13,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html":[8,0,0,18,6,4,82,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html":[8,0,0,18,6,4,80,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap_1_1Statistics.html":[8,0,0,18,6,4,84,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap_1_1Statistics.html":[8,0,0,18,6,4,84,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[8,0,0,18,6,4,88,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[8,0,0,18,6,4,86,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[8,0,0,18,6,4,90,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr_1_1Statistics.html":[8,0,0,18,6,4,94,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[8,0,0,18,6,4,92,0]
 };

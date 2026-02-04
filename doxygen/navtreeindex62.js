@@ -1,10 +1,5 @@
 var NAVTREEINDEX62 =
 {
-"structMonster.html#a2cf0e4c676ca221634781990cdba9647":[8,0,206,1],
-"structMonster.html#aad1d7dd3820b1dad18b04d2a67c13164":[8,0,206,2],
-"structMonster.html#ad32633c349f44cfc07b868ed4c27acde":[8,0,206,0],
-"structMpsWriterTestFixture.html":[8,0,209],
-"structMpsWriterTestFixture.html#a4d0b1d61a67192f59e891a95fdbd25ae":[8,0,209,2],
 "structMpsWriterTestFixture.html#a56e180653451e0f3a91283423226451b":[8,0,209,1],
 "structMpsWriterTestFixture.html#a60b7676bf7f5cfe9bdd8e439f60ee0d6":[8,0,209,3],
 "structMpsWriterTestFixture.html#ac19c617a39ad15a18a80f7d4070ef3d7":[8,0,209,0],
@@ -249,5 +244,10 @@ var NAVTREEINDEX62 =
 "structRESULTATS__HORAIRES.html#ad1b7f4213f5fa2d8f0a5d3c321227561":[8,0,266,13],
 "structRESULTATS__HORAIRES.html#ad39178e50f44fbc3c8f9188883bdd7fc":[8,0,266,1],
 "structRESULTS.html":[8,0,268],
-"structRESULTS.html#a1a862576a9267051a18a283bccd2a944":[8,0,268,2]
+"structRESULTS.html#a1a862576a9267051a18a283bccd2a944":[8,0,268,2],
+"structRESULTS.html#a796f5bc416be58aa2f081a51c0c91b63":[8,0,268,1],
+"structRESULTS.html#aa3ce8d81be0e1d31a6f24fb36519a50a":[8,0,268,0],
+"structRawConnection.html":[8,0,259],
+"structRawConnection.html#a10d4d12dffd2454f5b58c48b34811e5b":[8,0,259,3],
+"structRawConnection.html#a209f9280bae59d52f984c777e4c787aa":[8,0,259,2]
 };

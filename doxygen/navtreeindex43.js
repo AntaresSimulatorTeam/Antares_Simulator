@@ -1,10 +1,5 @@
 var NAVTREEINDEX43 =
 {
-"classPMinMaxDispatchableGenerationGroup.html":[8,0,241],
-"classPMinMaxDispatchableGenerationGroup.html#a0640a47d12fe6575ac78e2ce18ac85cd":[8,0,241,1],
-"classPMinMaxDispatchableGenerationGroup.html#a9c350292abde5369bce78679b8923e32":[8,0,241,0],
-"classPMinMaxDispatchableGenerationGroup.html#ae2b413b2ff78d8568f20bbe2aafcb763":[8,0,241,2],
-"classPROBLEME__ANTARES__A__RESOUDRE.html":[8,0,246],
 "classPROBLEME__ANTARES__A__RESOUDRE.html#a01dc015b6294d2a94d776199730b29b3":[8,0,246,12],
 "classPROBLEME__ANTARES__A__RESOUDRE.html#a02cdd1ce49f2f0c27e7bd83d4359749c":[8,0,246,21],
 "classPROBLEME__ANTARES__A__RESOUDRE.html#a0d3a773752d640767d770bb22482f7e2":[8,0,246,1],
@@ -91,8 +86,8 @@ var NAVTREEINDEX43 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[8,0,254,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[8,0,254,7],
 "classPublicStudy.html":[8,0,256],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,256,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,256,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,256,1],
 "classQuadraticProblemMatrix.html":[8,0,258],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[8,0,258,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[8,0,258,0],
@@ -249,5 +244,10 @@ var NAVTREEINDEX43 =
 "classShortTermStorageCostVariationInjectionForward.html":[8,0,283],
 "classShortTermStorageCostVariationInjectionForward.html#a127beb0407257b8a0741428d5e807747":[8,0,283,0],
 "classShortTermStorageCostVariationInjectionForward.html#a397e0346039efe2d754dae7113b8fac2":[8,0,283,2],
-"classShortTermStorageCostVariationInjectionForward.html#a92810f50be4340f16068480970655ae2":[8,0,283,1]
+"classShortTermStorageCostVariationInjectionForward.html#a92810f50be4340f16068480970655ae2":[8,0,283,1],
+"classShortTermStorageCostVariationInjectionForward.html#ac8bce40b2ac003404af2f0e6366e8e29":[8,0,283,3],
+"classShortTermStorageCostVariationInjectionForward.html#af936b682e59df97c58c18d9ddd7fc530":[8,0,283,4],
+"classShortTermStorageCostVariationWithdrawalBackward.html":[8,0,284],
+"classShortTermStorageCostVariationWithdrawalBackward.html#a5f8ca74c18741368185217c12d362bb5":[8,0,284,1],
+"classShortTermStorageCostVariationWithdrawalBackward.html#a64452a3fb729542b9755ec033eefde99":[8,0,284,4]
 };

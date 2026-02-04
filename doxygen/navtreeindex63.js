@@ -1,10 +1,5 @@
 var NAVTREEINDEX63 =
 {
-"structRESULTS.html#a796f5bc416be58aa2f081a51c0c91b63":[8,0,268,1],
-"structRESULTS.html#aa3ce8d81be0e1d31a6f24fb36519a50a":[8,0,268,0],
-"structRawConnection.html":[8,0,259],
-"structRawConnection.html#a10d4d12dffd2454f5b58c48b34811e5b":[8,0,259,3],
-"structRawConnection.html#a209f9280bae59d52f984c777e4c787aa":[8,0,259,2],
 "structRawConnection.html#a7e8ed61894f9e8b8f7b0111aedeff458":[8,0,259,1],
 "structRawConnection.html#a99c1de3a977350523a38bab1e65091cf":[8,0,259,0],
 "structReadFromStreamFixture.html":[8,0,260],
@@ -114,9 +109,9 @@ var NAVTREEINDEX63 =
 "structStudyFixture.html#a79050046161e92da8d3cd1d036aeee12":[8,0,308,6],
 "structStudyFixture.html#a7bb40e5d558cca55d2e8635fb9b8741c":[8,0,308,5],
 "structStudyFixture.html#a7f9294e12e51c105bfe982bcc69ec640":[8,0,308,12],
+"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,308,1],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,308,2],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,308,0],
-"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,308,1],
 "structStudyFixture.html#ad030b15ed14595081f9c90fb6f7c2049":[8,0,308,8],
 "structStudyFixture.html#ae65400ddc7129fa01c5ae1ae44a6e00f":[8,0,308,10],
 "structStudyFixture.html#aebfb8a290fdbc5cc45b4fa56787601a9":[8,0,308,11],
@@ -249,5 +244,10 @@ var NAVTREEINDEX63 =
 "structTimeSeriesFile.html#a543d0d2d4d4191fff3e4625825862963":[8,0,331,0],
 "structTimeSeriesFile.html#a6163631660813ff954fd41daadb839d6":[8,0,331,1],
 "structTimeSeriesFile.html#ac4144e671adfd7029be8d8be39955383":[8,0,331,2],
-"structTwoConstraintsCreator__OneSubPb__OneMaster.html":[8,0,337]
+"structTwoConstraintsCreator__OneSubPb__OneMaster.html":[8,0,337],
+"structTwoObjsCreator__OneSubPb__OneMaster.html":[8,0,338],
+"structTwoSubPbObjsCreator.html":[8,0,339],
+"structTwoSubPbVarsCreator.html":[8,0,340],
+"structTwoVarsCreator__OneSubPb__OneMaster.html":[8,0,341],
+"structVALEURS__DE__NTC__ET__RESISTANCES.html":[8,0,343]
 };

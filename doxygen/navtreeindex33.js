@@ -1,10 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a95b2df47ea1828e48fa7a59de91e3e28":[8,0,0,18,6,45,28],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a9c2ec8f71cf533ffab5d090b4ff545bb":[8,0,0,18,6,45,35],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a9c989879cf66da5ee75971e4c193a653":[8,0,0,18,6,45,32],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a9ee062328d0be5a0a78b1a4c32959df8":[8,0,0,18,6,45,22],
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa4f550c1b189b57769f2fc25c4ee144d":[8,0,0,18,6,45,13],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa6250be7c2705994292d955c87325773":[8,0,0,18,6,45,20],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa67ba324885ff7541d1c6beae1ecc385":[8,0,0,18,6,45,1],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa697be12f5e996ecd53e7fc33c70d10b":[8,0,0,18,6,45,6],
@@ -249,5 +244,10 @@ var NAVTREEINDEX33 =
 "classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a1cb684f76974219ec0d5ec150fe07fcd":[8,0,0,19,1,3,5],
 "classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a28db89aab174fdb704e6aa25a18f1bdf":[8,0,0,19,1,3,6],
 "classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a30aa03034179e1f85acc1b34c1c888de":[8,0,0,19,1,3,4],
-"classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a384caa9863d98f89564cf55bed788614":[8,0,0,19,1,3,0]
+"classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a384caa9863d98f89564cf55bed788614":[8,0,0,19,1,3,0],
+"classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a4a2d1f636640549b0685ea64475deaa3":[8,0,0,19,1,3,3],
+"classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a61a87c2ed3f052711bc6d74638b263c1":[8,0,0,19,1,3,1],
+"classAntares_1_1Toolbox_1_1Filter_1_1Day.html#a95655d61a8b017a6bc4d3eac0bdb0c16":[8,0,0,19,1,3,2],
+"classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html":[8,0,0,19,1,4],
+"classAntares_1_1Toolbox_1_1Filter_1_1DayYear.html#a0d9ccdf4a1ccf071580c583eea525e61":[8,0,0,19,1,4,0]
 };

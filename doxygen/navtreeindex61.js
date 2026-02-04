@@ -1,10 +1,5 @@
 var NAVTREEINDEX61 =
 {
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#ae45ad8c58b357c942b8becd5c053d74d":[8,0,11,2,0],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#ae756b51f7593132c9b949329a102e3ce":[8,0,11,2,1],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#aefbff0859fe19c8a06460ae81ace9325":[8,0,11,2,7],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#afbeb93c6845bd6ce1778f79283bc057a":[8,0,11,2,2],
-"structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html":[8,0,12,2],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a0e768ab50742661c6149b3fabc9d7f48":[8,0,12,2,7],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a2cc9f0f5f51500c96852fb41c7c793ee":[8,0,12,2,6],
 "structDonneesOptimisationMensuelle_1_1CORRESPONDANCE__DES__VARIABLES.html#a4ad5e6336937db444c58607c5ef861b0":[8,0,12,2,5],
@@ -195,8 +190,8 @@ var NAVTREEINDEX61 =
 "structInputFixture.html#ae5cc7310bbfbc0b87ee5712bb4e4f62d":[8,0,167,22],
 "structInputFixture.html#ae7e762eeef60cce51097c8ba5cf9f245":[8,0,167,14],
 "structInputFixture.html#aeb3d7f53766e66fa2589dd8cf5a9f611":[8,0,167,3],
-"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,167,1],
 "structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,167,0],
+"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,167,1],
 "structLEVEL__FLEX__DOWN__NODE.html":[8,0,174],
 "structLEVEL__FLEX__DOWN__NODE.html#adb586b5229c47e72dc6503a2b621e37d":[8,0,174,0],
 "structLEVEL__FLEX__UP__NODE.html":[8,0,175],
@@ -240,8 +235,8 @@ var NAVTREEINDEX61 =
 "structMockLinearProblemData.html#a447caf2b3dd2ee13a4f31ce0e069dbb9":[8,0,198,7],
 "structMockLinearProblemData.html#a63350ea43c8987d172b7cc2550169cb5":[8,0,198,9],
 "structMockLinearProblemData.html#a7856971bf8e1c5693dd3e1b61522471b":[8,0,198,3],
-"structMockLinearProblemData.html#a7bcbf2377c723b3d73218a500404d17c":[8,0,198,5],
 "structMockLinearProblemData.html#a7bcbf2377c723b3d73218a500404d17c":[8,0,198,4],
+"structMockLinearProblemData.html#a7bcbf2377c723b3d73218a500404d17c":[8,0,198,5],
 "structMockLinearProblemData.html#a808c41967b7bac1df08fb3c6f9de711f":[8,0,198,2],
 "structMockLinearProblemData.html#abf445989115f0f76b81017886a678749":[8,0,198,0],
 "structMockLinearProblemData.html#ac076745592d0c42aab410026d0fa3c3e":[8,0,198,1],
@@ -249,5 +244,10 @@ var NAVTREEINDEX61 =
 "structMockMipSolution.html#a8d027cb0a8cbaa458600c24557d4a74e":[8,0,200,0],
 "structMockMipSolution.html#a8e14eceb9e52693bd1bb4ae4ffaf6af1":[8,0,200,1],
 "structMockSolverTraits.html":[8,0,203],
-"structMonster.html":[8,0,206]
+"structMonster.html":[8,0,206],
+"structMonster.html#a2cf0e4c676ca221634781990cdba9647":[8,0,206,1],
+"structMonster.html#aad1d7dd3820b1dad18b04d2a67c13164":[8,0,206,2],
+"structMonster.html#ad32633c349f44cfc07b868ed4c27acde":[8,0,206,0],
+"structMpsWriterTestFixture.html":[8,0,209],
+"structMpsWriterTestFixture.html#a4d0b1d61a67192f59e891a95fdbd25ae":[8,0,209,2]
 };

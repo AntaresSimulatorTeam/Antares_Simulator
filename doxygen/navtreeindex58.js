@@ -1,10 +1,5 @@
 var NAVTREEINDEX58 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a2873f3dcadf41b22a48d666b1ad8f509":[8,0,0,18,6,4,107,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a3fbb3343d9334207cd4db86d4c836427":[8,0,0,18,6,4,107,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a88cac487a15cf0b4c793ab47588e9852":[8,0,0,18,6,4,107,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#adaf31d1027688f7e96d0781dc0a0041f":[8,0,0,18,6,4,107,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html":[8,0,0,18,6,4,109],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html#a179dda16bfa4bede89d0462465059dc6":[8,0,0,18,6,4,109,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html#a2561c7b5095df7ae7ae753ef0f96653a":[8,0,0,18,6,4,109,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html#a59857622de301577ca2d8c738485ada4":[8,0,0,18,6,4,109,0],
@@ -249,5 +244,10 @@ var NAVTREEINDEX58 =
 "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html#acd7a7e188effcfb8e9c43442213b49e4":[8,0,0,19,1,0,10,0,0],
 "structAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Parameter_1_1Value.html#ae0e7c28da8ce7acb90788b6b407ff673":[8,0,0,19,1,0,10,0,2],
 "structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html":[8,0,0,19,1,13],
-"structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html#aa52f1f91cfd6d2eee9c288760268fbcb":[8,0,0,19,1,13,0]
+"structAntares_1_1Toolbox_1_1Filter_1_1ResultCaption.html#aa52f1f91cfd6d2eee9c288760268fbcb":[8,0,0,19,1,13,0],
+"structAntares_1_1Toolbox_1_1Filter_1_1ResultNewInstance.html":[8,0,0,19,1,14],
+"structAntares_1_1Toolbox_1_1Filter_1_1ResultNewInstance.html#aa7d830f4ca03adbf381d5a6428bfc357":[8,0,0,19,1,14,0],
+"structAntares_1_1UnitTests_1_1PredicateIdentity.html":[8,0,0,21,0],
+"structAntares_1_1UnitTests_1_1PredicateIdentity.html#a812b13232fa7c26f22d12294eb197cec":[8,0,0,21,0,0],
+"structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html":[8,0,0,49]
 };
