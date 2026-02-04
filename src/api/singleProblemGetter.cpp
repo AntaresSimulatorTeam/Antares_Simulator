@@ -72,11 +72,11 @@ void SingleProblemGetter::setBendersDecomposition(Optimisation::BendersDecomposi
 ModelerData* SingleProblemGetter::modelerData()
 {
     return impl_->modelerData();
+}
 
-    bool SingleProblemGetter::areWeeksIndependent() const
-    {
-        return impl_->areWeeksIndependent();
-    }
+bool SingleProblemGetter::areWeeksIndependent() const
+{
+    return impl_->areWeeksIndependent();
 }
 
 } // namespace Antares::Solver
