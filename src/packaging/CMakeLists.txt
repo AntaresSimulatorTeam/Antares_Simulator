@@ -113,6 +113,7 @@ set(TARGET_LIBS #No alias
         yml-optim-config
         enums
         modeler-checks
+	structured-linear-problem
 )
 
 install(TARGETS ${TARGET_LIBS}

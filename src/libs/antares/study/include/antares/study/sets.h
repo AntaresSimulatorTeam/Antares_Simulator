@@ -17,6 +17,7 @@
 
 namespace Antares::Data
 {
+struct CompareAreaName;
 class SetHandlerAreas;
 
 class Sets final

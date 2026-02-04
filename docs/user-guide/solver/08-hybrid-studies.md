@@ -100,9 +100,10 @@ of the area's [balance constraint](05-model.md#balance-between-load-and-generati
 
 ## Limitations
 
-- In legacy mode, each MC year is optimized separately. Thus, hybrid studies cannot contain scenario-independent 
-  variables unless using the Benders decomposition resolution mode. If you try to use such a variable in hybrid mode with 
-  the default sequential-subproblems mode, the solver will fail. Use `resolution-mode: benders-decomposition` in 
+- In legacy mode, each MC year is optimized separately. Thus, hybrid studies cannot contain scenario-independent
+  variables unless using the Benders decomposition resolution mode. If you try to use such a variable in hybrid mode
+  with
+  the default sequential-subproblems mode, the solver will fail. Use `resolution-mode: benders-decomposition` in
   the `optim-config.yml` file for investment studies with scenario-independent variables.
 
 ## Troubleshooting

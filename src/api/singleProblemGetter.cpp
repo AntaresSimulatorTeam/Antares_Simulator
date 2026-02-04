@@ -3,6 +3,8 @@
 
 #include "antares/api/singleProblemGetter.h"
 
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
+
 #include "singleProblemGetterImpl.h"
 
 namespace Antares::Solver
@@ -60,6 +62,21 @@ int SingleProblemGetter::nbWeeks() const
 std::set<int> SingleProblemGetter::playedYears() const
 {
     return impl_->playedYears();
+}
+
+void SingleProblemGetter::setBendersDecomposition(Optimisation::BendersDecomposition* bd)
+{
+    impl_->setBendersDecomposition(bd);
+}
+
+ModelerData* SingleProblemGetter::modelerData()
+{
+    return impl_->modelerData();
+}
+
+bool SingleProblemGetter::areWeeksIndependent() const
+{
+    return impl_->areWeeksIndependent();
 }
 
 } // namespace Antares::Solver

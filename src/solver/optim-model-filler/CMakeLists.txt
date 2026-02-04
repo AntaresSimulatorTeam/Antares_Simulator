@@ -1,12 +1,14 @@
 set(PROJ optim-model-filler)
 
 set(SRC_optim_model_filler
+        BendersDecomposition.cpp
         ComponentFiller.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
         LinearExpression.cpp
         TimeDependentLinearExpression.cpp
         Dimensions.cpp
+        include/antares/solver/optim-model-filler/BendersDecomposition.h
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h

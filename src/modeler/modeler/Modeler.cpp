@@ -4,8 +4,10 @@
 #include "antares/solver/modeler/Modeler.h"
 
 #include <fstream>
+#include <stdexcept>
 
 #include <antares/logs/logs.h>
+#include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblemBuilder.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
@@ -17,8 +19,8 @@
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
 
-using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares;
+using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -116,25 +118,36 @@ LocationAnalysis analyzeLocation(const ModelerData& data, const Config::Location
     return result;
 }
 
-struct ProblemEntity
+std::unique_ptr<ILinearProblem> getProblem(bool isMip,
+                                           const ResolutionMode& resolutionMode,
+                                           const std::optional<std::string>& solver)
 {
-    std::unique_ptr<ILinearProblem> problem;
-    std::unique_ptr<OptimEntityContainer> optimEntityContainer;
-};
+    if (resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
+    {
+        if (!solver)
+        {
+            throw std::invalid_argument(
+              "Please provide a solver for sequential subproblem resolution");
+        }
+        return std::make_unique<OrtoolsLinearProblem>(isMip, solver.value());
+    }
+    return std::make_unique<StructuredLinearProblem>();
+}
 
-ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
+ProblemEntity buildProblem(const ModelerData& data,
                            const Config::Location& location,
                            const std::string& problemId,
                            BendersDecomposition* bendersDecomposition,
                            const FillContext& timeScenarioCtx,
-                           const std::string& solver)
+                           const ResolutionMode& resolutionMode,
+                           const std::optional<std::string>& solver)
 {
     auto [hasCompatibleVariable, isMip] = analyzeLocation(data, location);
     if (!hasCompatibleVariable)
     {
         return {nullptr, nullptr};
     }
-    auto problem = std::make_unique<OrtoolsLinearProblem>(isMip, solver);
+    auto problem = getProblem(isMip, resolutionMode, solver);
     auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
       *problem,
       data.dataSeries.get(),
@@ -147,6 +160,72 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
     bendersDecomposition->setCurrentProblemId(problemId);
     builder.build(timeScenarioCtx, location);
     return {std::move(problem), (std::move(optimEntityContainer))};
+}
+
+IMipSolution* Modeler::solveSubproblem()
+{
+    Utils::TimeMeasurement measure;
+    logs.info() << "Launching resolution...";
+    measure.reset();
+    auto& subproblem_1_1 = subproblems_[0];
+    auto* solution = subproblem_1_1->solve(parameters_.solverLogs);
+    measure.tick();
+    logs.info() << "Solved in " << measure.toStringInSeconds();
+    return solution;
+}
+
+void Modeler::writeSubProblemSimulationTable(
+  const IMipSolution* solution,
+  const OptimEntityContainer& subproblemOptimEntityContainer,
+  const FillContext& timeScenarioCtx) const
+{
+    switch (solution->getStatus())
+    {
+    case MipStatus::OPTIMAL:
+    case MipStatus::FEASIBLE:
+    {
+        if (!parameters_.noOutput)
+        {
+            auto& subproblem_1_1 = subproblems_[0];
+            writer_.writeSimulationTable(*subproblem_1_1,
+                                         *solution,
+                                         data_,
+                                         subproblemOptimEntityContainer,
+                                         timeScenarioCtx);
+        }
+    }
+    break;
+    default:
+        logs.error() << "Problem during linear optimization";
+    }
+}
+
+void Modeler::exportMps() const
+{
+    const auto& output = writer_.outputPath();
+
+    // 1-1.mps
+    if (auto& subproblem_1_1 = subproblems_[0])
+    {
+        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
+        Antares::IO::Outputs::MPSFileWriter::write(output / "1-1.mps", mps);
+    }
+    // master.mps
+    if (masterProblem_)
+    {
+        const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
+        Antares::IO::Outputs::MPSFileWriter::write(output / "master.mps", mps);
+    }
+}
+
+void Modeler::exportStructureFile() const
+{
+    const auto& output = writer_.outputPath();
+
+    // structure.txt
+    const BendersDecompositionWriter writer(data_.bendersDecomposition);
+    std::ofstream of(output / "structure.txt");
+    writer.write(of);
 }
 
 void Modeler::run()
@@ -165,23 +244,24 @@ void Modeler::run()
       0};
 
     // Sub problem
-    BendersDecomposition bendersDecomposition;
 
     // Master
 
     auto masterEntities = buildProblem(data_,
                                        Config::Location::MASTER,
                                        "master",
-                                       &bendersDecomposition,
+                                       &data_.bendersDecomposition,
                                        timeScenarioCtx,
-                                       parameters_.solver);
+                                       ResolutionMode::BENDERS_DECOMPOSITION,
+                                       std::nullopt);
     masterProblem_ = std::move(masterEntities.problem);
     // Subproblem
     auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
                                                                      Config::Location::SUBPROBLEMS,
                                                                      "1-1",
-                                                                     &bendersDecomposition,
+                                                                     &data_.bendersDecomposition,
                                                                      timeScenarioCtx,
+                                                                     data_.resolutionMode,
                                                                      parameters_.solver);
     subproblems_.emplace_back(std::move(subproblem));
 
@@ -207,49 +287,14 @@ void Modeler::run()
     }
     if (parameters_.exportMps)
     {
-        auto output = writer_.outputPath();
-
-        // 1-1.mps
-        if (subproblem_1_1)
-        {
-            auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
-            Antares::IO::Outputs::MPSFileWriter::write(output / "1-1.mps", mps);
-        }
-        // master.mps
-        if (masterProblem_)
-        {
-            auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
-            Antares::IO::Outputs::MPSFileWriter::write(output / "master.mps", mps);
-        }
-        // structure.txt
-        BendersDecompositionWriter writer(bendersDecomposition);
-        std::ofstream of(output / "structure.txt");
-        writer.write(of);
+        exportMps();
+        exportStructureFile();
     }
-
-    logs.info() << "Launching resolution...";
-    measure.reset();
-    auto* solution = subproblem_1_1->solve(parameters_.solverLogs);
-    measure.tick();
-    logs.info() << "Solved in " << measure.toStringInSeconds();
-
-    switch (solution->getStatus())
+    if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-    case MipStatus::OPTIMAL:
-    case MipStatus::FEASIBLE:
-    {
-        if (!parameters_.noOutput)
-        {
-            writer_.writeSimulationTable(*subproblem_1_1,
-                                         *solution,
-                                         data_,
-                                         *subproblemOptimEntityContainer,
-                                         timeScenarioCtx);
-        }
-    }
-    break;
-    default:
-        logs.error() << "Problem during linear optimization";
+        auto* solution = solveSubproblem();
+        writeSubProblemSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
     }
 }
+
 } // namespace Antares::Solver
