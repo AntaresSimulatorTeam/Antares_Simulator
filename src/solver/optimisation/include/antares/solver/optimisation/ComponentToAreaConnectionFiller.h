@@ -78,15 +78,15 @@ private:
       const ModelerStudy::SystemModel::Component& component,
       const Optimisation::LinearProblemApi::FillContext& ctx);
 
-    void addInjectionPortToLinearProblem(const Optimisation::LinearProblemApi::FillContext& ctx,
+    void addInjectionPortToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
                                          const ModelerStudy::SystemModel::Component& component,
                                          const std::string& portId,
                                          const unsigned& areaIndex);
-    void addToLinearPbSpillageBound(const Optimisation::LinearProblemApi::FillContext& ctx,
+    void addSpillageBoundToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
                                     const ModelerStudy::SystemModel::Component& component,
                                     const std::string& portId,
                                     const unsigned& areaIndex);
-    void addToLinearPbUnsupEnergyBound(const Optimisation::LinearProblemApi::FillContext& ctx,
+    void addUnsupEnergyBoundToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
                                        const ModelerStudy::SystemModel::Component& component,
                                        const std::string& portId,
                                        const unsigned& areaIndex);
