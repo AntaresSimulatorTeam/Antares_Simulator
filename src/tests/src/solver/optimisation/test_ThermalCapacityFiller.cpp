@@ -215,13 +215,19 @@ static constexpr std::string_view portVariableFormat = "{}_t{}";
 constexpr std::string_view maxGenerationFromCapacityConstraintFormat = "MaxGenerationFromCapacity::"
                                                                        "area<{}>::ThermalCluster<{}"
                                                                        ">::hour<{}>";
+
+struct ExpectedConstraint
+{
+    std::vector<std::pair<std::string, double>> terms;
+    std::vector<double> upperBounds;
+};
 BOOST_FIXTURE_TEST_SUITE(_ComponentToThermalCapacityFiller_, FillerFixture)
 
 BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
 {
     init(thermalConnectionSystem, thermalConnectionLib);
-    setData("availability_factor", {4.0});
-    setData("already_installed_availability_factor", {1250.});
+    setData("availability_factor", {4.0, -389});
+    setData("already_installed_availability_factor", {1250., -153});
 
     OptimEntityContainer optimEntityContainer(linearProblem,
                                               &linearProblemData,
@@ -291,14 +297,30 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
         addLegacyVariables(dispatchableProductionVariables);
     }
     setUpModelerVariables(0, tsEnd, optimEntityContainer);
-    fillProblemWithThermalCapacityConnectionFiller({0, tsEnd, 0, 0, 0}, optimEntityContainer);
-    const std::vector<std::pair<std::string, std::vector<double>>>
-      expectedGemsVariableCoefPerConnection = {
-        {"crypto_invest.oil", {-1110 /* -(-satoshi) */, 44}},
-        {"compo.modelForCompo", {-43 /* -(modelForCompoPar)*/, 42}},
-        {"my_thermal_invest.invested_capacity", {-4 /*-(availability_factor)*/, 12}},
-      };
+    fillProblemWithThermalCapacityConnectionFiller({0, tsEnd, 0, tsEnd, 0}, optimEntityContainer);
 
+    std::vector<ExpectedConstraint> expectedGemsVariableCoefPerConnection;
+    std::pair<std::string, double> crypto_invest_oil = {"crypto_invest.oil",
+                                                        -1110 /* -(-satoshi) */};
+    expectedGemsVariableCoefPerConnection.emplace_back(std::vector{crypto_invest_oil,
+                                                                   crypto_invest_oil},
+                                                       std::vector{0., 0.});
+
+    std::pair<std::string, double> compo_modelForCompo = {"compo.modelForCompo",
+                                                          -43 /* -(modelForCompoPar)*/};
+    expectedGemsVariableCoefPerConnection.emplace_back(std::vector{compo_modelForCompo,
+                                                                   compo_modelForCompo},
+                                                       std::vector{0., 0.});
+    std::pair<std::string, double> my_thermal_invest_invested_capacity_t0 = {
+      "my_thermal_invest.invested_capacity",
+      -4 /*-(availability_factor)*/};
+    std::pair<std::string, double> my_thermal_invest_invested_capacity_t1 = {
+      "my_thermal_invest.invested_capacity",
+      389 /*-(availability_factor)*/};
+    expectedGemsVariableCoefPerConnection.emplace_back(
+      std::vector{my_thermal_invest_invested_capacity_t0, my_thermal_invest_invested_capacity_t1},
+      std::vector{-175000., 21420.}); // == already_installed_availability_factor *
+                                      // already_installed_capacity ==(1250.,-153)*(-140)
     for (int pdt = 0; pdt < nbTimeStep; ++pdt)
     {
         for (int areaIndex = 0; areaIndex < nbAreas; areaIndex++)
@@ -311,10 +333,14 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
             const auto* dispatchableVar = linearProblem.lookupVariable(
               fmt::format(dispatchableProductionVariableFormat, area, cluster, pdt));
             BOOST_CHECK_EQUAL(maxGenConstraint->getCoefficient(dispatchableVar), 1);
-            const auto& [varName, coeffs] = expectedGemsVariableCoefPerConnection[areaIndex];
+
+            const auto& areaExpectedResult = expectedGemsVariableCoefPerConnection[areaIndex];
             const auto* portVariable = linearProblem.lookupVariable(
-              fmt::format(portVariableFormat, varName, pdt));
-            BOOST_CHECK_EQUAL(maxGenConstraint->getCoefficient(portVariable), coeffs[pdt]);
+              fmt::format(portVariableFormat, areaExpectedResult.terms[pdt].first, pdt));
+            BOOST_CHECK_EQUAL(maxGenConstraint->getCoefficient(portVariable),
+                              areaExpectedResult.terms[pdt].second);
+            BOOST_CHECK_EQUAL(maxGenConstraint->getLb(), -linearProblem.infinity());
+            BOOST_CHECK_EQUAL(maxGenConstraint->getUb(), areaExpectedResult.upperBounds[pdt]);
         }
     }
 }
