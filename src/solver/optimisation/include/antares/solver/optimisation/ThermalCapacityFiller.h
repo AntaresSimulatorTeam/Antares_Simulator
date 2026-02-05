@@ -45,14 +45,16 @@ private:
     Optimisation::OptimEntityContainer& optimEntityContainer_;
     void processThermalCapacityField(
       const TimeDependentLinearExpression& linearExpression,
-      const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection,
+      const ModelerStudy::SystemModel::Component::ThermalCapacityConnection&
+        thermalCapacityConnection,
       const Optimisation::LinearProblemApi::FillContext& ctx);
 
     void addComponentPortContributionToThermalCapacity(
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const ModelerStudy::SystemModel::Component& component,
       const std::string& portId,
-      const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection);
+      const ModelerStudy::SystemModel::Component::ThermalCapacityConnection&
+        thermalCapacityConnection);
     Optimisation::LinearProblemApi::IMipVariable* getDispatchableProductionVariable(int palier,
                                                                                     unsigned pdt);
     void addCapacityFieldConstraint(const TimeDependentLinearExpression& linearExpression,

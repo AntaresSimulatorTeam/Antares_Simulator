@@ -66,12 +66,13 @@ void ThermalCapacityFiller::addConstraints(const FillContext& ctx)
 {
     for (const auto& component: modelerSystem_->Components())
     {
-        for (const auto& [portId, thermalConnection]: component.portToThermalConnections())
+        for (const auto& [portId, thermalCapacityConnection]:
+             component.portToThermalCapacityConnections())
         {
             addComponentPortContributionToThermalCapacity(ctx,
                                                           component,
                                                           portId,
-                                                          thermalConnection);
+                                                          thermalCapacityConnection);
         }
     }
 }
@@ -166,32 +167,32 @@ int ThermalCapacityFiller::getClusterIndex(const std::string& areaId, const std:
 // TODO
 void ThermalCapacityFiller::processThermalCapacityField(
   const TimeDependentLinearExpression& linearExpression,
-  const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection,
+  const ModelerStudy::SystemModel::Component::ThermalCapacityConnection& thermalCapacityConnection,
   const FillContext& ctx)
 {
-    auto areaId = thermalConnection.areaId;
+    auto areaId = thermalCapacityConnection.areaId;
     boost::algorithm::to_lower(areaId);
 
-    const int clusterIndex = getClusterIndex(areaId, thermalConnection.clusterId);
+    const int clusterIndex = getClusterIndex(areaId, thermalCapacityConnection.clusterId);
     addCapacityFieldConstraint(
       linearExpression,
       ctx,
       clusterIndex,
       fmt::format("MaxGenerationFromCapacity::area<{}>::ThermalCluster<{}>",
                   areaId,
-                  thermalConnection.clusterId));
+                  thermalCapacityConnection.clusterId));
 }
 
 void ThermalCapacityFiller::addComponentPortContributionToThermalCapacity(
   const Optimisation::LinearProblemApi::FillContext& ctx,
   const ModelerStudy::SystemModel::Component& component,
   const std::string& portId,
-  const ModelerStudy::SystemModel::Component::ThermalConnection& thermalConnection)
+  const ModelerStudy::SystemModel::Component::ThermalCapacityConnection& thermalCapacityConnection)
 {
     std::string thermalCapacityField = getThermalCapacityField(component, portId);
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
     const auto linearExpression = visitor.visitMergeDuplicates(
       component.nodeAtPortField(portId, thermalCapacityField));
-    processThermalCapacityField(linearExpression, thermalConnection, ctx);
+    processThermalCapacityField(linearExpression, thermalCapacityConnection, ctx);
 }
 } // namespace Antares::Optimization

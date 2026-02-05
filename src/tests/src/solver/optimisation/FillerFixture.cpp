@@ -10,6 +10,7 @@
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/solver/optimisation/ThermalCapacityFiller.h"
 using namespace std::string_literals;
 
 using namespace Optimization;
@@ -19,7 +20,8 @@ using namespace LinearProblemApi;
 using namespace LinearProblemDataImpl;
 
 FillerFixture::FillerFixture():
-    linearProblem(true, "scip")
+    linearProblem(true, "scip"),
+    linearProblemData((DataSeriesRepository()))
 {
 }
 
@@ -34,14 +36,11 @@ void FillerFixture::init(const std::string& systemYaml, const std::string& libra
     scenarioGroupRepository.addScenario("SG", std::move(scenarioPtr));
 }
 
-void FillerFixture::setData(const std::vector<double>& some_param_value)
+void FillerFixture::setData(const std::string& name, const std::vector<double>& some_param_value)
 {
-    auto tss = std::make_unique<TimeSeriesSet>("some_param_value", some_param_value.size());
+    auto tss = std::make_unique<TimeSeriesSet>(name, some_param_value.size());
     tss->add(some_param_value);
-    DataSeriesRepository ds;
-    ds.addDataSeries(std::move(tss));
-    LinearProblemData d(std::move(ds));
-    data = std::move(d);
+    linearProblemData.addDataSeries(std::move(tss));
 }
 
 void FillerFixture::setUpModelerSystem(const std::string& systemYaml,
@@ -55,6 +54,15 @@ void FillerFixture::setUpModelerSystem(const std::string& systemYaml,
     modelerData = std::make_unique<Solver::ModelerData>();
     modelerData->system = std::make_unique<System>(std::move(system));
     problemeHebdo->modelerData = modelerData.get();
+}
+
+// this should be called before setUpModelerVariables
+void FillerFixture::addLegacyVariables(const std::vector<std::string>& variableNames)
+{
+    for (const auto& variable: variableNames)
+    {
+        linearProblem.addVariable(-999, 999, false, variable);
+    }
 }
 
 void FillerFixture::setUpModelerVariables(unsigned int ts_start,
@@ -124,15 +132,28 @@ void FillerFixture::setUpLegacyLp(std::vector<std::string>& constraintNames,
     addEmptyConstraints(constraintNames, useNamedProblems, rhs);
 }
 
-void FillerFixture::fillProblem(const FillContext& fillCtx,
-                                OptimEntityContainer& optimEntityContainer)
+void FillerFixture::fillProblemWithAreaConnectionFiller(
+  const FillContext& fillCtx,
+  OptimEntityContainer& optimEntityContainer) const
 {
     problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
 
     ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
                                            optimEntityContainer,
-                                           data,
+                                           linearProblemData,
                                            scenarioGroupRepository);
+    filler.addVariables(fillCtx);
+    filler.addConstraints(fillCtx);
+    filler.addObjectives(fillCtx);
+}
+
+void FillerFixture::fillProblemWithThermalCapacityConnectionFiller(
+  const FillContext& fillCtx,
+  OptimEntityContainer& optimEntityContainer) const
+{
+    problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
+
+    ThermalCapacityFiller filler(problemeHebdo.get(), optimEntityContainer);
     filler.addVariables(fillCtx);
     filler.addConstraints(fillCtx);
     filler.addObjectives(fillCtx);

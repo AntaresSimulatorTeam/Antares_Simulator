@@ -102,15 +102,16 @@ public:
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
 
-    struct ThermalConnection
+    struct ThermalCapacityConnection
     {
         std::string areaId;
         std::string clusterId;
     };
 
-    const std::map<std::string, ThermalConnection>& portToThermalConnections() const;
+    const std::map<std::string, ThermalCapacityConnection>& portToThermalCapacityConnections()
+      const;
 
-    std::optional<::Antares::ModelerStudy::SystemModel::Component::ThermalConnection>
+    std::optional<::Antares::ModelerStudy::SystemModel::Component::ThermalCapacityConnection>
     thermalCapacityConnectedToPort(const std::string& portId) const;
 
     unsigned int Index() const
@@ -124,7 +125,7 @@ private:
     explicit Component(const ComponentData& component_data);
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
-    std::map<std::string, ThermalConnection> portToThermalConnections_;
+    std::map<std::string, ThermalCapacityConnection> portToThermalConnections_;
     ComponentData data_;
 };
 

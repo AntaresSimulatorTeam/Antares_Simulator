@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connectivity)
     YmlSystem::System system = parserSystem.parse(thermalConnectionSystem);
     auto systemModel = SystemConverter::convert(system, libraries);
     const auto& thermalInvestComponent = systemModel.Components().at(0);
-    const auto& connection = thermalInvestComponent.portToThermalConnections();
+    const auto& connection = thermalInvestComponent.portToThermalCapacityConnections();
     BOOST_CHECK_EQUAL(connection.size(), 1);
     const auto& [portId, thermalConnection] = *connection.begin();
 

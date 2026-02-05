@@ -73,8 +73,8 @@ static void checkComponentDataValidity(const ComponentData& data)
     }
 }
 
-const std::map<std::string, Component::ThermalConnection>& Component::portToThermalConnections()
-  const
+const std::map<std::string, Component::ThermalCapacityConnection>&
+Component::portToThermalCapacityConnections() const
 {
     return portToThermalConnections_;
 }
@@ -214,7 +214,7 @@ void Component::addThermalCapacityConnection(const std::string& portId,
                                      clusterId);
         throw std::invalid_argument(msg);
     }
-    portToThermalConnections_.try_emplace(portId, ThermalConnection{areaId, clusterId});
+    portToThermalConnections_.try_emplace(portId, ThermalCapacityConnection{areaId, clusterId});
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
@@ -224,7 +224,7 @@ std::optional<std::string> Component::areaConnectedToPort(const std::string& por
              : std::nullopt;
 }
 
-std::optional<Component::ThermalConnection> Component::thermalCapacityConnectedToPort(
+std::optional<Component::ThermalCapacityConnection> Component::thermalCapacityConnectedToPort(
   const std::string& portId) const
 {
     const auto it = portToThermalConnections_.find(portId);

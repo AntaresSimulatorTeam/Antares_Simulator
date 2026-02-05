@@ -106,9 +106,11 @@ BOOST_FIXTURE_TEST_SUITE(_ComponentToAreaConnectionFiller_, FillerFixture)
 BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
     init(systemYaml, libraryYaml);
-    setData({4.0});
+    setData("some_param_value", {4.0});
 
-    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem,
+                                              &linearProblemData,
+                                              &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
@@ -117,7 +119,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
-    fillProblem({0, 0, 0, 0, 0}, optimEntityContainer);
+    fillProblemWithAreaConnectionFiller({0, 0, 0, 0, 0}, optimEntityContainer);
 
     auto balance_ct = linearProblem.lookupConstraint("AreaBalance::area<area1>::hour<0>");
     BOOST_CHECK_EQUAL(balance_ct->getCoefficient(linearProblem.lookupVariable(
@@ -149,9 +151,11 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 {
     init(systemYaml, libraryYaml);
-    setData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
+    setData("some_param_value", {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
-    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem,
+                                              &linearProblemData,
+                                              &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(10, 11, optimEntityContainer);
@@ -164,7 +168,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
     problemeHebdo->CorrespondanceCntNativesCntOptim[0].NumeroDeContrainteDesBilansPays.push_back(1);
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
     problemeHebdo->CorrespondanceCntNativesCntOptim[1].NumeroDeContrainteDesBilansPays.push_back(2);
-    fillProblem({0, 1, 10, 11, 0}, optimEntityContainer);
+    fillProblemWithAreaConnectionFiller({0, 1, 10, 11, 0}, optimEntityContainer);
 
     auto balance_ct_t10 = linearProblem.lookupConstraint("c1");
     auto balance_ct_t11 = linearProblem.lookupConstraint("c2");
@@ -216,15 +220,18 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 BOOST_AUTO_TEST_CASE(fail_if_constraint_not_defined)
 {
     init(systemYaml, libraryYaml);
-    setData({4.0});
+    setData("some_param_value", {4.0});
 
-    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem,
+                                              &linearProblemData,
+                                              &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     setUpModelerVariables(0, 0, optimEntityContainer);
     std::vector<std::string> constraints({"whatever"});
     setUpLegacyLp(constraints, true, 0);
-    BOOST_CHECK_EXCEPTION(fillProblem({0, 0, 0, 0, 0}, optimEntityContainer),
+    BOOST_CHECK_EXCEPTION(fillProblemWithAreaConnectionFiller({0, 0, 0, 0, 0},
+                                                              optimEntityContainer),
                           std::runtime_error,
                           checkMessage("A component is connected to area \"area1\", that does not "
                                        "have a balance constraint defined for timestep 0"));

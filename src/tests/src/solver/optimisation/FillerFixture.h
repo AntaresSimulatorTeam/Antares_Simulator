@@ -17,14 +17,15 @@ struct FillerFixture
     std::vector<ModelerStudy::SystemModel::Library> libraries;
     Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
-    std::remove_reference_t<Antares::Optimisation::LinearProblemDataImpl::LinearProblemData&> data;
+    Antares::Optimisation::LinearProblemDataImpl::LinearProblemData linearProblemData;
 
     FillerFixture();
     void init(const std::string& systemYaml, const std::string& libraryYaml);
 
-    void setData(const std::vector<double>& some_param_value);
+    void setData(const std::string& name, const std::vector<double>& some_param_value);
 
     void setUpModelerSystem(const std::string& systemYaml, const std::string& libraryYaml);
+    void addLegacyVariables(const std::vector<std::string>& variableNames);
 
     void setUpModelerVariables(unsigned int ts_start,
                                unsigned int ts_end,
@@ -40,6 +41,10 @@ struct FillerFixture
                        bool useNamedProblems,
                        double rhs);
 
-    void fillProblem(const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
-                     Antares::Optimisation::OptimEntityContainer& optimEntityContainer);
+    void fillProblemWithAreaConnectionFiller(
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
+      Antares::Optimisation::OptimEntityContainer& optimEntityContainer) const;
+    void fillProblemWithThermalCapacityConnectionFiller(
+      const Optimisation::LinearProblemApi::FillContext& fillCtx,
+      Optimisation::OptimEntityContainer& optimEntityContainer) const;
 };

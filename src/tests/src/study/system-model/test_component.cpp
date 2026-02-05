@@ -412,7 +412,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_undefined_field)
                    "clusterId = cluster989)' to port 'portACNoDef' of component 'myComponent': "
                    "port field 'field2' is not defined in the component's model 'myModel'"));
     BOOST_CHECK_EQUAL(component.thermalCapacityConnectedToPort("portACNoDef").has_value(), false);
-    BOOST_CHECK(component.portToThermalConnections().empty());
+    BOOST_CHECK(component.portToThermalCapacityConnections().empty());
 }
 
 BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
@@ -486,7 +486,7 @@ BOOST_AUTO_TEST_CASE(successfully_connect_thermal_capacity_to_port)
     const auto [areaId, clusterId] = thermalConnectionOpt.value();
     BOOST_CHECK_EQUAL(areaId, "area1");
     BOOST_CHECK_EQUAL(clusterId, "cluster57");
-    BOOST_CHECK_EQUAL(component.portToThermalConnections().size(), 1);
+    BOOST_CHECK_EQUAL(component.portToThermalCapacityConnections().size(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
