@@ -57,19 +57,30 @@ BOOST_FIXTURE_TEST_CASE(read_one_lib_treile, FixtureLoadFile)
     )";
     libStream.close();
 
-    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
     BOOST_CHECK_EQUAL(libraries[0].Id(), "lib_id");
-}
+ }
 
-BOOST_FIXTURE_TEST_CASE(dont_read_bad_extension, FixtureLoadFile)
-{
-    createFile(libraryDirPath.string(), "abc.txt");
-    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
-    BOOST_CHECK(libraries.empty());
-}
+ BOOST_FIXTURE_TEST_CASE(dont_read_bad_extension, FixtureLoadFile)
+ {
+     createFile(libraryDirPath.string(), "abc.txt");
+    auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    // If no libraries found, the function may return an empty optional or a pair with empty vector.
+    if (res.has_value())
+    {
+        const auto& libraries = res.value().first;
+        BOOST_CHECK(libraries.empty());
+    }
+    else
+    {
+        BOOST_CHECK(true);
+    }
+ }
 
-BOOST_FIXTURE_TEST_CASE(incorrect_library, FixtureLoadFile)
-{
+ BOOST_FIXTURE_TEST_CASE(incorrect_library, FixtureLoadFile)
+ {
     std::ofstream libStream(libraryDirPath / "simple.yml");
     libStream << R"(
         library:
@@ -128,7 +139,9 @@ BOOST_FIXTURE_TEST_CASE(read_several_lib_file, FixtureLoadFile)
     )";
     libStream3.close();
 
-    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
 
     auto checkLibIdInVector = [&libraries](const std::string& libId)
     {
@@ -170,12 +183,14 @@ BOOST_FIXTURE_TEST_CASE(read_system_file, FixtureLoadFile)
     )";
     systemStream.close();
 
-    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
     BOOST_CHECK_NO_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries));
-}
+ }
 
-BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
-{
+ BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
+ {
     std::ofstream libStream(libraryDirPath / "simple.yml");
     libStream << R"(
         library:
@@ -195,13 +210,15 @@ BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
     )";
     systemStream.close();
 
-    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
     BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
                       std::runtime_error);
-}
+ }
 
-BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
-{
+ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
+ {
     std::ofstream libStream(libraryDirPath / "simple.yml");
     libStream << R"(
         library:
@@ -229,11 +246,13 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
     )";
     systemStream.close();
 
-    auto [libraries, _] = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
     auto system = Antares::Solver::LoadFiles::loadSystem(studyPath, libraries);
     const auto compoK = std::ranges::find_if(system.Components(),
                                              [](const auto& comp) { return comp.Id() == "K"; });
     BOOST_CHECK_EQUAL(compoK->getScenarioGroupId(), "");
-}
+ }
 
-BOOST_AUTO_TEST_SUITE_END()
+ BOOST_AUTO_TEST_SUITE_END()

@@ -218,8 +218,14 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = std::make_unique<Solver::ModelerData>(Solver::LoadFiles::loadAll(folder));
-        checkModelerDataCompatibility();
+        auto data = Solver::LoadFiles::loadAll(folder);
+        if (data.has_value())
+        {
+            // Move the ModelerData out of the optional to avoid copying
+            // (ModelerData contains unique_ptr members and is not copyable).
+            modelerInput_ = std::make_unique<Solver::ModelerData>(std::move(*data));
+            checkModelerDataCompatibility();
+        }
     }
     catch (const Error::LoadingError& e)
     {
