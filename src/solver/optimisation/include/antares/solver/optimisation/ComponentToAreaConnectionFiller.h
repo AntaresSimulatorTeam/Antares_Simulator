@@ -79,9 +79,9 @@ private:
       const Optimisation::LinearProblemApi::FillContext& ctx);
 
     void addInjectionPortToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
-                                         const ModelerStudy::SystemModel::Component& component,
-                                         const std::string& portId,
-                                         const unsigned& areaIndex);
+                                    const ModelerStudy::SystemModel::Component& component,
+                                    const std::string& portId,
+                                    const unsigned& areaIndex);
     void addSpillageBoundToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
                                     const ModelerStudy::SystemModel::Component& component,
                                     const std::string& portId,

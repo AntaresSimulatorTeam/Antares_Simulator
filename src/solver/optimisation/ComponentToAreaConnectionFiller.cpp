@@ -163,9 +163,9 @@ TimeDependentLinearExpression ComponentToAreaConnectionFiller::linearExpressionA
 }
 
 void ComponentToAreaConnectionFiller::addInjectionPortToLinearPb(const FillContext& ctx,
-                                                                      const Component& component,
-                                                                      const std::string& portId,
-                                                                      const unsigned& areaIndex)
+                                                                 const Component& component,
+                                                                 const std::string& portId,
+                                                                 const unsigned& areaIndex)
 {
     std::string portField = componentInjectionField(component, portId);
     if (portField.empty())
