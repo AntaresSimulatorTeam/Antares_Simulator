@@ -66,7 +66,6 @@ private:
                                // building
     std::set<int> playedYears_;
     int nbWeeks_;
-    Optimisation::BendersDecomposition* bendersDecomposition_ = nullptr;
 
     std::vector<std::string> variablesName_;
     std::vector<std::string> constraintsName_;

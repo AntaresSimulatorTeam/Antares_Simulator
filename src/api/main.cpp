@@ -148,9 +148,7 @@ void writeMasterAndStructure(ModelerData* data, const std::filesystem::path& out
 
 void printProblems(const ApiOptions& options)
 {
-    Antares::Optimisation::BendersDecomposition bendersDecomposition;
     Antares::Solver::SingleProblemGetter getter(options.studyFolder);
-    getter.setBendersDecomposition(&bendersDecomposition);
     if (getter.areWeeksIndependent())
     {
         logs.info() << "Weeks are independent";

@@ -378,7 +378,11 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
                                                             modelerDataSeries,
                                                             modelerScenarioGroupRepository);
 
-    fillLinearProblem(fillCtx, &pb_, optimEntityContainer, true, bendersDecomposition_);
+    fillLinearProblem(fillCtx,
+                      &pb_,
+                      optimEntityContainer,
+                      true,
+                      &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -488,11 +492,6 @@ int SingleProblemGetter::nbYears() const
 std::set<int> SingleProblemGetter::playedYears() const
 {
     return playedYears_;
-}
-
-void SingleProblemGetter::setBendersDecomposition(Optimisation::BendersDecomposition* bd)
-{
-    bendersDecomposition_ = bd;
 }
 
 ModelerData* SingleProblemGetter::modelerData()
