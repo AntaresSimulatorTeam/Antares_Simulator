@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['dataseriescsvimporter_5214',['DataSeriesCsvImporter',['../namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html',1,'Antares::IO::Inputs']]],
-  ['detail_5215',['detail',['../namespaceAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail.html',1,'Antares::Solver::Variable::Economy']]],
-  ['dispatcher_5216',['Dispatcher',['../namespaceAntares_1_1Dispatcher.html',1,'Antares']]],
-  ['linearproblemapi_5217',['LinearProblemApi',['../namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html',1,'Antares::Optimisation']]],
-  ['optimisation_5218',['Optimisation',['../namespaceAntares_1_1Optimisation.html',1,'Antares']]],
-  ['wip_5219',['WIP',['../namespaceAntares_1_1WIP.html',1,'Antares']]]
+  ['dataseriescsvimporter_5215',['DataSeriesCsvImporter',['../namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html',1,'Antares::IO::Inputs']]],
+  ['detail_5216',['detail',['../namespaceAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail.html',1,'Antares::Solver::Variable::Economy']]],
+  ['dispatcher_5217',['Dispatcher',['../namespaceAntares_1_1Dispatcher.html',1,'Antares']]],
+  ['linearproblemapi_5218',['LinearProblemApi',['../namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html',1,'Antares::Optimisation']]],
+  ['optimisation_5219',['Optimisation',['../namespaceAntares_1_1Optimisation.html',1,'Antares']]],
+  ['wip_5220',['WIP',['../namespaceAntares_1_1WIP.html',1,'Antares']]]
 ];

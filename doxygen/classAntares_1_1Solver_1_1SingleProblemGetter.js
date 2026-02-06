@@ -11,7 +11,6 @@ var classAntares_1_1Solver_1_1SingleProblemGetter =
     [ "nbWeeks", "classAntares_1_1Solver_1_1SingleProblemGetter.html#ae801c21f30a94cab168b4542b44107d3", null ],
     [ "nbYears", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a2b47992ebc5f3b8b53f904ea5bcf756a", null ],
     [ "playedYears", "classAntares_1_1Solver_1_1SingleProblemGetter.html#af54b8362cd4542c002593f0bcf1c6279", null ],
-    [ "setBendersDecomposition", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a07070b05b7efece1297e062114195689", null ],
     [ "writeNTCTimeSeries", "classAntares_1_1Solver_1_1SingleProblemGetter.html#ae625c9a225b8b34cf95f6bdb59e2a5ad", null ],
     [ "writeStudyDescriptionFiles", "classAntares_1_1Solver_1_1SingleProblemGetter.html#a70484175188fcdc158658a740917b940", null ]
 ];
