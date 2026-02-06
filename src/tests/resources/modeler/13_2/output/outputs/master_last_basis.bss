@@ -1,7 +1,0 @@
-NAME                                                                          
- UL discrete_generator_candidate.nb_units                                         10
- XU continuous_generator_candidate.p_max                      discrete_generator_candidate.p_max_nb_units_relation               100             0
- XU discrete_generator_candidate.p_max                        R2                                                                 100             0
- XL alpha                                                     R3                                                               11000       -109200
- XL alpha_0                                                   R8                                                               11000        -18000
-ENDATA 
