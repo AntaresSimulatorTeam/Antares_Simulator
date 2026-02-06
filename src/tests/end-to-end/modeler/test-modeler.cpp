@@ -54,8 +54,7 @@ private:
 
 ConstantDataSeries emptyDataSeries(0.);
 
-Component copyComponent(
-  const Component& c)
+Component copyComponent(const Component& c)
 {
     ComponentBuilder builder;
     return builder.withId(c.Id())
@@ -129,8 +128,7 @@ public:
         auto system = builder.withId("dummy-system").withComponents(std::move(components)).build();
         ModelerData md;
         md.libraries = {library};
-        md.system = std::make_unique<System>(
-          std::move(system));
+        md.system = std::make_unique<System>(std::move(system));
         md.dataSeries = std::move(data);
         md.scenarioGroupRepository = std::move(scenarioGroupRepository);
 
