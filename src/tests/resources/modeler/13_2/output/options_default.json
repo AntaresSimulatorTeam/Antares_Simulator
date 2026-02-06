@@ -1,0 +1,19 @@
+{
+     "LOG_LEVEL": 0,
+     "MAX_ITERATIONS": -1,
+     "GAP": 1e-06,
+     "AGGREGATION": false,
+     "OUTPUTROOT": "./outputs/",
+     "TRACE": true,
+     "SLAVE_WEIGHT": "CONSTANT",
+     "SLAVE_WEIGHT_VALUE": 1,
+     "MASTER_NAME": "master",
+     "LAST_MASTER_MPS": "master_last_iteration",
+     "STRUCTURE_FILE": "structure.txt",
+     "INPUTROOT": ".",
+     "CSV_NAME": "benders_output_trace",
+     "BOUND_ALPHA": true,
+     "SOLVER_NAME": "Xpress",
+     "JSON_FILE": "./expansion/out.json",
+     "LAST_ITERATION_JSON_FILE": "./expansion/last_iteration.json"
+}

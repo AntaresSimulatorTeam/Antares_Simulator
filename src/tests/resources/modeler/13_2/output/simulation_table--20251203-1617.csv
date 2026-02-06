@@ -1,0 +1,15 @@
+block,component,output,absolute_time_index,block_time_index,scenario_index,value,basis_status
+1,my_node,spillage,1,1,0,0,None
+1,my_node,unsupplied_energy,1,1,0,0,None
+1,my_node,balance,1,1,0,None,None
+1,load,balance_port.flow,None,None,None,-400,None
+1,already_installed_generator,generation,1,1,0,0,None
+1,already_installed_generator,max_generation,1,1,0,None,None
+1,already_installed_generator,balance_port.flow,1,1,0,0,None
+1,continuous_generator_candidate,generation,1,1,0,0,None
+1,continuous_generator_candidate,max_generation,1,1,0,None,None
+1,continuous_generator_candidate,balance_port.flow,1,1,0,0,None
+1,discrete_generator_candidate,generation,1,1,0,400,None
+1,discrete_generator_candidate,max_generation,1,1,0,None,None
+1,discrete_generator_candidate,balance_port.flow,1,1,0,400,None
+1,None,OBJECTIVE_VALUE,None,None,0,4000,None

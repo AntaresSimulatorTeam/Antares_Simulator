@@ -1,0 +1,4 @@
+1-1	continuous_generator_candidate.p_max	2
+1-1	discrete_generator_candidate.p_max	4
+master	continuous_generator_candidate.p_max	4294967295
+master	discrete_generator_candidate.p_max	0
