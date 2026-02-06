@@ -360,12 +360,37 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         if (*results.isPrinted)
         {
-            const Data::PartThermal& thermal = results.data.area->thermal;
-            for (uint i = 0; i != container.size(); ++i)
-            {
-                results.variableCaption = thermal.list.enabledClusterAt(i)->name();
+            const uint8_t categoryFileLevel = VCardT::categoryFileLevel;
+            const bool thermal_details = categoryFileLevel & Category::FileLevel::de;
+            const bool renewable_details = categoryFileLevel & Category::FileLevel::de_res;
+            const bool st_storage_details = categoryFileLevel & Category::FileLevel::de_sts;
 
-                container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+            if (thermal_details)
+            {
+                auto& thermal = results.data.area->thermal;
+                for (uint i = 0; i != container.size(); ++i)
+                {
+                    results.variableCaption = thermal.list.enabledClusterAt(i)->name();
+                    container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+                }
+            }
+            else if (renewable_details)
+            {
+                auto& renewable = results.data.area->renewable;
+                for (uint i = 0; i != container.size(); ++i)
+                {
+                    results.variableCaption = renewable.list.enabledClusterAt(i)->name();
+                    container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+                }
+            }
+            else if (st_storage_details)
+            {
+                auto& st_storage_part = results.data.area->shortTermStorage;
+                for (uint i = 0; i != container.size(); ++i)
+                {
+                    results.variableCaption = st_storage_part.storagesByIndex[i].properties.name;
+                    container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+                }
             }
         }
     }

@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <numeric>
 #include <ranges>
 #include <stdexcept>
 #include <variant>
@@ -21,10 +20,7 @@ std::optional<T> buildOptional(bool condition, T value)
     {
         return value;
     }
-    else
-    {
-        return {};
-    }
+    return {};
 }
 } // namespace
 
@@ -73,41 +69,6 @@ std::string VariableNames::name(unsigned index) const
 std::vector<std::string> VariableNames::names()
 {
     return names_;
-}
-
-void BendersDecomposition::setCurrentProblemId(std::string id)
-{
-    currentProblemId_ = id;
-}
-
-void BendersDecomposition::collectConnectionVariables(std::vector<std::string>&& varnames,
-                                                      unsigned varsCountInPb)
-{
-    std::vector<std::string> names = std::move(varnames);
-    unsigned nbVars = names.size();
-    unsigned startIndexInPb = varsCountInPb - nbVars;
-    unsigned varIndex = startIndexInPb;
-    for (const auto& name: names)
-    {
-        connectionVars_[currentProblemId_].emplace_back(name, varIndex);
-        varIndex++;
-    }
-}
-
-BendersDecompositionWriter::BendersDecompositionWriter(const BendersDecomposition& bd):
-    bd_(bd)
-{
-}
-
-void BendersDecompositionWriter::write(std::ostream& os) const
-{
-    for (const auto& [problemId, v]: bd_.connections())
-    {
-        for (const auto& [variableName, variableIndex]: v)
-        {
-            os << problemId << '\t' << variableName << '\t' << variableIndex << '\n';
-        }
-    }
 }
 
 class AddVariableVisitor
@@ -308,8 +269,8 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         if (bendersDecomposition_
             && variable.location() == Solver::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
-            bendersDecomposition_->collectConnectionVariables(variableNames.names(),
-                                                              pb.variableCount());
+            bendersDecomposition_->collectCouplingVariables(variableNames.names(),
+                                                            pb.variableCount());
         }
     }
 }
@@ -410,7 +371,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
         objectiveOffset += linearExpression.constant();
     }
     auto& pb = optimEntityContainer_.Problem();
-    pb.setObjectiveOffset(objectiveOffset);
+    pb.setObjectiveOffset(pb.getObjectiveOffset() + objectiveOffset);
 }
 
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const

@@ -7,6 +7,8 @@
 #include <cmath>
 #include <float.h>
 
+#include "antares/solver/variable/storage/empty.h"
+
 using HighPrecision = long double;
 
 namespace Antares::Solver::Variable::R::AllYears
@@ -32,7 +34,6 @@ public:
         return "std deviation";
     }
 
-protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
         stdDeviationHourly.assign(HOURS_PER_YEAR, 0.);
@@ -141,7 +142,6 @@ protected:
                                                         precision);
     }
 
-public:
     std::vector<HighPrecision> stdDeviationMonthly;
     std::vector<HighPrecision> stdDeviationWeekly;
     std::vector<HighPrecision> stdDeviationDaily;
@@ -223,33 +223,6 @@ private:
         }
         break;
         }
-
-        // Next column index
-        ++report.data.columnIndex;
-    }
-
-    template<class S, unsigned int Size, class VCardT, int PrecisionT, class A>
-    void InternalExportValuesMC(SurveyResults& report, const S& /*results*/, const A& array) const
-    {
-        if (not(PrecisionT & Category::annual))
-        {
-            return;
-        }
-        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-        // Caption
-        report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = report.variableUnit;
-        report.captions[2][report.data.columnIndex] = "std";
-
-        // Precision
-        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
-
-        // Non applicability
-        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-        (void)::memcpy(report.data.matrix[report.data.columnIndex], array, Size * sizeof(double));
 
         // Next column index
         ++report.data.columnIndex;

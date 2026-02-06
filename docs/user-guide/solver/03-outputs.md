@@ -192,6 +192,59 @@ Alike Input data, output results can be filtered so as to include only items tha
 - **Districts** displays only results obtained for spatial aggregates
 - **Unknown** displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has changed since the last simulation)
 
+### Dynamic Aggregation for Sets of Areas (Districts)
+#### Overview
+
+- **Thermal groups**: dispatchable production of the group
+- **Renewable groups**: production of the group
+- **Short-term storage groups**: level, injection and withdrawal of the group
+
+#### Where these columns appear
+
+These dynamic aggregation columns appear in:
+- `areas/name/values-*.txt` (hourly, daily, etc.) files in mc-all synthesis reports (Data Level: `setOfAreas`)
+- `areas/name/values-*.txt` (hourly, daily, etc.) files in mc-ind/year_number year-by-year reports (Data Level: `setOfAreas`)
+
+#### Column Naming Convention
+
+For each thermal group, renewable group, or short-term storage group, the columns follow this pattern:
+- **Single-year reports** (`mc-ind`): `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+- **Synthesis reports** (`mc-all`): `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+
+The suffixes indicate:
+- `_TH_PROD`: Thermal production (total)
+- `_RES_PROD`: Renewable production (total)
+- `_INJECTION`: Short-term storage injection (total)
+- `_WITHDRAWAL`: Short-term storage withdrawal (total)
+- `_LEVEL`: Short-term storage level (average)
+
+#### Available Variables
+
+The following group types can be used for dynamic aggregation:
+
+| Variable type | Description | Column pattern (per group) |
+|--------------|-------------|------------------------|
+| Thermal clusters | Production | `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+| Renewable clusters | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+| Short-term storage | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+
+#### Dynamic vs Static Groups
+
+| Aspect | Static Groups | Dynamic Groups |
+|--------|-----------------------------|-----------------------|
+| Definition | Defined once in study input | Defined dynamically based on plant `group` attribute |
+| Column count | Limited to available groups | Can scale with number of districts |
+
+#### Notes
+
+- Dynamic district variables are handled differently from other variables for technical reasons
+  - They cannot be enabled/disabled with thematic trimming
+  - They cannot be enabled/disabled with geographic trimming
+
+- For short-term storage `LEVEL` columns, values represent **averages** (not hourly values) computed over the period of time (day, week, month or year)
+- The number of columns generated scales with the number of districts and groups defined in your study
+- To enable dynamic aggregation, define [sets of areas](02-inputs.md) in your study input
+
 [^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
 [^12]: Value identical to that defined under the same name in the "Misc Gen" input section.

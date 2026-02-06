@@ -123,7 +123,7 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_
     auto* var = linear_pb.lookupVariable("my-component.var-2");
     BOOST_REQUIRE(var);
 
-    BOOST_CHECK(bendersDecomposition.connections().empty());
+    BOOST_CHECK(bendersDecomposition.couplings().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_variables,
@@ -142,7 +142,7 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_var
     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
     auto* var = linear_pb.lookupVariable("my-component.var-1");
     BOOST_REQUIRE(var);
-    BOOST_CHECK(bendersDecomposition.connections().empty());
+    BOOST_CHECK(bendersDecomposition.couplings().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_objectives,
@@ -168,7 +168,7 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_ob
     BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var1), 1);
     // No objective associated to var2 found in problem
     BOOST_CHECK_EQUAL(linear_pb.getObjectiveCoefficient(var2), 0);
-    BOOST_CHECK(bendersDecomposition.connections().empty());
+    BOOST_CHECK(bendersDecomposition.couplings().empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master_objectives,
@@ -182,7 +182,7 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master
 
     componentFiller.addVariables(time_scenario_ctx);
     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 0);
-    BOOST_CHECK(bendersDecomposition.connections().empty());
+    BOOST_CHECK(bendersDecomposition.couplings().empty());
 }
 
 // TODO expand with 1 mixed variable located in 1 master and N subproblems
@@ -200,11 +200,11 @@ BOOST_FIXTURE_TEST_CASE(mixed_variable_listed_in_benders_decomposition,
     masterFiller.addVariables(time_scenario_ctx);
     BOOST_CHECK_EQUAL(linear_pb.variableCount(), 1);
 
-    BOOST_REQUIRE_EQUAL(bendersDecomposition.connections().size(), 1);
-    // connections = {{"master", {"my-component.var-1", 0}}
-    const auto& [name, connections] = *bendersDecomposition.connections().begin();
+    BOOST_REQUIRE_EQUAL(bendersDecomposition.couplings().size(), 1);
+    // couplings = {{"master", {"my-component.var-1", 0}}
+    const auto& [name, couplings] = *bendersDecomposition.couplings().begin();
     BOOST_CHECK_EQUAL(name, "master");
-    const auto& connection = connections[0];
+    const auto& connection = couplings[0];
     BOOST_CHECK_EQUAL(connection.name, "my-component.var-1");
     BOOST_CHECK_EQUAL(connection.indexInProblem, 0);
 }

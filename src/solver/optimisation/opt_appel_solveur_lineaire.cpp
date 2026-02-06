@@ -58,7 +58,8 @@ static void logProblemSize(const MPSolver* mpSolver)
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Solver::ModelerData* modelerData,
-  OptimEntityContainer& optimEntityContainer)
+  OptimEntityContainer& optimEntityContainer,
+  Optimisation::BendersDecomposition* bendersDecomposition)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -69,7 +70,7 @@ static void fillModelerComponents(
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
                                             Solver::Config::Location::SUBPROBLEMS,
-                                            nullptr));
+                                            bendersDecomposition));
     }
 }
 
@@ -100,11 +101,11 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 }
 
 // Returns a shared_ptr to the solver
-std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortoolsProblem,
-                                             FillContext& fillCtx,
-                                             const PROBLEME_HEBDO* problemeHebdo,
-                                             OptimEntityContainer& optimEntityContainer,
-                                             bool namedProblems)
+void fillLinearProblem(FillContext& fillCtx,
+                       const PROBLEME_HEBDO* problemeHebdo,
+                       OptimEntityContainer& optimEntityContainer,
+                       bool namedProblems,
+                       Optimisation::BendersDecomposition* bendersDecomposition)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -113,7 +114,10 @@ std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortools
     if (problemeHebdo->modelerData)
     {
         // All LP variables coordinates (component id, variable id, scenario, time step)
-        fillModelerComponents(fillersCollection, problemeHebdo->modelerData, optimEntityContainer);
+        fillModelerComponents(fillersCollection,
+                              problemeHebdo->modelerData,
+                              optimEntityContainer,
+                              bendersDecomposition);
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
@@ -134,8 +138,6 @@ std::shared_ptr<MPSolver> fillAndGetMpSolver(LegacyOrtoolsLinearProblem& ortools
     measure.tick();
 
     logs.debug() << "Modeler build took " << measure.toStringInSeconds();
-
-    return ortoolsProblem.getMpSolver();
 }
 
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
@@ -170,12 +172,17 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                               modelerDataSeries,
                                               modelerScenarioGroupRepository);
 
-    auto solver = fillAndGetMpSolver(ortoolsProblem,
-                                     fillCtx,
-                                     problemeHebdo,
-                                     optimEntityContainer,
-                                     problemeHebdo->NamedProblems);
+    Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
+                                                                 ? &modelerData
+                                                                      ->bendersDecomposition
+                                                                 : nullptr;
 
+    fillLinearProblem(fillCtx,
+                      problemeHebdo,
+                      optimEntityContainer,
+                      problemeHebdo->NamedProblems,
+                      bendersDecomposition);
+    auto solver = ortoolsProblem.getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
     std::call_once(logProblemSizeFlag, logProblemSize, solver.get());
@@ -331,12 +338,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         OptimEntityContainer optimEntityContainer(infeasibleProblem,
                                                   modelerDataSeries,
                                                   modelerScenarioGroupRepository);
-        auto MPproblem = fillAndGetMpSolver(infeasibleProblem,
-                                            fillCtx,
-                                            problemeHebdo,
-                                            optimEntityContainer,
-                                            true);
+        Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
+                                                                     ? &modelerData
+                                                                          ->bendersDecomposition
+                                                                     : nullptr;
 
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
+        auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
