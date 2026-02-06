@@ -242,8 +242,9 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
                 return false;
             }
             rhs.area_connection.injection = findValue("injection-field", node);
-            rhs.area_connection.to_area_bound = findValue("to-area-bound-field", node);
-            rhs.area_connection.from_area_bound = findValue("from-area-bound-field", node);
+            rhs.area_connection.spillage_bound = findValue("spillage-bound", node);
+            rhs.area_connection.unsupplied_energy_bound = findValue("unsupplied-energy-bound",
+                                                                    node);
         }
         return true;
     }

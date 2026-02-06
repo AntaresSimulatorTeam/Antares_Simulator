@@ -24,6 +24,11 @@ FictitiousLoadData Group1::GetFictitiousLoadData()
             .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
 }
 
+MaxUnsupEnergyData Group1::GetMaxUnsupEnergyData()
+{
+    return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim};
+}
+
 ShortTermStorageData Group1::GetShortTermStorageData()
 {
     return {
@@ -64,6 +69,9 @@ void Group1::BuildConstraints()
     auto fictitiousLoadData = GetFictitiousLoadData();
     FictitiousLoad fictitiousLoad(builder_, fictitiousLoadData);
 
+    auto maxUnsupEnergyData = GetMaxUnsupEnergyData();
+    MaxUnsuppliedEnergy maxUnsuppliedEnergy(builder_, maxUnsupEnergyData);
+
     auto shortTermStorageData = GetShortTermStorageData();
     ShortTermStorageLevel shortTermStorageLevel(builder_, shortTermStorageData);
 
@@ -99,6 +107,7 @@ void Group1::BuildConstraints()
         {
             areaBalance.add(pdt, pays);
             fictitiousLoad.add(pdt, pays);
+            maxUnsuppliedEnergy.add(pdt, pays);
             shortTermStorageLevel.add(pdt, pays);
             shortTermStorageCostVariationInjectionBackward.add(pdt, pays);
             shortTermStorageCostVariationInjectionForward.add(pdt, pays);

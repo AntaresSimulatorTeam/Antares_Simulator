@@ -49,8 +49,8 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_read_correctly)
     auto area_connection = portType.areaConnection();
     BOOST_CHECK(area_connection.has_value());
     BOOST_CHECK_EQUAL(area_connection->injection, "flow");
-    BOOST_CHECK(area_connection->to_area_bound.empty());
-    BOOST_CHECK(area_connection->from_area_bound.empty());
+    BOOST_CHECK(area_connection->spillage_bound.empty());
+    BOOST_CHECK(area_connection->unsupplied_energy_bound.empty());
 }
 
 // This yaml lib contains only a port type, but with a more complete area connection.
@@ -69,8 +69,8 @@ library:
         - id: from-area-bound
       area-connection:
         - injection-field: flow
-        - to-area-bound-field: to-area-bound
-        - from-area-bound-field: from-area-bound
+        - spillage-bound: to-area-bound
+        - unsupplied-energy-bound: from-area-bound
 
   models:
     - id: empty model
@@ -95,8 +95,8 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_more_complete_and_is_still_rea
     auto area_connection = portType.areaConnection();
     BOOST_CHECK(area_connection.has_value());
     BOOST_CHECK_EQUAL(area_connection->injection, "flow");
-    BOOST_CHECK_EQUAL(area_connection->to_area_bound, "to-area-bound");
-    BOOST_CHECK_EQUAL(area_connection->from_area_bound, "from-area-bound");
+    BOOST_CHECK_EQUAL(area_connection->spillage_bound, "to-area-bound");
+    BOOST_CHECK_EQUAL(area_connection->unsupplied_energy_bound, "from-area-bound");
 }
 
 static const auto libraryYaml = R"(

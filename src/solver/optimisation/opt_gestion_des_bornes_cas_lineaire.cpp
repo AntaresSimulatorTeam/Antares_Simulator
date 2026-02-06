@@ -66,47 +66,16 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-    const bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
-    const bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const ALL_MUST_RUN_GENERATION& AllMustRunGeneration = problemeHebdo
-                                                                ->AllMustRunGeneration[pdtHebdo];
-        const CONSOMMATIONS_ABATTUES& ConsommationsAbattues = problemeHebdo
-                                                                ->ConsommationsAbattues[pdtHebdo];
-
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-
-            if (reserveJm1 && opt1)
-            {
-                ResidualLoadInArea += problemeHebdo->ReserveJMoins1[pays]
-                                        .ReserveHoraireJMoins1[pdtHebdo];
-            }
-
             int var = variableManager.UnsuppliedEnergy(pays, pdtJour);
             Xmin[var] = 0.0;
-
-            double MaxAllMustRunGenerationOfArea = 0.;
-            if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.)
-            {
-                MaxAllMustRunGenerationOfArea = AllMustRunGeneration
-                                                  .AllMustRunGenerationOfArea[pays];
-            }
-
-            ResidualLoadInArea += MaxAllMustRunGenerationOfArea;
-            if (ResidualLoadInArea >= 0.)
-            {
-                Xmax[var] = ResidualLoadInArea + 1e-5;
-            }
-            else
-            {
-                Xmax[var] = 0.;
-            }
+            Xmax[var] = LINFINI_ANTARES;
 
             problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive[pdtHebdo]
               = 0.0;

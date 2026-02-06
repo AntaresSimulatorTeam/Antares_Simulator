@@ -141,7 +141,7 @@ static ForbiddenNodes ForbiddenInExtraOutput()
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
-    return {ac.injection, ac.to_area_bound, ac.from_area_bound};
+    return {ac.injection, ac.spillage_bound, ac.unsupplied_energy_bound};
 }
 
 std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
