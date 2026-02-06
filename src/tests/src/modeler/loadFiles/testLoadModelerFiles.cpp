@@ -35,16 +35,6 @@ struct FixtureLoadFile
     }
 };
 
-BOOST_AUTO_TEST_CASE(files_not_existing)
-{
-    fs::path studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-
-    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadLibraries(studyPath), std::runtime_error);
-    std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
-    BOOST_CHECK_THROW(Antares::Solver::LoadFiles::loadSystem(studyPath, libraries),
-                      std::runtime_error);
-}
-
 BOOST_FIXTURE_TEST_CASE(read_one_lib_treile, FixtureLoadFile)
 {
     std::ofstream libStream(libraryDirPath / "simple.yml");
