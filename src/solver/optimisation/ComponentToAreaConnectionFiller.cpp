@@ -162,7 +162,7 @@ TimeDependentLinearExpression ComponentToAreaConnectionFiller::linearExpressionA
     return visitor.visitMergeDuplicates(expression).expandToSize(ctx.getLocalNumberOfTimeSteps());
 }
 
-void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const FillContext& ctx,
+void ComponentToAreaConnectionFiller::addInjectionPortToLinearPb(const FillContext& ctx,
                                                                       const Component& component,
                                                                       const std::string& portId,
                                                                       const unsigned& areaIndex)
@@ -183,7 +183,7 @@ void ComponentToAreaConnectionFiller::addInjectionPortToLinearProblem(const Fill
     addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
-void ComponentToAreaConnectionFiller::addToLinearPbSpillageBound(const FillContext& ctx,
+void ComponentToAreaConnectionFiller::addSpillageBoundToLinearPb(const FillContext& ctx,
                                                                  const Component& component,
                                                                  const std::string& portId,
                                                                  const unsigned& areaIndex)
@@ -204,7 +204,7 @@ void ComponentToAreaConnectionFiller::addToLinearPbSpillageBound(const FillConte
     addExpressionToConstraint(linearExpression, ctx, constraints);
 }
 
-void ComponentToAreaConnectionFiller::addToLinearPbUnsupEnergyBound(const FillContext& ctx,
+void ComponentToAreaConnectionFiller::addUnsupEnergyBoundToLinearPb(const FillContext& ctx,
                                                                     const Component& component,
                                                                     const std::string& portId,
                                                                     const unsigned& areaIndex)
@@ -239,9 +239,9 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
         for (auto [portId, areaId]: component.portToAreaConnections())
         {
             auto areaIndex = areaIndices_.at(areaId);
-            addInjectionPortToLinearProblem(ctx, component, portId, areaIndex);
-            addToLinearPbSpillageBound(ctx, component, portId, areaIndex);
-            addToLinearPbUnsupEnergyBound(ctx, component, portId, areaIndex);
+            addInjectionPortToLinearPb(ctx, component, portId, areaIndex);
+            addSpillageBoundToLinearPb(ctx, component, portId, areaIndex);
+            addUnsupEnergyBoundToLinearPb(ctx, component, portId, areaIndex);
         }
     }
 }
