@@ -64,11 +64,6 @@ std::set<int> SingleProblemGetter::playedYears() const
     return impl_->playedYears();
 }
 
-void SingleProblemGetter::setBendersDecomposition(Optimisation::BendersDecomposition* bd)
-{
-    impl_->setBendersDecomposition(bd);
-}
-
 ModelerData* SingleProblemGetter::modelerData()
 {
     return impl_->modelerData();

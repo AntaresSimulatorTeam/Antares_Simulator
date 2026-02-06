@@ -39,7 +39,6 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     std::set<int> playedYears() const;
-    void setBendersDecomposition(Optimisation::BendersDecomposition* bd);
     ModelerData* modelerData();
     bool areWeeksIndependent() const;
 
