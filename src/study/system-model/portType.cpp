@@ -10,7 +10,7 @@ namespace Antares::ModelerStudy::SystemModel
 // -----------------
 bool isEmpty(const AreaConnection& ac)
 {
-    return ac.injection.empty() && ac.to_area_bound.empty() && ac.from_area_bound.empty();
+    return ac.injection.empty() && ac.spillage_bound.empty() && ac.unsupplied_energy_bound.empty();
 }
 
 void checkNonEmptyFieldExist(const std::string& field,
@@ -40,8 +40,8 @@ bool operator==(const std::optional<AreaConnection>& a, const std::optional<Area
 
     if (a.has_value())
     {
-        return a->injection == b->injection && a->to_area_bound == b->to_area_bound
-               && a->from_area_bound == b->from_area_bound;
+        return a->injection == b->injection && a->spillage_bound == b->spillage_bound
+               && a->unsupplied_energy_bound == b->unsupplied_energy_bound;
     }
 
     return true; // both are std::nullopt
@@ -59,8 +59,8 @@ PortType::PortType(const std::string& id,
     if (!isEmpty(areaConnection))
     {
         checkNonEmptyFieldExist(areaConnection.injection, fields_, id_);
-        checkNonEmptyFieldExist(areaConnection.to_area_bound, fields_, id_);
-        checkNonEmptyFieldExist(areaConnection.from_area_bound, fields_, id_);
+        checkNonEmptyFieldExist(areaConnection.spillage_bound, fields_, id_);
+        checkNonEmptyFieldExist(areaConnection.unsupplied_energy_bound, fields_, id_);
         areaConnection_ = areaConnection;
     }
 }
