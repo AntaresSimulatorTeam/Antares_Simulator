@@ -54,7 +54,8 @@ private:
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
-    void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem);
+    void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem,
+                     const WeeklyProblemId& id);
     void setWeeklyData(WeeklyProblemId& id);
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
