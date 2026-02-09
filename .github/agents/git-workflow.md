@@ -8,7 +8,7 @@ CI runs only for these branch name patterns:
 - `release/*`
 - `issue-*`
 - `doc/*`
-- `tests/*`
+- `tests/`
 
 Other patterns will not trigger CI.
 
