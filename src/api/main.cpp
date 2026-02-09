@@ -1,5 +1,4 @@
 #include <fstream>
-#include <mutex>
 
 #include "yuni/core/getopt/parser.h"
 
@@ -7,35 +6,9 @@
 #include "antares/api/singleProblemGetter.h"
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
 
 using namespace Antares::Solver;
-
-// Helper: convert any value to string
-template<typename T>
-std::string to_string_any(const T& value)
-{
-    std::ostringstream oss;
-    oss << std::setprecision(8) << value;
-    return oss.str();
-}
-
-// Variadic print function that limits rows to n
-template<typename... Vecs>
-void print_side_by_side(size_t n, const Vecs&... vecs)
-{
-    std::ostringstream oss;
-    for (size_t i = 0; i < n; ++i)
-    {
-        size_t col = 0;
-        ((oss << (i < vecs.size() ? to_string_any(vecs[i]) : "")
-              << (++col < sizeof...(vecs) ? "\t" : "")),
-         ...);
-        oss << '\n';
-    }
-    logs.info() << "\n" << oss.str();
-}
 
 struct ApiOptions
 {
@@ -110,7 +83,6 @@ void writeMasterAndStructure(ModelerData* data, const std::filesystem::path& out
     using namespace Antares::Solver;
     using namespace Antares::Optimisation;
     using namespace Antares::Optimisation::LinearProblemApi;
-    namespace fs = std::filesystem;
 
     logs.info() << "Building master problem and Benders decomposition...";
 
@@ -155,7 +127,8 @@ void printProblems(const ApiOptions& options)
     }
     else
     {
-        logs.info() << "Weeks are dependent";
+        logs.warning() << "Weeks are dependent, the printed MPS files may differ from those "
+                          "produced by antares-solver because of hydro levels";
     }
     auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
