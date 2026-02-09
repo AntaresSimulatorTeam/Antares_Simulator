@@ -556,7 +556,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
                                                                       // dependent
         };
         auto var1_node = variable("var1", 0);
-        auto var4_node = variable("var4", 8954);
+        auto var4_node = variable("var4", 8954, VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
         auto three = literal(3);
         auto ct1_node = nodeRegistry.create<Nodes::LessThanOrEqualNode>(var1_node, three);
         auto ct2_node = nodeRegistry.create<Nodes::GreaterThanOrEqualNode>(multiply(var1_node,
@@ -799,6 +799,163 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
                                              TimeConversionMode::SingleBlock););
 }
 
+BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        1,
+                        TimeConversionMode::WeeklyBlocks);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("2,comp1,var4,169,1") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp1,var4,170,2") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, day 2 globally
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        1,
+                        TimeConversionMode::DailyBlocks);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("2,comp1,var4,25,1") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp1,var4,26,2") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, single block
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,var4,1,1") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,2,2") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        1,
+                        TimeConversionMode::WeeklyBlocks);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("2,comp1,constraint2,169,1,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp1,constraint2,170,2,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock,
+                        true);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,constraint1,None,None,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutputs)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,var1,None,None,None,") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,1,1,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,2,2,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,1,1,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,2,2,0") != std::string::npos);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(EdgeCaseStressTests)
@@ -939,6 +1096,10 @@ BOOST_AUTO_TEST_CASE(ConvertTimeStep)
     BOOST_CHECK_EQUAL(result.block, 1);
     BOOST_CHECK_EQUAL(*result.blockTimeIndex, 43);    // 42 + 1
     BOOST_CHECK_EQUAL(*result.absoluteTimeIndex, 43); // 42 + 1
+    auto result0 = convertBlockTimeStepToAbsoluteTimeStep(0, TimeConversionMode::SingleBlock, 99);
+    BOOST_CHECK_EQUAL(result0.block, 1);
+    BOOST_CHECK_EQUAL(*result0.blockTimeIndex, 1);
+    BOOST_CHECK_EQUAL(*result0.absoluteTimeIndex, 1);
 
     // Daily blocks - exactly at day boundary
     auto result1 = convertBlockTimeStepToAbsoluteTimeStep(23, TimeConversionMode::DailyBlocks, 0);
@@ -961,6 +1122,11 @@ BOOST_AUTO_TEST_CASE(ConvertTimeStep)
     BOOST_CHECK_EQUAL(result4.block, 2);
     BOOST_CHECK_EQUAL(*result4.blockTimeIndex, 1);
     BOOST_CHECK_EQUAL(*result4.absoluteTimeIndex, 169);
+
+    auto result5 = convertBlockTimeStepToAbsoluteTimeStep(167, TimeConversionMode::WeeklyBlocks, 1);
+    BOOST_CHECK_EQUAL(result5.block, 2);
+    BOOST_CHECK_EQUAL(*result5.blockTimeIndex, 168);
+    BOOST_CHECK_EQUAL(*result5.absoluteTimeIndex, 336);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
