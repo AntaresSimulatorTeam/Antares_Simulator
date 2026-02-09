@@ -18,6 +18,8 @@ void FictitiousLoad::add(int pdt, int pays)
     ExportPaliers(data.PaliersThermiquesDuPays[pays], builder);
     auto coeff = data.DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
     builder.HydProd(pays, coeff).NegativeUnsuppliedEnergy(pays, 1.0);
+    builder.ShortTermStorageWithdrawal(pays, coeff);
+    builder.ShortTermStorageInjection(pays, -coeff);
 
     builder.lessThan();
     builder.build();
