@@ -218,15 +218,15 @@ static void connectComponents(const YmlSystem::Connection& connection,
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 
     auto& firstComponent = findComponent(firstComponentId, components);
-    const auto& firstPort = findPort(firstComponent, firstPortId, "");
+    const auto& firstPort = firstComponent.findPort(firstPortId, "");
     auto& secondComponent = findComponent(secondComponentId, components);
-    const auto& secondPort = findPort(secondComponent, secondPortId, "");
+    const auto& secondPort = secondComponent.findPort(secondPortId, "");
     CheckPortsType(firstPort, secondPort);
 
-    const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(firstComponent,
-                                                                               firstPort,
-                                                                               secondComponent,
-                                                                               secondPort);
+    // const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(firstComponent,
+    //                                                                            firstPort,
+    //                                                                            secondComponent,
+    //                                                                            secondPort);
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
     firstComponent.addComponentConnection(firstPort.Id(),

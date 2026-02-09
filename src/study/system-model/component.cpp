@@ -3,8 +3,9 @@
 
 #include <fmt/format.h>
 
-#include <antares/study/system-model/component.h>
+#include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/study/system-model/component.h>
 using namespace Antares::Expressions::Nodes;
 
 namespace Antares::ModelerStudy::SystemModel
@@ -73,7 +74,7 @@ static void checkComponentDataValidity(const ComponentData& data)
     }
 }
 
-const std::map<std::string, Component::ThermalCapacityConnection>&
+const std::map<std::string, Component::ThermalComponent>&
 Component::portToThermalCapacityConnections() const
 {
     return portToThermalConnections_;
@@ -128,11 +129,9 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
     }
 }
 
-const Port& findPort(const Component& component,
-                     const std::string& portId,
-                     const std::string& prefixMessage)
+const Port& Component::findPort(const std::string& portId, const std::string& prefixMessage)
 {
-    const auto& ports = component.getModel()->Ports();
+    const auto& ports = getModel()->Ports();
     const auto& it = ports.find(portId);
     if (it == ports.end())
     {
@@ -149,7 +148,7 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
       areaId,
       localPortId,
       data_.id);
-    const auto& port = findPort(*this, localPortId, exceptionPrefix);
+    const auto& port = findPort(localPortId, exceptionPrefix);
     if (!port.Type().AreaConnectionFieldId().has_value())
     {
         throw std::invalid_argument(
@@ -187,7 +186,7 @@ void Component::addThermalCapacityConnection(const std::string& portId,
       clusterId,
       portId,
       data_.id);
-    const auto& port = findPort(*this, portId, exceptionPrefix);
+    const auto& port = findPort(portId, exceptionPrefix);
     const auto thermalCapacityConnectionFieldId = port.Type().ThermalCapacityConnectionFieldId();
     if (!thermalCapacityConnectionFieldId.has_value())
     {
@@ -214,7 +213,9 @@ void Component::addThermalCapacityConnection(const std::string& portId,
                                      clusterId);
         throw std::invalid_argument(msg);
     }
-    portToThermalConnections_.try_emplace(portId, ThermalCapacityConnection{areaId, clusterId});
+    auto loweredAreaId = areaId;
+    boost::algorithm::to_lower(loweredAreaId);
+    portToThermalConnections_.try_emplace(portId, ThermalComponent{loweredAreaId, clusterId});
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
@@ -224,7 +225,7 @@ std::optional<std::string> Component::areaConnectedToPort(const std::string& por
              : std::nullopt;
 }
 
-std::optional<Component::ThermalCapacityConnection> Component::thermalCapacityConnectedToPort(
+std::optional<Component::ThermalComponent> Component::thermalCapacityConnectedToPort(
   const std::string& portId) const
 {
     const auto it = portToThermalConnections_.find(portId);

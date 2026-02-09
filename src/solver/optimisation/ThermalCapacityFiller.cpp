@@ -3,9 +3,6 @@
 
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 
-#include <boost/algorithm/string/case_conv.hpp>
-#include <boost/regex.hpp>
-
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h"
@@ -14,6 +11,7 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::ModelerStudy::SystemModel;
 
 namespace Antares::Optimization
 {
@@ -48,8 +46,7 @@ void ThermalCapacityFiller::addVariables(const FillContext&)
     // nothing to do
 }
 
-static std::string getThermalCapacityField(const ModelerStudy::SystemModel::Component& component,
-                                           const std::string& portId)
+static std::string getThermalCapacityField(const Component& component, const std::string& portId)
 {
     auto field = component.getModel()->Ports().at(portId).Type().ThermalCapacityConnectionFieldId();
     if (!field.has_value())
@@ -164,30 +161,28 @@ int ThermalCapacityFiller::getClusterIndex(const std::string& areaId, const std:
 // my_thermal_invest.capacity_port.
 // capacity = availability_factor * invested_capacity + already_installed_availability_factor *
 // already_installed_capacity
-// TODO
+
 void ThermalCapacityFiller::processThermalCapacityField(
   const TimeDependentLinearExpression& linearExpression,
-  const ModelerStudy::SystemModel::Component::ThermalCapacityConnection& thermalCapacityConnection,
+  const ThermalComponent& thermalCapacityConnection,
   const FillContext& ctx)
 {
-    auto areaId = thermalCapacityConnection.areaId;
-    boost::algorithm::to_lower(areaId);
-
-    const int clusterIndex = getClusterIndex(areaId, thermalCapacityConnection.clusterId);
+    const int clusterIndex = getClusterIndex(thermalCapacityConnection.areaId,
+                                             thermalCapacityConnection.clusterId);
     addCapacityFieldConstraint(
       linearExpression,
       ctx,
       clusterIndex,
       fmt::format("MaxGenerationFromCapacity::area<{}>::ThermalCluster<{}>",
-                  areaId,
+                  thermalCapacityConnection.areaId,
                   thermalCapacityConnection.clusterId));
 }
 
 void ThermalCapacityFiller::addComponentPortContributionToThermalCapacity(
-  const Optimisation::LinearProblemApi::FillContext& ctx,
-  const ModelerStudy::SystemModel::Component& component,
+  const FillContext& ctx,
+  const Component& component,
   const std::string& portId,
-  const ModelerStudy::SystemModel::Component::ThermalCapacityConnection& thermalCapacityConnection)
+  const ThermalComponent& thermalCapacityConnection)
 {
     std::string thermalCapacityField = getThermalCapacityField(component, portId);
     ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);

@@ -4,7 +4,6 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/regex.hpp>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/exception/RuntimeError.hpp"

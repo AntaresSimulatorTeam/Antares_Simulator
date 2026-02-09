@@ -24,11 +24,10 @@ namespace Antares::Optimization
 {
 
 /**
- * \brief Fills the linear problem with constraints and variables related to component-to-area
- * connections.
- *
- * This class is responsible for adding variables, constraints, and objectives to the linear problem
- * based on the connections between components and areas in the Antares study.
+ * \brief Fills the linear problem with constraints and variables related to
+ * thermal capacity connections.
+ * This class is responsible for adding constraints to the linear problem
+ * based on the connections between components and (areas, thermal clusters) in the Antares study.
  */
 class ThermalCapacityFiller final: public Optimisation::LinearProblemApi::LinearProblemFiller
 {
@@ -45,16 +44,14 @@ private:
     Optimisation::OptimEntityContainer& optimEntityContainer_;
     void processThermalCapacityField(
       const TimeDependentLinearExpression& linearExpression,
-      const ModelerStudy::SystemModel::Component::ThermalCapacityConnection&
-        thermalCapacityConnection,
+      const ModelerStudy::SystemModel::ThermalComponent& thermalCapacityConnection,
       const Optimisation::LinearProblemApi::FillContext& ctx);
 
     void addComponentPortContributionToThermalCapacity(
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const ModelerStudy::SystemModel::Component& component,
       const std::string& portId,
-      const ModelerStudy::SystemModel::Component::ThermalCapacityConnection&
-        thermalCapacityConnection);
+      const ModelerStudy::SystemModel::ThermalComponent& thermalCapacityConnection);
     Optimisation::LinearProblemApi::IMipVariable* getDispatchableProductionVariable(int palier,
                                                                                     unsigned pdt);
     void addCapacityFieldConstraint(const TimeDependentLinearExpression& linearExpression,

@@ -45,6 +45,12 @@ public:
     }
 };
 
+struct ThermalComponent
+{
+    std::string areaId;
+    std::string clusterId;
+};
+
 /**
  * Defines an actual component of the simulated system.
  */
@@ -102,22 +108,16 @@ public:
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
 
-    struct ThermalCapacityConnection
-    {
-        std::string areaId;
-        std::string clusterId;
-    };
+    const std::map<std::string, ThermalComponent>& portToThermalCapacityConnections() const;
 
-    const std::map<std::string, ThermalCapacityConnection>& portToThermalCapacityConnections()
-      const;
-
-    std::optional<::Antares::ModelerStudy::SystemModel::Component::ThermalCapacityConnection>
-    thermalCapacityConnectedToPort(const std::string& portId) const;
+    std::optional<ThermalComponent> thermalCapacityConnectedToPort(const std::string& portId) const;
 
     unsigned int Index() const
     {
         return data_.index;
     }
+
+    const Port& findPort(const std::string& portId, const std::string& prefixMessage);
 
 private:
     // Only ComponentBuilder is allowed to build Component instances
@@ -125,7 +125,7 @@ private:
     explicit Component(const ComponentData& component_data);
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
-    std::map<std::string, ThermalCapacityConnection> portToThermalConnections_;
+    std::map<std::string, ThermalComponent> portToThermalConnections_;
     ComponentData data_;
 };
 
@@ -144,7 +144,4 @@ private:
     ComponentData data_;
 };
 
-const Port& findPort(const Component& component,
-                     const std::string& portId,
-                     const std::string& prefixMessage);
 } // namespace Antares::ModelerStudy::SystemModel

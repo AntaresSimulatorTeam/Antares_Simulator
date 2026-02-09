@@ -9,7 +9,6 @@ from pathlib import Path
 
 import numpy as np
 from behave import *
-from common_steps.assertions import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
 

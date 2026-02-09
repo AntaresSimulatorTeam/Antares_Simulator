@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include "antares/io/inputs/yml-model/Library.h"
 
 #include "yaml-cpp/yaml.h"
@@ -206,42 +208,45 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
     }
 };
 
+inline bool convertConnectionField(const Node& node,
+                                   const std::string& connectionName,
+                                   const std::string& fieldName,
+                                   std::string& lhs)
+{
+    if (node[connectionName].IsDefined())
+    {
+        if (node[connectionName].size() != 1)
+        {
+            // Must have exactly one area connection field definition
+            return false;
+        }
+        for (const auto& field: node[connectionName])
+        {
+            lhs = field[fieldName].as<std::string>("");
+        }
+    }
+    return true;
+}
+
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
-    static bool processAreaInjectionField(const Node& node,
+    static bool convertAreaInjectionField(const Node& node,
                                           Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
-        if (node["area-connection"].IsDefined())
-        {
-            if (node["area-connection"].size() != 1)
-            {
-                // Must have exactly one area connection field definition
-                return false;
-            }
-            for (const auto& field: node["area-connection"])
-            {
-                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
-            }
-        }
-        return true;
+        return convertConnectionField(node,
+                                      "area-connection",
+                                      "injection-field",
+                                      rhs.area_connection_injection_field);
     }
 
-    static bool processThermalCapacityField(const Node& node,
+    static bool convertThermalCapacityField(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
-        if (node["thermal-capacity-connection"].IsDefined())
-        {
-            if (node["thermal-capacity-connection"].size() != 1)
-            {
-                return false;
-            }
-            for (const auto& field: node["thermal-capacity-connection"])
-            {
-                rhs.thermal_capacity_connection_field = field["capacity-field"].as<std::string>("");
-            }
-        }
-        return true;
+        return convertConnectionField(node,
+                                      "thermal-capacity-connection",
+                                      "capacity-field",
+                                      rhs.thermal_capacity_connection_field);
     }
 
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortType& rhs)
@@ -256,11 +261,11 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             rhs.fields.push_back(field["id"].as<std::string>());
         }
-        if (!processAreaInjectionField(node, rhs))
+        if (!convertAreaInjectionField(node, rhs))
         {
             return false;
         }
-        if (!processThermalCapacityField(node, rhs))
+        if (!convertThermalCapacityField(node, rhs))
         {
             return false;
         }
