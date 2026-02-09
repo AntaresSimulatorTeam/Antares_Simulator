@@ -63,12 +63,12 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
     }
     catch (const fs::filesystem_error& exc)
     {
-        logs.error() << exc.what();
+        logs.error() << "Error writing " << filePath << " (exception message " << exc.what() << ")";
     }
 
     if (ec)
     {
-        logs.error() << "Error: " << ec.message();
+        logs.error() << "Error writing " << filePath << " (message " << ec.message() << ")";
     }
 }
 

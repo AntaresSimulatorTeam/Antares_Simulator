@@ -9,6 +9,7 @@
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/study/parameters/adq-patch-params.h"
@@ -106,5 +107,6 @@ Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBD
 void fillLinearProblem(Optimisation::LinearProblemApi::FillContext& fillCtx,
                        const PROBLEME_HEBDO* problemeHebdo,
                        Optimisation::OptimEntityContainer& optimEntityContainer,
-                       bool namedProblems);
+                       bool namedProblems,
+                       Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

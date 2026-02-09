@@ -172,33 +172,6 @@ private:
         ++report.data.columnIndex;
     }
 
-    template<uint Size, class VCardT>
-    void InternalExportValuesMC(int precision, SurveyResults& report, const double* array) const
-    {
-        if (not(precision & Category::annual))
-        {
-            return;
-        }
-        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-        // Caption
-        report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = report.variableUnit;
-        report.captions[2][report.data.columnIndex] = "values";
-        // Precision
-        report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
-        // Non applicability
-        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-        (void)::memcpy(report.data.matrix[report.data.columnIndex],
-                       array,
-                       report.data.nbYears * sizeof(double));
-
-        // Next column index
-        ++report.data.columnIndex;
-    }
-
 }; // class Raw
 
 } // namespace Antares::Solver::Variable::R::AllYears

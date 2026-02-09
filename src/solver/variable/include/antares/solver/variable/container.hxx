@@ -6,6 +6,7 @@
 
 #include <yuni/core/static/types.h>
 
+#include "antares/solver/variable/dynamicAggregation/dynamicAggregation.h"
 #include "antares/solver/variable/surveyresults/reportbuilder.hxx"
 
 namespace Antares::Solver::Variable::Container
@@ -15,6 +16,12 @@ inline void List<NextT>::initializeFromStudy(Data::Study& study)
 {
     // Store a pointer to the current study
     pStudy = &study;
+    dynamicAggregationAllYears_ = std::make_unique<DynamicAggregationAllYears>(study);
+    dynamicAggregationSingleYear_.reserve(study.maxNbYearsInParallel);
+    for (size_t y = 0; y < study.maxNbYearsInParallel; ++y)
+    {
+        dynamicAggregationSingleYear_.emplace_back(study);
+    }
     // Next
     NextT::initializeFromStudy(study);
 }
@@ -96,6 +103,7 @@ inline void List<NextT>::computeSpatialAggregatesSummary(V& allVars,
                                                          unsigned int year,
                                                          unsigned int numSpace)
 {
+    dynamicAggregationAllYears_->merge(dynamicAggregationSingleYear_[numSpace], year);
     // Next variable
     NextT::computeSpatialAggregatesSummary(allVars, year, numSpace);
 }
@@ -125,6 +133,7 @@ inline void List<NextT>::hourBegin(unsigned int hourInTheYear)
 template<class NextT>
 inline void List<NextT>::weekBegin(State& state)
 {
+    dynamicAggregationSingleYear_[state.numSpace].addResultsToSets(*state.problemeHebdo);
     NextT::weekBegin(state);
 }
 
@@ -216,6 +225,15 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     // Ask to all variables
     NextT::buildSurveyReport(results, dataLevel, fileLevel, precision);
 
+    // Append dynamic aggregation columns for sets of areas, values files only
+    if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va
+        && dynamicAggregationAllYears_)
+    {
+        const auto& setName = pStudy->setsOfAreas.nameByIndex(results.data.setOfAreasIndex);
+        dynamicAggregationAllYears_
+          ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+    }
+
     // If the column index is still equals to 0, that would mean we have nothing
     // to do (there is no data to write)
     if (results.data.columnIndex > 0)
@@ -245,6 +263,14 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     // Ask to all variables
     NextT::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+
+    // Append dynamic aggregation columns for sets of areas, values files only
+    if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va)
+    {
+        const auto& setName = pStudy->setsOfAreas.nameByIndex(results.data.setOfAreasIndex);
+        dynamicAggregationSingleYear_[numSpace]
+          .appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+    }
 
     // If the column index is still equals to 0, that would mean we have nothing
     // to do (there is no data to write)

@@ -13,7 +13,7 @@ class Min;
 template<class NextT = Empty>
 class Max;
 
-template<bool OpInferior, class NextT>
+template<bool OpInferior, class NextT = Empty>
 struct MinMaxBase: public NextT
 {
 public:
@@ -34,7 +34,6 @@ public:
         return "minmaxbase";
     }
 
-public:
     MinMaxBase()
     {
     }
@@ -43,7 +42,6 @@ public:
     {
     }
 
-protected:
     void initializeFromStudy(Data::Study& study);
 
     template<class S, class VCardT>

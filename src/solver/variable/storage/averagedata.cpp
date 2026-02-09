@@ -7,8 +7,6 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-AverageData::AverageData() = default;
-AverageData::~AverageData() = default;
 
 void AverageData::reset()
 {

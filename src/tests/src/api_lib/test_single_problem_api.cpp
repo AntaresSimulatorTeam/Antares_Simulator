@@ -24,7 +24,7 @@ std::size_t findIndex(const std::vector<std::string>& v, const std::string& valu
     return ret;
 }
 
-std::unique_ptr<Antares::Data::Study> buildStudy(bool thermal, bool hydro)
+std::unique_ptr<Study> buildStudy(bool thermal, bool hydro)
 {
     StudyBuilder builder;
     builder.simulationBetweenDays(0, 14);
@@ -74,6 +74,9 @@ std::unique_ptr<Antares::Data::Study> buildStudy(bool thermal, bool hydro)
     // more specifically, this resize is usually done when loading from files. It's all good, except
     // when you DON'T LOAD FILES.
     area->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
+    builder.study->resizeAllTimeseriesNumbers(
+      1 + builder.study->runtime.rangeLimits.year[Antares::Data::rangeEnd]);
+
     return std::move(builder.study);
 }
 BOOST_AUTO_TEST_SUITE(in_memory_check_problem_contents)
@@ -81,8 +84,8 @@ BOOST_AUTO_TEST_SUITE(in_memory_check_problem_contents)
 BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 {
     auto study = buildStudy(true, false);
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
-    const Antares::Solver::ConstantDataFromAntares constantData = getter.getConstantData();
+    Implementation::SingleProblemGetter getter(std::move(study));
+    const ConstantDataFromAntares constantData = getter.getConstantData();
     // 504 = 3*168, 3 sets of variables
     // unsupplied energy
     // spilled energy
@@ -111,7 +114,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[0], -1);
     BOOST_CHECK_EQUAL(constantData.ConstraintsMatrixCoeff[1], -1);
 
-    const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
+    const WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
     BOOST_CHECK_EQUAL(firstWeekData.name, "problem-1-1--optim-nb-1");
 
     // COST
@@ -138,8 +141,8 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
 {
     auto study = buildStudy(false, true);
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
-    const Antares::Solver::ConstantDataFromAntares constantData = getter.getConstantData();
+    Implementation::SingleProblemGetter getter(std::move(study));
+    const ConstantDataFromAntares constantData = getter.getConstantData();
     // Total 1008
     // 168 unsupplied energy
     // 168 spilled energy
@@ -168,7 +171,7 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
     const auto areaHydroLevel = findIndex(constantData.ConstraintsMeaning,
                                           "AreaHydroLevel::area<area>::hour<0>");
 
-    const Antares::Solver::WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
+    const WeeklyDataFromAntares firstWeekData = getter.getWeeklyData({0, 1});
     // COST
     BOOST_CHECK_CLOSE(firstWeekData.LinearCost[hydroLevelVariable],
                       -1.e-6,
@@ -187,7 +190,7 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                       3048.5130614352684,
                       EPSILON); // random initial level
 
-    const Antares::Solver::WeeklyDataFromAntares secondWeekData = getter.getWeeklyData({0, 2});
+    const WeeklyDataFromAntares secondWeekData = getter.getWeeklyData({0, 2});
     // RHS
     BOOST_CHECK_CLOSE(secondWeekData.RHS[areaHydroLevel],
                       3048.5130614352684,
@@ -209,7 +212,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks)
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
 
-    const Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter(std::move(study));
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 3 * 2); // (3 years) x (2 weeks)
 
@@ -234,7 +237,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year)
     // Disable year 1 in the playlist
     study->parameters.yearsFilter[1] = false;
 
-    const Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter(std::move(study));
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 2); // (2 years) x (2 weeks), one year is disabled
 
@@ -259,7 +262,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
     // Disable year 1 in the playlist
     study->parameters.yearsFilter[1] = false;
 
-    const Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter(std::move(study));
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 1); // (2 years) x (1 week), one year is disabled
 
@@ -286,7 +289,7 @@ BOOST_AUTO_TEST_CASE(single_link_ntc_ts_numbers)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter(std::move(study));
 
     // Erase TS numbers for repeatability (no randomness)
     link->timeseriesNumbers.reset(5);
@@ -320,7 +323,7 @@ BOOST_AUTO_TEST_CASE(single_link_structure_files)
     auto link = AreaAddLinkBetweenAreas(a1, a2);
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter(std::move(study));
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -369,7 +372,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_directory_structure)
     settingsFile << "general.mode = 0\n";
     settingsFile.close();
 
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter(std::move(study));
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -394,7 +397,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_area_names)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter(std::move(study));
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -419,7 +422,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_links_content)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter(std::move(study));
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -453,7 +456,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_parameters_file)
     settingsFile << "general.mode = 0\n";
     settingsFile.close();
 
-    Antares::Solver::Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter(std::move(study));
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -465,6 +468,179 @@ BOOST_AUTO_TEST_CASE(about_the_study_parameters_file)
 
     // Parameters file should not be empty
     BOOST_CHECK(!content.empty());
+}
+
+BOOST_AUTO_TEST_CASE(weeks_independent_no_reservoir_management)
+{
+    // Test case: No areas with reservoir management
+    // Expected: weeks are independent (returns true)
+    auto study = buildStudy(true, false);
+    Implementation::SingleProblemGetter getter(std::move(study));
+    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
+}
+
+BOOST_AUTO_TEST_CASE(weeks_independent_with_heuristic_and_no_leeway)
+{
+    // Test case: All reservoir-managed areas have useHeuristicTarget=true and useLeeway=false
+    // Expected: weeks are independent (returns true)
+    auto study = buildStudy(false, true);
+    auto* area = study->areas.byIndex[0];
+    area->hydro.useHeuristicTarget = true;
+    area->hydro.useLeeway = false;
+
+    Implementation::SingleProblemGetter getter(std::move(study));
+    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
+}
+
+BOOST_AUTO_TEST_CASE(weeks_not_independent_with_leeway)
+{
+    // Test case: Reservoir-managed area has useLeeway=true
+    // Expected: weeks are NOT independent (returns false)
+    auto study = buildStudy(false, true);
+    auto* area = study->areas.byIndex[0];
+    area->hydro.useHeuristicTarget = true;
+    area->hydro.useLeeway = true;
+
+    Implementation::SingleProblemGetter getter(std::move(study));
+    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
+}
+
+BOOST_AUTO_TEST_CASE(weeks_not_independent_without_heuristic_target)
+{
+    // Test case: Reservoir-managed area has useHeuristicTarget=false
+    // Expected: weeks are NOT independent (returns false)
+    auto study = buildStudy(false, true);
+    auto* area = study->areas.byIndex[0];
+    area->hydro.useHeuristicTarget = false;
+    area->hydro.useLeeway = false;
+
+    Implementation::SingleProblemGetter getter(std::move(study));
+    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
+}
+
+BOOST_AUTO_TEST_CASE(weeks_not_independent_with_both_conditions_false)
+{
+    // Test case: Reservoir-managed area has both useHeuristicTarget=false and useLeeway=true
+    // Expected: weeks are NOT independent (returns false)
+    auto study = buildStudy(false, true);
+    auto* area = study->areas.byIndex[0];
+    area->hydro.useHeuristicTarget = false;
+    area->hydro.useLeeway = true;
+
+    Implementation::SingleProblemGetter getter(std::move(study));
+    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
+}
+
+BOOST_AUTO_TEST_CASE(weeks_independent_multiple_areas_all_compliant)
+{
+    // Test case: Multiple areas, all reservoir-managed, all with correct settings
+    // Expected: weeks are independent (returns true)
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 14);
+    builder.setNumberMCyears(2);
+
+    // Add area 1 with proper hydro settings
+    auto* area1 = builder.addAreaToStudy("AREA1");
+    area1->hydro.reservoirManagement = true;
+    auto& h1 = area1->hydro;
+    TimeSeriesConfigurer genP1(h1.series->maxHourlyGenPower);
+    genP1.setDimensions(1).fillColumnWith(0, 100.);
+    TimeSeriesConfigurer hydroStorage1(h1.series->storage);
+    hydroStorage1.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 10.);
+    TimeSeriesConfigurer genE1(h1.dailyNbHoursAtGenPmax);
+    genE1.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+    h1.reservoirCapacity = 1e4;
+    h1.prepro.release();
+    area1->load.prepro.release();
+    TimeSeriesConfigurer loadTSconfig1(area1->load.series);
+    loadTSconfig1.setDimensions(1).fillColumnWith(0, 120.);
+
+    // Add area 2 with proper hydro settings
+    auto* area2 = builder.addAreaToStudy("AREA2");
+    area2->hydro.reservoirManagement = true;
+    auto& h2 = area2->hydro;
+    TimeSeriesConfigurer genP2(h2.series->maxHourlyGenPower);
+    genP2.setDimensions(1).fillColumnWith(0, 100.);
+    TimeSeriesConfigurer hydroStorage2(h2.series->storage);
+    hydroStorage2.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 10.);
+    TimeSeriesConfigurer genE2(h2.dailyNbHoursAtGenPmax);
+    genE2.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+    h2.reservoirCapacity = 1e4;
+    h2.prepro.release();
+    area2->load.prepro.release();
+    TimeSeriesConfigurer loadTSconfig2(area2->load.series);
+    loadTSconfig2.setDimensions(1).fillColumnWith(0, 120.);
+
+    builder.study->initializeRuntimeInfos();
+    addScratchpadToEachArea(*builder.study);
+    area1->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
+    area2->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
+
+    // Set both areas with compliant settings
+    area1->hydro.useHeuristicTarget = true;
+    area1->hydro.useLeeway = false;
+    area2->hydro.useHeuristicTarget = true;
+    area2->hydro.useLeeway = false;
+
+    Implementation::SingleProblemGetter getter(std::move(builder.study));
+    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
+}
+
+BOOST_AUTO_TEST_CASE(weeks_not_independent_multiple_areas_one_non_compliant)
+{
+    // Test case: Multiple areas, one with non-compliant settings
+    // Expected: weeks are NOT independent (returns false)
+    StudyBuilder builder;
+    builder.simulationBetweenDays(0, 14);
+    builder.setNumberMCyears(2);
+
+    // Add area 1 with proper hydro settings
+    auto* area1 = builder.addAreaToStudy("AREA1");
+    area1->hydro.reservoirManagement = true;
+    auto& h1 = area1->hydro;
+    TimeSeriesConfigurer genP1(h1.series->maxHourlyGenPower);
+    genP1.setDimensions(1).fillColumnWith(0, 100.);
+    TimeSeriesConfigurer hydroStorage1(h1.series->storage);
+    hydroStorage1.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 10.);
+    TimeSeriesConfigurer genE1(h1.dailyNbHoursAtGenPmax);
+    genE1.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+    h1.reservoirCapacity = 1e4;
+    h1.prepro.release();
+    area1->load.prepro.release();
+    TimeSeriesConfigurer loadTSconfig1(area1->load.series);
+    loadTSconfig1.setDimensions(1).fillColumnWith(0, 120.);
+
+    // Add area 2 with proper hydro settings
+    auto* area2 = builder.addAreaToStudy("AREA2");
+    area2->hydro.reservoirManagement = true;
+    auto& h2 = area2->hydro;
+    TimeSeriesConfigurer genP2(h2.series->maxHourlyGenPower);
+    genP2.setDimensions(1).fillColumnWith(0, 100.);
+    TimeSeriesConfigurer hydroStorage2(h2.series->storage);
+    hydroStorage2.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 10.);
+    TimeSeriesConfigurer genE2(h2.dailyNbHoursAtGenPmax);
+    genE2.setDimensions(1, DAYS_PER_YEAR).fillColumnWith(0, 24);
+    h2.reservoirCapacity = 1e4;
+    h2.prepro.release();
+    area2->load.prepro.release();
+    TimeSeriesConfigurer loadTSconfig2(area2->load.series);
+    loadTSconfig2.setDimensions(1).fillColumnWith(0, 120.);
+
+    builder.study->initializeRuntimeInfos();
+    addScratchpadToEachArea(*builder.study);
+    area1->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
+    area2->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
+
+    // Set area 1 with compliant settings
+    area1->hydro.useHeuristicTarget = true;
+    area1->hydro.useLeeway = false;
+
+    // Set area 2 with NON-compliant settings (useLeeway=true)
+    area2->hydro.useHeuristicTarget = true;
+    area2->hydro.useLeeway = true;
+
+    Implementation::SingleProblemGetter getter(std::move(builder.study));
+    BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -174,6 +174,17 @@ std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::stri
     return strToNumber;
 }
 
+std::map<std::string, unsigned> giveNumbersToStrings(const std::set<std::string>& strs)
+{
+    unsigned strNb = 0;
+    std::map<std::string, unsigned> strToNumber;
+    for (const auto& s: strs)
+    {
+        strToNumber[s] = strNb++;
+    }
+    return strToNumber;
+}
+
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w)
 {
     auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end

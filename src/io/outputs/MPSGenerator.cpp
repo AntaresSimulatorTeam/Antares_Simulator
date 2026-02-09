@@ -109,7 +109,7 @@ MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name):
 
 void MPSGenerator::writeHeader()
 {
-    fmt::format_to(std::back_inserter(out_), "* Antares Simulator\n");
+    fmt::format_to(std::back_inserter(out_), "* Antares Simulator MPSGenerator\n");
     fmt::format_to(std::back_inserter(out_),
                    "* Number of variables: {}\n",
                    linearProblem_.variableCount());

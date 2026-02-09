@@ -332,18 +332,19 @@ studies, [see the relevant documentation](../solver/08-hybrid-studies.md#connect
 
 ## Optim-config file
 
-The `optim-config.yml` file is an optional configuration file used in hybrid studies to specify the optimization 
+The `optim-config.yml` file is an optional configuration file used in hybrid studies to specify the optimization
 resolution mode. When present, it should be placed in the `input/` directory alongside other modeler files.
 
 ### Resolution mode
 
-The **resolution-mode** field specifies the optimization resolution mode to use. This field is optional and defaults to 
+The **resolution-mode** field specifies the optimization resolution mode to use. This field is optional and defaults to
 `sequential-subproblems` if not specified.
 
 **Available values:**
-- `sequential-subproblems` (default): Each Monte-Carlo year is optimized separately. This mode does not support 
+
+- `sequential-subproblems` (default): Each Monte-Carlo year is optimized separately. This mode does not support
   scenario-independent variables.
-- `benders-decomposition`: Uses Benders decomposition method to solve the optimization problem. This mode is designed 
+- `benders-decomposition`: Uses Benders decomposition method to solve the optimization problem. This mode is designed
   for investment studies and allows the use of scenario-independent variables in the master problem.
 
 Example:
@@ -354,8 +355,9 @@ resolution-mode: benders-decomposition
 
 ### Model decomposition configuration
 
-The **models** section allows you to explicitly configure where model elements (variables, constraints, objective contributions) 
-appear in the optimization hierarchy (`master`, `subproblems`, or `master-and-subproblems`). This overrides the default 
+The **models** section allows you to explicitly configure where model elements (variables, constraints, objective
+contributions)
+appear in the optimization hierarchy (`master`, `subproblems`, or `master-and-subproblems`). This overrides the default
 behavior determined by variable and parameter properties (such as `scenario-dependent` flags).
 
 Example:
@@ -381,14 +383,15 @@ models:
 
 **Configuration keys:**
 
-- **id**: Model identifier in the format `library_id.model_id` (referencing a model from your [model libraries](#model-libraries))
+- **id**: Model identifier in the format `library_id.model_id` (referencing a model from
+  your [model libraries](#model-libraries))
 - **model-decomposition**:
-  - **variables** (optional): Override default variable locations
-  - **constraints** (optional): Override default constraint locations  
-  - **objective-contributions** (optional): Override default objective contribution locations
-  - Each entry requires:
-    - **id**: Element ID as defined in the [model library](#models)
-    - **location**: One of `master`, `subproblems`, or `master-and-subproblems`
+    - **variables** (optional): Override default variable locations
+    - **constraints** (optional): Override default constraint locations
+    - **objective-contributions** (optional): Override default objective contribution locations
+    - Each entry requires:
+        - **id**: Element ID as defined in the [model library](#models)
+        - **location**: One of `master`, `subproblems`, or `master-and-subproblems`
 
 **Location semantics:**
 
@@ -396,7 +399,8 @@ models:
 - `subproblems`: Element appears only in subproblems (operational decisions, per scenario)
 - `master-and-subproblems`: Element appears in both master and subproblems
 
-For investment studies with `benders-decomposition`, it's common to place investment decisions in `master` and operational 
+For investment studies with `benders-decomposition`, it's common to place investment decisions in `master` and
+operational
 decisions in `subproblems`.
 
 ## Data series

@@ -23,7 +23,6 @@
 
 #include "fmt/format.h"
 using namespace Optimisation::LinearProblemApi;
-using namespace operations_research;
 
 namespace
 {
@@ -355,12 +354,12 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
     std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
       Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.ProblemeAResoudre->isMIP(),
                                                          options.solverName);
-    fillProblem(*linearProblem);
+    fillProblem(*linearProblem, id);
 
     return linearProblem;
 }
 
-void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
+void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProblemId& id)
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
@@ -378,9 +377,16 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
     Optimisation::OptimEntityContainer optimEntityContainer(problem,
                                                             modelerDataSeries,
                                                             modelerScenarioGroupRepository);
+    if (hasModelerData)
+    {
+        modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
+    }
 
-    fillLinearProblem(fillCtx, &pb_, optimEntityContainer,
-                      true); // TODO
+    fillLinearProblem(fillCtx,
+                      &pb_,
+                      optimEntityContainer,
+                      true,
+                      &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -492,8 +498,24 @@ std::set<int> SingleProblemGetter::playedYears() const
     return playedYears_;
 }
 
+ModelerData* SingleProblemGetter::modelerData()
+{
+    return pb_.modelerData;
+}
+
 int SingleProblemGetter::nbWeeks() const
 {
     return nbWeeks_;
+}
+
+bool SingleProblemGetter::areWeeksIndependent() const
+{
+    return std::ranges::all_of(study_->areas | std::views::values,
+                               [&](const auto& area)
+                               {
+                                   const auto& hydro = area->hydro;
+                                   return !hydro.reservoirManagement
+                                          || (hydro.useHeuristicTarget && !hydro.useLeeway);
+                               });
 }
 } // namespace Antares::Solver::Implementation
