@@ -117,7 +117,7 @@ public:
         return data_.index;
     }
 
-    const Port& findPort(const std::string& portId, const std::string& prefixMessage);
+    const Port& findPort(const std::string& portId, const std::string& prefixMessage) const;
 
 private:
     // Only ComponentBuilder is allowed to build Component instances

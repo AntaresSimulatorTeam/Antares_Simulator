@@ -74,8 +74,7 @@ static void checkComponentDataValidity(const ComponentData& data)
     }
 }
 
-const std::map<std::string, Component::ThermalComponent>&
-Component::portToThermalCapacityConnections() const
+const std::map<std::string, ThermalComponent>& Component::portToThermalCapacityConnections() const
 {
     return portToThermalConnections_;
 }
@@ -129,14 +128,14 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
     }
 }
 
-const Port& Component::findPort(const std::string& portId, const std::string& prefixMessage)
+const Port& Component::findPort(const std::string& portId, const std::string& prefixMessage) const
 {
     const auto& ports = getModel()->Ports();
     const auto& it = ports.find(portId);
     if (it == ports.end())
     {
         throw std::invalid_argument(prefixMessage + "Port with id '" + portId
-                                    + "' not found in component '" + component.Id() + "'.");
+                                    + "' not found in component '" + Id() + "'.");
     }
     return it->second;
 }
@@ -225,7 +224,7 @@ std::optional<std::string> Component::areaConnectedToPort(const std::string& por
              : std::nullopt;
 }
 
-std::optional<Component::ThermalComponent> Component::thermalCapacityConnectedToPort(
+std::optional<ThermalComponent> Component::thermalCapacityConnectedToPort(
   const std::string& portId) const
 {
     const auto it = portToThermalConnections_.find(portId);
