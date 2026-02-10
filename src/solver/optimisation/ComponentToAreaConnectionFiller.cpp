@@ -39,7 +39,8 @@ std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* pr
     unsigned index = 0;
     for (auto name: problemeHebdo_->NomsDesPays)
     {
-        areaIndices.try_emplace(name, index++);
+        areaIndices.try_emplace(name, index);
+        index++;
     }
     return areaIndices;
 }
@@ -76,6 +77,7 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
 
 void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
 {
+    // Nothing to do
 }
 
 std::vector<unsigned> ComponentToAreaConnectionFiller::balanceConstraintIndices(

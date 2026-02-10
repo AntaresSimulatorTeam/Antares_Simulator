@@ -144,7 +144,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                     .NumeroDeContraintePourEviterLesChargesFictives[pays];
 
             SecondMembre[cnt] = DefaillanceNegativeUtiliserConsoAbattue[pays]
-                                * (MaxMustRunGenOfArea + MaxMoinsConsoBrute);
+                                  ? MaxMustRunGenOfArea + MaxMoinsConsoBrute
+                                  : 0.;
 
             if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
             {

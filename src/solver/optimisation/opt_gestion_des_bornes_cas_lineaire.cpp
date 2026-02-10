@@ -57,8 +57,7 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays,
 
 void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                                   const int PremierPdtDeLIntervalle,
-                                  const int DernierPdtDeLIntervalle,
-                                  const int optimizationNumber)
+                                  const int DernierPdtDeLIntervalle)
 {
     // OUTPUT
     std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
@@ -432,8 +431,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
     setBoundsForUnsuppliedEnergy(problemeHebdo,
                                  PremierPdtDeLIntervalle,
-                                 DernierPdtDeLIntervalle,
-                                 optimizationNumber);
+                                 DernierPdtDeLIntervalle);
 
     setBoundsForShortTermStorage(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 

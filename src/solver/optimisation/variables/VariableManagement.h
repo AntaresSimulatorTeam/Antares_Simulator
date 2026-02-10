@@ -16,8 +16,6 @@ public:
                     std::vector<std::vector<int>>& NumeroDeVariableDeTrancheDeStock,
                     const int32_t& NombreDePasDeTempsPourUneOptimisation);
 
-    VariableManager(PROBLEME_HEBDO* pb_hebdo);
-
     int& DispatchableProduction(unsigned int index,
                                 unsigned int hourInWeek,
                                 int offset = 0,
