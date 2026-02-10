@@ -14,9 +14,6 @@ struct ApiOptions
 {
     std::string studyFolder = "";
     std::string outputFolder = "";
-    unsigned int year = -1;
-    unsigned int week = -1;
-    bool writeMps = false;
 };
 
 // Boost.ProgramOptions is another candidate
@@ -26,9 +23,6 @@ Yuni::GetOpt::Parser Parser(ApiOptions& options)
     parser.addFlag(options.studyFolder, 'i', "input", "Study folder");
     logs.info() << " study folder: " << options.studyFolder;
     parser.add(options.outputFolder, 'o', "output", "Output folder");
-    parser.add(options.year, 'y', "year", "year");
-    parser.add(options.week, 'w', "week", "week");
-    parser.addFlag(options.writeMps, 's', "write-mps");
 
     parser.remainingArguments(options.studyFolder);
     return parser;
@@ -68,9 +62,6 @@ void writeWeekMPS(const std::unique_ptr<Optimisation::LinearProblemApi::ILinearP
 
     logs.info() << "Printing problem: " << name << '\n';
 
-    // logs.info() << "******************************** BEGIN MPS ********************************";
-    // logs.info() << '\n' << mps;
-    // logs.info() << "******************************** END MPS ********************************";
     if (!outputPath.empty())
     {
         std::filesystem::create_directories(outputPath);
@@ -130,31 +121,22 @@ void printProblems(const ApiOptions& options)
         logs.warning() << "Weeks are dependent, the printed MPS files may differ from those "
                           "produced by antares-solver because of hydro levels";
     }
-    auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
     logs.info() << " * Number of years: " << nbYears;
     logs.info() << " * Number of weeks per year: " << nbWeeks;
 
-    unsigned int firstWeek = options.week == -1 ? 1 : options.week;
-    unsigned int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
+    auto problemIds = getter.getProblemIds();
+    logs.info() << " * Number of problems to process: " << problemIds.size();
 
-    for (auto year: getter.playedYears())
+    for (const auto& id: problemIds)
     {
-        logs.info() << " year: " << year << '\n';
-        for (unsigned int week = firstWeek; week < lastWeek; ++week)
-        {
-            logs.info() << " week: " << week << '\n';
-            const WeeklyProblemId id = {static_cast<unsigned int>(year), week};
-            auto weekly = getter.getWeeklyProblem(id);
-            if (options.writeMps)
-            {
-                writeWeekMPS(weekly, options.outputFolder, id);
-            }
-        }
+        logs.info() << " year: " << id.year << ", week: " << id.week;
+        auto weekly = getter.getWeeklyProblem(id);
+        writeWeekMPS(weekly, options.outputFolder, id);
     }
 
-    if (options.writeMps && getter.modelerData())
+    if (getter.modelerData())
     {
         writeMasterAndStructure(getter.modelerData(), options.outputFolder);
     }
