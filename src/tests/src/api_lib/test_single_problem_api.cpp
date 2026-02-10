@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_SUITE(in_memory_check_problem_contents)
 BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 {
     auto study = buildStudy(true, false);
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     const ConstantDataFromAntares constantData = getter.getConstantData();
     // 504 = 3*168, 3 sets of variables
     // unsupplied energy
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
 {
     auto study = buildStudy(false, true);
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     const ConstantDataFromAntares constantData = getter.getConstantData();
     // Total 1008
     // 168 unsupplied energy
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks)
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
 
-    const Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 3 * 2); // (3 years) x (2 weeks)
 
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year)
     // Disable year 1 in the playlist
     study->parameters.yearsFilter[1] = false;
 
-    const Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 2); // (2 years) x (2 weeks), one year is disabled
 
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
     // Disable year 1 in the playlist
     study->parameters.yearsFilter[1] = false;
 
-    const Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 1); // (2 years) x (1 week), one year is disabled
 
@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE(single_link_ntc_ts_numbers)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     // Erase TS numbers for repeatability (no randomness)
     link->timeseriesNumbers.reset(5);
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE(single_link_structure_files)
     auto link = AreaAddLinkBetweenAreas(a1, a2);
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -372,7 +372,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_directory_structure)
     settingsFile << "general.mode = 0\n";
     settingsFile.close();
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -397,7 +397,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_area_names)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -422,7 +422,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_links_content)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -456,7 +456,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_parameters_file)
     settingsFile << "general.mode = 0\n";
     settingsFile.close();
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -475,7 +475,7 @@ BOOST_AUTO_TEST_CASE(weeks_independent_no_reservoir_management)
     // Test case: No areas with reservoir management
     // Expected: weeks are independent (returns true)
     auto study = buildStudy(true, false);
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
 }
 
@@ -488,7 +488,7 @@ BOOST_AUTO_TEST_CASE(weeks_independent_with_heuristic_and_no_leeway)
     area->hydro.useHeuristicTarget = true;
     area->hydro.useLeeway = false;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
 }
 
@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_with_leeway)
     area->hydro.useHeuristicTarget = true;
     area->hydro.useLeeway = true;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
@@ -514,7 +514,7 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_without_heuristic_target)
     area->hydro.useHeuristicTarget = false;
     area->hydro.useLeeway = false;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
@@ -527,7 +527,7 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_with_both_conditions_false)
     area->hydro.useHeuristicTarget = false;
     area->hydro.useLeeway = true;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
@@ -582,7 +582,7 @@ BOOST_AUTO_TEST_CASE(weeks_independent_multiple_areas_all_compliant)
     area2->hydro.useHeuristicTarget = true;
     area2->hydro.useLeeway = false;
 
-    Implementation::SingleProblemGetter getter(std::move(builder.study));
+    Implementation::SingleProblemGetter getter({std::move(builder.study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
 }
 
@@ -639,7 +639,7 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_multiple_areas_one_non_compliant)
     area2->hydro.useHeuristicTarget = true;
     area2->hydro.useLeeway = true;
 
-    Implementation::SingleProblemGetter getter(std::move(builder.study));
+    Implementation::SingleProblemGetter getter({std::move(builder.study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 

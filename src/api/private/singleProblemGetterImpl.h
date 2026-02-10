@@ -34,8 +34,9 @@ class SingleProblemGetter final
 {
 public:
     explicit SingleProblemGetter(const std::filesystem::path& studyPath);
-    explicit SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
-    ConstantDataFromAntares getConstantData();
+    explicit SingleProblemGetter(
+      std::pair<std::unique_ptr<Data::Study>, Solver::IResultWriter::Ptr>&& loadedPair);
+    ConstantDataFromAntares getConstantData() const;
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> getWeeklyProblem(
       WeeklyProblemId id);
@@ -46,11 +47,12 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     bool areWeeksIndependent() const;
+    void printProblems();
     std::set<int> playedYears() const;
-    void setBendersDecomposition(Optimisation::BendersDecomposition* bd);
-    ModelerData* modelerData();
 
 private:
+    void initConstantData();
+
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
@@ -73,5 +75,6 @@ private:
     std::vector<NameMemo> variablesMemo_;
     std::vector<NameMemo> constraintsMemo_;
     std::set<int> randomPrepared_;
+    std::shared_ptr<IResultWriter> resultWriter_;
 };
 } // namespace Antares::Solver::Implementation
