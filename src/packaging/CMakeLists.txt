@@ -12,6 +12,7 @@ set(TARGET_LIBS #No alias
 
         solver_api # What we want to export
 	single_problem_api
+	antares-api
 
         study
         scenario-builder-utils
