@@ -45,8 +45,8 @@ def simulation(study_path, antares_simu_path, solver_name, named_mps_problems, p
     return study_run(study_path, antares_simu_path, solver_name, named_mps_problems, parallel)
 
 @pytest.fixture
-def api(study_path, api_exe_path, write_mps, output_dir="20210110-0900eco"):
-    return api_run(study_path, api_exe_path, write_mps, output_dir)
+def api(study_path, api_exe_path, output_dir="20210110-0900eco"):
+    return api_run(study_path, api_exe_path, output_dir)
 
 @pytest.fixture
 def is_api(api_exe_path):
