@@ -70,7 +70,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     ProblemeAResoudre->NombreDeContraintes += problemeHebdo->NombreDePays;
 
-    // For constraint : max unsupplied energy 
+    // For constraint : max unsupplied energy
     ProblemeAResoudre->NombreDeContraintes += problemeHebdo->NombreDePays;
 
     ProblemeAResoudre->NombreDeContraintes += problemeHebdo->NombreDInterconnexions;
@@ -86,7 +86,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
     }
 
-    // Very important : make previous constraints hourly constraints : we multiply by nb of hours 
+    // Very important : make previous constraints hourly constraints : we multiply by nb of hours
     ProblemeAResoudre->NombreDeContraintes *= nombreDePasDeTempsPourUneOptimisation;
 
     int nombreDeJoursDansUnIntervalleOptimise;
