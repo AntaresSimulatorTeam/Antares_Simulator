@@ -121,6 +121,10 @@ void printProblems(const ApiOptions& options)
         logs.warning() << "Weeks are dependent, the printed MPS files may differ from those "
                           "produced by antares-solver because of hydro levels";
     }
+    // `constant` is not necessary, but getConstantData initializes some stuff
+    // so removing this call causes a segfault
+    // TODO better initialization
+    auto constant = getter.getConstantData();
     auto nbYears = getter.nbYears();
     auto nbWeeks = getter.nbWeeks();
     logs.info() << " * Number of years: " << nbYears;
