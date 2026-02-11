@@ -57,16 +57,11 @@ BOOST_FIXTURE_TEST_CASE(dont_read_bad_extension, FixtureLoadFile)
 {
     createFile(libraryDirPath.string(), "abc.txt");
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
-    // If no libraries found, the function may return an empty optional or a pair with empty vector.
-    if (res.has_value())
-    {
-        const auto& libraries = res.value().first;
-        BOOST_CHECK(libraries.empty());
-    }
-    else
-    {
-        BOOST_CHECK(true);
-    }
+    // If no .yml libraries are found in an existing directory, the function returns an optional
+    // containing a pair whose first element is an empty vector of libraries.
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
+    BOOST_CHECK(libraries.empty());
 }
 
 BOOST_FIXTURE_TEST_CASE(incorrect_library, FixtureLoadFile)
