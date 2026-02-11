@@ -132,7 +132,7 @@ public:
         md.dataSeries = std::move(data);
         md.scenarioGroupRepository = std::move(scenarioGroupRepository);
 
-        return std::optional<ModelerData>{std::move(md)};
+        return md;
     }
 
     void setComponents(const std::vector<Component>& compos)
