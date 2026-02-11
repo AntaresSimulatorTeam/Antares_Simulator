@@ -33,6 +33,8 @@ target_include_directories(structured-linear-problem
 target_link_libraries(structured-linear-problem
         PUBLIC
         Antares::linear-problem-api
+        PRIVATE
+        Antares::exception
 )
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)

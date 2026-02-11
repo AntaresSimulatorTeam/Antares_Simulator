@@ -270,7 +270,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
             && variable.location() == Solver::Config::Location::MASTER_AND_SUBPROBLEMS)
         {
             bendersDecomposition_->collectCouplingVariables(variableNames.names(),
-                                                            pb.variableCount());
+                                                             static_cast<unsigned>(pb.variableCount()));
         }
     }
 }

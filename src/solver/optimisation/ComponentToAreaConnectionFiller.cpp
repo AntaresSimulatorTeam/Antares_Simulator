@@ -57,7 +57,7 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
 
 void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
 {
-    // Nothing to do
+    (void)ctx;
 }
 
 std::vector<unsigned> ComponentToAreaConnectionFiller::balanceConstraintIndices(
@@ -78,7 +78,7 @@ std::vector<unsigned> ComponentToAreaConnectionFiller::fictitiousLoadConstraintI
   const unsigned& areaIndex) const
 {
     std::vector<unsigned> indices(ctx.getLocalNumberOfTimeSteps());
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         indices[h] = problemeHebdo_->CorrespondanceCntNativesCntOptim[h]
                        .NumeroDeContraintePourEviterLesChargesFictives[areaIndex];

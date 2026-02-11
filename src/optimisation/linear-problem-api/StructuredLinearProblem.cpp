@@ -4,6 +4,7 @@
 #include <limits>
 #include <stdexcept>
 
+#include "antares/exception/RuntimeError.hpp"
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 
 namespace Antares::Optimisation::LinearProblemApi
@@ -65,13 +66,13 @@ MipBasisStatus StructuredMipVariable::getMipBasisStatus() const
 
 double StructuredMipVariable::solutionValue() const
 {
-    throw std::logic_error(
+    throw Antares::Error::RuntimeError(
       "StructuredMipVariable::solutionValue not available (problem not solved)");
 }
 
 double StructuredMipVariable::reducedCost() const
 {
-    throw std::logic_error("StructuredMipVariable::reducedCost not available (problem not solved)");
+    throw Antares::Error::RuntimeError("StructuredMipVariable::reducedCost not available (problem not solved)");
 }
 
 unsigned int StructuredMipVariable::index() const
@@ -156,7 +157,7 @@ std::vector<std::pair<int, double>> StructuredMipConstraint::getCoefficients() c
 
 double StructuredMipConstraint::dual() const
 {
-    throw std::logic_error("StructuredMipConstraint::dual not available (problem not solved)");
+    throw Antares::Error::RuntimeError("StructuredMipConstraint::dual not available (problem not solved)");
 }
 
 const std::string& StructuredMipConstraint::getName() const
@@ -338,7 +339,7 @@ bool StructuredLinearProblem::isMaximization() const
 
 IMipSolution* StructuredLinearProblem::solve(bool)
 {
-    throw std::logic_error("StructuredLinearProblem::solve not supported (no solver backend)");
+    throw Antares::Error::RuntimeError("StructuredLinearProblem::solve not supported (no solver backend)");
 }
 
 double StructuredLinearProblem::infinity() const
@@ -353,7 +354,7 @@ bool StructuredLinearProblem::isLP() const
 
 double StructuredLinearProblem::objectiveValue() const
 {
-    throw std::logic_error(
+    throw Antares::Error::RuntimeError(
       "StructuredLinearProblem::objectiveValue not available (problem not solved)");
 }
 
