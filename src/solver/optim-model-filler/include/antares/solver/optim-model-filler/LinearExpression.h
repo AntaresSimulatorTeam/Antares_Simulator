@@ -47,7 +47,7 @@ template<class Op>
 double applyOperation(const std::vector<const LinearExpression*>& expressions, Op op)
 {
     std::vector<double> constants(expressions.size(), 0);
-    for (int i = 0; i < expressions.size(); ++i)
+    for (std::size_t i = 0; i < expressions.size(); ++i)
     {
         const auto& expression = expressions[i];
         if (expression->hasCoefs())

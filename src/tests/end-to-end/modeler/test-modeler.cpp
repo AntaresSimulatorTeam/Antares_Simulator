@@ -38,10 +38,10 @@ public:
         return value_;
     }
 
-    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
-                                                  unsigned timeSeriesNumber,
-                                                  unsigned firstHour,
-                                                  unsigned lastHour) const override
+    [[nodiscard]] std::span<const double> getData([[maybe_unused]] const std::string& dataSetId,
+                                                  [[maybe_unused]] unsigned timeSeriesNumber,
+                                                  [[maybe_unused]] unsigned firstHour,
+                                                  [[maybe_unused]] unsigned lastHour) const override
 
     {
         return vector_;
@@ -131,7 +131,8 @@ public:
                 .system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
                   std::move(system)),
                 .dataSeries = std::move(data),
-                .scenarioGroupRepository = std::move(scenarioGroupRepository)};
+                .scenarioGroupRepository = std::move(scenarioGroupRepository),
+                .bendersDecomposition = {}};
     }
 
     void setComponents(const std::vector<Antares::ModelerStudy::SystemModel::Component>& compos)
@@ -197,11 +198,12 @@ public:
         return dummy;
     }
 
-    void writeSimulationTable(const LinearProblemApi::ILinearProblem& linearProblem,
-                              const LinearProblemApi::IMipSolution& solution,
-                              const ModelerData& modelerData,
-                              const OptimEntityContainer& variableContainer,
-                              const LinearProblemApi::FillContext& fillContext) const override
+    void writeSimulationTable(
+      [[maybe_unused]] const LinearProblemApi::ILinearProblem& linearProblem,
+      const LinearProblemApi::IMipSolution& solution,
+      [[maybe_unused]] const ModelerData& modelerData,
+      [[maybe_unused]] const OptimEntityContainer& variableContainer,
+      [[maybe_unused]] const LinearProblemApi::FillContext& fillContext) const override
     {
         solution_.objectiveValue = solution.getObjectiveValue();
     }

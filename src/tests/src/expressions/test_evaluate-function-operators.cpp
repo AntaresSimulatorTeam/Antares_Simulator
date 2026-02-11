@@ -86,8 +86,8 @@ CreateEvalVisitor::CreateEvalVisitor():
       {{"p", {"p", VariabilityType::VARYING_IN_TIME_ONLY, "p"}},
        {"p-const", {"p-const", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "4.5"}}},
       0)),
-    scenarioGroupRepo_(makeScenarioGroupRepo(component_)),
-    components_({component_})
+    components_({component_}),
+    scenarioGroupRepo_(makeScenarioGroupRepo(component_))
 {
     // Parameter p : make associated time-series
     auto ts = std::make_unique<TimeSeriesSet>("p", 3);

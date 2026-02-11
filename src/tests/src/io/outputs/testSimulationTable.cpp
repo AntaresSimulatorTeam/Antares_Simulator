@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
 {
     SimulationTableCsv table;
     const size_t numEntries = 3;
-    for (int i = 0; i < numEntries; ++i)
+    for (size_t i = 0; i < numEntries; ++i)
     {
         SimulationTableEntry entry{.block = static_cast<unsigned>(i + 1),
                                    .component = "comp" + std::to_string(i),
@@ -498,7 +498,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             optimEntityContainer->addStartColumn();
             if (var.isTimeDependent())
             {
-                for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
+                for (unsigned t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {
                     linearProblem->addVariable(0, 0, false, "");
                 }
@@ -524,7 +524,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             optimEntityContainer->registerConstraint(compo, constraint_variability);
             if (isTimeDependent(constraint_variability))
             {
-                for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
+                for (unsigned t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {
                     linearProblem->addConstraint(0, 0, "");
                 }
@@ -683,12 +683,12 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
     std::istringstream stream(csvOutput);
     std::string line;
 
-    int entryIndex = 0;
+    size_t entryIndex = 0;
     while (std::getline(stream, line) && entryIndex < originalEntries.size())
     {
         const auto& original = originalEntries[entryIndex];
 
-        // Basic checks that the line contains expected components
+        // Basic checks that line contains expected components
         BOOST_CHECK(line.find(std::to_string(original.block)) != std::string::npos);
         BOOST_CHECK(line.find(original.component.value()) != std::string::npos);
         BOOST_CHECK(line.find(original.output) != std::string::npos);

@@ -14,8 +14,8 @@ struct ApiOptions
 {
     std::string studyFolder = "";
     std::string outputFolder = "";
-    unsigned int year = -1;
-    unsigned int week = -1;
+    int year = -1;
+    int week = -1;
     bool writeMps = false;
 };
 
@@ -136,8 +136,9 @@ void printProblems(const ApiOptions& options)
     logs.info() << " * Number of years: " << nbYears;
     logs.info() << " * Number of weeks per year: " << nbWeeks;
 
-    unsigned int firstWeek = options.week == -1 ? 1 : options.week;
-    unsigned int lastWeek = options.week == -1 ? nbWeeks + 1 : options.week + 1;
+    bool allWeeks = options.week == -1;
+    unsigned int firstWeek = allWeeks ? 1 : static_cast<unsigned int>(options.week);
+    unsigned int lastWeek = allWeeks ? nbWeeks + 1 : static_cast<unsigned int>(options.week + 1);
 
     for (auto year: getter.playedYears())
     {
