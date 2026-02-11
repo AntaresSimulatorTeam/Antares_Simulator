@@ -144,6 +144,38 @@ AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
     return {ac.injection, ac.spillage_bound, ac.unsupplied_energy_bound};
 }
 
+void checkAreaConnectionField(const std::string& field,
+                              const std::vector<PortField>& portfields,
+                              const std::string& portTypeId)
+{
+    if (field.empty())
+    {
+        return;
+    }
+
+    auto it = std::ranges::find_if(portfields, [&field](const auto& f) { return f.Id() == field; });
+    if (it == portfields.end())
+    {
+        std::string errMsg = fmt::format(
+          "Port type '{}' > area connection : no port matches field '{}'",
+          portTypeId,
+          field);
+
+        throw std::invalid_argument(errMsg);
+    }
+}
+
+void checkAreaConnection(const AreaConnection& area_connection,
+                         const std::vector<PortField>& fields,
+                         const std::string& portTypeId)
+{
+    // Checking every area connection field is either empty or
+    // is a port id referenced in the same port type.
+    checkAreaConnectionField(area_connection.injection, fields, portTypeId);
+    checkAreaConnectionField(area_connection.spillage_bound, fields, portTypeId);
+    checkAreaConnectionField(area_connection.unsupplied_energy_bound, fields, portTypeId);
+}
+
 std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 {
     std::vector<PortType> out;
@@ -167,9 +199,10 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
             throw PortTypeWithThisIdAlreadyExists(ymlPortType.id);
         }
 
-        PortType portType(ymlPortType.id,
-                          std::move(fields),
-                          convert_to_system(ymlPortType.area_connection));
+        AreaConnection area_connection = convert_to_system(ymlPortType.area_connection);
+        checkAreaConnection(area_connection, fields, ymlPortType.id);
+
+        PortType portType(ymlPortType.id, std::move(fields), area_connection);
         out.emplace_back(std::move(portType));
     }
     return out;
