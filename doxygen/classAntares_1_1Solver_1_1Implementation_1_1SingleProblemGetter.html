@@ -136,12 +136,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab186edf43dc7154042e8686079bdd241"><td class="memItemLeft" align="right" valign="top"><a id="ab186edf43dc7154042e8686079bdd241"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>SingleProblemGetter</b> (const std::filesystem::path &amp;studyPath)</td></tr>
 <tr class="separator:ab186edf43dc7154042e8686079bdd241"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9acfec601094165c0af58467e929ca9"><td class="memItemLeft" align="right" valign="top"><a id="ab9acfec601094165c0af58467e929ca9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SingleProblemGetter</b> (std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &gt; &amp;&amp;study)</td></tr>
-<tr class="separator:ab9acfec601094165c0af58467e929ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb7a26a08534ac5074ae8a4175a2a39e"><td class="memItemLeft" align="right" valign="top"><a id="acb7a26a08534ac5074ae8a4175a2a39e"></a>
-<a class="el" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getConstantData</b> ()</td></tr>
-<tr class="separator:acb7a26a08534ac5074ae8a4175a2a39e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2690872d7bae20ab627f115be0efc8ef"><td class="memItemLeft" align="right" valign="top"><a id="a2690872d7bae20ab627f115be0efc8ef"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>SingleProblemGetter</b> (std::pair&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &gt;, Solver::IResultWriter::Ptr &gt; &amp;&amp;loadedPair)</td></tr>
+<tr class="separator:a2690872d7bae20ab627f115be0efc8ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac0949badac7474e8a0d1a6e8a2ece7e"><td class="memItemLeft" align="right" valign="top"><a id="aac0949badac7474e8a0d1a6e8a2ece7e"></a>
+<a class="el" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getConstantData</b> () const</td></tr>
+<tr class="separator:aac0949badac7474e8a0d1a6e8a2ece7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eb140845344d0eca8786f1af22d87ba"><td class="memItemLeft" align="right" valign="top"><a id="a1eb140845344d0eca8786f1af22d87ba"></a>
 <a class="el" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getWeeklyData</b> (<a class="el" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> id)</td></tr>
 <tr class="separator:a1eb140845344d0eca8786f1af22d87ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,15 +166,18 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>nbWeeks</b> () const</
 <tr class="memitem:a959d18f097888639fd424a919215fa00"><td class="memItemLeft" align="right" valign="top"><a id="a959d18f097888639fd424a919215fa00"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>areWeeksIndependent</b> () const</td></tr>
 <tr class="separator:a959d18f097888639fd424a919215fa00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1afd3a5fb3f44c198d621c9a5494803"><td class="memItemLeft" align="right" valign="top"><a id="af1afd3a5fb3f44c198d621c9a5494803"></a>
+<tr class="memitem:acb4a5cca89621b3bd7f4ccd273a7ee8e"><td class="memItemLeft" align="right" valign="top"><a id="acb4a5cca89621b3bd7f4ccd273a7ee8e"></a>
+<a class="el" href="structAntares_1_1Solver_1_1ProblemEntity.html">Solver::ProblemEntity</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getMasterProblem</b> () const</td></tr>
+<tr class="separator:acb4a5cca89621b3bd7f4ccd273a7ee8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b185ab1cd03e86c2dae1e1e6304120e"><td class="memItemLeft" align="right" valign="top"><a id="a4b185ab1cd03e86c2dae1e1e6304120e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeMasterAndStructure</b> () const</td></tr>
+<tr class="separator:a4b185ab1cd03e86c2dae1e1e6304120e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9210cd48654673e8b29c823121a99a28"><td class="memItemLeft" align="right" valign="top"><a id="a9210cd48654673e8b29c823121a99a28"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>printProblems</b> ()</td></tr>
+<tr class="separator:a9210cd48654673e8b29c823121a99a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72c79e0afdeb10ca51efba02b426a82f"><td class="memItemLeft" align="right" valign="top"><a id="a72c79e0afdeb10ca51efba02b426a82f"></a>
 std::set&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>playedYears</b> () const</td></tr>
-<tr class="separator:af1afd3a5fb3f44c198d621c9a5494803"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcb7dffb9328364236c112cdea3b736f"><td class="memItemLeft" align="right" valign="top"><a id="adcb7dffb9328364236c112cdea3b736f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setBendersDecomposition</b> (<a class="el" href="classAntares_1_1Optimisation_1_1BendersDecomposition.html">Optimisation::BendersDecomposition</a> *bd)</td></tr>
-<tr class="separator:adcb7dffb9328364236c112cdea3b736f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93899e73a2556e419ccf2afeabbf8129"><td class="memItemLeft" align="right" valign="top"><a id="a93899e73a2556e419ccf2afeabbf8129"></a>
-<a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">ModelerData</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>modelerData</b> ()</td></tr>
-<tr class="separator:a93899e73a2556e419ccf2afeabbf8129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a72c79e0afdeb10ca51efba02b426a82f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/api/private/<a class="el" href="singleProblemGetterImpl_8h_source.html">singleProblemGetterImpl.h</a></li>

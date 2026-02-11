@@ -149,15 +149,16 @@ $(document).ready(function(){initNavTree('FileTreeStudyLoader_8h_source.html',''
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1FileTreeStudyLoader.html">FileTreeStudyLoader</a>(std::filesystem::path study_path);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    ~<a class="code" href="classAntares_1_1FileTreeStudyLoader.html">FileTreeStudyLoader</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    [[nodiscard]] std::unique_ptr&lt;Antares::Data::Study&gt; <a class="code" href="classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019">load</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::string study_path_;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;};</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    [[nodiscard]] std::pair&lt;std::unique_ptr&lt;Data::Study&gt;, std::shared_ptr&lt;Solver::IResultWriter&gt;&gt;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classAntares_1_1FileTreeStudyLoader.html#ad1cc76a073bf96684d6a819d125db171">load</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::string study_path_;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;} <span class="comment">// namespace Antares</span></div>
 <div class="ttc" id="aclassAntares_1_1FileTreeStudyLoader_html"><div class="ttname"><a href="classAntares_1_1FileTreeStudyLoader.html">Antares::FileTreeStudyLoader</a></div><div class="ttdoc">A class to load studies from the file tree.</div><div class="ttdef"><b>Definition:</b> FileTreeStudyLoader.h:26</div></div>
-<div class="ttc" id="aclassAntares_1_1FileTreeStudyLoader_html_aec874bace5d8216b2c11f0947d557019"><div class="ttname"><a href="classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019">Antares::FileTreeStudyLoader::load</a></div><div class="ttdeci">std::unique_ptr&lt; Antares::Data::Study &gt; load() const override</div><div class="ttdoc">Loads a study from the file tree.</div><div class="ttdef"><b>Definition:</b> FileTreeStudyLoader.cpp:18</div></div>
-<div class="ttc" id="aclassAntares_1_1IStudyLoader_html"><div class="ttname"><a href="classAntares_1_1IStudyLoader.html">Antares::IStudyLoader</a></div><div class="ttdoc">The IStudyLoader class is an interface for loading studies.</div><div class="ttdef"><b>Definition:</b> IStudyLoader.h:21</div></div>
+<div class="ttc" id="aclassAntares_1_1FileTreeStudyLoader_html_ad1cc76a073bf96684d6a819d125db171"><div class="ttname"><a href="classAntares_1_1FileTreeStudyLoader.html#ad1cc76a073bf96684d6a819d125db171">Antares::FileTreeStudyLoader::load</a></div><div class="ttdeci">std::pair&lt; std::unique_ptr&lt; Data::Study &gt;, std::shared_ptr&lt; Solver::IResultWriter &gt; &gt; load() const override</div><div class="ttdoc">Loads a study from the file tree.</div><div class="ttdef"><b>Definition:</b> FileTreeStudyLoader.cpp:17</div></div>
+<div class="ttc" id="aclassAntares_1_1IStudyLoader_html"><div class="ttname"><a href="classAntares_1_1IStudyLoader.html">Antares::IStudyLoader</a></div><div class="ttdoc">The IStudyLoader class is an interface for loading studies.</div><div class="ttdef"><b>Definition:</b> IStudyLoader.h:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

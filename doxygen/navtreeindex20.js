@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"classAntares_1_1HydroErrorsCollector.html#ac164a073f713ec96b71cf6d3e392a755":[8,0,0,47,2],
 "classAntares_1_1HydroErrorsCollector.html#ae14973b02eecd1327b4bf5cd3abc9fae":[8,0,0,47,3],
 "classAntares_1_1HydroErrorsCollector.html#ae8c73b3b2cbf5456142d293c1c9eaf09":[8,0,0,47,1],
 "classAntares_1_1HydroErrorsCollector_1_1AreaReference.html":[8,0,0,47,0],
@@ -181,8 +182,8 @@ var NAVTREEINDEX20 =
 "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html#af234239dfe9059461cddcfdc3b98cb39":[8,0,0,12,1,3,5],
 "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html#afa500b9ae7a75bae54748a73ba2769e0":[8,0,0,12,1,3,7],
 "classAntares_1_1IStudyLoader.html":[8,0,0,41],
-"classAntares_1_1IStudyLoader.html#aa80bbd10976cd03e2568f3d8ce3b52c2":[8,0,0,41,1],
 "classAntares_1_1IStudyLoader.html#ae39a6586f177e4945f233a4be86ffc44":[8,0,0,41,0],
+"classAntares_1_1IStudyLoader.html#af9626a487c132b5e0d0e041e8a0ce87d":[8,0,0,41,1],
 "classAntares_1_1I__mtx__to__buffer__dumper.html":[8,0,0,26],
 "classAntares_1_1I__mtx__to__buffer__dumper.html#a06c816f2a9eff252c905cc6263091155":[8,0,0,26,3],
 "classAntares_1_1I__mtx__to__buffer__dumper.html#a1efeacb99994f577f6ed8c3fe67c5dc8":[8,0,0,26,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "classAntares_1_1IniFile_1_1Section.html#aef71cd58aaecbd7570ecbcd0f4c7ff2f":[8,0,0,36,1,6],
 "classAntares_1_1Map_1_1BindingConstraint.html":[8,0,0,13,8],
 "classAntares_1_1Map_1_1BindingConstraint.html#a1b0a461e6b6db72987acd1c3ee249998":[8,0,0,13,8,9],
-"classAntares_1_1Map_1_1BindingConstraint.html#a334fea57d73c804d4db596f66d1bf096":[8,0,0,13,8,8],
-"classAntares_1_1Map_1_1BindingConstraint.html#a433fe32b336820cc6b05b7d7e61cb13b":[8,0,0,13,8,14]
+"classAntares_1_1Map_1_1BindingConstraint.html#a334fea57d73c804d4db596f66d1bf096":[8,0,0,13,8,8]
 };

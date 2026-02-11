@@ -146,9 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab168b5458c585edb8c328a79ae86ca63"><td class="memItemLeft" align="right" valign="top"><a id="ab168b5458c585edb8c328a79ae86ca63"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>InMemoryStudyLoader</b> (bool success=true)</td></tr>
 <tr class="separator:ab168b5458c585edb8c328a79ae86ca63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4da5ec49c91c549848330e51bb566c81"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInMemoryStudyLoader.html#a4da5ec49c91c549848330e51bb566c81">load</a> () const override</td></tr>
-<tr class="memdesc:a4da5ec49c91c549848330e51bb566c81"><td class="mdescLeft">&#160;</td><td class="mdescRight">The load method is used to load a study.  <a href="classInMemoryStudyLoader.html#a4da5ec49c91c549848330e51bb566c81">More...</a><br /></td></tr>
-<tr class="separator:a4da5ec49c91c549848330e51bb566c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a621c3dff4f011bbb5f0e9809fd0bd474"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &gt;, std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classInMemoryStudyLoader.html#a621c3dff4f011bbb5f0e9809fd0bd474">load</a> () const override</td></tr>
+<tr class="memdesc:a621c3dff4f011bbb5f0e9809fd0bd474"><td class="mdescLeft">&#160;</td><td class="mdescRight">The load method is used to load a study.  <a href="classInMemoryStudyLoader.html#a621c3dff4f011bbb5f0e9809fd0bd474">More...</a><br /></td></tr>
+<tr class="separator:a621c3dff4f011bbb5f0e9809fd0bd474"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -157,8 +157,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>success_</b> = true</
 <tr class="separator:a0e3cd339cddf5eb08497d4ed54f4a005"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4da5ec49c91c549848330e51bb566c81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4da5ec49c91c549848330e51bb566c81">&#9670;&nbsp;</a></span>load()</h2>
+<a id="a621c3dff4f011bbb5f0e9809fd0bd474"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a621c3dff4f011bbb5f0e9809fd0bd474">&#9670;&nbsp;</a></span>load()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -167,7 +167,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>success_</b> = true</
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&gt; InMemoryStudyLoader::load </td>
+          <td class="memname">std::pair&lt;std::unique_ptr&lt;<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a>&gt;, std::shared_ptr&lt;<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&gt; &gt; InMemoryStudyLoader::load </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -181,9 +181,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>success_</b> = true</
 </div><div class="memdoc">
 
 <p>The load method is used to load a study. </p>
-<dl class="section return"><dt>Returns</dt><dd>A shared pointer to a Study object. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pair which is a std::unique_ptr&lt;Data::Study&gt; and Solver::IResultWriter::Ptr </dd></dl>
 
-<p>Implements <a class="el" href="classAntares_1_1IStudyLoader.html#aa80bbd10976cd03e2568f3d8ce3b52c2">Antares::IStudyLoader</a>.</p>
+<p>Implements <a class="el" href="classAntares_1_1IStudyLoader.html#af9626a487c132b5e0d0e041e8a0ce87d">Antares::IStudyLoader</a>.</p>
 
 </div>
 </div>

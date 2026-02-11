@@ -1,7 +1,5 @@
 var NAVTREEINDEX57 =
 {
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#ae490527435d4608d08fce05626af2084":[8,0,0,12,1,10,6],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#af0bc2e78b4f2dd67d180ff0350bbb9d3":[8,0,0,12,1,10,1],
 "structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#af998195ffe0337e1cd6aa77447be38af":[8,0,0,12,1,10,7],
 "structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html":[8,0,0,12,1,11],
 "structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html#a0dfa0417fed2a6db8287beac1afdb798":[8,0,0,12,1,11,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX57 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant_1_1Statistics.html":[8,0,0,18,6,4,106,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html":[8,0,0,18,6,4,108,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[8,0,0,18,6,4,110,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[8,0,0,18,6,4,112,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[8,0,0,18,6,4,112,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics.html":[8,0,0,18,6,4,114,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[8,0,0,18,6,4,17,0]
 };

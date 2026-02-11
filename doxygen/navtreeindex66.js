@@ -1,13 +1,5 @@
 var NAVTREEINDEX66 =
 {
-"ui_2simulator_2application_2application_8cpp.html#af067a98f4ac1ce7489298088681c3e53":[7,0,0,114],
-"ui_2simulator_2application_2application_8h_source.html":[9,0,0,12,2,0,1],
-"ui_2simulator_2application_2main_2fwd_8h_source.html":[9,0,0,12,2,0,0,3],
-"ui_2simulator_2application_2main_2main_8cpp.html#a03fd2ba295fa74af54ee2c4b2c5fc2a8":[7,0,0,12,12],
-"ui_2simulator_2application_2main_2main_8cpp.html#af74bb6d3e6980e190dcd41fe62ab2a78":[7,0,0,12,19],
-"ui_2simulator_2application_2study_8cpp.html#a001065ba5adeed7f336ad730394805da":[7,0,0,123],
-"ui_2simulator_2application_2study_8cpp.html#a0486c6f0fc659879a61fc9b585940e05":[7,0,0,171],
-"ui_2simulator_2application_2study_8cpp.html#a0cd419a1ce7e22778e0d553159c05b0c":[7,0,0,142],
 "ui_2simulator_2application_2study_8cpp.html#a14f1aa2f2ffe7b1f338c07504da4d23f":[7,0,0,131],
 "ui_2simulator_2application_2study_8cpp.html#a17978a82cafaf85f6ae9aa8b6bc2ce8e":[7,0,0,145],
 "ui_2simulator_2application_2study_8cpp.html#a1fa4462e165b72af7228fd583952b917":[7,0,0,107],
@@ -249,5 +241,13 @@ var NAVTREEINDEX66 =
 "watched-constraints_8h.html#aac13d5895b888127d4d62045556476ba":[7,0,0,20,26],
 "watched-constraints_8h_source.html":[9,0,0,8,3,0,0,0,0,5],
 "waterValue_8h_source.html":[9,0,0,8,12,0,0,0,0,3,51],
-"watervalues_8h_source.html":[9,0,0,12,2,1,1,1,1,0,15]
+"watervalues_8h_source.html":[9,0,0,12,2,1,1,1,1,0,15],
+"week_8h_source.html":[9,0,0,12,2,1,1,1,0,0,7],
+"weekday_8h_source.html":[9,0,0,12,2,1,1,1,0,0,8],
+"weekly__optimization_8h_source.html":[9,0,0,8,7,1,0,0,0,19],
+"wind_2prepro_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,7,2],
+"wind_8h_source.html":[9,0,0,8,12,0,0,0,0,1,13],
+"windows_2bindingconstraint_2bindingconstraint_8h_source.html":[9,0,0,12,2,2,1,0],
+"windows_2output_2window_8h_source.html":[9,0,0,12,2,2,9,12],
+"windows_2textinput_2input_8cpp.html#a522bb0ea4ba233d9e9d50127ec600c40":[7,0,0,30,55]
 };

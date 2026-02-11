@@ -1,5 +1,6 @@
 var NAVTREEINDEX29 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a437f75629189a273bbb8cbcc4f06ee56":[8,0,0,18,6,4,48,19],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a4c52dd3bad11c5fb8751e61cab71bf2b":[8,0,0,18,6,4,48,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a52b87b62e143d64a7caa445b931105a7":[8,0,0,18,6,4,48,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a5302b5ab60234abcd409d5c150ff9cb3":[8,0,0,18,6,4,48,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX29 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#ac921153f0e3a9ac433770aee6faf5a06":[8,0,0,18,6,4,42,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#ad780060d4e0aff208d7c65bb5f36fa38":[8,0,0,18,6,4,42,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html":[8,0,0,18,6,4,62],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a16345f9ade306a2f9be9dca9b6d26505":[8,0,0,18,6,4,62,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a317ccafc2f66f1562de49ffe32b394aa":[8,0,0,18,6,4,62,16]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations.html#a16345f9ade306a2f9be9dca9b6d26505":[8,0,0,18,6,4,62,17]
 };

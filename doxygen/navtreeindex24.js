@@ -1,5 +1,7 @@
 var NAVTREEINDEX24 =
 {
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem.html#a2da90596e615463e449703999e6a17c3":[8,0,0,15,0,15,10],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem.html#a3490b4d123cc81f84504bacec2ea44e9":[8,0,0,15,0,15,8],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem.html#a3d7971a853ae0931630d360777ade8b7":[8,0,0,15,0,15,12],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem.html#a4ddff65cad1662cd4d931e22ea3d7cf0":[8,0,0,15,0,15,13],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredLinearProblem.html#a5332acedfdf18ef11d786c279a522054":[8,0,0,15,0,15,22],
@@ -247,7 +249,5 @@ var NAVTREEINDEX24 =
 "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html":[8,0,0,16,0],
 "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html#a61e26729036b842adef511ebd6aac6d3":[8,0,0,16,0,4],
 "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html#a77a0186348bae7f85c6c3986cafa6916":[8,0,0,16,0,3],
-"classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html#a8d462ff13a82fed8ed9e9c964521596c":[8,0,0,16,0,1],
-"classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html#ad1402dcaaf3205024c4d9dedfb3f9b04":[8,0,0,16,0,0],
-"classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html#afc09b0f2bef8209d51e2df7fa234398a":[8,0,0,16,0,2]
+"classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html#a8d462ff13a82fed8ed9e9c964521596c":[8,0,0,16,0,1]
 };

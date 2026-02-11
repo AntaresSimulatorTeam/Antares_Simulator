@@ -1513,6 +1513,7 @@ var namespaces_dup =
           [ "buildMemo", "singleProblemGetterImpl_8cpp.html#ae3127a02ee96b5741ca4ee9dfe73b0a7", null ],
           [ "fillLinksProperties", "singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa", null ],
           [ "updateWeekId", "singleProblemGetterImpl_8cpp.html#a82c11a08d823fab6631bb50c211c1ca5", null ],
+          [ "writeWeekMPS", "singleProblemGetterImpl_8cpp.html#a0e15df5fb4ccae2d5a629c40cc789ccd", null ],
           [ "tags", "singleProblemGetterImpl_8cpp.html#a1e92fd112582108e456dee0757bbc61b", null ]
         ] ],
         [ "Initialization", null, [
@@ -2653,8 +2654,8 @@ var namespaces_dup =
       [ "OnStudyUpdatePlaylist", "ui_2simulator_2application_2study_8cpp.html#ab0fcbeb3c476bb08dede962044192921", null ],
       [ "SystemParameterHaveChanged", "ui_2simulator_2application_2study_8cpp.html#aef7b41bc50798319e185b3947e5e9df1", null ]
     ] ],
-    [ "api_run", null, [
-      [ "api_run", "classapi__run_1_1api__run.html", "classapi__run_1_1api__run" ]
+    [ "antares_problem_generator", null, [
+      [ "AntaresProblemGeneratorRun", "classantares__problem__generator_1_1AntaresProblemGeneratorRun.html", "classantares__problem__generator_1_1AntaresProblemGeneratorRun" ]
     ] ],
     [ "assertions", null, [
       [ "assert_double_close", "cucumber_2features_2steps_2common__steps_2assertions_8py.html#acd3c2265c9f98c73603fbf713bdcb362", null ],
@@ -2705,17 +2706,15 @@ var namespaces_dup =
       [ "tol", "compare__mps__files_8py.html#acefb1d07624d65725d6b0ab19f415120", null ]
     ] ],
     [ "conftest", null, [
+      [ "antares_problem_generator_exe", "run-study-tests_2conftest_8py.html#a43e58d952434ecf874033e06947a9ddd", null ],
       [ "antares_simu_path", "run-study-tests_2conftest_8py.html#a75aa74dbf5a8cc876d721a29b81cf470", null ],
-      [ "api_exe_path", "run-study-tests_2conftest_8py.html#a8433334825bfc384954e23a990a50094", null ],
       [ "named_mps_problems", "run-study-tests_2conftest_8py.html#ab14b209de745d00c3dea31b7fc8b55be", null ],
       [ "ortools_solver", "examples_2conftest_8py.html#a54ae42864d0cd3a8e733dfdf653f8274", null ],
-      [ "output_dir", "run-study-tests_2conftest_8py.html#a7f02383910754721c73ddb04e8380681", null ],
       [ "parallel", "run-study-tests_2conftest_8py.html#a9740f129861e2a7c9214e69368a0a87f", null ],
       [ "pytest_addoption", "examples_2conftest_8py.html#ab0ebca4c0bae417023a405900453603d", null ],
       [ "pytest_collection_modifyitems", "run-study-tests_2conftest_8py.html#abe907f64aa904cebe2c9198b2f2caf91", null ],
       [ "solver_name", "run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7", null ],
-      [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ],
-      [ "write_mps", "run-study-tests_2conftest_8py.html#a8fdb5ae32f4a50b407f1ab8617bbad9a", null ]
+      [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ]
     ] ],
     [ "create_checks", null, [
       [ "create_check_hydro_level", "create__checks_8py.html#a16cc70ab9aa97d6e3dba3c4acebf30a5", null ],
@@ -2784,9 +2783,9 @@ var namespaces_dup =
     ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
-      [ "api", "fixtures_8py.html#aa6e3dd2012e60e4c1d738d16a29d2c54", null ],
-      [ "check_runner", "fixtures_8py.html#a5f063c637460ed79230cc66b4d988687", null ],
-      [ "is_api", "fixtures_8py.html#af2069f6d90808dca08fcfc2990f7419a", null ],
+      [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
+      [ "check_runner", "fixtures_8py.html#aa0d40d47bc787c0a5f6764b31a2a219e", null ],
+      [ "is_problem_generation", "fixtures_8py.html#a6277278f160ef4790de7d95c773b90ad", null ],
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]

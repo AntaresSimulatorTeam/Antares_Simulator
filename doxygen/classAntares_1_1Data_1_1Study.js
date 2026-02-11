@@ -48,6 +48,7 @@ var classAntares_1_1Data_1_1Study =
     [ "scenarioRulesCreate", "classAntares_1_1Data_1_1Study.html#a26561b5030df89b922edb0453ad1ae5a", null ],
     [ "scenarioRulesDestroy", "classAntares_1_1Data_1_1Study.html#ad64c59f44620ab2636902f0fcc373a7b", null ],
     [ "scenarioRulesLoadIfNotAvailable", "classAntares_1_1Data_1_1Study.html#a05e9fea00b649e34465951809f6ecb85", null ],
+    [ "setModelerData", "classAntares_1_1Data_1_1Study.html#afd0e52a1d19d8c61f2caead5b6a265e7", null ],
     [ "storeTimeSeriesNumbers", "classAntares_1_1Data_1_1Study.html#a8741d43b1ce73c398a802bf089640634", null ],
     [ "areas", "classAntares_1_1Data_1_1Study.html#ad4f8a799f2cf9214dada8b0ad8993214", null ],
     [ "bindingConstraints", "classAntares_1_1Data_1_1Study.html#a24abc348d810c423a622796e34afe476", null ],

@@ -1,7 +1,5 @@
 var NAVTREEINDEX59 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#afa929b139bcabb9a98ad8715fc874a62":[8,0,0,18,6,4,111,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html":[8,0,0,18,6,4,113],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a2c9d07393ce936e4e01613f14b2c1c5b":[8,0,0,18,6,4,113,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a359458cd3981c05c2be5752f4a4d2573":[8,0,0,18,6,4,113,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a4841456f557e4dd6b885c1ff81be4c71":[8,0,0,18,6,4,113,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX59 =
 "structAntares_1_1Window_1_1Inspector_1_1PAdequacyPatchMode.html":[8,0,0,23,1,31],
 "structAntares_1_1Window_1_1Inspector_1_1PAdequacyPatchMode.html#a8a88cea1ad43dac37075e12d44731a35":[8,0,0,23,1,31,0],
 "structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html":[8,0,0,23,1,4],
-"structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html#a5eff8708cea7c10444a4805c327089ac":[8,0,0,23,1,4,1]
+"structAntares_1_1Window_1_1Inspector_1_1PAreaColor.html#a5eff8708cea7c10444a4805c327089ac":[8,0,0,23,1,4,1],
+"structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html":[8,0,0,23,1,4,0],
+"structAntares_1_1Window_1_1Inspector_1_1PAreaColor_1_1Color.html#a1bf5272061ce7955c13cf033aa31faff":[8,0,0,23,1,4,0,2]
 };

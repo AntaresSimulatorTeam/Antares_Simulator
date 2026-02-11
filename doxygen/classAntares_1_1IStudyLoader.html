@@ -148,16 +148,16 @@ Inheritance diagram for Antares::IStudyLoader:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa80bbd10976cd03e2568f3d8ce3b52c2"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IStudyLoader.html#aa80bbd10976cd03e2568f3d8ce3b52c2">load</a> () const =0</td></tr>
-<tr class="memdesc:aa80bbd10976cd03e2568f3d8ce3b52c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The load method is used to load a study.  <a href="classAntares_1_1IStudyLoader.html#aa80bbd10976cd03e2568f3d8ce3b52c2">More...</a><br /></td></tr>
-<tr class="separator:aa80bbd10976cd03e2568f3d8ce3b52c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9626a487c132b5e0d0e041e8a0ce87d"><td class="memItemLeft" align="right" valign="top">virtual std::pair&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &gt;, std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IStudyLoader.html#af9626a487c132b5e0d0e041e8a0ce87d">load</a> () const =0</td></tr>
+<tr class="memdesc:af9626a487c132b5e0d0e041e8a0ce87d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The load method is used to load a study.  <a href="classAntares_1_1IStudyLoader.html#af9626a487c132b5e0d0e041e8a0ce87d">More...</a><br /></td></tr>
+<tr class="separator:af9626a487c132b5e0d0e041e8a0ce87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classAntares_1_1IStudyLoader.html" title="The IStudyLoader class is an interface for loading studies.">IStudyLoader</a> class is an interface for loading studies. </p>
 <p>It declares the load method. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa80bbd10976cd03e2568f3d8ce3b52c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa80bbd10976cd03e2568f3d8ce3b52c2">&#9670;&nbsp;</a></span>load()</h2>
+<a id="af9626a487c132b5e0d0e041e8a0ce87d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9626a487c132b5e0d0e041e8a0ce87d">&#9670;&nbsp;</a></span>load()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -166,7 +166,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::unique_ptr&lt;<a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&gt; Antares::IStudyLoader::load </td>
+          <td class="memname">virtual std::pair&lt;std::unique_ptr&lt;<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&gt;, std::shared_ptr&lt;<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&gt; &gt; Antares::IStudyLoader::load </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -180,9 +180,9 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The load method is used to load a study. </p>
-<dl class="section return"><dt>Returns</dt><dd>A shared pointer to a Study object. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A pair which is a std::unique_ptr&lt;Data::Study&gt; and Solver::IResultWriter::Ptr </dd></dl>
 
-<p>Implemented in <a class="el" href="classInMemoryStudyLoader.html#a4da5ec49c91c549848330e51bb566c81">InMemoryStudyLoader</a>, and <a class="el" href="classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019">Antares::FileTreeStudyLoader</a>.</p>
+<p>Implemented in <a class="el" href="classInMemoryStudyLoader.html#a621c3dff4f011bbb5f0e9809fd0bd474">InMemoryStudyLoader</a>, and <a class="el" href="classAntares_1_1FileTreeStudyLoader.html#ad1cc76a073bf96684d6a819d125db171">Antares::FileTreeStudyLoader</a>.</p>
 
 </div>
 </div>

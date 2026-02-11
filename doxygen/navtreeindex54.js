@@ -1,6 +1,5 @@
 var NAVTREEINDEX54 =
 {
-"objective_8h_source.html":[9,0,0,9,0,0,0,0,0,6],
 "objectives-creators_8h_source.html":[9,0,0,10,2,4,0,0,1],
 "operatingCost_8h_source.html":[9,0,0,8,12,0,0,0,0,3,30],
 "operator_8h_source.html":[9,0,0,12,2,1,1,1,0,6],
@@ -177,14 +176,12 @@ var NAVTREEINDEX54 =
 "rules_8h_source.html":[9,0,0,4,0,25,0,0,0,8,7],
 "rules_8hxx_source.html":[9,0,0,4,0,25,0,0,0,8,8],
 "run-study-tests_2check__on__results_2mps__utils_8py.html#ad7d2400c813cae7eaff0c4a7e4f450b3":[7,0,30,1],
-"run-study-tests_2conftest_8py.html#a75aa74dbf5a8cc876d721a29b81cf470":[7,0,11,0],
-"run-study-tests_2conftest_8py.html#a7f02383910754721c73ddb04e8380681":[7,0,11,4],
-"run-study-tests_2conftest_8py.html#a8433334825bfc384954e23a990a50094":[7,0,11,1],
-"run-study-tests_2conftest_8py.html#a8fdb5ae32f4a50b407f1ab8617bbad9a":[7,0,11,10],
-"run-study-tests_2conftest_8py.html#a9740f129861e2a7c9214e69368a0a87f":[7,0,11,5],
+"run-study-tests_2conftest_8py.html#a43e58d952434ecf874033e06947a9ddd":[7,0,11,0],
+"run-study-tests_2conftest_8py.html#a75aa74dbf5a8cc876d721a29b81cf470":[7,0,11,1],
+"run-study-tests_2conftest_8py.html#a9740f129861e2a7c9214e69368a0a87f":[7,0,11,4],
 "run-study-tests_2conftest_8py.html#ab14b209de745d00c3dea31b7fc8b55be":[7,0,11,2],
-"run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7":[7,0,11,8],
-"run-study-tests_2conftest_8py.html#abe907f64aa904cebe2c9198b2f2caf91":[7,0,11,7],
+"run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7":[7,0,11,7],
+"run-study-tests_2conftest_8py.html#abe907f64aa904cebe2c9198b2f2caf91":[7,0,11,6],
 "run-study-tests_2utils_2assertions_8py.html#a12484173019ff38ad11b727adc616565":[7,0,2,1],
 "run-study-tests_2utils_2assertions_8py.html#a3061966e08d91fc806bd95f740004b64":[7,0,2,2],
 "run_8h_source.html":[9,0,0,12,2,2,12,1],
@@ -249,5 +246,8 @@ var NAVTREEINDEX54 =
 "simulator_2toolbox_2components_2datagrid_2renderer_2area_2nodal-optimization_8h_source.html":[9,0,0,12,2,1,1,1,1,0,8],
 "simulator_2toolbox_2components_2datagrid_2renderer_2area_2timeseries_8h_source.html":[9,0,0,12,2,1,1,1,1,0,14],
 "simulator_2toolbox_2components_2datagrid_2renderer_2bindingconstraint_2offsets_8h_source.html":[9,0,0,12,2,1,1,1,1,1,1],
-"simulator_2toolbox_2components_2datagrid_2renderer_2bindingconstraint_2weights_8h_source.html":[9,0,0,12,2,1,1,1,1,1,2]
+"simulator_2toolbox_2components_2datagrid_2renderer_2bindingconstraint_2weights_8h_source.html":[9,0,0,12,2,1,1,1,1,1,2],
+"simulator_2toolbox_2components_2htmllistbox_2item_2group_8h_source.html":[9,0,0,12,2,1,1,2,1,4],
+"simulator_2toolbox_2components_2map_2settings_8h.html#a2dd8f5c6cbdd1420b7f2dff55359fb8d":[7,0,0,16,15],
+"simulator_2toolbox_2components_2map_2settings_8h.html#a2dd8f5c6cbdd1420b7f2dff55359fb8da0816f4b5fc962cf1f07544c9bf92440e":[7,0,0,16,15,4]
 };

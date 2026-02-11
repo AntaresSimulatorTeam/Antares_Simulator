@@ -164,16 +164,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:af9da5fd27e22389c58240eeac26bc9cb"><td class="memItemLeft" align="right" valign="top"><a id="af9da5fd27e22389c58240eeac26bc9cb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>writeExecutionInfo</b> ()</td></tr>
 <tr class="separator:af9da5fd27e22389c58240eeac26bc9cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06130e2b72b4529a16baf8eacb280168"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Application.html#a06130e2b72b4529a16baf8eacb280168">acquireStudy</a> ()</td></tr>
-<tr class="memdesc:a06130e2b72b4529a16baf8eacb280168"><td class="mdescLeft">&#160;</td><td class="mdescRight">/!\ Acquire the study. Leave <a class="el" href="classAntares_1_1Solver_1_1Application.html">Application</a> object in an invalid state.  <a href="classAntares_1_1Solver_1_1Application.html#a06130e2b72b4529a16baf8eacb280168">More...</a><br /></td></tr>
-<tr class="separator:a06130e2b72b4529a16baf8eacb280168"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a439ee57fe487abe8b53730b6dfe45e8b"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &gt;, IResultWriter::Ptr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Application.html#a439ee57fe487abe8b53730b6dfe45e8b">acquireStudy</a> ()</td></tr>
+<tr class="memdesc:a439ee57fe487abe8b53730b6dfe45e8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">/!\ Acquire the study. Leave <a class="el" href="classAntares_1_1Solver_1_1Application.html">Application</a> object in an invalid state.  <a href="classAntares_1_1Solver_1_1Application.html#a439ee57fe487abe8b53730b6dfe45e8b">More...</a><br /></td></tr>
+<tr class="separator:a439ee57fe487abe8b53730b6dfe45e8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99c7b5b2841bce24943af7050e0e265c"><td class="memItemLeft" align="right" valign="top"><a id="a99c7b5b2841bce24943af7050e0e265c"></a>
 <a class="el" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getDurationCollector</b> ()</td></tr>
 <tr class="separator:a99c7b5b2841bce24943af7050e0e265c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a06130e2b72b4529a16baf8eacb280168"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06130e2b72b4529a16baf8eacb280168">&#9670;&nbsp;</a></span>acquireStudy()</h2>
+<a id="a439ee57fe487abe8b53730b6dfe45e8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a439ee57fe487abe8b53730b6dfe45e8b">&#9670;&nbsp;</a></span>acquireStudy()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +182,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>writeExecutionInfo</b
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&gt; Antares::Solver::Application::acquireStudy </td>
+          <td class="memname">std::pair&lt;std::unique_ptr&lt;<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&gt;, IResultWriter::Ptr&gt; Antares::Solver::Application::acquireStudy </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -196,7 +196,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>writeExecutionInfo</b
 </div><div class="memdoc">
 
 <p>/!\ Acquire the study. Leave <a class="el" href="classAntares_1_1Solver_1_1Application.html">Application</a> object in an invalid state. </p>
-<dl class="section return"><dt>Returns</dt><dd>The study </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>pair {study, <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>} </dd></dl>
 
 </div>
 </div>

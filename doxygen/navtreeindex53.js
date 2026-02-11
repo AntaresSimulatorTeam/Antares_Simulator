@@ -1,6 +1,5 @@
 var NAVTREEINDEX53 =
 {
-"locale_8h_source.html":[9,0,0,4,0,15,0,0,0,0],
 "locales_8cpp.html#a79feb0ae930c8cd7de7b3c1380c71809":[7,0,0,15,0],
 "locales_8cpp.html#a8f92b9278e064483db7c17d6f42fd546":[7,0,0,15,1],
 "locales_8h_source.html":[9,0,0,12,2,1,13],
@@ -249,5 +248,6 @@ var NAVTREEINDEX53 =
 "npCostByDispatchablePlant_8h_source.html":[9,0,0,8,12,0,0,0,0,3,29],
 "ntc_8h_source.html":[9,0,0,12,0,0,0,2,6],
 "null-provider_8h_source.html":[9,0,0,12,1,0,3,4],
-"numspace__manager_8h_source.html":[9,0,0,8,9,0,0,0,0,11]
+"numspace__manager_8h_source.html":[9,0,0,8,9,0,0,0,0,11],
+"objective_8h_source.html":[9,0,0,9,0,0,0,0,0,6]
 };

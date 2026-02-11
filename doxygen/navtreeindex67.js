@@ -1,13 +1,5 @@
 var NAVTREEINDEX67 =
 {
-"week_8h_source.html":[9,0,0,12,2,1,1,1,0,0,7],
-"weekday_8h_source.html":[9,0,0,12,2,1,1,1,0,0,8],
-"weekly__optimization_8h_source.html":[9,0,0,8,7,1,0,0,0,19],
-"wind_2prepro_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,7,2],
-"wind_8h_source.html":[9,0,0,8,12,0,0,0,0,1,13],
-"windows_2bindingconstraint_2bindingconstraint_8h_source.html":[9,0,0,12,2,2,1,0],
-"windows_2output_2window_8h_source.html":[9,0,0,12,2,2,9,12],
-"windows_2textinput_2input_8cpp.html#a522bb0ea4ba233d9e9d50127ec600c40":[7,0,0,30,55],
 "windows_2textinput_2input_8h_source.html":[9,0,0,12,2,2,13,0],
 "wip-panel_8h_source.html":[9,0,0,12,2,1,1,10],
 "wizardheader_8h_source.html":[9,0,0,12,2,1,1,11],

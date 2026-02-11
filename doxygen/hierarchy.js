@@ -39,6 +39,7 @@ var hierarchy =
     [ "AllocationFixture", "structAllocationFixture.html", null ],
     [ "Antares::Data::AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html", null ],
     [ "Antares::Solver::Simulation::annualCostsStatistics", "classAntares_1_1Solver_1_1Simulation_1_1annualCostsStatistics.html", null ],
+    [ "antares_problem_generator.AntaresProblemGeneratorRun", "classantares__problem__generator_1_1AntaresProblemGeneratorRun.html", null ],
     [ "Antares::Toolbox::Filter::Operator::AOperator", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1AOperator.html", [
       [ "Antares::Toolbox::Filter::Operator::EqualsTo", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1EqualsTo.html", null ],
       [ "Antares::Toolbox::Filter::Operator::GreaterThan", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1GreaterThan.html", null ],
@@ -48,9 +49,7 @@ var hierarchy =
       [ "Antares::Toolbox::Filter::Operator::Modulo", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1Modulo.html", null ],
       [ "Antares::Toolbox::Filter::Operator::NotEqualsTo", "classAntares_1_1Toolbox_1_1Filter_1_1Operator_1_1NotEqualsTo.html", null ]
     ] ],
-    [ "api_run.api_run", "classapi__run_1_1api__run.html", null ],
     [ "Antares::API::APIInternal", "classAntares_1_1API_1_1APIInternal.html", null ],
-    [ "ApiOptions", "structApiOptions.html", null ],
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1CostGeneration_01_4.html", null ],
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
@@ -157,8 +156,8 @@ var hierarchy =
       [ "Antares::Component::Datagrid::Renderer::thermalColumn", "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1thermalColumn.html", null ]
     ] ],
     [ "Antares::IO::Outputs::ColumnBasedStorage", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html", null ],
-    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "commonFixture", "structcommonFixture.html", null ],
+    [ "CommonFixture", "structCommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Forms::CompareBySimulationMode", "structAntares_1_1Forms_1_1CompareBySimulationMode.html", null ],

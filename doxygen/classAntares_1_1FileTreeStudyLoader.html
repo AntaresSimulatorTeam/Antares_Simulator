@@ -150,17 +150,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af23c335e62797005c5dd7e7fe25b8f1d"><td class="memItemLeft" align="right" valign="top"><a id="af23c335e62797005c5dd7e7fe25b8f1d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>FileTreeStudyLoader</b> (std::filesystem::path study_path)</td></tr>
 <tr class="separator:af23c335e62797005c5dd7e7fe25b8f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec874bace5d8216b2c11f0947d557019"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019">load</a> () const override</td></tr>
-<tr class="memdesc:aec874bace5d8216b2c11f0947d557019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a study from the file tree.  <a href="classAntares_1_1FileTreeStudyLoader.html#aec874bace5d8216b2c11f0947d557019">More...</a><br /></td></tr>
-<tr class="separator:aec874bace5d8216b2c11f0947d557019"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1cc76a073bf96684d6a819d125db171"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &gt;, std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1FileTreeStudyLoader.html#ad1cc76a073bf96684d6a819d125db171">load</a> () const override</td></tr>
+<tr class="memdesc:ad1cc76a073bf96684d6a819d125db171"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a study from the file tree.  <a href="classAntares_1_1FileTreeStudyLoader.html#ad1cc76a073bf96684d6a819d125db171">More...</a><br /></td></tr>
+<tr class="separator:ad1cc76a073bf96684d6a819d125db171"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A class to load studies from the file tree. </p>
 <p>This class is responsible for loading studies from files in file system.</p>
 <dl class="section note"><dt>Note</dt><dd>This class inherits from the <a class="el" href="classAntares_1_1IStudyLoader.html" title="The IStudyLoader class is an interface for loading studies.">IStudyLoader</a> interface. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aec874bace5d8216b2c11f0947d557019"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec874bace5d8216b2c11f0947d557019">&#9670;&nbsp;</a></span>load()</h2>
+<a id="ad1cc76a073bf96684d6a819d125db171"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1cc76a073bf96684d6a819d125db171">&#9670;&nbsp;</a></span>load()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -169,7 +169,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &gt; Antares::FileTreeStudyLoader::load </td>
+          <td class="memname">std::pair&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &gt;, Solver::IResultWriter::Ptr &gt; Antares::FileTreeStudyLoader::load </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -186,7 +186,7 @@ Public Member Functions</h2></td></tr>
 <p>This function prepares the arguments required by the Antares Solver application and then calls the application's prepare method. It then returns the study loaded by the application.</p>
 <dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;Antares::Data::Study&gt; A shared_ptr to the loaded Study object. </dd></dl>
 
-<p>Implements <a class="el" href="classAntares_1_1IStudyLoader.html#aa80bbd10976cd03e2568f3d8ce3b52c2">Antares::IStudyLoader</a>.</p>
+<p>Implements <a class="el" href="classAntares_1_1IStudyLoader.html#af9626a487c132b5e0d0e041e8a0ce87d">Antares::IStudyLoader</a>.</p>
 
 </div>
 </div>
