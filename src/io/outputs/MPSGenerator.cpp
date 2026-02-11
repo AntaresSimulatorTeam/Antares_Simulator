@@ -24,8 +24,8 @@
 #include <fmt/format.h>
 #include <fstream>
 
-#include "antares/exception/RuntimeError.hpp"
 #include <antares/logs/logs.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/io/outputs/ExportableName.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;

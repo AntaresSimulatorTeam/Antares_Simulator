@@ -233,7 +233,8 @@ std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
     for (const auto& [left_end, right_begin, baseTime, index, base]: mem)
     {
         std::string& s = names[index];
-        s = s.substr(0, left_end) + std::to_string(baseTime + week * base) + s.substr(static_cast<size_t>(right_begin));
+        s = s.substr(0, left_end) + std::to_string(baseTime + week * base)
+            + s.substr(static_cast<size_t>(right_begin));
     }
     return names;
 }
@@ -364,11 +365,11 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem) const
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
-                                                                            numeroDeLIntervalle);
+                                                                           numeroDeLIntervalle);
     const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
-                                                                  : nullptr;
+                                                                 : nullptr;
     const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
       = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
