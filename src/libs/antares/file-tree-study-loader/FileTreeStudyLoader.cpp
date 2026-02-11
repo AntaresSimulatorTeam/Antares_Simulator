@@ -4,7 +4,6 @@
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 
 #include <memory>
-#include <span>
 
 #include "antares/application/application.h"
 
@@ -15,7 +14,8 @@ FileTreeStudyLoader::FileTreeStudyLoader(std::filesystem::path study_path):
 {
 }
 
-std::unique_ptr<Antares::Data::Study> FileTreeStudyLoader::load() const
+std::pair<std::unique_ptr<Data::Study>, Solver::IResultWriter::Ptr> FileTreeStudyLoader::load()
+  const
 {
     using namespace std::literals::string_literals;
     Antares::Solver::Application application;

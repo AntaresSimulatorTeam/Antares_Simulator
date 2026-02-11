@@ -1,6 +1,8 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <fmt/format.h>
+
 #include <antares/solver/optim-model-filler/BendersDecomposition.h>
 
 namespace Antares::Optimisation
@@ -32,13 +34,24 @@ BendersDecompositionWriter::BendersDecompositionWriter(const BendersDecompositio
 
 void BendersDecompositionWriter::write(std::ostream& os) const
 {
+    os << getBendersDecomposition();
+}
+
+std::string BendersDecompositionWriter::getBendersDecomposition() const
+{
+    std::string structure;
     for (const auto& [problemId, v]: bd_.couplings())
     {
         for (const auto& [variableName, variableIndex]: v)
         {
-            os << problemId << '\t' << variableName << '\t' << variableIndex << '\n';
+            fmt::format_to(std::back_inserter(structure),
+                           "{}\t{}\t{}\n",
+                           problemId,
+                           variableName,
+                           variableIndex);
         }
     }
+    return structure;
 }
 
 } // namespace Antares::Optimisation

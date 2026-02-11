@@ -7,9 +7,7 @@ def pytest_addoption(parser):
     parser.addoption("--named-mps-problems", action="store_true", default=False)
     parser.addoption("--force-parallel", action="store_true", default=False)
     parser.addoption("--ts-generator", action="store_true", default=False)
-    parser.addoption("--api-exe-path", action="store", default="")
-    parser.addoption("--write-mps", action="store_true", default=False)
-    parser.addoption("--output-dir", action="store", default="20210110-0900eco")
+    parser.addoption("--antares-problem-generator-exe", action="store", default="")
 
 
 @pytest.fixture()
@@ -33,18 +31,8 @@ def parallel(request):
 
 
 @pytest.fixture()
-def api_exe_path(request):
-    return request.config.getoption("--api-exe-path")
-
-
-@pytest.fixture()
-def write_mps(request):
-    return request.config.getoption("--write-mps")
-
-
-@pytest.fixture()
-def output_dir(request):
-    return request.config.getoption("--output-dir")
+def antares_problem_generator_exe(request):
+    return request.config.getoption("--antares-problem-generator-exe")
 
 
 def pytest_collection_modifyitems(config, items):
@@ -52,13 +40,13 @@ def pytest_collection_modifyitems(config, items):
     Hook to skip specific failing studies.
     """
     skipped_studies = ["AreaHydroLevel", "FinalStockEquivalent-cnt", "reservoir-Min-MaxHydroPower", ]
-    if config.getoption("--api-exe-path"):
+    if config.getoption("--antares-problem-generator-exe"):
         for item in items:
             for study_name in skipped_studies:
                 if study_name in item.name:
                     item.add_marker(
                         pytest.mark.skip(
-                            reason=f"Study 'api can not run {study_name}' because it has not independent weeks"
+                            reason=f"Study 'antares-problem-generator can not run {study_name}' because it has not independent weeks"
                         )
                     )
                     break
