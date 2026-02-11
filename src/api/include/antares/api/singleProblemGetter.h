@@ -17,6 +17,7 @@ class SingleProblemGetter;
 
 namespace Antares::Solver
 {
+struct ProblemEntity;
 
 class SingleProblemGetter final
 {
@@ -36,12 +37,9 @@ public:
     // TODO[FOM] This should not be necessary
     void writeNTCTimeSeries(const std::filesystem::path& outputDir);
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
-    int nbYears() const;
-    int nbWeeks() const;
-    std::set<int> playedYears() const;
-    void setBendersDecomposition(Optimisation::BendersDecomposition* bd);
-    ModelerData* modelerData();
     bool areWeeksIndependent() const;
+    void printProblems() const;
+    Solver::ProblemEntity getMasterProblem() const;
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

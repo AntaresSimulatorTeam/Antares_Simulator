@@ -10,11 +10,191 @@
 #include "antares/solver/utils/ortools_utils.h"
 #include "antares/utils/utils.h"
 
-using namespace Antares;
-using namespace Antares::Data;
+namespace
+{
 namespace fs = std::filesystem;
 
-std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoadOptions& options)
+void addSimulationOptions(Yuni::GetOpt::Parser& parser, Antares::Data::StudyLoadOptions& options)
+{
+    parser.addParagraph("Simulation");
+
+    parser.addFlag(options.studyFolder, 'i', "input", "Study folder");
+    parser.addFlag(options.forceExpansion,
+                   ' ',
+                   "expansion",
+                   "Force the simulation in expansion mode");
+    parser.addFlag(options.forceEconomy, ' ', "economy", "Force the simulation in economy mode");
+    parser.addFlag(options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
+    parser.addFlag(options.enableParallel,
+                   ' ',
+                   "parallel",
+                   "Enable the parallel computation of MC years");
+    parser.add(options.maxNbYearsInParallel,
+               ' ',
+               "force-parallel",
+               "Override the max number of years computed simultaneously");
+}
+
+void addParameterOptions(Yuni::GetOpt::Parser& parser,
+                         Settings& settings,
+                         Antares::Data::StudyLoadOptions& options)
+{
+    (void)options;
+
+    parser.addParagraph("\nParameters");
+
+    parser.add(settings.simulationName, 'n', "name", "Name of the current simulation");
+    parser.addFlag(settings.tsGeneratorsOnly,
+                   'g',
+                   "generators-only",
+                   "Run the time-series generators only");
+    parser.add(settings.commentFile,
+               'c',
+               "comment-file",
+               "Specify the file to copy as comments of the simulation");
+    parser.addFlag(settings.ignoreLoadingErrors, 'f', "force", "Ignore all errors at loading");
+    parser.addFlag(settings.noOutput,
+                   ' ',
+                   "no-output",
+                   "Do not write the results in the output folder");
+    parser.add(options.nbYears, 'y', "year", "Override the number of MC years");
+    parser.addFlag(options.forceYearByYear,
+                   ' ',
+                   "year-by-year",
+                   "Force the writing the result output for each year (economy only)");
+    parser.addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
+    parser.addFlag(settings.forceZipOutput,
+                   'z',
+                   "zip-output",
+                   "Force the write output into a single zip archive");
+}
+
+void addOptimizationOptions(Yuni::GetOpt::Parser& parser,
+                            Settings& settings,
+                            Antares::Data::StudyLoadOptions& options)
+{
+    parser.addParagraph("\nOptimization");
+
+    parser.add(options.solverOptions.linearSolver,
+               ' ',
+               "linear-solver",
+               "Solver used for linear optimizations during simulation. Use --list-solvers to get "
+               "the avaible solver list");
+    parser.add(options.solverOptions.linearSolver,
+               ' ',
+               "solver",
+               "Deprecated, use --linear-solver instead.");
+    parser.add(options.solverOptions.linearSolverParameters,
+               ' ',
+               "linear-solver-param",
+               "Linear solver-specific parameters, for instance \"THREADS 1 "
+               "PRESOLVE 1\""
+               " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
+               "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
+    parser.add(options.solverOptions.linearSolverParameters,
+               ' ',
+               "solver-parameters",
+               "Deprecated, use --linear-solver-param instead.");
+    parser.add(options.solverOptions.lpSolverParamOptim1,
+               ' ',
+               "linear-solver-param-optim-1",
+               "Linear solver-specific parameters for first optimization."
+               " Only supported for SCIP & XPRESS.");
+    parser.add(options.solverOptions.lpSolverParamOptim2,
+               ' ',
+               "linear-solver-param-optim-2",
+               "Linear solver-specific parameters for second optimization."
+               " Only supported for SCIP & XPRESS.");
+    parser.addFlag(options.solverOptions.useOptim1BasisInNextWeek,
+                   ' ',
+                   "use-optim-1-basis-next-week",
+                   "Use basis of first optimization in next week's first optimization");
+    parser.addFlag(options.solverOptions.useOptim1BasisInOptim2,
+                   ' ',
+                   "use-optim-1-basis-optim-2",
+                   "Use basis of first optimization in second optimization");
+    parser.add(options.solverOptions.quadraticSolver,
+               ' ',
+               "quadratic-solver",
+               "Solver used for quadratic optimizations during simulation. Use --list-solvers to "
+               "get the avaible solver list");
+    parser.add(options.solverOptions.quadraticSolverParameters,
+               ' ',
+               "quadratic-solver-param",
+               "Quadratic solver-specific parameters, for instance \"THREADS 8\""
+               " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
+               "Syntax is solver-dependent.");
+    parser.addFlag(settings.simplexOptimRange,
+                   ' ',
+                   "optimization-range",
+                   "Force the simplex optimization range ('day' or 'week')");
+    parser.addFlag(settings.ignoreConstraints, ' ', "no-constraints", "Ignore all constraints");
+    parser.addFlag(options.noTimeseriesImportIntoInput,
+                   ' ',
+                   "no-ts-import",
+                   "Do not import timeseries into the input folder. This option might be useful "
+                   "for running old studies without upgrading them");
+    parser.addFlag(options.mpsToExport,
+                   'm',
+                   "mps-export",
+                   "Export in the mps (anonymous) format the optimization problems (both optim).");
+    parser.addFlag(options.namedProblems,
+                   's',
+                   "named-mps-problems",
+                   "Export named constraints and variables in mps (both optim).");
+    parser.addFlag(options.solverOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
+}
+
+void addMiscOptions(Yuni::GetOpt::Parser& parser,
+                    Settings& settings,
+                    Antares::Data::StudyLoadOptions& options)
+{
+    parser.addParagraph("\nMisc.");
+
+    parser.addFlag(settings.displayProgression,
+                   ' ',
+                   "progress",
+                   "Display the progress of each task");
+    parser.add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
+    parser.addFlag(options.listSolvers,
+                   'l',
+                   "list-solvers",
+                   "List available OR-Tools solvers, then exit.");
+    parser.addFlag(options.displayVersion,
+                   'v',
+                   "version",
+                   "Print the version of antares-solver and exit");
+}
+
+void applySimplexOptimRange(const Settings& settings, Antares::Data::StudyLoadOptions& options)
+{
+    if (settings.simplexOptimRange.empty())
+    {
+        return;
+    }
+
+    auto range = settings.simplexOptimRange;
+    range.trim(" \t");
+    range.toLower();
+
+    if (range == "week")
+    {
+        options.simplexOptimizationRange = Data::sorWeek;
+        return;
+    }
+
+    if (range == "day")
+    {
+        options.simplexOptimizationRange = Data::sorDay;
+        return;
+    }
+
+    throw Error::InvalidOptimizationRange();
+}
+} // namespace
+
+std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
+                                                   Antares::Data::StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -22,218 +202,35 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
 
     parser->addParagraph(Yuni::String() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << "\n");
 
-    // Simulation mode
-    parser->addParagraph("Simulation");
-    // --input
-    parser->addFlag(options.studyFolder, 'i', "input", "Study folder");
-    // --expansion
-    parser->addFlag(options.forceExpansion,
-                    ' ',
-                    "expansion",
-                    "Force the simulation in expansion mode");
-    // --economy
-    parser->addFlag(options.forceEconomy, ' ', "economy", "Force the simulation in economy mode");
-    // --adequacy
-    parser->addFlag(options.forceAdequacy,
-                    ' ',
-                    "adequacy",
-                    "Force the simulation in adequacy mode");
-    // --parallel
-    parser->addFlag(options.enableParallel,
-                    ' ',
-                    "parallel",
-                    "Enable the parallel computation of MC years");
-    // --force-parallel
-    parser->add(options.maxNbYearsInParallel,
-                ' ',
-                "force-parallel",
-                "Override the max number of years computed simultaneously");
+    addSimulationOptions(*parser, options);
+    addParameterOptions(*parser, settings, options);
+    addOptimizationOptions(*parser, settings, options);
+    addMiscOptions(*parser, settings, options);
 
-    parser->addParagraph("\nParameters");
-    // --name
-    parser->add(settings.simulationName, 'n', "name", "Name of the current simulation");
-    // --generators-only
-    parser->addFlag(settings.tsGeneratorsOnly,
-                    'g',
-                    "generators-only",
-                    "Run the time-series generators only");
-
-    // --comment-file
-    parser->add(settings.commentFile,
-                'c',
-                "comment-file",
-                "Specify the file to copy as comments of the simulation");
-    // --force
-    parser->addFlag(settings.ignoreLoadingErrors, 'f', "force", "Ignore all errors at loading");
-    // --no-output
-    parser->addFlag(settings.noOutput,
-                    ' ',
-                    "no-output",
-                    "Do not write the results in the output folder");
-    // --year
-    parser->add(options.nbYears, 'y', "year", "Override the number of MC years");
-    // --year-by-year
-    parser->addFlag(options.forceYearByYear,
-                    ' ',
-                    "year-by-year",
-                    "Force the writing the result output for each year (economy only)");
-    // --derated
-    parser->addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
-
-    // --output-force-zip
-    parser->addFlag(settings.forceZipOutput,
-                    'z',
-                    "zip-output",
-                    "Force the write output into a single zip archive");
-
-    parser->addParagraph("\nOptimization");
-
-    //--linear-solver
-    parser->add(options.solverOptions.linearSolver,
-                ' ',
-                "linear-solver",
-                "Solver used for linear optimizations during simulation. Use --list-solvers to get "
-                "the avaible solver list");
-
-    //--solver
-    parser->add(options.solverOptions.linearSolver,
-                ' ',
-                "solver",
-                "Deprecated, use --linear-solver instead.");
-
-    //--linear-solver-param
-    parser->add(options.solverOptions.linearSolverParameters,
-                ' ',
-                "linear-solver-param",
-                "Linear solver-specific parameters, for instance \"THREADS 1 "
-                "PRESOLVE 1\""
-                " for XPRESS or \"parallel/maxnthreads 1, lp/presolving TRUE\" for "
-                "SCIP. Syntax is solver-dependent, and only supported for SCIP & XPRESS.");
-
-    //--solver-parameters
-    parser->add(options.solverOptions.linearSolverParameters,
-                ' ',
-                "solver-parameters",
-                "Deprecated, use --linear-solver-param instead.");
-
-    // --linear-solver-param-optim-1
-    parser->add(options.solverOptions.lpSolverParamOptim1,
-                ' ',
-                "linear-solver-param-optim-1",
-                "Linear solver-specific parameters for first optimization."
-                " Only supported for SCIP & XPRESS.");
-
-    // --linear-solver-param-optim-2
-    parser->add(options.solverOptions.lpSolverParamOptim2,
-                ' ',
-                "linear-solver-param-optim-2",
-                "Linear solver-specific parameters for second optimization."
-                " Only supported for SCIP & XPRESS.");
-
-    // --use-optim-1-basis-next-week
-    parser->addFlag(options.solverOptions.useOptim1BasisInNextWeek,
-                    ' ',
-                    "use-optim-1-basis-next-week",
-                    "Use basis of first optimization in next week's first optimization");
-
-    // --use-optim-1-basis-optim-2
-    parser->addFlag(options.solverOptions.useOptim1BasisInOptim2,
-                    ' ',
-                    "use-optim-1-basis-optim-2",
-                    "Use basis of first optimization in second optimization");
-
-    //--quadratic-solver
-    parser->add(options.solverOptions.quadraticSolver,
-                ' ',
-                "quadratic-solver",
-                "Solver used for quadratic optimizations during simulation. Use --list-solvers to "
-                "get the avaible solver list");
-
-    //--quadratic-solver-param
-    parser->add(options.solverOptions.quadraticSolverParameters,
-                ' ',
-                "quadratic-solver-param",
-                "Quadratic solver-specific parameters, for instance \"THREADS 8\""
-                " for XPRESS or \"parallel/maxnthreads 8\" for SCIP. "
-                "Syntax is solver-dependent.");
-
-    // --optimization-range
-    parser->addFlag(settings.simplexOptimRange,
-                    ' ',
-                    "optimization-range",
-                    "Force the simplex optimization range ('day' or 'week')");
-
-    // --no-constraints
-    parser->addFlag(settings.ignoreConstraints, ' ', "no-constraints", "Ignore all constraints");
-
-    // --no-ts-import
-    parser->addFlag(options.noTimeseriesImportIntoInput,
-                    ' ',
-                    "no-ts-import",
-                    "Do not import timeseries into the input folder. This option might be useful "
-                    "for running old studies without upgrading them");
-
-    // --mps-export
-    parser->addFlag(options.mpsToExport,
-                    'm',
-                    "mps-export",
-                    "Export in the mps (anonymous) format the optimization problems (both optim).");
-
-    // --named-problems
-    parser->addFlag(options.namedProblems,
-                    's',
-                    "named-mps-problems",
-                    "Export named constraints and variables in mps (both optim).");
-
-    // --solver-logs
-    parser->addFlag(options.solverOptions.solverLogs, ' ', "solver-logs", "Print solver logs.");
-
-    parser->addParagraph("\nMisc.");
-    // --progress
-    parser->addFlag(settings.displayProgression,
-                    ' ',
-                    "progress",
-                    "Display the progress of each task");
-
-    // --pid
-    parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
-
-    // --list-solvers
-    parser->addFlag(options.listSolvers,
-                    'l',
-                    "list-solvers",
-                    "List available OR-Tools solvers, then exit.");
-    // --version
-
-    parser->addFlag(options.displayVersion,
-                    'v',
-                    "version",
-                    "Print the version of antares-solver and exit");
-
-    // The last argument is the study folder.
-    // Unlike all other arguments, it does not need to be given after a --flag.
     parser->remainingArguments(options.studyFolder);
 
     return parser;
 }
 
-void printPIDtoDisk(Settings& settings)
+void printPIDtoDisk(const Settings& settings)
 {
     const auto& optPID = settings.PID;
-    if (!optPID.empty())
+    if (optPID.empty())
     {
-        if (std::ofstream pidfile(optPID); pidfile.is_open())
-        {
-            pidfile << getpid();
-        }
-        else
-        {
-            throw Error::WritingPID(optPID);
-        }
+        return;
+    }
+
+    if (std::ofstream pidfile(optPID); pidfile.is_open())
+    {
+        pidfile << getpid();
+    }
+    else
+    {
+        throw Error::WritingPID(optPID);
     }
 }
 
-void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options)
+void checkAndCorrectSettingsAndOptions(Settings& settings, Antares::Data::StudyLoadOptions& options)
 {
     if (!options.simulationName.empty())
     {
@@ -250,26 +247,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
         throw Error::IncompatibleParallelOptions();
     }
 
-    if (!settings.simplexOptimRange.empty())
-    {
-        settings.simplexOptimRange.trim(" \t");
-        settings.simplexOptimRange.toLower();
-        if (settings.simplexOptimRange == "week")
-        {
-            options.simplexOptimizationRange = Data::sorWeek;
-        }
-        else
-        {
-            if (settings.simplexOptimRange == "day")
-            {
-                options.simplexOptimizationRange = Data::sorDay;
-            }
-            else
-            {
-                throw Error::InvalidOptimizationRange();
-            }
-        }
-    }
+    applySimplexOptimRange(settings, options);
 
     options.checkForceSimulationMode();
 
@@ -310,10 +288,15 @@ void Settings::reset()
     studyFolder.clear();
     simulationName.clear();
     commentFile.clear();
-    ignoreLoadingErrors = 0;
+    simplexOptimRange.clear();
+    PID.clear();
+
+    ignoreLoadingErrors = false;
+    ignoreConstraints = false;
     tsGeneratorsOnly = false;
     noOutput = false;
     displayProgression = false;
-    ignoreConstraints = false;
     forceZipOutput = false;
+
+    solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};
 }
