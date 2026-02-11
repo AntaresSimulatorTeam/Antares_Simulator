@@ -98,7 +98,7 @@ const std::optional<AreaConnection>& Component::areaConnectionAtPort(
 {
     if (!getModel()->Ports().contains(portId))
     {
-        std::string errMsg = "Port '" + portId + "' not found in component '" + data_.id + "'"; 
+        std::string errMsg = "Port '" + portId + "' not found in component '" + data_.id + "'";
         throw std::invalid_argument(errMsg);
     }
     return getModel()->Ports().at(portId).Type().areaConnection();
