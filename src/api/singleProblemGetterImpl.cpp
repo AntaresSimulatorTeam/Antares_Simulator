@@ -321,8 +321,7 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
 
     OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(&pb_,
                                                            PremierPdtDeLIntervalle,
-                                                           DernierPdtDeLIntervalle,
-                                                           optimizationNumber);
+                                                           DernierPdtDeLIntervalle);
 
     OPT_InitialiserLeSecondMembreDuProblemeLineaire(&pb_,
                                                     PremierPdtDeLIntervalle,
