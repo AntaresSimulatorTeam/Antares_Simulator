@@ -13,26 +13,6 @@ using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions::Visitors;
 
-std::string componentInjectionField(const Component& component, const std::string& portId)
-{
-    return component.getModel()->Ports().at(portId).Type().areaConnection()->injection;
-}
-
-std::string componentSpillageBound(const Component& component, const std::string& portId)
-{
-    return component.getModel()->Ports().at(portId).Type().areaConnection()->spillage_bound;
-}
-
-std::string componentUnsupEnergyBound(const Component& component, const std::string& portId)
-{
-    return component.getModel()
-      ->Ports()
-      .at(portId)
-      .Type()
-      .areaConnection()
-      ->unsupplied_energy_bound;
-}
-
 std::map<std::string, unsigned> associateIndicesToAreas(const PROBLEME_HEBDO* problemeHebdo_)
 {
     std::map<std::string, unsigned> areaIndices;
@@ -169,7 +149,7 @@ void ComponentToAreaConnectionFiller::addInjectionPortToLinearPb(const FillConte
                                                                  const std::string& portId,
                                                                  const unsigned& areaIndex)
 {
-    std::string portField = componentInjectionField(component, portId);
+    std::string portField = component.areaConnectionAtPort(portId)->injection;
     if (portField.empty())
     {
         // area connection does not specify this port field
@@ -190,7 +170,7 @@ void ComponentToAreaConnectionFiller::addSpillageBoundToLinearPb(const FillConte
                                                                  const std::string& portId,
                                                                  const unsigned& areaIndex)
 {
-    std::string portField = componentSpillageBound(component, portId);
+    std::string portField = component.areaConnectionAtPort(portId)->spillage_bound;
     if (portField.empty())
     {
         // area connection does not specify this port field
@@ -211,7 +191,7 @@ void ComponentToAreaConnectionFiller::addUnsupEnergyBoundToLinearPb(const FillCo
                                                                     const std::string& portId,
                                                                     const unsigned& areaIndex)
 {
-    std::string portField = componentUnsupEnergyBound(component, portId);
+    std::string portField = component.areaConnectionAtPort(portId)->unsupplied_energy_bound;
     if (portField.empty())
     {
         // area connection does not specify this port field

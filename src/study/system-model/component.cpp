@@ -93,6 +93,17 @@ void Component::addComponentConnection(const std::string localPortId, Connection
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
 
+const std::optional<AreaConnection>& Component::areaConnectionAtPort(
+  const std::string& portId) const
+{
+    if (!getModel()->Ports().contains(portId))
+    {
+        std::string errMsg = "Port '" + portId + "' not found in component '" + data_.id + "'"; 
+        throw std::invalid_argument(errMsg);
+    }
+    return getModel()->Ports().at(portId).Type().areaConnection();
+}
+
 std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
 {
     if (auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
