@@ -59,4 +59,9 @@ void SingleProblemGetter::printProblems() const
     impl_->printProblems();
 }
 
+Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+{
+    return impl_->getMasterProblem();
+}
+
 } // namespace Antares::Solver

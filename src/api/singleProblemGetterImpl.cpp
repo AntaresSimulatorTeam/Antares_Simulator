@@ -522,7 +522,25 @@ void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
     resultWriter->addEntryFromBuffer(name + ".mps", mps);
 }
 
-void writeMasterAndStructure(ModelerData* data, IResultWriter::Ptr& resultWriter)
+Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+{
+    using namespace Antares::Solver;
+    using namespace Antares::Optimisation;
+    using namespace Antares::Optimisation::LinearProblemApi;
+
+    logs.info() << "Building master problem and Benders decomposition...";
+
+    FillContext fillContext = {0, 167, 0, 167, 0};
+    return buildProblem(*pb_.modelerData,
+                        Config::Location::MASTER,
+                        "master",
+                        &pb_.modelerData->bendersDecomposition,
+                        fillContext,
+                        ResolutionMode::BENDERS_DECOMPOSITION,
+                        std::nullopt);
+}
+
+void SingleProblemGetter::writeMasterAndStructure() const
 {
     using namespace Antares::Solver;
     using namespace Antares::Optimisation;
@@ -532,13 +550,7 @@ void writeMasterAndStructure(ModelerData* data, IResultWriter::Ptr& resultWriter
 
     FillContext fillContext = {0, 167, 0, 167, 0};
 
-    auto [masterProblem, optimEntityContainer] = buildProblem(*data,
-                                                              Config::Location::MASTER,
-                                                              "master",
-                                                              &data->bendersDecomposition,
-                                                              fillContext,
-                                                              ResolutionMode::BENDERS_DECOMPOSITION,
-                                                              std::nullopt);
+    auto [masterProblem, _] = getMasterProblem();
 
     if (!masterProblem)
     {
@@ -547,12 +559,12 @@ void writeMasterAndStructure(ModelerData* data, IResultWriter::Ptr& resultWriter
     }
 
     auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master").run();
-    resultWriter->addEntryFromBuffer("master.mps", mps);
+    resultWriter_->addEntryFromBuffer("master.mps", mps);
     logs.info() << "Written: " << "master.mps";
 
-    BendersDecompositionWriter writer(data->bendersDecomposition);
+    BendersDecompositionWriter writer(pb_.modelerData->bendersDecomposition);
     auto structureFile = writer.getBendersDecomposition();
-    resultWriter->addEntryFromBuffer("structure.txt", structureFile);
+    resultWriter_->addEntryFromBuffer("structure.txt", structureFile);
     logs.info() << "Written: " << "structure.txt";
 }
 
@@ -583,7 +595,7 @@ void SingleProblemGetter::printProblems()
 
     if (pb_.modelerData)
     {
-        writeMasterAndStructure(pb_.modelerData, resultWriter_);
+        writeMasterAndStructure();
     }
 }
 } // namespace Antares::Solver::Implementation

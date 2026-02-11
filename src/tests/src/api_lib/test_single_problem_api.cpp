@@ -732,24 +732,8 @@ ModelerData OneParameterOneVariableOneConstraint()
     };
 }
 
-BOOST_AUTO_TEST_CASE(simple_model_one_component)
+void checkFiles(const std::map<std::string, std::string, std::less<>>& outputs)
 {
-    StudyBuilder builder;
-
-    auto study = buildStudy(true, true);
-
-    study->setModelerData(std::make_unique<ModelerData>(OneParameterOneVariableOneConstraint()));
-    auto queueService = std::make_shared<Yuni::Job::QueueService>();
-    Benchmarking::DurationCollector durationCollector;
-    auto resultWriter = resultWriterFactory(Data::ResultFormat::inMemory,
-                                            "",
-                                            queueService,
-                                            durationCollector);
-    Implementation::SingleProblemGetter getter({std::move(study), resultWriter});
-    //-- check mps and structure.txt
-    getter.printProblems();
-    auto* writer = dynamic_cast<InMemoryWriter*>(resultWriter.get());
-    auto& outputs = writer->getMap();
     // the study has 4 sub-problems mps (2 years x 2 weeks) + structure.txt + master.mps
     BOOST_CHECK_EQUAL(outputs.size(), 6);
     // the master has one variable and one constraint
@@ -779,5 +763,72 @@ problem-2-1--optim-nb-1	component.x	1008
 problem-2-2--optim-nb-1	component.x	1008
 )";
     BOOST_CHECK_EQUAL(outputs.at("structure.txt"), structure);
+}
+
+void checkMasterProblem(const Implementation::SingleProblemGetter& getter)
+{
+    auto [masterPb, _] = getter.getMasterProblem();
+    BOOST_CHECK_EQUAL(masterPb->constraintCount(), 1);
+    BOOST_CHECK_EQUAL(masterPb->variableCount(), 1);
+    const auto& x = masterPb->getVariables().at(0);
+    BOOST_CHECK_EQUAL(x->getName(), "component.x");
+    BOOST_CHECK_EQUAL(x->isInteger(), false);
+    BOOST_CHECK_EQUAL(x->getLb(), 0);
+    BOOST_CHECK_EQUAL(x->getUb(), 55);
+
+    const auto& c = masterPb->getConstraints().at(0);
+    BOOST_CHECK_EQUAL(c->getName(), "component.constraint");
+    BOOST_CHECK_EQUAL(c->getLb(), -masterPb->infinity());
+    BOOST_CHECK_EQUAL(c->getUb(), 13);
+    BOOST_CHECK_EQUAL(c->getCoefficient(x.get()), 1);
+}
+
+void checkSubProblems(Implementation::SingleProblemGetter& getter)
+{
+    for (auto id: getter.getProblemIds())
+    {
+        auto weekly = getter.getWeeklyProblem(id);
+        // the last variable is the one from the modeler
+        const auto& x = weekly->getVariables().back();
+        BOOST_CHECK_EQUAL(x->getName(), "component.x");
+        BOOST_CHECK_EQUAL(x->isInteger(), false);
+        BOOST_CHECK_EQUAL(x->getLb(), 0);
+        BOOST_CHECK_EQUAL(x->getUb(), 55);
+        // the last constraint is the one from the modeler
+        const auto& c = weekly->getConstraints().back();
+        BOOST_CHECK_EQUAL(c->getName(), "component.constraint");
+        BOOST_CHECK_EQUAL(c->getLb(), -weekly->infinity());
+        BOOST_CHECK_EQUAL(c->getUb(), 13);
+        BOOST_CHECK_EQUAL(c->getCoefficient(x.get()), 1);
+    }
+}
+
+void checkProblems(Implementation::SingleProblemGetter& getter)
+{
+    checkMasterProblem(getter);
+    checkSubProblems(getter);
+}
+
+BOOST_AUTO_TEST_CASE(simple_model_one_component)
+{
+    StudyBuilder builder;
+
+    auto study = buildStudy(true, true);
+
+    study->setModelerData(std::make_unique<ModelerData>(OneParameterOneVariableOneConstraint()));
+    auto queueService = std::make_shared<Yuni::Job::QueueService>();
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(Data::ResultFormat::inMemory,
+                                            "",
+                                            queueService,
+                                            durationCollector);
+    Implementation::SingleProblemGetter getter({std::move(study), resultWriter});
+    //-- check mps and structure.txt
+    getter.printProblems();
+    auto* writer = dynamic_cast<InMemoryWriter*>(resultWriter.get());
+    auto& outputs = writer->getMap();
+    checkFiles(outputs);
+    //-- check problem in memory
+    checkProblems(getter);
 }
 BOOST_AUTO_TEST_SUITE_END()

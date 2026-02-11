@@ -17,6 +17,7 @@ class SingleProblemGetter;
 
 namespace Antares::Solver
 {
+struct ProblemEntity;
 
 class SingleProblemGetter final
 {
@@ -38,6 +39,7 @@ public:
     void writeStudyDescriptionFiles(const std::filesystem::path& outputDir);
     bool areWeeksIndependent() const;
     void printProblems() const;
+    Solver::ProblemEntity getMasterProblem() const;
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetter> impl_;

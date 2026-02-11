@@ -3,6 +3,7 @@
 
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/lps/LpsFromAntares.h"
+#include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/simulation/random.h"
@@ -47,6 +48,8 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     bool areWeeksIndependent() const;
+    Solver::ProblemEntity getMasterProblem() const;
+    void writeMasterAndStructure() const;
     void printProblems();
     std::set<int> playedYears() const;
 
