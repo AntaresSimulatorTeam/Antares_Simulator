@@ -177,8 +177,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
-                                                            const int DernierPdtDeLIntervalle,
-                                                            const int optimizationNumber)
+                                                            const int DernierPdtDeLIntervalle)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
