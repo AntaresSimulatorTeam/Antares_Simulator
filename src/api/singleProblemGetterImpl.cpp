@@ -10,8 +10,10 @@
 #include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
+#include "antares/io/outputs/MPSGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
+#include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
@@ -34,11 +36,11 @@ constexpr int DernierPdtDeLIntervalle = 168; // 1 week = 7*24 hours
 Antares::Solver::NullResultWriter gResultWriter;
 Benchmarking::DurationCollector gDurationCollector;
 
-std::unique_ptr<Antares::Data::Study> loadStudy(const std::filesystem::path& studyPath)
+std::pair<std::unique_ptr<Data::Study>, Solver::IResultWriter::Ptr> loadStudy(
+  const std::filesystem::path& studyPath)
 {
     Antares::FileTreeStudyLoader loader(studyPath);
-    auto study = loader.load();
-    return study;
+    return loader.load();
 }
 
 } // namespace
@@ -51,8 +53,10 @@ SingleProblemGetter::SingleProblemGetter(const std::filesystem::path& studyPath)
 {
 }
 
-SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study):
-    study_(std::move(study))
+SingleProblemGetter::SingleProblemGetter(
+  std::pair<std::unique_ptr<Data::Study>, Solver::IResultWriter::Ptr>&& loadedPair):
+    study_(std::move(loadedPair.first)),
+    resultWriter_(std::move(loadedPair.second))
 {
     SIM_InitialisationProblemeHebdo(*study_,
                                     pb_,
@@ -87,6 +91,7 @@ SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&&
     scratchmap_ = study_->areas.buildScratchMap(numSpace);
 
     initializeRandomNumbers();
+    initConstantData();
 }
 
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
@@ -203,7 +208,7 @@ std::vector<NameMemo> buildMemo(const std::vector<std::string>& names)
     return mem;
 }
 
-ConstantDataFromAntares SingleProblemGetter::getConstantData()
+void SingleProblemGetter::initConstantData()
 {
     // IntercoGereeAvecDesCouts needs to be initialized
     // before building variable list and the common matrix
@@ -222,7 +227,11 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
     constraintsMemo_ = buildMemo(PbAResoudre->NomDesContraintes);
     variablesName_ = PbAResoudre->NomDesVariables;
     constraintsName_ = PbAResoudre->NomDesContraintes;
-    return translator_.commonProblemData(PbAResoudre);
+}
+
+ConstantDataFromAntares SingleProblemGetter::getConstantData() const
+{
+    return translator_.commonProblemData(pb_.ProblemeAResoudre.get());
 }
 
 std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
@@ -437,7 +446,7 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
     const auto& calendar = study_->calendar;
 
     int areaIndex = 0;
-    for (const auto& [_, area]: study_->areas)
+    for (const auto& area: study_->areas | std::views::values)
     {
         if (!area->hydro.reservoirManagement)
         {
@@ -488,26 +497,6 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
     return {hydroLevels, ventilationResults};
 }
 
-int SingleProblemGetter::nbYears() const
-{
-    return playedYears_.size();
-}
-
-std::set<int> SingleProblemGetter::playedYears() const
-{
-    return playedYears_;
-}
-
-ModelerData* SingleProblemGetter::modelerData()
-{
-    return pb_.modelerData;
-}
-
-int SingleProblemGetter::nbWeeks() const
-{
-    return nbWeeks_;
-}
-
 bool SingleProblemGetter::areWeeksIndependent() const
 {
     return std::ranges::all_of(study_->areas | std::views::values,
@@ -517,5 +506,96 @@ bool SingleProblemGetter::areWeeksIndependent() const
                                    return !hydro.reservoirManagement
                                           || (hydro.useHeuristicTarget && !hydro.useLeeway);
                                });
+}
+
+void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
+                  const WeeklyProblemId& id,
+                  IResultWriter::Ptr& resultWriter)
+{
+    auto name = problemName(id);
+
+    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps");
+    std::string mps = mpsGenerator.run();
+
+    logs.info() << "Printing problem: " << name << '\n';
+
+    resultWriter->addEntryFromBuffer(name + ".mps", mps);
+}
+
+Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+{
+    using namespace Antares::Solver;
+    using namespace Antares::Optimisation;
+    using namespace Antares::Optimisation::LinearProblemApi;
+
+    logs.info() << "Building master problem and Benders decomposition...";
+
+    FillContext fillContext = {0, 167, 0, 167, 0};
+    return buildProblem(*pb_.modelerData,
+                        Config::Location::MASTER,
+                        "master",
+                        &pb_.modelerData->bendersDecomposition,
+                        fillContext,
+                        ResolutionMode::BENDERS_DECOMPOSITION,
+                        std::nullopt);
+}
+
+void SingleProblemGetter::writeMasterAndStructure() const
+{
+    using namespace Antares::Solver;
+    using namespace Antares::Optimisation;
+    using namespace Antares::Optimisation::LinearProblemApi;
+
+    logs.info() << "Building master problem and Benders decomposition...";
+
+    FillContext fillContext = {0, 167, 0, 167, 0};
+
+    auto [masterProblem, _] = getMasterProblem();
+
+    if (!masterProblem)
+    {
+        logs.warning() << "Master problem is empty - not writing master.mps or structure.txt";
+        return;
+    }
+
+    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master").run();
+    resultWriter_->addEntryFromBuffer("master.mps", mps);
+    logs.info() << "Written: " << "master.mps";
+
+    BendersDecompositionWriter writer(pb_.modelerData->bendersDecomposition);
+    auto structureFile = writer.getBendersDecomposition();
+    resultWriter_->addEntryFromBuffer("structure.txt", structureFile);
+    logs.info() << "Written: " << "structure.txt";
+}
+
+void SingleProblemGetter::printProblems()
+{
+    if (areWeeksIndependent())
+    {
+        logs.info() << "Weeks are independent";
+    }
+    else
+    {
+        logs.warning() << "Weeks are dependent, the printed MPS files may differ from those "
+                          "produced by antares-solver because of hydro levels";
+    }
+
+    logs.info() << " * Number of years: " << playedYears_.size();
+    logs.info() << " * Number of weeks per year: " << nbWeeks_;
+
+    auto problemIds = getProblemIds();
+    logs.info() << " * Number of problems to process: " << problemIds.size();
+
+    for (const auto& id: problemIds)
+    {
+        logs.info() << " year: " << id.year << ", week: " << id.week;
+        auto weekly = getWeeklyProblem(id);
+        writeWeekMPS(weekly, id, resultWriter_);
+    }
+
+    if (pb_.modelerData)
+    {
+        writeMasterAndStructure();
+    }
 }
 } // namespace Antares::Solver::Implementation

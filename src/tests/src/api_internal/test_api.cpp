@@ -22,11 +22,12 @@ public:
     {
     }
 
-    [[nodiscard]] std::unique_ptr<Data::Study> load() const override
+    [[nodiscard]] std::pair<std::unique_ptr<Study>, std::shared_ptr<Solver::IResultWriter>> load()
+      const override
     {
         if (!success_)
         {
-            return nullptr;
+            return {nullptr, nullptr};
         }
         StudyBuilder builder;
         builder.addAreaToStudy("area1");
@@ -34,7 +35,7 @@ public:
         builder.study->initializeRuntimeInfos();
         builder.setNumberMCyears(1);
         builder.study->parameters.resultFormat = ResultFormat::inMemory;
-        return std::move(builder.study);
+        return {std::move(builder.study), nullptr};
     }
 
     bool success_ = true;

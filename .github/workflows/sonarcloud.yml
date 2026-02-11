@@ -273,8 +273,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v5
+      uses: AntaresSimulatorTeam/cache@main
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{ steps.cache.outputs.cache-primary-key }}
-
