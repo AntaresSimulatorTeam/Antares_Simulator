@@ -176,7 +176,7 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
         throw std::invalid_argument(errMsgPrefix + "port is already connected to '"
                                     + portToAreaConnections_.at(localPortId) + "'");
     }
-    
+
     portToAreaConnections_[localPortId] = toLowerCase(areaId);
 }
 
