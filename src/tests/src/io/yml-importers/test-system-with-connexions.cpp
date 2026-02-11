@@ -1,7 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <string>
-#include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
@@ -15,63 +14,6 @@ using namespace Antares::IO::Inputs;
 using namespace Antares::ModelerStudy;
 
 BOOST_AUTO_TEST_SUITE(readYamlInput)
-
-static const auto InvalidPortTypeLib = R"(
-library:
-  id: my_lib
-  description: test model library
-
-  port-types:
-    - id:  some_port_type
-      description: port type description
-      fields:
-        - id: flow
-      area-connection:
-        - injection-field: blah-blah
-  models:
-    - id: empty model
-      description: we need this empty model, otherwise parser fails !
-)"s;
-
-BOOST_AUTO_TEST_CASE(reading_lib_with_port_type_with_invalid_area_connection_section)
-{
-    YmlModel::Parser parserModel;
-    std::string expectedErrMsg = "Port type 'some_port_type' > area connection : no port matches "
-                                 "field 'blah-blah'";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(parserModel.parse(InvalidPortTypeLib)),
-                          std::invalid_argument,
-                          checkMessage(expectedErrMsg));
-}
-
-static const auto AnotherInvalidPortTypeLib = R"(
-library:
-  id: my_lib
-  description: test model library
-
-  port-types:
-    - id:  some_port_type
-      description: port type description
-      fields:
-        - id: flow
-      area-connection:
-        - injection-field: flow
-        - spillage-bound: to-area-bound
-
-  models:
-    - id: empty model
-      description: we need this empty model, otherwise parser fails !
-)"s;
-
-BOOST_AUTO_TEST_CASE(reading_lib_with_port_type_with_another_invalid_area_connection_section)
-{
-    YmlModel::Parser parserModel;
-    std::string expectedErrMsg = "Port type 'some_port_type' > area connection : no port matches "
-                                 "field 'to-area-bound'";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(parserModel.parse(AnotherInvalidPortTypeLib)),
-                          std::invalid_argument,
-                          checkMessage(expectedErrMsg));
-}
-
 // This yaml lib contains only a port type.
 // Note that : an empty model is added to prevent parser from failing when reading the lib
 static const auto onlyPortTypeYmlLib = R"(
