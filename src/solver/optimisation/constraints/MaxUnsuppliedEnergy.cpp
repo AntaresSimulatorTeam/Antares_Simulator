@@ -1,6 +1,6 @@
 #include "antares/solver/optimisation/constraints/MaxUnsuppliedEnergy.h"
 
-void MaxUnsuppliedEnergy::add(int pdt, int pays)
+void MaxUnsuppliedEnergy::add(unsigned pdt, int pays)
 {
     data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContraintePourBornerLaDefaillance[pays]
       = builder.data.nombreDeContraintes;

@@ -429,9 +429,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         }
     }
 
-    setBoundsForUnsuppliedEnergy(problemeHebdo,
-                                 PremierPdtDeLIntervalle,
-                                 DernierPdtDeLIntervalle);
+    setBoundsForUnsuppliedEnergy(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
     setBoundsForShortTermStorage(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 

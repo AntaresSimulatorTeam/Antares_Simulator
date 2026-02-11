@@ -47,7 +47,7 @@ public:
         return global.last;
     }
 
-    [[nodiscard]] unsigned int getLocalNumberOfTimeSteps() const
+    [[nodiscard]] unsigned getLocalNumberOfTimeSteps() const
     {
         return local.last - local.first + 1;
     }

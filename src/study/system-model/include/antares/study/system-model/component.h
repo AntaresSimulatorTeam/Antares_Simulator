@@ -93,7 +93,7 @@ public:
     const Expression& expressionAtPortField(const std::string& portId,
                                             const std::string& fieldId) const;
 
-    void addAreaConnection(const std::string& localPortId, std::string areaId);
+    void addAreaConnection(const std::string& localPortId, const std::string& areaId);
 
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 

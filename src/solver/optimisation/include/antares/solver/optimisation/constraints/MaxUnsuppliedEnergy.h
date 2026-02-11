@@ -28,7 +28,7 @@ public:
      * @param pdt : timestep
      * @param pays : area
      */
-    void add(int pdt, int pays);
+    void add(unsigned pdt, int pays);
 
 private:
     MaxUnsupEnergyData& data;

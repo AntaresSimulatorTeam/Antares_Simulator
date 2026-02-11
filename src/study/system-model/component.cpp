@@ -9,6 +9,13 @@
 
 using namespace Antares::Expressions::Nodes;
 
+std::string toLowerCase(const std::string& str)
+{
+    std::string lowerCaseStr = str;
+    boost::algorithm::to_lower(lowerCaseStr);
+    return lowerCaseStr;
+}
+
 namespace Antares::ModelerStudy::SystemModel
 {
 
@@ -141,7 +148,7 @@ void Component::checkPortFieldDefinitionExists(const std::string& portName,
     }
 }
 
-void Component::addAreaConnection(const std::string& localPortId, std::string areaId)
+void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
     std::string errMsgPrefix = "Cannot connect area '" + areaId + "' to port '" + localPortId
                                + "' of component '" + data_.id + "': ";
@@ -169,8 +176,8 @@ void Component::addAreaConnection(const std::string& localPortId, std::string ar
         throw std::invalid_argument(errMsgPrefix + "port is already connected to '"
                                     + portToAreaConnections_.at(localPortId) + "'");
     }
-    boost::algorithm::to_lower(areaId);
-    portToAreaConnections_[localPortId] = areaId;
+    
+    portToAreaConnections_[localPortId] = toLowerCase(areaId);
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
