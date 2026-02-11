@@ -164,11 +164,15 @@ bool PreproAvailability::normalizeAndCheckNPO()
             normalized = true;
         }
 
-        if (columnNPOMin[y] > columnNPOMax[y] && ++errors < maxErrors)
+        if (columnNPOMin[y] > columnNPOMax[y])
         {
-            logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
-                         << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
-                         << ')';
+            ++errors;
+            if (errors < maxErrors)
+            {
+                logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
+                             << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
+                             << ')';
+            }
         }
     }
 

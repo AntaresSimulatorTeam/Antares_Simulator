@@ -41,9 +41,9 @@ private:
 
 } // namespace
 
-std::future<void> AddTask(Yuni::Job::QueueService& threadPool,
-                          const Task& task,
-                          Yuni::Job::Priority priority)
+TaskFuture AddTask(Yuni::Job::QueueService& threadPool,
+                   const Task& task,
+                   Yuni::Job::Priority priority)
 {
     auto job = std::make_unique<PackagedJob>(task);
     auto future = job->getFuture();
