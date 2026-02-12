@@ -16,8 +16,8 @@ class Registry
 {
 public:
     Registry() = default;
-    Registry(Registry<Base>&&) = default;
-    Registry<Base>& operator=(Registry<Base>&&) = default;
+    Registry(Registry<Base>&&) noexcept = default;
+    Registry<Base>& operator=(Registry<Base>&&) noexcept = default;
 
     //  Method to create a new derived class object and add it to the registry
     template<class Derived, class... Args>

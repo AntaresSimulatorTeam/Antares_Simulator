@@ -97,15 +97,12 @@ public:
 
     int& LayerStorage(unsigned area, unsigned layer);
 
-    int& PositiveUnsuppliedEnergy(unsigned int index,
-                                  unsigned int hourInWeek,
-                                  int offset = 0,
-                                  int delta = 0);
+    int& UnsuppliedEnergy(unsigned int index,
+                          unsigned int hourInWeek,
+                          int offset = 0,
+                          int delta = 0);
 
-    int& NegativeUnsuppliedEnergy(unsigned int index,
-                                  unsigned int hourInWeek,
-                                  int offset = 0,
-                                  int delta = 0);
+    int& Spillage(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
 private:
     std::vector<CORRESPONDANCES_DES_VARIABLES>& CorrespondanceVarNativesVarOptim_;

@@ -76,7 +76,8 @@ void MinMaxData::mergeInf(uint year, const IntermediateValues& rhs)
     mergeArray(true, year, weekly, rhs.week);
     mergeArray(true, year, daily, rhs.day);
     mergeArray(true, year, hourly, rhs.hour);
-    mergeArray(true, year, annual, &rhs.year);
+    const double yearArray[1] = {rhs.year};
+    mergeArray(true, year, annual, yearArray);
 }
 
 void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
@@ -85,7 +86,8 @@ void MinMaxData::mergeSup(uint year, const IntermediateValues& rhs)
     mergeArray(false, year, weekly, rhs.week);
     mergeArray(false, year, daily, rhs.day);
     mergeArray(false, year, hourly, rhs.hour);
-    mergeArray(false, year, annual, &rhs.year);
+    const double yearArray[1] = {rhs.year};
+    mergeArray(false, year, annual, yearArray);
 }
 
 } // namespace Antares::Solver::Variable::R::AllYears

@@ -261,7 +261,6 @@ static void connectComponents(const YmlSystem::Connection& connection,
 static void connectAreas(const YmlSystem::AreaConnection& connection,
                          std::vector<Component>& components)
 {
-    // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
     component.addAreaConnection(connection.portId, connection.areaId);
 }

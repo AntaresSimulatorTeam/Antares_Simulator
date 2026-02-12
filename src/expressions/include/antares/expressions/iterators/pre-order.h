@@ -24,6 +24,18 @@ public:
     // Constructor
     explicit ASTPreOrderIterator(Node* root = nullptr);
 
+    // Copy constructor
+    ASTPreOrderIterator(const ASTPreOrderIterator&) = default;
+
+    // Move constructor
+    ASTPreOrderIterator(ASTPreOrderIterator&&) noexcept = default;
+
+    // Copy assignment
+    ASTPreOrderIterator& operator=(const ASTPreOrderIterator&) = default;
+
+    // Move assignment
+    ASTPreOrderIterator& operator=(ASTPreOrderIterator&&) noexcept = default;
+
     // Dereference operator
     reference operator*() const;
 
@@ -70,6 +82,18 @@ public:
 
     // Constructor
     explicit ASTPreOrderIteratorConst(const Node* root = nullptr);
+
+    // Copy constructor
+    ASTPreOrderIteratorConst(const ASTPreOrderIteratorConst&) = default;
+
+    // Move constructor
+    ASTPreOrderIteratorConst(ASTPreOrderIteratorConst&&) noexcept = default;
+
+    // Copy assignment
+    ASTPreOrderIteratorConst& operator=(const ASTPreOrderIteratorConst&) = default;
+
+    // Move assignment
+    ASTPreOrderIteratorConst& operator=(ASTPreOrderIteratorConst&&) noexcept = default;
 
     // Dereference operator
     reference operator*() const;

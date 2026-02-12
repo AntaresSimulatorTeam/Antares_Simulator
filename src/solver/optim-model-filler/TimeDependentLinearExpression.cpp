@@ -35,6 +35,22 @@ TimeDependentLinearExpression::TimeDependentLinearExpression(
 {
 }
 
+TimeDependentLinearExpression::TimeDependentLinearExpression(
+  std::vector<LinearExpression>&& linearExpressions):
+    v_(std::move(linearExpressions))
+{
+}
+
+TimeDependentLinearExpression TimeDependentLinearExpression::expandToSize(unsigned size)
+{
+    if (isConstant())
+    {
+        std::vector<LinearExpression> v(size, v_[0]);
+        return TimeDependentLinearExpression(std::move(v));
+    }
+    return *this;
+}
+
 void TimeDependentLinearExpression::expandTo(std::size_t nbTimesteps)
 {
     v_.resize(nbTimesteps, v_[0]);

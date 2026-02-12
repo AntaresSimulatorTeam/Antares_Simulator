@@ -135,9 +135,9 @@ public:
 
     ConstraintBuilder& FinalStorage(unsigned int index, double coeff);
 
-    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index, double coeff);
+    ConstraintBuilder& UnsuppliedEnergy(unsigned int index, double coeff);
 
-    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index, double coeff);
+    ConstraintBuilder& Spillage(unsigned int index, double coeff);
 
     ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
 
