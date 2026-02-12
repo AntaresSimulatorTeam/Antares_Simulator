@@ -11,19 +11,19 @@ var classVariableNamer =
     [ "IntercoIndirectCost", "classVariableNamer.html#a39271023aa118b809f83022a8398b823", null ],
     [ "LayerStorage", "classVariableNamer.html#ab3c14fcf429a730ab1e23ebf5bc717b8", null ],
     [ "Namer", "classVariableNamer.html#ac86fca681803ca8a161de0e5ffe66294", null ],
-    [ "NegativeUnsuppliedEnergy", "classVariableNamer.html#aa5231ccb1ea22789f70e481a1b2fa165", null ],
     [ "NODU", "classVariableNamer.html#a89455751bef11f5b8ff24143fda0fc30", null ],
     [ "NTCDirect", "classVariableNamer.html#a9195d2be224c11ae48ba05195fd83f29", null ],
     [ "NumberBreakingDownDispatchableUnits", "classVariableNamer.html#ac63b11fb4752f1770b102da132dda0bf", null ],
     [ "NumberStartingDispatchableUnits", "classVariableNamer.html#ad5a3412212baf3f2b057cc9a0f2f6262", null ],
     [ "NumberStoppingDispatchableUnits", "classVariableNamer.html#abacabb8ea5db5b50dcd5ef13a00ad9f7", null ],
     [ "Overflow", "classVariableNamer.html#a73ea8629e9a5b19b32f0b83d46c55383", null ],
-    [ "PositiveUnsuppliedEnergy", "classVariableNamer.html#ada13619116f66f8a5ba035729a58bda2", null ],
     [ "Pumping", "classVariableNamer.html#a016f6f8d81b2b98da0e646e2b8ae3be8", null ],
     [ "ShortTermStorageCostVariationInjection", "classVariableNamer.html#a686d31ccb6faa2f10fe1bf3867b6bd8f", null ],
     [ "ShortTermStorageCostVariationWithdrawal", "classVariableNamer.html#af4d690baf534cc16e0c65d52ada68cc2", null ],
     [ "ShortTermStorageInjection", "classVariableNamer.html#ad0a12287280625559ae8893ca7beb7cb", null ],
     [ "ShortTermStorageLevel", "classVariableNamer.html#a9dc570909954274c69f73f0f90b65b21", null ],
     [ "ShortTermStorageOverflow", "classVariableNamer.html#a512b7c934d6bf73f89fa2e9af1daa887", null ],
-    [ "ShortTermStorageWithdrawal", "classVariableNamer.html#a8f95052c98f6acdf280a39c19e13e2a1", null ]
+    [ "ShortTermStorageWithdrawal", "classVariableNamer.html#a8f95052c98f6acdf280a39c19e13e2a1", null ],
+    [ "Spillage", "classVariableNamer.html#a0ab2e2b356789758ec79a53a4e1522cb", null ],
+    [ "UnsuppliedEnergy", "classVariableNamer.html#af650ca1ed28ec9ecc582284a847e0d59", null ]
 ];

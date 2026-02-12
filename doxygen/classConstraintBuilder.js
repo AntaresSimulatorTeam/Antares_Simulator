@@ -16,7 +16,6 @@ var classConstraintBuilder =
     [ "IntercoIndirectCost", "classConstraintBuilder.html#a252c8faae95d804bf53a834b2a827fbc", null ],
     [ "LayerStorage", "classConstraintBuilder.html#a369099ad93d164e56c68a8ae33fd1803", null ],
     [ "lessThan", "classConstraintBuilder.html#a3262d836d58f1bc5757ed4c8e10df90c", null ],
-    [ "NegativeUnsuppliedEnergy", "classConstraintBuilder.html#abb62dcc1cc0816de056a7b0e5ef3a128", null ],
     [ "NTCDirect", "classConstraintBuilder.html#ab6d4d759c7ad6bedf68d58612295fed6", null ],
     [ "NumberBreakingDownDispatchableUnits", "classConstraintBuilder.html#a82c723b66cef17c9c4af3d88985120d7", null ],
     [ "NumberOfDispatchableUnits", "classConstraintBuilder.html#adb7263568de70d2ac32e5f0b6b55cb51", null ],
@@ -24,7 +23,6 @@ var classConstraintBuilder =
     [ "NumberStartingDispatchableUnits", "classConstraintBuilder.html#a4608ddc31508c2f0222a5b3dcae9b7df", null ],
     [ "NumberStoppingDispatchableUnits", "classConstraintBuilder.html#a80fe9e8e8e5e83cf4c5f3ca4591f9775", null ],
     [ "Overflow", "classConstraintBuilder.html#a66ce76f0b22930bfc5160d430fc7f496", null ],
-    [ "PositiveUnsuppliedEnergy", "classConstraintBuilder.html#a2465882f4d231b44d0525297c95f35ac", null ],
     [ "Pumping", "classConstraintBuilder.html#a3dc9eaf843b193b133e932b6cfff8799", null ],
     [ "SetOperator", "classConstraintBuilder.html#ac42236b48615e4247c80791169218dba", null ],
     [ "ShortTermCostVariationInjection", "classConstraintBuilder.html#a0fc7b8495ff8d3e5671a2a05d80cff4d", null ],
@@ -33,6 +31,8 @@ var classConstraintBuilder =
     [ "ShortTermStorageLevel", "classConstraintBuilder.html#ae9ed8f71f80cbde9243ef09f8e8c4cf7", null ],
     [ "ShortTermStorageOverflow", "classConstraintBuilder.html#a51619522ef95290fe281632a02b126ab", null ],
     [ "ShortTermStorageWithdrawal", "classConstraintBuilder.html#a52b0b0e7dc6b890df4f55cf3b72f773c", null ],
+    [ "Spillage", "classConstraintBuilder.html#a6535df75f30c6ac9523e4e019cc24285", null ],
+    [ "UnsuppliedEnergy", "classConstraintBuilder.html#a4469cf86c75b00314c7a079cd1a5803e", null ],
     [ "updateHourWithinWeek", "classConstraintBuilder.html#a1daa3a79a8586a9a95e6bbd973830075", null ],
     [ "data", "classConstraintBuilder.html#a206bfb317c63a99e019b7cdd19d2350a", null ]
 ];

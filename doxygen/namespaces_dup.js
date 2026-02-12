@@ -1168,6 +1168,7 @@ var namespaces_dup =
             [ "FieldNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition" ],
             [ "PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition" ],
             [ "convert", "modelConverter_8h.html#a0a04dc70e79a252bba53b25a7863f2db", null ],
+            [ "convert_to_system", "modelConverter_8cpp.html#a410dca443f3dda026bd659d08f9d4408", null ],
             [ "convertConstraints", "modelConverter_8cpp.html#ab3894dd65ddfb8dc2f639d30e491b4e9", null ],
             [ "convertExpressionToNode", "convertorVisitor_8cpp.html#a1410f7982fde7bac28b6e5a3d330c351", null ],
             [ "convertExtraOutputs", "modelConverter_8cpp.html#a828f5bbaa6c825f4f040d4e1ab6a9db0", null ],
@@ -1177,8 +1178,8 @@ var namespaces_dup =
             [ "convertParameters", "modelConverter_8cpp.html#a25808bf603cc8a83cb1b06fd083dc9de", null ],
             [ "convertPortFieldDefinitions", "modelConverter_8cpp.html#adf7a16e405558f1c54f994679f5eda1b", null ],
             [ "convertPorts", "modelConverter_8cpp.html#ad976a8baec13a3acc87bda2197e83558", null ],
+            [ "convertPortTypes", "modelConverter_8cpp.html#a561469b6b14b831db569ccd71aeab89c", null ],
             [ "convertType", "modelConverter_8cpp.html#a1363b64e5b67aed1d14775057e9dc413", null ],
-            [ "convertTypes", "modelConverter_8cpp.html#aaa6c6c3c8cf9c71f49c073d2ec9f3582", null ],
             [ "convertVariables", "modelConverter_8cpp.html#a2c67b6096c44fe5dd3d813b6d0e9d507", null ],
             [ "ErrorMessage", "ForbiddenNodesVisitor_8cpp.html#a39e15fd558fdf195c78c8cf9c81c0bb7", null ],
             [ "ExpressionsToIds", "convertorVisitor_8cpp.html#a5979644e8f14ddeb13ce77bf8d554564", null ],
@@ -1204,6 +1205,7 @@ var namespaces_dup =
             [ "ExtraOutput", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model" ],
+            [ "AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection" ],
             [ "PortType", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType" ],
             [ "Library", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ],
@@ -1349,6 +1351,7 @@ var namespaces_dup =
           [ "Port", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port" ],
           [ "PortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortField" ],
           [ "PortFieldDefinition", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldDefinition" ],
+          [ "AreaConnection", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection" ],
           [ "PortType", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType" ],
           [ "System", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System" ],
           [ "SystemBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder" ],
@@ -1372,10 +1375,13 @@ var namespaces_dup =
             [ "INTEGER", "valueType_8h.html#a2b015dee485401ea1c78381617002925a5d5cd46919fa987731fb2edefe0f2a0c", null ],
             [ "BOOL", "valueType_8h.html#a2b015dee485401ea1c78381617002925aa97b2c144243b2b9d2c593ec268b62f5", null ]
           ] ],
+          [ "checkNonEmptyFieldExist", "portType_8cpp.html#a50a0cf363e3461a391e2da4484f6f577", null ],
           [ "fromBool", "timeAndScenarioType_8h.html#acb58641e2e58b26c41533b310a8b6e53", null ],
           [ "fromBool", "timeAndScenarioType_8h.html#a1ec198537ff13af974a5dac7cd20ee8d", null ],
+          [ "isEmpty", "portType_8cpp.html#ae25c2ee4d96cf9586d5619fff8e2562b", null ],
           [ "operator<<", "study_2system-model_2include_2antares_2study_2system-model_2connection_8h.html#a4abb4fd7c458500f26ff69554f194304", null ],
-          [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ]
+          [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ],
+          [ "operator==", "portType_8cpp.html#a5f72d81c70aac087bc14e5f150aeffb3", null ]
         ] ]
       ] ],
       [ "Optimisation", "namespaceAntares_1_1Optimisation.html", "namespaceAntares_1_1Optimisation" ],
@@ -3109,7 +3115,8 @@ var namespaces_dup =
       [ "convert< Vec3 >", "structYAML_1_1convert_3_01Vec3_01_4.html", null ],
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
-      [ "as_fallback_default", "yml-model_2decoders_8hxx.html#a1f73904464749314bdb46864a93c5dae", null ]
+      [ "as_fallback_default", "yml-model_2decoders_8hxx.html#a1f73904464749314bdb46864a93c5dae", null ],
+      [ "findValue", "yml-model_2decoders_8hxx.html#a8d4d09c36ffd7b06ec80b73bac229d94", null ]
     ] ],
     [ "Yuni", null, [
       [ "Extension", null, [

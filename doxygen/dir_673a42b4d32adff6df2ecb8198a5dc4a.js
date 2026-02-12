@@ -31,6 +31,7 @@ var dir_673a42b4d32adff6df2ecb8198a5dc4a =
     [ "MaxHydroPower.h", "MaxHydroPower_8h_source.html", null ],
     [ "MaxPumping.h", "MaxPumping_8h_source.html", null ],
     [ "MaxPumpingGroup.h", "MaxPumpingGroup_8h_source.html", null ],
+    [ "MaxUnsuppliedEnergy.h", "MaxUnsuppliedEnergy_8h_source.html", null ],
     [ "MinDownTime.h", "MinDownTime_8h_source.html", null ],
     [ "MinDownTimeGroup.h", "MinDownTimeGroup_8h_source.html", null ],
     [ "MinHydroPower.h", "MinHydroPower_8h_source.html", null ],

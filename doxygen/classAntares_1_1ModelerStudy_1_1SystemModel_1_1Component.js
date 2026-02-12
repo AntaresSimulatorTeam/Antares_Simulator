@@ -4,6 +4,7 @@ var classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component =
     [ "addAreaConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#aa9aeff46a6ef78aab76b4fa6ce7d70f5", null ],
     [ "addComponentConnection", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#ad75b4891d16f01ada62d0e527bbfa6d0", null ],
     [ "areaConnectedToPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#adf8d8937a96e84a5e572b8b2199749fc", null ],
+    [ "areaConnectionAtPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#afe2806362d1807bd568e8866415af79f", null ],
     [ "componentConnectionsViaPort", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#afeafffd5f0a1cbd18c383b7280040700", null ],
     [ "expressionAtPortField", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a3a60b273a5ea300847221855912ec5f2", null ],
     [ "getModel", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html#a0ca3fa1600733161bb0c3b02a06c6fff", null ],

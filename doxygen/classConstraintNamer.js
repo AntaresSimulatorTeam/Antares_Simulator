@@ -18,6 +18,7 @@ var classConstraintNamer =
     [ "HydroPowerSmoothingUsingVariationSum", "classConstraintNamer.html#a731fce69804bfd40b0e7e1a92c0409b6", null ],
     [ "MaxHydroPower", "classConstraintNamer.html#a34eb02f40afa583fc05a3fcb468cc0ef", null ],
     [ "MaxPumping", "classConstraintNamer.html#a918e30aa6d3c7b715505e068df1358cf", null ],
+    [ "MaxUnsuppliedEnergy", "classConstraintNamer.html#aaf4650e0d7ce543b0a000eaed6a5d452", null ],
     [ "MinDownTime", "classConstraintNamer.html#aca80a0a7c62c0081bd610b1fb2493fb8", null ],
     [ "MinHydroPower", "classConstraintNamer.html#a45725ec155804b68f2f96606862c40af", null ],
     [ "Namer", "classConstraintNamer.html#ac86fca681803ca8a161de0e5ffe66294", null ],

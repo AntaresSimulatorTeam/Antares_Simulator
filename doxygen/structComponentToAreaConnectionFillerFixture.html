@@ -134,27 +134,30 @@ $(document).ready(function(){initNavTree('structComponentToAreaConnectionFillerF
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6950cf025b29dd955d2da79bf8f5ef62"><td class="memItemLeft" align="right" valign="top"><a id="a6950cf025b29dd955d2da79bf8f5ef62"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setData</b> (const std::vector&lt; double &gt; &amp;some_param_value)</td></tr>
-<tr class="separator:a6950cf025b29dd955d2da79bf8f5ef62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f29778fa2665a006a4017a5e3140631"><td class="memItemLeft" align="right" valign="top"><a id="a4f29778fa2665a006a4017a5e3140631"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpModelerSystem</b> ()</td></tr>
-<tr class="separator:a4f29778fa2665a006a4017a5e3140631"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af29ba94a6093b4fefc2e5d737a82ae55"><td class="memItemLeft" align="right" valign="top"><a id="af29ba94a6093b4fefc2e5d737a82ae55"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpModelerVariables</b> (unsigned int ts_start, unsigned int ts_end, OptimEntityContainer &amp;optimEntityContainer)</td></tr>
-<tr class="separator:af29ba94a6093b4fefc2e5d737a82ae55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac184dd7bdb22f1bfd0c04699d425b5ce"><td class="memItemLeft" align="right" valign="top"><a id="ac184dd7bdb22f1bfd0c04699d425b5ce"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addEmptyConstraintsToLinearProblem</b> (std::vector&lt; std::string &gt; &amp;names, double rhs)</td></tr>
-<tr class="separator:ac184dd7bdb22f1bfd0c04699d425b5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe7c5c0dca31614fd935d57216d9008f"><td class="memItemLeft" align="right" valign="top"><a id="afe7c5c0dca31614fd935d57216d9008f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addEmptyConstraints</b> (std::vector&lt; std::string &gt; &amp;constraintNames, bool useNamedProblems, double rhs)</td></tr>
-<tr class="separator:afe7c5c0dca31614fd935d57216d9008f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83fe9a1fd25d582a4e03350455053f51"><td class="memItemLeft" align="right" valign="top"><a id="a83fe9a1fd25d582a4e03350455053f51"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setUpLegacyLp</b> (std::vector&lt; std::string &gt; &amp;constraintNames, bool useNamedProblems, double rhs)</td></tr>
-<tr class="separator:a83fe9a1fd25d582a4e03350455053f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8827ca0ab2c30d9e4928bbfe554bf82"><td class="memItemLeft" align="right" valign="top"><a id="aa8827ca0ab2c30d9e4928bbfe554bf82"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>fillProblem</b> (const FillContext &amp;fillCtx, OptimEntityContainer &amp;optimEntityContainer)</td></tr>
-<tr class="separator:aa8827ca0ab2c30d9e4928bbfe554bf82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ee5e0c1440eb02c6a9d43366e4b4a19"><td class="memItemLeft" align="right" valign="top"><a id="a8ee5e0c1440eb02c6a9d43366e4b4a19"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLinearProblemData</b> (const std::vector&lt; double &gt; &amp;some_param_value)</td></tr>
+<tr class="separator:a8ee5e0c1440eb02c6a9d43366e4b4a19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73b52edec0bcb8dbcf9583dd93bfb08f"><td class="memItemLeft" align="right" valign="top"><a id="a73b52edec0bcb8dbcf9583dd93bfb08f"></a>
+std::unique_ptr&lt; <a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">Solver::ModelerData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>buildModelerSystem</b> ()</td></tr>
+<tr class="separator:a73b52edec0bcb8dbcf9583dd93bfb08f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a997d5bd0e8b168525dcf74b0eb564f46"><td class="memItemLeft" align="right" valign="top"><a id="a997d5bd0e8b168525dcf74b0eb564f46"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addAllComponentsVariablesToLP</b> (unsigned int ts_start, unsigned int ts_end, OptimEntityContainer &amp;optimEntityContainer)</td></tr>
+<tr class="separator:a997d5bd0e8b168525dcf74b0eb564f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af63bfdb531fd3606bbc821a2ab10ae04"><td class="memItemLeft" align="right" valign="top"><a id="af63bfdb531fd3606bbc821a2ab10ae04"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addConstraintsToLinearProblem</b> (std::vector&lt; std::string &gt; &amp;names, double rhs)</td></tr>
+<tr class="separator:af63bfdb531fd3606bbc821a2ab10ae04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a291fd3ee3ee82f45f9deeac8fbbcdc91"><td class="memItemLeft" align="right" valign="top"><a id="a291fd3ee3ee82f45f9deeac8fbbcdc91"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>makeAutomaticConstraintNames</b> (unsigned nb_of_constraints)</td></tr>
+<tr class="separator:a291fd3ee3ee82f45f9deeac8fbbcdc91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7225e704340b2c7d12a2a079ee000dee"><td class="memItemLeft" align="right" valign="top"><a id="a7225e704340b2c7d12a2a079ee000dee"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addAutomaticConstraintsToLP</b> (unsigned nb_of_constraints, const double rhs)</td></tr>
+<tr class="separator:a7225e704340b2c7d12a2a079ee000dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1368154d270cd0d1e38065970d656d12"><td class="memItemLeft" align="right" valign="top"><a id="a1368154d270cd0d1e38065970d656d12"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addNamedConstraintsToLP</b> (std::vector&lt; std::string &gt; &amp;constraintNames, double rhs)</td></tr>
+<tr class="separator:a1368154d270cd0d1e38065970d656d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a2114a14bcbed3fe343cdf20267e693"><td class="memItemLeft" align="right" valign="top"><a id="a7a2114a14bcbed3fe343cdf20267e693"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addConstraintsFromConnectionsToLP</b> (const FillContext &amp;fillCtx, OptimEntityContainer &amp;optimEntityContainer)</td></tr>
+<tr class="separator:a7a2114a14bcbed3fe343cdf20267e693"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>

@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"action_2handler_2antares-study_2area_2timeseries_8h_source.html":[9,0,0,12,0,0,0,0,12],
 "action_2handler_2antares-study_2constraint_2data_8hxx_source.html":[9,0,0,12,0,0,0,1,3],
 "action_2handler_2antares-study_2constraint_2offsets_8h_source.html":[9,0,0,12,0,0,0,1,6],
 "action_2handler_2antares-study_2constraint_2weights_8h_source.html":[9,0,0,12,0,0,0,1,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Color.html":[8,0,0,0,0,0,2],
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Color.html#a508361386d0ccef0816f3278836ac3a2":[8,0,0,0,0,0,2,1],
 "classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Color.html#a57492b7b50df8d974335709aa420da0f":[8,0,0,0,0,0,2,5],
-"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Color.html#a934641b516d036977e46aebfb4cfd6bb":[8,0,0,0,0,0,2,2],
-"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Color.html#a987bec650741ea104d9026c2e42049e4":[8,0,0,0,0,0,2,0]
+"classAntares_1_1Action_1_1AntaresStudy_1_1Area_1_1Color.html#a934641b516d036977e46aebfb4cfd6bb":[8,0,0,0,0,0,2,2]
 };

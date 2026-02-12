@@ -1,5 +1,6 @@
 var NAVTREEINDEX21 =
 {
+"classAntares_1_1IniFile_1_1Section.html#aa13a790c06d73d5b992963b0b08f7f44":[8,0,0,36,1,13],
 "classAntares_1_1IniFile_1_1Section.html#aa43c5b43d6dfce578462d631a822aa0f":[8,0,0,36,1,1],
 "classAntares_1_1IniFile_1_1Section.html#aa86ebaa8abf1b711eb79b5506207e27b":[8,0,0,36,1,5],
 "classAntares_1_1IniFile_1_1Section.html#aa9d770e6f754435e0ead5c822afd29f1":[8,0,0,36,1,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX21 =
 "classAntares_1_1Map_1_1Manager.html#a707552ee79e9af7f066d09d56a2fc05c":[8,0,0,13,7,27],
 "classAntares_1_1Map_1_1Manager.html#a796310f6d35ec2ca032c32eebf1c0b90":[8,0,0,13,7,13],
 "classAntares_1_1Map_1_1Manager.html#a7a4a3ac4b650695d9bcd0547b7ba2a9e":[8,0,0,13,7,6],
-"classAntares_1_1Map_1_1Manager.html#a7d73ea7ce54525207b2c9caaf807e52c":[8,0,0,13,7,37],
-"classAntares_1_1Map_1_1Manager.html#a81a9b23334e591adce3cdb2bf0382801":[8,0,0,13,7,29]
+"classAntares_1_1Map_1_1Manager.html#a7d73ea7ce54525207b2c9caaf807e52c":[8,0,0,13,7,37]
 };

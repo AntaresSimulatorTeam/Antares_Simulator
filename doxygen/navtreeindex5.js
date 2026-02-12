@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classAntares_1_1Component_1_1Datagrid_1_1DBGrid.html#afb7a22b830a3e25634e513686defdc8d":[8,0,0,3,0,6,12],
 "classAntares_1_1Component_1_1Datagrid_1_1GridCellAttrProvider.html":[8,0,0,3,0,7],
 "classAntares_1_1Component_1_1Datagrid_1_1GridCellAttrProvider.html#a2f8686c8954db31996ea1686e06cc436":[8,0,0,3,0,7,0],
 "classAntares_1_1Component_1_1Datagrid_1_1GridCellAttrProvider.html#a48ffe45fac0959c269096be793d22dc8":[8,0,0,3,0,7,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#ae8e3af9dae864e28bcc999d6c064d178":[8,0,0,3,0,0,9,5],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#af279100a5daadff375f7d8fdc75149cc":[8,0,0,3,0,0,9,1],
 "classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CommonClusterSummarySingleArea.html#aff2996a1426ea0a14f4d55957f87b635":[8,0,0,3,0,0,9,12],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Connection.html":[8,0,0,3,0,0,66],
-"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Connection.html#a0aa7a9f437f095fe195e613e93c64994":[8,0,0,3,0,0,66,10]
+"classAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1Connection.html":[8,0,0,3,0,0,66]
 };

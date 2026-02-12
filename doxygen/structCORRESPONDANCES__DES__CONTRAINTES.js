@@ -9,6 +9,7 @@ var structCORRESPONDANCES__DES__CONTRAINTES =
     [ "NumeroDeContrainteDesContraintesDeDureeMinDArret", "structCORRESPONDANCES__DES__CONTRAINTES.html#ae60ca80280de5c1abfb7de3b5807af87", null ],
     [ "NumeroDeContrainteDesContraintesDeDureeMinDeMarche", "structCORRESPONDANCES__DES__CONTRAINTES.html#ae774ce79967a45f0383d96f94872722b", null ],
     [ "NumeroDeContrainteDesNiveauxPays", "structCORRESPONDANCES__DES__CONTRAINTES.html#aab841046ab7d0f94cc1048424faeeaea", null ],
+    [ "NumeroDeContraintePourBornerLaDefaillance", "structCORRESPONDANCES__DES__CONTRAINTES.html#a8580e9fd1ecb02e51ee719314b5496a0", null ],
     [ "NumeroDeContraintePourEviterLesChargesFictives", "structCORRESPONDANCES__DES__CONTRAINTES.html#a9379b7e36a3b784f6a51fb9db0bf9954", null ],
     [ "NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne", "structCORRESPONDANCES__DES__CONTRAINTES.html#a03feeb01ba69438346b911b655382af8", null ],
     [ "NumeroDeuxiemeContrainteDeReserveParZone", "structCORRESPONDANCES__DES__CONTRAINTES.html#a08e7ea2d1bc9d4fe202a11816a7794eb", null ],

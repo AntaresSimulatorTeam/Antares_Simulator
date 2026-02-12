@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Data_1_1PreproAvailability.html#ad398f7f7ccf3731aac3e762837005b80":[8,0,0,5,77,7],
 "classAntares_1_1Data_1_1PreproAvailability.html#af10876e3da1ad823f2097ae32aa28bff":[8,0,0,5,77,3],
 "classAntares_1_1Data_1_1PreproAvailability.html#afed46098d3008169ed08a278dfa0296a":[8,0,0,5,77,6],
 "classAntares_1_1Data_1_1PreproHydro.html":[8,0,0,5,52],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html":[8,0,0,5,3,2],
 "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html#a1f67d70755b45dd5983dbae02762bdd2":[8,0,0,5,3,2,4],
 "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html#a2cfe89f3e5c5ca2c655f7a94c385288c":[8,0,0,5,3,2,2],
-"classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html#a33bd05e9730ad0a3214904a76c2d66ba":[8,0,0,5,3,2,7],
-"classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html#a3c42df8345e2db15f77fcc0b485ae54b":[8,0,0,5,3,2,12]
+"classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html#a33bd05e9730ad0a3214904a76c2d66ba":[8,0,0,5,3,2,7]
 };

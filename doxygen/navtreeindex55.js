@@ -1,5 +1,17 @@
 var NAVTREEINDEX55 =
 {
+"setofareas_8hxx_source.html":[9,0,0,8,12,0,0,0,0,17],
+"sets_8hxx_source.html":[9,0,0,4,0,25,0,0,0,8,12],
+"shave-peaks-by-remix-help_8h.html#a0dca85fdb36f5289211a7723ba109b2d":[7,0,0,24,6,42],
+"shave-peaks-by-remix-help_8h.html#a194416baeb9057cc4e1803e5b6f5a1cf":[7,0,0,24,6,82],
+"shave-peaks-by-remix-help_8h.html#a1ce7f2520ce4e57370b5a56f0e861710":[7,0,0,24,6,79],
+"shave-peaks-by-remix-help_8h.html#a6030c96de573a2966ac86c71d0bf601f":[7,0,0,24,6,80],
+"shave-peaks-by-remix-help_8h.html#af8d74f9a2276d5691612bc3a19099e6e":[7,0,0,24,6,74],
+"shave-peaks-by-remix-help_8h_source.html":[9,0,0,8,9,0,0,0,0,0,2],
+"shave-peaks-by-remix-storage-gen_8h.html#a0e9b015ccae89026b94fe37772f84d44":[7,0,0,24,6,41],
+"shave-peaks-by-remix-storage-gen_8h.html#a4a85a74da287a9bd0410a983ea8f856c":[7,0,0,24,6,76],
+"shave-peaks-by-remix-storage-gen_8h.html#a586c540400f03bb38022fe5f5f450164":[7,0,0,24,6,40],
+"shave-peaks-by-remix-storage-gen_8h_source.html":[9,0,0,8,9,0,0,0,0,0,3],
 "sim__alloc__probleme__hebdo_8h_source.html":[9,0,0,8,9,0,0,0,0,15],
 "sim__binding__constraints__rhs_8h.html#afad00fb25244815afedc70fe7775be9a":[7,0,36,0],
 "sim__binding__constraints__rhs_8h_source.html":[9,0,0,8,9,0,0,0,0,16],
@@ -237,17 +249,5 @@ var NAVTREEINDEX55 =
 "structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89":[8,0,0,1,1,1],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CheckMinUpDownTime.html":[8,0,0,3,0,0,5],
 "structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1CheckUnitCount.html":[8,0,0,3,0,0,6],
-"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html":[8,0,0,3,0,0,4],
-"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1RefeshInspector.html":[8,0,0,3,0,0,7],
-"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1RefeshInspectorAndMarkAsModified.html":[8,0,0,3,0,0,8],
-"structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaOrder.html":[8,0,0,3,2,0,0],
-"structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaOrder.html#a2fbec8b57d74c84102e2006cb1249658":[8,0,0,3,2,0,0,0],
-"structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaReverseOrder.html":[8,0,0,3,2,0,1],
-"structAntares_1_1Component_1_1HTMLListbox_1_1Datasource_1_1SortAlphaReverseOrder.html#a247f6fb384731047ca37ef8f24d79446":[8,0,0,3,2,0,1,0],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html":[8,0,0,5,0,1],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a01e73f48ced94858d77759e29cb7f052":[8,0,0,5,0,1,7],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a0c951b8ab3c2ef254cf5e4e260137590":[8,0,0,5,0,1,3],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a225dad6b92cb785a90187c9185bb3e44":[8,0,0,5,0,1,9],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a2a359d2911b8e0e96752c785e0fb16cd":[8,0,0,5,0,1,10],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a2ba6547c870c1e0d683c9589942404b8":[8,0,0,5,0,1,8]
+"structAntares_1_1Component_1_1Datagrid_1_1Renderer_1_1NoCheck.html":[8,0,0,3,0,0,4]
 };

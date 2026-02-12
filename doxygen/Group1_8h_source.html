@@ -136,31 +136,32 @@ $(document).ready(function(){initNavTree('Group1_8h_source.html',''); initResiza
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;ConstraintGroup.h&quot;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;FictitiousLoad.h&quot;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;FlowDissociation.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;ShortTermStorageLevel.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classGroup1.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classGroup1.html">Group1</a> final: <span class="keyword">public</span> <a class="code" href="classConstraintGroup.html">ConstraintGroup</a></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">using</span> ConstraintGroup::ConstraintGroup;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> BuildConstraints() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="structAreaBalanceData.html">AreaBalanceData</a> GetAreaBalanceData();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="structFictitiousLoadData.html">FictitiousLoadData</a> GetFictitiousLoadData();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="structShortTermStorageData.html">ShortTermStorageData</a> GetShortTermStorageData();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="structShortTermStorageCumulativeConstraintData.html">ShortTermStorageCumulativeConstraintData</a> GetShortTermStorageCumulativeConstraintData();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;MaxUnsuppliedEnergy.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;ShortTermStorageLevel.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classGroup1.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classGroup1.html">Group1</a> final: <span class="keyword">public</span> <a class="code" href="classConstraintGroup.html">ConstraintGroup</a></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">using</span> ConstraintGroup::ConstraintGroup;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> BuildConstraints() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="structAreaBalanceData.html">AreaBalanceData</a> GetAreaBalanceData();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="structFictitiousLoadData.html">FictitiousLoadData</a> GetFictitiousLoadData();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="structMaxUnsupEnergyData.html">MaxUnsupEnergyData</a> GetMaxUnsupEnergyData();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="structShortTermStorageData.html">ShortTermStorageData</a> GetShortTermStorageData();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="structShortTermStorageCumulativeConstraintData.html">ShortTermStorageCumulativeConstraintData</a> GetShortTermStorageCumulativeConstraintData();</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="structFlowDissociationData.html">FlowDissociationData</a> GetFlowDissociationData();</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="structBindingConstraintHourData.html">BindingConstraintHourData</a> GetBindingConstraintHourData();</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;};</div>
 <div class="ttc" id="aclassConstraintGroup_html"><div class="ttname"><a href="classConstraintGroup.html">ConstraintGroup</a></div><div class="ttdef"><b>Definition:</b> ConstraintGroup.h:12</div></div>
-<div class="ttc" id="aclassGroup1_html"><div class="ttname"><a href="classGroup1.html">Group1</a></div><div class="ttdef"><b>Definition:</b> Group1.h:13</div></div>
+<div class="ttc" id="aclassGroup1_html"><div class="ttname"><a href="classGroup1.html">Group1</a></div><div class="ttdef"><b>Definition:</b> Group1.h:14</div></div>
 <div class="ttc" id="astructAreaBalanceData_html"><div class="ttname"><a href="structAreaBalanceData.html">AreaBalanceData</a></div><div class="ttdef"><b>Definition:</b> AreaBalance.h:8</div></div>
 <div class="ttc" id="astructBindingConstraintHourData_html"><div class="ttname"><a href="structBindingConstraintHourData.html">BindingConstraintHourData</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintHour.h:9</div></div>
 <div class="ttc" id="astructFictitiousLoadData_html"><div class="ttname"><a href="structFictitiousLoadData.html">FictitiousLoadData</a></div><div class="ttdef"><b>Definition:</b> FictitiousLoad.h:9</div></div>
 <div class="ttc" id="astructFlowDissociationData_html"><div class="ttname"><a href="structFlowDissociationData.html">FlowDissociationData</a></div><div class="ttdef"><b>Definition:</b> FlowDissociation.h:8</div></div>
+<div class="ttc" id="astructMaxUnsupEnergyData_html"><div class="ttname"><a href="structMaxUnsupEnergyData.html">MaxUnsupEnergyData</a></div><div class="ttdef"><b>Definition:</b> MaxUnsuppliedEnergy.h:9</div></div>
 <div class="ttc" id="astructShortTermStorageCumulativeConstraintData_html"><div class="ttname"><a href="structShortTermStorageCumulativeConstraintData.html">ShortTermStorageCumulativeConstraintData</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:294</div></div>
 <div class="ttc" id="astructShortTermStorageData_html"><div class="ttname"><a href="structShortTermStorageData.html">ShortTermStorageData</a></div><div class="ttdef"><b>Definition:</b> ConstraintBuilder.h:287</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -1,5 +1,14 @@
 var NAVTREEINDEX54 =
 {
+"namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933":[7,0,25,6],
+"namespacemembers.html":[7,1,0],
+"namespacemembers_enum.html":[7,1,4],
+"namespacemembers_func.html":[7,1,1],
+"namespacemembers_type.html":[7,1,3],
+"namespacemembers_vars.html":[7,1,2],
+"namespaces.html":[7,0],
+"nbOfDispatchedUnitsByPlant_8h_source.html":[9,0,0,8,12,0,0,0,0,3,26],
+"nbOfDispatchedUnits_8h_source.html":[9,0,0,8,12,0,0,0,0,3,25],
 "nearPriceCap_8h.html#a9bc81019a96355ed256af3134ff28fc3":[7,0,0,24,8,4,162],
 "nearPriceCap_8h.html#ae4c312a5614cd3dabec99918aab0459c":[7,0,0,24,8,4,161],
 "nearPriceCap_8h_source.html":[9,0,0,8,12,0,0,0,0,3,27],
@@ -74,6 +83,9 @@ var NAVTREEINDEX54 =
 "pollutant_8h_source.html":[9,0,0,4,0,25,0,0,0,5,6,7],
 "portFieldDefinition_8h_source.html":[9,0,0,9,0,0,0,0,0,11],
 "portField_8h_source.html":[9,0,0,9,0,0,0,0,0,10],
+"portType_8cpp.html#a50a0cf363e3461a391e2da4484f6f577":[7,0,0,18,0,31],
+"portType_8cpp.html#a5f72d81c70aac087bc14e5f150aeffb3":[7,0,0,18,0,37],
+"portType_8cpp.html#ae25c2ee4d96cf9586d5619fff8e2562b":[7,0,0,18,0,34],
 "portType_8h_source.html":[9,0,0,9,0,0,0,0,0,12],
 "port_8h_source.html":[9,0,0,9,0,0,0,0,0,9],
 "position_8h_source.html":[9,0,0,12,0,0,0,0,10],
@@ -237,17 +249,5 @@ var NAVTREEINDEX54 =
 "selectionoperation_8h_source.html":[9,0,0,12,2,1,1,1,10],
 "separator_8h_source.html":[9,0,0,12,1,0,3,8],
 "setData_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1],
-"setofareas_8h_source.html":[9,0,0,8,12,0,0,0,0,16],
-"setofareas_8hxx_source.html":[9,0,0,8,12,0,0,0,0,17],
-"sets_8hxx_source.html":[9,0,0,4,0,25,0,0,0,8,12],
-"shave-peaks-by-remix-help_8h.html#a0dca85fdb36f5289211a7723ba109b2d":[7,0,0,24,6,42],
-"shave-peaks-by-remix-help_8h.html#a194416baeb9057cc4e1803e5b6f5a1cf":[7,0,0,24,6,82],
-"shave-peaks-by-remix-help_8h.html#a1ce7f2520ce4e57370b5a56f0e861710":[7,0,0,24,6,79],
-"shave-peaks-by-remix-help_8h.html#a6030c96de573a2966ac86c71d0bf601f":[7,0,0,24,6,80],
-"shave-peaks-by-remix-help_8h.html#af8d74f9a2276d5691612bc3a19099e6e":[7,0,0,24,6,74],
-"shave-peaks-by-remix-help_8h_source.html":[9,0,0,8,9,0,0,0,0,0,2],
-"shave-peaks-by-remix-storage-gen_8h.html#a0e9b015ccae89026b94fe37772f84d44":[7,0,0,24,6,41],
-"shave-peaks-by-remix-storage-gen_8h.html#a4a85a74da287a9bd0410a983ea8f856c":[7,0,0,24,6,76],
-"shave-peaks-by-remix-storage-gen_8h.html#a586c540400f03bb38022fe5f5f450164":[7,0,0,24,6,40],
-"shave-peaks-by-remix-storage-gen_8h_source.html":[9,0,0,8,9,0,0,0,0,0,3]
+"setofareas_8h_source.html":[9,0,0,8,12,0,0,0,0,16]
 };
