@@ -132,7 +132,7 @@ void FillerFixture::setUpLegacyLp(std::vector<std::string>& constraintNames,
     addEmptyConstraints(constraintNames, useNamedProblems, rhs);
 }
 
-void FillerFixture::fillProblemWithAreaConnectionFiller(
+/*void FillerFixture::fillProblemWithAreaConnectionFiller(
   const FillContext& fillCtx,
   OptimEntityContainer& optimEntityContainer) const
 {
@@ -145,7 +145,7 @@ void FillerFixture::fillProblemWithAreaConnectionFiller(
     filler.addVariables(fillCtx);
     filler.addConstraints(fillCtx);
     filler.addObjectives(fillCtx);
-}
+}*/
 
 void FillerFixture::fillProblemWithThermalCapacityConnectionFiller(
   const FillContext& fillCtx,

@@ -249,10 +249,10 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
     {
         std::vector<FieldMatching> areaConnection;
 
-        areaConnection.emplace_back("injection-field", rhs.area_connection_injection_field);
-        areaConnection.emplace_back("spillage-bound", rhs.area_connection_spillage_bound_field);
+        areaConnection.emplace_back("injection-field", rhs.area_connection.injection);
+        areaConnection.emplace_back("spillage-bound", rhs.area_connection.spillage_bound);
         areaConnection.emplace_back("unsupplied-energy-bound",
-                                    rhs.area_connection_unsupplied_energy_bound_field);
+                                    rhs.area_connection.unsupplied_energy_bound);
         return convertConnectionField(node, "area-connection", areaConnection);
     }
 

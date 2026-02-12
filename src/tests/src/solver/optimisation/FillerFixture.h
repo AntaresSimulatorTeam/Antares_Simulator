@@ -41,9 +41,9 @@ struct FillerFixture
                        bool useNamedProblems,
                        double rhs);
 
-    void fillProblemWithAreaConnectionFiller(
+    /*void fillProblemWithAreaConnectionFiller(
       const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
-      Antares::Optimisation::OptimEntityContainer& optimEntityContainer) const;
+      Antares::Optimisation::OptimEntityContainer& optimEntityContainer) const;*/
     void fillProblemWithThermalCapacityConnectionFiller(
       const Optimisation::LinearProblemApi::FillContext& fillCtx,
       Optimisation::OptimEntityContainer& optimEntityContainer) const;

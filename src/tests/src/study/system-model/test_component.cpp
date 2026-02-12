@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_port_with_no_thermal_capacity_
 {
     PortField field1("field1");
     std::vector portFields1 = {field1};
-    PortType portTypeWithoutThermalCapacityConnection("portType1", std::move(portFields1), "", "");
+    PortType portTypeWithoutThermalCapacityConnection("portType1", std::move(portFields1), {}, "");
 
     Port portNoAC("portNoAC", portTypeWithoutThermalCapacityConnection);
     ModelBuilder model_builder;
@@ -392,7 +392,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_undefined_field)
     std::vector portFields2 = {field2};
     PortType portTypeWithThermalCapacityConnection("portType2",
                                                    std::move(portFields2),
-                                                   "",
+                                                   {},
                                                    "field2");
 
     Port portACNoDef("portACNoDef", portTypeWithThermalCapacityConnection);
@@ -461,7 +461,7 @@ BOOST_AUTO_TEST_CASE(successfully_connect_thermal_capacity_to_port)
     std::vector portFields2 = {field2};
     PortType portTypeWithThermalCapacityConnection("portType2",
                                                    std::move(portFields2),
-                                                   "",
+                                                   {},
                                                    "field2");
 
     Port portACDef("portACDef", portTypeWithThermalCapacityConnection);

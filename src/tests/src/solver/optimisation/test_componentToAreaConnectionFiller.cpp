@@ -5,7 +5,16 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "FillerFixture.h"
+#include <antares/io/inputs/yml-system/converter.h>
+#include "antares/io/inputs/model-converter/modelConverter.h"
+#include "antares/io/inputs/yml-model/parser.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
+#include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
+#include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/study/system-model/library.h"
+
 #include "unit_test_utils.h"
 
 using namespace std::string_literals;
@@ -232,9 +241,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
     setLinearProblemData({4.0});
 
-    OptimEntityContainer optimEntityContainer(linearProblem,
-                                              &linearProblemData,
-                                              &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     addAllComponentsVariablesToLP(0, 0, optimEntityContainer);
@@ -272,9 +279,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 {
     setLinearProblemData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
-    OptimEntityContainer optimEntityContainer(linearProblem,
-                                              &linearProblemData,
-                                              &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     addAllComponentsVariablesToLP(10, 11, optimEntityContainer);
