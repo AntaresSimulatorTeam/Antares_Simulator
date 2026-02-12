@@ -63,8 +63,8 @@ public:
     void Overflow(unsigned varIndex);
     void FinalStorage(unsigned varIndex);
     void LayerStorage(unsigned varIndex, int layerIndex);
-    void PositiveUnsuppliedEnergy(unsigned varIndex);
-    void NegativeUnsuppliedEnergy(unsigned varIndex);
+    void UnsuppliedEnergy(unsigned varIndex);
+    void Spillage(unsigned varIndex);
     void AreaBalance(unsigned varIndex);
 
 private:
@@ -82,6 +82,7 @@ public:
     void FlowDissociation(unsigned constrIndex);
     void AreaBalance(unsigned constrIndex);
     void FictiveLoads(unsigned constrIndex);
+    void MaxUnsuppliedEnergy(unsigned constrIndex);
     void HydroPower(unsigned constrIndex);
     void HydroPowerSmoothingUsingVariationSum(unsigned constrIndex);
     void HydroPowerSmoothingUsingVariationMaxDown(unsigned constrIndex);

@@ -172,6 +172,11 @@ public:
     {
     }
 
+    WhoseNameContains(const WhoseNameContains&) = default;
+    WhoseNameContains& operator=(const WhoseNameContains&) = default;
+    WhoseNameContains(WhoseNameContains&&) noexcept = default;
+    WhoseNameContains& operator=(WhoseNameContains&&) noexcept = default;
+
     bool operator()(const std::shared_ptr<BindingConstraint>& s) const
     {
         return (s->name()).contains(pFilter);

@@ -248,13 +248,17 @@ void VariableNamer::FinalStorage(unsigned varIndex)
     SetAreaElementNameHour(varIndex, "FinalStorage");
 }
 
-void VariableNamer::PositiveUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
 {
+    // TODO : what is "PositiveUnsuppliedEnergy" ?
+    // We mean "UnsuppliedEnergy". To be replaced.
     SetAreaElementNameHour(varIndex, "PositiveUnsuppliedEnergy");
 }
 
-void VariableNamer::NegativeUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::Spillage(unsigned varIndex)
 {
+    // TODO : what is "NegativeUnsuppliedEnergy" ?
+    // Should be replaced with "Spillage".
     SetAreaElementNameHour(varIndex, "NegativeUnsuppliedEnergy");
 }
 
@@ -286,6 +290,11 @@ void ConstraintNamer::AreaBalance(unsigned constrIndex)
 void ConstraintNamer::FictiveLoads(unsigned constrIndex)
 {
     SetAreaElementNameHour(constrIndex, "FictiveLoads");
+}
+
+void ConstraintNamer::MaxUnsuppliedEnergy(unsigned constrIndex)
+{
+    SetAreaElementNameHour(constrIndex, "MaxUnsupEnergy");
 }
 
 void ConstraintNamer::HydroPower(unsigned constrIndex)

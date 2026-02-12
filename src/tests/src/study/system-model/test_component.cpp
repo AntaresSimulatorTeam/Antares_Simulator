@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_port_with_no_area_connection_f
 {
     PortField field1("field1");
     std::vector portFields1 = {field1};
-    PortType portTypeWithoutAreaConnection("portType1", std::move(portFields1), "");
+    PortType portTypeWithoutAreaConnection("portType1", std::move(portFields1));
 
     Port portNoAC("portNoAC", portTypeWithoutAreaConnection);
     ModelBuilder model_builder;
@@ -365,7 +365,7 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
 {
     PortField field2("field2");
     std::vector portFields2 = {field2};
-    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), "field2");
+    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), {"field2", "", ""});
 
     Port portACNoDef("portACNoDef", portTypeWithAreaConnection);
     ModelBuilder model_builder;
@@ -417,13 +417,13 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_undefined_field)
 
 BOOST_AUTO_TEST_CASE(successfully_connect_area_to_port)
 {
-    PortField field2("field2");
-    std::vector portFields2 = {field2};
-    PortType portTypeWithAreaConnection("portType2", std::move(portFields2), "field2");
+    PortField field_flow("flow");
+    std::vector portFields = {field_flow};
+    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), {"flow", "", ""});
 
     Port portACDef("portACDef", portTypeWithAreaConnection);
     std::vector<PortFieldDefinition> portFieldDefs;
-    portFieldDefs.emplace_back(portACDef, field2, Expression());
+    portFieldDefs.emplace_back(portACDef, field_flow, Expression());
 
     ModelBuilder model_builder;
     auto model = model_builder.withId("myModel")
@@ -489,4 +489,107 @@ BOOST_AUTO_TEST_CASE(successfully_connect_thermal_capacity_to_port)
     BOOST_CHECK_EQUAL(component.portToThermalCapacityConnections().size(), 1);
 }
 
+BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_definition_missing)
+{
+    // Defining a PortType
+    //  fields:
+    PortField flow("flow");
+    PortField to_area_bound("to-area-bound");
+    PortField from_area_bound("from-area-bound");
+    std::vector portFields = {flow, to_area_bound, from_area_bound};
+    //  area-connection:
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    //  Finally : the port type
+    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
+
+    // Definig a Model
+    // ... port with an area connection
+    Port balance_port("balance-port", portTypeWithAreaConnection);
+    // ... definitions associated to the port
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(balance_port, flow, Expression());
+    portFieldDefs.emplace_back(balance_port, to_area_bound, Expression());
+    // =======================================================
+    // Here definition of port "from-area-bound "is missing
+    // =======================================================
+
+    // ... Finally, the model
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("my-model")
+                   .withPorts({balance_port})
+                   .withPortFieldDefinitions(std::move(portFieldDefs))
+                   .build();
+
+    // Make a component from the model
+    auto component = component_builder.withId("my-component")
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario-group")
+                       .build();
+
+    // Now checking what we have
+    BOOST_CHECK(not component.areaConnectedToPort("balance-port").has_value());
+
+    std::string errMsg = "Cannot connect area 'some-area' to port 'balance-port' of component "
+                         "'my-component': ";
+    errMsg += "port field 'from-area-bound' is not defined in the component's model 'my-model'";
+    BOOST_CHECK_EXCEPTION(component.addAreaConnection("balance-port", "some-area"),
+                          std::invalid_argument,
+                          checkMessage(errMsg));
+}
+
+BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)
+{
+    // Defining a PortType
+    //  fields:
+    PortField flow("flow");
+    PortField to_area_bound("to-area-bound");
+    PortField from_area_bound("from-area-bound");
+    std::vector portFields = {flow, to_area_bound, from_area_bound};
+    //  area-connection:
+    AreaConnection area_connection = {"flow", "to-area-bound", "from-area-bound"};
+    //  Finally : the port type
+    PortType portTypeWithAreaConnection("port-type-id", std::move(portFields), area_connection);
+
+    // Definig a Model
+    // ... port with an area connection
+    Port balance_port("balance-port", portTypeWithAreaConnection);
+    // ... definitions associated to the port
+    std::vector<PortFieldDefinition> portFieldDefs;
+    portFieldDefs.emplace_back(balance_port, flow, Expression());
+    portFieldDefs.emplace_back(balance_port, to_area_bound, Expression());
+    portFieldDefs.emplace_back(balance_port, from_area_bound, Expression());
+
+    // ... Finally, the model
+    ModelBuilder model_builder;
+    auto model = model_builder.withId("my-model")
+                   .withPorts({balance_port})
+                   .withPortFieldDefinitions(std::move(portFieldDefs))
+                   .build();
+
+    // Make a component from the model
+    auto component = component_builder.withId("my-component")
+                       .withModel(&model)
+                       .withScenarioGroupId("scenario-group")
+                       .build();
+
+    // Now checking what we have
+    BOOST_CHECK(not component.areaConnectedToPort("balance-port").has_value());
+    component.addAreaConnection("balance-port", "some-area");
+    BOOST_CHECK(component.areaConnectedToPort("balance-port").has_value());
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("balance-port").value(), "some-area");
+    BOOST_CHECK_EQUAL(component.portToAreaConnections().size(), 1);
+    BOOST_CHECK_EQUAL(component.portToAreaConnections().at("balance-port"), "some-area");
+
+    std::string errMsg = "Cannot connect area 'area-2' to port 'balance-port' of component "
+                         "'my-component': port is already connected to 'some-area'";
+    BOOST_CHECK_EXCEPTION(component.addAreaConnection("balance-port", "area-2"),
+                          std::invalid_argument,
+                          checkMessage(errMsg));
+    BOOST_CHECK(component.areaConnectedToPort("balance-port").has_value());
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("balance-port").value(), "some-area");
+    BOOST_CHECK_EQUAL(component.portToAreaConnections().size(), 1);
+    BOOST_CHECK_EQUAL(component.portToAreaConnections().at("balance-port"), "some-area");
+
+    BOOST_CHECK_THROW(component.nodeAtPortField("wrong port", "field"), std::invalid_argument);
+}
 BOOST_AUTO_TEST_SUITE_END()

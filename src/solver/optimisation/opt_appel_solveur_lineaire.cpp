@@ -125,7 +125,6 @@ void fillLinearProblem(FillContext& fillCtx,
         fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
           problemeHebdo,
           optimEntityContainer,
-          *problemeHebdo->modelerData->dataSeries,
           problemeHebdo->modelerData->scenarioGroupRepository));
         fillersCollection.push_back(
           std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));

@@ -8,6 +8,13 @@
 #include <antares/study/system-model/component.h>
 using namespace Antares::Expressions::Nodes;
 
+std::string toLowerCase(const std::string& str)
+{
+    std::string lowerCaseStr = str;
+    boost::algorithm::to_lower(lowerCaseStr);
+    return lowerCaseStr;
+}
+
 namespace Antares::ModelerStudy::SystemModel
 {
 
@@ -90,6 +97,17 @@ void Component::addComponentConnection(const std::string localPortId, Connection
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
 
+const std::optional<AreaConnection>& Component::areaConnectionAtPort(
+  const std::string& portId) const
+{
+    if (!getModel()->Ports().contains(portId))
+    {
+        std::string errMsg = "Port '" + portId + "' not found in component '" + data_.id + "'";
+        throw std::invalid_argument(errMsg);
+    }
+    return getModel()->Ports().at(portId).Type().areaConnection();
+}
+
 std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
 {
     if (auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
@@ -140,6 +158,25 @@ const Port& Component::findPort(const std::string& portId, const std::string& pr
     return it->second;
 }
 
+void Component::checkPortFieldDefinitionExists(const std::string& portName,
+                                               const std::string& fieldName,
+                                               const std::string& errMsgPrefix)
+{
+    if (!fieldName.empty())
+    {
+        PortFieldKey key(portName, fieldName);
+        if (!getModel()->PortFieldDefinitions().contains(key))
+        {
+            std::string errMsg = errMsgPrefix
+                                 + fmt::format(
+                                   "port field '{}' is not defined in the component's model '{}'",
+                                   fieldName,
+                                   getModel()->Id());
+            throw std::invalid_argument(errMsg);
+        }
+    }
+}
+
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
     std::string exceptionPrefix = fmt::format(
@@ -148,22 +185,21 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
       localPortId,
       data_.id);
     const auto& port = findPort(localPortId, exceptionPrefix);
-    if (!port.Type().AreaConnectionFieldId().has_value())
+    const auto& area_connection = port.Type().areaConnection();
+    if (!area_connection.has_value())
     {
         throw std::invalid_argument(
           exceptionPrefix
           + fmt::format("port type '{}' has no area-connection field ID defined",
                         port.Type().Id()));
     }
-    PortFieldKey key(localPortId, port.Type().AreaConnectionFieldId().value());
-    if (!data_.model->PortFieldDefinitions().contains(key))
-    {
-        throw std::invalid_argument(
-          exceptionPrefix
-          + fmt::format("port field '{}' is not defined in the component's model '{}'",
-                        port.Type().AreaConnectionFieldId().value(),
-                        data_.model->Id()));
-    }
+
+    checkPortFieldDefinitionExists(localPortId, area_connection->injection, errMsgPrefix);
+    checkPortFieldDefinitionExists(localPortId, area_connection->spillage_bound, errMsgPrefix);
+    checkPortFieldDefinitionExists(localPortId,
+                                   area_connection->unsupplied_energy_bound,
+                                   errMsgPrefix);
+
     if (portToAreaConnections_.contains(localPortId))
     {
         throw std::invalid_argument(exceptionPrefix
@@ -171,7 +207,7 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
                                                   portToAreaConnections_.at(localPortId)));
     }
 
-    portToAreaConnections_[localPortId] = areaId;
+    portToAreaConnections_[localPortId] = toLowerCase(areaId);
 }
 
 void Component::addThermalCapacityConnection(const std::string& portId,

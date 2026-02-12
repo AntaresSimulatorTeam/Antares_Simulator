@@ -173,6 +173,8 @@ struct ConstraintBuilderFixture: public STScumulativeConstaintFixture,
 {
 };
 
+BOOST_AUTO_TEST_SUITE(_constraint_builder_test_suite_)
+
 BOOST_FIXTURE_TEST_CASE(AddWithdrawalConstraint, ConstraintBuilderFixture)
 {
     ConstraintBuilderData constraint_builder_data = makeConstraintBuilderData();
@@ -389,7 +391,6 @@ BOOST_FIXTURE_TEST_CASE(week_is_set_to_12___all_constraints_receive_correct_name
 void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
                        int numberOfAreas,
                        int numberOfConstraints,
-
                        int numberOfTimeSteps)
 {
     problemeHebdo.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
@@ -414,6 +415,7 @@ void SetupProblemHebdo(PROBLEME_HEBDO& problemeHebdo,
     {
         corresp.NumeroDeContrainteDesBilansPays.resize(numberOfAreas, 0);
         corresp.NumeroDeContraintePourEviterLesChargesFictives.resize(numberOfAreas, 0);
+        corresp.NumeroDeContraintePourBornerLaDefaillance.resize(numberOfAreas, 0);
         corresp.NumeroDeContrainteDesNiveauxPays.resize(numberOfAreas, 0);
         corresp.NumeroDeContrainteDeDissociationDeFlux.resize(1, 0);
         corresp.NumeroDeContrainteDesContraintesCouplantes.resize(1, 0);
@@ -714,3 +716,5 @@ BOOST_AUTO_TEST_CASE(TestMultipleStoragesSameArea)
         BOOST_CHECK_CLOSE(problemeAResoudre.SecondMembre[constraint_index], expected_rhs, 0.001);
     }
 }
+
+BOOST_AUTO_TEST_SUITE_END()

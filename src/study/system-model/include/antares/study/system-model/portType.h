@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <fmt/format.h>
 #include <optional>
-#include <ranges>
 #include <string>
 #include <vector>
 
@@ -14,79 +13,34 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
-inline std::optional<std::string> getOptionalConnectionField(const std::vector<PortField>& fields,
-                                                             const std::string& portTypeId,
-                                                             const std::string& connectionFieldId,
-                                                             const std::string& nameOfTheConnection)
+
+struct AreaConnection
 {
-    if (!connectionFieldId.empty())
-    {
-        if (!std::ranges::any_of(fields,
-                                 [connectionFieldId](const auto& field)
-                                 { return field.Id() == connectionFieldId; }))
-        {
-            const auto msg = fmt::format(
-              "Field '{}' selected for {} connections was not defined in PortType '{}'.",
-              connectionFieldId,
-              nameOfTheConnection,
-              portTypeId);
-            throw std::invalid_argument(msg);
-        }
-        return connectionFieldId;
-    }
-    return std::nullopt;
-}
+    std::string injection;
+    std::string spillage_bound;
+    std::string unsupplied_energy_bound;
+};
 
 class PortType final
 {
 public:
     PortType(const std::string& id,
              std::vector<PortField>&& fields,
-             const std::string& areaConnectionFieldId = "",
-             const std::string& thermalCapacityConnectionField = ""):
-        id_(id),
-        fields_(std::move(fields))
-    {
-        areaConnectionFieldId_ = getOptionalConnectionField(fields_,
-                                                            id,
-                                                            areaConnectionFieldId,
-                                                            "area");
-        thermalCapacityConnectionFieldId_ = getOptionalConnectionField(
-          fields_,
-          id,
-          thermalCapacityConnectionField,
-          "thermal capacity");
-    }
+             const AreaConnection& areaConnection = {},
+             const std::string& thermalCapacityConnectionField = "");
 
-    const std::string& Id() const
-    {
-        return id_;
-    }
+    const std::optional<std::string>& ThermalCapacityConnectionFieldId() const;
 
-    const std::vector<PortField>& Fields() const
-    {
-        return fields_;
-    }
-
-    const std::optional<std::string>& AreaConnectionFieldId() const
-    {
-        return areaConnectionFieldId_;
-    }
-
-    const std::optional<std::string>& ThermalCapacityConnectionFieldId() const
-    {
-        return thermalCapacityConnectionFieldId_;
-    }
-
-    bool operator==(const PortType& other) const = default;
+    const std::string& Id() const;
+    const std::vector<PortField>& Fields() const;
+    const std::optional<AreaConnection>& areaConnection() const;
+    bool operator==(const PortType& other) const;
 
 private:
     std::string id_;
-
     std::vector<PortField> fields_;
-
-    std::optional<std::string> areaConnectionFieldId_;
     std::optional<std::string> thermalCapacityConnectionFieldId_;
+    std::optional<AreaConnection> areaConnection_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

@@ -25,6 +25,7 @@
 #include <fstream>
 
 #include <antares/logs/logs.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/io/outputs/ExportableName.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -294,7 +295,6 @@ void MPSGenerator::writeBounds()
 
         if (lbIsZero && ubIsPlusInfinity) // this case is the default
         {
-            // out_ << pad << "PL " << bnd << " " << varName << "\n";
             continue;
         }
 
@@ -349,7 +349,7 @@ void MPSFileWriter::write(const std::filesystem::path& filename, const std::stri
     std::ofstream file(filename);
     if (!file.is_open())
     {
-        throw std::runtime_error("Failed to open file: " + filename.string());
+        throw Antares::Error::RuntimeError("Failed to open file: " + filename.string());
     }
     file << content;
 }
