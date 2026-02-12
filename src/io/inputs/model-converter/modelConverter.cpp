@@ -139,33 +139,38 @@ static ForbiddenNodes ForbiddenInExtraOutput()
     return forbidden;
 }
 
-std::vector<PortType> convertTypes(const ::YmlModel::Library& library)
+AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
+{
+    return {ac.injection, ac.spillage_bound, ac.unsupplied_energy_bound};
+}
+
+std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 {
     std::vector<PortType> out;
     out.reserve(library.port_types.size());
-    for (const auto& portType: library.port_types)
+    for (const auto& ymlPortType: library.port_types)
     {
-        if (portType.fields.empty()) // Can't have a port type without fields
+        if (ymlPortType.fields.empty()) // Can't have a port type without fields
         {
-            throw PortTypeDoesntContainsFields(portType.id);
+            throw PortTypeDoesntContainsFields(ymlPortType.id);
         }
         std::vector<PortField> fields;
-        for (const auto& field: portType.fields)
+        for (const auto& field: ymlPortType.fields)
         {
             fields.emplace_back(field);
         }
 
         // Can't have port types with the same ID
-        if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
-            != out.end())
+        auto predicate = [&ymlPortType](const auto& p) { return p.Id() == ymlPortType.id; };
+        if (std::ranges::find_if(out, predicate) != out.end())
         {
-            throw PortTypeWithThisIdAlreadyExists(portType.id);
+            throw PortTypeWithThisIdAlreadyExists(ymlPortType.id);
         }
 
-        PortType portTypeModel(portType.id,
-                               std::move(fields),
-                               portType.area_connection_injection_field);
-        out.emplace_back(std::move(portTypeModel));
+        PortType portType(ymlPortType.id,
+                          std::move(fields),
+                          convert_to_system(ymlPortType.area_connection));
+        out.emplace_back(std::move(portType));
     }
     return out;
 }
@@ -474,7 +479,7 @@ std::vector<Model> convertModels(const YmlModel::Library& library,
  */
 Library convert(const YmlModel::Library& library)
 {
-    std::vector<PortType> portTypes = convertTypes(library);
+    std::vector<PortType> portTypes = convertPortTypes(library);
     std::vector<Model> models = convertModels(library, portTypes);
 
     LibraryBuilder builder;

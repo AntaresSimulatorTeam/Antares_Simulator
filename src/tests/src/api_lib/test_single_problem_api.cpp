@@ -92,15 +92,16 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     auto study = buildStudy(true, false);
     Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     const ConstantDataFromAntares constantData = getter.getConstantData();
-    // 504 = 3*168, 3 sets of variables
-    // unsupplied energy
-    // spilled energy
-    // dispatchable production
+    // 504 = 3*168, 3 sets of variables :
+    // - unsupplied energy
+    // - spilled energy
+    // - dispatchable production
     BOOST_CHECK_EQUAL(constantData.VariablesCount, 504);
-    // 336 = 2*168
-    // area balance
-    // fictive loads
-    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 336);
+    // 336 = 3*168 : 3 hourly constraints
+    // - area balance
+    // - fictive loads
+    // - Max unsupplied energy
+    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 504);
 
     const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
                                               "PositiveUnsuppliedEnergy::area<area>::hour<0>");
@@ -138,10 +139,10 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(firstWeekData.Xmin[unsuppliedVariable], 0.);
     BOOST_CHECK_EQUAL(firstWeekData.Xmin[spilledVariable], 0.);
 
+    double infinity = 1.e80;
     BOOST_CHECK_EQUAL(firstWeekData.Xmax[dispatchableVariable], 102.);
-    BOOST_CHECK_EQUAL(firstWeekData.Xmax[unsuppliedVariable],
-                      1.e-5); // default value when there is no residual load
-    BOOST_CHECK_EQUAL(firstWeekData.Xmax[spilledVariable], 1.e80); // infinite
+    BOOST_CHECK_EQUAL(firstWeekData.Xmax[unsuppliedVariable], infinity);
+    BOOST_CHECK_EQUAL(firstWeekData.Xmax[spilledVariable], infinity);
 }
 
 BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
@@ -149,19 +150,20 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
     auto study = buildStudy(false, true);
     Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     const ConstantDataFromAntares constantData = getter.getConstantData();
-    // Total 1008
-    // 168 unsupplied energy
-    // 168 spilled energy
-    // 168 hydro level
-    // 168 hydro prod
-    // 168 overflow
+    // Total variable : 1008
+    // - 168 unsupplied energy
+    // - 168 spilled energy
+    // - 168 hydro level
+    // - 168 hydro prod
+    // - 168 overflow
     BOOST_CHECK_EQUAL(constantData.VariablesCount, 840);
-    // Total 505
-    // 168 area balance
-    // 168 fictive loads
-    // 168 hydro level
-    // 1 hydro power
-    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 505);
+    // Total constaints : 673
+    // - 168 area balance
+    // - 168 fictive loads
+    // - 168 max unsupplied energy
+    // - 168 hydro level
+    // - 1 hydro power
+    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 673);
 
     const auto hydroLevelVariable = findIndex(constantData.VariablesMeaning,
                                               "HydroLevel::area<area>::hour<0>");

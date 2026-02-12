@@ -116,7 +116,7 @@ std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
 void SingleProblemGetter::initializeRandomNumbers()
 {
     int nbYears = 0;
-    nbWeeks_ = study_->parameters.simulationDays.numberOfWeeks();
+    nbWeeks_ = static_cast<int>(study_->parameters.simulationDays.numberOfWeeks());
     std::map<unsigned int, bool> isYearPerformed; // TODO check year number
     for (uint year = 0; year < study_->parameters.nbYears; ++year)
     {
@@ -124,7 +124,7 @@ void SingleProblemGetter::initializeRandomNumbers()
         if (study_->parameters.yearsFilter[year])
         {
             ++nbYears;
-            playedYears_.insert(year);
+            playedYears_.insert(static_cast<unsigned>(year));
         }
     }
 
@@ -242,7 +242,8 @@ std::vector<std::string> applyTimeOffset(const std::vector<std::string>& in,
     for (const auto& [left_end, right_begin, baseTime, index, base]: mem)
     {
         std::string& s = names[index];
-        s = s.substr(0, left_end) + std::to_string(baseTime + week * base) + s.substr(right_begin);
+        s = s.substr(0, left_end) + std::to_string(baseTime + week * base)
+            + s.substr(static_cast<size_t>(right_begin));
     }
     return names;
 }
@@ -255,7 +256,7 @@ void updateWeekId(WeeklyProblemId& id)
     {
         throw std::out_of_range("Invalid week number 0 detected, week number must be >=1");
     }
-    week--;
+    --week;
 }
 
 void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
@@ -269,7 +270,7 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
     uint indexYear = randomForParallelYears_->yearNumberToIndex[id.year];
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
     // TODO
-    if (auto [_, unseen] = randomPrepared_.insert(id.year); unseen)
+    if (auto [_, unseen] = randomPrepared_.insert(static_cast<int>(id.year)); unseen)
     {
         // TODO once per year, not every week
         Antares::Solver::Simulation::PrepareRandomNumbers(*study_, pb_, randomForCurrentYear);
@@ -320,8 +321,7 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
 
     OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(&pb_,
                                                            PremierPdtDeLIntervalle,
-                                                           DernierPdtDeLIntervalle,
-                                                           optimizationNumber);
+                                                           DernierPdtDeLIntervalle);
 
     OPT_InitialiserLeSecondMembreDuProblemeLineaire(&pb_,
                                                     PremierPdtDeLIntervalle,
@@ -372,11 +372,9 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
 {
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    // OptimizationStatistics& optimizationStatistics = pb_.optimizationStatistics[opt];
-    // TIME_MEASURE timeMeasure;
     Optimisation::LinearProblemApi::FillContext fillCtx = buildFillContext(&pb_,
                                                                            numeroDeLIntervalle);
-    const auto& modelerData = pb_.modelerData;
+    const auto modelerData = pb_.modelerData;
     bool hasModelerData = modelerData != nullptr;
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;

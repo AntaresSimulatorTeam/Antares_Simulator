@@ -182,15 +182,15 @@ ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double co
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::UnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.PositiveUnsuppliedEnergy(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.UnsuppliedEnergy(index, hourInWeek_), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::Spillage(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.NegativeUnsuppliedEnergy(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.Spillage(index, hourInWeek_), coeff);
     return *this;
 }
 

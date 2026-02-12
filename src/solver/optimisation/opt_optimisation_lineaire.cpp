@@ -144,8 +144,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
 
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo,
                                                                PremierPdtDeLIntervalle,
-                                                               DernierPdtDeLIntervalle,
-                                                               optimizationNumber);
+                                                               DernierPdtDeLIntervalle);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
                                                         PremierPdtDeLIntervalle,

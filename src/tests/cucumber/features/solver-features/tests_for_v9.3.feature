@@ -26,11 +26,11 @@ Feature: tests for v9.3
     Then the simulation takes less than 2 seconds
     And the simulation succeeds
     And in area "area", year 1 and hour 0, near price cap is 0 hours
-    And in area "area", year 1 and hour 48, near price cap is 1 hours
+    And in area "area", year 1 and hour 73, near price cap is 1 hours
     And in area "area 2", year 1 and hour 0, near price cap is 0 hours
-    And in area "area 2", year 1 and hour 48, near price cap is 1 hours
+    And in area "area 2", year 1 and hour 73, near price cap is 1 hours
     And in area "area 2", year 1 and hour 120, near price cap is 0 hours
-    And in area "area 2", year 1 and hour 144, near price cap is 1 hours
+    And in area "area 2", year 1 and hour 144, near price cap is 0 hours
     And in area "area 3", year 1 and hour 0, near price cap is 0 hours
     And in area "area 3", year 1 and hour 120, near price cap is 1 hours
     And in area "area 4", year 1 and hour 0, near price cap is 0 hours

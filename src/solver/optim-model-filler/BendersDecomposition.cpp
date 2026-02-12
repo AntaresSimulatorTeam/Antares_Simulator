@@ -23,7 +23,7 @@ void BendersDecomposition::collectCouplingVariables(std::vector<std::string>&& v
     for (const auto& name: names)
     {
         connectionVars_[currentProblemId_].emplace_back(name, varIndex);
-        varIndex++;
+        ++varIndex;
     }
 }
 

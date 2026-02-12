@@ -55,7 +55,7 @@ void HourlyCSRProblem::setQuadraticCost()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour);
+            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour);
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
                 problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(

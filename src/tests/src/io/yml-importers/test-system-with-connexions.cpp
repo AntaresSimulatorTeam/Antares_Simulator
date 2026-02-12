@@ -13,6 +13,92 @@ using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
 using namespace Antares::ModelerStudy;
 
+BOOST_AUTO_TEST_SUITE(readYamlInput)
+// This yaml lib contains only a port type.
+// Note that : an empty model is added to prevent parser from failing when reading the lib
+static const auto onlyPortTypeYmlLib = R"(
+library:
+  id: my_lib
+  description: test model library
+
+  port-types:
+    - id:  power_flow
+      description: power flow
+      fields:
+        - id: flow
+      area-connection:
+        - injection-field: flow
+  models:
+    - id: empty model
+      description: we need this empty model, otherwise parser fails !
+)"s;
+
+BOOST_AUTO_TEST_CASE(port_type_area_connection_is_read_correctly)
+{
+    YmlModel::Parser parserModel;
+    SystemModel::Library library = ModelConverter::convert(parserModel.parse(onlyPortTypeYmlLib));
+
+    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
+
+    SystemModel::PortType portType = library.PortTypes().begin()->second;
+
+    auto fields = portType.Fields();
+    BOOST_CHECK_EQUAL(fields.size(), 1);
+    BOOST_CHECK_EQUAL(fields[0].Id(), "flow");
+
+    auto area_connection = portType.areaConnection();
+    BOOST_CHECK(area_connection.has_value());
+    BOOST_CHECK_EQUAL(area_connection->injection, "flow");
+    BOOST_CHECK(area_connection->spillage_bound.empty());
+    BOOST_CHECK(area_connection->unsupplied_energy_bound.empty());
+}
+
+// This yaml lib contains only a port type, but with a more complete area connection.
+// Note that : as previously (and for same reason), an empty model is added.
+static const auto onlyPortTypeYmlLib2 = R"(
+library:
+  id: my_lib
+  description: test model library
+
+  port-types:
+    - id: power_flow
+      description: power flow
+      fields:
+        - id: flow
+        - id: to-area-bound
+        - id: from-area-bound
+      area-connection:
+        - injection-field: flow
+        - spillage-bound: to-area-bound
+        - unsupplied-energy-bound: from-area-bound
+
+  models:
+    - id: empty model
+      description: we need this empty model, otherwise parser fails !
+)"s;
+
+BOOST_AUTO_TEST_CASE(port_type_area_connection_is_more_complete_and_is_still_read_correctly)
+{
+    YmlModel::Parser parserModel;
+    SystemModel::Library library = ModelConverter::convert(parserModel.parse(onlyPortTypeYmlLib2));
+
+    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
+
+    SystemModel::PortType portType = library.PortTypes().begin()->second;
+
+    auto fields = portType.Fields();
+    BOOST_CHECK_EQUAL(fields.size(), 3);
+    BOOST_CHECK_EQUAL(fields[0].Id(), "flow");
+    BOOST_CHECK_EQUAL(fields[1].Id(), "to-area-bound");
+    BOOST_CHECK_EQUAL(fields[2].Id(), "from-area-bound");
+
+    auto area_connection = portType.areaConnection();
+    BOOST_CHECK(area_connection.has_value());
+    BOOST_CHECK_EQUAL(area_connection->injection, "flow");
+    BOOST_CHECK_EQUAL(area_connection->spillage_bound, "to-area-bound");
+    BOOST_CHECK_EQUAL(area_connection->unsupplied_energy_bound, "from-area-bound");
+}
+
 static const auto libraryYaml = R"(
 library:
   id: my_lib
@@ -149,3 +235,4 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     BOOST_CHECK_EQUAL(component_NL->areaConnectedToPort("injection_port").value(),
                       "some_other_area");
 }
+BOOST_AUTO_TEST_SUITE_END()
