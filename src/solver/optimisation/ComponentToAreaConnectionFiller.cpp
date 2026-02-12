@@ -35,7 +35,8 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    optimEntityContainer_(optimEntityContainer)
+    optimEntityContainer_(optimEntityContainer),
+    pb_(optimEntityContainer_.Problem())
 {
     areaIndices_ = associateIndicesToAreas(problemeHebdo_);
     checkAreasFromConnexionsExist();
@@ -106,7 +107,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   const FillContext& ctx,
   const std::vector<IMipConstraint*>& constraints) const
 {
-    const auto& solverVariables = optimEntityContainer_.getVariables();
+    const auto& solverVariables = pb_.getVariables();
 
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
@@ -125,11 +126,10 @@ std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::fetchConstraints(
   const FillContext& ctx,
   const std::vector<unsigned>& constraintsIndices)
 {
-    auto& pb = optimEntityContainer_.Problem();
     std::vector<IMipConstraint*> constraints(ctx.getLocalNumberOfTimeSteps());
     for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
-        constraints[h] = pb.getConstraint(constraintsIndices[h]);
+        constraints[h] = pb_.getConstraint(constraintsIndices[h]);
     }
     return constraints;
 }

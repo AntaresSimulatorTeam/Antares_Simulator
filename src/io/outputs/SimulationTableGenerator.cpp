@@ -194,18 +194,19 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         }
         const auto& constraintId = modelConstr.Id();
 
-        const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(
+        const auto [constraints, variability] = optimEntityContainer.getComponentConstraint(
           component,
           constraintLocalIndex,
           fillContext.getLocalNumberOfTimeSteps());
+
         ++constraintLocalIndex;
 
-        auto idxType = updateVariabilityIfShouldForceScenario(timeIndex,
+        auto idxType = updateVariabilityIfShouldForceScenario(variability,
                                                               forceExportForScenarioIndex);
 
         auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-            const auto& c = componentConstraints[ts.value_or(0)];
+            const auto& c = constraints[ts.value_or(0)];
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
                                                                        currentBlock)

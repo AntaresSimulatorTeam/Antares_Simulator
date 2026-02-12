@@ -54,6 +54,7 @@ private:
 
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
+    LinearProblemApi::ILinearProblem& pb_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
     const Solver::Config::Location targetLocation_;
     BendersDecomposition* bendersDecomposition_ = nullptr;

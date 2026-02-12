@@ -20,6 +20,7 @@ ThermalCapacityFiller::ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer),
+    pb_(optimEntityContainer_.Problem()),
     variableManager_(VariableManagerFromProblemHebdo(problemeHebdo))
 {
     unsigned int i = 0;
@@ -82,7 +83,7 @@ void ThermalCapacityFiller::addObjectives(const FillContext&)
 IMipVariable* ThermalCapacityFiller::getDispatchableProductionVariable(int palier, unsigned pdt)
 {
     auto varIndex = variableManager_.DispatchableProduction(palier, pdt);
-    return optimEntityContainer_.Problem().getVariable(varIndex);
+    return pb_.getVariable(varIndex);
 }
 
 void ThermalCapacityFiller::addCapacityFieldConstraint(
@@ -91,20 +92,20 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
   const int clusterIndex,
   const std::string& namePrefix)
 {
-    auto& linearProblem = optimEntityContainer_.Problem();
-    const auto& solverVariables = optimEntityContainer_.getVariables();
+    const auto& solverVariables = pb_.getVariables();
     for (auto localIndex(ctx.getLocalFirstTimeStep()); localIndex <= ctx.getLocalLastTimeStep();
          ++localIndex)
     {
         auto pdt = localIndex % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
         IMipVariable* dispatchableProduction = getDispatchableProductionVariable(clusterIndex, pdt);
-        double infinity = linearProblem.infinity();
+        double infinity = pb_.infinity();
         dispatchableProduction->setUb(infinity);
 
-        auto* ct = linearProblem.addConstraint(
-          -infinity,
-          linearExpression[localIndex].constant(),
-          namePrefix + fmt::format("::hour<{}>", pdt + problemeHebdo_->weekInTheYear * 168));
+        auto* ct = pb_.addConstraint(-infinity,
+                                     linearExpression[localIndex].constant(),
+                                     namePrefix
+                                       + fmt::format("::hour<{}>",
+                                                     pdt + problemeHebdo_->weekInTheYear * 168));
         ct->setCoefficient(dispatchableProduction, 1.0);
 
         for (const auto& [varIndex, coef]: linearExpression[localIndex])

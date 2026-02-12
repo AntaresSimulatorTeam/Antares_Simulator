@@ -42,6 +42,8 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     Optimisation::OptimEntityContainer& optimEntityContainer_;
+    Optimisation::LinearProblemApi::ILinearProblem& pb_;
+
     void processThermalCapacityField(
       const TimeDependentLinearExpression& linearExpression,
       const ModelerStudy::SystemModel::ThermalComponent& thermalCapacityConnection,
