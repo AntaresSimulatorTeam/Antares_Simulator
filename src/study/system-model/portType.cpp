@@ -29,10 +29,10 @@ bool operator==(const std::optional<AreaConnection>& a, const std::optional<Area
     return true; // both are std::nullopt
 }
 
-std::string getConnectionField(const std::vector<PortField>& fields,
-                               const std::string& portTypeId,
-                               const std::string& connectionFieldId,
-                               const std::string& nameOfTheConnection)
+std::optional<std::string> getConnectionField(const std::vector<PortField>& fields,
+                                              const std::string& portTypeId,
+                                              const std::string& connectionFieldId,
+                                              const std::string& nameOfTheConnection)
 {
     if (!connectionFieldId.empty())
     {
@@ -49,7 +49,7 @@ std::string getConnectionField(const std::vector<PortField>& fields,
         }
         return connectionFieldId;
     }
-    return "";
+    return std::nullopt;
 }
 
 // -------------------
@@ -64,30 +64,12 @@ PortType::PortType(const std::string& id,
 {
     if (!isEmpty(areaConnection))
     {
-        areaConnection_.emplace();
-        areaConnection_->injection = getConnectionField(fields_,
-                                                        id,
-                                                        areaConnection.injection,
-                                                        "area-connection");
-        areaConnection_->spillage_bound = getConnectionField(fields_,
-                                                             id,
-                                                             areaConnection.spillage_bound,
-                                                             "area-connection");
-
-        areaConnection_->unsupplied_energy_bound = getConnectionField(
-          fields_,
-          id,
-          areaConnection.unsupplied_energy_bound,
-          "area-connection");
+        areaConnection_ = areaConnection;
     }
-    auto thermalConnectionField = getConnectionField(fields_,
-                                                     id,
-                                                     thermalCapacityConnectionField,
-                                                     "thermal capacity");
-    thermalCapacityConnectionFieldId_ = thermalConnectionField == ""
-                                          ? std::nullopt
-                                          : std::optional<std::string>(
-                                              thermalCapacityConnectionField);
+    thermalCapacityConnectionFieldId_ = getConnectionField(fields_,
+                                                           id,
+                                                           thermalCapacityConnectionField,
+                                                           "thermal capacity");
 }
 
 const std::string& PortType::Id() const
