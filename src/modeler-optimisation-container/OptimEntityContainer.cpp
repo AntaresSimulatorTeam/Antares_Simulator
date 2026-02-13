@@ -68,15 +68,14 @@ std::span<const std::unique_ptr<IMipVariable>> OptimEntityContainer::getComponen
     return {variables.data() + startColumn, nbTimeSteps};
 }
 
-std::pair<std::span<const std::unique_ptr<IMipConstraint>>, VariabilityType>
-OptimEntityContainer::getComponentConstraint(const Component& component,
-                                             unsigned int index,
-                                             std::size_t nbTimeSteps) const
+std::span<const std::unique_ptr<IMipConstraint>> OptimEntityContainer::componentConstraints(
+  const Component& component,
+  unsigned int index,
+  std::size_t nbTimeSteps) const
 {
     const auto& constraints = linearProblem_.getConstraints();
-    const unsigned startLine = getConstraintStartLine(component, index);
-    const VariabilityType variablility = getConstraintVariability(component, index);
-    return {{constraints.data() + startLine, nbTimeSteps}, variablility};
+    unsigned int startLine = getConstraintStartLine(component, index);
+    return {constraints.data() + startLine, nbTimeSteps};
 }
 
 OptimComponent& OptimEntityContainer::getOptimComponent(size_t index)

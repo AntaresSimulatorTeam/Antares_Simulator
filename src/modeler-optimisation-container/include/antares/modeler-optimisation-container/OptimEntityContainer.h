@@ -51,10 +51,10 @@ public:
       unsigned int index,
       std::size_t nbTimeSteps) const;
 
-    std::pair<std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>>, VariabilityType>
-    getComponentConstraint(const ModelerStudy::SystemModel::Component& component,
-                           unsigned int index,
-                           std::size_t nbTimeSteps) const;
+    std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>> componentConstraints(
+      const ModelerStudy::SystemModel::Component& component,
+      unsigned int index,
+      std::size_t nbTimeSteps) const;
 
     OptimComponent& getOptimComponent(size_t index);
 

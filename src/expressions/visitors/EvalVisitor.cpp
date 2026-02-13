@@ -194,22 +194,19 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 
     if (isTimeConstant(variability))
     {
-        const auto componentConstraints = optimContainer_.getComponentConstraint(
-          component_,
-          cstrIndex,
-          1 /* single timestep */);
-        return EvaluationResult(componentConstraints.first[0]->dual());
+        const auto constraints = optimContainer_.componentConstraints(component_, cstrIndex, 1);
+        return EvaluationResult(constraints[0]->dual());
     }
 
     // The constraint depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
-    const auto componentConstraints = optimContainer_.getComponentConstraint(component_,
-                                                                             cstrIndex,
-                                                                             nbTimeStep);
+    const auto componentConstraints = optimContainer_.componentConstraints(component_,
+                                                                           cstrIndex,
+                                                                           nbTimeStep);
     for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
     {
-        constraintValues[constraintInd] = componentConstraints.first[constraintInd]->dual();
+        constraintValues[constraintInd] = componentConstraints[constraintInd]->dual();
     }
 
     return EvaluationResult{constraintValues};

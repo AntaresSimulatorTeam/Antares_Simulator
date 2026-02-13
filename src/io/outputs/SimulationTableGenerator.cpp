@@ -184,8 +184,9 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
+    const size_t nbTimeSteps = fillContext.getLocalNumberOfTimeSteps();
 
-    unsigned constraintLocalIndex = 0;
+    unsigned constraintIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
         if (modelConstr.location() != Solver::Config::Location::SUBPROBLEMS)
@@ -193,13 +194,13 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             continue;
         }
         const auto& constraintId = modelConstr.Id();
+        const auto variability = optimEntityContainer.getConstraintVariability(component,
+                                                                               constraintIndex);
 
-        const auto [constraints, variability] = optimEntityContainer.getComponentConstraint(
-          component,
-          constraintLocalIndex,
-          fillContext.getLocalNumberOfTimeSteps());
-
-        ++constraintLocalIndex;
+        const auto constraints = optimEntityContainer.componentConstraints(component,
+                                                                           constraintIndex,
+                                                                           nbTimeSteps);
+        ++constraintIndex;
 
         auto idxType = updateVariabilityIfShouldForceScenario(variability,
                                                               forceExportForScenarioIndex);
