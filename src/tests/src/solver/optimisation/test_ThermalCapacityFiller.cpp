@@ -200,7 +200,7 @@ system:
     port: model_port
     thermal-component:
       area: Persia
-      cluster-id: herbs
+      cluster-id: east
   - component : my_thermal_invest
     port: capacity_port
     thermal-component:
@@ -248,11 +248,11 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
                            problemeHebdo->NomsDesPays.begin(),
                            [](const char* area) { return area; });
     std::vector<std::vector<std::string>> allClusters = {{"assets"},
-                                                         {"tree", "herbs", "mining"},
+                                                         {"north", "east", "south"},
                                                          {"short"}};
     const std::vector<std::string> connectedClusterPerAreas = {
       {allClusters.at(0).front() /*== assets*/},
-      {allClusters.at(1).at(1) /*== herbs*/},
+      {allClusters.at(1).at(1) /*== east*/},
       {allClusters.at(2).front() /*== short*/}};
     int totalNbClusters = 0;
     for (int i = 0; i < nbAreas; i++)
@@ -296,7 +296,7 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
         }
         addLegacyVariables(dispatchableProductionVariables);
     }
-    setUpModelerVariables(0, tsEnd, optimEntityContainer);
+    addModelerVariables(0, tsEnd, optimEntityContainer);
     fillProblemWithThermalCapacityConnectionFiller({0, tsEnd, 0, tsEnd, 0}, optimEntityContainer);
 
     std::vector<ExpectedConstraint> expectedGemsVariableCoefPerConnection;

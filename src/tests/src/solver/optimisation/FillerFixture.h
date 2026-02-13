@@ -27,9 +27,9 @@ struct FillerFixture
     void setUpModelerSystem(const std::string& systemYaml, const std::string& libraryYaml);
     void addLegacyVariables(const std::vector<std::string>& variableNames);
 
-    void setUpModelerVariables(unsigned int ts_start,
-                               unsigned int ts_end,
-                               Optimisation::OptimEntityContainer& optimEntityContainer);
+    void addModelerVariables(unsigned int ts_start,
+                             unsigned int ts_end,
+                             Optimisation::OptimEntityContainer& optimEntityContainer);
 
     void addEmptyConstraintsToLinearProblem(std::vector<std::string>& names, double rhs);
 
@@ -37,9 +37,7 @@ struct FillerFixture
                              bool useNamedProblems,
                              double rhs);
 
-    void setUpLegacyLp(std::vector<std::string>& constraintNames,
-                       bool useNamedProblems,
-                       double rhs);
+    void addLegacyLp(std::vector<std::string>& constraintNames, bool useNamedProblems, double rhs);
 
     /*void fillProblemWithAreaConnectionFiller(
       const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
