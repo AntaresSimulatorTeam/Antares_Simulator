@@ -28,6 +28,8 @@ library:
         - id: flow
       area-connection:
         - injection-field: flow
+        - spillage-bound: 
+        - unsupplied-energy-bound: 
   models:
     - id: empty model
       description: we need this empty model, otherwise parser fails !
@@ -111,6 +113,8 @@ library:
         - id: flow
       area-connection:
         - injection-field: flow
+        - spillage-bound: 
+        - unsupplied-energy-bound: 
 
   models:
     - id: balance_node
