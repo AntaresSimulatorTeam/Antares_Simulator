@@ -31,34 +31,35 @@ public:
                          const LinearProblemApi::ILinearProblemData* data,
                          const ScenarioGroupRepository* scenarioGroupRepository);
 
-    unsigned getVariableStartColumn(const Antares::ModelerStudy::SystemModel::Component& component,
+    unsigned getVariableStartColumn(const ModelerStudy::SystemModel::Component& component,
                                     unsigned index) const;
 
     const EvaluationContext& getEvaluationContext(
-      const Antares::ModelerStudy::SystemModel::Component& component) const;
+      const ModelerStudy::SystemModel::Component& component) const;
 
-    std::pair<unsigned, VariabilityType> getConstraintData(
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned index) const;
+    unsigned getConstraintStartLine(const ModelerStudy::SystemModel::Component& component,
+                                    unsigned index) const;
+    VariabilityType getConstraintVariability(const ModelerStudy::SystemModel::Component& component,
+                                             unsigned index) const;
 
     LinearProblemApi::ILinearProblem& Problem();
 
     void addStartColumn();
 
     std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>> getComponentVariable(
-      const Antares::ModelerStudy::SystemModel::Component& component,
+      const ModelerStudy::SystemModel::Component& component,
       unsigned int index,
       std::size_t nbTimeSteps) const;
 
     std::pair<std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>>, VariabilityType>
-    getComponentConstraint(const Antares::ModelerStudy::SystemModel::Component& component,
+    getComponentConstraint(const ModelerStudy::SystemModel::Component& component,
                            unsigned int index,
                            std::size_t nbTimeSteps) const;
 
     OptimComponent& getOptimComponent(size_t index);
 
     void addFromSystemComponents(
-      const std::vector<Antares::ModelerStudy::SystemModel::Component>& component,
+      const std::vector<ModelerStudy::SystemModel::Component>& component,
       Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);
 
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,

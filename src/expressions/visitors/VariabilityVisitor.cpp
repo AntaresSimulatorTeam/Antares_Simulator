@@ -136,9 +136,7 @@ VariabilityType VariabilityVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto constraintIndexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int constraintIndex = static_cast<unsigned int>(constraintIndexNode->value());
-    const auto& [_, variability] = optimEntityContainer_.getConstraintData(component_,
-                                                                           constraintIndex);
-    return variability;
+    return optimEntityContainer_.getConstraintVariability(component_, constraintIndex);
 }
 
 VariabilityType VariabilityVisitor::visitPow(const Nodes::FunctionNode* node)

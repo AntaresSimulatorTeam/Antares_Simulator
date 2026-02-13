@@ -190,7 +190,7 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
-    const auto& [_, variability] = optimContainer_.getConstraintData(component_, cstrIndex);
+    const auto& variability = optimContainer_.getConstraintVariability(component_, cstrIndex);
 
     if (isTimeConstant(variability))
     {

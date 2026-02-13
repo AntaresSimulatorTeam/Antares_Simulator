@@ -34,13 +34,18 @@ const EvaluationContext& OptimEntityContainer::getEvaluationContext(
     return optimComponent.evaluationContext;
 }
 
-std::pair<unsigned, VariabilityType> OptimEntityContainer::getConstraintData(
-  const Component& component,
-  unsigned index) const
+unsigned OptimEntityContainer::getConstraintStartLine(const Component& component,
+                                                      unsigned index) const
 {
     const auto& optimComponent = optimComponents_.at(component.Index());
-    return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),
-            optimComponent.modelConstraintsVariability.at(index)};
+    return constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index));
+}
+
+VariabilityType OptimEntityContainer::getConstraintVariability(const Component& component,
+                                                               unsigned index) const
+{
+    const auto& optimComponent = optimComponents_.at(component.Index());
+    return optimComponent.modelConstraintsVariability.at(index);
 }
 
 ILinearProblem& OptimEntityContainer::Problem()
@@ -69,8 +74,9 @@ OptimEntityContainer::getComponentConstraint(const Component& component,
                                              std::size_t nbTimeSteps) const
 {
     const auto& constraints = linearProblem_.getConstraints();
-    const auto [startLine, timeIndex] = getConstraintData(component, index);
-    return {{constraints.data() + startLine, nbTimeSteps}, timeIndex};
+    const unsigned startLine = getConstraintStartLine(component, index);
+    const VariabilityType variablility = getConstraintVariability(component, index);
+    return {{constraints.data() + startLine, nbTimeSteps}, variablility};
 }
 
 OptimComponent& OptimEntityContainer::getOptimComponent(size_t index)
