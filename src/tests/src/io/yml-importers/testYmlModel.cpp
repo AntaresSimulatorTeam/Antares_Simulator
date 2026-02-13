@@ -121,6 +121,118 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__thermal_capacity_connection_field)
     BOOST_CHECK_EQUAL(capacity_port_type.thermal_capacity_connection_field, "");
 }
 
+BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
+{
+    Antares::IO::Inputs::YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                 area-connection:
+                   - injection-field:
+                   - spillage-bound:
+                   - unsupplied-energy-bound:
+            models: []
+        )"s;
+    auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    const auto& capacity_port_type = libraryObj.port_types[0];
+    BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
+    BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
+    BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
+}
+
+BOOST_AUTO_TEST_CASE(port_types_with_only_injection_field__in_area_connection)
+{
+    Antares::IO::Inputs::YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                 area-connection:
+                   - injection-field: capa
+                   - spillage-bound:
+                   - unsupplied-energy-bound:
+            models: []
+        )"s;
+    auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    const auto& capacity_port_type = libraryObj.port_types[0];
+    BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
+    BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
+    BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "capa");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
+}
+
+BOOST_AUTO_TEST_CASE(port_types_with_only_spillage_bound_field__in_area_connection)
+{
+    Antares::IO::Inputs::YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                 area-connection:
+                   - injection-field:
+                   - spillage-bound: f1
+                   - unsupplied-energy-bound:
+            models: []
+        )"s;
+    auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    const auto& capacity_port_type = libraryObj.port_types[0];
+    BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
+    BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
+    BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "f1");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
+}
+
+BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area_connection)
+{
+    Antares::IO::Inputs::YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                 area-connection:
+                   - injection-field:
+                   - spillage-bound:
+                   - unsupplied-energy-bound: f2
+            models: []
+        )"s;
+    auto libraryObj = parser.parse(library);
+    BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
+    const auto& capacity_port_type = libraryObj.port_types[0];
+    BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
+    BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
+    BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "f2");
+}
+
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
 {
     Antares::IO::Inputs::YmlModel::Parser parser;
@@ -133,6 +245,29 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
                  fields:
                    - id: capacity
                  thermal-capacity-connection:
+
+            models: []
+        )"s;
+    BOOST_REQUIRE_THROW(Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library),
+                        YAML::TypedBadConversion<
+                          Antares::IO::Inputs::YmlModel::PortType>); // When this line was written,
+                                                                     // the exception thrown is
+    // YAML::TypedBadConversion<PortType>; this may change, see
+    // https://github.com/jbeder/yaml-cpp/commit/3d2888cc8a45da2f420454ad728cdfad01a3d54f
+}
+
+BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
+{
+    Antares::IO::Inputs::YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "lib_description"
+            port-types:
+               - id: capacity_port
+                 fields:
+                   - id: capacity
+                 area-connection:
 
             models: []
         )"s;
