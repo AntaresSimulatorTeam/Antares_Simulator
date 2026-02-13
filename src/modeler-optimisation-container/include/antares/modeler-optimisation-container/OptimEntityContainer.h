@@ -48,15 +48,13 @@ public:
 
     std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>> getComponentVariable(
       const ModelerStudy::SystemModel::Component& component,
-      unsigned int index,
+      unsigned index,
       std::size_t nbTimeSteps) const;
 
     std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>> componentConstraints(
       const ModelerStudy::SystemModel::Component& component,
-      unsigned int index,
+      unsigned index,
       std::size_t nbTimeSteps) const;
-
-    OptimComponent& getOptimComponent(size_t index);
 
     void addFromSystemComponents(
       const std::vector<ModelerStudy::SystemModel::Component>& component,
@@ -70,9 +68,9 @@ public:
 private:
     void addStartLine();
 
-    std::vector<unsigned int> variableStartColumn_;
+    std::vector<unsigned> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
-    std::vector<unsigned int> constraintStartLine_;
+    std::vector<unsigned> constraintStartLine_;
     LinearProblemApi::ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData* data_;
     const ScenarioGroupRepository* scenarioGroupRepository_;

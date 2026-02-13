@@ -64,28 +64,23 @@ std::span<const std::unique_ptr<IMipVariable>> OptimEntityContainer::getComponen
   std::size_t nbTimeSteps) const
 {
     const auto& variables = linearProblem_.getVariables();
-    unsigned int startColumn = getVariableStartColumn(component, index);
+    unsigned startColumn = getVariableStartColumn(component, index);
     return {variables.data() + startColumn, nbTimeSteps};
 }
 
 std::span<const std::unique_ptr<IMipConstraint>> OptimEntityContainer::componentConstraints(
   const Component& component,
-  unsigned int index,
+  unsigned index,
   std::size_t nbTimeSteps) const
 {
     const auto& constraints = linearProblem_.getConstraints();
-    unsigned int startLine = getConstraintStartLine(component, index);
+    unsigned startLine = getConstraintStartLine(component, index);
     return {constraints.data() + startLine, nbTimeSteps};
-}
-
-OptimComponent& OptimEntityContainer::getOptimComponent(size_t index)
-{
-    return optimComponents_.at(index);
 }
 
 unsigned OptimEntityContainer::constraintGLobalIndex() const
 {
-    return static_cast<unsigned int>(constraintStartLine_.size());
+    return static_cast<unsigned>(constraintStartLine_.size());
 }
 
 void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>& components,
@@ -98,7 +93,7 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
     {
         const auto* model = component.getModel();
         const auto& variables = model->Variables();
-        std::vector<unsigned int> modelVariableGlobalIndices;
+        std::vector<unsigned> modelVariableGlobalIndices;
 
         modelVariableGlobalIndices.reserve(variables.size());
         for (const auto& variable: variables)
@@ -115,12 +110,11 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
                 modelVariableGlobalIndices.push_back(-1);
             }
         }
-        optimComponents_.push_back(
-          {.modelVariableGlobalIndices = modelVariableGlobalIndices,
-           .evaluationContext = Optimisation::EvaluationContext(
-             &component,
-             data_,
-             &scenarioGroupRepository_->scenario(component.getScenarioGroupId()))});
+        auto& scenario = scenarioGroupRepository_->scenario(component.getScenarioGroupId());
+        auto evalContext = EvaluationContext(&component, data_, &scenario);
+
+        optimComponents_.push_back({.modelVariableGlobalIndices = modelVariableGlobalIndices,
+                                    .evaluationContext = std::move(evalContext)});
     }
 }
 
@@ -128,7 +122,7 @@ void OptimEntityContainer::registerConstraint(const Component& component,
                                               const VariabilityType& variability)
 {
     unsigned gLobalIndex = constraintGLobalIndex();
-    auto& optimComponent = getOptimComponent(component.Index());
+    auto& optimComponent = optimComponents_.at(component.Index());
     optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
     optimComponent.modelConstraintsVariability.push_back(variability);
     addStartLine();
