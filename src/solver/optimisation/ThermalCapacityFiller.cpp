@@ -22,22 +22,23 @@ ThermalCapacityFiller::ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
     optimEntityContainer_(optimEntityContainer),
     variableManager_(VariableManagerFromProblemHebdo(problemeHebdo))
 {
-    unsigned int i = 0;
-    for (auto name: problemeHebdo_->NomsDesPays)
+    unsigned int areaIndex = 0;
+    for (const auto* areaName: problemeHebdo_->NomsDesPays)
     {
-        unsigned int j = 0;
-        const auto& palierThermiques = problemeHebdo_->PaliersThermiquesDuPays[i];
+        unsigned int thermalClusterLocalIndex = 0;
+        const auto& thermalClusters = problemeHebdo_->PaliersThermiquesDuPays[areaIndex];
         std::unordered_map<std::string, unsigned int> clusters;
-        for (const auto& nomPalier: palierThermiques.NomsDesPaliersThermiques)
+        for (const auto& clusterName: thermalClusters.NomsDesPaliersThermiques)
         {
-            clusters[nomPalier] = j;
-            ++j;
+            clusters[clusterName] = thermalClusters.NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                                      [thermalClusterLocalIndex];
+            ++thermalClusterLocalIndex;
         }
         if (!clusters.empty())
         {
-            areasAndClusters_.try_emplace(name, AreaAndClusters{i, clusters});
+            areasAndClusters_.try_emplace(areaName, AreaAndClusters{areaIndex, clusters});
         }
-        ++i;
+        ++areaIndex;
     }
 }
 
@@ -79,9 +80,10 @@ void ThermalCapacityFiller::addObjectives(const FillContext&)
     // nothing to do
 }
 
-IMipVariable* ThermalCapacityFiller::getDispatchableProductionVariable(int palier, unsigned pdt)
+IMipVariable* ThermalCapacityFiller::getDispatchableProductionVariable(int thermalClusterIndex,
+                                                                       unsigned pdt)
 {
-    auto varIndex = variableManager_.DispatchableProduction(palier, pdt);
+    auto varIndex = variableManager_.DispatchableProduction(thermalClusterIndex, pdt);
     return optimEntityContainer_.Problem().getVariable(varIndex);
 }
 
@@ -114,7 +116,7 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
     }
 }
 
-ThermalCapacityFiller::AreaAndClusters* ThermalCapacityFiller::areaClusters(
+ThermalCapacityFiller::AreaAndClusters& ThermalCapacityFiller::areaClusters(
   const std::string& areaId)
 {
     const auto it = areasAndClusters_.find(areaId);
@@ -123,44 +125,31 @@ ThermalCapacityFiller::AreaAndClusters* ThermalCapacityFiller::areaClusters(
         throw Error::RuntimeError(
           fmt::format("unknown area '{}', is found in thermal-connection-capacity ", areaId));
     }
-    return &it->second;
+    return it->second;
 }
 
-unsigned int getClusterLocalIndex(const std::string& areaId,
-                                  const std::string& clusterId,
-                                  const std::unordered_map<std::string, unsigned>& clusters)
+unsigned int clusterAt(const std::string& areaId,
+                       const std::string& clusterId,
+                       const std::unordered_map<std::string, unsigned>& clusters)
 {
     if (clusters.empty())
     {
         throw Error::RuntimeError(fmt::format(" area '{}' has not thermal clusters ", areaId));
     }
-    const auto itv = clusters.find(clusterId);
-    if (itv == clusters.end())
+    const auto it = clusters.find(clusterId);
+    if (it == clusters.end())
     {
         throw Error::RuntimeError(
           fmt::format(" area '{}' has not thermal cluster by the name '{}' ", areaId, clusterId));
     }
-    return itv->second;
+    return it->second;
 }
 
 int ThermalCapacityFiller::getClusterIndex(const std::string& areaId, const std::string& clusterId)
 {
-    //--- area
-    const auto& [pays, clusters] = *areaClusters(areaId);
-
-    //--- cluster
-    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                          ->PaliersThermiquesDuPays[pays];
-    const auto clusterLocalIndex = getClusterLocalIndex(areaId, clusterId, clusters);
-    return PaliersThermiquesDuPays
-      .NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterLocalIndex];
+    const auto& [_, clusters] = areaClusters(areaId);
+    return clusterAt(areaId, clusterId, clusters);
 }
-
-// set up DispatchableProduction up to max and add
-// DispatchableProduction[t] <= component.port.capacity-field (qui vaut
-// my_thermal_invest.capacity_port.
-// capacity = availability_factor * invested_capacity + already_installed_availability_factor *
-// already_installed_capacity
 
 void ThermalCapacityFiller::processThermalCapacityField(
   const TimeDependentLinearExpression& linearExpression,

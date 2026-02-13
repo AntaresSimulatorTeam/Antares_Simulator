@@ -52,8 +52,9 @@ private:
       const ModelerStudy::SystemModel::Component& component,
       const std::string& portId,
       const ModelerStudy::SystemModel::ThermalComponent& thermalCapacityConnection);
-    Optimisation::LinearProblemApi::IMipVariable* getDispatchableProductionVariable(int palier,
-                                                                                    unsigned pdt);
+    Optimisation::LinearProblemApi::IMipVariable* getDispatchableProductionVariable(
+      int thermalClusterIndex,
+      unsigned pdt);
     void addCapacityFieldConstraint(const TimeDependentLinearExpression& linearExpression,
                                     const Optimisation::LinearProblemApi::FillContext& ctx,
                                     int clusterIndex,
@@ -62,10 +63,10 @@ private:
     struct AreaAndClusters
     {
         unsigned int areaIndex;
-        std::unordered_map<std::string, unsigned> clusters;
+        std::unordered_map<std::string, unsigned> clusters; // name <-> global Index
     };
 
-    AreaAndClusters* areaClusters(const std::string& areaId);
+    AreaAndClusters& areaClusters(const std::string& areaId);
     int getClusterIndex(const std::string& areaId, const std::string& clusterId);
 
     std::unordered_map<std::string, AreaAndClusters> areasAndClusters_;
