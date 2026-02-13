@@ -128,4 +128,10 @@ void OptimEntityContainer::registerConstraint(const Component& component,
     optimComponent.modelConstraintsVariability.push_back(variability);
     addStartLine();
 }
+
+void OptimEntityContainer::addStartLine()
+{
+    constraintStartLine_.push_back(linearProblem_.constraintCount());
+}
+
 } // namespace Antares::Optimisation

@@ -67,16 +67,13 @@ public:
     unsigned constraintGLobalIndex() const;
 
 private:
+    void addStartLine();
+
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
     std::vector<unsigned int> constraintStartLine_;
     LinearProblemApi::ILinearProblem& linearProblem_;
     const LinearProblemApi::ILinearProblemData* data_;
     const ScenarioGroupRepository* scenarioGroupRepository_;
-
-    void addStartLine()
-    {
-        constraintStartLine_.push_back(linearProblem_.constraintCount());
-    }
 };
 } // namespace Antares::Optimisation
