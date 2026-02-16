@@ -211,8 +211,7 @@ BOOST_FIXTURE_TEST_CASE(injecting_spillage_and_unsupplied_energy_bounds, AreaCon
     addComponentsVariablesToLP();
 
     // 2. Adding constraints from GEMS area connections
-    ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
-                                           *optimContainer);
+    ComponentToAreaConnectionFiller filler(problemeHebdo.get(), *optimContainer);
     filler.addConstraints(fill_ctx);
 
     // ---------

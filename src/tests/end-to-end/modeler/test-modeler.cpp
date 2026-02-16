@@ -198,12 +198,11 @@ public:
         return dummy;
     }
 
-    void writeSimulationTable(
-      const LinearProblemApi::ILinearProblem& /*linearProblem*/,
-      const LinearProblemApi::IMipSolution& solution,
-      const ModelerData& /*modelerData*/,
-      const OptimEntityContainer& /*variableContainer*/,
-      const LinearProblemApi::FillContext& /*fillContext*/) const override
+    void writeSimulationTable(const LinearProblemApi::ILinearProblem& /*linearProblem*/,
+                              const LinearProblemApi::IMipSolution& solution,
+                              const ModelerData& /*modelerData*/,
+                              const OptimEntityContainer& /*variableContainer*/,
+                              const LinearProblemApi::FillContext& /*fillContext*/) const override
     {
         solution_.objectiveValue = solution.getObjectiveValue();
     }
