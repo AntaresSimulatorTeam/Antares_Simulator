@@ -682,7 +682,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    [[nodiscard]] double getData(const std::string& /*dataSetId*/,
+    [[nodiscard]] double getData(const std::string& dataSetId,
                                  const unsigned /*scenario*/,
                                  unsigned hour) const override
     {
