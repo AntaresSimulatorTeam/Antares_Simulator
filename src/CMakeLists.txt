@@ -181,9 +181,6 @@ endif ()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
-option(BUILD_UI "Build antares ui simulator" ON)
-message(STATUS "Build antares ui simulator: ${BUILD_UI}")
-
 option(BUILD_TOOLS "Build antares tools" OFF)
 message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 
@@ -250,12 +247,6 @@ else ()
     endif ()
 endif ()
 
-#wxWidget not needed for all library find is done in ui CMakeLists.txt
-if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
-    #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
-    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
-endif ()
-
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
 
@@ -270,13 +261,6 @@ configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cm
 add_subdirectory("ext/yuni/src")
 
 OMESSAGE("") # empty line
-
-# Sub Directories
-if (BUILD_UI)
-    add_compile_definitions(BUILD_UI)
-    add_subdirectory(ui)  #all antares ui libs + antares simulator
-endif ()
-
 
 add_subdirectory(api)
 add_subdirectory(io)
@@ -308,98 +292,21 @@ endif ()
 OMESSAGE("")
 
 
-# Informations for NSIS
-if (WIN32 OR WIN64)
-    if (MSVC)
-        if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-            set(NSIS_TARGET "Release")
-        else ()
-            set(NSIS_TARGET "Debug")
-        endif ()
-        set(COMPILER_MARK "v")
-        #set(COMPILER_INCLUDE "vs9")
-    else (MSVC)
-        set(NSIS_TARGET "")
-        set(COMPILER_MARK "m")
-        set(COMPILER_INCLUDE "mingw")
-    endif (MSVC)
-
-    set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
-
-    # Configure file with custom definitions for NSIS.
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
-    )
-
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
-    )
-
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
-    )
-
-    SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
-
-    # Define system libraries so NSIS can package these files
-    include(InstallRequiredSystemLibraries)
-
-    #Convert to native and add double quote to be used in NSIS package
-    foreach (SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
-        file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
-
-        list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
-    endforeach ()
-
-    #Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
-    string(REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
-
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
-            @ONLY
-    )
-
-    #Define cpack install script to checkout examples
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
-            @ONLY
-    )
-
-    set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
-
-    #Set package name from CMake and antares variables
-    set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
-
-
-else ()
-
-    if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-        get_linux_lsb_release_information()
-        message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
-        set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
-    endif ()
-
-    #For now only test deb, need to define several CPACK variable
-    set(CPACK_PROJECT_NAME "antares-deb-test")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
-    set(CPACK_DEBIAN_PACKAGE_NAME "antares")
-    set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
-    set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
-    set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
-
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
-    set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
-    set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
-
-    configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
-
-
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    get_linux_lsb_release_information()
+    message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
+    set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
 endif ()
+
+#For now only test deb, need to define several CPACK variable
+set(CPACK_PROJECT_NAME "antares-deb-test")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
+set(CPACK_DEBIAN_PACKAGE_NAME "antares")
+set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
+set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
+set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
+
+configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
 # Load packaging facilities.
 include(CPack)
