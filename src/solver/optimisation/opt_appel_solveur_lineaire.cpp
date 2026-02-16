@@ -18,6 +18,7 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
+#include "antares/solver/optimisation/MipDetection.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
@@ -72,26 +73,6 @@ static void fillModelerComponents(
                                             Solver::Config::Location::SUBPROBLEMS,
                                             bendersDecomposition));
     }
-}
-
-static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData)
-{
-    if (!modelerData || !modelerData->system)
-    {
-        return false;
-    }
-
-    for (const auto& component: modelerData->system->Components())
-    {
-        for (const auto& variable: component.getModel()->Variables())
-        {
-            if (variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
@@ -179,7 +160,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                       || hasModelerIntegerVariables(modelerData);
+                       || Antares::Optimization::hasModelerIntegerVariables(modelerData);
 
     LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
@@ -350,7 +331,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
         const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                           || hasModelerIntegerVariables(modelerData);
+                           || Antares::Optimization::hasModelerIntegerVariables(modelerData);
 
         LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
