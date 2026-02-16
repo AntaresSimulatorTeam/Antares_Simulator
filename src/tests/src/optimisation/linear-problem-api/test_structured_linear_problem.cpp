@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(add_mixed_variables)
 BOOST_AUTO_TEST_CASE(add_constraints)
 {
     StructuredLinearProblem lp;
-    [[maybe_unused]] auto* x = lp.addNumVariable(0.0, 10.0, "x");
+    (void) lp.addNumVariable(0.0, 10.0, "x");
     [[maybe_unused]] auto* y = lp.addNumVariable(0.0, 10.0, "y");
 
     auto* c1 = lp.addConstraint(2.0, 5.0, "c1");
