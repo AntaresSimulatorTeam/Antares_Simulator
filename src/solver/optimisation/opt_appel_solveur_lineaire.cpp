@@ -179,7 +179,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                        || hasModelerIntegerVariables(modelerData);
+                       || hasModelerIntegerVariables(modelerData);
 
     LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
@@ -350,7 +350,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
         const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                            || hasModelerIntegerVariables(modelerData);
+                           || hasModelerIntegerVariables(modelerData);
 
         LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
