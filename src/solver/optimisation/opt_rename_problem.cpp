@@ -292,6 +292,11 @@ void ConstraintNamer::FictiveLoads(unsigned constrIndex)
     SetAreaElementNameHour(constrIndex, "FictiveLoads");
 }
 
+void ConstraintNamer::CsrFictitiousLoad(unsigned int constraint)
+{
+    SetAreaElementNameHour(constraint, "CsrFictitiousLoad");
+}
+
 void ConstraintNamer::MaxUnsuppliedEnergy(unsigned constrIndex)
 {
     SetAreaElementNameHour(constrIndex, "MaxUnsupEnergy");

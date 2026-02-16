@@ -164,6 +164,7 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
     logs.debug() << "[CSR] RHS: ";
     setRHSvalueOnFlows();
     setRHSnodeBalanceValue();
+    setRHSfictitiousLoadValue();
     setRHSbindingConstraintsValue();
 }
 
