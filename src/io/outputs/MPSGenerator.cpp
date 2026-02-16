@@ -279,7 +279,7 @@ void MPSGenerator::writeBounds()
         const bool lbIsZero = isEqual(lb, 0.0);
         if (lbIsMinusInfinity && ubIsPlusInfinity)
         {
-            fmt::format_to(std::back_inserter(out_), "{}FR {}  {}\n", pad, bnd, varName);
+            fmt::format_to(std::back_inserter(out_), "{}FR {} {}\n", pad, bnd, varName);
             continue;
         }
         if (isEqual(lb, ub))
