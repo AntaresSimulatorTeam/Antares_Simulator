@@ -74,6 +74,26 @@ static void fillModelerComponents(
     }
 }
 
+static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData)
+{
+    if (!modelerData || !modelerData->system)
+    {
+        return false;
+    }
+
+    for (const auto& component: modelerData->system->Components())
+    {
+        for (const auto& variable: component.getModel()->Variables())
+        {
+            if (variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumIntervalle)
 {
     unsigned globalFirst, globalLast;
@@ -156,11 +176,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
 
-    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
-                                              options.solverName);
-    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
+    const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
+                        || hasModelerIntegerVariables(modelerData);
+
+    LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
+    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
     const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
@@ -325,11 +347,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     }
     else
     {
-        LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
-                                                     options.solverName);
-        FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
+        const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
+                            || hasModelerIntegerVariables(modelerData);
+
+        LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
+        FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                      : nullptr;
         const ScenarioGroupRepository* modelerScenarioGroupRepository
