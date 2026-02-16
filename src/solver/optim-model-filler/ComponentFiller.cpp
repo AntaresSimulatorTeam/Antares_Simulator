@@ -300,14 +300,17 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
     const auto dims = getDimensions(ctx);
 
     const auto& solverVariables = optimEntityContainer_.getVariables();
-    for ([[maybe_unused]] const auto s: dims.getScenarioIndices()) // TODO
+    const bool isScenarioDependent = dims.getScenarioIndices().size() > 1;
+    for (const auto s: dims.getScenarioIndices())
     {
         for (const auto t: dims.getTimesteps())
         {
-            auto* ct = pb.addConstraint(linear_constraints.lb[t],
-                                        linear_constraints.ub[t],
-                                        component_.Id() + "." + constraint_id + '_'
-                                          + std::to_string(t));
+            auto name = component_.Id() + "." + constraint_id + '_' + std::to_string(t);
+            if (isScenarioDependent)
+            {
+                name += "_" + std::to_string(s);
+            }
+            auto* ct = pb.addConstraint(linear_constraints.lb[t], linear_constraints.ub[t], name);
 
             const auto& coefsPerVar = linear_constraints.coef_per_var[t];
             for (const auto& [index, value]: coefsPerVar)

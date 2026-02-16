@@ -121,10 +121,8 @@ void fillLinearProblem(FillContext& fillCtx,
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
-          problemeHebdo,
-          optimEntityContainer,
-          problemeHebdo->modelerData->scenarioGroupRepository));
+        fillersCollection.push_back(
+          std::make_unique<ComponentToAreaConnectionFiller>(problemeHebdo, optimEntityContainer));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);

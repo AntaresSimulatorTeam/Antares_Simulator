@@ -32,11 +32,8 @@ class ComponentToAreaConnectionFiller final
     : public Optimisation::LinearProblemApi::LinearProblemFiller
 {
 public:
-    explicit ComponentToAreaConnectionFiller(
-      const PROBLEME_HEBDO* problemeHebdo,
-      Optimisation::OptimEntityContainer& variableContainer,
-      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
-
+    explicit ComponentToAreaConnectionFiller(const PROBLEME_HEBDO* problemeHebdo,
+                                             Optimisation::OptimEntityContainer& variableContainer);
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;

@@ -29,8 +29,7 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  OptimEntityContainer& optimEntityContainer,
-  [[maybe_unused]] const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+  OptimEntityContainer& optimEntityContainer):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer)

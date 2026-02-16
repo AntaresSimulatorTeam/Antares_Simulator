@@ -226,9 +226,7 @@ struct ComponentToAreaConnectionFillerFixture
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
 
-        ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
-                                               optimEntityContainer,
-                                               scenarioGroupRepository);
+        ComponentToAreaConnectionFiller filler(problemeHebdo.get(), optimEntityContainer);
         filler.addVariables(fillCtx);
         filler.addConstraints(fillCtx);
         filler.addObjectives(fillCtx);
