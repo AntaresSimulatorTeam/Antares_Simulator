@@ -259,17 +259,6 @@ inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
     }
 }
 
-inline void shortTermStorageBalance(const ::AREA_INPUT& shortTermStorageInput,
-                                    ConstraintBuilder& constraintBuilder)
-{
-    for (const auto& storage: shortTermStorageInput)
-    {
-        unsigned index = storage.clusterGlobalIndex;
-        constraintBuilder.ShortTermStorageInjection(index, 1.0)
-          .ShortTermStorageWithdrawal(index, -1.0);
-    }
-}
-
 class BindingConstraintData final
 {
 public:

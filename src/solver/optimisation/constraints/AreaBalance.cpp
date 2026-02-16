@@ -3,6 +3,17 @@
 
 #include "antares/solver/optimisation/constraints/AreaBalance.h"
 
+static void shortTermStorageBalance(const ::AREA_INPUT& shortTermStorageInput,
+                                    ConstraintBuilder& constraintBuilder)
+{
+    for (const auto& storage: shortTermStorageInput)
+    {
+        unsigned index = storage.clusterGlobalIndex;
+        constraintBuilder.ShortTermStorageInjection(index, 1.0)
+          .ShortTermStorageWithdrawal(index, -1.0);
+    }
+}
+
 void AreaBalance::add(int pdt, int pays)
 {
     data.CorrespondanceCntNativesCntOptim[pdt].NumeroDeContrainteDesBilansPays[pays]
