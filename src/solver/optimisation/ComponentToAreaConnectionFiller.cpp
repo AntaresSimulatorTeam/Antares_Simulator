@@ -90,7 +90,7 @@ std::vector<unsigned> ComponentToAreaConnectionFiller::maxUnsupEnergyConstraintI
   const unsigned& areaIndex) const
 {
     std::vector<unsigned> indices(ctx.getLocalNumberOfTimeSteps());
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         indices[h] = problemeHebdo_->CorrespondanceCntNativesCntOptim[h]
                        .NumeroDeContraintePourBornerLaDefaillance[areaIndex];
@@ -105,7 +105,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 {
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         IMipConstraint* constraint = constraints[h];
         for (const auto& [index, coef]: linearExpression[h])
@@ -124,7 +124,7 @@ std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::fetchConstraints(
 {
     auto& pb = optimEntityContainer_.Problem();
     std::vector<IMipConstraint*> constraints(ctx.getLocalNumberOfTimeSteps());
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         constraints[h] = pb.getConstraint(constraintsIndices[h]);
     }

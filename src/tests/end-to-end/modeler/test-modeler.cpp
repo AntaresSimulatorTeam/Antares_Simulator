@@ -31,17 +31,17 @@ public:
     {
     }
 
-    double getData([[maybe_unused]] const std::string& dataSetId,
-                   [[maybe_unused]] unsigned year,
-                   [[maybe_unused]] unsigned hour) const override
+    double getData(const std::string& /*dataSetId*/,
+                   unsigned /*year*/,
+                   unsigned /*hour*/) const override
     {
         return value_;
     }
 
-    [[nodiscard]] std::span<const double> getData([[maybe_unused]] const std::string& dataSetId,
-                                                  [[maybe_unused]] unsigned timeSeriesNumber,
-                                                  [[maybe_unused]] unsigned firstHour,
-                                                  [[maybe_unused]] unsigned lastHour) const override
+    [[nodiscard]] std::span<const double> getData(const std::string& /*dataSetId*/,
+                                                  unsigned /*timeSeriesNumber*/,
+                                                  unsigned /*firstHour*/,
+                                                  unsigned /*lastHour*/) const override
 
     {
         return vector_;
@@ -199,11 +199,11 @@ public:
     }
 
     void writeSimulationTable(
-      [[maybe_unused]] const LinearProblemApi::ILinearProblem& linearProblem,
+      const LinearProblemApi::ILinearProblem& /*linearProblem*/,
       const LinearProblemApi::IMipSolution& solution,
-      [[maybe_unused]] const ModelerData& modelerData,
-      [[maybe_unused]] const OptimEntityContainer& variableContainer,
-      [[maybe_unused]] const LinearProblemApi::FillContext& fillContext) const override
+      const ModelerData& /*modelerData*/,
+      const OptimEntityContainer& /*variableContainer*/,
+      const LinearProblemApi::FillContext& /*fillContext*/) const override
     {
         solution_.objectiveValue = solution.getObjectiveValue();
     }

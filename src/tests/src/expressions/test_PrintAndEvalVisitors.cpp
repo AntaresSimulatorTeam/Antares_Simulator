@@ -682,8 +682,8 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
-                                 [[maybe_unused]] const unsigned scenario,
+    [[nodiscard]] double getData(const std::string& /*dataSetId*/,
+                                 const unsigned /*scenario*/,
                                  unsigned hour) const override
     {
         if (const auto [ok, value] = IsParameterRegistered(dataSetId, hour); ok)
@@ -693,23 +693,24 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
         return hour; // for test
     }
 
-    [[nodiscard]] std::span<const double> getData([[maybe_unused]] const std::string& dataSetId,
-                                                  [[maybe_unused]] unsigned timeSeriesNumber,
-                                                  [[maybe_unused]] unsigned firstHour,
-                                                  [[maybe_unused]] unsigned lastHour) const override
+    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
+                                                  unsigned /*timeSeriesNumber*/,
+                                                  unsigned firstHour,
+                                                  unsigned lastHour) const override
     {
         if (const auto [ok, value] = IsParameterRegistered(dataSetId); ok)
         {
-            return value;
+            lastData_ = value;
+            return lastData_;
         }
-        std::vector<double> data(lastHour - firstHour + 1);
+        lastData_.resize(lastHour - firstHour + 1);
         auto v = firstHour;
-        for (std::size_t i = 0; i < data.size(); ++i)
+        for (std::size_t i = 0; i < lastData_.size(); ++i)
         {
-            data[i] = v;
+            lastData_[i] = v;
             ++v;
         }
-        return data;
+        return lastData_;
     }
 
     MockLinearProblemData(const std::map<std::string, std::vector<double>>& parametersValues = {}):
@@ -745,6 +746,7 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     }
 
     std::map<std::string, std::vector<double>> parametersValues = {};
+    mutable std::vector<double> lastData_;
 };
 
 struct TimeDependentParameterFixture

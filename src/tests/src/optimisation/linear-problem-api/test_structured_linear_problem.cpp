@@ -52,10 +52,10 @@ BOOST_AUTO_TEST_CASE(add_constraints)
 {
     StructuredLinearProblem lp;
     (void)lp.addNumVariable(0.0, 10.0, "x");
-    [[maybe_unused]] auto* y = lp.addNumVariable(0.0, 10.0, "y");
+    (void)lp.addNumVariable(0.0, 10.0, "y");
 
     auto* c1 = lp.addConstraint(2.0, 5.0, "c1");
-    [[maybe_unused]] auto* c2 = lp.addConstraint(-1e20, 3.0, "c2");
+    (void)lp.addConstraint(-1e20, 3.0, "c2");
 
     BOOST_CHECK_EQUAL(lp.constraintCount(), 2);
     BOOST_CHECK_CLOSE(c1->getLb(), 2.0, 1e-12);
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(modify_bounds)
 BOOST_AUTO_TEST_CASE(solve_not_supported)
 {
     StructuredLinearProblem lp;
-    [[maybe_unused]] auto* x = lp.addNumVariable(0.0, 10.0, "x");
+    (void)lp.addNumVariable(0.0, 10.0, "x");
 
     BOOST_CHECK_THROW(lp.solve(false), RuntimeError);
 }
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(solution_value_not_available)
 BOOST_AUTO_TEST_CASE(dual_not_available)
 {
     StructuredLinearProblem lp;
-    [[maybe_unused]] auto* x = lp.addNumVariable(0.0, 10.0, "x");
+    (void)lp.addNumVariable(0.0, 10.0, "x");
     auto* c = lp.addConstraint(1.0, 10.0, "c");
 
     BOOST_CHECK_THROW(c->dual(), RuntimeError);
