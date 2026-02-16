@@ -1,5 +1,7 @@
 var NAVTREEINDEX37 =
 {
+"classAntares_1_1Window_1_1Message.html#aaae4b4db663f1859529a7b982fb293c4":[8,0,0,23,43,12],
+"classAntares_1_1Window_1_1Message.html#ab0b1ff86c7e1f0f196bd7e19204d1b83":[8,0,0,23,43,4],
 "classAntares_1_1Window_1_1Message.html#ab5316eb6856c4caec366802ceabca995":[8,0,0,23,43,10],
 "classAntares_1_1Window_1_1Message.html#abdfb868a546457abcb431fc57b103d63":[8,0,0,23,43,9],
 "classAntares_1_1Window_1_1Message.html#ac1ac4cd01317eb81d193b17972135a1f":[8,0,0,23,43,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX37 =
 "classAntares_1_1Window_1_1StudyLogs.html#a87c6ae71e0bf144945fb6e434e0419b2":[8,0,0,23,52,8],
 "classAntares_1_1Window_1_1StudyLogs.html#ab5c9266221e03571fabca2601c5a9c65":[8,0,0,23,52,2],
 "classAntares_1_1Window_1_1StudyLogs.html#ace01286752cf1f2a5b32cf1feb678b10":[8,0,0,23,52,7],
-"classAntares_1_1Window_1_1StudyLogs.html#ae87fe99636196fa028687657e3a53c43":[8,0,0,23,52,3],
-"classAntares_1_1Window_1_1StudyLogs.html#af15b31d897bb0ef292f484f057f64eb9":[8,0,0,23,52,4],
-"classAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo.html":[8,0,0,23,52,0]
+"classAntares_1_1Window_1_1StudyLogs.html#ae87fe99636196fa028687657e3a53c43":[8,0,0,23,52,3]
 };

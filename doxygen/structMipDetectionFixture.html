@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: MipDetectionFixture Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('structMipDetectionFixture.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structMipDetectionFixture-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">MipDetectionFixture Struct Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for MipDetectionFixture:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="structMipDetectionFixture.png" usemap="#MipDetectionFixture_map" alt=""/>
+  <map id="MipDetectionFixture_map" name="MipDetectionFixture_map">
+<area href="structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html" alt="Test::Modeler::LinearProblemBuildingFixture" shape="rect" coords="0,0,260,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a647ac4f041996db922da67809b47f505"><td class="memItemLeft" align="right" valign="top"><a id="a647ac4f041996db922da67809b47f505"></a>
+std::unique_ptr&lt; <a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">ModelerData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createModelerDataWithVariableType</b> (ValueType type)</td></tr>
+<tr class="separator:a647ac4f041996db922da67809b47f505"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html">Test::Modeler::LinearProblemBuildingFixture</a></td></tr>
+<tr class="memitem:a3839ba0bdfd6926abedb6ec6bb4891fd inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a3839ba0bdfd6926abedb6ec6bb4891fd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createModel</b> (const std::string &amp;modelId, const std::vector&lt; std::string &gt; &amp;parameterIds, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1VariableData.html">VariableData</a> &gt; &amp;variablesData, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1ConstraintData.html">ConstraintData</a> &gt; &amp;constraintsData, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *objective=nullptr)</td></tr>
+<tr class="separator:a3839ba0bdfd6926abedb6ec6bb4891fd inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61190b4008785dc4fb477cd6967de415 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a61190b4008785dc4fb477cd6967de415"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createModelWithSystemModelParameter</b> (const std::string &amp;modelId, std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Parameter.html">Parameter</a> &gt;, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1VariableData.html">VariableData</a> &gt; &amp;variablesData, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1ConstraintData.html">ConstraintData</a> &gt; &amp;constraintsData, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *objective=nullptr)</td></tr>
+<tr class="separator:a61190b4008785dc4fb477cd6967de415 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eff8f885a25f90d47f00476061ac8ee inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a8eff8f885a25f90d47f00476061ac8ee"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createModelWithMultipleObjectives</b> (const std::string &amp;modelId, std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Parameter.html">Parameter</a> &gt;, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1VariableData.html">VariableData</a> &gt; &amp;variablesData, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1ConstraintData.html">ConstraintData</a> &gt; &amp;constraintsData, std::vector&lt; <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> * &gt; objectives)</td></tr>
+<tr class="separator:a8eff8f885a25f90d47f00476061ac8ee inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a6335129e9df8ea3505ceb39e455d72 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a2a6335129e9df8ea3505ceb39e455d72"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createModelWithOneFloatVar</b> (const std::string &amp;modelId, const std::vector&lt; std::string &gt; &amp;parameterIds, const std::string &amp;varId, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *lb, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *ub, const std::vector&lt; <a class="el" href="structTest_1_1Modeler_1_1ConstraintData.html">ConstraintData</a> &gt; &amp;constraintsData, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *objective=nullptr, bool time_dependent=false)</td></tr>
+<tr class="separator:a2a6335129e9df8ea3505ceb39e455d72 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed0e711b17cb69c8ffbe5bc0ae1b072a inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="aed0e711b17cb69c8ffbe5bc0ae1b072a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>createComponent</b> (const std::string &amp;modelId, const std::string &amp;componentId, std::map&lt; std::string, <a class="el" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html">ParameterTypeAndValue</a> &gt; parameterValues={}, std::string scenarioGroupId=&quot;&quot;)</td></tr>
+<tr class="separator:aed0e711b17cb69c8ffbe5bc0ae1b072a inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac549ec9ac83f8eda9eb4776c54bb84f1 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="ac549ec9ac83f8eda9eb4776c54bb84f1"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>literal</b> (double value)</td></tr>
+<tr class="separator:ac549ec9ac83f8eda9eb4776c54bb84f1 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d442c766460146c265217037d099189 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a7d442c766460146c265217037d099189"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parameter</b> (const std::string &amp;paramId, const <a class="el" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a> &amp;variability=Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)</td></tr>
+<tr class="separator:a7d442c766460146c265217037d099189 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46f52004cca1aaf09baf208418a0f532 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a46f52004cca1aaf09baf208418a0f532"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>variable</b> (const std::string &amp;varId, unsigned int index, const <a class="el" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a> &amp;variability=Antares::Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)</td></tr>
+<tr class="separator:a46f52004cca1aaf09baf208418a0f532 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55e7b184398c8c2f81b6a65f622905d9 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a55e7b184398c8c2f81b6a65f622905d9"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>multiply</b> (<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node1, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node2)</td></tr>
+<tr class="separator:a55e7b184398c8c2f81b6a65f622905d9 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a09953081eb60b9d7b39605615ba455 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a2a09953081eb60b9d7b39605615ba455"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>add</b> (<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node1, <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node2)</td></tr>
+<tr class="separator:a2a09953081eb60b9d7b39605615ba455 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ae7f1d6dbf7486a90d1314c4007e891 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a3ae7f1d6dbf7486a90d1314c4007e891"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>Sum</b> (<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node)</td></tr>
+<tr class="separator:a3ae7f1d6dbf7486a90d1314c4007e891 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a244c9b617dd37ccd0d5dd68190685b36 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a244c9b617dd37ccd0d5dd68190685b36"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>negate</b> (<a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> *node)</td></tr>
+<tr class="separator:a244c9b617dd37ccd0d5dd68190685b36 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92923271aab191d68618f2e099a0ea0d inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a92923271aab191d68618f2e099a0ea0d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildLinearProblem</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a> &amp;time_scenario_ctx, <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">Antares::Optimisation::LinearProblemDataImpl::LinearProblemData</a> &amp;dummy_data, std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Antares::Optimisation::LinearProblemApi::IScenario</a> &gt;&gt; &amp;scenarios)</td></tr>
+<tr class="separator:a92923271aab191d68618f2e099a0ea0d inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd06dc895b766328cf0a338211ffdd26 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="afd06dc895b766328cf0a338211ffdd26"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildLinearProblem</b> (<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a> &amp;time_scenario_ctx)</td></tr>
+<tr class="separator:afd06dc895b766328cf0a338211ffdd26 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50bcefd9a5eed89f9388e11874230dca inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a50bcefd9a5eed89f9388e11874230dca"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildLinearProblem</b> ()</td></tr>
+<tr class="separator:a50bcefd9a5eed89f9388e11874230dca inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79eb86799796d6c44c003992209cb451 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a79eb86799796d6c44c003992209cb451"></a>
+<a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">ModelerData</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getModelerData</b> ()</td></tr>
+<tr class="separator:a79eb86799796d6c44c003992209cb451 inherit pub_methods_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html">Test::Modeler::LinearProblemBuildingFixture</a></td></tr>
+<tr class="memitem:a40658eb5c0faf492539914f8415f9b66 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a40658eb5c0faf492539914f8415f9b66"></a>
+std::unordered_map&lt; std::string, <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Model</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>models</b></td></tr>
+<tr class="separator:a40658eb5c0faf492539914f8415f9b66 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a217af771a3cc3b9e3cb2cd551fc614f0 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a217af771a3cc3b9e3cb2cd551fc614f0"></a>
+<a class="el" href="classAntares_1_1Expressions_1_1Registry.html">Antares::Expressions::Registry</a>&lt; <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nodeRegistry</b></td></tr>
+<tr class="separator:a217af771a3cc3b9e3cb2cd551fc614f0 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc9a10e2848577bce276e87d368bb5d9 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="acc9a10e2848577bce276e87d368bb5d9"></a>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pb</b></td></tr>
+<tr class="separator:acc9a10e2848577bce276e87d368bb5d9 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedc08193ed389147c5396f69e46612b3 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="aedc08193ed389147c5396f69e46612b3"></a>
+std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Component</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>components</b></td></tr>
+<tr class="separator:aedc08193ed389147c5396f69e46612b3 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc1a037c4a01443a7fbc6a83b4cd3658 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="abc1a037c4a01443a7fbc6a83b4cd3658"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">Antares::Optimisation::LinearProblemDataImpl::LinearProblemData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>dummy_data_</b></td></tr>
+<tr class="separator:abc1a037c4a01443a7fbc6a83b4cd3658 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ecda1a43dcaa024d3aaee2f0119feba inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a0ecda1a43dcaa024d3aaee2f0119feba"></a>
+<a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">ModelerData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>modelerData</b></td></tr>
+<tr class="separator:a0ecda1a43dcaa024d3aaee2f0119feba inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ad18f207ed2f91de79dae41ed567ab7 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a5ad18f207ed2f91de79dae41ed567ab7"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Antares::Optimisation::ScenarioGroupRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><b>scenarioGroupRepo</b></td></tr>
+<tr class="separator:a5ad18f207ed2f91de79dae41ed567ab7 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bdd0586fcda74c9f26b9ba59420e439 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memItemLeft" align="right" valign="top"><a id="a7bdd0586fcda74c9f26b9ba59420e439"></a>
+std::unique_ptr&lt; <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Antares::Optimisation::OptimEntityContainer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>optimEntityContainer</b></td></tr>
+<tr class="separator:a7bdd0586fcda74c9f26b9ba59420e439 inherit pub_attribs_structTest_1_1Modeler_1_1LinearProblemBuildingFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/tests/src/solver/optimisation/test_mip_detection.cpp</li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="structMipDetectionFixture.html">MipDetectionFixture</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

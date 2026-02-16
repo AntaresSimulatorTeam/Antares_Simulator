@@ -1,5 +1,7 @@
 var NAVTREEINDEX61 =
 {
+"structCsrBindingConstraintHourData.html#af14807ac8053e066b5c9fe583d3b7309":[8,0,99,2],
+"structCsrBindingConstraintHourData.html#af74bdea5c2a860adeca6467c6e0814cb":[8,0,99,4],
 "structCsrFlowDissociationData.html":[8,0,101],
 "structCsrFlowDissociationData.html#a265585c099ccfd554b8a3fcccc83a012":[8,0,101,1],
 "structCsrFlowDissociationData.html#a302cad09aaa374a645ac3040d92e3370":[8,0,101,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX61 =
 "structFixture_1_1STSAdditionalConstraints.html":[8,0,134,3],
 "structFixture_1_1STSAdditionalConstraints.html#a6d9bd1fa8d8c33b8e9d3ec2416d55af5":[8,0,134,3,2],
 "structFixture_1_1STSAdditionalConstraints.html#aabbf8d25963c82abee981f2c1574e42e":[8,0,134,3,1],
-"structFixture_1_1STSAdditionalConstraints.html#ac8db8b3f561a8412c39bbde053028562":[8,0,134,3,0],
-"structFixture_1_1STSInflows.html":[8,0,134,4],
-"structFixture_1_1STSInflows.html#a0148d9a54c76aea1d11da44cc0882431":[8,0,134,4,1]
+"structFixture_1_1STSAdditionalConstraints.html#ac8db8b3f561a8412c39bbde053028562":[8,0,134,3,0]
 };

@@ -1,5 +1,7 @@
 var NAVTREEINDEX59 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#aed37a620f52b81f5ed215d2f4b3bd18a":[8,0,0,18,6,6,0,9,5],
+"structAntares_1_1Solver_1_1Variable_1_1SetDataBase_1_1VCardDynamic.html":[8,0,0,18,6,17,0],
 "structAntares_1_1Solver_1_1Variable_1_1SetsOfAreas_1_1Statistics.html":[8,0,0,18,6,45,0],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation.html":[8,0,0,18,6,30],
 "structAntares_1_1Solver_1_1Variable_1_1SpatialAggregateOperation_3_01true_00_01Category_1_1spati841a76f09dca40f27176e5114824b3ac.html":[8,0,0,18,6,33],
@@ -247,7 +249,5 @@ var NAVTREEINDEX59 =
 "structAntares_1_1Window_1_1SortColor.html":[8,0,0,23,31],
 "structAntares_1_1Window_1_1SortColor.html#afd57fe258750985ef56db5bbc777f6be":[8,0,0,23,31,0],
 "structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html":[8,0,0,23,52,0,0],
-"structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html#afd3da9f999454f89e5faf80040a72bec":[8,0,0,23,52,0,0,0],
-"structAntares_1_1linkInfo_1_1addpWeight.html":[8,0,0,43,0],
-"structAntares_1_1linkInfo_1_1addpWeight.html#afa157028fda8f84bb438eb07a5269ca7":[8,0,0,43,0,0]
+"structAntares_1_1Window_1_1StudyLogs_1_1LogFilenameInfo_1_1ltstr.html#afd3da9f999454f89e5faf80040a72bec":[8,0,0,23,52,0,0,0]
 };

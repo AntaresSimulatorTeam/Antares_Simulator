@@ -1,5 +1,7 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Data_1_1Study.html#ac84095305b6524e9b8fecda02070e825":[8,0,0,5,70,3],
+"classAntares_1_1Data_1_1Study.html#acb39944d58dae61bef9ae4ab12d8a3f5":[8,0,0,5,70,78],
 "classAntares_1_1Data_1_1Study.html#acd6521d444413475db5e715adb608ef7":[8,0,0,5,70,10],
 "classAntares_1_1Data_1_1Study.html#ad18ee161ef5942de357d8e1bfc220b79":[8,0,0,5,70,7],
 "classAntares_1_1Data_1_1Study.html#ad441def28743298e5a1a6c1ebdb409f1":[8,0,0,5,70,58],
@@ -247,7 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Data_1_1UIRuntimeInfo.html#aee07645ba1f9e76cff0457084012857d":[8,0,0,5,71,7],
 "classAntares_1_1Data_1_1UIRuntimeInfo.html#af273d37917807b764649d7c47a2b5ae7":[8,0,0,5,71,10],
 "classAntares_1_1Data_1_1UIRuntimeInfo.html#afc960197ba5faa6101045328c8931c77":[8,0,0,5,71,2],
-"classAntares_1_1Data_1_1UnfeasibleProblemError.html":[8,0,0,5,8],
-"classAntares_1_1Data_1_1UnfeasibleProblemError.html#a0e2dfedcfde8e881fb70af2b0908ec13":[8,0,0,5,8,0],
-"classAntares_1_1Data_1_1UnfeasibleProblemError.html#adb09871c346e8747be9c9e6fe2e363a6":[8,0,0,5,8,1]
+"classAntares_1_1Data_1_1UnfeasibleProblemError.html":[8,0,0,5,8]
 };

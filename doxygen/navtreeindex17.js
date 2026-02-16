@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Data_1_1UnfeasibleProblemError.html#a0e2dfedcfde8e881fb70af2b0908ec13":[8,0,0,5,8,0],
+"classAntares_1_1Data_1_1UnfeasibleProblemError.html#adb09871c346e8747be9c9e6fe2e363a6":[8,0,0,5,8,1],
 "classAntares_1_1Data_1_1VariablePrintInfo.html":[8,0,0,5,72],
 "classAntares_1_1Data_1_1VariablePrintInfo.html#a000300b7505d33eaeb25900ba0f2f71e":[8,0,0,5,72,1],
 "classAntares_1_1Data_1_1VariablePrintInfo.html#a020c312b189f4c9e64a0ca090daa74bc":[8,0,0,5,72,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html":[8,0,0,8,0,14],
 "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html#a665c9cf559aee7ac894b5bef11c6cbe5":[8,0,0,8,0,14,1],
 "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html#a893c3edcae6c95ac309885357683b003":[8,0,0,8,0,14,0],
-"classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html":[8,0,0,8,0,15],
-"classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html#ab72c08835af3684149a2e4ff76a0b110":[8,0,0,8,0,15,1],
-"classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html#ad93716c8ea3d7d4cf2ccfed1df46672a":[8,0,0,8,0,15,0]
+"classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html":[8,0,0,8,0,15]
 };

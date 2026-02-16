@@ -8,6 +8,7 @@ var dir_703a08c8b9d2f88ac5fb64946c0e4ddb =
     [ "LegacyOrtoolsLinearProblem.h", "LegacyOrtoolsLinearProblem_8h_source.html", null ],
     [ "LinearProblemMatrix.h", "LinearProblemMatrix_8h_source.html", null ],
     [ "LinearProblemMatrixStartUpCosts.h", "LinearProblemMatrixStartUpCosts_8h_source.html", null ],
+    [ "MipDetection.h", "MipDetection_8h_source.html", null ],
     [ "opt_appel_solveur_quadratique.h", "opt__appel__solveur__quadratique_8h_source.html", null ],
     [ "opt_constants.h", "opt__constants_8h_source.html", null ],
     [ "opt_export_structure.h", "opt__export__structure_8h_source.html", null ],

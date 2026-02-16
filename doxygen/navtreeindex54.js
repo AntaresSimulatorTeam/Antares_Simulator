@@ -1,9 +1,11 @@
 var NAVTREEINDEX54 =
 {
+"renewable_2cluster_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,3,1],
+"renewable_2cluster__list_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,2],
 "renewable_2defines_8h_source.html":[9,0,0,4,0,25,0,0,0,5,3,5],
 "renewable_8areasummary_8h_source.html":[9,0,0,12,2,1,1,1,1,0,9],
-"report_8cpp.html#a1418a64099521dabe8235df401f4f0cc":[7,0,0,20,36],
-"report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3":[7,0,0,20,32],
+"report_8cpp.html#a1418a64099521dabe8235df401f4f0cc":[7,0,0,20,37],
+"report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3":[7,0,0,20,33],
 "report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[7,0,0,20,30],
 "report_8h_source.html":[9,0,0,8,3,0,0,0,0,1],
 "reportbuilder_8hxx_source.html":[9,0,0,8,12,0,0,0,0,5,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX54 =
 "solver__steps_8py.html#afca43bd690264fd540610109a4428819":[7,0,39,52],
 "solver__utils_8h.html#af2a01e66ccaa61af5d7372e6ccd3a91f":[7,0,0,24,6,38],
 "solver__utils_8h_source.html":[9,0,0,8,9,0,0,0,0,24],
-"spatial-aggregate_8h_source.html":[9,0,0,8,12,0,0,0,0,1,11],
-"specific__test_8py.html#a023b924f3c94a2c19ec6cebe3ad7465e":[7,0,40,2],
-"specific__test_8py.html#a02597652d916bafa62c6ea569503a128":[7,0,40,6]
+"spatial-aggregate_8h_source.html":[9,0,0,8,12,0,0,0,0,1,11]
 };

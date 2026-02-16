@@ -1,5 +1,7 @@
 var NAVTREEINDEX56 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html":[8,0,0,12,0,2,4],
+"structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html":[8,0,0,12,0,2,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html":[8,0,0,12,0,3,8],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#a044c1a4878754738f921bdd73218c5c7":[8,0,0,12,0,3,8,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#a14b632d44ca7592b1c0e9669a21ca582":[8,0,0,12,0,3,8,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX56 =
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a7e644b6acdc2a7ab5f97d99386e7ea60":[8,0,0,18,5,11,3],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#aa982732ccf2bb70cc56e28c078d18859":[8,0,0,18,5,11,1],
 "structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html":[8,0,0,18,5,30],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#a286abc5071a6ff0a86603bf8f9f1fa6d":[8,0,0,18,5,30,6],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#a5076e638335fa82856ede26879b65612":[8,0,0,18,5,30,0],
-"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#a5f18a947542b29339ac482cfd425bc89":[8,0,0,18,5,30,1]
+"structAntares_1_1Solver_1_1Simulation_1_1setOfParallelYears.html#a286abc5071a6ff0a86603bf8f9f1fa6d":[8,0,0,18,5,30,6]
 };
