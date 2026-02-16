@@ -178,9 +178,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                            ->scenarioGroupRepository
                                                                       : nullptr;
 
-    OptimEntityContainer optimEntityContainer(ortoolsProblem,
-                                              modelerDataSeries,
-                                              modelerScenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(ortoolsProblem);
 
     Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
                                                                  ? &modelerData
@@ -345,9 +343,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         const ScenarioGroupRepository* modelerScenarioGroupRepository
           = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-        OptimEntityContainer optimEntityContainer(infeasibleProblem,
-                                                  modelerDataSeries,
-                                                  modelerScenarioGroupRepository);
+        OptimEntityContainer optimEntityContainer(infeasibleProblem);
         Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
                                                                      ? &modelerData
                                                                           ->bendersDecomposition

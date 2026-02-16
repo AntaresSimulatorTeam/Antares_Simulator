@@ -152,10 +152,7 @@ ProblemEntity buildProblem(const ModelerData& data,
         return {nullptr, nullptr};
     }
     auto problem = getProblem(isMip, resolutionMode, solver);
-    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
-      *problem,
-      data.dataSeries.get(),
-      &data.scenarioGroupRepository);
+    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(*problem);
 
     SystemLinearProblemBuilder builder(data.system.get(),
                                        data.dataSeries.get(),

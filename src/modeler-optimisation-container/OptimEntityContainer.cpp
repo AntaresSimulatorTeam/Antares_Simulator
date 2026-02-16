@@ -11,12 +11,8 @@ using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::Optimisation
 {
 
-OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
-                                           const LinearProblemApi::ILinearProblemData* data,
-                                           const ScenarioGroupRepository* scenarioGroupRepository):
-    linearProblem_(linearProblem),
-    data_(data),
-    scenarioGroupRepository_(scenarioGroupRepository)
+OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem):
+    linearProblem_(linearProblem)
 {
 }
 
@@ -25,13 +21,6 @@ unsigned OptimEntityContainer::getVariableStartColumn(const Component& component
 {
     const auto& optimComponent = optimComponents_.at(component.Index());
     return variableStartColumn_.at(optimComponent.modelVariableGlobalIndices.at(index));
-}
-
-const EvaluationContext& OptimEntityContainer::getEvaluationContext(
-  const Component& component) const
-{
-    const auto& optimComponent = optimComponents_.at(component.Index());
-    return optimComponent.evaluationContext;
 }
 
 unsigned OptimEntityContainer::getConstraintStartLine(const Component& component,
@@ -110,11 +99,8 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
                 modelVariableGlobalIndices.push_back(-1);
             }
         }
-        auto& scenario = scenarioGroupRepository_->scenario(component.getScenarioGroupId());
-        auto evalContext = EvaluationContext(&component, data_, &scenario);
 
-        optimComponents_.push_back({.modelVariableGlobalIndices = modelVariableGlobalIndices,
-                                    .evaluationContext = std::move(evalContext)});
+        optimComponents_.push_back({.modelVariableGlobalIndices = modelVariableGlobalIndices});
     }
 }
 

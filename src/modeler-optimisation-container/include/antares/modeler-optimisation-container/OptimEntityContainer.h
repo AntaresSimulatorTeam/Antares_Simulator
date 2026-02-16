@@ -21,21 +21,15 @@ struct OptimComponent
     std::vector<unsigned> modelVariableGlobalIndices;
     std::vector<unsigned> modelConstraintsGlobalIndices;
     std::vector<VariabilityType> modelConstraintsVariability;
-    EvaluationContext evaluationContext;
 };
 
 class OptimEntityContainer
 {
 public:
-    OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
-                         const LinearProblemApi::ILinearProblemData* data,
-                         const ScenarioGroupRepository* scenarioGroupRepository);
+    OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem);
 
     unsigned getVariableStartColumn(const ModelerStudy::SystemModel::Component& component,
                                     unsigned index) const;
-
-    const EvaluationContext& getEvaluationContext(
-      const ModelerStudy::SystemModel::Component& component) const;
 
     unsigned getConstraintStartLine(const ModelerStudy::SystemModel::Component& component,
                                     unsigned index) const;
