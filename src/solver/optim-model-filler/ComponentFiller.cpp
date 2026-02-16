@@ -187,15 +187,16 @@ void AddVariableVisitor::operator()(const std::vector<double>& lb,
 }
 
 ComponentFiller::ComponentFiller(const Component& component,
+                                 const LinearProblemApi::ILinearProblemData* data,
                                  OptimEntityContainer& optimEntityContainer,
-                                 const ScenarioGroupRepository& scenarioGroupRepository,
+                                 const ScenarioGroupRepository& scenarioGroupRepo,
                                  Solver::Config::Location targetLocation,
                                  BendersDecomposition* bendersDecomposition):
     component_(component),
     optimEntityContainer_(optimEntityContainer),
     pb_(optimEntityContainer_.Problem()),
-    // gp : scenario group repo unused for now
-    scenarioGroupRepository_(scenarioGroupRepository),
+    data_(data),
+    scenarioGroupRepo_(scenarioGroupRepo),
     targetLocation_(targetLocation),
     bendersDecomposition_(bendersDecomposition)
 {
@@ -230,7 +231,11 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         return;
     }
 
-    Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_);
+    Visitors::EvalVisitor evaluator(optimEntityContainer_,
+                                    ctx,
+                                    component_,
+                                    data_,
+                                    &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())
@@ -319,7 +324,11 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
-    ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
+    ReadLinearConstraintVisitor visitor(optimEntityContainer_,
+                                        ctx,
+                                        component_,
+                                        data_,
+                                        scenarioGroupRepo_);
 
     const auto& contraints = component_.getModel()->Constraints();
     for (const auto& constraint: contraints | locationFilter())
@@ -354,7 +363,11 @@ void ComponentFiller::addStaticObjective(const Optimization::LinearExpression& e
 void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 {
     auto* model = component_.getModel();
-    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component_);
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_,
+                                        ctx,
+                                        component_,
+                                        data_,
+                                        scenarioGroupRepo_);
 
     double objectiveOffset = 0.0;
     for (const auto& objective: model->Objectives() | locationFilter())
@@ -374,7 +387,12 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const
 {
-    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component);
+    auto& scenario = scenarioGroupRepo_.scenario(component.getScenarioGroupId());
+
+    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_,
+                                                     component,
+                                                     data_,
+                                                     &scenario);
     return variability_visitor.dispatch(node);
 }
 } // namespace Antares::Optimisation

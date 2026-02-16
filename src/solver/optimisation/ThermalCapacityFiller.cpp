@@ -16,11 +16,15 @@ using namespace Antares::ModelerStudy::SystemModel;
 namespace Antares::Optimization
 {
 ThermalCapacityFiller::ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
-                                             OptimEntityContainer& optimEntityContainer):
+                                             OptimEntityContainer& optimEntityContainer,
+                                             const ILinearProblemData* data,
+                                             const ScenarioGroupRepository& scenarioGroupRepo):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer),
     pb_(optimEntityContainer_.Problem()),
+    data_(data),
+    scenarioGroupRepo_(scenarioGroupRepo),
     variableManager_(VariableManagerFromProblemHebdo(problemeHebdo))
 {
     unsigned int i = 0;
@@ -186,7 +190,12 @@ void ThermalCapacityFiller::addComponentPortContributionToThermalCapacity(
   const ThermalComponent& thermalCapacityConnection)
 {
     std::string thermalCapacityField = getThermalCapacityField(component, portId);
-    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_,
+                                        ctx,
+                                        component,
+                                        data_,
+                                        scenarioGroupRepo_);
+
     const auto linearExpression = visitor.visitMergeDuplicates(
       component.nodeAtPortField(portId, thermalCapacityField));
     processThermalCapacityField(linearExpression, thermalCapacityConnection, ctx);

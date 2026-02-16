@@ -32,10 +32,13 @@ namespace Antares::Optimization
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
   OptimEntityContainer& optimEntityContainer,
-  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+  const ILinearProblemData* data,
+  const ScenarioGroupRepository& scenarioGroupRepo):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer),
+    data_(data),
+    scenarioGroupRepo_(scenarioGroupRepo),
     pb_(optimEntityContainer_.Problem())
 {
     areaIndices_ = associateIndicesToAreas(problemeHebdo_);
@@ -140,7 +143,11 @@ TimeDependentLinearExpression ComponentToAreaConnectionFiller::linearExpressionA
   const Component& component,
   const FillContext& ctx)
 {
-    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_,
+                                        ctx,
+                                        component,
+                                        data_,
+                                        scenarioGroupRepo_);
 
     Nodes::Node* expression = component.nodeAtPortField(portId, fieldId);
     return visitor.visitMergeDuplicates(expression).expandToSize(ctx.getLocalNumberOfTimeSteps());

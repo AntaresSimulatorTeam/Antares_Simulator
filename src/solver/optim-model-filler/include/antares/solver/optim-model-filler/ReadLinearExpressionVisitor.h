@@ -35,7 +35,9 @@ public:
     explicit ReadLinearExpressionVisitor(
       const OptimEntityContainer& optimEntityContainer,
       const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
-      const Antares::ModelerStudy::SystemModel::Component& component);
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      const Optimisation::LinearProblemApi::ILinearProblemData* data,
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepo);
 
     Antares::Optimization::TimeDependentLinearExpression visitMergeDuplicates(
       const Nodes::Node* node);
@@ -102,9 +104,15 @@ private:
 
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;
-    const Antares::Optimisation::EvaluationContext& evalContext_;
+    const Antares::Optimisation::EvaluationContext evalContext_;
     const Antares::Optimisation::LinearProblemApi::FillContext& fillContext_;
     Antares::Expressions::Visitors::EvalVisitor evalVisitor_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+
+    // gp : scenarioGroupRepo_ not needed, only scenario_ is needed
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
+    const Optimisation::LinearProblemApi::IScenario* scenario_;
+
     const unsigned nbtimeSteps_;
 };
 } // namespace Antares::Optimisation

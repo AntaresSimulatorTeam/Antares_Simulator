@@ -8,6 +8,7 @@
 #include <variant>
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -310,15 +311,19 @@ public:
 
     explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component& component);
+                         const ModelerStudy::SystemModel::Component& component,
+                         const Optimisation::LinearProblemApi::ILinearProblemData* data,
+                         const Optimisation::LinearProblemApi::IScenario* scenario);
 
     std::string name() const override;
 
 private:
     const Optimisation::OptimEntityContainer& optimContainer_;
-    const Optimisation::EvaluationContext& evalContext_;
+    const Optimisation::EvaluationContext evalContext_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::LinearProblemApi::IScenario* scenario_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

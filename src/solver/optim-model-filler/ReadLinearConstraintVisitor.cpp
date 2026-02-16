@@ -17,8 +17,14 @@ namespace Antares::Optimisation
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   const Optimisation::OptimEntityContainer& optimEntityContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const Component& component):
-    linear_expression_visitor_(optimEntityContainer, fillContext, component)
+  const Component& component,
+  const LinearProblemApi::ILinearProblemData* data,
+  const ScenarioGroupRepository& scenarioGroupRepo):
+    linear_expression_visitor_(optimEntityContainer,
+                               fillContext,
+                               component,
+                               data,
+                               scenarioGroupRepo)
 {
 }
 

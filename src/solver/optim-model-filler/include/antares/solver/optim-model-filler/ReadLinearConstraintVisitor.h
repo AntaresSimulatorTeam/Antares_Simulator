@@ -42,7 +42,9 @@ public:
     explicit ReadLinearConstraintVisitor(
       const Optimisation::OptimEntityContainer& optimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext,
-      const ModelerStudy::SystemModel::Component& component);
+      const ModelerStudy::SystemModel::Component& component,
+      const Optimisation::LinearProblemApi::ILinearProblemData* data,
+      const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
 
     std::string name() const override;
 

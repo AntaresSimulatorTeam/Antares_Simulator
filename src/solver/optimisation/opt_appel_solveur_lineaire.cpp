@@ -68,6 +68,7 @@ static void fillModelerComponents(
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
+                                            modelerData->dataSeries.get(),
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
                                             Solver::Config::Location::SUBPROBLEMS,
@@ -104,13 +105,14 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 // Returns a shared_ptr to the solver
 void fillLinearProblem(FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
+                       LegacyOrtoolsLinearProblem& ortoolsProblem,
                        OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(ortoolsProblem, problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -125,9 +127,14 @@ void fillLinearProblem(FillContext& fillCtx,
         fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
           problemeHebdo,
           optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
           problemeHebdo->modelerData->scenarioGroupRepository));
-        fillersCollection.push_back(
-          std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
+
+        fillersCollection.push_back(std::make_unique<ThermalCapacityFiller>(
+          problemeHebdo,
+          optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
+          problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -182,6 +189,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     fillLinearProblem(fillCtx,
                       problemeHebdo,
+                      ortoolsProblem,
                       optimEntityContainer,
                       problemeHebdo->NamedProblems,
                       bendersDecomposition);
@@ -246,7 +254,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         FillSimulationTable(*simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver.get()),
-
                             *modelerData,
                             optimEntityContainer,
                             fillCtx,
@@ -346,7 +353,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                                           ->bendersDecomposition
                                                                      : nullptr;
 
-        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
+        fillLinearProblem(fillCtx,
+                          problemeHebdo,
+                          infeasibleProblem,
+                          optimEntityContainer,
+                          true,
+                          bendersDecomposition);
+
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

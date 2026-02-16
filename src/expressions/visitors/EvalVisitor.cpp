@@ -11,19 +11,25 @@
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
+using namespace Antares::Optimisation;
+
 namespace Antares::Expressions::Visitors
 {
 
-EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component& component):
+EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
+                         const LinearProblemApi::FillContext& fillContext,
+                         const ModelerStudy::SystemModel::Component& component,
+                         const LinearProblemApi::ILinearProblemData* data,
+                         const LinearProblemApi::IScenario* scenario):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
+    component_(component),
+    data_(data),
+    scenario_(scenario),
     optimContainer_(optimContainer),
-    evalContext_(optimContainer.getEvaluationContext(component)),
-    fillContext_(fillContext),
-    component_(component)
+    evalContext_(&component, data, scenario),
+    fillContext_(fillContext)
 {
 }
 
@@ -95,11 +101,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (systemParameter.type == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
     }
-    if (systemParameter.type == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {
         return EvaluationResult(
           evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0));
@@ -145,7 +151,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     {
         auto* component = connectionEnd.component();
         auto* port = connectionEnd.port();
-        EvalVisitor visitor(optimContainer_, fillContext_, *component);
+        EvalVisitor visitor(optimContainer_, fillContext_, *component, data_, scenario_);
         const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;

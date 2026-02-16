@@ -29,6 +29,7 @@ public:
     ComponentFiller(ComponentFiller& other) = delete;
 
     explicit ComponentFiller(const ModelerStudy::SystemModel::Component& component,
+                             const LinearProblemApi::ILinearProblemData* data,
                              OptimEntityContainer& optimEntityContainer,
                              const ScenarioGroupRepository& scenarioGroupRepository,
                              Solver::Config::Location targetLocation,
@@ -55,7 +56,8 @@ private:
     const ModelerStudy::SystemModel::Component& component_;
     OptimEntityContainer& optimEntityContainer_;
     LinearProblemApi::ILinearProblem& pb_;
-    const ScenarioGroupRepository& scenarioGroupRepository_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
     const Solver::Config::Location targetLocation_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
 
