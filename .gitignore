@@ -64,3 +64,4 @@ vcpkg_installed
 src/CMakeUserPresets.json
 .cache/
 build-debug/
+build-test/
