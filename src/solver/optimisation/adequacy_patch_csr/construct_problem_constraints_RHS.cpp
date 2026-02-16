@@ -83,7 +83,8 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 void HourlyCSRProblem::setRHSfictitiousLoadValue()
 {
     // constraint: FictitiousLoad for all areas inside adequacy patch
-    // In CSR context, spilled energy <= 0 (always)
+    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt)
+    // In CSR context, the RHS is calculated based on first step results
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
@@ -93,7 +94,41 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
             if (it != numberOfConstraintCsrFictitiousLoad.end())
             {
                 int Cnt = it->second;
-                problemeAResoudre_.SecondMembre[Cnt] = 0.;
+                
+                // Start with 0
+                double rhs = 0.0;
+                
+                // Add must-run generation and load terms if enabled
+                if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
+                {
+                    double maxAllMustRunGeneration = 0.0;
+                    double allMustRunGen = problemeHebdo_->AllMustRunGeneration[triggeredHour].AllMustRunGenerationOfArea[Area];
+                    if (allMustRunGen > 0.0)
+                        maxAllMustRunGeneration = allMustRunGen;
+                    
+                    double consommationAbattue = problemeHebdo_->ConsommationsAbattues[triggeredHour].ConsommationAbattueDuPays[Area];
+                    double maxMoinsConsommationBrute = 0.0;
+                    if (-(consommationAbattue + allMustRunGen) > 0.0)
+                        maxMoinsConsommationBrute = -(consommationAbattue + allMustRunGen);
+                    
+                    rhs = maxAllMustRunGeneration + maxMoinsConsommationBrute;
+                }
+                
+                // Subtract Pmin of thermal units if enabled
+                if (!problemeHebdo_->DefaillanceNegativeUtiliserPMinThermique[Area])
+                {
+                    // Sum of Pmin for all thermal units
+                    const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
+                    
+                    double sumPmin = 0.0;
+                    for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
+                    {
+                        sumPmin += paliersThermiques.PminDuPalierThermiquePendantUneHeure[index];
+                    }
+                    rhs -= sumPmin;
+                }
+                
+                problemeAResoudre_.SecondMembre[Cnt] = rhs;
                 logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
                              << "] = " << problemeAResoudre_.SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
