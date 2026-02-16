@@ -69,6 +69,8 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/constraints/CsrFlowDissociation.cpp
 		adequacy_patch_csr/constraints/CsrAreaBalance.h
 		adequacy_patch_csr/constraints/CsrAreaBalance.cpp
+		adequacy_patch_csr/constraints/CsrFictitiousLoad.h
+		adequacy_patch_csr/constraints/CsrFictitiousLoad.cpp
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
 		adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
 

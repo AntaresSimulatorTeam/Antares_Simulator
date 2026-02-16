@@ -35,6 +35,7 @@
 #include "sim_structure_probleme_economique.h"
 #include "constraints/CsrFlowDissociation.h"
 #include "constraints/CsrAreaBalance.h"
+#include "constraints/CsrFictitiousLoad.h"
 #include "constraints/CsrBindingConstraintHour.h"
 #include "../constraints/constraint_builder_utils.h"
 
@@ -91,6 +92,21 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(ConstraintBuilder& builder)
     csrAreaBalance.add();
 }
 
+void CsrQuadraticProblem::setFictitiousLoadConstraints(ConstraintBuilder& builder)
+{
+    int hour = hourlyCsrProblem_.triggeredHour;
+
+    CsrFictitiousLoadData csrFictitiousLoadData{
+      .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
+      .hour = hour,
+      .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro,
+      .numberOfConstraintCsrFictitiousLoad = hourlyCsrProblem_.numberOfConstraintCsrFictitiousLoad,
+      .NombreDePays = problemeHebdo_->NombreDePays};
+
+    CsrFictitiousLoad csrFictitiousLoad(builder, csrFictitiousLoadData);
+    csrFictitiousLoad.add();
+}
+
 void CsrQuadraticProblem::setBindingConstraints(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
@@ -125,6 +141,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     auto builder = ConstraintBuilder(builder_data);
     setConstraintsOnFlows(builder);
     setNodeBalanceConstraints(builder);
+    setFictitiousLoadConstraints(builder);
     setBindingConstraints(builder);
 }
 

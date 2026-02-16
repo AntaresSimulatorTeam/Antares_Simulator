@@ -132,6 +132,7 @@ public:
                              const std::string& destination);
 
     void CsrAreaBalance(unsigned int constraint);
+    void CsrFictitiousLoad(unsigned int constraint);
     void CsrBindingConstraintHour(unsigned int constraint, const std::string& name);
 
 private:

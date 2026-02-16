@@ -93,6 +93,7 @@ public:
     std::map<int, LinkVariable> linkInsideAdqPatch;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
+    std::map<int, int> numberOfConstraintCsrFictitiousLoad;
     std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
                                                            // contains interco 2-2
 
@@ -120,6 +121,7 @@ private:
     // Constraints
     void setRHSvalueOnFlows();
     void setRHSnodeBalanceValue();
+    void setRHSfictitiousLoadValue();
     void setRHSbindingConstraintsValue();
 
     // Costs

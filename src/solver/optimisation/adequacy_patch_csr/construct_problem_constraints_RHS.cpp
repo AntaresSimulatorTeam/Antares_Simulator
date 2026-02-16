@@ -80,6 +80,28 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
     }
 }
 
+void HourlyCSRProblem::setRHSfictitiousLoadValue()
+{
+    // constraint: FictitiousLoad for all areas inside adequacy patch
+    // In CSR context, spilled energy <= 0 (always)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it = numberOfConstraintCsrFictitiousLoad.find(Area);
+            if (it != numberOfConstraintCsrFictitiousLoad.end())
+            {
+                int Cnt = it->second;
+                problemeAResoudre_.SecondMembre[Cnt] = 0.;
+                logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
+                             << "] = " << problemeAResoudre_.SecondMembre[Cnt]
+                             << " (Area = " << Area << ")";
+            }
+        }
+    }
+}
+
 void HourlyCSRProblem::setRHSbindingConstraintsValue()
 {
     std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;

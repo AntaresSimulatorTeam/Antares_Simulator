@@ -229,6 +229,11 @@ void ConstraintNamer::CsrAreaBalance(unsigned int constraint)
     SetAreaElementNameHour(constraint, "CsrAreaBalance");
 }
 
+void ConstraintNamer::CsrFictitiousLoad(unsigned int constraint)
+{
+    SetAreaElementNameHour(constraint, "CsrFictitiousLoad");
+}
+
 void ConstraintNamer::AreaBalance(unsigned int constraint)
 {
     SetAreaElementNameHour(constraint, "AreaBalance");
