@@ -10,6 +10,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/optimisation/MipDetection.h"
+
 #include "inmemory-modeler.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
@@ -72,7 +73,7 @@ BOOST_FIXTURE_TEST_CASE(modeler_data_with_bool_variable_returns_true, MipDetecti
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_integer_returns_true,
                         MipDetectionFixture)
 {
-    auto modelerData = std::make_unique<ModelerData>();
+    ModelerData modelerData;
 
     createModel("test_model",
                 {},
@@ -84,15 +85,15 @@ BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_integer_retu
     SystemBuilder systemBuilder;
     systemBuilder.withId("test_system");
     systemBuilder.withComponents(std::move(components));
-    modelerData->system = std::make_unique<System>(systemBuilder.build());
+    modelerData.system = std::make_unique<System>(systemBuilder.build());
 
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(modelerData.get()), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(&modelerData), true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_bool_returns_true,
                         MipDetectionFixture)
 {
-    auto modelerData = std::make_unique<ModelerData>();
+    ModelerData modelerData;
 
     createModel("test_model",
                 {},
@@ -104,14 +105,14 @@ BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_bool_returns
     SystemBuilder systemBuilder;
     systemBuilder.withId("test_system");
     systemBuilder.withComponents(std::move(components));
-    modelerData->system = std::make_unique<System>(systemBuilder.build());
+    modelerData.system = std::make_unique<System>(systemBuilder.build());
 
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(modelerData.get()), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(&modelerData), true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_only_float_variables_returns_false, MipDetectionFixture)
 {
-    auto modelerData = std::make_unique<ModelerData>();
+    ModelerData modelerData;
 
     createModel("test_model",
                 {},
@@ -124,9 +125,9 @@ BOOST_FIXTURE_TEST_CASE(modeler_data_with_only_float_variables_returns_false, Mi
     SystemBuilder systemBuilder;
     systemBuilder.withId("test_system");
     systemBuilder.withComponents(std::move(components));
-    modelerData->system = std::make_unique<System>(systemBuilder.build());
+    modelerData.system = std::make_unique<System>(systemBuilder.build());
 
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(modelerData.get()), false);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(&modelerData), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
