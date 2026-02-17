@@ -183,10 +183,6 @@ public:
     const Matrix<>& RHSTimeSeries() const;
     Matrix<>& RHSTimeSeries();
 
-    bool hasAllWeightedLinksOnLayer(size_t layerID);
-
-    bool hasAllWeightedClustersOnLayer(size_t layerID);
-
     //! \name Links
     //@{
     /*!
