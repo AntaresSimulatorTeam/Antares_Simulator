@@ -66,7 +66,5 @@ private:
     std::vector<OptimComponent> optimComponents_;
     std::vector<unsigned> constraintStartLine_;
     LinearProblemApi::ILinearProblem& linearProblem_;
-    const LinearProblemApi::ILinearProblemData* data_;
-    const ScenarioGroupRepository* scenarioGroupRepository_;
 };
 } // namespace Antares::Optimisation
