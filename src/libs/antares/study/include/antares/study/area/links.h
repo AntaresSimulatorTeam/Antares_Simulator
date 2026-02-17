@@ -97,8 +97,6 @@ public:
     void markAsModified() const;
     //@}
 
-    bool isVisibleOnLayer(const size_t& layerID) const;
-
     Yuni::String getName() const;
 
     bool isLinkPhysical() const;

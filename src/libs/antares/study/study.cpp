@@ -25,7 +25,6 @@
 #include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/scenario-builder/updater.hxx"
-#include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
@@ -50,7 +49,6 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver):
-    LayerData(0, true),
     simulationComments(*this),
     areas(*this),
     pQueueService(std::make_shared<Yuni::Job::QueueService>()),
@@ -72,13 +70,6 @@ Study::Study(bool forTheSolver):
     preproSolarCorrelation.timeSeries = timeSeriesSolar;
     preproWindCorrelation.timeSeries = timeSeriesWind;
     preproHydroCorrelation.timeSeries = timeSeriesHydro;
-
-    // Data related to the GUI
-    if (JIT::usedFromGUI)
-    {
-        uiinfo = new UIRuntimeInfo(*this);
-        uiinfo->reloadAll();
-    }
 }
 
 Study::~Study()
@@ -89,7 +80,6 @@ Study::~Study()
 void Study::clear()
 {
     scenarioRules.reset();
-    FreeAndNil(uiinfo);
 
     // areas
     setsOfAreas.clear();
@@ -150,15 +140,6 @@ void Study::createAsNew()
     // Scenario Builder
     scenarioRulesDestroy();
 
-    // Cache
-    if (JIT::usedFromGUI)
-    {
-        if (not uiinfo)
-        {
-            uiinfo = new UIRuntimeInfo(*this);
-        }
-        uiinfo->reloadAll();
-    }
     // Reduce memory footprint
     reduceMemoryUsage();
 }
@@ -496,13 +477,8 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
         area->resetToDefaultValues();
     }
 
-    if (uiinfo)
-    {
-        uiinfo->reload();
-    }
     return area;
 }
-
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {

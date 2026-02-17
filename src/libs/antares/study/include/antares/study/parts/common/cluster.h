@@ -66,12 +66,6 @@ public:
     virtual void markAsModified() const = 0;
 
     /*!
-    ** \brief Check wether the cluster is visible in a layer (it's parent area is visible in the
-    *layer)
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const;
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI

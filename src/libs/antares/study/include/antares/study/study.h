@@ -23,7 +23,6 @@
 #include "binding_constraint/BindingConstraint.h"
 #include "fwd.h"
 #include "header.h"
-#include "layerdata.h"
 #include "parameters.h"
 #include "progression/progression.h"
 #include "sets.h"
@@ -35,9 +34,7 @@ namespace Antares::Data
 ** \brief Antares Study
 */
 
-class UIRuntimeInfo;
-
-class Study: public Yuni::NonCopyable<Study>, public LayerData
+class Study: public Yuni::NonCopyable<Study>
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -200,7 +197,6 @@ public:
     // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the
     // default value
     Area* areaAdd(const AreaName& name, bool update = false);
-
 
     //! \name Time-series
     //@{
@@ -486,13 +482,6 @@ public:
     ** These informations are only needed when a study is processed.
     */
     StudyRuntimeInfos runtime;
-
-    // Antares::Solver::Variable::State* state;
-
-    /*!
-    ** \brief Specific data related to the User Interface
-    */
-    UIRuntimeInfo* uiinfo = nullptr;
 
     /*!
     ** \brief The file extension for file within the input ('txt' or 'csv')

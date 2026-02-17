@@ -146,7 +146,6 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& file
     return true;
 }
 
-
 } // anonymous namespace
 
 bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
@@ -424,7 +423,6 @@ void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
       });
 }
 
-
 bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount) const
 {
     bool ret = true;
@@ -453,7 +451,6 @@ void AreaList::markAsModified() const
 {
     each([](const Data::Area& area) { area.markAsModified(); });
 }
-
 
 static void readAdqPatchMode(Study& study, Area& area)
 {
@@ -578,18 +575,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         fs::path folder = study.folderInput / "links" / area.id.c_str();
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
-    }
-
-    // TODO remove with GUI
-    if (JIT::usedFromGUI)
-    {
-        if (!area.ui)
-        {
-            area.ui = std::make_unique<AreaUI>();
-        }
-
-        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP << "ui.ini";
-        ret = area.ui->loadFromFile(buffer) && ret;
     }
 
     bool averageTs = (study.usedByTheSolver && study.parameters.derated);
@@ -969,27 +954,6 @@ Area* AreaList::findFromName(const AreaName& name)
     AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
     return (i != this->areas.end()) ? i->second : nullptr;
-}
-
-Area* AreaList::findFromPosition(const int x, const int y) const
-{
-    if (!this->areas.empty())
-    {
-        auto end = this->areas.rend();
-        double nearestDistance = 5;
-        Area* nearestItem = nullptr;
-        for (auto i = this->areas.rbegin(); i != end; ++i)
-        {
-            auto lastArea = i->second;
-            if (lastArea->ui && std::abs(lastArea->ui->x - x) < nearestDistance
-                && std::abs(lastArea->ui->y - y) < nearestDistance)
-            {
-                nearestItem = lastArea;
-            }
-        }
-        return nearestItem;
-    }
-    return nullptr;
 }
 
 const Area* AreaList::findFromName(const AreaName& name) const

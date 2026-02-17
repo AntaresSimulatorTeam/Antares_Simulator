@@ -6,7 +6,6 @@
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
-#include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
 
 #include "include/antares/study/fwd.h"
@@ -77,10 +76,6 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
         }
     }
 
-    // Load the layer data
-    fs::path layersPath = path / "layers" / "layers.ini";
-    loadLayers(layersPath);
-
     return true;
 }
 
@@ -117,13 +112,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     // After two consecutive load, some scenario builder data
     // may still exist.
     scenarioRulesDestroy();
-
-    if (JIT::usedFromGUI && uiinfo)
-    {
-        // Post-processing when loaded from the User-Interface
-        uiinfo->reload();
-        uiinfo->reloadBindingConstraints();
-    }
 
     // calendar update
     if (usedByTheSolver)

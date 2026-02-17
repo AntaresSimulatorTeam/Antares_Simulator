@@ -21,7 +21,6 @@
 
 #include "constants.h"
 #include "links.h"
-#include "ui.h"
 
 namespace Antares::Data
 {
@@ -68,27 +67,7 @@ public:
     ** \brief Destructor
     */
     ~Area();
-
     //@}
-
-    // !\name isVisibleOnLayer
-    //@{
-    /*!
-    ** \brief check visibility on layer
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const
-    {
-        if (ui == nullptr)
-        {
-            return false;
-        }
-
-        std::vector<size_t>& layerList = ui->mapLayersVisibilityList;
-        std::vector<size_t>::iterator layerPosition = std::find(layerList.begin(),
-                                                                layerList.end(),
-                                                                layerID);
-        return layerPosition != layerList.end();
-    }
 
     //! \name Links
     //@{
@@ -280,12 +259,6 @@ public:
     uint filterYearByYear = filterAll;
     //@}
 
-    //! \name UI
-    //@{
-    //! Information for the UI
-    std::unique_ptr<AreaUI> ui;
-    //@}
-
     //! \name Dynamic
     //@{
     /*!
@@ -429,7 +402,6 @@ public:
     */
     bool loadListFromFile(const std::filesystem::path& filename);
 
-
     /*!
     ** \brief Write the list of all links into a file
     **
@@ -475,8 +447,6 @@ public:
     ** \brief Find an area from its name
     */
     Area* findFromName(const AreaName& name);
-
-    Area* findFromPosition(const int x, const int y) const;
 
     /*!
     ** \brief Find an area from its name (const)
@@ -666,7 +636,6 @@ bool AreaLinksLoadFromFolder(Study& s,
                              AreaList* l,
                              Area* area,
                              const std::filesystem::path& folder);
-
 
 /*!
 ** \brief Clear all interconnection from an area
