@@ -297,7 +297,7 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
         return false;
     }
 
-    if (JIT::usedFromGUI or pMode == modeAnnual)
+    if (pMode == modeAnnual)
     {
         annual.clear();
         annual.resize(study.areas.size(), study.areas.size());
@@ -310,7 +310,7 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
         }
     }
 
-    if (JIT::usedFromGUI or pMode == modeMonthly)
+    if (pMode == modeMonthly)
     {
         monthly.resize(12);
         for (uint i = 0; i < 12; ++i)
@@ -349,27 +349,9 @@ void Correlation::reset(Study& study)
     clear();
 
     pMode = modeAnnual;
-    if (JIT::usedFromGUI)
-    {
-        // Reset
-        annual.clear();
-        annual.resize(study.areas.size(), study.areas.size());
-        annual.fillUnit();
-
-        // Preparing the monthly correlation matrices
-        monthly.resize(12);
-        for (int i = 0; i < 12; ++i)
-        {
-            monthly[i].resize(study.areas.size(), study.areas.size());
-            monthly[i].fillUnit();
-        }
-    }
-    else
-    {
-        annual.clear();
-        annual.resize(study.areas.size(), study.areas.size());
-        annual.fillUnit();
-    }
+    annual.clear();
+    annual.resize(study.areas.size(), study.areas.size());
+    annual.fillUnit();
 }
 
 void Correlation::clear()
@@ -386,17 +368,6 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
     {
         // The loading has failed - fallback
         pMode = modeAnnual;
-        if (JIT::usedFromGUI)
-        {
-            // Preparing the monthly correlation matrices
-            monthly.resize(12);
-            for (int i = 0; i < 12; ++i)
-            {
-                monthly[i].resize(study.areas.size(), study.areas.size());
-                monthly[i].fillUnit();
-            }
-        }
-
         annual.clear();
         annual.resize(study.areas.size(), study.areas.size());
         annual.fillUnit();
