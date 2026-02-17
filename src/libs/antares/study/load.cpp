@@ -222,7 +222,7 @@ void Study::loadModelerComponents()
         if (data.has_value())
         {
             // Move the ModelerData out of the optional to avoid copying
-            // (ModelerData contains unique_ptr members and is not copyable).
+            // (ModelerData contains unique_ptr members and is move-only: it can be moved but not copied).
             modelerInput_ = std::make_unique<Solver::ModelerData>(std::move(*data));
             checkModelerDataCompatibility();
         }
