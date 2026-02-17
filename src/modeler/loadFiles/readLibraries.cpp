@@ -177,11 +177,9 @@ std::optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>> load
     {
         const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
         updateLibrariesWithOptimConfig(ymlLibraries.value(), ymlOptimConfig);
-        // Avoid ambiguous brace-init by explicitly creating the optional
-        // using std::make_optional/std::make_pair.
-        return std::make_optional(
-          std::make_pair(convertIntoSystemLibs(ymlLibraries.value()),
-                         convertResolutionMode(ymlOptimConfig.resolution_mode)));
+        return std::make_optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>>(
+          convertIntoSystemLibs(ymlLibraries.value()),
+                         convertResolutionMode(ymlOptimConfig.resolution_mode));
     }
     return {};
 }
