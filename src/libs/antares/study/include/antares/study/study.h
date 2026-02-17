@@ -194,9 +194,8 @@ public:
     ** \param name The name of the new area
     ** \return A pointer to a new area, or NULL if the operation failed
     */
-    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the
     // default value
-    Area* areaAdd(const AreaName& name, bool update = false);
+    Area* areaAdd(const AreaName& name);
 
     //! \name Time-series
     //@{

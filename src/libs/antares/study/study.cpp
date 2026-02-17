@@ -423,7 +423,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     }
 }
 
-Area* Study::areaAdd(const AreaName& name, bool updateMode)
+Area* Study::areaAdd(const AreaName& name)
 {
     if (name.empty())
     {
