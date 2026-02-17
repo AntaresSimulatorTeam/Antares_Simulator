@@ -85,6 +85,8 @@ public:
     }
 
     void addComponentConnection(const std::string localPortId, ConnectionEnd&& connection);
+    const std::optional<AreaConnection>& areaConnectionAtPort(const std::string& portId) const;
+
     std::vector<ConnectionEnd> componentConnectionsViaPort(const std::string& portId) const;
 
     Expressions::Nodes::Node* nodeAtPortField(const std::string& portId,
@@ -105,6 +107,10 @@ public:
     }
 
 private:
+    void checkPortFieldDefinitionExists(const std::string& portName,
+                                        const std::string& fieldName,
+                                        const std::string& errMsgPrefix) const;
+
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);

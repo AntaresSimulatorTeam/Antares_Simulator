@@ -206,6 +206,20 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
     }
 };
 
+std::string findValue(const std::string& key, const YAML::Node& node)
+{
+    std::string value;
+    for (auto& field: node["area-connection"])
+    {
+        value = field[key].as<std::string>("");
+        if (!value.empty())
+        {
+            return value;
+        }
+    }
+    return value; // Should be empty
+}
+
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
@@ -223,15 +237,14 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         }
         if (node["area-connection"].IsDefined())
         {
-            if (node["area-connection"].size() != 1)
+            if (node["area-connection"].size() == 0 || node["area-connection"].size() > 3)
             {
-                // Must have exactly one area connection field definition
                 return false;
             }
-            for (const auto& field: node["area-connection"])
-            {
-                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
-            }
+            rhs.area_connection.injection = findValue("injection-field", node);
+            rhs.area_connection.spillage_bound = findValue("spillage-bound", node);
+            rhs.area_connection.unsupplied_energy_bound = findValue("unsupplied-energy-bound",
+                                                                    node);
         }
         return true;
     }

@@ -7,6 +7,7 @@
 #include "ConstraintGroup.h"
 #include "FictitiousLoad.h"
 #include "FlowDissociation.h"
+#include "MaxUnsuppliedEnergy.h"
 #include "ShortTermStorageLevel.h"
 
 class Group1 final: public ConstraintGroup
@@ -19,10 +20,9 @@ public:
 private:
     AreaBalanceData GetAreaBalanceData();
     FictitiousLoadData GetFictitiousLoadData();
+    MaxUnsupEnergyData GetMaxUnsupEnergyData();
     ShortTermStorageData GetShortTermStorageData();
-
     ShortTermStorageCumulativeConstraintData GetShortTermStorageCumulativeConstraintData();
-
     FlowDissociationData GetFlowDissociationData();
     BindingConstraintHourData GetBindingConstraintHourData();
 };

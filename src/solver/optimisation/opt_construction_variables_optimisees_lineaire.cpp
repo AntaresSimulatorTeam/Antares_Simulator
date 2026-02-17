@@ -128,16 +128,16 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 }
             }
 
-            variableManager.PositiveUnsuppliedEnergy(pays, pdt) = NombreDeVariables;
+            variableManager.UnsuppliedEnergy(pays, pdt) = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            variableNamer.PositiveUnsuppliedEnergy(NombreDeVariables);
+            variableNamer.UnsuppliedEnergy(NombreDeVariables);
             NombreDeVariables++;
 
-            variableManager.NegativeUnsuppliedEnergy(pays, pdt) = NombreDeVariables;
+            variableManager.Spillage(pays, pdt) = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-            variableNamer.NegativeUnsuppliedEnergy(NombreDeVariables);
+            variableNamer.Spillage(NombreDeVariables);
             NombreDeVariables++;
         }
 

@@ -10,11 +10,17 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/antares/constants.h"
+#include "antares/expressions/nodes/ExpressionsNodes.h"
+#include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/study/study.h"
+#include "antares/writer/in_memory_writer.h"
 
 #include "in-memory-study.h"
 #include "singleProblemGetterImpl.h"
 
+using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::Optimisation;
+using namespace Antares::Expressions::Nodes;
 constexpr double EPSILON = 1.e-6;
 
 std::size_t findIndex(const std::vector<std::string>& v, const std::string& value)
@@ -84,17 +90,18 @@ BOOST_AUTO_TEST_SUITE(in_memory_check_problem_contents)
 BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
 {
     auto study = buildStudy(true, false);
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     const ConstantDataFromAntares constantData = getter.getConstantData();
-    // 504 = 3*168, 3 sets of variables
-    // unsupplied energy
-    // spilled energy
-    // dispatchable production
+    // 504 = 3*168, 3 sets of variables :
+    // - unsupplied energy
+    // - spilled energy
+    // - dispatchable production
     BOOST_CHECK_EQUAL(constantData.VariablesCount, 504);
-    // 336 = 2*168
-    // area balance
-    // fictive loads
-    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 336);
+    // 336 = 3*168 : 3 hourly constraints
+    // - area balance
+    // - fictive loads
+    // - Max unsupplied energy
+    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 504);
 
     const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
                                               "PositiveUnsuppliedEnergy::area<area>::hour<0>");
@@ -132,30 +139,31 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(firstWeekData.Xmin[unsuppliedVariable], 0.);
     BOOST_CHECK_EQUAL(firstWeekData.Xmin[spilledVariable], 0.);
 
+    double infinity = 1.e80;
     BOOST_CHECK_EQUAL(firstWeekData.Xmax[dispatchableVariable], 102.);
-    BOOST_CHECK_EQUAL(firstWeekData.Xmax[unsuppliedVariable],
-                      1.e-5); // default value when there is no residual load
-    BOOST_CHECK_EQUAL(firstWeekData.Xmax[spilledVariable], 1.e80); // infinite
+    BOOST_CHECK_EQUAL(firstWeekData.Xmax[unsuppliedVariable], infinity);
+    BOOST_CHECK_EQUAL(firstWeekData.Xmax[spilledVariable], infinity);
 }
 
 BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
 {
     auto study = buildStudy(false, true);
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     const ConstantDataFromAntares constantData = getter.getConstantData();
-    // Total 1008
-    // 168 unsupplied energy
-    // 168 spilled energy
-    // 168 hydro level
-    // 168 hydro prod
-    // 168 overflow
+    // Total variable : 1008
+    // - 168 unsupplied energy
+    // - 168 spilled energy
+    // - 168 hydro level
+    // - 168 hydro prod
+    // - 168 overflow
     BOOST_CHECK_EQUAL(constantData.VariablesCount, 840);
-    // Total 505
-    // 168 area balance
-    // 168 fictive loads
-    // 168 hydro level
-    // 1 hydro power
-    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 505);
+    // Total constaints : 673
+    // - 168 area balance
+    // - 168 fictive loads
+    // - 168 max unsupplied energy
+    // - 168 hydro level
+    // - 1 hydro power
+    BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 673);
 
     const auto hydroLevelVariable = findIndex(constantData.VariablesMeaning,
                                               "HydroLevel::area<area>::hour<0>");
@@ -212,7 +220,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks)
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
 
-    const Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 3 * 2); // (3 years) x (2 weeks)
 
@@ -237,7 +245,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year)
     // Disable year 1 in the playlist
     study->parameters.yearsFilter[1] = false;
 
-    const Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 2); // (2 years) x (2 weeks), one year is disabled
 
@@ -262,7 +270,7 @@ BOOST_AUTO_TEST_CASE(three_years_two_weeks_one_disabled_year_partial_year)
     // Disable year 1 in the playlist
     study->parameters.yearsFilter[1] = false;
 
-    const Implementation::SingleProblemGetter getter(std::move(study));
+    const Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     auto problem_ids = getter.getProblemIds();
     BOOST_REQUIRE_EQUAL(problem_ids.size(), 2 * 1); // (2 years) x (1 week), one year is disabled
 
@@ -289,7 +297,7 @@ BOOST_AUTO_TEST_CASE(single_link_ntc_ts_numbers)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     // Erase TS numbers for repeatability (no randomness)
     link->timeseriesNumbers.reset(5);
@@ -323,7 +331,7 @@ BOOST_AUTO_TEST_CASE(single_link_structure_files)
     auto link = AreaAddLinkBetweenAreas(a1, a2);
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -372,7 +380,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_directory_structure)
     settingsFile << "general.mode = 0\n";
     settingsFile.close();
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -397,7 +405,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_area_names)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -422,7 +430,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_links_content)
 
     auto study = std::move(builder.study);
     study->initializeRuntimeInfos();
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -456,7 +464,7 @@ BOOST_AUTO_TEST_CASE(about_the_study_parameters_file)
     settingsFile << "general.mode = 0\n";
     settingsFile.close();
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
 
     auto output_dir = std::filesystem::temp_directory_path() / "study" / "output";
     getter.writeStudyDescriptionFiles(output_dir);
@@ -475,7 +483,7 @@ BOOST_AUTO_TEST_CASE(weeks_independent_no_reservoir_management)
     // Test case: No areas with reservoir management
     // Expected: weeks are independent (returns true)
     auto study = buildStudy(true, false);
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
 }
 
@@ -488,7 +496,7 @@ BOOST_AUTO_TEST_CASE(weeks_independent_with_heuristic_and_no_leeway)
     area->hydro.useHeuristicTarget = true;
     area->hydro.useLeeway = false;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
 }
 
@@ -501,7 +509,7 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_with_leeway)
     area->hydro.useHeuristicTarget = true;
     area->hydro.useLeeway = true;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
@@ -514,7 +522,7 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_without_heuristic_target)
     area->hydro.useHeuristicTarget = false;
     area->hydro.useLeeway = false;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
@@ -527,7 +535,7 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_with_both_conditions_false)
     area->hydro.useHeuristicTarget = false;
     area->hydro.useLeeway = true;
 
-    Implementation::SingleProblemGetter getter(std::move(study));
+    Implementation::SingleProblemGetter getter({std::move(study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
 
@@ -582,7 +590,7 @@ BOOST_AUTO_TEST_CASE(weeks_independent_multiple_areas_all_compliant)
     area2->hydro.useHeuristicTarget = true;
     area2->hydro.useLeeway = false;
 
-    Implementation::SingleProblemGetter getter(std::move(builder.study));
+    Implementation::SingleProblemGetter getter({std::move(builder.study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), true);
 }
 
@@ -639,8 +647,190 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_multiple_areas_one_non_compliant)
     area2->hydro.useHeuristicTarget = true;
     area2->hydro.useLeeway = true;
 
-    Implementation::SingleProblemGetter getter(std::move(builder.study));
+    Implementation::SingleProblemGetter getter({std::move(builder.study), nullptr});
     BOOST_CHECK_EQUAL(getter.areWeeksIndependent(), false);
 }
+BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE(WithModelerData)
 
+ModelerData OneParameterOneVariableOneConstraint()
+{
+    std::vector<Model> models;
+    //---
+    std::vector<ModelerStudy::SystemModel::Variable> variables;
+    Expressions::Registry<Node> lb_registry;
+    auto* lb = lb_registry.create<LiteralNode>(0);
+    Expressions::NodeRegistry lb_nodeRegistry(lb, (std::move(lb_registry)));
+    Expressions::Registry<Node> ub_registry;
+    auto* ub = ub_registry.create<LiteralNode>(55);
+    Expressions::NodeRegistry ub_nodeRegistry(ub, (std::move(ub_registry)));
+
+    ModelerStudy::SystemModel::Variable x("x",
+                                          Expression("0", std::move(lb_nodeRegistry)),
+                                          Expression("55", std::move(ub_nodeRegistry)),
+                                          ValueType::FLOAT,
+                                          TimeDependent::NO,
+                                          ScenarioDependent::NO,
+                                          Config::Location::MASTER_AND_SUBPROBLEMS);
+    variables.push_back(std::move(x));
+    //---
+    std::vector<Constraint> constraints;
+    Expressions::Registry<Node> constraint_registry;
+    auto* x_node = constraint_registry
+                     .create<VariableNode>("x", 0, VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    auto* thirteen = constraint_registry.create<LiteralNode>(13.);
+
+    auto* constraint_node = constraint_registry
+                              .create<Expressions::Nodes::LessThanOrEqualNode>(x_node, thirteen);
+    Expressions::NodeRegistry constraint_nodeRegistry(constraint_node,
+                                                      (std::move(constraint_registry)));
+
+    constraints.emplace_back("constraint",
+                             Expression("x < 13", std::move(constraint_nodeRegistry)),
+                             Config::Location::MASTER_AND_SUBPROBLEMS);
+    auto modelWithParameters = ModelBuilder()
+                                 .withId("model")
+                                 .withParameters(
+                                   {Parameter{"P1", TimeDependent::NO, ScenarioDependent::NO}})
+                                 .withVariables(std::move(variables))
+                                 .withConstraints(std::move(constraints))
+                                 .build();
+    models.push_back(std::move(modelWithParameters));
+    //---
+    std::vector<Library> libraries;
+    libraries.emplace_back(
+      LibraryBuilder().withId("library").withModels(std::move(models)).build());
+    std::map<std::string, ParameterTypeAndValue> parameterValues = {
+      {"P1",
+       {.id = "id", .type = VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, .value = "11.03"}}};
+
+    //---
+    std::vector<Component> components;
+    components.emplace_back(ComponentBuilder()
+                              .withId("component")
+                              .withIndex(0)
+                              .withModel(&libraries.at(0).Models().at("model"))
+                              .withParameterValues(parameterValues)
+                              .withScenarioGroupId("scenario_group")
+                              .build());
+    auto system = std::make_unique<ModelerStudy::SystemModel::System>(
+      SystemBuilder().withId("system").withComponents(std::move(components)).build());
+    std::unique_ptr<LinearProblemApi::ILinearProblemData>
+      linearProblemData = std::make_unique<LinearProblemDataImpl::LinearProblemData>(
+        LinearProblemDataImpl::DataSeriesRepository{});
+    //---
+    std::unique_ptr<LinearProblemApi::IScenario>
+      scenario = std::make_unique<LinearProblemDataImpl::Scenario>("scenario_group");
+    ScenarioGroupRepository scenarioGroupRepository;
+    scenarioGroupRepository.addScenario("scenario_group", std::move(scenario));
+    //---
+    return {
+      .libraries = libraries,
+      .system = (std::move(system)),
+      .dataSeries = std::move(linearProblemData),
+      .scenarioGroupRepository = std::move(scenarioGroupRepository),
+      .resolutionMode = ResolutionMode::BENDERS_DECOMPOSITION,
+      .bendersDecomposition = {},
+    };
+}
+
+void checkFiles(const std::map<std::string, std::string, std::less<>>& outputs)
+{
+    // the study has 4 sub-problems mps (2 years x 2 weeks) + structure.txt + master.mps
+    BOOST_CHECK_EQUAL(outputs.size(), 6);
+    // the master has one variable and one constraint
+
+    static constexpr std::string_view master = R"(* Antares Simulator MPSGenerator
+* Number of variables: 1
+* Number of constraints: 1
+NAME master
+ROWS
+    N  OBJ
+    L  component.constraint
+COLUMNS
+    component.x  component.constraint  1
+RHS
+    RHS1  component.constraint  13
+RANGES
+BOUNDS
+    UP BND1 component.x 55
+ENDATA
+)";
+    BOOST_CHECK_EQUAL(outputs.at("master.mps"), master);
+
+    static constexpr std::string_view structure = R"(master	component.x	0
+problem-1-1--optim-nb-1	component.x	1008
+problem-1-2--optim-nb-1	component.x	1008
+problem-2-1--optim-nb-1	component.x	1008
+problem-2-2--optim-nb-1	component.x	1008
+)";
+    BOOST_CHECK_EQUAL(outputs.at("structure.txt"), structure);
+}
+
+void checkMasterProblem(const Implementation::SingleProblemGetter& getter)
+{
+    auto [masterPb, _] = getter.getMasterProblem();
+    BOOST_CHECK_EQUAL(masterPb->constraintCount(), 1);
+    BOOST_CHECK_EQUAL(masterPb->variableCount(), 1);
+    const auto& x = masterPb->getVariables().at(0);
+    BOOST_CHECK_EQUAL(x->getName(), "component.x");
+    BOOST_CHECK_EQUAL(x->isInteger(), false);
+    BOOST_CHECK_EQUAL(x->getLb(), 0);
+    BOOST_CHECK_EQUAL(x->getUb(), 55);
+
+    const auto& c = masterPb->getConstraints().at(0);
+    BOOST_CHECK_EQUAL(c->getName(), "component.constraint");
+    BOOST_CHECK_EQUAL(c->getLb(), -masterPb->infinity());
+    BOOST_CHECK_EQUAL(c->getUb(), 13);
+    BOOST_CHECK_EQUAL(c->getCoefficient(x.get()), 1);
+}
+
+void checkSubProblems(Implementation::SingleProblemGetter& getter)
+{
+    for (auto id: getter.getProblemIds())
+    {
+        auto weekly = getter.getWeeklyProblem(id);
+        // the last variable is the one from the modeler
+        const auto& x = weekly->getVariables().back();
+        BOOST_CHECK_EQUAL(x->getName(), "component.x");
+        BOOST_CHECK_EQUAL(x->isInteger(), false);
+        BOOST_CHECK_EQUAL(x->getLb(), 0);
+        BOOST_CHECK_EQUAL(x->getUb(), 55);
+        // the last constraint is the one from the modeler
+        const auto& c = weekly->getConstraints().back();
+        BOOST_CHECK_EQUAL(c->getName(), "component.constraint");
+        BOOST_CHECK_EQUAL(c->getLb(), -weekly->infinity());
+        BOOST_CHECK_EQUAL(c->getUb(), 13);
+        BOOST_CHECK_EQUAL(c->getCoefficient(x.get()), 1);
+    }
+}
+
+void checkProblems(Implementation::SingleProblemGetter& getter)
+{
+    checkMasterProblem(getter);
+    checkSubProblems(getter);
+}
+
+BOOST_AUTO_TEST_CASE(simple_model_one_component)
+{
+    StudyBuilder builder;
+
+    auto study = buildStudy(true, true);
+
+    study->setModelerData(std::make_unique<ModelerData>(OneParameterOneVariableOneConstraint()));
+    auto queueService = std::make_shared<Yuni::Job::QueueService>();
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(Data::ResultFormat::inMemory,
+                                            "",
+                                            queueService,
+                                            durationCollector);
+    Implementation::SingleProblemGetter getter({std::move(study), resultWriter});
+    //-- check mps and structure.txt
+    getter.printProblems();
+    auto* writer = dynamic_cast<InMemoryWriter*>(resultWriter.get());
+    auto& outputs = writer->getMap();
+    checkFiles(outputs);
+    //-- check problem in memory
+    checkProblems(getter);
+}
 BOOST_AUTO_TEST_SUITE_END()

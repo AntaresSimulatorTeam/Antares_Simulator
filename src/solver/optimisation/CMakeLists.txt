@@ -68,6 +68,9 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
 
+        include/antares/solver/optimisation/MipDetection.h
+        MipDetection.cpp
+
         constraints/ConstraintBuilder.cpp
         include/antares/solver/optimisation/constraints/ConstraintBuilder.h
         constraints/constraint_builder_utils.cpp
@@ -76,6 +79,8 @@ set(RTESOLVER_OPT
         constraints/AreaBalance.cpp
         include/antares/solver/optimisation/constraints/FictitiousLoad.h
         constraints/FictitiousLoad.cpp
+        include/antares/solver/optimisation/constraints/MaxUnsuppliedEnergy.h
+        constraints/MaxUnsuppliedEnergy.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageLevel.h
         constraints/ShortTermStorageLevel.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h

@@ -37,8 +37,9 @@ private:
 class BendersDecompositionWriter
 {
 public:
-    BendersDecompositionWriter(const BendersDecomposition& bd);
+    explicit BendersDecompositionWriter(const BendersDecomposition& bd);
     void write(std::ostream& os) const;
+    std::string getBendersDecomposition() const;
 
 private:
     const BendersDecomposition& bd_;

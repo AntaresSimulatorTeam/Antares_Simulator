@@ -20,7 +20,7 @@ void HourlyCSRProblem::setBoundsOnENS()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.PositiveUnsuppliedEnergy(area, triggeredHour);
+            int var = variableManager_.UnsuppliedEnergy(area, triggeredHour);
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var] = problemeHebdo_->ResultatsHoraires[area]
@@ -50,7 +50,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int var = variableManager_.NegativeUnsuppliedEnergy(area, triggeredHour);
+            int var = variableManager_.Spillage(area, triggeredHour);
 
             problemeAResoudre_.Xmin[var] = -belowThisThresholdSetToZero;
             problemeAResoudre_.Xmax[var] = LINFINI_ANTARES;

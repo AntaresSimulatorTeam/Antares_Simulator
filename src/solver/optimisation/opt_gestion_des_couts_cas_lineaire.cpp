@@ -301,14 +301,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 ProblemeAResoudre->CoutLineaire[var] = LEVEL_COST;
             }
 
-            var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
+            var = variableManager.UnsuppliedEnergy(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
                                                          ->CoutDeDefaillancePositive[pays];
             }
 
-            var = variableManager.NegativeUnsuppliedEnergy(pays, pdtJour);
+            var = variableManager.Spillage(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = problemeHebdo

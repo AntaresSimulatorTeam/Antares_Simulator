@@ -214,19 +214,16 @@ int& VariableManager::LayerStorage(unsigned area, unsigned layer)
     return NumeroDeVariableDeTrancheDeStock_[area][layer];
 }
 
-int& VariableManager::PositiveUnsuppliedEnergy(unsigned int index,
-                                               unsigned int hourInWeek,
-                                               int offset,
-                                               int delta)
+int& VariableManager::UnsuppliedEnergy(unsigned int index,
+                                       unsigned int hourInWeek,
+                                       int offset,
+                                       int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDefaillancePositive[index];
 }
 
-int& VariableManager::NegativeUnsuppliedEnergy(unsigned int index,
-                                               unsigned int hourInWeek,
-                                               int offset,
-                                               int delta)
+int& VariableManager::Spillage(unsigned int index, unsigned int hourInWeek, int offset, int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDefaillanceNegative[index];
