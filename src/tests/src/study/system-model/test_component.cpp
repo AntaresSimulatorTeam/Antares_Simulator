@@ -377,13 +377,10 @@ BOOST_AUTO_TEST_CASE(fail_when_connecting_area_to_undefined_field)
                        .build();
 
     BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACNoDef").has_value(), false);
-    BOOST_CHECK_EXCEPTION(
-      component.addAreaConnection("portACNoDef", "area1"),
-      std::invalid_argument,
-      checkMessage("Cannot connect area 'area1' to port 'portACNoDef' of component 'myComponent': "
-                   "port field 'field2' is not defined in the component's model 'myModel'"));
-    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACNoDef").has_value(), false);
-    BOOST_CHECK(component.portToAreaConnections().empty());
+    BOOST_CHECK_NO_THROW(component.addAreaConnection("portACNoDef", "area1"));
+    BOOST_CHECK_EQUAL(component.areaConnectedToPort("portACNoDef").has_value(),
+                      true); // because injection field is defined
+    BOOST_CHECK(!component.portToAreaConnections().empty());
 }
 
 BOOST_AUTO_TEST_CASE(fail_when_connecting_thermal_capacity_to_undefined_field)
@@ -529,12 +526,7 @@ BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_fails_because_port_
     // Now checking what we have
     BOOST_CHECK(not component.areaConnectedToPort("balance-port").has_value());
 
-    std::string errMsg = "Cannot connect area 'some-area' to port 'balance-port' of component "
-                         "'my-component': ";
-    errMsg += "port field 'from-area-bound' is not defined in the component's model 'my-model'";
-    BOOST_CHECK_EXCEPTION(component.addAreaConnection("balance-port", "some-area"),
-                          std::invalid_argument,
-                          checkMessage(errMsg));
+    BOOST_CHECK_NO_THROW(component.addAreaConnection("balance-port", "some-area"));
 }
 
 BOOST_AUTO_TEST_CASE(connecting_area_to_multiple_fields_port_is_successful)

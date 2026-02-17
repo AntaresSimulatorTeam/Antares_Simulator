@@ -6,6 +6,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/study/system-model/component.h>
+#include "antares/logs/logs.h"
 using namespace Antares::Expressions::Nodes;
 
 std::string toLowerCase(const std::string& str)
@@ -167,12 +168,11 @@ void Component::checkPortFieldDefinitionExists(const std::string& portName,
         PortFieldKey key(portName, fieldName);
         if (!getModel()->PortFieldDefinitions().contains(key))
         {
-            std::string errMsg = errMsgPrefix
-                                 + fmt::format(
-                                   "port field '{}' is not defined in the component's model '{}'",
-                                   fieldName,
-                                   getModel()->Id());
-            throw std::invalid_argument(errMsg);
+            logs.warning()
+              << errMsgPrefix
+              << fmt::format("port field '{}' is not defined in the component's model '{}'",
+                             fieldName,
+                             getModel()->Id());
         }
     }
 }
@@ -248,9 +248,8 @@ void Component::addThermalCapacityConnection(const std::string& portId,
                                      clusterId);
         throw std::invalid_argument(msg);
     }
-    auto loweredAreaId = areaId;
-    boost::algorithm::to_lower(loweredAreaId);
-    portToThermalConnections_.try_emplace(portId, ThermalComponent{loweredAreaId, clusterId});
+
+    portToThermalConnections_.try_emplace(portId, ThermalComponent{toLowerCase(areaId), clusterId});
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const

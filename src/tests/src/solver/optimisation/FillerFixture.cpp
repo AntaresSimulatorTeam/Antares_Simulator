@@ -65,9 +65,9 @@ void FillerFixture::addLegacyVariables(const std::vector<std::string>& variableN
     }
 }
 
-void FillerFixture::setUpModelerVariables(unsigned int ts_start,
-                                          unsigned int ts_end,
-                                          OptimEntityContainer& optimEntityContainer)
+void FillerFixture::addModelerVariables(unsigned int ts_start,
+                                        unsigned int ts_end,
+                                        OptimEntityContainer& optimEntityContainer)
 {
     const Dimensions dim({}, IntegerInterval(ts_start, ts_end));
     for (const auto& component: modelerData->system->Components())
@@ -124,28 +124,13 @@ void FillerFixture::addEmptyConstraints(std::vector<std::string>& constraintName
     }
 }
 
-void FillerFixture::setUpLegacyLp(std::vector<std::string>& constraintNames,
-                                  bool useNamedProblems,
-                                  double rhs)
+void FillerFixture::addLegacyLp(std::vector<std::string>& constraintNames,
+                                bool useNamedProblems,
+                                double rhs)
 {
     problemeHebdo->NamedProblems = useNamedProblems;
     addEmptyConstraints(constraintNames, useNamedProblems, rhs);
 }
-
-/*void FillerFixture::fillProblemWithAreaConnectionFiller(
-  const FillContext& fillCtx,
-  OptimEntityContainer& optimEntityContainer) const
-{
-    problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
-
-    ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
-                                           optimEntityContainer,
-                                           linearProblemData,
-                                           scenarioGroupRepository);
-    filler.addVariables(fillCtx);
-    filler.addConstraints(fillCtx);
-    filler.addObjectives(fillCtx);
-}*/
 
 void FillerFixture::fillProblemWithThermalCapacityConnectionFiller(
   const FillContext& fillCtx,

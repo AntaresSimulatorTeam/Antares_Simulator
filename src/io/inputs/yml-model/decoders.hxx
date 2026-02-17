@@ -228,8 +228,10 @@ inline bool convertConnectionField(const Node& node,
         for (const auto& field: node[connectionName])
         {
             auto it = std::ranges::find_if(fieldNames,
-                                           [&](const FieldMatching& fm)
-                                           { return field[fm.fieldName].IsDefined(); });
+                                           [&](const FieldMatching& fm) {
+                                               return field[fm.fieldName].IsDefined()
+                                                      && !field[fm.fieldName].IsNull();
+                                           });
 
             if (it != fieldNames.end())
             {
@@ -247,8 +249,8 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
     static bool convertAreaConnectionFields(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
+        rhs.area_connection = {};
         std::vector<FieldMatching> areaConnection;
-
         areaConnection.emplace_back("injection-field", rhs.area_connection.injection);
         areaConnection.emplace_back("spillage-bound", rhs.area_connection.spillage_bound);
         areaConnection.emplace_back("unsupplied-energy-bound",
