@@ -179,7 +179,7 @@ std::optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>> load
         updateLibrariesWithOptimConfig(ymlLibraries.value(), ymlOptimConfig);
         return std::make_optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>>(
           convertIntoSystemLibs(ymlLibraries.value()),
-                         convertResolutionMode(ymlOptimConfig.resolution_mode));
+          convertResolutionMode(ymlOptimConfig.resolution_mode));
     }
     return {};
 }
