@@ -243,12 +243,10 @@ main() {
       exit 1
     fi
 
-    if [ "$USE_DOCKER" = true ]; then
-      select_and_build_image || exit 1
-      verify_image_clang_version || exit 1
-      format_with_docker
-      exit 0
-    fi
+    select_and_build_image || exit 1
+    verify_image_clang_version || exit 1
+    format_with_docker
+    exit 0
   fi
 
   # fallback: use local clang-format
