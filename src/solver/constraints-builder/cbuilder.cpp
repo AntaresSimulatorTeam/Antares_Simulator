@@ -319,10 +319,6 @@ bool CBuilder::saveCBuilderToFile(const String& filename) const
     // Study
     mainSection->add("study", pStudy.folder);
 
-    // Tmp
-    /*wxStringToString(pPathTemp->GetValue(), tmp);
-    mainSection->add("temporary", tmp);*/
-
     // Prefix
     mainSection->add("prefix", CB_PREFIX);        // for now, predifined prefix
     mainSection->add("prefix_delete", CB_PREFIX); // for now, predifined prefex
