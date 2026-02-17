@@ -90,7 +90,9 @@ gather_files() {
 # Normalize CRLF -> LF when dos2unix is available
 normalize_line_endings() {
   if command -v dos2unix >/dev/null 2>&1; then
-    printf '%s\n' "${FILES[@]}" | xargs -r -I{} dos2unix "{}" || true
+    # Silence dos2unix output (stdout and stderr). Keep || true so the script doesn't fail if dos2unix
+    # can't process a file (e.g. binary files) or xargs finds nothing.
+    printf '%s\n' "${FILES[@]}" | xargs -r -I{} dos2unix "{}" >/dev/null 2>&1 || true
   fi
 }
 
