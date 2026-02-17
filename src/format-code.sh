@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# Petite wrapper: vérifie la version locale de clang-format et appelle le script d'implémentation.
 # Si clang-format est absent ou a une version différente de REQUIRED_CLANG_FORMAT_VERSION -> erreur.
 
 REQUIRED_CLANG_FORMAT_VERSION="18.1.3"
