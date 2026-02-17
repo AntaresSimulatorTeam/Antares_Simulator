@@ -20,7 +20,7 @@ ARGS=()
 # ---------------------- helpers ----------------------
 usage() {
   cat <<'USAGE'
-Usage: bash src/format-code.sh [--rebuild-image|-r] [files...]
+Usage: bash src/format-code-docker.sh [--rebuild-image|-r] [files...]
 
 Options:
   --rebuild-image, -r   Force rebuild of the clang-format Docker image before formatting
