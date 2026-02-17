@@ -19,8 +19,8 @@ void FictitiousLoad::add(int pdt, int pays)
 
     if (data.DefaillanceNegativeUtiliserHydro[pays])
     {
-        builder.HydProd(pays, -1.0):
-            for (const auto& storage: data.ShortTermStorage[pays])
+        builder.HydProd(pays, -1.0);
+        for (const auto& storage: data.ShortTermStorage[pays])
         {
             builder.ShortTermStorageWithdrawal(storage.clusterGlobalIndex, -1.0);
         }
