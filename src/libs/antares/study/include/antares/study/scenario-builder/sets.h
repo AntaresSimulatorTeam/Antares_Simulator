@@ -59,14 +59,6 @@ public:
     template<class StringT>
     bool loadFromINIFile(const StringT& filename);
 
-#ifdef BUILD_UI
-    /*!
-    ** \brief Save all rulesets into a mere INI file
-    */
-    template<class StringT>
-    bool saveToINIFile(const StringT& filename);
-//@}
-#endif
 
     //! \name Set manipulation
     //@{
@@ -123,10 +115,6 @@ public:
 private:
     //! Load all rulesets into a mere INI file
     bool internalLoadFromINIFile(const AnyString& filename);
-#ifdef BUILD_UI
-    //! Save all rulesets into a mere INI file
-    bool internalSaveToIniFile(const AnyString& filename) const;
-#endif
 
 private:
     //! All available sets, ordered by their lower name

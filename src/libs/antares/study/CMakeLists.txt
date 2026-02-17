@@ -170,8 +170,6 @@ set(SRC_STUDY_BINDING_CONSTRAINT
         binding_constraint/BindingConstraintsRepository.cpp
         binding_constraint/BindingConstraintLoader.cpp
         include/antares/study/binding_constraint/BindingConstraintLoader.h
-        binding_constraint/BindingConstraintSaver.cpp
-        include/antares/study/binding_constraint/BindingConstraintSaver.h
         include/antares/study/binding_constraint/EnvForLoading.h
         include/antares/study/binding_constraint/BindingConstraintStructures.h
         binding_constraint/BindingConstraintGroup.cpp
@@ -227,7 +225,6 @@ set(SRC_STUDY
         study.importprepro.cpp
         importlogs.cpp
         load.cpp
-        save.cpp
         study.extra.cpp
         include/antares/study/version.h
         version.cpp

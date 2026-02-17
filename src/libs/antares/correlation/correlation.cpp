@@ -248,67 +248,6 @@ int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string
     return 0;
 }
 
-#ifdef BUILD_UI
-IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
-{
-    /* Asserts */
-    assert(m);
-    assert(l);
-
-    /* The Ini File structure */
-    IniFile* ini = new IniFile();
-
-    if (m->width != l->size() or m->height != l->size())
-    {
-        logs.error() << "Correlation: The matrix does not have the good sie (" << l->size() << 'x'
-                     << l->size() << " expected, got " << m->width << 'x' << m->height << ')';
-    }
-    else
-    {
-        uint x;
-        uint y;
-        IniFile::Section* s;
-        for (x = 1; x < l->size(); ++x)
-        {
-            s = ini->addSection(l->byIndex[x]->id);
-            auto& col = m->entry[x];
-            for (y = 0; y < x; ++y)
-            {
-                if (fabs(col[y]) > 0.00000001)
-                {
-                    s->add(l->byIndex[y]->id, col[y]);
-                }
-            }
-        }
-    }
-    return ini;
-}
-
-int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const char filename[])
-{
-    /* Asserts */
-    assert(m);
-    assert(l);
-
-    if (!filename or '\0' == *filename)
-    {
-        return 0;
-    }
-    if (m->width != l->size() or m->height != l->size())
-    {
-        logs.error() << filename << ": The matrix does not have the good sie (" << l->size() << 'x'
-                     << l->size() << " expected, got " << m->width << 'x' << m->height << ')';
-    }
-    else
-    {
-        IniFile* ini = InterAreaCorrelationSaveToIniFile(m, l);
-        ini->save(filename);
-        delete ini;
-        return 1;
-    }
-    return 0;
-}
-#endif
 
 Correlation::Correlation():
     pMode(modeNone)

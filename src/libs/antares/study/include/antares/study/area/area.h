@@ -429,25 +429,6 @@ public:
     */
     bool loadListFromFile(const std::filesystem::path& filename);
 
-#ifdef BUILD_UI
-    /*!
-    ** \brief Save all informations about areas into a folder (-> input/generalData)
-    **
-    ** \param l The list of areas
-    ** \param folder The target folder
-    */
-    bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Write the list of areas into a file
-    **
-    ** The file structure is merely composed by all names of areas, one line one area
-    **
-    ** \param filename The file to read
-    ** \return A non-zero value if the operation was successful, 0 otherwise
-    */
-    bool saveListToFile(const AnyString& filename) const;
-#endif
 
     /*!
     ** \brief Write the list of all links into a file
@@ -686,19 +667,6 @@ bool AreaLinksLoadFromFolder(Study& s,
                              Area* area,
                              const std::filesystem::path& folder);
 
-#ifdef BUILD_UI
-/*!
-** \brief Save interconnections of a given area into a folder (`input/areas/[area]/ntc`)
-**
-** \param area The area
-** \param folder The target folder
-** \return True if the operation succeeded, 0 otherwise
-*/
-bool AreaLinksSaveToFolder(const Area* area, const char* const folder);
-
-// Save a given area's interconnexions configuration file into a folder
-bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder);
-#endif
 
 /*!
 ** \brief Clear all interconnection from an area

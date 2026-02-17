@@ -11,7 +11,6 @@
 #include <yuni/yuni.h>
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
-#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
 

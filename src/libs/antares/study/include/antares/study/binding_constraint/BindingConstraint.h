@@ -31,7 +31,6 @@ struct CompareBindingConstraintName;
 class BindingConstraint final: public Yuni::NonCopyable<BindingConstraint>
 {
     friend class BindingConstraintLoader;
-    friend class BindingConstraintSaver;
 
 public:
     enum Type
