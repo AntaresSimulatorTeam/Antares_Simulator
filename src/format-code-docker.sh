@@ -223,9 +223,9 @@ format_with_local() {
   for f in "${FILES[@]}"; do
     echo "Formatting: $f"
     if [ -n "$STYLE_LOCAL" ]; then
-      clang-format $STYLE_LOCAL -i --verbose "$f" || true
+      clang-format $STYLE_LOCAL -i --verbose "$f"
     else
-      clang-format -i --verbose "$f" || true
+      clang-format -i --verbose "$f"
     fi
   done
 }
