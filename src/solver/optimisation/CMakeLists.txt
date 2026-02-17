@@ -68,6 +68,9 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
 
+        include/antares/solver/optimisation/MipDetection.h
+        MipDetection.cpp
+
         constraints/ConstraintBuilder.cpp
         include/antares/solver/optimisation/constraints/ConstraintBuilder.h
         constraints/constraint_builder_utils.cpp
