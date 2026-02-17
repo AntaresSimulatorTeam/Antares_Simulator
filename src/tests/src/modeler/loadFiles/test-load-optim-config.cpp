@@ -546,3 +546,15 @@ models:
     // Act & Assert - invalid resolution mode should throw an exception
     BOOST_CHECK_THROW(loadLibraries(studyFolder), Antares::Error::InvalidArgumentError);
 }
+
+BOOST_FIXTURE_TEST_CASE(load_libraries_returns_empty_optional_when_no_model_libraries_dir,
+                        CreateInputFileFixture)
+{
+    std::filesystem::path libFolder = studyFolder / "input" / "model-libraries";
+    std::filesystem::remove_all(libFolder);
+
+    auto res = loadLibraries(studyFolder);
+
+    // On attend une optional vide (std::nullopt)
+    BOOST_CHECK(!res.has_value());
+}

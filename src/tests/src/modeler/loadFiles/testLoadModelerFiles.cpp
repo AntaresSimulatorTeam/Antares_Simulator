@@ -240,4 +240,12 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
     BOOST_CHECK_EQUAL(compoK->getScenarioGroupId(), "");
 }
 
+BOOST_FIXTURE_TEST_CASE(return_empty_optional_when_no_model_libraries_dir, FixtureLoadFile)
+{
+    fs::remove_all(libraryDirPath);
+
+    auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
+    BOOST_CHECK(!res.has_value());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
