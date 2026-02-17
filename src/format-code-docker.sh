@@ -209,9 +209,9 @@ format_with_docker() {
 
   echo "Formatting ${#FILES[@]} files using Docker image $CLANG_FORMAT_IMAGE..."
   if [ -n "$STYLE_DOCKER" ]; then
-    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format $STYLE_DOCKER -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
+    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "set -euo pipefail; while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format $STYLE_DOCKER -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
   else
-    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
+    docker run --rm -v "$PROJECT_ROOT:/workspace" -w /workspace/src "$CLANG_FORMAT_IMAGE" bash -c "set -euo pipefail; while IFS= read -r file || [ -n \"\$file\" ]; do if [ -n \"\$file\" ]; then echo \"Formatting: \$file\"; clang-format -i --verbose \"\$file\"; fi; done < $INSIDE_LIST"
   fi
 }
 
