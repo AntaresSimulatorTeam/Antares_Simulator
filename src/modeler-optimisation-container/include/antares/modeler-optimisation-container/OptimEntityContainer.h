@@ -36,7 +36,8 @@ public:
     VariabilityType getConstraintVariability(const ModelerStudy::SystemModel::Component& component,
                                              unsigned index) const;
 
-    LinearProblemApi::ILinearProblem& Problem();
+     // gp : to be removed : used to avoid passing the linear problem.
+    LinearProblemApi::ILinearProblem& Problem(); 
 
     void addStartColumn();
 
@@ -56,8 +57,6 @@ public:
 
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
                             const VariabilityType& variability);
-
-    unsigned constraintGLobalIndex() const;
 
 private:
     void addStartLine();

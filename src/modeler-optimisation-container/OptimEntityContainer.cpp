@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
-
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
@@ -67,11 +66,6 @@ std::span<const std::unique_ptr<IMipConstraint>> OptimEntityContainer::component
     return {constraints.data() + startLine, nbTimeSteps};
 }
 
-unsigned OptimEntityContainer::constraintGLobalIndex() const
-{
-    return static_cast<unsigned>(constraintStartLine_.size());
-}
-
 void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>& components,
                                                    Solver::Config::Location targetLocation)
 {
@@ -107,9 +101,9 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
 void OptimEntityContainer::registerConstraint(const Component& component,
                                               const VariabilityType& variability)
 {
-    unsigned gLobalIndex = constraintGLobalIndex();
+    unsigned globalIndex = (unsigned)constraintStartLine_.size();
     auto& optimComponent = optimComponents_.at(component.Index());
-    optimComponent.modelConstraintsGlobalIndices.push_back(gLobalIndex);
+    optimComponent.modelConstraintsGlobalIndices.push_back(globalIndex);
     optimComponent.modelConstraintsVariability.push_back(variability);
     addStartLine();
 }
