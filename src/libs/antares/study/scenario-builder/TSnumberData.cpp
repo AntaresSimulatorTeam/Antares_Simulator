@@ -18,7 +18,6 @@ bool TSNumberData::reset(const Study& study)
     return true;
 }
 
-
 void TSNumberData::setTSnumber(uint areaindex, uint year, uint value)
 {
     assert(areaindex < pTSNumberRules.width);

@@ -60,7 +60,6 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenRenewable ? 1 : 0u;
 }
 
-
 bool renewableTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;

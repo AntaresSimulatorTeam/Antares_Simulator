@@ -28,7 +28,6 @@ bool hydroLevelsData::reset(const Study& study)
     return true;
 }
 
-
 void hydroLevelsData::set_value(uint x, uint y, double value)
 {
     pHydroLevelsRules.entry[y][x] = value;

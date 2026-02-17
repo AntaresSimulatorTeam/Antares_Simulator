@@ -52,7 +52,6 @@ inline Rules::Ptr Sets::find(const RulesScenarioName& lname) const
     return nullptr;
 }
 
-
 template<class StringT>
 bool Sets::loadFromINIFile(const StringT& filename)
 {

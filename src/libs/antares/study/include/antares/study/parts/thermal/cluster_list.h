@@ -103,7 +103,6 @@ public:
     bool savePreproToFolder(const AnyString& folder) const;
     bool saveEconomicCosts(const AnyString& folder) const;
 
-
     unsigned int enabledAndMustRunCount() const;
     unsigned int enabledAndNotMustRunCount() const;
 

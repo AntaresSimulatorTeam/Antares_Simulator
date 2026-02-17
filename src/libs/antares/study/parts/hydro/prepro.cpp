@@ -21,7 +21,6 @@ namespace fs = std::filesystem;
 namespace Antares::Data
 {
 
-
 static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 {
     IniFile ini;
@@ -87,7 +86,6 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
     data = rhs.data;
     rhs.data.unloadFromMemory();
 }
-
 
 bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
 {

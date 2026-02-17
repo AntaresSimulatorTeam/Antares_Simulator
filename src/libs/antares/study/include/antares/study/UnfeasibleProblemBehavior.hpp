@@ -15,7 +15,6 @@ enum class UnfeasibleProblemBehavior : unsigned char
     ERROR_MPS    /*! Stop simulation with MPS export */
 };
 
-
 /*!
  *  \brief Define if MPS must be exported in case of unfeasible problem
  *

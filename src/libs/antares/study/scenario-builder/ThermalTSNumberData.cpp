@@ -28,7 +28,6 @@ bool thermalTSNumberData::reset(const Study& study)
     return true;
 }
 
-
 void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
                                       const uint year,
                                       uint value)

@@ -45,7 +45,6 @@ bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     }
 }
 
-
 namespace Enum
 {
 template<>

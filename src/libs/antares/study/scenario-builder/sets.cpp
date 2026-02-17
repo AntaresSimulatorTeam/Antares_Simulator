@@ -125,7 +125,6 @@ bool Sets::remove(const RulesScenarioName& lname)
     return true;
 }
 
-
 bool Sets::internalLoadFromINIFile(const AnyString& filename)
 {
     // Logs

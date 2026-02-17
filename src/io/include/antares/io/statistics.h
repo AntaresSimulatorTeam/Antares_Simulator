@@ -73,7 +73,6 @@ void HasWrittenToNetwork(uint64_t size);
 */
 void Reset();
 
-
 } // namespace Antares::Statistics
 
 #endif // __ANTARES_LIBS_IO_STATISTICS_H__

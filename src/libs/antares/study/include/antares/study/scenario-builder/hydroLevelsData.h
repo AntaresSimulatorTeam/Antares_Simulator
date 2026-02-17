@@ -32,7 +32,6 @@ public:
     */
     bool reset(const Study& study) override;
 
-
     /*!
     ** \brief Assign a single value
     **

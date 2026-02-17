@@ -19,7 +19,6 @@ public:
 
     bool reset(const Study& study) override;
 
-
     void setTSnumber(const std::string& group_name, unsigned year, unsigned value);
     unsigned get(const std::string& group_name, unsigned year) const;
     bool apply(Study& study) override;

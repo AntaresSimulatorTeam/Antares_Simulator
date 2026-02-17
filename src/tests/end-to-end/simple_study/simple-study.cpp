@@ -598,5 +598,4 @@ BOOST_FIXTURE_TEST_CASE(scenario_builder, HydroMaxPowerStudy)
                tt::tolerance(0.1));
 }
 
-
 BOOST_AUTO_TEST_SUITE_END()

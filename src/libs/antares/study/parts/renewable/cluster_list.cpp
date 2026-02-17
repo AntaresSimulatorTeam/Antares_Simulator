@@ -22,7 +22,6 @@ std::string RenewableClusterList::typeID() const
     return "renewables";
 }
 
-
 static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())

@@ -430,7 +430,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 }
 
-
 BOOST_AUTO_TEST_SUITE_END()
 
 // Test data for parameterization

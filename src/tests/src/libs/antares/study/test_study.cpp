@@ -37,7 +37,6 @@ BOOST_AUTO_TEST_CASE(area_add)
     BOOST_CHECK_EQUAL(areaA->id, "a");
 }
 
-
 BOOST_AUTO_TEST_SUITE_END() // areas
 
 // Check that disabled objects are indeed removed from computations
@@ -151,7 +150,6 @@ struct ThermalClusterStudy: public OneAreaStudy
 
     ThermalCluster* cluster;
 };
-
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
@@ -278,7 +276,6 @@ struct RenewableClusterStudy: public OneAreaStudy
 
     RenewableCluster* cluster;
 };
-
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 {

@@ -59,7 +59,6 @@ public:
     template<class StringT>
     bool loadFromINIFile(const StringT& filename);
 
-
     //! \name Set manipulation
     //@{
     /*!

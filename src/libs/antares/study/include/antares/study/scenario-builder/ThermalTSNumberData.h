@@ -18,6 +18,7 @@ public:
     virtual ~thermalTSNumberData() = default;
 
     bool reset(const Study& study) override;
+
     void attachArea(const Area* area)
     {
         pArea = area;

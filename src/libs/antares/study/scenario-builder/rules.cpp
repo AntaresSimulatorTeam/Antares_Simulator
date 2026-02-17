@@ -36,7 +36,6 @@ Rules::Rules(Study& study):
 {
 }
 
-
 bool Rules::reset()
 {
     // The new area count

@@ -28,7 +28,6 @@ public:
      */
     virtual bool reset(const Study& study) = 0;
 
-
     [[nodiscard]] virtual uint width() const = 0;
 
     [[nodiscard]] virtual uint height() const = 0;

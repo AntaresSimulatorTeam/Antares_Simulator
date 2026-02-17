@@ -72,7 +72,6 @@ bool BindingConstraintsTSNumberData::reset(const Study& study)
     return true;
 }
 
-
 void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
                                                  const uint year,
                                                  uint value)

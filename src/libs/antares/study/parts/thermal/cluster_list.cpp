@@ -363,7 +363,6 @@ void ThermalClusterList::ensureDataPrepro()
     }
 }
 
-
 bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
 {
     Clob buffer;

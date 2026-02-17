@@ -63,7 +63,6 @@ public:
     */
     bool readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode = false);
 
-
     //! Get the number of areas
     uint areaCount() const;
 
