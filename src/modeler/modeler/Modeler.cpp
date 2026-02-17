@@ -41,7 +41,7 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
             throw ModelerError("Error while loading files, exiting");
         }
         // Move the loaded ModelerData out of the optional to avoid copying
-        // (ModelerData contains unique_ptr members and is not copyable).
+        // (ModelerData contains unique_ptr members and is move-only).
         data_ = std::move(*data);
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
