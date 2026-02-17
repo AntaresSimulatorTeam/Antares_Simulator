@@ -179,6 +179,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .NumeroDeContraintePourEviterLesChargesFictives.assign(nbPays, 0);
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays.assign(nbPays,
                                                                                             0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContraintePourBornerLaDefaillance.assign(nbPays, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .ShortTermStorageLevelConstraint.assign(shortTermStorageCount, 0);

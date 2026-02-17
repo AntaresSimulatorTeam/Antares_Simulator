@@ -118,7 +118,7 @@ BOOST_FIXTURE_TEST_CASE(portfield_throw, Fixture)
     // ports setup
     PortField portfield("field");
     std::vector portFields = {portfield};
-    PortType portType("port", std::move(portFields), "field");
+    PortType portType("port", std::move(portFields), {"field", "", ""});
     Port port("port", portType);
     std::vector<PortFieldDefinition> portFieldDefs;
     portFieldDefs.emplace_back(port, portfield, std::move(pfExpression));
@@ -164,7 +164,7 @@ BOOST_FIXTURE_TEST_CASE(portfield_ok_var_throw, Fixture)
     // ports setup
     PortField portfield("field");
     std::vector portFields = {portfield};
-    PortType portType("port", std::move(portFields), "field");
+    PortType portType("port", std::move(portFields), {"field", "", ""});
     Port port("port", portType);
     std::vector<PortFieldDefinition> portFieldDefs;
     portFieldDefs.emplace_back(port, portfield, std::move(pfExpression));
@@ -205,7 +205,7 @@ BOOST_FIXTURE_TEST_CASE(porfieldsum_throw, Fixture)
     // ports setup
     PortField portfield("field");
     std::vector portFields = {portfield};
-    PortType portType("port", std::move(portFields), "field");
+    PortType portType("port", std::move(portFields), {"field", "", ""});
     Port port("port", portType);
     std::vector<PortFieldDefinition> portFieldDefs;
     portFieldDefs.emplace_back(port, portfield, std::move(pfExpression));

@@ -35,11 +35,9 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> NumeroDeVariablesDeDebordement;
 
     std::vector<int> NumeroDeVariableDefaillancePositive;
-
     std::vector<int> NumeroDeVariableDefaillanceNegative;
 
     std::vector<int> NumeroDeVariablesVariationHydALaBaisse;
-
     std::vector<int> NumeroDeVariablesVariationHydALaHausse;
 
     std::vector<int> NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
@@ -67,6 +65,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES
 
     std::vector<int> NumeroDeContrainteDesBilansPays;
     std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
+    std::vector<int> NumeroDeContraintePourBornerLaDefaillance;
 
     std::vector<int> NumeroPremiereContrainteDeReserveParZone;
     std::vector<int> NumeroDeuxiemeContrainteDeReserveParZone;

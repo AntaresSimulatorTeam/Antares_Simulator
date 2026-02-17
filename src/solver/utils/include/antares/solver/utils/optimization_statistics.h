@@ -31,7 +31,7 @@ public:
         this->reset();
     }
 
-    OptimizationStatistics(OptimizationStatistics&& rhs):
+    OptimizationStatistics(OptimizationStatistics&& rhs) noexcept:
         totalSolveTime(rhs.totalSolveTime.load()),
         nbSolve(rhs.nbSolve.load()),
         totalUpdateTime(rhs.totalUpdateTime.load()),

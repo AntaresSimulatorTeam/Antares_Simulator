@@ -69,8 +69,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (node->variability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->variability() == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (isTimeConstant(node->variability()))
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
@@ -191,18 +190,18 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
-    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, cstrIndex);
+    const auto& [_, variability] = optimContainer_.getConstraintData(component_, cstrIndex);
 
-    if (timeIndex == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        || timeIndex == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (isTimeConstant(variability))
     {
         const auto componentConstraints = optimContainer_.getComponentConstraint(
           component_,
           cstrIndex,
-          1 /* single timestep*/);
+          1 /* single timestep */);
         return EvaluationResult(componentConstraints.first[0]->dual());
     }
-    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+
+    // The constraint depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
     const auto componentConstraints = optimContainer_.getComponentConstraint(component_,

@@ -608,6 +608,11 @@ public:
         return modelerInput_.get();
     }
 
+    void setModelerData(std::unique_ptr<Solver::ModelerData> modelerData)
+    {
+        modelerInput_ = std::move(modelerData);
+    }
+
 protected:
     //! \name Loading
     //@{

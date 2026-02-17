@@ -25,6 +25,7 @@
 #include <fstream>
 
 #include <antares/logs/logs.h>
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/io/outputs/ExportableName.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -107,26 +108,26 @@ MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name):
     exportableVariablesNames_ = ExtractNames(lp.getVariables());
 }
 
-void MPSGenerator::writeHeader()
+void MPSGenerator::writeHeader(std::string& mps) const
 {
-    fmt::format_to(std::back_inserter(out_), "* Antares Simulator MPSGenerator\n");
-    fmt::format_to(std::back_inserter(out_),
+    fmt::format_to(std::back_inserter(mps), "* Antares Simulator MPSGenerator\n");
+    fmt::format_to(std::back_inserter(mps),
                    "* Number of variables: {}\n",
                    linearProblem_.variableCount());
-    fmt::format_to(std::back_inserter(out_),
+    fmt::format_to(std::back_inserter(mps),
                    "* Number of constraints: {}\n",
                    linearProblem_.constraintCount());
 }
 
-void MPSGenerator::writeRows()
+void MPSGenerator::writeRows(std::string& mps) const
 {
     /* ========= ROWS ========= */
-    out_ += "ROWS\n";
-    fmt::format_to(std::back_inserter(out_), "{}N  OBJ\n", pad);
+    mps += "ROWS\n";
+    fmt::format_to(std::back_inserter(mps), "{}N  OBJ\n", pad);
     int i = 0;
     for (const auto& constraints = linearProblem_.getConstraints(); const auto& c: constraints)
     {
-        fmt::format_to(std::back_inserter(out_),
+        fmt::format_to(std::back_inserter(mps),
                        "{}{}  {}\n",
                        pad,
                        ConstraintSense(c->getLb(), c->getUb(), linearProblem_.infinity()),
@@ -161,10 +162,10 @@ std::vector<MpsColumn> Columns(const ILinearProblem& linearProblem)
     return columns;
 }
 
-void MPSGenerator::writeColumns()
+void MPSGenerator::writeColumns(std::string& mps) const
 {
     /* ========= COLUMNS ========= */
-    out_ += "COLUMNS\n";
+    mps += "COLUMNS\n";
     const auto columns = Columns(linearProblem_);
     int i = 0;
     for (const auto& vars = linearProblem_.getVariables(); const auto& var: vars)
@@ -172,7 +173,7 @@ void MPSGenerator::writeColumns()
         const bool isInt = var->isInteger();
         if (isInt)
         {
-            fmt::format_to(std::back_inserter(out_),
+            fmt::format_to(std::back_inserter(mps),
                            "{}MARK{:010}    'MARKER'                 'INTORG'\n",
                            pad,
                            i);
@@ -183,7 +184,7 @@ void MPSGenerator::writeColumns()
         {
             // TODO Maximisation problem...
             // if (linearProblem_.isMaximization())  coef*=-1;
-            fmt::format_to(std::back_inserter(out_),
+            fmt::format_to(std::back_inserter(mps),
                            "{}{}  OBJ  {}\n",
                            pad,
                            exportableVariablesName,
@@ -194,7 +195,7 @@ void MPSGenerator::writeColumns()
         const auto& mpsColumn = columns[i];
         for (const auto& [row, coef]: mpsColumn)
         {
-            fmt::format_to(std::back_inserter(out_),
+            fmt::format_to(std::back_inserter(mps),
                            "{}{}  {}  {}\n",
                            pad,
                            exportableVariablesName,
@@ -204,7 +205,7 @@ void MPSGenerator::writeColumns()
 
         if (isInt)
         {
-            fmt::format_to(std::back_inserter(out_),
+            fmt::format_to(std::back_inserter(mps),
                            "{}MARK{:010}    'MARKER'                 'INTEND'\n",
                            pad,
                            i);
@@ -213,14 +214,14 @@ void MPSGenerator::writeColumns()
     }
 }
 
-void MPSGenerator::writeRhs()
+void MPSGenerator::writeRhs(std::string& mps) const
 {
     const double INF = linearProblem_.infinity();
     /* ========= RHS ========= */
-    out_ += "RHS\n";
+    mps += "RHS\n";
     if (const auto objOffset = linearProblem_.getObjectiveOffset(); isNotEqual(objOffset, 0.0))
     {
-        fmt::format_to(std::back_inserter(out_), "{}RHS1  OBJ  {}\n", pad, -objOffset);
+        fmt::format_to(std::back_inserter(mps), "{}RHS1  OBJ  {}\n", pad, -objOffset);
     }
     int i = 0;
     for (const auto& c: linearProblem_.getConstraints())
@@ -228,7 +229,7 @@ void MPSGenerator::writeRhs()
         if (const auto rhs = ConstraintRhs(c->getLb(), c->getUb(), INF);
             isNotEqual(std::abs(rhs), INF) && isNotEqual(rhs, 0.))
         {
-            fmt::format_to(std::back_inserter(out_),
+            fmt::format_to(std::back_inserter(mps),
                            "{}RHS1  {}  {}\n",
                            pad,
                            exportableConstraintsNames_[i],
@@ -238,16 +239,16 @@ void MPSGenerator::writeRhs()
     }
 }
 
-void MPSGenerator::writeRanges()
+void MPSGenerator::writeRanges(std::string& mps) const
 {
-    out_ += "RANGES\n";
+    mps += "RANGES\n";
     int i = 0;
     for (const auto& c: linearProblem_.getConstraints())
     {
         if (const auto range = std::abs(c->getUb() - c->getLb());
             isNotEqual(range, linearProblem_.infinity()) && isNotEqual(range, 0.))
         {
-            fmt::format_to(std::back_inserter(out_),
+            fmt::format_to(std::back_inserter(mps),
                            "{}RNG1  {}  {}\n",
                            pad,
                            exportableConstraintsNames_[i],
@@ -257,11 +258,11 @@ void MPSGenerator::writeRanges()
     }
 }
 
-void MPSGenerator::writeBounds()
+void MPSGenerator::writeBounds(std::string& mps) const
 {
     const double INF = linearProblem_.infinity();
     /* ========= BOUNDS ========= */
-    out_ += "BOUNDS\n";
+    mps += "BOUNDS\n";
     int i = 0;
     for (const auto& var: linearProblem_.getVariables())
     {
@@ -278,23 +279,22 @@ void MPSGenerator::writeBounds()
         const bool lbIsZero = isEqual(lb, 0.0);
         if (lbIsMinusInfinity && ubIsPlusInfinity)
         {
-            fmt::format_to(std::back_inserter(out_), "{}FR {}  {}\n", pad, bnd, varName);
+            fmt::format_to(std::back_inserter(mps), "{}FR {} {}\n", pad, bnd, varName);
             continue;
         }
         if (isEqual(lb, ub))
         {
-            fmt::format_to(std::back_inserter(out_), "{}FX {} {} {}\n", pad, bnd, varName, lb);
+            fmt::format_to(std::back_inserter(mps), "{}FX {} {} {}\n", pad, bnd, varName, lb);
             continue;
         }
         if (isBinary)
         {
-            fmt::format_to(std::back_inserter(out_), "{}BV {} {}\n", pad, bnd, varName);
+            fmt::format_to(std::back_inserter(mps), "{}BV {} {}\n", pad, bnd, varName);
             continue;
         }
 
         if (lbIsZero && ubIsPlusInfinity) // this case is the default
         {
-            // out_ << pad << "PL " << bnd << " " << varName << "\n";
             continue;
         }
 
@@ -302,46 +302,46 @@ void MPSGenerator::writeBounds()
         {
             if (lbIsMinusInfinity)
             {
-                fmt::format_to(std::back_inserter(out_), "{}MI {} {}\n", pad, bnd, varName);
+                fmt::format_to(std::back_inserter(mps), "{}MI {} {}\n", pad, bnd, varName);
             }
             else if (!lbIsZero)
             {
-                fmt::format_to(std::back_inserter(out_), "{}LI {} {} {}\n", pad, bnd, varName, lb);
+                fmt::format_to(std::back_inserter(mps), "{}LI {} {} {}\n", pad, bnd, varName, lb);
             }
             if (!ubIsPlusInfinity)
             {
-                fmt::format_to(std::back_inserter(out_), "{}UI {} {} {}\n", pad, bnd, varName, ub);
+                fmt::format_to(std::back_inserter(mps), "{}UI {} {} {}\n", pad, bnd, varName, ub);
             }
         }
         else
         {
             if (lbIsMinusInfinity)
             {
-                fmt::format_to(std::back_inserter(out_), "{}MI {} {}\n", pad, bnd, varName);
+                fmt::format_to(std::back_inserter(mps), "{}MI {} {}\n", pad, bnd, varName);
             }
             else if (!lbIsZero)
             {
-                fmt::format_to(std::back_inserter(out_), "{}LO {} {} {}\n", pad, bnd, varName, lb);
+                fmt::format_to(std::back_inserter(mps), "{}LO {} {} {}\n", pad, bnd, varName, lb);
             }
 
             if (!ubIsPlusInfinity)
             {
-                fmt::format_to(std::back_inserter(out_), "{}UP {} {} {}\n", pad, bnd, varName, ub);
+                fmt::format_to(std::back_inserter(mps), "{}UP {} {} {}\n", pad, bnd, varName, ub);
             }
         }
     }
 }
 
-void MPSGenerator::writeName()
+void MPSGenerator::writeName(std::string& mps) const
 {
     /* ========= NAME ========= */
-    fmt::format_to(std::back_inserter(out_), "NAME {}\n", name_);
+    fmt::format_to(std::back_inserter(mps), "NAME {}\n", name_);
 }
 
-void MPSGenerator::writeEnd()
+void MPSGenerator::writeEnd(std::string& mps) const
 {
     /* ========= END ========= */
-    out_ += "ENDATA\n";
+    mps += "ENDATA\n";
 }
 
 void MPSFileWriter::write(const std::filesystem::path& filename, const std::string& content)
@@ -349,34 +349,34 @@ void MPSFileWriter::write(const std::filesystem::path& filename, const std::stri
     std::ofstream file(filename);
     if (!file.is_open())
     {
-        throw std::runtime_error("Failed to open file: " + filename.string());
+        throw Antares::Error::RuntimeError("Failed to open file: " + filename.string());
     }
     file << content;
 }
 
-std::string MPSGenerator::run()
+std::string MPSGenerator::run() const
 {
-    out_ = "";
+    std::string mps = "";
     if (linearProblem_.variableCount() == 0)
     {
         logs.warning() << "mps will not be produced for empty linear problem '" << name_ << "'.";
         return "";
     }
-    writeHeader();
+    writeHeader(mps);
 
-    writeName();
+    writeName(mps);
 
-    writeRows();
+    writeRows(mps);
 
-    writeColumns();
+    writeColumns(mps);
 
-    writeRhs();
+    writeRhs(mps);
 
-    writeRanges();
+    writeRanges(mps);
 
-    writeBounds();
+    writeBounds(mps);
 
-    writeEnd();
-    return std::move(out_);
+    writeEnd(mps);
+    return mps;
 }
 } // namespace Antares::IO::Outputs

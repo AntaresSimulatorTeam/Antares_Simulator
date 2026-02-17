@@ -18,6 +18,9 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
     int nombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
 
+    // =============================
+    // Counting variables
+    // =============================
     int mxPaliers = 0;
     ProblemeAResoudre->NombreDeVariables = problemeHebdo->NombreDInterconnexions;
 
@@ -59,12 +62,20 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
     }
 
+    // =============================
+    // Counting constraints
+    // =============================
+
     ProblemeAResoudre->NombreDeContraintes = problemeHebdo->NombreDePays;
 
     ProblemeAResoudre->NombreDeContraintes += problemeHebdo->NombreDePays;
 
+    // For constraint : max unsupplied energy
+    ProblemeAResoudre->NombreDeContraintes += problemeHebdo->NombreDePays;
+
     ProblemeAResoudre->NombreDeContraintes += problemeHebdo->NombreDInterconnexions;
 
+    // Hourly binding constraints
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
@@ -74,6 +85,8 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
             ProblemeAResoudre->NombreDeContraintes++;
         }
     }
+
+    // Very important : make previous constraints hourly constraints : we multiply by nb of hours
     ProblemeAResoudre->NombreDeContraintes *= nombreDePasDeTempsPourUneOptimisation;
 
     int nombreDeJoursDansUnIntervalleOptimise;
@@ -87,6 +100,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         nombreDeJoursDansUnIntervalleOptimise = 1;
     }
 
+    // Daily binding constraints
     for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          cntCouplante++)
     {
@@ -97,6 +111,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
     }
 
+    // Weekly binding constraints
     if (nombreDePasDeTempsPourUneOptimisation > problemeHebdo->NombreDePasDeTempsDUneJournee)
     {
         for (uint32_t cntCouplante = 0; cntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
@@ -111,6 +126,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
     }
 
+    // Hydro
     for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         char Pump = problemeHebdo->CaracteristiquesHydrauliques[pays].PresenceDePompageModulable;
@@ -190,6 +206,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
                                                                 document) */
         }
     }
+
     // Short term storage
     {
         const uint nbSTS = problemeHebdo->NumberOfShortTermStorages;

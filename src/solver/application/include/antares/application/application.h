@@ -59,11 +59,11 @@ public:
 
     /**
      * @brief /!\ Acquire the study. Leave Application object in an invalid state.
-     * @return The study
+     * @return pair  {study, IResultWriter}
      */
-    std::unique_ptr<Data::Study> acquireStudy()
+    std::pair<std::unique_ptr<Data::Study>, IResultWriter::Ptr> acquireStudy()
     {
-        return std::move(pStudy);
+        return {std::move(pStudy), std::move(resultWriter)};
     }
 
     Benchmarking::DurationCollector& getDurationCollector()

@@ -8,10 +8,12 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/exception/RuntimeError.hpp>
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 
 using namespace Antares::Optimisation::LinearProblemApi;
+using Antares::Error::RuntimeError;
 
 BOOST_AUTO_TEST_SUITE(StructuredLinearProblemTests)
 
@@ -170,7 +172,7 @@ BOOST_AUTO_TEST_CASE(solve_not_supported)
     StructuredLinearProblem lp;
     auto* x = lp.addNumVariable(0.0, 10.0, "x");
 
-    BOOST_CHECK_THROW(lp.solve(false), std::logic_error);
+    BOOST_CHECK_THROW(lp.solve(false), RuntimeError);
 }
 
 BOOST_AUTO_TEST_CASE(solution_value_not_available)
@@ -178,8 +180,8 @@ BOOST_AUTO_TEST_CASE(solution_value_not_available)
     StructuredLinearProblem lp;
     auto* x = lp.addNumVariable(0.0, 10.0, "x");
 
-    BOOST_CHECK_THROW(x->solutionValue(), std::logic_error);
-    BOOST_CHECK_THROW(x->reducedCost(), std::logic_error);
+    BOOST_CHECK_THROW(x->solutionValue(), RuntimeError);
+    BOOST_CHECK_THROW(x->reducedCost(), RuntimeError);
 }
 
 BOOST_AUTO_TEST_CASE(dual_not_available)
@@ -188,7 +190,7 @@ BOOST_AUTO_TEST_CASE(dual_not_available)
     auto* x = lp.addNumVariable(0.0, 10.0, "x");
     auto* c = lp.addConstraint(1.0, 10.0, "c");
 
-    BOOST_CHECK_THROW(c->dual(), std::logic_error);
+    BOOST_CHECK_THROW(c->dual(), RuntimeError);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -3,9 +3,7 @@
 
 #pragma once
 
-#include <algorithm>
 #include <optional>
-#include <ranges>
 #include <string>
 #include <vector>
 
@@ -13,54 +11,29 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
+struct AreaConnection
+{
+    std::string injection;
+    std::string spillage_bound;
+    std::string unsupplied_energy_bound;
+};
 
 class PortType final
 {
 public:
     PortType(const std::string& id,
              std::vector<PortField>&& fields,
-             const std::string& areaConnectionFieldId = ""):
-        id_(id),
-        fields_(std::move(fields))
-    {
-        if (!areaConnectionFieldId.empty())
-        {
-            if (!std::ranges::any_of(fields_,
-                                     [areaConnectionFieldId](const auto& field)
-                                     { return field.Id() == areaConnectionFieldId; }))
-            {
-                throw std::invalid_argument(
-                  "Field \"" + areaConnectionFieldId
-                  + "\" selected for area connections was not defined in PortType \"" + id_
-                  + "\".");
-            }
-            areaConnectionFieldId_ = areaConnectionFieldId;
-        }
-    }
+             const AreaConnection& areaConnection = {});
 
-    const std::string& Id() const
-    {
-        return id_;
-    }
-
-    const std::vector<PortField>& Fields() const
-    {
-        return fields_;
-    }
-
-    const std::optional<std::string>& AreaConnectionFieldId() const
-    {
-        return areaConnectionFieldId_;
-    }
-
-    bool operator==(const PortType& other) const = default;
+    const std::string& Id() const;
+    const std::vector<PortField>& Fields() const;
+    const std::optional<AreaConnection>& areaConnection() const;
+    bool operator==(const PortType& other) const;
 
 private:
     std::string id_;
-
     std::vector<PortField> fields_;
-
-    std::optional<std::string> areaConnectionFieldId_;
+    std::optional<AreaConnection> areaConnection_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

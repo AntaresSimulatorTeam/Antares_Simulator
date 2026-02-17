@@ -98,15 +98,19 @@ struct Model
     std::vector<ExtraOutput> extra_outputs;
 };
 
+struct AreaConnection
+{
+    std::string injection;
+    std::string spillage_bound;
+    std::string unsupplied_energy_bound;
+};
+
 struct PortType
 {
     std::string id;
     std::string description;
-    // Small optimization: we only need the name of the fields
-    // No need for an intermediate struct "field" with just a string "name" member
     std::vector<std::string> fields;
-    // Also, we only need the injection-field of the area-connection
-    std::string area_connection_injection_field;
+    AreaConnection area_connection;
 };
 
 struct Library

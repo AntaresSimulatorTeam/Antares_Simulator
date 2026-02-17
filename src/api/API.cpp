@@ -23,7 +23,8 @@ SimulationResults APIInternal::run(
 {
     try
     {
-        study_ = study_loader.load();
+        auto [study, _] = study_loader.load();
+        study_ = std::move(study);
     }
     catch (const ::Antares::Error::StudyFolderDoesNotExist& e)
     {

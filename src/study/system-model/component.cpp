@@ -3,9 +3,18 @@
 
 #include <fmt/format.h>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/study/system-model/component.h>
 
 using namespace Antares::Expressions::Nodes;
+
+std::string toLowerCase(const std::string& str)
+{
+    std::string lowerCaseStr = str;
+    boost::algorithm::to_lower(lowerCaseStr);
+    return lowerCaseStr;
+}
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -84,6 +93,17 @@ void Component::addComponentConnection(const std::string localPortId, Connection
     componentConnectionEnds_[localPortId].push_back(std::move(connexionEnd));
 }
 
+const std::optional<AreaConnection>& Component::areaConnectionAtPort(
+  const std::string& portId) const
+{
+    if (!getModel()->Ports().contains(portId))
+    {
+        std::string errMsg = "Port '" + portId + "' not found in component '" + data_.id + "'";
+        throw std::invalid_argument(errMsg);
+    }
+    return getModel()->Ports().at(portId).Type().areaConnection();
+}
+
 std::vector<ConnectionEnd> Component::componentConnectionsViaPort(const std::string& portId) const
 {
     if (auto it = componentConnectionEnds_.find(portId); it != componentConnectionEnds_.end())
@@ -122,7 +142,9 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
     }
 }
 
-void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
+void Component::checkPortFieldDefinitionExists(const std::string& portName,
+                                               const std::string& fieldName,
+                                               const std::string& errMsgPrefix)
 {
     std::string exceptionPrefix = fmt::format(
       "Cannot connect area \"{}\" to port \"{}\" of component \"{}\": ",
@@ -136,16 +158,22 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
                       exceptionPrefix,
                       data_.model->Id()));
     }
-    Port port = getModel()->Ports().at(localPortId);
-    if (!port.Type().AreaConnectionFieldId().has_value())
+}
+
+void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
+{
+    std::string errMsgPrefix = "Cannot connect area '" + areaId + "' to port '" + localPortId
+                               + "' of component '" + data_.id + "': ";
+    if (!getModel()->Ports().contains(localPortId))
     {
         throw std::invalid_argument(
           fmt::format("{}port type \"{}\" has no area-connection field ID defined",
                       exceptionPrefix,
                       port.Type().Id()));
     }
-    PortFieldKey key(localPortId, port.Type().AreaConnectionFieldId().value());
-    if (!data_.model->PortFieldDefinitions().contains(key))
+    Port port = getModel()->Ports().at(localPortId);
+    const auto& area_connection = port.Type().areaConnection();
+    if (!area_connection.has_value())
     {
         throw std::invalid_argument(
           fmt::format("{}port field \"{}\" is not defined in the component's model \"{}\"",
@@ -153,13 +181,21 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
                       port.Type().AreaConnectionFieldId().value(),
                       data_.model->Id()));
     }
+
+    checkPortFieldDefinitionExists(localPortId, area_connection->injection, errMsgPrefix);
+    checkPortFieldDefinitionExists(localPortId, area_connection->spillage_bound, errMsgPrefix);
+    checkPortFieldDefinitionExists(localPortId,
+                                   area_connection->unsupplied_energy_bound,
+                                   errMsgPrefix);
+
     if (portToAreaConnections_.contains(localPortId))
     {
         throw std::invalid_argument(fmt::format("{}port is already connected to \"{}\"",
                                                 exceptionPrefix,
                                                 portToAreaConnections_.at(localPortId)));
     }
-    portToAreaConnections_[localPortId] = areaId;
+
+    portToAreaConnections_[localPortId] = toLowerCase(areaId);
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const

@@ -5,4 +5,5 @@ add_boost_test(test_structured_linear_problem
         test_structured_linear_problem.cpp
         LIBS
         linear-problem-api
-        structured-linear-problem)
+        structured-linear-problem
+	Antares::exception)
