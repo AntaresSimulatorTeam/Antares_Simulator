@@ -248,7 +248,6 @@ int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string
     return 0;
 }
 
-
 Correlation::Correlation():
     pMode(modeNone)
 {
@@ -259,18 +258,6 @@ bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool war
     Antares::logs.debug() << "  " << correlationName << ": loading " << filename;
     IniFile ini;
     return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings) : false;
-}
-
-bool Correlation::saveToFile(Study& study, const AnyString& filename) const
-{
-    using namespace Yuni;
-    IO::File::Stream file;
-    if (file.openRW(filename))
-    {
-        internalSaveToINI(study, file);
-        return true;
-    }
-    return false;
 }
 
 const char* Correlation::ModeToCString(Mode mode)
@@ -301,35 +288,6 @@ Correlation::Mode Correlation::CStringToMode(const AnyString& str)
         return modeMonthly;
     }
     return modeNone;
-}
-
-void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
-{
-    // General settings
-    // (the only mandatory section)
-    // mode
-    file << "[general]\nmode = " << ModeToCString(pMode) << "\n\n";
-
-    if (!annual.empty())
-    {
-        ExportCorrelationCoefficients(study, annual, file, "annual");
-    }
-    else
-    {
-        logs.error() << correlationName << ": the annual correlation coefficients are missing";
-    }
-
-    if (!monthly.empty())
-    {
-        for (int month = 0; month < 12; month++)
-        {
-            ExportCorrelationCoefficients(study, monthly[month], file, std::to_string(month));
-        }
-    }
-    else
-    {
-        logs.error() << correlationName << ": the montlhy correlation coefficients are missing";
-    }
 }
 
 bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings)
