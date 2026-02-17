@@ -75,7 +75,7 @@ var classAntares_1_1Matrix =
     [ "unloadFromMemory", "classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760", null ],
     [ "zero", "classAntares_1_1Matrix.html#a0764fae6bafeb8425318d6e0e379727b", null ],
     [ "entry", "classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230", null ],
-    [ "height", "classAntares_1_1Matrix.html#a0b5614256a04ece0ea54b8aad7e6980c", null ],
+    [ "height", "classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e", null ],
     [ "jit", "classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24", null ],
-    [ "width", "classAntares_1_1Matrix.html#ad4320bd2dc03fd11887d3ba350c6c8ef", null ]
+    [ "width", "classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6", null ]
 ];

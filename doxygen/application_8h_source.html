@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: src/solver/application/include/antares/application/application.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('application_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">application.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;yuni/core/string.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;antares/benchmarking/DurationCollector.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;antares/benchmarking/timer.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;antares/study/load-options.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;antares/study/study.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;antares/writer/i_writer.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/infoCollection/StudyInfoCollector.h&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;antares/solver/misc/options.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/ISimulationObserver.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Application.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Application.html">Application</a> final: <span class="keyword">public</span> Yuni::IEventObserver&lt;Application, Yuni::Policy::SingleThreaded&gt;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Application.html#a1017f09dcde5080ada2af4b4172f8138">Application</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Application.html#ab731ee5d76d2df87411284e1c79ff080">~Application</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Application.html#a1017f09dcde5080ada2af4b4172f8138">Application</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Application.html">Application</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Application.html">Application</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Application.html">Application</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1Application.html#a717ddcf81267379bce00aecf165dd263">prepare</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>* argv[]);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1Application.html#ac941ab441ad1379f58b0187287431a96">execute</a>();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1Application.html#a4026d1ad4f3a316165d04917797576ce">resetProcessPriority</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> writeExecutionInfo();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Application.html#a439ee57fe487abe8b53730b6dfe45e8b">   64</a></span>&#160;    std::pair&lt;std::unique_ptr&lt;Data::Study&gt;, IResultWriter::Ptr&gt; <a class="code" href="classAntares_1_1Solver_1_1Application.html#a439ee57fe487abe8b53730b6dfe45e8b">acquireStudy</a>()</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> {std::move(pStudy), std::move(resultWriter)};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; getDurationCollector()</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> pDurationCollector;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">enum class</span> LogType</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        Warning,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        Error</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    };</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> resetLogFilename() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">void</span> readDataForTheStudy(<a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Antares::Data::StudyLoadOptions</a>&amp; options);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordtype">void</span> onLogMessage(<span class="keywordtype">int</span> level, <span class="keyword">const</span> std::string&amp; message);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="classSettings.html">Settings</a> pSettings;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::unique_ptr&lt;Antares::Data::Study&gt; pStudy;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a>* pParameters = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    uint pErrorCount = 0;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    uint pWarningCount = 0;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">int</span> pArgc = 0;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>** pArgv = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="comment">// Benchmarking</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a> pDurationCollector;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="structBenchmarking_1_1OptimizationInfo.html">Benchmarking::OptimizationInfo</a> pOptimizationInfo;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::shared_ptr&lt;Yuni::Job::QueueService&gt; ioQueueService;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    IResultWriter::Ptr resultWriter = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    std::vector&lt;std::pair&lt;LogType, std::string&gt;&gt; messagesStack;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">void</span> prepareWriter(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                       <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; duration_collector);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> writeComment(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">void</span> readStudy_makeChecks_and_printThings(<a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Data::StudyLoadOptions</a>&amp; options);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">// Return false if the user requested the version ,available solvers, etc, true otherwise</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">bool</span> handleOptions(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Data::StudyLoadOptions</a>&amp; options);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">void</span> LogMessageStack(std::vector&lt;std::pair&lt;LogType, std::string&gt;&gt;&amp; stack);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="comment">// Return false if the user requested help, true otherwise</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">bool</span> parseCommandLine(<a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Data::StudyLoadOptions</a>&amp; options);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordtype">void</span> postParametersChecks() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}; <span class="comment">// class Application</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="keywordtype">void</span> writeSimulationInfos(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                          <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; durationCollector,</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                          <span class="keyword">const</span> <a class="code" href="structBenchmarking_1_1OptimizationInfo.html">Benchmarking::OptimizationInfo</a>&amp; optimizationInfo,</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                          IResultWriter* resultWriter);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Parameters_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Parameters.html">Antares::Data::Parameters</a></div><div class="ttdoc">General data for a study.</div><div class="ttdef"><b>Definition:</b> parameters.h:34</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1StudyLoadOptions_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyLoadOptions.html">Antares::Data::StudyLoadOptions</a></div><div class="ttdef"><b>Definition:</b> load-options.h:17</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:41</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Application_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Application.html">Antares::Solver::Application</a></div><div class="ttdef"><b>Definition:</b> application.h:21</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Application_html_a1017f09dcde5080ada2af4b4172f8138"><div class="ttname"><a href="classAntares_1_1Solver_1_1Application.html#a1017f09dcde5080ada2af4b4172f8138">Antares::Solver::Application::Application</a></div><div class="ttdeci">Application()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition:</b> application.cpp:62</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Application_html_a4026d1ad4f3a316165d04917797576ce"><div class="ttname"><a href="classAntares_1_1Solver_1_1Application.html#a4026d1ad4f3a316165d04917797576ce">Antares::Solver::Application::resetProcessPriority</a></div><div class="ttdeci">void resetProcessPriority() const</div><div class="ttdoc">Reset the process priority (Windows only)</div><div class="ttdef"><b>Definition:</b> process-priority.cpp:20</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Application_html_a439ee57fe487abe8b53730b6dfe45e8b"><div class="ttname"><a href="classAntares_1_1Solver_1_1Application.html#a439ee57fe487abe8b53730b6dfe45e8b">Antares::Solver::Application::acquireStudy</a></div><div class="ttdeci">std::pair&lt; std::unique_ptr&lt; Data::Study &gt;, IResultWriter::Ptr &gt; acquireStudy()</div><div class="ttdoc">/!\ Acquire the study. Leave Application object in an invalid state.</div><div class="ttdef"><b>Definition:</b> application.h:64</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Application_html_a717ddcf81267379bce00aecf165dd263"><div class="ttname"><a href="classAntares_1_1Solver_1_1Application.html#a717ddcf81267379bce00aecf165dd263">Antares::Solver::Application::prepare</a></div><div class="ttdeci">void prepare(int argc, const char *argv[])</div><div class="ttdoc">Initialize data before launching the simulation.</div><div class="ttdef"><b>Definition:</b> application.cpp:328</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Application_html_ab731ee5d76d2df87411284e1c79ff080"><div class="ttname"><a href="classAntares_1_1Solver_1_1Application.html#ab731ee5d76d2df87411284e1c79ff080">Antares::Solver::Application::~Application</a></div><div class="ttdeci">~Application() override</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> application.cpp:545</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Application_html_ac941ab441ad1379f58b0187287431a96"><div class="ttname"><a href="classAntares_1_1Solver_1_1Application.html#ac941ab441ad1379f58b0187287431a96">Antares::Solver::Application::execute</a></div><div class="ttdeci">void execute()</div><div class="ttdoc">Execute the simulation.</div><div class="ttdef"><b>Definition:</b> application.cpp:415</div></div>
+<div class="ttc" id="aclassBenchmarking_1_1DurationCollector_html"><div class="ttname"><a href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a></div><div class="ttdef"><b>Definition:</b> DurationCollector.h:19</div></div>
+<div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Command line settings for launching the simulation.</div><div class="ttdef"><b>Definition:</b> options.h:19</div></div>
+<div class="ttc" id="astructBenchmarking_1_1OptimizationInfo_html"><div class="ttname"><a href="structBenchmarking_1_1OptimizationInfo.html">Benchmarking::OptimizationInfo</a></div><div class="ttdef"><b>Definition:</b> StudyInfoCollector.h:44</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_bac1b05bbeb3d17522a3d266590990b3.html">application</a></li><li class="navelem"><a class="el" href="dir_888e6072dc2d15b6ca8baef8e839f217.html">include</a></li><li class="navelem"><a class="el" href="dir_d4c44c54b2cd4e601e99cf508d15a59e.html">antares</a></li><li class="navelem"><a class="el" href="dir_bb0fa0527d0e3b83fb4c4dbedb551f7d.html">application</a></li><li class="navelem"><b>application.h</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

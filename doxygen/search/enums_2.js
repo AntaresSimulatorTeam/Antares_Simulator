@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ids_7155',['IDs',['../classAntares_1_1Map_1_1PanelInfos.html#a3066387ddb479bcf0d3cbaec4b789d34',1,'Antares::Map::PanelInfos']]]
+  ['options_4717',['Options',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2',1,'Antares::Matrix']]]
 ];
