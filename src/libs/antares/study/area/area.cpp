@@ -16,22 +16,15 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-void Area::internalInitialize()
-{
-    // TODO remove this method
-}
-
 Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
-    internalInitialize();
 }
 
 Area::Area(const AnyString& name):
     Area()
 {
-    internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(this->name);
 }
@@ -39,7 +32,6 @@ Area::Area(const AnyString& name):
 Area::Area(const AnyString& name, const AnyString& id):
     Area()
 {
-    internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(id);
 }

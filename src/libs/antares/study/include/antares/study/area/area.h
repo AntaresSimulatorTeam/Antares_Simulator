@@ -279,7 +279,6 @@ public:
     //@}
 
 private:
-    void internalInitialize();
     void createMissingTimeSeries();
     void createMissingPrepros();
 
