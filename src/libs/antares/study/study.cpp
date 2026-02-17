@@ -7,7 +7,6 @@
 #include <climits>
 #include <cmath> // For use of floor(...) and ceil(...)
 #include <ctime>
-#include <optional>
 #include <sstream> // std::ostringstream
 #include <thread>
 
@@ -21,13 +20,13 @@
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/antares.h"
 #include "antares/study/area/constants.h"
-#include "antares/study/correlation-updater.hxx"
 #include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
-#include "antares/study/scenario-builder/updater.hxx"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
+
+#define SEP IO::Separator
 
 namespace fs = std::filesystem;
 
@@ -443,17 +442,6 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     // The new scope is mandatory to rebuild the correlation matrices
     // and the scenario builder data
     {
-        // These are only useful for the GUI, remove afterwards
-        // We need the constructors to be called here, and the destructors
-        // to be called at the end of the scope. Using std::optional is merely
-        // a means to that end.
-        std::optional<CorrelationUpdater> updater;
-        std::optional<ScenarioBuilderUpdater> updaterSB;
-        if (updateMode)
-        {
-            updater.emplace(*this);
-            updaterSB.emplace(*this);
-        }
         // Adding an area
         AreaName newName;
         if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())

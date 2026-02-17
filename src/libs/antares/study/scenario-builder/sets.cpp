@@ -13,7 +13,6 @@ namespace Antares::Data::ScenarioBuilder
 Sets::Sets():
     pStudy(nullptr)
 {
-    inUpdaterMode = false;
 }
 
 Sets::~Sets()
@@ -161,7 +160,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
           for (auto* p = section.firstProperty; p != nullptr; p = p->next)
           {
               p->key.split(splitKey, ",", true, false);
-              ruleset.readLine(splitKey, p->value, inUpdaterMode);
+              ruleset.readLine(splitKey, p->value, false);
           }
 
           ruleset.sendWarningsForDisabledClusters();

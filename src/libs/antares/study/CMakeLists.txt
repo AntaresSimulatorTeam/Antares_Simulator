@@ -10,7 +10,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/sets.h
         include/antares/study/scenario-builder/sets.hxx
         scenario-builder/sets.cpp
-        include/antares/study/scenario-builder/updater.hxx
         scenario-builder/BindingConstraintsTSNumbersData.cpp
         scenario-builder/NTCTSNumberData.cpp
         include/antares/study/scenario-builder/NTCTSNumberData.h
@@ -207,7 +206,6 @@ set(SRC_STUDY
         study.cpp
         duplicates.cpp
         include/antares/study/duplicates.h
-        include/antares/study/correlation-updater.hxx
         study.importprepro.cpp
         importlogs.cpp
         load.cpp
