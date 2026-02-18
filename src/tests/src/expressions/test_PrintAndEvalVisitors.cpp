@@ -585,7 +585,11 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
     auto param = build_context_parameter_with("my-param", value);
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
-    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+    EvalVisitor visitor(optimEntityContainer,
+                        ctx,
+                        *compo,
+                        &data,
+                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double num = 221.3;
     Node* equalLiteralParam = create<EqualNode>(create<LiteralNode>(num), &root);
@@ -655,7 +659,11 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
 
-    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+    EvalVisitor visitor(optimEntityContainer,
+                        ctx,
+                        *compo,
+                        &data,
+                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -672,7 +680,11 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
 
-    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+    EvalVisitor visitor(optimEntityContainer,
+                        ctx,
+                        *compo,
+                        &data,
+                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -760,9 +772,7 @@ struct TimeDependentParameterFixture
     std::vector<Component> components;
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem,
-                                                               &dummy_data,
-                                                               &scenarioGroupRepo);
+    OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem);
 
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 1};
@@ -787,7 +797,12 @@ struct TimeDependentParameterFixture
         components.push_back(createComponent(model, compoName, additionnalParams));
         scenarioGroupRepo = makeScenarioGroupRepo(components.front());
         optimContainer.addFromSystemComponents(components);
-        evalVisitor = std::make_unique<EvalVisitor>(optimContainer, ctx, components.front());
+        evalVisitor = std::make_unique<EvalVisitor>(optimContainer,
+                                                    ctx,
+                                                    components.front(),
+                                                    &dummy_data,
+                                                    &scenarioGroupRepo.scenario(
+                                                      components.front().getScenarioGroupId()));
     }
 };
 
@@ -832,11 +847,13 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
-                        {first, last /*two hours*/, first, last, 0},
-                        components.back());
+                        {first, last /*three hours*/, first, last, 0},
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -882,12 +899,14 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
                         {first, last /*three hours*/, first, last, 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -925,12 +944,14 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
                         {first, last /*three hours*/, first, last, 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     return visitor.dispatch(&root);
 }
 
@@ -963,12 +984,14 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
                         {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -1027,12 +1050,14 @@ void evaluate_time_dependent_operation()
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
-                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                        components.back());
+                        {hour_0, hour_1 /*three hours*/, hour_0, hour_1, 0},
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(literal.value(), hour_0));
@@ -1064,11 +1089,13 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(literal.value(),
@@ -1108,11 +1135,13 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     const auto eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -1627,7 +1656,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     PredfinedSolutionLinearProblemMock linearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &testData, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     optimContainer.addStartColumn();
@@ -1644,7 +1673,11 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
                                       0,
                                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
-    EvalVisitor visitor(optimContainer, fillContext, components.back());
+    EvalVisitor visitor(optimContainer,
+                        fillContext,
+                        components.back(),
+                        &testData,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 

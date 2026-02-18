@@ -41,13 +41,12 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
     pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
-    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb,
-                                                                  &dummy_data,
-                                                                  &scenarioGroupRepo);
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
     optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {
         auto cf = std::make_unique<ComponentFiller>(component,
+                                                    &dummy_data,
                                                     *optimEntityContainer,
                                                     scenarioGroupRepo,
                                                     Config::Location::SUBPROBLEMS);

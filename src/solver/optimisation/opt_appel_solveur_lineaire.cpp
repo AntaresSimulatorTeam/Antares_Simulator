@@ -105,14 +105,13 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 // Returns a shared_ptr to the solver
 void fillLinearProblem(FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
-                       LegacyOrtoolsLinearProblem& ortoolsProblem,
                        OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(ortoolsProblem, problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -187,7 +186,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     fillLinearProblem(fillCtx,
                       problemeHebdo,
-                      ortoolsProblem,
                       optimEntityContainer,
                       problemeHebdo->NamedProblems,
                       bendersDecomposition);
@@ -351,7 +349,6 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
 
         fillLinearProblem(fillCtx,
                           problemeHebdo,
-                          infeasibleProblem,
                           optimEntityContainer,
                           true,
                           bendersDecomposition);

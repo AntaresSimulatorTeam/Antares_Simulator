@@ -51,8 +51,8 @@ private:
 
     const Optimisation::OptimEntityContainer& optimEntityContainer_;
     const ModelerStudy::SystemModel::Component& component_;
-    const Optimisation::EvaluationContext evalContext_;
     const Optimisation::LinearProblemApi::ILinearProblemData* data_;
     const Optimisation::LinearProblemApi::IScenario* scenario_;
+    const Optimisation::EvaluationContext evalContext_;
 };
 } // namespace Antares::Expressions::Visitors

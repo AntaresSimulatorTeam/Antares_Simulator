@@ -319,11 +319,11 @@ public:
 
 private:
     const Optimisation::OptimEntityContainer& optimContainer_;
-    const Optimisation::EvaluationContext evalContext_;
-    const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
     const Optimisation::LinearProblemApi::ILinearProblemData* data_;
     const Optimisation::LinearProblemApi::IScenario* scenario_;
+    const Optimisation::EvaluationContext evalContext_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

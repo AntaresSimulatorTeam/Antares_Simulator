@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
                                .output = "var2",
                                .absolute_time_index = std::nullopt,
                                .block_time_index = std::nullopt,
-                               .scenario_index = std::nullopt,
+                               .scenario_index = 0,
                                .value = std::nullopt,
                                .status = std::nullopt};
 
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp2,var2,None,None,None,None,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp2,var2,None,None,0,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
@@ -519,8 +519,11 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
-                                                  .dispatch(constraint.expression().RootNode());
+            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer,
+                                                                   compo,
+                                                                   &dummy_data_,
+                                                                   &scenarioGroupRepo.scenario(compo.getScenarioGroupId()))
+                                                   .dispatch(constraint.expression().RootNode());
             optimEntityContainer->registerConstraint(compo, constraint_variability);
             if (isTimeDependent(constraint_variability))
             {
@@ -538,11 +541,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
 
     void setOptimEntityContainer(MockLinearProblem* linearProblem)
     {
-        scenarioGroupRepository = std::make_unique<ScenarioGroupRepository>();
-        optimEntityContainer = std::make_unique<OptimEntityContainer>(
-          *linearProblem,
-          &dummy_data_,
-          scenarioGroupRepository.get());
+        optimEntityContainer = std::make_unique<OptimEntityContainer>(*linearProblem);
     }
 
     void PrepareData()
@@ -575,9 +574,9 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& compo: components)
         {
             const auto& compoId = compo.Id();
-            scenarioGroupRepository->addScenario(compo.getScenarioGroupId(),
-                                                 std::make_unique<Scenario>(
-                                                   compo.getScenarioGroupId()));
+            scenarioGroupRepo.addScenario(compo.getScenarioGroupId(),
+                                          std::make_unique<Scenario>(
+                                            compo.getScenarioGroupId()));
             addRandomVariables(fillContext, linearProblem, compo);
         }
 
@@ -601,8 +600,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         setOptimEntityContainer(linearProblem);
         AddRandomVariablesAndContraints(fillContext, linearProblem);
     }
-
-    std::unique_ptr<ScenarioGroupRepository> scenarioGroupRepository = nullptr;
 
     std::unique_ptr<OptimEntityContainer> optimEntityContainer = nullptr;
 };
@@ -668,7 +665,7 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
 
     std::vector<SimulationTableEntry> originalEntries = {
       {1, "comp1", "var1", 10, 5, 1, 123.456, MipBasisStatus::BASIC},
-      {2, "comp2", "var2", std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt},
+      {2, "comp2", "var2", std::nullopt, std::nullopt, 0, std::nullopt, std::nullopt},
       {3, "comp3", "var3", 20, 10, 2, -456.789, MipBasisStatus::AT_UPPER_BOUND}};
 
     for (const auto& entry: originalEntries)
@@ -948,9 +945,9 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
     table.write();
 
     const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var1,None,None,None,") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var2,1,1,None") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var2,2,2,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var1,None,None,0,") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,1,1,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,2,2,0") != std::string::npos);
     BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
     BOOST_CHECK(buffer.find("1,comp1,var4,1,1,0") != std::string::npos);
     BOOST_CHECK(buffer.find("1,comp1,var4,2,2,0") != std::string::npos);
@@ -968,7 +965,7 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
                                .output = "",
                                .absolute_time_index = std::nullopt,
                                .block_time_index = std::nullopt,
-                               .scenario_index = std::nullopt,
+                               .scenario_index = 0,
                                .value = std::nullopt,
                                .status = std::nullopt};
 
@@ -976,7 +973,7 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("0,,,None,None,None,None,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("0,,,None,None,0,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)

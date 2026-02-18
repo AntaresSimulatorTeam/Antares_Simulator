@@ -229,9 +229,7 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
     setData("availability_factor", {4.0, -389});
     setData("already_installed_availability_factor", {1250., -153});
 
-    OptimEntityContainer optimEntityContainer(linearProblem,
-                                              &linearProblemData,
-                                              &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     unsigned int nbTimeStep = 2;
