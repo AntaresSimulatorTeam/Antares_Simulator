@@ -16,11 +16,11 @@ namespace Antares::Solver::LoadFiles
 {
 
 /// Load the libraries, system and dataseries
-ModelerData loadAll(const std::filesystem::path& studyPath);
+std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath);
 
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
-std::pair<std::vector<ModelerStudy::SystemModel::Library>, Antares::Solver::ResolutionMode>
+std::optional<std::pair<std::vector<ModelerStudy::SystemModel::Library>, ResolutionMode>>
 loadLibraries(const std::filesystem::path& studyPath);
 
 ModelerStudy::SystemModel::System loadSystem(

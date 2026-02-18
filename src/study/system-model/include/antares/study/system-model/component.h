@@ -109,7 +109,7 @@ public:
 private:
     void checkPortFieldDefinitionExists(const std::string& portName,
                                         const std::string& fieldName,
-                                        const std::string& errMsgPrefix);
+                                        const std::string& errMsgPrefix) const;
 
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;

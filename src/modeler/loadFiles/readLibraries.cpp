@@ -69,10 +69,15 @@ std::vector<SystemModel::Library> convertIntoSystemLibs(const std::vector<YmlMod
     return libraries;
 }
 
-std::vector<YmlModel::Library> loadLibrariesFromYaml(const fs::path& studyPath)
+std::optional<std::vector<YmlModel::Library>> loadLibrariesFromYaml(const fs::path& studyPath)
 {
     std::vector<YmlModel::Library> yml_libs;
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
+    if (!fs::exists(directoryPath))
+    {
+        logs.warning() << "Model library missing";
+        return {};
+    }
     for (const auto& entry: fs::directory_iterator(directoryPath))
     {
         if (entry.path().extension() != ".yml")
@@ -164,13 +169,18 @@ Solver::ResolutionMode convertResolutionMode(std::string ymlMode)
 }
 } // namespace
 
-std::pair<std::vector<SystemModel::Library>, Solver::ResolutionMode> loadLibraries(
+std::optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>> loadLibraries(
   const fs::path& studyPath)
 {
     auto ymlLibraries = loadLibrariesFromYaml(studyPath);
-    const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
-    updateLibrariesWithOptimConfig(ymlLibraries, ymlOptimConfig);
-    return {convertIntoSystemLibs(ymlLibraries),
-            convertResolutionMode(ymlOptimConfig.resolution_mode)};
+    if (ymlLibraries.has_value())
+    {
+        const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
+        updateLibrariesWithOptimConfig(ymlLibraries.value(), ymlOptimConfig);
+        return std::make_optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>>(
+          convertIntoSystemLibs(ymlLibraries.value()),
+          convertResolutionMode(ymlOptimConfig.resolution_mode));
+    }
+    return {};
 }
 } // namespace Antares::Solver::LoadFiles
