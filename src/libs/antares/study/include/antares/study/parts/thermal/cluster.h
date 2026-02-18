@@ -157,6 +157,9 @@ public:
     //! The index of the cluster (within a list)
     uint index = 0;
 
+    //! The global index of the cluster across all areas (used by the solver)
+    int globalIndex = -1;
+
     //! Mustrun
     bool mustrun = false;
 

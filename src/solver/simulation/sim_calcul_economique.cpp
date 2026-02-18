@@ -288,9 +288,9 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
         for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
         {
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index] = NombrePaliers
-                                                                                       + cluster
-                                                                                           ->index;
+            cluster->globalIndex = static_cast<int>(NombrePaliers + cluster->index);
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
+              = cluster->globalIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[cluster->index]
               = cluster->nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[cluster->index] = cluster->minStablePower;

@@ -60,16 +60,7 @@ private:
                                     int clusterIndex,
                                     const std::string& namePrefix);
 
-    struct AreaAndClusters
-    {
-        unsigned int areaIndex;
-        std::unordered_map<std::string, unsigned> clusters; // name <-> global Index
-    };
-
-    AreaAndClusters& areaClusters(const std::string& areaId);
     int getClusterIndex(const std::string& areaId, const std::string& clusterId);
-
-    std::unordered_map<std::string, AreaAndClusters> areasAndClusters_;
 
     VariableManagement::VariableManager variableManager_;
 };
