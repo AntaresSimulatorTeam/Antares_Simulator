@@ -3,6 +3,7 @@
 
 
 #include <antares/modeler-optimisation-container/EvaluationContext.h>
+#include "antares/exception/RuntimeError.hpp"
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include "antares/optimisation/linear-problem-api/IScenario.h"
 
@@ -92,11 +93,19 @@ ModelerStudy::SystemModel::ParameterTypeAndValue EvaluationContext::getParameter
 
 const ILinearProblemData& EvaluationContext::data() const
 {
+    if (!data_)
+    {
+        throw Error::RuntimeError("EvaluationContext::data() called with null data pointer");
+    }
     return *data_;
 }
 
 const Optimisation::LinearProblemApi::IScenario& EvaluationContext::scenario() const
 {
+    if (!scenario_)
+    {
+        throw Error::RuntimeError("EvaluationContext::scenario() called with null scenario pointer");
+    }
     return *scenario_;
 }
 } // namespace Antares::Optimisation
