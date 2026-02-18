@@ -91,7 +91,6 @@ LinearExpression& LinearExpression::operator*=(double factor)
 
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
-    coefs_.reserve(coefs_.size() + other.coefs_.size());
     coefs_.insert(coefs_.end(), other.coefs_.begin(), other.coefs_.end());
     constant_ += other.constant_;
     return *this;
@@ -99,7 +98,6 @@ LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 
 LinearExpression& LinearExpression::operator-=(const LinearExpression& other)
 {
-    coefs_.reserve(coefs_.size() + other.coefs_.size());
     for (const auto& [index, coef]: other.coefs_)
     {
         coefs_.emplace_back(index, -coef);
