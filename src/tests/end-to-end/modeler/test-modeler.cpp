@@ -363,11 +363,11 @@ public:
         // GOOD linear scaling for this expression
         auto objective = fixture.add(fixture.Sum(var_node), fixture.Sum(var_node));
 
-        // BAD quadratic scaling for this expression
-        // auto objective = fixture.Sum(fixture.add(var_node, var_node));
+        // GOOD quadratic scaling for this expression
+        auto lhs = fixture.Sum(fixture.add(var_node, var_node));
 
         auto zero = fixture.literal(0);
-        auto ct_node = fixture.nodeRegistry.template create<Nodes::GreaterThanOrEqualNode>(var_node,
+        auto ct_node = fixture.nodeRegistry.template create<Nodes::GreaterThanOrEqualNode>(lhs,
                                                                                            zero);
         fixture.createModelWithOneFloatVar("some_model",
                                            parameterIds,
