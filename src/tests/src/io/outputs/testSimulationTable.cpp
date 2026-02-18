@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
                                    .output = "var" + std::to_string(i),
                                    .absolute_time_index = i * 10,
                                    .block_time_index = i % 168,
-                                   .scenario_index = i % 10,
+                                   .scenario_index = static_cast<unsigned>(i % 10),
                                    .value = static_cast<double>(i) * 0.1,
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
                                              .output = "var_" + std::to_string(i),
                                              .absolute_time_index = i,
                                              .block_time_index = i % 24,
-                                             .scenario_index = t,
+                                             .scenario_index = static_cast<unsigned>(t),
                                              .value = static_cast<double>(i),
                                              .status = MipBasisStatus::BASIC};
 
@@ -388,7 +388,7 @@ BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
                                    .output = "variable_" + std::to_string(i % 50),
                                    .absolute_time_index = i,
                                    .block_time_index = i % 168,
-                                   .scenario_index = i % 10,
+                                   .scenario_index = static_cast<unsigned>(i % 10),
                                    .value = static_cast<double>(i) * 0.001,
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
@@ -1013,7 +1013,7 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
                                        .output = "var_" + std::to_string(i),
                                        .absolute_time_index = i,
                                        .block_time_index = i,
-                                       .scenario_index = cycle,
+                                       .scenario_index = static_cast<unsigned>(cycle),
                                        .value = static_cast<double>(i),
                                        .status = MipBasisStatus::BASIC};
             table.addEntry(entry);
@@ -1286,7 +1286,7 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
                                        .output = "output_" + std::to_string(i),
                                        .absolute_time_index = i * 10,
                                        .block_time_index = i * 5,
-                                       .scenario_index = i % 3,
+                                       .scenario_index = static_cast<unsigned>(i % 3),
                                        .value = i * 2.5,
                                        .status = static_cast<MipBasisStatus>(i % 6)};
             table.addEntry(entry);
