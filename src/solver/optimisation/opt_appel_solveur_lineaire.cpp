@@ -347,11 +347,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                                           ->bendersDecomposition
                                                                      : nullptr;
 
-        fillLinearProblem(fillCtx,
-                          problemeHebdo,
-                          optimEntityContainer,
-                          true,
-                          bendersDecomposition);
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
 
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();

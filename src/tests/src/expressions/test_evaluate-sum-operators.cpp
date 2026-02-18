@@ -113,7 +113,8 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
                                                 fillCtx_,
                                                 component_,
                                                 &data_,
-                                                &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
+                                                &scenarioGroupRepo_.scenario(
+                                                  component_.getScenarioGroupId()));
 }
 
 // =================================================

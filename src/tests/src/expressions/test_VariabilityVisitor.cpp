@@ -95,7 +95,8 @@ struct TestVariabilityVisitorFixture
         variabilityVisitor.emplace(*fixture.optimEntityContainer,
                                    fixture.components[0],
                                    &data_,
-                                   &fixture.scenarioGroupRepo.scenario(fixture.components[0].getScenarioGroupId()));
+                                   &fixture.scenarioGroupRepo.scenario(
+                                     fixture.components[0].getScenarioGroupId()));
     }
 };
 
@@ -362,7 +363,8 @@ BOOST_AUTO_TEST_CASE(overwrite_variability_in_model_by_variablility_in_component
     variabilityVisitor.emplace(*fixture.optimEntityContainer,
                                fixture.components[1],
                                &data2_,
-                               &fixture.scenarioGroupRepo.scenario(fixture.components[1].getScenarioGroupId()));
+                               &fixture.scenarioGroupRepo.scenario(
+                                 fixture.components[1].getScenarioGroupId()));
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&parameterNode),
                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);

@@ -103,7 +103,8 @@ CreateEvalVisitor::CreateEvalVisitor():
                                                 fillCtx_,
                                                 component_,
                                                 &data_,
-                                                &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
+                                                &scenarioGroupRepo_.scenario(
+                                                  component_.getScenarioGroupId()));
 }
 
 // =================================================

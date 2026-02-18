@@ -116,21 +116,30 @@ private:
 
         auto dummyExpression = []() { return SystemModel::Expression("", {}); };
         std::vector<SystemModel::Variable> variables;
-        variables.emplace_back("var1", dummyExpression(), dummyExpression(),
+        variables.emplace_back("var1",
+                               dummyExpression(),
+                               dummyExpression(),
                                SystemModel::ValueType::FLOAT,
-                               SystemModel::TimeDependent::NO, SystemModel::ScenarioDependent::NO);
-        variables.emplace_back("var2", dummyExpression(), dummyExpression(),
+                               SystemModel::TimeDependent::NO,
+                               SystemModel::ScenarioDependent::NO);
+        variables.emplace_back("var2",
+                               dummyExpression(),
+                               dummyExpression(),
                                SystemModel::ValueType::FLOAT,
-                               SystemModel::TimeDependent::NO, SystemModel::ScenarioDependent::NO);
-        variables.emplace_back("var3", dummyExpression(), dummyExpression(),
+                               SystemModel::TimeDependent::NO,
+                               SystemModel::ScenarioDependent::NO);
+        variables.emplace_back("var3",
+                               dummyExpression(),
+                               dummyExpression(),
                                SystemModel::ValueType::FLOAT,
-                               SystemModel::TimeDependent::NO, SystemModel::ScenarioDependent::NO);
+                               SystemModel::TimeDependent::NO,
+                               SystemModel::ScenarioDependent::NO);
 
         SystemModel::ModelBuilder modelBuilder;
         m = modelBuilder.withId("model")
-                         .withParameters(std::move(parameters))
-                         .withVariables(std::move(variables))
-                         .build();
+              .withParameters(std::move(parameters))
+              .withVariables(std::move(variables))
+              .build();
 
         SystemModel::ComponentBuilder componentBuilder;
         return componentBuilder.withId("compo")

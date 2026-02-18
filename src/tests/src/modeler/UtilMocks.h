@@ -481,7 +481,8 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
                                                            ctx,
                                                            compo,
                                                            &data,
-                                                           &scenarioGroupRepository.scenario(compo.getScenarioGroupId()));
+                                                           &scenarioGroupRepository.scenario(
+                                                             compo.getScenarioGroupId()));
         }
     }
 

@@ -153,7 +153,6 @@ void handleDependingOnVariability(
         {
             handle(ts, year);
         }
-
     }
     else
     {

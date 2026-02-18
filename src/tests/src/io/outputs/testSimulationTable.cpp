@@ -522,8 +522,9 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             const auto constraint_variability = VariabilityVisitor(*optimEntityContainer,
                                                                    compo,
                                                                    &dummy_data_,
-                                                                   &scenarioGroupRepo.scenario(compo.getScenarioGroupId()))
-                                                   .dispatch(constraint.expression().RootNode());
+                                                                   &scenarioGroupRepo.scenario(
+                                                                     compo.getScenarioGroupId()))
+                                                  .dispatch(constraint.expression().RootNode());
             optimEntityContainer->registerConstraint(compo, constraint_variability);
             if (isTimeDependent(constraint_variability))
             {
@@ -575,8 +576,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         {
             const auto& compoId = compo.Id();
             scenarioGroupRepo.addScenario(compo.getScenarioGroupId(),
-                                          std::make_unique<Scenario>(
-                                            compo.getScenarioGroupId()));
+                                          std::make_unique<Scenario>(compo.getScenarioGroupId()));
             addRandomVariables(fillContext, linearProblem, compo);
         }
 

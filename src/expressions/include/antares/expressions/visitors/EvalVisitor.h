@@ -8,10 +8,10 @@
 #include <variant>
 
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 
