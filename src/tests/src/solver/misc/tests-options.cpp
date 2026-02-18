@@ -186,3 +186,115 @@ BOOST_AUTO_TEST_CASE(output_settings_are_incompatible___exception_raised)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(settings_reset)
+
+BOOST_AUTO_TEST_CASE(reset_restores_default_values)
+{
+    Settings settings;
+
+    // Set non-default values
+    settings.studyFolder = "some-folder";
+    settings.simulationName = "some-simulation";
+    settings.commentFile = "some-comment-file";
+    settings.simplexOptimRange = "week";
+    settings.PID = "some-pid-path";
+
+    settings.ignoreLoadingErrors = true;
+    settings.ignoreConstraints = true;
+    settings.tsGeneratorsOnly = true;
+    settings.noOutput = true;
+    settings.displayProgression = true;
+    settings.forceZipOutput = true;
+
+    settings.solverOptions.linearSolver = "custom-linear";
+    settings.solverOptions.linearSolverParameters = "custom-params";
+    settings.solverOptions.lpSolverParamOptim1 = "optim1";
+    settings.solverOptions.lpSolverParamOptim2 = "optim2";
+    settings.solverOptions.useOptim1BasisInNextWeek = false;
+    settings.solverOptions.useOptim1BasisInOptim2 = false;
+    settings.solverOptions.quadraticSolver = "custom-quadratic";
+    settings.solverOptions.quadraticSolverParameters = "quadratic-params";
+    settings.solverOptions.solverLogs = true;
+
+    settings.reset();
+
+    BOOST_CHECK(settings.studyFolder.empty());
+    BOOST_CHECK(settings.simulationName.empty());
+    BOOST_CHECK(settings.commentFile.empty());
+    BOOST_CHECK(settings.simplexOptimRange.empty());
+    BOOST_CHECK(settings.PID.empty());
+
+    BOOST_CHECK(!settings.ignoreLoadingErrors);
+    BOOST_CHECK(!settings.ignoreConstraints);
+    BOOST_CHECK(!settings.tsGeneratorsOnly);
+    BOOST_CHECK(!settings.noOutput);
+    BOOST_CHECK(!settings.displayProgression);
+    BOOST_CHECK(!settings.forceZipOutput);
+
+    BOOST_CHECK_EQUAL(settings.solverOptions.linearSolver, std::string("sirius"));
+    BOOST_CHECK(settings.solverOptions.linearSolverParameters.empty());
+    BOOST_CHECK(settings.solverOptions.lpSolverParamOptim1.empty());
+    BOOST_CHECK(settings.solverOptions.lpSolverParamOptim2.empty());
+    BOOST_CHECK(settings.solverOptions.useOptim1BasisInNextWeek);
+    BOOST_CHECK(settings.solverOptions.useOptim1BasisInOptim2);
+    BOOST_CHECK_EQUAL(settings.solverOptions.quadraticSolver, std::string("sirius"));
+    BOOST_CHECK(settings.solverOptions.quadraticSolverParameters.empty());
+    BOOST_CHECK(!settings.solverOptions.solverLogs);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(create_parser)
+
+BOOST_AUTO_TEST_CASE(default_parser_resets_settings_and_keeps_defaults)
+{
+    Settings settings;
+    settings.studyFolder = "folder";
+    settings.simulationName = "simulation";
+    settings.commentFile = "comment";
+    settings.simplexOptimRange = "day";
+    settings.noOutput = true;
+    settings.forceZipOutput = true;
+
+    StudyLoadOptions options;
+
+    auto parser = CreateParser(settings, options);
+    BOOST_CHECK(parser);
+
+    // CreateParser must reset settings
+    BOOST_CHECK(settings.studyFolder.empty());
+    BOOST_CHECK(settings.simulationName.empty());
+    BOOST_CHECK(settings.commentFile.empty());
+    BOOST_CHECK(settings.simplexOptimRange.empty());
+    BOOST_CHECK(settings.PID.empty());
+
+    BOOST_CHECK(!settings.ignoreLoadingErrors);
+    BOOST_CHECK(!settings.ignoreConstraints);
+    BOOST_CHECK(!settings.tsGeneratorsOnly);
+    BOOST_CHECK(!settings.noOutput);
+    BOOST_CHECK(!settings.displayProgression);
+    BOOST_CHECK(!settings.forceZipOutput);
+
+    // Solver options should be at their defaults
+    BOOST_CHECK_EQUAL(settings.solverOptions.linearSolver, std::string("sirius"));
+    BOOST_CHECK(settings.solverOptions.linearSolverParameters.empty());
+    BOOST_CHECK(settings.solverOptions.lpSolverParamOptim1.empty());
+    BOOST_CHECK(settings.solverOptions.lpSolverParamOptim2.empty());
+    BOOST_CHECK(settings.solverOptions.useOptim1BasisInNextWeek);
+    BOOST_CHECK(settings.solverOptions.useOptim1BasisInOptim2);
+    BOOST_CHECK_EQUAL(settings.solverOptions.quadraticSolver, std::string("sirius"));
+    BOOST_CHECK(settings.solverOptions.quadraticSolverParameters.empty());
+    BOOST_CHECK(!settings.solverOptions.solverLogs);
+}
+
+BOOST_AUTO_TEST_CASE(parser_can_be_created)
+{
+    Settings settings;
+    StudyLoadOptions options;
+
+    auto parser = CreateParser(settings, options);
+    BOOST_CHECK(parser);
+}
+
+BOOST_AUTO_TEST_SUITE_END()

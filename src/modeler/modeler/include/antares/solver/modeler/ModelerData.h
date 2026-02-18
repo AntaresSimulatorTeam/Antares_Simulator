@@ -7,6 +7,7 @@
 
 #include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include <antares/solver/optim-model-filler/BendersDecomposition.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
@@ -26,6 +27,7 @@ struct ModelerData
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> dataSeries;
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
+    Optimisation::BendersDecomposition bendersDecomposition;
 };
 
 // Operator for printing ResolutionMode in logs and tests

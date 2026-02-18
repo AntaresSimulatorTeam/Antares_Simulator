@@ -10,7 +10,14 @@ namespace Antares
 namespace Data
 {
 class Study;
+
 }
+
+namespace Solver
+{
+class IResultWriter;
+
+} // namespace Solver
 
 /**
  * @class IStudyLoader
@@ -23,8 +30,10 @@ public:
     virtual ~IStudyLoader() = default;
     /**
      * @brief The load method is used to load a study.
-     * @return A shared pointer to a Study object.
+     * @return A pair which is a std::unique_ptr<Data::Study> and Solver::IResultWriter::Ptr
      */
-    [[nodiscard]] virtual std::unique_ptr<Antares::Data::Study> load() const = 0;
+    [[nodiscard]] virtual std::pair<std::unique_ptr<Data::Study>,
+                                    std::shared_ptr<Solver::IResultWriter>>
+    load() const = 0;
 };
 } // namespace Antares

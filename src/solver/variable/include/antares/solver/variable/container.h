@@ -4,11 +4,14 @@
 #ifndef __SOLVER_VARIABLE_LIST_H__
 #define __SOLVER_VARIABLE_LIST_H__
 
+#include <vector>
+
 #include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 #include <yuni/core/string.h>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/variable/dynamicAggregation/dynamicAggregation.h>
 
 #include "categories.h"
 #include "endoflist.h"
@@ -191,6 +194,10 @@ public:
 private:
     //! Pointer to the current study
     Data::Study* pStudy;
+
+    // Allow delayed init
+    std::unique_ptr<Solver::Variable::DynamicAggregationAllYears> dynamicAggregationAllYears_;
+    std::vector<Solver::Variable::DynamicAggregationSingleYear> dynamicAggregationSingleYear_;
 
 }; // class List
 

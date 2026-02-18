@@ -6,14 +6,6 @@ hide:
 # Installer creation
 CPack can be used to create the installer after the build phase:
 
-=== "Windows"
-    ```
-    cd _build
-    cpack -GNSIS
-    ```
-    Currently missing in NSIS installer:
-    - External libraries sources
-
 === "Centos"
 
     ### RHEL .rpm (Experimental)

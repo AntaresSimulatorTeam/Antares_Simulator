@@ -8,46 +8,13 @@
 #include <antares/study/system-model/variable.h>
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 
 #include "ReadLinearConstraintVisitor.h"
 
 namespace Antares::Optimisation
 {
-
-// Represents a variable shared by master and subproblems
-struct ConnectionVariable
-{
-    std::string name;
-    unsigned indexInProblem;
-};
-
-class BendersDecomposition
-{
-public:
-    BendersDecomposition() = default;
-    void setCurrentProblemId(std::string id);
-    void collectConnectionVariables(std::vector<std::string>&& varnames, unsigned varsCountInPb);
-
-    const std::map<std::string, std::vector<ConnectionVariable>>& connections() const
-    {
-        return connectionVars_;
-    }
-
-private:
-    std::map<std::string, std::vector<ConnectionVariable>> connectionVars_;
-    std::string currentProblemId_ = "master";
-};
-
-class BendersDecompositionWriter
-{
-public:
-    BendersDecompositionWriter(const BendersDecomposition& bd);
-    void write(std::ostream& os) const;
-
-private:
-    const BendersDecomposition& bd_;
-};
 
 /**
  * Component filler

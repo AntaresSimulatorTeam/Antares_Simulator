@@ -37,7 +37,8 @@ public:
      *
      * @return std::shared_ptr<Antares::Data::Study> A shared_ptr to the loaded Study object.
      */
-    [[nodiscard]] std::unique_ptr<Antares::Data::Study> load() const override;
+    [[nodiscard]] std::pair<std::unique_ptr<Data::Study>, std::shared_ptr<Solver::IResultWriter>>
+    load() const override;
 
 private:
     std::string study_path_;

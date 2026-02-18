@@ -26,10 +26,10 @@ Feature: hybrid (simulator+modeler) studies
     And the annual system cost is 0
     And in area "NODE", during year 1, loss of load lasts 0 hours
     And the modeler outputs contain the following entries
-      | block   | component | output                 | timestep  | scenario | value |
-      |         | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
-      |         | gen1      | generation.flow_field  | 6184-6230 | 0-4      | 100   |
-      | 1-52    | load1     | consumption.flow_field |           | 0-4      | -100  |
+      | block | component | output                 | timestep  | scenario | value |
+      |       | gen1      | generation.flow_field  | 1-24      | 0-4      | 100   |
+      |       | gen1      | generation.flow_field  | 6184-6230 | 0-4      | 100   |
+      | 1-52  | load1     | consumption.flow_field |           | 0-4      | -100  |
 
   @fast @short
   Scenario: Legacy node with one legacy load (up to 5952 MW) and wind, and one generator component (max_p=6200) (168h simplex)
@@ -94,3 +94,26 @@ Feature: hybrid (simulator+modeler) studies
     When I run antares simulator on all studies
     Then all simulations succeed
     And for each time step, all studies have the same objective value
+
+
+  @fast @short
+  Scenario: Thermal capacity connection: on one node (= area, thermal cluster = continuous_generator_candidate), one timestep and one scenario with one candidate.
+
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/13_1_thermal_add_on/"
+    When I run antares simulator with --named-mps-problems
+    Then the simulation succeeds
+    And the simulation takes less than 15 seconds
+    Then for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster continuous_generator_candidate in area area.
+    And enforces: DispatchableProduction - thermal_add_on.p_max < 0 for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area area.
+
+  @fast @short
+  Scenario: Thermal capacity connection: on one node (= area, thermal cluster = continuous_generator_candidate), one timestep and one scenario with two candidates: one continuous and one discrete..
+
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/13_2_thermal_add_on/"
+    When I run antares simulator with --named-mps-problems
+#    Then the simulation succeeds
+#    And the simulation takes less than 15 seconds
+    Then for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster continuous_generator_candidate in area area.
+    And for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster discrete_generator_candidate in area area.
+    And enforces: DispatchableProduction - thermal_add_on_continuous.p_max < 0 for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area area.
+    And enforces: DispatchableProduction - thermal_add_on_discrete.p_max < 0 for the thermal capacity connection between GEMS and the discrete_generator_candidate thermal cluster in area area.

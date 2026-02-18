@@ -101,8 +101,8 @@ struct Model
 struct AreaConnection
 {
     std::string injection;
-    std::string to_area_bound;
-    std::string from_area_bound;
+    std::string spillage_bound;
+    std::string unsupplied_energy_bound;
 };
 
 struct PortType
@@ -110,6 +110,7 @@ struct PortType
     std::string id;
     std::string description;
     std::vector<std::string> fields;
+    std::string thermal_capacity_connection_field;
     AreaConnection area_connection;
 };
 

@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <algorithm>
+#include <fmt/format.h>
 #include <optional>
 #include <string>
 #include <vector>
@@ -11,11 +13,12 @@
 
 namespace Antares::ModelerStudy::SystemModel
 {
+
 struct AreaConnection
 {
     std::string injection;
-    std::string to_area_bound;
-    std::string from_area_bound;
+    std::string spillage_bound;
+    std::string unsupplied_energy_bound;
 };
 
 class PortType final
@@ -23,7 +26,10 @@ class PortType final
 public:
     PortType(const std::string& id,
              std::vector<PortField>&& fields,
-             const AreaConnection& areaConnection = {});
+             const AreaConnection& areaConnection = {},
+             const std::string& thermalCapacityConnectionField = "");
+
+    const std::optional<std::string>& ThermalCapacityConnectionFieldId() const;
 
     const std::string& Id() const;
     const std::vector<PortField>& Fields() const;
@@ -33,6 +39,7 @@ public:
 private:
     std::string id_;
     std::vector<PortField> fields_;
+    std::optional<std::string> thermalCapacityConnectionFieldId_;
     std::optional<AreaConnection> areaConnection_;
 };
 

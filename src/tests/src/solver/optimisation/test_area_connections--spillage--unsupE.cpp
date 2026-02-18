@@ -23,7 +23,7 @@ using namespace Optimisation;
 using namespace LinearProblemApi;
 using namespace LinearProblemDataImpl;
 
-static const auto libraryYaml = R"(
+static const auto libraryYamlWithSpillageAndUnsuppliedEnergyBound = R"(
 library:
   id: my_lib
   description: test model library
@@ -33,8 +33,11 @@ library:
       description: some port type for area connection
       fields:
         - id: to-area-bound
+        - id: from-area-bound
       area-connection:
-        to-area-bound-field: to-area-bound
+        - injection-field: 
+        - spillage-bound: to-area-bound
+        - unsupplied-energy-bound: from-area-bound
 
   models:
     - id: model_with_vars
@@ -49,10 +52,13 @@ library:
       port-field-definitions:
         - port: area_conn_port
           field: to-area-bound
-          definition: 2 * var_1
+          definition: 2 * var_1 + 30
+        - port: area_conn_port
+          field: from-area-bound
+          definition: var_1 / 2 - 10
 )"s;
 
-static const auto systemYaml = R"(
+static const auto systemYamlAreaConnection = R"(
 system:
   id: my_system
   model-libraries: my_lib
@@ -74,7 +80,9 @@ struct AreaConnectionFixture
     AreaConnectionFixture();
     std::unique_ptr<Solver::ModelerData> buildModelerSystem();
     void addComponentsVariablesToLP();
-    void addNamedConstraintsToLP(std::vector<std::string>& constraintNames, double rhs);
+    void addNamedConstraintsToLP(std::vector<std::string>& constraintNames,
+                                 const double low_bound,
+                                 const double up_bound);
 
     // public data members :
     // -------------------
@@ -92,7 +100,9 @@ struct AreaConnectionFixture
     std::unique_ptr<OptimEntityContainer> optimContainer;
 
 private:
-    void addConstraintsToLinearProblem(std::vector<std::string>& names, double rhs);
+    void addConstraintsToLinearProblem(std::vector<std::string>& names,
+                                       const double low_bound,
+                                       const double up_bound);
 };
 
 AreaConnectionFixture::AreaConnectionFixture():
@@ -117,14 +127,14 @@ std::unique_ptr<Solver::ModelerData> AreaConnectionFixture::buildModelerSystem()
     auto to_return = std::make_unique<Solver::ModelerData>();
 
     IO::Inputs::YmlModel::Parser parserModel;
-    libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
+    libraries.push_back(IO::Inputs::ModelConverter::convert(
+      parserModel.parse(libraryYamlWithSpillageAndUnsuppliedEnergyBound)));
 
     IO::Inputs::YmlSystem::Parser parserSystem;
-    auto ymlSystem = parserSystem.parse(systemYaml);
+    auto ymlSystem = parserSystem.parse(systemYamlAreaConnection);
     auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
 
     to_return->system = std::make_unique<System>(std::move(system));
-    // std::string id = to_return->system->Id();
     return to_return;
 }
 
@@ -147,43 +157,56 @@ void AreaConnectionFixture::addComponentsVariablesToLP()
 }
 
 void AreaConnectionFixture::addNamedConstraintsToLP(std::vector<std::string>& constraintNames,
-                                                    double rhs)
+                                                    const double low_bound,
+                                                    const double up_bound)
 {
     problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
     problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
 
-    addConstraintsToLinearProblem(constraintNames, rhs);
+    addConstraintsToLinearProblem(constraintNames, low_bound, up_bound);
 }
 
 void AreaConnectionFixture::addConstraintsToLinearProblem(std::vector<std::string>& names,
-                                                          double rhs)
+                                                          const double low_bound,
+                                                          const double up_bound)
 {
     for (const auto& name: names)
     {
-        linearProblem.addConstraint(rhs, rhs, name);
+        linearProblem.addConstraint(low_bound, up_bound, name);
     }
 }
 
-BOOST_AUTO_TEST_SUITE(_area_connections___spillage_)
+BOOST_AUTO_TEST_SUITE(_area_connections___injecting_spillage_and_unsupplied_energy_bounds)
 
-BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
+BOOST_FIXTURE_TEST_CASE(injecting_spillage_and_unsupplied_energy_bounds, AreaConnectionFixture)
 {
+    // ------------------------------------------
     // Linear problem before addition from GEMS
     // ------------------------------------------
     // 1. LP is filled with constraints before GEMS comes into play.
     std::vector<std::string> constraintNames;
+    std::string fictiveLoadsConstrName = "FictiveLoads::area<area1>::hour<0>";
+    std::string maxUnsupEconstrName = "MaxUnsupEnergy::area<area1>::hour<0>";
+
     constraintNames.push_back("dummy constaint");
-    constraintNames.push_back("FictiveLoads::area<area1>::hour<0>");
+    constraintNames.push_back(fictiveLoadsConstrName);
+    constraintNames.push_back("another dummy constaint");
+    constraintNames.push_back(maxUnsupEconstrName);
 
-    addNamedConstraintsToLP(constraintNames, 10 /* rhs */);
+    addNamedConstraintsToLP(constraintNames, 0. /* low rhs */, 50. /* up rhs */);
 
-    // 2. Contraints numbering in linear problem before GEMS commes into play.
+    // 2. Contraints numbering in linear problem before GEMS comes into play.
     problemeHebdo->NomsDesPays.push_back("area1");
     problemeHebdo->CorrespondanceCntNativesCntOptim.push_back({});
-    // In LP, fictive loads constraints are contiguous. The start number for them is 1.
+    // ... In LP, fictive loads constraints are contiguous.
+    //     The start number for fictive loads is 1.
     problemeHebdo->CorrespondanceCntNativesCntOptim[0]
       .NumeroDeContraintePourEviterLesChargesFictives.push_back(1);
+    // ... The start number for upper-bounding the unsupplied energy is 3.
+    problemeHebdo->CorrespondanceCntNativesCntOptim[0]
+      .NumeroDeContraintePourBornerLaDefaillance.push_back(3);
 
+    // -------------------------------------------------------
     // Adding GEMS variables and constraints to linear problem
     // -------------------------------------------------------
     // 1. Adding variables (replaces the work of ComponentFiller, but for variables)
@@ -198,14 +221,22 @@ BOOST_FIXTURE_TEST_CASE(dummy_test, AreaConnectionFixture)
     // ---------
     // Checks
     // ---------
-    const auto* fictive_ct_t0 = linearProblem.lookupConstraint(
-      "FictiveLoads::area<area1>::hour<0>");
     const auto* var1_t0 = linearProblem.lookupVariable("component_with_vars.var_1_t0");
 
-    BOOST_CHECK_EQUAL(fictive_ct_t0->getCoefficient(var1_t0), -2.);
+    const auto* fictive_load_ct_t0 = linearProblem.lookupConstraint(fictiveLoadsConstrName);
+    BOOST_CHECK_EQUAL(fictive_load_ct_t0->getCoefficient(var1_t0), -2.);
+    BOOST_CHECK_EQUAL(fictive_load_ct_t0->getLb(), 0. + 30.);
+    BOOST_CHECK_EQUAL(fictive_load_ct_t0->getUb(), 50. + 30.);
 
-    auto other_ct = linearProblem.lookupConstraint("dummy constaint");
-    BOOST_CHECK_EQUAL(other_ct->getCoefficient(var1_t0), 0);
+    const auto* max_unsupE_ct_t0 = linearProblem.lookupConstraint(maxUnsupEconstrName);
+    BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getCoefficient(var1_t0), -0.5);
+    BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getLb(), 0. - 10.);
+    BOOST_CHECK_EQUAL(max_unsupE_ct_t0->getUb(), 50. - 10.);
+
+    auto dummy_ct = linearProblem.lookupConstraint("dummy constaint");
+    auto other_dummy_ct = linearProblem.lookupConstraint("dummy constaint");
+    BOOST_CHECK_EQUAL(dummy_ct->getCoefficient(var1_t0), 0);
+    BOOST_CHECK_EQUAL(other_dummy_ct->getCoefficient(var1_t0), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

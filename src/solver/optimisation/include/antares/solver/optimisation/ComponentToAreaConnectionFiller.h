@@ -20,6 +20,10 @@ class OptimEntityContainer;
 
 namespace Antares::Optimization
 {
+using ConstraintIndicesHelper = std::function<
+  std::vector<unsigned>(const PROBLEME_HEBDO* problemeHebdo,
+                        const Optimisation::LinearProblemApi::FillContext& ctx,
+                        const unsigned& areaIndex)>;
 
 /**
  * \brief Fills the linear problem with constraints and variables related to component-to-area
@@ -55,14 +59,6 @@ private:
       const Optimisation::LinearProblemApi::FillContext& ctx,
       const std::vector<unsigned>& constraintsIndices);
 
-    std::vector<unsigned> balanceConstraintIndices(
-      const Optimisation::LinearProblemApi::FillContext& ctx,
-      const unsigned& areaIndex) const;
-
-    std::vector<unsigned> fictitiousLoadConstraintIndices(
-      const Optimisation::LinearProblemApi::FillContext& ctx,
-      const unsigned& areaIndex) const;
-
     void addExpressionToConstraint(
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
@@ -74,14 +70,12 @@ private:
       const ModelerStudy::SystemModel::Component& component,
       const Optimisation::LinearProblemApi::FillContext& ctx);
 
-    void addInjectionPortToLinearProblem(const Optimisation::LinearProblemApi::FillContext& ctx,
-                                         const ModelerStudy::SystemModel::Component& component,
-                                         const std::string& portId,
-                                         const unsigned& areaIndex);
-    void addToAreaBoundPortInLinearProblem(const Optimisation::LinearProblemApi::FillContext& ctx,
-                                           const ModelerStudy::SystemModel::Component& component,
-                                           const std::string& portId,
-                                           const unsigned& areaIndex);
+    void addPortContributionToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
+                                       const ModelerStudy::SystemModel::Component& component,
+                                       const std::string& portId,
+                                       const std::string& portField,
+                                       const unsigned& areaIndex,
+                                       const ConstraintIndicesHelper& helper);
 };
 
 } // namespace Antares::Optimization

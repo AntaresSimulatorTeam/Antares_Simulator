@@ -90,7 +90,7 @@ jobs:
     - name: Install libraries
       run: |
         sudo apt-get update
-        sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+        sudo apt-get install uuid-dev
         sudo apt-get install libboost-test-dev
 
     - name: Download pre-compiled librairies
@@ -273,8 +273,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v5
+      uses: AntaresSimulatorTeam/cache@main
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{ steps.cache.outputs.cache-primary-key }}
-
