@@ -766,6 +766,8 @@ var namespaces_dup =
             [ "ConnectionEntry", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry" ],
             [ "Connection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection" ],
             [ "AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection" ],
+            [ "ThermalComponent", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent" ],
+            [ "ThermalCapacityConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection" ],
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System" ]
           ] ]
         ] ],
@@ -829,6 +831,7 @@ var namespaces_dup =
           [ "Expression", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression" ],
           [ "ParameterTypeAndValue", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue" ],
           [ "ComponentData", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentData" ],
+          [ "ThermalComponent", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent" ],
           [ "Component", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component" ],
           [ "ComponentBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ComponentBuilder" ],
           [ "ConnectionEnd", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ConnectionEnd" ],
@@ -870,9 +873,9 @@ var namespaces_dup =
             [ "INTEGER", "valueType_8h.html#a2b015dee485401ea1c78381617002925a5d5cd46919fa987731fb2edefe0f2a0c", null ],
             [ "BOOL", "valueType_8h.html#a2b015dee485401ea1c78381617002925aa97b2c144243b2b9d2c593ec268b62f5", null ]
           ] ],
-          [ "checkNonEmptyFieldExist", "portType_8cpp.html#a50a0cf363e3461a391e2da4484f6f577", null ],
           [ "fromBool", "timeAndScenarioType_8h.html#acb58641e2e58b26c41533b310a8b6e53", null ],
           [ "fromBool", "timeAndScenarioType_8h.html#a1ec198537ff13af974a5dac7cd20ee8d", null ],
+          [ "getConnectionField", "portType_8cpp.html#a5b98aaee910ac96798b010a1c3599679", null ],
           [ "isEmpty", "portType_8cpp.html#ae25c2ee4d96cf9586d5619fff8e2562b", null ],
           [ "operator<<", "connection_8h.html#a4abb4fd7c458500f26ff69554f194304", null ],
           [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ],
@@ -903,19 +906,25 @@ var namespaces_dup =
         [ "ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller" ],
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
+        [ "ThermalCapacityFiller", "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html", "classAntares_1_1Optimization_1_1ThermalCapacityFiller" ],
         [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],
         [ "BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", "classAntares_1_1Optimization_1_1BasisStatus" ],
+        [ "ConstraintIndicesHelper", "ComponentToAreaConnectionFiller_8h.html#aae4c4e4a0c2549a17240d4e93e2032f4", null ],
         [ "STSInjectionSum", "watched-constraints_8h.html#a512aba669c091827c6b436d0b3408192", null ],
         [ "STSNettingSum", "watched-constraints_8h.html#a92ecfd5cfe8111fcc5761687e57227fa", null ],
         [ "STSWithdrawalSum", "watched-constraints_8h.html#aac13d5895b888127d4d62045556476ba", null ],
         [ "applyOperation", "LinearExpression_8h.html#ae0afdb45eb93e24332629b1b32ae10c3", null ],
         [ "applyOperation", "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0", null ],
+        [ "balanceConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a70b02987bc0443abb2f9fba61f119869", null ],
+        [ "clusterAt", "ThermalCapacityFiller_8cpp.html#a9b6e21ab7d8830ef295199ed19357576", null ],
+        [ "fictitiousLoadConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a46b71a6ea25755421399d5a0ec661061", null ],
         [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
         [ "hasModelerIntegerVariables", "MipDetection_8h.html#a315948fa5e8b4d579f90f64746ac93f0", null ],
         [ "Helper", "watched-constraints_8cpp.html#a9957d3cc982e75341f07ae9e56c1e0e5", null ],
         [ "lessTypeName", "report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3", null ],
         [ "makeUnfeasiblePbAnalyzer", "unfeasible-pb-analyzer_8h.html#a14f36c0006d50ed493aa40606b57bb4b", null ],
+        [ "maxUnsupEnergyConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a3a0a12194e913ae104d3e387ef0b78e8", null ],
         [ "operator<<", "MCYearAndTime_8h.html#a4acd8157dc362e4991f60f2436acc4f4", null ],
         [ "operator<<", "MCYearAndTime_8h.html#a577631761643b7e0a0785e4a82b75f34", null ],
         [ "sameType", "report_8cpp.html#a1418a64099521dabe8235df401f4f0cc", null ],
@@ -1680,28 +1689,69 @@ var namespaces_dup =
       [ "SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", "classBenchmarking_1_1SimulationInfoCollector" ],
       [ "operator<<", "DurationCollector_8cpp.html#a809b83640ed2a281114744389980bffc", null ]
     ] ],
-    [ "check_general", null, [
-      [ "check_interface", "classcheck__general_1_1check__interface.html", "classcheck__general_1_1check__interface" ],
-      [ "check_list", "classcheck__general_1_1check__list.html", "classcheck__general_1_1check__list" ]
-    ] ],
-    [ "check_hydro_level", null, [
-      [ "check_hydro_level", "classcheck__hydro__level_1_1check__hydro__level.html", "classcheck__hydro__level_1_1check__hydro__level" ],
-      [ "fetch_hourly_values", "check__hydro__level_8py.html#a7bc902d349c54860ee1c4cdedba6fa83", null ],
-      [ "find_values_hourly_path", "check__hydro__level_8py.html#ae9d65dc4505f09e564090f31c0c94549", null ]
-    ] ],
-    [ "check_logs_content", null, [
-      [ "check_logs_content", "classcheck__logs__content_1_1check__logs__content.html", "classcheck__logs__content_1_1check__logs__content" ],
-      [ "find_logs_file", "check__logs__content_8py.html#a60bfb74ec2dcb3a4d5f9043414f53a07", null ]
-    ] ],
-    [ "check_mps_existence", null, [
-      [ "check_mps_existence", "classcheck__mps__existence_1_1check__mps__existence.html", "classcheck__mps__existence_1_1check__mps__existence" ]
-    ] ],
-    [ "check_no_mps", null, [
-      [ "check_no_mps", "classcheck__no__mps_1_1check__no__mps.html", "classcheck__no__mps_1_1check__no__mps" ]
-    ] ],
-    [ "compare_mps_files", null, [
-      [ "compare_mps_files", "classcompare__mps__files_1_1compare__mps__files.html", "classcompare__mps__files_1_1compare__mps__files" ],
-      [ "tol", "compare__mps__files_8py.html#acefb1d07624d65725d6b0ab19f415120", null ]
+    [ "check_on_results", null, [
+      [ "check_general", null, [
+        [ "check_interface", "classcheck__on__results_1_1check__general_1_1check__interface.html", "classcheck__on__results_1_1check__general_1_1check__interface" ],
+        [ "check_list", "classcheck__on__results_1_1check__general_1_1check__list.html", "classcheck__on__results_1_1check__general_1_1check__list" ]
+      ] ],
+      [ "check_hydro_level", null, [
+        [ "check_hydro_level", "classcheck__on__results_1_1check__hydro__level_1_1check__hydro__level.html", "classcheck__on__results_1_1check__hydro__level_1_1check__hydro__level" ],
+        [ "fetch_hourly_values", "check__hydro__level_8py.html#ac884f07f43a0b351596ccaced827437e", null ],
+        [ "find_values_hourly_path", "check__hydro__level_8py.html#a3ec7b877a4ee2133fa347a14f04eeec4", null ]
+      ] ],
+      [ "check_logs_content", null, [
+        [ "check_logs_content", "classcheck__on__results_1_1check__logs__content_1_1check__logs__content.html", "classcheck__on__results_1_1check__logs__content_1_1check__logs__content" ],
+        [ "find_logs_file", "check__logs__content_8py.html#a3f57416b6ba461893fa6f68918f2a7ef", null ]
+      ] ],
+      [ "check_mps_existence", null, [
+        [ "check_mps_existence", "classcheck__on__results_1_1check__mps__existence_1_1check__mps__existence.html", "classcheck__on__results_1_1check__mps__existence_1_1check__mps__existence" ]
+      ] ],
+      [ "check_no_mps", null, [
+        [ "check_no_mps", "classcheck__on__results_1_1check__no__mps_1_1check__no__mps.html", "classcheck__on__results_1_1check__no__mps_1_1check__no__mps" ]
+      ] ],
+      [ "compare_mps_files", null, [
+        [ "compare_mps_files", "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files.html", "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files" ],
+        [ "tol", "compare__mps__files_8py.html#a30d3154dfdff4e3c489d342ea6e8209b", null ]
+      ] ],
+      [ "create_checks", null, [
+        [ "create_check_hydro_level", "create__checks_8py.html#ac0708f92e0f2302e73ba709c8563bb46", null ],
+        [ "create_checks", "create__checks_8py.html#a74ef8d9684568c9b2d7b95cb8ccc3bd9", null ],
+        [ "create_intergrity_compare", "create__checks_8py.html#a1f8e908de533889fbc40d3baba63ca5d", null ],
+        [ "create_mps_compare", "create__checks_8py.html#ac5044d659b2f512fe1387fd922bac8df", null ],
+        [ "create_output_compare", "create__checks_8py.html#abff8ff809b7e45730b0cf1f53e8ff199", null ],
+        [ "create_unfeasible_problem", "create__checks_8py.html#a3a5a158a42de5673f08cb31349523ad6", null ],
+        [ "make_list_of_weeks", "create__checks_8py.html#af14dd080f305f68d37c13635712c3659", null ]
+      ] ],
+      [ "integrity_compare", null, [
+        [ "integrity_compare", "classcheck__on__results_1_1integrity__compare_1_1integrity__compare.html", "classcheck__on__results_1_1integrity__compare_1_1integrity__compare" ],
+        [ "find_integrity_path", "integrity__compare_8py.html#a9f708c163e32c8674716a5430d565764", null ],
+        [ "get_integrity_check_values", "integrity__compare_8py.html#a3693386218d3161acd8003fce959ccad", null ]
+      ] ],
+      [ "output_compare", null, [
+        [ "output_compare", "classcheck__on__results_1_1output__compare_1_1output__compare.html", "classcheck__on__results_1_1output__compare_1_1output__compare" ],
+        [ "compare_simulation_files", "output__compare_8py.html#a8ea9ffee10f1348594629e8e40287614", null ],
+        [ "find_simulation_files", "output__compare_8py.html#a74bdfaa6f96a96dcaad3367a2fdea18a", null ],
+        [ "get_headers", "output__compare_8py.html#a50b7a583378d9fa0b0300fbb0c5ce22e", null ],
+        [ "print_comparison_report", "output__compare_8py.html#a0b1626757c53d26985a9d14341a1a780", null ],
+        [ "skip_file", "output__compare_8py.html#ad6035b3ab9f9f6bcceffc7268f045154", null ],
+        [ "skip_folder", "output__compare_8py.html#a1e5a62aa6379be1dc5c011dd1e2d7794", null ]
+      ] ],
+      [ "sim_return_code", null, [
+        [ "simulation_success", "classcheck__on__results_1_1sim__return__code_1_1simulation__success.html", "classcheck__on__results_1_1sim__return__code_1_1simulation__success" ]
+      ] ],
+      [ "tolerances", null, [
+        [ "Tolerances", "classcheck__on__results_1_1tolerances_1_1Tolerances.html", "classcheck__on__results_1_1tolerances_1_1Tolerances" ],
+        [ "Linux_tolerances", "classcheck__on__results_1_1tolerances_1_1Linux__tolerances.html", "classcheck__on__results_1_1tolerances_1_1Linux__tolerances" ],
+        [ "Win_tolerances", "classcheck__on__results_1_1tolerances_1_1Win__tolerances.html", "classcheck__on__results_1_1tolerances_1_1Win__tolerances" ],
+        [ "get_tolerances", "tolerances_8py.html#a9e4ad8cb1fffc56633c6ff900e04ab28", null ],
+        [ "trim_digit_after_last_dot", "tolerances_8py.html#a387a643c94cec31932d121f7a3b2617d", null ]
+      ] ],
+      [ "unfeasible_problem", null, [
+        [ "weeks_in_year", "classcheck__on__results_1_1unfeasible__problem_1_1weeks__in__year.html", "classcheck__on__results_1_1unfeasible__problem_1_1weeks__in__year" ],
+        [ "behavior_flag", "classcheck__on__results_1_1unfeasible__problem_1_1behavior__flag.html", "classcheck__on__results_1_1unfeasible__problem_1_1behavior__flag" ],
+        [ "unfeasible_problem", "classcheck__on__results_1_1unfeasible__problem_1_1unfeasible__problem.html", "classcheck__on__results_1_1unfeasible__problem_1_1unfeasible__problem" ]
+      ] ],
+      [ "tests_dir", "run-study-tests_2check__on__results_2____init_____8py.html#a53e405a395fa4203cd219e435a0a1e67", null ]
     ] ],
     [ "conftest", null, [
       [ "antares_problem_generator_exe", "run-study-tests_2conftest_8py.html#a43e58d952434ecf874033e06947a9ddd", null ],
@@ -1713,15 +1763,6 @@ var namespaces_dup =
       [ "pytest_collection_modifyitems", "run-study-tests_2conftest_8py.html#abe907f64aa904cebe2c9198b2f2caf91", null ],
       [ "solver_name", "run-study-tests_2conftest_8py.html#abb137afc7ad9747df934f556298017a7", null ],
       [ "solver_path", "examples_2conftest_8py.html#ac8a0b650cf676deaa4e6df67f7222e6d", null ]
-    ] ],
-    [ "create_checks", null, [
-      [ "create_check_hydro_level", "create__checks_8py.html#a16cc70ab9aa97d6e3dba3c4acebf30a5", null ],
-      [ "create_checks", "create__checks_8py.html#af8e561801895918f6bda330f84da49e1", null ],
-      [ "create_intergrity_compare", "create__checks_8py.html#a9266f63a7d2022da70ccbb5d19cf4f18", null ],
-      [ "create_mps_compare", "create__checks_8py.html#a2e23c3095882c8ea71185c344f95d3f6", null ],
-      [ "create_output_compare", "create__checks_8py.html#a93e6f2d63a575328785893a8f85ae49f", null ],
-      [ "create_unfeasible_problem", "create__checks_8py.html#ac9d63bb5245e0743c440bd46142c8cef", null ],
-      [ "make_list_of_weeks", "create__checks_8py.html#ab40bb79c88499a20a9ec6c66170b9cd0", null ]
     ] ],
     [ "csv", null, [
       [ "read_csv", "csv_8py.html#a6a8b3b1499fe55ae04d541f84422bb44", null ]
@@ -1812,11 +1853,6 @@ var namespaces_dup =
         [ "flSkip", "fswalker_8h.html#aa9f4cc25fd19c29c51f4461303a2f8a6acbeb8f8226d44e8ff80f6a426c729b02", null ]
       ] ]
     ] ],
-    [ "integrity_compare", null, [
-      [ "integrity_compare", "classintegrity__compare_1_1integrity__compare.html", "classintegrity__compare_1_1integrity__compare" ],
-      [ "find_integrity_path", "integrity__compare_8py.html#a5742ebeebf431dfcb175afb8b0447e38", null ],
-      [ "get_integrity_check_values", "integrity__compare_8py.html#a64f232095924df1dcd633ac13b840bf3", null ]
-    ] ],
     [ "json_collector", null, [
       [ "error", "classjson__collector_1_1error.html", "classjson__collector_1_1error" ],
       [ "checksRetriever", "classjson__collector_1_1checksRetriever.html", "classjson__collector_1_1checksRetriever" ],
@@ -1868,37 +1904,20 @@ var namespaces_dup =
     [ "modified_inode", null, [
       [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
     ] ],
-    [ "mps_utils", null, [
-      [ "extract_variables", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#afe5b3b74e45a7e1fc32ba6e781e5dd13", null ],
-      [ "extract_variables", "run-study-tests_2check__on__results_2mps__utils_8py.html#ad7d2400c813cae7eaff0c4a7e4f450b3", null ],
-      [ "get_constraint_bounds", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#a29a8042a0acad246c43a432e16c6c990", null ],
-      [ "get_constraint_matrix", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#a35181eb77127b78978728ae66253cb10", null ],
-      [ "get_objective_coeffs", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#a62ee24a111d79ec22f28415720ff2590", null ],
-      [ "load_problem", "cucumber_2features_2steps_2common__steps_2mps__utils_8py.html#ab9142458563fb0cf75c5cf2134d0b723", null ]
-    ] ],
     [ "OperatingSystem", null, [
       [ "FindAntaresLocalAppData", "appdata_8h.html#af4149dcd70b39c611b24064d32cfa6ac", null ],
       [ "FindAntaresLocalAppData", "appdata_8cpp.html#a46f401c7d546f8f708c21f06ad8accab", null ],
       [ "FindLocalAppData", "appdata_8h.html#a7ca8be668500dd8791d664b3bcb97b4e", null ],
       [ "FindLocalAppData", "appdata_8cpp.html#af6c0fcf11671ce283527fbdd87173e7e", null ]
     ] ],
-    [ "output_compare", null, [
-      [ "output_compare", "classoutput__compare_1_1output__compare.html", "classoutput__compare_1_1output__compare" ],
-      [ "compare_simulation_files", "output__compare_8py.html#a86d99ce52b70977cfbba7d103d761115", null ],
-      [ "find_simulation_files", "output__compare_8py.html#aafe31f64a2bf4ef48247e73deb525f0b", null ],
-      [ "get_headers", "output__compare_8py.html#a88bb0425b92e9599c66ce1d17363fa33", null ],
-      [ "print_comparison_report", "output__compare_8py.html#a828889d588f22ff27546ccc147c3cd48", null ],
-      [ "skip_file", "output__compare_8py.html#a89ff344ae91a63adfc3183bfdad1efae", null ],
-      [ "skip_folder", "output__compare_8py.html#a53e8c7c405f9ac0d3ff6707463aeaefb", null ]
+    [ "parse_linear_expression", null, [
+      [ "parse_linear_expression", "parse__linear__expression_8py.html#aeedd9bd949821f252bd8004fcc6fa513", null ]
     ] ],
     [ "print_name", null, [
       [ "printNameDecorator", "print__name_8py.html#a922a8b50fe1e958918e08da49809cc73", null ]
     ] ],
     [ "results_remover", null, [
       [ "results_remover", "classresults__remover_1_1results__remover.html", "classresults__remover_1_1results__remover" ]
-    ] ],
-    [ "sim_return_code", null, [
-      [ "simulation_success", "classsim__return__code_1_1simulation__success.html", "classsim__return__code_1_1simulation__success" ]
     ] ],
     [ "Simulation", null, [
       [ "setBindingConstraintsRHS", "sim__binding__constraints__rhs_8h.html#afad00fb25244815afedc70fe7775be9a", null ]
@@ -1930,6 +1949,8 @@ var namespaces_dup =
       [ "check_hydro_pumping_value", "solver__steps_8py.html#a754d3942eb20316fe0f3c91e564b93d8", null ],
       [ "check_lold_duration", "solver__steps_8py.html#a7696c1bc76e2ff40a4c0d748f3cadeae", null ],
       [ "check_lold_weekly_duration", "solver__steps_8py.html#a0d6066d93b1d91553039b66130ff5e09", null ],
+      [ "check_max_generation_from_capacity_constraint", "solver__steps_8py.html#a8a5cf7620b720b9e26db4a6b12b8f708", null ],
+      [ "check_max_generation_from_capacity_exists", "solver__steps_8py.html#a9a20cf8bba1102648ac8da70d572218f", null ],
       [ "check_near_price_cap", "solver__steps_8py.html#aebe85f8a80cd0cae6841c9d1e1ffdf90", null ],
       [ "check_no_mingen_column_for_cluster", "solver__steps_8py.html#aa281a354ead0677f44051587f789b3a2", null ],
       [ "check_np_cost_for_specific_year", "solver__steps_8py.html#aa91257aac7aef80384c16fa65ec8fd43", null ],
@@ -1952,14 +1973,17 @@ var namespaces_dup =
       [ "ckeck_log_exists", "solver__steps_8py.html#a67663c9898d825af30daa11963437920", null ],
       [ "compare_objective_values_all_studies", "solver__steps_8py.html#a456fc9449c3a767d2eefcba9e558561b", null ],
       [ "create_temporary_copy", "solver__steps_8py.html#a4ab3e50370fefa91f351c1f9b700dccf", null ],
+      [ "extract_time_step", "solver__steps_8py.html#a7b346cbada46f027493785bd4cd34a63", null ],
       [ "extract_week_ts", "solver__steps_8py.html#aab856c02ada388cf7223cdfae48aa6ad", null ],
       [ "get_linear_solver", "solver__steps_8py.html#aaa5700945636174fda3c68c92e2ada80", null ],
       [ "get_quadratic_solver", "solver__steps_8py.html#ad6dc4924ed005d05b2eb6a323cc98387", null ],
+      [ "get_week_time_steps_from_mps_file_name", "solver__steps_8py.html#ace601feecb8cccc508040a2a3c731bb7", null ],
       [ "init_simulation", "solver__steps_8py.html#ab2230b1b6c17b656b40b98f95b8e24b6", null ],
       [ "make_daily_values_from_a_string", "solver__steps_8py.html#a295d1b406ada0604a0a775c3f0dfd9cf", null ],
       [ "nth_study_path_is", "solver__steps_8py.html#aa89f5a48dc1f209824c0d34f3be1f8ba", null ],
+      [ "parse_options", "solver__steps_8py.html#a24a80524348aaa8cdfd37bd82ae2daa2", null ],
       [ "parse_output_folder_from_logs", "solver__steps_8py.html#a3e4ae8358376dec656f4144e8e6e4c05", null ],
-      [ "run_antares", "solver__steps_8py.html#a89814f960e3fcf649f35e2807c72d622", null ],
+      [ "run_antares", "solver__steps_8py.html#ac1820b6ae387258263066b08bbae4939", null ],
       [ "run_antares_on_all_studies", "solver__steps_8py.html#a7577735f21e19ee31788552d506c7b37", null ],
       [ "run_simulation", "solver__steps_8py.html#a6bf2916b2068ca7f1f59639da6388e00", null ],
       [ "set_linear_solver", "solver__steps_8py.html#a9b57d898de72258c60168f75218628c4", null ],
@@ -1999,10 +2023,11 @@ var namespaces_dup =
     ] ],
     [ "steps", null, [
       [ "import_helper", null, [
+        [ "import_shared_utils", "import__helper_8py.html#ad6fe9b51dec32c23aa7db73f6e39981e", null ],
         [ "import_steps", "import__helper_8py.html#aa974063ef554e07ce24987062c9177e6", null ]
       ] ],
-      [ "STEPS_DIR", "____init_____8py.html#aca15ed5364a22a57acfdbc3d1159eb79", null ],
-      [ "STEPS_DIR_NAME", "____init_____8py.html#a63c51c45c497c2004c9efa3ec81c1471", null ]
+      [ "STEPS_DIR", "cucumber_2features_2steps_2____init_____8py.html#aca15ed5364a22a57acfdbc3d1159eb79", null ],
+      [ "STEPS_DIR_NAME", "cucumber_2features_2steps_2____init_____8py.html#a63c51c45c497c2004c9efa3ec81c1471", null ]
     ] ],
     [ "study_input_handler", null, [
       [ "study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", "classstudy__input__handler_1_1study__input__handler" ]
@@ -2066,18 +2091,6 @@ var namespaces_dup =
       [ "test_unfeasible_problem_10__warning_dry", "test__unfeasible__problem_8py.html#a0b7e31937b0dfbde8744b4cd283adadb", null ],
       [ "ALL_STUDIES_PATH", "test__unfeasible__problem_8py.html#addd803da5b8b645af37901eb79573e75", null ]
     ] ],
-    [ "tolerances", null, [
-      [ "Tolerances", "classtolerances_1_1Tolerances.html", "classtolerances_1_1Tolerances" ],
-      [ "Linux_tolerances", "classtolerances_1_1Linux__tolerances.html", "classtolerances_1_1Linux__tolerances" ],
-      [ "Win_tolerances", "classtolerances_1_1Win__tolerances.html", "classtolerances_1_1Win__tolerances" ],
-      [ "get_tolerances", "tolerances_8py.html#a375c5bbd695b8b6f119b13d68bcb6e9c", null ],
-      [ "trim_digit_after_last_dot", "tolerances_8py.html#a4b5ad5876599cd58d5653326906ec4e0", null ]
-    ] ],
-    [ "unfeasible_problem", null, [
-      [ "weeks_in_year", "classunfeasible__problem_1_1weeks__in__year.html", "classunfeasible__problem_1_1weeks__in__year" ],
-      [ "behavior_flag", "classunfeasible__problem_1_1behavior__flag.html", "classunfeasible__problem_1_1behavior__flag" ],
-      [ "unfeasible_problem", "classunfeasible__problem_1_1unfeasible__problem.html", "classunfeasible__problem_1_1unfeasible__problem" ]
-    ] ],
     [ "VariableManagement", null, [
       [ "VariableManager", "classVariableManagement_1_1VariableManager.html", "classVariableManagement_1_1VariableManager" ]
     ] ],
@@ -2091,6 +2104,7 @@ var namespaces_dup =
       [ "convert< Antares::IO::Inputs::YmlModel::ExtraOutput >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Objective >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_01_4.html", null ],
+      [ "FieldMatching", "structYAML_1_1FieldMatching.html", "structYAML_1_1FieldMatching" ],
       [ "convert< Antares::IO::Inputs::YmlModel::PortType >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Library >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_01_4.html", null ],
@@ -2102,13 +2116,15 @@ var namespaces_dup =
       [ "convert< Antares::IO::Inputs::YmlSystem::Component >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::Connection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::AreaConnection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlSystem::ThermalComponent >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlSystem::System >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_01_4.html", null ],
       [ "convert< Antares::Solver::ModelerParameters >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelerParameters_01_4.html", null ],
       [ "convert< Vec3 >", "structYAML_1_1convert_3_01Vec3_01_4.html", null ],
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
       [ "as_fallback_default", "yml-model_2decoders_8hxx.html#a1f73904464749314bdb46864a93c5dae", null ],
-      [ "findValue", "yml-model_2decoders_8hxx.html#a8d4d09c36ffd7b06ec80b73bac229d94", null ]
+      [ "convertConnectionField", "yml-model_2decoders_8hxx.html#aa5e1270b326ad742225a56dcbc4f86e7", null ]
     ] ],
     [ "Yuni", null, [
       [ "Extension", null, [

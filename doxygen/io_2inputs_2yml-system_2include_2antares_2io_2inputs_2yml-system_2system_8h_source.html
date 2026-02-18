@@ -173,22 +173,38 @@ $(document).ready(function(){initNavTree('io_2inputs_2yml-system_2include_2antar
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::string areaId;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;};</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">   47</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">System</a></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html">   47</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html">ThermalComponent</a></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::string id;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::vector&lt;std::string&gt; libraries;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector&lt;Component&gt; components;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::vector&lt;Connection&gt; connections;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::vector&lt;AreaConnection&gt; areaConnections;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::YmlSystem</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::string areaId;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    std::string clusterId;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html">   53</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html">ThermalCapacityConnection</a></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::string componentId;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::string portId;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html">ThermalComponent</a> thermalComponent;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">   60</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">System</a></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    std::string id;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::vector&lt;std::string&gt; libraries;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::vector&lt;Component&gt; components;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::vector&lt;Connection&gt; connections;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::vector&lt;AreaConnection&gt; areaConnections;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::vector&lt;ThermalCapacityConnection&gt; thermalCapacityConnections;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::YmlSystem</span></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html">Antares::IO::Inputs::YmlSystem::AreaConnection</a></div><div class="ttdef"><b>Definition:</b> system.h:41</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html">Antares::IO::Inputs::YmlSystem::Component</a></div><div class="ttdef"><b>Definition:</b> system.h:21</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ConnectionEntry.html">Antares::IO::Inputs::YmlSystem::ConnectionEntry</a></div><div class="ttdef"><b>Definition:</b> system.h:29</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html">Antares::IO::Inputs::YmlSystem::Connection</a></div><div class="ttdef"><b>Definition:</b> system.h:35</div></div>
 <div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter.html">Antares::IO::Inputs::YmlSystem::Parameter</a></div><div class="ttdef"><b>Definition:</b> system.h:13</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">Antares::IO::Inputs::YmlSystem::System</a></div><div class="ttdef"><b>Definition:</b> system.h:48</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">Antares::IO::Inputs::YmlSystem::System</a></div><div class="ttdef"><b>Definition:</b> system.h:61</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html">Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection</a></div><div class="ttdef"><b>Definition:</b> system.h:54</div></div>
+<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html">Antares::IO::Inputs::YmlSystem::ThermalComponent</a></div><div class="ttdef"><b>Definition:</b> system.h:48</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

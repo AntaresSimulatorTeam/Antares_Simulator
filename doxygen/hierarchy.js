@@ -4,7 +4,17 @@ var hierarchy =
       [ "Antares::Solver::Variable::Economy::ProductionByDispatchablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant.html", null ]
     ] ],
     [ "abc.ABCMeta", null, [
-      [ "check_general.check_interface", "classcheck__general_1_1check__interface.html", null ]
+      [ "check_on_results.check_general.check_interface", "classcheck__on__results_1_1check__general_1_1check__interface.html", [
+        [ "check_on_results.check_hydro_level.check_hydro_level", "classcheck__on__results_1_1check__hydro__level_1_1check__hydro__level.html", null ],
+        [ "check_on_results.check_logs_content.check_logs_content", "classcheck__on__results_1_1check__logs__content_1_1check__logs__content.html", null ],
+        [ "check_on_results.check_mps_existence.check_mps_existence", "classcheck__on__results_1_1check__mps__existence_1_1check__mps__existence.html", null ],
+        [ "check_on_results.check_no_mps.check_no_mps", "classcheck__on__results_1_1check__no__mps_1_1check__no__mps.html", null ],
+        [ "check_on_results.compare_mps_files.compare_mps_files", "classcheck__on__results_1_1compare__mps__files_1_1compare__mps__files.html", null ],
+        [ "check_on_results.integrity_compare.integrity_compare", "classcheck__on__results_1_1integrity__compare_1_1integrity__compare.html", null ],
+        [ "check_on_results.output_compare.output_compare", "classcheck__on__results_1_1output__compare_1_1output__compare.html", null ],
+        [ "check_on_results.sim_return_code.simulation_success", "classcheck__on__results_1_1sim__return__code_1_1simulation__success.html", null ],
+        [ "check_on_results.unfeasible_problem.unfeasible_problem", "classcheck__on__results_1_1unfeasible__problem_1_1unfeasible__problem.html", null ]
+      ] ]
     ] ],
     [ "antlr4::tree::AbstractParseTreeVisitor", null, [
       [ "ExprVisitor", "classExprVisitor.html", [
@@ -85,7 +95,7 @@ var hierarchy =
     [ "Antares::Optimization::BasisStatus", "classAntares_1_1Optimization_1_1BasisStatus.html", null ],
     [ "Test::BasisStatus", "classTest_1_1BasisStatus.html", null ],
     [ "Antares::Optimization::BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", null ],
-    [ "unfeasible_problem.behavior_flag", "classunfeasible__problem_1_1behavior__flag.html", null ],
+    [ "check_on_results.unfeasible_problem.behavior_flag", "classcheck__on__results_1_1unfeasible__problem_1_1behavior__flag.html", null ],
     [ "Antares::Optimisation::BendersDecomposition", "classAntares_1_1Optimisation_1_1BendersDecomposition.html", null ],
     [ "Antares::Optimisation::BendersDecompositionWriter", "classAntares_1_1Optimisation_1_1BendersDecompositionWriter.html", null ],
     [ "BindingConstraintData", "classBindingConstraintData.html", null ],
@@ -113,7 +123,7 @@ var hierarchy =
     [ "Antares::CBuilder", "classAntares_1_1CBuilder.html", null ],
     [ "CellColumnData", "classCellColumnData.html", null ],
     [ "fixtures.check_handler", "classfixtures_1_1check__handler.html", null ],
-    [ "check_general.check_list", "classcheck__general_1_1check__list.html", null ],
+    [ "check_on_results.check_general.check_list", "classcheck__on__results_1_1check__general_1_1check__list.html", null ],
     [ "json_collector.checksRetriever", "classjson__collector_1_1checksRetriever.html", null ],
     [ "Antares::Data::Cluster", "classAntares_1_1Data_1_1Cluster.html", [
       [ "Antares::Data::RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html", null ],
@@ -245,6 +255,8 @@ var hierarchy =
     [ "YAML::convert< Antares::IO::Inputs::YmlSystem::Connection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlSystem::Parameter >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Parameter_01_4.html", null ],
     [ "YAML::convert< Antares::IO::Inputs::YmlSystem::System >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_01_4.html", null ],
+    [ "YAML::convert< Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection_01_4.html", null ],
+    [ "YAML::convert< Antares::IO::Inputs::YmlSystem::ThermalComponent >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent_01_4.html", null ],
     [ "YAML::convert< Antares::Solver::ModelerParameters >", "structYAML_1_1convert_3_01Antares_1_1Solver_1_1ModelerParameters_01_4.html", null ],
     [ "YAML::convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
     [ "YAML::convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
@@ -529,6 +541,7 @@ var hierarchy =
     [ "Antares::Expressions::Visitors::EvaluationResult", "classAntares_1_1Expressions_1_1Visitors_1_1EvaluationResult.html", null ],
     [ "Antares::Solver::Simulation::Exchange", "structAntares_1_1Solver_1_1Simulation_1_1Exchange.html", null ],
     [ "ExchangeBalanceData", "structExchangeBalanceData.html", null ],
+    [ "ExpectedConstraint", "structExpectedConstraint.html", null ],
     [ "ExpectedResult", "structExpectedResult.html", null ],
     [ "Antares::ModelerStudy::SystemModel::Expression", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Expression.html", null ],
     [ "Antares::IO::Inputs::YmlModel::ExtraOutput", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput.html", null ],
@@ -540,9 +553,11 @@ var hierarchy =
       [ "Antares::IO::Outputs::is_optional< T >", "structAntares_1_1IO_1_1Outputs_1_1is__optional.html", null ]
     ] ],
     [ "FictitiousLoadData", "structFictitiousLoadData.html", null ],
+    [ "YAML::FieldMatching", "structYAML_1_1FieldMatching.html", null ],
     [ "Benchmarking::FileContent", "classBenchmarking_1_1FileContent.html", null ],
     [ "PathList::FileInfo", "structPathList_1_1FileInfo.html", null ],
     [ "Antares::Optimisation::LinearProblemApi::FillContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html", null ],
+    [ "FillerFixture", "structFillerFixture.html", null ],
     [ "Antares::Solver::FinalLevelValidator", "classAntares_1_1Solver_1_1FinalLevelValidator.html", null ],
     [ "FinalStockEquivalentData", "structFinalStockEquivalentData.html", null ],
     [ "FinalStockExpressionData", "structFinalStockExpressionData.html", null ],
@@ -848,7 +863,8 @@ var hierarchy =
       [ "Antares::Optimisation::LinearProblemApi::TwoVarsTwoConstraintsFiller", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html", null ],
       [ "Antares::Optimisation::LinearProblemApi::VarFillerContext", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html", null ],
       [ "Antares::Optimization::ComponentToAreaConnectionFiller", "classAntares_1_1Optimization_1_1ComponentToAreaConnectionFiller.html", null ],
-      [ "Antares::Optimization::LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ]
+      [ "Antares::Optimization::LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ],
+      [ "Antares::Optimization::ThermalCapacityFiller", "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html", null ]
     ] ],
     [ "Antares::linkInfo", "classAntares_1_1linkInfo.html", null ],
     [ "Antares::Solver::Variable::Links< VariablePerLink >", "classAntares_1_1Solver_1_1Variable_1_1Links.html", null ],
@@ -897,7 +913,7 @@ var hierarchy =
     [ "Antares::Optimization::MCYearAndTime", "structAntares_1_1Optimization_1_1MCYearAndTime.html", null ],
     [ "Antares::MersenneTwister", "classAntares_1_1MersenneTwister.html", null ],
     [ "metaclass", null, [
-      [ "check_general.check_interface", "classcheck__general_1_1check__interface.html", null ]
+      [ "check_on_results.check_general.check_interface", "classcheck__on__results_1_1check__general_1_1check__interface.html", null ]
     ] ],
     [ "MinDownTimeData", "structMinDownTimeData.html", null ],
     [ "Antares::MinGenerationScaling", "classAntares_1_1MinGenerationScaling.html", null ],
@@ -1499,7 +1515,10 @@ var hierarchy =
     [ "TestExceptionN< N >", "classTestExceptionN.html", null ],
     [ "TestVariabilityVisitorFixture", "structTestVariabilityVisitorFixture.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Thermal.html", null ],
+    [ "Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html", null ],
     [ "ThermalClusterConfig", "classThermalClusterConfig.html", null ],
+    [ "Antares::IO::Inputs::YmlSystem::ThermalComponent", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html", null ],
+    [ "Antares::ModelerStudy::SystemModel::ThermalComponent", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html", null ],
     [ "ThermalIniFile", "structThermalIniFile.html", [
       [ "FixtureFull", "structFixtureFull.html", null ]
     ] ],
@@ -1530,9 +1549,9 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::TimeSeriesTraits< TraitsType >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html", [
       [ "Antares::Solver::Variable::Economy::VCardTimeSeriesBase< TraitsType >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html", null ]
     ] ],
-    [ "tolerances.Tolerances", "classtolerances_1_1Tolerances.html", [
-      [ "tolerances.Linux_tolerances", "classtolerances_1_1Linux__tolerances.html", null ],
-      [ "tolerances.Win_tolerances", "classtolerances_1_1Win__tolerances.html", null ]
+    [ "check_on_results.tolerances.Tolerances", "classcheck__on__results_1_1tolerances_1_1Tolerances.html", [
+      [ "check_on_results.tolerances.Linux_tolerances", "classcheck__on__results_1_1tolerances_1_1Linux__tolerances.html", null ],
+      [ "check_on_results.tolerances.Win_tolerances", "classcheck__on__results_1_1tolerances_1_1Win__tolerances.html", null ]
     ] ],
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html", null ],
     [ "TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE", "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html", null ],
@@ -1656,7 +1675,7 @@ var hierarchy =
     [ "Antares::Solver::WeeklyDataFromAntares", "structAntares_1_1Solver_1_1WeeklyDataFromAntares.html", null ],
     [ "Antares::Solver::Optimization::WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html", null ],
     [ "Antares::Solver::WeeklyProblemId", "structAntares_1_1Solver_1_1WeeklyProblemId.html", null ],
-    [ "unfeasible_problem.weeks_in_year", "classunfeasible__problem_1_1weeks__in__year.html", null ],
+    [ "check_on_results.unfeasible_problem.weeks_in_year", "classcheck__on__results_1_1unfeasible__problem_1_1weeks__in__year.html", null ],
     [ "Antares::Data::WhoseNameContains", "structAntares_1_1Data_1_1WhoseNameContains.html", null ],
     [ "Antares::TSGenerator::Predicate::Wind", "classAntares_1_1TSGenerator_1_1Predicate_1_1Wind.html", null ],
     [ "Antares::Solver::Variable::Economy::WindTag", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html", null ],
@@ -1671,17 +1690,6 @@ var hierarchy =
     [ "Antares::Solver::Implementation::YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", null ],
     [ "Antares::Solver::Simulation::yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", null ],
     [ "Antares::Solver::ZipWriteJob< ContentT >", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
-    [ "check_interface", null, [
-      [ "check_hydro_level.check_hydro_level", "classcheck__hydro__level_1_1check__hydro__level.html", null ],
-      [ "check_logs_content.check_logs_content", "classcheck__logs__content_1_1check__logs__content.html", null ],
-      [ "check_mps_existence.check_mps_existence", "classcheck__mps__existence_1_1check__mps__existence.html", null ],
-      [ "check_no_mps.check_no_mps", "classcheck__no__mps_1_1check__no__mps.html", null ],
-      [ "compare_mps_files.compare_mps_files", "classcompare__mps__files_1_1compare__mps__files.html", null ],
-      [ "integrity_compare.integrity_compare", "classintegrity__compare_1_1integrity__compare.html", null ],
-      [ "output_compare.output_compare", "classoutput__compare_1_1output__compare.html", null ],
-      [ "sim_return_code.simulation_success", "classsim__return__code_1_1simulation__success.html", null ],
-      [ "unfeasible_problem.unfeasible_problem", "classunfeasible__problem_1_1unfeasible__problem.html", null ]
-    ] ],
     [ "Enum", null, [
       [ "solver_output_handler.result_type", "classsolver__output__handler_1_1result__type.html", null ]
     ] ]

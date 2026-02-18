@@ -11,6 +11,7 @@ var classsolver__output__handler_1_1solver__output__handler =
     [ "get_hydro_pumping_mwh", "classsolver__output__handler_1_1solver__output__handler.html#a8e89193d6bf918942ca8a71e30d165b0", null ],
     [ "get_loss_of_load_duration_h", "classsolver__output__handler_1_1solver__output__handler.html#a2a455bfa6f7a553909145147e0369d4c", null ],
     [ "get_loss_of_load_weekly_duration_h", "classsolver__output__handler_1_1solver__output__handler.html#a8660765459298615c9e6fe7cd4d23f1a", null ],
+    [ "get_mps_files", "classsolver__output__handler_1_1solver__output__handler.html#a77039a51e10551ac745866d064cc7b2a", null ],
     [ "get_non_proportional_cost", "classsolver__output__handler_1_1solver__output__handler.html#afec988d40cfc048c84c3b2102ca9b2d0", null ],
     [ "get_npcap_hours", "classsolver__output__handler_1_1solver__output__handler.html#af83a8b0acb397302e7bce7038f07ee09", null ],
     [ "get_npcap_hours_for_hour", "classsolver__output__handler_1_1solver__output__handler.html#a81e2f5a6d746f93b71481f404c588352", null ],

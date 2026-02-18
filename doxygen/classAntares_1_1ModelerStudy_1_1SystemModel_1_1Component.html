@@ -169,15 +169,27 @@ const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Express
 <tr class="memitem:aa9aeff46a6ef78aab76b4fa6ce7d70f5"><td class="memItemLeft" align="right" valign="top"><a id="aa9aeff46a6ef78aab76b4fa6ce7d70f5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addAreaConnection</b> (const std::string &amp;localPortId, const std::string &amp;areaId)</td></tr>
 <tr class="separator:aa9aeff46a6ef78aab76b4fa6ce7d70f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96c7dfaa69a744c5846f3268ef160e9f"><td class="memItemLeft" align="right" valign="top"><a id="a96c7dfaa69a744c5846f3268ef160e9f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addThermalCapacityConnection</b> (const std::string &amp;portId, const std::string &amp;areaId, const std::string &amp;clusterId)</td></tr>
+<tr class="separator:a96c7dfaa69a744c5846f3268ef160e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf8d8937a96e84a5e572b8b2199749fc"><td class="memItemLeft" align="right" valign="top"><a id="adf8d8937a96e84a5e572b8b2199749fc"></a>
 std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>areaConnectedToPort</b> (const std::string &amp;portId) const</td></tr>
 <tr class="separator:adf8d8937a96e84a5e572b8b2199749fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a434594ac7de2a71fd06048a864e18f13"><td class="memItemLeft" align="right" valign="top"><a id="a434594ac7de2a71fd06048a864e18f13"></a>
 const std::map&lt; std::string, std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>portToAreaConnections</b> () const</td></tr>
 <tr class="separator:a434594ac7de2a71fd06048a864e18f13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaff821ff5b186fefacb2c63dbe1c8a55"><td class="memItemLeft" align="right" valign="top"><a id="aaff821ff5b186fefacb2c63dbe1c8a55"></a>
+const std::map&lt; std::string, <a class="el" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html">ThermalComponent</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>portToThermalCapacityConnections</b> () const</td></tr>
+<tr class="separator:aaff821ff5b186fefacb2c63dbe1c8a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a7238338b2dfb53ba53b50851c47ad1"><td class="memItemLeft" align="right" valign="top"><a id="a7a7238338b2dfb53ba53b50851c47ad1"></a>
+std::optional&lt; <a class="el" href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html">ThermalComponent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>thermalCapacityConnectedToPort</b> (const std::string &amp;portId) const</td></tr>
+<tr class="separator:a7a7238338b2dfb53ba53b50851c47ad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22b2ed394925fa3984744930babccd65"><td class="memItemLeft" align="right" valign="top"><a id="a22b2ed394925fa3984744930babccd65"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>Index</b> () const</td></tr>
 <tr class="separator:a22b2ed394925fa3984744930babccd65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a862afdfbcbde73e5f5793d8908e9ad7b"><td class="memItemLeft" align="right" valign="top"><a id="a862afdfbcbde73e5f5793d8908e9ad7b"></a>
+const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Port.html">Port</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>findPort</b> (const std::string &amp;portId, const std::string &amp;prefixMessage) const</td></tr>
+<tr class="separator:a862afdfbcbde73e5f5793d8908e9ad7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
