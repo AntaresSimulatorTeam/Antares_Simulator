@@ -127,8 +127,8 @@ Node* Component::nodeAtPortField(const std::string& portId, const std::string& f
     }
     catch (const std::out_of_range&)
     {
-        throw std::invalid_argument("Port field '" + portId + "." + fieldId
-                                    + "' not found in component '" + data_.id + "'");
+        throw std::invalid_argument(
+          fmt::format("Port field '{}.{}' not found in component '{}'", portId, fieldId, data_.id));
     }
 }
 
@@ -142,8 +142,8 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
     }
     catch (const std::out_of_range&)
     {
-        throw std::invalid_argument("Port field '" + portId + "." + fieldId
-                                    + "' not found in component '" + data_.id + "'");
+        throw std::invalid_argument(
+          fmt::format("Port field '{}.{}' not found in component '{}'", portId, fieldId, data_.id));
     }
 }
 
@@ -161,7 +161,7 @@ const Port& Component::findPort(const std::string& portId, const std::string& pr
 
 void Component::checkPortFieldDefinitionExists(const std::string& portName,
                                                const std::string& fieldName,
-                                               const std::string& errMsgPrefix)
+                                               const std::string& errMsgPrefix) const
 {
     if (!fieldName.empty())
     {

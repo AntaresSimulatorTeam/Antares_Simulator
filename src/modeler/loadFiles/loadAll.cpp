@@ -15,13 +15,17 @@ using namespace Antares::ModelerStudy;
 namespace Antares::Solver::LoadFiles
 {
 
-ModelerData loadAll(const std::filesystem::path& studyPath)
+std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
 {
     Utils::TimeMeasurement measure;
     logs.info() << "Loading modeler files...";
     ModelerData data;
-
-    std::tie(data.libraries, data.resolutionMode) = loadLibraries(studyPath);
+    auto res = loadLibraries(studyPath);
+    if (!res.has_value())
+    {
+        return {};
+    }
+    std::tie(data.libraries, data.resolutionMode) = res.value();
     logs.info() << "Libraries loaded";
 
     data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));

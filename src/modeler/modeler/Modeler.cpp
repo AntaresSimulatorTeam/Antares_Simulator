@@ -35,7 +35,14 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
     {
         parameters_ = loader_.loadParameters();
         logs.info() << "Parameters loaded";
-        data_ = loader_.loadAll();
+        auto data = loader_.loadAll();
+        if (!data.has_value())
+        {
+            throw ModelerError("Error while loading files, exiting");
+        }
+        // Move the loaded ModelerData out of the optional to avoid copying
+        // (ModelerData contains unique_ptr members and is move-only).
+        data_ = std::move(*data);
     }
     catch (const LoadFiles::ErrorLoadingYaml&)
     {

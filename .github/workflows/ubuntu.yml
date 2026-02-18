@@ -31,7 +31,6 @@ env:
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   triplet: x64-linux
-  WX_CONFIG: /usr/bin/wx-config
   PYTHON_VERSION: "3.12"
 
 jobs:
@@ -88,7 +87,7 @@ jobs:
     - name: Install libraries
       run: |
         sudo apt-get update
-        sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+        sudo apt-get install uuid-dev
         sudo apt-get install xsltproc
 
     - name: Config OR-Tools URL

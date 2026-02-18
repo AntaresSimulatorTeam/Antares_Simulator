@@ -1,5 +1,25 @@
 #!/bin/bash
 
+set -euo pipefail
+
+# Si clang-format est absent ou a une version différente de REQUIRED_CLANG_FORMAT_VERSION -> erreur.
+
+REQUIRED_CLANG_FORMAT_VERSION="18.1.3"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if ! command -v clang-format >/dev/null 2>&1; then
+  echo "Error: clang-format not found. Please install clang-format version $REQUIRED_CLANG_FORMAT_VERSION." >&2
+  exit 1
+fi
+
+CLANG_FORMAT_VERSION=$(clang-format --version 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+if [ -z "$CLANG_FORMAT_VERSION" ] || [ "$CLANG_FORMAT_VERSION" != "$REQUIRED_CLANG_FORMAT_VERSION" ]; then
+  echo "Error: found clang-format version ${CLANG_FORMAT_VERSION:-unknown} but required is $REQUIRED_CLANG_FORMAT_VERSION." >&2
+  echo "Please install the required version to proceed or use format-code-docker.sh." >&2
+  exit 1
+fi
+
 if [ $# -eq 0 ]
 then
     # No arguments: format all

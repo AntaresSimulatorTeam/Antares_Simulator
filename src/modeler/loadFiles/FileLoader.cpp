@@ -19,7 +19,7 @@ ModelerParameters FileLoader::loadParameters()
     return LoadFiles::loadParameters(studyPath_);
 }
 
-ModelerData FileLoader::loadAll()
+std::optional<ModelerData> FileLoader::loadAll()
 {
     return LoadFiles::loadAll(studyPath_);
 }
