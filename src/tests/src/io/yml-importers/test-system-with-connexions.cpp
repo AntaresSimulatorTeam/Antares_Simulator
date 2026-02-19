@@ -27,9 +27,9 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
-        - spillage-bound: 
-        - unsupplied-energy-bound: 
+        injection-field: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
   models:
     - id: empty model
       description: we need this empty model, otherwise parser fails !
@@ -70,9 +70,9 @@ library:
         - id: to-area-bound
         - id: from-area-bound
       area-connection:
-        - injection-field: flow
-        - spillage-bound: to-area-bound
-        - unsupplied-energy-bound: from-area-bound
+        injection-field: flow
+        spillage-bound: to-area-bound
+        unsupplied-energy-bound: from-area-bound
 
   models:
     - id: empty model
@@ -112,9 +112,9 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
-        - spillage-bound: 
-        - unsupplied-energy-bound: 
+        injection-field: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
 
   models:
     - id: balance_node
@@ -249,7 +249,7 @@ library:
       fields:
         - id: capacity
       thermal-capacity-connection: # Explicitly use "capacity" in the name as later on there might be other thermal hybrid connections involving thermal generation
-        - capacity-field: capacity
+        capacity-field: capacity
   models:
     - id: thermal_invest
       parameters:

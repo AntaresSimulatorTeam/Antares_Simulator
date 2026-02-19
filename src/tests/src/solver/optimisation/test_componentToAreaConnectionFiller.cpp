@@ -38,8 +38,8 @@ library:
         - id: connected_field
       area-connection:
         injection-field: connected_field
-        - spillage-bound: 
-        - unsupplied-energy-bound: 
+        spillage-bound: 
+        unsupplied-energy-bound: 
 
   models:
     - id: model_with_vars

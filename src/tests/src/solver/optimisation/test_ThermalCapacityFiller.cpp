@@ -24,18 +24,18 @@ library:
       fields:
         - id: capacity
       thermal-capacity-connection: # Explicitly use "capacity" in the name as later on there might be other thermal hybrid connections involving thermal generation
-        - capacity-field: capacity
+        capacity-field: capacity
 
     - id: asset_management
       fields:
         - id: gold
       thermal-capacity-connection:
-        - capacity-field: gold
+        capacity-field: gold
     - id: my_port_type
       fields:
         - id: my_field
       thermal-capacity-connection:
-        - capacity-field: my_field
+        capacity-field: my_field
   models:
     - id: thermal_invest
       parameters:

@@ -111,7 +111,7 @@ void fillLinearProblem(FillContext& fillCtx,
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(ortoolsProblem, problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
