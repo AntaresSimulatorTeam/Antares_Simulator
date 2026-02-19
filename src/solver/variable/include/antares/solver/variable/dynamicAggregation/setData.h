@@ -49,6 +49,8 @@ public:
 
     void addResultsToSet(const PROBLEME_HEBDO& pb);
 
+    void reset();
+
     void appendToSurvey(SurveyResults& survey,
                         Category::Precision precision,
                         Data::Study& study) const;
