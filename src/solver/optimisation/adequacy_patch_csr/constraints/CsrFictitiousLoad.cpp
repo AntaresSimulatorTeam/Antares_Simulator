@@ -8,24 +8,9 @@ void CsrFictitiousLoad::add()
             continue;
 
         builder.updateHourWithinWeek(data.hour);
-        
-        // Add all thermal dispatchable generation with coefficient -1.0
-        // This represents STt in the formula
-        for (int index = 0; index < data.PaliersThermiquesDuPays[Area].NombreDePaliersThermiques; index++)
-        {
-            const int palier = data.PaliersThermiquesDuPays[Area].NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-            builder.DispatchableProduction(palier, -1.0);
-        }
-        
-        // Add hydro production if enabled
-        // This represents Ht in the formula
-        auto hydroCoeff = data.DefaillanceNegativeUtiliserHydro[Area] ? -1.0 : 0.0;
-        if (data.DefaillanceNegativeUtiliserHydro[Area])
-        {
-            builder.HydProd(Area, hydroCoeff);
-        }
-        
-        // Add spillage (negative unsupplied energy) with coefficient 1.0
+
+        // Only add spillage variable (negative unsupplied energy) with coefficient 1.0
+        // Thermal and hydro production are constants in CSR, moved to RHS
         builder.NegativeUnsuppliedEnergy(Area, 1.0);
 
         data.numberOfConstraintCsrFictitiousLoad[Area] = builder.data.nombreDeContraintes;
@@ -34,7 +19,7 @@ void CsrFictitiousLoad::add()
         namer.UpdateTimeStep(data.hour);
         namer.UpdateArea(builder.data.NomsDesPays[Area]);
         namer.CsrFictitiousLoad(builder.data.nombreDeContraintes);
-        
+
         builder.lessThan();
         builder.build();
     }

@@ -83,7 +83,8 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 void HourlyCSRProblem::setRHSfictitiousLoadValue()
 {
     // constraint: FictitiousLoad for all areas inside adequacy patch
-    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt)
+    // Formula: spillage <= STt + Ht + other_terms
+    // where STt is thermal production and Ht is hydro production from first optimization step
     // In CSR context, the RHS is calculated based on first step results
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
@@ -94,10 +95,25 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
             if (it != numberOfConstraintCsrFictitiousLoad.end())
             {
                 int Cnt = it->second;
-                
-                // Start with 0
+
+                // Start with thermal production from first optimization step
                 double rhs = 0.0;
-                
+
+                // Add sum of all thermal dispatchable generation (STt)
+                const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
+                const auto& productionThermique = problemeHebdo_->ResultatsHoraires[Area].ProductionThermique[triggeredHour];
+                for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
+                {
+                    int palier = paliersThermiques.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                    rhs += productionThermique.ProductionThermiqueDuPalier[palier];
+                }
+
+                // Add hydro production if enabled (Ht)
+                if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
+                {
+                    rhs += problemeHebdo_->ResultatsHoraires[Area].TurbinageHoraire[triggeredHour];
+                }
+
                 // Add must-run generation and load terms if enabled
                 if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
                 {
@@ -105,21 +121,18 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     double allMustRunGen = problemeHebdo_->AllMustRunGeneration[triggeredHour].AllMustRunGenerationOfArea[Area];
                     if (allMustRunGen > 0.0)
                         maxAllMustRunGeneration = allMustRunGen;
-                    
+
                     double consommationAbattue = problemeHebdo_->ConsommationsAbattues[triggeredHour].ConsommationAbattueDuPays[Area];
                     double maxMoinsConsommationBrute = 0.0;
                     if (-(consommationAbattue + allMustRunGen) > 0.0)
                         maxMoinsConsommationBrute = -(consommationAbattue + allMustRunGen);
-                    
-                    rhs = maxAllMustRunGeneration + maxMoinsConsommationBrute;
+
+                    rhs += maxAllMustRunGeneration + maxMoinsConsommationBrute;
                 }
-                
+
                 // Subtract Pmin of thermal units if enabled
                 if (!problemeHebdo_->DefaillanceNegativeUtiliserPMinThermique[Area])
                 {
-                    // Sum of Pmin for all thermal units
-                    const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
-                    
                     double sumPmin = 0.0;
                     for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
                     {
@@ -127,7 +140,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     }
                     rhs -= sumPmin;
                 }
-                
+
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
                 logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
                              << "] = " << problemeAResoudre_.SecondMembre[Cnt]
