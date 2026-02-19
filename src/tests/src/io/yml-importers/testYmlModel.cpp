@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
                  fields:
                    - id: capacity
                  area-connection:
-                   injection-field:
+                   injection-to-balance:
                    spillage-bound:
                    unsupplied-energy-bound:
             models: []
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_injection_field__in_area_connection)
                  fields:
                    - id: capacity
                  area-connection:
-                   injection-field: capa
+                   injection-to-balance: capa
                    spillage-bound:
                    unsupplied-energy-bound:
             models: []
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_spillage_bound_field__in_area_connecti
                  fields:
                    - id: capacity
                  area-connection:
-                   injection-field:
+                   injection-to-balance:
                    spillage-bound: f1
                    unsupplied-energy-bound:
             models: []
@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area
                  fields:
                    - id: capacity
                  area-connection:
-                   injection-field:
+                   injection-to-balance:
                    spillage-bound:
                    unsupplied-energy-bound: f2
             models: []

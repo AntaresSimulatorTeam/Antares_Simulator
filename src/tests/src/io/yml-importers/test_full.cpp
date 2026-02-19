@@ -80,7 +80,7 @@ library:
       fields:
         - id: flow
       area-connection:
-        injection-field: flow
+        injection-to-balance: flow
         spillage-bound: 
         unsupplied-energy-bound: 
 

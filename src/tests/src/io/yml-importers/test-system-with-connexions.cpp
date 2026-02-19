@@ -27,7 +27,7 @@ library:
       fields:
         - id: flow
       area-connection:
-        injection-field: flow
+        injection-to-balance: flow
         spillage-bound: 
         unsupplied-energy-bound: 
   models:
@@ -70,7 +70,7 @@ library:
         - id: to-area-bound
         - id: from-area-bound
       area-connection:
-        injection-field: flow
+        injection-to-balance: flow
         spillage-bound: to-area-bound
         unsupplied-energy-bound: from-area-bound
 
@@ -112,7 +112,7 @@ library:
       fields:
         - id: flow
       area-connection:
-        injection-field: flow
+        injection-to-balance: flow
         spillage-bound: 
         unsupplied-energy-bound: 
 

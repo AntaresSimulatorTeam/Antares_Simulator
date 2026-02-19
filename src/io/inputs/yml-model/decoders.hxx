@@ -244,7 +244,7 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
             return false;
         }
 
-        rhs.area_connection.injection = getFieldFromNode(child_node, "injection-field");
+        rhs.area_connection.injection = getFieldFromNode(child_node, "injection-to-balance");
         rhs.area_connection.spillage_bound = getFieldFromNode(child_node, "spillage-bound");
         rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(child_node,
                                                                        "unsupplied-energy-bound");
