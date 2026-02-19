@@ -217,7 +217,7 @@ std::string getFieldFromNode(const Node& node, const std::string& fieldName)
     return node[fieldName].as<std::string>("");
 }
 
-bool isExpectedDictionary(const Node& node, const unsigned& nbFields)
+bool isValidMap(const Node& node, const unsigned& nbFields)
 {
     if (node.IsMap() && node.size() == nbFields)
     {
@@ -239,7 +239,7 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         }
 
         const unsigned expectedNbFields = 3;
-        if (!isExpectedDictionary(ac_node, expectedNbFields))
+        if (!isValidMap(ac_node, expectedNbFields))
         {
             return false;
         }
@@ -261,7 +261,7 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         }
 
         const unsigned expectedNbFields = 1;
-        if (!isExpectedDictionary(tcc_node, expectedNbFields))
+        if (!isValidMap(tcc_node, expectedNbFields))
         {
             return false;
         }
