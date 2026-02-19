@@ -217,6 +217,15 @@ std::string getFieldFromNode(const Node& node, const std::string& fieldName)
     return node[fieldName].as<std::string>("");
 }
 
+bool isExpectedDictionary(const Node& node, const unsigned& nbFields)
+{
+    if (node.IsMap() && node.size() == nbFields)
+    {
+        return true;
+    }
+    return false;
+}
+
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
@@ -224,22 +233,14 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
                                             Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
         auto ac_node = node["area-connection"];
-        const unsigned nbFields = 3;
         if (!ac_node.IsDefined())
         {
-            // area connection fields are optional
             return true;
         }
 
-        if (ac_node.size() != nbFields)
+        const unsigned expectedNbFields = 3;
+        if (!isExpectedDictionary(ac_node, expectedNbFields))
         {
-            // area-connection must have 3 fields
-            return false;
-        }
-
-        if (!ac_node.IsMap())
-        {
-            // area-connection must be a dictionary
             return false;
         }
 
@@ -254,22 +255,14 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
                                             Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
         auto tcc_node = node["thermal-capacity-connection"];
-        const unsigned nbFields = 1;
         if (!tcc_node.IsDefined())
         {
-            // thermal capacity connection fields are optional
             return true;
         }
 
-        if (tcc_node.size() != nbFields)
+        const unsigned expectedNbFields = 1;
+        if (!isExpectedDictionary(tcc_node, expectedNbFields))
         {
-            // thermal capacity connection must have 3 fields
-            return false;
-        }
-
-        if (!tcc_node.IsMap())
-        {
-            // thermal capacity connection must be a dictionary
             return false;
         }
         
