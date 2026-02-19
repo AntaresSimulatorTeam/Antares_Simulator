@@ -243,12 +243,6 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
             return false;
         }
 
-        if (ac_node.IsNull())
-        {
-            // the fields themselves can be null
-            return true;
-        }
-
         rhs.area_connection.injection = getFieldFromNode(ac_node, "injection-field");
         rhs.area_connection.spillage_bound = getFieldFromNode(ac_node, "spillage-bound");
         rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(ac_node,
@@ -277,12 +271,6 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             // thermal capacity connection must be a dictionary
             return false;
-        }
-
-        if (tcc_node.IsNull())
-        {
-            // the fields themselves can be null
-            return true;
         }
         
         rhs.thermal_capacity_connection_field = getFieldFromNode(tcc_node, "capacity-field");
