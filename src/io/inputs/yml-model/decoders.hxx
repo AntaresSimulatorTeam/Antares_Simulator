@@ -232,21 +232,21 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
     static bool convertAreaConnectionFields(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
-        auto ac_node = node["area-connection"];
-        if (!ac_node.IsDefined())
+        auto child_node = node["area-connection"];
+        if (!child_node.IsDefined())
         {
             return true;
         }
 
         const unsigned expectedNbFields = 3;
-        if (!isValidMap(ac_node, expectedNbFields))
+        if (!isValidMap(child_node, expectedNbFields))
         {
             return false;
         }
 
-        rhs.area_connection.injection = getFieldFromNode(ac_node, "injection-field");
-        rhs.area_connection.spillage_bound = getFieldFromNode(ac_node, "spillage-bound");
-        rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(ac_node,
+        rhs.area_connection.injection = getFieldFromNode(child_node, "injection-field");
+        rhs.area_connection.spillage_bound = getFieldFromNode(child_node, "spillage-bound");
+        rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(child_node,
                                                                        "unsupplied-energy-bound");
         return true;
     }
@@ -254,19 +254,19 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
     static bool convertThermalCapacityField(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
-        auto tcc_node = node["thermal-capacity-connection"];
-        if (!tcc_node.IsDefined())
+        auto child_node = node["thermal-capacity-connection"];
+        if (!child_node.IsDefined())
         {
             return true;
         }
 
         const unsigned expectedNbFields = 1;
-        if (!isValidMap(tcc_node, expectedNbFields))
+        if (!isValidMap(child_node, expectedNbFields))
         {
             return false;
         }
-        
-        rhs.thermal_capacity_connection_field = getFieldFromNode(tcc_node, "capacity-field");
+
+        rhs.thermal_capacity_connection_field = getFieldFromNode(child_node, "capacity-field");
         return true;
     }
 
