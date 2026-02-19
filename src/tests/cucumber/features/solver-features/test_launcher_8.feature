@@ -1,7 +1,6 @@
 Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
 
-  Scenario: 8.1 : Study 028b Electrolyser - V8.6
-    Small test case with two Legacy nodes (areas). One electric node :  3 thermal clusters, 1 load, 1 wind, one H2 node :  1 H2 load, 1 H2 back-up production, one electrolyser as modeler component
+  Scenario: 8.1 : Study 028b Electrolyser - V8.6 Small test case with two Legacy nodes (areas). One electric node :  3 thermal clusters, 1 load, 1 wind, one H2 node :  1 H2 load, 1 H2 back-up production, one electrolyser as modeler component
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/8_1"
     When I run antares simulator
     Then the simulation succeeds
