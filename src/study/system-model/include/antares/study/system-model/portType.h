@@ -16,7 +16,7 @@ namespace Antares::ModelerStudy::SystemModel
 
 struct AreaConnection
 {
-    std::string injection;
+    std::string inject_to_balance;
     std::string spillage_bound;
     std::string unsupplied_energy_bound;
 };

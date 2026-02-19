@@ -190,7 +190,7 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
                 addPortContributionToLinearPb(ctx,
                                               component,
                                               portId,
-                                              portAreaConnection->injection,
+                                              portAreaConnection->inject_to_balance,
                                               areaIndex,
                                               balanceConstraintIndices);
                 addPortContributionToLinearPb(ctx,

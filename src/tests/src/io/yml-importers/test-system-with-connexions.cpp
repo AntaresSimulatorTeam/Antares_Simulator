@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_read_correctly)
 
     auto area_connection = portType.areaConnection();
     BOOST_CHECK(area_connection.has_value());
-    BOOST_CHECK_EQUAL(area_connection->injection, "flow");
+    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
     BOOST_CHECK(area_connection->spillage_bound.empty());
     BOOST_CHECK(area_connection->unsupplied_energy_bound.empty());
 }
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_more_complete_and_is_still_rea
 
     auto area_connection = portType.areaConnection();
     BOOST_CHECK(area_connection.has_value());
-    BOOST_CHECK_EQUAL(area_connection->injection, "flow");
+    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
     BOOST_CHECK_EQUAL(area_connection->spillage_bound, "to-area-bound");
     BOOST_CHECK_EQUAL(area_connection->unsupplied_energy_bound, "from-area-bound");
 }

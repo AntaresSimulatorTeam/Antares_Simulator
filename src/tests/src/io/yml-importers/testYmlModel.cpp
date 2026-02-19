@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
 }
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_injection_field__in_area_connection)
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "capa");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "capa");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
 }
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_spillage_bound_field__in_area_connecti
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "f1");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
 }
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "f2");
 }
