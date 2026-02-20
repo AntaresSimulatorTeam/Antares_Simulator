@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html#a5781ddab2a864e3627eac7897e2a447c":[8,0,0,8,0,5,7,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html#ac922a0376eaae6a8b672d2e76e047b08":[8,0,0,8,0,5,7,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html":[8,0,0,8,0,5,6],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html#a9a6122d9f2fa06cad423c9052a4280dc":[8,0,0,8,0,5,6,1],
@@ -29,8 +30,8 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Memory_1_1Stored.html#a6e0c1192459ecb47a8cb4b9615d3664a":[8,0,0,28,0,2],
 "structAntares_1_1Memory_1_1Stored.html#aafa0dd9fefbedc1ff143b689f717559f":[8,0,0,28,0,1],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection.html":[8,0,0,9,0,21],
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection.html#a848e10d958c3c85c7d1ae424eb73cc97":[8,0,0,9,0,21,0],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection.html#ac2a56023a58da431c0d3372d30817e1a":[8,0,0,9,0,21,2],
+"structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection.html#ac3fb5c138498c8cc103d4a6559411421":[8,0,0,9,0,21,0],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1AreaConnection.html#ad27ebf46476e72210651fc7633ee8d5c":[8,0,0,9,0,21,1],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html":[8,0,0,9,0,1],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html#a49cf4e1f69bc886e050abdac57f16d11":[8,0,0,9,0,1,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap_1_1Statistics.html":[8,0,0,12,6,4,84,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html":[8,0,0,12,6,4,88,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html":[8,0,0,12,6,4,86,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[8,0,0,12,6,4,90,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr_1_1Statistics.html":[8,0,0,12,6,4,94,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html":[8,0,0,12,6,4,90,0]
 };

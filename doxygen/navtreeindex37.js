@@ -1,5 +1,6 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aa7be674b4ad148105a640a78cecb82cf":[8,0,0,3,49,2],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aac1c472f1c5822ed2673146d73fa1fb3":[8,0,0,3,49,6],
 "structAntares_1_1Data_1_1BindingConstraintStructures.html":[8,0,0,3,26],
 "structAntares_1_1Data_1_1BindingConstraintStructures.html#a21b500116da97136cb4ea52bea54620d":[8,0,0,3,26,3],
@@ -150,7 +151,7 @@ var NAVTREEINDEX37 =
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html":[8,0,0,8,0,3,8],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#a044c1a4878754738f921bdd73218c5c7":[8,0,0,8,0,3,8,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#a14b632d44ca7592b1c0e9669a21ca582":[8,0,0,8,0,3,8,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#a39329c8fd6dc711d2f9a47e7a0dcb495":[8,0,0,8,0,3,8,0],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#ae260e569932847e19963e2b886ef1242":[8,0,0,8,0,3,8,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html":[8,0,0,8,0,3,4],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html#a155bb81fcc470222c71d73086b94e37b":[8,0,0,8,0,3,4,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html#ab51b8028018155ea41514b9391e82738":[8,0,0,8,0,3,4,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#ad10a45d534b4eb0e1574369798e2bbed":[8,0,0,8,0,5,8,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html#af6b2aa247121bfcef6673985c323a830":[8,0,0,8,0,5,8,4],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html":[8,0,0,8,0,5,7],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html#a063b0d15bfb30a9f0932ba48b8e9772a":[8,0,0,8,0,5,7,2],
-"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html#a5781ddab2a864e3627eac7897e2a447c":[8,0,0,8,0,5,7,0]
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html#a063b0d15bfb30a9f0932ba48b8e9772a":[8,0,0,8,0,5,7,2]
 };

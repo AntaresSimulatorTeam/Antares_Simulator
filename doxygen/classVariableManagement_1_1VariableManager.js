@@ -1,6 +1,7 @@
 var classVariableManagement_1_1VariableManager =
 [
     [ "VariableManager", "classVariableManagement_1_1VariableManager.html#a28c1fccfe6af867cc228e2de89267e7c", null ],
+    [ "VariableManager", "classVariableManagement_1_1VariableManager.html#a0291b65f654f38b8365f6f2ba35806a3", null ],
     [ "DispatchableProduction", "classVariableManagement_1_1VariableManager.html#ad7b2c2ebef348bf49c76c338926710f3", null ],
     [ "FinalStorage", "classVariableManagement_1_1VariableManager.html#ac5b7391512f247bce2166d33e779f256", null ],
     [ "HydProd", "classVariableManagement_1_1VariableManager.html#a6339bf52361262365c5504a75ab45d80", null ],

@@ -2104,7 +2104,6 @@ var namespaces_dup =
       [ "convert< Antares::IO::Inputs::YmlModel::ExtraOutput >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1ExtraOutput_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Objective >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Objective_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Model_01_4.html", null ],
-      [ "FieldMatching", "structYAML_1_1FieldMatching.html", "structYAML_1_1FieldMatching" ],
       [ "convert< Antares::IO::Inputs::YmlModel::PortType >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlModel::Library >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_01_4.html", null ],
@@ -2124,7 +2123,8 @@ var namespaces_dup =
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
       [ "as_fallback_default", "yml-model_2decoders_8hxx.html#a1f73904464749314bdb46864a93c5dae", null ],
-      [ "convertConnectionField", "yml-model_2decoders_8hxx.html#aa5e1270b326ad742225a56dcbc4f86e7", null ]
+      [ "getFieldFromNode", "yml-model_2decoders_8hxx.html#afc5b7de82649b3ced3d8b91f2dc536fc", null ],
+      [ "isValidMap", "yml-model_2decoders_8hxx.html#ab4584f99c0cd53219a83617389781ba3", null ]
     ] ],
     [ "Yuni", null, [
       [ "Extension", null, [

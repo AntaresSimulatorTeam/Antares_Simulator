@@ -1,5 +1,6 @@
 var NAVTREEINDEX42 =
 {
+"structCumulationConstraint.html#a13563bb2050269e5ebafc1a8edd2da92":[8,0,93,0],
 "structCumulationConstraint.html#a4d3d494de407e18a424494aa5c647713":[8,0,93,1],
 "structDEMAND__FLEX__DOWN__POOL.html":[8,0,97],
 "structDEMAND__FLEX__DOWN__POOL.html#a4b91aa5f6b0605c637f074c435c46bdd":[8,0,97,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX42 =
 "structFixture_1_1Link.html#af0b5f8052ca2570165cbad0885f467a9":[8,0,126,1,1],
 "structFixture_1_1Renewable.html":[8,0,126,2],
 "structFixture_1_1Renewable.html#a164aa89da7dc27649540bc1876d68a0c":[8,0,126,2,1],
-"structFixture_1_1Renewable.html#a8f6e9698637c7c2faa3dcc29aada526d":[8,0,126,2,0],
-"structFixture_1_1STSAdditionalConstraints.html":[8,0,126,3]
+"structFixture_1_1Renewable.html#a8f6e9698637c7c2faa3dcc29aada526d":[8,0,126,2,0]
 };

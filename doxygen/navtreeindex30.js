@@ -1,5 +1,6 @@
 var NAVTREEINDEX30 =
 {
+"classreferenceIniFile.html#af14c0e9ad664aa1793c0671b25a5c9ed":[8,0,253,6],
 "classreferenceScBuilderFile.html":[8,0,254],
 "classreferenceScBuilderFile.html#a045962399a5c39cfb01d64c99b9fbf6c":[8,0,254,1],
 "classreferenceScBuilderFile.html#a260a01d7ddc68a8557180f6321dfdf9d":[8,0,254,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX30 =
 "dir_08305d0335bff9d217f1701185279828.html":[9,0,0,6,0,0],
 "dir_0a07d74471d1651a86a3f1d0b1d738a8.html":[9,0,0,5,3,0],
 "dir_0a30ec3ba11d4bcec9eeae47fd14b8c6.html":[9,0,0,4,0,7,0,0],
-"dir_0ad44d5965cb798732b588d4ff2ade5a.html":[9,0,0,8,2,0],
-"dir_0b49f2c0c42ac9238401bd8828c3a92d.html":[9,0,0,3,1,1,0]
+"dir_0ad44d5965cb798732b588d4ff2ade5a.html":[9,0,0,8,2,0]
 };
