@@ -102,7 +102,7 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
                                                              int NumIntervalle);
 void fillLinearProblem(Optimisation::LinearProblemApi::FillContext& fillCtx,
-                       const PROBLEME_HEBDO* problemeHebdo,
+                       PROBLEME_HEBDO* problemeHebdo,
                        Optimisation::OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition = nullptr);

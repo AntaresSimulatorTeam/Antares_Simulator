@@ -23,7 +23,7 @@ using namespace Optimisation;
 using namespace LinearProblemApi;
 using namespace LinearProblemDataImpl;
 
-static const auto libraryYaml = R"(
+static const auto libraryYamlWithSpillageAndUnsuppliedEnergyBound = R"(
 library:
   id: my_lib
   description: test model library
@@ -35,8 +35,9 @@ library:
         - id: to-area-bound
         - id: from-area-bound
       area-connection:
-        - spillage-bound: to-area-bound
-        - unsupplied-energy-bound: from-area-bound
+        injection-to-balance: 
+        spillage-bound: to-area-bound
+        unsupplied-energy-bound: from-area-bound
 
   models:
     - id: model_with_vars
@@ -57,7 +58,7 @@ library:
           definition: var_1 / 2 - 10
 )"s;
 
-static const auto systemYaml = R"(
+static const auto systemYamlAreaConnection = R"(
 system:
   id: my_system
   model-libraries: my_lib
@@ -126,10 +127,11 @@ std::unique_ptr<Solver::ModelerData> AreaConnectionFixture::buildModelerSystem()
     auto to_return = std::make_unique<Solver::ModelerData>();
 
     IO::Inputs::YmlModel::Parser parserModel;
-    libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
+    libraries.push_back(IO::Inputs::ModelConverter::convert(
+      parserModel.parse(libraryYamlWithSpillageAndUnsuppliedEnergyBound)));
 
     IO::Inputs::YmlSystem::Parser parserSystem;
-    auto ymlSystem = parserSystem.parse(systemYaml);
+    auto ymlSystem = parserSystem.parse(systemYamlAreaConnection);
     auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
 
     to_return->system = std::make_unique<System>(std::move(system));

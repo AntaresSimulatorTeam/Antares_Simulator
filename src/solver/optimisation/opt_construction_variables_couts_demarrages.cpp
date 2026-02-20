@@ -4,9 +4,8 @@
 #include <spx_constantes_externes.h>
 
 #include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include "variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
