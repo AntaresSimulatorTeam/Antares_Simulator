@@ -39,7 +39,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: windows-2022
-      vcpkgPackages: wxwidgets boost-test
+      vcpkgPackages: boost-test
       triplet: x64-windows-release
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"

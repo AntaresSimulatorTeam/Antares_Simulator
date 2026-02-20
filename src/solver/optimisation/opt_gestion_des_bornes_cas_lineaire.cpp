@@ -4,11 +4,9 @@
 #include <cmath>
 #include <spx_constantes_externes.h>
 
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include "variables/VariableManagement.h"
-#include "variables/VariableManagerUtils.h"
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,

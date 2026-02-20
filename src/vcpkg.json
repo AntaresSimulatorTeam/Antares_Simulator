@@ -7,10 +7,6 @@
       "version>=": "1.9"
     },
     {
-      "name": "wxwidgets",
-      "platform": "windows"
-    },
-    {
       "name": "boost-test",
       "version>=": "1.86.0"
     },

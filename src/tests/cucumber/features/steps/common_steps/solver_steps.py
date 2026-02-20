@@ -9,13 +9,15 @@ from pathlib import Path
 
 import numpy as np
 from behave import *
-from common_steps.assertions import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
 
-from features.steps.common_steps.assertions import assert_double_close
-from features.steps.common_steps.modeler_output_handler import modeler_output_handler
-from features.steps.common_steps.table_compare import *
+from common_steps.assertions import assert_double_close
+from common_steps.modeler_output_handler import modeler_output_handler
+from common_steps.table_compare import *
+from shared_utils import mps_utils as mpu
+
+from common_steps.parse_linear_expression import parse_linear_expression
 
 NB_HOURS_IN_WEEK = 168
 NB_DAYS_IN_WEEK = 7
@@ -56,10 +58,20 @@ def set_quadratic_solver(context, solver_name):
     context.config.userdata["quadratic-solver"] = solver_name
 
 
-@when('I run antares simulator')
-def run_antares(context):
+def parse_options(context, options):
     context.named_mps_problems = False
     context.parallel = False
+    if options is not None:
+        if options.count("--named-mps-problems") > 0 or options.count("-s") > 0:
+            context.named_mps_problems = True
+
+        if options.count("--parallel") > 0:
+            context.parallel = True
+
+@when('I run antares simulator')
+@when('I run antares simulator with {options}')
+def run_antares(context, options=None):
+    parse_options(context, options)
     run_simulation(context)
 
 
@@ -548,3 +560,85 @@ def check_hourly_variable_value(context, area, year, var_name, hour, expected_va
 def check_near_price_cap(context, area, year, hour, value):
     actual = context.soh.get_npcap_hours_for_hour(area, year, hour)
     assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"
+
+
+def get_week_time_steps_from_mps_file_name(file_name):
+    """
+    Extract week number from MPS file name and generate 168 time steps.
+
+    Args:
+        file_name: MPS file name like 'problem-1-1--optim-nb-1.mps' or full path
+
+    Returns:
+        List of 168 time steps for the week: [(week-1)*168 + hour for hour in 0..167]
+
+    Example:
+        'problem-1-1-optim-nb-1.mps' -> week=1 -> [0, 1, 2, ..., 167]
+        'problem-1-2-optim-nb-1.mps' -> week=2 -> [168, 169, 170, ..., 335]
+    """
+    # Extract just the filename if a path was provided
+    file_name = Path(file_name).name
+
+    # Parse file name pattern: problem-{year}-{week}-optim-nb-{number}.mps
+    # Using regex to extract the week number (second number after 'problem-')
+    match = re.match(r'problem-(\d+)-(\d+)--optim-nb-(\d+)\.mps', file_name)
+
+    if not match:
+        raise ValueError(f"Invalid MPS file name format: {file_name}. "
+                         f"Expected format: problem-<year>-<week>--optim-nb-<number>.mps")
+
+    year = int(match.group(1))
+    week = int(match.group(2))
+    optim_nb = int(match.group(3))
+
+    # Generate 168 time steps for the week
+    week_time_steps = [(week - 1) * 168 + hour for hour in range(168)]
+
+    return week_time_steps
+
+
+def extract_time_step(name) -> int:
+    return int(name.split("hour<")[1].split(">")[0])
+
+
+@then(
+    'for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster {cluster} in area {area}.')
+def check_max_generation_from_capacity_exists(context, area, cluster):
+    for mps_file in context.soh.get_mps_files():
+        mps_problem = mpu.load_problem(str(mps_file))
+        week_time_step = get_week_time_steps_from_mps_file_name(mps_file)
+        time_step_constraint: dict[int, str] = {}
+        for c in mps_problem.get_linear_constraints():
+            if c.name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
+                time_step = extract_time_step(c.name)
+                time_step_constraint[time_step] = c.name
+        assert len(week_time_step) == len(time_step_constraint), \
+            f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
+        assert week_time_step == list(
+            time_step_constraint.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_time_step[0]}, {week_time_step[-1]}] in {mps_file}"
+
+
+@then(
+    'enforces: DispatchableProduction {expression} < {rhs} for the thermal capacity connection between GEMS and the {cluster} thermal cluster in area {area}.')
+def check_max_generation_from_capacity_constraint(context, expression, rhs, cluster, area):
+    for mps_file in context.soh.get_mps_files():
+        mps_problem = mpu.load_problem(str(mps_file))
+        parsed_expression = parse_linear_expression(expression)
+        rhs = float(rhs)
+        for constr_name, row in mpu.get_constraint_matrix(mps_problem).items():
+            if constr_name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
+                time_step = extract_time_step(constr_name)
+                assert len(
+                    row) == 2, f"{constr_name} must have exactly two non null coefficients: DispatchableProduction-thermal_add_on.p_max<0"
+                # Check coefficients
+                for var_name, coeff in row.items():
+                    dispatchable_production = f"DispatchableProduction::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>"
+
+                    if var_name == dispatchable_production:
+                        assert coeff == 1.0, f"the coefficient of {dispatchable_production} in {constr_name} must be = 1"
+                    elif var_name in parsed_expression:
+                        assert coeff == parsed_expression[
+                            var_name], f"the coefficient of {var_name} in {constr_name} must be = {coeff}"
+                    else:
+                        raise ValueError(
+                            f"{var_name} should not have coefficient in MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>")

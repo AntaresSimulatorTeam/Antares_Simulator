@@ -119,18 +119,6 @@ static Component& findComponent(const std::string& id, std::vector<Component>& c
     return *it;
 }
 
-static const Port& findPort(const Component& component, const std::string& portId)
-{
-    const auto& ports = component.getModel()->Ports();
-    const auto& it = ports.find(portId);
-    if (it == ports.end())
-    {
-        throw std::invalid_argument("Port with id '" + portId + "' not found in component '"
-                                    + component.Id() + "'.");
-    }
-    return it->second;
-}
-
 static void CheckPortSelfConnection(const std::string& firstComponentId,
                                     const std::string& firstPortId,
                                     const std::string& secondComponentId,
@@ -230,9 +218,9 @@ static void connectComponents(const YmlSystem::Connection& connection,
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 
     auto& firstComponent = findComponent(firstComponentId, components);
-    const auto& firstPort = findPort(firstComponent, firstPortId);
+    const auto& firstPort = firstComponent.findPort(firstPortId, "");
     auto& secondComponent = findComponent(secondComponentId, components);
-    const auto& secondPort = findPort(secondComponent, secondPortId);
+    const auto& secondPort = secondComponent.findPort(secondPortId, "");
     CheckPortsType(firstPort, secondPort);
 
     const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(firstComponent,
@@ -263,6 +251,30 @@ static void connectAreas(const YmlSystem::AreaConnection& connection,
 {
     auto& component = findComponent(connection.componentId, components);
     component.addAreaConnection(connection.portId, connection.areaId);
+}
+
+/**
+ * @brief Uses a YmlSystem::ThermalCapacityConnection to connect (areas, clusters) and components
+ * via ports
+ *
+ * @param connection A YmlSystem::ThermalCapacityConnection object containing the connection
+ * details.
+ * @param components An unordered map of component IDs to SystemModel::Component objects.
+ *
+ * @return void
+ *
+ * @throw std::invalid_argument if a component is not found, or if the connection could not be
+ * established
+ */
+static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
+                                   std::vector<Component>& components)
+{
+    // TODO : check that area exists in legacy study? seems complicated here
+    auto& component = findComponent(connection.componentId, components);
+
+    component.addThermalCapacityConnection(connection.portId,
+                                           connection.thermalComponent.areaId,
+                                           connection.thermalComponent.clusterId);
 }
 
 System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& libraries)
@@ -298,6 +310,14 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         connectAreas(connection, components);
         logs.debug() << "Loaded area connection (component=`" << connection.componentId
                      << "` area=`" << connection.areaId << "`)";
+    }
+    // Create thermal capacity connections from system
+    for (const auto& connection: ymlSystem.thermalCapacityConnections)
+    {
+        connectThermalCapacity(connection, components);
+        logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
+                     << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
+                     << connection.thermalComponent.clusterId << "`)";
     }
 
     // Build system from components and connections

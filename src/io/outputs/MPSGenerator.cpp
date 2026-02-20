@@ -266,7 +266,7 @@ void MPSGenerator::writeBounds(std::string& mps) const
     int i = 0;
     for (const auto& var: linearProblem_.getVariables())
     {
-        const auto varName = exportableVariablesNames_[i];
+        const auto& varName = exportableVariablesNames_[i];
         ++i;
         const std::string bnd = "BND1";
 

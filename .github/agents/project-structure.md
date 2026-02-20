@@ -12,6 +12,7 @@
 ## Additional Resources
 
 See [developer-guide](../../docs/developer-guide/) for detailed documentation:
+
 - Build requirements and dependencies
 - Installation procedures
 - CI/CD workflows

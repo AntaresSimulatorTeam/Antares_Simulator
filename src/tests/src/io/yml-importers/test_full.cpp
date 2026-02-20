@@ -80,7 +80,9 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
+        injection-to-balance: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
 
   models:
     - id: generator
@@ -276,7 +278,7 @@ library:
         auto& portTypeField2 = portType2.Fields().at(0);
         BOOST_CHECK_EQUAL(portTypeField2.Id(), "flow");
         BOOST_REQUIRE_EQUAL(portType2.areaConnection().has_value(), true);
-        BOOST_CHECK_EQUAL(portType2.areaConnection()->injection, "flow");
+        BOOST_CHECK_EQUAL(portType2.areaConnection()->inject_to_balance, "flow");
 
         BOOST_REQUIRE_EQUAL(lib.Models().size(), 7);
         auto& model0 = lib.Models().at("generator");

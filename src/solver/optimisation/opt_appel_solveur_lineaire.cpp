@@ -18,6 +18,8 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
+#include "antares/solver/optimisation/MipDetection.h"
+#include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
@@ -102,7 +104,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 
 // Returns a shared_ptr to the solver
 void fillLinearProblem(FillContext& fillCtx,
-                       const PROBLEME_HEBDO* problemeHebdo,
+                       PROBLEME_HEBDO* problemeHebdo,
                        OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition)
@@ -125,6 +127,8 @@ void fillLinearProblem(FillContext& fillCtx,
           problemeHebdo,
           optimEntityContainer,
           problemeHebdo->modelerData->scenarioGroupRepository));
+        fillersCollection.push_back(
+          std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -156,11 +160,13 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     OptimizationStatistics& optimizationStatistics = problemeHebdo->optimizationStatistics[opt];
     TIME_MEASURE timeMeasure;
 
-    LegacyOrtoolsLinearProblem ortoolsProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
-                                              options.solverName);
-    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
+    const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
+                       || Antares::Optimization::hasModelerIntegerVariables(modelerData);
+
+    LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
+    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
     const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
@@ -325,11 +331,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     }
     else
     {
-        LegacyOrtoolsLinearProblem infeasibleProblem(problemeHebdo->ProblemeAResoudre->isMIP(),
-                                                     options.solverName);
-        FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
+        const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
+                           || Antares::Optimization::hasModelerIntegerVariables(modelerData);
+
+        LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
+        FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                      : nullptr;
         const ScenarioGroupRepository* modelerScenarioGroupRepository

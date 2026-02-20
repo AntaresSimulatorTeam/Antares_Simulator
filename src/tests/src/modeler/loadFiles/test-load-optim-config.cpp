@@ -94,7 +94,9 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_variable_decomposition, CreateInp
     createOptimConfigFile(yamlContent);
 
     // Act part
-    auto [libraries, _] = loadLibraries(studyFolder);
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
 
     // Assert part
     const auto& modelVariables = libraries[0].Models().at("some-model").Variables();
@@ -143,7 +145,9 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateI
     createOptimConfigFile(yamlContent);
 
     // Act part
-    auto [libraries, _] = loadLibraries(studyFolder);
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
 
     // Assert part
     const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
@@ -192,7 +196,9 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateIn
     createOptimConfigFile(yamlContent);
 
     // Act part
-    auto [libraries, _] = loadLibraries(studyFolder);
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
 
     // Assert part
     const auto& modelObjectives = libraries[0].Models().at("some-model").Objectives();
@@ -391,7 +397,10 @@ models:
 
     createOptimConfigFile(yamlContent);
 
-    auto [_, resolutionMode] = loadLibraries(studyFolder);
+    // Act part
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    auto resolutionMode = res.value().second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
@@ -422,7 +431,10 @@ models:
 
     createOptimConfigFile(yamlContent);
 
-    auto [_, resolutionMode] = loadLibraries(studyFolder);
+    // Act part
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    auto resolutionMode = res.value().second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
 }
 
@@ -449,7 +461,10 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_default_resolution_mode, CreateInputFi
     createOptimConfigFile(yamlContent);
 
     // Act & Assert - default mode should be SEQUENTIAL_SUBPROBLEMS
-    auto [libraries, resolutionMode] = loadLibraries(studyFolder);
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
+    auto resolutionMode = res.value().second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
@@ -492,7 +507,10 @@ models:
     createOptimConfigFile(yamlContent);
 
     // Act & Assert
-    auto [libraries, resolutionMode] = loadLibraries(studyFolder);
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
+    auto resolutionMode = res.value().second;
     BOOST_CHECK_EQUAL(resolutionMode, Antares::Solver::ResolutionMode::BENDERS_DECOMPOSITION);
     BOOST_REQUIRE_EQUAL(libraries.size(), 1);
     const auto& models = libraries[0].Models();
@@ -527,4 +545,16 @@ models:
 
     // Act & Assert - invalid resolution mode should throw an exception
     BOOST_CHECK_THROW(loadLibraries(studyFolder), Antares::Error::InvalidArgumentError);
+}
+
+BOOST_FIXTURE_TEST_CASE(load_libraries_returns_empty_optional_when_no_model_libraries_dir,
+                        CreateInputFileFixture)
+{
+    std::filesystem::path libFolder = studyFolder / "input" / "model-libraries";
+    std::filesystem::remove_all(libFolder);
+
+    auto res = loadLibraries(studyFolder);
+
+    // On attend une optional vide (std::nullopt)
+    BOOST_CHECK(!res.has_value());
 }
