@@ -661,7 +661,8 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::ILoader", "classAntares_1_1Solver_1_1ILoader.html", [
       [ "Antares::Solver::LoadFiles::FileLoader", "classAntares_1_1Solver_1_1LoadFiles_1_1FileLoader.html", null ],
-      [ "InMemoryLoader", "classInMemoryLoader.html", null ]
+      [ "InMemoryLoader", "classInMemoryLoader.html", null ],
+      [ "ScalingLoader", "classScalingLoader.html", null ]
     ] ],
     [ "Antares::Optimisation::LinearProblemApi::IMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html", [
       [ "Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsMipSolution", "classAntares_1_1Optimisation_1_1LinearProblemMpsolverImpl_1_1OrtoolsMipSolution.html", null ],
@@ -817,7 +818,8 @@ var hierarchy =
     ] ],
     [ "Antares::Solver::IWriter", "classAntares_1_1Solver_1_1IWriter.html", [
       [ "Antares::Solver::FileWriter", "classAntares_1_1Solver_1_1FileWriter.html", null ],
-      [ "InMemoryWriter", "classInMemoryWriter.html", null ]
+      [ "InMemoryWriter", "classInMemoryWriter.html", null ],
+      [ "ScalingWriter", "classScalingWriter.html", null ]
     ] ],
     [ "JIT", "classJIT.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],

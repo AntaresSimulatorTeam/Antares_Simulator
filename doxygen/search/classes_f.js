@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['qpfixture_3168',['QpFixture',['../structQpFixture.html',1,'']]],
-  ['quadraticproblemmatrix_3169',['QuadraticProblemMatrix',['../classQuadraticProblemMatrix.html',1,'']]]
+  ['qpfixture_3169',['QpFixture',['../structQpFixture.html',1,'']]],
+  ['quadraticproblemmatrix_3170',['QuadraticProblemMatrix',['../classQuadraticProblemMatrix.html',1,'']]]
 ];

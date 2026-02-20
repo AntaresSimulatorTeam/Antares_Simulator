@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['jit_2868',['JIT',['../classJIT.html',1,'']]],
-  ['jobfilereader_2869',['JobFileReader',['../classJobFileReader.html',1,'']]],
-  ['join_2870',['Join',['../classAntares_1_1Solver_1_1Variable_1_1Join.html',1,'Antares::Solver::Variable']]],
-  ['jsoncollector_2871',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
-  ['just_5fin_5ftime_5fmanager_2872',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
+  ['jit_2869',['JIT',['../classJIT.html',1,'']]],
+  ['jobfilereader_2870',['JobFileReader',['../classJobFileReader.html',1,'']]],
+  ['join_2871',['Join',['../classAntares_1_1Solver_1_1Variable_1_1Join.html',1,'Antares::Solver::Variable']]],
+  ['jsoncollector_2872',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
+  ['just_5fin_5ftime_5fmanager_2873',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
 ];

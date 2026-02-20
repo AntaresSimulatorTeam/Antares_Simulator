@@ -1214,6 +1214,8 @@ var annotated_dup =
     [ "ResultMatrix", "classResultMatrix.html", "classResultMatrix" ],
     [ "RESULTS", "structRESULTS.html", "structRESULTS" ],
     [ "SavingToStreamFixture", "structSavingToStreamFixture.html", "structSavingToStreamFixture" ],
+    [ "ScalingLoader", "classScalingLoader.html", "classScalingLoader" ],
+    [ "ScalingWriter", "classScalingWriter.html", "classScalingWriter" ],
     [ "ScenarioBuilderBaseVisitor", "classScenarioBuilderBaseVisitor.html", "classScenarioBuilderBaseVisitor" ],
     [ "ScenarioBuilderFixture", "structScenarioBuilderFixture.html", "structScenarioBuilderFixture" ],
     [ "ScenarioBuilderLexer", "classScenarioBuilderLexer.html", "classScenarioBuilderLexer" ],
