@@ -75,7 +75,7 @@ std::optional<std::vector<YmlModel::Library>> loadLibrariesFromYaml(const fs::pa
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
     if (!fs::exists(directoryPath))
     {
-        logs.warning() << "Model library missing";
+        logs.info() << "Model library missing";
         return {};
     }
     for (const auto& entry: fs::directory_iterator(directoryPath))

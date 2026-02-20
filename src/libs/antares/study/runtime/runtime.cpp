@@ -123,9 +123,9 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
         {
             // We have here too much hours, the interval will be reduced
             // Log Entry
-            logs.info() << "    Partial week detected. Not allowed in "
+            logs.warning() << "    Partial week detected. Not allowed in "
                         << SimulationModeToCString(study.parameters.mode);
-            logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
+            logs.warning() << "    Time interval that has been requested: " << (1 + a) << ".."
                         << (1 + b);
             // Reducing
             while (b > a and 0 != ((b - a + 1) % 168))
