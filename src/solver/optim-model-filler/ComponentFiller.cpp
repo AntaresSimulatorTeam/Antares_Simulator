@@ -14,9 +14,9 @@
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
-static constexpr std:string_view scenarioDepVarNameFormat = "{}.{}_s{}";
-static constexpr std:string_view timeDepVarNameFormat = "{}.{}_t{}"; 
-static constexpr std:string_view varNameFormat = "{}.{}_s{}_t{}"; 
+static constexpr std::string_view base_name_format = "{}.{}";
+static constexpr std::string_view scenarioDepVarNameAppendFormat = "{}_s{}";
+static constexpr std::string_view timeDepVarNameAppendFormat = "{}_t{}";
 
 namespace Antares::Optimisation
 {
@@ -41,29 +41,27 @@ void VariableNames::makeNames(const Component& compo, const Variable& var, const
 
     names_.resize(scenarioIndices.size() * timesteps.size());
 
-    std::string baseVarName = fmt::format("{}.{}", compo.Id(), var.Id());
-    std::string scenarizedVarName;
-    std::string tsVarName;
+    std::string baseVarName = fmt::format(base_name_format, compo.Id(), var.Id());
 
     for (const auto& s: scenarioIndices)
     {
-        scenarizedVarName = baseVarName;
+        std::string scenarisedVarName = baseVarName;
         if (dims.isScenarioDependent())
         {
             auto year = static_cast<Optimization::MCYearAndTime::MCYear>(s);
-            scenarizedVarName += "_s" + std::to_string(format_as(year));
+            scenarisedVarName = fmt::format(scenarioDepVarNameAppendFormat, baseVarName, year);
         }
 
         for (const auto t: timesteps)
         {
-            tsVarName = scenarizedVarName;
+            std::string tsVarName = scenarisedVarName;
             if (dims.isTimeDependent())
             {
-                tsVarName += "_t" + std::to_string(t);
+                tsVarName = fmt::format(timeDepVarNameAppendFormat, scenarisedVarName, t);
             }
 
             names_[index] = tsVarName;
-            index++;
+            ++index;
         }
     }
 }
