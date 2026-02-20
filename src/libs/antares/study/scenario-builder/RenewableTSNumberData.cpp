@@ -60,36 +60,6 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenRenewable ? 1 : 0u;
 }
 
-#ifdef BUILD_UI
-void renewableTSNumberData::saveToINIFile(const Study& /* study */,
-                                          Yuni::IO::File::Stream& file) const
-{
-    // Prefix
-    CString<512, false> prefix;
-    prefix += get_prefix();
-
-    if (!pArea)
-    {
-        return;
-    }
-
-    for (auto& cluster: pArea->renewable.list.all())
-    {
-        for (uint year = 0; year != pTSNumberRules.height; ++year)
-        {
-            const uint val = get(cluster.get(), year);
-            // Equals to zero means 'auto', which is the default mode
-            if (!val)
-            {
-                continue;
-            }
-            file << prefix << pArea->id << "," << year << ',' << cluster->id() << " = " << val
-                 << '\n';
-        }
-    }
-}
-#endif
-
 bool renewableTSNumberData::reset(const Study& study)
 {
     const uint nbYears = study.parameters.nbYears;

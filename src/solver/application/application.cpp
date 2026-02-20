@@ -188,8 +188,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         study.simulationComments.name = pSettings.simulationName;
     }
 
-    // Removing all callbacks, which are no longer needed
-    logs.callback.clear();
     logs.info();
 
     if (pSettings.noOutput)
@@ -245,6 +243,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         throw Error::RuntimeInfoInitialization();
     }
+
+    // Removing all callbacks, which are no longer needed
+    logs.callback.clear();
+    logs.info();
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();

@@ -430,31 +430,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 }
 
-#ifdef BUILD_UI
-BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
-{
-    createIniFile(true);
-
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
-
-    fs::remove(work_dir / "list.ini");
-
-    BOOST_CHECK(container.saveToFolder(work_dir.string()));
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
-}
-
-BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
-{
-    resizeFillVectors(series, 0.123456789, HOURS_PER_YEAR);
-
-    BOOST_CHECK(series.saveToFolder(work_dir.string()));
-    resizeFillVectors(series, 0, 0);
-
-    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
-    BOOST_CHECK(series.validate("", StudyVersion::latest()));
-}
-#endif
-
 BOOST_AUTO_TEST_SUITE_END()
 
 // Test data for parameterization

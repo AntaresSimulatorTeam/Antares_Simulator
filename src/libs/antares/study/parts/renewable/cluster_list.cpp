@@ -22,64 +22,6 @@ std::string RenewableClusterList::typeID() const
     return "renewables";
 }
 
-#ifdef BUILD_UI
-bool RenewableClusterList::saveToFolder(const AnyString& folder) const
-{
-    // Make sure the folder is created
-    if (IO::Directory::Create(folder))
-    {
-        Clob buffer;
-        bool ret = true;
-
-        // Allocate the inifile structure
-        IniFile ini;
-
-        // Browse all clusters
-        for (auto& c: all())
-        {
-            // Adding a section to the inifile
-            IniFile::Section* s = ini.addSection(c->name());
-
-            // The section must not be empty
-            // This key will be silently ignored the next time
-            s->add("name", c->name());
-
-            if (!c->getGroup().empty())
-            {
-                s->add("group", c->getGroup());
-            }
-            if (!c->enabled)
-            {
-                s->add("enabled", "false");
-            }
-
-            if (!Utils::isZero(c->nominalCapacity))
-            {
-                s->add("nominalCapacity", c->nominalCapacity);
-            }
-
-            if (!Utils::isZero(c->unitCount))
-            {
-                s->add("unitCount", c->unitCount);
-            }
-
-            s->add("ts-interpretation", c->getTimeSeriesModeAsString());
-        }
-
-        // Write the ini file
-        buffer.clear() << folder << SEP << "list.ini";
-        ret = ini.save(buffer) and ret;
-    }
-    else
-    {
-        logs.error() << "I/O Error: impossible to create '" << folder << "'";
-        return false;
-    }
-
-    return true;
-}
-#endif
-
 static bool ClusterLoadFromProperty(RenewableCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
