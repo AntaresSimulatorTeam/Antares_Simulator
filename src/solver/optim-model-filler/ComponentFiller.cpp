@@ -14,9 +14,6 @@
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
-static constexpr std:string_view scenarioDepVarNameFormat = "{}.{}_s{}";
-static constexpr std:string_view timeDepVarNameFormat = "{}.{}_t{}"; 
-static constexpr std:string_view varNameFormat = "{}.{}_s{}_t{}"; 
 
 namespace Antares::Optimisation
 {
