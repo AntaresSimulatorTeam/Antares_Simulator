@@ -944,6 +944,7 @@ collectRemixDebugInfo (#3278)
 ### 8.8.17 (06/2025)
 
 #### Bugfixes
+
 * Bump OR-Tools v9.13-rte1.0 [ANT-3350]
 * Remove limit on CPU cores when requested threads == nproc (#2833)
 * Create criterion files in `Expansion` mode (#2822) [ANT-3137]
@@ -2023,7 +2024,7 @@ features to be used without hassle.
 - Simulation Dashboard: A new option "Thematic Trimming"
   is available in the "Output Profile" Section. This option
   now makes it possible to define precisely the content of
-  output files so as to include variables of interest
+  output files so as to include only variables of interest
 
 - Optimization: a new parameter "Hydro Pricing mode" is
   available in the "advanced parameters" section, with two
@@ -2070,7 +2071,7 @@ features to be used without hassle.
   "Geographic District" as "Regional District" to avoid confusion
   with new "Trimming" options
 
-- Output: When simulation results are trimmed so as not to produce
+- Output: when simulation results are trimmed so as not to produce
   any data for given Areas or Links, avoid creation of empty folders
   named after said Areas or Links
 
