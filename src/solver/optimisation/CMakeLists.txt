@@ -175,9 +175,9 @@ set(RTESOLVER_OPT
         constraints/ExchangeBalance.cpp
         include/antares/solver/optimisation/constraints/ExchangeBalanceGroup.h
         constraints/ExchangeBalanceGroup.cpp
-        variables/VariableManagement.h
+        include/antares/solver/optimisation/variables/VariableManagement.h
         variables/VariableManagement.cpp
-        variables/VariableManagerUtils.h
+        include/antares/solver/optimisation/variables/VariableManagerUtils.h
         variables/VariableManagerUtils.cpp
         include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
         HebdoProblemToLpsTranslator.cpp
@@ -186,6 +186,8 @@ set(RTESOLVER_OPT
         LegacyFiller.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
         ComponentToAreaConnectionFiller.cpp
+        include/antares/solver/optimisation/ThermalCapacityFiller.h
+        ThermalCapacityFiller.cpp
         include/antares/solver/optimisation/OptimisationsSimulationTable.h
         OptimisationsSimulationTable.cpp
 )

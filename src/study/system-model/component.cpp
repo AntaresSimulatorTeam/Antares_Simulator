@@ -6,7 +6,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/study/system-model/component.h>
-
+#include "antares/logs/logs.h"
 using namespace Antares::Expressions::Nodes;
 
 std::string toLowerCase(const std::string& str)
@@ -82,6 +82,11 @@ static void checkComponentDataValidity(const ComponentData& data)
     }
 }
 
+const std::map<std::string, ThermalComponent>& Component::portToThermalCapacityConnections() const
+{
+    return portToThermalConnections_;
+}
+
 Component::Component(const ComponentData& component_data)
 {
     checkComponentDataValidity(component_data);
@@ -142,6 +147,18 @@ const Expression& Component::expressionAtPortField(const std::string& portId,
     }
 }
 
+const Port& Component::findPort(const std::string& portId, const std::string& prefixMessage) const
+{
+    const auto& ports = getModel()->Ports();
+    const auto& it = ports.find(portId);
+    if (it == ports.end())
+    {
+        throw std::invalid_argument(prefixMessage + "Port with id '" + portId
+                                    + "' not found in component '" + Id() + "'.");
+    }
+    return it->second;
+}
+
 void Component::checkPortFieldDefinitionExists(const std::string& portName,
                                                const std::string& fieldName,
                                                const std::string& errMsgPrefix) const
@@ -151,44 +168,88 @@ void Component::checkPortFieldDefinitionExists(const std::string& portName,
         PortFieldKey key(portName, fieldName);
         if (!getModel()->PortFieldDefinitions().contains(key))
         {
-            std::string errMsg = errMsgPrefix + "port field '" + fieldName
-                                 + "' is not defined in the component's model '" + getModel()->Id()
-                                 + "'";
-            throw std::invalid_argument(errMsg);
+            logs.warning()
+              << errMsgPrefix
+              << fmt::format("port field '{}' is not defined in the component's model '{}'",
+                             fieldName,
+                             getModel()->Id());
         }
     }
 }
 
 void Component::addAreaConnection(const std::string& localPortId, const std::string& areaId)
 {
-    std::string errMsgPrefix = "Cannot connect area '" + areaId + "' to port '" + localPortId
-                               + "' of component '" + data_.id + "': ";
-    if (!getModel()->Ports().contains(localPortId))
-    {
-        throw std::invalid_argument(errMsgPrefix + "port does not exist in the component's model '"
-                                    + getModel()->Id() + "'");
-    }
-    Port port = getModel()->Ports().at(localPortId);
+    std::string exceptionPrefix = fmt::format(
+      "Cannot connect area '{}' to port '{}' of component '{}': ",
+      areaId,
+      localPortId,
+      data_.id);
+    const auto& port = findPort(localPortId, exceptionPrefix);
     const auto& area_connection = port.Type().areaConnection();
     if (!area_connection.has_value())
     {
-        throw std::invalid_argument(errMsgPrefix + "port type '" + port.Type().Id()
-                                    + "' has no area-connection field ID defined");
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port type '{}' has no area-connection field ID defined",
+                        port.Type().Id()));
     }
 
-    checkPortFieldDefinitionExists(localPortId, area_connection->injection, errMsgPrefix);
-    checkPortFieldDefinitionExists(localPortId, area_connection->spillage_bound, errMsgPrefix);
+    checkPortFieldDefinitionExists(localPortId, area_connection->injection, exceptionPrefix);
+    checkPortFieldDefinitionExists(localPortId, area_connection->spillage_bound, exceptionPrefix);
     checkPortFieldDefinitionExists(localPortId,
                                    area_connection->unsupplied_energy_bound,
-                                   errMsgPrefix);
+                                   exceptionPrefix);
 
     if (portToAreaConnections_.contains(localPortId))
     {
-        throw std::invalid_argument(errMsgPrefix + "port is already connected to '"
-                                    + portToAreaConnections_.at(localPortId) + "'");
+        throw std::invalid_argument(exceptionPrefix
+                                    + fmt::format("port is already connected to '{}'",
+                                                  portToAreaConnections_.at(localPortId)));
     }
 
     portToAreaConnections_[localPortId] = toLowerCase(areaId);
+}
+
+void Component::addThermalCapacityConnection(const std::string& portId,
+                                             const std::string& areaId,
+                                             const std::string& clusterId)
+{
+    const std::string exceptionPrefix = fmt::format(
+      "Cannot connect thermal capacity '(area = {}, "
+      "clusterId = {})' to port '{}' of component '{}': ",
+      areaId,
+      clusterId,
+      portId,
+      data_.id);
+    const auto& port = findPort(portId, exceptionPrefix);
+    const auto thermalCapacityConnectionFieldId = port.Type().ThermalCapacityConnectionFieldId();
+    if (!thermalCapacityConnectionFieldId.has_value())
+    {
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port type '{}' has no thermal-capacity-connection field ID defined",
+                        port.Type().Id()));
+    }
+    PortFieldKey key(portId, thermalCapacityConnectionFieldId.value());
+    if (!data_.model->PortFieldDefinitions().contains(key))
+    {
+        throw std::invalid_argument(
+          exceptionPrefix
+          + fmt::format("port field '{}' is not defined in the component's model '{}'",
+                        thermalCapacityConnectionFieldId.value(),
+                        data_.model->Id()));
+    }
+    if (portToThermalConnections_.contains(portId))
+    {
+        const auto msg = fmt::format("port '{}' port is already connected to '(area = {}, "
+                                     "clusterId = {})'",
+                                     portId,
+                                     areaId,
+                                     clusterId);
+        throw std::invalid_argument(msg);
+    }
+
+    portToThermalConnections_.try_emplace(portId, ThermalComponent{toLowerCase(areaId), clusterId});
 }
 
 std::optional<std::string> Component::areaConnectedToPort(const std::string& portId) const
@@ -196,6 +257,17 @@ std::optional<std::string> Component::areaConnectedToPort(const std::string& por
     return portToAreaConnections_.contains(portId)
              ? std::optional(portToAreaConnections_.at(portId))
              : std::nullopt;
+}
+
+std::optional<ThermalComponent> Component::thermalCapacityConnectedToPort(
+  const std::string& portId) const
+{
+    const auto it = portToThermalConnections_.find(portId);
+    if (it == portToThermalConnections_.end())
+    {
+        return std::nullopt;
+    }
+    return it->second;
 }
 
 const std::map<std::string, std::string>& Component::portToAreaConnections() const

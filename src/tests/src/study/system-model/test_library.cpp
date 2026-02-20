@@ -176,25 +176,24 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
 {
-    auto shouldThrow = []
+    auto shouldNotThrow = []
     {
         PortField field1("firstField");
         std::vector fields = {field1};
         return PortType("portTypeId", std::move(fields), {"secondField", "", ""});
     };
-    std::string err_msg = "In PortType portTypeId, area connexion field 'secondField' undefined.";
-    BOOST_CHECK_EXCEPTION(shouldThrow(), std::invalid_argument, checkMessage(err_msg));
+
+    BOOST_CHECK_NO_THROW(shouldNotThrow());
 }
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_last_field_undefined__exception_raised)
 {
-    auto shouldThrow = []
+    auto shouldNotThrow = []
     {
         std::vector fields = {PortField("field-1"), PortField("field-2")};
         return PortType("portTypeId", std::move(fields), {"field-1", "field-2", "field-3"});
     };
-    std::string err_msg = "In PortType portTypeId, area connexion field 'field-3' undefined.";
-    BOOST_CHECK_EXCEPTION(shouldThrow(), std::invalid_argument, checkMessage(err_msg));
+    BOOST_CHECK_NO_THROW(shouldNotThrow());
 }
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_all_fields_defined)

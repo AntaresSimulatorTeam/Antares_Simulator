@@ -45,6 +45,12 @@ public:
     }
 };
 
+struct ThermalComponent
+{
+    std::string areaId;
+    std::string clusterId;
+};
+
 /**
  * Defines an actual component of the simulated system.
  */
@@ -97,14 +103,23 @@ public:
 
     void addAreaConnection(const std::string& localPortId, const std::string& areaId);
 
+    void addThermalCapacityConnection(const std::string& portId,
+                                      const std::string& areaId,
+                                      const std::string& clusterId);
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
+
+    const std::map<std::string, ThermalComponent>& portToThermalCapacityConnections() const;
+
+    std::optional<ThermalComponent> thermalCapacityConnectedToPort(const std::string& portId) const;
 
     unsigned int Index() const
     {
         return data_.index;
     }
+
+    const Port& findPort(const std::string& portId, const std::string& prefixMessage) const;
 
 private:
     void checkPortFieldDefinitionExists(const std::string& portName,
@@ -116,6 +131,7 @@ private:
     explicit Component(const ComponentData& component_data);
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
+    std::map<std::string, ThermalComponent> portToThermalConnections_;
     ComponentData data_;
 };
 

@@ -50,7 +50,7 @@ set(YBY_AGGREGATOR_LIBS
         yuni-static-core
         Antares::sys
         Antares::locale
-	${CMAKE_THREADS_LIBS_INIT})
+        ${CMAKE_THREADS_LIBS_INIT})
 
 # The new ant library
 target_include_directories(${execname}

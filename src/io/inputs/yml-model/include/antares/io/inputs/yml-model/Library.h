@@ -110,6 +110,7 @@ struct PortType
     std::string id;
     std::string description;
     std::vector<std::string> fields;
+    std::string thermal_capacity_connection_field;
     AreaConnection area_connection;
 };
 

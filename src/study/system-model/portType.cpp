@@ -13,24 +13,6 @@ bool isEmpty(const AreaConnection& ac)
     return ac.injection.empty() && ac.spillage_bound.empty() && ac.unsupplied_energy_bound.empty();
 }
 
-void checkNonEmptyFieldExist(const std::string& field,
-                             const std::vector<PortField>& portFields,
-                             const std::string& portTypeId)
-{
-    if (field.empty())
-    {
-        return;
-    }
-
-    if (std::ranges::all_of(portFields,
-                            [&](const auto& portField) { return portField.Id() != field; }))
-    {
-        std::string err_msg = "In PortType " + portTypeId + ", area connexion field '" + field
-                              + "' undefined.";
-        throw std::invalid_argument(err_msg);
-    }
-}
-
 bool operator==(const std::optional<AreaConnection>& a, const std::optional<AreaConnection>& b)
 {
     if (a.has_value() != b.has_value())
@@ -47,22 +29,47 @@ bool operator==(const std::optional<AreaConnection>& a, const std::optional<Area
     return true; // both are std::nullopt
 }
 
+std::optional<std::string> getConnectionField(const std::vector<PortField>& fields,
+                                              const std::string& portTypeId,
+                                              const std::string& connectionFieldId,
+                                              const std::string& nameOfTheConnection)
+{
+    if (!connectionFieldId.empty())
+    {
+        if (!std::ranges::any_of(fields,
+                                 [&connectionFieldId](const auto& field)
+                                 { return field.Id() == connectionFieldId; }))
+        {
+            const auto msg = fmt::format(
+              "Field '{}' selected for {} connections was not defined in PortType '{}'.",
+              connectionFieldId,
+              nameOfTheConnection,
+              portTypeId);
+            throw std::invalid_argument(msg);
+        }
+        return connectionFieldId;
+    }
+    return std::nullopt;
+}
+
 // -------------------
 // PortType methods
 // -------------------
 PortType::PortType(const std::string& id,
                    std::vector<PortField>&& portFields,
-                   const AreaConnection& areaConnection):
+                   const AreaConnection& areaConnection,
+                   const std::string& thermalCapacityConnectionField):
     id_(id),
     fields_(std::move(portFields))
 {
     if (!isEmpty(areaConnection))
     {
-        checkNonEmptyFieldExist(areaConnection.injection, fields_, id_);
-        checkNonEmptyFieldExist(areaConnection.spillage_bound, fields_, id_);
-        checkNonEmptyFieldExist(areaConnection.unsupplied_energy_bound, fields_, id_);
         areaConnection_ = areaConnection;
     }
+    thermalCapacityConnectionFieldId_ = getConnectionField(fields_,
+                                                           id,
+                                                           thermalCapacityConnectionField,
+                                                           "thermal capacity");
 }
 
 const std::string& PortType::Id() const
@@ -82,6 +89,12 @@ const std::optional<AreaConnection>& PortType::areaConnection() const
 
 bool PortType::operator==(const PortType& other) const
 {
-    return id_ == other.id_ && fields_ == other.fields_ && areaConnection_ == other.areaConnection_;
+    return id_ == other.id_ && fields_ == other.fields_ && areaConnection_ == other.areaConnection_
+           && thermalCapacityConnectionFieldId_ == other.thermalCapacityConnectionFieldId_;
+}
+
+const std::optional<std::string>& PortType::ThermalCapacityConnectionFieldId() const
+{
+    return thermalCapacityConnectionFieldId_;
 }
 } // namespace Antares::ModelerStudy::SystemModel

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include "antares/io/inputs/yml-model/Library.h"
 
 #include "yaml-cpp/yaml.h"
@@ -206,23 +208,68 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
     }
 };
 
-std::string findValue(const std::string& key, const YAML::Node& node)
+struct FieldMatching
 {
-    std::string value;
-    for (auto& field: node["area-connection"])
+    std::string fieldName;
+    std::string& value;
+};
+
+inline bool convertConnectionField(const Node& node,
+                                   const std::string& connectionName,
+                                   std::vector<FieldMatching>& fieldNames)
+{
+    if (node[connectionName].IsDefined())
     {
-        value = field[key].as<std::string>("");
-        if (!value.empty())
+        if (node[connectionName].size() != fieldNames.size())
         {
-            return value;
+            // Must have exactly fieldNames.size() fields
+            return false;
+        }
+        for (const auto& field: node[connectionName])
+        {
+            auto it = std::ranges::find_if(fieldNames,
+                                           [&](const FieldMatching& fm) {
+                                               return field[fm.fieldName].IsDefined()
+                                                      && !field[fm.fieldName].IsNull();
+                                           });
+
+            if (it != fieldNames.end())
+            {
+                it->value = field[it->fieldName].as<std::string>();
+            }
         }
     }
-    return value; // Should be empty
+
+    return true;
 }
 
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
+    static bool convertAreaConnectionFields(const Node& node,
+                                            Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        rhs.area_connection = {};
+        std::vector<FieldMatching> areaConnection;
+        areaConnection.emplace_back("injection-field", rhs.area_connection.injection);
+        areaConnection.emplace_back("spillage-bound", rhs.area_connection.spillage_bound);
+        areaConnection.emplace_back("unsupplied-energy-bound",
+                                    rhs.area_connection.unsupplied_energy_bound);
+        return convertConnectionField(node, "area-connection", areaConnection);
+    }
+
+    static bool convertThermalCapacityField(const Node& node,
+                                            Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        std::vector<FieldMatching> thermalCapacityConnection;
+
+        thermalCapacityConnection.emplace_back("capacity-field",
+                                               rhs.thermal_capacity_connection_field);
+        return convertConnectionField(node,
+                                      "thermal-capacity-connection",
+                                      thermalCapacityConnection);
+    }
+
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
         if (!node.IsMap())
@@ -235,17 +282,15 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             rhs.fields.push_back(field["id"].as<std::string>());
         }
-        if (node["area-connection"].IsDefined())
+        if (!convertThermalCapacityField(node, rhs))
         {
-            if (node["area-connection"].size() == 0 || node["area-connection"].size() > 3)
-            {
-                return false;
-            }
-            rhs.area_connection.injection = findValue("injection-field", node);
-            rhs.area_connection.spillage_bound = findValue("spillage-bound", node);
-            rhs.area_connection.unsupplied_energy_bound = findValue("unsupplied-energy-bound",
-                                                                    node);
+            return false;
         }
+        if (!convertAreaConnectionFields(node, rhs))
+        {
+            return false;
+        }
+
         return true;
     }
 };

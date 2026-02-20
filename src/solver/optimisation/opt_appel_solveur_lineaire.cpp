@@ -19,6 +19,7 @@
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/MipDetection.h"
+#include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/utils/filename.h"
@@ -103,7 +104,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 
 // Returns a shared_ptr to the solver
 void fillLinearProblem(FillContext& fillCtx,
-                       const PROBLEME_HEBDO* problemeHebdo,
+                       PROBLEME_HEBDO* problemeHebdo,
                        OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition)
@@ -126,6 +127,8 @@ void fillLinearProblem(FillContext& fillCtx,
           problemeHebdo,
           optimEntityContainer,
           problemeHebdo->modelerData->scenarioGroupRepository));
+        fillersCollection.push_back(
+          std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
