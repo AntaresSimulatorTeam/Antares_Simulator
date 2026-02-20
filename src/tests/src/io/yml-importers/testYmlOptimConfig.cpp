@@ -11,8 +11,6 @@
 using namespace Antares::IO::Inputs::YmlOptimConfig;
 using namespace std::string_literals;
 
-using namespace Antares::IO::Inputs::YmlOptimConfig;
-
 BOOST_AUTO_TEST_SUITE(ParserTests)
 
 BOOST_AUTO_TEST_CASE(parse_complete_valid_yaml)

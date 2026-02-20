@@ -81,6 +81,8 @@ library:
         - id: flow
       area-connection:
         - injection-field: flow
+        - spillage-bound: 
+        - unsupplied-energy-bound: 
 
   models:
     - id: generator

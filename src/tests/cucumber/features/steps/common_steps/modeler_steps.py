@@ -10,7 +10,7 @@ import subprocess
 from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import modeler_output_handler
-import common_steps.mps_utils as mpu
+from shared_utils import mps_utils as mpu
 
 
 @given('the modeler study path is "{string}"')

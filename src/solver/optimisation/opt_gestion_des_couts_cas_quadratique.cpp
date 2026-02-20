@@ -3,8 +3,7 @@
 
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "variables/VariableManagerUtils.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {

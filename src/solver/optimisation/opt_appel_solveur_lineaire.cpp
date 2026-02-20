@@ -102,7 +102,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 
 // Returns a shared_ptr to the solver
 void fillLinearProblem(FillContext& fillCtx,
-                       const PROBLEME_HEBDO* problemeHebdo,
+                       PROBLEME_HEBDO* problemeHebdo,
                        OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition)
@@ -125,6 +125,8 @@ void fillLinearProblem(FillContext& fillCtx,
           problemeHebdo,
           optimEntityContainer,
           problemeHebdo->modelerData->scenarioGroupRepository));
+        fillersCollection.push_back(
+          std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);

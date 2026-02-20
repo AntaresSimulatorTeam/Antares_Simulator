@@ -169,7 +169,8 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 
         PortType portType(ymlPortType.id,
                           std::move(fields),
-                          convert_to_system(ymlPortType.area_connection));
+                          convert_to_system(ymlPortType.area_connection),
+                          ymlPortType.thermal_capacity_connection_field);
         out.emplace_back(std::move(portType));
     }
     return out;
