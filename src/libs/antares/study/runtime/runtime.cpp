@@ -132,6 +132,8 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
             {
                 --b;
             }
+            logs.warning() << "    Time interval that will be simulated: " << (1 + a) << ".."
+                           << (1 + b);
         }
     }
 
