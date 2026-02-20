@@ -124,8 +124,8 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
     problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
                                                  == Antares::Data::UnitCommitmentMode::ucMILP)
-                                                || Antares::Optimization::hasModelerIntegerVariables(
-                                                   problem.modelerData);
+                                                || Antares::Optimization::
+                                                  hasModelerIntegerVariables(problem.modelerData);
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
