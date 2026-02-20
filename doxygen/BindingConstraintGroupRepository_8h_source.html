@@ -144,44 +144,43 @@ $(document).ready(function(){initNavTree('BindingConstraintGroupRepository_8h_so
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;antares/study/fwd.h&quot;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;BindingConstraint.h&quot;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;BindingConstraintSaver.h&quot;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1BindingConstraintGroupRepository.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1BindingConstraintGroupRepository.html">BindingConstraintGroupRepository</a> final</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    [[nodiscard]] <span class="keywordtype">unsigned</span> size() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> buildFrom(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html">BindingConstraintsRepository</a>&amp; repository);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> resizeAllTimeseriesNumbers(<span class="keywordtype">unsigned</span> nb_years);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1BindingConstraintGroup.html">BindingConstraintGroup</a>* operator[](<span class="keyword">const</span> std::string&amp; name) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">using</span> iterator = std::vector&lt;std::unique_ptr&lt;BindingConstraintGroup&gt;&gt;::iterator;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">using</span> const_iterator = std::vector&lt;std::unique_ptr&lt;BindingConstraintGroup&gt;&gt;::const_iterator;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    [[nodiscard]] iterator begin();</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    [[nodiscard]] const_iterator begin() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    [[nodiscard]] iterator end();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    [[nodiscard]] const_iterator end() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1BindingConstraintGroup.html">BindingConstraintGroup</a>* add(<span class="keyword">const</span> std::string&amp; name);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> timeSeriesWidthConsistentInGroups() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::vector&lt;std::unique_ptr&lt;BindingConstraintGroup&gt;&gt; groups_;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintGroupRepository.html">Antares::Data::BindingConstraintGroupRepository</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintGroupRepository.h:24</div></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1BindingConstraintGroupRepository.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1BindingConstraintGroupRepository.html">BindingConstraintGroupRepository</a> final</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    [[nodiscard]] <span class="keywordtype">unsigned</span> size() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> buildFrom(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html">BindingConstraintsRepository</a>&amp; repository);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> resizeAllTimeseriesNumbers(<span class="keywordtype">unsigned</span> nb_years);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1BindingConstraintGroup.html">BindingConstraintGroup</a>* operator[](<span class="keyword">const</span> std::string&amp; name) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">using</span> iterator = std::vector&lt;std::unique_ptr&lt;BindingConstraintGroup&gt;&gt;::iterator;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">using</span> const_iterator = std::vector&lt;std::unique_ptr&lt;BindingConstraintGroup&gt;&gt;::const_iterator;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    [[nodiscard]] iterator begin();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    [[nodiscard]] const_iterator begin() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    [[nodiscard]] iterator end();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    [[nodiscard]] const_iterator end() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1BindingConstraintGroup.html">BindingConstraintGroup</a>* add(<span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> clear();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> timeSeriesWidthConsistentInGroups() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    std::vector&lt;std::unique_ptr&lt;BindingConstraintGroup&gt;&gt; groups_;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;};</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintGroupRepository.html">Antares::Data::BindingConstraintGroupRepository</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintGroupRepository.h:23</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintGroup_html"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintGroup.html">Antares::Data::BindingConstraintGroup</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintGroup.h:18</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintsRepository_html"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintsRepository.html">Antares::Data::BindingConstraintsRepository</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintsRepository.h:19</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1BindingConstraintsRepository_html"><div class="ttname"><a href="classAntares_1_1Data_1_1BindingConstraintsRepository.html">Antares::Data::BindingConstraintsRepository</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintsRepository.h:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

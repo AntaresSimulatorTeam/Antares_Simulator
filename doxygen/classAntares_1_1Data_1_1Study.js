@@ -7,7 +7,7 @@ var classAntares_1_1Data_1_1Study =
     [ "SetsOfAreas", "classAntares_1_1Data_1_1Study.html#aab54ffdf4fbc75b5d4e5461d4f649750", null ],
     [ "Study", "classAntares_1_1Data_1_1Study.html#ac7be7a2a3105799743468871378ad4fd", null ],
     [ "~Study", "classAntares_1_1Data_1_1Study.html#aef6c85631895b8500f68b7df86dd2c28", null ],
-    [ "areaAdd", "classAntares_1_1Data_1_1Study.html#ad18ee161ef5942de357d8e1bfc220b79", null ],
+    [ "areaAdd", "classAntares_1_1Data_1_1Study.html#ab496531b39e59036ae03075ae7dced49", null ],
     [ "checkForFilenameLimits", "classAntares_1_1Data_1_1Study.html#a92a7dc71b966e460f9e6f1750ce25382", null ],
     [ "checkModelerDataCompatibility", "classAntares_1_1Data_1_1Study.html#a43caa627f54b086a1b26b352e7400ac2", null ],
     [ "clear", "classAntares_1_1Data_1_1Study.html#acd6521d444413475db5e715adb608ef7", null ],
@@ -84,6 +84,5 @@ var classAntares_1_1Data_1_1Study =
     [ "scenarioRules", "classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16", null ],
     [ "setsOfAreas", "classAntares_1_1Data_1_1Study.html#ab79f4691a33e445f73d06782389a8a2c", null ],
     [ "simulationComments", "classAntares_1_1Data_1_1Study.html#a83df1f36832cd1cb70ce40c5949f2182", null ],
-    [ "uiinfo", "classAntares_1_1Data_1_1Study.html#a635d6801eb4d4113abdcb2ccf0f0bb79", null ],
     [ "usedByTheSolver", "classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55", null ]
 ];

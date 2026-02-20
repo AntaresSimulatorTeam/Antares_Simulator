@@ -50,8 +50,6 @@ var classAntares_1_1Data_1_1BindingConstraint =
     [ "forceReload", "classAntares_1_1Data_1_1BindingConstraint.html#aedb20252534d6cbca773f498e78b62bf", null ],
     [ "group", "classAntares_1_1Data_1_1BindingConstraint.html#a7a34d9a77804194550b53a75729fc1a5", null ],
     [ "group", "classAntares_1_1Data_1_1BindingConstraint.html#a3842f94c7c3bdf6c96db58156f4558a3", null ],
-    [ "hasAllWeightedClustersOnLayer", "classAntares_1_1Data_1_1BindingConstraint.html#ac642b89314c88dd99d64c7fd4cbd7031", null ],
-    [ "hasAllWeightedLinksOnLayer", "classAntares_1_1Data_1_1BindingConstraint.html#aa45bcbbfcd6bea60cf0433c7bce0f1bb", null ],
     [ "id", "classAntares_1_1Data_1_1BindingConstraint.html#a8d08a1750c57b02bd95ad632d010dbec", null ],
     [ "initLinkArrays", "classAntares_1_1Data_1_1BindingConstraint.html#ad0c7a74cbfce6bca12322d3054879763", null ],
     [ "isActive", "classAntares_1_1Data_1_1BindingConstraint.html#a9ccd50b8e0575000198cf9d8233c8782", null ],
@@ -81,6 +79,5 @@ var classAntares_1_1Data_1_1BindingConstraint =
     [ "weight", "classAntares_1_1Data_1_1BindingConstraint.html#afd764c294e05e6386b61e776c16cf63e", null ],
     [ "weight", "classAntares_1_1Data_1_1BindingConstraint.html#a9768ce28b90e0d6ed1820baf5ab058f8", null ],
     [ "yearByYearFilter", "classAntares_1_1Data_1_1BindingConstraint.html#a4b26d1fc7231486b3814a5dfb3df2a15", null ],
-    [ "BindingConstraintLoader", "classAntares_1_1Data_1_1BindingConstraint.html#ad57a2c288f05bfaa9f258436b884b20e", null ],
-    [ "BindingConstraintSaver", "classAntares_1_1Data_1_1BindingConstraint.html#ac9069b14c8e222df83eef6dfad1eebf9", null ]
+    [ "BindingConstraintLoader", "classAntares_1_1Data_1_1BindingConstraint.html#ad57a2c288f05bfaa9f258436b884b20e", null ]
 ];

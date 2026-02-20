@@ -26,7 +26,6 @@ var classAntares_1_1Data_1_1AreaList =
     [ "findClusterFromINIKey", "classAntares_1_1Data_1_1AreaList.html#af95abb4c201ad6eb6ebdc7552a52fc6f", null ],
     [ "findFromName", "classAntares_1_1Data_1_1AreaList.html#ab81b1c4032009455b188d551c15fb6f0", null ],
     [ "findFromName", "classAntares_1_1Data_1_1AreaList.html#ae8a4946b3784c75150ee5e7df600df33", null ],
-    [ "findFromPosition", "classAntares_1_1Data_1_1AreaList.html#adaee1d86d76705410d8b4b5e3150d43a", null ],
     [ "findLink", "classAntares_1_1Data_1_1AreaList.html#a329990b86690843bc1551e4fbe399a4e", null ],
     [ "findLink", "classAntares_1_1Data_1_1AreaList.html#afcc3f5516897d61116e3cc8e11eeb377", null ],
     [ "findLinkFromINIKey", "classAntares_1_1Data_1_1AreaList.html#a3536cd9e7266281001085023171b5c3c", null ],

@@ -18,6 +18,5 @@ var dir_d545d36ba08f64b8abeca9c40e2060ec =
     [ "solarTSNumberData.h", "solarTSNumberData_8h_source.html", null ],
     [ "ThermalTSNumberData.h", "ThermalTSNumberData_8h_source.html", null ],
     [ "TSnumberData.h", "TSnumberData_8h_source.html", null ],
-    [ "updater.hxx", "updater_8hxx_source.html", null ],
     [ "WindTSNumberData.h", "WindTSNumberData_8h_source.html", null ]
 ];

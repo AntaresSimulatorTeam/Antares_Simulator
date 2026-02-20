@@ -151,25 +151,21 @@ $(document).ready(function(){initNavTree('scBuilderDataInterface_8h_source.html'
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a597478e346b768d4724a5a1895c4fcf7">   29</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a597478e346b768d4724a5a1895c4fcf7">reset</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) = 0;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#ifdef BUILD_UI</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> saveToINIFile(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, Yuni::IO::File::Stream&amp; file) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> uint width() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> uint height() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> uint width() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> uint height() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a513077ec87d869a8a958912c846cbd95">   40</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a513077ec87d869a8a958912c846cbd95">apply</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) = 0;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a513077ec87d869a8a958912c846cbd95">   47</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a513077ec87d869a8a958912c846cbd95">apply</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study) = 0;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}; <span class="comment">// class dataInterface</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;} <span class="comment">// namespace Antares::Data::ScenarioBuilder</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __LIBS_STUDY_SCENARIO_BUILDER_DATA_INTERFACE_H__</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}; <span class="comment">// class dataInterface</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <span class="comment">// namespace Antares::Data::ScenarioBuilder</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __LIBS_STUDY_SCENARIO_BUILDER_DATA_INTERFACE_H__</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html">Antares::Data::ScenarioBuilder::dataInterface</a></div><div class="ttdoc">Interface for scenario builder data (time series, hydro levels, ...)</div><div class="ttdef"><b>Definition:</b> scBuilderDataInterface.h:20</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface_html_a513077ec87d869a8a958912c846cbd95"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a513077ec87d869a8a958912c846cbd95">Antares::Data::ScenarioBuilder::dataInterface::apply</a></div><div class="ttdeci">virtual bool apply(Study &amp;study)=0</div><div class="ttdoc">Apply the changes to the study corresponding data (time series, hydro levels, ...)</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface_html_a597478e346b768d4724a5a1895c4fcf7"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a597478e346b768d4724a5a1895c4fcf7">Antares::Data::ScenarioBuilder::dataInterface::reset</a></div><div class="ttdeci">virtual bool reset(const Study &amp;study)=0</div><div class="ttdoc">Reset data from the study.</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdef"><b>Definition:</b> study.h:41</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:38</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

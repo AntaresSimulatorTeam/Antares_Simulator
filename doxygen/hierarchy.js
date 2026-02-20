@@ -69,7 +69,6 @@ var hierarchy =
     [ "Antares::HydroErrorsCollector::AreaReference", "classAntares_1_1HydroErrorsCollector_1_1AreaReference.html", null ],
     [ "Antares::Solver::Variable::Areas< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Areas.html", null ],
     [ "Antares::Data::AreaScratchpad", "classAntares_1_1Data_1_1AreaScratchpad.html", null ],
-    [ "Antares::Data::AreaUI", "classAntares_1_1Data_1_1AreaUI.html", null ],
     [ "Antares::Expressions::Nodes::AST", "classAntares_1_1Expressions_1_1Nodes_1_1AST.html", null ],
     [ "Antares::Expressions::Nodes::ASTconst", "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html", null ],
     [ "Antares::Expressions::Nodes::ASTPreOrderIterator", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator.html", null ],
@@ -106,7 +105,6 @@ var hierarchy =
     [ "BindingConstraintHourData", "structBindingConstraintHourData.html", null ],
     [ "Antares::Data::BindingConstraintLoader", "classAntares_1_1Data_1_1BindingConstraintLoader.html", null ],
     [ "Antares::Solver::Variable::BindingConstraints< NextT >", "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html", null ],
-    [ "Antares::Data::BindingConstraintSaver", "classAntares_1_1Data_1_1BindingConstraintSaver.html", null ],
     [ "Antares::Data::BindingConstraintStructures", "structAntares_1_1Data_1_1BindingConstraintStructures.html", null ],
     [ "BindingConstraintWeekData", "structBindingConstraintWeekData.html", null ],
     [ "BOUND_FLEX_DOWN_NODE", "structBOUND__FLEX__DOWN__NODE.html", null ],
@@ -140,7 +138,6 @@ var hierarchy =
     [ "CmdLineOptionsFixture", "structCmdLineOptionsFixture.html", null ],
     [ "Antares::IO::Outputs::ColumnBasedStorage", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html", null ],
     [ "CommonFixture", "structCommonFixture.html", null ],
-    [ "commonFixture", "structcommonFixture.html", null ],
     [ "Antares::Data::CompareAreaName", "structAntares_1_1Data_1_1CompareAreaName.html", null ],
     [ "Antares::Data::CompareBindingConstraintName", "structAntares_1_1Data_1_1CompareBindingConstraintName.html", null ],
     [ "Antares::Data::CompareClusterName", "structAntares_1_1Data_1_1CompareClusterName.html", null ],
@@ -534,7 +531,6 @@ var hierarchy =
     [ "ENERGIES_ET_PUISSANCES_HYDRAULIQUES", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html", null ],
     [ "Antares::Solver::EnsureQueueStartedIfNeeded", "classAntares_1_1Solver_1_1EnsureQueueStartedIfNeeded.html", null ],
     [ "Antares::Data::EnvForLoading", "classAntares_1_1Data_1_1EnvForLoading.html", null ],
-    [ "Antares::Data::BindingConstraintSaver::EnvForSaving", "classAntares_1_1Data_1_1BindingConstraintSaver_1_1EnvForSaving.html", null ],
     [ "Antares::API::Error", "structAntares_1_1API_1_1Error.html", null ],
     [ "json_collector.error", "classjson__collector_1_1error.html", null ],
     [ "Antares::Optimisation::EvaluationContext", "classAntares_1_1Optimisation_1_1EvaluationContext.html", null ],
@@ -826,12 +822,6 @@ var hierarchy =
     [ "JIT", "classJIT.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],
     [ "JIT::just_in_time_manager", "classJIT_1_1just__in__time__manager.html", null ],
-    [ "Antares::Data::LayerData", "classAntares_1_1Data_1_1LayerData.html", [
-      [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", [
-        [ "PublicStudy", "classPublicStudy.html", null ],
-        [ "PublicStudy", "classPublicStudy.html", null ]
-      ] ]
-    ] ],
     [ "LeftT", null, [
       [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
     ] ],
@@ -982,7 +972,10 @@ var hierarchy =
       [ "Antares::Data::Load::Container", "classAntares_1_1Data_1_1Load_1_1Container.html", null ],
       [ "Antares::Data::ScenarioBuilder::Rules", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html", null ],
       [ "Antares::Data::ScenarioBuilder::Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html", null ],
-      [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", null ],
+      [ "Antares::Data::Study", "classAntares_1_1Data_1_1Study.html", [
+        [ "PublicStudy", "classPublicStudy.html", null ],
+        [ "PublicStudy", "classPublicStudy.html", null ]
+      ] ],
       [ "Antares::Data::XCast", "classAntares_1_1Data_1_1XCast.html", null ],
       [ "Antares::TSGenerator::XCast::XCast", "classAntares_1_1TSGenerator_1_1XCast_1_1XCast.html", null ],
       [ "FSWalker::EventsRegistry", "classFSWalker_1_1EventsRegistry.html", null ],
@@ -1159,7 +1152,6 @@ var hierarchy =
     [ "ReadFromStreamFixture", "structReadFromStreamFixture.html", null ],
     [ "find_reference.reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", null ],
     [ "referenceIniFile", "classreferenceIniFile.html", null ],
-    [ "referenceScBuilderFile", "classreferenceScBuilderFile.html", null ],
     [ "Antares::Expressions::Registry< Base >", "classAntares_1_1Expressions_1_1Registry.html", null ],
     [ "Antares::Expressions::Registry< Antares::Expressions::Nodes::Node >", "classAntares_1_1Expressions_1_1Registry.html", [
       [ "MyDummyFixture", "structMyDummyFixture.html", null ]
@@ -1566,7 +1558,6 @@ var hierarchy =
     [ "TwoSubPbVarsCreator", "structTwoSubPbVarsCreator.html", null ],
     [ "TwoVarsCreator_OneSubPb_OneMaster", "structTwoVarsCreator__OneSubPb__OneMaster.html", null ],
     [ "Antares::Data::Parameters::UCMode", "structAntares_1_1Data_1_1Parameters_1_1UCMode.html", null ],
-    [ "Antares::Data::UIRuntimeInfo", "classAntares_1_1Data_1_1UIRuntimeInfo.html", null ],
     [ "Antares::Optimization::UnfeasibilityAnalysis", "classAntares_1_1Optimization_1_1UnfeasibilityAnalysis.html", [
       [ "AnalysisMock", "classAnalysisMock.html", null ],
       [ "Antares::Optimization::ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", null ],

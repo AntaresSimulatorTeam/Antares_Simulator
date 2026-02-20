@@ -15,7 +15,6 @@ var classAntares_1_1Data_1_1Correlation =
     [ "mode", "classAntares_1_1Data_1_1Correlation.html#ad24b833b9dd6761ddbce73d18e4edc37", null ],
     [ "mode", "classAntares_1_1Data_1_1Correlation.html#a0f8f7010c990e6d275eb91ebe2647df6", null ],
     [ "reset", "classAntares_1_1Data_1_1Correlation.html#aee3c56bc865e166a8b8a4d8c6911b1c4", null ],
-    [ "saveToFile", "classAntares_1_1Data_1_1Correlation.html#a3ec9351d4d8d282989e716498046ad45", null ],
     [ "set", "classAntares_1_1Data_1_1Correlation.html#a89c1ef584d4a3987800d364e04c3ac95", null ],
     [ "set", "classAntares_1_1Data_1_1Correlation.html#a655e24dc0d9f479830b7b1432aa03b7c", null ],
     [ "annual", "classAntares_1_1Data_1_1Correlation.html#a98f4cf70dd3a518e7de7b4a479740b2e", null ],

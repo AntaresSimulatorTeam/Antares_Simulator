@@ -10,7 +10,6 @@ var classAntares_1_1Data_1_1AreaLink =
     [ "forceReload", "classAntares_1_1Data_1_1AreaLink.html#a0d04f7504f9122281cf1981bf29260dd", null ],
     [ "getName", "classAntares_1_1Data_1_1AreaLink.html#a0f83b613025c0ccbc9a2d76370144e43", null ],
     [ "isLinkPhysical", "classAntares_1_1Data_1_1AreaLink.html#abec06adf2ea4dcabac9f6f6633c5b919", null ],
-    [ "isVisibleOnLayer", "classAntares_1_1Data_1_1AreaLink.html#a02e7793bb2ceab8b562b1ebb8a5de520", null ],
     [ "loadTimeSeries", "classAntares_1_1Data_1_1AreaLink.html#ab7f9ba15562da05262cc0d104ff61875", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1AreaLink.html#a1983f2f1ec53ff29608a80e0712808e3", null ],
     [ "overrideTransmissionCapacityAccordingToGlobalParameter", "classAntares_1_1Data_1_1AreaLink.html#ad2d9f71dc054cbb39ddecb11f1cc7925", null ],

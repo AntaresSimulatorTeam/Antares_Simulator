@@ -10,7 +10,6 @@ var classAntares_1_1Data_1_1Cluster =
     [ "integrityCheck", "classAntares_1_1Data_1_1Cluster.html#acd914aeeada706fa6c666551c39930a0", null ],
     [ "invalidateArea", "classAntares_1_1Data_1_1Cluster.html#ad13dd96e336ec0cca19b78d5e3f6e047", null ],
     [ "isEnabled", "classAntares_1_1Data_1_1Cluster.html#ab99c2591da5313c6096ce8d8731f9f38", null ],
-    [ "isVisibleOnLayer", "classAntares_1_1Data_1_1Cluster.html#ac6b2ed92f9e40778fd2e5640713872e1", null ],
     [ "loadDataSeriesFromFolder", "classAntares_1_1Data_1_1Cluster.html#a73f6dd3032b764da0e310681a73b8283", null ],
     [ "markAsModified", "classAntares_1_1Data_1_1Cluster.html#ad4140c4202f83318258856e71db9b868", null ],
     [ "name", "classAntares_1_1Data_1_1Cluster.html#abcca945059844e48edabf6d5b6ffbabe", null ],
