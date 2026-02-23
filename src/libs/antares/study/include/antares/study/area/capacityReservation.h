@@ -134,7 +134,7 @@ struct AllCapacityReservations
     std::pair<UnsuppliedSpilled, ReserveName> reserveParticipationUnsuppliedSpilledAt(
       unsigned int index) const
     {
-        int column = 0;
+        uint column = 0;
         for (const auto& reserveName: areaCapacityReservations | std::views::keys)
         {
             for (int indexUnsuppliedSpilled = 0;
