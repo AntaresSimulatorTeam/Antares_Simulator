@@ -149,36 +149,38 @@ $(document).ready(function(){initNavTree('dynamicAggregation_8h_source.html','')
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> addResultsToSets(<span class="keyword">const</span> <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; pb);</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> appendToSurveyForSet(<span class="keyword">const</span> std::string&amp; setName,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                              <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; survey,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                              Category::Precision precision) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study_;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::map&lt;std::string, SetDataSingleYear&gt; setsData_;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;};</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">DynamicAggregationAllYears</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">DynamicAggregationAllYears</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> merge(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html">DynamicAggregationSingleYear</a>&amp; toMerge, <span class="keywordtype">unsigned</span> year);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> reset();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> appendToSurveyForSet(<span class="keyword">const</span> std::string&amp; setName,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                              <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; survey,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                              Category::Precision precision) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study_;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    std::map&lt;std::string, SetDataSingleYear&gt; setsData_;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">DynamicAggregationAllYears</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">DynamicAggregationAllYears</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> appendToSurveyForSet(<span class="keyword">const</span> std::string&amp; setName,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                              <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; survey,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                              Category::Precision precision) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study_;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::map&lt;std::string, SetDataAllYears&gt; setsData_;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> computeDynamicAggregationMaxColumns(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> merge(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html">DynamicAggregationSingleYear</a>&amp; toMerge, <span class="keywordtype">unsigned</span> year);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> appendToSurveyForSet(<span class="keyword">const</span> std::string&amp; setName,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                              <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; survey,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                              Category::Precision precision) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study_;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    std::map&lt;std::string, SetDataAllYears&gt; setsData_;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> computeDynamicAggregationMaxColumns(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:38</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">Antares::Solver::Variable::DynamicAggregationAllYears</a></div><div class="ttdef"><b>Definition:</b> dynamicAggregation.h:41</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html">Antares::Solver::Variable::DynamicAggregationAllYears</a></div><div class="ttdef"><b>Definition:</b> dynamicAggregation.h:43</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationSingleYear.html">Antares::Solver::Variable::DynamicAggregationSingleYear</a></div><div class="ttdef"><b>Definition:</b> dynamicAggregation.h:19</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">Antares::Solver::Variable::SurveyResults</a></div><div class="ttdoc">Class utility for building CSV results files.</div><div class="ttdef"><b>Definition:</b> surveyresults.h:24</div></div>
 <div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:385</div></div>
