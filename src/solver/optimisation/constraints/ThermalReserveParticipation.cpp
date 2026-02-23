@@ -2,12 +2,12 @@
 
 void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
 {
-    CAPACITY_RESERVATION capacityReservation = data.areaReserves[pays]
-                                                 .areaCapacityReservations[reserve];
+    const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
-    auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
-    bool offUnitParticipating = capacityReservation.type == ReserveType::UP
-                                && reserveParticipation.maxPowerOff > 0;
+    const auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation.at(
+      cluster);
+    const bool offUnitParticipating = capacityReservation.type == ReserveType::UP
+                                      && reserveParticipation.maxPowerOff > 0;
     if (!data.Simulation)
     {
         // 17 quinquies / sexies
@@ -17,8 +17,8 @@ void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pd
         // P^on : Participation of running units
         // P^off : Participation of off units
 
-        int globalClusterIdx = data.thermalClusters[pays]
-                                 .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+        const int globalClusterIdx = data.thermalClusters[pays]
+                                       .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
 
         builder.updateHourWithinWeek(pdt)
           .ThermalClusterReserveParticipation(reserveParticipation.globalIndexClusterParticipation,

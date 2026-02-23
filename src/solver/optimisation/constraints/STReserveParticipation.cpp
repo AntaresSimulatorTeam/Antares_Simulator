@@ -11,14 +11,12 @@ void STReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
         // Π : Store participation to reserve
         // P : Up Reserve Participation
 
-        CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                      .areaCapacityReservations[reserve];
+        const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
-        RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation = capacityReservation
-                                                                  .AllSTStorageReservesParticipation
-                                                                    [cluster];
+        const auto& reserveParticipation = capacityReservation.AllSTStorageReservesParticipation.at(
+          cluster);
 
-        int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
+        const int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
         builder.updateHourWithinWeek(pdt)
           .STStorageReleaseClusterReserveParticipation(
             reserveParticipation.globalIndexClusterParticipation,

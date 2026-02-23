@@ -476,7 +476,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             // Checks if Hydro is participating to reserves
             if (std::ranges::any_of(
                   problemeHebdo->allReserves.value()[pays].areaCapacityReservations,
-                  [](CAPACITY_RESERVATION& res)
+                  [](const CAPACITY_RESERVATION& res)
                   { return res.AllHydroReservesParticipation.size() > 0; }))
             {
                 reserveVariablesRightSidesSetter.setHydroRightSides(areaReserves);

@@ -444,7 +444,7 @@ struct ReserveData
         return count;
     }
 
-    static void addRunningThermalClusterReserveParticipationToBuilder(ReserveData& data,
+    static void addRunningThermalClusterReserveParticipationToBuilder(const ReserveData& data,
                                                                       int pays,
                                                                       int cluster,
                                                                       ReserveType type,
@@ -455,8 +455,8 @@ struct ReserveData
         {
             if (capacityReservation.AllThermalReservesParticipation.contains(cluster))
             {
-                auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation.at(
-                  cluster);
+                const auto& reserveParticipation = capacityReservation
+                                                     .AllThermalReservesParticipation.at(cluster);
                 builder.RunningThermalClusterReserveParticipation(
                   reserveParticipation.globalIndexClusterParticipation,
                   1);

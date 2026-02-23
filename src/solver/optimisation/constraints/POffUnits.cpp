@@ -12,8 +12,8 @@ void POffUnits::add(int pays, int cluster, int pdt)
         // M : max number of running units in cluster
         // M : actual number of running units in cluster
 
-        int globalClusterIdx = data.thermalClusters[pays]
-                                 .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
+        const int globalClusterIdx = data.thermalClusters[pays]
+                                       .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
 
         {
             builder.updateHourWithinWeek(pdt);
@@ -23,8 +23,9 @@ void POffUnits::add(int pays, int cluster, int pdt)
             {
                 if (capacityReservation.AllThermalReservesParticipation.contains(cluster))
                 {
-                    auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation
-                                                   .at(cluster);
+                    const auto& reserveParticipation = capacityReservation
+                                                         .AllThermalReservesParticipation.at(
+                                                           cluster);
                     builder.PowerOfOffUnitsParticipatingToReserve(
                       reserveParticipation.globalIndexClusterParticipation,
                       1);

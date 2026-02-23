@@ -9,14 +9,12 @@ void STStoreMaxReserve::add(int pays, int reserve, int cluster, int pdt)
         // cluster Π <= Π^max Π : Store power Π^max : Maximum accessible limit of the cluster for
         // the reserve
 
-        CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                      .areaCapacityReservations[reserve];
+        const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
-        RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation = capacityReservation
-                                                                  .AllSTStorageReservesParticipation
-                                                                    [cluster];
+        const auto& reserveParticipation = capacityReservation.AllSTStorageReservesParticipation.at(
+          cluster);
 
-        int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
+        const int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
 
         builder.updateHourWithinWeek(pdt)
           .STStorageStoreClusterReserveParticipation(

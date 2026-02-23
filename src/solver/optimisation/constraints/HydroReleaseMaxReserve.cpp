@@ -9,12 +9,10 @@ void HydroReleaseMaxReserve::add(int pays, int reserve, int cluster, int pdt)
         // participation of the cluster constraint : H <= H^max H : Release power H^max : Maximum
         // accessible power of the cluster for the reserve
 
-        CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                      .areaCapacityReservations[reserve];
+        const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
-        RESERVE_PARTICIPATION_HYDRO& reserveParticipation = capacityReservation
-                                                              .AllHydroReservesParticipation
-                                                                [cluster];
+        const auto& reserveParticipation = capacityReservation
+                                             .AllHydroReservesParticipation[cluster];
 
         builder.updateHourWithinWeek(pdt)
           .HydroReleaseReserveParticipation(reserveParticipation.globalIndexClusterParticipation,

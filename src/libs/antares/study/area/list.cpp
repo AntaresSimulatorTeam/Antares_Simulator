@@ -24,6 +24,7 @@
 #include <ranges>
 
 #include <yuni/io/file.h>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
@@ -46,13 +47,6 @@ namespace Antares::Data
 {
 namespace // anonymous
 {
-static void toLower(std::string& str)
-{
-    for (char& c: str)
-    {
-        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-    }
-}
 
 bool readReservesAreaParameters(Area& area, const IniFile::Section& section)
 {
@@ -60,7 +54,7 @@ bool readReservesAreaParameters(Area& area, const IniFile::Section& section)
     for (auto* p = section.firstProperty; p; p = p->next)
     {
         std::string key = p->key;
-        toLower(key);
+        boost::algorithm::to_lower(key);
 
         if (key == "energy-activation-ratio-up")
         {
@@ -129,7 +123,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFil
     for (auto* p = section.firstProperty; p; p = p->next)
     {
         std::string key = p->key;
-        toLower(key);
+        boost::algorithm::to_lower(key);
 
         if (key == "failure-cost")
         {

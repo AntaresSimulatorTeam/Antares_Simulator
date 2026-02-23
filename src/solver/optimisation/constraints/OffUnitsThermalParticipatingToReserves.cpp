@@ -11,14 +11,14 @@ void OffUnitsThermalParticipatingToReserves::add(int pays, int reserve, int clus
         // unit M : Number of units in the cluster M^on : Number of running units in the cluster
         //
 
-        CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                      .areaCapacityReservations[reserve];
+        const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
-        auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation[cluster];
+        const auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation.at(
+          cluster);
 
-        int globalClusterIdx = data.thermalClusters[pays]
-                                 .NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                                   [reserveParticipation.clusterIdInArea];
+        const int globalClusterIdx = data.thermalClusters[pays]
+                                       .NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                                         [reserveParticipation.clusterIdInArea];
 
         builder.updateHourWithinWeek(pdt)
           .OffThermalClusterReserveParticipation(

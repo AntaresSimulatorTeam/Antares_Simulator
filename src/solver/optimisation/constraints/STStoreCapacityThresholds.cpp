@@ -2,7 +2,7 @@
 
 void STStoreCapacityThresholds::add(int pays, int cluster, int pdt)
 {
-    int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
+    const int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
 
     if (!data.Simulation)
     {
@@ -21,8 +21,9 @@ void STStoreCapacityThresholds::add(int pays, int cluster, int pdt)
             {
                 if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
                 {
-                    auto& reserveParticipation = capacityReservation
-                                                   .AllSTStorageReservesParticipation.at(cluster);
+                    const auto& reserveParticipation = capacityReservation
+                                                         .AllSTStorageReservesParticipation.at(
+                                                           cluster);
                     builder.STStorageStoreClusterReserveParticipation(
                       reserveParticipation.globalIndexClusterParticipation,
                       1);
@@ -52,8 +53,9 @@ void STStoreCapacityThresholds::add(int pays, int cluster, int pdt)
             {
                 if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
                 {
-                    auto& reserveParticipation = capacityReservation
-                                                   .AllSTStorageReservesParticipation.at(cluster);
+                    const auto& reserveParticipation = capacityReservation
+                                                         .AllSTStorageReservesParticipation.at(
+                                                           cluster);
                     builder.STStorageStoreClusterReserveParticipation(
                       reserveParticipation.globalIndexClusterParticipation,
                       1);

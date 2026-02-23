@@ -9,12 +9,10 @@ void HydroStoreMaxReserve::add(int pays, int reserve, int cluster, int pdt)
         // cluster Π <= Π^max Π : Store power Π^max : Maximum accessible limit of the cluster for
         // the reserve
 
-        CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                      .areaCapacityReservations[reserve];
+        const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
-        RESERVE_PARTICIPATION_HYDRO& reserveParticipation = capacityReservation
-                                                              .AllHydroReservesParticipation
-                                                                [cluster];
+        const auto& reserveParticipation = capacityReservation
+                                             .AllHydroReservesParticipation[cluster];
 
         builder.updateHourWithinWeek(pdt)
           .HydroStoreReserveParticipation(reserveParticipation.globalIndexClusterParticipation, 1.0)

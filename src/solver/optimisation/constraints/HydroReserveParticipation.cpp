@@ -10,13 +10,11 @@ void HydroReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
         // Π : Store participation to reserve
         // P : Up (e) or down (f) Reserve Participation
 
-        CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                      .areaCapacityReservations[reserve];
+        const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
-        RESERVE_PARTICIPATION_HYDRO& reserveParticipation = capacityReservation
-                                                              .AllHydroReservesParticipation
-                                                                [cluster];
-        bool isUpReserve = capacityReservation.type == ReserveType::UP;
+        const auto& reserveParticipation = capacityReservation
+                                             .AllHydroReservesParticipation[cluster];
+        const bool isUpReserve = capacityReservation.type == ReserveType::UP;
         builder.updateHourWithinWeek(pdt)
           .HydroReleaseReserveParticipation(reserveParticipation.globalIndexClusterParticipation,
                                             isUpReserve ? -1.0 : 1.0)
