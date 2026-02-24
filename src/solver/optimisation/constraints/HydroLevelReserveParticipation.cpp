@@ -24,13 +24,13 @@ void HydroLevelReserveParticipation::add(int pays, int cluster, int pdt)
         for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {
             builder.updateHourWithinWeek(pdt);
-            for (auto& capacityReservation:
+            for (const auto& capacityReservation:
                  data.areaReserves[pays].areaCapacityReservations | filter(type))
             {
                 if (capacityReservation.AllHydroReservesParticipation.size())
                 {
-                    RESERVE_PARTICIPATION_HYDRO reserveParticipations
-                      = capacityReservation.AllHydroReservesParticipation[cluster];
+                    const auto& reserveParticipations = capacityReservation
+                                                          .AllHydroReservesParticipation[cluster];
                     builder.HydroReserveParticipation(
                       type,
                       reserveParticipations.globalIndexClusterParticipation,

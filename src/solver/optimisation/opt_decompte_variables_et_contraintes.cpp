@@ -20,7 +20,7 @@
  */
 
 #include <antares/antares/fatal-error.h>
-#include "antares/solver/optimisation/opt_decompte_variables_et_contraintes_reserves.h"
+#include "antares/solver/optimisation/opt_reserves.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares;

@@ -23,13 +23,14 @@ void HydroGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, int 
                                                         .maxGlobalEnergyActivationRatio[type];
             for (int t = 0; t < timeMax; t++)
             {
-                for (auto& capacityReservation:
+                for (const auto& capacityReservation:
                      data.areaReserves[pays].areaCapacityReservations | filter(type))
                 {
                     if (capacityReservation.AllHydroReservesParticipation.size())
                     {
-                        RESERVE_PARTICIPATION_HYDRO& reserveParticipation
-                          = capacityReservation.AllHydroReservesParticipation[cluster];
+                        const auto& reserveParticipation = capacityReservation
+                                                             .AllHydroReservesParticipation
+                                                               [cluster];
                         builder.HydroReserveParticipation(
                           type,
                           reserveParticipation.globalIndexClusterParticipation,

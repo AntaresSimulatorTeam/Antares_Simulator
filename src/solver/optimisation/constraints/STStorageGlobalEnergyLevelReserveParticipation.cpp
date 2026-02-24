@@ -26,8 +26,9 @@ void STStorageGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, 
                 {
                     if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
                     {
-                        RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
-                          = capacityReservation.AllSTStorageReservesParticipation[cluster];
+                        const auto& reserveParticipation = capacityReservation
+                                                             .AllSTStorageReservesParticipation.at(
+                                                               cluster);
                         builder.STStorageClusterReserveParticipation(
                           capacityReservation.type,
                           reserveParticipation.globalIndexClusterParticipation,

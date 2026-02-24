@@ -30,20 +30,17 @@ set(RTESOLVER_OPT
         opt_gestion_des_couts_cas_quadratique.cpp
         opt_construction_variables_couts_demarrages.cpp
         opt_gestion_des_bornes_couts_demarrage.cpp
-        include/antares/solver/optimisation/opt_gestion_des_bornes_reserves.h
+        include/antares/solver/optimisation/opt_reserves.h
         opt_gestion_des_bornes_reserves.cpp
         opt_gestion_des_couts_couts_demarrage.cpp
-        include/antares/solver/optimisation/opt_gestion_des_couts_reserves.h
         opt_gestion_des_couts_reserves.cpp
         opt_gestion_second_membre_couts_demarrage.cpp
-        include/antares/solver/optimisation/opt_gestion_second_membre_reserves.h
         opt_gestion_second_membre_reserves.cpp
         opt_decompte_variables_et_contraintes_couts_demarrage.cpp
         opt_decompte_variables_et_contraintes_reserves.cpp
         opt_init_minmax_groupes_couts_demarrage.cpp
         opt_nombre_min_groupes_demarres_couts_demarrage.cpp
-        include/antares/solver/optimisation/opt_construction_variables_reserves.h
-		opt_construction_variables_reserves.cpp
+	opt_construction_variables_reserves.cpp
         include/antares/solver/optimisation/opt_export_structure.h
         opt_export_structure.cpp
         include/antares/solver/optimisation/weekly_optimization.h

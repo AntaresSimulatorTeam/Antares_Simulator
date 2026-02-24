@@ -23,6 +23,21 @@
 
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
+  PROBLEME_HEBDO* problemeHebdo,
+  bool Simulation);
+  
+void OPT_DecompteDesVariablesEtDesContraintesReserves(PROBLEME_HEBDO* problemeHebdo);
+
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReserves(PROBLEME_HEBDO*,
+                                                                    const int,
+                                                                    const int);
+																	
 void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                                              const int PremierPdtDeLIntervalle,
                                              const int DernierPdtDeLIntervalle);
+											 
+void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
+                                                             int PremierPdtDeLIntervalle,
+                                                             int DernierPdtDeLIntervalle);
+

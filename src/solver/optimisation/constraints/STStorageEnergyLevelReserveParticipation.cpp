@@ -19,8 +19,8 @@ void STStorageEnergyLevelReserveParticipation::add(int pays, int cluster, int re
             {
                 double sign = capacityReservation.type == ReserveType::UP ? -1.0 : 1.0;
 
-                RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation
-                  = capacityReservation.AllSTStorageReservesParticipation[cluster];
+                const auto& reserveParticipation = capacityReservation
+                                                     .AllSTStorageReservesParticipation.at(cluster);
 
                 builder.updateHourWithinWeek(pdt);
 

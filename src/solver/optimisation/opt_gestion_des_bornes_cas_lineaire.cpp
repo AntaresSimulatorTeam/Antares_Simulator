@@ -22,7 +22,7 @@
 #include <cmath>
 #include <spx_constantes_externes.h>
 
-#include "antares/solver/optimisation/opt_gestion_des_bornes_reserves.h"
+#include "antares/solver/optimisation/opt_reserves.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 

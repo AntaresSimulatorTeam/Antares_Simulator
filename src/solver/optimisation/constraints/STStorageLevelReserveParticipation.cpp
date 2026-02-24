@@ -25,13 +25,13 @@ void STStorageLevelReserveParticipation::add(int pays, int cluster, int pdt)
         {
             builder.updateHourWithinWeek(pdt);
 
-            for (auto& capacityReservation:
+            for (const auto& capacityReservation:
                  data.areaReserves[pays].areaCapacityReservations | filter(type))
             {
                 if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
                 {
                     RESERVE_PARTICIPATION_STSTORAGE reserveParticipations
-                      = capacityReservation.AllSTStorageReservesParticipation[cluster];
+                      = capacityReservation.AllSTStorageReservesParticipation.at(cluster);
                     builder.STStorageClusterReserveParticipation(
                       capacityReservation.type,
                       reserveParticipations.globalIndexClusterParticipation,
