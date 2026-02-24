@@ -54,9 +54,9 @@ var NAVTREEINDEX1 =
 "LpsFromAntares_8h.html#a4d52985d43d59ef854f3a608e0ab4032":[7,0,0,15,71],
 "LpsFromAntares_8h.html#ac4f3e9c303f92dbf1178ca6451ddeecd":[7,0,0,15,46],
 "LpsFromAntares_8h_source.html":[9,0,0,8,4,0,0,0,0,0],
-"MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4":[7,0,0,13,34],
-"MCYearAndTime_8h.html#a4acd8157dc362e4991f60f2436acc4f4":[7,0,0,13,41],
-"MCYearAndTime_8h.html#a577631761643b7e0a0785e4a82b75f34":[7,0,0,13,42],
+"MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4":[7,0,0,13,33],
+"MCYearAndTime_8h.html#a4acd8157dc362e4991f60f2436acc4f4":[7,0,0,13,40],
+"MCYearAndTime_8h.html#a577631761643b7e0a0785e4a82b75f34":[7,0,0,13,41],
 "MCYearAndTime_8h_source.html":[9,0,0,8,6,0,0,0,0,5],
 "MPSGenerator_8cpp.html#a0fb46360b981f589a0e456188684e7de":[7,0,0,9,1,29],
 "MPSGenerator_8cpp.html#a3f99b6f7324a873f9a3c0a649da2bb4a":[7,0,0,9,1,28],
@@ -74,7 +74,7 @@ var NAVTREEINDEX1 =
 "MinGenerationScaling_8h_source.html":[9,0,0,8,2,0,0,0,0,2,4],
 "MinHydroPower_8h_source.html":[9,0,0,8,7,1,0,0,0,1,34],
 "MinMaxHydroPowerGroup_8h_source.html":[9,0,0,8,7,1,0,0,0,1,35],
-"MipDetection_8h.html#a315948fa5e8b4d579f90f64746ac93f0":[7,0,0,13,36],
+"MipDetection_8h.html#a315948fa5e8b4d579f90f64746ac93f0":[7,0,0,13,35],
 "MipDetection_8h_source.html":[9,0,0,8,7,1,0,0,0,9],
 "ModelerData_8h.html#a3807237afb7d19474c651c800a1277ea":[7,0,0,15,48],
 "ModelerData_8h.html#a3807237afb7d19474c651c800a1277eaacb392e76c12ad269c58036cd69360673":[7,0,0,15,48,0],
@@ -168,7 +168,6 @@ var NAVTREEINDEX1 =
 "SubtractionNode_8h_source.html":[9,0,0,2,1,0,0,1,19],
 "SumNode_8h_source.html":[9,0,0,2,1,0,0,1,20],
 "TSnumberData_8h_source.html":[9,0,0,4,0,25,0,0,0,8,17],
-"ThermalCapacityFiller_8cpp.html#a9b6e21ab7d8830ef295199ed19357576":[7,0,0,13,32],
 "ThermalCapacityFiller_8h_source.html":[9,0,0,8,7,1,0,0,0,21],
 "ThermalTSNumberData_8h_source.html":[9,0,0,4,0,25,0,0,0,8,16],
 "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0":[7,0,0,13,30],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "avail-dispatchable-generation_8h_source.html":[9,0,0,8,12,0,0,0,0,3,3],
 "availability_8cpp.html#a3e63ef1830806b4386115677e0cc8113":[7,0,0,17,18],
 "availability_8cpp.html#a6931dc8e4802e8792c952569484a6a6a":[7,0,0,17,15],
-"availability_8cpp.html#a70dc7060a974a1670f019295c2dfef56":[7,0,0,17,17]
+"availability_8cpp.html#a70dc7060a974a1670f019295c2dfef56":[7,0,0,17,17],
+"availability_8cpp.html#aa30390df1cab09cfc69c1e5d3f5059e5":[7,0,0,17,11]
 };

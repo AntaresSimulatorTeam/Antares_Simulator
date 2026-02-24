@@ -32,6 +32,7 @@ var classAntares_1_1Data_1_1ThermalCluster =
     [ "forcedLaw", "classAntares_1_1Data_1_1ThermalCluster.html#ab78a06266cb24d89b2fb3210075eed13", null ],
     [ "forcedVolatility", "classAntares_1_1Data_1_1ThermalCluster.html#afc29cf272b33f1dad1e6b5ff37ea6125", null ],
     [ "fuelEfficiency", "classAntares_1_1Data_1_1ThermalCluster.html#aa0fb5f7cdfe334fba4cd15cb14a05c81", null ],
+    [ "globalIndex", "classAntares_1_1Data_1_1ThermalCluster.html#a32219634ccd1b991718da33f53e8f21c", null ],
     [ "index", "classAntares_1_1Data_1_1ThermalCluster.html#abda5a216c7a6a1050a51512ef711c05e", null ],
     [ "marginalCost", "classAntares_1_1Data_1_1ThermalCluster.html#a9ccf00212f5fc4d36edb9997946a048a", null ],
     [ "marketBidCost", "classAntares_1_1Data_1_1ThermalCluster.html#a0a198bbb1eb62f7379e0f56d24772a8d", null ],

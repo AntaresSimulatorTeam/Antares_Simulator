@@ -912,7 +912,6 @@ var namespaces_dup =
         [ "applyOperation", "LinearExpression_8h.html#ae0afdb45eb93e24332629b1b32ae10c3", null ],
         [ "applyOperation", "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0", null ],
         [ "balanceConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a70b02987bc0443abb2f9fba61f119869", null ],
-        [ "clusterAt", "ThermalCapacityFiller_8cpp.html#a9b6e21ab7d8830ef295199ed19357576", null ],
         [ "fictitiousLoadConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a46b71a6ea25755421399d5a0ec661061", null ],
         [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
