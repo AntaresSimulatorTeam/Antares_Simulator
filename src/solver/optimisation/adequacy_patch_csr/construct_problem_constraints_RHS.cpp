@@ -102,8 +102,6 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                 // Add sum of all thermal dispatchable generation (STt)
                 const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
                 const auto& productionThermique = problemeHebdo_->ResultatsHoraires[Area].ProductionThermique[triggeredHour];
-                const CONTRAINTES_COUPLANTES& MatriceDesContraintesCouplantes
-                  = problemeHebdo_->MatriceDesContraintesCouplantes[Cnt];
                 for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
                 {
                     rhs += productionThermique.ProductionThermiqueDuPalier[index];
