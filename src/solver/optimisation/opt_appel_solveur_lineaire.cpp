@@ -125,7 +125,7 @@ void fillLinearProblem(FillContext& fillCtx,
         fillersCollection.push_back(
           std::make_unique<ComponentToAreaConnectionFiller>(problemeHebdo, optimEntityContainer));
         fillersCollection.push_back(
-  std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
+          std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
