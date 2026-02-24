@@ -7,36 +7,24 @@
 
 #include <yuni/yuni.h>
 
-#include "antares/study//study.h"
 #include "antares/study/area/scratchpad.h"
-#include "antares/study/area/ui.h"
 #include "antares/study/parts/load/prepro.h"
+#include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
 
 namespace Antares::Data
 {
-void Area::internalInitialize()
-{
-    // Make sure we have
-    if (JIT::usedFromGUI)
-    {
-        ui = std::make_unique<AreaUI>();
-    }
-}
-
 Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
-    internalInitialize();
 }
 
 Area::Area(const AnyString& name):
     Area()
 {
-    internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(this->name);
 }
@@ -44,7 +32,6 @@ Area::Area(const AnyString& name):
 Area::Area(const AnyString& name, const AnyString& id):
     Area()
 {
-    internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(id);
 }
@@ -286,11 +273,6 @@ bool Area::forceReload(bool reload) const
         }
     }
 
-    if (ui)
-    {
-        self.ui->markAsModified();
-    }
-
     return ret;
 }
 
@@ -321,10 +303,6 @@ void Area::markAsModified() const
         {
             (i->second)->markAsModified();
         }
-    }
-    if (ui)
-    {
-        ui->markAsModified();
     }
 }
 

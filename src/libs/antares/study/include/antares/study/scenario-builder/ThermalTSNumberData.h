@@ -18,9 +18,7 @@ public:
     virtual ~thermalTSNumberData() = default;
 
     bool reset(const Study& study) override;
-#ifdef BUILD_UI
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-#endif
+
     void attachArea(const Area* area)
     {
         pArea = area;

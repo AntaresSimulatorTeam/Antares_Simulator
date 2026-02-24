@@ -248,68 +248,6 @@ int InterAreaCorrelationLoadFromFile(Matrix<>* m, AreaList* l, const std::string
     return 0;
 }
 
-#ifdef BUILD_UI
-IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l)
-{
-    /* Asserts */
-    assert(m);
-    assert(l);
-
-    /* The Ini File structure */
-    IniFile* ini = new IniFile();
-
-    if (m->width != l->size() or m->height != l->size())
-    {
-        logs.error() << "Correlation: The matrix does not have the good sie (" << l->size() << 'x'
-                     << l->size() << " expected, got " << m->width << 'x' << m->height << ')';
-    }
-    else
-    {
-        uint x;
-        uint y;
-        IniFile::Section* s;
-        for (x = 1; x < l->size(); ++x)
-        {
-            s = ini->addSection(l->byIndex[x]->id);
-            auto& col = m->entry[x];
-            for (y = 0; y < x; ++y)
-            {
-                if (fabs(col[y]) > 0.00000001)
-                {
-                    s->add(l->byIndex[y]->id, col[y]);
-                }
-            }
-        }
-    }
-    return ini;
-}
-
-int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const char filename[])
-{
-    /* Asserts */
-    assert(m);
-    assert(l);
-
-    if (!filename or '\0' == *filename)
-    {
-        return 0;
-    }
-    if (m->width != l->size() or m->height != l->size())
-    {
-        logs.error() << filename << ": The matrix does not have the good sie (" << l->size() << 'x'
-                     << l->size() << " expected, got " << m->width << 'x' << m->height << ')';
-    }
-    else
-    {
-        IniFile* ini = InterAreaCorrelationSaveToIniFile(m, l);
-        ini->save(filename);
-        delete ini;
-        return 1;
-    }
-    return 0;
-}
-#endif
-
 Correlation::Correlation():
     pMode(modeNone)
 {
@@ -320,18 +258,6 @@ bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool war
     Antares::logs.debug() << "  " << correlationName << ": loading " << filename;
     IniFile ini;
     return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings) : false;
-}
-
-bool Correlation::saveToFile(Study& study, const AnyString& filename) const
-{
-    using namespace Yuni;
-    IO::File::Stream file;
-    if (file.openRW(filename))
-    {
-        internalSaveToINI(study, file);
-        return true;
-    }
-    return false;
 }
 
 const char* Correlation::ModeToCString(Mode mode)
@@ -364,35 +290,6 @@ Correlation::Mode Correlation::CStringToMode(const AnyString& str)
     return modeNone;
 }
 
-void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
-{
-    // General settings
-    // (the only mandatory section)
-    // mode
-    file << "[general]\nmode = " << ModeToCString(pMode) << "\n\n";
-
-    if (!annual.empty())
-    {
-        ExportCorrelationCoefficients(study, annual, file, "annual");
-    }
-    else
-    {
-        logs.error() << correlationName << ": the annual correlation coefficients are missing";
-    }
-
-    if (!monthly.empty())
-    {
-        for (int month = 0; month < 12; month++)
-        {
-            ExportCorrelationCoefficients(study, monthly[month], file, std::to_string(month));
-        }
-    }
-    else
-    {
-        logs.error() << correlationName << ": the montlhy correlation coefficients are missing";
-    }
-}
-
 bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings)
 {
     if (!ReadCorrelationModeFromINI(ini, pMode, warnings))
@@ -400,7 +297,7 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
         return false;
     }
 
-    if (JIT::usedFromGUI or pMode == modeAnnual)
+    if (pMode == modeAnnual)
     {
         annual.clear();
         annual.resize(study.areas.size(), study.areas.size());
@@ -413,7 +310,7 @@ bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool 
         }
     }
 
-    if (JIT::usedFromGUI or pMode == modeMonthly)
+    if (pMode == modeMonthly)
     {
         monthly.resize(12);
         for (uint i = 0; i < 12; ++i)
@@ -452,27 +349,9 @@ void Correlation::reset(Study& study)
     clear();
 
     pMode = modeAnnual;
-    if (JIT::usedFromGUI)
-    {
-        // Reset
-        annual.clear();
-        annual.resize(study.areas.size(), study.areas.size());
-        annual.fillUnit();
-
-        // Preparing the monthly correlation matrices
-        monthly.resize(12);
-        for (int i = 0; i < 12; ++i)
-        {
-            monthly[i].resize(study.areas.size(), study.areas.size());
-            monthly[i].fillUnit();
-        }
-    }
-    else
-    {
-        annual.clear();
-        annual.resize(study.areas.size(), study.areas.size());
-        annual.fillUnit();
-    }
+    annual.clear();
+    annual.resize(study.areas.size(), study.areas.size());
+    annual.fillUnit();
 }
 
 void Correlation::clear()
@@ -489,17 +368,6 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
     {
         // The loading has failed - fallback
         pMode = modeAnnual;
-        if (JIT::usedFromGUI)
-        {
-            // Preparing the monthly correlation matrices
-            monthly.resize(12);
-            for (int i = 0; i < 12; ++i)
-            {
-                monthly[i].resize(study.areas.size(), study.areas.size());
-                monthly[i].fillUnit();
-            }
-        }
-
         annual.clear();
         annual.resize(study.areas.size(), study.areas.size());
         annual.fillUnit();

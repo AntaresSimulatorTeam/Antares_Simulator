@@ -9,8 +9,6 @@
 
 bool JIT::enabled = false;
 
-bool JIT::usedFromGUI = false;
-
 JIT::Informations::Informations():
     alreadyLoaded(false),
     modified(false),

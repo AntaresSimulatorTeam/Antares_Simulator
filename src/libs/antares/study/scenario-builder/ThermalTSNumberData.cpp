@@ -28,36 +28,6 @@ bool thermalTSNumberData::reset(const Study& study)
     return true;
 }
 
-#ifdef BUILD_UI
-void thermalTSNumberData::saveToINIFile(const Study& /* study */,
-                                        Yuni::IO::File::Stream& file) const
-{
-    // Prefix
-    CString<512, false> prefix;
-    prefix += get_prefix();
-
-    if (!pArea)
-    {
-        return;
-    }
-
-    for (auto& cluster: pArea->thermal.list.all())
-    {
-        for (uint year = 0; year != pTSNumberRules.height; ++year)
-        {
-            const uint val = get(cluster.get(), year);
-            // Equals to zero means 'auto', which is the default mode
-            if (!val)
-            {
-                continue;
-            }
-            file << prefix << pArea->id << "," << year << ',' << cluster->id() << " = " << val
-                 << '\n';
-        }
-    }
-}
-#endif
-
 void thermalTSNumberData::setTSnumber(const Antares::Data::ThermalCluster* cluster,
                                       const uint year,
                                       uint value)
