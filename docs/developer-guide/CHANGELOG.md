@@ -8,7 +8,7 @@ toc_depth: 2
 
 #### Feature
 
-* Problem Generator: new tool to write problems without running the simulation
+* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
 
 #### Improvements
 
