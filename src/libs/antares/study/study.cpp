@@ -7,7 +7,6 @@
 #include <climits>
 #include <cmath> // For use of floor(...) and ceil(...)
 #include <ctime>
-#include <optional>
 #include <sstream> // std::ostringstream
 #include <thread>
 
@@ -21,14 +20,13 @@
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/antares.h"
 #include "antares/study/area/constants.h"
-#include "antares/study/correlation-updater.hxx"
 #include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
-#include "antares/study/scenario-builder/updater.hxx"
-#include "antares/study/ui-runtimeinfos.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
+
+#define SEP IO::Separator
 
 namespace fs = std::filesystem;
 
@@ -50,7 +48,6 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver):
-    LayerData(0, true),
     simulationComments(*this),
     areas(*this),
     pQueueService(std::make_shared<Yuni::Job::QueueService>()),
@@ -72,13 +69,6 @@ Study::Study(bool forTheSolver):
     preproSolarCorrelation.timeSeries = timeSeriesSolar;
     preproWindCorrelation.timeSeries = timeSeriesWind;
     preproHydroCorrelation.timeSeries = timeSeriesHydro;
-
-    // Data related to the GUI
-    if (JIT::usedFromGUI)
-    {
-        uiinfo = new UIRuntimeInfo(*this);
-        uiinfo->reloadAll();
-    }
 }
 
 Study::~Study()
@@ -89,7 +79,6 @@ Study::~Study()
 void Study::clear()
 {
     scenarioRules.reset();
-    FreeAndNil(uiinfo);
 
     // areas
     setsOfAreas.clear();
@@ -150,15 +139,6 @@ void Study::createAsNew()
     // Scenario Builder
     scenarioRulesDestroy();
 
-    // Cache
-    if (JIT::usedFromGUI)
-    {
-        if (not uiinfo)
-        {
-            uiinfo = new UIRuntimeInfo(*this);
-        }
-        uiinfo->reloadAll();
-    }
     // Reduce memory footprint
     reduceMemoryUsage();
 }
@@ -443,7 +423,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     }
 }
 
-Area* Study::areaAdd(const AreaName& name, bool updateMode)
+Area* Study::areaAdd(const AreaName& name)
 {
     if (name.empty())
     {
@@ -462,17 +442,6 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
     // The new scope is mandatory to rebuild the correlation matrices
     // and the scenario builder data
     {
-        // These are only useful for the GUI, remove afterwards
-        // We need the constructors to be called here, and the destructors
-        // to be called at the end of the scope. Using std::optional is merely
-        // a means to that end.
-        std::optional<CorrelationUpdater> updater;
-        std::optional<ScenarioBuilderUpdater> updaterSB;
-        if (updateMode)
-        {
-            updater.emplace(*this);
-            updaterSB.emplace(*this);
-        }
         // Adding an area
         AreaName newName;
         if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
@@ -496,340 +465,8 @@ Area* Study::areaAdd(const AreaName& name, bool updateMode)
         area->resetToDefaultValues();
     }
 
-    if (uiinfo)
-    {
-        uiinfo->reload();
-    }
     return area;
 }
-
-#ifdef BUILD_UI
-// TODO VP: delete with GUI
-bool Study::areaDelete(Area* area)
-{
-    if (not area)
-    {
-        return true;
-    }
-    if (not AreaListLFind(&areas, area->id.c_str()))
-    {
-        return false;
-    }
-
-    logs.info() << "destroying the area: " << area->name;
-
-    // The new scope is mandatory to rebuild the correlation matrices
-    // and the scenario builder data *before* reloading uiinfo.
-    {
-        // Updating all hydro allocation
-        areas.each([&area](Data::Area& areait) { areait.hydro.allocation.remove(area->id); });
-
-        // We __must__ update the scenario builder data
-        // We may delete an area and re-create a new one with the same
-        // name (or rename) for example, but the data related to the old
-        // area must be gone.
-        scenarioRulesLoadIfNotAvailable();
-
-        CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
-
-        // Remove a single area
-        // Remove all binding constraints attached to the area
-        bindingConstraints.remove(area);
-        // Delete the area from the list
-        areas.remove(area->id);
-
-        // Rebuild indexes for all areas
-        areas.rebuildIndexes();
-
-        // delete updates here
-    }
-
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
-    return true;
-}
-
-// TODO VP: delete with GUI
-void Study::areaDelete(Area::Vector& arealist)
-{
-    if (arealist.empty())
-    {
-        return;
-    }
-    if (arealist.size() > 1)
-    {
-        logs.info() << "destroying " << arealist.size() << " areas...";
-    }
-
-    // The new scope is mandatory to rebuild the correlation matrices
-    // and the scenario builder data
-    {
-        // We __must__ update the scenario builder data
-        // We may delete an area and re-create a new one with the same
-        // name (or rename) for example, but the data related to the old
-        // area must be gone.
-        scenarioRulesLoadIfNotAvailable();
-
-        CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
-
-        // Remove all areas
-        {
-            uint count = 0;
-            auto end = arealist.end();
-            for (auto i = arealist.begin(); i != end; ++i)
-            {
-                // The current area
-                Area& area = *(*i);
-                ++count;
-
-                logs.info() << "destroying the area " << count << '/' << arealist.size() << ": "
-                            << area.name;
-
-                // Updating all hydro allocation
-                areas.each([&area](Data::Area& areait)
-                           { areait.hydro.allocation.remove(area.id); });
-
-                // Remove all binding constraints attached to the area
-                bindingConstraints.remove(*i);
-                // Delete the area from the list
-                areas.remove(area.id);
-            }
-
-            // Rebuild indexes for all areas
-            areas.rebuildIndexes();
-        }
-    }
-
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
-
-    if (arealist.size() > 1)
-    {
-        logs.info() << arealist.size() << " areas have been destroyed";
-    }
-}
-
-// TODO VP: delete with GUI
-bool Study::linkDelete(AreaLink* lnk)
-{
-    // Impossible to find the attached area
-    // The link might be already deleted
-    if (not lnk or !AreaListFindPtr(&areas, lnk->from) or !AreaListFindPtr(&areas, lnk->with))
-    {
-        return false;
-    }
-
-    assert(lnk->with);
-    assert(lnk->from);
-
-    logs.info() << "destroying the link " << lnk->from->name << " -> " << lnk->with->name;
-    // Remove all associated binding constraints
-    bindingConstraints.remove(lnk);
-    // The area in the study must be removed
-    AreaLinkRemove(lnk);
-
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
-    return true;
-}
-
-// TODO VP: delete with GUI
-bool Study::areaRename(Area* area, AreaName newName)
-{
-    // A name must not be empty
-    if (not area or newName.empty())
-    {
-        return false;
-    }
-
-    String beautifyname;
-    BeautifyName(beautifyname, newName);
-    if (beautifyname.empty())
-    {
-        return false;
-    }
-    newName = beautifyname;
-
-    // Preparing the new area ID
-    AreaName newid = transformNameIntoID(newName);
-    if (newid.empty())
-    {
-        return false;
-    }
-
-    // Checking if the area exists
-    {
-        Area* found;
-        if ((found = areas.find(newid)))
-        {
-            if (found->name != newName)
-            {
-                // The ID will remain identical
-                found->name = newName;
-                return true;
-            }
-            return false;
-        }
-    }
-
-    // We must have the scenario rules to rename properly the area
-    scenarioRulesLoadIfNotAvailable();
-
-    // We will temporary override the id of the area in order to have to
-    // the new name in the archive
-    // Otherwise the values associated to the area will be lost.
-    AreaName oldid;
-    oldid = area->id;
-    area->id = newid;
-    logs.info() << "renaming area " << area->name << " into " << newName;
-
-    // Updating all hydro allocation
-    areas.each([&oldid, &newid](Data::Area& areait)
-               { areait.hydro.allocation.rename(oldid, newid); });
-
-    ScenarioBuilderUpdater updaterSB(*this);
-    bool ret = true;
-
-    // Archiving data
-    {
-        CorrelationUpdater updater(*this);
-
-        // Restoring the old ID
-        area->id = oldid;
-
-        // Rename the ares
-        ret = areas.renameArea(oldid, newid, newName);
-        // Rebuild indexes for all areas
-        areas.rebuildIndexes();
-
-        // reloading correlation and scenario builder
-    }
-
-    // ReAdjust all interconnections
-    areas.fixOrientationForAllInterconnections(bindingConstraints);
-
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
-
-    return ret;
-}
-
-// TODO VP: delete with GUI
-bool Study::clusterRename(Cluster* cluster, std::string newName)
-{
-    // A name must not be empty
-    if (!cluster or newName.empty())
-    {
-        return false;
-    }
-
-    String beautifyname;
-    BeautifyName(beautifyname, newName);
-    if (!beautifyname)
-    {
-        return false;
-    }
-    newName = beautifyname.c_str();
-
-    // Preparing the new area ID
-    std::string newID = transformNameIntoID(newName);
-    if (newID.empty())
-    {
-        logs.error() << "invalid id transformation";
-        return false;
-    }
-
-    Area& area = *cluster->parentArea;
-    if (not cluster->parentArea)
-    {
-        logs.error() << "renaming cluster: no parent area";
-        return false;
-    }
-
-    // Checking if the area exists
-    Cluster* found = nullptr;
-
-    enum
-    {
-        kThermal,
-        kRenewable,
-        kUnknown
-    } type = kUnknown;
-
-    if (dynamic_cast<ThermalCluster*>(cluster))
-    {
-        found = area.thermal.list.findInAll(newID);
-        type = kThermal;
-    }
-    else if (dynamic_cast<RenewableCluster*>(cluster))
-    {
-        found = area.renewable.list.findInAll(newID);
-        type = kRenewable;
-    }
-
-    if (found)
-    {
-        if (found->name() != newName)
-        {
-            area.invalidateJIT = true;
-            found->setName(newName);
-            return true;
-        }
-        return false;
-    }
-
-    // gp : to be updated with renewable clusters
-    // We must have the scenario rules to rename properly the cluster
-    scenarioRulesLoadIfNotAvailable();
-
-    // We will temporary override the id of the area in order to have to
-    // the new name in the archive
-    // Otherwise the values associated to the area will be lost.
-    logs.info() << "  renaming cluster '" << cluster->name() << "' into '" << newName << "'";
-
-    area.invalidateJIT = true;
-
-    bool ret = true;
-
-    // Archiving data
-    switch (type)
-    {
-    case kRenewable:
-        ret = area.renewable.list.rename(cluster->id(), newName);
-        break;
-    case kThermal:
-        ret = area.thermal.list.rename(cluster->id(), newName);
-        break;
-    case kUnknown:
-        logs.error() << "Unknown cluster type";
-        break;
-    }
-
-    ScenarioBuilderUpdater updaterSB(*this);
-
-    if (uiinfo)
-    {
-        uiinfo->reloadAll();
-    }
-
-    return ret;
-}
-
-bool Study::readonly() const
-{
-    return (parameters.readonly);
-}
-#endif // BUILD_UI
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {

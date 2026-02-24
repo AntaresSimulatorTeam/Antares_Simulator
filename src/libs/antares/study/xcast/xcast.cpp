@@ -265,22 +265,20 @@ bool XCast::loadFromFolder(const fs::path& folder)
     p = folder / "translation.txt";
 
     ret = translation.loadFromCSVFile(p.string(), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
-    if (!JIT::usedFromGUI)
+
+    if (translation.empty())
     {
-        if (translation.empty())
+        // This is not really an error
+        useTranslation = tsTranslationNone;
+        translation.reset(1, HOURS_PER_YEAR);
+    }
+    else
+    {
+        if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
         {
-            // This is not really an error
+            logs.warning() << folder << ": invalid size for the time-series translation.";
+            translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
             useTranslation = tsTranslationNone;
-            translation.reset(1, HOURS_PER_YEAR);
-        }
-        else
-        {
-            if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
-            {
-                logs.warning() << folder << ": invalid size for the time-series translation.";
-                translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
-                useTranslation = tsTranslationNone;
-            }
         }
     }
 

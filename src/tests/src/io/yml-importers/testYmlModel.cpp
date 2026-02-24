@@ -14,11 +14,12 @@
 #include "enum_operators.h"
 
 using namespace std::string_literals;
+using namespace Antares::IO::Inputs;
 
 // Test empty library
 BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: ""
@@ -26,7 +27,7 @@ BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
             port-types: []
             models: []
     )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.id.empty());
     BOOST_CHECK(libraryObj.description.empty());
     BOOST_CHECK(libraryObj.port_types.empty());
@@ -36,7 +37,7 @@ BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
 // Test library with id and description
 BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "test_id"
@@ -44,7 +45,7 @@ BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
             port-types: []
             models: []
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.id, "test_id");
     BOOST_CHECK_EQUAL(libraryObj.description, "test_description");
 }
@@ -52,7 +53,7 @@ BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
 // Test library with port types
 BOOST_AUTO_TEST_CASE(port_types_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -64,7 +65,7 @@ BOOST_AUTO_TEST_CASE(port_types_properly_parsed)
                       - id: "port_name"
             models: []
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.port_types[0].id, "porttype_id");
     BOOST_CHECK_EQUAL(libraryObj.port_types[0].description, "porttype_description");
@@ -75,7 +76,7 @@ BOOST_AUTO_TEST_CASE(port_types_properly_parsed)
 // Test library with port types
 BOOST_AUTO_TEST_CASE(port_types_with_thermal_capacity_connection_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -85,10 +86,10 @@ BOOST_AUTO_TEST_CASE(port_types_with_thermal_capacity_connection_properly_parsed
                  fields:
                    - id: capacity
                  thermal-capacity-connection:
-                   - capacity-field: capacity
+                   capacity-field: capacity
             models: []
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 1);
     const auto& capacity_port_type = libraryObj.port_types[0];
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
@@ -99,7 +100,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_thermal_capacity_connection_properly_parsed
 
 BOOST_AUTO_TEST_CASE(port_types_with_empty__thermal_capacity_connection_field)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -109,7 +110,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__thermal_capacity_connection_field)
                  fields:
                    - id: capacity
                  thermal-capacity-connection:
-                   - capacity-field:
+                   capacity-field:
             models: []
         )"s;
     auto libraryObj = parser.parse(library);
@@ -123,7 +124,7 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__thermal_capacity_connection_field)
 
 BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -133,9 +134,9 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
                  fields:
                    - id: capacity
                  area-connection:
-                   - injection-field:
-                   - spillage-bound:
-                   - unsupplied-energy-bound:
+                   injection-to-balance:
+                   spillage-bound:
+                   unsupplied-energy-bound:
             models: []
         )"s;
     auto libraryObj = parser.parse(library);
@@ -144,14 +145,14 @@ BOOST_AUTO_TEST_CASE(port_types_with_empty__area_connection_fields)
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
 }
 
 BOOST_AUTO_TEST_CASE(port_types_with_only_injection_field__in_area_connection)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -161,9 +162,9 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_injection_field__in_area_connection)
                  fields:
                    - id: capacity
                  area-connection:
-                   - injection-field: capa
-                   - spillage-bound:
-                   - unsupplied-energy-bound:
+                   injection-to-balance: capa
+                   spillage-bound:
+                   unsupplied-energy-bound:
             models: []
         )"s;
     auto libraryObj = parser.parse(library);
@@ -172,14 +173,14 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_injection_field__in_area_connection)
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "capa");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "capa");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
 }
 
 BOOST_AUTO_TEST_CASE(port_types_with_only_spillage_bound_field__in_area_connection)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -189,9 +190,9 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_spillage_bound_field__in_area_connecti
                  fields:
                    - id: capacity
                  area-connection:
-                   - injection-field:
-                   - spillage-bound: f1
-                   - unsupplied-energy-bound:
+                   injection-to-balance:
+                   spillage-bound: f1
+                   unsupplied-energy-bound:
             models: []
         )"s;
     auto libraryObj = parser.parse(library);
@@ -200,14 +201,14 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_spillage_bound_field__in_area_connecti
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "f1");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "");
 }
 
 BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area_connection)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -217,9 +218,9 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area
                  fields:
                    - id: capacity
                  area-connection:
-                   - injection-field:
-                   - spillage-bound:
-                   - unsupplied-energy-bound: f2
+                   injection-to-balance:
+                   spillage-bound:
+                   unsupplied-energy-bound: f2
             models: []
         )"s;
     auto libraryObj = parser.parse(library);
@@ -228,14 +229,14 @@ BOOST_AUTO_TEST_CASE(port_types_with_only_unsupplied_energy_bound_field__in_area
     BOOST_CHECK_EQUAL(capacity_port_type.id, "capacity_port");
     BOOST_REQUIRE_EQUAL(capacity_port_type.fields.size(), 1);
     BOOST_CHECK_EQUAL(capacity_port_type.fields[0], "capacity");
-    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.injection, "");
+    BOOST_CHECK_EQUAL(capacity_port_type.area_connection.inject_to_balance, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.spillage_bound, "");
     BOOST_CHECK_EQUAL(capacity_port_type.area_connection.unsupplied_energy_bound, "f2");
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -248,17 +249,16 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
 
             models: []
         )"s;
-    BOOST_REQUIRE_THROW(Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library),
-                        YAML::TypedBadConversion<
-                          Antares::IO::Inputs::YmlModel::PortType>); // When this line was written,
-                                                                     // the exception thrown is
+    BOOST_REQUIRE_THROW(YmlModel::Library libraryObj = parser.parse(library),
+                        YAML::TypedBadConversion<YmlModel::PortType>);
+    // When the previous line was written, the exception thrown is
     // YAML::TypedBadConversion<PortType>; this may change, see
     // https://github.com/jbeder/yaml-cpp/commit/3d2888cc8a45da2f420454ad728cdfad01a3d54f
 }
 
 BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -271,10 +271,9 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
 
             models: []
         )"s;
-    BOOST_REQUIRE_THROW(Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library),
-                        YAML::TypedBadConversion<
-                          Antares::IO::Inputs::YmlModel::PortType>); // When this line was written,
-                                                                     // the exception thrown is
+    BOOST_REQUIRE_THROW(YmlModel::Library libraryObj = parser.parse(library),
+                        YAML::TypedBadConversion<YmlModel::PortType>);
+    // When the previous line was written, the exception thrown is
     // YAML::TypedBadConversion<PortType>; this may change, see
     // https://github.com/jbeder/yaml-cpp/commit/3d2888cc8a45da2f420454ad728cdfad01a3d54f
 }
@@ -282,7 +281,7 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
 // Test library with multiple port types
 BOOST_AUTO_TEST_CASE(library_can_contain_multiple_port_types)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -298,7 +297,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_port_types)
                       - id: "port_name2"
             models: []
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.port_types.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.port_types[0].id, "porttype_id1");
     BOOST_CHECK_EQUAL(libraryObj.port_types[0].description, "porttype_description1");
@@ -313,7 +312,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_port_types)
 // Test library with models
 BOOST_AUTO_TEST_CASE(models_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const std::string library = R"(
         library:
             id: "lib_id"
@@ -334,7 +333,7 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
                         expression: "objective2"
 
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id");
     BOOST_CHECK_EQUAL(libraryObj.models[0].description, "model_description");
@@ -354,7 +353,7 @@ BOOST_AUTO_TEST_CASE(models_properly_parsed)
 // Test library with multiple models
 BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -382,7 +381,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
                       - id: "objective2"
                         expression: "objective2"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id1");
     BOOST_CHECK_EQUAL(libraryObj.models[0].description, "model_description1");
@@ -399,7 +398,7 @@ BOOST_AUTO_TEST_CASE(library_can_contain_multiple_models)
 // Test library with one model containing parameters
 BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -420,7 +419,7 @@ BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].parameters.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].id, "param_name");
@@ -431,7 +430,7 @@ BOOST_AUTO_TEST_CASE(parameters_properly_parsed)
 // Test library with one model containing multiple parameters
 BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -455,7 +454,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].parameters.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].parameters[0].id, "param_name1");
@@ -469,7 +468,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_parameters)
 // Time dependent and scenario dependant default value are true
 BOOST_AUTO_TEST_CASE(test_library_model_parameters_default_values)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     auto library = R"(
         library:
             id: "lib_id"
@@ -488,7 +487,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters_default_values)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK(libraryObj.models.size() == 1);
     BOOST_CHECK(libraryObj.models[0].parameters.size() == 1);
     BOOST_CHECK(libraryObj.models[0].parameters[0].id == "param_name");
@@ -499,7 +498,7 @@ BOOST_AUTO_TEST_CASE(test_library_model_parameters_default_values)
 // Test library with one model containing variables
 BOOST_AUTO_TEST_CASE(variables_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -520,7 +519,7 @@ BOOST_AUTO_TEST_CASE(variables_properly_parsed)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
@@ -531,7 +530,7 @@ BOOST_AUTO_TEST_CASE(variables_properly_parsed)
 // Test library with one model containing multiple variables
 BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -555,7 +554,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].variables.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name1");
@@ -569,7 +568,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_variables)
 // variable bounds are strings expressions
 BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -590,7 +589,7 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].id, "var_name");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].lower_bound, "near-zero");
     BOOST_CHECK_EQUAL(libraryObj.models[0].variables[0].upper_bound, "pmax");
@@ -599,7 +598,7 @@ BOOST_AUTO_TEST_CASE(variables_bounds_are_literals)
 // variable variable-type
 BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -632,22 +631,22 @@ BOOST_AUTO_TEST_CASE(variable_types_can_be_integer_bool_float_default_to_float)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     auto& model = libraryObj.models[0];
     auto& var1 = model.variables[0];
     auto& var2 = model.variables[1];
     auto& var3 = model.variables[2];
     auto& var4 = model.variables[3];
-    BOOST_CHECK_EQUAL(var1.variable_type, Antares::IO::Inputs::YmlModel::ValueType::BOOL);
-    BOOST_CHECK_EQUAL(var2.variable_type, Antares::IO::Inputs::YmlModel::ValueType::INTEGER);
-    BOOST_CHECK_EQUAL(var3.variable_type, Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS);
-    BOOST_CHECK_EQUAL(var4.variable_type, Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS);
+    BOOST_CHECK_EQUAL(var1.variable_type, YmlModel::ValueType::BOOL);
+    BOOST_CHECK_EQUAL(var2.variable_type, YmlModel::ValueType::INTEGER);
+    BOOST_CHECK_EQUAL(var3.variable_type, YmlModel::ValueType::CONTINUOUS);
+    BOOST_CHECK_EQUAL(var4.variable_type, YmlModel::ValueType::CONTINUOUS);
 }
 
 // Test library with one model containing ports
 BOOST_AUTO_TEST_CASE(ports_are_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -667,7 +666,7 @@ BOOST_AUTO_TEST_CASE(ports_are_properly_parsed)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].ports.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].id, "port_name");
@@ -677,7 +676,7 @@ BOOST_AUTO_TEST_CASE(ports_are_properly_parsed)
 // Test library with one model containing multiple ports
 BOOST_AUTO_TEST_CASE(model_can_conatin_multiple_ports)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -699,7 +698,7 @@ BOOST_AUTO_TEST_CASE(model_can_conatin_multiple_ports)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].ports.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].ports[0].id, "port_name1");
@@ -711,7 +710,7 @@ BOOST_AUTO_TEST_CASE(model_can_conatin_multiple_ports)
 // Test library with one model containing port field definitions
 BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -732,7 +731,7 @@ BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name");
@@ -743,7 +742,7 @@ BOOST_AUTO_TEST_CASE(model_port_fileds_properly_parsed)
 // Test library with one model containing multiple port field definitions
 BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -767,7 +766,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].port_field_definitions.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].port_field_definitions[0].port, "port_name1");
@@ -781,7 +780,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_portfields)
 // Test library with one model containing constraints
 BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -801,7 +800,7 @@ BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name");
@@ -811,7 +810,7 @@ BOOST_AUTO_TEST_CASE(constraints_properly_parsed)
 // Test library with one model containing multiple constraints
 BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -833,7 +832,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].constraints.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].constraints[0].id, "constraint_name1");
@@ -845,7 +844,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_constraints)
 // Test error when model is not a map
 BOOST_AUTO_TEST_CASE(model_is_not_scalar)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -858,7 +857,7 @@ BOOST_AUTO_TEST_CASE(model_is_not_scalar)
 
 BOOST_AUTO_TEST_CASE(model_attributes_can_be_ommited)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -867,7 +866,7 @@ BOOST_AUTO_TEST_CASE(model_attributes_can_be_ommited)
             models:
                 - id: "model_id"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_CHECK_EQUAL(libraryObj.models[0].id, "model_id");
     BOOST_CHECK_EQUAL(libraryObj.models[0].description, "");
@@ -881,7 +880,7 @@ BOOST_AUTO_TEST_CASE(model_attributes_can_be_ommited)
 
 BOOST_AUTO_TEST_CASE(test_variable_to_string)
 {
-    namespace YmlMod = Antares::IO::Inputs::YmlModel;
+    namespace YmlMod = YmlModel;
 
     BOOST_CHECK_EQUAL(YmlMod::toString(YmlMod::ValueType::CONTINUOUS), "CONTINUOUS");
     BOOST_CHECK_EQUAL(YmlMod::toString(YmlMod::ValueType::INTEGER), "INTEGER");
@@ -892,7 +891,7 @@ BOOST_AUTO_TEST_CASE(test_variable_to_string)
 // Test library with one model containing multiple extra outputs
 BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
 {
-    Antares::IO::Inputs::YmlModel::Parser parser;
+    YmlModel::Parser parser;
     const auto library = R"(
         library:
             id: "lib_id"
@@ -915,7 +914,7 @@ BOOST_AUTO_TEST_CASE(model_can_contain_multiple_extra_outputs)
                       - id: "objective"
                         expression: "objective"
         )"s;
-    Antares::IO::Inputs::YmlModel::Library libraryObj = parser.parse(library);
+    YmlModel::Library libraryObj = parser.parse(library);
     BOOST_REQUIRE_EQUAL(libraryObj.models.size(), 1);
     BOOST_REQUIRE_EQUAL(libraryObj.models[0].extra_outputs.size(), 2);
     BOOST_CHECK_EQUAL(libraryObj.models[0].extra_outputs[0].id, "output_name1");

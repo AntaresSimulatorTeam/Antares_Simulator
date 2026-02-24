@@ -24,6 +24,8 @@ public:
 
     void addResultsToSets(const PROBLEME_HEBDO& pb);
 
+    void reset();
+
     void appendToSurveyForSet(const std::string& setName,
                               SurveyResults& survey,
                               Category::Precision precision) const;

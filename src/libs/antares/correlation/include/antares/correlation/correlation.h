@@ -81,11 +81,6 @@ public:
     bool loadFromFile(Study& study, const AnyString& filename, bool warnings = true);
 
     /*!
-    ** \brief Save the correlation matrices into an INI file
-    */
-    bool saveToFile(Study& study, const AnyString& filename) const;
-
-    /*!
     ** \brief Clear all data
     */
     void clear();
@@ -130,8 +125,6 @@ public:
 private:
     bool internalLoadFromINI(Study& study, const IniFile& ini, bool warnings);
     bool internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings);
-
-    void internalSaveToINI(Study& study, Yuni::IO::File::Stream& file) const;
 
 private:
     Mode pMode;
@@ -190,21 +183,6 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
 ** \return A non-zero value if the matrix has been loaded, 0 otherwise
 */
 int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings);
-
-#ifdef BUILD_UI
-/*!
-** \brief Save an inter-area correlation matrix to a Ini file structure
-** \ingroup interareacorrelation
-**
-** The matrix must have the good dimensions, otherwise nothin will be
-** done (N*N with N = count of areas).
-**
-** \param m The matrix to save
-** \param l The list of area
-** \return An Ini file structure
-*/
-IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l);
-#endif
 
 } // namespace Antares::Data
 

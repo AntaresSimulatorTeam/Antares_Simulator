@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "firstField");
     BOOST_CHECK_EQUAL(portType.Fields()[1].Id(), "secondField");
     BOOST_CHECK_EQUAL(portType.areaConnection().has_value(), true);
-    BOOST_CHECK_EQUAL(portType.areaConnection()->injection, "secondField");
+    BOOST_CHECK_EQUAL(portType.areaConnection()->inject_to_balance, "secondField");
 }
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_all_fields_defined)
     BOOST_CHECK(portType.areaConnection().has_value());
 
     AreaConnection areaConnection = portType.areaConnection().value();
-    BOOST_CHECK_EQUAL(areaConnection.injection, "field-3");
+    BOOST_CHECK_EQUAL(areaConnection.inject_to_balance, "field-3");
     BOOST_CHECK_EQUAL(areaConnection.spillage_bound, "field-2");
     BOOST_CHECK_EQUAL(areaConnection.unsupplied_energy_bound, "field-1");
 }

@@ -13,7 +13,6 @@ namespace Antares::Data::ScenarioBuilder
 Sets::Sets():
     pStudy(nullptr)
 {
-    inUpdaterMode = false;
 }
 
 Sets::~Sets()
@@ -125,44 +124,6 @@ bool Sets::remove(const RulesScenarioName& lname)
     return true;
 }
 
-#ifdef BUILD_UI
-bool Sets::internalSaveToIniFile(const AnyString& filename) const
-{
-    // Logs
-    {
-        logs.info() << "  > Exporting scenario builder data";
-        logs.debug() << "[scenario-builder] writing " << filename;
-    }
-
-    // Open the file
-    IO::File::Stream file;
-    if (not file.openRW(filename))
-    {
-        logs.error() << "Impossible to write " << filename;
-        return false;
-    }
-
-    // There is no ruleset. Trivial. Aborting.
-    if (pMap.empty())
-    {
-        return true;
-    }
-
-    const Rules::Map::const_iterator end = pMap.end();
-    for (Rules::Map::const_iterator i = pMap.begin(); i != end; ++i)
-    {
-        // Alias to the current ruleset
-        // Export the informations of the current ruleset
-        const Rules::Ptr& ruleset = i->second;
-        if (!(!ruleset))
-        {
-            ruleset->saveToINIFile(file);
-        }
-    }
-    return true;
-}
-#endif
-
 bool Sets::internalLoadFromINIFile(const AnyString& filename)
 {
     // Logs
@@ -199,7 +160,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
           for (auto* p = section.firstProperty; p != nullptr; p = p->next)
           {
               p->key.split(splitKey, ",", true, false);
-              ruleset.readLine(splitKey, p->value, inUpdaterMode);
+              ruleset.readLine(splitKey, p->value, false);
           }
 
           ruleset.sendWarningsForDisabledClusters();
