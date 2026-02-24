@@ -144,12 +144,12 @@ Inheritance diagram for MockLinearProblemData:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a808c41967b7bac1df08fb3c6f9de711f"><td class="memItemLeft" align="right" valign="top"><a id="a808c41967b7bac1df08fb3c6f9de711f"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[maybe_unused]] const std::string &amp;dataSetId, [[maybe_unused]] const unsigned scenario, unsigned hour) const override</td></tr>
-<tr class="separator:a808c41967b7bac1df08fb3c6f9de711f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bcbf2377c723b3d73218a500404d17c"><td class="memItemLeft" align="right" valign="top"><a id="a7bcbf2377c723b3d73218a500404d17c"></a>
-std::span&lt; const double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned firstHour, unsigned lastHour) const override</td></tr>
-<tr class="separator:a7bcbf2377c723b3d73218a500404d17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75b485f49404c47dda78a680b6a5adcc"><td class="memItemLeft" align="right" valign="top"><a id="a75b485f49404c47dda78a680b6a5adcc"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, const unsigned, unsigned hour) const override</td></tr>
+<tr class="separator:a75b485f49404c47dda78a680b6a5adcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2aeb2720dbc7a74ac0b3521a32ccd8d"><td class="memItemLeft" align="right" valign="top"><a id="ab2aeb2720dbc7a74ac0b3521a32ccd8d"></a>
+std::span&lt; const double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned, unsigned firstHour, unsigned lastHour) const override</td></tr>
+<tr class="separator:ab2aeb2720dbc7a74ac0b3521a32ccd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf445989115f0f76b81017886a678749"><td class="memItemLeft" align="right" valign="top"><a id="abf445989115f0f76b81017886a678749"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>MockLinearProblemData</b> (const std::map&lt; std::string, std::vector&lt; double &gt;&gt; &amp;parametersValues={})</td></tr>
 <tr class="separator:abf445989115f0f76b81017886a678749"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,22 +162,21 @@ std::pair&lt; bool, std::vector&lt; double &gt; &gt;&#160;</td><td class="memIte
 <tr class="memitem:ac076745592d0c42aab410026d0fa3c3e"><td class="memItemLeft" align="right" valign="top"><a id="ac076745592d0c42aab410026d0fa3c3e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addParams</b> (std::pair&lt; std::string, std::vector&lt; double &gt;&gt; values)</td></tr>
 <tr class="separator:ac076745592d0c42aab410026d0fa3c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7856971bf8e1c5693dd3e1b61522471b"><td class="memItemLeft" align="right" valign="top"><a id="a7856971bf8e1c5693dd3e1b61522471b"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> ([[maybe_unused]] const std::string &amp;dataSetId, [[maybe_unused]] unsigned scenario, unsigned hour) const override</td></tr>
-<tr class="separator:a7856971bf8e1c5693dd3e1b61522471b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bcbf2377c723b3d73218a500404d17c"><td class="memItemLeft" align="right" valign="top"><a id="a7bcbf2377c723b3d73218a500404d17c"></a>
-std::span&lt; const double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned firstHour, unsigned lastHour) const override</td></tr>
-<tr class="separator:a7bcbf2377c723b3d73218a500404d17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></td></tr>
-<tr class="memitem:a0a188e2921abcb871fe497d86668565b inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td class="memItemLeft" align="right" valign="top"><a id="a0a188e2921abcb871fe497d86668565b"></a>
-virtual double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;dataSetId, unsigned timeSeriesNumber, unsigned hour) const =0</td></tr>
-<tr class="separator:a0a188e2921abcb871fe497d86668565b inherit pub_methods_classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4d467a3ab78fe36f58df63c5f525504"><td class="memItemLeft" align="right" valign="top"><a id="ae4d467a3ab78fe36f58df63c5f525504"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;, unsigned, unsigned hour) const override</td></tr>
+<tr class="separator:ae4d467a3ab78fe36f58df63c5f525504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbc59f39030125f0658cac1c38568f50"><td class="memItemLeft" align="right" valign="top"><a id="afbc59f39030125f0658cac1c38568f50"></a>
+std::span&lt; const double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getData</b> (const std::string &amp;, unsigned, unsigned firstHour, unsigned lastHour) const override</td></tr>
+<tr class="separator:afbc59f39030125f0658cac1c38568f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a2a2b34197a60c98f3b256b5fc208754e"><td class="memItemLeft" align="right" valign="top"><a id="a2a2b34197a60c98f3b256b5fc208754e"></a>
 std::map&lt; std::string, std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parametersValues</b> = {}</td></tr>
 <tr class="separator:a2a2b34197a60c98f3b256b5fc208754e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfd356ffcad6d370433dc3b6f3776309"><td class="memItemLeft" align="right" valign="top"><a id="adfd356ffcad6d370433dc3b6f3776309"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>lastData_</b></td></tr>
+<tr class="separator:adfd356ffcad6d370433dc3b6f3776309"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63350ea43c8987d172b7cc2550169cb5"><td class="memItemLeft" align="right" valign="top"><a id="a63350ea43c8987d172b7cc2550169cb5"></a>
 const std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>v_</b> {0., 1., 2., 3., 4., 5.}</td></tr>
 <tr class="separator:a63350ea43c8987d172b7cc2550169cb5"><td class="memSeparator" colspan="2">&#160;</td></tr>

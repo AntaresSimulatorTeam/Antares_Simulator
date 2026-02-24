@@ -151,18 +151,29 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">      .id = <span class="stringliteral">&quot;model0&quot;</span>,</div>
-<div class="line">      .description = <span class="stringliteral">&quot;description&quot;</span>,</div>
-<div class="line">      .parameters = {{<span class="stringliteral">&quot;pmin&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>}},</div>
-<div class="line">      .variables = {{<span class="stringliteral">&quot;varA&quot;</span>, <span class="stringliteral">&quot;7&quot;</span>, <span class="stringliteral">&quot;pmin&quot;</span>, YmlModel::ValueType::CONTINUOUS, <span class="keyword">false</span>, <span class="keyword">false</span>},</div>
-<div class="line">                    {<span class="stringliteral">&quot;varB&quot;</span>, <span class="stringliteral">&quot;7&quot;</span>, <span class="stringliteral">&quot;pmin&quot;</span>, YmlModel::ValueType::CONTINUOUS, <span class="keyword">false</span>, <span class="keyword">false</span>}},</div>
-<div class="line">      .ports = {},</div>
-<div class="line">      .port_field_definitions = {},</div>
-<div class="line">      .constraints = {},</div>
-<div class="line">      .binding_constraints = {},</div>
-<div class="line">      .objectives = {{<span class="stringliteral">&quot;objective-id&quot;</span>, <span class="stringliteral">&quot;&quot;</span>}},</div>
-<div class="line">      .extra_outputs = {}}</div>
+<b>Initial value:</b><div class="fragment"><div class="line">{.id = <span class="stringliteral">&quot;model0&quot;</span>,</div>
+<div class="line">                          .description = <span class="stringliteral">&quot;description&quot;</span>,</div>
+<div class="line">                          .parameters = {{<span class="stringliteral">&quot;pmin&quot;</span>, <span class="keyword">true</span>, <span class="keyword">false</span>}},</div>
+<div class="line">                          .variables = {{<span class="stringliteral">&quot;varA&quot;</span>,</div>
+<div class="line">                                         <span class="stringliteral">&quot;7&quot;</span>,</div>
+<div class="line">                                         <span class="stringliteral">&quot;pmin&quot;</span>,</div>
+<div class="line">                                         YmlModel::ValueType::CONTINUOUS,</div>
+<div class="line">                                         <span class="keyword">false</span>,</div>
+<div class="line">                                         <span class="keyword">false</span>,</div>
+<div class="line">                                         <span class="stringliteral">&quot;test.yaml&quot;</span>},</div>
+<div class="line">                                        {<span class="stringliteral">&quot;varB&quot;</span>,</div>
+<div class="line">                                         <span class="stringliteral">&quot;7&quot;</span>,</div>
+<div class="line">                                         <span class="stringliteral">&quot;pmin&quot;</span>,</div>
+<div class="line">                                         YmlModel::ValueType::CONTINUOUS,</div>
+<div class="line">                                         <span class="keyword">false</span>,</div>
+<div class="line">                                         <span class="keyword">false</span>,</div>
+<div class="line">                                         <span class="stringliteral">&quot;test.yaml&quot;</span>}},</div>
+<div class="line">                          .ports = {},</div>
+<div class="line">                          .port_field_definitions = {},</div>
+<div class="line">                          .constraints = {},</div>
+<div class="line">                          .binding_constraints = {},</div>
+<div class="line">                          .objectives = {{<span class="stringliteral">&quot;objective-id&quot;</span>, <span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;test.yaml&quot;</span>}},</div>
+<div class="line">                          .extra_outputs = {}}</div>
 </div><!-- fragment -->
 </div>
 </div>

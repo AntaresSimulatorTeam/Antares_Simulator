@@ -159,15 +159,15 @@ $(document).ready(function(){initNavTree('visitorFixture_8hpp_source.html',''); 
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">struct </span><a class="code" href="structMockLinearProblemData.html">MockLinearProblemData</a>: <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">LinearProblemApi::ILinearProblemData</a></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getData([[maybe_unused]] <span class="keyword">const</span> std::string&amp; dataSetId,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                 [[maybe_unused]] <span class="keywordtype">unsigned</span> scenario,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    [[nodiscard]] <span class="keywordtype">double</span> getData(<span class="keyword">const</span> std::string&amp; <span class="comment">/*dataSetId*/</span>,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                 <span class="keywordtype">unsigned</span> <span class="comment">/*scenario*/</span>,</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                 <span class="keywordtype">unsigned</span> hour)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">return</span> hour; <span class="comment">// for test</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    [[nodiscard]] std::span&lt;const double&gt; getData(<span class="keyword">const</span> std::string&amp; dataSetId,</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                                                  <span class="keywordtype">unsigned</span> timeSeriesNumber,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    [[nodiscard]] std::span&lt;const double&gt; getData(<span class="keyword">const</span> std::string&amp; <span class="comment">/*dataSetId*/</span>,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                                                  <span class="keywordtype">unsigned</span> <span class="comment">/*timeSeriesNumber*/</span>,</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                                  <span class="keywordtype">unsigned</span> firstHour,</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                                  <span class="keywordtype">unsigned</span> lastHour)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">    </span>{</div>
@@ -278,7 +278,7 @@ $(document).ready(function(){initNavTree('visitorFixture_8hpp_source.html',''); 
 <div class="ttc" id="aclassMockLinearProblem_html_aef27f34880e92bc060bdff439eed2943"><div class="ttname"><a href="classMockLinearProblem.html#aef27f34880e92bc060bdff439eed2943">MockLinearProblem::addNumVariable</a></div><div class="ttdeci">Antares::Optimisation::LinearProblemApi::IMipVariable * addNumVariable(double, double, const std::string &amp;) override</div><div class="ttdoc">Create a continuous variable.</div><div class="ttdef"><b>Definition:</b> UtilMocks.h:206</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:9</div></div>
 <div class="ttc" id="astructAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue_html"><div class="ttname"><a href="structAntares_1_1ModelerStudy_1_1SystemModel_1_1ParameterTypeAndValue.html">Antares::ModelerStudy::SystemModel::ParameterTypeAndValue</a></div><div class="ttdef"><b>Definition:</b> component.h:20</div></div>
-<div class="ttc" id="astructMockLinearProblemData_html"><div class="ttname"><a href="structMockLinearProblemData.html">MockLinearProblemData</a></div><div class="ttdef"><b>Definition:</b> test_PrintAndEvalVisitors.cpp:683</div></div>
+<div class="ttc" id="astructMockLinearProblemData_html"><div class="ttname"><a href="structMockLinearProblemData.html">MockLinearProblemData</a></div><div class="ttdef"><b>Definition:</b> test_PrintAndEvalVisitors.cpp:684</div></div>
 <div class="ttc" id="astructVisitorFixture_html"><div class="ttname"><a href="structVisitorFixture.html">VisitorFixture</a></div><div class="ttdef"><b>Definition:</b> visitorFixture.hpp:53</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
