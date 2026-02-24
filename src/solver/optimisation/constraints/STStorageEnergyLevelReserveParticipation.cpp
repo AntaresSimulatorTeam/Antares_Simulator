@@ -2,9 +2,8 @@
 
 void STStorageEnergyLevelReserveParticipation::add(int pays, int cluster, int reserve, int pdt)
 {
-    int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
-    CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                  .areaCapacityReservations[reserve];
+    const int globalClusterIdx = data.shortTermStorageOfArea[pays][cluster].clusterGlobalIndex;
+    const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
     if (capacityReservation.referenceActivationDuration > 0)
     {

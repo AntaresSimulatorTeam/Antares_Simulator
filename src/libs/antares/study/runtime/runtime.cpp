@@ -310,7 +310,7 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
     auto loadReserveParticipations = [&](const Area* area, const CAPACITY_RESERVATION& reserve)
     {
         // Thermal clusters
-        for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
+        for (const auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
         {
             reserveParticipationIndexMaps.value().at(area->id).thermalClusters.insert(
               {{reserve.reserveName, reserveParticipation.clusterName},
@@ -318,7 +318,8 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         }
 
         // Short Term Storage
-        for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
+        for (const auto& [clusterId, reserveParticipation]:
+             reserve.AllSTStorageReservesParticipation)
         {
             reserveParticipationIndexMaps.value().at(area->id).STStorageClusters.insert(
               {{reserve.reserveName, reserveParticipation.clusterName},
@@ -326,7 +327,7 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         }
 
         // Hydro
-        for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
+        for (const auto& reserveParticipation: reserve.AllHydroReservesParticipation)
         {
             reserveParticipationIndexMaps.value().at(area->id).Hydro.insert(
               {reserve.reserveName, reserveParticipation.areaIndexClusterParticipation});

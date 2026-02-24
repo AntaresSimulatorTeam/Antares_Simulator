@@ -2,9 +2,8 @@
 
 void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserve, int pdt)
 {
-    int globalClusterIdx = data.hydroOfArea[pays].GlobalHydroIndex;
-    CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                  .areaCapacityReservations[reserve];
+    const int globalClusterIdx = data.hydroOfArea[pays].GlobalHydroIndex;
+    const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
     if (capacityReservation.referenceActivationDuration > 0)
     {

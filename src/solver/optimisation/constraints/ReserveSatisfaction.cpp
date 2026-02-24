@@ -2,8 +2,7 @@
 
 void ReserveSatisfaction::add(int pays, int reserve, int pdt)
 {
-    CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
-                                                  .areaCapacityReservations[reserve];
+    const auto& capacityReservation = data.areaReserves[pays].areaCapacityReservations[reserve];
 
     int nbTermes = capacityReservation.AllThermalReservesParticipation.size()
                    + capacityReservation.AllSTStorageReservesParticipation.size()
@@ -27,7 +26,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
         builder.updateHourWithinWeek(pdt);
 
         // Thermal clusters reserve participation
-        for (auto& [clusterId, reserveParticipation]:
+        for (const auto& [clusterId, reserveParticipation]:
              capacityReservation.AllThermalReservesParticipation)
         {
             builder.ThermalClusterReserveParticipation(
@@ -36,7 +35,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
         }
 
         // Short Term Storage clusters reserve participation
-        for (auto& [clusterId, reserveParticipation]:
+        for (const auto& [clusterId, reserveParticipation]:
              capacityReservation.AllSTStorageReservesParticipation)
         {
             builder.STStorageClusterReserveParticipation(
@@ -46,7 +45,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
         }
 
         // Hydro reserve participation
-        for (auto& reserveParticipation: capacityReservation.AllHydroReservesParticipation)
+        for (const auto& reserveParticipation: capacityReservation.AllHydroReservesParticipation)
         {
             builder.HydroReserveParticipation(capacityReservation.type,
                                               reserveParticipation.globalIndexClusterParticipation,
