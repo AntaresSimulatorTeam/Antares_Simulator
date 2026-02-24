@@ -328,7 +328,7 @@ struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
 struct NullWriterExtension final: Solver::NullResultWriter
 {
     // hack to read variables and constraints names
-    void addEntryFromBuffer([[maybe_unused]] const std::filesystem::path& entryPath,
+    void addEntryFromBuffer(const std::filesystem::path&,
                             std::string& mpsToWrite) override
     {
         mps = mpsToWrite;
@@ -397,7 +397,7 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 class EmptySimulationTable final: public ISimulationTable
 {
 public:
-    void addEntry([[maybe_unused]] const SimulationTableEntry& entry) override
+    void addEntry(const SimulationTableEntry&) override
     {
     }
 
