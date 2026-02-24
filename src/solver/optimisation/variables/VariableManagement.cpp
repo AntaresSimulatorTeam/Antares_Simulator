@@ -1,4 +1,4 @@
-#include "VariableManagement.h"
+#include "antares/solver/optimisation/variables/VariableManagement.h"
 
 using namespace VariableManagement;
 
@@ -11,6 +11,14 @@ VariableManager::VariableManager(
     NumeroDeVariableStockFinal_(NumeroDeVariableStockFinal),
     NumeroDeVariableDeTrancheDeStock_(NumeroDeVariableDeTrancheDeStock),
     NombreDePasDeTempsPourUneOptimisation_(NombreDePasDeTempsPourUneOptimisation)
+{
+}
+
+VariableManager::VariableManager(PROBLEME_HEBDO* problemHebdo):
+    CorrespondanceVarNativesVarOptim_(problemHebdo->CorrespondanceVarNativesVarOptim),
+    NumeroDeVariableStockFinal_(problemHebdo->NumeroDeVariableStockFinal),
+    NumeroDeVariableDeTrancheDeStock_(problemHebdo->NumeroDeVariableDeTrancheDeStock),
+    NombreDePasDeTempsPourUneOptimisation_(problemHebdo->NombreDePasDeTempsPourUneOptimisation)
 {
 }
 

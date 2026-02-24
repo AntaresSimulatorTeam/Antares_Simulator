@@ -108,11 +108,6 @@ void Cluster::invalidateArea()
     }
 }
 
-bool Cluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
-}
-
 void Cluster::reset()
 {
     unitCount = 0;

@@ -15,7 +15,6 @@
 #include <antares/study/study.h>
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
-#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/utils/utils.h"
 
 void Data::BindingConstraintsRepository::clear()
@@ -129,15 +128,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::Lo
     return loader.load(std::move(env));
 }
 
-#ifdef BUILD_UI
-bool BindingConstraintsRepository::saveToFolder(const AnyString& folder) const
-{
-    BindingConstraintSaver::EnvForSaving env;
-    env.folder = folder;
-    return internalSaveToFolder(env);
-}
-#endif
-
 bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString& newname)
 {
     // Copy of the name
@@ -249,50 +239,6 @@ void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
               constraint.setTimeGranularity(BindingConstraint::typeDaily);
           }
       });
-}
-
-bool BindingConstraintsRepository::internalSaveToFolder(
-  BindingConstraintSaver::EnvForSaving& env) const
-{
-    if (constraints_.empty())
-    {
-        logs.info() << "No binding constraint to export.";
-        if (!Yuni::IO::Directory::Create(env.folder))
-        {
-            return false;
-        }
-        // stripping the file
-        env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
-        return Yuni::IO::File::CreateEmptyFile(env.folder);
-    }
-
-    if (constraints_.size() == 1)
-    {
-        logs.info() << "Exporting 1 binding constraint...";
-    }
-    else
-    {
-        logs.info() << "Exporting " << constraints_.size() << " binding constraints...";
-    }
-
-    if (!Yuni::IO::Directory::Create(env.folder))
-    {
-        return false;
-    }
-
-    IniFile ini;
-    bool ret = true;
-    uint index = 0;
-    auto end = constraints_.end();
-
-    for (auto i = constraints_.begin(); i != end; ++i, ++index)
-    {
-        env.section = ini.addSection(std::to_string(index));
-        ret = Antares::Data::BindingConstraintSaver::saveToEnv(env, i->get()) && ret;
-    }
-
-    env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
-    return ini.save(env.folder) && ret;
 }
 
 void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)

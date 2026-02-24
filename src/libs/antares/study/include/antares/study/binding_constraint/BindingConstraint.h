@@ -31,7 +31,6 @@ struct CompareBindingConstraintName;
 class BindingConstraint final: public Yuni::NonCopyable<BindingConstraint>
 {
     friend class BindingConstraintLoader;
-    friend class BindingConstraintSaver;
 
 public:
     enum Type
@@ -183,10 +182,6 @@ public:
     // Ref to prevent copy. const ref to prevent modification.
     const Matrix<>& RHSTimeSeries() const;
     Matrix<>& RHSTimeSeries();
-
-    bool hasAllWeightedLinksOnLayer(size_t layerID);
-
-    bool hasAllWeightedClustersOnLayer(size_t layerID);
 
     //! \name Links
     //@{

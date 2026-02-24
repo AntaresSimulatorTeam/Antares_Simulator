@@ -80,16 +80,6 @@ public:
 
     bool validate(const std::string& areaID);
 
-#ifdef BUILD_UI
-    /*!
-    ** \brief Save hydro settings for the prepro into a folder
-    **
-    ** \param folder The target folder (ex: `input/hydro/prepro`)
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    bool saveToFolder(const AreaName& areaID, const char* folder);
-#endif
-
     bool forceReload(bool reload = false) const;
 
     void markAsModified() const;

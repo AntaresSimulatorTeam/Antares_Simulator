@@ -96,11 +96,4 @@ public:
     {
         basisStatus.clear();
     }
-
-    bool isMIP() const
-    {
-        return std::any_of(VariablesEntieres.cbegin(),
-                           VariablesEntieres.cend(),
-                           [](bool x) { return x; });
-    }
 };

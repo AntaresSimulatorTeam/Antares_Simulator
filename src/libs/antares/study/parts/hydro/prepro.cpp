@@ -21,16 +21,6 @@ namespace fs = std::filesystem;
 namespace Antares::Data
 {
 
-#ifdef BUILD_UI
-static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
-{
-    IniFile ini;
-    auto* s = ini.addSection("prepro");
-    s->add("intermonthly-correlation", h->intermonthlyCorrelation);
-    return ini.save(filename);
-}
-#endif
-
 static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 {
     IniFile ini;
@@ -96,36 +86,6 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
     data = rhs.data;
     rhs.data.unloadFromMemory();
 }
-
-#ifdef BUILD_UI
-bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
-{
-    assert(folder);
-    assert('\0' != *folder);
-
-    Clob buffer;
-    // Make sure the folder is created
-    buffer.clear() << folder << SEP << areaID;
-    if (IO::Directory::Create(buffer))
-    {
-        // Writing the ini file
-        buffer.clear() << folder << SEP << areaID << SEP << "prepro.ini";
-        bool ret = (PreproHydroSaveSettings(this, buffer.c_str()) ? true : false);
-
-        buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-        if (data.jit)
-        {
-            assert(0 != (data.jit->options & Matrix<>::optFixedSize));
-            assert(data.jit->minWidth == hydroPreproMax);
-        }
-
-        ret = data.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-
-        return ret;
-    }
-    return false;
-}
-#endif
 
 bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
 {

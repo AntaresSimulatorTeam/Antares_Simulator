@@ -23,7 +23,6 @@
 #include "binding_constraint/BindingConstraint.h"
 #include "fwd.h"
 #include "header.h"
-#include "layerdata.h"
 #include "parameters.h"
 #include "progression/progression.h"
 #include "sets.h"
@@ -35,9 +34,7 @@ namespace Antares::Data
 ** \brief Antares Study
 */
 
-class UIRuntimeInfo;
-
-class Study: public Yuni::NonCopyable<Study>, public LayerData
+class Study: public Yuni::NonCopyable<Study>
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -197,74 +194,8 @@ public:
     ** \param name The name of the new area
     ** \return A pointer to a new area, or NULL if the operation failed
     */
-    // TODO no need for the 2nd argument, remove it after the GUI has been removed, keeping the
     // default value
-    Area* areaAdd(const AreaName& name, bool update = false);
-
-#ifdef BUILD_UI
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param area The area. The pointer will no longer be valid after the call to this routine
-    ** \return True if the operation succeeded, false otherwise
-    ** \see BeautifyName()
-    */
-    bool areaRename(Area* area, AreaName newName);
-
-    /*!
-    ** \brief Delete an area _and_ all its dependancies
-    **
-    ** It is the safe way to delete an area and it is mainly used by the GUI
-    ** \param area The area. The pointer will no longer be valid after the call to this routine
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool areaDelete(Area* area);
-
-    /*!
-    ** \brief Delete an area and all its dependencies
-    **
-    ** It is the safe way to delete an area and it is mainly used by the GUI
-    **
-    ** \param s The study
-    ** \param area The area. The pointer will no longer be valid after the call to this routine
-    ** \return True if the operation succeeded, false otherwise
-    */
-    void areaDelete(Area::Vector& area);
-    //@}
-
-    //! \name Links
-    //@{
-    /*!
-    ** \brief Delete a connection _and_ all its dependencies
-    **
-    ** It is the safe way to delete a link and it is mainly used by the GUI
-    **
-    ** \param lnk The link. The pointer will no longer be valid after the call to this routine
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool linkDelete(AreaLink* lnk);
-    //@}
-
-    //! \name Renewable/thermal clusters
-    //@{
-    /*!
-    ** \brief Rename a renewable/thermal cluster
-    **
-    ** \param cluster The cluster
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool clusterRename(Cluster* cluster, std::string newName);
-    //@}
-
-    //! \name Read-only
-    //@{
-    /*!
-    ** \brief Get if the study is in readonly mode
-    */
-    bool readonly() const;
-
-    //@}
-#endif
+    Area* areaAdd(const AreaName& name);
 
     //! \name Time-series
     //@{
@@ -550,13 +481,6 @@ public:
     ** These informations are only needed when a study is processed.
     */
     StudyRuntimeInfos runtime;
-
-    // Antares::Solver::Variable::State* state;
-
-    /*!
-    ** \brief Specific data related to the User Interface
-    */
-    UIRuntimeInfo* uiinfo = nullptr;
 
     /*!
     ** \brief The file extension for file within the input ('txt' or 'csv')

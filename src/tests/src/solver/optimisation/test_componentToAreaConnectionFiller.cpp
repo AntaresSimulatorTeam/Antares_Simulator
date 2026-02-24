@@ -37,7 +37,9 @@ library:
         - id: some_field
         - id: connected_field
       area-connection:
-        - injection-field: connected_field
+        injection-to-balance: connected_field
+        spillage-bound: 
+        unsupplied-energy-bound: 
 
   models:
     - id: model_with_vars

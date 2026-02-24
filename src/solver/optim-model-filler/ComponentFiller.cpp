@@ -11,19 +11,6 @@
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 
-namespace
-{
-template<typename T>
-std::optional<T> buildOptional(bool condition, T value)
-{
-    if (condition)
-    {
-        return value;
-    }
-    return {};
-}
-} // namespace
-
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
@@ -46,16 +33,33 @@ private:
 void VariableNames::makeNames(const Component& compo, const Variable& var, const Dimensions& dims)
 {
     unsigned index = 0;
-    names_.resize(dims.getScenarioIndices().size() * dims.getTimesteps().size());
-    for (const auto& s: dims.getScenarioIndices())
+    const auto& scenarioIndices = dims.getScenarioIndices();
+    const auto& timesteps = dims.getTimesteps();
+
+    names_.resize(scenarioIndices.size() * timesteps.size());
+
+    std::string baseVarName = fmt::format("{}.{}", compo.Id(), var.Id());
+    std::string scenarizedVarName;
+    std::string tsVarName;
+
+    for (const auto& s: scenarioIndices)
     {
-        for (const auto t: dims.getTimesteps())
+        scenarizedVarName = baseVarName;
+        if (dims.isScenarioDependent())
         {
-            auto year = buildOptional(dims.isScenarioDependent(),
-                                      static_cast<Optimization::MCYearAndTime::MCYear>(s));
-            const auto ts = buildOptional(dims.isTimeDependent(), t);
-            std::string name = buildVariableName(compo.Id(), var.Id(), year, ts);
-            names_[index] = name;
+            auto year = static_cast<Optimization::MCYearAndTime::MCYear>(s);
+            scenarizedVarName += "_s" + std::to_string(format_as(year));
+        }
+
+        for (const auto t: timesteps)
+        {
+            tsVarName = scenarizedVarName;
+            if (dims.isTimeDependent())
+            {
+                tsVarName += "_t" + std::to_string(t);
+            }
+
+            names_[index] = tsVarName;
             index++;
         }
     }

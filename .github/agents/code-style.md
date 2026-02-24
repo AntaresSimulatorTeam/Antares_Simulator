@@ -19,10 +19,10 @@ clang-format -i -style=file:../.clang-format file.cpp file.hpp
 - **Brace style:** Allman (braces on new lines)
 - **Braces:** ALWAYS required for if/for/while/switch (even single-line)
 - **Spacing:**
-  - Space after keywords: `if (condition)`, `for (int i = 0; ...)`
-  - Space after semicolon in for loops
-  - Spaces between binary operators: `x = y * y + z * z`
-  - No spaces in parentheses, square brackets, or angles
+    - Space after keywords: `if (condition)`, `for (int i = 0; ...)`
+    - Space after semicolon in for loops
+    - Spaces between binary operators: `x = y * y + z * z`
+    - No spaces in parentheses, square brackets, or angles
 - **Pointers/References:** Left-aligned: `const string& s`, `int* ptr`
 - **Header guards:** `#pragma once`
 - **Constants:** Mark as `constexpr` when possible

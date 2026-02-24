@@ -45,48 +45,6 @@ bool stopSimulation(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
     }
 }
 
-#ifdef BUILD_UI
-const char* getIcon(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
-{
-    switch (unfeasibleProblemBehavior)
-    {
-    case UnfeasibleProblemBehavior::WARNING_DRY:
-        return "images/16x16/light_green.png";
-    case UnfeasibleProblemBehavior::WARNING_MPS:
-        return "images/16x16/light_green.png";
-    case UnfeasibleProblemBehavior::ERROR_DRY:
-        return "images/16x16/light_orange.png";
-    case UnfeasibleProblemBehavior::ERROR_MPS:
-        return "images/16x16/light_orange.png";
-    default:
-        throw std::runtime_error(
-          "Invalid UnfeasibleProblemBehavior "
-          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
-        return "";
-    }
-}
-
-std::string getDisplayName(const UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
-{
-    switch (unfeasibleProblemBehavior)
-    {
-    case UnfeasibleProblemBehavior::WARNING_DRY:
-        return "Warning Dry";
-    case UnfeasibleProblemBehavior::WARNING_MPS:
-        return "Warning Verbose";
-    case UnfeasibleProblemBehavior::ERROR_DRY:
-        return "Error Dry";
-    case UnfeasibleProblemBehavior::ERROR_MPS:
-        return "Error Verbose";
-    default:
-        throw std::runtime_error(
-          "Invalid UnfeasibleProblemBehavior "
-          + std::to_string(static_cast<unsigned long>(unfeasibleProblemBehavior)));
-        return "";
-    }
-}
-#endif
-
 namespace Enum
 {
 template<>
