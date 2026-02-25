@@ -22,10 +22,24 @@
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/study/area/reservesList.h>
-#include "antares/study/area/area.h"
 
 namespace Antares::Data
 {
+
+void errorIfNegativeValue(const std::string& propertyName,
+                          double value,
+                          const std::string& areaName,
+                          const std::optional<std::string>& clusterName,
+                          const std::optional<std::string>& reserveName)
+{
+    if (value < 0)
+    {
+        logs.error() << areaName << " : invalid " << propertyName << " can not be negative"
+                     << (clusterName.has_value() ? ", for cluster " + clusterName.value() : "")
+                     << (reserveName.has_value() ? ", for reserve " + reserveName.value() : "");
+    }
+}
+
 namespace // anonymous
 {
 

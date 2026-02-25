@@ -37,19 +37,11 @@ using ReserveName = std::string;
 namespace Antares::Data
 {
 
-void static errorIfNegativeValue(const std::string& propertyName,
-                                 double value,
-                                 const std::string& areaName,
-                                 const std::optional<std::string>& clusterName = std::nullopt,
-                                 const std::optional<std::string>& reserveName = std::nullopt)
-{
-    if (value < 0)
-    {
-        logs.error() << areaName << " : invalid " << propertyName << " can not be negative"
-                     << (clusterName.has_value() ? ", for cluster " + clusterName.value() : "")
-                     << (reserveName.has_value() ? ", for reserve " + reserveName.value() : "");
-    }
-}
+void errorIfNegativeValue(const std::string& propertyName,
+                          double value,
+                          const std::string& areaName,
+                          const std::optional<std::string>& clusterName = std::nullopt,
+                          const std::optional<std::string>& reserveName = std::nullopt);
 
 /// @brief Represents an area capacity reservation using it's name, it's failure cost and it's
 /// spillage cost

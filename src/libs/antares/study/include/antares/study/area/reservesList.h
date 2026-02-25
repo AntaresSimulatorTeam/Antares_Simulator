@@ -20,6 +20,10 @@
  */
 #pragma once
 
+#include "antares/study/area/area.h"
+
+namespace fs = std::filesystem;
+
 namespace Antares::Data
 {
 bool loadReservesParameters(fs::path& folderInput, Area& area);
