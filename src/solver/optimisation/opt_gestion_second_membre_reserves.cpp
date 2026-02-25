@@ -168,7 +168,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
 
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = cluster.series.get()->maxWithdrawalModulation[pdtGlobal]
+                SecondMembre[cnt] = cluster.series->maxWithdrawalModulation[pdtGlobal]
                                     * cluster.withdrawalNominalCapacity;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
@@ -177,7 +177,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     .STStorageClusterReleaseCapacityThresholdsMin[cluster.clusterGlobalIndex];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = cluster.series.get()->lowerRuleCurve[pdtGlobal]
+                SecondMembre[cnt] = cluster.series->lowerRuleCurve[pdtGlobal]
                                     * cluster.withdrawalNominalCapacity;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
@@ -186,7 +186,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     .STStorageClusterStoreCapacityThresholds[cluster.clusterGlobalIndex];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = cluster.series.get()->maxInjectionModulation[pdtGlobal]
+                SecondMembre[cnt] = cluster.series->maxInjectionModulation[pdtGlobal]
                                     * cluster.injectionNominalCapacity;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
