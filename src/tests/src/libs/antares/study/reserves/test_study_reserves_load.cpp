@@ -31,7 +31,7 @@
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/solver/simulation/simulation.h>
 #include <antares/study/area/capacityReservation.h>
-#include "antares/study/area/forTestsOnlyList.h"
+#include "antares/study/area/reservesList.h"
 #include "antares/study/study.h"
 
 using Antares::UnitTests::CaptureAntaresLogs;
@@ -1147,7 +1147,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
     file << "[ReserveUp]\n";
     file.close();
     BOOST_CHECK_EXCEPTION(
-      accessForTests::loadReservesParameters(studyPath, *areaA),
+      loadReservesParameters(studyPath, *areaA),
       std::runtime_error,
       checkMessage("Could not open " + (studyPath / "reserves" / "a" / "ReserveUp.txt").string()));
 }
@@ -1164,7 +1164,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
     fileNeeds << "\n";
     fileNeeds.close();
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), false);
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(areaA->allCapacityReservations.has_value(), true);
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1215,7 +1215,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_ini, OneProblemWithoutReservesOneAr
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "ReserveUp.txt");
     fileNeeds << "\n";
     fileNeeds.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    loadReservesParameters(studyPath, *areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 2);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1239,7 +1239,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters, OneProblemWithoutReserv
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "ReserveUp.txt");
     fileNeeds << "\n";
     fileNeeds.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    loadReservesParameters(studyPath, *areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 2);
@@ -1280,7 +1280,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok, OneProblemWithoutReservesOneAreaWit
     fileNeedsDown << "5\n";
     fileNeedsDown << "6\n";
     fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    loadReservesParameters(studyPath, *areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1359,7 +1359,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_negative_parameters_values,
 
     std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "ReserveDown.txt");
     fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(getErrors().size(), 7);
     BOOST_CHECK(
       getErrors().contains("A : invalid maxGlobalEnergyActivationRatio down can not be negative"));
@@ -1403,7 +1403,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters_values,
 
     std::ofstream fileNeedsDown(studyPath / "reserves" / "a" / "ReserveDown.txt");
     fileNeedsDown.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 10);
     BOOST_CHECK(getWarnings().contains("A : invalid type for reserve ReserveUp"));
@@ -1439,7 +1439,7 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_duplicated, OneProblemWithoutReservesOn
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "ReserveUp.txt");
     fileNeedsUp.close();
-    accessForTests::loadReservesParameters(studyPath, *areaA);
+    loadReservesParameters(studyPath, *areaA);
     BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK(getErrors().contains("A : reserve name already exists for reserve ReserveUp"));
@@ -1463,7 +1463,7 @@ BOOST_FIXTURE_TEST_CASE(test_negative_value, CaptureAntaresLogs)
 BOOST_FIXTURE_TEST_CASE(test_validateCapacityReservations_noNegative,
                         OneProblemWithReservesOneAreaWithLogger)
 {
-    accessForTests::validateCapacityReservations(*areaA);
+    AccessForTests::validateCapacityReservations(*areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
@@ -1476,7 +1476,7 @@ BOOST_FIXTURE_TEST_CASE(test_validateCapacityReservations_OneNegative,
       .areaCapacityReservations.at("ReserveUp")
       .powerActivationRatio
       = -1;
-    accessForTests::validateCapacityReservations(*areaA);
+    AccessForTests::validateCapacityReservations(*areaA);
 
     BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);

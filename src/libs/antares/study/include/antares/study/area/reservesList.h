@@ -22,10 +22,10 @@
 
 namespace Antares::Data
 {
-namespace accessForTests // anonymous
-{
 bool loadReservesParameters(fs::path& folderInput, Area& area);
 
+namespace AccessForTests
+{
 void validateCapacityReservations(const Area& area);
-} // namespace accessForTests
+} // namespace AccessForTests
 } // namespace Antares::Data
