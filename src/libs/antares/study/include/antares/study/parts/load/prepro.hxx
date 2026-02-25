@@ -7,11 +7,6 @@
 namespace Antares::Data::Load
 {
 
-inline void Prepro::markAsModified() const
-{
-    xcast.markAsModified();
-}
-
 inline void Prepro::resetToDefault()
 {
     xcast.resetToDefaultValues();

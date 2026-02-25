@@ -7,11 +7,6 @@
 namespace Antares::Data::Solar
 {
 
-inline void Prepro::markAsModified() const
-{
-    xcast.markAsModified();
-}
-
 inline void Prepro::resetToDefault()
 {
     xcast.resetToDefaultValues();

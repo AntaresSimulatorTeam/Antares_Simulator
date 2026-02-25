@@ -201,15 +201,6 @@ bool ClusterList<ClusterT>::rename(std::string idToFind, std::string newName)
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::markAsModified() const
-{
-    for (const auto& c: allClusters_)
-    {
-        c->markAsModified();
-    }
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const std::string& id)
 {
     auto nbDeletion = std::erase_if(allClusters_,

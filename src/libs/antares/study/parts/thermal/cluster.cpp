@@ -175,17 +175,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     series.timeseriesNumbers.clear();
 }
 
-void Data::ThermalCluster::markAsModified() const
-{
-    modulation.markAsModified();
-    series.markAsModified();
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
-    ecoInput.markAsModified();
-}
-
 void Data::ThermalCluster::calculationOfSpinning()
 {
     // nominal capacity (for solver)

@@ -423,11 +423,6 @@ void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
       });
 }
 
-void AreaList::markAsModified() const
-{
-    each([](const Data::Area& area) { area.markAsModified(); });
-}
-
 static void readAdqPatchMode(Study& study, Area& area)
 {
     if (study.header.version < StudyVersion(8, 3))

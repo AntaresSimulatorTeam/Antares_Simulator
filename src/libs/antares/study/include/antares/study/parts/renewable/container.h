@@ -37,11 +37,6 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    /*!
-    ** \brief Mark the renewable cluster as modified
-    */
-    void markAsModified() const;
-
 public:
     //! List of all renewable clusters (enabled and disabled)
     RenewableClusterList list;

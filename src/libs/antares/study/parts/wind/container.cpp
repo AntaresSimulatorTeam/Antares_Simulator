@@ -16,15 +16,6 @@ Container::Container():
 {
 }
 
-void Container::markAsModified() const
-{
-    series.markAsModified();
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
-}
-
 void Container::resetToDefault()
 {
     series.reset();

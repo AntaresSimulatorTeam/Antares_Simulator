@@ -165,11 +165,6 @@ public:
     */
     Area* areaAdd(const AreaName& name);
 
-    /*!
-    ** \brief Mark the whole study as modified
-    */
-    void markAsModified() const;
-
     //! \name Time-series
     //@{
     /*!

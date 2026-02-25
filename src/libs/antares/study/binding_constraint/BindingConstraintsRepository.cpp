@@ -318,14 +318,6 @@ BindingConstraintsRepository::const_iterator BindingConstraintsRepository::end()
     return constraints_.end();
 }
 
-void BindingConstraintsRepository::markAsModified() const
-{
-    for (const auto& i: constraints_)
-    {
-        i->markAsModified();
-    }
-}
-
 std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeConstraints()
   const
 {

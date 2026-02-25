@@ -132,11 +132,6 @@ public:
     */
     void changeConstraintsWeeklyToDaily();
 
-    /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
-
     static Vector LoadBindingConstraint(EnvForLoading env);
 
     [[nodiscard]] Vector activeConstraints() const;

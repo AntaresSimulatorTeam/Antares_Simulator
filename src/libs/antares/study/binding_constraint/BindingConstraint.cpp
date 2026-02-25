@@ -217,7 +217,6 @@ void BindingConstraint::resetToDefaultValues()
     pEnabled = true;
     pComments.clear();
     RHSTimeSeries_.reset();
-    markAsModified();
 }
 
 void BindingConstraint::copyWeights(
@@ -584,11 +583,6 @@ const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights
     return pClusterWeights;
 }
 
-void BindingConstraint::markAsModified() const
-{
-    RHSTimeSeries().markAsModified();
-}
-
 void BindingConstraint::clearAndReset(const AnyString& name,
                                       BindingConstraint::Type newType,
                                       BindingConstraint::Operator op)
@@ -641,7 +635,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
         break;
     }
     }
-    RHSTimeSeries_.markAsModified();
 }
 
 std::string BindingConstraint::group() const
@@ -652,7 +645,6 @@ std::string BindingConstraint::group() const
 void BindingConstraint::group(std::string group_name)
 {
     group_ = std::move(group_name);
-    markAsModified();
 }
 
 const Matrix<>& BindingConstraint::RHSTimeSeries() const

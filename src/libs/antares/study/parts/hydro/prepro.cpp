@@ -187,9 +187,4 @@ bool PreproHydro::validate(const std::string& areaID)
     return ret;
 }
 
-void PreproHydro::markAsModified() const
-{
-    return data.markAsModified();
-}
-
 } // namespace Antares::Data

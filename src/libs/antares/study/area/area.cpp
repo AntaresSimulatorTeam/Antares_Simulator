@@ -237,36 +237,6 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
     return noErrorMinStabPow;
 }
 
-void Area::markAsModified() const
-{
-    // Misc Gen
-    miscGen.markAsModified();
-    // Reserves
-    reserves.markAsModified();
-
-    // Load
-    load.markAsModified();
-    // Solar
-    solar.markAsModified();
-    // Hydro
-    hydro.markAsModified();
-    // Wind
-    wind.markAsModified();
-    // Thermal
-    thermal.markAsModified();
-    // Renewable
-    renewable.markAsModified();
-
-    if (not links.empty())
-    {
-        auto end = links.end();
-        for (auto i = links.begin(); i != end; ++i)
-        {
-            (i->second)->markAsModified();
-        }
-    }
-}
-
 void Area::detachLinkFromID(const AreaName& id)
 {
     auto i = links.find(id);

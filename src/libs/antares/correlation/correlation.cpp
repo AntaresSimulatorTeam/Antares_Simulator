@@ -407,18 +407,6 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
     m[to.index][from.index] = v;
 }
 
-void Correlation::markAsModified() const
-{
-    if (!annual.empty())
-    {
-        annual.markAsModified();
-    }
-    for (uint i = 0; i != 12; ++i)
-    {
-        monthly[i].markAsModified();
-    }
-}
-
 static inline uint FindMappedAreaName(const AreaName& name,
                                       const Study& study,
                                       const Area::NameMapping& mapping)

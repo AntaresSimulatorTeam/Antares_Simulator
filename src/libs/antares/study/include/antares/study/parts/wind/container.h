@@ -28,11 +28,6 @@ public:
     */
     void resetToDefault();
 
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
-
     //! Data for the pre-processor
     std::unique_ptr<Data::Wind::Prepro> prepro;
 

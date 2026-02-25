@@ -107,15 +107,6 @@ void DataSeriesHydro::resizeTS(uint nbSeries)
     ror.reset(nbSeries, HOURS_PER_YEAR);
 }
 
-void DataSeriesHydro::markAsModified() const
-{
-    ror.markAsModified();
-    storage.markAsModified();
-    mingen.markAsModified();
-    maxHourlyGenPower.markAsModified();
-    maxHourlyPumpPower.markAsModified();
-}
-
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
                                        const fs::path& folder,
                                        StudyVersion studyVersion)

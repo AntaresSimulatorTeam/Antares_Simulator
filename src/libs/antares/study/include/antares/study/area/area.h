@@ -140,11 +140,6 @@ public:
     ** The flag `invalidateJIT` will be reset to false.
     */
 
-    /*!
-    ** \brief Mark all areas as modified
-    */
-    void markAsModified() const;
-
     //! \name Thermal clusters min stable power validity checking
     //@{
     /*!
@@ -454,11 +449,6 @@ public:
 
     //! Get if the container is empty
     bool empty() const;
-
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
 
     /*!
     ** \brief Rebuild the indexes for accessing areas

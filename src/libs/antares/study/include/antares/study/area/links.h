@@ -84,12 +84,6 @@ public:
 
     void resetToDefaultValues();
 
-    /*!
-    ** \brief Mark the data associated to the link as modified
-    */
-    void markAsModified() const;
-    //@}
-
     Yuni::String getName() const;
 
     bool isLinkPhysical() const;

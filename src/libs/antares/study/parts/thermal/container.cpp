@@ -23,11 +23,6 @@ PartThermal::PartThermal():
 {
 }
 
-void PartThermal::markAsModified() const
-{
-    list.markAsModified();
-}
-
 void PartThermal::reset()
 {
     unsuppliedEnergyCost = 0.;

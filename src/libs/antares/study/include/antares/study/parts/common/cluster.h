@@ -51,11 +51,6 @@ public:
     virtual bool integrityCheck() = 0;
 
     /*!
-    ** \brief Invalidate all data associated to the cluster
-    */
-    virtual void markAsModified() const = 0;
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI

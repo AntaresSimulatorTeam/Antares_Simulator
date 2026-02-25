@@ -39,11 +39,6 @@ public:
     bool saveToFolder(const AnyString& folder) const;
 
     /*!
-    ** \brief Mark the load data as modified
-    */
-    void markAsModified() const;
-
-    /*!
     ** \brief Reset to default all values
     */
     void resetToDefault();

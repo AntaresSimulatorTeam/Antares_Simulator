@@ -309,11 +309,6 @@ public:
     //@}
 
     /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
-
-    /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
     **
     ** This method is used when reverting an interconnection or thermal cluster

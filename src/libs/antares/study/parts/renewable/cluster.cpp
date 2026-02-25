@@ -45,11 +45,6 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     series.timeseriesNumbers.clear();
 }
 
-void Data::RenewableCluster::markAsModified() const
-{
-    series.markAsModified();
-}
-
 void Data::RenewableCluster::reset()
 {
     Cluster::reset();

@@ -39,8 +39,6 @@ public:
     */
     bool saveToFolder(const AnyString& folder) const;
 
-    void markAsModified() const;
-
     /*!
     ** \brief Reset to default all values
     */

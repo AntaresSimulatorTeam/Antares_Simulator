@@ -97,11 +97,6 @@ public:
 
     //@}
 
-    /*!
-    ** \brief Mark the clusters as modified
-    */
-    void markAsModified() const;
-
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);

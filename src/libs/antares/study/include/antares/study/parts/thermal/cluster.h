@@ -73,11 +73,6 @@ public:
     ~ThermalCluster() = default;
 
     /*!
-    ** \brief Mark the thermal cluster as modified
-    */
-    void markAsModified() const override;
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI

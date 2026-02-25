@@ -60,8 +60,6 @@ public:
         optQuiet = 2,
         //! Do not postpone the loading
         optImmediate = 4,
-        //! mark the matrix as modified after loading
-        optMarkAsModified = 8,
         //! Do not warn if the file is empty
         optNoWarnIfEmpty = 16,
         //! The loading never fails
@@ -375,13 +373,6 @@ public:
     ** structure and when the matrix is not modified
     */
     void unloadFromMemory() const;
-
-    /*!
-    ** \brief Mark the matrix as modified
-    **
-    ** This routine has no effect when the UI is not present
-    */
-    void markAsModified() const;
 
     /*!
     ** \brief Get if the matrix is empty

@@ -122,7 +122,6 @@ void Study::createAsNew()
 
     // Sets
     setsOfAreas.defaultForAreas();
-    setsOfAreas.markAsModified();
 
     // Binding constraints
     bindingConstraints.clear();
@@ -557,20 +556,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     // Needed by the progression meter thread to retrieve properly
     // messages from all MC years
     progression.setNumberOfParallelYears(maxNbYearsInParallel);
-}
-
-void Study::markAsModified() const
-{
-    areas.markAsModified();
-
-    preproLoadCorrelation.markAsModified();
-    preproSolarCorrelation.markAsModified();
-    preproWindCorrelation.markAsModified();
-    preproHydroCorrelation.markAsModified();
-
-    bindingConstraints.markAsModified();
-
-    setsOfAreas.markAsModified();
 }
 
 void Study::relocate(const fs::path& newFolder)

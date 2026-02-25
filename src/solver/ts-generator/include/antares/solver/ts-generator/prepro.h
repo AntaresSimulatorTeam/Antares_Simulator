@@ -43,8 +43,6 @@ public:
     explicit PreproAvailability(const YString& id, unsigned int unitCount);
     //@}
 
-    void markAsModified() const;
-
     /*!
     ** \brief Reset all values to their default ones
     */

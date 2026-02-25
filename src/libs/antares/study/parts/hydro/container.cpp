@@ -625,25 +625,6 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
     return ini.save(buffer) && ret;
 }
 
-void PartHydro::markAsModified() const
-{
-    inflowPattern.markAsModified();
-    reservoirLevel.markAsModified();
-    waterValues.markAsModified();
-    creditModulation.markAsModified();
-    dailyNbHoursAtGenPmax.markAsModified();
-    dailyNbHoursAtPumpPmax.markAsModified();
-
-    if (series)
-    {
-        series->markAsModified();
-    }
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
-}
-
 void PartHydro::copyFrom(const PartHydro& rhs)
 {
     // credit modulations

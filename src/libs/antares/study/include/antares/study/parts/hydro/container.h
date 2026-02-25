@@ -130,11 +130,6 @@ public:
     void copyFrom(const PartHydro& rhs);
 
     /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
-
-    /*!
     ** \brief Load daily max energy
     */
     bool LoadDailyMaxEnergy(const std::filesystem::path& folder, const std::string& areaid);

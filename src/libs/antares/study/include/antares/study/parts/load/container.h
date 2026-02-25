@@ -31,11 +31,6 @@ public:
     */
     void resetToDefault();
 
-    /*!
-    ** \brief Mark the load data as modified
-    */
-    void markAsModified() const;
-
     //! Data for the pre-processor
     std::unique_ptr<Data::Load::Prepro> prepro;
 

@@ -136,11 +136,6 @@ public:
     */
     void clear();
 
-    void markAsModified() const
-    {
-        pModified = true;
-    }
-
     uint size() const;
 
     /*!

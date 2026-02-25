@@ -80,8 +80,6 @@ public:
 
     bool validate(const std::string& areaID);
 
-    void markAsModified() const;
-
 public:
     //! The intermonthly correlation value
     double intermonthlyCorrelation;

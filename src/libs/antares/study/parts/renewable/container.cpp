@@ -17,11 +17,6 @@ PartRenewable::PartRenewable()
 {
 }
 
-void PartRenewable::markAsModified() const
-{
-    list.markAsModified();
-}
-
 PartRenewable::~PartRenewable()
 {
 }

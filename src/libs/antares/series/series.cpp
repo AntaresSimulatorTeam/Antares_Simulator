@@ -186,9 +186,4 @@ void TimeSeries::unloadFromMemory() const
     timeSeries.unloadFromMemory();
 }
 
-void TimeSeries::markAsModified() const
-{
-    timeSeries.markAsModified();
-}
-
 } // namespace Antares::Data

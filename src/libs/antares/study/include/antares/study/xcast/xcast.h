@@ -132,10 +132,6 @@ public:
 
     //! \name Memory management
     //@{
-    /*!
-    ** \brief Mark the load data as modified
-    */
-    void markAsModified() const;
 
 public:
     /*!

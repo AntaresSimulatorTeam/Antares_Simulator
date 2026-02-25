@@ -242,9 +242,6 @@ void AreaLink::reverse()
 
     // invert NTC values
     directCapacities.timeSeries.swap(indirectCapacities.timeSeries);
-
-    directCapacities.markAsModified();
-    indirectCapacities.markAsModified();
 }
 
 AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
@@ -674,13 +671,6 @@ void AreaLinkRemove(AreaLink* link)
     }
 
     delete link;
-}
-
-void AreaLink::markAsModified() const
-{
-    parameters.markAsModified();
-    directCapacities.markAsModified();
-    indirectCapacities.markAsModified();
 }
 
 String AreaLink::getName() const
