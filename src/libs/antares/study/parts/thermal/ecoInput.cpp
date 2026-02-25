@@ -88,11 +88,6 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
     return ret;
 }
 
-bool EconomicInputData::forceReload(bool reload) const
-{
-    return fuelcost.forceReload(reload) && co2cost.forceReload(reload);
-}
-
 void EconomicInputData::markAsModified() const
 {
     fuelcost.markAsModified();

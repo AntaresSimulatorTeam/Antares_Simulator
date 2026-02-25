@@ -138,11 +138,7 @@ public:
     ** However, we would like to be able to force the load of all data, especially
     ** when saving a study.
     ** The flag `invalidateJIT` will be reset to false.
-    **
-    ** \param reload True to force the reload of data
-    ** \return True if the operation succeeded
     */
-    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all areas as modified
@@ -458,14 +454,6 @@ public:
 
     //! Get if the container is empty
     bool empty() const;
-
-    /*!
-    ** \brief Invalidate all areas
-    **
-    ** \param reload True to reload data in the same time
-    ** \return True if the operation succeeded
-    */
-    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all data as modified

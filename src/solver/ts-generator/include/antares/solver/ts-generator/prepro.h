@@ -43,8 +43,6 @@ public:
     explicit PreproAvailability(const YString& id, unsigned int unitCount);
     //@}
 
-    bool forceReload(bool reload) const;
-
     void markAsModified() const;
 
     /*!

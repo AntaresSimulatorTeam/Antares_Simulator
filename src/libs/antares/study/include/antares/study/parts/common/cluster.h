@@ -53,16 +53,6 @@ public:
     /*!
     ** \brief Invalidate all data associated to the cluster
     */
-    virtual bool forceReload(bool reload) const = 0;
-
-    /*!
-    ** \brief Invalidate the whole attached area
-    */
-    void invalidateArea();
-
-    /*!
-    ** \brief Mark the cluster as modified
-    */
     virtual void markAsModified() const = 0;
 
     /*!

@@ -407,21 +407,6 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
     m[to.index][from.index] = v;
 }
 
-bool Correlation::forceReload(bool reload) const
-{
-    bool ret = true;
-    if (!annual.empty())
-    {
-        ret = annual.forceReload(reload) and ret;
-    }
-    for (uint i = 0; i != 12; ++i)
-    {
-        ret = monthly[i].forceReload(reload) and ret;
-    }
-
-    return ret;
-}
-
 void Correlation::markAsModified() const
 {
     if (!annual.empty())

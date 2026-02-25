@@ -98,11 +98,6 @@ public:
     //@}
 
     /*!
-    ** \brief Invalidate all clusters
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
     ** \brief Mark the clusters as modified
     */
     void markAsModified() const;

@@ -107,17 +107,6 @@ void DataSeriesHydro::resizeTS(uint nbSeries)
     ror.reset(nbSeries, HOURS_PER_YEAR);
 }
 
-bool DataSeriesHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = ror.forceReload(reload) && ret;
-    ret = storage.forceReload(reload) && ret;
-    ret = mingen.forceReload(reload) && ret;
-    ret = maxHourlyGenPower.forceReload(reload) && ret;
-    ret = maxHourlyPumpPower.forceReload(reload) && ret;
-    return ret;
-}
-
 void DataSeriesHydro::markAsModified() const
 {
     ror.markAsModified();

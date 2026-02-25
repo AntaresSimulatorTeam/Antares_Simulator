@@ -120,11 +120,6 @@ bool PreproAvailability::validate() const
     return errors == 0;
 }
 
-bool PreproAvailability::forceReload(bool reload) const
-{
-    return data.forceReload(reload);
-}
-
 void PreproAvailability::markAsModified() const
 {
     data.markAsModified();

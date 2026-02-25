@@ -584,11 +584,6 @@ const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights
     return pClusterWeights;
 }
 
-bool BindingConstraint::forceReload(bool reload) const
-{
-    return RHSTimeSeries().forceReload(reload);
-}
-
 void BindingConstraint::markAsModified() const
 {
     RHSTimeSeries().markAsModified();

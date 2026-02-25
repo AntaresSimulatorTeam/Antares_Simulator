@@ -559,24 +559,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     progression.setNumberOfParallelYears(maxNbYearsInParallel);
 }
 
-bool Study::forceReload(bool reload) const
-{
-    bool ret = true;
-
-    // Invalidate all areas
-    ret = areas.forceReload(reload) and ret;
-    // Binding constraints
-    bindingConstraints.forceReload(reload);
-
-    ret = preproLoadCorrelation.forceReload(reload) and ret;
-    ret = preproSolarCorrelation.forceReload(reload) and ret;
-    ret = preproWindCorrelation.forceReload(reload) and ret;
-    ret = preproHydroCorrelation.forceReload(reload) and ret;
-
-    ret = setsOfAreas.forceReload(reload) and ret;
-    return ret;
-}
-
 void Study::markAsModified() const
 {
     areas.markAsModified();

@@ -187,11 +187,6 @@ bool PreproHydro::validate(const std::string& areaID)
     return ret;
 }
 
-bool PreproHydro::forceReload(bool reload) const
-{
-    return data.forceReload(reload);
-}
-
 void PreproHydro::markAsModified() const
 {
     return data.markAsModified();

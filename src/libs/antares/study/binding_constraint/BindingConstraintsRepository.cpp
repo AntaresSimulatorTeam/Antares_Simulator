@@ -368,15 +368,4 @@ BindingConstraintsRepository::getPtrForInequalityBindingConstraints() const
     return ptr;
 }
 
-void BindingConstraintsRepository::forceReload(bool reload) const
-{
-    if (!constraints_.empty())
-    {
-        for (const auto& i: constraints_)
-        {
-            i->forceReload(reload);
-        }
-    }
-}
-
 } // namespace Antares::Data

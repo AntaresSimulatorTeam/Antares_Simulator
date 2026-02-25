@@ -366,11 +366,7 @@ public:
     **
     ** This method is only useful if the load-on-demand is used.
     ** The matrix will be marked as modified to force the written.
-    **
-    ** \param reload True to load all JIT data
-    ** \return True if the data was really loaded (reload = true)
     */
-    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Try to remove from memory all data from the matrix

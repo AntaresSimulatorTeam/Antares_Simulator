@@ -149,22 +149,6 @@ public:
     bool resetFolderIcon() const;
     //@}
 
-    //! \name Invalidate
-    //@{
-    /*!
-    ** \brief Invalidate the whole study
-    **
-    ** Mark all JIT structures as invalidated. This will force the loading of missing
-    ** data in memory and it will force the rewritten of any matrix.
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the whole study as modified
-    */
-    void markAsModified() const;
-    //@}
-
     //! \name Areas
     //@{
     /*!
@@ -178,14 +162,13 @@ public:
 
     /*!
     ** \brief Add an area and make all required initialization
-    **
-    ** It is the safe way to add an area and it is mainly used by the GUI
-    **
-    ** \param name The name of the new area
-    ** \return A pointer to a new area, or NULL if the operation failed
     */
-    // default value
     Area* areaAdd(const AreaName& name);
+
+    /*!
+    ** \brief Mark the whole study as modified
+    */
+    void markAsModified() const;
 
     //! \name Time-series
     //@{
@@ -476,8 +459,10 @@ public:
 
     /*!
     ** \name Cache
-    **
-    ** \warning Those variables must not be used outside of a study.
+    */
+
+    /*!
+    ** \brief Mark the whole study as modified
     */
     //@{
     //! A buffer for temporary operations on filename

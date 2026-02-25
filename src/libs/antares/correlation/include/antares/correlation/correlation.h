@@ -102,11 +102,6 @@ public:
                   const Study& study);
 
     /*!
-    ** \brief Invalidate all matrices
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
     ** \brief Mark as modified
     */
     void markAsModified() const;

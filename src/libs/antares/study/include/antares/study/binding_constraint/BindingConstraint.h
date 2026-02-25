@@ -309,11 +309,6 @@ public:
     //@}
 
     /*!
-    ** \brief Invalidate all matrices
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
     ** \brief Mark the constraint as modified
     */
     void markAsModified() const;

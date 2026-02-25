@@ -26,8 +26,6 @@ public:
     explicit EconomicInputData();
     //@}
 
-    bool forceReload(bool reload) const;
-
     void markAsModified() const;
 
     /*!

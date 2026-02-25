@@ -201,13 +201,6 @@ bool ClusterList<ClusterT>::rename(std::string idToFind, std::string newName)
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::forceReload(bool reload) const
-{
-    return std::ranges::all_of(allClusters_,
-                               [&reload](const auto& c) { return c->forceReload(reload); });
-}
-
-template<class ClusterT>
 void ClusterList<ClusterT>::markAsModified() const
 {
     for (const auto& c: allClusters_)
@@ -221,9 +214,6 @@ bool ClusterList<ClusterT>::remove(const std::string& id)
 {
     auto nbDeletion = std::erase_if(allClusters_,
                                     [&id](const SharedPtr& c) { return c->id() == id; });
-
-    // Invalidating the parent area
-    forceReload();
 
     return nbDeletion > 0;
 }

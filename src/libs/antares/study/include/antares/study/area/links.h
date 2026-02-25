@@ -85,13 +85,6 @@ public:
     void resetToDefaultValues();
 
     /*!
-    ** \brief Invalidate all matrices
-    **
-    ** \param reload True to load all missing data
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
     ** \brief Mark the data associated to the link as modified
     */
     void markAsModified() const;
