@@ -167,16 +167,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // years and pick the size of the smallest set.
     unsigned minYears = p.userPlaylist ? p.yearsFilter.size() % maxNbYearsInParallel
                                        : p.nbYears % maxNbYearsInParallel;
-
-    // GUI : storing minimum number of parallel years (in a set of parallel years).
-    //		 Useful in the run window's simulation cores field in case parallel mode is enabled
-    // by user.
-    minNbYearsInParallel_save = minYears;
-
-    // GUI : storing max nb of parallel years (in a set of parallel years) in case parallel mode is
-    // enabled.
-    //		 Useful for RAM estimation.
-    maxNbYearsInParallel_save = maxNbYearsInParallel;
 }
 
 bool Study::initializeRuntimeInfos()
@@ -534,7 +524,6 @@ void Study::resizeAllTimeseriesNumbers(uint n)
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
-// TODO VP: Could be removed with the GUI
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
 {
     enum

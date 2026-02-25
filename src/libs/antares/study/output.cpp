@@ -7,71 +7,12 @@
 
 #include <yuni/io/directory/iterator.h>
 
-using namespace Yuni;
-
 namespace fs = std::filesystem;
 
 #define SEP IO::Separator
 
 namespace Antares::Data
 {
-namespace // anonymous
-{
-
-// TODO VP: remove with GUI
-class OutputFolderIterator final: public IO::Directory::IIterator<true>
-{
-public:
-    using IteratorType = IO::Directory::IIterator<true>;
-    using Flow = IO::Flow;
-
-public:
-    OutputFolderIterator(Data::Output::List& list):
-        pList(list)
-    {
-    }
-
-    virtual ~OutputFolderIterator()
-    {
-        // For code robustness and to avoid corrupt vtable
-        stop();
-    }
-
-protected:
-    virtual bool onStart(const String&)
-    {
-        pList.clear();
-        return true;
-    }
-
-    virtual Flow onFile(const String& /*filename*/,
-                        const String& parent,
-                        const String& name,
-                        uint64_t)
-    {
-        pExtension.clear();
-        IO::ExtractExtension(pExtension, name);
-        pExtension.toLower();
-
-        if (pExtension == ".antares-output")
-        {
-            auto info = std::make_shared<Data::Output>(parent);
-            if (info->valid())
-            {
-                pList.push_back(info);
-            }
-            return IO::flowSkip;
-        }
-        return IO::flowContinue;
-    }
-
-private:
-    CString<20, false> pExtension;
-    Output::List& pList;
-
-}; // class OutputFolderIterator
-
-} // anonymous namespace
 
 Output::Output(const AnyString& folder):
     timestamp(0),
@@ -104,7 +45,7 @@ bool Output::loadFromFolder(const AnyString& folder)
     IniFile ini;
     // The internal variable path will be use for temporary operations
     path.reserve(folder.size() + 32);
-    path << folder << SEP << "info.antares-output";
+    path << folder << Yuni::SEP << "info.antares-output";
 
     if (not ini.open(path))
     {
@@ -171,35 +112,6 @@ bool Output::loadFromFolder(const AnyString& folder)
     }
 
     return true;
-}
-
-// TODO VP: remove with GUI
-void Output::RetrieveListFromStudy(List& out, const Study& study)
-{
-    out.clear();
-
-    if (not study.folder.empty())
-    {
-        fs::path folder = fs::path(study.folder.c_str()) / "output";
-
-        if (fs::exists(folder))
-        {
-            OutputFolderIterator iterator(out);
-            iterator.add(folder.string());
-            iterator.start();
-            iterator.wait(15000); // 15s - arbitrary
-        }
-        else
-        {
-            // No output at all, it is quite useless to start a new thread
-            // for iterating into a non-existing folder
-        }
-    }
-    else
-    {
-        // The variable folder is empty, meaning that the study is still
-        // in memory and does not come from the disk
-    }
 }
 
 } // namespace Antares::Data

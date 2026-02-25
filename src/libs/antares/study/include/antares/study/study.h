@@ -310,44 +310,12 @@ public:
     SimulationComments simulationComments;
 
     int64_t pStartTime;
-    // Used in GUI and solver
-    // ----------------------
     // Maximum number of years in a set of parallel years.
     // It is a possible reduction of the raw number of cores set by user (simulation cores level).
     // This raw number of cores is possibly reduced by the smallest TS refresh span or the total
     // number of MC years. In GUI, used for RAM estimation only. In solver, it is the max number of
     // years (actually run, not skipped) a set of parallel years can contain.
     uint maxNbYearsInParallel = 1;
-
-    // Used in GUI only.
-    // ----------------
-    // Allows storing the maximum number of years in a set of parallel years.
-    // Useful to estimate the RAM when the run window's parallel mode is chosen.
-    uint maxNbYearsInParallel_save = 0;
-
-    // Used in GUI and solver.
-    // ----------------------
-    // Raw numbers of cores (== nb of MC years run in parallel) based on the number
-    // of cores level (see advanced parameters).
-    uint nbYearsParallelRaw = 1;
-
-    // Used in GUI only.
-    // -----------------
-    // Minimum number of years in a set of parallel years.
-    // It is a possible reduction of the raw number of cores set by user (simulation cores level).
-    // This raw number of cores can be reduced :
-    //	- by the smallest TS refresh span
-    //	- by the smallest interval between TS refreshes
-    //	- In the Run window, if either Default or swap support mode is enabled, then parallel
-    //	  computation is disabled, and the number of cores is 1
-    // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel = 0;
-
-    // Used in GUI only.
-    // ----------------
-    // Allows storing the minimum number of years in a set of parallel years.
-    // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel_save = 0;
 
     //! Parameters
     Parameters parameters;

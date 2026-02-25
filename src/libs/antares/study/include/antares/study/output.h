@@ -34,13 +34,6 @@ public:
     //! Map of study output info, ordered by their timestamp (desc)
     using MapByTimestampDesc = std::map<int64_t, Ptr, std::greater<int64_t>>;
 
-public:
-    /*!
-    ** \brief Retrieve the list of all available outputs
-    */
-    static void RetrieveListFromStudy(List& out, const Study& study);
-
-public:
     //! \name Constructor
     //@{
     /*!
