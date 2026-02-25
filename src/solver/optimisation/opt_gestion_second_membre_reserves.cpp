@@ -74,7 +74,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             pays = p;
         }
 
-        // Set the rigth sides of equations for a reserve
+        // Set the right sides of equations for a reserve
         void setReserveRightSides(const CAPACITY_RESERVATION& reserve)
         {
             const auto& CorrespondanceCntNativesCntOptim = problemeHebdo
@@ -92,7 +92,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             }
         }
 
-        // Set the rigth sides of equations for a Thermal cluster participation to a reserve up
+        // Set the right sides of equations for a Thermal cluster participation to a reserve up
         void setThermalReserveUpParticipationRightSides(
           const RESERVE_PARTICIPATION_THERMAL& reserveParticipation)
         {
@@ -113,7 +113,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             }
         }
 
-        // Set the rigth sides of equations for a Thermal cluster
+        // Set the right sides of equations for a Thermal cluster
         void setThermalClusterRightSides(const int areaClusterId)
         {
             const auto& CorrespondanceCntNativesCntOptim = problemeHebdo
@@ -230,7 +230,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             }
         }
 
-        // Set the rigth sides of equations for a ShortTerm cluster participation to a reserve
+        // Set the right sides of equations for a ShortTerm cluster participation to a reserve
         void setSTStorageReserveParticipationRightSides(
           const RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation,
           const CAPACITY_RESERVATION& reserve,
@@ -320,7 +320,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     .HydroLevelParticipation.down[globalClusterIdx];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = hydroCluster.NiveauHoraireSup[pdtHebdo];
+                SecondMembre[cnt] = level_max;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 
@@ -328,7 +328,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     .HydroLevelParticipation.up[globalClusterIdx];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = hydroCluster.NiveauHoraireInf[pdtHebdo];
+                SecondMembre[cnt] = level_min;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 
@@ -351,7 +351,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             }
         }
 
-        // Set the rigth sides of equations for a Hydro participation to a reserve
+        // Set the right sides of equations for a Hydro participation to a reserve
         void setHydroReserveParticipationRightSides(
           const RESERVE_PARTICIPATION_HYDRO& reserveParticipation,
           const CAPACITY_RESERVATION& reserve,
