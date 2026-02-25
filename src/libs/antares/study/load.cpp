@@ -335,36 +335,4 @@ bool Study::internalLoadSets()
     return false;
 }
 
-void Study::reloadCorrelation()
-{
-    StudyLoadOptions options;
-    options.loadOnlyNeeded = false;
-    internalLoadCorrelationMatrices(options);
-}
-
-// TODO remove with GUI
-bool Study::reloadXCastData()
-{
-    // if changes are required, please update AreaListLoadFromFolderSingleArea()
-    bool ret = true;
-    areas.each(
-      [this, &ret](Area& area)
-      {
-          assert(area.load.prepro);
-          assert(area.solar.prepro);
-          assert(area.wind.prepro);
-
-          // Load
-          fs::path loadPath = folderInput / "load" / "prepro" / area.id.to<std::string>();
-          ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
-          // Solar
-          fs::path solarPath = folderInput / "solar" / "prepro" / area.id.to<std::string>();
-          ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
-          // Wind
-          fs::path windPath = folderInput / "wind" / "prepro" / area.id.to<std::string>();
-          ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
-      });
-    return ret;
-}
-
 } // namespace Antares::Data

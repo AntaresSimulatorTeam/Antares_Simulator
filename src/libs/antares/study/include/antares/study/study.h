@@ -134,16 +134,6 @@ public:
     void clear();
 
     /*!
-    ** \brief Reload all correlation
-    */
-    void reloadCorrelation();
-
-    /*!
-    ** \brief Reload all XCast Data
-    */
-    bool reloadXCastData();
-
-    /*!
     ** \brief Save the study into a folder
     **
     ** \param folder The folder where to write data
