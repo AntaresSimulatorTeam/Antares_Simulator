@@ -562,7 +562,7 @@ def check_near_price_cap(context, area, year, hour, value):
     assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"
 
 
-def get_week_time_steps_from_mps_file_name(file_name):
+def week_hours_from_mps_file(file_name):
     """
     Extract week number from MPS file name and generate 168 time steps.
 
@@ -592,9 +592,9 @@ def get_week_time_steps_from_mps_file_name(file_name):
     optim_nb = int(match.group(3))
 
     # Generate 168 time steps for the week
-    week_time_steps = [(week - 1) * 168 + hour for hour in range(168)]
+    week_hours = [(week - 1) * 168 + hour for hour in range(168)]
 
-    return week_time_steps
+    return week_hours
 
 
 def extract_time_step(name) -> int:
@@ -606,15 +606,15 @@ def extract_time_step(name) -> int:
 def check_max_generation_from_capacity_exists(context, area, cluster):
     for mps_file in context.soh.get_mps_files():
         mps_problem = mpu.load_problem(str(mps_file))
-        week_time_step = get_week_time_steps_from_mps_file_name(mps_file)
+        week_hours = week_hours_from_mps_file(mps_file)
         time_step_constraint: dict[int, str] = {}
         for c in mps_problem.get_linear_constraints():
             if c.name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
                 time_step = extract_time_step(c.name)
                 time_step_constraint[time_step] = c.name
-        assert len(week_time_step) == len(time_step_constraint), \
+        assert len(week_hours) == len(time_step_constraint), \
             f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
-        assert week_time_step == list(
+        assert week_hours == list(
             time_step_constraint.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_time_step[0]}, {week_time_step[-1]}] in {mps_file}"
 
 

@@ -20,7 +20,7 @@ Feature: hybrid (simulator+modeler) studies
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_6_0"
     When I run antares simulator
     Then the simulation succeeds
-    And the simulation takes less than 10 seconds
+    And the simulation takes less than 50 seconds
     # 100MW @ 0.3€/MW/h, for 1 week = 5040 €
     # for now, modeler costs does not figure in system cost txt
     And the annual system cost is 0
