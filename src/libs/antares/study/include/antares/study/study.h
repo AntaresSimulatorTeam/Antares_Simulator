@@ -76,20 +76,6 @@ public:
     */
     static bool IsRootStudy(const AnyString& folder, YString& buffer);
 
-    /*!
-    ** \brief Check if a path is within a study folder
-    **
-    ** \warning This method assumes that the given path is properly formatted
-    **   according to the OS parameters
-    **
-    ** \param      path     The path to check
-    ** \param[out] location The location of the study folder (if any)
-    ** \param[out] title    The title of the study folder (if any)
-    ** \return True if the path is within a study folder. In this case
-    **   the parameters 'location' and 'title' are set.
-    */
-    static bool IsInsideStudyFolder(const AnyString& path, YString& location, YString& title);
-
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -102,13 +88,6 @@ public:
     //! Destructor
     virtual ~Study();
     //@}
-
-    //! \name Loading/Saving
-    //@{
-    /*!
-    ** \brief Create a clean study
-    */
-    void createAsNew();
 
     /*!
     ** \brief Relocate the study into a new folder
@@ -252,12 +231,6 @@ public:
     ** \brief Re-Initialize/Re-Load the scenario builder data
     */
     void scenarioRulesCreate();
-
-    /*!
-    ** \brief Release the scenario builder
-    */
-    void scenarioRulesDestroy();
-    //@}
 
     //! \name Internal Data TS-Generators / Series
     //@{

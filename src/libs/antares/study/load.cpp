@@ -108,11 +108,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     // Prepare the output for the study
     prepareOutput(); // will abort early if not usedByTheSolver
 
-    // Scenario Rules sets, only available since v3.6
-    // After two consecutive load, some scenario builder data
-    // may still exist.
-    scenarioRulesDestroy();
-
     // calendar update
     if (usedByTheSolver)
     {

@@ -103,45 +103,6 @@ void Study::clear()
     inputExtension.clear();
 }
 
-void Study::createAsNew()
-{
-    inputExtension = "txt";
-    // Folders
-    folder.clear();
-    folderInput.clear();
-    folderOutput.clear();
-    folderSettings.clear();
-
-    // Simulations
-    parameters.reset();
-    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy
-    // Source)
-    parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
-
-    parameters.yearsFilter = std::vector<bool>(1, true);
-
-    // Sets
-    setsOfAreas.defaultForAreas();
-
-    // Binding constraints
-    bindingConstraints.clear();
-
-    // Areas
-    areas.clear();
-
-    // Correlation
-    preproLoadCorrelation.reset(*this);
-    preproSolarCorrelation.reset(*this);
-    preproWindCorrelation.reset(*this);
-    preproHydroCorrelation.reset(*this);
-
-    // Scenario Builder
-    scenarioRulesDestroy();
-
-    // Reduce memory footprint
-    reduceMemoryUsage();
-}
-
 void Study::reduceMemoryUsage()
 {
     ClearAndShrink(buffer);
