@@ -24,11 +24,12 @@
 
 #include <antares/inifile/inifile.h>
 #include <antares/study/area/area.h>
+#include <antares/study/area/capacityReservation.h>
 
 namespace Antares::Data
 {
 template<typename Derived /*, typename ParticipationT*/>
-class ReserveParticipationLoader
+class ReservesParticipationsLoader
 {
 public:
     bool load(Area& area, const std::filesystem::path& file)
@@ -79,25 +80,10 @@ private:
     }
 };
 
-void static errorIfNegativeValue(const std::string& propertyName,
-                                 double value,
-                                 const std::string& areaName,
-                                 const std::optional<std::string>& clusterName,
-                                 const std::string& reserveName)
-{
-    if (value < 0)
-    {
-        logs.error() << "in area " << areaName
-                     << (clusterName.has_value() ? ", cluster: " + clusterName.value() : "")
-                     << ", reservation capacity in reserve: " << reserveName << ", " << propertyName
-                     << " can not be negative";
-    }
-}
-
 class HydroReserveLoader;
 
 template<typename Derived, typename ParticipationT>
-class ReserveLoaderMixin: public ReserveParticipationLoader<Derived>
+class ReserveLoaderMixin: public ReservesParticipationsLoader<Derived>
 {
 public:
     using participation_type = ParticipationT;

@@ -30,6 +30,7 @@
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/solver/simulation/simulation.h>
+#include <antares/study/area/capacityReservation.h>
 #include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/study.h"
 
