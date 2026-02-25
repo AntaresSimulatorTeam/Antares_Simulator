@@ -418,14 +418,6 @@ public:
     */
     void saveLinkListToBuffer(Yuni::Clob& buffer) const;
 
-    /*!
-    ** \brief Preload all areas which have been invalidated
-    **
-    ** \param [out] The number of areas which have been invalidated
-    */
-    bool preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount = nullptr) const;
-    //@}
-
     //! \name Areas
     //@{
     /*!
@@ -496,33 +488,6 @@ public:
     **   routine.
     */
     bool remove(const AnyString& id);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newName);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newID The new area ID
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newid, const AreaName& newName);
 
     /*!
     ** \brief Get the total number of areas

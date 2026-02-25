@@ -468,17 +468,6 @@ Area* Study::areaAdd(const AreaName& name)
     return area;
 }
 
-void Study::ensureDataAreLoadedForAllBindingConstraints()
-{
-    for (const auto& constraint: bindingConstraints)
-    {
-        if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
-        {
-            constraint->forceReload(true);
-        }
-    }
-}
-
 template<>
 inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
 

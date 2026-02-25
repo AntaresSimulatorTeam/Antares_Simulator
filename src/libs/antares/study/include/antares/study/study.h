@@ -321,15 +321,6 @@ public:
     bool checkForFilenameLimits(bool output, const YString& chfolder = nullptr) const;
     //@}
 
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Load all matrices within the binding constraints if not already done
-    **
-    ** This method is required by the interface when a saveAs is performed
-    */
-    void ensureDataAreLoadedForAllBindingConstraints();
-
     //! \name Logs
     //@{
     /*!
