@@ -132,16 +132,6 @@ public:
     */
     void changeConstraintsWeeklyToDaily();
 
-    /*!
-    ** \brief Invalidate all matrices of all binding constraints
-    */
-    void forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
-
     static Vector LoadBindingConstraint(EnvForLoading env);
 
     [[nodiscard]] Vector activeConstraints() const;

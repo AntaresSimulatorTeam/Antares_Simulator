@@ -318,14 +318,6 @@ BindingConstraintsRepository::const_iterator BindingConstraintsRepository::end()
     return constraints_.end();
 }
 
-void BindingConstraintsRepository::markAsModified() const
-{
-    for (const auto& i: constraints_)
-    {
-        i->markAsModified();
-    }
-}
-
 std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::activeConstraints()
   const
 {
@@ -366,17 +358,6 @@ BindingConstraintsRepository::getPtrForInequalityBindingConstraints() const
     }
 
     return ptr;
-}
-
-void BindingConstraintsRepository::forceReload(bool reload) const
-{
-    if (!constraints_.empty())
-    {
-        for (const auto& i: constraints_)
-        {
-            i->forceReload(reload);
-        }
-    }
 }
 
 } // namespace Antares::Data

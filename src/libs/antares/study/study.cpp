@@ -103,46 +103,6 @@ void Study::clear()
     inputExtension.clear();
 }
 
-void Study::createAsNew()
-{
-    inputExtension = "txt";
-    // Folders
-    folder.clear();
-    folderInput.clear();
-    folderOutput.clear();
-    folderSettings.clear();
-
-    // Simulations
-    parameters.reset();
-    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy
-    // Source)
-    parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
-
-    parameters.yearsFilter = std::vector<bool>(1, true);
-
-    // Sets
-    setsOfAreas.defaultForAreas();
-    setsOfAreas.markAsModified();
-
-    // Binding constraints
-    bindingConstraints.clear();
-
-    // Areas
-    areas.clear();
-
-    // Correlation
-    preproLoadCorrelation.reset(*this);
-    preproSolarCorrelation.reset(*this);
-    preproWindCorrelation.reset(*this);
-    preproHydroCorrelation.reset(*this);
-
-    // Scenario Builder
-    scenarioRulesDestroy();
-
-    // Reduce memory footprint
-    reduceMemoryUsage();
-}
-
 void Study::reduceMemoryUsage()
 {
     ClearAndShrink(buffer);
@@ -201,22 +161,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     {
         maxNbYearsInParallel = 1;
     }
-
-    // Getting the minimum number of years in a set of parallel years.
-    // To get this number, we have to divide all years into sets of parallel
-    // years and pick the size of the smallest set.
-    unsigned minYears = p.userPlaylist ? p.yearsFilter.size() % maxNbYearsInParallel
-                                       : p.nbYears % maxNbYearsInParallel;
-
-    // GUI : storing minimum number of parallel years (in a set of parallel years).
-    //		 Useful in the run window's simulation cores field in case parallel mode is enabled
-    // by user.
-    minNbYearsInParallel_save = minYears;
-
-    // GUI : storing max nb of parallel years (in a set of parallel years) in case parallel mode is
-    // enabled.
-    //		 Useful for RAM estimation.
-    maxNbYearsInParallel_save = maxNbYearsInParallel;
 }
 
 bool Study::initializeRuntimeInfos()
@@ -468,17 +412,6 @@ Area* Study::areaAdd(const AreaName& name)
     return area;
 }
 
-void Study::ensureDataAreLoadedForAllBindingConstraints()
-{
-    for (const auto& constraint: bindingConstraints)
-    {
-        if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
-        {
-            constraint->forceReload(true);
-        }
-    }
-}
-
 template<>
 inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
 
@@ -570,38 +503,6 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     progression.setNumberOfParallelYears(maxNbYearsInParallel);
 }
 
-bool Study::forceReload(bool reload) const
-{
-    bool ret = true;
-
-    // Invalidate all areas
-    ret = areas.forceReload(reload) and ret;
-    // Binding constraints
-    bindingConstraints.forceReload(reload);
-
-    ret = preproLoadCorrelation.forceReload(reload) and ret;
-    ret = preproSolarCorrelation.forceReload(reload) and ret;
-    ret = preproWindCorrelation.forceReload(reload) and ret;
-    ret = preproHydroCorrelation.forceReload(reload) and ret;
-
-    ret = setsOfAreas.forceReload(reload) and ret;
-    return ret;
-}
-
-void Study::markAsModified() const
-{
-    areas.markAsModified();
-
-    preproLoadCorrelation.markAsModified();
-    preproSolarCorrelation.markAsModified();
-    preproWindCorrelation.markAsModified();
-    preproHydroCorrelation.markAsModified();
-
-    bindingConstraints.markAsModified();
-
-    setsOfAreas.markAsModified();
-}
-
 void Study::relocate(const fs::path& newFolder)
 {
     folder = newFolder;
@@ -617,7 +518,6 @@ void Study::resizeAllTimeseriesNumbers(uint n)
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
-// TODO VP: Could be removed with the GUI
 bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
 {
     enum

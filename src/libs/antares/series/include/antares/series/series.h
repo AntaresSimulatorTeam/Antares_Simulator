@@ -91,9 +91,6 @@ public:
     void fill(double value);
     void averageTimeseries();
 
-    bool forceReload(bool reload = false) const;
-    void markAsModified() const;
-
     TS timeSeries;
     TimeSeriesNumbers& timeseriesNumbers;
 

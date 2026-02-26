@@ -97,11 +97,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     // Prepare the output for the study
     prepareOutput(); // will abort early if not usedByTheSolver
 
-    // Scenario Rules sets, only available since v3.6
-    // After two consecutive load, some scenario builder data
-    // may still exist.
-    scenarioRulesDestroy();
-
     // calendar update
     if (usedByTheSolver)
     {
@@ -321,37 +316,6 @@ bool Study::internalLoadSets()
 
     logs.warning() << "Impossible to load the sets of areas";
     return false;
-}
-
-void Study::reloadCorrelation()
-{
-    StudyLoadOptions options;
-    internalLoadCorrelationMatrices(options);
-}
-
-// TODO remove with GUI
-bool Study::reloadXCastData()
-{
-    // if changes are required, please update AreaListLoadFromFolderSingleArea()
-    bool ret = true;
-    areas.each(
-      [this, &ret](Area& area)
-      {
-          assert(area.load.prepro);
-          assert(area.solar.prepro);
-          assert(area.wind.prepro);
-
-          // Load
-          fs::path loadPath = folderInput / "load" / "prepro" / area.id.to<std::string>();
-          ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
-          // Solar
-          fs::path solarPath = folderInput / "solar" / "prepro" / area.id.to<std::string>();
-          ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
-          // Wind
-          fs::path windPath = folderInput / "wind" / "prepro" / area.id.to<std::string>();
-          ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
-      });
-    return ret;
 }
 
 } // namespace Antares::Data

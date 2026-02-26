@@ -216,9 +216,6 @@ set(SRC_STUDY
         cleaner/cleaner.cpp
         include/antares/study/cleaner/versions.h
         cleaner/cleaner-v20.cpp
-        output.cpp
-        include/antares/study/output.h
-        include/antares/study/output.hxx
 
         # progression
         include/antares/study/progression/progression.h

@@ -39,8 +39,6 @@ All loadFromCSVFile(...) entries (some directions to test this big method):
 modified
                         + optQuiet = 2,				//! Do not produce warnings/errors
                         + optImmediate = 4,			//! Do not postpone the loading
-                        + optMarkAsModified = 8,	//! mark the matrix as modified after
-loading
                         + optNoWarnIfEmpty = 16,	//! Do not warn if the file is empty
                         + optNeverFails = 32,		//! The loading never fails
         4. Error type returned by loadFromFileToBuffer(...)
@@ -836,12 +834,7 @@ BOOST_AUTO_TEST_CASE(mtx_is_marked_modified__load_is_done___mtx_no_more_modified
     // Testing load
     Matrix_mock_load_to_buffer<int, int> mtx;
     mtx.jit = new JIT::Informations(); // Giving matrix a defaut jit information
-    mtx.markAsModified();
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file",
-                                    0,
-                                    0,
-                                    Matrix<>::optImmediate | Matrix<>::optMarkAsModified,
-                                    fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optImmediate, fake_buffer));
 
     delete fake_buffer;
 

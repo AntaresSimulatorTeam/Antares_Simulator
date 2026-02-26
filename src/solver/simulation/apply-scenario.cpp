@@ -32,7 +32,7 @@ void ApplyCustomScenario(Data::Study& study)
         }
     }
 
-    study.scenarioRulesDestroy();
+    study.scenarioRules.reset();
     logs.info();
 }
 

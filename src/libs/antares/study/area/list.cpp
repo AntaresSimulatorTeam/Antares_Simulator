@@ -423,35 +423,6 @@ void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
       });
 }
 
-bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount) const
-{
-    bool ret = true;
-    uint count = 0;
-    each(
-      [&ret, &count](const Data::Area& area)
-      {
-          if (area.invalidateJIT)
-          {
-              logs.info() << "Preparing the area " << area.name;
-              // invalidating all data belonging to the area
-              ret = area.forceReload(true) && ret;
-              // marking the area as modified to force the incremental save
-              area.markAsModified();
-              ++count;
-          }
-      });
-    if (invalidateCount)
-    {
-        *invalidateCount = count;
-    }
-    return ret;
-}
-
-void AreaList::markAsModified() const
-{
-    each([](const Data::Area& area) { area.markAsModified(); });
-}
-
 static void readAdqPatchMode(Study& study, Area& area)
 {
     if (study.header.version < StudyVersion(8, 3))
@@ -582,7 +553,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.load.prepro) // Prepro
         {
-            // if changes are required, please update reloadXCastData()
             fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
             ret = area.load.prepro->loadFromFolder(loadPath) && ret;
         }
@@ -599,7 +569,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.solar.prepro) // Prepro
         {
-            // if changes are required, please update reloadXCastData()
             fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
             ret = area.solar.prepro->loadFromFolder(solarPath) && ret;
         }
@@ -623,7 +592,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         if (area.hydro.prepro) /* Hydro */
         {
-            // if changes are required, please update reloadXCastData()
             fs::path hydroPrepro = pathHydro / "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro) && ret;
             ret = area.hydro.prepro->validate(area.id) && ret;
@@ -664,7 +632,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.wind.prepro) // Prepro
         {
-            // if changes are required, please update reloadXCastData()
             fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
             ret = area.wind.prepro->loadFromFolder(windPath) && ret;
         }
@@ -1078,78 +1045,6 @@ void Area::detachLinkFromItsPointer(const AreaLink* lnk)
     }
 }
 
-bool AreaList::renameArea(const AreaName& oldid, const AreaName& newName)
-{
-    AreaName newid = transformNameIntoID(newName);
-    return renameArea(oldid, newid, newName);
-}
-
-bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const AreaName& newName)
-{
-    if (!oldid || !newName || !newid || areas.empty())
-    {
-        return false;
-    }
-
-    if (CheckForbiddenCharacterInAreaName(newName))
-    {
-        logs.error() << "character '*' is forbidden in area name: `" << newName << "`";
-        return false;
-    }
-    // Detaching the area from the list
-    Area* area;
-    {
-        auto i = areas.find(oldid);
-        if (i == areas.end())
-        {
-            return false;
-        }
-        area = i->second;
-        areas.erase(i);
-    }
-
-    if (find(newid))
-    {
-        // Another area with the same ID already exists
-        // Aborting.
-        areas[newid] = area;
-        return false;
-    }
-
-    // Renaming the area
-    area->id = newid;
-    area->name = newName;
-
-    area->invalidateJIT = true;
-    areas[area->id] = area;
-
-    // We have to update all links connected to this area
-    each(
-      [&oldid](Data::Area& a)
-      {
-          auto* link = a.findLinkByID(oldid);
-          if (!link)
-          {
-              return;
-          }
-
-          [[maybe_unused]] unsigned oldCount = (uint)a.links.size(); // only used in assert
-          // Renaming the entry
-
-          link->forceReload(true);
-          link->markAsModified();
-
-          link->detach();
-          a.links[link->with->id] = link;
-
-          assert(oldCount == a.links.size() && "We must have the same number of items in the list");
-      });
-
-    area->buildLinksIndexes();
-
-    return true;
-}
-
 void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
 {
     if (!list || !a)
@@ -1186,13 +1081,6 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
               }
           } while (mustLoop);
       });
-}
-
-bool AreaList::forceReload(bool reload) const
-{
-    bool ret = true;
-    each([&ret, &reload](const Data::Area& area) { ret = area.forceReload(reload) && ret; });
-    return ret;
 }
 
 void AreaList::resizeAllTimeseriesNumbers(uint n)

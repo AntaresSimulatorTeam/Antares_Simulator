@@ -88,17 +88,6 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
     return ret;
 }
 
-bool EconomicInputData::forceReload(bool reload) const
-{
-    return fuelcost.forceReload(reload) && co2cost.forceReload(reload);
-}
-
-void EconomicInputData::markAsModified() const
-{
-    fuelcost.markAsModified();
-    co2cost.markAsModified();
-}
-
 void EconomicInputData::reset()
 {
     fuelcost.reset(1, HOURS_PER_YEAR, true);

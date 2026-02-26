@@ -390,24 +390,6 @@ bool XCast::saveToFolder(const AnyString& folder) const
     return ini.save(buffer) && ret;
 }
 
-bool XCast::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = data.forceReload(reload) && ret;
-    ret = K.forceReload(reload) && ret;
-    ret = translation.forceReload(reload) && ret;
-    ret = conversion.forceReload(reload) && ret;
-    return ret;
-}
-
-void XCast::markAsModified() const
-{
-    data.markAsModified();
-    K.markAsModified();
-    translation.markAsModified();
-    conversion.markAsModified();
-}
-
 void XCast::copyFrom(const XCast& rhs)
 {
     // Coeffs

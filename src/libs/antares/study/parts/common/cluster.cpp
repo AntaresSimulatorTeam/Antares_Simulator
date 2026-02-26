@@ -100,14 +100,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 
 #undef SEP
 
-void Cluster::invalidateArea()
-{
-    if (parentArea)
-    {
-        parentArea->forceReload();
-    }
-}
-
 void Cluster::reset()
 {
     unitCount = 0;

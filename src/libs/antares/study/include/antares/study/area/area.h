@@ -138,16 +138,7 @@ public:
     ** However, we would like to be able to force the load of all data, especially
     ** when saving a study.
     ** The flag `invalidateJIT` will be reset to false.
-    **
-    ** \param reload True to force the reload of data
-    ** \return True if the operation succeeded
     */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all areas as modified
-    */
-    void markAsModified() const;
 
     //! \name Thermal clusters min stable power validity checking
     //@{
@@ -418,14 +409,6 @@ public:
     */
     void saveLinkListToBuffer(Yuni::Clob& buffer) const;
 
-    /*!
-    ** \brief Preload all areas which have been invalidated
-    **
-    ** \param [out] The number of areas which have been invalidated
-    */
-    bool preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount = nullptr) const;
-    //@}
-
     //! \name Areas
     //@{
     /*!
@@ -468,19 +451,6 @@ public:
     bool empty() const;
 
     /*!
-    ** \brief Invalidate all areas
-    **
-    ** \param reload True to reload data in the same time
-    ** \return True if the operation succeeded
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
-
-    /*!
     ** \brief Rebuild the indexes for accessing areas
     **
     ** It is sometimes quite usefull to use a mere index to access to
@@ -496,33 +466,6 @@ public:
     **   routine.
     */
     bool remove(const AnyString& id);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newName);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newID The new area ID
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newid, const AreaName& newName);
 
     /*!
     ** \brief Get the total number of areas

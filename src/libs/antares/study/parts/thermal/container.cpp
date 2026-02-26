@@ -23,18 +23,6 @@ PartThermal::PartThermal():
 {
 }
 
-bool PartThermal::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = list.forceReload(reload) && ret;
-    return ret;
-}
-
-void PartThermal::markAsModified() const
-{
-    list.markAsModified();
-}
-
 void PartThermal::reset()
 {
     unsuppliedEnergyCost = 0.;

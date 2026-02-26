@@ -131,7 +131,6 @@ bool CBuilder::updateLinks()
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-        link->forceReload(true);
         link->useLoopFlow = includeLoopFlow;
         link->usePST = includePhaseShift;
 
@@ -301,7 +300,6 @@ bool CBuilder::deletePreviousConstraints()
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-        link->forceReload(true);
         link->useLoopFlow = false;
         link->usePST = false;
     }
