@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <fmt/format.h>
+#include <fstream>
+#include <sstream>
 
 #include <yuni/yuni.h>
-#include <yuni/io/file.h>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
@@ -14,8 +15,6 @@
 #include "include/antares/study/fwd.h"
 
 using namespace Yuni;
-
-#define SEP IO::Separator
 
 namespace fs = std::filesystem;
 
@@ -60,14 +59,15 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
     }
 
     // The simulation settings (comments.txt)
-    if (!options.loadOnlyNeeded)
+    fs::path commentsPath = folderSettings / "comments.txt";
+    std::ifstream file(commentsPath);
+    if (file)
     {
-        buffer.clear() << folderSettings << SEP << "comments.txt";
-        if (IO::errNone != IO::File::LoadFromFile(simulationComments, buffer))
-        {
-            logs.warning() << buffer << ": Impossible to read the file";
-        }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        simulationComments = buffer.str();
     }
+
     // Load the general data
     fs::path generalDataPath = folderSettings / "generaldata.ini";
     bool errorWhileLoading = !parameters.loadFromFile(generalDataPath, header.version);
