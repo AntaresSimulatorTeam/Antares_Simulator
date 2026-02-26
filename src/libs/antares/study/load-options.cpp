@@ -11,7 +11,6 @@ namespace Antares::Data
 StudyLoadOptions::StudyLoadOptions():
     nbYears(0),
     prepareOutput(false),
-    loadOnlyNeeded(false),
     forceYearByYear(false),
     forceDerated(false),
     noTimeseriesImportIntoInput(false),

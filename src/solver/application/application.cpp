@@ -128,7 +128,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
     options.ignoreConstraints = pSettings.ignoreConstraints;
-    options.loadOnlyNeeded = true;
 
     // Load the study from a folder
     Benchmarking::Timer timer;

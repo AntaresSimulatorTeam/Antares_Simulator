@@ -59,13 +59,10 @@ void SimulationComments::saveUsingWriter(Solver::IResultWriter& writer,
 
 bool SimulationComments::loadFromFolder(const StudyLoadOptions& options)
 {
-    if (!options.loadOnlyNeeded)
+    pStudy.buffer.clear() << pStudy.folderSettings << SEP << "comments.txt";
+    if (IO::errNone != IO::File::LoadFromFile(comments, pStudy.buffer))
     {
-        pStudy.buffer.clear() << pStudy.folderSettings << SEP << "comments.txt";
-        if (IO::errNone != IO::File::LoadFromFile(comments, pStudy.buffer))
-        {
-            logs.warning() << pStudy.buffer << ": Impossible to read the file";
-        }
+        logs.warning() << pStudy.buffer << ": Impossible to read the file";
     }
     return true;
 }
