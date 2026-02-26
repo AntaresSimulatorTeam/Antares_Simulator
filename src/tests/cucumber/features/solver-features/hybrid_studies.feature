@@ -117,3 +117,13 @@ Feature: hybrid (simulator+modeler) studies
     And for each weekly problem, verify the "MaxGenerationFromCapacity" constraint exists for all time steps for thermal cluster discrete_generator_candidate in area area.
     And enforces: DispatchableProduction - thermal_add_on_continuous.p_max < 0 for the thermal capacity connection between GEMS and the continuous_generator_candidate thermal cluster in area area.
     And enforces: DispatchableProduction - thermal_add_on_discrete.p_max < 0 for the thermal capacity connection between GEMS and the discrete_generator_candidate thermal cluster in area area.
+
+  @fast @short
+  Scenario: A load from GEMS is taken into account in balance constraint
+
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/3_8/"
+    When I run antares simulator with --named-mps-problems
+    Then the simulation succeeds
+    And the simulation takes less than 10 seconds
+	And the objective value is 186360
+	Then for first week, area balance RHS (for area unique) is first -12, -13, -14, -15, -16, then equals constant -11
