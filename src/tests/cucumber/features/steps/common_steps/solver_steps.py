@@ -597,7 +597,7 @@ def week_hours_from_mps_file(file_name):
     return week_hours
 
 
-def extract_time_step(name) -> int:
+def extract_hour(name) -> int:
     return int(name.split("hour<")[1].split(">")[0])
 
 
@@ -610,8 +610,8 @@ def check_max_generation_from_capacity_exists(context, area, cluster):
         time_step_constraint: dict[int, str] = {}
         for c in mps_problem.get_linear_constraints():
             if c.name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
-                time_step = extract_time_step(c.name)
-                time_step_constraint[time_step] = c.name
+                hour = extract_hour(c.name)
+                time_step_constraint[hour] = c.name
         assert len(week_hours) == len(time_step_constraint), \
             f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
         assert week_hours == list(
@@ -627,12 +627,12 @@ def check_max_generation_from_capacity_constraint(context, expression, rhs, clus
         rhs = float(rhs)
         for constr_name, row in mpu.get_constraint_matrix(mps_problem).items():
             if constr_name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
-                time_step = extract_time_step(constr_name)
+                hour = extract_hour(constr_name)
                 assert len(
                     row) == 2, f"{constr_name} must have exactly two non null coefficients: DispatchableProduction-thermal_add_on.p_max<0"
                 # Check coefficients
                 for var_name, coeff in row.items():
-                    dispatchable_production = f"DispatchableProduction::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>"
+                    dispatchable_production = f"DispatchableProduction::area<{area}>::ThermalCluster<{cluster}>::hour<{hour}>"
 
                     if var_name == dispatchable_production:
                         assert coeff == 1.0, f"the coefficient of {dispatchable_production} in {constr_name} must be = 1"
@@ -641,4 +641,4 @@ def check_max_generation_from_capacity_constraint(context, expression, rhs, clus
                             var_name], f"the coefficient of {var_name} in {constr_name} must be = {coeff}"
                     else:
                         raise ValueError(
-                            f"{var_name} should not have coefficient in MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>")
+                            f"{var_name} should not have coefficient in MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::hour<{hour}>")
