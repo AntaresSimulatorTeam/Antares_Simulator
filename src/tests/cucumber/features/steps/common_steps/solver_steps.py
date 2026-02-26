@@ -607,15 +607,15 @@ def check_max_generation_from_capacity_exists(context, area, cluster):
     for mps_file in context.soh.get_mps_files():
         mps_problem = mpu.load_problem(str(mps_file))
         week_hours = week_hours_from_mps_file(mps_file)
-        time_step_constraint: dict[int, str] = {}
+        hours_mapped_to_constraints: dict[int, str] = {}
         for c in mps_problem.get_linear_constraints():
             if c.name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
                 hour = extract_hour(c.name)
-                time_step_constraint[hour] = c.name
-        assert len(week_hours) == len(time_step_constraint), \
+                hours_mapped_to_constraints[hour] = c.name
+        assert len(week_hours) == len(hours_mapped_to_constraints), \
             f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
         assert week_hours == list(
-            time_step_constraint.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_hours[0]}, {week_hours[-1]}] in {mps_file}"
+            hours_mapped_to_constraints.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_hours[0]}, {week_hours[-1]}] in {mps_file}"
 
 
 @then(
