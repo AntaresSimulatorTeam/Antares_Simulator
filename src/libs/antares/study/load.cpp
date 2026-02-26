@@ -5,16 +5,12 @@
 #include <fstream>
 #include <sstream>
 
-#include <yuni/yuni.h>
-
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
 #include "antares/study/version.h"
 
 #include "include/antares/study/fwd.h"
-
-using namespace Yuni;
 
 namespace fs = std::filesystem;
 
