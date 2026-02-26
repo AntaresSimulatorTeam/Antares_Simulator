@@ -151,8 +151,7 @@ Public Types</h2></td></tr>
 , <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3">optQuiet</a> = 2
 , <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508">optImmediate</a> = 4
 , <br />
-&#160;&#160;<a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aaa387da86458ab0555e8d40f4f42eec2">optMarkAsModified</a> = 8
-, <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee">optNoWarnIfEmpty</a> = 16
+&#160;&#160;<a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee">optNoWarnIfEmpty</a> = 16
 , <a class="el" href="classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5">optNeverFails</a> = 32
 <br />
  }</td></tr>
@@ -370,15 +369,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:aba3cdd8d647239701bd0a07c976dd63a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift all rows of a specific column. <br /></td></tr>
 <tr class="separator:aba3cdd8d647239701bd0a07c976dd63a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Memory Management</div></td></tr>
-<tr class="memitem:a6dd2ee3e07ad553dcc734b070cf76e68"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a6dd2ee3e07ad553dcc734b070cf76e68">forceReload</a> (bool reload=false) const</td></tr>
-<tr class="memdesc:a6dd2ee3e07ad553dcc734b070cf76e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the Load of data (if not done) for the next save and mark the matrix as modified.  <a href="classAntares_1_1Matrix.html#a6dd2ee3e07ad553dcc734b070cf76e68">More...</a><br /></td></tr>
-<tr class="separator:a6dd2ee3e07ad553dcc734b070cf76e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeadbf3080154bb8f6a00f2f626f80760"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760">unloadFromMemory</a> () const</td></tr>
-<tr class="memdesc:aeadbf3080154bb8f6a00f2f626f80760"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to remove from memory all data from the matrix.  <a href="classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760">More...</a><br /></td></tr>
+<tr class="memdesc:aeadbf3080154bb8f6a00f2f626f80760"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the Load of data (if not done) for the next save and mark the matrix as modified.  <a href="classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760">More...</a><br /></td></tr>
 <tr class="separator:aeadbf3080154bb8f6a00f2f626f80760"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2878cd709236d85412911474e5afd36b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a2878cd709236d85412911474e5afd36b">markAsModified</a> () const</td></tr>
-<tr class="memdesc:a2878cd709236d85412911474e5afd36b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the matrix as modified.  <a href="classAntares_1_1Matrix.html#a2878cd709236d85412911474e5afd36b">More...</a><br /></td></tr>
-<tr class="separator:a2878cd709236d85412911474e5afd36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6efb67c1b998ea7ffdc0a1e1b4252e62"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Matrix.html#a6efb67c1b998ea7ffdc0a1e1b4252e62">empty</a> () const</td></tr>
 <tr class="memdesc:a6efb67c1b998ea7ffdc0a1e1b4252e62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the matrix is empty.  <a href="classAntares_1_1Matrix.html#a6efb67c1b998ea7ffdc0a1e1b4252e62">More...</a><br /></td></tr>
 <tr class="separator:a6efb67c1b998ea7ffdc0a1e1b4252e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -487,8 +480,6 @@ template&lt;class T  = double, class ReadWriteT  = T&gt; </div>
 <tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3"></a>optQuiet&#160;</td><td class="fielddoc"><p>Do not produce warnings/errors. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508"></a>optImmediate&#160;</td><td class="fielddoc"><p>Do not postpone the loading. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2aaa387da86458ab0555e8d40f4f42eec2"></a>optMarkAsModified&#160;</td><td class="fielddoc"><p>mark the matrix as modified after loading </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee"></a>optNoWarnIfEmpty&#160;</td><td class="fielddoc"><p>Do not warn if the file is empty. </p>
 </td></tr>
@@ -632,36 +623,6 @@ template&lt;class T , class ReadWriteT &gt; </div>
 
 </div>
 </div>
-<a id="a6dd2ee3e07ad553dcc734b070cf76e68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6dd2ee3e07ad553dcc734b070cf76e68">&#9670;&nbsp;</a></span>forceReload()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , class ReadWriteT &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Matrix::forceReload </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>reload</em> = <code>false</code></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Force the Load of data (if not done) for the next save and mark the matrix as modified. </p>
-<p>This method is only useful if the load-on-demand is used. The matrix will be marked as modified to force the written.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">reload</td><td>True to load all <a class="el" href="classJIT.html">JIT</a> data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the data was really loaded (reload = true) </dd></dl>
-
-</div>
-</div>
 <a id="ae30aa9ea83dbe8013e5e64266a7bdcb4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae30aa9ea83dbe8013e5e64266a7bdcb4">&#9670;&nbsp;</a></span>loadFromCSVFile()</h2>
 
@@ -731,33 +692,6 @@ template&lt;class T , class ReadWriteT &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the operation succeeded </dd></dl>
-
-</div>
-</div>
-<a id="a2878cd709236d85412911474e5afd36b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2878cd709236d85412911474e5afd36b">&#9670;&nbsp;</a></span>markAsModified()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , class ReadWriteT &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Matrix::markAsModified</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Mark the matrix as modified. </p>
-<p>This routine has no effect when the UI is not present </p>
 
 </div>
 </div>
@@ -1081,7 +1015,9 @@ template&lt;class T , class ReadWriteT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Try to remove from memory all data from the matrix. </p>
+<p>Force the Load of data (if not done) for the next save and mark the matrix as modified. </p>
+<p>This method is only useful if the load-on-demand is used. The matrix will be marked as modified to force the written.</p>
+<p>Try to remove from memory all data from the matrix</p>
 <p>This is possible only when enough informations is provided by the <a class="el" href="classJIT.html">JIT</a> structure and when the matrix is not modified </p>
 
 </div>

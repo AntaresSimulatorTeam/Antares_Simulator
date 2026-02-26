@@ -23,8 +23,6 @@ var classAntares_1_1Data_1_1Area =
     [ "findExistingLinkWith", "classAntares_1_1Data_1_1Area.html#a1868a4e5143c0fa1fb5dcec8afae1887", null ],
     [ "findLinkByID", "classAntares_1_1Data_1_1Area.html#af274153df0ff4b32a9bcf6b659959105", null ],
     [ "findLinkByID", "classAntares_1_1Data_1_1Area.html#ab5054208d5ebec6f0324d9892af39944", null ],
-    [ "forceReload", "classAntares_1_1Data_1_1Area.html#a57104b89d9bdfabb560dd18ca64d2fc0", null ],
-    [ "markAsModified", "classAntares_1_1Data_1_1Area.html#a8e18b4e1c8cb310d6981bdd871d5736b", null ],
     [ "resetToDefaultValues", "classAntares_1_1Data_1_1Area.html#aa8299689caa40aa2c62aa5e2eda700dd", null ],
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1Area.html#ad453f1402603adcd9c49069217a5b009", null ],
     [ "thermalClustersMinStablePowerValidity", "classAntares_1_1Data_1_1Area.html#a79528edfda396dafea0bde19fe39f870", null ],

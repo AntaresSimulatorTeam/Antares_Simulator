@@ -172,7 +172,6 @@ var namespaces_dup =
         [ "TimeSeriesToCStr< 32 >", "structAntares_1_1Data_1_1TimeSeriesToCStr_3_0132_01_4.html", null ],
         [ "StudyHeader", "classAntares_1_1Data_1_1StudyHeader.html", "classAntares_1_1Data_1_1StudyHeader" ],
         [ "StudyLoadOptions", "classAntares_1_1Data_1_1StudyLoadOptions.html", "classAntares_1_1Data_1_1StudyLoadOptions" ],
-        [ "Output", "classAntares_1_1Data_1_1Output.html", "classAntares_1_1Data_1_1Output" ],
         [ "Parameters", "classAntares_1_1Data_1_1Parameters.html", "classAntares_1_1Data_1_1Parameters" ],
         [ "CompareClusterName", "structAntares_1_1Data_1_1CompareClusterName.html", "structAntares_1_1Data_1_1CompareClusterName" ],
         [ "Cluster", "classAntares_1_1Data_1_1Cluster.html", "classAntares_1_1Data_1_1Cluster" ],

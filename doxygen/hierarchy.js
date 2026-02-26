@@ -1022,7 +1022,6 @@ var hierarchy =
     [ "std::out_of_range", null, [
       [ "Antares::Expressions::Visitors::EvalResultTimeIndexOutOfRange", "classAntares_1_1Expressions_1_1Visitors_1_1EvalResultTimeIndexOutOfRange.html", null ]
     ] ],
-    [ "Antares::Data::Output", "classAntares_1_1Data_1_1Output.html", null ],
     [ "Output", "classOutput.html", null ],
     [ "find_output.output_folder_finder", "classfind__output_1_1output__folder__finder.html", null ],
     [ "OutputRetriever", "classOutputRetriever.html", null ],

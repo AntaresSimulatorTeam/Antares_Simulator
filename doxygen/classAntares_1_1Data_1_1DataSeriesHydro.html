@@ -172,14 +172,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a616c1fd7dcb52246088125bf27dffba5"><td class="memItemLeft" align="right" valign="top"><a id="a616c1fd7dcb52246088125bf27dffba5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTS</b> (uint nbSeries)</td></tr>
 <tr class="separator:a616c1fd7dcb52246088125bf27dffba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d199bab434a74b243a750ab35d3b452"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a6d199bab434a74b243a750ab35d3b452">forceReload</a> (bool reload=false) const</td></tr>
-<tr class="memdesc:a6d199bab434a74b243a750ab35d3b452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load all data not already loaded.  <a href="classAntares_1_1Data_1_1DataSeriesHydro.html#a6d199bab434a74b243a750ab35d3b452">More...</a><br /></td></tr>
-<tr class="separator:a6d199bab434a74b243a750ab35d3b452"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea46437b68d4cb5afea832855e7c6380"><td class="memItemLeft" align="right" valign="top"><a id="aea46437b68d4cb5afea832855e7c6380"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>markAsModified</b> () const</td></tr>
-<tr class="separator:aea46437b68d4cb5afea832855e7c6380"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a046191c957df17bcd0617341ba5efff8"><td class="memItemLeft" align="right" valign="top"><a id="a046191c957df17bcd0617341ba5efff8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadGenerationTS</b> (const AreaName &amp;areaID, const std::filesystem::path &amp;folder, <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> version)</td></tr>
+<tr class="memitem:a046191c957df17bcd0617341ba5efff8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1DataSeriesHydro.html#a046191c957df17bcd0617341ba5efff8">loadGenerationTS</a> (const AreaName &amp;areaID, const std::filesystem::path &amp;folder, <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> version)</td></tr>
 <tr class="separator:a046191c957df17bcd0617341ba5efff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37aeddd3e9114bb641232329690fdc1b"><td class="memItemLeft" align="right" valign="top"><a id="a37aeddd3e9114bb641232329690fdc1b"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>LoadMaxPower</b> (const std::string &amp;areaID, const std::filesystem::path &amp;folder)</td></tr>
@@ -206,24 +199,39 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTSinDeratedMode
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data series (Hydro) </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6d199bab434a74b243a750ab35d3b452"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d199bab434a74b243a750ab35d3b452">&#9670;&nbsp;</a></span>forceReload()</h2>
+<a id="a046191c957df17bcd0617341ba5efff8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a046191c957df17bcd0617341ba5efff8">&#9670;&nbsp;</a></span>loadGenerationTS()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool Antares::Data::DataSeriesHydro::forceReload </td>
+          <td class="memname">bool Antares::Data::DataSeriesHydro::loadGenerationTS </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>reload</em> = <code>false</code></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const AreaName &amp;&#160;</td>
+          <td class="paramname"><em>areaID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>folder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a>&#160;</td>
+          <td class="paramname"><em>version</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Load all data not already loaded. </p>
-<p>If the load-on-demand is enabled, some data might not be loaded (see <code><a class="el" href="classAntares_1_1Matrix.html" title="A n-by-n matrix.">Matrix</a></code>) </p>
+<pre class="fragment">   \brief Load all data not already loaded
+</pre><p> Returned boolean : reading from file failed </p>
 
 </div>
 </div>
