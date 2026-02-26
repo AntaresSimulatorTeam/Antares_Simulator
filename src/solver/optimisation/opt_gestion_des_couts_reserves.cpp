@@ -25,129 +25,129 @@
 
 #include "variables/VariableManagerUtils.h"
 
-void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
-                                             const int PremierPdtDeLIntervalle,
-                                             const int DernierPdtDeLIntervalle)
+namespace //anonymous
 {
-    struct ReserveCostsInitializer
+
+class ReserveCostsInitializer
+{
+public:
+    explicit ReserveCostsInitializer(PROBLEME_HEBDO* hebdo):
+        problemeHebdo(hebdo),
+        ProblemeAResoudre(hebdo->ProblemeAResoudre),
+        variableManager(VariableManagerFromProblemHebdo(hebdo)),
+        CoutLineaire(hebdo->ProblemeAResoudre->CoutLineaire)
     {
-        PROBLEME_HEBDO* problemeHebdo;
-        const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
-        VariableManagement::VariableManager variableManager;
-        std::vector<double>& CoutLineaire;
-        int pdtHebdo;
+    }
 
-        ReserveCostsInitializer(PROBLEME_HEBDO* hebdo):
-            problemeHebdo(hebdo),
-            ProblemeAResoudre(hebdo->ProblemeAResoudre),
-            variableManager(VariableManagerFromProblemHebdo(hebdo)),
-            CoutLineaire(hebdo->ProblemeAResoudre->CoutLineaire),
-            pdtHebdo(0)
-        {
-        }
-
-        void setPdtHebdo(int pdt)
-        {
-            pdtHebdo = pdt;
-        }
-
-        // Init costs for a reserve
-        void initReserveCosts(const CAPACITY_RESERVATION& reserve)
-        {
-            int var = variableManager.InternalExcessReserve(reserve.globalReserveIndex, pdtHebdo);
-            if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
-            {
-                CoutLineaire[var] = reserve.spillageCost;
-            }
-
-            var = variableManager.InternalUnsatisfiedReserve(reserve.globalReserveIndex, pdtHebdo);
-            if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
-            {
-                CoutLineaire[var] = reserve.unsuppliedCost;
-            }
-        }
-
-        // Init costs for a Thermal cluster participation to a reserve up
-        void initThermalReserveParticipationCosts(
-          ReserveType type,
-          const RESERVE_PARTICIPATION_THERMAL& reserveParticipation)
-        {
-            int var = variableManager.RunningThermalClusterReserveParticipation(
-              reserveParticipation.globalIndexClusterParticipation,
-              pdtHebdo);
-            CoutLineaire[var] = reserveParticipation.participationCost;
-            if (type == ReserveType::UP)
-            {
-                var = variableManager.OffThermalClusterReserveParticipation(
-                  reserveParticipation.globalIndexClusterParticipation,
-                  pdtHebdo);
-                CoutLineaire[var] = reserveParticipation.participationCostOff;
-            }
-        }
-
-        // Init costs for a ShortTerm cluster participation to a reserve up
-        void initSTStorageReserveParticipationCosts(
-          ReserveType type,
-          const RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation)
-        {
-            int var = variableManager.STStorageClusterReserveParticipation(
-              type,
-              reserveParticipation.globalIndexClusterParticipation,
-              pdtHebdo);
-            CoutLineaire[var] = reserveParticipation.participationCost;
-        }
-
-        // Init costs for a Hydro participation to a reserve
-        void initHydroReserveParticipationCosts(
-          ReserveType type,
-          const RESERVE_PARTICIPATION_HYDRO& reserveParticipation)
-        {
-            int var = variableManager.HydroReserveParticipation(
-              type,
-              reserveParticipation.globalIndexClusterParticipation,
-              pdtHebdo);
-            CoutLineaire[var] = reserveParticipation.participationCost;
-        }
-    };
-
-    ReserveCostsInitializer reserveCostsInitializer(problemeHebdo);
-
-    for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
+    void setPdtHebdo(int pdt)
     {
-        reserveCostsInitializer.setPdtHebdo(pdtHebdo);
-        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        pdtHebdo = pdt;
+    }
+
+    // Init costs for a reserve
+    void initReserveCosts(const CAPACITY_RESERVATION& reserve)
+    {
+        setCostIfValid(variableManager.InternalExcessReserve(reserve.globalReserveIndex, pdtHebdo),
+                       reserve.spillageCost);
+
+        setCostIfValid(variableManager.InternalUnsatisfiedReserve(reserve.globalReserveIndex,
+                                                                  pdtHebdo),
+                       reserve.unsuppliedCost);
+    }
+
+    // Init costs for a Thermal cluster participation to a reserve up
+    void initThermalReserveParticipationCosts(
+      ReserveType type,
+      const RESERVE_PARTICIPATION_THERMAL& reserveParticipation)
+    {
+        setCostIfValid(variableManager.RunningThermalClusterReserveParticipation(
+                         reserveParticipation.globalIndexClusterParticipation,
+                         pdtHebdo),
+                       reserveParticipation.participationCost);
+
+        if (type == ReserveType::UP)
         {
-            auto areaReserves = problemeHebdo->allReserves.value()[pays];
+            setCostIfValid(variableManager.OffThermalClusterReserveParticipation(
+                             reserveParticipation.globalIndexClusterParticipation,
+                             pdtHebdo),
+                           reserveParticipation.participationCostOff);
+        }
+    }
 
-            for (auto& areaReserve: areaReserves.areaCapacityReservations)
+    // Init costs for a ShortTerm cluster participation to a reserve up
+    void initSTStorageReserveParticipationCosts(
+      ReserveType type,
+      const RESERVE_PARTICIPATION_STSTORAGE& reserveParticipation)
+    {
+        setCostIfValid(variableManager.STStorageClusterReserveParticipation(
+                         type,
+                         reserveParticipation.globalIndexClusterParticipation,
+                         pdtHebdo),
+                       reserveParticipation.participationCost);
+    }
+
+    // Init costs for a Hydro participation to a reserve
+    void initHydroReserveParticipationCosts(ReserveType type,
+                                            const RESERVE_PARTICIPATION_HYDRO& reserveParticipation)
+    {
+        setCostIfValid(variableManager.HydroReserveParticipation(
+                         type,
+                         reserveParticipation.globalIndexClusterParticipation,
+                         pdtHebdo),
+                       reserveParticipation.participationCost);
+    }
+
+private:
+    void setCostIfValid(int var, double cost)
+    {
+        if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+        {
+            CoutLineaire[var] = cost;
+        }
+    }
+
+    PROBLEME_HEBDO* problemeHebdo;
+    const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
+    VariableManagement::VariableManager variableManager;
+    std::vector<double>& CoutLineaire;
+    int pdtHebdo = 0;
+};
+
+} // anonymous namespace
+
+void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
+                                             int PremierPdtDeLIntervalle,
+                                             int DernierPdtDeLIntervalle)
+{
+    ReserveCostsInitializer initializer(problemeHebdo);
+
+    for (int pdt = PremierPdtDeLIntervalle; pdt < DernierPdtDeLIntervalle; ++pdt)
+    {
+        initializer.setPdtHebdo(pdt);
+
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
+        {
+            const auto& areaReserves = problemeHebdo->allReserves.value()[pays];
+
+            for (const auto& areaReserve: areaReserves.areaCapacityReservations)
             {
-                reserveCostsInitializer.initReserveCosts(areaReserve);
+                initializer.initReserveCosts(areaReserve);
 
-                // Thermal clusters
-                for (const auto& [clusterId, clusterReserveParticipation]:
-                     areaReserve.AllThermalReservesParticipation)
+                for (const auto& [_, participation]: areaReserve.AllThermalReservesParticipation)
                 {
-                    reserveCostsInitializer.initThermalReserveParticipationCosts(
-                      areaReserve.type,
-                      clusterReserveParticipation);
+                    initializer.initThermalReserveParticipationCosts(areaReserve.type,
+                                                                     participation);
                 }
 
-                // Short Term Storage clusters
-                for (const auto& [clusterId, clusterReserveParticipation]:
-                     areaReserve.AllSTStorageReservesParticipation)
+                for (const auto& [_, participation]: areaReserve.AllSTStorageReservesParticipation)
                 {
-                    reserveCostsInitializer.initSTStorageReserveParticipationCosts(
-                      areaReserve.type,
-                      clusterReserveParticipation);
+                    initializer.initSTStorageReserveParticipationCosts(areaReserve.type,
+                                                                       participation);
                 }
 
-                // Hydro
-                for (const auto& clusterReserveParticipation:
-                     areaReserve.AllHydroReservesParticipation)
+                for (const auto& participation: areaReserve.AllHydroReservesParticipation)
                 {
-                    reserveCostsInitializer.initHydroReserveParticipationCosts(
-                      areaReserve.type,
-                      clusterReserveParticipation);
+                    initializer.initHydroReserveParticipationCosts(areaReserve.type, participation);
                 }
             }
         }
