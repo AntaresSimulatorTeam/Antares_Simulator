@@ -442,7 +442,7 @@ protected:
     //! Load the study header
     bool internalLoadHeader(const std::filesystem::path& folder);
     //! Load all correlation matrices
-    bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
+    bool internalLoadCorrelationMatrices();
     //! Load all binding constraints
     virtual bool internalLoadBindingConstraints(const StudyLoadOptions& options);
     //! Load all set of areas and links

@@ -143,64 +143,6 @@ void ClusterList<ClusterT>::rebuildIndexes()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::rename(std::string idToFind, std::string newName)
-{
-    if (idToFind.empty() or newName.empty())
-    {
-        return false;
-    }
-
-    // Internal:
-    // It is vital to make copy of these strings. We can not make assumption that these
-    // CString are not from the same buffer (name, id) than ours.
-    // It may have an undefined behavior.
-    // Consequently, the parameters `idToFind` and `newName` shall not be `const &`.
-
-    // Making sure that the id is lowercase
-    boost::to_lower(idToFind);
-
-    // The new ID
-    std::string newID = Antares::transformNameIntoID(newName);
-
-    // Looking for the renewable clusters in the list
-    auto* cluster_ptr = this->findInAll(idToFind);
-    if (!cluster_ptr)
-    {
-        return true;
-    }
-
-    if (idToFind == newID)
-    {
-        cluster_ptr->setName(newName);
-        return true;
-    }
-
-    // The name is the same. Aborting nicely.
-    if (cluster_ptr->name() == newName)
-    {
-        return true;
-    }
-
-    // Already exist
-    if (this->exists(newID))
-    {
-        return false;
-    }
-
-    cluster_ptr->setName(newName);
-
-    // Invalidate matrices attached to the area
-    // It is a bit excessive (all matrices not only those related to the renewable clusters)
-    // will be rewritten but currently it is the less error-prone.
-    if (cluster_ptr->parentArea)
-    {
-        (cluster_ptr->parentArea)->invalidateJIT = true;
-    }
-
-    return true;
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::remove(const std::string& id)
 {
     auto nbDeletion = std::erase_if(allClusters_,
