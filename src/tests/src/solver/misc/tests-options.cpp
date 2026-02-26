@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(study_folder_is_empty___exception_raised)
 #if defined(_WIN32)
 BOOST_AUTO_TEST_CASE(on_Win__study_folder_contains_non_ascii_chars___exception_raised)
 {
-    fs::path studyFolder = fs::temp_directory_path() / "I contain an accènt";
+    fs::path studyFolder = fs::temp_directory_path() / "I contain an accÃ©nt";
     std::string err_msg = "Study folder contains non ASCII chars : ";
     BOOST_CHECK_EXCEPTION(checkStudyFolder(studyFolder.string()),
                           std::runtime_error,
@@ -204,7 +204,6 @@ BOOST_AUTO_TEST_CASE(reset_restores_default_values)
     settings.ignoreConstraints = true;
     settings.tsGeneratorsOnly = true;
     settings.noOutput = true;
-    settings.displayProgression = true;
     settings.forceZipOutput = true;
 
     settings.solverOptions.linearSolver = "custom-linear";
@@ -229,7 +228,6 @@ BOOST_AUTO_TEST_CASE(reset_restores_default_values)
     BOOST_CHECK(!settings.ignoreConstraints);
     BOOST_CHECK(!settings.tsGeneratorsOnly);
     BOOST_CHECK(!settings.noOutput);
-    BOOST_CHECK(!settings.displayProgression);
     BOOST_CHECK(!settings.forceZipOutput);
 
     BOOST_CHECK_EQUAL(settings.solverOptions.linearSolver, std::string("sirius"));
@@ -273,7 +271,6 @@ BOOST_AUTO_TEST_CASE(default_parser_resets_settings_and_keeps_defaults)
     BOOST_CHECK(!settings.ignoreConstraints);
     BOOST_CHECK(!settings.tsGeneratorsOnly);
     BOOST_CHECK(!settings.noOutput);
-    BOOST_CHECK(!settings.displayProgression);
     BOOST_CHECK(!settings.forceZipOutput);
 
     // Solver options should be at their defaults

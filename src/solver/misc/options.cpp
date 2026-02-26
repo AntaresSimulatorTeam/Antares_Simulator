@@ -151,10 +151,6 @@ void addMiscOptions(Yuni::GetOpt::Parser& parser,
 {
     parser.addParagraph("\nMisc.");
 
-    parser.addFlag(settings.displayProgression,
-                   ' ',
-                   "progress",
-                   "Display the progress of each task");
     parser.add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
     parser.addFlag(options.listSolvers,
                    'l',
@@ -295,7 +291,6 @@ void Settings::reset()
     ignoreConstraints = false;
     tsGeneratorsOnly = false;
     noOutput = false;
-    displayProgression = false;
     forceZipOutput = false;
 
     solverOptions = Antares::Solver::Optimization::CmdLineOptimOptions{};

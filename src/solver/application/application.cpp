@@ -280,22 +280,6 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
     postParametersChecks();
 
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
-    if (pSettings.noOutput)
-    {
-        pSettings.displayProgression = false;
-    }
-
-    if (pSettings.displayProgression)
-    {
-        auto& filename = pStudy->buffer;
-        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, *resultWriter);
-        pStudy->progression.start();
-    }
-    else
-    {
-        logs.info() << "  The progression is disabled";
-    }
 }
 
 void Application::postParametersChecks() const
