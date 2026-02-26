@@ -240,24 +240,8 @@ void AreaLink::reverse()
     from->buildLinksIndexes();
     with->buildLinksIndexes();
 
-    // Making sure that we have the data
-    directCapacities.forceReload(true);
-    indirectCapacities.forceReload(true);
-
     // invert NTC values
     directCapacities.timeSeries.swap(indirectCapacities.timeSeries);
-
-    directCapacities.markAsModified();
-    indirectCapacities.markAsModified();
-}
-
-bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
-{
-    if (from && with)
-    {
-        return from->isVisibleOnLayer(layerID) && with->isVisibleOnLayer(layerID);
-    }
-    return false;
 }
 
 AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
@@ -668,70 +652,6 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
     return success;
 }
 
-#ifdef BUILD_UI
-bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder)
-{
-    String filename;
-    IniFile ini;
-
-    auto end = area->links.end();
-    for (auto i = area->links.begin(); i != end; ++i)
-    {
-        auto& link = *(i->second);
-
-        auto* section = ini.addSection(link.with->id);
-
-        section->add("hurdles-cost", link.useHurdlesCost);
-        section->add("loop-flow", link.useLoopFlow);
-        section->add("use-phase-shifter", link.usePST);
-        section->add("transmission-capacities",
-                     transmissionCapacitiesToString(link.transmissionCapacities));
-        section->add("asset-type", assetTypeToString(link.assetType));
-        section->add("link-style", styleToString(link.style));
-        section->add("link-width", link.linkWidth);
-        section->add("colorr", link.color[0]);
-        section->add("colorg", link.color[1]);
-        section->add("colorb", link.color[2]);
-        section->add("display-comments", link.displayComments);
-        if (!link.comments.empty())
-        {
-            section->add("comments", link.comments);
-        }
-        section->add("filter-synthesis", datePrecisionIntoString(link.filterSynthesis));
-        section->add("filter-year-by-year", datePrecisionIntoString(link.filterYearByYear));
-    }
-
-    filename.clear() << folder << SEP << "properties.ini";
-    return ini.save(filename);
-}
-
-bool AreaLinksSaveToFolder(const Area* area, const char* const folder)
-{
-    /* Assert */
-    assert(area);
-    assert(folder);
-
-    // Initialize
-    if (!IO::Directory::Create(folder))
-    {
-        logs.error() << folder << ": Impossible to create the folder";
-        return false;
-    }
-
-    if (!saveAreaLinksConfigurationFileToFolder(area, folder))
-    {
-        return false;
-    }
-
-    if (!saveAreaLinksTimeSeriesToFolder(area, folder))
-    {
-        return false;
-    }
-
-    return true;
-}
-#endif
-
 void AreaLinkRemove(AreaLink* link)
 {
     if (!link)
@@ -751,19 +671,6 @@ void AreaLinkRemove(AreaLink* link)
     }
 
     delete link;
-}
-
-bool AreaLink::forceReload(bool reload) const
-{
-    return parameters.forceReload(reload) && directCapacities.forceReload(reload)
-           && indirectCapacities.forceReload(reload);
-}
-
-void AreaLink::markAsModified() const
-{
-    parameters.markAsModified();
-    directCapacities.markAsModified();
-    indirectCapacities.markAsModified();
 }
 
 String AreaLink::getName() const

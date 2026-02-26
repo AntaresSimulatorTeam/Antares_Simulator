@@ -97,24 +97,11 @@ public:
 
     //@}
 
-    /*!
-    ** \brief Invalidate all clusters
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the clusters as modified
-    */
-    void markAsModified() const;
-
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
-#ifdef BUILD_UI
-    virtual bool saveToFolder(const AnyString& folder) const = 0;
-#endif
     ///@}
 
     /*!

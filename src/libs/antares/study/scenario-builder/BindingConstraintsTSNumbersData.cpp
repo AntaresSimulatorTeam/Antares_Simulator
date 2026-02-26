@@ -72,27 +72,6 @@ bool BindingConstraintsTSNumberData::reset(const Study& study)
     return true;
 }
 
-#ifdef BUILD_UI
-void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File::Stream& file) const
-{
-    // Turning values into strings (precision 4)
-    std::ostringstream value_into_string;
-    value_into_string << std::setprecision(4);
-
-    for (const auto& [group_name, ts_numbers]: rules_)
-    {
-        for (unsigned year = 0; year < ts_numbers.height; ++year)
-        {
-            auto value = ts_numbers[0][year];
-            if (value != 0)
-            {
-                file << get_prefix() << group_name << "," << year << " = " << value << "\n";
-            }
-        }
-    }
-}
-#endif
-
 void BindingConstraintsTSNumberData::setTSnumber(const std::string& group_name,
                                                  const uint year,
                                                  uint value)

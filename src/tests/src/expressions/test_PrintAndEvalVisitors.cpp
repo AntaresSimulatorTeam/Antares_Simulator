@@ -36,10 +36,11 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
             return 123.45; // Mock return value for testing
         }
 
-        [[nodiscard]] virtual std::span<const double> getData(const std::string& dataSetId,
-                                                              unsigned timeSeriesNumber,
-                                                              unsigned firstHour,
-                                                              unsigned lastHour) const
+        [[nodiscard]] virtual std::span<const double> getData(
+          [[maybe_unused]] const std::string& dataSetId,
+          [[maybe_unused]] unsigned timeSeriesNumber,
+          [[maybe_unused]] unsigned firstHour,
+          [[maybe_unused]] unsigned lastHour) const
         {
             static std::vector<double> data = {123.45};
             return data;
@@ -681,8 +682,8 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
-                                 [[maybe_unused]] const unsigned scenario,
+    [[nodiscard]] double getData(const std::string& dataSetId,
+                                 const unsigned /*scenario*/,
                                  unsigned hour) const override
     {
         if (const auto [ok, value] = IsParameterRegistered(dataSetId, hour); ok)
@@ -693,22 +694,23 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     }
 
     [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
-                                                  unsigned timeSeriesNumber,
+                                                  unsigned /*timeSeriesNumber*/,
                                                   unsigned firstHour,
                                                   unsigned lastHour) const override
     {
         if (const auto [ok, value] = IsParameterRegistered(dataSetId); ok)
         {
-            return value;
+            lastData_ = value;
+            return lastData_;
         }
-        std::vector<double> data(lastHour - firstHour + 1);
+        lastData_.resize(lastHour - firstHour + 1);
         auto v = firstHour;
-        for (int i = 0; i < data.size(); ++i)
+        for (std::size_t i = 0; i < lastData_.size(); ++i)
         {
-            data[i] = v;
+            lastData_[i] = v;
             ++v;
         }
-        return data;
+        return lastData_;
     }
 
     MockLinearProblemData(const std::map<std::string, std::vector<double>>& parametersValues = {}):
@@ -744,6 +746,7 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     }
 
     std::map<std::string, std::vector<double>> parametersValues = {};
+    mutable std::vector<double> lastData_;
 };
 
 struct TimeDependentParameterFixture

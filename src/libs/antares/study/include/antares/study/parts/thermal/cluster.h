@@ -73,16 +73,6 @@ public:
     ~ThermalCluster() = default;
 
     /*!
-    ** \brief Invalidate all data associated to the thermal cluster
-    */
-    bool forceReload(bool reload) const override;
-
-    /*!
-    ** \brief Mark the thermal cluster as modified
-    */
-    void markAsModified() const override;
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI
@@ -156,6 +146,9 @@ public:
 
     //! The index of the cluster (within a list)
     uint index = 0;
+
+    //! The global index of the cluster across all areas (used by the solver)
+    int globalIndex = -1;
 
     //! Mustrun
     bool mustrun = false;

@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(ExponentOneWithCoefficients)
     BOOST_CHECK(nonConstantExpr.hasCoefs());
     BOOST_CHECK_EQUAL(nonConstantExpr.constant(), original.constant());
     BOOST_CHECK_EQUAL(original.size(), nonConstantExpr.size());
-    for (auto i = 0; i < original.size(); ++i)
+    for (std::size_t i = 0; i < original.size(); ++i)
     {
         BOOST_CHECK_EQUAL(original[i].first, nonConstantExpr[i].first);
         BOOST_CHECK_EQUAL(original[i].second, nonConstantExpr[i].second);

@@ -29,8 +29,7 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  OptimEntityContainer& optimEntityContainer,
-  const Optimisation::ScenarioGroupRepository& scenarioGroupRepository):
+  OptimEntityContainer& optimEntityContainer):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer)
@@ -90,7 +89,7 @@ std::vector<unsigned> maxUnsupEnergyConstraintIndices(const PROBLEME_HEBDO* prob
                                                       const unsigned& areaIndex)
 {
     std::vector<unsigned> indices(ctx.getLocalNumberOfTimeSteps());
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         indices[h] = problemeHebdo->CorrespondanceCntNativesCntOptim[h]
                        .NumeroDeContraintePourBornerLaDefaillance[areaIndex];
@@ -105,7 +104,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 {
     const auto& solverVariables = optimEntityContainer_.getVariables();
 
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         IMipConstraint* constraint = constraints[h];
         for (const auto& [index, coef]: linearExpression[h])
@@ -124,7 +123,7 @@ std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::fetchConstraints(
 {
     auto& pb = optimEntityContainer_.Problem();
     std::vector<IMipConstraint*> constraints(ctx.getLocalNumberOfTimeSteps());
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         constraints[h] = pb.getConstraint(constraintsIndices[h]);
     }

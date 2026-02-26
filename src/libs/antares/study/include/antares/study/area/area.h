@@ -21,7 +21,6 @@
 
 #include "constants.h"
 #include "links.h"
-#include "ui.h"
 
 namespace Antares::Data
 {
@@ -68,27 +67,7 @@ public:
     ** \brief Destructor
     */
     ~Area();
-
     //@}
-
-    // !\name isVisibleOnLayer
-    //@{
-    /*!
-    ** \brief check visibility on layer
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const
-    {
-        if (ui == nullptr)
-        {
-            return false;
-        }
-
-        std::vector<size_t>& layerList = ui->mapLayersVisibilityList;
-        std::vector<size_t>::iterator layerPosition = std::find(layerList.begin(),
-                                                                layerList.end(),
-                                                                layerID);
-        return layerPosition != layerList.end();
-    }
 
     //! \name Links
     //@{
@@ -159,16 +138,7 @@ public:
     ** However, we would like to be able to force the load of all data, especially
     ** when saving a study.
     ** The flag `invalidateJIT` will be reset to false.
-    **
-    ** \param reload True to force the reload of data
-    ** \return True if the operation succeeded
     */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all areas as modified
-    */
-    void markAsModified() const;
 
     //! \name Thermal clusters min stable power validity checking
     //@{
@@ -280,12 +250,6 @@ public:
     uint filterYearByYear = filterAll;
     //@}
 
-    //! \name UI
-    //@{
-    //! Information for the UI
-    std::unique_ptr<AreaUI> ui;
-    //@}
-
     //! \name Dynamic
     //@{
     /*!
@@ -306,7 +270,6 @@ public:
     //@}
 
 private:
-    void internalInitialize();
     void createMissingTimeSeries();
     void createMissingPrepros();
 
@@ -429,26 +392,6 @@ public:
     */
     bool loadListFromFile(const std::filesystem::path& filename);
 
-#ifdef BUILD_UI
-    /*!
-    ** \brief Save all informations about areas into a folder (-> input/generalData)
-    **
-    ** \param l The list of areas
-    ** \param folder The target folder
-    */
-    bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Write the list of areas into a file
-    **
-    ** The file structure is merely composed by all names of areas, one line one area
-    **
-    ** \param filename The file to read
-    ** \return A non-zero value if the operation was successful, 0 otherwise
-    */
-    bool saveListToFile(const AnyString& filename) const;
-#endif
-
     /*!
     ** \brief Write the list of all links into a file
     **
@@ -465,14 +408,6 @@ public:
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
     void saveLinkListToBuffer(Yuni::Clob& buffer) const;
-
-    /*!
-    ** \brief Preload all areas which have been invalidated
-    **
-    ** \param [out] The number of areas which have been invalidated
-    */
-    bool preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount = nullptr) const;
-    //@}
 
     //! \name Areas
     //@{
@@ -495,8 +430,6 @@ public:
     */
     Area* findFromName(const AreaName& name);
 
-    Area* findFromPosition(const int x, const int y) const;
-
     /*!
     ** \brief Find an area from its name (const)
     */
@@ -518,19 +451,6 @@ public:
     bool empty() const;
 
     /*!
-    ** \brief Invalidate all areas
-    **
-    ** \param reload True to reload data in the same time
-    ** \return True if the operation succeeded
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
-
-    /*!
     ** \brief Rebuild the indexes for accessing areas
     **
     ** It is sometimes quite usefull to use a mere index to access to
@@ -546,33 +466,6 @@ public:
     **   routine.
     */
     bool remove(const AnyString& id);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newName);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newID The new area ID
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newid, const AreaName& newName);
 
     /*!
     ** \brief Get the total number of areas
@@ -685,20 +578,6 @@ bool AreaLinksLoadFromFolder(Study& s,
                              AreaList* l,
                              Area* area,
                              const std::filesystem::path& folder);
-
-#ifdef BUILD_UI
-/*!
-** \brief Save interconnections of a given area into a folder (`input/areas/[area]/ntc`)
-**
-** \param area The area
-** \param folder The target folder
-** \return True if the operation succeeded, 0 otherwise
-*/
-bool AreaLinksSaveToFolder(const Area* area, const char* const folder);
-
-// Save a given area's interconnexions configuration file into a folder
-bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder);
-#endif
 
 /*!
 ** \brief Clear all interconnection from an area

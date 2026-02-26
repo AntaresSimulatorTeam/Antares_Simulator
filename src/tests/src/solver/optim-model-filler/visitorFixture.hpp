@@ -30,15 +30,15 @@ inline ScenarioGroupRepository createScenario()
 
 struct MockLinearProblemData: LinearProblemApi::ILinearProblemData
 {
-    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
-                                 [[maybe_unused]] unsigned scenario,
+    [[nodiscard]] double getData(const std::string& /*dataSetId*/,
+                                 unsigned /*scenario*/,
                                  unsigned hour) const override
     {
         return hour; // for test
     }
 
-    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
-                                                  unsigned timeSeriesNumber,
+    [[nodiscard]] std::span<const double> getData(const std::string& /*dataSetId*/,
+                                                  unsigned /*timeSeriesNumber*/,
                                                   unsigned firstHour,
                                                   unsigned lastHour) const override
     {

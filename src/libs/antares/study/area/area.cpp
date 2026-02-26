@@ -7,36 +7,24 @@
 
 #include <yuni/yuni.h>
 
-#include "antares/study//study.h"
 #include "antares/study/area/scratchpad.h"
-#include "antares/study/area/ui.h"
 #include "antares/study/parts/load/prepro.h"
+#include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
 using namespace Yuni;
 
 namespace Antares::Data
 {
-void Area::internalInitialize()
-{
-    // Make sure we have
-    if (JIT::usedFromGUI)
-    {
-        ui = std::make_unique<AreaUI>();
-    }
-}
-
 Area::Area():
     reserves(fhrMax, HOURS_PER_YEAR),
     miscGen(fhhMax, HOURS_PER_YEAR)
 {
-    internalInitialize();
 }
 
 Area::Area(const AnyString& name):
     Area()
 {
-    internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(this->name);
 }
@@ -44,7 +32,6 @@ Area::Area(const AnyString& name):
 Area::Area(const AnyString& name, const AnyString& id):
     Area()
 {
-    internalInitialize();
     this->name = name;
     this->id = Antares::transformNameIntoID(id);
 }
@@ -248,84 +235,6 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
         }
     }
     return noErrorMinStabPow;
-}
-
-bool Area::forceReload(bool reload) const
-{
-    // To not break the entire constness design of the library
-    // this method should remain const event if the operations
-    // performed are obviously not const
-    auto& self = *(const_cast<Area*>(this));
-
-    bool ret = true;
-    invalidateJIT = false;
-
-    // Misc Gen
-    ret = self.miscGen.forceReload(reload) and ret;
-    // Reserves
-    ret = self.reserves.forceReload(reload) and ret;
-
-    // Load
-    ret = self.load.forceReload(reload) and ret;
-    // Solar
-    ret = self.solar.forceReload(reload) and ret;
-    // Hydro
-    ret = self.hydro.forceReload(reload) and ret;
-    // Wind
-    ret = self.wind.forceReload(reload) and ret;
-    // Thermal
-    ret = self.thermal.forceReload(reload) and ret;
-    // Renewable
-    ret = self.renewable.forceReload(reload) and ret;
-    if (not links.empty())
-    {
-        auto end = self.links.end();
-        for (auto i = self.links.begin(); i != end; ++i)
-        {
-            ret = (i->second)->forceReload(reload) and ret;
-        }
-    }
-
-    if (ui)
-    {
-        self.ui->markAsModified();
-    }
-
-    return ret;
-}
-
-void Area::markAsModified() const
-{
-    // Misc Gen
-    miscGen.markAsModified();
-    // Reserves
-    reserves.markAsModified();
-
-    // Load
-    load.markAsModified();
-    // Solar
-    solar.markAsModified();
-    // Hydro
-    hydro.markAsModified();
-    // Wind
-    wind.markAsModified();
-    // Thermal
-    thermal.markAsModified();
-    // Renewable
-    renewable.markAsModified();
-
-    if (not links.empty())
-    {
-        auto end = links.end();
-        for (auto i = links.begin(); i != end; ++i)
-        {
-            (i->second)->markAsModified();
-        }
-    }
-    if (ui)
-    {
-        ui->markAsModified();
-    }
 }
 
 void Area::detachLinkFromID(const AreaName& id)

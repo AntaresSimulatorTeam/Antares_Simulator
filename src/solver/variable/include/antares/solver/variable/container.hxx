@@ -64,6 +64,7 @@ inline void List<NextT>::simulationEnd()
 template<class NextT>
 inline void List<NextT>::yearBegin(unsigned int year, unsigned int numSpace)
 {
+    dynamicAggregationSingleYear_[numSpace].reset();
     NextT::yearBegin(year, numSpace);
 }
 

@@ -22,24 +22,6 @@ ThermalCapacityFiller::ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
     optimEntityContainer_(optimEntityContainer),
     variableManager_(VariableManagerFromProblemHebdo(problemeHebdo))
 {
-    unsigned int areaIndex = 0;
-    for (const auto* areaName: problemeHebdo_->NomsDesPays)
-    {
-        unsigned int thermalClusterLocalIndex = 0;
-        const auto& thermalClusters = problemeHebdo_->PaliersThermiquesDuPays[areaIndex];
-        std::unordered_map<std::string, unsigned int> clusters;
-        for (const auto& clusterName: thermalClusters.NomsDesPaliersThermiques)
-        {
-            clusters[clusterName] = thermalClusters.NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                                      [thermalClusterLocalIndex];
-            ++thermalClusterLocalIndex;
-        }
-        if (!clusters.empty())
-        {
-            areasAndClusters_.try_emplace(areaName, AreaAndClusters{areaIndex, clusters});
-        }
-        ++areaIndex;
-    }
 }
 
 void ThermalCapacityFiller::addVariables(const FillContext&)
@@ -116,39 +98,45 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
     }
 }
 
-ThermalCapacityFiller::AreaAndClusters& ThermalCapacityFiller::areaClusters(
-  const std::string& areaId)
-{
-    const auto it = areasAndClusters_.find(areaId);
-    if (it == areasAndClusters_.end())
-    {
-        throw Error::RuntimeError(
-          fmt::format("unknown area '{}', is found in thermal-connection-capacity ", areaId));
-    }
-    return it->second;
-}
-
-unsigned int clusterAt(const std::string& areaId,
-                       const std::string& clusterId,
-                       const std::unordered_map<std::string, unsigned>& clusters)
-{
-    if (clusters.empty())
-    {
-        throw Error::RuntimeError(fmt::format(" area '{}' has not thermal clusters ", areaId));
-    }
-    const auto it = clusters.find(clusterId);
-    if (it == clusters.end())
-    {
-        throw Error::RuntimeError(
-          fmt::format(" area '{}' has not thermal cluster by the name '{}' ", areaId, clusterId));
-    }
-    return it->second;
-}
-
 int ThermalCapacityFiller::getClusterIndex(const std::string& areaId, const std::string& clusterId)
 {
-    const auto& [_, clusters] = areaClusters(areaId);
-    return clusterAt(areaId, clusterId, clusters);
+    // Find area index by name
+    int areaIndex = -1;
+    for (unsigned int i = 0; i < problemeHebdo_->NomsDesPays.size(); ++i)
+    {
+        if (areaId == problemeHebdo_->NomsDesPays[i])
+        {
+            areaIndex = static_cast<int>(i);
+            break;
+        }
+    }
+
+    if (areaIndex < 0)
+    {
+        throw Error::RuntimeError(
+          fmt::format("Unknown area '{}' in thermal capacity connection", areaId));
+    }
+
+    const auto& thermalClusters = problemeHebdo_->PaliersThermiquesDuPays[areaIndex];
+
+    // Find cluster local index by name
+    int clusterLocalIndex = -1;
+    for (int i = 0; i < thermalClusters.NombreDePaliersThermiques; ++i)
+    {
+        if (clusterId == thermalClusters.NomsDesPaliersThermiques[i])
+        {
+            clusterLocalIndex = i;
+            break;
+        }
+    }
+
+    if (clusterLocalIndex < 0)
+    {
+        throw Error::RuntimeError(
+          fmt::format("Area '{}' has no thermal cluster named '{}'", areaId, clusterId));
+    }
+
+    return thermalClusters.NumeroDuPalierDansLEnsembleDesPaliersThermiques[clusterLocalIndex];
 }
 
 void ThermalCapacityFiller::processThermalCapacityField(

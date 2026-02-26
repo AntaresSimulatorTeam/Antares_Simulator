@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <fmt/format.h>
+#include <fstream>
+#include <sstream>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
-#include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
 
 #include "include/antares/study/fwd.h"
@@ -53,14 +54,16 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
         }
     }
 
-    // The simulation settings
-    if (!simulationComments.loadFromFolder(options))
+    // The simulation settings (comments.txt)
+    fs::path commentsPath = folderSettings / "comments.txt";
+    std::ifstream file(commentsPath);
+    if (file)
     {
-        if (options.loadOnlyNeeded)
-        {
-            return false;
-        }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        simulationComments = buffer.str();
     }
+
     // Load the general data
     fs::path generalDataPath = folderSettings / "generaldata.ini";
     bool errorWhileLoading = !parameters.loadFromFile(generalDataPath, header.version);
@@ -76,10 +79,6 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
             return false;
         }
     }
-
-    // Load the layer data
-    fs::path layersPath = path / "layers" / "layers.ini";
-    loadLayers(layersPath);
 
     return true;
 }
@@ -112,18 +111,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     // This settings can only be enabled from the solver
     // Prepare the output for the study
     prepareOutput(); // will abort early if not usedByTheSolver
-
-    // Scenario Rules sets, only available since v3.6
-    // After two consecutive load, some scenario builder data
-    // may still exist.
-    scenarioRulesDestroy();
-
-    if (JIT::usedFromGUI && uiinfo)
-    {
-        // Post-processing when loaded from the User-Interface
-        uiinfo->reload();
-        uiinfo->reloadBindingConstraints();
-    }
 
     // calendar update
     if (usedByTheSolver)
@@ -345,38 +332,6 @@ bool Study::internalLoadSets()
 
     logs.warning() << "Impossible to load the sets of areas";
     return false;
-}
-
-void Study::reloadCorrelation()
-{
-    StudyLoadOptions options;
-    options.loadOnlyNeeded = false;
-    internalLoadCorrelationMatrices(options);
-}
-
-// TODO remove with GUI
-bool Study::reloadXCastData()
-{
-    // if changes are required, please update AreaListLoadFromFolderSingleArea()
-    bool ret = true;
-    areas.each(
-      [this, &ret](Area& area)
-      {
-          assert(area.load.prepro);
-          assert(area.solar.prepro);
-          assert(area.wind.prepro);
-
-          // Load
-          fs::path loadPath = folderInput / "load" / "prepro" / area.id.to<std::string>();
-          ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
-          // Solar
-          fs::path solarPath = folderInput / "solar" / "prepro" / area.id.to<std::string>();
-          ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
-          // Wind
-          fs::path windPath = folderInput / "wind" / "prepro" / area.id.to<std::string>();
-          ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
-      });
-    return ret;
 }
 
 } // namespace Antares::Data

@@ -11,7 +11,6 @@
 #include <memory>
 
 #include "BindingConstraint.h"
-#include "BindingConstraintSaver.h"
 
 namespace Antares::Data
 {
@@ -94,12 +93,6 @@ public:
     [[nodiscard]] bool loadFromFolder(Data::Study& s,
                                       const Data::StudyLoadOptions& options,
                                       const std::filesystem::path& folder);
-#ifdef BUILD_UI
-    /*!
-    ** \brief Save all binding constraints into a folder
-    */
-    [[nodiscard]] bool saveToFolder(const AnyString& folder) const;
-#endif
 
     /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
@@ -139,16 +132,6 @@ public:
     */
     void changeConstraintsWeeklyToDaily();
 
-    /*!
-    ** \brief Invalidate all matrices of all binding constraints
-    */
-    void forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
-
     static Vector LoadBindingConstraint(EnvForLoading env);
 
     [[nodiscard]] Vector activeConstraints() const;
@@ -156,8 +139,6 @@ public:
     [[nodiscard]] Vector getPtrForInequalityBindingConstraints() const;
 
 private:
-    bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
-
     //! All constraints
     Vector constraints_;
 

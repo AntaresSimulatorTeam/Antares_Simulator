@@ -625,47 +625,6 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
     return ini.save(buffer) && ret;
 }
 
-bool PartHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = creditModulation.forceReload(reload) && ret;
-    ret = inflowPattern.forceReload(reload) && ret;
-    ret = reservoirLevel.forceReload(reload) && ret;
-    ret = waterValues.forceReload(reload) && ret;
-    ret = dailyNbHoursAtGenPmax.forceReload(reload) && ret;
-    ret = dailyNbHoursAtPumpPmax.forceReload(reload) && ret;
-
-    if (series)
-    {
-        ret = series->forceReload(reload) && ret;
-    }
-    if (prepro)
-    {
-        ret = prepro->forceReload(reload) && ret;
-    }
-
-    return ret;
-}
-
-void PartHydro::markAsModified() const
-{
-    inflowPattern.markAsModified();
-    reservoirLevel.markAsModified();
-    waterValues.markAsModified();
-    creditModulation.markAsModified();
-    dailyNbHoursAtGenPmax.markAsModified();
-    dailyNbHoursAtPumpPmax.markAsModified();
-
-    if (series)
-    {
-        series->markAsModified();
-    }
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
-}
-
 void PartHydro::copyFrom(const PartHydro& rhs)
 {
     // credit modulations

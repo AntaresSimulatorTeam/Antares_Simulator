@@ -36,16 +36,6 @@ public:
     void resizeAllTimeseriesNumbers(uint n) const;
 
     /*!
-    ** \brief Invalidate all JIT data
-    */
-    bool forceReload(bool reload) const;
-
-    /*!
-    ** \brief Mark the thermal cluster as modified
-    */
-    void markAsModified() const;
-
-    /*!
     ** \brief Some clusters force the generation of timeseries,
         overriding the global (study) parameter.
     */

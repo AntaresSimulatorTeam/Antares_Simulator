@@ -146,176 +146,6 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& file
     return true;
 }
 
-#ifdef BUILD_UI
-static bool AreaListSaveThermalDataToFile(const AreaList& list, const AnyString& filename)
-{
-    IniFile ini;
-
-    IniFile::Section* s = ini.addSection("unserverdenergycost");
-    list.each(
-      [&s](const Data::Area& area)
-      {
-          // 0 values are skipped
-          if (!Utils::isZero(area.thermal.unsuppliedEnergyCost))
-          {
-              s->add(area.id, area.thermal.unsuppliedEnergyCost);
-          }
-      });
-
-    s = ini.addSection("spilledenergycost");
-    list.each(
-      [&s](const Data::Area& area)
-      {
-          // 0 values are skipped
-          if (!Utils::isZero(area.thermal.spilledEnergyCost))
-          {
-              s->add(area.id, area.thermal.spilledEnergyCost);
-          }
-      });
-
-    return ini.save(filename);
-}
-
-static bool AreaListSaveToFolderSingleArea(const Area& area,
-                                           const AnyString& folder,
-                                           const Parameters::Compatibility::HydroPmax hydroPmax)
-{
-    bool ret = true;
-    Clob buffer;
-
-    // A specific folder for general data
-    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id;
-    if (!IO::Directory::Create(buffer))
-    {
-        logs.error() << "I/O Error: Impossible to create: " << buffer;
-        ret = false;
-    }
-
-    // Data related to User Interface
-    if (area.ui && area.ui->modified())
-    {
-        buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
-                       << "ui.ini";
-        ret = area.ui->saveToFile(buffer) && ret;
-    }
-
-    // Nodal optimization
-    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
-                   << "optimization.ini";
-    ret = saveAreaOptimisationIniFile(area, buffer) && ret;
-
-    // Adequacy ini
-    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
-                   << "adequacy_patch.ini";
-    ret = saveAreaAdequacyPatchIniFile(area, buffer) && ret;
-
-    // Reserves: primary, strategic, dsm, d-1...
-    buffer.clear() << folder << SEP << "input" << SEP << "reserves" << SEP << area.id << ".txt";
-    ret = area.reserves.saveToCSVFile(buffer) && ret;
-
-    // Fatal hors hydro
-    buffer.clear() << folder << SEP << "input" << SEP << "misc-gen" << SEP << "miscgen-" << area.id
-                   << ".txt";
-    ret = area.miscGen.saveToCSVFile(buffer) && ret;
-
-    // NTC
-    buffer.clear() << folder << SEP << "input" << SEP << "links" << SEP << area.id;
-    ret = AreaLinksSaveToFolder(&area, buffer.c_str()) && ret;
-
-    // Load
-    {
-        if (area.load.prepro) // Prepro
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.load.prepro->saveToFolder(buffer) && ret;
-        }
-        buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "series";
-        area.load.series.saveToFolder(area.id, buffer.c_str(), "load_") && ret;
-    }
-
-    // Solar
-    {
-        if (area.solar.prepro) // Prepro
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.solar.prepro->saveToFolder(buffer) && ret;
-        }
-        buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "series";
-        ret = area.solar.series.saveToFolder(area.id, buffer.c_str(), "solar_") && ret;
-    }
-
-    // Hydro
-    {
-        buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "allocation" << SEP
-                       << area.id << ".ini";
-        ret = area.hydro.allocation.saveToFile(buffer) && ret;
-
-        if (area.hydro.prepro) // Hydro
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "prepro";
-            ret = area.hydro.prepro->saveToFolder(area.id, buffer.c_str()) && ret;
-        }
-        if (area.hydro.series) // Series
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "series";
-            ret = area.hydro.series->saveToFolder(area.id, buffer, hydroPmax) && ret;
-        }
-    }
-
-    // Wind
-    {
-        if (area.wind.prepro) // Prepro
-        {
-            buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "prepro" << SEP
-                           << area.id;
-            ret = area.wind.prepro->saveToFolder(buffer) && ret;
-        }
-
-        buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
-        ret = area.wind.series.saveToFolder(area.id, buffer.c_str(), "wind_") && ret;
-    }
-
-    // Thermal cluster list
-    {
-        buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "clusters" << SEP
-                       << area.id;
-        ret = area.thermal.list.saveToFolder(buffer) && ret;
-
-        buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "prepro";
-        ret = area.thermal.list.savePreproToFolder(buffer) && ret;
-        buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "series";
-        ret = area.thermal.list.saveDataSeriesToFolder(buffer) && ret;
-        ret = area.thermal.list.saveEconomicCosts(buffer) && ret;
-    }
-
-    // Renewable cluster list
-    {
-        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "clusters"
-                       << SEP << area.id;
-        ret = area.renewable.list.saveToFolder(buffer) && ret;
-
-        buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "series";
-        ret = area.renewable.list.saveDataSeriesToFolder(buffer) && ret;
-    }
-
-    // Short term storage
-
-    // save sts in list.ini for this area
-    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "clusters" << SEP
-                   << area.id;
-    ret = area.shortTermStorage.saveToFolder(buffer.c_str()) && ret;
-
-    // save the series files
-    buffer.clear() << folder << SEP << "input" << SEP << "st-storage" << SEP << "series" << SEP
-                   << area.id;
-    ret = area.shortTermStorage.saveDataSeriesToFolder(buffer.c_str()) && ret;
-
-    return ret;
-}
-#endif
-
 } // anonymous namespace
 
 bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
@@ -593,180 +423,6 @@ void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
       });
 }
 
-#ifdef BUILD_UI
-bool AreaList::saveListToFile(const AnyString& filename) const
-{
-    if (!filename)
-    {
-        return false;
-    }
-
-    Clob data;
-    {
-        // Preparing a new list of areas, sorted by their name
-        using List = std::list<std::string>;
-        List list;
-        {
-            auto end = areas.end();
-            for (auto i = areas.begin(); i != end; ++i)
-            {
-                list.push_back((i->second)->name.c_str());
-            }
-            list.sort();
-        }
-        {
-            auto end = list.end();
-            for (auto i = list.begin(); i != end; ++i)
-            {
-                data << *i << '\n';
-            }
-        }
-    }
-
-    // Writing data into the appropriate file
-    std::ofstream file(filename);
-    if (file.is_open())
-    {
-        file << data;
-        return true;
-    }
-    logs.error() << "impossible to write " << filename;
-    return false;
-}
-#endif
-
-bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount) const
-{
-    bool ret = true;
-    uint count = 0;
-    each(
-      [&ret, &count](const Data::Area& area)
-      {
-          if (area.invalidateJIT)
-          {
-              logs.info() << "Preparing the area " << area.name;
-              // invalidating all data belonging to the area
-              ret = area.forceReload(true) && ret;
-              // marking the area as modified to force the incremental save
-              area.markAsModified();
-              ++count;
-          }
-      });
-    if (invalidateCount)
-    {
-        *invalidateCount = count;
-    }
-    return ret;
-}
-
-void AreaList::markAsModified() const
-{
-    each([](const Data::Area& area) { area.markAsModified(); });
-}
-
-#ifdef BUILD_UI
-bool AreaList::saveToFolder(const AnyString& folder) const
-{
-    if (folder.empty())
-    {
-        logs.error() << "areas: invalid empty target folder";
-        assert(false and "invalid empty folder");
-        return false;
-    }
-
-    // Temporary buffer
-    Clob buffer;
-
-    // Invalidating all areas if required
-    // Forcing the loading of all data before writing something to prevent
-    // agains circular area renaming.
-    // Example :
-    //   rename A -> B
-    //   rename B -> A
-    preloadAndMarkAsModifiedAllInvalidatedAreas();
-
-    // Make sure a default structure is present
-    // All sub-routines must not rely on it. It just ensures that a common
-    // structure is present for the user
-    bool ret = true;
-
-    // Create the whole structure
-    buffer.clear() << folder << SEP << "input" << SEP << "areas";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "reserves";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "bindingconstraints";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "links";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "series";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "load" << SEP << "prepro";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "series";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "solar" << SEP << "prepro";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "series";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "wind" << SEP << "prepro";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "series";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "prepro";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "allocation";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "hydro" << SEP << "common" << SEP
-                   << "capacity";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "series";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "prepro";
-    ret = IO::Directory::Create(buffer) && ret;
-    buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "clusters";
-    ret = IO::Directory::Create(buffer) && ret;
-
-    // Write the list of areas to a flat file
-    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << "list.txt";
-    ret = saveListToFile(buffer) && ret;
-
-    // Thermal data, specific to areas
-    buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "areas.ini";
-    ret = AreaListSaveThermalDataToFile(*this, buffer) && ret;
-
-    // Save all areas
-    each(
-      [&ret, &folder, this](const Data::Area& area)
-      {
-          logs.info() << "Exporting the area " << (area.index + 1) << '/' << areas.size() << ": "
-                      << area.name;
-          ret = AreaListSaveToFolderSingleArea(area,
-                                               folder,
-                                               pStudy.parameters.compatibility.hydroPmax)
-                && ret;
-      });
-
-    // Hydro
-    // The hydro files must be saved after the area has been invalidated
-    buffer.clear() << folder << SEP << "input" << SEP << "hydro";
-    ret = PartHydro::SaveToFolder(*this, buffer, pStudy.parameters.compatibility.hydroPmax) && ret;
-
-    // update nameid set
-    updateNameIDSet();
-
-    return ret;
-}
-#endif
-
 static void readAdqPatchMode(Study& study, Area& area)
 {
     if (study.header.version < StudyVersion(8, 3))
@@ -892,24 +548,11 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
-    // TODO remove with GUI
-    if (JIT::usedFromGUI)
-    {
-        if (!area.ui)
-        {
-            area.ui = std::make_unique<AreaUI>();
-        }
-
-        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP << "ui.ini";
-        ret = area.ui->loadFromFile(buffer) && ret;
-    }
-
     bool averageTs = (study.usedByTheSolver && study.parameters.derated);
     // Load
     {
         if (area.load.prepro) // Prepro
         {
-            // if changes are required, please update reloadXCastData()
             fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
             ret = area.load.prepro->loadFromFolder(loadPath) && ret;
         }
@@ -926,7 +569,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.solar.prepro) // Prepro
         {
-            // if changes are required, please update reloadXCastData()
             fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
             ret = area.solar.prepro->loadFromFolder(solarPath) && ret;
         }
@@ -950,7 +592,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         if (area.hydro.prepro) /* Hydro */
         {
-            // if changes are required, please update reloadXCastData()
             fs::path hydroPrepro = pathHydro / "prepro";
             ret = area.hydro.prepro->loadFromFolder(study, area.id, hydroPrepro) && ret;
             ret = area.hydro.prepro->validate(area.id) && ret;
@@ -991,7 +632,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.wind.prepro) // Prepro
         {
-            // if changes are required, please update reloadXCastData()
             fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
             ret = area.wind.prepro->loadFromFolder(windPath) && ret;
         }
@@ -1283,27 +923,6 @@ Area* AreaList::findFromName(const AreaName& name)
     return (i != this->areas.end()) ? i->second : nullptr;
 }
 
-Area* AreaList::findFromPosition(const int x, const int y) const
-{
-    if (!this->areas.empty())
-    {
-        auto end = this->areas.rend();
-        double nearestDistance = 5;
-        Area* nearestItem = nullptr;
-        for (auto i = this->areas.rbegin(); i != end; ++i)
-        {
-            auto lastArea = i->second;
-            if (lastArea->ui && std::abs(lastArea->ui->x - x) < nearestDistance
-                && std::abs(lastArea->ui->y - y) < nearestDistance)
-            {
-                nearestItem = lastArea;
-            }
-        }
-        return nearestItem;
-    }
-    return nullptr;
-}
-
 const Area* AreaList::findFromName(const AreaName& name) const
 {
     AreaName id = transformNameIntoID(name);
@@ -1437,78 +1056,6 @@ void Area::detachLinkFromItsPointer(const AreaLink* lnk)
     }
 }
 
-bool AreaList::renameArea(const AreaName& oldid, const AreaName& newName)
-{
-    AreaName newid = transformNameIntoID(newName);
-    return renameArea(oldid, newid, newName);
-}
-
-bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const AreaName& newName)
-{
-    if (!oldid || !newName || !newid || areas.empty())
-    {
-        return false;
-    }
-
-    if (CheckForbiddenCharacterInAreaName(newName))
-    {
-        logs.error() << "character '*' is forbidden in area name: `" << newName << "`";
-        return false;
-    }
-    // Detaching the area from the list
-    Area* area;
-    {
-        auto i = areas.find(oldid);
-        if (i == areas.end())
-        {
-            return false;
-        }
-        area = i->second;
-        areas.erase(i);
-    }
-
-    if (find(newid))
-    {
-        // Another area with the same ID already exists
-        // Aborting.
-        areas[newid] = area;
-        return false;
-    }
-
-    // Renaming the area
-    area->id = newid;
-    area->name = newName;
-
-    area->invalidateJIT = true;
-    areas[area->id] = area;
-
-    // We have to update all links connected to this area
-    each(
-      [&oldid](Data::Area& a)
-      {
-          auto* link = a.findLinkByID(oldid);
-          if (!link)
-          {
-              return;
-          }
-
-          [[maybe_unused]] unsigned oldCount = (uint)a.links.size(); // only used in assert
-          // Renaming the entry
-
-          link->forceReload(true);
-          link->markAsModified();
-
-          link->detach();
-          a.links[link->with->id] = link;
-
-          assert(oldCount == a.links.size() && "We must have the same number of items in the list");
-      });
-
-    area->buildLinksIndexes();
-
-    return true;
-}
-
 void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
 {
     if (!list || !a)
@@ -1545,13 +1092,6 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
               }
           } while (mustLoop);
       });
-}
-
-bool AreaList::forceReload(bool reload) const
-{
-    bool ret = true;
-    each([&ret, &reload](const Data::Area& area) { ret = area.forceReload(reload) && ret; });
-    return ret;
 }
 
 void AreaList::resizeAllTimeseriesNumbers(uint n)
