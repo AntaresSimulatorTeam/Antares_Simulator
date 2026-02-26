@@ -332,12 +332,9 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
             return line.split(b'Output folder : ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
 
-
-def make_values_from_string(days: str):
-    list_daily_values = [float(number) for number in re.findall(r'\d+', days)]
-    assert len(list_daily_values) == NB_DAYS_IN_WEEK, "7 daily values expected, %d given" % len(list_daily_values)
-    return list_daily_values
-
+def make_values_from_string(values: str):
+    list_values = [float(number.strip()) for number in values.split(",")]
+    return list_values
 
 def check_week_ts_has_daily_values(week_ts, list_daily_values):
     split_ts = np.array_split(week_ts, NB_DAYS_IN_WEEK)
@@ -357,6 +354,7 @@ def extract_week_ts(ts, week):
 def check_thermal_cluster_min_gen_for_week(context, area, week, year, cluster, days):
     ts = context.soh.min_gen_for_thermal_cluster(area, year, cluster)
     list_daily_values = make_values_from_string(days)
+    assert len(list_daily_values) == NB_DAYS_IN_WEEK, "7 daily values expected, %d given" % len(list_daily_values)
     week_ts = extract_week_ts(ts, week)
     check_week_ts_has_daily_values(week_ts, list_daily_values)
 
@@ -617,10 +615,28 @@ def check_max_generation_from_capacity_exists(context, area, cluster):
         assert week_hours == list(
             hours_mapped_to_constraints.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_hours[0]}, {week_hours[-1]}] in {mps_file}"
 
-@then('for first week, area balance rhs is {values}, and then equals constant {c}')
-def check_area_balance_rhs(context, values, c):
-    mps_file = context.soh.get_output_files_with_pattern("problem-1-1--optim-nb-1.mps")
-    pass
+@then('for first week, area balance RHS (for area {area}) is first {values_str}, then equals constant {constant_str}')
+def check_area_balance_rhs(context, area, values_str, constant_str):
+    list_values = make_values_from_string(values_str)
+    constant = float(constant_str)
+
+    mps_file_path = context.soh.get_output_file_with_name("problem-1-1--optim-nb-1.mps")
+    assert mps_file_path, f"No output file named problem-1-1--optim-nb-1.mps"
+
+    mps_problem = mpu.load_problem(mps_file_path)
+    balanced_constraints = [c for c in mps_problem.get_linear_constraints() if c.name.startswith(f"AreaBalance::area<{area}>")]
+
+    # Checking first balance constraints have expected bounds
+    first_constraints = balanced_constraints[0:len(list_values)]
+    for c, value in zip(first_constraints, list_values):
+        assert c.lower_bound == value, f"Contraint {c.name} lower bound should be equal to {value}"
+        assert c.upper_bound == value, f"Contraint {c.name} upper bound should be equal to {value}"
+
+    # Checking remaining balance constraints have same expected bounds
+    last_constraints = balanced_constraints[len(list_values):]
+    for c in last_constraints:
+        assert c.lower_bound == constant
+        assert c.upper_bound == constant
 
 
 @then(

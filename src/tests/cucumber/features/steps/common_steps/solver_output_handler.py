@@ -164,5 +164,8 @@ class solver_output_handler:
     def get_mps_files(self):
         return list(Path(self.study_output_path).glob("*.mps"))
 
-    def get_output_files_with_pattern(self, pattern: str):
-        return list(Path(self.study_output_path).glob(pattern))
+    def get_output_file_with_name(self, filename: str):
+        path = Path(self.study_output_path) / filename
+        if path.is_file():
+            return str(path)
+        return None
