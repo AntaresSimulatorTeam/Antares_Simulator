@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <fmt/format.h>
+#include <fstream>
+#include <sstream>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
@@ -49,10 +51,14 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
         return false;
     }
 
-    // The simulation settings
-    if (!simulationComments.loadFromFolder(options))
+    // The simulation settings (comments.txt)
+    fs::path commentsPath = folderSettings / "comments.txt";
+    std::ifstream file(commentsPath);
+    if (file)
     {
-        return false;
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        simulationComments = buffer.str();
     }
 
     // Load the general data

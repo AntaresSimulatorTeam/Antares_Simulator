@@ -48,7 +48,6 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver):
-    simulationComments(*this),
     areas(*this),
     pQueueService(std::make_shared<Yuni::Job::QueueService>()),
     usedByTheSolver(forTheSolver)
@@ -289,7 +288,7 @@ void Study::prepareOutput()
     folderOutput = StudyCreateOutputPath(parameters.mode,
                                          parameters.resultFormat,
                                          baseFolderOutput,
-                                         simulationComments.name,
+                                         simulationName,
                                          getCurrentTime());
 
     logs.info() << "  Output folder : " << folderOutput;
@@ -300,8 +299,8 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     String path;
     path.reserve(1024);
 
-    path.clear() << "about-the-study";
-    simulationComments.saveUsingWriter(resultWriter, path);
+    path.clear() << "about-the-study" << SEP << "comments.txt";
+    resultWriter.addEntryFromBuffer(path.c_str(), simulationComments);
 
     // Write the header as a reminder
     {
@@ -329,7 +328,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
     f << "[general]";
     f << "\nversion = " << StudyVersion::latest().toString();
-    f << "\nname = " << simulationComments.name;
+    f << "\nname = " << simulationName;
     f << "\nmode = " << SimulationModeToCString(parameters.mode);
     f << "\ndate = " << startTimeStr;
     f << "\ntitle = " << startTimeStr;
