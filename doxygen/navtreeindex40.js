@@ -1,6 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a12df50cd2c1e1c78a98db21c94511389":[8,0,0,12,6,4,121,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a3960816873b685677a7ac5457492b770":[8,0,0,12,6,4,121,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a6a442801077d983176bd041687ecd165":[8,0,0,12,6,4,121,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a83a40623b47343a163fab88d2ce12ac5":[8,0,0,12,6,4,121,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX40 =
 "structBenchmarking_1_1OptimizationInfo.html":[8,0,3,4],
 "structBenchmarking_1_1OptimizationInfo.html#a7e561afa84d4526d96888694b024ad0a":[8,0,3,4,1],
 "structBenchmarking_1_1OptimizationInfo.html#ab015293c71a92d90e2df2e31cab5d3df":[8,0,3,4,0],
-"structBindingConstraintDayData.html":[8,0,43]
+"structBindingConstraintDayData.html":[8,0,43],
+"structBindingConstraintDayData.html#a1a3ae4aab40166a7f90466ad04835476":[8,0,43,1]
 };

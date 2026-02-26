@@ -1,6 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html":[8,0,0,12,6,4,23],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a063dac8c7805983bb7f3a708669c5600":[8,0,0,12,6,4,23,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a4da935b39adf02d85c2fca62c8987271":[8,0,0,12,6,4,23,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a619922888a16b56c3b24fb072c63aee7":[8,0,0,12,6,4,23,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a6516c5c9c8168e3c39b645ed6db3fd5c":[8,0,0,12,6,4,119,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#a74b32a23eb3007da28cc803e81989ff5":[8,0,0,12,6,4,119,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html#af114b90f03d17e6ceff20d112a9ea9c1":[8,0,0,12,6,4,119,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html":[8,0,0,12,6,4,121]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html":[8,0,0,12,6,4,121],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a12df50cd2c1e1c78a98db21c94511389":[8,0,0,12,6,4,121,0]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX38 =
 {
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html#a6d4689edbbe468e7c7b79838d28375c7":[8,0,0,9,0,11,2],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html#a7c54fe9d6c83ab46f5a3436f2d4a55ea":[8,0,0,9,0,11,0],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1PortFieldKey.html#a8a4bcf4a34d0612e1a86fba31e58b5e9":[8,0,0,9,0,11,1],
 "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html":[8,0,0,9,0,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a2dd97977a3ebe27349071461bc552cf9":[8,0,0,12,6,4,21,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a3195e9c7f73c77182e5b7a18c584f8c0":[8,0,0,12,6,4,21,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#a8551e9d199d322a2fd5e5ca52e419115":[8,0,0,12,6,4,21,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ac3fbe8b90d66340a321ce094f51e4343":[8,0,0,12,6,4,21,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html#ac3fbe8b90d66340a321ce094f51e4343":[8,0,0,12,6,4,21,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html":[8,0,0,12,6,4,23]
 };
