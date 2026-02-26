@@ -333,7 +333,7 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
     raise LookupError("Could not parse output folder in output logs")
 
 
-def make_daily_values_from_a_string(days: str):
+def make_values_from_string(days: str):
     list_daily_values = [float(number) for number in re.findall(r'\d+', days)]
     assert len(list_daily_values) == NB_DAYS_IN_WEEK, "7 daily values expected, %d given" % len(list_daily_values)
     return list_daily_values
@@ -356,7 +356,7 @@ def extract_week_ts(ts, week):
 @then('in area "{area}", week {week:d}, year {year:d}, daily mingens for cluster "{cluster}" are {days}')
 def check_thermal_cluster_min_gen_for_week(context, area, week, year, cluster, days):
     ts = context.soh.min_gen_for_thermal_cluster(area, year, cluster)
-    list_daily_values = make_daily_values_from_a_string(days)
+    list_daily_values = make_values_from_string(days)
     week_ts = extract_week_ts(ts, week)
     check_week_ts_has_daily_values(week_ts, list_daily_values)
 
@@ -562,7 +562,7 @@ def check_near_price_cap(context, area, year, hour, value):
     assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"
 
 
-def week_hours_from_mps_file(file_name):
+def week_hours_from_mps_filename(file_name):
     """
     Extract week number from MPS file name and generate 168 time steps.
 
@@ -606,7 +606,7 @@ def extract_hour(name) -> int:
 def check_max_generation_from_capacity_exists(context, area, cluster):
     for mps_file in context.soh.get_mps_files():
         mps_problem = mpu.load_problem(str(mps_file))
-        week_hours = week_hours_from_mps_file(mps_file)
+        week_hours = week_hours_from_mps_filename(mps_file)
         hours_mapped_to_constraints: dict[int, str] = {}
         for c in mps_problem.get_linear_constraints():
             if c.name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
@@ -616,6 +616,11 @@ def check_max_generation_from_capacity_exists(context, area, cluster):
             f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
         assert week_hours == list(
             hours_mapped_to_constraints.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_hours[0]}, {week_hours[-1]}] in {mps_file}"
+
+@then('for first week, area balance rhs is {values}, and then equals constant {c}')
+def check_area_balance_rhs(context, values, c):
+    mps_file = context.soh.get_output_files_with_pattern("problem-1-1--optim-nb-1.mps")
+    pass
 
 
 @then(

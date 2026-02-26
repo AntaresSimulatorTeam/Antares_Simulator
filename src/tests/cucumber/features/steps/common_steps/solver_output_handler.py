@@ -163,3 +163,6 @@ class solver_output_handler:
 
     def get_mps_files(self):
         return list(Path(self.study_output_path).glob("*.mps"))
+
+    def get_output_files_with_pattern(self, pattern: str):
+        return list(Path(self.study_output_path).glob(pattern))
