@@ -556,7 +556,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
             ret = area.load.prepro->loadFromFolder(loadPath) && ret;
         }
-        if (!options.loadOnlyNeeded || !area.load.prepro) // Series
+        if (!area.load.prepro) // Series
         {
             std::string loadId = "load_" + area.id + ".txt";
             fs::path loadSeriesPath = study.folderInput / "load" / "series" / loadId;
@@ -572,7 +572,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
             ret = area.solar.prepro->loadFromFolder(solarPath) && ret;
         }
-        if (!options.loadOnlyNeeded || !area.solar.prepro) // Series
+        if (!area.solar.prepro) // Series
         {
             std::string solarId = "solar_" + area.id + ".txt";
             fs::path solarPath = study.folderInput / "solar" / "series" / solarId;
@@ -597,7 +597,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             ret = area.hydro.prepro->validate(area.id) && ret;
         }
 
-        if (!options.loadOnlyNeeded || !area.hydro.prepro) // Series
+        if (!area.hydro.prepro) // Series
         {
             ret = area.hydro.series->loadGenerationTS(area.id, hydroSeries, studyVersion) && ret;
         }
@@ -635,7 +635,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
             ret = area.wind.prepro->loadFromFolder(windPath) && ret;
         }
-        if (!options.loadOnlyNeeded || !area.wind.prepro) // Series
+        if (!area.wind.prepro) // Series
         {
             std::string windId = "wind_" + area.id + ".txt";
             fs::path windPath = study.folderInput / "wind" / "series" / windId;
@@ -758,41 +758,30 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     return ret;
 }
 
-void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
+void AreaList::ensureDataIsInitialized(Parameters& params)
 {
     AreaListEnsureDataHydroTimeSeries(this);
 
-    if (loadOnlyNeeded)
-    {
-        // Load
-        if (params.isTSGeneratedByPrepro(timeSeriesLoad))
-        {
-            AreaListEnsureDataLoadPrepro(this);
-        }
-        // Solar
-        if (params.isTSGeneratedByPrepro(timeSeriesSolar))
-        {
-            AreaListEnsureDataSolarPrepro(this);
-        }
-        // Hydro
-        if (params.isTSGeneratedByPrepro(timeSeriesHydro))
-        {
-            AreaListEnsureDataHydroPrepro(this);
-        }
-        // Wind
-        if (params.isTSGeneratedByPrepro(timeSeriesWind))
-        {
-            AreaListEnsureDataWindPrepro(this);
-        }
-    }
-    else
+    // Load
+    if (params.isTSGeneratedByPrepro(timeSeriesLoad))
     {
         AreaListEnsureDataLoadPrepro(this);
+    }
+    // Solar
+    if (params.isTSGeneratedByPrepro(timeSeriesSolar))
+    {
         AreaListEnsureDataSolarPrepro(this);
+    }
+    // Hydro
+    if (params.isTSGeneratedByPrepro(timeSeriesHydro))
+    {
         AreaListEnsureDataHydroPrepro(this);
+    }
+    // Wind
+    if (params.isTSGeneratedByPrepro(timeSeriesWind))
+    {
         AreaListEnsureDataWindPrepro(this);
     }
-
     // Thermal
     AreaListEnsureDataThermalPrepro(this);
 }
@@ -883,7 +872,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Prepare
-    ensureDataIsInitialized(pStudy.parameters, options.loadOnlyNeeded);
+    ensureDataIsInitialized(pStudy.parameters);
 
     // Load all nodes
     uint indx = 0;

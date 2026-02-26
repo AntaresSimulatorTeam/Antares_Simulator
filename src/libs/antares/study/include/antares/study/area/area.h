@@ -368,7 +368,7 @@ public:
     ** routine when areas are already loaded.
     */
 
-    void ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded);
+    void ensureDataIsInitialized(Parameters& params);
     //@}
 
     //! \name Import / Export

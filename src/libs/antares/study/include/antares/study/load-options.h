@@ -29,8 +29,6 @@ public:
     uint nbYears;
     //! True to prepare the output folder
     bool prepareOutput;
-    //! True to load only the strictly required data
-    bool loadOnlyNeeded;
     //! Force the year-by-year flag
     bool forceYearByYear;
 
