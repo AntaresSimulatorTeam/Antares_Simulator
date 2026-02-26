@@ -3,12 +3,19 @@
 
 #include <fmt/format.h>
 
+#include <yuni/yuni.h>
+#include <yuni/io/file.h>
+
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
 #include "antares/study/version.h"
 
 #include "include/antares/study/fwd.h"
+
+using namespace Yuni;
+
+#define SEP IO::Separator
 
 namespace fs = std::filesystem;
 
@@ -52,12 +59,13 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
         }
     }
 
-    // The simulation settings
-    if (!simulationComments.loadFromFolder(options))
+    // The simulation settings (comments.txt)
+    if (!options.loadOnlyNeeded)
     {
-        if (options.loadOnlyNeeded)
+        buffer.clear() << folderSettings << SEP << "comments.txt";
+        if (IO::errNone != IO::File::LoadFromFile(simulationComments, buffer))
         {
-            return false;
+            logs.warning() << buffer << ": Impossible to read the file";
         }
     }
     // Load the general data

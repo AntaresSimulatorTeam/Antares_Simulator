@@ -225,10 +225,6 @@ set(SRC_STUDY
         include/antares/study/progression/progression.hxx
         progression/progression.cpp
 
-        # Simulation
-        include/antares/study/simulation.h
-        simulation.cpp
-
         # Filter
         include/antares/study/filter.h
         filter.cpp

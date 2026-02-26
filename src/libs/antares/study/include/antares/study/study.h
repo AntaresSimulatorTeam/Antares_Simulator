@@ -26,7 +26,6 @@
 #include "parameters.h"
 #include "progression/progression.h"
 #include "sets.h"
-#include "simulation.h"
 
 namespace Antares::Data
 {
@@ -374,8 +373,10 @@ public:
     //! \name Simulation
     //@{
     //! The current Simulation
-    // TODO VP: remove with GUI
-    SimulationComments simulationComments;
+    //! Simulation comments (content of comments.txt)
+    std::string simulationComments;
+    //! Simulation name
+    std::string simulationName;
 
     int64_t pStartTime;
     // Used in GUI and solver

@@ -122,7 +122,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
     // Force some options
@@ -185,7 +185,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
     logs.info();
