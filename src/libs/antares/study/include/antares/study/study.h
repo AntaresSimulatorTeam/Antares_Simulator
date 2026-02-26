@@ -372,7 +372,6 @@ public:
 
     //! \name Simulation
     //@{
-    //! The current Simulation
     //! Simulation comments (content of comments.txt)
     std::string simulationComments;
     //! Simulation name
