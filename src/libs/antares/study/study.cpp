@@ -602,33 +602,6 @@ bool Study::checkForFilenameLimits(const String& chfolder) const
     return true;
 }
 
-void Study::removeTimeseriesIfTSGeneratorEnabled()
-{
-    if (0 != parameters.timeSeriesToGenerate)
-    {
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesLoad))
-        {
-            areas.removeLoadTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesHydro))
-        {
-            areas.removeHydroTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesSolar))
-        {
-            areas.removeSolarTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesWind))
-        {
-            areas.removeWindTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal))
-        {
-            areas.removeThermalTimeseries();
-        }
-    }
-}
-
 void Study::computePThetaInfForThermalClusters() const
 {
     for (uint i = 0; i != this->areas.size(); i++)

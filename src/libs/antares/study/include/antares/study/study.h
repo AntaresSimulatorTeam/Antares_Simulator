@@ -251,12 +251,6 @@ public:
     */
     void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
 
-    /*!
-    ** \brief Remove timeseries if ts-generator is enabled
-    */
-    void removeTimeseriesIfTSGeneratorEnabled();
-    //@}
-
     //! \name
     //@{
     /*!
