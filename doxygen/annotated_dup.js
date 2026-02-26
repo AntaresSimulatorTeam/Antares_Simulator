@@ -123,7 +123,6 @@ var annotated_dup =
         [ "StudyRuntimeInfos", "classAntares_1_1Data_1_1StudyRuntimeInfos.html", "classAntares_1_1Data_1_1StudyRuntimeInfos" ],
         [ "Sets", "classAntares_1_1Data_1_1Sets.html", "classAntares_1_1Data_1_1Sets" ],
         [ "SetHandlerAreas", "classAntares_1_1Data_1_1SetHandlerAreas.html", "classAntares_1_1Data_1_1SetHandlerAreas" ],
-        [ "SimulationComments", "classAntares_1_1Data_1_1SimulationComments.html", "classAntares_1_1Data_1_1SimulationComments" ],
         [ "Study", "classAntares_1_1Data_1_1Study.html", "classAntares_1_1Data_1_1Study" ],
         [ "VariablePrintInfo", "classAntares_1_1Data_1_1VariablePrintInfo.html", "classAntares_1_1Data_1_1VariablePrintInfo" ],
         [ "variablePrintInfoCollector", "classAntares_1_1Data_1_1variablePrintInfoCollector.html", "classAntares_1_1Data_1_1variablePrintInfoCollector" ],

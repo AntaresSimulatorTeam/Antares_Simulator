@@ -72,6 +72,7 @@ var classAntares_1_1Data_1_1Study =
     [ "scenarioInitialHydroLevels", "classAntares_1_1Data_1_1Study.html#aa42db178e46759ddcfe6e052a4fda2a0", null ],
     [ "scenarioRules", "classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16", null ],
     [ "setsOfAreas", "classAntares_1_1Data_1_1Study.html#ab79f4691a33e445f73d06782389a8a2c", null ],
-    [ "simulationComments", "classAntares_1_1Data_1_1Study.html#a83df1f36832cd1cb70ce40c5949f2182", null ],
+    [ "simulationComments", "classAntares_1_1Data_1_1Study.html#a186e82a3044153d9bf628f19e66f0484", null ],
+    [ "simulationName", "classAntares_1_1Data_1_1Study.html#a05064bd6addd1e9f42f39eaa6ef75f29", null ],
     [ "usedByTheSolver", "classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55", null ]
 ];

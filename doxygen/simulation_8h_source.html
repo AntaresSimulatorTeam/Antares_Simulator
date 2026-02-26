@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Data::SimulationComments Class Reference</title>
+<title>Antares Simulator: src/solver/simulation/include/antares/solver/simulation/simulation.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1Data_1_1SimulationComments.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('simulation_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,80 +123,49 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1SimulationComm
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="classAntares_1_1Data_1_1SimulationComments-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Data::SimulationComments Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
+<div class="title">simulation.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Set of settings for a simulation.  
- <a href="classAntares_1_1Data_1_1SimulationComments.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="libs_2antares_2study_2include_2antares_2study_2simulation_8h_source.html">simulation.h</a>&gt;</code></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Constructor &amp; Destructor</h2></td></tr>
-<tr class="memitem:a2bb3282494b26529edf3a8f11f2f3e3e"><td class="memItemLeft" align="right" valign="top"><a id="a2bb3282494b26529edf3a8f11f2f3e3e"></a>
-YString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1SimulationComments.html#a2bb3282494b26529edf3a8f11f2f3e3e">comments</a></td></tr>
-<tr class="memdesc:a2bb3282494b26529edf3a8f11f2f3e3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comments. <br /></td></tr>
-<tr class="separator:a2bb3282494b26529edf3a8f11f2f3e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae611c99e9ff74d7c3cd9b3e53845f0ce"><td class="memItemLeft" align="right" valign="top"><a id="ae611c99e9ff74d7c3cd9b3e53845f0ce"></a>
-YString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1SimulationComments.html#ae611c99e9ff74d7c3cd9b3e53845f0ce">name</a></td></tr>
-<tr class="memdesc:ae611c99e9ff74d7c3cd9b3e53845f0ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">name <br /></td></tr>
-<tr class="separator:ae611c99e9ff74d7c3cd9b3e53845f0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58a4ffbd65268b9b7dfa6de6012914cf"><td class="memItemLeft" align="right" valign="top"><a id="a58a4ffbd65268b9b7dfa6de6012914cf"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1SimulationComments.html#a58a4ffbd65268b9b7dfa6de6012914cf">SimulationComments</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study)</td></tr>
-<tr class="memdesc:a58a4ffbd65268b9b7dfa6de6012914cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
-<tr class="separator:a58a4ffbd65268b9b7dfa6de6012914cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea587700ba6ccecd18c3d5fe2b4c09a1"><td class="memItemLeft" align="right" valign="top"><a id="aea587700ba6ccecd18c3d5fe2b4c09a1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1SimulationComments.html#aea587700ba6ccecd18c3d5fe2b4c09a1">~SimulationComments</a> ()</td></tr>
-<tr class="memdesc:aea587700ba6ccecd18c3d5fe2b4c09a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
-<tr class="separator:aea587700ba6ccecd18c3d5fe2b4c09a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8c82b8b8535606cf176a2cc32535ca2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1SimulationComments.html#aa8c82b8b8535606cf176a2cc32535ca2">loadFromFolder</a> (const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;options)</td></tr>
-<tr class="memdesc:aa8c82b8b8535606cf176a2cc32535ca2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a simulation from a folder.  <a href="classAntares_1_1Data_1_1SimulationComments.html#aa8c82b8b8535606cf176a2cc32535ca2">More...</a><br /></td></tr>
-<tr class="separator:aa8c82b8b8535606cf176a2cc32535ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac82e5ed7120e946215424eae1c22cb69"><td class="memItemLeft" align="right" valign="top"><a id="ac82e5ed7120e946215424eae1c22cb69"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1SimulationComments.html#ac82e5ed7120e946215424eae1c22cb69">saveToFolder</a> (const AnyString &amp;folder) const</td></tr>
-<tr class="memdesc:ac82e5ed7120e946215424eae1c22cb69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save settings to the appropriate folder. <br /></td></tr>
-<tr class="separator:ac82e5ed7120e946215424eae1c22cb69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add3ec51c8778b087f72e0b64cd24fa2a"><td class="memItemLeft" align="right" valign="top"><a id="add3ec51c8778b087f72e0b64cd24fa2a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>saveUsingWriter</b> (<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &amp;writer, const AnyString &amp;folder) const</td></tr>
-<tr class="separator:add3ec51c8778b087f72e0b64cd24fa2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Set of settings for a simulation. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa8c82b8b8535606cf176a2cc32535ca2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8c82b8b8535606cf176a2cc32535ca2">&#9670;&nbsp;</a></span>loadFromFolder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Antares::Data::SimulationComments::loadFromFolder </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classAntares_1_1Data_1_1StudyLoadOptions.html">StudyLoadOptions</a> &amp;&#160;</td>
-          <td class="paramname"><em>options</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Load a simulation from a folder. </p>
-<dl class="section return"><dt>Returns</dt><dd>A non-zero value if succeeded, 0 otherwise </dd></dl>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/libs/antares/study/include/antares/study/<a class="el" href="libs_2antares_2study_2include_2antares_2study_2simulation_8h_source.html">simulation.h</a></li>
-<li>src/libs/antares/study/simulation.cpp</li>
-</ul>
-</div><!-- contents -->
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifndef __SOLVER_SIMULATION_H__</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __SOLVER_SIMULATION_H__</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;antares/study/study.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/config/config.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;antares/solver/hydro/management/management.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;sim_structure_donnees.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">struct </span><a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keywordtype">void</span> SIM_AllocationProblemeHebdo(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                                 <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                                 uint NombreDePasDeTemps);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> SIM_InitialisationProblemeHebdo(<a class="code" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;                                     <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                                     <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> NombreDePasDeTemps,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                     uint numspace);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> SIM_RenseignementProblemeHebdo(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                                    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problem,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                    uint weekInTheYear,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                                    <span class="keyword">const</span> <span class="keywordtype">int</span>,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                    <span class="keyword">const</span> Antares::HYDRO_VENTILATION_RESULTS&amp;,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                    <span class="keyword">const</span> Antares::Data::Area::ScratchMap&amp;);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __SOLVER_SIMULATION_H__ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:37</div></div>
+<div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:385</div></div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Data</b></li><li class="navelem"><a class="el" href="classAntares_1_1Data_1_1SimulationComments.html">SimulationComments</a></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_44f9bd718728581550ea4fab84861031.html">simulation</a></li><li class="navelem"><a class="el" href="dir_46b36ea6fa9d77f27ee93d1bc566d14a.html">include</a></li><li class="navelem"><a class="el" href="dir_d37629c657dd31246671cde783e0428b.html">antares</a></li><li class="navelem"><a class="el" href="dir_fd28d3366d3b8c3567af53eb90468272.html">solver</a></li><li class="navelem"><a class="el" href="dir_a5026c306b85c4d4525ccae1c833a895.html">simulation</a></li><li class="navelem"><b>simulation.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
