@@ -615,7 +615,7 @@ def check_max_generation_from_capacity_exists(context, area, cluster):
         assert len(week_hours) == len(time_step_constraint), \
             f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
         assert week_hours == list(
-            time_step_constraint.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_time_step[0]}, {week_time_step[-1]}] in {mps_file}"
+            time_step_constraint.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_hours[0]}, {week_hours[-1]}] in {mps_file}"
 
 
 @then(
