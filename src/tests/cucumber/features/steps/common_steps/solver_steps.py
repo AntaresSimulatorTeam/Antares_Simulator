@@ -629,15 +629,14 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
     # Checking first balance constraints have expected bounds
     first_constraints = balanced_constraints[0:len(list_values)]
     for c, value in zip(first_constraints, list_values):
-        assert c.lower_bound == value, f"Contraint {c.name} lower bound should be equal to {value}"
-        assert c.upper_bound == value, f"Contraint {c.name} upper bound should be equal to {value}"
+        assert c.lower_bound == value, f"Contraint {c.name} low bound should be {str(value)}"
+        assert c.upper_bound == value, f"Contraint {c.name} up bound should be {str(value)}"
 
     # Checking remaining balance constraints have same expected bounds
     last_constraints = balanced_constraints[len(list_values):]
     for c in last_constraints:
-        assert c.lower_bound == constant
-        assert c.upper_bound == constant
-
+        assert c.lower_bound == constant, f"Contraint {c.name} low bound should be {constant_str}"
+        assert c.upper_bound == constant, f"Contraint {c.name} up bound should be {constant_str}"
 
 @then(
     'enforces: DispatchableProduction {expression} < {rhs} for the thermal capacity connection between GEMS and the {cluster} thermal cluster in area {area}.')
