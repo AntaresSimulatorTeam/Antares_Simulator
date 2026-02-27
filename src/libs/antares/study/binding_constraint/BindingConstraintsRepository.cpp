@@ -128,28 +128,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::Lo
     return loader.load(std::move(env));
 }
 
-bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString& newname)
-{
-    // Copy of the name
-    ConstraintName name;
-    name = newname;
-    if (name == bc->name())
-    {
-        return true;
-    }
-    ConstraintName id = Antares::transformNameIntoID(name);
-    if (std::any_of(constraints_.begin(),
-                    constraints_.end(),
-                    [&id](auto constraint) { return constraint->id() == id; }))
-    {
-        return false;
-    }
-    bc->name(name);
-    bc->pId(name);
-    JIT::Invalidate(bc->RHSTimeSeries().jit);
-    return true;
-}
-
 bool BindingConstraintsRepository::loadFromFolder(Study& study,
                                                   const StudyLoadOptions& options,
                                                   const std::filesystem::path& folder)

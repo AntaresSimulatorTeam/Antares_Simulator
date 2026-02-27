@@ -123,11 +123,6 @@ public:
     void removeConstraintsWhoseNameConstains(const AnyString& filter);
 
     /*!
-    ** \brief Rename a binding constraint
-    */
-    bool rename(Data::BindingConstraint* bc, const AnyString& newname);
-
-    /*!
     ** \brief Convert all weekly constraints into daily ones
     */
     void changeConstraintsWeeklyToDaily();
