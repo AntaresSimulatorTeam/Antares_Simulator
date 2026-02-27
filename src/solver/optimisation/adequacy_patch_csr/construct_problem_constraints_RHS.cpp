@@ -126,8 +126,18 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     bfTerm = std::max(0.0, ftMinusLt);
                 }
 
-                // RHS = STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt)
-                double rhs = stt - stmint + ht + bfTerm;
+                // Add short term storage net production (injection - withdrawal)
+                double stsNetProduction = 0.0;
+                const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
+                                                        .ShortTermStorage;
+                for (const auto& storageResults: shortTermStorageResults)
+                {
+                    stsNetProduction += storageResults.injection[triggeredHour]
+                                        - storageResults.withdrawal[triggeredHour];
+                }
+
+                // RHS = STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt) + STS_net_production
+                double rhs = stt - stmint + ht + bfTerm + stsNetProduction;
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
                 logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
