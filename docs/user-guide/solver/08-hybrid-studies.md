@@ -82,9 +82,9 @@ port-type:
 	  - id: to-area-bound
       - id: from-area-bound
    area-connection:
-      - injection-field: field_to_balance
-	  - spillage-bound: to-area-bound
-      - unsupplied-energy-bound: from-area-bound
+      injection-to-balance: field_to_balance
+	  spillage-bound: to-area-bound
+      unsupplied-energy-bound: from-area-bound
 ~~~
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
@@ -96,7 +96,7 @@ see previous paragraph [Defining the connections](#defining-the-connections)) wi
 expression contributing to a constraint of the linear problem.
 The nature of this contribution depends on the field : 
 
-  - **injection-field**: the linear expression is injected in the balance constraint of the area.
+  - **injection-to-balance**: the linear expression is injected in the balance constraint of the area.
 	This is done with respect to a convention (see next [Optimization model](#optimization-model)).
 	
   - **spillage-bound**: the linear expression is added to the sum of all variables or linear expressions already used 
@@ -105,6 +105,8 @@ The nature of this contribution depends on the field :
   - **unsupplied-energy-bound** : the linear expression is added to any linear expression already used to bound the unsupplied energy.
 
 These fields are independent : you don't have to define the 3 of them at the same time, you can define only one (as long as its value is an existing port in the same port type).
+
+These fields must be present in the **area-connection** section of a port type, even if they are not defined (= corresponding value is empty). 
  
 #### Adding a linear expression in optimization model
 When you connect a component to an area via a port (containing an **area-connection** section), you must respect conventions on the GEMS side.
@@ -122,7 +124,10 @@ Typically, you would defined it like this :
      fields:
        - id: field_to_balance
      area-connection:
-       - injection-field: field_to_balance
+       injection-to-balance: field_to_balance
+	   spillage-bound:
+       unsupplied-energy-bound:
+
 
   models:
     - id: my-production
@@ -163,7 +168,10 @@ The convention is the same as the connection to balance constraint : make the pr
      fields:
        - id: to-area-bound
      area-connection:
-       - spillage-bound: to-area-bound
+	   injection-to-balance:
+	   spillage-bound: to-area-bound
+       unsupplied-energy-bound:
+
 
   models:
     - id: my-production
@@ -189,7 +197,9 @@ The convention is to make the loads positive and don't prefix it with a - sign.
      fields:
        - id: from-area-bound
      area-connection:
-       - unsupplied-energy-bound: from-area-bound
+	   injection-to-balance:
+	   spillage-bound:
+       unsupplied-energy-bound: from-area-bound
 
   models:
     - id: my-load
