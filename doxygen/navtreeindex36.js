@@ -1,6 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"series_2include_2antares_2series_2series_8h_source.html":[9,0,0,4,0,24,0,0,0,0],
 "setData_8h_source.html":[9,0,0,8,12,0,0,0,0,2,1],
 "setofareas_8h_source.html":[9,0,0,8,12,0,0,0,0,16],
 "setofareas_8hxx_source.html":[9,0,0,8,12,0,0,0,0,17],
@@ -249,5 +248,6 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html":[8,0,0,3,37,1,0],
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a0bfc876da19558211caf678e59e2e25f":[8,0,0,3,37,1,0,0],
 "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a8c222973cbcc0bd3eaa35197509c5ecd":[8,0,0,3,37,1,0,3],
-"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a98bdac6b1251906cf5107ff35c40dfb0":[8,0,0,3,37,1,0,2]
+"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#a98bdac6b1251906cf5107ff35c40dfb0":[8,0,0,3,37,1,0,2],
+"structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html#aebd3a697e1cebc9a99271b4a77501024":[8,0,0,3,37,1,0,1]
 };

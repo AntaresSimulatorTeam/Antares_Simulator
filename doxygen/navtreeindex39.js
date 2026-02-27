@@ -1,6 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html":[8,0,0,12,6,4,25],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a621a539cd5a98cc3b775d7946cccf22e":[8,0,0,12,6,4,25,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#ab829a8c7c8e037d4362a6ba356d33d43":[8,0,0,12,6,4,25,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#ad5c23c20b5d9315b10689448b7310251":[8,0,0,12,6,4,25,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX39 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a6a442801077d983176bd041687ecd165":[8,0,0,12,6,4,121,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a83a40623b47343a163fab88d2ce12ac5":[8,0,0,12,6,4,121,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html#a8bd41496ae17e2f93d58d6be627a4655":[8,0,0,12,6,4,121,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageLevelsByCluster.html":[8,0,0,12,6,4,123]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageLevelsByCluster.html":[8,0,0,12,6,4,123],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageLevelsByCluster.html#a0ef5df910c2e5890fdea5e64fc8f4a5e":[8,0,0,12,6,4,123,2]
 };

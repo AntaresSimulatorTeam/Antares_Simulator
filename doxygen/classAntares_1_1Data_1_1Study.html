@@ -219,14 +219,10 @@ template&lt;TimeSeriesType TS&gt; </td></tr>
 <tr class="memitem:aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#aa8ddbddbd409bc9aa2a76b0e92f5dff2">getNumberOfCores</a> (const bool forceParallel, const uint nbYearsParallelForced)</td></tr>
 <tr class="memdesc:aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes number of cores.  <a href="classAntares_1_1Data_1_1Study.html#aa8ddbddbd409bc9aa2a76b0e92f5dff2">More...</a><br /></td></tr>
 <tr class="separator:aa8ddbddbd409bc9aa2a76b0e92f5dff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3afeb9f20c7d7be0bfeb7f55075f1e38"><td class="memItemLeft" align="right" valign="top"><a id="a3afeb9f20c7d7be0bfeb7f55075f1e38"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a3afeb9f20c7d7be0bfeb7f55075f1e38">removeTimeseriesIfTSGeneratorEnabled</a> ()</td></tr>
-<tr class="memdesc:a3afeb9f20c7d7be0bfeb7f55075f1e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove timeseries if ts-generator is enabled. <br /></td></tr>
-<tr class="separator:a3afeb9f20c7d7be0bfeb7f55075f1e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
-<tr class="memitem:a92a7dc71b966e460f9e6f1750ce25382"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a92a7dc71b966e460f9e6f1750ce25382">checkForFilenameLimits</a> (bool output, const YString &amp;chfolder=nullptr) const</td></tr>
-<tr class="memdesc:a92a7dc71b966e460f9e6f1750ce25382"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for filename limits restriction on some platforms.  <a href="classAntares_1_1Data_1_1Study.html#a92a7dc71b966e460f9e6f1750ce25382">More...</a><br /></td></tr>
-<tr class="separator:a92a7dc71b966e460f9e6f1750ce25382"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0b3d7a7b4a4d6fe581961e7bac5d87a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ac0b3d7a7b4a4d6fe581961e7bac5d87a">checkForFilenameLimits</a> () const</td></tr>
+<tr class="memdesc:ac0b3d7a7b4a4d6fe581961e7bac5d87a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for filename limits restriction on some platforms.  <a href="classAntares_1_1Data_1_1Study.html#ac0b3d7a7b4a4d6fe581961e7bac5d87a">More...</a><br /></td></tr>
+<tr class="separator:ac0b3d7a7b4a4d6fe581961e7bac5d87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Logs</div></td></tr>
 <tr class="memitem:a43e70c63ab3f91b02a55a9a24a81c4a6"><td class="memItemLeft" align="right" valign="top"><a id="a43e70c63ab3f91b02a55a9a24a81c4a6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a43e70c63ab3f91b02a55a9a24a81c4a6">importLogsToOutputFolder</a> (<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &amp;resultWriter) const</td></tr>
@@ -495,8 +491,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a92a7dc71b966e460f9e6f1750ce25382"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92a7dc71b966e460f9e6f1750ce25382">&#9670;&nbsp;</a></span>checkForFilenameLimits()</h2>
+<a id="ac0b3d7a7b4a4d6fe581961e7bac5d87a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0b3d7a7b4a4d6fe581961e7bac5d87a">&#9670;&nbsp;</a></span>checkForFilenameLimits()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -504,19 +500,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="memname">bool Antares::Data::Study::checkForFilenameLimits </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>output</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const YString &amp;&#160;</td>
-          <td class="paramname"><em>chfolder</em> = <code>nullptr</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">

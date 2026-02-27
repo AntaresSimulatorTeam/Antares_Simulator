@@ -1,6 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#af5581570abc7df22afb759a80a0401ad":[8,0,0,12,6,4,60,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html":[8,0,0,12,6,4,74],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html#a0e7bb04bcfa4339d1b2fea455cf815dd":[8,0,0,12,6,4,74,0],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr.html":[8,0,0,12,6,4,70],
@@ -249,5 +248,6 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#aa59396bca8c450a3fd70316b1d053843":[8,0,0,12,6,4,15,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#abb9af735e02fec6b697d6e76d8d83062":[8,0,0,12,6,4,15,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#abbd2e8f7e92eba95b3c248bbbc325c1c":[8,0,0,12,6,4,15,14],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#ad2adc09ec09053907ebf061d6c8175ad":[8,0,0,12,6,4,15,12]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#ad2adc09ec09053907ebf061d6c8175ad":[8,0,0,12,6,4,15,12],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP.html#adb9cf6e6d5c8d74acacb91b93c3a2343":[8,0,0,12,6,4,15,5]
 };

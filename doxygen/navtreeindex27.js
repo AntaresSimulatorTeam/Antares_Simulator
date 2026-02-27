@@ -1,6 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"classOptimizationStatistics.html#ad40d5c8781031506875cdf648a6d7eda":[8,0,218,11],
 "classOptimizationStatisticsWriter.html":[8,0,219],
 "classOptimizationStatisticsWriter.html#a427073aa4fc98039e14526caf6b6561b":[8,0,219,0],
 "classOptimizationStatisticsWriter.html#aa075f6d9de67c1d79693faeaced45890":[8,0,219,1],
@@ -127,8 +126,8 @@ var NAVTREEINDEX27 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[8,0,245,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[8,0,245,7],
 "classPublicStudy.html":[8,0,247],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,247,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,247,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,247,1],
 "classQuadraticProblemMatrix.html":[8,0,249],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[8,0,249,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[8,0,249,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX27 =
 "classShortTermStorageAddConstraintConfig.html#a7afa57e20770ed9381761b52dea94563":[8,0,269,1],
 "classShortTermStorageAddConstraintConfig.html#a9c3d54c2eb134f032a69c04d77f2b28e":[8,0,269,5],
 "classShortTermStorageAddConstraintConfig.html#aa50421058cf2d81bf6f4296417a5894f":[8,0,269,6],
-"classShortTermStorageAddConstraintConfig.html#ab4fb3a39aef6aa309ca39f27cb48976f":[8,0,269,4]
+"classShortTermStorageAddConstraintConfig.html#ab4fb3a39aef6aa309ca39f27cb48976f":[8,0,269,4],
+"classShortTermStorageConfig.html":[8,0,270]
 };

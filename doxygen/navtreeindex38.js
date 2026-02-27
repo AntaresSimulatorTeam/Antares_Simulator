@@ -1,6 +1,5 @@
 var NAVTREEINDEX38 =
 {
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html#afefa6e3d672d8ce56c8f599db5c1200b":[8,0,0,9,0,3,1],
 "structAntares_1_1Optimisation_1_1CouplingVariable.html":[8,0,0,10,10],
 "structAntares_1_1Optimisation_1_1CouplingVariable.html#a7809200869ce134cdef59683e68acd44":[8,0,0,10,10,1],
 "structAntares_1_1Optimisation_1_1CouplingVariable.html#a8488c069875bb34ed0df65dc3442a106":[8,0,0,10,10,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a4da935b39adf02d85c2fca62c8987271":[8,0,0,12,6,4,23,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a619922888a16b56c3b24fb072c63aee7":[8,0,0,12,6,4,23,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#a999bc95509b49928ddefc68cfe8035c8":[8,0,0,12,6,4,23,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#af71714d1380a4afdd8ac7496fb62fd19":[8,0,0,12,6,4,23,2]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html#af71714d1380a4afdd8ac7496fb62fd19":[8,0,0,12,6,4,23,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html":[8,0,0,12,6,4,25]
 };

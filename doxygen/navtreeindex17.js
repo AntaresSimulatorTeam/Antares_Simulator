@@ -1,6 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a7d9c8fd40fb19c0f4fffbc90fc24f2d3":[8,0,0,12,6,4,34,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a83aa8ebfbb065259ca1ff86aadc67da8":[8,0,0,12,6,4,34,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a8a6b73466bda8d4c485320506a132ff4":[8,0,0,12,6,4,34,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a9eda455b76c43cbc94e3ae3a2c2e3c5a":[8,0,0,12,6,4,34,18],
@@ -249,5 +248,6 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ac35ec915b2a6ca5f5ec77d16aebd9b06":[8,0,0,12,6,4,60,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ac937816e4583651a1a17586121ff17a9":[8,0,0,12,6,4,60,20],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ad40ca214991b3679eeefcfc4ed61c332":[8,0,0,12,6,4,60,19],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ad4185b7daa6eedec87f69f9b678fd75b":[8,0,0,12,6,4,60,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ad4185b7daa6eedec87f69f9b678fd75b":[8,0,0,12,6,4,60,7],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#af5581570abc7df22afb759a80a0401ad":[8,0,0,12,6,4,60,1]
 };
