@@ -230,7 +230,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Checking for filename length limits
     if (!pSettings.noOutput)
     {
-        if (!study.checkForFilenameLimits(true))
+        if (!study.checkForFilenameLimits())
         {
             throw Error::InvalidFileName();
         }
