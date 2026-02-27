@@ -6,15 +6,6 @@
 
 namespace Antares::Data::Solar
 {
-inline bool Prepro::forceReload(bool reload) const
-{
-    return xcast.forceReload(reload);
-}
-
-inline void Prepro::markAsModified() const
-{
-    xcast.markAsModified();
-}
 
 inline void Prepro::resetToDefault()
 {

@@ -35,9 +35,9 @@ library:
         - id: to-area-bound
         - id: from-area-bound
       area-connection:
-        - injection-field: 
-        - spillage-bound: to-area-bound
-        - unsupplied-energy-bound: from-area-bound
+        injection-to-balance: 
+        spillage-bound: to-area-bound
+        unsupplied-energy-bound: from-area-bound
 
   models:
     - id: model_with_vars
@@ -145,7 +145,7 @@ void AreaConnectionFixture::addComponentsVariablesToLP()
             optimContainer->addStartColumn();
 
             // All variables are time-dependent here
-            for (auto t = 0; t <= fill_ctx.getLocalLastTimeStep(); ++t)
+            for (unsigned t = 0; t <= fill_ctx.getLocalLastTimeStep(); ++t)
             {
                 auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
                 linearProblem.addVariable(-999, 999, false, name);

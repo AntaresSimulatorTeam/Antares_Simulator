@@ -61,7 +61,6 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
 
 void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
 {
-    // nothing to do
 }
 
 std::vector<unsigned> balanceConstraintIndices(const PROBLEME_HEBDO* problemeHebdo,
@@ -95,7 +94,7 @@ std::vector<unsigned> maxUnsupEnergyConstraintIndices(const PROBLEME_HEBDO* prob
                                                       const unsigned& areaIndex)
 {
     std::vector<unsigned> indices(ctx.getLocalNumberOfTimeSteps());
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         indices[h] = problemeHebdo->CorrespondanceCntNativesCntOptim[h]
                        .NumeroDeContraintePourBornerLaDefaillance[areaIndex];
@@ -110,7 +109,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
 {
     const auto& solverVariables = pb_.getVariables();
 
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         IMipConstraint* constraint = constraints[h];
         for (const auto& [index, coef]: linearExpression[h])
@@ -128,7 +127,7 @@ std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::fetchConstraints(
   const std::vector<unsigned>& constraintsIndices)
 {
     std::vector<IMipConstraint*> constraints(ctx.getLocalNumberOfTimeSteps());
-    for (auto h(0); h <= ctx.getLocalLastTimeStep(); ++h)
+    for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
         constraints[h] = pb_.getConstraint(constraintsIndices[h]);
     }
@@ -198,7 +197,7 @@ void ComponentToAreaConnectionFiller::addConstraints(const FillContext& ctx)
                 addPortContributionToLinearPb(ctx,
                                               component,
                                               portId,
-                                              portAreaConnection->injection,
+                                              portAreaConnection->inject_to_balance,
                                               areaIndex,
                                               balanceConstraintIndices);
                 addPortContributionToLinearPb(ctx,

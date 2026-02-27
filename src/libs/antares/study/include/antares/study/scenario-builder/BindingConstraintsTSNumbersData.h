@@ -19,10 +19,6 @@ public:
 
     bool reset(const Study& study) override;
 
-#ifdef BUILD_UI
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-#endif
-
     void setTSnumber(const std::string& group_name, unsigned year, unsigned value);
     unsigned get(const std::string& group_name, unsigned year) const;
     bool apply(Study& study) override;

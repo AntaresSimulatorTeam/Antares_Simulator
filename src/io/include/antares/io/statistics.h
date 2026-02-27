@@ -73,28 +73,6 @@ void HasWrittenToNetwork(uint64_t size);
 */
 void Reset();
 
-#ifdef BUILD_UI
-/*!
-** \brief Dump the statistic to the logs
-*/
-void DumpToLogs();
-
-class Updater final
-{
-public:
-    Updater()
-    {
-        Reset();
-    }
-
-    ~Updater()
-    {
-        DumpToLogs();
-    }
-};
-
-#endif // BUILD_UI
-
 } // namespace Antares::Statistics
 
 #endif // __ANTARES_LIBS_IO_STATISTICS_H__

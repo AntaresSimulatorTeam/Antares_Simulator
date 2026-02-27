@@ -96,8 +96,8 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
                       {{"p", {"p", VariabilityType::VARYING_IN_TIME_ONLY, "p"}},
                        {"five", {"five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}},
                       0)),
-    scenarioGroupRepo_(makeScenarioGroupRepo(component_)),
-    components_({component_})
+    components_({component_}),
+    scenarioGroupRepo_(makeScenarioGroupRepo(component_))
 {
     // Parameter p : make assocaited time-series
     auto ts = std::make_unique<TimeSeriesSet>("p", 3);

@@ -194,7 +194,9 @@ void Component::addAreaConnection(const std::string& localPortId, const std::str
                         port.Type().Id()));
     }
 
-    checkPortFieldDefinitionExists(localPortId, area_connection->injection, exceptionPrefix);
+    checkPortFieldDefinitionExists(localPortId,
+                                   area_connection->inject_to_balance,
+                                   exceptionPrefix);
     checkPortFieldDefinitionExists(localPortId, area_connection->spillage_bound, exceptionPrefix);
     checkPortFieldDefinitionExists(localPortId,
                                    area_connection->unsupplied_energy_bound,

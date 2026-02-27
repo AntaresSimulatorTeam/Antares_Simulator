@@ -14,6 +14,14 @@ VariableManager::VariableManager(
 {
 }
 
+VariableManager::VariableManager(PROBLEME_HEBDO* problemHebdo):
+    CorrespondanceVarNativesVarOptim_(problemHebdo->CorrespondanceVarNativesVarOptim),
+    NumeroDeVariableStockFinal_(problemHebdo->NumeroDeVariableStockFinal),
+    NumeroDeVariableDeTrancheDeStock_(problemHebdo->NumeroDeVariableDeTrancheDeStock),
+    NombreDePasDeTempsPourUneOptimisation_(problemHebdo->NombreDePasDeTempsPourUneOptimisation)
+{
+}
+
 int VariableManager::GetShiftedTimeStep(int offset, int delta, unsigned int hourInWeek) const
 {
     int pdt = hourInWeek + offset;

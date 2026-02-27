@@ -122,13 +122,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
     options.ignoreConstraints = pSettings.ignoreConstraints;
-    options.loadOnlyNeeded = true;
 
     // Load the study from a folder
     Benchmarking::Timer timer;
@@ -185,11 +184,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
-    // Removing all callbacks, which are no longer needed
-    logs.callback.clear();
     logs.info();
 
     if (pSettings.noOutput)
@@ -245,6 +242,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         throw Error::RuntimeInfoInitialization();
     }
+
+    // Removing all callbacks, which are no longer needed
+    logs.callback.clear();
+    logs.info();
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();

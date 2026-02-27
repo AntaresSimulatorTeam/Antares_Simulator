@@ -94,9 +94,6 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
                                                         Matrix<>::optFixedSize,
                                                         &fileContent)
               && ret;
-        // Allowing the daily power matrix to be printed in case of 'save as' (even if its content
-        // hasn't changed since it was loaded).
-        hydro_.dailyMaxPumpAndGen.markAsModified();
 
         if (enabledModeIsChanged)
         {

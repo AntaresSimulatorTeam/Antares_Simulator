@@ -132,15 +132,6 @@ public:
 
     //! \name Memory management
     //@{
-    /*!
-    ** \brief Make sure that all data are loaded in memory
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the load data as modified
-    */
-    void markAsModified() const;
 
 public:
     /*!

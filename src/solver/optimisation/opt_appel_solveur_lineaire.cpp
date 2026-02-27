@@ -18,7 +18,6 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
-#include "antares/solver/optimisation/MipDetection.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -168,8 +167,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                       || Antares::Optimization::hasModelerIntegerVariables(modelerData);
+    const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
     LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
@@ -336,8 +334,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     {
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
-        const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                           || Antares::Optimization::hasModelerIntegerVariables(modelerData);
+        const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
         LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);

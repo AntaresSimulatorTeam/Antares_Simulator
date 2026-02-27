@@ -11,7 +11,6 @@
 #include <yuni/yuni.h>
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
-#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
@@ -218,7 +217,6 @@ void BindingConstraint::resetToDefaultValues()
     pEnabled = true;
     pComments.clear();
     RHSTimeSeries_.reset();
-    markAsModified();
 }
 
 void BindingConstraint::copyWeights(
@@ -485,56 +483,6 @@ uint BindingConstraint::synthesisFilter() const
     return pFilterSynthesis;
 }
 
-bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = this->end();
-
-    for (auto j = this->begin(); j != endWeights; ++j)
-    {
-        auto* areaLink = j->first;
-        if (!areaLink)
-        {
-            continue;
-        }
-
-        if (!areaLink->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = pClusterWeights.end();
-
-    for (auto j = pClusterWeights.begin(); j != endWeights; ++j)
-    {
-        auto* cluster = j->first;
-        if (!cluster)
-        {
-            continue;
-        }
-
-        if (!cluster->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
 double BindingConstraint::weight(const AreaLink* lnk) const
 {
     auto i = pLinkWeights.find(lnk);
@@ -635,16 +583,6 @@ const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights
     return pClusterWeights;
 }
 
-bool BindingConstraint::forceReload(bool reload) const
-{
-    return RHSTimeSeries().forceReload(reload);
-}
-
-void BindingConstraint::markAsModified() const
-{
-    RHSTimeSeries().markAsModified();
-}
-
 void BindingConstraint::clearAndReset(const AnyString& name,
                                       BindingConstraint::Type newType,
                                       BindingConstraint::Operator op)
@@ -697,7 +635,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
         break;
     }
     }
-    RHSTimeSeries_.markAsModified();
 }
 
 std::string BindingConstraint::group() const
@@ -708,7 +645,6 @@ std::string BindingConstraint::group() const
 void BindingConstraint::group(std::string group_name)
 {
     group_ = std::move(group_name);
-    markAsModified();
 }
 
 const Matrix<>& BindingConstraint::RHSTimeSeries() const

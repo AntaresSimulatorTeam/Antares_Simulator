@@ -27,9 +27,9 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
-        - spillage-bound: 
-        - unsupplied-energy-bound: 
+        injection-to-balance: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
   models:
     - id: empty model
       description: we need this empty model, otherwise parser fails !
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_read_correctly)
 
     auto area_connection = portType.areaConnection();
     BOOST_CHECK(area_connection.has_value());
-    BOOST_CHECK_EQUAL(area_connection->injection, "flow");
+    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
     BOOST_CHECK(area_connection->spillage_bound.empty());
     BOOST_CHECK(area_connection->unsupplied_energy_bound.empty());
 }
@@ -70,9 +70,9 @@ library:
         - id: to-area-bound
         - id: from-area-bound
       area-connection:
-        - injection-field: flow
-        - spillage-bound: to-area-bound
-        - unsupplied-energy-bound: from-area-bound
+        injection-to-balance: flow
+        spillage-bound: to-area-bound
+        unsupplied-energy-bound: from-area-bound
 
   models:
     - id: empty model
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(port_type_area_connection_is_more_complete_and_is_still_rea
 
     auto area_connection = portType.areaConnection();
     BOOST_CHECK(area_connection.has_value());
-    BOOST_CHECK_EQUAL(area_connection->injection, "flow");
+    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
     BOOST_CHECK_EQUAL(area_connection->spillage_bound, "to-area-bound");
     BOOST_CHECK_EQUAL(area_connection->unsupplied_energy_bound, "from-area-bound");
 }
@@ -112,9 +112,9 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
-        - spillage-bound: 
-        - unsupplied-energy-bound: 
+        injection-to-balance: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
 
   models:
     - id: balance_node
@@ -249,7 +249,7 @@ library:
       fields:
         - id: capacity
       thermal-capacity-connection: # Explicitly use "capacity" in the name as later on there might be other thermal hybrid connections involving thermal generation
-        - capacity-field: capacity
+        capacity-field: capacity
   models:
     - id: thermal_invest
       parameters:
