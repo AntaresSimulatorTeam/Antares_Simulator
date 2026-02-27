@@ -510,7 +510,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
-bool Study::checkForFilenameLimits(const String& chfolder) const
+bool Study::checkForFilenameLimits() const
 {
     enum
     {
@@ -524,16 +524,6 @@ bool Study::checkForFilenameLimits(const String& chfolder) const
     if (areas.empty())
     {
         return true;
-    }
-
-    String studyfolder;
-    if (chfolder.empty())
-    {
-        studyfolder = folder;
-    }
-    else
-    {
-        studyfolder = chfolder;
     }
 
     String linkname;
@@ -564,7 +554,7 @@ bool Study::checkForFilenameLimits(const String& chfolder) const
       });
 
     String filename;
-    filename << studyfolder << SEP << "output" << SEP;
+    filename << folder << SEP << "output" << SEP;
 
     if (linkname.empty())
     {

@@ -262,7 +262,7 @@ public:
     ** \param output True for checking output filenames, false for input
     ** \param chfolder The study folder to take into consideration
     */
-    bool checkForFilenameLimits(const YString& chfolder = nullptr) const;
+    bool checkForFilenameLimits() const;
     //@}
 
     //! \name Logs

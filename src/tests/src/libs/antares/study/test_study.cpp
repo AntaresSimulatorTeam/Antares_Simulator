@@ -334,7 +334,7 @@ BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
     BOOST_CHECK(s->checkForFilenameLimits()); // empty areas should return true
 
     BOOST_CHECK(study->checkForFilenameLimits());
-    BOOST_CHECK(study->checkForFilenameLimits("abc"));
+    BOOST_CHECK(study->checkForFilenameLimits());
 
 #ifdef YUNI_OS_WINDOWS
     std::string area1name(128, 'a');
