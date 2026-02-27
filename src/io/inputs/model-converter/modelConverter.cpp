@@ -141,7 +141,7 @@ static ForbiddenNodes ForbiddenInExtraOutput()
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
-    return {ac.injection, ac.spillage_bound, ac.unsupplied_energy_bound};
+    return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound};
 }
 
 std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
@@ -169,7 +169,8 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 
         PortType portType(ymlPortType.id,
                           std::move(fields),
-                          convert_to_system(ymlPortType.area_connection));
+                          convert_to_system(ymlPortType.area_connection),
+                          ymlPortType.thermal_capacity_connection_field);
         out.emplace_back(std::move(portType));
     }
     return out;

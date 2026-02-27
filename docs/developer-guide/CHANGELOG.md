@@ -4,6 +4,61 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.3.6
+
+#### New features
+
+* feat: resolution mode [ANT-4380] (#3339)
+* Dynamic aggregation [ANT-2739] (#3342)
+* Investment with integer variables for hybrid studies [ANT-4046] (#3372)
+* [100% optional] Use customized mps generator in the simulator (#3346)
+* [100%] print mps in api mode (#3314)
+* Modeler: operators ceil and floor [ANT-4295] (#3316)
+* feat(api): check week independency (#3387)
+
+#### Improvements
+
+* Remove usage of raw pointers around MPSolver, use std::shared_ptr (#3348)
+* Refactor AverageData year management (#3332)
+* Simplify, fix and slightly extend output variable classes (#3337)
+* Use a custom MPS writer in antares-modeler [ANT-4324] (#3302)
+* Change PMax computation for STS in remix hydro (#3363)
+* Remove ts-generator binary (#3334)
+* Shorten header/copyright notice (#3353)
+* Residual consumption [ANT-2444] (#3330)
+
+#### Bugfixes
+
+* fix: hourly PMax not clamped up to PMax Hydro Écrêtée (#3361)
+* fix: Offset overwritten instead of accumulated [ANT-4467] (#3385)
+* Fix naming for daily binding constraints (#3362)
+* Fix missing elements from digest.txt [ANT-4446] (#3388)
+* fix test "single_problem_thermal_first_week_nominal_case" (#3380)
+* fix: API save study meta data (#3356)
+* APIv2 - Fix wrong size for TS numbers (#3391)
+* Fix TODO & add tests in hydro allocation (#3343)
+* test: Handle new study directory "invalid-studies" (#3246)
+
+#### Tests
+
+* Add tests on `SurveyResults` (#3338)
+* constraints builder tests: adding tests + improvements (#3305)
+* Add unit tests for `IntermediateValues::computeStatisticsForTheCurrentYear` (#3344)
+* Add tests on time aggregation + formatting to a survey report (#3345)
+
+#### Documentation
+
+* Add documentation on missing parameters (#3347)
+* Add doc for execution_info.ini durations (#3359)
+* Add doc for resolution mode (#3371)
+* Add AGENTS.md for coding agents (#3368)
+
+#### CI/Chore
+
+* update simtest version (#3360)
+* chore(simtest): update version to v9.3.6b (#3386)
+* [oracle 8] update python version to get ortools (#3379)
+
 ### 9.3.5
 #### Improvements
 * New option Adequacy patch debug files [ANT-4034] (#3297)

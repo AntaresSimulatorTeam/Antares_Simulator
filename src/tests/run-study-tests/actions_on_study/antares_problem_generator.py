@@ -32,7 +32,6 @@ class AntaresProblemGeneratorRun:
 
         check(self.success(), f"Solver returned error {self.return_code}")
 
-
     def get_return_code(self):
         return self.return_code
 

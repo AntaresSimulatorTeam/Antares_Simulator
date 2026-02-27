@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include "antares/io/inputs/yml-model/Library.h"
 
 #include "yaml-cpp/yaml.h"
@@ -206,23 +208,69 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
     }
 };
 
-std::string findValue(const std::string& key, const YAML::Node& node)
+std::string getFieldFromNode(const Node& node, const std::string& fieldName)
 {
-    std::string value;
-    for (auto& field: node["area-connection"])
+    if (node[fieldName].IsNull())
     {
-        value = field[key].as<std::string>("");
-        if (!value.empty())
-        {
-            return value;
-        }
+        return {};
     }
-    return value; // Should be empty
+    return node[fieldName].as<std::string>("");
+}
+
+bool isValidMap(const Node& node, const unsigned& nbFields)
+{
+    if (node.IsMap() && node.size() == nbFields)
+    {
+        return true;
+    }
+    return false;
 }
 
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
+    static bool convertAreaConnectionFields(const Node& node,
+                                            Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        auto child_node = node["area-connection"];
+        if (!child_node.IsDefined())
+        {
+            return true;
+        }
+
+        const unsigned expectedNbFields = 3;
+        if (!isValidMap(child_node, expectedNbFields))
+        {
+            return false;
+        }
+
+        rhs.area_connection.inject_to_balance = getFieldFromNode(child_node,
+                                                                 "injection-to-balance");
+        rhs.area_connection.spillage_bound = getFieldFromNode(child_node, "spillage-bound");
+        rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(child_node,
+                                                                       "unsupplied-energy-bound");
+        return true;
+    }
+
+    static bool convertThermalCapacityField(const Node& node,
+                                            Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        auto child_node = node["thermal-capacity-connection"];
+        if (!child_node.IsDefined())
+        {
+            return true;
+        }
+
+        const unsigned expectedNbFields = 1;
+        if (!isValidMap(child_node, expectedNbFields))
+        {
+            return false;
+        }
+
+        rhs.thermal_capacity_connection_field = getFieldFromNode(child_node, "capacity-field");
+        return true;
+    }
+
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
         if (!node.IsMap())
@@ -235,17 +283,15 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             rhs.fields.push_back(field["id"].as<std::string>());
         }
-        if (node["area-connection"].IsDefined())
+        if (!convertThermalCapacityField(node, rhs))
         {
-            if (node["area-connection"].size() == 0 || node["area-connection"].size() > 3)
-            {
-                return false;
-            }
-            rhs.area_connection.injection = findValue("injection-field", node);
-            rhs.area_connection.spillage_bound = findValue("spillage-bound", node);
-            rhs.area_connection.unsupplied_energy_bound = findValue("unsupplied-energy-bound",
-                                                                    node);
+            return false;
         }
+        if (!convertAreaConnectionFields(node, rhs))
+        {
+            return false;
+        }
+
         return true;
     }
 };

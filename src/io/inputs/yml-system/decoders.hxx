@@ -97,6 +97,39 @@ struct convert<Antares::IO::Inputs::YmlSystem::AreaConnection>
 };
 
 template<>
+struct convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::ThermalComponent& rhs)
+    {
+        if (!node.IsMap() || node.size() != 2)
+        {
+            return false;
+        }
+        rhs.areaId = node["area"].as<std::string>();
+        rhs.clusterId = node["cluster-id"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>
+{
+    static bool decode(const Node& node,
+                       Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection& rhs)
+    {
+        if (!node.IsMap() || node.size() != 3)
+        {
+            return false;
+        }
+        rhs.componentId = node["component"].as<std::string>();
+        rhs.portId = node["port"].as<std::string>();
+        rhs.thermalComponent = as_fallback_default<
+          Antares::IO::Inputs::YmlSystem::ThermalComponent>(node["thermal-component"]);
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::IO::Inputs::YmlSystem::System>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::System& rhs)
@@ -109,6 +142,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::System>
           std::vector<Antares::IO::Inputs::YmlSystem::Connection>>(node["connections"]);
         rhs.areaConnections = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::AreaConnection>>(node["area-connections"]);
+        rhs.thermalCapacityConnections = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>>(
+          node["thermal-capacity-connections"]);
         return true;
     }
 };

@@ -218,8 +218,15 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = std::make_unique<Solver::ModelerData>(Solver::LoadFiles::loadAll(folder));
-        checkModelerDataCompatibility();
+        auto data = Solver::LoadFiles::loadAll(folder);
+        if (data.has_value())
+        {
+            // Move the ModelerData out of the optional to avoid copying
+            // (ModelerData contains unique_ptr members and is move-only: it can be moved but not
+            // copied).
+            modelerInput_ = std::make_unique<Solver::ModelerData>(std::move(*data));
+            checkModelerDataCompatibility();
+        }
     }
     catch (const Error::LoadingError& e)
     {
@@ -227,8 +234,8 @@ void Study::loadModelerComponents()
     }
     catch (const std::exception& e)
     {
-        logs.info() << "No modeler inputs were loaded";
-        logs.info() << "Modeler inputs error: " << e.what();
+        logs.error() << "No modeler inputs were loaded";
+        logs.error() << "Modeler inputs error: " << e.what();
     }
 
     if (fs::exists(folder / "parameters.yml"))

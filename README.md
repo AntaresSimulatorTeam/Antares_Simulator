@@ -30,8 +30,6 @@ In May 2018, RTE decided to release the project under the GPLv3 license.
 In January 2024, RTE, as the exclusive copyright owner, decided to switch from the GPLv3 to the MPLv2 license,
 starting with the 9.0 version of Antares Simulator.
 
-The GUI is deprecated in favor of [Antares Web](https://antares-web.readthedocs.io).
-
 # Links:
 
 - Antares website:  https://antares-simulator.org
@@ -69,7 +67,6 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 * [src/libs/](src/libs)           - miscellaneous Antares_Simulator libraries.
 * [src/solver/](src/solver)     - simulation and optimization part.
 * [src/tools/](src/tools)        - miscellaneous tools for dataset management.
-* [src/ui/](src/ui)           - Graphic user interface.
 
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml/badge.svg?branch=develop
 

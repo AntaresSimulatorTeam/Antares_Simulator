@@ -1,3 +1,0 @@
-#include "winuser.h"
-1 RT_MANIFEST  resources/win32/manifest.antares-win32.manifest
-
