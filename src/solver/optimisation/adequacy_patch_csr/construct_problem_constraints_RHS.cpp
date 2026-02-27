@@ -81,14 +81,13 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
 
                 // Start with thermal dispatchable generation (STt)
                 double stt = 0.0;
+
                 const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
+                const auto& productionThermique = problemeHebdo_->ResultatsHoraires[Area]
+                                                    .ProductionThermique[triggeredHour];
                 for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
                 {
-                    const int palier = paliersThermiques
-                                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                    stt += problemeHebdo_->ResultatsHoraires[Area]
-                             .ProductionThermique[triggeredHour]
-                             .ProductionThermiqueDuPalier[palier];
+                    stt += productionThermique.ProductionThermiqueDuPalier[index];
                 }
 
                 // Subtract (1-BT)*STmint term
