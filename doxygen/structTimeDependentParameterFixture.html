@@ -170,7 +170,8 @@ std::vector&lt; <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_
 <tr class="memitem:a688a83c198ed5030ca190c1f14ed6074"><td class="memItemLeft" align="right" valign="top"><a id="a688a83c198ed5030ca190c1f14ed6074"></a>
 <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a>&#160;</td><td class="memItemRight" valign="bottom"><b>linearProblem</b> = <a class="el" href="classMockLinearProblem.html">MockLinearProblem</a>(true)</td></tr>
 <tr class="separator:a688a83c198ed5030ca190c1f14ed6074"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba9417511661653a4b0bd4468f26705a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>optimContainer</b></td></tr>
+<tr class="memitem:aba9417511661653a4b0bd4468f26705a"><td class="memItemLeft" align="right" valign="top"><a id="aba9417511661653a4b0bd4468f26705a"></a>
+<a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>optimContainer</b> = <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a>(linearProblem)</td></tr>
 <tr class="separator:aba9417511661653a4b0bd4468f26705a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36755f52e710489861a6252766c71ba7"><td class="memItemLeft" align="right" valign="top"><a id="a36755f52e710489861a6252766c71ba7"></a>
 std::unique_ptr&lt; <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html">Antares::Expressions::Visitors::EvalVisitor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>evalVisitor</b></td></tr>
@@ -179,24 +180,6 @@ std::unique_ptr&lt; <a class="el" href="classAntares_1_1Expressions_1_1Visitors_
 <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ctx</b> {0, 1, 0, 1, 1}</td></tr>
 <tr class="separator:aab6c59e602d80da70b0c44209ca43fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="aba9417511661653a4b0bd4468f26705a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba9417511661653a4b0bd4468f26705a">&#9670;&nbsp;</a></span>optimContainer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a> TimeDependentParameterFixture::optimContainer</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= OptimEntityContainer(linearProblem,</div>
-<div class="line">                                                               &amp;dummy_data,</div>
-<div class="line">                                                               &amp;scenarioGroupRepo)</div>
-</div><!-- fragment -->
-</div>
-</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/tests/src/expressions/test_PrintAndEvalVisitors.cpp</li>
 </ul>

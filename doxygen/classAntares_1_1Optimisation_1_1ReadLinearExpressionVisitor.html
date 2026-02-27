@@ -143,9 +143,9 @@ Inheritance diagram for Antares::Optimisation::ReadLinearExpressionVisitor:</div
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab6d553e8f590bfdb94d4dac24f7612df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#ab6d553e8f590bfdb94d4dac24f7612df">ReadLinearExpressionVisitor</a> (const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a> &amp;optimEntityContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &amp;component)</td></tr>
-<tr class="memdesc:ab6d553e8f590bfdb94d4dac24f7612df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a clone visitor with the specified registry for creating new nodes.  <a href="classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#ab6d553e8f590bfdb94d4dac24f7612df">More...</a><br /></td></tr>
-<tr class="separator:ab6d553e8f590bfdb94d4dac24f7612df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad16d8aa0c5f05d8614f6136adb406ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#aad16d8aa0c5f05d8614f6136adb406ef">ReadLinearExpressionVisitor</a> (const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a> &amp;optimEntityContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &amp;component, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a> *data, const <a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Optimisation::ScenarioGroupRepository</a> &amp;scenarioGroupRepo)</td></tr>
+<tr class="memdesc:aad16d8aa0c5f05d8614f6136adb406ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a clone visitor with the specified registry for creating new nodes.  <a href="classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#aad16d8aa0c5f05d8614f6136adb406ef">More...</a><br /></td></tr>
+<tr class="separator:aad16d8aa0c5f05d8614f6136adb406ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab385b841388056ab289fbe3f4ce51473"><td class="memItemLeft" align="right" valign="top"><a id="ab385b841388056ab289fbe3f4ce51473"></a>
 <a class="el" href="classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html">Antares::Optimization::TimeDependentLinearExpression</a>&#160;</td><td class="memItemRight" valign="bottom"><b>visitMergeDuplicates</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Nodes::Node</a> *node)</td></tr>
 <tr class="separator:ab385b841388056ab289fbe3f4ce51473"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -276,8 +276,8 @@ std::vector&lt; <a class="el" href="classAntares_1_1Optimization_1_1TimeDependen
 <tr class="separator:aea09e2d220b25a522141a0d230f8ddc0 inherit pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab6d553e8f590bfdb94d4dac24f7612df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6d553e8f590bfdb94d4dac24f7612df">&#9670;&nbsp;</a></span>ReadLinearExpressionVisitor()</h2>
+<a id="aad16d8aa0c5f05d8614f6136adb406ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad16d8aa0c5f05d8614f6136adb406ef">&#9670;&nbsp;</a></span>ReadLinearExpressionVisitor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -301,7 +301,19 @@ std::vector&lt; <a class="el" href="classAntares_1_1Optimization_1_1TimeDependen
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> &amp;&#160;</td>
-          <td class="paramname"><em>component</em>&#160;</td>
+          <td class="paramname"><em>component</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Optimisation::ScenarioGroupRepository</a> &amp;&#160;</td>
+          <td class="paramname"><em>scenarioGroupRepo</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

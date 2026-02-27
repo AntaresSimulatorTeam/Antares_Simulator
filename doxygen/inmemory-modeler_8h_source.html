@@ -256,13 +256,14 @@ $(document).ready(function(){initNavTree('inmemory-modeler_8h_source.html',''); 
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        modelerData.system = std::make_unique&lt;System&gt;(std::move(system));</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        modelerData.dataSeries = std::make_unique&lt;</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;          <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1LinearProblemData.html">Antares::Optimisation::LinearProblemDataImpl::LinearProblemData</a>&gt;(std::move(dummy_data_));</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keywordflow">return</span> modelerData;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">int</span> componentIndex_ = 0;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;};</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;} <span class="comment">// namespace Test::Modeler</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        modelerData.scenarioGroupRepository = std::move(scenarioGroupRepo);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keywordflow">return</span> modelerData;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">int</span> componentIndex_ = 0;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;};</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;} <span class="comment">// namespace Test::Modeler</span></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Nodes_1_1Node_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Antares::Expressions::Nodes::Node</a></div><div class="ttdoc">Base class for nodes in a syntax tree.</div><div class="ttdef"><b>Definition:</b> Node.h:13</div></div>
 <div class="ttc" id="aclassAntares_1_1Expressions_1_1Registry_html"><div class="ttname"><a href="classAntares_1_1Expressions_1_1Registry.html">Antares::Expressions::Registry&lt; Antares::Expressions::Nodes::Node &gt;</a></div></div>
 <div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html">Antares::ModelerStudy::SystemModel::SystemBuilder</a></div><div class="ttdef"><b>Definition:</b> system.h:43</div></div>

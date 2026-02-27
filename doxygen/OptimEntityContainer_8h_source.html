@@ -130,143 +130,78 @@ $(document).ready(function(){initNavTree('OptimEntityContainer_8h_source.html','
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;span&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;antares/optimisation/linear-problem-api/mipConstraint.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;antares/optimisation/linear-problem-api/mipVariable.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;antares/study/system-model/component.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;antares/study/system-model/variabilityType.h&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/linearProblem.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;EvaluationContext.h&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;scenarioGroupRepo.h&quot;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structAntares_1_1Optimisation_1_1OptimComponent.html">   20</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Optimisation_1_1OptimComponent.html">OptimComponent</a></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::vector&lt;unsigned&gt; modelVariableGlobalIndices;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::vector&lt;unsigned&gt; modelConstraintsGlobalIndices;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    std::vector&lt;VariabilityType&gt; modelConstraintsVariability;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1EvaluationContext.html">EvaluationContext</a> evaluationContext;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;};</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">   28</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a>(<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">LinearProblemApi::ILinearProblem</a>&amp; linearProblem,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                         <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">LinearProblemApi::ILinearProblemData</a>* data,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                         <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a>* scenarioGroupRepository);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    [[nodiscard]] <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> getVariableStartColumn(</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; optimComponent = optimComponents_.at(component.Index());</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> variableStartColumn_.at(optimComponent.modelVariableGlobalIndices.at(index));</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1EvaluationContext.html">EvaluationContext</a>&amp; getEvaluationContext(</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; optimComponent = optimComponents_.at(component.Index());</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> optimComponent.evaluationContext;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    [[nodiscard]] std::pair&lt;unsigned int, VariabilityType&gt; getConstraintData(</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; optimComponent = optimComponents_.at(component.Index());</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">return</span> {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                optimComponent.modelConstraintsVariability.at(index)};</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">LinearProblemApi::ILinearProblem</a>&amp; Problem()</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> linearProblem_;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;span&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;antares/optimisation/linear-problem-api/mipConstraint.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;antares/optimisation/linear-problem-api/mipVariable.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;antares/study/system-model/component.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;antares/study/system-model/variabilityType.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/linearProblem.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;EvaluationContext.h&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;scenarioGroupRepo.h&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="structAntares_1_1Optimisation_1_1OptimComponent.html">   19</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Optimisation_1_1OptimComponent.html">OptimComponent</a></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::vector&lt;unsigned&gt; modelVariableGlobalIndices;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::vector&lt;unsigned&gt; modelConstraintsGlobalIndices;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::vector&lt;VariabilityType&gt; modelConstraintsVariability;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">   26</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">OptimEntityContainer</a>(<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">LinearProblemApi::ILinearProblem</a>&amp; linearProblem);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">unsigned</span> getVariableStartColumn(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                    <span class="keywordtype">unsigned</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">unsigned</span> getConstraintStartLine(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                    <span class="keywordtype">unsigned</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VariabilityType</a> getConstraintVariability(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                             <span class="keywordtype">unsigned</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;     <span class="comment">// gp : to be removed : used to avoid passing the linear problem.</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">LinearProblemApi::ILinearProblem</a>&amp; Problem(); </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> addStartColumn();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::span&lt;const std::unique_ptr&lt;LinearProblemApi::IMipVariable&gt;&gt; getComponentVariable(</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <span class="keywordtype">unsigned</span> index,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      std::size_t nbTimeSteps) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::span&lt;const std::unique_ptr&lt;LinearProblemApi::IMipConstraint&gt;&gt; componentConstraints(</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="keywordtype">unsigned</span> index,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      std::size_t nbTimeSteps) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> addFromSystemComponents(</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      <span class="keyword">const</span> std::vector&lt;ModelerStudy::SystemModel::Component&gt;&amp; component,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> registerConstraint(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                            <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VariabilityType</a>&amp; variability);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> addStartLine();</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> addStartColumn()</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        variableStartColumn_.push_back(linearProblem_.variableCount());</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;std::unique_ptr&lt;LinearProblemApi::IMipVariable&gt;&gt;&amp; getVariables()<span class="keyword"></span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">      const</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">return</span> linearProblem_.getVariables();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    [[nodiscard]] std::span&lt;const std::unique_ptr&lt;LinearProblemApi::IMipVariable&gt;&gt;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    getComponentVariable(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                         std::size_t nbTimeSteps)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; variables = linearProblem_.getVariables();</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> startColumn = getVariableStartColumn(component, index);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">return</span> {variables.data() + startColumn, nbTimeSteps};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    [[nodiscard]] std::pair&lt;std::span&lt;const std::unique_ptr&lt;LinearProblemApi::IMipConstraint&gt;&gt;,</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                            <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VariabilityType</a>&gt;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    getComponentConstraint(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a>&amp; component,</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                           <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                           std::size_t nbTimeSteps)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; constraints = linearProblem_.getConstraints();</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> [startLine, timeIndex] = getConstraintData(component, index);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordflow">return</span> {{constraints.data() + startLine, nbTimeSteps}, timeIndex};</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;std::unique_ptr&lt;LinearProblemApi::IMipConstraint&gt;&gt;&amp;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    getConstraints()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> linearProblem_.getConstraints();</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    [[nodiscard]] <a class="code" href="structAntares_1_1Optimisation_1_1OptimComponent.html">OptimComponent</a>&amp; getOptimComponent(<span class="keywordtype">size_t</span> index)</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">return</span> optimComponents_.at(index);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> addFromSystemComponents(</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      <span class="keyword">const</span> std::vector&lt;Antares::ModelerStudy::SystemModel::Component&gt;&amp; component,</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> registerConstraint(<span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                            <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">VariabilityType</a>&amp; variability);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">unsigned</span> constraintGLobalIndex()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(constraintStartLine_.size());</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    std::vector&lt;unsigned int&gt; variableStartColumn_;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    std::vector&lt;OptimComponent&gt; optimComponents_;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    std::vector&lt;unsigned int&gt; constraintStartLine_;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">LinearProblemApi::ILinearProblem</a>&amp; linearProblem_;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">LinearProblemApi::ILinearProblemData</a>* data_;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">ScenarioGroupRepository</a>* scenarioGroupRepository_;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordtype">void</span> addStartLine()</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    {</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        constraintStartLine_.push_back(linearProblem_.constraintCount());</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    }</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;};</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::vector&lt;unsigned&gt; variableStartColumn_;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::vector&lt;OptimComponent&gt; optimComponents_;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::vector&lt;unsigned&gt; constraintStartLine_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">LinearProblemApi::ILinearProblem</a>&amp; linearProblem_;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;} <span class="comment">// namespace Antares::Optimisation</span></div>
 <div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:58</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1EvaluationContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1EvaluationContext.html">Antares::Optimisation::EvaluationContext</a></div><div class="ttdoc">Represents the context for evaluating expressions.</div><div class="ttdef"><b>Definition:</b> EvaluationContext.h:25</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Antares::Optimisation::LinearProblemApi::ILinearProblemData</a></div><div class="ttdoc">Interface for linear problem data. Provides a method to retrieve data for a specific dataset,...</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:96</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a></div><div class="ttdef"><b>Definition:</b> linearProblem.h:23</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1OptimEntityContainer_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Antares::Optimisation::OptimEntityContainer</a></div><div class="ttdef"><b>Definition:</b> OptimEntityContainer.h:29</div></div>
-<div class="ttc" id="aclassAntares_1_1Optimisation_1_1ScenarioGroupRepository_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1ScenarioGroupRepository.html">Antares::Optimisation::ScenarioGroupRepository</a></div><div class="ttdef"><b>Definition:</b> scenarioGroupRepo.h:12</div></div>
+<div class="ttc" id="aclassAntares_1_1Optimisation_1_1OptimEntityContainer_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Antares::Optimisation::OptimEntityContainer</a></div><div class="ttdef"><b>Definition:</b> OptimEntityContainer.h:27</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html">Antares::Optimisation</a></div><div class="ttdef"><b>Definition:</b> VariableNode.h:9</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a1e55658b769471a302044e59ca6ee351"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a></div><div class="ttdeci">VariabilityType</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> variabilityType.h:12</div></div>
-<div class="ttc" id="astructAntares_1_1Optimisation_1_1OptimComponent_html"><div class="ttname"><a href="structAntares_1_1Optimisation_1_1OptimComponent.html">Antares::Optimisation::OptimComponent</a></div><div class="ttdef"><b>Definition:</b> OptimEntityContainer.h:21</div></div>
+<div class="ttc" id="astructAntares_1_1Optimisation_1_1OptimComponent_html"><div class="ttname"><a href="structAntares_1_1Optimisation_1_1OptimComponent.html">Antares::Optimisation::OptimComponent</a></div><div class="ttdef"><b>Definition:</b> OptimEntityContainer.h:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

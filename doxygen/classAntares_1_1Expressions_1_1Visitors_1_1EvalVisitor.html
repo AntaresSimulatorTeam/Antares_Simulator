@@ -148,9 +148,9 @@ Inheritance diagram for Antares::Expressions::Visitors::EvalVisitor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a455410b93f30d85d1a60f569f001dcb5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a455410b93f30d85d1a60f569f001dcb5">EvalVisitor</a> (const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;optimContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> &amp;component)</td></tr>
-<tr class="memdesc:a455410b93f30d85d1a60f569f001dcb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation visitor with the specified context.  <a href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#a455410b93f30d85d1a60f569f001dcb5">More...</a><br /></td></tr>
-<tr class="separator:a455410b93f30d85d1a60f569f001dcb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac13ee1694bbfb5e58648701549a2db6f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#ac13ee1694bbfb5e58648701549a2db6f">EvalVisitor</a> (const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;optimContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext, const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> &amp;component, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a> *data, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a> *scenario)</td></tr>
+<tr class="memdesc:ac13ee1694bbfb5e58648701549a2db6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an evaluation visitor with the specified context.  <a href="classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitor.html#ac13ee1694bbfb5e58648701549a2db6f">More...</a><br /></td></tr>
+<tr class="separator:ac13ee1694bbfb5e58648701549a2db6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5d5e66923473c4a0797e502057c7dba"><td class="memItemLeft" align="right" valign="top"><a id="aa5d5e66923473c4a0797e502057c7dba"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const override</td></tr>
 <tr class="separator:aa5d5e66923473c4a0797e502057c7dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,8 +226,8 @@ std::vector&lt; <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1E
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a visitor for evaluating expressions within a given context. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a455410b93f30d85d1a60f569f001dcb5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a455410b93f30d85d1a60f569f001dcb5">&#9670;&nbsp;</a></span>EvalVisitor()</h2>
+<a id="ac13ee1694bbfb5e58648701549a2db6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac13ee1694bbfb5e58648701549a2db6f">&#9670;&nbsp;</a></span>EvalVisitor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,7 +251,19 @@ std::vector&lt; <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1E
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a> &amp;&#160;</td>
-          <td class="paramname"><em>component</em>&#160;</td>
+          <td class="paramname"><em>component</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblemData.html">Optimisation::LinearProblemApi::ILinearProblemData</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IScenario.html">Optimisation::LinearProblemApi::IScenario</a> *&#160;</td>
+          <td class="paramname"><em>scenario</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
