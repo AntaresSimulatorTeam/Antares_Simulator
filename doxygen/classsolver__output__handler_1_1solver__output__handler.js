@@ -17,6 +17,7 @@ var classsolver__output__handler_1_1solver__output__handler =
     [ "get_npcap_hours_for_hour", "classsolver__output__handler_1_1solver__output__handler.html#a81e2f5a6d746f93b71481f404c588352", null ],
     [ "get_optim1_simulation_table", "classsolver__output__handler_1_1solver__output__handler.html#a76fb366468f397cafadbaadf834213b6", null ],
     [ "get_optim2_simulation_table", "classsolver__output__handler_1_1solver__output__handler.html#ac7c245afb9220d5ebc08f26928aa581b", null ],
+    [ "get_output_file_with_name", "classsolver__output__handler_1_1solver__output__handler.html#a3a3b6989827cf8502c0b859e084851b9", null ],
     [ "get_simu_time", "classsolver__output__handler_1_1solver__output__handler.html#a7319c20c5a74833cc09615468fda3105", null ],
     [ "get_specific_value", "classsolver__output__handler_1_1solver__output__handler.html#a072885a78978daa3fe848158d1109b78", null ],
     [ "get_spilled_energy_mwh", "classsolver__output__handler_1_1solver__output__handler.html#ae97706775e5a4255375c1e64406a66cc", null ],
