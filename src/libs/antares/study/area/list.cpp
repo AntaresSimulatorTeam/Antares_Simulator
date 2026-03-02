@@ -1090,51 +1090,6 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
     each([n](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-void AreaList::fixOrientationForAllInterconnections(
-  BindingConstraintsRepository& bindingconstraints)
-{
-    each(
-      [&bindingconstraints](Data::Area& area)
-      {
-          bool mustLoop;
-          // for each link from this area
-          do
-          {
-              // Nothing to do if the area does not have any links
-              if (area.links.empty())
-              {
-                  break;
-              }
-
-              // By default, we don't have to loop forever
-              mustLoop = false;
-
-              // Foreach link...
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  // Reference to the link
-                  auto& link = *(i->second);
-                  // Asserts
-                  assert(link.from);
-                  assert(link.with);
-
-                  if ((link.from)->id > (link.with)->id)
-                  {
-                      // Reversing the link
-                      link.reverse();
-                      // Updating the binding constraints
-                      bindingconstraints.reverseWeightSign(&link);
-                      // Since the iterators have been compromised, we have to restart the iteration
-                      // through the links
-                      mustLoop = true;
-                      break;
-                  }
-              }
-          } while (mustLoop);
-      });
-}
-
 bool AreaList::remove(const AnyString& id)
 {
     AreaName lname = transformNameIntoID(id);

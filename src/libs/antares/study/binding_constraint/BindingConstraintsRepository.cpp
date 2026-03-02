@@ -202,11 +202,6 @@ void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
       });
 }
 
-void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
-{
-    each([&lnk](BindingConstraint& constraint) { constraint.reverseWeightSign(lnk); });
-}
-
 BindingConstraintsRepository::iterator BindingConstraintsRepository::begin()
 {
     return constraints_.begin();
