@@ -227,11 +227,6 @@ public:
     */
     bool completeFromStudy();
 
-    /*!
-    ** \brief Delete the network constraints
-    */
-    bool deletePreviousConstraints();
-
     bool saveCBuilderToFile(const String& filename = "") const;
     bool completeCBuilderFromFile(const std::string& filename = "");
 
