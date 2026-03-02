@@ -1032,44 +1032,6 @@ uint AreaList::areaLinkCount() const
     return ret;
 }
 
-void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
-{
-    if (!list || !a)
-    {
-        return;
-    }
-
-    list->each(
-      [&a](Data::Area& area)
-      {
-          if (!area.links.empty())
-          {
-              return;
-          }
-          bool mustLoop = false;
-          do
-          {
-              mustLoop = false;
-              // Foreach link from this area
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  AreaLink* lnk = i->second;
-
-                  // The link must be destroyed if attached to the given area
-                  if ((lnk->from == a) || (lnk->with == a))
-                  {
-                      // The reference to this link will be removed and the link will be freed
-                      AreaLinkRemove(lnk);
-                      // Let's start again
-                      mustLoop = true;
-                      break;
-                  }
-              }
-          } while (mustLoop);
-      });
-}
-
 void AreaList::resizeAllTimeseriesNumbers(uint n)
 {
     // Ask to resize the matrices dedicated to the sampled timeseries numbers
@@ -1089,9 +1051,6 @@ bool AreaList::remove(const AnyString& id)
 
         // Then we remove the reference to this area
         areas.erase(i);
-
-        // All dependencies must be removed as well
-        AreaListDeleteLinkFromAreaPtr(this, areaToRemove);
 
         // Finally we can destroy the area itself
         delete areaToRemove;

@@ -654,7 +654,6 @@ void AreaLinkRemove(AreaLink* link)
     Area* areaFrom = link->from;
     if (areaFrom && !areaFrom->links.empty())
     {
-        areaFrom->detachLinkFromID(link->with->id);
         areaFrom->buildLinksIndexes();
     }
 

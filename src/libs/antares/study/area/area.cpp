@@ -229,24 +229,6 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
     return noErrorMinStabPow;
 }
 
-void Area::detachLinkFromID(const AreaName& id)
-{
-    auto i = links.find(id);
-    if (i != links.end())
-    {
-        links.erase(i);
-    }
-}
-
-void Area::detachLink(const AreaLink* lnk)
-{
-    assert(lnk);
-    assert(lnk->from);
-    assert(lnk->with);
-
-    lnk->from->detachLinkFromID(lnk->with->id);
-}
-
 void Area::buildLinksIndexes()
 {
     uint areaIndx = 0;

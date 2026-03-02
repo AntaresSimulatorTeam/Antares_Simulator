@@ -75,13 +75,6 @@ public:
     */
     void clearAllLinks();
 
-    /*!
-    ** \brief Detach any link connected from this area to the given area
-    */
-    void detachLinkFromID(const AreaName& id);
-
-    static void detachLink(const AreaLink* lnk);
-
     void buildLinksIndexes();
     //@}
 
