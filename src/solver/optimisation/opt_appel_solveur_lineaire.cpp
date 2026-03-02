@@ -68,6 +68,7 @@ static void fillModelerComponents(
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
+                                            modelerData->dataSeries.get(),
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
                                             Solver::Config::Location::SUBPROBLEMS,
@@ -122,10 +123,17 @@ void fillLinearProblem(FillContext& fillCtx,
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(
-          std::make_unique<ComponentToAreaConnectionFiller>(problemeHebdo, optimEntityContainer));
-        fillersCollection.push_back(
-          std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
+        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
+          problemeHebdo,
+          optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
+          problemeHebdo->modelerData->scenarioGroupRepository));
+
+        fillersCollection.push_back(std::make_unique<ThermalCapacityFiller>(
+          problemeHebdo,
+          optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
+          problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -170,9 +178,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                            ->scenarioGroupRepository
                                                                       : nullptr;
 
-    OptimEntityContainer optimEntityContainer(ortoolsProblem,
-                                              modelerDataSeries,
-                                              modelerScenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(ortoolsProblem);
 
     Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
                                                                  ? &modelerData
@@ -245,7 +251,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         FillSimulationTable(*simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver.get()),
-
                             *modelerData,
                             optimEntityContainer,
                             fillCtx,
@@ -338,15 +343,14 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         const ScenarioGroupRepository* modelerScenarioGroupRepository
           = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-        OptimEntityContainer optimEntityContainer(infeasibleProblem,
-                                                  modelerDataSeries,
-                                                  modelerScenarioGroupRepository);
+        OptimEntityContainer optimEntityContainer(infeasibleProblem);
         Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
                                                                      ? &modelerData
                                                                           ->bendersDecomposition
                                                                      : nullptr;
 
         fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
+
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

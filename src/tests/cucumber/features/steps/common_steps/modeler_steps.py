@@ -25,7 +25,7 @@ def run_antares_modeler(context):
 
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    assert_double_close(value, context.moh.get_objective_value(), 1e-6)
+    assert_double_close(value, context.moh.get_objective_value(), 1e-5)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')

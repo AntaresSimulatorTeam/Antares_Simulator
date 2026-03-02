@@ -29,10 +29,15 @@ namespace Antares::Optimization
 {
 ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
   const PROBLEME_HEBDO* problemeHebdo,
-  OptimEntityContainer& optimEntityContainer):
+  OptimEntityContainer& optimEntityContainer,
+  const ILinearProblemData* data,
+  const ScenarioGroupRepository& scenarioGroupRepo):
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
-    optimEntityContainer_(optimEntityContainer)
+    optimEntityContainer_(optimEntityContainer),
+    data_(data),
+    scenarioGroupRepo_(scenarioGroupRepo),
+    pb_(optimEntityContainer_.Problem())
 {
     areaIndices_ = associateIndicesToAreas(problemeHebdo_);
     checkAreasFromConnexionsExist();
@@ -102,7 +107,7 @@ void ComponentToAreaConnectionFiller::addExpressionToConstraint(
   const FillContext& ctx,
   const std::vector<IMipConstraint*>& constraints) const
 {
-    const auto& solverVariables = optimEntityContainer_.getVariables();
+    const auto& solverVariables = pb_.getVariables();
 
     for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
@@ -121,11 +126,10 @@ std::vector<IMipConstraint*> ComponentToAreaConnectionFiller::fetchConstraints(
   const FillContext& ctx,
   const std::vector<unsigned>& constraintsIndices)
 {
-    auto& pb = optimEntityContainer_.Problem();
     std::vector<IMipConstraint*> constraints(ctx.getLocalNumberOfTimeSteps());
     for (unsigned h(0); h <= ctx.getLocalLastTimeStep(); ++h)
     {
-        constraints[h] = pb.getConstraint(constraintsIndices[h]);
+        constraints[h] = pb_.getConstraint(constraintsIndices[h]);
     }
     return constraints;
 }
@@ -136,7 +140,11 @@ TimeDependentLinearExpression ComponentToAreaConnectionFiller::linearExpressionA
   const Component& component,
   const FillContext& ctx)
 {
-    ReadLinearExpressionVisitor visitor(optimEntityContainer_, ctx, component);
+    ReadLinearExpressionVisitor visitor(optimEntityContainer_,
+                                        ctx,
+                                        component,
+                                        data_,
+                                        scenarioGroupRepo_);
 
     Nodes::Node* expression = component.nodeAtPortField(portId, fieldId);
     return visitor.visitMergeDuplicates(expression).expandToSize(ctx.getLocalNumberOfTimeSteps());

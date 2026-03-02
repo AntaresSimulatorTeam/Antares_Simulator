@@ -11,19 +11,25 @@
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
+using namespace Antares::Optimisation;
+
 namespace Antares::Expressions::Visitors
 {
 
-EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component& component):
+EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
+                         const LinearProblemApi::FillContext& fillContext,
+                         const ModelerStudy::SystemModel::Component& component,
+                         const LinearProblemApi::ILinearProblemData* data,
+                         const LinearProblemApi::IScenario* scenario):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
+    component_(component),
+    data_(data),
+    scenario_(scenario),
     optimContainer_(optimContainer),
-    evalContext_(optimContainer.getEvaluationContext(component)),
-    fillContext_(fillContext),
-    component_(component)
+    evalContext_(&component, data, scenario),
+    fillContext_(fillContext)
 {
 }
 
@@ -95,11 +101,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (systemParameter.type == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
     {
         return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
     }
-    if (systemParameter.type == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
     {
         return EvaluationResult(
           evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0));
@@ -145,7 +151,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     {
         auto* component = connectionEnd.component();
         auto* port = connectionEnd.port();
-        EvalVisitor visitor(optimContainer_, fillContext_, *component);
+        EvalVisitor visitor(optimContainer_, fillContext_, *component, data_, scenario_);
         const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;
@@ -190,26 +196,23 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
-    const auto& [_, variability] = optimContainer_.getConstraintData(component_, cstrIndex);
+    const auto& variability = optimContainer_.getConstraintVariability(component_, cstrIndex);
 
     if (isTimeConstant(variability))
     {
-        const auto componentConstraints = optimContainer_.getComponentConstraint(
-          component_,
-          cstrIndex,
-          1 /* single timestep */);
-        return EvaluationResult(componentConstraints.first[0]->dual());
+        const auto constraints = optimContainer_.componentConstraints(component_, cstrIndex, 1);
+        return EvaluationResult(constraints[0]->dual());
     }
 
     // The constraint depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
-    const auto componentConstraints = optimContainer_.getComponentConstraint(component_,
-                                                                             cstrIndex,
-                                                                             nbTimeStep);
+    const auto componentConstraints = optimContainer_.componentConstraints(component_,
+                                                                           cstrIndex,
+                                                                           nbTimeStep);
     for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
     {
-        constraintValues[constraintInd] = componentConstraints.first[constraintInd]->dual();
+        constraintValues[constraintInd] = componentConstraints[constraintInd]->dual();
     }
 
     return EvaluationResult{constraintValues};

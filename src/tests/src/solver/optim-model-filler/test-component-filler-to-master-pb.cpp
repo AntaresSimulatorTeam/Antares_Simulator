@@ -32,7 +32,7 @@ public:
         objectives(ObjectivesCreator::Create(nodeRegistry)),
         constraints(ConstraintsCreators::Create(nodeRegistry)),
         linear_pb(false, "sirius"),
-        optimEntityContainer(linear_pb, &dummy_data, &scenario_group_repo)
+        optimEntityContainer(linear_pb)
     {
         createModel();
         createComponent();
@@ -110,6 +110,7 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_master_pb_actually_adds_only_master_
                         Fixtures::VarOneSubOneMasterNoObjective)
 {
     ComponentFiller componentFiller(*component,
+                                    &dummy_data,
                                     optimEntityContainer,
                                     scenario_group_repo,
                                     Location::MASTER,
@@ -130,6 +131,7 @@ BOOST_FIXTURE_TEST_CASE(adding_variables_to_pb_actually_adds_only_subproblem_var
                         Fixtures::VarOneSubOneMasterNoObjective)
 {
     ComponentFiller componentFiller(*component,
+                                    &dummy_data,
                                     optimEntityContainer,
                                     scenario_group_repo,
                                     Location::SUBPROBLEMS,
@@ -149,6 +151,7 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_pb_actually_adds_only_subproblem_ob
                         Fixtures::VarTwoSubObjeOneSubOneMaster)
 {
     ComponentFiller componentFiller(*component,
+                                    &dummy_data,
                                     optimEntityContainer,
                                     scenario_group_repo,
                                     Location::SUBPROBLEMS,
@@ -175,6 +178,7 @@ BOOST_FIXTURE_TEST_CASE(adding_objectives_to_master_pb_actually_adds_only_master
                         Fixtures::VarTwoSubObjeOneSubOneMaster)
 {
     ComponentFiller componentFiller(*component,
+                                    &dummy_data,
                                     optimEntityContainer,
                                     scenario_group_repo,
                                     Location::MASTER,
@@ -192,6 +196,7 @@ BOOST_FIXTURE_TEST_CASE(mixed_variable_listed_in_benders_decomposition,
                         Fixtures::SingleMixedVarNoObjective)
 {
     ComponentFiller masterFiller(*component,
+                                 &dummy_data,
                                  optimEntityContainer,
                                  scenario_group_repo,
                                  Location::MASTER,
@@ -217,6 +222,7 @@ BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_sub,
                         Fixtures::VarTwoSubNoObjConstrOneSubOneMaster)
 {
     ComponentFiller componentFiller(*component,
+                                    &dummy_data,
                                     optimEntityContainer,
                                     scenario_group_repo,
                                     Location::SUBPROBLEMS,
@@ -231,6 +237,7 @@ BOOST_FIXTURE_TEST_CASE(adding_two_constraints_one_sub_one_master_in_master,
                         Fixtures::VarTwoSubNoObjConstrOneSubOneMaster)
 {
     ComponentFiller masterFiller(*component,
+                                 &dummy_data,
                                  optimEntityContainer,
                                  scenario_group_repo,
                                  Location::MASTER,

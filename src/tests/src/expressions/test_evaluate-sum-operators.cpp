@@ -105,13 +105,16 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
     data_.addDataSeries(std::move(ts));
 
     // Creation of a OptimEntityContainer
-    optimEntityContainer_ = std::make_unique<OptimEntityContainer>(linearProblem_,
-                                                                   &data_,
-                                                                   &scenarioGroupRepo_);
+    optimEntityContainer_ = std::make_unique<OptimEntityContainer>(linearProblem_);
     optimEntityContainer_->addFromSystemComponents(components_);
 
     // And finally, creation of the evaluation visitor (purpose of this fixture)
-    evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_, fillCtx_, component_);
+    evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_,
+                                                fillCtx_,
+                                                component_,
+                                                &data_,
+                                                &scenarioGroupRepo_.scenario(
+                                                  component_.getScenarioGroupId()));
 }
 
 // =================================================
