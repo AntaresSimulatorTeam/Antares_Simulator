@@ -214,7 +214,18 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     }
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
     const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+    // Bounds check - timeIndex must be within expression size
+    if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= expression.size())
+    {
+        throw std::runtime_error("TimeIndexNode: index " + std::to_string(timeIndex)
+                                 + " is out of range (expression size: "
+                                 + std::to_string(expression.size()) + ")");
+    }
+    // Must make explicit copy since expression is a local that will be destroyed
+    /*LinearExpression exprCopy = expression[timeIndex];*/
+    /*return TimeDependentLinearExpression(std::move(exprCopy));*/
     return TimeDependentLinearExpression(std::move(expression[timeIndex]));
+
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TimeSumNode* node)
