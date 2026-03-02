@@ -416,11 +416,6 @@ bool ThermalClusterList::validatePrepro(const Study& study)
     const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
                                            & timeSeriesThermal;
 
-    if (!study.usedByTheSolver)
-    {
-        return true;
-    }
-
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro),
                                [&globalThermalTSgeneration](auto& c)
                                {

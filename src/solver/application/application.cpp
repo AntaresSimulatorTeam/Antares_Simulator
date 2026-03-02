@@ -339,7 +339,6 @@ void Application::prepare(int argc, const char* argv[])
 
     // Options
     Data::StudyLoadOptions options;
-    options.usedByTheSolver = true;
 
     // Bind pSettings / options members to command line arguments
     // Something like bind("--foo", options.foo);

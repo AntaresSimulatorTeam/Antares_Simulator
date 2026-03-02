@@ -31,7 +31,7 @@ struct Fixture
     Fixture()
     {
         // Create studies
-        study = std::make_shared<Study>(true);
+        study = std::make_shared<Study>();
 
         // Add areas to studies
         area_1 = study->areaAdd("Area1");

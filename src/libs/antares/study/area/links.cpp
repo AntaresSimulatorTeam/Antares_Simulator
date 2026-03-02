@@ -496,7 +496,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
         ret = link.loadTimeSeries(study.header.version, folder) && ret;
 
         // Checks on loaded link's data
-        if (study.usedByTheSolver)
         {
             const uint nbDirectTS = link.directCapacities.timeSeries.width;
             const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
@@ -576,40 +575,37 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
             }
         }
 
-        // From the solver only
-        if (study.usedByTheSolver)
+        // From the solver
+        link.overrideTransmissionCapacityAccordingToGlobalParameter(
+          study.parameters.transmissionCapacities);
+
+        if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
         {
-            link.overrideTransmissionCapacityAccordingToGlobalParameter(
-              study.parameters.transmissionCapacities);
+            link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
+            link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
+        }
 
-            if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
-            {
-                link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
-                link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
-            }
-
-            switch (link.transmissionCapacities)
-            {
-            case Data::LocalTransmissionCapacities::enabled:
-                break;
-            case Data::LocalTransmissionCapacities::null:
-            {
-                // Ignore transmission capacities
-                link.directCapacities.timeSeries.zero();
-                link.indirectCapacities.timeSeries.zero();
-                break;
-            }
-            case Data::LocalTransmissionCapacities::infinite:
-            {
-                // Copper plate mode
-                auto infinity = +std::numeric_limits<double>::infinity();
-                link.directCapacities.fill(infinity);
-                link.indirectCapacities.fill(infinity);
-                break;
-            }
-            default:
-                return false;
-            }
+        switch (link.transmissionCapacities)
+        {
+        case Data::LocalTransmissionCapacities::enabled:
+            break;
+        case Data::LocalTransmissionCapacities::null:
+        {
+            // Ignore transmission capacities
+            link.directCapacities.timeSeries.zero();
+            link.indirectCapacities.timeSeries.zero();
+            break;
+        }
+        case Data::LocalTransmissionCapacities::infinite:
+        {
+            // Copper plate mode
+            auto infinity = +std::numeric_limits<double>::infinity();
+            link.directCapacities.fill(infinity);
+            link.indirectCapacities.fill(infinity);
+            break;
+        }
+        default:
+            return false;
         }
     }
 

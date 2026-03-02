@@ -512,7 +512,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Optimzation preferences
-    if (study.usedByTheSolver)
     {
         if (!study.parameters.include.reserve.dayAhead)
         {
@@ -548,7 +547,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = AreaLinksLoadFromFolder(study, list, &area, folder) && ret;
     }
 
-    bool averageTs = (study.usedByTheSolver && study.parameters.derated);
+    bool averageTs = study.parameters.derated;
     // Load
     {
         if (area.load.prepro) // Prepro
@@ -609,7 +608,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
-            ret = reader.read(pathHydro.string(), study.usedByTheSolver) && ret;
+            ret = reader.read(pathHydro.string(), true) && ret;
             break;
         }
         case Parameters::Compatibility::HydroPmax::Hourly:
@@ -625,7 +624,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                                  studyVersion,
                                                  study.parameters.compatibility.hydroPmax,
-                                                 study.usedByTheSolver);
+                                                 true);
     }
 
     // Wind
@@ -653,7 +652,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.thermal.list.loadEconomicCosts(study, seriesPath) && ret;
 
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
-        if (study.usedByTheSolver && study.parameters.mode == SimulationMode::Adequacy)
+        if (study.parameters.mode == SimulationMode::Adequacy)
         {
             area.thermal.list.enableMustrunForEveryone();
         }

@@ -1355,10 +1355,7 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
         logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
     }
     // Specific action before launching a simulation
-    if (options.usedByTheSolver)
-    {
-        prepareForSimulation(options);
-    }
+    prepareForSimulation(options);
 
     if (options.mpsToExport || options.namedProblems)
     {
