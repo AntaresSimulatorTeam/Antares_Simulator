@@ -28,8 +28,6 @@ bool Study::importTimeseriesIntoInput()
         logs.notice() << "Updating the input data...";
         logs.info() << "Importing the generated time-series into the input data";
 
-        Solver::Progression::Task progression(*this, Solver::Progression::sectImportTS);
-
         // Load
         if (parameters.haveToImport(timeSeriesLoad))
         {
@@ -39,7 +37,6 @@ bool Study::importTimeseriesIntoInput()
                 logs.info() << "Importing load timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "load" << SEP << "series";
                 ret = area->load.series.saveToFolder(area->id, buffer.c_str(), "load_") && ret;
-                ++progression;
             }
         }
 
@@ -52,7 +49,6 @@ bool Study::importTimeseriesIntoInput()
                 logs.info() << "Importing solar timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "solar" << SEP << "series";
                 ret = area->solar.series.saveToFolder(area->id, buffer.c_str(), "solar_") && ret;
-                ++progression;
             }
         }
 
@@ -68,7 +64,6 @@ bool Study::importTimeseriesIntoInput()
                                                        buffer,
                                                        parameters.compatibility.hydroPmax)
                       && ret;
-                ++progression;
             }
         }
 
@@ -81,7 +76,6 @@ bool Study::importTimeseriesIntoInput()
                 logs.info() << "Importing wind timeseries : " << areaName;
                 buffer.clear() << folderInput << SEP << "wind" << SEP << "series";
                 area->wind.series.saveToFolder(area->id, buffer.c_str(), "wind_") && ret;
-                ++progression;
             }
         }
 
@@ -100,7 +94,6 @@ bool Study::importTimeseriesIntoInput()
 
                 buffer.clear() << folderInput << SEP << "thermal" << SEP << "series";
                 ret = area->thermal.list.saveDataSeriesToFolder(buffer.c_str()) && ret;
-                ++progression;
             }
         }
 

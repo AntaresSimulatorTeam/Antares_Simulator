@@ -24,7 +24,6 @@
 #include "fwd.h"
 #include "header.h"
 #include "parameters.h"
-#include "progression/progression.h"
 #include "sets.h"
 #include "simulation.h"
 
@@ -241,11 +240,6 @@ public:
     void prepareOutput();
 
     void saveAboutTheStudy(Solver::IResultWriter& resultWriter);
-
-    /*!
-    ** \brief Initialize the progress meter
-    */
-    void initializeProgressMeter(bool tsGeneratorOnly);
 
     //@}
 
@@ -489,9 +483,6 @@ public:
     ** (instead of .csv)
     */
     FileExtension inputExtension = "txt";
-
-    //! Progression about the current action performed on the study
-    mutable Solver::Progression progression;
 
     /*!
     ** \name Cache

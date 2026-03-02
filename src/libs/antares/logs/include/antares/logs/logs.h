@@ -25,18 +25,10 @@
 /*! Special message to the interface */
 #define LOG_UI "[UI] "
 
-/*! Special message to the interface for notifying about a progression change */
-#define LOG_PROGRESSION "[UI] progression: "
-
-/*! Inform the GUI that the progression map is ready */
-#define LOG_UI_PROGRESSION_MAP "[UI] Progression map: "
-
 /*! Ask to the GUI to show the messages */
 #define LOG_UI_DISPLAY_MESSAGES_ON "[UI] Display messages: On"
 /*! Ask to the GUI to hide the messages */
 #define LOG_UI_DISPLAY_MESSAGES_OFF "[UI] Display messages: Off"
-/*! Ask to the GUI to hide the progress bar */
-#define LOG_UI_HIDE_PROGRESSBAR "[UI] Progression: Off"
 /*! Inform the GUI that the solver has properly ended */
 #define LOG_UI_SOLVER_DONE "[UI] Quitting the solver gracefully"
 
@@ -71,7 +63,6 @@ extern Yuni::Logs::Logger<LoggingHandlers, LoggingDecorators> logs;
 enum LogLevel
 {
     logUnknown = 0,
-    logProgress, /* not really a real log level */
     logFatal,
     logError,
     logWarning,

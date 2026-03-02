@@ -112,8 +112,6 @@ private:
 public:
     void operator()()
     {
-        Progression::Task progression(study, y, Solver::Progression::sectYear);
-
         // Index of the current year in the list of structures
         uint indexYear = randomForParallelYears.yearNumberToIndex[y];
 
@@ -148,8 +146,7 @@ public:
         std::list<uint> failedWeekList;
 
         OptimizationStatisticsWriter optWriter(pResultWriter, y);
-        bool yearFailed = !simulation_->year(progression,
-                                             state,
+        bool yearFailed = !simulation_->year(state,
                                              numSpace,
                                              randomForCurrentYear,
                                              failedWeekList,
@@ -216,7 +213,6 @@ public:
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
         numspaceManager.freeNumSpace(numSpace);
-        simulation_->incrementProgression(progression);
 
         aggregationMutex.unlock();
 
