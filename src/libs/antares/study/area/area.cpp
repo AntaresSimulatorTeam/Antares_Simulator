@@ -247,18 +247,6 @@ void Area::detachLink(const AreaLink* lnk)
     lnk->from->detachLinkFromID(lnk->with->id);
 }
 
-AreaLink* Area::findLinkByID(const AreaName& id)
-{
-    auto i = links.find(id);
-    return (i != links.end()) ? i->second : nullptr;
-}
-
-const AreaLink* Area::findLinkByID(const AreaName& id) const
-{
-    auto i = links.find(id);
-    return (i != links.end()) ? i->second : nullptr;
-}
-
 void Area::buildLinksIndexes()
 {
     uint areaIndx = 0;

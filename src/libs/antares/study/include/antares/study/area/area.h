@@ -43,7 +43,6 @@ public:
     //! Name mapping -> must be replaced by AreaNameMapping
     using NameMapping = std::map<AreaName, AreaName>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -77,25 +76,15 @@ public:
     void clearAllLinks();
 
     /*!
-    ** \brief Try to find the attached link from another area id
-    */
-    AreaLink* findLinkByID(const AreaName& id);
-    const AreaLink* findLinkByID(const AreaName& id) const;
-
-    /*!
     ** \brief Detach any link connected from this area to the given area
     */
     void detachLinkFromID(const AreaName& id);
 
     static void detachLink(const AreaLink* lnk);
 
-    /*!
-    ** \brief Remove a link from its raw pointer
-    */
-    void detachLinkFromItsPointer(const AreaLink* lnk);
+    void buildLinksIndexes();
     //@}
 
-    void buildLinksIndexes();
     /*!
     ** \brief Ensure all data are created
     */
@@ -151,7 +140,6 @@ public:
     template<enum TimeSeriesType T>
     const XCast* xcastData() const;
 
-public:
     //! \name General
     //@{
     //! Name of the area
