@@ -180,9 +180,17 @@ jobs:
       run: |
         echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-    - name: Init submodule Antares_Simulator_Tests_NR
+    # Get latest Test NR
+    - name: Init submodule Antares_Simulator_Tests_NR on top of main
+      if: ${{ env.IS_RELEASE == 'false' }}
       run: |
         git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
+
+    # Get test NR of submodule commit for reproductibility
+    - name: Init submodule Antares_Simulator_Tests_NR at submodule commit
+      if: ${{ env.IS_RELEASE == 'true' }}
+      run: |
+        git submodule update --init --depth 1 -- src/tests/resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
