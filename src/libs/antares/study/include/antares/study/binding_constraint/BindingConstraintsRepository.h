@@ -99,7 +99,6 @@ public:
     //! Get the number of binding constraints
     [[nodiscard]] uint size() const;
 
-
     /*!
     ** \brief Convert all weekly constraints into daily ones
     */
