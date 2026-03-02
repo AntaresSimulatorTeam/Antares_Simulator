@@ -18,6 +18,5 @@ var classAntares_1_1Data_1_1HydroAllocation =
     [ "operator[]", "classAntares_1_1Data_1_1HydroAllocation.html#a7a3b300353dbe58198903a7a917ba833", null ],
     [ "prepareForSolver", "classAntares_1_1Data_1_1HydroAllocation.html#a757b4161921a1277a498260a5f0e7925", null ],
     [ "remove", "classAntares_1_1Data_1_1HydroAllocation.html#add18ed47df45017fd18e40a2e3b72f29", null ],
-    [ "rename", "classAntares_1_1Data_1_1HydroAllocation.html#afefd99a6191bb52494f06330f879983b", null ],
     [ "saveToFile", "classAntares_1_1Data_1_1HydroAllocation.html#a2f0e85366f2a9ea2279f4156ff0e317c", null ]
 ];

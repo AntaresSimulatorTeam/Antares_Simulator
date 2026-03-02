@@ -16,7 +16,6 @@ var classAntares_1_1Data_1_1ClusterList =
     [ "operator[]", "classAntares_1_1Data_1_1ClusterList.html#a02e539f84a702a19ec0db7d75a26c5c3", null ],
     [ "rebuildIndexes", "classAntares_1_1Data_1_1ClusterList.html#a15e5fd0a7d059a7aab8312a64ecdc057", null ],
     [ "remove", "classAntares_1_1Data_1_1ClusterList.html#ab3bcc3ab30f269f9badaf7eb73d48cf4", null ],
-    [ "rename", "classAntares_1_1Data_1_1ClusterList.html#a5fd7281f0327e5a60e8fb417424ae826", null ],
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e", null ],
     [ "retrieveTotalCapacityAndUnitCount", "classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6", null ],
     [ "saveDataSeriesToFolder", "classAntares_1_1Data_1_1ClusterList.html#a6f13a4fb77ccb1889cc18f26537ca1bf", null ],

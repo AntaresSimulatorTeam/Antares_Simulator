@@ -16,7 +16,6 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets =
     [ "loadFromINIFile", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a65525c03a9d41529a8bf54f8d3f298f6", null ],
     [ "loadFromStudy", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#aacea4d12442fc046187a685e2a24ea43", null ],
     [ "remove", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a60d7c7e23c54fbcf541d5b54deefeccc", null ],
-    [ "rename", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a17e31c98f6ab11bc83000f8b3e289a83", null ],
     [ "setStudy", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#ac6a1d56ea54e0afca0e35e35a5d2e526", null ],
     [ "size", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#af0e04aa669f1aa7f2c2fa65d85678ce0", null ]
 ];

@@ -15,7 +15,6 @@ var classAntares_1_1CBuilder =
     [ "completeFromStudy", "classAntares_1_1CBuilder.html#a43770aa46f54102f70c8d7c85ee6c14c", null ],
     [ "createConstraints", "classAntares_1_1CBuilder.html#a9a0508f1e4bcc1a3aad2ba1ba6b467dc", null ],
     [ "cycleCount", "classAntares_1_1CBuilder.html#a6aa9a08dcced6d75f4252b4afce06fdc", null ],
-    [ "deletePreviousConstraints", "classAntares_1_1CBuilder.html#afc2334d042cd988519ce7f83f60b7574", null ],
     [ "findLinkInfoFromNodeNames", "classAntares_1_1CBuilder.html#a41bdcb7f978c87797e85a10c401b67b3", null ],
     [ "getCalendarEnd", "classAntares_1_1CBuilder.html#a0bd77b5263d2a4ce19ee69042b26b2a6", null ],
     [ "getCalendarStart", "classAntares_1_1CBuilder.html#a57aabdf31f450703b26c7959d37e7af3", null ],

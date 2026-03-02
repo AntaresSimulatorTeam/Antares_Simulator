@@ -167,59 +167,56 @@ $(document).ready(function(){initNavTree('common_2cluster__list_8h_source.html',
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    std::vector&lt;std::shared_ptr&lt;ClusterT&gt;&gt; all() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ClusterList.html#a5fd7281f0327e5a60e8fb417424ae826">rename</a>(std::string idToFind, std::string newName);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ClusterList.html#ab3bcc3ab30f269f9badaf7eb73d48cf4">remove</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    SharedPtr operator[](std::size_t idx)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> allClusters_[idx];</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1ClusterList.html#ab3bcc3ab30f269f9badaf7eb73d48cf4">remove</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    SharedPtr operator[](std::size_t idx)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span> allClusters_[idx];</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    SharedPtr operator[](std::size_t idx)</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">return</span> allClusters_[idx];</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    SharedPtr operator[](std::size_t idx)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">return</span> allClusters_[idx];</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    SharedPtr enabledClusterAt(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e">resizeAllTimeseriesNumbers</a>(uint n) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> storeTimeseriesNumbers(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    SharedPtr enabledClusterAt(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e">resizeAllTimeseriesNumbers</a>(uint n) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> storeTimeseriesNumbers(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">bool</span> loadDataSeriesFromFolder(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, <span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">bool</span> saveDataSeriesToFolder(<span class="keyword">const</span> AnyString&amp; folder) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">bool</span> loadDataSeriesFromFolder(<a class="code" href="classAntares_1_1Data_1_1Study.html">Study</a>&amp; study, <span class="keyword">const</span> std::filesystem::path&amp; folder);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">bool</span> saveDataSeriesToFolder(<span class="keyword">const</span> AnyString&amp; folder) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6">retrieveTotalCapacityAndUnitCount</a>(<span class="keywordtype">double</span>&amp; total, uint&amp; unitCount) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6">retrieveTotalCapacityAndUnitCount</a>(<span class="keywordtype">double</span>&amp; total, uint&amp; unitCount) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> enabledCount() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> allClustersCount() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">void</span> addToCompleteList(std::shared_ptr&lt;ClusterT&gt; cluster);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">void</span> sortCompleteList();</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    std::vector&lt;std::shared_ptr&lt;ClusterT&gt;&gt; allClusters_;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">virtual</span> std::string typeID() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="comment">// Give a special index to enabled clusters (thermal / renewable)</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">void</span> rebuildIndexes();</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordtype">bool</span> alreadyInAllClusters(std::string clusterName);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}; <span class="comment">// class ClusterList</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> enabledCount() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> allClustersCount() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordtype">void</span> addToCompleteList(std::shared_ptr&lt;ClusterT&gt; cluster);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> sortCompleteList();</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    std::vector&lt;std::shared_ptr&lt;ClusterT&gt;&gt; allClusters_;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">virtual</span> std::string typeID() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">// Give a special index to enabled clusters (thermal / renewable)</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">void</span> rebuildIndexes();</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">bool</span> alreadyInAllClusters(std::string clusterName);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}; <span class="comment">// class ClusterList</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html">Antares::Data::ClusterList</a></div><div class="ttdoc">Generic list of clustersThis class implements the base functions for a list of cluster It's used for ...</div><div class="ttdef"><b>Definition:</b> cluster_list.h:29</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_a2742ab55510a24092d9cb7105c73bd7e"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e">Antares::Data::ClusterList::resizeAllTimeseriesNumbers</a></div><div class="ttdeci">void resizeAllTimeseriesNumbers(uint n) const</div><div class="ttdoc">Resize all matrices dedicated to the sampled timeseries numbers.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:66</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_a504fb83dac29c01e461acb94dad0fb6e"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#a504fb83dac29c01e461acb94dad0fb6e">Antares::Data::ClusterList::exists</a></div><div class="ttdeci">bool exists(const std::string &amp;id) const</div><div class="ttdoc">Get if a cluster exists.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:54</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_a5fd7281f0327e5a60e8fb417424ae826"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#a5fd7281f0327e5a60e8fb417424ae826">Antares::Data::ClusterList::rename</a></div><div class="ttdeci">bool rename(std::string idToFind, std::string newName)</div><div class="ttdoc">Rename a cluster.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:146</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_ab3bcc3ab30f269f9badaf7eb73d48cf4"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#ab3bcc3ab30f269f9badaf7eb73d48cf4">Antares::Data::ClusterList::remove</a></div><div class="ttdeci">virtual bool remove(const std::string &amp;id)</div><div class="ttdoc">Remove properly a cluster.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:204</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_ab3bcc3ab30f269f9badaf7eb73d48cf4"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#ab3bcc3ab30f269f9badaf7eb73d48cf4">Antares::Data::ClusterList::remove</a></div><div class="ttdeci">virtual bool remove(const std::string &amp;id)</div><div class="ttdoc">Remove properly a cluster.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:146</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_ad0ccafba9922c3ea8b7d74a8c237b9d1"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#ad0ccafba9922c3ea8b7d74a8c237b9d1">Antares::Data::ClusterList::findInAll</a></div><div class="ttdeci">ClusterT * findInAll(std::string_view id) const</div><div class="ttdoc">Try to find a cluster from its id (const) in the complete cluster list.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:35</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_aebf4acf28c0d0becf175f69862cb49b6"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6">Antares::Data::ClusterList::retrieveTotalCapacityAndUnitCount</a></div><div class="ttdeci">void retrieveTotalCapacityAndUnitCount(double &amp;total, uint &amp;unitCount) const</div><div class="ttdoc">Retrieve the total capacity and the total unit count.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:229</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1ClusterList_html_aebf4acf28c0d0becf175f69862cb49b6"><div class="ttname"><a href="classAntares_1_1Data_1_1ClusterList.html#aebf4acf28c0d0becf175f69862cb49b6">Antares::Data::ClusterList::retrieveTotalCapacityAndUnitCount</a></div><div class="ttdeci">void retrieveTotalCapacityAndUnitCount(double &amp;total, uint &amp;unitCount) const</div><div class="ttdoc">Retrieve the total capacity and the total unit count.</div><div class="ttdef"><b>Definition:</b> cluster_list.cpp:171</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:37</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
 </div><!-- fragment --></div><!-- contents -->
