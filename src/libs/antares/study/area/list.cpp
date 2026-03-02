@@ -148,51 +148,6 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& file
 
 } // anonymous namespace
 
-bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
-{
-    IniFile ini;
-    IniFile::Section* section = ini.addSection("nodal optimization");
-
-    section->add("non-dispatchable-power",
-                 static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
-    section->add("dispatchable-hydro-power",
-                 static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
-    section->add("other-dispatchable-power",
-                 static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
-    section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
-    section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
-
-    section = ini.addSection("filtering");
-    section->add("filter-synthesis", datePrecisionIntoString(area.filterSynthesis));
-    section->add("filter-year-by-year", datePrecisionIntoString(area.filterYearByYear));
-
-    return ini.save(buffer);
-}
-
-bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
-{
-    IniFile ini;
-    IniFile::Section* section = ini.addSection("adequacy-patch");
-    std::string value;
-    switch (area.adequacyPatchMode)
-    {
-    case Data::AdequacyPatch::virtualArea:
-        value = "virtual";
-        break;
-    case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
-        value = "outside";
-        break;
-    case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
-        value = "inside";
-        break;
-    default:
-        value = "outside"; // default physicalAreaOutsideAdqPatch
-        break;
-    }
-    section->add("adequacy-patch-mode", value);
-    return ini.save(buffer);
-}
-
 AreaList::AreaList(Study& study):
     pStudy(study)
 {

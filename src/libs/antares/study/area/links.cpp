@@ -640,26 +640,6 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
     return success;
 }
 
-void AreaLinkRemove(AreaLink* link)
-{
-    if (!link)
-    {
-        return;
-    }
-
-    // Asserts
-    assert(link->from);
-    assert(link->with);
-
-    Area* areaFrom = link->from;
-    if (areaFrom && !areaFrom->links.empty())
-    {
-        areaFrom->buildLinksIndexes();
-    }
-
-    delete link;
-}
-
 String AreaLink::getName() const
 {
     String s;

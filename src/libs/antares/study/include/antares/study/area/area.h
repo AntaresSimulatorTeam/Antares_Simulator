@@ -8,9 +8,9 @@
 #include <set>
 #include <stdlib.h>
 #include <vector>
-//
+
 #include "antares/study/parts/parts.h"
-//
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
@@ -248,10 +248,6 @@ private:
     void createMissingPrepros();
 
 }; // class Area
-
-bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
-
-bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 
 /*!
 ** \brief A list of areas
@@ -548,16 +544,6 @@ bool AreaLinksLoadFromFolder(Study& s,
                              AreaList* l,
                              Area* area,
                              const std::filesystem::path& folder);
-
-/*!
-** \brief Clear all interconnection from an area
-*/
-int AreaLinkClear(AreaList* l, Area* area);
-
-/*!
-** \brief Remove a connection
-*/
-void AreaLinkRemove(AreaLink* lnk);
 
 /*!
 ** \brief Try to find an area by its name (in lowercase)
