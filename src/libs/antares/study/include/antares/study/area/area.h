@@ -467,18 +467,6 @@ public:
     //! \name Tools
     //@{
 
-    //! Remove all load timeseries
-    void removeLoadTimeseries();
-    //! Remove all hydro timeseries
-    void removeHydroTimeseries();
-    //! Remove all solar timeseries
-    void removeSolarTimeseries();
-    //! Remove all wind timeseries
-    void removeWindTimeseries();
-    //! Remove all thermal timeseries
-    void removeThermalTimeseries();
-    //@}
-
     /// create a map with the corresponding scratchpad for each area link to this numspace
     Area::ScratchMap buildScratchMap(uint numspace);
 

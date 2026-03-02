@@ -1045,38 +1045,6 @@ void AreaList::updateNameIDSet() const
     }
 }
 
-void AreaList::removeLoadTimeseries()
-{
-    each([](Data::Area& area) { area.load.series.reset(); });
-}
-
-void AreaList::removeHydroTimeseries()
-{
-    each([](Data::Area& area) { area.hydro.series->reset(); });
-}
-
-void AreaList::removeSolarTimeseries()
-{
-    each([](Data::Area& area) { area.solar.series.reset(); });
-}
-
-void AreaList::removeWindTimeseries()
-{
-    each([](Data::Area& area) { area.wind.series.reset(); });
-}
-
-void AreaList::removeThermalTimeseries()
-{
-    each(
-      [](const Data::Area& area)
-      {
-          for (const auto& c: area.thermal.list.all())
-          {
-              c->series.reset();
-          }
-      });
-}
-
 Area::ScratchMap AreaList::buildScratchMap(uint numspace)
 {
     Area::ScratchMap scratchmap;
