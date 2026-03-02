@@ -23,6 +23,7 @@ void FictitiousLoad::add(int pdt, int pays)
             builder.ShortTermStorageWithdrawal(storage.clusterGlobalIndex, -1.0);
         }
     }
+    builder.NegativeUnsuppliedEnergy(pays, 1.0);
 
     builder.lessThan();
     builder.build();
