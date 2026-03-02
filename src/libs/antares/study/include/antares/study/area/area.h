@@ -298,8 +298,7 @@ public:
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-    //! Destructor
-    ~AreaList();
+    ~AreaList() = default;
     //@}
 
     //! \name Iterating through all areas
@@ -411,11 +410,6 @@ public:
     ** \param n A number of years
     */
     void resizeAllTimeseriesNumbers(uint n);
-
-    /*!
-    ** \brief Remove all elements in the container
-    */
-    void clear();
 
     //! Get if the container is empty
     bool empty() const;

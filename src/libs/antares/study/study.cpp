@@ -81,7 +81,6 @@ void Study::clear()
     preproHydroCorrelation.clear();
 
     bindingConstraintsGroups.clear();
-    areas.clear();
 
     // no folder
     ClearAndShrink(header.caption);

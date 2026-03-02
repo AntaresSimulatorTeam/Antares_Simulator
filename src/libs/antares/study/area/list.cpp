@@ -153,11 +153,6 @@ AreaList::AreaList(Study& study):
 {
 }
 
-AreaList::~AreaList()
-{
-    clear();
-}
-
 bool AreaList::empty() const
 {
     return areas.empty();
@@ -218,20 +213,6 @@ const AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with) c
         }
     }
     return nullptr;
-}
-
-void AreaList::clear()
-{
-    byIndex.clear();
-
-    Area::Map copy;
-    copy.swap(areas);
-
-    auto end = copy.end();
-    for (auto i = copy.begin(); i != end; ++i)
-    {
-        delete i->second;
-    }
 }
 
 void AreaList::rebuildIndexes()
