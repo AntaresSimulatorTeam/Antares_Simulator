@@ -291,7 +291,6 @@ public:
     //! Key-value type
     using value_type = Area::Map::value_type;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -423,15 +422,6 @@ public:
     void rebuildIndexes();
 
     /*!
-    ** \brief Remove an area from its ID
-    **
-    ** \warning When used by a study, do not forget to remove all binding
-    **   constraints which depends upon this area before any call to this
-    **   routine.
-    */
-    bool remove(const AnyString& id);
-
-    /*!
     ** \brief Get the total number of areas
     */
     uint size() const;
@@ -485,7 +475,6 @@ public:
     const Area* operator[](uint i) const;
     //@}
 
-public:
     //! All areas by their index
     std::vector<Area*> byIndex;
     //! All areas in the list
@@ -500,8 +489,6 @@ private:
     Study& pStudy;
 
 }; // class AreaList
-
-void AreaListDeleteLinkFromAreaPtr(AreaList* l, const Area* a);
 
 /*!
 ** \brief Establish a link between two areas

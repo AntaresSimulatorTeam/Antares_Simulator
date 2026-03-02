@@ -975,27 +975,6 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
     each([n](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-bool AreaList::remove(const AnyString& id)
-{
-    AreaName lname = transformNameIntoID(id);
-
-    auto i = areas.find(lname);
-    if (i != areas.end())
-    {
-        // Referene to the area
-        auto* areaToRemove = i->second;
-
-        // Then we remove the reference to this area
-        areas.erase(i);
-
-        // Finally we can destroy the area itself
-        delete areaToRemove;
-
-        return true;
-    }
-    return false;
-}
-
 AreaLink* AreaList::findLinkFromINIKey(const AnyString& key)
 {
     if (key.empty())
