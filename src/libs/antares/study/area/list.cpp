@@ -1032,19 +1032,6 @@ uint AreaList::areaLinkCount() const
     return ret;
 }
 
-void Area::detachLinkFromItsPointer(const AreaLink* lnk)
-{
-    auto end = links.end();
-    for (auto i = links.begin(); i != end; ++i)
-    {
-        if (i->second == lnk)
-        {
-            links.erase(i);
-            return;
-        }
-    }
-}
-
 void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
 {
     if (!list || !a)
@@ -1100,8 +1087,6 @@ bool AreaList::remove(const AnyString& id)
         // Referene to the area
         auto* areaToRemove = i->second;
 
-        // We remove all links starting from this node in a first time
-        areaToRemove->detachAllLinks();
         // Then we remove the reference to this area
         areas.erase(i);
 

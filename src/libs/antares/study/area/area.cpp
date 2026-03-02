@@ -64,14 +64,6 @@ void Area::clearAllLinks()
     }
 }
 
-void Area::detachAllLinks()
-{
-    while (not links.empty())
-    {
-        AreaLinkRemove((links.begin())->second);
-    }
-}
-
 AreaLink* Area::findExistingLinkWith(Area& with)
 {
     if (&with == this)

@@ -77,13 +77,6 @@ public:
     void clearAllLinks();
 
     /*!
-    ** \brief Properly detach all links attached to an area
-    **
-    ** It is the safe way to add an area and it is mainly used by the GUI
-    */
-    void detachAllLinks();
-
-    /*!
     ** \brief Try to find the attached link from another area id
     */
     AreaLink* findLinkByID(const AreaName& id);
