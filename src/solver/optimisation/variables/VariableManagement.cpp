@@ -94,7 +94,7 @@ int& VariableManager::NumberBreakingDownDispatchableUnits(unsigned int index,
 int& VariableManager::NTCDirect(unsigned int index, unsigned int hourInWeek, int offset, int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDeLInterconnexion[index];
+    return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirect[index];
 }
 
 int& VariableManager::IntercoDirectCost(unsigned int index,

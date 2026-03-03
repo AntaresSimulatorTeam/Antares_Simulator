@@ -22,7 +22,7 @@ struct CORRESPONDANCES_DES_VARIABLES
     CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
     CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
 
-    std::vector<int> NumeroDeVariableDeLInterconnexion;
+    std::vector<int> NumeroDeVariableDuFluxDirect;
     std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
     std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
 
