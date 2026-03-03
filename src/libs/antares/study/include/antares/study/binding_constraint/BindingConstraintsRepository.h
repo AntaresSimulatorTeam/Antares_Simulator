@@ -35,11 +35,6 @@ public:
     ~BindingConstraintsRepository() = default;
     //@}
 
-    /*!
-    ** \brief Delete all constraints
-    */
-    void clear();
-
     //! \name Iterating through all constraints
     //@{
     /*!
@@ -103,29 +98,6 @@ public:
 
     //! Get the number of binding constraints
     [[nodiscard]] uint size() const;
-
-    /*!
-    ** \brief Remove a binding constraint
-    */
-    void remove(const Data::BindingConstraint* bc);
-    /*!
-    ** \brief Remove any binding constraint linked with a given area
-    */
-    void remove(const Data::Area* area);
-    /*!
-    ** \brief Remove any binding constraint linked with a given interconnection
-    */
-    void remove(const Data::AreaLink* area);
-
-    /*!
-    ** \brief Remove any binding constraint whose name contains the string in argument
-    */
-    void removeConstraintsWhoseNameConstains(const AnyString& filter);
-
-    /*!
-    ** \brief Rename a binding constraint
-    */
-    bool rename(Data::BindingConstraint* bc, const AnyString& newname);
 
     /*!
     ** \brief Convert all weekly constraints into daily ones

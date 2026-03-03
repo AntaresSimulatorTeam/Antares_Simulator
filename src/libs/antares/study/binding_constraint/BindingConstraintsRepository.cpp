@@ -15,13 +15,6 @@
 #include <antares/study/study.h>
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
-#include "antares/utils/utils.h"
-
-void Data::BindingConstraintsRepository::clear()
-{
-    constraints_.clear();
-    activeConstraints_.clear();
-}
 
 namespace Antares::Data
 {
@@ -74,13 +67,6 @@ const BindingConstraint* BindingConstraintsRepository::findByName(const AnyStrin
     return nullptr;
 }
 
-void BindingConstraintsRepository::removeConstraintsWhoseNameConstains(const AnyString& filter)
-{
-    WhoseNameContains pred(filter);
-    constraints_.erase(std::remove_if(constraints_.begin(), constraints_.end(), pred),
-                       constraints_.end());
-}
-
 static int valueForSort(BindingConstraint::Operator op)
 {
     switch (op)
@@ -128,28 +114,6 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintsRepository::Lo
     return loader.load(std::move(env));
 }
 
-bool BindingConstraintsRepository::rename(BindingConstraint* bc, const AnyString& newname)
-{
-    // Copy of the name
-    ConstraintName name;
-    name = newname;
-    if (name == bc->name())
-    {
-        return true;
-    }
-    ConstraintName id = Antares::transformNameIntoID(name);
-    if (std::any_of(constraints_.begin(),
-                    constraints_.end(),
-                    [&id](auto constraint) { return constraint->id() == id; }))
-    {
-        return false;
-    }
-    bc->name(name);
-    bc->pId(name);
-    JIT::Invalidate(bc->RHSTimeSeries().jit);
-    return true;
-}
-
 bool BindingConstraintsRepository::loadFromFolder(Study& study,
                                                   const StudyLoadOptions& options,
                                                   const std::filesystem::path& folder)
@@ -157,9 +121,6 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     // Log entries
     logs.info(); // space for beauty
     logs.info() << "Loading constraints...";
-
-    // Cleaning
-    clear();
 
     if (study.usedByTheSolver)
     {
@@ -244,58 +205,6 @@ void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
 void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
 {
     each([&lnk](BindingConstraint& constraint) { constraint.reverseWeightSign(lnk); });
-}
-
-namespace // anonymous
-{
-template<class T>
-class RemovePredicate final
-{
-public:
-    explicit RemovePredicate(const T* u):
-        pItem(u)
-    {
-    }
-
-    bool operator()(const std::shared_ptr<BindingConstraint>& bc) const
-    {
-        assert(bc);
-        if (bc->contains(pItem))
-        {
-            logs.info() << "destroying the binding constraint " << bc->name();
-            return true;
-        }
-        return false;
-    }
-
-private:
-    const T* pItem;
-};
-
-} // anonymous namespace
-
-void BindingConstraintsRepository::remove(const Area* area)
-{
-    RemovePredicate<Area> predicate(area);
-    auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
-    constraints_.erase(e, constraints_.end());
-    activeConstraints_.clear();
-}
-
-void BindingConstraintsRepository::remove(const AreaLink* lnk)
-{
-    RemovePredicate<AreaLink> predicate(lnk);
-    auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
-    constraints_.erase(e, constraints_.end());
-    activeConstraints_.clear();
-}
-
-void BindingConstraintsRepository::remove(const BindingConstraint* bc)
-{
-    RemovePredicate<BindingConstraint> predicate(bc);
-    auto e = std::remove_if(constraints_.begin(), constraints_.end(), predicate);
-    constraints_.erase(e, constraints_.end());
-    activeConstraints_.clear();
 }
 
 BindingConstraintsRepository::iterator BindingConstraintsRepository::begin()

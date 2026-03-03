@@ -282,31 +282,6 @@ bool CBuilder::runConstraintsBuilder(bool standalone)
     return result;
 }
 
-bool CBuilder::deletePreviousConstraints()
-{
-    if (pPrefixDelete.empty())
-    {
-        return true;
-    }
-
-    logs.info() << "Deleting previously built network constraints (with prefix  " << pPrefixDelete
-                << ")";
-
-    // Data::BindingConstraintsList::iterator it = pStudy.bindingConstraints.begin();
-    pStudy.bindingConstraints.removeConstraintsWhoseNameConstains(pPrefixDelete);
-
-    for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
-    {
-        auto linkInfo = *linkInfoIt;
-        Data::AreaLink* link = linkInfo->ptr;
-
-        link->useLoopFlow = false;
-        link->usePST = false;
-    }
-
-    return true;
-}
-
 bool CBuilder::saveCBuilderToFile(const String& filename) const
 {
     String tmp;

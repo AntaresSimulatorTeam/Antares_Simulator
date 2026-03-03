@@ -177,7 +177,7 @@ bool Study::internalLoadFromFolder(const fs::path& path,
 
         logs.info() << "Loading correlation matrices...";
         // Correlation matrices
-        ret = internalLoadCorrelationMatrices(options) && ret;
+        ret = internalLoadCorrelationMatrices() && ret;
         // Binding constraints
         ret = internalLoadBindingConstraints(options) && ret;
         // Sets of areas & links
@@ -256,7 +256,7 @@ void Study::checkModelerDataCompatibility() const
     }
 }
 
-bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
+bool Study::internalLoadCorrelationMatrices()
 {
     // Load
     if (timeSeriesLoad & parameters.timeSeriesToGenerate)

@@ -81,32 +81,6 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
     return newRulesSet;
 }
 
-Rules::Ptr Sets::rename(const RulesScenarioName& lname, const RulesScenarioName& newname)
-{
-    // Checking in a first time if the name already exists
-    RulesScenarioName id = newname;
-    id.toLower();
-    if (id == lname)
-    {
-        return find(lname);
-    }
-    if (exists(id))
-    {
-        return nullptr;
-    }
-
-    Rules::Map::iterator i = pMap.find(lname);
-    if (i == pMap.end())
-    {
-        return nullptr;
-    }
-    Rules::Ptr rules = i->second;
-    pMap.erase(i);
-    rules->setName(newname);
-    pMap[id] = rules;
-    return rules;
-}
-
 bool Sets::remove(const RulesScenarioName& lname)
 {
     // Checking in a first time if the name already exists
