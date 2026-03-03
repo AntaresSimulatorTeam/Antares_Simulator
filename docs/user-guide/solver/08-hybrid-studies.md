@@ -167,8 +167,8 @@ The convention is the same as the connection to balance constraint : make the pr
       fields:
         - id: to-area-bound
       area-connection:
-	    injection-to-balance:
-	    spillage-bound: to-area-bound
+        injection-to-balance:
+        spillage-bound: to-area-bound
         unsupplied-energy-bound:
 
   models:
@@ -195,8 +195,8 @@ The convention is to make the loads positive and don't prefix it with a - sign.
       fields:
         - id: from-area-bound
       area-connection:
-	    injection-to-balance:
-	    spillage-bound:
+        injection-to-balance:
+        spillage-bound:
         unsupplied-energy-bound: from-area-bound
 
   models:
