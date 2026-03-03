@@ -240,7 +240,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
             if (CoutDeTransport.IntercoGereeAvecDesCouts)
             {
-                var = variableManager.IntercoDirectCost(interco, pdtJour);
+                var = variableManager.DirectFluxPositif(interco, pdtJour);
 
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                 {
@@ -262,7 +262,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
 
-                var = variableManager.IntercoIndirectCost(interco, pdtJour);
+                var = variableManager.IndirectFluxPositif(interco, pdtJour);
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                 {
                     Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]

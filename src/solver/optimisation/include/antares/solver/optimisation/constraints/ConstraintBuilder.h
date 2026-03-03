@@ -88,9 +88,9 @@ public:
 
     ConstraintBuilder& DirectFlux(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& IntercoDirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& DirectFluxPositif(unsigned int index, double coeff);
 
-    ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& IndirectFluxPositif(unsigned int index, double coeff);
 
     ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
                                                  double coeff,

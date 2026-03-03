@@ -102,7 +102,7 @@ void HourlyCSRProblem::setLinearCost()
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
         // direct / indirect flow
-        var = variableManager_.IntercoDirectCost(Interco, triggeredHour);
+        var = variableManager_.DirectFluxPositif(Interco, triggeredHour);
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)
@@ -119,7 +119,7 @@ void HourlyCSRProblem::setLinearCost()
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
 
-        var = variableManager_.IntercoIndirectCost(Interco, triggeredHour);
+        var = variableManager_.IndirectFluxPositif(Interco, triggeredHour);
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             if (!TransportCost.IntercoGereeAvecDesCouts)

@@ -97,7 +97,7 @@ int& VariableManager::DirectFlux(unsigned int index, unsigned int hourInWeek, in
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirect[index];
 }
 
-int& VariableManager::IntercoDirectCost(unsigned int index,
+int& VariableManager::DirectFluxPositif(unsigned int index,
                                         unsigned int hourInWeek,
                                         int offset,
                                         int delta)
@@ -106,7 +106,7 @@ int& VariableManager::IntercoDirectCost(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirectPositif[index];
 }
 
-int& VariableManager::IntercoIndirectCost(unsigned int index,
+int& VariableManager::IndirectFluxPositif(unsigned int index,
                                           unsigned int hourInWeek,
                                           int offset,
                                           int delta)

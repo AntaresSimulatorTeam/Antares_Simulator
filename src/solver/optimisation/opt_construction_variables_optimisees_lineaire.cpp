@@ -39,15 +39,15 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
-                variableManager.IntercoDirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.DirectFluxPositif(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoDirectCost(NombreDeVariables);
+                variableNamer.DirectFluxPositif(NombreDeVariables);
                 NombreDeVariables++;
-                variableManager.IntercoIndirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.IndirectFluxPositif(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoIndirectCost(NombreDeVariables);
+                variableNamer.IndirectFluxPositif(NombreDeVariables);
                 NombreDeVariables++;
             }
         }

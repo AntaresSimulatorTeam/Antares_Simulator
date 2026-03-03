@@ -67,15 +67,15 @@ ConstraintBuilder& ConstraintBuilder::DirectFlux(unsigned int index,
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoDirectCost(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::DirectFluxPositif(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.IntercoDirectCost(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.DirectFluxPositif(index, hourInWeek_), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::IndirectFluxPositif(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.IntercoIndirectCost(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.IndirectFluxPositif(index, hourInWeek_), coeff);
     return *this;
 }
 

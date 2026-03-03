@@ -47,8 +47,8 @@ public:
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void DirectFlux(unsigned varIndex);
-    void IntercoDirectCost(unsigned varIndex);
-    void IntercoIndirectCost(unsigned varIndex);
+    void DirectFluxPositif(unsigned varIndex);
+    void IndirectFluxPositif(unsigned varIndex);
     void ShortTermStorageInjection(unsigned varIndex, const std::string& sts_name);
     void ShortTermStorageWithdrawal(unsigned varIndex, const std::string& sts_name);
     void ShortTermStorageLevel(unsigned varIndex, const std::string& sts_name);
