@@ -103,8 +103,7 @@ int& VariableManager::IntercoDirectCost(unsigned int index,
                                         int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt]
-      .NumeroDeVariableDuFluxDirectPositif[index];
+    return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirectPositif[index];
 }
 
 int& VariableManager::IntercoIndirectCost(unsigned int index,
@@ -113,8 +112,7 @@ int& VariableManager::IntercoIndirectCost(unsigned int index,
                                           int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt]
-      .NumeroDeVariableDuFluxIndirectPositif[index];
+    return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxIndirectPositif[index];
 }
 
 int& VariableManager::ShortTermStorageInjection(unsigned int index,
