@@ -5,6 +5,7 @@ on:
   push:
     branches:
     - develop
+    - branch-coverage
 
 jobs:
   sonarcloud:
