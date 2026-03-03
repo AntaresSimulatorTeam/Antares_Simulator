@@ -17,7 +17,7 @@ void CsrFlowDissociation::add()
             && data.extremityAreaMode[interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            builder.NTCDirect(interco, 1.0)
+            builder.DirectFlux(interco, 1.0)
               .IntercoDirectCost(interco, -1.0)
               .IntercoIndirectCost(interco, 1.0);
 

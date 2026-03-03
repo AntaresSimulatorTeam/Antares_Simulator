@@ -134,9 +134,9 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
         variablesMapping.NumeroDeVariableDuFluxDirect.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion.assign(linkCount,
+        variablesMapping.NumeroDeVariableDuFluxDirectPositif.assign(linkCount,
                                                                                           0);
-        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion.assign(linkCount,
+        variablesMapping.NumeroDeVariableDuFluxIndirectPositif.assign(linkCount,
                                                                                           0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique

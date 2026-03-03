@@ -201,7 +201,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            int var = variableManager.NTCDirect(interco, pdtJour);
+            int var = variableManager.DirectFlux(interco, pdtJour);
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
             Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];

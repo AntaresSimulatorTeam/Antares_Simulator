@@ -91,7 +91,7 @@ int& VariableManager::NumberBreakingDownDispatchableUnits(unsigned int index,
       .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[index];
 }
 
-int& VariableManager::NTCDirect(unsigned int index, unsigned int hourInWeek, int offset, int delta)
+int& VariableManager::DirectFlux(unsigned int index, unsigned int hourInWeek, int offset, int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirect[index];
@@ -104,7 +104,7 @@ int& VariableManager::IntercoDirectCost(unsigned int index,
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt]
-      .NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[index];
+      .NumeroDeVariableDuFluxDirectPositif[index];
 }
 
 int& VariableManager::IntercoIndirectCost(unsigned int index,
@@ -114,7 +114,7 @@ int& VariableManager::IntercoIndirectCost(unsigned int index,
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt]
-      .NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[index];
+      .NumeroDeVariableDuFluxIndirectPositif[index];
 }
 
 int& VariableManager::ShortTermStorageInjection(unsigned int index,

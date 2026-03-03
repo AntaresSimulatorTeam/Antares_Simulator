@@ -46,7 +46,7 @@ public:
     void NumberStoppingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(unsigned varIndex, const std::string& clusterName);
-    void NTCDirect(unsigned varIndex);
+    void DirectFlux(unsigned varIndex);
     void IntercoDirectCost(unsigned varIndex);
     void IntercoIndirectCost(unsigned varIndex);
     void ShortTermStorageInjection(unsigned varIndex, const std::string& sts_name);

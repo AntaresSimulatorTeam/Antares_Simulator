@@ -95,7 +95,7 @@ void HourlyCSRProblem::setLinearCost()
 
         const COUTS_DE_TRANSPORT& TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
-        var = variableManager_.NTCDirect(Interco, triggeredHour);
+        var = variableManager_.DirectFlux(Interco, triggeredHour);
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
             problemeAResoudre_.CoutLineaire[var] = 0.0;

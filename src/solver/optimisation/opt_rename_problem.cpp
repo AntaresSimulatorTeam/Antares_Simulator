@@ -151,7 +151,7 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned varIndex,
     SetThermalClusterElementName(varIndex, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NTCDirect(unsigned varIndex)
+void VariableNamer::DirectFlux(unsigned varIndex)
 {
     SetLinkElementName(varIndex, "NTCDirect");
 }

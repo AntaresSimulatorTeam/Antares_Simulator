@@ -91,7 +91,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         }
 
         // flow
-        int var = variableManager_.NTCDirect(Interco, triggeredHour);
+        int var = variableManager_.DirectFlux(Interco, triggeredHour);
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
                     + belowThisThresholdSetToZero;
         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco])

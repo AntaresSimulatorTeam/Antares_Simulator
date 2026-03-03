@@ -23,8 +23,8 @@ struct CORRESPONDANCES_DES_VARIABLES
     CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
 
     std::vector<int> NumeroDeVariableDuFluxDirect;
-    std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
-    std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
+    std::vector<int> NumeroDeVariableDuFluxDirectPositif;
+    std::vector<int> NumeroDeVariableDuFluxIndirectPositif;
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
 

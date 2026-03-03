@@ -75,7 +75,7 @@ void HourlyCSRProblem::constructVariableFlows()
             int algebraicFluxVar;
             int directVar;
             int indirectVar;
-            algebraicFluxVar = variableManager_.NTCDirect(Interco, triggeredHour)
+            algebraicFluxVar = variableManager_.DirectFlux(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug()

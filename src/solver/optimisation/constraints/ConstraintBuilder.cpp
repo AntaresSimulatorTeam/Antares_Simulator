@@ -58,12 +58,12 @@ ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsign
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
-                                                double coeff,
-                                                int offset,
-                                                int delta)
+ConstraintBuilder& ConstraintBuilder::DirectFlux(unsigned int index,
+                                                 double coeff,
+                                                 int offset,
+                                                 int delta)
 {
-    AddVariable(variableManager_.NTCDirect(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.DirectFlux(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 
