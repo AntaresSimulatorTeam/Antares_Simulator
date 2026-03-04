@@ -32,6 +32,7 @@ var namespaceAntares_1_1Optimisation =
     [ "LinearConstraint", "structAntares_1_1Optimisation_1_1LinearConstraint.html", "structAntares_1_1Optimisation_1_1LinearConstraint" ],
     [ "ReadLinearConstraintVisitor", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor" ],
     [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor" ],
+    [ "TimeIndexOutOfRangeException", "classAntares_1_1Optimisation_1_1TimeIndexOutOfRangeException.html", "classAntares_1_1Optimisation_1_1TimeIndexOutOfRangeException" ],
     [ "VariabilityType", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351", [
       [ "CONSTANT_IN_TIME_AND_SCENARIO", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351af345732ff2a78575909e4a8e03a21bda", null ],
       [ "VARYING_IN_TIME_ONLY", "namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351af22c09d6a3d286c13601c93951b6bae8", null ],
