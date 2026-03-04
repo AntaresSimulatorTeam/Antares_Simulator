@@ -109,7 +109,7 @@ jobs:
     # Only run this job if the `generate_results` input is true AND all the required build jobs succeeded.
     # If you'd like to generate results even when some builds fail, replace this condition with a less strict one
     # (for example, exclude some jobs) or add a new input like `allow_partial_results` to control that behavior.
-    if: ${{ github.event.inputs.generate_results == 'true' && needs.ubuntu.result == 'success' && needs.windows.results == 'success' }}
+    if: ${{ github.event.inputs.generate_results == 'true' && needs.ubuntu.result == 'success' && needs.windows.result == 'success' }}
     # ASSUMPTION: we call the `main` ref of that repository. Change the ref if you prefer a tag or SHA.
     uses: AntaresSimulatorTeam/SimTest/.github/workflows/generate-reference.yml@main
     permissions:
