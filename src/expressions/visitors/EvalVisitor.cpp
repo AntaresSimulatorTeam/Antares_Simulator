@@ -177,10 +177,11 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
-    const auto result = dispatch(node->expression());
+    auto result = dispatch(node->expression());
     const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
 
+    result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
     return result.timeSum(from, to);
 }
 
@@ -329,6 +330,15 @@ size_t EvaluationResult::size() const
     return 1;
 }
 
+void EvaluationResult::toConstantVector(const size_t size)
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        const double value = std::get<double>(value_);
+        value_ = std::vector<double>(size, value);
+    }
+}
+
 double EvaluationResult::value(unsigned i) const
 {
     if (std::holds_alternative<std::vector<double>>(value_))
@@ -344,22 +354,10 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-double shift(double value, int)
-{
-    return value;
-}
-
-std::vector<double> shift(const std::vector<double>& values, int timeShift)
-{
-    return shiftVector(values, timeShift);
-}
-
 EvaluationResult EvaluationResult::timeShift(int time_shift) const
 {
-    return EvaluationResult(
-      std::visit([&time_shift](const auto& l) -> std::variant<double, std::vector<double>>
-                 { return shift(l, time_shift); },
-                 value_));
+    auto shifltedVector = shiftVector(std::get<std::vector<double>>(value_), time_shift);
+    return EvaluationResult(shifltedVector);
 }
 
 EvaluationResult EvaluationResult::timeSum(int from, int to) const
