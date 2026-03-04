@@ -181,7 +181,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 
     buffer.clear();
     buffer = base_folder + SEP + hydro_folder;
-    ret = reader->read(buffer, true) && ret;
+    ret = reader->read(buffer) && ret;
 
     BOOST_CHECK(ret);
     BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(genP, genPReader));

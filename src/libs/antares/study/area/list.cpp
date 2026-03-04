@@ -606,7 +606,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             HydroMaxTimeSeriesReader reader(area.hydro,
                                             area.id.to<std::string>(),
                                             area.name.to<std::string>());
-            ret = reader.read(pathHydro.string(), true) && ret;
+            ret = reader.read(pathHydro.string()) && ret;
             break;
         }
         case Parameters::Compatibility::HydroPmax::Hourly:
@@ -621,8 +621,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                                  studyVersion,
-                                                 study.parameters.compatibility.hydroPmax,
-                                                 true);
+                                                 study.parameters.compatibility.hydroPmax);
     }
 
     // Wind

@@ -217,10 +217,9 @@ uint DataSeriesHydro::TScount() const
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             StudyVersion studyVersion,
-                                            Parameters::Compatibility::HydroPmax hydroPmax,
-                                            bool usedBySolver)
+                                            Parameters::Compatibility::HydroPmax hydroPmax)
 {
-    if (!(derated && usedBySolver))
+    if (!derated)
     {
         return;
     }
