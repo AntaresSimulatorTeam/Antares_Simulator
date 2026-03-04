@@ -13,7 +13,6 @@ readonly VCPKG_FILE="$REPO_ROOT/src/vcpkg.json"
 DRY_RUN=0
 DO_COMMIT=0
 COMMIT_MSG=""
-TAG_NAME=""
 usage() {
   cat <<EOF
 Usage: $PROGNAME [options] <new-version>
@@ -68,9 +67,6 @@ if ! [[ "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.].*)?$ ]]; then
 fi
 if [ -z "$COMMIT_MSG" ]; then
   COMMIT_MSG="chore(version): v$NEW_VERSION"
-fi
-if [ -z "$TAG_NAME" ]; then
-  TAG_NAME="v$NEW_VERSION"
 fi
 # Ensure we're in a git repo
 if ! git rev-parse --git-dir >/dev/null 2>&1; then
@@ -151,10 +147,6 @@ if [ $DRY_RUN -eq 1 ]; then
     echo "Manual commit command:"
     echo "  git commit -m '$COMMIT_MSG'"
   fi
-  echo
-  echo "Optional next steps:"
-  echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
-  echo "  git push origin $BRANCH $TAG_NAME"
   exit 0
 fi
 # Real run: update files
@@ -250,10 +242,8 @@ else
   echo "Files staged. To commit:"
   echo "  git commit -m '$COMMIT_MSG'"
 fi
-echo
-echo "Next steps (optional):"
-echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
-echo "  git push origin $BRANCH $TAG_NAME"
+
 echo
 echo "✓ Version updated to $NEW_VERSION"
+
 rm -rf "$BACKUP_DIR"
