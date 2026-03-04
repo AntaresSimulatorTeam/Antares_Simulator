@@ -20,7 +20,7 @@ Usage: $PROGNAME [options] <new-version>
 
 Options:
   -d, --dry-run        Show planned changes and exit without modifying files
-  -m, --message <msg>  Commit message (default: "Bump version to <new-version>")
+  -m, --message <msg>  Commit message (default: "chore(version): v<new-version>")
       # build and test are not performed by this script
       # note: tag creation is not performed by this script; suggested tag name is v<new-version>
   -h, --help           Show this help and exit
@@ -65,7 +65,8 @@ if ! [[ "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.].*)?$ ]]; then
 fi
 
 if [ -z "$COMMIT_MSG" ]; then
-  COMMIT_MSG="Bump version to $NEW_VERSION"
+  # Default commit message uses the conventional commit style requested
+  COMMIT_MSG="chore(version): v$NEW_VERSION"
 fi
 if [ -z "$TAG_NAME" ]; then
   TAG_NAME="v$NEW_VERSION"
