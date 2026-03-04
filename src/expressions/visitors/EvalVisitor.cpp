@@ -101,17 +101,17 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (isConstant(systemParameter.type))
     {
         return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
     }
-    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
-    {
-        return EvaluationResult(
-          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0));
-    }
 
     unsigned year = fillContext_.getYear();
+    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    {
+        return EvaluationResult(evalContext_.getParameterValue(node->value(), year, 0));
+    }
+
     std::vector<double> params;
     params.reserve(fillContext_.getLocalNumberOfTimeSteps());
     for (auto t = fillContext_.getGlobalFirstTimeStep(); t <= fillContext_.getGlobalLastTimeStep();
@@ -178,11 +178,9 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
     const auto expression = dispatch(node->expression());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
-
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
+
     return expression.timeSum(from, to);
 }
 
