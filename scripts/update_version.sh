@@ -1,40 +1,41 @@
 #!/usr/bin/env bash
-# Script to bump project version in CMakeLists and create a git commit + tag
+# Script to bump project version in CMakeLists.txt, sonar-project.properties, and vcpkg.json
 # Usage: scripts/update_version.sh [options] <new-version>
-# Options: --dry-run, --message, --tag, --sign
-
 set -euo pipefail
 IFS=$'\n\t'
-
-PROGNAME="$(basename "$0")"
-REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
-
+readonly PROGNAME="$(basename "$0")"
+readonly REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
+# File paths
+readonly CMAKE_FILE="$REPO_ROOT/src/CMakeLists.txt"
+readonly SONAR_FILE="$REPO_ROOT/sonar-project.properties"
+readonly VCPKG_FILE="$REPO_ROOT/src/vcpkg.json"
 # Defaults
 DRY_RUN=0
 DO_COMMIT=0
 COMMIT_MSG=""
 TAG_NAME=""
-
 usage() {
   cat <<EOF
 Usage: $PROGNAME [options] <new-version>
-
+Updates version in CMakeLists.txt, sonar-project.properties, and vcpkg.json
 Options:
-  -d, --dry-run        Show planned changes and exit without modifying files
-  -c, --commit         Actually run git commit on updated files
+  -d, --dry-run        Show planned changes without modifying files
+  -c, --commit         Commit updated files automatically
   -m, --message <msg>  Commit message (default: "chore(version): v<new-version>")
-      # build and test are not performed by this script
-      # note: tag creation is not performed by this script; suggested tag name is v<new-version>
-  -h, --help           Show this help and exit
+                       Note: -m automatically enables --commit
+  -h, --help           Show this help
+Examples:
+  $PROGNAME --dry-run 10.5.0          # Preview changes
+  $PROGNAME 10.5.0                     # Update files only
+  $PROGNAME -c 10.5.0                  # Update and commit
+  $PROGNAME -m "docs: bump" 10.5.0     # Update and commit with custom message
 EOF
 }
-
 # Minimal argument parsing
 if [ $# -eq 0 ]; then
   usage
   exit 2
 fi
-
 # Parse
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
@@ -57,55 +58,43 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 set -- "${POSITIONAL[@]}"
-
 if [ ${#POSITIONAL[@]} -lt 1 ]; then
   echo "Error: missing <new-version>" >&2; usage; exit 2
 fi
 NEW_VERSION="${POSITIONAL[0]}"
-
 # Validate version: simple regex like X.Y.Z or X.Y.Z-extra
 if ! [[ "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.].*)?$ ]]; then
   echo "Invalid version format: $NEW_VERSION. Expected X.Y.Z" >&2; exit 2
 fi
-
 if [ -z "$COMMIT_MSG" ]; then
-  # Default commit message uses the conventional commit style requested
   COMMIT_MSG="chore(version): v$NEW_VERSION"
 fi
 if [ -z "$TAG_NAME" ]; then
   TAG_NAME="v$NEW_VERSION"
 fi
-
 # Ensure we're in a git repo
 if ! git rev-parse --git-dir >/dev/null 2>&1; then
   echo "Not a git repository (or any of the parent directories)." >&2
   exit 2
 fi
-
-# Gather git info
-# If we're on a detached HEAD, warn but continue (script always runs)
-BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "HEAD")
-if [ "$BRANCH" = "HEAD" ]; then
-  echo "Warning: Detached HEAD detected; continuing with current commit." >&2
-fi
-
-# If working tree is dirty, warn but continue (script always runs)
-STATUS=$(git status --porcelain)
-if [ -n "$STATUS" ]; then
-  echo "Warning: Working tree not clean; proceeding. Changed/untracked files:" >&2
-  echo "$STATUS" >&2
-fi
-
+# Warn about uncommitted changes but continue
+check_git_state() {
+  local branch status
+  branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "HEAD")
+  status=$(git status --porcelain)
+  if [ "$branch" = "HEAD" ]; then
+    echo "Warning: Detached HEAD detected; continuing with current commit." >&2
+  fi
+  if [ -n "$status" ]; then
+    echo "Warning: Working tree not clean; proceeding. Changed/untracked files:" >&2
+    echo "$status" >&2
+  fi
+  echo "$branch"
+}
+BRANCH=$(check_git_state)
 # Parse version components
 IFS='.' read -r VER_HI VER_LO VER_REV <<< "$(echo "$NEW_VERSION" | cut -d'-' -f1)"
-
-# Files to update: primary target
-CMAKE_FILE="$REPO_ROOT/src/CMakeLists.txt"
-SONAR_FILE="$REPO_ROOT/sonar-project.properties"
-VCPKG_FILE="$REPO_ROOT/src/vcpkg.json"
-# Assume the target files exist in the workspace as requested; proceed without checking.
-
-# Prepare in-place update function
+# Update CMakeLists version
 update_cmake_version() {
   local file="$1"
   local hi="$2"; local lo="$3"; local rev="$4"; local year="$5"
@@ -120,77 +109,83 @@ update_cmake_version() {
   ' "$file" > "$tmp"
   mv "$tmp" "$file"
 }
-
-# Dry-run: show planned replacement and exit
+# Dry-run: show planned changes and exit
 if [ $DRY_RUN -eq 1 ]; then
-  echo "DRY RUN: would update $CMAKE_FILE with:"
+  echo "=== DRY RUN MODE ==="
+  echo
+  echo "Would update $CMAKE_FILE:"
   echo "  ANTARES_VERSION_HI = $VER_HI"
   echo "  ANTARES_VERSION_LO = $VER_LO"
   echo "  ANTARES_VERSION_REVISION = $VER_REV"
   if grep -q "ANTARES_VERSION_YEAR" "$CMAKE_FILE"; then
-    echo "  ANTARES_VERSION_YEAR = <current year> (will be updated automatically)"
-  fi
-  # sonar-project.properties: assume present and report planned change
-  if grep -q '^sonar.projectVersion=' "$SONAR_FILE"; then
-    CUR_SONAR_VER=$(grep '^sonar.projectVersion=' "$SONAR_FILE" | cut -d'=' -f2-)
-    echo "DRY RUN: would update $SONAR_FILE: sonar.projectVersion = $CUR_SONAR_VER -> $NEW_VERSION"
-  else
-    echo "DRY RUN: would add to $SONAR_FILE: sonar.projectVersion=$NEW_VERSION"
-  fi
-  # vcpkg.json: assume present and report planned change
-  if grep -q '"version-string"' "$VCPKG_FILE"; then
-    CUR_VCPKG_VER=$(grep '"version-string"' "$VCPKG_FILE" | head -n1 | sed -E 's/.*"version-string"\s*:\s*"([^\"]+)".*/\1/')
-    echo "DRY RUN: would update $VCPKG_FILE: version-string = $CUR_VCPKG_VER -> $NEW_VERSION"
-  else
-    echo "DRY RUN: would add to $VCPKG_FILE: \"version-string\": \"$NEW_VERSION\""
+    echo "  ANTARES_VERSION_YEAR = $(date +%Y)"
   fi
   echo
-  echo "Planned git operations:"
-  echo "  (note: this script will NOT commit, tag or push automatically)"
-  echo "Suggested commands to commit and push manually:"
-  echo "  git add $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
-  if [ $DO_COMMIT -eq 1 ]; then
-    echo "DRY RUN: Would run: git commit -m '$COMMIT_MSG' $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
+  if grep -q '^sonar.projectVersion=' "$SONAR_FILE"; then
+    CUR_SONAR_VER=$(grep '^sonar.projectVersion=' "$SONAR_FILE" | cut -d'=' -f2-)
+    echo "Would update $SONAR_FILE:"
+    echo "  sonar.projectVersion: $CUR_SONAR_VER → $NEW_VERSION"
   else
+    echo "Would add to $SONAR_FILE:"
+    echo "  sonar.projectVersion=$NEW_VERSION"
+  fi
+  echo
+  if grep -q '"version-string"' "$VCPKG_FILE"; then
+    CUR_VCPKG_VER=$(grep '"version-string"' "$VCPKG_FILE" | head -n1 | sed -E 's/.*"version-string"\s*:\s*"([^\"]+)".*/\1/')
+    echo "Would update $VCPKG_FILE:"
+    echo "  version-string: $CUR_VCPKG_VER → $NEW_VERSION"
+  else
+    echo "Would add to $VCPKG_FILE:"
+    echo "  \"version-string\": \"$NEW_VERSION\""
+  fi
+  echo
+  echo "Files to be staged:"
+  echo "  $CMAKE_FILE"
+  echo "  $SONAR_FILE"
+  echo "  $VCPKG_FILE"
+  echo
+  if [ $DO_COMMIT -eq 1 ]; then
+    echo "Would commit with message: '$COMMIT_MSG'"
+  else
+    echo "Would NOT commit (use -c or -m to commit)"
+    echo "Manual commit command:"
     echo "  git commit -m '$COMMIT_MSG'"
   fi
-  echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'  # optional"
-  echo "  git push origin $BRANCH && git push origin $TAG_NAME  # optional"
-   exit 0
- fi
-
-# Real run: update the CMake file(s)
+  echo
+  echo "Optional next steps:"
+  echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
+  echo "  git push origin $BRANCH $TAG_NAME"
+  exit 0
+fi
+# Real run: update files
 CURRENT_YEAR="$(date +%Y)"
-YEAR_TO_SET="$CURRENT_YEAR"
-
-# Make a backup copy first
+# Ensure vcpkg.json is valid, restore from git if needed
+restore_vcpkg_if_needed() {
+  local rel_vcpkg="${VCPKG_FILE#$REPO_ROOT/}"
+  if ! python3 -c "import json; json.load(open('$VCPKG_FILE'))" >/dev/null 2>&1; then
+    echo "Warning: $VCPKG_FILE invalid or empty, attempting restore from git HEAD..." >&2
+    if git show HEAD:"$rel_vcpkg" > "$VCPKG_FILE" 2>/dev/null; then
+      echo "Restored $VCPKG_FILE from git HEAD." >&2
+    else
+      echo "Creating minimal vcpkg.json with version-string=$NEW_VERSION" >&2
+      printf '{\n  "version-string": "%s"\n}\n' "$NEW_VERSION" > "$VCPKG_FILE"
+    fi
+  fi
+}
+# Create backups
 BACKUP_DIR=$(mktemp -d)
 cp "$CMAKE_FILE" "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak"
-# create backups (assume files exist)
 cp "$SONAR_FILE" "$BACKUP_DIR/$(basename "$SONAR_FILE").bak"
 cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
-# If vcpkg.json is empty or contains invalid JSON, try to restore from git HEAD
-REL_VCPKG="${VCPKG_FILE#$REPO_ROOT/}"
-if ! python3 -c "import json,sys; json.load(open('$VCPKG_FILE'))" >/dev/null 2>&1; then
-  echo "Warning: $VCPKG_FILE missing or invalid JSON; attempting to restore from git HEAD..." >&2
-  if git show HEAD:"$REL_VCPKG" > "$VCPKG_FILE" 2>/dev/null; then
-    echo "Restored $VCPKG_FILE from git HEAD." >&2
-  else
-    echo "No vcpkg.json in git HEAD; creating minimal vcpkg.json with version-string=$NEW_VERSION" >&2
-    printf '{\n  "version-string": "%s"\n}\n' "$NEW_VERSION" > "$VCPKG_FILE"
-  fi
-  # update the backup to reflect restored/created file
-  cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
-fi
-
-update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
-
-# Update sonar-project.properties if present: replace sonar.projectVersion or append it
+restore_vcpkg_if_needed
+# Update backup after potential restore
+cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
+update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$CURRENT_YEAR"
+# Update sonar-project.properties
 tmp=$(mktemp)
 awk -v ver="$NEW_VERSION" 'BEGIN{found=0} /^sonar.projectVersion[[:space:]]*=/ { print "sonar.projectVersion=" ver; found=1; next } { print } END { if (!found) print "sonar.projectVersion=" ver }' "$SONAR_FILE" > "$tmp"
 mv "$tmp" "$SONAR_FILE"
-
-# Update vcpkg.json: use Python json module to set "version-string" = NEW_VERSION
+# Update vcpkg.json
 tmp=$(mktemp)
 if python3 - "$VCPKG_FILE" "$NEW_VERSION" > "$tmp" <<'PY'
 import sys, json
@@ -203,82 +198,62 @@ sys.stdout.write(json.dumps(data, indent=2, ensure_ascii=False))
 sys.stdout.write('\n')
 PY
 then
-  # validate tmp is valid JSON before overwriting
-  if python3 -c "import json,sys; json.load(open('$tmp'))" >/dev/null 2>&1; then
+  if python3 -c "import json; json.load(open('$tmp'))" >/dev/null 2>&1; then
     mv "$tmp" "$VCPKG_FILE"
   else
-    echo "Error: Python produced invalid JSON (tmp). Restoring original vcpkg.json." >&2
-    if [ -f "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" ]; then
-      mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" || true
-    fi
+    echo "Error: Python produced invalid JSON. Restoring original vcpkg.json." >&2
+    mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" 2>/dev/null || true
     rm -f "$tmp"
     exit 7
   fi
 else
-  echo "Error: failed to run Python update for $VCPKG_FILE" >&2
-  if [ -f "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" ]; then
-    mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" || true
-  fi
+  echo "Error: Failed to update $VCPKG_FILE" >&2
+  mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" 2>/dev/null || true
   rm -f "$tmp"
   exit 7
 fi
-
-# Check that the file actually changed
+# Check if files changed
 CHANGED=0
-if ! git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
-  CHANGED=1
-fi
-if ! git diff --no-ext-diff --quiet -- "$SONAR_FILE"; then
-  CHANGED=1
-fi
-if ! git diff --no-ext-diff --quiet -- "$VCPKG_FILE"; then
-  CHANGED=1
-fi
+for file in "$CMAKE_FILE" "$SONAR_FILE" "$VCPKG_FILE"; do
+  if ! git diff --no-ext-diff --quiet -- "$file"; then
+    CHANGED=1
+    break
+  fi
+done
 if [ $CHANGED -eq 0 ]; then
-  echo "No changes detected in updated files after update. Aborting." >&2
+  echo "No changes detected. Aborting." >&2
+  rm -rf "$BACKUP_DIR"
   exit 6
 fi
-
-# Stage only the modified file
-git add "$CMAKE_FILE"
-git add "$SONAR_FILE"
-git add "$VCPKG_FILE"
-
-echo "Files updated locally:"
+# Stage files
+git add "$CMAKE_FILE" "$SONAR_FILE" "$VCPKG_FILE"
+echo "Files updated:"
 echo "  $CMAKE_FILE"
 echo "  $SONAR_FILE"
 echo "  $VCPKG_FILE"
 echo
+# Commit if requested
 if [ $DO_COMMIT -eq 1 ]; then
   echo "Committing changes..."
   if git commit -m "$COMMIT_MSG" -- "$CMAKE_FILE" "$SONAR_FILE" "$VCPKG_FILE"; then
-    COMMIT_HASH=$(git rev-parse --short HEAD)
-    echo "Committed as $COMMIT_HASH"
+    echo "✓ Committed as $(git rev-parse --short HEAD)"
   else
-    echo "git commit failed. Restoring backups." >&2
-    # Restore backups
-    if [ -f "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" ]; then
-      mv "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" "$CMAKE_FILE" || true
-    fi
-    if [ -f "$BACKUP_DIR/$(basename "$SONAR_FILE").bak" ]; then
-      mv "$BACKUP_DIR/$(basename "$SONAR_FILE").bak" "$SONAR_FILE" || true
-    fi
-    if [ -f "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" ]; then
-      mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" || true
-    fi
-    git reset -- "$CMAKE_FILE" "$SONAR_FILE" "$VCPKG_FILE" || true
+    echo "Error: Commit failed. Restoring backups." >&2
+    mv "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" "$CMAKE_FILE" 2>/dev/null || true
+    mv "$BACKUP_DIR/$(basename "$SONAR_FILE").bak" "$SONAR_FILE" 2>/dev/null || true
+    mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" 2>/dev/null || true
+    git reset -- "$CMAKE_FILE" "$SONAR_FILE" "$VCPKG_FILE" 2>/dev/null || true
+    rm -rf "$BACKUP_DIR"
     exit 7
   fi
 else
-  echo "Skipping commit (use -c/--commit or -m to commit automatically). To commit now:"
-  echo "  git commit -m '$COMMIT_MSG' $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
+  echo "Files staged. To commit:"
+  echo "  git commit -m '$COMMIT_MSG'"
 fi
-echo "(Optional) create a tag: git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
-echo "(Optional) push: git push origin $BRANCH && git push origin $TAG_NAME"
-
-# build and test are intentionally not performed by this script
-
-echo "Success: updated version to $NEW_VERSION"
-
-# cleanup
+echo
+echo "Next steps (optional):"
+echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
+echo "  git push origin $BRANCH $TAG_NAME"
+echo
+echo "✓ Version updated to $NEW_VERSION"
 rm -rf "$BACKUP_DIR"
