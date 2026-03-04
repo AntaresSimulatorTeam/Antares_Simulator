@@ -11,6 +11,7 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
 
 # Defaults
 DRY_RUN=0
+DO_COMMIT=0
 COMMIT_MSG=""
 TAG_NAME=""
 
@@ -20,6 +21,7 @@ Usage: $PROGNAME [options] <new-version>
 
 Options:
   -d, --dry-run        Show planned changes and exit without modifying files
+  -c, --commit         Actually run git commit on updated files
   -m, --message <msg>  Commit message (default: "chore(version): v<new-version>")
       # build and test are not performed by this script
       # note: tag creation is not performed by this script; suggested tag name is v<new-version>
@@ -40,8 +42,10 @@ while [[ $# -gt 0 ]]; do
   case $key in
     -d|--dry-run)
       DRY_RUN=1; shift;;
+    -c|--commit)
+      DO_COMMIT=1; shift;;
     -m|--message)
-      COMMIT_MSG="$2"; shift 2;;
+      COMMIT_MSG="$2"; DO_COMMIT=1; shift 2;;
     -h|--help)
       usage; exit 0;;
     --)
@@ -145,7 +149,11 @@ if [ $DRY_RUN -eq 1 ]; then
   echo "  (note: this script will NOT commit, tag or push automatically)"
   echo "Suggested commands to commit and push manually:"
   echo "  git add $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
-  echo "  git commit -m '$COMMIT_MSG'"
+  if [ $DO_COMMIT -eq 1 ]; then
+    echo "DRY RUN: Would run: git commit -m '$COMMIT_MSG' $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
+  else
+    echo "  git commit -m '$COMMIT_MSG'"
+  fi
   echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'  # optional"
   echo "  git push origin $BRANCH && git push origin $TAG_NAME  # optional"
    exit 0
@@ -161,6 +169,19 @@ cp "$CMAKE_FILE" "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak"
 # create backups (assume files exist)
 cp "$SONAR_FILE" "$BACKUP_DIR/$(basename "$SONAR_FILE").bak"
 cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
+# If vcpkg.json is empty or contains invalid JSON, try to restore from git HEAD
+REL_VCPKG="${VCPKG_FILE#$REPO_ROOT/}"
+if ! python3 -c "import json,sys; json.load(open('$VCPKG_FILE'))" >/dev/null 2>&1; then
+  echo "Warning: $VCPKG_FILE missing or invalid JSON; attempting to restore from git HEAD..." >&2
+  if git show HEAD:"$REL_VCPKG" > "$VCPKG_FILE" 2>/dev/null; then
+    echo "Restored $VCPKG_FILE from git HEAD." >&2
+  else
+    echo "No vcpkg.json in git HEAD; creating minimal vcpkg.json with version-string=$NEW_VERSION" >&2
+    printf '{\n  "version-string": "%s"\n}\n' "$NEW_VERSION" > "$VCPKG_FILE"
+  fi
+  # update the backup to reflect restored/created file
+  cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
+fi
 
 update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
 
@@ -171,19 +192,36 @@ mv "$tmp" "$SONAR_FILE"
 
 # Update vcpkg.json: use Python json module to set "version-string" = NEW_VERSION
 tmp=$(mktemp)
-python3 - "$VCPKG_FILE" "$NEW_VERSION" > "$tmp" <<'PY'
+if python3 - "$VCPKG_FILE" "$NEW_VERSION" > "$tmp" <<'PY'
 import sys, json
-path = sys.argv[1]
+inpath = sys.argv[1]
 ver = sys.argv[2]
-with open(path, 'r', encoding='utf-8') as f:
+with open(inpath, 'r', encoding='utf-8') as f:
     data = json.load(f)
 data['version-string'] = ver
-with open(path, 'w', encoding='utf-8') as f:
-    json.dump(data, f, indent=2, ensure_ascii=False)
-    f.write('\n')
-print('')
+sys.stdout.write(json.dumps(data, indent=2, ensure_ascii=False))
+sys.stdout.write('\n')
 PY
-mv "$tmp" "$VCPKG_FILE"
+then
+  # validate tmp is valid JSON before overwriting
+  if python3 -c "import json,sys; json.load(open('$tmp'))" >/dev/null 2>&1; then
+    mv "$tmp" "$VCPKG_FILE"
+  else
+    echo "Error: Python produced invalid JSON (tmp). Restoring original vcpkg.json." >&2
+    if [ -f "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" ]; then
+      mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" || true
+    fi
+    rm -f "$tmp"
+    exit 7
+  fi
+else
+  echo "Error: failed to run Python update for $VCPKG_FILE" >&2
+  if [ -f "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" ]; then
+    mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" || true
+  fi
+  rm -f "$tmp"
+  exit 7
+fi
 
 # Check that the file actually changed
 CHANGED=0
@@ -211,8 +249,30 @@ echo "  $CMAKE_FILE"
 echo "  $SONAR_FILE"
 echo "  $VCPKG_FILE"
 echo
-echo "This script does not perform git commit, tag or push. To commit and push manually, run the suggested commands shown in dry-run output or:"
-echo "  git add $CMAKE_FILE $SONAR_FILE $VCPKG_FILE && git commit -m '$COMMIT_MSG'"
+if [ $DO_COMMIT -eq 1 ]; then
+  echo "Committing changes..."
+  if git commit -m "$COMMIT_MSG" -- "$CMAKE_FILE" "$SONAR_FILE" "$VCPKG_FILE"; then
+    COMMIT_HASH=$(git rev-parse --short HEAD)
+    echo "Committed as $COMMIT_HASH"
+  else
+    echo "git commit failed. Restoring backups." >&2
+    # Restore backups
+    if [ -f "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" ]; then
+      mv "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" "$CMAKE_FILE" || true
+    fi
+    if [ -f "$BACKUP_DIR/$(basename "$SONAR_FILE").bak" ]; then
+      mv "$BACKUP_DIR/$(basename "$SONAR_FILE").bak" "$SONAR_FILE" || true
+    fi
+    if [ -f "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" ]; then
+      mv "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak" "$VCPKG_FILE" || true
+    fi
+    git reset -- "$CMAKE_FILE" "$SONAR_FILE" "$VCPKG_FILE" || true
+    exit 7
+  fi
+else
+  echo "Skipping commit (use -c/--commit or -m to commit automatically). To commit now:"
+  echo "  git commit -m '$COMMIT_MSG' $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
+fi
 echo "(Optional) create a tag: git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
 echo "(Optional) push: git push origin $BRANCH && git push origin $TAG_NAME"
 
