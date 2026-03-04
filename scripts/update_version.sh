@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Script to bump project version in CMakeLists and create a git commit + tag
 # Usage: scripts/update_version.sh [options] <new-version>
-# Options: --force, --dry-run, --message, --tag, --sign
+# Options: --dry-run, --message, --tag, --sign
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -10,7 +10,6 @@ PROGNAME="$(basename "$0")"
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
 
 # Defaults
-FORCE=0
 DRY_RUN=0
 COMMIT_MSG=""
 TAG_NAME=""
@@ -20,7 +19,6 @@ usage() {
 Usage: $PROGNAME [options] <new-version>
 
 Options:
-  -f, --force          Allow running with dirty working tree or detached HEAD
   -d, --dry-run        Show planned changes and exit without modifying files
   -m, --message <msg>  Commit message (default: "Bump version to <new-version>")
       # build and test are not performed by this script
@@ -40,8 +38,6 @@ POSITIONAL=()
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
-    -f|--force)
-      FORCE=1; shift;;
     -d|--dry-run)
       DRY_RUN=1; shift;;
     -m|--message)
@@ -82,18 +78,17 @@ if ! git rev-parse --git-dir >/dev/null 2>&1; then
 fi
 
 # Gather git info
+# If we're on a detached HEAD, warn but continue (script always runs)
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "HEAD")
-if [ "$BRANCH" = "HEAD" ] && [ $FORCE -ne 1 ]; then
-  echo "Detached HEAD. Use --force to override." >&2; exit 3
+if [ "$BRANCH" = "HEAD" ]; then
+  echo "Warning: Detached HEAD detected; continuing with current commit." >&2
 fi
 
-# Check for dirty tree
+# If working tree is dirty, warn but continue (script always runs)
 STATUS=$(git status --porcelain)
-if [ -n "$STATUS" ] && [ $FORCE -ne 1 ]; then
-  echo "Working tree is not clean. Please commit or stash changes, or use --force to proceed." >&2
-  echo "Changed files:" >&2
+if [ -n "$STATUS" ]; then
+  echo "Warning: Working tree not clean; proceeding. Changed/untracked files:" >&2
   echo "$STATUS" >&2
-  exit 4
 fi
 
 # Parse version components
