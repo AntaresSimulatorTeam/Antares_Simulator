@@ -2,7 +2,6 @@ var classSettings =
 [
     [ "reset", "classSettings.html#afecd6362eeeee77b655500ec3be9f168", null ],
     [ "commentFile", "classSettings.html#a228b5676a10dbeb98600e5e6f1b4ac76", null ],
-    [ "displayProgression", "classSettings.html#aa742a4d5b98ed4e1fa60847e5a738db8", null ],
     [ "forceZipOutput", "classSettings.html#abca7349ce43deac6f66a70acd9c8bcbe", null ],
     [ "ignoreConstraints", "classSettings.html#adb034c947f06b715917880d531b6fe6b", null ],
     [ "ignoreLoadingErrors", "classSettings.html#a0861603bba644d21d26807e06aa75450", null ],
