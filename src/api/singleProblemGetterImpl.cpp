@@ -360,9 +360,10 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
     }
     SingleOptimOptions options;
 
-    std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
-      Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.OptimisationAvecVariablesEntieres,
-                                                         options.solverName);
+    std::unique_ptr<ILinearProblem>
+      linearProblem = std::make_unique<Antares::Optimization::LegacyOrtoolsLinearProblem>(
+        pb_.OptimisationAvecVariablesEntieres || pb_.OptimisationAvecVariablesEntieresModeleur,
+        options.solverName);
     fillProblem(*linearProblem, id);
 
     return linearProblem;

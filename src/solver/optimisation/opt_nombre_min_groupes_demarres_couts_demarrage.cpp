@@ -139,7 +139,8 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                     NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = (int)Utils::ceil(X);
                 }
 
-                if (!problemeHebdo->OptimisationAvecVariablesEntieres)
+                if (!problemeHebdo->OptimisationAvecVariablesEntieres
+                    || problemeHebdo->OptimisationAvecVariablesEntieresModeleur)
                 {
                     OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
                       problemeHebdo,

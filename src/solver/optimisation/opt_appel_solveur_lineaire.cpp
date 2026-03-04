@@ -167,7 +167,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
+    const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres
+                       || problemeHebdo->OptimisationAvecVariablesEntieresModeleur;
 
     LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
@@ -334,7 +335,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     {
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
-        const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
+        const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres
+                           || problemeHebdo->OptimisationAvecVariablesEntieresModeleur;
 
         LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
