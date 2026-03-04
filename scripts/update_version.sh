@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Script to bump project version in CMakeLists and create a git commit + tag
 # Usage: scripts/update_version.sh [options] <new-version>
-# Options: --no-push, --force, --dry-run, --message, --tag, --sign, --run-tests
+# Options: --no-push, --force, --dry-run, --message, --tag, --sign
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -13,7 +13,6 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
 NO_PUSH=0
 FORCE=0
 DRY_RUN=0
-RUN_TESTS=0
 COMMIT_MSG=""
 TAG_NAME=""
 
@@ -26,8 +25,8 @@ Options:
   -f, --force          Allow running with dirty working tree or detached HEAD
   -d, --dry-run        Show planned changes and exit without modifying files
   -m, --message <msg>  Commit message (default: "Bump version to <new-version>")
-      --run-tests      Run a build+test after updating (abort on failure)
-     # note: tag creation is not performed by this script; suggested tag name is v<new-version>
+      # build and test are not performed by this script
+      # note: tag creation is not performed by this script; suggested tag name is v<new-version>
   -h, --help           Show this help and exit
 EOF
 }
@@ -51,8 +50,6 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=1; shift;;
     -m|--message)
       COMMIT_MSG="$2"; shift 2;;
-    --run-tests)
-      RUN_TESTS=1; shift;;
     -h|--help)
       usage; exit 0;;
     --)
@@ -223,24 +220,7 @@ fi
 echo "(Optional) create a tag: git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
 echo "(Optional) push: git push origin $BRANCH && git push origin $TAG_NAME"
 
-# Optional: run tests/build
-if [ $RUN_TESTS -eq 1 ]; then
-  echo "Running build and tests (this may take a while)..."
-  set +e
-  mkdir -p "$REPO_ROOT/build"
-  pushd "$REPO_ROOT/build" >/dev/null
-  cmake .. && cmake --build . -- -j"$(nproc)"
-  CT_EXIT=0
-  if command -v ctest >/dev/null 2>&1; then
-    ctest -j2 || CT_EXIT=$?
-  fi
-  popd >/dev/null
-  set -e
-  if [ $CT_EXIT -ne 0 ]; then
-    echo "Build or tests failed (exit $CT_EXIT). Please inspect build logs." >&2
-    exit 8
-  fi
-fi
+# build and test are intentionally not performed by this script
 
 echo "Success: updated version to $NEW_VERSION"
 
