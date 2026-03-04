@@ -173,14 +173,20 @@ tmp=$(mktemp)
 awk -v ver="$NEW_VERSION" 'BEGIN{found=0} /^sonar.projectVersion[[:space:]]*=/ { print "sonar.projectVersion=" ver; found=1; next } { print } END { if (!found) print "sonar.projectVersion=" ver }' "$SONAR_FILE" > "$tmp"
 mv "$tmp" "$SONAR_FILE"
 
-# Update vcpkg.json if present: replace "version-string": "x.y.z" or add it near top
+# Update vcpkg.json: use Python json module to set "version-string" = NEW_VERSION
 tmp=$(mktemp)
-# If version-string exists, replace its value; otherwise add it after opening brace
-if grep -q '"version-string"' "$VCPKG_FILE"; then
-  sed -E 's/("version-string"[[:space:]]*:[[:space:]]*")[^"]*("[, ]*)/\1'"$NEW_VERSION"'\2/' "$VCPKG_FILE" > "$tmp"
-else
-  awk -v ver="$NEW_VERSION" 'NR==1{print; next} NR==2{print "  \"version-string\": \"" ver "\","; print; next} {print}' "$VCPKG_FILE" > "$tmp"
-fi
+python3 - "$VCPKG_FILE" "$NEW_VERSION" > "$tmp" <<'PY'
+import sys, json
+path = sys.argv[1]
+ver = sys.argv[2]
+with open(path, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+data['version-string'] = ver
+with open(path, 'w', encoding='utf-8') as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+    f.write('\n')
+print('')
+PY
 mv "$tmp" "$VCPKG_FILE"
 
 # Check that the file actually changed
