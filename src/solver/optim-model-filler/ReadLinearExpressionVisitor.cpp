@@ -46,19 +46,6 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
 {
 }
 
-class TimeIndexOutOfRangeException: public std::out_of_range
-{
-public:
-    TimeIndexOutOfRangeException(unsigned timeIndex, const std::string& expr, std::size_t size):
-        std::out_of_range(fmt::format(
-          "TimeIndexNode: index {} is out of range in expression '{}' (expression size: {})",
-          timeIndex,
-          expr,
-          size))
-    {
-    }
-};
-
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visitMergeDuplicates(
   const Nodes::Node* node)
 {
