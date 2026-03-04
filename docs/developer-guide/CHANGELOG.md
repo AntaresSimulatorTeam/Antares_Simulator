@@ -13,10 +13,10 @@ toc_depth: 2
 #### Improvements
 
 * Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
+* Improve performance for sum operations in expressions
 
 #### Bugfixes
 
-* Improve performance for sum operations in expressions
 * Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
 
 ### 9.3.6
