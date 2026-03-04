@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Script to bump project version in CMakeLists and create a git commit + tag
 # Usage: scripts/update_version.sh [options] <new-version>
-# Options: --no-push, --force, --dry-run, --message, --tag, --sign, --run-tests, --update-year
+# Options: --no-push, --force, --dry-run, --message, --tag, --sign, --run-tests
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -15,7 +15,6 @@ FORCE=0
 DRY_RUN=0
 SIGN_TAG=0
 RUN_TESTS=0
-UPDATE_YEAR=1
 COMMIT_MSG=""
 TAG_NAME=""
 OVERWRITE_TAG=0
@@ -32,7 +31,6 @@ Options:
   -t, --tag <tag>      Tag name to create (default: v<new-version>)
       --sign           Sign the tag with GPG
       --run-tests      Run a build+test after updating (abort on failure)
-      --update-year    (deprecated) kept for compatibility; the script updates ANTARES_VERSION_YEAR to current year automatically
       --overwrite-tag  Overwrite existing tag if present (implies --force)
   -h, --help           Show this help and exit
 EOF
@@ -63,8 +61,6 @@ while [[ $# -gt 0 ]]; do
       SIGN_TAG=1; shift;;
     --run-tests)
       RUN_TESTS=1; shift;;
-    --update-year)
-      UPDATE_YEAR=1; shift;;
     --overwrite-tag)
       OVERWRITE_TAG=1; FORCE=1; shift;;
     -h|--help)
