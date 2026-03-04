@@ -240,11 +240,8 @@ inline ISimulation<ImplementationType>::ISimulation(
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
-    // Ask to the interface to show the messages
-    logs.info();
-    logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
-
     // Running !
+    logs.info();
     logs.checkpoint() << "Running the simulation (" << ImplementationType::Name() << ')';
     logs.info() << "Allocating resources...";
 

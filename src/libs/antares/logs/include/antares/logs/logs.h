@@ -17,29 +17,6 @@
 ** \ingroup toolbox
 */
 
-/*! Name of the app to use into logs */
-#define LOG_APPLICATION_NAME "antares"
-/*! Vendor */
-#define LOG_APPLICATION_VENDOR "RTE"
-
-/*! Special message to the interface */
-#define LOG_UI "[UI] "
-
-/*! Special message to the interface for notifying about a progression change */
-#define LOG_PROGRESSION "[UI] progression: "
-
-/*! Inform the GUI that the progression map is ready */
-#define LOG_UI_PROGRESSION_MAP "[UI] Progression map: "
-
-/*! Ask to the GUI to show the messages */
-#define LOG_UI_DISPLAY_MESSAGES_ON "[UI] Display messages: On"
-/*! Ask to the GUI to hide the messages */
-#define LOG_UI_DISPLAY_MESSAGES_OFF "[UI] Display messages: Off"
-/*! Ask to the GUI to hide the progress bar */
-#define LOG_UI_HIDE_PROGRESSBAR "[UI] Progression: Off"
-/*! Inform the GUI that the solver has properly ended */
-#define LOG_UI_SOLVER_DONE "[UI] Quitting the solver gracefully"
-
 // This section is only dedicated to includes from a c++ file
 #include <yuni/core/logs.h>
 #include <yuni/core/logs/decorators/applicationname.h>

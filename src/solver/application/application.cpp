@@ -138,7 +138,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
         {
             logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
         }
 
         if (study.areas.empty())
@@ -537,7 +536,7 @@ Application::~Application()
     {
         try
         {
-            logs.info() << LOG_UI_SOLVER_DONE;
+            logs.info() << "[END] Quitting the solver gracefully";
         }
         catch (...)
         {
