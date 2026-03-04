@@ -102,6 +102,7 @@ IFS='.' read -r VER_HI VER_LO VER_REV <<< "$(echo "$NEW_VERSION" | cut -d'-' -f1
 # Files to update: primary target
 CMAKE_FILE="$REPO_ROOT/src/CMakeLists.txt"
 SONAR_FILE="$REPO_ROOT/sonar-project.properties"
+VCPKG_FILE="$REPO_ROOT/src/vcpkg.json"
 SONAR_PRESENT=0
 if [ -f "$SONAR_FILE" ]; then
   SONAR_PRESENT=1
@@ -144,15 +145,31 @@ if [ $DRY_RUN -eq 1 ]; then
       echo "DRY RUN: would add to $SONAR_FILE: sonar.projectVersion=$NEW_VERSION"
     fi
   fi
+  if [ -f "$VCPKG_FILE" ]; then
+    if grep -q '"version-string"' "$VCPKG_FILE"; then
+      CUR_VCPKG_VER=$(grep '"version-string"' "$VCPKG_FILE" | head -n1 | sed -E 's/.*"version-string"\s*:\s*"([^\"]+)".*/\1/')
+      echo "DRY RUN: would update $VCPKG_FILE: version-string = $CUR_VCPKG_VER -> $NEW_VERSION"
+    else
+      echo "DRY RUN: would add to $VCPKG_FILE: \"version-string\": \"$NEW_VERSION\""
+    fi
+  fi
   echo
   echo "Planned git operations:"
   echo "  (note: this script will NOT commit, tag or push automatically)"
   if [ $SONAR_PRESENT -eq 1 ]; then
     echo "Suggested commands to commit and push manually:"
-    echo "  git add $CMAKE_FILE $SONAR_FILE"
+    if [ -f "$VCPKG_FILE" ]; then
+      echo "  git add $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
+    else
+      echo "  git add $CMAKE_FILE $SONAR_FILE"
+    fi
   else
     echo "Suggested commands to commit and push manually:"
-    echo "  git add $CMAKE_FILE"
+    if [ -f "$VCPKG_FILE" ]; then
+      echo "  git add $CMAKE_FILE $VCPKG_FILE"
+    else
+      echo "  git add $CMAKE_FILE"
+    fi
   fi
   echo "  git commit -m '$COMMIT_MSG'"
   echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'  # optional"
@@ -170,6 +187,9 @@ cp "$CMAKE_FILE" "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak"
 if [ $SONAR_PRESENT -eq 1 ]; then
   cp "$SONAR_FILE" "$BACKUP_DIR/$(basename "$SONAR_FILE").bak"
 fi
+if [ -f "$VCPKG_FILE" ]; then
+  cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
+fi
 
 update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
 
@@ -180,6 +200,18 @@ if [ $SONAR_PRESENT -eq 1 ]; then
   mv "$tmp" "$SONAR_FILE"
 fi
 
+# Update vcpkg.json if present: replace "version-string": "x.y.z" or add it near top
+if [ -f "$VCPKG_FILE" ]; then
+  tmp=$(mktemp)
+  # If version-string exists, replace its value; otherwise add it after opening brace
+  if grep -q '"version-string"' "$VCPKG_FILE"; then
+    sed -E 's/("version-string"[[:space:]]*:[[:space:]]*")[^"]*("[, ]*)/\1'"$NEW_VERSION"'\2/' "$VCPKG_FILE" > "$tmp"
+  else
+    awk -v ver="$NEW_VERSION" 'NR==1{print; next} NR==2{print "  \"version-string\": \"" ver "\","; print; next} {print}' "$VCPKG_FILE" > "$tmp"
+  fi
+  mv "$tmp" "$VCPKG_FILE"
+fi
+
 # Check that the file actually changed
 CHANGED=0
 if ! git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
@@ -187,6 +219,11 @@ if ! git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
 fi
 if [ $SONAR_PRESENT -eq 1 ]; then
   if ! git diff --no-ext-diff --quiet -- "$SONAR_FILE"; then
+    CHANGED=1
+  fi
+fi
+if [ -f "$VCPKG_FILE" ]; then
+  if ! git diff --no-ext-diff --quiet -- "$VCPKG_FILE"; then
     CHANGED=1
   fi
 fi
@@ -200,11 +237,17 @@ git add "$CMAKE_FILE"
 if [ $SONAR_PRESENT -eq 1 ]; then
   git add "$SONAR_FILE"
 fi
+if [ -f "$VCPKG_FILE" ]; then
+  git add "$VCPKG_FILE"
+fi
 
 echo "Files updated locally:"
 echo "  $CMAKE_FILE"
 if [ $SONAR_PRESENT -eq 1 ]; then
   echo "  $SONAR_FILE"
+fi
+if [ -f "$VCPKG_FILE" ]; then
+  echo "  $VCPKG_FILE"
 fi
 echo
 echo "This script does not perform git commit, tag or push. To commit and push manually, run the suggested commands shown in dry-run output or:"
