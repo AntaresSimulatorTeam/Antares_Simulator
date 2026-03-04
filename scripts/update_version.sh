@@ -128,6 +128,11 @@ IFS='.' read -r VER_HI VER_LO VER_REV <<< "$(echo "$NEW_VERSION" | cut -d'-' -f1
 
 # Files to update: primary target
 CMAKE_FILE="$REPO_ROOT/src/CMakeLists.txt"
+SONAR_FILE="$REPO_ROOT/sonar-project.properties"
+SONAR_PRESENT=0
+if [ -f "$SONAR_FILE" ]; then
+  SONAR_PRESENT=1
+fi
 if [ ! -f "$CMAKE_FILE" ]; then
   echo "Expected file not found: $CMAKE_FILE" >&2
   exit 2
@@ -158,19 +163,31 @@ if [ $DRY_RUN -eq 1 ]; then
   if grep -q "ANTARES_VERSION_YEAR" "$CMAKE_FILE"; then
     echo "  ANTARES_VERSION_YEAR = <current year> (will be updated automatically)"
   fi
+  if [ $SONAR_PRESENT -eq 1 ]; then
+    if grep -q '^sonar.projectVersion=' "$SONAR_FILE"; then
+      CUR_SONAR_VER=$(grep '^sonar.projectVersion=' "$SONAR_FILE" | cut -d'=' -f2-)
+      echo "DRY RUN: would update $SONAR_FILE: sonar.projectVersion = $CUR_SONAR_VER -> $NEW_VERSION"
+    else
+      echo "DRY RUN: would add to $SONAR_FILE: sonar.projectVersion=$NEW_VERSION"
+    fi
+  fi
   echo
   echo "Planned git operations:"
-  echo "  git add $CMAKE_FILE"
-  echo "  git commit -m '$COMMIT_MSG'"
-  echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
-  if [ $NO_PUSH -eq 0 ]; then
-    echo "  git push origin $BRANCH"
-    echo "  git push origin $TAG_NAME"
+  if [ $SONAR_PRESENT -eq 1 ]; then
+    echo "  git add $CMAKE_FILE $SONAR_FILE"
   else
-    echo "  (no push due to --no-push)"
+    echo "  git add $CMAKE_FILE"
   fi
-  exit 0
-fi
+   echo "  git commit -m '$COMMIT_MSG'"
+   echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
+   if [ $NO_PUSH -eq 0 ]; then
+     echo "  git push origin $BRANCH"
+     echo "  git push origin $TAG_NAME"
+   else
+     echo "  (no push due to --no-push)"
+   fi
+   exit 0
+ fi
 
 # Real run: update the CMake file(s)
 CURRENT_YEAR="$(date +%Y)"
@@ -179,27 +196,55 @@ YEAR_TO_SET="$CURRENT_YEAR"
 # Make a backup copy first
 BACKUP_DIR=$(mktemp -d)
 cp "$CMAKE_FILE" "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak"
-
-update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
-
-# Check that the file actually changed
-if git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
-  echo "No changes detected in $CMAKE_FILE after update. Aborting." >&2
-  exit 6
+if [ $SONAR_PRESENT -eq 1 ]; then
+  cp "$SONAR_FILE" "$BACKUP_DIR/$(basename "$SONAR_FILE").bak"
 fi
 
-# Stage only the modified file
+ update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
+
+# Update sonar-project.properties if present: replace sonar.projectVersion or append it
+if [ $SONAR_PRESENT -eq 1 ]; then
+  tmp=$(mktemp)
+  awk -v ver="$NEW_VERSION" 'BEGIN{found=0} /^sonar.projectVersion[[:space:]]*=/ { print "sonar.projectVersion=" ver; found=1; next } { print } END { if (!found) print "sonar.projectVersion=" ver }' "$SONAR_FILE" > "$tmp"
+  mv "$tmp" "$SONAR_FILE"
+fi
+
+ # Check that the file actually changed
+-if git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
+-  echo "No changes detected in $CMAKE_FILE after update. Aborting." >&2
+-  exit 6
++CHANGED=0
++if ! git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
++  CHANGED=1
++fi
++if [ $SONAR_PRESENT -eq 1 ]; then
++  if ! git diff --no-ext-diff --quiet -- "$SONAR_FILE"; then
++    CHANGED=1
++  fi
++fi
++if [ $CHANGED -eq 0 ]; then
++  echo "No changes detected in updated files after update. Aborting." >&2
++  exit 6
+ fi
+
+ # Stage only the modified file
 git add "$CMAKE_FILE"
+if [ $SONAR_PRESENT -eq 1 ]; then
+  git add "$SONAR_FILE"
+fi
 
 # Commit
-if ! git commit -m "$COMMIT_MSG"; then
-  echo "git commit failed. Restoring backup." >&2
-  mv "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" "$CMAKE_FILE"
-  git reset -- "$CMAKE_FILE" || true
-  exit 7
-fi
+ if ! git commit -m "$COMMIT_MSG"; then
+   echo "git commit failed. Restoring backup." >&2
+   mv "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" "$CMAKE_FILE"
++  if [ $SONAR_PRESENT -eq 1 ]; then
++    mv "$BACKUP_DIR/$(basename "$SONAR_FILE").bak" "$SONAR_FILE"
++  fi
+   git reset -- "$CMAKE_FILE" || true
+   exit 7
+ fi
 
-COMMIT_HASH=$(git rev-parse --short HEAD)
+ COMMIT_HASH=$(git rev-parse --short HEAD)
 
 # Create tag
 if [ $SIGN_TAG -eq 1 ]; then
@@ -240,4 +285,3 @@ echo "Success: committed $COMMIT_HASH and created tag $TAG_NAME"
 
 # cleanup
 rm -rf "$BACKUP_DIR"
-
