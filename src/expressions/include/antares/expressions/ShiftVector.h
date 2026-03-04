@@ -9,10 +9,6 @@ template<class T>
 std::vector<T> shiftVector(const std::vector<T>& values, int shiftValue)
 {
     const auto n = static_cast<int>(values.size());
-    if (n == 0)
-    {
-        return {};
-    }
 
     // Normalize shiftValue within bounds
     shiftValue = (shiftValue % n + n) % n;
