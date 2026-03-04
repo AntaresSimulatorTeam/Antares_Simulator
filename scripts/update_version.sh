@@ -7,7 +7,6 @@ set -euo pipefail
 IFS=$'\n\t'
 
 PROGNAME="$(basename "$0")"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
 
 # Defaults
@@ -16,7 +15,7 @@ FORCE=0
 DRY_RUN=0
 SIGN_TAG=0
 RUN_TESTS=0
-UPDATE_YEAR=0
+UPDATE_YEAR=1
 COMMIT_MSG=""
 TAG_NAME=""
 OVERWRITE_TAG=0
@@ -33,7 +32,7 @@ Options:
   -t, --tag <tag>      Tag name to create (default: v<new-version>)
       --sign           Sign the tag with GPG
       --run-tests      Run a build+test after updating (abort on failure)
-      --update-year    Update ANTARES_VERSION_YEAR to current year if present
+      --update-year    (deprecated) kept for compatibility; the script updates ANTARES_VERSION_YEAR to current year automatically
       --overwrite-tag  Overwrite existing tag if present (implies --force)
   -h, --help           Show this help and exit
 EOF
@@ -72,7 +71,7 @@ while [[ $# -gt 0 ]]; do
       usage; exit 0;;
     --)
       shift; break;;
-    -*|--*)
+    -*)
       echo "Unknown option: $1" >&2; usage; exit 2;;
     *)
       POSITIONAL+=("$1"); shift;;
@@ -161,7 +160,7 @@ if [ $DRY_RUN -eq 1 ]; then
   echo "  ANTARES_VERSION_LO = $VER_LO"
   echo "  ANTARES_VERSION_REVISION = $VER_REV"
   if grep -q "ANTARES_VERSION_YEAR" "$CMAKE_FILE"; then
-    echo "  ANTARES_VERSION_YEAR = <current year> (if --update-year)"
+    echo "  ANTARES_VERSION_YEAR = <current year> (will be updated automatically)"
   fi
   echo
   echo "Planned git operations:"
@@ -179,11 +178,7 @@ fi
 
 # Real run: update the CMake file(s)
 CURRENT_YEAR="$(date +%Y)"
-if [ $UPDATE_YEAR -eq 1 ]; then
-  YEAR_TO_SET="$CURRENT_YEAR"
-else
-  YEAR_TO_SET=""
-fi
+YEAR_TO_SET="$CURRENT_YEAR"
 
 # Make a backup copy first
 BACKUP_DIR=$(mktemp -d)
@@ -232,7 +227,7 @@ if [ $RUN_TESTS -eq 1 ]; then
   set +e
   mkdir -p "$REPO_ROOT/build"
   pushd "$REPO_ROOT/build" >/dev/null
-  cmake .. && cmake --build . -- -j$(nproc)
+  cmake .. && cmake --build . -- -j"$(nproc)"
   CT_EXIT=0
   if command -v ctest >/dev/null 2>&1; then
     ctest -j2 || CT_EXIT=$?
