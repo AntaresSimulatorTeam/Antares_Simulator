@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Script to bump project version in CMakeLists and create a git commit + tag
 # Usage: scripts/update_version.sh [options] <new-version>
-# Options: --no-push, --force, --dry-run, --message, --tag, --sign
+# Options: --force, --dry-run, --message, --tag, --sign
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -10,7 +10,6 @@ PROGNAME="$(basename "$0")"
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
 
 # Defaults
-NO_PUSH=0
 FORCE=0
 DRY_RUN=0
 COMMIT_MSG=""
@@ -21,7 +20,6 @@ usage() {
 Usage: $PROGNAME [options] <new-version>
 
 Options:
-  -n, --no-push        Do not push commit or tag to remote
   -f, --force          Allow running with dirty working tree or detached HEAD
   -d, --dry-run        Show planned changes and exit without modifying files
   -m, --message <msg>  Commit message (default: "Bump version to <new-version>")
@@ -42,8 +40,6 @@ POSITIONAL=()
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
-    -n|--no-push)
-      NO_PUSH=1; shift;;
     -f|--force)
       FORCE=1; shift;;
     -d|--dry-run)
