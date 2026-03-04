@@ -103,14 +103,7 @@ IFS='.' read -r VER_HI VER_LO VER_REV <<< "$(echo "$NEW_VERSION" | cut -d'-' -f1
 CMAKE_FILE="$REPO_ROOT/src/CMakeLists.txt"
 SONAR_FILE="$REPO_ROOT/sonar-project.properties"
 VCPKG_FILE="$REPO_ROOT/src/vcpkg.json"
-SONAR_PRESENT=0
-if [ -f "$SONAR_FILE" ]; then
-  SONAR_PRESENT=1
-fi
-if [ ! -f "$CMAKE_FILE" ]; then
-  echo "Expected file not found: $CMAKE_FILE" >&2
-  exit 2
-fi
+# Assume the target files exist in the workspace as requested; proceed without checking.
 
 # Prepare in-place update function
 update_cmake_version() {
@@ -137,40 +130,25 @@ if [ $DRY_RUN -eq 1 ]; then
   if grep -q "ANTARES_VERSION_YEAR" "$CMAKE_FILE"; then
     echo "  ANTARES_VERSION_YEAR = <current year> (will be updated automatically)"
   fi
-  if [ $SONAR_PRESENT -eq 1 ]; then
-    if grep -q '^sonar.projectVersion=' "$SONAR_FILE"; then
-      CUR_SONAR_VER=$(grep '^sonar.projectVersion=' "$SONAR_FILE" | cut -d'=' -f2-)
-      echo "DRY RUN: would update $SONAR_FILE: sonar.projectVersion = $CUR_SONAR_VER -> $NEW_VERSION"
-    else
-      echo "DRY RUN: would add to $SONAR_FILE: sonar.projectVersion=$NEW_VERSION"
-    fi
+  # sonar-project.properties: assume present and report planned change
+  if grep -q '^sonar.projectVersion=' "$SONAR_FILE"; then
+    CUR_SONAR_VER=$(grep '^sonar.projectVersion=' "$SONAR_FILE" | cut -d'=' -f2-)
+    echo "DRY RUN: would update $SONAR_FILE: sonar.projectVersion = $CUR_SONAR_VER -> $NEW_VERSION"
+  else
+    echo "DRY RUN: would add to $SONAR_FILE: sonar.projectVersion=$NEW_VERSION"
   fi
-  if [ -f "$VCPKG_FILE" ]; then
-    if grep -q '"version-string"' "$VCPKG_FILE"; then
-      CUR_VCPKG_VER=$(grep '"version-string"' "$VCPKG_FILE" | head -n1 | sed -E 's/.*"version-string"\s*:\s*"([^\"]+)".*/\1/')
-      echo "DRY RUN: would update $VCPKG_FILE: version-string = $CUR_VCPKG_VER -> $NEW_VERSION"
-    else
-      echo "DRY RUN: would add to $VCPKG_FILE: \"version-string\": \"$NEW_VERSION\""
-    fi
+  # vcpkg.json: assume present and report planned change
+  if grep -q '"version-string"' "$VCPKG_FILE"; then
+    CUR_VCPKG_VER=$(grep '"version-string"' "$VCPKG_FILE" | head -n1 | sed -E 's/.*"version-string"\s*:\s*"([^\"]+)".*/\1/')
+    echo "DRY RUN: would update $VCPKG_FILE: version-string = $CUR_VCPKG_VER -> $NEW_VERSION"
+  else
+    echo "DRY RUN: would add to $VCPKG_FILE: \"version-string\": \"$NEW_VERSION\""
   fi
   echo
   echo "Planned git operations:"
   echo "  (note: this script will NOT commit, tag or push automatically)"
-  if [ $SONAR_PRESENT -eq 1 ]; then
-    echo "Suggested commands to commit and push manually:"
-    if [ -f "$VCPKG_FILE" ]; then
-      echo "  git add $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
-    else
-      echo "  git add $CMAKE_FILE $SONAR_FILE"
-    fi
-  else
-    echo "Suggested commands to commit and push manually:"
-    if [ -f "$VCPKG_FILE" ]; then
-      echo "  git add $CMAKE_FILE $VCPKG_FILE"
-    else
-      echo "  git add $CMAKE_FILE"
-    fi
-  fi
+  echo "Suggested commands to commit and push manually:"
+  echo "  git add $CMAKE_FILE $SONAR_FILE $VCPKG_FILE"
   echo "  git commit -m '$COMMIT_MSG'"
   echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'  # optional"
   echo "  git push origin $BRANCH && git push origin $TAG_NAME  # optional"
@@ -184,48 +162,37 @@ YEAR_TO_SET="$CURRENT_YEAR"
 # Make a backup copy first
 BACKUP_DIR=$(mktemp -d)
 cp "$CMAKE_FILE" "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak"
-if [ $SONAR_PRESENT -eq 1 ]; then
-  cp "$SONAR_FILE" "$BACKUP_DIR/$(basename "$SONAR_FILE").bak"
-fi
-if [ -f "$VCPKG_FILE" ]; then
-  cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
-fi
+# create backups (assume files exist)
+cp "$SONAR_FILE" "$BACKUP_DIR/$(basename "$SONAR_FILE").bak"
+cp "$VCPKG_FILE" "$BACKUP_DIR/$(basename "$VCPKG_FILE").bak"
 
 update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
 
 # Update sonar-project.properties if present: replace sonar.projectVersion or append it
-if [ $SONAR_PRESENT -eq 1 ]; then
-  tmp=$(mktemp)
-  awk -v ver="$NEW_VERSION" 'BEGIN{found=0} /^sonar.projectVersion[[:space:]]*=/ { print "sonar.projectVersion=" ver; found=1; next } { print } END { if (!found) print "sonar.projectVersion=" ver }' "$SONAR_FILE" > "$tmp"
-  mv "$tmp" "$SONAR_FILE"
-fi
+tmp=$(mktemp)
+awk -v ver="$NEW_VERSION" 'BEGIN{found=0} /^sonar.projectVersion[[:space:]]*=/ { print "sonar.projectVersion=" ver; found=1; next } { print } END { if (!found) print "sonar.projectVersion=" ver }' "$SONAR_FILE" > "$tmp"
+mv "$tmp" "$SONAR_FILE"
 
 # Update vcpkg.json if present: replace "version-string": "x.y.z" or add it near top
-if [ -f "$VCPKG_FILE" ]; then
-  tmp=$(mktemp)
-  # If version-string exists, replace its value; otherwise add it after opening brace
-  if grep -q '"version-string"' "$VCPKG_FILE"; then
-    sed -E 's/("version-string"[[:space:]]*:[[:space:]]*")[^"]*("[, ]*)/\1'"$NEW_VERSION"'\2/' "$VCPKG_FILE" > "$tmp"
-  else
-    awk -v ver="$NEW_VERSION" 'NR==1{print; next} NR==2{print "  \"version-string\": \"" ver "\","; print; next} {print}' "$VCPKG_FILE" > "$tmp"
-  fi
-  mv "$tmp" "$VCPKG_FILE"
+tmp=$(mktemp)
+# If version-string exists, replace its value; otherwise add it after opening brace
+if grep -q '"version-string"' "$VCPKG_FILE"; then
+  sed -E 's/("version-string"[[:space:]]*:[[:space:]]*")[^"]*("[, ]*)/\1'"$NEW_VERSION"'\2/' "$VCPKG_FILE" > "$tmp"
+else
+  awk -v ver="$NEW_VERSION" 'NR==1{print; next} NR==2{print "  \"version-string\": \"" ver "\","; print; next} {print}' "$VCPKG_FILE" > "$tmp"
 fi
+mv "$tmp" "$VCPKG_FILE"
 
 # Check that the file actually changed
 CHANGED=0
 if ! git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
   CHANGED=1
 fi
-if [ $SONAR_PRESENT -eq 1 ]; then
-  if ! git diff --no-ext-diff --quiet -- "$SONAR_FILE"; then
-    CHANGED=1
-  fi
+if ! git diff --no-ext-diff --quiet -- "$SONAR_FILE"; then
+  CHANGED=1
 fi
-if [ -f "$VCPKG_FILE" ]; then
-  if ! git diff --no-ext-diff --quiet -- "$VCPKG_FILE"; then
-    CHANGED=1
-  fi
+if ! git diff --no-ext-diff --quiet -- "$VCPKG_FILE"; then
+  CHANGED=1
 fi
 if [ $CHANGED -eq 0 ]; then
   echo "No changes detected in updated files after update. Aborting." >&2
@@ -234,28 +201,16 @@ fi
 
 # Stage only the modified file
 git add "$CMAKE_FILE"
-if [ $SONAR_PRESENT -eq 1 ]; then
-  git add "$SONAR_FILE"
-fi
-if [ -f "$VCPKG_FILE" ]; then
-  git add "$VCPKG_FILE"
-fi
+git add "$SONAR_FILE"
+git add "$VCPKG_FILE"
 
 echo "Files updated locally:"
 echo "  $CMAKE_FILE"
-if [ $SONAR_PRESENT -eq 1 ]; then
-  echo "  $SONAR_FILE"
-fi
-if [ -f "$VCPKG_FILE" ]; then
-  echo "  $VCPKG_FILE"
-fi
+echo "  $SONAR_FILE"
+echo "  $VCPKG_FILE"
 echo
 echo "This script does not perform git commit, tag or push. To commit and push manually, run the suggested commands shown in dry-run output or:"
-if [ $SONAR_PRESENT -eq 1 ]; then
-  echo "  git add $CMAKE_FILE $SONAR_FILE && git commit -m '$COMMIT_MSG'"
-else
-  echo "  git add $CMAKE_FILE && git commit -m '$COMMIT_MSG'"
-fi
+echo "  git add $CMAKE_FILE $SONAR_FILE $VCPKG_FILE && git commit -m '$COMMIT_MSG'"
 echo "(Optional) create a tag: git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
 echo "(Optional) push: git push origin $BRANCH && git push origin $TAG_NAME"
 
