@@ -13,11 +13,9 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo '.')"
 NO_PUSH=0
 FORCE=0
 DRY_RUN=0
-SIGN_TAG=0
 RUN_TESTS=0
 COMMIT_MSG=""
 TAG_NAME=""
-OVERWRITE_TAG=0
 
 usage() {
   cat <<EOF
@@ -28,10 +26,8 @@ Options:
   -f, --force          Allow running with dirty working tree or detached HEAD
   -d, --dry-run        Show planned changes and exit without modifying files
   -m, --message <msg>  Commit message (default: "Bump version to <new-version>")
-  -t, --tag <tag>      Tag name to create (default: v<new-version>)
-      --sign           Sign the tag with GPG
       --run-tests      Run a build+test after updating (abort on failure)
-      --overwrite-tag  Overwrite existing tag if present (implies --force)
+     # note: tag creation is not performed by this script; suggested tag name is v<new-version>
   -h, --help           Show this help and exit
 EOF
 }
@@ -55,14 +51,8 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=1; shift;;
     -m|--message)
       COMMIT_MSG="$2"; shift 2;;
-    -t|--tag)
-      TAG_NAME="$2"; shift 2;;
-    --sign)
-      SIGN_TAG=1; shift;;
     --run-tests)
       RUN_TESTS=1; shift;;
-    --overwrite-tag)
-      OVERWRITE_TAG=1; FORCE=1; shift;;
     -h|--help)
       usage; exit 0;;
     --)
@@ -111,16 +101,6 @@ if [ -n "$STATUS" ] && [ $FORCE -ne 1 ]; then
   echo "Changed files:" >&2
   echo "$STATUS" >&2
   exit 4
-fi
-
-# Check tag existence
-if git rev-parse --verify --quiet "refs/tags/$TAG_NAME" >/dev/null; then
-  if [ $OVERWRITE_TAG -ne 1 ]; then
-    echo "Tag $TAG_NAME already exists. Use --overwrite-tag to replace it." >&2
-    exit 5
-  else
-    echo "Warning: tag $TAG_NAME exists and will be overwritten (force mode)."
-  fi
 fi
 
 # Parse version components
@@ -173,19 +153,17 @@ if [ $DRY_RUN -eq 1 ]; then
   fi
   echo
   echo "Planned git operations:"
+  echo "  (note: this script will NOT commit, tag or push automatically)"
   if [ $SONAR_PRESENT -eq 1 ]; then
+    echo "Suggested commands to commit and push manually:"
     echo "  git add $CMAKE_FILE $SONAR_FILE"
   else
+    echo "Suggested commands to commit and push manually:"
     echo "  git add $CMAKE_FILE"
   fi
-   echo "  git commit -m '$COMMIT_MSG'"
-   echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
-   if [ $NO_PUSH -eq 0 ]; then
-     echo "  git push origin $BRANCH"
-     echo "  git push origin $TAG_NAME"
-   else
-     echo "  (no push due to --no-push)"
-   fi
+  echo "  git commit -m '$COMMIT_MSG'"
+  echo "  git tag -a $TAG_NAME -m 'Release $TAG_NAME'  # optional"
+  echo "  git push origin $BRANCH && git push origin $TAG_NAME  # optional"
    exit 0
  fi
 
@@ -200,7 +178,7 @@ if [ $SONAR_PRESENT -eq 1 ]; then
   cp "$SONAR_FILE" "$BACKUP_DIR/$(basename "$SONAR_FILE").bak"
 fi
 
- update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
+update_cmake_version "$CMAKE_FILE" "$VER_HI" "$VER_LO" "$VER_REV" "$YEAR_TO_SET"
 
 # Update sonar-project.properties if present: replace sonar.projectVersion or append it
 if [ $SONAR_PRESENT -eq 1 ]; then
@@ -209,58 +187,41 @@ if [ $SONAR_PRESENT -eq 1 ]; then
   mv "$tmp" "$SONAR_FILE"
 fi
 
- # Check that the file actually changed
--if git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
--  echo "No changes detected in $CMAKE_FILE after update. Aborting." >&2
--  exit 6
-+CHANGED=0
-+if ! git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
-+  CHANGED=1
-+fi
-+if [ $SONAR_PRESENT -eq 1 ]; then
-+  if ! git diff --no-ext-diff --quiet -- "$SONAR_FILE"; then
-+    CHANGED=1
-+  fi
-+fi
-+if [ $CHANGED -eq 0 ]; then
-+  echo "No changes detected in updated files after update. Aborting." >&2
-+  exit 6
- fi
+# Check that the file actually changed
+CHANGED=0
+if ! git diff --no-ext-diff --quiet -- "$CMAKE_FILE"; then
+  CHANGED=1
+fi
+if [ $SONAR_PRESENT -eq 1 ]; then
+  if ! git diff --no-ext-diff --quiet -- "$SONAR_FILE"; then
+    CHANGED=1
+  fi
+fi
+if [ $CHANGED -eq 0 ]; then
+  echo "No changes detected in updated files after update. Aborting." >&2
+  exit 6
+fi
 
- # Stage only the modified file
+# Stage only the modified file
 git add "$CMAKE_FILE"
 if [ $SONAR_PRESENT -eq 1 ]; then
   git add "$SONAR_FILE"
 fi
 
-# Commit
- if ! git commit -m "$COMMIT_MSG"; then
-   echo "git commit failed. Restoring backup." >&2
-   mv "$BACKUP_DIR/$(basename "$CMAKE_FILE").bak" "$CMAKE_FILE"
-+  if [ $SONAR_PRESENT -eq 1 ]; then
-+    mv "$BACKUP_DIR/$(basename "$SONAR_FILE").bak" "$SONAR_FILE"
-+  fi
-   git reset -- "$CMAKE_FILE" || true
-   exit 7
- fi
-
- COMMIT_HASH=$(git rev-parse --short HEAD)
-
-# Create tag
-if [ $SIGN_TAG -eq 1 ]; then
-  git tag -s "$TAG_NAME" -m "Release $TAG_NAME"
-else
-  git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+echo "Files updated locally:"
+echo "  $CMAKE_FILE"
+if [ $SONAR_PRESENT -eq 1 ]; then
+  echo "  $SONAR_FILE"
 fi
-
-# Push if requested
-if [ $NO_PUSH -eq 0 ]; then
-  echo "Pushing commit and tag to origin/$BRANCH..."
-  git push origin "$BRANCH"
-  git push origin "$TAG_NAME"
+echo
+echo "This script does not perform git commit, tag or push. To commit and push manually, run the suggested commands shown in dry-run output or:"
+if [ $SONAR_PRESENT -eq 1 ]; then
+  echo "  git add $CMAKE_FILE $SONAR_FILE && git commit -m '$COMMIT_MSG'"
 else
-  echo "Skipping push ( --no-push ). Commit: $COMMIT_HASH, Tag: $TAG_NAME"
+  echo "  git add $CMAKE_FILE && git commit -m '$COMMIT_MSG'"
 fi
+echo "(Optional) create a tag: git tag -a $TAG_NAME -m 'Release $TAG_NAME'"
+echo "(Optional) push: git push origin $BRANCH && git push origin $TAG_NAME"
 
 # Optional: run tests/build
 if [ $RUN_TESTS -eq 1 ]; then
@@ -281,7 +242,7 @@ if [ $RUN_TESTS -eq 1 ]; then
   fi
 fi
 
-echo "Success: committed $COMMIT_HASH and created tag $TAG_NAME"
+echo "Success: updated version to $NEW_VERSION"
 
 # cleanup
 rm -rf "$BACKUP_DIR"
