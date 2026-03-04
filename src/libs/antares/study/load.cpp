@@ -101,10 +101,8 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     prepareOutput();
 
     // calendar update
-    calendar.reset({parameters.dayOfThe1stJanuary,
-                    parameters.firstWeekday,
-                    parameters.firstMonthInYear,
-                    false});
+    calendar.reset(
+      {parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, false});
 
     calendarOutput.reset({parameters.dayOfThe1stJanuary,
                           parameters.firstWeekday,

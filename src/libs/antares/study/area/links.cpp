@@ -496,69 +496,65 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
         ret = link.loadTimeSeries(study.header.version, folder) && ret;
 
         // Checks on loaded link's data
+        const uint nbDirectTS = link.directCapacities.timeSeries.width;
+        const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
+        if (nbDirectTS != nbIndirectTS)
         {
-            const uint nbDirectTS = link.directCapacities.timeSeries.width;
-            const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
-            if (nbDirectTS != nbIndirectTS)
-            {
-                logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
-            }
+            logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
+        }
 
-            auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
-            auto& indirectHurdlesCost = link.parameters[fhlHurdlesCostIndirect];
-            auto& loopFlow = link.parameters[fhlLoopFlow];
-            auto& PShiftMinus = link.parameters[fhlPShiftMinus];
-            auto& PShiftPlus = link.parameters[fhlPShiftPlus];
+        auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
+        auto& indirectHurdlesCost = link.parameters[fhlHurdlesCostIndirect];
+        auto& loopFlow = link.parameters[fhlLoopFlow];
+        auto& PShiftMinus = link.parameters[fhlPShiftMinus];
+        auto& PShiftPlus = link.parameters[fhlPShiftPlus];
 
-            for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
-            {
-                const double* directCapacities = link.directCapacities[indexTS];
-                const double* indirectCapacities = link.indirectCapacities[indexTS];
+        for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
+        {
+            const double* directCapacities = link.directCapacities[indexTS];
+            const double* indirectCapacities = link.indirectCapacities[indexTS];
 
-                // Checks on direct capacities
-                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
-                {
-                    if (directCapacities[h] < 0.)
-                    {
-                        logLinkDataCheckError(link, "direct capacity < 0", h);
-                    }
-                    if (directCapacities[h] < loopFlow[h])
-                    {
-                        logLinkDataCheckError(link, "direct capacity < loop flow", h);
-                    }
-                }
-
-                // Checks on indirect capacities
-                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
-                {
-                    if (indirectCapacities[h] < 0.)
-                    {
-                        logLinkDataCheckError(link, "indirect capacitity < 0", h);
-                    }
-                    if (indirectCapacities[h] + loopFlow[h] < 0)
-                    {
-                        logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
-                    }
-                }
-            }
-            // Checks on hurdle costs
+            // Checks on direct capacities
             for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
-                if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
+                if (directCapacities[h] < 0.)
                 {
-                    logLinkDataCheckError(link,
-                                          "hurdle costs direct + hurdle cost indirect < 0",
-                                          h);
+                    logLinkDataCheckError(link, "direct capacity < 0", h);
+                }
+                if (directCapacities[h] < loopFlow[h])
+                {
+                    logLinkDataCheckError(link, "direct capacity < loop flow", h);
                 }
             }
 
-            // Checks on P. shift min and max
+            // Checks on indirect capacities
             for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
             {
-                if (PShiftPlus[h] < PShiftMinus[h])
+                if (indirectCapacities[h] < 0.)
                 {
-                    logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
+                    logLinkDataCheckError(link, "indirect capacitity < 0", h);
                 }
+                if (indirectCapacities[h] + loopFlow[h] < 0)
+                {
+                    logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
+                }
+            }
+        }
+        // Checks on hurdle costs
+        for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
+            {
+                logLinkDataCheckError(link, "hurdle costs direct + hurdle cost indirect < 0", h);
+            }
+        }
+
+        // Checks on P. shift min and max
+        for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            if (PShiftPlus[h] < PShiftMinus[h])
+            {
+                logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
             }
         }
 

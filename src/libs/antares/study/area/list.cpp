@@ -512,19 +512,17 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Optimzation preferences
+    if (!study.parameters.include.reserve.dayAhead)
     {
-        if (!study.parameters.include.reserve.dayAhead)
-        {
-            area.reserves.columnToZero(fhrDayBefore);
-        }
-        if (!study.parameters.include.reserve.strategic)
-        {
-            area.reserves.columnToZero(fhrStrategicReserve);
-        }
-        if (!study.parameters.include.reserve.primary)
-        {
-            area.reserves.columnToZero(fhrPrimaryReserve);
-        }
+        area.reserves.columnToZero(fhrDayBefore);
+    }
+    if (!study.parameters.include.reserve.strategic)
+    {
+        area.reserves.columnToZero(fhrStrategicReserve);
+    }
+    if (!study.parameters.include.reserve.primary)
+    {
+        area.reserves.columnToZero(fhrPrimaryReserve);
     }
 
     // Fatal hors hydro - Misc Gen.
