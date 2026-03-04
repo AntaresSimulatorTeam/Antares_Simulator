@@ -469,7 +469,7 @@ For details on including loop flow to a link, see [Links](02-inputs.md#lnks)).
 
 When loop flow is not included for a given link $l$, relations between $F\_l$, $F\_l^+$ and $F\_l^-$ are given in [Balance between load and generation](#balance-between-load-and-generation).
 
-For a lionk where we do include the loop flow, we have :
+For a link where we do include the loop flow, we have :
 $$
 F\_l - F\_l^+ + F\_l^- = LF\_l
 $$
