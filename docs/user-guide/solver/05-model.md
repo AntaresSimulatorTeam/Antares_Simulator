@@ -463,18 +463,18 @@ All constraints (1) to (23) previously defined for regular operation conditions 
 Besides, in the expression of constraints , all occurrences of are replaced by $D_n + S_n$
 
 ### Loop flow
-Loop flow is an amount of power flowing circularly through the grid when all "nodes" are perfectly balanced (no import and no export).
-For any link, user can ask to include the related passive loop flow.
-For details on including loop flow to a link, see [Links](02-inputs.md#lnks)).
+In Antares Simulator, a loop flow is an fixed amount of power flowing circularly through the grid when all "nodes" are perfectly balanced (no import and no export).
+For a given link, user can ask to include the related passive loop flow.
+For details on including loop flow, see [Links](02-inputs.md#lnks)).
 
-When loop flow is not included for a given link $l$, relations between $F\_l$, $F\_l^+$ and $F\_l^-$ are given in [Balance between load and generation](#balance-between-load-and-generation).
+When loop flow is not included for link $l$, relations between $F\_l$, $F\_l^+$ and $F\_l^-$ are given in [Balance between load and generation](#balance-between-load-and-generation).
 
-For a link where we do include the loop flow, we have :
+Including a loop flow for a link $l$ implies :
 $$
 F\_l - F\_l^+ + F\_l^- = LF\_l
 $$
 
-where $LF\_l$ is the passive loop flow on link $l$.
+where $LF\_l$ is the passive loop flow on $l$.
 
 In that case, variables bounds change, and we have : 
 $$
