@@ -112,6 +112,9 @@ jobs:
     if: ${{ github.event.inputs.generate_results == 'true' && needs.ubuntu.result == 'success' && needs.windows.results == 'success' }}
     # ASSUMPTION: we call the `main` ref of that repository. Change the ref if you prefer a tag or SHA.
     uses: AntaresSimulatorTeam/SimTest/.github/workflows/generate-reference.yml@main
+    permissions:
+      contents: write
+      actions: read
     with:
       # Map inputs expected by the external reusable workflow
       release_tag: ${{ github.event.inputs.release_tag }}
