@@ -16,7 +16,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        variableManager.NTCDirect(interco, 0) = nombreDeVariables;
+        variableManager.DirectFlux(interco, 0) = nombreDeVariables;
         ProblemeAResoudre->TypeDeVariable[nombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
         nombreDeVariables++;
     }

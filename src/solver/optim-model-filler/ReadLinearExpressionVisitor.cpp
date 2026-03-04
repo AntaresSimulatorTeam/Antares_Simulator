@@ -9,8 +9,10 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/exception/LoadingError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/expressions/visitors/HelpVisitNode.h"
+#include "antares/expressions/visitors/PrintVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
@@ -43,6 +45,19 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps())
 {
 }
+
+class TimeIndexOutOfRangeException: public std::out_of_range
+{
+public:
+    TimeIndexOutOfRangeException(unsigned timeIndex, const std::string& expr, std::size_t size):
+        std::out_of_range(fmt::format(
+          "TimeIndexNode: index {} is out of range in expression '{}' (expression size: {})",
+          timeIndex,
+          expr,
+          size))
+    {
+    }
+};
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visitMergeDuplicates(
   const Nodes::Node* node)
@@ -214,6 +229,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     }
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
     const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+
+    if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= expression.size())
+    {
+        Expressions::Visitors::PrintVisitor visitor;
+        throw Error::LoadingError(fmt::format(
+          "TimeIndexNode: index {} is out of range in expression '{}' (expression size: {})",
+          timeIndex,
+          visitor.dispatch(node),
+          expression.size()));
+    }
     return TimeDependentLinearExpression(std::move(expression[timeIndex]));
 }
 
