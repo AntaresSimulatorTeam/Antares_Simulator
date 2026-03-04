@@ -177,17 +177,17 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
-    const auto expression = dispatch(node->expression());
+    const auto result = dispatch(node->expression());
     const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
 
-    return expression.timeSum(from, to);
+    return result.timeSum(from, to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
-    const EvaluationResult expression = dispatch(node->child());
-    return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
+    const EvaluationResult result = dispatch(node->child());
+    return result.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
 EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
