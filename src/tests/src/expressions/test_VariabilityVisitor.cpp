@@ -65,6 +65,8 @@ struct TestVariabilityVisitorFixture
     ParameterNode parameterNode{"param", VariabilityType::VARYING_IN_SCENARIO_ONLY};
     VariableNode variableNode{"v1", 0, VariabilityType::VARYING_IN_TIME_ONLY};
     std::optional<VariabilityVisitor> variabilityVisitor;
+    LinearProblemDataImpl::LinearProblemData data_;
+    LinearProblemDataImpl::LinearProblemData data2_;
 
     void setup()
     {
@@ -83,15 +85,18 @@ struct TestVariabilityVisitorFixture
         LinearProblemApi::FillContext ctx{0, 2, 0, 2, 0};
         // setting 3 hours (including h 1 and 2)
         bounds_time_series->add({10., 11., 12.});
-        LinearProblemDataImpl::LinearProblemData data;
-        data.addDataSeries(std::move(bounds_time_series));
+        data_.addDataSeries(std::move(bounds_time_series));
         std::vector<std::unique_ptr<LinearProblemApi::IScenario>> scenarios;
         auto scenario0 = std::make_unique<LinearProblemDataImpl::Scenario>("group");
         scenario0->setTimeSerieNumber(0, 0);
         scenarios.push_back(std::move(scenario0));
 
-        fixture.buildLinearProblem(ctx, data, scenarios);
-        variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[0]);
+        fixture.buildLinearProblem(ctx, data_, scenarios);
+        variabilityVisitor.emplace(*fixture.optimEntityContainer,
+                                   fixture.components[0],
+                                   &data_,
+                                   &fixture.scenarioGroupRepo.scenario(
+                                     fixture.components[0].getScenarioGroupId()));
     }
 };
 
@@ -348,15 +353,18 @@ BOOST_AUTO_TEST_CASE(overwrite_variability_in_model_by_variablility_in_component
     LinearProblemApi::FillContext ctx{0, 2, 0, 2, 0};
     // setting 3 hours (including h 1 and 2)
     bounds_time_series->add({10., 11., 12.});
-    LinearProblemDataImpl::LinearProblemData data;
-    data.addDataSeries(std::move(bounds_time_series));
+    data2_.addDataSeries(std::move(bounds_time_series));
     std::vector<std::unique_ptr<LinearProblemApi::IScenario>> scenarios;
     auto scenario0 = std::make_unique<LinearProblemDataImpl::Scenario>("group2");
     scenario0->setTimeSerieNumber(0, 0);
     scenarios.push_back(std::move(scenario0));
 
-    fixture.buildLinearProblem(ctx, data, scenarios);
-    variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[1]);
+    fixture.buildLinearProblem(ctx, data2_, scenarios);
+    variabilityVisitor.emplace(*fixture.optimEntityContainer,
+                               fixture.components[1],
+                               &data2_,
+                               &fixture.scenarioGroupRepo.scenario(
+                                 fixture.components[1].getScenarioGroupId()));
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&parameterNode),
                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);

@@ -120,16 +120,6 @@ bool PreproAvailability::validate() const
     return errors == 0;
 }
 
-bool PreproAvailability::forceReload(bool reload) const
-{
-    return data.forceReload(reload);
-}
-
-void PreproAvailability::markAsModified() const
-{
-    data.markAsModified();
-}
-
 void PreproAvailability::reset()
 {
     data.reset(preproAvailabilityMax, DAYS_PER_YEAR, true);
@@ -186,7 +176,6 @@ bool PreproAvailability::normalizeAndCheckNPO()
         logs.info() << "  NPO max for entity '" << id << "' has been normalized";
     }
 
-    data.markAsModified();
     return (0 == errors);
 }
 

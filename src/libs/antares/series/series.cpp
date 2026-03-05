@@ -186,14 +186,4 @@ void TimeSeries::unloadFromMemory() const
     timeSeries.unloadFromMemory();
 }
 
-bool TimeSeries::forceReload(bool reload) const
-{
-    return timeSeries.forceReload(reload);
-}
-
-void TimeSeries::markAsModified() const
-{
-    timeSeries.markAsModified();
-}
-
 } // namespace Antares::Data

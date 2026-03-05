@@ -4,6 +4,21 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.3.7
+
+#### Feature
+
+* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
+
+#### Improvements
+
+* Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
+* Improve performance for sum operations in expressions
+
+#### Bugfixes
+
+* Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
+
 ### 9.3.6
 
 #### New features

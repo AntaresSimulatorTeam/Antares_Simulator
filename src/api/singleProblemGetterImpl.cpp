@@ -381,9 +381,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
     const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
       = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-    Optimisation::OptimEntityContainer optimEntityContainer(problem,
-                                                            modelerDataSeries,
-                                                            modelerScenarioGroupRepository);
+    Optimisation::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
     {
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));

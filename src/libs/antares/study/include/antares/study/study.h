@@ -25,7 +25,6 @@
 #include "header.h"
 #include "parameters.h"
 #include "sets.h"
-#include "simulation.h"
 
 namespace Antares::Data
 {
@@ -75,20 +74,6 @@ public:
     */
     static bool IsRootStudy(const AnyString& folder, YString& buffer);
 
-    /*!
-    ** \brief Check if a path is within a study folder
-    **
-    ** \warning This method assumes that the given path is properly formatted
-    **   according to the OS parameters
-    **
-    ** \param      path     The path to check
-    ** \param[out] location The location of the study folder (if any)
-    ** \param[out] title    The title of the study folder (if any)
-    ** \return True if the path is within a study folder. In this case
-    **   the parameters 'location' and 'title' are set.
-    */
-    static bool IsInsideStudyFolder(const AnyString& path, YString& location, YString& title);
-
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -101,13 +86,6 @@ public:
     //! Destructor
     virtual ~Study();
     //@}
-
-    //! \name Loading/Saving
-    //@{
-    /*!
-    ** \brief Create a clean study
-    */
-    void createAsNew();
 
     /*!
     ** \brief Relocate the study into a new folder
@@ -133,16 +111,6 @@ public:
     void clear();
 
     /*!
-    ** \brief Reload all correlation
-    */
-    void reloadCorrelation();
-
-    /*!
-    ** \brief Reload all XCast Data
-    */
-    bool reloadXCastData();
-
-    /*!
     ** \brief Save the study into a folder
     **
     ** \param folder The folder where to write data
@@ -158,22 +126,6 @@ public:
     bool resetFolderIcon() const;
     //@}
 
-    //! \name Invalidate
-    //@{
-    /*!
-    ** \brief Invalidate the whole study
-    **
-    ** Mark all JIT structures as invalidated. This will force the loading of missing
-    ** data in memory and it will force the rewritten of any matrix.
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the whole study as modified
-    */
-    void markAsModified() const;
-    //@}
-
     //! \name Areas
     //@{
     /*!
@@ -187,13 +139,7 @@ public:
 
     /*!
     ** \brief Add an area and make all required initialization
-    **
-    ** It is the safe way to add an area and it is mainly used by the GUI
-    **
-    ** \param name The name of the new area
-    ** \return A pointer to a new area, or NULL if the operation failed
     */
-    // default value
     Area* areaAdd(const AreaName& name);
 
     //! \name Time-series
@@ -279,12 +225,6 @@ public:
     */
     void scenarioRulesCreate();
 
-    /*!
-    ** \brief Release the scenario builder
-    */
-    void scenarioRulesDestroy();
-    //@}
-
     //! \name Internal Data TS-Generators / Series
     //@{
 
@@ -305,12 +245,6 @@ public:
     */
     void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
 
-    /*!
-    ** \brief Remove timeseries if ts-generator is enabled
-    */
-    void removeTimeseriesIfTSGeneratorEnabled();
-    //@}
-
     //! \name
     //@{
     /*!
@@ -322,17 +256,8 @@ public:
     ** \param output True for checking output filenames, false for input
     ** \param chfolder The study folder to take into consideration
     */
-    bool checkForFilenameLimits(bool output, const YString& chfolder = nullptr) const;
+    bool checkForFilenameLimits() const;
     //@}
-
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Load all matrices within the binding constraints if not already done
-    **
-    ** This method is required by the interface when a saveAs is performed
-    */
-    void ensureDataAreLoadedForAllBindingConstraints();
 
     //! \name Logs
     //@{
@@ -367,49 +292,17 @@ public:
 
     //! \name Simulation
     //@{
-    //! The current Simulation
-    // TODO VP: remove with GUI
-    SimulationComments simulationComments;
+    //! Simulation comments (content of comments.txt)
+    std::string simulationComments;
+    //! Simulation name
+    std::string simulationName;
 
     int64_t pStartTime;
-    // Used in GUI and solver
-    // ----------------------
-    // Maximum number of years in a set of parallel years.
+    //! Maximum number of years in a set of parallel years.
     // It is a possible reduction of the raw number of cores set by user (simulation cores level).
-    // This raw number of cores is possibly reduced by the smallest TS refresh span or the total
-    // number of MC years. In GUI, used for RAM estimation only. In solver, it is the max number of
-    // years (actually run, not skipped) a set of parallel years can contain.
+    // In solver, it is the max number of years (actually run, not skipped) a set of parallel
+    // years can contain.
     uint maxNbYearsInParallel = 1;
-
-    // Used in GUI only.
-    // ----------------
-    // Allows storing the maximum number of years in a set of parallel years.
-    // Useful to estimate the RAM when the run window's parallel mode is chosen.
-    uint maxNbYearsInParallel_save = 0;
-
-    // Used in GUI and solver.
-    // ----------------------
-    // Raw numbers of cores (== nb of MC years run in parallel) based on the number
-    // of cores level (see advanced parameters).
-    uint nbYearsParallelRaw = 1;
-
-    // Used in GUI only.
-    // -----------------
-    // Minimum number of years in a set of parallel years.
-    // It is a possible reduction of the raw number of cores set by user (simulation cores level).
-    // This raw number of cores can be reduced :
-    //	- by the smallest TS refresh span
-    //	- by the smallest interval between TS refreshes
-    //	- In the Run window, if either Default or swap support mode is enabled, then parallel
-    //	  computation is disabled, and the number of cores is 1
-    // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel = 0;
-
-    // Used in GUI only.
-    // ----------------
-    // Allows storing the minimum number of years in a set of parallel years.
-    // Useful to populate the run window's simulation cores field.
-    uint minNbYearsInParallel_save = 0;
 
     //! Parameters
     Parameters parameters;
@@ -486,8 +379,10 @@ public:
 
     /*!
     ** \name Cache
-    **
-    ** \warning Those variables must not be used outside of a study.
+    */
+
+    /*!
+    ** \brief Mark the whole study as modified
     */
     //@{
     //! A buffer for temporary operations on filename
@@ -538,7 +433,7 @@ protected:
     //! Load the study header
     bool internalLoadHeader(const std::filesystem::path& folder);
     //! Load all correlation matrices
-    bool internalLoadCorrelationMatrices(const StudyLoadOptions& options);
+    bool internalLoadCorrelationMatrices();
     //! Load all binding constraints
     virtual bool internalLoadBindingConstraints(const StudyLoadOptions& options);
     //! Load all set of areas and links

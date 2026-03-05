@@ -26,7 +26,7 @@ void CsrAreaBalance::add()
             }
 
             // flow (A->2)
-            builder.NTCDirect(Interco, -1.0);
+            builder.DirectFlux(Interco, -1.0);
 
             logs.debug() << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
                          << builder.data.NomsDesPays[Area] << "]-["
@@ -46,7 +46,7 @@ void CsrAreaBalance::add()
                 continue;
             }
             // flow (2 -> A)
-            builder.NTCDirect(Interco, 1.0);
+            builder.DirectFlux(Interco, 1.0);
 
             logs.debug() << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
                          << builder.data.NomsDesPays[Area] << "]-["

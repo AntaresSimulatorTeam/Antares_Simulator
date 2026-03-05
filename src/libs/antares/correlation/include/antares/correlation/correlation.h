@@ -101,16 +101,6 @@ public:
                   const AreaNameMapping& mapping,
                   const Study& study);
 
-    /*!
-    ** \brief Invalidate all matrices
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark as modified
-    */
-    void markAsModified() const;
-
 public:
     //! The correlation matrix for the whole year
     Matrix<> annual;

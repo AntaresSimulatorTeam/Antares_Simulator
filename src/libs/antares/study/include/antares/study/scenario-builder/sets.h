@@ -76,13 +76,6 @@ public:
     Rules::Ptr find(const RulesScenarioName& lname) const;
 
     /*!
-    ** \brief Rename a given ruleset
-    **
-    ** \return The object to the ruleset, null if the operation failed
-    */
-    Rules::Ptr rename(const RulesScenarioName& lname, const RulesScenarioName& newname);
-
-    /*!
     ** \brief Delete a ruleset
     **
     ** \return True if the operation suceeded, false otherwise

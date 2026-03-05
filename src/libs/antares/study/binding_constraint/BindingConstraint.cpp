@@ -217,7 +217,6 @@ void BindingConstraint::resetToDefaultValues()
     pEnabled = true;
     pComments.clear();
     RHSTimeSeries_.reset();
-    markAsModified();
 }
 
 void BindingConstraint::copyWeights(
@@ -353,16 +352,6 @@ void BindingConstraint::clear()
     // Enabled: True by default to automatically allow the use of bindingconstraint
     // from old studies (<= 3.1)
     this->pEnabled = true;
-}
-
-void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
-{
-    auto i = pLinkWeights.find(lnk);
-    if (i != pLinkWeights.end())
-    {
-        i->second *= -1.;
-        logs.info() << "Updated the binding constraint `" << pName << '`';
-    }
 }
 
 bool BindingConstraint::contains(const Area* area) const
@@ -584,16 +573,6 @@ const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights
     return pClusterWeights;
 }
 
-bool BindingConstraint::forceReload(bool reload) const
-{
-    return RHSTimeSeries().forceReload(reload);
-}
-
-void BindingConstraint::markAsModified() const
-{
-    RHSTimeSeries().markAsModified();
-}
-
 void BindingConstraint::clearAndReset(const AnyString& name,
                                       BindingConstraint::Type newType,
                                       BindingConstraint::Operator op)
@@ -646,7 +625,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
         break;
     }
     }
-    RHSTimeSeries_.markAsModified();
 }
 
 std::string BindingConstraint::group() const
@@ -657,7 +635,6 @@ std::string BindingConstraint::group() const
 void BindingConstraint::group(std::string group_name)
 {
     group_ = std::move(group_name);
-    markAsModified();
 }
 
 const Matrix<>& BindingConstraint::RHSTimeSeries() const

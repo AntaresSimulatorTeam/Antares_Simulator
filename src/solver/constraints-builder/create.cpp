@@ -193,11 +193,7 @@ std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(
     if (!Utils::isZero(secondMember))
     {
         constraint->RHSTimeSeries().fill(secondMember);
-        constraint->RHSTimeSeries().markAsModified();
     }
-
-    // mark all values as modified
-    constraint->markAsModified();
 
     return constraint;
 }

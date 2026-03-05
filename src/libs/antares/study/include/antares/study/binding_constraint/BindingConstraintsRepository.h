@@ -35,11 +35,6 @@ public:
     ~BindingConstraintsRepository() = default;
     //@}
 
-    /*!
-    ** \brief Delete all constraints
-    */
-    void clear();
-
     //! \name Iterating through all constraints
     //@{
     /*!
@@ -94,53 +89,13 @@ public:
                                       const Data::StudyLoadOptions& options,
                                       const std::filesystem::path& folder);
 
-    /*!
-    ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
-    **
-    ** This method is used when reverting an interconnection or thermal cluster
-    */
-    void reverseWeightSign(const Data::AreaLink* lnk);
-
     //! Get the number of binding constraints
     [[nodiscard]] uint size() const;
-
-    /*!
-    ** \brief Remove a binding constraint
-    */
-    void remove(const Data::BindingConstraint* bc);
-    /*!
-    ** \brief Remove any binding constraint linked with a given area
-    */
-    void remove(const Data::Area* area);
-    /*!
-    ** \brief Remove any binding constraint linked with a given interconnection
-    */
-    void remove(const Data::AreaLink* area);
-
-    /*!
-    ** \brief Remove any binding constraint whose name contains the string in argument
-    */
-    void removeConstraintsWhoseNameConstains(const AnyString& filter);
-
-    /*!
-    ** \brief Rename a binding constraint
-    */
-    bool rename(Data::BindingConstraint* bc, const AnyString& newname);
 
     /*!
     ** \brief Convert all weekly constraints into daily ones
     */
     void changeConstraintsWeeklyToDaily();
-
-    /*!
-    ** \brief Invalidate all matrices of all binding constraints
-    */
-    void forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
 
     static Vector LoadBindingConstraint(EnvForLoading env);
 

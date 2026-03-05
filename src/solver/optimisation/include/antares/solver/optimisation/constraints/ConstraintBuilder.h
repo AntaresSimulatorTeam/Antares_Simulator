@@ -41,7 +41,7 @@ Math:
 |coeffn1 coeffn2 .. coeffnn||varn| |sign_n|   |rhsn|       |constraintn||sign_n||rhsn|
 
 it propose a set of methods  to attach 'Variables' to the Constraint
-ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constraint
+ex: calling DirectFlux() implies adding Direct Flux Variable to the current Constraint
 finally the build() method gather all variables and put them into the matrix
 \endverbatim
 */
@@ -86,11 +86,11 @@ public:
 
     ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& DirectFlux(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& IntercoDirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& DirectFluxPositif(unsigned int index, double coeff);
 
-    ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& IndirectFluxPositif(unsigned int index, double coeff);
 
     ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
                                                  double coeff,

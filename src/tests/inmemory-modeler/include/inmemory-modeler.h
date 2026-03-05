@@ -127,6 +127,7 @@ struct LinearProblemBuildingFixture
         modelerData.system = std::make_unique<System>(std::move(system));
         modelerData.dataSeries = std::make_unique<
           Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
+        modelerData.scenarioGroupRepository = std::move(scenarioGroupRepo);
         return modelerData;
     }
 

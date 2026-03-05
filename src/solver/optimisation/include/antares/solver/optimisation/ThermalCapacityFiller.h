@@ -33,7 +33,10 @@ class ThermalCapacityFiller final: public Optimisation::LinearProblemApi::Linear
 {
 public:
     explicit ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
-                                   Optimisation::OptimEntityContainer& variableContainer);
+                                   Optimisation::OptimEntityContainer& variableContainer,
+                                   const Optimisation::LinearProblemApi::ILinearProblemData* data,
+                                   const Optimisation::ScenarioGroupRepository& scenarioGroupRepo);
+
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -42,6 +45,10 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     Optimisation::OptimEntityContainer& optimEntityContainer_;
+    Optimisation::LinearProblemApi::ILinearProblem& pb_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
+
     void processThermalCapacityField(
       const TimeDependentLinearExpression& linearExpression,
       const ModelerStudy::SystemModel::ThermalComponent& thermalCapacityConnection,

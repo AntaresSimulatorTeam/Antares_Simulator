@@ -40,15 +40,7 @@ static inline void ClearAndShrink(StringT& string)
     string.shrink();
 }
 
-template<class T>
-static inline void FreeAndNil(T*& pointer)
-{
-    delete pointer;
-    pointer = nullptr;
-}
-
 Study::Study(bool forTheSolver):
-    simulationComments(*this),
     areas(*this),
     pQueueService(std::make_shared<Yuni::Job::QueueService>()),
     usedByTheSolver(forTheSolver)
@@ -88,9 +80,7 @@ void Study::clear()
     preproWindCorrelation.clear();
     preproHydroCorrelation.clear();
 
-    bindingConstraints.clear();
     bindingConstraintsGroups.clear();
-    areas.clear();
 
     // no folder
     ClearAndShrink(header.caption);
@@ -101,46 +91,6 @@ void Study::clear()
     folderOutput.clear();
     folderSettings.clear();
     inputExtension.clear();
-}
-
-void Study::createAsNew()
-{
-    inputExtension = "txt";
-    // Folders
-    folder.clear();
-    folderInput.clear();
-    folderOutput.clear();
-    folderSettings.clear();
-
-    // Simulations
-    parameters.reset();
-    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy
-    // Source)
-    parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
-
-    parameters.yearsFilter = std::vector<bool>(1, true);
-
-    // Sets
-    setsOfAreas.defaultForAreas();
-    setsOfAreas.markAsModified();
-
-    // Binding constraints
-    bindingConstraints.clear();
-
-    // Areas
-    areas.clear();
-
-    // Correlation
-    preproLoadCorrelation.reset(*this);
-    preproSolarCorrelation.reset(*this);
-    preproWindCorrelation.reset(*this);
-    preproHydroCorrelation.reset(*this);
-
-    // Scenario Builder
-    scenarioRulesDestroy();
-
-    // Reduce memory footprint
-    reduceMemoryUsage();
 }
 
 void Study::reduceMemoryUsage()
@@ -201,22 +151,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     {
         maxNbYearsInParallel = 1;
     }
-
-    // Getting the minimum number of years in a set of parallel years.
-    // To get this number, we have to divide all years into sets of parallel
-    // years and pick the size of the smallest set.
-    unsigned minYears = p.userPlaylist ? p.yearsFilter.size() % maxNbYearsInParallel
-                                       : p.nbYears % maxNbYearsInParallel;
-
-    // GUI : storing minimum number of parallel years (in a set of parallel years).
-    //		 Useful in the run window's simulation cores field in case parallel mode is enabled
-    // by user.
-    minNbYearsInParallel_save = minYears;
-
-    // GUI : storing max nb of parallel years (in a set of parallel years) in case parallel mode is
-    // enabled.
-    //		 Useful for RAM estimation.
-    maxNbYearsInParallel_save = maxNbYearsInParallel;
 }
 
 bool Study::initializeRuntimeInfos()
@@ -345,7 +279,7 @@ void Study::prepareOutput()
     folderOutput = StudyCreateOutputPath(parameters.mode,
                                          parameters.resultFormat,
                                          baseFolderOutput,
-                                         simulationComments.name,
+                                         simulationName,
                                          getCurrentTime());
 
     logs.info() << "  Output folder : " << folderOutput;
@@ -356,8 +290,8 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     String path;
     path.reserve(1024);
 
-    path.clear() << "about-the-study";
-    simulationComments.saveUsingWriter(resultWriter, path);
+    path.clear() << "about-the-study" << SEP << "comments.txt";
+    resultWriter.addEntryFromBuffer(path.c_str(), simulationComments);
 
     // Write the header as a reminder
     {
@@ -385,7 +319,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
     f << "[general]";
     f << "\nversion = " << StudyVersion::latest().toString();
-    f << "\nname = " << simulationComments.name;
+    f << "\nname = " << simulationName;
     f << "\nmode = " << SimulationModeToCString(parameters.mode);
     f << "\ndate = " << startTimeStr;
     f << "\ntitle = " << startTimeStr;
@@ -468,17 +402,6 @@ Area* Study::areaAdd(const AreaName& name)
     return area;
 }
 
-void Study::ensureDataAreLoadedForAllBindingConstraints()
-{
-    for (const auto& constraint: bindingConstraints)
-    {
-        if (not JIT::IsReady(constraint->RHSTimeSeries().jit))
-        {
-            constraint->forceReload(true);
-        }
-    }
-}
-
 template<>
 inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
 
@@ -504,38 +427,6 @@ inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
     areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
 }
 
-bool Study::forceReload(bool reload) const
-{
-    bool ret = true;
-
-    // Invalidate all areas
-    ret = areas.forceReload(reload) and ret;
-    // Binding constraints
-    bindingConstraints.forceReload(reload);
-
-    ret = preproLoadCorrelation.forceReload(reload) and ret;
-    ret = preproSolarCorrelation.forceReload(reload) and ret;
-    ret = preproWindCorrelation.forceReload(reload) and ret;
-    ret = preproHydroCorrelation.forceReload(reload) and ret;
-
-    ret = setsOfAreas.forceReload(reload) and ret;
-    return ret;
-}
-
-void Study::markAsModified() const
-{
-    areas.markAsModified();
-
-    preproLoadCorrelation.markAsModified();
-    preproSolarCorrelation.markAsModified();
-    preproWindCorrelation.markAsModified();
-    preproHydroCorrelation.markAsModified();
-
-    bindingConstraints.markAsModified();
-
-    setsOfAreas.markAsModified();
-}
-
 void Study::relocate(const fs::path& newFolder)
 {
     folder = newFolder;
@@ -551,8 +442,7 @@ void Study::resizeAllTimeseriesNumbers(uint n)
     bindingConstraintsGroups.resizeAllTimeseriesNumbers(n);
 }
 
-// TODO VP: Could be removed with the GUI
-bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
+bool Study::checkForFilenameLimits() const
 {
     enum
     {
@@ -568,221 +458,70 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         return true;
     }
 
-    String studyfolder;
-    if (chfolder.empty())
-    {
-        studyfolder = folder;
-    }
-    else
-    {
-        studyfolder = chfolder;
-    }
+    String linkname;
+    String areaname;
 
-    if (output)
-    {
-        String linkname;
-        String areaname;
-
-        areas.each(
-          [&linkname, &areaname](const Area& area)
+    areas.each(
+      [&linkname, &areaname](const Area& area)
+      {
+          if (areaname.size() < area.id.size())
           {
-              if (areaname.size() < area.id.size())
+              areaname = area.id;
+          }
+
+          auto end = area.links.end();
+          for (auto i = area.links.begin(); i != end; ++i)
+          {
+              auto& link = *(i->second);
+              uint len = link.from->id.size() + link.with->id.size();
+              len += 3;
+              if (len > linkname.size())
               {
-                  areaname = area.id;
+                  linkname.clear();
+                  linkname << i->second->from->id;
+                  linkname << " - "; // 3
+                  linkname << i->second->with->id;
               }
+          }
+      });
 
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  auto& link = *(i->second);
-                  uint len = link.from->id.size() + link.with->id.size();
-                  len += 3;
-                  if (len > linkname.size())
-                  {
-                      linkname.clear();
-                      linkname << i->second->from->id;
-                      linkname << " - "; // 3
-                      linkname << i->second->with->id;
-                  }
-              }
-          });
+    String filename;
+    filename << folder << SEP << "output" << SEP;
 
-        String filename;
-        filename << studyfolder << SEP << "output" << SEP;
-
-        if (linkname.empty())
+    if (linkname.empty())
+    {
+        if (areaname.empty())
         {
-            if (areaname.empty())
-            {
-                filename.clear();
-            }
-            else
-            {
-                // no links : obtained from areas
-                // The maximum filename should be obtained with links :
-                // Adequacy/mc-all/areas/languedocroussillon/without-network-hourly.txt
-                filename << (parameters.economy() ? "economy" : "adequacy") << SEP;
-                filename << "mc-all" << SEP << "areas";
-                filename << SEP << areaname << SEP;
-                filename << "values-hourly.txt";
-            }
+            filename.clear();
         }
         else
         {
+            // no links : obtained from areas
             // The maximum filename should be obtained with links :
-            // economy/mc-ind/00001/links/pyrennees\ -\ languedocroussillon/values-hourly.txt
-            filename << (parameters.adequacy() ? "adequacy" : "economy") << SEP;
-            filename << "mc-all" << SEP << "links";
-            filename << SEP << linkname << SEP << "values-hourly.txt";
-        }
-
-        if (not filename.empty() and filename.size() >= limit)
-        {
-            logs.error() << "OS Maximum path length limitation obtained with the link '" << linkname
-                         << "' (got " << filename.size() << " characters)";
-            logs.error() << "You may experience problems while accessing to this file: "
-                         << filename;
-            return false;
+            // Adequacy/mc-all/areas/languedocroussillon/without-network-hourly.txt
+            filename << (parameters.economy() ? "economy" : "adequacy") << SEP;
+            filename << "mc-all" << SEP << "areas";
+            filename << SEP << areaname << SEP;
+            filename << "values-hourly.txt";
         }
     }
     else
     {
-        String areaname;
-        String clustername;
+        // The maximum filename should be obtained with links :
+        // economy/mc-ind/00001/links/pyrennees\ -\ languedocroussillon/values-hourly.txt
+        filename << (parameters.adequacy() ? "adequacy" : "economy") << SEP;
+        filename << "mc-all" << SEP << "links";
+        filename << SEP << linkname << SEP << "values-hourly.txt";
+    }
 
-        // For input, the maximum filename length can be obtained from multiple
-        // sources :
-        // /input/thermal/series/languedocroussillon/aggregate\ 1/series.txt
-        // /input/hydro/common/capacity/maxcapacityexpectation_languedocroussillon.txt
-        // or even constraints
-
-        areas.each(
-          [&areaname, &clustername](const Area& area)
-          {
-              if (areaname.size() < area.id.size())
-              {
-                  areaname = area.id;
-              }
-              auto& cname = clustername;
-              cname.clear();
-
-              for (auto& cluster: area.thermal.list.all())
-              {
-                  if (cluster->id().size() > cname.size())
-                  {
-                      cname = cluster->id();
-                  }
-              }
-          });
-
-        String filename;
-
-        // Checking for thermal clusters
-        if (not areaname.empty() and not clustername.empty())
-        {
-            filename.clear();
-            filename << studyfolder << SEP << "input" << SEP;
-            filename << "thermal" << SEP << "series" << SEP << areaname << SEP;
-            filename << clustername << SEP << "series.txt";
-
-            if (filename.size() >= limit)
-            {
-                logs.error()
-                  << "OS Maximum path length limitation  obtained with the thermal plant '"
-                  << areaname << "::" << clustername << "' (got " << filename.size()
-                  << " characters)";
-                logs.error() << "You may experience problems while accessing to this file: "
-                             << filename;
-                return false;
-            }
-        }
-
-        // Checking for hydro files
-        if (not areaname.empty())
-        {
-            filename.clear();
-            filename << studyfolder << "input" << SEP;
-            filename << "hydro" << SEP << "common" << SEP << "capacity" << SEP;
-            areaname << "maxcapacityexpectation_" << areaname << ".txt";
-
-            if (filename.size() >= limit)
-            {
-                logs.error() << "OS Maximum path length limitation obtained with the area '"
-                             << areaname << "' (got " << filename.size() << " characters)";
-                logs.error() << "You may experience problems while accessing to this file: "
-                             << filename;
-                return false;
-            }
-        }
-
-        // Checking constraints
-        filename.clear();
-        // /input/bindingconstraints/bindingconstraints.ini
-        filename << studyfolder << "input" << SEP;
-        filename << "bindingconstraints" << SEP << "bindingconstraints.ini";
-        if (filename.size() >= limit)
-        {
-            logs.error()
-              << "OS Maximum path length limitation obtained with the binding constraint list"
-              << " (got " << filename.size() << " characters)";
-            logs.error() << "You may experience problems while accessing to this file: "
-                         << filename;
-            return false;
-        }
-
-        if (not bindingConstraints.empty())
-        {
-            // /input/bindingconstraints/maille1_down.txt
-            auto end = bindingConstraints.end();
-            for (auto i = bindingConstraints.begin(); i != end; ++i)
-            {
-                // The current constraint
-                auto& constraint = *(*i);
-
-                filename.clear();
-                filename << studyfolder << "input" << SEP << "bindingconstraints" << SEP;
-                filename << constraint.id() << ".ini";
-
-                if (filename.size() >= limit)
-                {
-                    logs.error()
-                      << "OS Maximum path length limitation obtained with the constraint '"
-                      << constraint.name() << "' (got " << filename.size() << " characters)";
-                    logs.error() << "You may experience problems while accessing to this file: "
-                                 << filename;
-                    return false;
-                }
-            }
-        }
+    if (not filename.empty() and filename.size() >= limit)
+    {
+        logs.error() << "OS Maximum path length limitation obtained with the link '" << linkname
+                     << "' (got " << filename.size() << " characters)";
+        logs.error() << "You may experience problems while accessing to this file: " << filename;
+        return false;
     }
     return true;
-}
-
-void Study::removeTimeseriesIfTSGeneratorEnabled()
-{
-    if (0 != parameters.timeSeriesToGenerate)
-    {
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesLoad))
-        {
-            areas.removeLoadTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesHydro))
-        {
-            areas.removeHydroTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesSolar))
-        {
-            areas.removeSolarTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesWind))
-        {
-            areas.removeWindTimeseries();
-        }
-        if (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal))
-        {
-            areas.removeThermalTimeseries();
-        }
-    }
 }
 
 void Study::computePThetaInfForThermalClusters() const

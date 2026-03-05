@@ -228,7 +228,10 @@ struct ComponentToAreaConnectionFillerFixture
     {
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
 
-        ComponentToAreaConnectionFiller filler(problemeHebdo.get(), optimEntityContainer);
+        ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
+                                               optimEntityContainer,
+                                               &data,
+                                               scenarioGroupRepository);
         filler.addVariables(fillCtx);
         filler.addConstraints(fillCtx);
         filler.addObjectives(fillCtx);
@@ -241,7 +244,7 @@ BOOST_AUTO_TEST_CASE(add_one_term_to_balance_constraint_named)
 {
     setLinearProblemData({4.0});
 
-    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     addAllComponentsVariablesToLP(0, 0, optimEntityContainer);
@@ -279,7 +282,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 {
     setLinearProblemData({0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -51.0, 8.3});
 
-    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     addAllComponentsVariablesToLP(10, 11, optimEntityContainer);
@@ -325,7 +328,7 @@ BOOST_AUTO_TEST_CASE(add_two_terms_to_balance_constraint_not_named)
 
 BOOST_AUTO_TEST_CASE(failure_if_a_connection_references_a_not_existing_area)
 {
-    OptimEntityContainer optimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem);
 
     std::string errMsg = "Component 'component_with_vars' is connected to a non existing area ";
     errMsg += ": area1";

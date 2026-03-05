@@ -73,16 +73,6 @@ public:
     ~ThermalCluster() = default;
 
     /*!
-    ** \brief Invalidate all data associated to the thermal cluster
-    */
-    bool forceReload(bool reload) const override;
-
-    /*!
-    ** \brief Mark the thermal cluster as modified
-    */
-    void markAsModified() const override;
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI

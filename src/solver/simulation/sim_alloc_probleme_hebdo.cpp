@@ -7,7 +7,6 @@
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/study/simulation.h"
 
 using namespace Antares;
 
@@ -134,11 +133,9 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.SoldeMoyenHoraire[k].SoldeMoyenDuPays.assign(nbPays, 0.);
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
-        variablesMapping.NumeroDeVariableDeLInterconnexion.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion.assign(linkCount,
-                                                                                          0);
-        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion.assign(linkCount,
-                                                                                          0);
+        variablesMapping.NumeroDeVariableDuFluxDirect.assign(linkCount, 0);
+        variablesMapping.NumeroDeVariableDuFluxDirectPositif.assign(linkCount, 0);
+        variablesMapping.NumeroDeVariableDuFluxIndirectPositif.assign(linkCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime.thermalPlantTotalCount, 0);

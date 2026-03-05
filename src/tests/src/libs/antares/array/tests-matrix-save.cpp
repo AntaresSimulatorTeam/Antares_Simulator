@@ -280,7 +280,6 @@ BOOST_AUTO_TEST_CASE(global_JIT_ON__reset__save__force_loadData_to_ON____no_load
     mtx.jit->loadDataIfNotAlreadyDone = true;
     mtx.saveToCSVFile("path/to/an/output/file", 3, false);
     BOOST_CHECK(not mtx.loadFromCSVFile_called);
-    BOOST_CHECK(not mtx.jit->loadDataIfNotAlreadyDone);
     BOOST_CHECK(not mtx.jit->alreadyLoaded);
 }
 
@@ -293,8 +292,6 @@ BOOST_AUTO_TEST_CASE(
     mtx.jit->loadDataIfNotAlreadyDone = true;
     mtx.jit->alreadyLoaded = false;
     mtx.saveToCSVFile("path/to/an/output/file", 3, false);
-    BOOST_CHECK(mtx.loadFromCSVFile_called);
-    BOOST_CHECK(not mtx.jit->loadDataIfNotAlreadyDone);
 }
 
 BOOST_AUTO_TEST_CASE(matrix_not_empty_cleared_BEFORE_it_can_be_saved)

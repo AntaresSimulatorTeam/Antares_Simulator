@@ -54,10 +54,12 @@ class SystemLinearProblemBuilder final
 {
 public:
     explicit SystemLinearProblemBuilder(const ModelerStudy::SystemModel::System* system,
+                                        const ILinearProblemData* data,
                                         const ScenarioGroupRepository& scenarioGroupRepository,
                                         BendersDecomposition* bendersDecomposition,
                                         OptimEntityContainer& optimEntityContainer):
         system_(system),
+        data_(data),
         scenarioGroupRepository_(scenarioGroupRepository),
         bendersDecomposition_(bendersDecomposition),
         optimEntityContainer_(optimEntityContainer)
@@ -75,6 +77,7 @@ public:
         for (const auto& component: components)
         {
             auto cf = std::make_unique<ComponentFiller>(component,
+                                                        data_,
                                                         optimEntityContainer_,
                                                         scenarioGroupRepository_,
                                                         location,
@@ -88,6 +91,7 @@ public:
 
 private:
     const ModelerStudy::SystemModel::System* system_;
+    const ILinearProblemData* data_;
     const ScenarioGroupRepository& scenarioGroupRepository_;
     BendersDecomposition* bendersDecomposition_ = nullptr;
     OptimEntityContainer& optimEntityContainer_;
@@ -155,11 +159,10 @@ ProblemEntity buildProblem(const ModelerData& data,
         return {nullptr, nullptr};
     }
     auto problem = getProblem(isMip, resolutionMode, solver);
-    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(
-      *problem,
-      data.dataSeries.get(),
-      &data.scenarioGroupRepository);
+    auto optimEntityContainer = std::make_unique<OptimEntityContainer>(*problem);
+
     SystemLinearProblemBuilder builder(data.system.get(),
+                                       data.dataSeries.get(),
                                        data.scenarioGroupRepository,
                                        bendersDecomposition,
                                        *optimEntityContainer);

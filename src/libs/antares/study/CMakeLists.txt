@@ -216,13 +216,6 @@ set(SRC_STUDY
         cleaner/cleaner.cpp
         include/antares/study/cleaner/versions.h
         cleaner/cleaner-v20.cpp
-        output.cpp
-        include/antares/study/output.h
-        include/antares/study/output.hxx
-
-        # Simulation
-        include/antares/study/simulation.h
-        simulation.cpp
 
         # Filter
         include/antares/study/filter.h

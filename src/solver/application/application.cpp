@@ -122,13 +122,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
     options.ignoreConstraints = pSettings.ignoreConstraints;
-    options.loadOnlyNeeded = true;
 
     // Load the study from a folder
     Benchmarking::Timer timer;
@@ -139,7 +138,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
         {
             logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
         }
 
         if (study.areas.empty())
@@ -185,7 +183,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
     logs.info();
@@ -231,7 +229,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Checking for filename length limits
     if (!pSettings.noOutput)
     {
-        if (!study.checkForFilenameLimits(true))
+        if (!study.checkForFilenameLimits())
         {
             throw Error::InvalidFileName();
         }
@@ -533,7 +531,7 @@ Application::~Application()
     {
         try
         {
-            logs.info() << LOG_UI_SOLVER_DONE;
+            logs.info() << "[END] Quitting the solver gracefully";
         }
         catch (...)
         {
