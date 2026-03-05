@@ -338,9 +338,6 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_constant_param_on_interval_t__t_plus_1, te
 
     auto evalResult = evalVisitor->dispatch(sum_of_squares);
 
-    // Expected evaluation result : p^2 + p^2 = 25 + 25 = 50.
-    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 50);
-
     // Expected evaluation result : (2*p^2, 2*p^2, 2*p^2) = (50., 50., 50.)
     std::vector<double> expected = {50., 50., 50.};
     std::vector<double> actual = evalResult.valuesAsVector();

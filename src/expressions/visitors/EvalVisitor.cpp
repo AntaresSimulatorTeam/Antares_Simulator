@@ -13,6 +13,12 @@
 
 using namespace Antares::Optimisation;
 
+std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b)
+{
+    std::ranges::transform(a, b, a.begin(), std::plus<double>());
+    return a;
+}
+
 namespace Antares::Expressions::Visitors
 {
 
@@ -182,7 +188,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
 
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
-    return result.timeSum(from, to);
+    return result.timeSumAsVector(from, to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
@@ -354,20 +360,28 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-EvaluationResult EvaluationResult::timeShift(int time_shift) const
+EvaluationResult EvaluationResult::timeShift(int shift) const
 {
-    auto shifltedVector = shiftVector(std::get<std::vector<double>>(value_), time_shift);
-    return EvaluationResult(shifltedVector);
+    if (std::holds_alternative<double>(value_))
+    {
+        return EvaluationResult(std::get<double>(value_));
+    }
+
+    auto shifted_values = shiftVector(std::get<std::vector<double>>(value_), shift);
+    return EvaluationResult(shifted_values);
 }
 
-EvaluationResult EvaluationResult::timeSum(int from, int to) const
+EvaluationResult EvaluationResult::timeSumAsVector(int from, int to) const
 {
-    EvaluationResult ret(0.);
+    std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
+    std::vector<double> v(values.size(), 0.);
+
     for (int shift = from; shift <= to; ++shift)
     {
-        ret += timeShift(shift);
+        std::vector<double> shifted_values = shiftVector(values, shift);
+        v += shifted_values;
     }
-    return ret;
+    return EvaluationResult(v);
 }
 
 EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
