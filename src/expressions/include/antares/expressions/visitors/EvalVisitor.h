@@ -163,7 +163,7 @@ public:
     // gp : They could be free function instead.
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult timeShift(int time_shift) const;
-    EvaluationResult timeSumAsVector(int from, int to) const;
+    EvaluationResult timeSumOnVector(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
 
     template<typename Op>

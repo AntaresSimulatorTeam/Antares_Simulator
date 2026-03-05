@@ -188,7 +188,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
 
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
-    return result.timeSumAsVector(from, to);
+    return result.timeSumOnVector(from, to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
@@ -371,7 +371,7 @@ EvaluationResult EvaluationResult::timeShift(int shift) const
     return EvaluationResult(shifted_values);
 }
 
-EvaluationResult EvaluationResult::timeSumAsVector(int from, int to) const
+EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
     std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
     std::vector<double> v(values.size(), 0.);

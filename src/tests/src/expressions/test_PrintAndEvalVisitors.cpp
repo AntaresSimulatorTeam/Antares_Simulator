@@ -362,15 +362,15 @@ BOOST_AUTO_TEST_CASE(ShiftResult_EmptyVector)
 BOOST_AUTO_TEST_CASE(TimeSum_on_double___exception_raised)
 {
     const EvaluationResult eval(4.0);
-    BOOST_CHECK_THROW(eval.timeSumAsVector(-1, 0), EvalResultTypeError);
+    BOOST_CHECK_THROW(eval.timeSumOnVector(-1, 0), EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
 {
     const EvaluationResult evalResult(std::vector<double>{1.0, 2.0, 3.0});
-    BOOST_CHECK_THROW(evalResult.timeSumAsVector(-1, 0).valueAsDouble(), EvalResultTypeError);
+    BOOST_CHECK_THROW(evalResult.timeSumOnVector(-1, 0).valueAsDouble(), EvalResultTypeError);
 
-    const auto sum = evalResult.timeSumAsVector(0, 2).valuesAsVector();
+    const auto sum = evalResult.timeSumOnVector(0, 2).valuesAsVector();
 
     const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
     BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
@@ -379,9 +379,9 @@ BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_NegativeShift)
 {
     const EvaluationResult evalResult(std::vector<double>{1.0, 2.0, 3.0});
-    BOOST_CHECK_THROW(evalResult.timeSumAsVector(-1, 0).valueAsDouble(), EvalResultTypeError);
+    BOOST_CHECK_THROW(evalResult.timeSumOnVector(-1, 0).valueAsDouble(), EvalResultTypeError);
 
-    const auto sum = evalResult.timeSumAsVector(-1, 0).valuesAsVector();
+    const auto sum = evalResult.timeSumOnVector(-1, 0).valuesAsVector();
     const std::vector<double> expected{3.0 + 1.0, 1.0 + 2.0, 2.0 + 3.0};
     BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
 }
