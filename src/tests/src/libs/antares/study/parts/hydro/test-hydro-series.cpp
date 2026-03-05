@@ -460,7 +460,10 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_invalid_mode, Fixture)
 
     auto invalidMode = static_cast<Parameters::Compatibility::HydroRuleCurves>(-1);
 
-    BOOST_CHECK_THROW(ruleCurvesLoaderService.LoadFromFolder(area_1->id, base_folder, study->usedByTheSolver, invalidMode),
+    BOOST_CHECK_THROW(ruleCurvesLoaderService.LoadFromFolder(area_1->id,
+                                                             base_folder,
+                                                             study->usedByTheSolver,
+                                                             invalidMode),
                       std::invalid_argument);
 }
 

@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #include "reservoirlevels.h"
 
 using namespace Yuni;
@@ -47,8 +46,6 @@ wxString ReservoirLevels::columnCaption(int colIndx) const
 
 wxString ReservoirLevels::cellValue(int x, int y) const
 {
-    
-
     if (!pArea)
     {
         return wxString();
@@ -58,12 +55,10 @@ wxString ReservoirLevels::cellValue(int x, int y) const
              ? DoubleToWxString(100. * matrix[x][y])
              : wxString();
     return wxString();
-
 }
 
 double ReservoirLevels::cellNumericValue(int x, int y) const
 {
-    
     if (!pArea)
     {
         return 0.;
@@ -104,8 +99,6 @@ bool ReservoirLevels::cellValue(int x, int y, const String& value)
 
 void ReservoirLevels::internalAreaChanged(Antares::Data::Area* area)
 {
-   
-    
     // FIXME for some reasons, the variable study here is not properly initialized
     if (area && !study)
     {

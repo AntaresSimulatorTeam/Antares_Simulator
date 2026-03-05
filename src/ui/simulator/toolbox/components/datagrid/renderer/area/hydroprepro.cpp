@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #include "hydroprepro.h"
 
 using namespace Yuni;
@@ -206,9 +205,9 @@ bool HydroPrepro::valid() const
 }
 
 bool HydroPrepro::circularShiftRowsUntilDate(MonthName month, uint daymonth)
-{   
+{
     if (pArea)
-     {
+    {
         pArea->hydro.series->ruleCurves.standardRuleCurvesGUI.circularShiftRows(month);
     }
     return MatrixAncestorType::circularShiftRowsUntilDate(month, daymonth);
