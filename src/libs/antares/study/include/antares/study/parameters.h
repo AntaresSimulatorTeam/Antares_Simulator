@@ -299,7 +299,7 @@ public:
     struct IncludeOptions
     {
         //! Include binding constraints
-        bool constraints;
+        bool constraints = true;
         //! Hurdle costs
         bool hurdleCosts;
 
