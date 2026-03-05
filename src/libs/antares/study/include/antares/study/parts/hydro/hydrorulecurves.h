@@ -39,6 +39,9 @@ public:
     explicit RuleCurves(TimeSeriesNumbers& timeseriesNumbers);
 
     void averageTimeSeries();
+    bool forceReload(bool reload = false) const;
+    void markAsModified() const;
+    bool saveToFolder(const std::string& areaID, const std::string& folder) const;
 
     TimeSeriesNumbers& timeseriesNumbers;
 
@@ -50,6 +53,7 @@ public:
     TimeSeries max;
     TimeSeries min;
     TimeSeries avg;
+    Matrix<double> standardRuleCurvesGUI;
 };
 
 class RuleCurvesLoader
@@ -89,14 +93,18 @@ public:
                              const std::string& areaID,
                              TimeSeries& max,
                              TimeSeries& avg,
-                             TimeSeries& min):
-        RuleCurvesLoader(baseFolder, areaID, max, avg, min)
+                             TimeSeries& min,
+                             Matrix<double>& standardRuleCurvesGUI):
+        RuleCurvesLoader(baseFolder, areaID, max, avg, min),
+        standardRuleCurvesMatrixGUI_(standardRuleCurvesGUI)
 
     {
     }
 
 private:
+    Matrix<double>& standardRuleCurvesMatrixGUI_;
     bool load() final;
+    void copyRuleCurvesFromBuffer();
 };
 
 class ScenarizedRuleCurvesLoader: public RuleCurvesLoader
@@ -128,6 +136,7 @@ public:
 
     bool LoadFromFolder(const std::string& areaID,
                         const std::filesystem::path& folder,
+                        bool usedBySolver,
                         Parameters::Compatibility::HydroRuleCurves hydroRuleCurves);
 
 private:

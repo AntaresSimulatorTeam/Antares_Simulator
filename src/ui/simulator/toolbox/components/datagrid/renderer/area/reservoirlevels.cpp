@@ -47,39 +47,38 @@ wxString ReservoirLevels::columnCaption(int colIndx) const
 
 wxString ReservoirLevels::cellValue(int x, int y) const
 {
-    /**
+    
 
     if (!pArea)
     {
         return wxString();
     }
-    auto& matrix = standardRuleCurves;
+    auto& matrix = pArea->hydro.series->ruleCurves.standardRuleCurvesGUI;
     return ((uint)x < matrix.width && (uint)y < matrix.height)
              ? DoubleToWxString(100. * matrix[x][y])
-             : wxString();*/
+             : wxString();
     return wxString();
 
 }
 
 double ReservoirLevels::cellNumericValue(int x, int y) const
 {
-    /*
+    
     if (!pArea)
     {
         return 0.;
     }
-    auto& matrix = standardRuleCurves;
-    return ((uint)x < matrix.width && (uint)y < matrix.height) ? matrix[x][y] * 100. : 0.;*/
-    return 0.0;
+    auto& matrix = pArea->hydro.series->ruleCurves.standardRuleCurvesGUI;
+    return ((uint)x < matrix.width && (uint)y < matrix.height) ? matrix[x][y] * 100. : 0.;
 }
 
 bool ReservoirLevels::cellValue(int x, int y, const String& value)
-{/*
+{
     if (!pArea)
     {
         return false;
     }
-    auto& matrix = standardRuleCurves;
+    auto& matrix = pArea->hydro.series->ruleCurves.standardRuleCurvesGUI;
     if ((uint)x < matrix.width && (uint)y < matrix.height)
     {
         double v;
@@ -98,7 +97,7 @@ bool ReservoirLevels::cellValue(int x, int y, const String& value)
             matrix.markAsModified();
             return true;
         }
-    }*/
+    }
 
     return false;
 }
@@ -106,7 +105,7 @@ bool ReservoirLevels::cellValue(int x, int y, const String& value)
 void ReservoirLevels::internalAreaChanged(Antares::Data::Area* area)
 {
    
-    /*
+    
     // FIXME for some reasons, the variable study here is not properly initialized
     if (area && !study)
     {
@@ -117,17 +116,16 @@ void ReservoirLevels::internalAreaChanged(Antares::Data::Area* area)
     Renderer::ARendererArea::internalAreaChanged(area);
     if (pHydro)
     {
-        MatrixAncestorType::matrix(&standardRuleCurves);
+        MatrixAncestorType::matrix(&pHydro->series->ruleCurves.standardRuleCurvesGUI);
     }
     else
     {
         MatrixAncestorType::matrix(nullptr);
-    }*/
+    }
 }
 
 IRenderer::CellStyle ReservoirLevels::cellStyle(int col, int row) const
 {
-/*
     if (!pMatrix || 3 > pMatrix->width || (uint)row >= pMatrix->height)
     {
         return IRenderer::cellStyleWithNumericCheck(col, row);
@@ -141,7 +139,7 @@ IRenderer::CellStyle ReservoirLevels::cellStyle(int col, int row) const
     {
         if (pArea)
         {
-            auto& matrix = standardRuleCurves;
+            auto& matrix = pArea->hydro.series->ruleCurves.standardRuleCurvesGUI;
             if ((uint)row < matrix.height)
             {
                 double d = matrix[col][row];
@@ -163,8 +161,8 @@ IRenderer::CellStyle ReservoirLevels::cellStyle(int col, int row) const
         }
         return ((row % 2) ? cellStyleDefaultAlternate : cellStyleDefault);
     }
-    }*/
-    return IRenderer::cellStyleWithNumericCheck(0, 0);
+    }
+    return IRenderer::cellStyleWithNumericCheck(col, row);
 }
 
 wxString ReservoirLevels::rowCaption(int rowIndx) const

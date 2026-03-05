@@ -91,10 +91,12 @@ void DataSeriesHydro::copyGenerationTS(const DataSeriesHydro& source)
     ror.timeSeries = source.ror.timeSeries;
     storage.timeSeries = source.storage.timeSeries;
     mingen.timeSeries = source.mingen.timeSeries;
+    ruleCurves.standardRuleCurvesGUI = source.ruleCurves.standardRuleCurvesGUI;
 
     source.ror.unloadFromMemory();
     source.storage.unloadFromMemory();
     source.mingen.unloadFromMemory();
+    source.ruleCurves.standardRuleCurvesGUI.unloadFromMemory();
 }
 
 void DataSeriesHydro::reset()
@@ -116,6 +118,7 @@ bool DataSeriesHydro::forceReload(bool reload) const
     ret = mingen.forceReload(reload) && ret;
     ret = maxHourlyGenPower.forceReload(reload) && ret;
     ret = maxHourlyPumpPower.forceReload(reload) && ret;
+    ret = ruleCurves.forceReload(reload) && ret;
     return ret;
 }
 
@@ -126,6 +129,7 @@ void DataSeriesHydro::markAsModified() const
     mingen.markAsModified();
     maxHourlyGenPower.markAsModified();
     maxHourlyPumpPower.markAsModified();
+    ruleCurves.markAsModified();
 }
 
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
