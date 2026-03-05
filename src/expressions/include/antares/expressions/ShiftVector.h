@@ -14,7 +14,7 @@ std::vector<T> shiftVector(std::vector<T> values, int shift)
         return {};
     }
 
-    shift = (shift % n + n) % n; // Normalize shiftValue within bounds
+    shift = (shift % n + n) % n; // Handle negative shifts and shifts larger than the vector size
 
     std::rotate(values.begin(), values.begin() + shift, values.end());
     return values;
