@@ -87,19 +87,50 @@ class Version:
 
 
 def parse_args():
-    """Parse command-line arguments."""
+    """Parse command-line arguments.
+
+    Pre-parse sys.argv to support `--rc` either as a flag (increment current RC)
+    or with an explicit integer value (e.g. --rc 7). We remove these tokens from
+    the argv list before passing the remainder to argparse to avoid argparse's
+    optional-argument pitfalls.
+    """
+    raw = list(sys.argv[1:])
+
+    rc_flag = None
+    rc_increment = False
+    # Find first occurrence of -r or --rc and interpret following token if it's an int
+    for i, tok in enumerate(raw):
+        if tok in ("-r", "--rc"):
+            # If next token exists and looks like an integer, take it as explicit rc
+            if i + 1 < len(raw) and not raw[i + 1].startswith("-") and raw[i + 1].lstrip('-').isdigit():
+                rc_flag = int(raw[i + 1])
+                # remove both tokens
+                del raw[i:i+2]
+            else:
+                # increment mode; remove the flag token
+                rc_increment = True
+                del raw[i]
+            break
+
     p = argparse.ArgumentParser(description="Update project version in files")
     p.add_argument("version", nargs="*",
                    help="New version (X.Y.Z) or omitted when using --rc to only set rc number")
-    p.add_argument("-r", "--rc", dest="rc", type=int,
-                   help="Set the RC number. If a version is provided it will be combined (X.Y.Z -> X.Y.Z-rcN); if no version is provided, only ANTARES_RC will be updated.")
     p.add_argument("-d", "--dry-run", action="store_true", help="Show planned changes")
     p.add_argument("-c", "--commit", action="store_true", help="Commit changes to git")
     p.add_argument("-m", "--message", metavar="MSG", help="Commit message (enables commit)")
 
-    args = p.parse_args()
+    args = p.parse_args(raw)
     # Convert variadic version list to single string
     args.version = args.version[0] if args.version else None
+
+    # Attach rc info for backward compatibility: args.rc is either None, '__INC__' or a numeric string
+    if rc_flag is not None:
+        args.rc = str(rc_flag)
+    elif rc_increment:
+        args.rc = '__INC__'
+    else:
+        args.rc = None
+
     return args
 
 
@@ -263,15 +294,47 @@ def main():
     """Main entry point."""
     args = parse_args()
 
+    # Interpret args.rc which can be:
+    #  - None (not provided)
+    #  - '__INC__' (user passed --rc with no value -> increment mode)
+    #  - numeric string (user passed --rc 7)
+    rc_flag = None
+    rc_increment = False
+    if hasattr(args, 'rc') and args.rc is not None:
+        if args.rc == '__INC__':
+            rc_increment = True
+            rc_flag = None
+        else:
+            try:
+                rc_flag = int(args.rc)
+            except Exception:
+                raise SystemExit("Invalid value for --rc: must be an integer if provided")
+
+    def _current_rc() -> int:
+        """Return current ANTARES_RC value from CMakeLists or 0 if missing."""
+        # CMakeLists.txt is guaranteed to exist in this repo; read it directly.
+        txt = read_text(CMAKE_PATH)
+        m = re.search(CMAKE_VAR_RE["RC"], txt)
+        if m:
+            return int(m.group(1))
+        return 0
+
     # Handle RC-only mode (when --rc provided without a version)
-    if args.rc is not None and not args.version:
+    if (rc_flag is not None or rc_increment) and not args.version:
+        if rc_increment:
+            args.rc = str(_current_rc() + 1)
+        else:
+            args.rc = str(rc_flag)
         handle_rc_only_mode(args)
         return
 
     # If both version and --rc are provided, merge them into a prerelease string
-    if args.version and args.rc is not None:
-        # e.g. 10.3.4 + --rc 7 -> 10.3.4-rc7
-        args.version = f"{args.version}-rc{int(args.rc)}"
+    if args.version and (rc_flag is not None or rc_increment):
+        if rc_increment:
+            newrc = _current_rc() + 1
+        else:
+            newrc = rc_flag
+        args.version = f"{args.version}-rc{int(newrc)}"
 
     # Normal mode: version required
     if not args.version:
