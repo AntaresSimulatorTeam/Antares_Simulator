@@ -164,6 +164,7 @@ public:
 private:
     bool linkLoadTimeSeries_for_version_below_810(const std::filesystem::path& folder);
     bool linkLoadTimeSeries_for_version_820_and_later(const std::filesystem::path& folder);
+    void checkLoadedData() const;
     NamePair getNamePair() const;
 }; // class AreaLink
 
