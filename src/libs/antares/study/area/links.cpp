@@ -438,7 +438,7 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
-void AreaLink::checkLoadedData() const
+void AreaLink::checkLoadedData()
 {
     const uint nbDirectTS = directCapacities.timeSeries.width;
     const uint nbIndirectTS = indirectCapacities.timeSeries.width;
@@ -503,6 +503,42 @@ void AreaLink::checkLoadedData() const
     }
 }
 
+bool areaLinksPostProcessLoadedLink(Study& study, AreaLink& link)
+{
+    link.overrideTransmissionCapacityAccordingToGlobalParameter(
+      study.parameters.transmissionCapacities);
+
+    if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
+    {
+        link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
+        link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
+    }
+
+    switch (link.transmissionCapacities)
+    {
+    case Data::LocalTransmissionCapacities::enabled:
+        break;
+    case Data::LocalTransmissionCapacities::null:
+    {
+        // Ignore transmission capacities
+        link.directCapacities.timeSeries.zero();
+        link.indirectCapacities.timeSeries.zero();
+        break;
+    }
+    case Data::LocalTransmissionCapacities::infinite:
+    {
+        // Copper plate mode
+        auto infinity = +std::numeric_limits<double>::infinity();
+        link.directCapacities.fill(infinity);
+        link.indirectCapacities.fill(infinity);
+        break;
+    }
+    default:
+        return false;
+    }
+    return true;
+}
+
 bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const fs::path& folder)
 {
     // Assert
@@ -563,37 +599,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
             }
         }
 
-        link.overrideTransmissionCapacityAccordingToGlobalParameter(
-          study.parameters.transmissionCapacities);
-
-        if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
-        {
-            link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
-            link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
-        }
-
-        switch (link.transmissionCapacities)
-        {
-        case Data::LocalTransmissionCapacities::enabled:
-            break;
-        case Data::LocalTransmissionCapacities::null:
-        {
-            // Ignore transmission capacities
-            link.directCapacities.timeSeries.zero();
-            link.indirectCapacities.timeSeries.zero();
-            break;
-        }
-        case Data::LocalTransmissionCapacities::infinite:
-        {
-            // Copper plate mode
-            auto infinity = +std::numeric_limits<double>::infinity();
-            link.directCapacities.fill(infinity);
-            link.indirectCapacities.fill(infinity);
-            break;
-        }
-        default:
-            return false;
-        }
+        ret = areaLinksPostProcessLoadedLink(study, link) & ret;
     }
 
     return ret;
