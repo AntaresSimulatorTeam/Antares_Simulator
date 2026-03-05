@@ -290,6 +290,39 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_zeros, Fixture)
     BOOST_CHECK(ret);
 }
 
+BOOST_AUTO_TEST_CASE(default_values)
+{
+    TimeSeriesNumbers tsNumbers;
+    RuleCurves rc(tsNumbers);
+
+    BOOST_CHECK_EQUAL(rc.max.numberOfColumns(), 1U);
+    BOOST_CHECK_EQUAL(rc.max.timeSeries.height, DAYS_PER_YEAR);
+    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+    {
+        BOOST_CHECK_EQUAL(rc.max.timeSeries[0][day], 1.0);
+    }
+
+    BOOST_CHECK_EQUAL(rc.avg.numberOfColumns(), 1U);
+    BOOST_CHECK_EQUAL(rc.avg.timeSeries.height, DAYS_PER_YEAR);
+    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+    {
+        BOOST_CHECK_EQUAL(rc.avg.timeSeries[0][day], 0.5);
+    }
+
+    BOOST_CHECK_EQUAL(rc.min.numberOfColumns(), 1U);
+    BOOST_CHECK_EQUAL(rc.min.timeSeries.height, DAYS_PER_YEAR);
+    BOOST_CHECK(rc.min.timeSeries.containsOnlyZero());
+
+    BOOST_CHECK_EQUAL(rc.standardRuleCurvesGUI.width, 3U);
+    BOOST_CHECK_EQUAL(rc.standardRuleCurvesGUI.height, DAYS_PER_YEAR);
+    for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+    {
+        BOOST_CHECK_EQUAL(rc.standardRuleCurvesGUI[RuleCurves::maximum][day], 1.0);
+        BOOST_CHECK_EQUAL(rc.standardRuleCurvesGUI[RuleCurves::average][day], 0.5);
+        BOOST_CHECK_EQUAL(rc.standardRuleCurvesGUI[RuleCurves::minimum][day], 0.);
+    }
+}
+
 BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_matrices_equal_width, Fixture)
 {
     bool ret = true;
@@ -321,6 +354,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_matrices_equal_width, Fixt
 
     ret = ruleCurvesLoaderService.LoadFromFolder(area_1->id,
                                                  base_folder,
+                                                 study->usedByTheSolver,
                                                  study->parameters.compatibility.hydroRuleCurves)
           && ret;
 
@@ -348,7 +382,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
     auto& maxDailyRuleCurves = area_1->hydro.series->ruleCurves.max.timeSeries;
     auto& minDailyRuleCurves = area_1->hydro.series->ruleCurves.min.timeSeries;
     auto& avgDailyRuleCurves = area_1->hydro.series->ruleCurves.avg.timeSeries;
-    Matrix<double> ruleCurves;
+    auto& ruleCurves = area_1->hydro.series->ruleCurves.standardRuleCurvesGUI;
 
     ruleCurves.reset(3, DAYS_PER_YEAR, true);
 
@@ -372,6 +406,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
 
     ret = ruleCurvesLoaderService.LoadFromFolder(area_1->id,
                                                  base_folder,
+                                                 study->usedByTheSolver,
                                                  study->parameters.compatibility.hydroRuleCurves)
           && ret;
 
@@ -388,7 +423,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
     study_UI->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::
       HydroRuleCurves::Single;
 
-    Matrix<double> ruleCurves;
+    auto& ruleCurves = area_1->hydro.series->ruleCurves.standardRuleCurvesGUI;
 
     ruleCurves.reset(3, DAYS_PER_YEAR, true);
 
@@ -412,6 +447,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_from_common_capacity_folde
 
     ret = ruleCurvesLoaderService.LoadFromFolder(area_2->id,
                                                  base_folder,
+                                                 study->usedByTheSolver,
                                                  study_UI->parameters.compatibility.hydroRuleCurves)
           && ret;
 
@@ -424,7 +460,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_invalid_mode, Fixture)
 
     auto invalidMode = static_cast<Parameters::Compatibility::HydroRuleCurves>(-1);
 
-    BOOST_CHECK_THROW(ruleCurvesLoaderService.LoadFromFolder(area_1->id, base_folder, invalidMode),
+    BOOST_CHECK_THROW(ruleCurvesLoaderService.LoadFromFolder(area_1->id, base_folder, study->usedByTheSolver, invalidMode),
                       std::invalid_argument);
 }
 
@@ -460,6 +496,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_max_file, Fixture)
 
     ret = ruleCurvesLoaderService.LoadFromFolder(area_1->id,
                                                  base_folder,
+                                                 study->usedByTheSolver,
                                                  study->parameters.compatibility.hydroRuleCurves)
           && ret;
 
@@ -498,6 +535,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_min_file, Fixture)
 
     ret = ruleCurvesLoaderService.LoadFromFolder(area_1->id,
                                                  base_folder,
+                                                 study->usedByTheSolver,
                                                  study->parameters.compatibility.hydroRuleCurves)
           && ret;
 
@@ -536,6 +574,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_avg_file, Fixture)
 
     ret = ruleCurvesLoaderService.LoadFromFolder(area_1->id,
                                                  base_folder,
+                                                 study->usedByTheSolver,
                                                  study->parameters.compatibility.hydroRuleCurves)
           && ret;
 
@@ -549,23 +588,25 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_reservoir_levels_missing_reservoir_file, Fi
     study->parameters.compatibility.hydroRuleCurves = Parameters::Compatibility::HydroRuleCurves::
       Single;
 
-    Matrix<double> standardRuleCurves;
-    standardRuleCurves.reset(3L, DAYS_PER_YEAR, true);
+    auto& ruleCurves = area_1->hydro.series->ruleCurves.standardRuleCurvesGUI;
 
-    standardRuleCurves.fillColumn(RuleCurves::maximum, 1.);
-    standardRuleCurves.fillColumn(RuleCurves::average, 0.5);
-    standardRuleCurves[RuleCurves::minimum][0] = 0.1;
+    ruleCurves.reset(3, DAYS_PER_YEAR, true);
 
-    ret = standardRuleCurves.saveToCSVFile(pathToReservoirLevels_file, 2) && ret;
+    ruleCurves.fillColumn(RuleCurves::maximum, 1.);
+    ruleCurves.fillColumn(RuleCurves::average, 0.5);
+    ruleCurves[RuleCurves::minimum][0] = 0.1;
+
+    ret = ruleCurves.saveToCSVFile(pathToReservoirLevels_file, 2) && ret;
 
     fs::remove(pathToReservoirLevels_file);
 
-    standardRuleCurves.reset(3, DAYS_PER_YEAR, true);
+    ruleCurves.reset(3, DAYS_PER_YEAR, true);
 
     RuleCurvesLoaderService ruleCurvesLoaderService(area_1->hydro.series->ruleCurves);
 
     ret = ruleCurvesLoaderService.LoadFromFolder(area_1->id,
                                                  base_folder,
+                                                 study->usedByTheSolver,
                                                  study->parameters.compatibility.hydroRuleCurves)
           && ret;
 
