@@ -91,8 +91,8 @@ def parse_args():
     p = argparse.ArgumentParser(description="Update project version in files")
     p.add_argument("version", nargs="*",
                    help="New version (X.Y.Z) or omitted when using --rc to only set rc number")
-    p.add_argument("-r", "--rc", dest="rc_only", type=int,
-                   help="Only set the RC number in CMakeLists (updates ANTARES_RC to <n>)")
+    p.add_argument("-r", "--rc", dest="rc", type=int,
+                   help="Set the RC number. If a version is provided it will be combined (X.Y.Z -> X.Y.Z-rcN); if no version is provided, only ANTARES_RC will be updated.")
     p.add_argument("-d", "--dry-run", action="store_true", help="Show planned changes")
     p.add_argument("-c", "--commit", action="store_true", help="Commit changes to git")
     p.add_argument("-m", "--message", metavar="MSG", help="Commit message (enables commit)")
@@ -215,10 +215,10 @@ def stage_and_commit(paths: list, message: str, do_commit: bool) -> None:
 def handle_rc_only_mode(args) -> None:
     """Handle --rc-only mode: update only ANTARES_RC in CMakeLists."""
     if args.version:
-        print(f"Note: version '{args.version}' will be ignored because --rc was used; "
+        print(f"Note: version '{args.version}' will be ignored because --rc was used without combining; "
               "only ANTARES_RC will be updated.", flush=True)
 
-    rc = int(args.rc_only)
+    rc = int(args.rc)
     do_commit = args.commit or (args.message is not None)
     commit_msg = args.message if args.message is not None else f"chore(version): rc{rc}"
 
@@ -263,10 +263,15 @@ def main():
     """Main entry point."""
     args = parse_args()
 
-    # Handle RC-only mode
-    if args.rc_only is not None:
+    # Handle RC-only mode (when --rc provided without a version)
+    if args.rc is not None and not args.version:
         handle_rc_only_mode(args)
         return
+
+    # If both version and --rc are provided, merge them into a prerelease string
+    if args.version and args.rc is not None:
+        # e.g. 10.3.4 + --rc 7 -> 10.3.4-rc7
+        args.version = f"{args.version}-rc{int(args.rc)}"
 
     # Normal mode: version required
     if not args.version:
