@@ -201,30 +201,6 @@ def update_vcpkg_json(path: Path, version: str) -> str:
     data["version-string"] = version
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
-
-def ensure_vcpkg_exists(version_str: str) -> None:
-    """Ensure vcpkg.json exists or restore from git."""
-    if VCPKG_PATH.exists():
-        try:
-            with open(VCPKG_PATH, "r", encoding="utf-8") as f:
-                json.load(f)
-            return
-        except Exception:
-            pass
-
-    try:
-        out = subprocess.check_output(
-            ["git", "show", f"HEAD:{VCPKG_PATH.relative_to(ROOT)}"],
-            stderr=subprocess.DEVNULL
-        )
-        VCPKG_PATH.write_bytes(out)
-    except subprocess.CalledProcessError:
-        VCPKG_PATH.write_text(
-            json.dumps({"version-string": version_str}, indent=2) + "\n",
-            encoding="utf-8"
-        )
-
-
 def stage_and_commit(paths: list, message: str, do_commit: bool) -> None:
     """Stage files and optionally commit."""
     subprocess.check_call(["git", "add"] + [str(p) for p in paths])
@@ -303,7 +279,6 @@ def main():
     # Ensure all files exist
     cmake_text = read_text(CMAKE_PATH)
     sonar_text = read_text(SONAR_PATH)
-    ensure_vcpkg_exists(args.version)
     vcpkg_text = read_text(VCPKG_PATH)
 
     # Prepare updates
