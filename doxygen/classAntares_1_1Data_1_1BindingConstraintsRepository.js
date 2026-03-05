@@ -21,6 +21,5 @@ var classAntares_1_1Data_1_1BindingConstraintsRepository =
     [ "findByName", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a88e149d9c498a95601a6e94494e28656", null ],
     [ "getPtrForInequalityBindingConstraints", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#ad68fa5856d1d9897efac2479df7f4b65", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#ac5e048b0e452c3f5dfa865039f858a4e", null ],
-    [ "reverseWeightSign", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#aa73290ca28f000465924f01e11ee440d", null ],
     [ "size", "classAntares_1_1Data_1_1BindingConstraintsRepository.html#a7e077d964694c2af32ae48e1ac9b4bda", null ]
 ];

@@ -6,7 +6,6 @@ var classAntares_1_1Data_1_1AreaLink =
     [ "Vector", "classAntares_1_1Data_1_1AreaLink.html#a9002ec505954a9752e91ea4a43412703", null ],
     [ "AreaLink", "classAntares_1_1Data_1_1AreaLink.html#a9566bbabc0f225c78c99ddcf0cfa597b", null ],
     [ "~AreaLink", "classAntares_1_1Data_1_1AreaLink.html#af0c8f6d00e71c2e4ae498952c9ebb69d", null ],
-    [ "detach", "classAntares_1_1Data_1_1AreaLink.html#a6b072a19e5be6e9e69d79dcf374af877", null ],
     [ "getName", "classAntares_1_1Data_1_1AreaLink.html#a0f83b613025c0ccbc9a2d76370144e43", null ],
     [ "isLinkPhysical", "classAntares_1_1Data_1_1AreaLink.html#abec06adf2ea4dcabac9f6f6633c5b919", null ],
     [ "loadTimeSeries", "classAntares_1_1Data_1_1AreaLink.html#ab7f9ba15562da05262cc0d104ff61875", null ],

@@ -1152,7 +1152,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::R::AllYears::RawData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html", null ],
     [ "ReadFromStreamFixture", "structReadFromStreamFixture.html", null ],
     [ "find_reference.reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", null ],
-    [ "referenceIniFile", "classreferenceIniFile.html", null ],
     [ "Antares::Expressions::Registry< Base >", "classAntares_1_1Expressions_1_1Registry.html", null ],
     [ "Antares::Expressions::Registry< Antares::Expressions::Nodes::Node >", "classAntares_1_1Expressions_1_1Registry.html", [
       [ "MyDummyFixture", "structMyDummyFixture.html", null ]

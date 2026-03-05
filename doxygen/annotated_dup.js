@@ -1204,7 +1204,6 @@ var annotated_dup =
     [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", "classQuadraticProblemMatrix" ],
     [ "RawConnection", "structRawConnection.html", "structRawConnection" ],
     [ "ReadFromStreamFixture", "structReadFromStreamFixture.html", "structReadFromStreamFixture" ],
-    [ "referenceIniFile", "classreferenceIniFile.html", "classreferenceIniFile" ],
     [ "RegistryHolder", "structRegistryHolder.html", "structRegistryHolder" ],
     [ "RenewableClusterStudy", "structRenewableClusterStudy.html", "structRenewableClusterStudy" ],
     [ "RESERVE_JMOINS1", "structRESERVE__JMOINS1.html", "structRESERVE__JMOINS1" ],
