@@ -13,14 +13,14 @@
 
 using namespace Antares::Optimisation;
 
+namespace Antares::Expressions::Visitors
+{
+
 std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b)
 {
     std::ranges::transform(a, b, a.begin(), std::plus<double>());
     return a;
 }
-
-namespace Antares::Expressions::Visitors
-{
 
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,
