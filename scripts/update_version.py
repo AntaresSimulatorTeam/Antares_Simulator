@@ -73,14 +73,28 @@ def restore_backups(bakdir, paths):
             shutil.copy2(str(backup), str(p))
 
 
-def update_cmake(text: str, hi: str, lo: str, rev: str, year: str):
-    # Replace set(ANTARES_VERSION_HI N)
+def update_cmake(text: str, hi: str, lo: str, rev: str, year: str, beta: int = 0, rc: int = 0):
+    # Replace numeric version components
     text_new = re.sub(r"set\(ANTARES_VERSION_HI\s+\d+\)", f"set(ANTARES_VERSION_HI {hi})", text)
     text_new = re.sub(r"set\(ANTARES_VERSION_LO\s+\d+\)", f"set(ANTARES_VERSION_LO {lo})", text_new)
     text_new = re.sub(r"set\(ANTARES_VERSION_REVISION\s+\d+\)", f"set(ANTARES_VERSION_REVISION {rev})", text_new)
     # Year may or may not be present; if present replace, otherwise leave as-is
     if re.search(r"set\(ANTARES_VERSION_YEAR\s+\d+\)", text_new):
         text_new = re.sub(r"set\(ANTARES_VERSION_YEAR\s+\d+\)", f"set(ANTARES_VERSION_YEAR {year})", text_new)
+
+    # Update ANTARES_BETA and ANTARES_RC (CMake builds ANTARES_VERSION_TAG from them)
+    if re.search(r"set\(ANTARES_BETA\s+\d+\)", text_new):
+        text_new = re.sub(r"set\(ANTARES_BETA\s+\d+\)", f"set(ANTARES_BETA {beta})", text_new)
+    else:
+        # if not present, add right after revision definition
+        text_new = re.sub(r"(set\(ANTARES_VERSION_REVISION\s+\d+\)\n)", r"\1set(ANTARES_BETA %d)\n" % beta, text_new, count=1)
+
+    if re.search(r"set\(ANTARES_RC\s+\d+\)", text_new):
+        text_new = re.sub(r"set\(ANTARES_RC\s+\d+\)", f"set(ANTARES_RC {rc})", text_new)
+    else:
+        # insert after ANTARES_BETA
+        text_new = re.sub(r"(set\(ANTARES_BETA\s+\d+\)\n)", r"\1set(ANTARES_RC %d)\n" % rc, text_new, count=1)
+
     return text_new
 
 
@@ -146,10 +160,32 @@ def main():
 
     vcpkg_orig_text = read_text(VCPKG_PATH)
 
+    # Detect prerelease suffix (rcN or betaN) if present
+    beta = 0
+    rc = 0
+    base_version = args.version
+    if '-' in args.version:
+        base_version, suffix = args.version.split('-', 1)
+        m = re.match(r'^(?P<tag>rc|beta)[.-]?(?P<num>\d+)$', suffix, flags=re.I)
+        if m:
+            tag = m.group('tag').lower()
+            num = int(m.group('num'))
+            if tag == 'rc':
+                rc = num
+            elif tag == 'beta':
+                beta = num
+
+    # If an rc suffix is present, we update only CMakeLists (internal rc for builds).
+    rc_only = (rc != 0)
+
     # Prepare updates
-    new_cmake = update_cmake(cmake_text, *VERSION_RE.match(args.version).groups(), str(__import__('datetime').date.today().year))
-    new_sonar = update_sonar(sonar_text, args.version)
-    new_vcpkg = update_vcpkg_json(VCPKG_PATH, args.version)
+    hi, lo, rev = VERSION_RE.match(base_version).groups()
+    year = str(__import__('datetime').date.today().year)
+    new_cmake = update_cmake(cmake_text, hi, lo, rev, year, beta=beta, rc=rc)
+
+    # For RC versions, update sonar and vcpkg with the base version (without the -rcN)
+    new_sonar = update_sonar(sonar_text, base_version)
+    new_vcpkg = update_vcpkg_json(VCPKG_PATH, base_version)
 
     # Dry-run: report
     if args.dry_run:
@@ -158,12 +194,13 @@ def main():
             print(f"CMake -> {CMAKE_PATH}: will be updated")
         else:
             print("CMake: no change")
+        # Always report sonar and vcpkg planned changes; for rc versions they use base_version
         if file_changed(sonar_text, new_sonar):
-            print(f"Sonar -> {SONAR_PATH}: will be updated")
+            print(f"Sonar -> {SONAR_PATH}: will be updated (to {base_version if rc_only else args.version})")
         else:
             print("Sonar: no change")
         if file_changed(vcpkg_orig_text, new_vcpkg):
-            print(f"vcpkg.json -> {VCPKG_PATH}: will be updated")
+            print(f"vcpkg.json -> {VCPKG_PATH}: will be updated (to {base_version if rc_only else args.version})")
         else:
             print("vcpkg.json: no change")
         print()
@@ -183,6 +220,7 @@ def main():
         # write files atomically only if changed
         if file_changed(cmake_text, new_cmake):
             write_atomic(CMAKE_PATH, new_cmake)
+        # Always update sonar and vcpkg if their content changed (for rc use base version)
         if file_changed(sonar_text, new_sonar):
             write_atomic(SONAR_PATH, new_sonar)
         if file_changed(vcpkg_orig_text, new_vcpkg):
