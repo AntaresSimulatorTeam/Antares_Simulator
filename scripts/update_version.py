@@ -1,16 +1,26 @@
 #!/usr/bin/env python3
 """
 Update project version across files:
- - src/CMakeLists.txt (ANTARES_VERSION_HI/LO/REVISION/YEAR)
+ - src/CMakeLists.txt (ANTARES_VERSION_HI/LO/REVISION/YEAR and ANTARES_RC)
  - sonar-project.properties (sonar.projectVersion)
  - src/vcpkg.json (version-string)
 
 Features:
- - dry-run: show planned changes
- - backup of files
- - atomic writes
- - optional git commit (--commit or when -m provided)
- - default commit message: "chore(version): v<version>"
+ - Update version in multiple formats (base X.Y.Z or with prerelease X.Y.Z-rcN)
+ - Auto-increment or set explicit RC number
+ - Combine version argument with --rc flag (e.g. "1.2.3 --rc" → "1.2.3-rcN")
+ - Dry-run mode to preview changes
+ - Atomic file writes with backups
+ - Optional automatic git commit with custom message
+ - Default commit message: "chore(version): v<version>"
+
+Usage:
+  python3 scripts/update_version.py 1.2.3 [--rc [N]] [--dry-run] [-m MSG] [-c]
+
+RC handling:
+  --rc        : Increment current ANTARES_RC (or set to 1 if missing)
+  --rc N      : Set ANTARES_RC to explicit value N
+  version --rc: Auto-increment RC and update version
 """
 
 import argparse
@@ -90,47 +100,58 @@ class Version:
 def parse_args():
     """Parse command-line arguments.
 
-    Pre-parse sys.argv to support `--rc` either as a flag (increment current RC)
-    or with an explicit integer value (e.g. --rc 7). We remove these tokens from
-    the argv list before passing the remainder to argparse to avoid argparse's
-    optional-argument pitfalls.
+    The --rc flag supports three modes:
+    - Omitted: no RC changes
+    - --rc alone: increment current ANTARES_RC
+    - --rc N: set ANTARES_RC to explicit value N
     """
-    raw = list(sys.argv[1:])
+    p = argparse.ArgumentParser(
+        description="Update project version across files (CMakeLists.txt, sonar-project.properties, vcpkg.json)",
+        epilog="""
+RC (Release Candidate) handling:
+  --rc        : Increment current ANTARES_RC value (or create as 1 if missing)
+  --rc N      : Set ANTARES_RC to explicit value N
+  VERSION --rc: Combine version with auto-incremented RC (e.g. "1.2.3 --rc" → "1.2.3-rcN")
 
-    rc_flag = None
-    rc_increment = False
-    # Find first occurrence of -r or --rc and interpret following token if it's an int
-    for i, tok in enumerate(raw):
-        if tok in ("-r", "--rc"):
-            # If next token exists and looks like an integer, take it as explicit rc
-            if i + 1 < len(raw) and not raw[i + 1].startswith("-") and raw[i + 1].lstrip('-').isdigit():
-                rc_flag = int(raw[i + 1])
-                # remove both tokens
-                del raw[i:i+2]
-            else:
-                # increment mode; remove the flag token
-                rc_increment = True
-                del raw[i]
-            break
+Examples:
+  # Update to version 1.2.3
+  %(prog)s 1.2.3
 
-    p = argparse.ArgumentParser(description="Update project version in files")
+  # Update to version 1.2.3 with RC 5 (becomes 1.2.3-rc5)
+  %(prog)s 1.2.3 --rc 5
+
+  # Update to version 1.2.3 and auto-increment RC from current value
+  %(prog)s 1.2.3 --rc
+
+  # Only increment current RC number (no version change)
+  %(prog)s --rc
+
+  # Dry-run to see what would change
+  %(prog)s 1.2.3 --dry-run
+
+  # Auto-commit with custom message
+  %(prog)s 1.2.3 -m "chore(version): release 1.2.3"
+        """,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     p.add_argument("version", nargs="*",
-                   help="New version (X.Y.Z) or omitted when using --rc to only set rc number")
-    p.add_argument("-d", "--dry-run", action="store_true", help="Show planned changes")
-    p.add_argument("-c", "--commit", action="store_true", help="Commit changes to git")
-    p.add_argument("-m", "--message", metavar="MSG", help="Commit message (enables commit)")
+                   help="Version string (X.Y.Z format), optional with --rc")
+    p.add_argument("-r", "--rc", nargs="?", const="__INC__", metavar="N",
+                   help="RC number: use --rc to increment, --rc N to set explicit value")
+    p.add_argument("-d", "--dry-run", action="store_true", help="Show planned changes without modifying files")
+    p.add_argument("-c", "--commit", action="store_true", help="Automatically commit changes to git")
+    p.add_argument("-m", "--message", metavar="MSG", help="Commit message (implies --commit)")
 
-    args = p.parse_args(raw)
+    args = p.parse_args()
     # Convert variadic version list to single string
     args.version = args.version[0] if args.version else None
 
-    # Attach rc info for backward compatibility: args.rc is either None, '__INC__' or a numeric string
-    if rc_flag is not None:
-        args.rc = str(rc_flag)
-    elif rc_increment:
-        args.rc = '__INC__'
-    else:
-        args.rc = None
+    # Normalize rc value: convert string back to marker if needed
+    if args.rc is not None and args.rc != "__INC__":
+        try:
+            int(args.rc)  # validate it's numeric
+        except ValueError:
+            p.error(f"Invalid value for --rc: must be an integer, got '{args.rc}'")
 
     return args
 
