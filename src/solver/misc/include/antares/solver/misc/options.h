@@ -40,8 +40,6 @@ public:
 
     //! True to disable the writing in the output folder
     bool noOutput = false;
-    //! Progression
-    bool displayProgression = false;
 
     Yuni::String PID;
     bool forceZipOutput = false;

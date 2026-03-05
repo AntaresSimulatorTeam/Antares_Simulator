@@ -75,7 +75,7 @@ void HourlyCSRProblem::constructVariableFlows()
             int algebraicFluxVar;
             int directVar;
             int indirectVar;
-            algebraicFluxVar = variableManager_.NTCDirect(Interco, triggeredHour)
+            algebraicFluxVar = variableManager_.DirectFlux(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug()
@@ -87,13 +87,13 @@ void HourlyCSRProblem::constructVariableFlows()
               << "].";
             NumberOfVariables++;
 
-            directVar = variableManager_.IntercoDirectCost(Interco, triggeredHour)
+            directVar = variableManager_.DirectFluxPositif(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
 
-            indirectVar = variableManager_.IntercoIndirectCost(Interco, triggeredHour)
+            indirectVar = variableManager_.IndirectFluxPositif(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";

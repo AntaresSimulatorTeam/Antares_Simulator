@@ -74,17 +74,17 @@ This is done in the [model library](../modeler/02-inputs.md#model-libraries), in
 
 Example:
 ~~~yaml
-port-type:
-   id: port-to-area
-   fields:
-      - id: field_to_balance
-      - id: angle
-	  - id: to-area-bound
-      - id: from-area-bound
-   area-connection:
-      injection-to-balance: field_to_balance
-	  spillage-bound: to-area-bound
-      unsupplied-energy-bound: from-area-bound
+port-types:
+   - id: port-to-area
+     fields:
+        - id: field_to_balance
+        - id: angle
+	    - id: to-area-bound
+        - id: from-area-bound
+     area-connection:
+        injection-to-balance: field_to_balance
+	    spillage-bound: to-area-bound
+        unsupplied-energy-bound: from-area-bound
 ~~~
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
@@ -119,15 +119,14 @@ If you need to involve a production (defined in a component), make it positive a
 Typically, you would defined it like this : 
 ~~~yaml
   # library.yml
-  port-type:
-     id: port-to-area
-     fields:
-       - id: field_to_balance
-     area-connection:
-       injection-to-balance: field_to_balance
-	   spillage-bound:
-       unsupplied-energy-bound:
-
+  port-types:
+    - id: port-to-area
+      fields:
+        - id: field_to_balance
+      area-connection:
+        injection-to-balance: field_to_balance
+	    spillage-bound:
+        unsupplied-energy-bound:
 
   models:
     - id: my-production
@@ -163,15 +162,14 @@ This kind of connection is specifically made to connect a production from a GEMS
 The convention is the same as the connection to balance constraint : make the production positive and don't prefix it with a - sign.
 ~~~yaml
   # library.yml
-  port-type:
-     id: port-to-area
-     fields:
-       - id: to-area-bound
-     area-connection:
-	   injection-to-balance:
-	   spillage-bound: to-area-bound
-       unsupplied-energy-bound:
-
+  port-types:
+    - id: port-to-area
+      fields:
+        - id: to-area-bound
+      area-connection:
+        injection-to-balance:
+        spillage-bound: to-area-bound
+        unsupplied-energy-bound:
 
   models:
     - id: my-production
@@ -192,14 +190,14 @@ This kind of connection is specifically made to connect a loads from a GEMS comp
 The convention is to make the loads positive and don't prefix it with a - sign.
 ~~~yaml
   # library.yml
-  port-type:
-     id: port-to-area
-     fields:
-       - id: from-area-bound
-     area-connection:
-	   injection-to-balance:
-	   spillage-bound:
-       unsupplied-energy-bound: from-area-bound
+  port-types:
+    - id: port-to-area
+      fields:
+        - id: from-area-bound
+      area-connection:
+        injection-to-balance:
+        spillage-bound:
+        unsupplied-energy-bound: from-area-bound
 
   models:
     - id: my-load

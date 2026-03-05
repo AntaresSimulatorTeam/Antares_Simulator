@@ -26,7 +26,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            variableManager.NTCDirect(interco, pdt) = NombreDeVariables;
+            variableManager.DirectFlux(interco, pdt) = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
 
             const auto origin = problemeHebdo->NomsDesPays
@@ -34,20 +34,20 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             const auto destination = problemeHebdo->NomsDesPays
                                        [problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
             variableNamer.updateExtremities(origin, destination);
-            variableNamer.NTCDirect(NombreDeVariables);
+            variableNamer.DirectFlux(NombreDeVariables);
             NombreDeVariables++;
 
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
-                variableManager.IntercoDirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.DirectFluxPositif(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoDirectCost(NombreDeVariables);
+                variableNamer.DirectFluxPositif(NombreDeVariables);
                 NombreDeVariables++;
-                variableManager.IntercoIndirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.IndirectFluxPositif(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoIndirectCost(NombreDeVariables);
+                variableNamer.IndirectFluxPositif(NombreDeVariables);
                 NombreDeVariables++;
             }
         }

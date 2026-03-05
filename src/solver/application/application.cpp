@@ -138,7 +138,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
         {
             logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
         }
 
         if (study.areas.empty())
@@ -279,22 +278,6 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
     postParametersChecks();
 
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
-    if (pSettings.noOutput)
-    {
-        pSettings.displayProgression = false;
-    }
-
-    if (pSettings.displayProgression)
-    {
-        auto& filename = pStudy->buffer;
-        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, *resultWriter);
-        pStudy->progression.start();
-    }
-    else
-    {
-        logs.info() << "  The progression is disabled";
-    }
 }
 
 void Application::postParametersChecks() const
@@ -552,7 +535,7 @@ Application::~Application()
     {
         try
         {
-            logs.info() << LOG_UI_SOLVER_DONE;
+            logs.info() << "[END] Quitting the solver gracefully";
         }
         catch (...)
         {

@@ -91,7 +91,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         }
 
         // flow
-        int var = variableManager_.NTCDirect(Interco, triggeredHour);
+        int var = variableManager_.DirectFlux(Interco, triggeredHour);
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
                     + belowThisThresholdSetToZero;
         Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco])
@@ -128,7 +128,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
                      << problemeAResoudre_.Xmax[var];
 
         // direct / indirect flow
-        var = variableManager_.IntercoDirectCost(Interco, triggeredHour);
+        var = variableManager_.DirectFluxPositif(Interco, triggeredHour);
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[Interco]
@@ -142,7 +142,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
         logs.debug() << var << ": " << problemeAResoudre_.Xmin[var] << ", "
                      << problemeAResoudre_.Xmax[var];
 
-        var = variableManager_.IntercoIndirectCost(Interco, triggeredHour);
+        var = variableManager_.IndirectFluxPositif(Interco, triggeredHour);
 
         Xmin[var] = -belowThisThresholdSetToZero;
         Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[Interco]
