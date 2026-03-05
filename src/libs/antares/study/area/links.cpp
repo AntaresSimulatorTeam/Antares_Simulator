@@ -571,7 +571,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
             }
         }
 
-        // From the solver
         link.overrideTransmissionCapacityAccordingToGlobalParameter(
           study.parameters.transmissionCapacities);
 
