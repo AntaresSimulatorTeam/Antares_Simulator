@@ -276,8 +276,6 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
     readDataForTheStudy(options);
 
     postParametersChecks();
-
-    pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
 }
 
 void Application::postParametersChecks() const
@@ -422,9 +420,6 @@ void Application::execute()
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
-
-    // Stop the display of the progression
-    pStudy->progression.stop();
 }
 
 void Application::resetLogFilename() const

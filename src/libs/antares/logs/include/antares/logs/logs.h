@@ -48,7 +48,6 @@ extern Yuni::Logs::Logger<LoggingHandlers, LoggingDecorators> logs;
 enum LogLevel
 {
     logUnknown = 0,
-    logProgress, /* not really a real log level */
     logFatal,
     logError,
     logWarning,
