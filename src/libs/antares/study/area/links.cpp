@@ -179,17 +179,6 @@ void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
     writer.addEntryFromBuffer(path, buffer);
 }
 
-void AreaLink::detach()
-{
-    assert(from);
-    assert(with);
-
-    // Here, we cannot make assumption that the variable `with->id` is up-to-date.
-    // Consequently, This code is invalid :
-    // this->from->detachLinkFromID(with->id);
-    from->detachLinkFromItsPointer(this);
-}
-
 void AreaLink::resetToDefaultValues()
 {
     parameters.reset(fhlMax, HOURS_PER_YEAR, true);
@@ -229,7 +218,6 @@ void AreaLink::reverse()
     Area* from = this->with;
     Area* with = this->from;
 
-    this->detach();
     // Reset the pointers
     this->from = from;
     this->with = with;
@@ -650,27 +638,6 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
     }
 
     return success;
-}
-
-void AreaLinkRemove(AreaLink* link)
-{
-    if (!link)
-    {
-        return;
-    }
-
-    // Asserts
-    assert(link->from);
-    assert(link->with);
-
-    Area* areaFrom = link->from;
-    if (areaFrom && !areaFrom->links.empty())
-    {
-        areaFrom->detachLinkFromID(link->with->id);
-        areaFrom->buildLinksIndexes();
-    }
-
-    delete link;
 }
 
 String AreaLink::getName() const

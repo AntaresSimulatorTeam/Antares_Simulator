@@ -81,7 +81,6 @@ void Study::clear()
     preproHydroCorrelation.clear();
 
     bindingConstraintsGroups.clear();
-    areas.clear();
 
     // no folder
     ClearAndShrink(header.caption);
@@ -426,72 +425,6 @@ template<>
 inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesHydro>()
 {
     areas.each([](Data::Area& area) { area.hydro.prepro.reset(); });
-}
-
-void Study::initializeProgressMeter(bool tsGeneratorOnly)
-{
-    uint years = tsGeneratorOnly ? 1 : (runtime.rangeLimits.year[rangeEnd] + 1);
-
-    unsigned ticksPerYear = 0;
-    unsigned ticksPerOutput = 0;
-
-    if (not tsGeneratorOnly)
-    {
-        // One tick at the begining and 2 at the end of the year
-        // Output - Areas
-        ticksPerOutput += areas.size();
-        // Output - Links
-        ticksPerOutput += runtime.interconnectionsCount();
-        // Output - digest
-        ticksPerOutput += 1;
-        ticksPerYear = 1;
-    }
-
-    unsigned n;
-
-    for (uint y = 0; y != years; ++y)
-    {
-        progression.add(y, Solver::Progression::sectYear, ticksPerYear);
-
-        if (parameters.yearByYear)
-        {
-            progression.add(y, Solver::Progression::sectOutput, ticksPerOutput);
-        }
-    }
-
-    // Output
-    progression.add(Solver::Progression::sectOutput, ticksPerOutput);
-
-    // Import
-    n = 0;
-    if (0 != (timeSeriesLoad & parameters.exportTimeSeriesInInput))
-    {
-        n += areas.size();
-    }
-    if (0 != (timeSeriesSolar & parameters.exportTimeSeriesInInput))
-    {
-        n += areas.size();
-    }
-    if (0 != (timeSeriesWind & parameters.exportTimeSeriesInInput))
-    {
-        n += areas.size();
-    }
-    if (0 != (timeSeriesHydro & parameters.exportTimeSeriesInInput))
-    {
-        n += areas.size();
-    }
-    if (0 != (timeSeriesThermal & parameters.exportTimeSeriesInInput))
-    {
-        n += areas.size();
-    }
-    if (n)
-    {
-        progression.add(Solver::Progression::sectImportTS, n);
-    }
-
-    // Needed by the progression meter thread to retrieve properly
-    // messages from all MC years
-    progression.setNumberOfParallelYears(maxNbYearsInParallel);
 }
 
 void Study::relocate(const fs::path& newFolder)

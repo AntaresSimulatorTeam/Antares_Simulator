@@ -148,59 +148,9 @@ static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& file
 
 } // anonymous namespace
 
-bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
-{
-    IniFile ini;
-    IniFile::Section* section = ini.addSection("nodal optimization");
-
-    section->add("non-dispatchable-power",
-                 static_cast<bool>(area.nodalOptimization & anoNonDispatchPower));
-    section->add("dispatchable-hydro-power",
-                 static_cast<bool>(area.nodalOptimization & anoDispatchHydroPower));
-    section->add("other-dispatchable-power",
-                 static_cast<bool>(area.nodalOptimization & anoOtherDispatchPower));
-    section->add("spread-unsupplied-energy-cost", area.spreadUnsuppliedEnergyCost);
-    section->add("spread-spilled-energy-cost", area.spreadSpilledEnergyCost);
-
-    section = ini.addSection("filtering");
-    section->add("filter-synthesis", datePrecisionIntoString(area.filterSynthesis));
-    section->add("filter-year-by-year", datePrecisionIntoString(area.filterYearByYear));
-
-    return ini.save(buffer);
-}
-
-bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
-{
-    IniFile ini;
-    IniFile::Section* section = ini.addSection("adequacy-patch");
-    std::string value;
-    switch (area.adequacyPatchMode)
-    {
-    case Data::AdequacyPatch::virtualArea:
-        value = "virtual";
-        break;
-    case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
-        value = "outside";
-        break;
-    case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
-        value = "inside";
-        break;
-    default:
-        value = "outside"; // default physicalAreaOutsideAdqPatch
-        break;
-    }
-    section->add("adequacy-patch-mode", value);
-    return ini.save(buffer);
-}
-
 AreaList::AreaList(Study& study):
     pStudy(study)
 {
-}
-
-AreaList::~AreaList()
-{
-    clear();
 }
 
 bool AreaList::empty() const
@@ -263,20 +213,6 @@ const AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with) c
         }
     }
     return nullptr;
-}
-
-void AreaList::clear()
-{
-    byIndex.clear();
-
-    Area::Map copy;
-    copy.swap(areas);
-
-    auto end = copy.end();
-    for (auto i = copy.begin(); i != end; ++i)
-    {
-        delete i->second;
-    }
 }
 
 void AreaList::rebuildIndexes()
@@ -1032,133 +968,11 @@ uint AreaList::areaLinkCount() const
     return ret;
 }
 
-void Area::detachLinkFromItsPointer(const AreaLink* lnk)
-{
-    auto end = links.end();
-    for (auto i = links.begin(); i != end; ++i)
-    {
-        if (i->second == lnk)
-        {
-            links.erase(i);
-            return;
-        }
-    }
-}
-
-void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
-{
-    if (!list || !a)
-    {
-        return;
-    }
-
-    list->each(
-      [&a](Data::Area& area)
-      {
-          if (!area.links.empty())
-          {
-              return;
-          }
-          bool mustLoop = false;
-          do
-          {
-              mustLoop = false;
-              // Foreach link from this area
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  AreaLink* lnk = i->second;
-
-                  // The link must be destroyed if attached to the given area
-                  if ((lnk->from == a) || (lnk->with == a))
-                  {
-                      // The reference to this link will be removed and the link will be freed
-                      AreaLinkRemove(lnk);
-                      // Let's start again
-                      mustLoop = true;
-                      break;
-                  }
-              }
-          } while (mustLoop);
-      });
-}
-
 void AreaList::resizeAllTimeseriesNumbers(uint n)
 {
     // Ask to resize the matrices dedicated to the sampled timeseries numbers
     // for each area
     each([n](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
-}
-
-void AreaList::fixOrientationForAllInterconnections(
-  BindingConstraintsRepository& bindingconstraints)
-{
-    each(
-      [&bindingconstraints](Data::Area& area)
-      {
-          bool mustLoop;
-          // for each link from this area
-          do
-          {
-              // Nothing to do if the area does not have any links
-              if (area.links.empty())
-              {
-                  break;
-              }
-
-              // By default, we don't have to loop forever
-              mustLoop = false;
-
-              // Foreach link...
-              auto end = area.links.end();
-              for (auto i = area.links.begin(); i != end; ++i)
-              {
-                  // Reference to the link
-                  auto& link = *(i->second);
-                  // Asserts
-                  assert(link.from);
-                  assert(link.with);
-
-                  if ((link.from)->id > (link.with)->id)
-                  {
-                      // Reversing the link
-                      link.reverse();
-                      // Updating the binding constraints
-                      bindingconstraints.reverseWeightSign(&link);
-                      // Since the iterators have been compromised, we have to restart the iteration
-                      // through the links
-                      mustLoop = true;
-                      break;
-                  }
-              }
-          } while (mustLoop);
-      });
-}
-
-bool AreaList::remove(const AnyString& id)
-{
-    AreaName lname = transformNameIntoID(id);
-
-    auto i = areas.find(lname);
-    if (i != areas.end())
-    {
-        // Referene to the area
-        auto* areaToRemove = i->second;
-
-        // We remove all links starting from this node in a first time
-        areaToRemove->detachAllLinks();
-        // Then we remove the reference to this area
-        areas.erase(i);
-
-        // All dependencies must be removed as well
-        AreaListDeleteLinkFromAreaPtr(this, areaToRemove);
-
-        // Finally we can destroy the area itself
-        delete areaToRemove;
-
-        return true;
-    }
-    return false;
 }
 
 AreaLink* AreaList::findLinkFromINIKey(const AnyString& key)
@@ -1208,38 +1022,6 @@ void AreaList::updateNameIDSet() const
         auto& area = *(i->second);
         nameidSet.insert(area.id);
     }
-}
-
-void AreaList::removeLoadTimeseries()
-{
-    each([](Data::Area& area) { area.load.series.reset(); });
-}
-
-void AreaList::removeHydroTimeseries()
-{
-    each([](Data::Area& area) { area.hydro.series->reset(); });
-}
-
-void AreaList::removeSolarTimeseries()
-{
-    each([](Data::Area& area) { area.solar.series.reset(); });
-}
-
-void AreaList::removeWindTimeseries()
-{
-    each([](Data::Area& area) { area.wind.series.reset(); });
-}
-
-void AreaList::removeThermalTimeseries()
-{
-    each(
-      [](const Data::Area& area)
-      {
-          for (const auto& c: area.thermal.list.all())
-          {
-              c->series.reset();
-          }
-      });
 }
 
 Area::ScratchMap AreaList::buildScratchMap(uint numspace)

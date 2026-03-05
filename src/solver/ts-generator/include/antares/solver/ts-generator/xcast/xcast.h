@@ -9,7 +9,6 @@
 
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/fwd.h>
-#include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/ts-generator/xcast/studydata.h"
 
@@ -88,13 +87,13 @@ private:
     template<class PredicateT>
     void updateMissingCoefficients(PredicateT& predicate);
     template<class PredicateT>
-    bool runWithPredicate(PredicateT& predicate, Progression::Task& progression);
+    bool runWithPredicate(PredicateT& predicate);
 
     /*!
     ** \brief Export all time-series for each process into the output folder
     */
     template<class PredicateT>
-    void exportTimeSeriesToTheOutput(Progression::Task& progression, PredicateT& predicate);
+    void exportTimeSeriesToTheOutput(PredicateT& predicate);
 
     /*!
     ** \brief Perform the generation of the time-series on a single day for all processes

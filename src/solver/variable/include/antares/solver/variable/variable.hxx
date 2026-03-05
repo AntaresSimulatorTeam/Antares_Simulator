@@ -320,12 +320,6 @@ inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results
             || VCardType::categoryDataLevel & Category::DataLevel::area
             || VCardType::categoryDataLevel & Category::DataLevel::link))
     {
-        // Skip STS by-cluster variables (categoryFileLevel = de_sts only) from digest
-        if (VCardType::categoryFileLevel == Category::FileLevel::de_sts)
-        {
-            return;
-        }
-
         // Initializing pointer on variable non applicable and print stati arrays to beginning
         results.isPrinted = isPrinted;
         results.isCurrentVarNA = isNonApplicable;

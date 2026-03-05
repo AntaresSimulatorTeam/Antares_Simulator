@@ -89,13 +89,6 @@ public:
                                       const Data::StudyLoadOptions& options,
                                       const std::filesystem::path& folder);
 
-    /*!
-    ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
-    **
-    ** This method is used when reverting an interconnection or thermal cluster
-    */
-    void reverseWeightSign(const Data::AreaLink* lnk);
-
     //! Get the number of binding constraints
     [[nodiscard]] uint size() const;
 

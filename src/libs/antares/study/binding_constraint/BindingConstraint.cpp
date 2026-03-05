@@ -354,16 +354,6 @@ void BindingConstraint::clear()
     this->pEnabled = true;
 }
 
-void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
-{
-    auto i = pLinkWeights.find(lnk);
-    if (i != pLinkWeights.end())
-    {
-        i->second *= -1.;
-        logs.info() << "Updated the binding constraint `" << pName << '`';
-    }
-}
-
 bool BindingConstraint::contains(const Area* area) const
 {
     for (const auto& [sourceLink, _]: pLinkWeights)
