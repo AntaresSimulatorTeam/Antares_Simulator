@@ -14,6 +14,7 @@ Features:
 """
 
 import argparse
+import datetime
 import json
 import os
 import re
@@ -23,7 +24,7 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import List
 
 ROOT = Path(__file__).resolve().parents[1]
 CMAKE_PATH = ROOT / "src" / "CMakeLists.txt"
@@ -146,23 +147,26 @@ def write_atomic(path: Path, text: str) -> None:
     os.replace(str(tmp), str(path))
 
 
-def backup_files(paths: list) -> Path:
+def backup_files(paths: List[Path]) -> Path:
     """Create backup directory with copies of files."""
     bakdir = Path(tempfile.mkdtemp(prefix="update_version_backup_"))
     for p in paths:
         try:
             shutil.copy2(p, bakdir / p.name)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Warning: failed to backup {p}: {e}", file=sys.stderr)
     return bakdir
 
 
-def restore_backups(bakdir: Path, paths: list) -> None:
+def restore_backups(bakdir: Path, paths: List[Path]) -> None:
     """Restore files from backup."""
     for p in paths:
         backup = bakdir / p.name
         if backup.exists():
-            shutil.copy2(str(backup), str(p))
+            try:
+                shutil.copy2(str(backup), str(p))
+            except Exception as e:
+                print(f"Error: failed to restore {p}: {e}", file=sys.stderr)
 
 
 def update_cmake_rc(cmake_text: str, rc: int) -> str:
@@ -186,6 +190,18 @@ def update_cmake_rc(cmake_text: str, rc: int) -> str:
 
 def update_cmake(text: str, version: Version, year: str) -> str:
     """Update CMakeLists.txt with version information."""
+    # Helper to update or insert a CMake variable
+    def set_cmake_var(content: str, var_name: str, value: int) -> str:
+        pattern = CMAKE_VAR_RE.get(var_name)
+        if not pattern:
+            return content
+        if re.search(pattern, content):
+            return re.sub(pattern, f"set(ANTARES_{var_name} {value})", content)
+        # Insert after REVISION if var is new
+        insert_pattern = r"(set\(ANTARES_VERSION_REVISION\s+\d+\)\n)"
+        return re.sub(insert_pattern, rf"\1set(ANTARES_{var_name} {value})\n", content, count=1)
+
+    # Update all version components
     text = re.sub(CMAKE_VAR_RE["HI"], f"set(ANTARES_VERSION_HI {version.major})", text)
     text = re.sub(CMAKE_VAR_RE["LO"], f"set(ANTARES_VERSION_LO {version.minor})", text)
     text = re.sub(CMAKE_VAR_RE["REVISION"], f"set(ANTARES_VERSION_REVISION {version.patch})", text)
@@ -193,21 +209,23 @@ def update_cmake(text: str, version: Version, year: str) -> str:
     if re.search(CMAKE_VAR_RE["YEAR"], text):
         text = re.sub(CMAKE_VAR_RE["YEAR"], f"set(ANTARES_VERSION_YEAR {year})", text)
 
+    # Update BETA
     if re.search(CMAKE_VAR_RE["BETA"], text):
         text = re.sub(CMAKE_VAR_RE["BETA"], f"set(ANTARES_BETA {version.beta})", text)
     else:
         text = re.sub(
             r"(set\(ANTARES_VERSION_REVISION\s+\d+\)\n)",
-            r"\1set(ANTARES_BETA %d)\n" % version.beta,
+            rf"\1set(ANTARES_BETA {version.beta})\n",
             text, count=1
         )
 
+    # Update RC
     if re.search(CMAKE_VAR_RE["RC"], text):
         text = re.sub(CMAKE_VAR_RE["RC"], f"set(ANTARES_RC {version.rc})", text)
     else:
         text = re.sub(
             r"(set\(ANTARES_BETA\s+\d+\)\n)",
-            r"\1set(ANTARES_RC %d)\n" % version.rc,
+            rf"\1set(ANTARES_RC {version.rc})\n",
             text, count=1
         )
 
@@ -232,7 +250,7 @@ def update_vcpkg_json(path: Path, version: str) -> str:
     data["version-string"] = version
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 
-def stage_and_commit(paths: list, message: str, do_commit: bool) -> None:
+def stage_and_commit(paths: List[Path], message: str, do_commit: bool) -> None:
     """Stage files and optionally commit."""
     subprocess.check_call(["git", "add"] + [str(p) for p in paths])
     if do_commit:
@@ -241,6 +259,15 @@ def stage_and_commit(paths: list, message: str, do_commit: bool) -> None:
     else:
         print("Files staged. To commit:")
         print(f"  git commit -m '{message}'")
+
+
+def get_current_rc() -> int:
+    """Return current ANTARES_RC value from CMakeLists.txt or 0 if missing."""
+    txt = read_text(CMAKE_PATH)
+    m = re.search(CMAKE_VAR_RE["RC"], txt)
+    if m:
+        return int(m.group(1))
+    return 0
 
 
 def handle_rc_only_mode(args) -> None:
@@ -307,22 +334,13 @@ def main():
         else:
             try:
                 rc_flag = int(args.rc)
-            except Exception:
+            except ValueError:
                 raise SystemExit("Invalid value for --rc: must be an integer if provided")
-
-    def _current_rc() -> int:
-        """Return current ANTARES_RC value from CMakeLists or 0 if missing."""
-        # CMakeLists.txt is guaranteed to exist in this repo; read it directly.
-        txt = read_text(CMAKE_PATH)
-        m = re.search(CMAKE_VAR_RE["RC"], txt)
-        if m:
-            return int(m.group(1))
-        return 0
 
     # Handle RC-only mode (when --rc provided without a version)
     if (rc_flag is not None or rc_increment) and not args.version:
         if rc_increment:
-            args.rc = str(_current_rc() + 1)
+            args.rc = str(get_current_rc() + 1)
         else:
             args.rc = str(rc_flag)
         handle_rc_only_mode(args)
@@ -331,7 +349,7 @@ def main():
     # If both version and --rc are provided, merge them into a prerelease string
     if args.version and (rc_flag is not None or rc_increment):
         if rc_increment:
-            newrc = _current_rc() + 1
+            newrc = get_current_rc() + 1
         else:
             newrc = rc_flag
         args.version = f"{args.version}-rc{int(newrc)}"
@@ -350,7 +368,7 @@ def main():
     vcpkg_text = read_text(VCPKG_PATH)
 
     # Prepare updates
-    year = str(__import__("datetime").date.today().year)
+    year = str(datetime.datetime.now().year)
     new_cmake = update_cmake(cmake_text, version, year)
     new_sonar = update_sonar(sonar_text, version.base)
     new_vcpkg = update_vcpkg_json(VCPKG_PATH, version.base)
