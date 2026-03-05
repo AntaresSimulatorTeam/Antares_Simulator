@@ -1142,7 +1142,6 @@ var hierarchy =
     ] ],
     [ "PRODUCTION_THERMIQUE", "structPRODUCTION__THERMIQUE.html", null ],
     [ "PRODUCTION_THERMIQUE_OPTIMALE", "structPRODUCTION__THERMIQUE__OPTIMALE.html", null ],
-    [ "Antares::Solver::Progression", "classAntares_1_1Solver_1_1Progression.html", null ],
     [ "Antares::Data::ShortTermStorage::Properties", "classAntares_1_1Data_1_1ShortTermStorage_1_1Properties.html", null ],
     [ "PROPERTIES", "structPROPERTIES.html", null ],
     [ "Antares::IniFile::Property", "classAntares_1_1IniFile_1_1Property.html", null ],
@@ -1497,7 +1496,6 @@ var hierarchy =
       [ "Antares::Optimisation::EvaluationContext::CouldNotEvaluateConstantParameter< T >", "structAntares_1_1Optimisation_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html", null ]
     ] ],
     [ "Antares::Solver::Implementation::Tag", "structAntares_1_1Solver_1_1Implementation_1_1Tag.html", null ],
-    [ "Antares::Solver::Progression::Task", "classAntares_1_1Solver_1_1Progression_1_1Task.html", null ],
     [ "TempDirFixture", "structTempDirFixture.html", null ],
     [ "TempMPSFilePathProvider", "structTempMPSFilePathProvider.html", null ],
     [ "TestContext", "structTestContext.html", null ],

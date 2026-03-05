@@ -1,7 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html":[8,0,0,10,1,1,1],
-"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#a74b250302d4ebed6a69a1bc2941b2e21":[8,0,0,10,1,1,1,0],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1Empty.html":[8,0,0,10,1,1,2],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1Empty.html#a67ca1d53f726d14a0bcf2f56dd3dc905":[8,0,0,10,1,1,2,0],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html":[8,0,0,10,1,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html#aa9c0de354227b826a741932f8122efe4":[8,0,0,11,22,2],
 "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html#ad591753a1abbedf759c3cb995c28ed30":[8,0,0,11,22,1],
 "classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html":[8,0,0,11,18],
-"classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a27b7e2ebf6eb8060f6fe28e01e057db9":[8,0,0,11,18,14]
+"classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a27b7e2ebf6eb8060f6fe28e01e057db9":[8,0,0,11,18,14],
+"classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a30be9b5e9a0c50931a812fe93c3fdf94":[8,0,0,11,18,21],
+"classAntares_1_1Optimization_1_1TimeDependentLinearExpression.html#a34a9a3c7d7c1c11e294c3f673c83fce3":[8,0,0,11,18,3]
 };

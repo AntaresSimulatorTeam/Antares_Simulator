@@ -716,7 +716,6 @@ var annotated_dup =
           [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ]
         ] ],
         [ "SingleProblemGetter", "classAntares_1_1Solver_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1SingleProblemGetter" ],
-        [ "Progression", "classAntares_1_1Solver_1_1Progression.html", "classAntares_1_1Solver_1_1Progression" ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
         [ "InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html", "classAntares_1_1Solver_1_1InMemoryWriter" ],

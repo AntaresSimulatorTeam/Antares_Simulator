@@ -1,7 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1ModelerStudy_1_1SystemModel_1_1PortType.html#afae4e2d28b2f89944b51ce2b5e5fc61a":[8,0,0,9,0,22,0],
-"classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html":[8,0,0,9,0,23],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html#a5c68b3a5f40d0e50ab75c6d7d89ec9d1":[8,0,0,9,0,23,5],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html#a7e976bc367293d85530fc5aa471bb1f8":[8,0,0,9,0,23,3],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html#a8d268014f4edfe0737f52833468293cb":[8,0,0,9,0,23,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html#ad8e680efc06b5462dc6fa96272a946fc":[8,0,0,10,1,1,7],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html#af739b82dd628a3d55212eb2c865ec6a7":[8,0,0,10,1,1,4],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html":[8,0,0,10,1,1,0],
-"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html#aa9633d22b551047078ab499d383ce03d":[8,0,0,10,1,1,0,0]
+"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html#aa9633d22b551047078ab499d383ce03d":[8,0,0,10,1,1,0,0],
+"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html":[8,0,0,10,1,1,1],
+"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#a74b250302d4ebed6a69a1bc2941b2e21":[8,0,0,10,1,1,1,0]
 };

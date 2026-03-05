@@ -176,43 +176,39 @@ $(document).ready(function(){initNavTree('economy_8h_source.html',''); initResiz
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">bool</span> simulationBegin();</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">bool</span> year(<a class="code" href="classAntares_1_1Solver_1_1Progression_1_1Task.html">Progression::Task</a>&amp; progression,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;              <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Variable::State</a>&amp; state,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;              uint numSpace,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;              <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html">yearRandomNumbers</a>&amp; randomForYear,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;              std::list&lt;uint&gt;&amp; failedWeekList,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;              <span class="keyword">const</span> HYDRO_VENTILATION_RESULTS&amp;,</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;              <a class="code" href="classOptimizationStatisticsWriter.html">OptimizationStatisticsWriter</a>&amp; optWriter,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;              <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; durationCollector,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;              <span class="keyword">const</span> Antares::Data::Area::ScratchMap&amp; scratchmap);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> incrementProgression(<a class="code" href="classAntares_1_1Solver_1_1Progression_1_1Task.html">Progression::Task</a>&amp; progression);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> simulationEnd();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> initializeState(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Variable::State</a>&amp; state, uint numSpace);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a>&amp; getSimulationTable(uint numSpace);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::string getSimulationTableHeader() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    uint pNbWeeks;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    uint pStartTime;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    uint pNbMaxPerformedYearsInParallel;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    std::vector&lt;PROBLEME_HEBDO&gt; pProblemesHebdo;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::vector&lt;Optimization::WeeklyOptimization&gt; weeklyOptProblems_;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    std::vector&lt;std::unique_ptr&lt;interfacePostProcessList&gt;&gt; postProcessesList_;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; resultWriter_;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    std::reference_wrapper&lt;Simulation::ISimulationObserver&gt; simulationObserver_;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">bool</span> year(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Variable::State</a>&amp; state,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;              uint numSpace,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;              <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html">yearRandomNumbers</a>&amp; randomForYear,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;              std::list&lt;uint&gt;&amp; failedWeekList,</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;              <span class="keyword">const</span> HYDRO_VENTILATION_RESULTS&amp;,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;              <a class="code" href="classOptimizationStatisticsWriter.html">OptimizationStatisticsWriter</a>&amp; optWriter,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;              <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a>&amp; durationCollector,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;              <span class="keyword">const</span> Antares::Data::Area::ScratchMap&amp; scratchmap);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> simulationEnd();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> initializeState(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">Variable::State</a>&amp; state, uint numSpace);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a>&amp; getSimulationTable(uint numSpace);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    std::string getSimulationTableHeader() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    uint pNbWeeks;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    uint pStartTime;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    uint pNbMaxPerformedYearsInParallel;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    std::vector&lt;PROBLEME_HEBDO&gt; pProblemesHebdo;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::vector&lt;Optimization::WeeklyOptimization&gt; weeklyOptProblems_;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    std::vector&lt;std::unique_ptr&lt;interfacePostProcessList&gt;&gt; postProcessesList_;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a>&amp; resultWriter_;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::reference_wrapper&lt;Simulation::ISimulationObserver&gt; simulationObserver_;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    std::vector&lt;OptimisationsSimulationTable&gt; simulationTables_;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}; <span class="comment">// class Economy</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    std::vector&lt;OptimisationsSimulationTable&gt; simulationTables_;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}; <span class="comment">// class Economy</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_ECONOMY_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:37</div></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;} <span class="comment">// namespace Antares::Solver::Simulation</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __SOLVER_SIMULATION_ECONOMY_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:36</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Progression_1_1Task_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Progression_1_1Task.html">Antares::Solver::Progression::Task</a></div><div class="ttdef"><b>Definition:</b> progression.h:72</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1Economy_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1Economy.html">Antares::Solver::Simulation::Economy</a></div><div class="ttdef"><b>Definition:</b> economy.h:21</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1Economy_html_a0235b9e54867b888aff232361a93b7ce"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a0235b9e54867b888aff232361a93b7ce">Antares::Solver::Simulation::Economy::study</a></div><div class="ttdeci">Data::Study &amp; study</div><div class="ttdoc">Current study.</div><div class="ttdef"><b>Definition:</b> economy.h:50</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1Economy_html_a34410d819e9c53fb9bc777ad1180a386"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1Economy.html#a34410d819e9c53fb9bc777ad1180a386">Antares::Solver::Simulation::Economy::preproOnly</a></div><div class="ttdeci">bool preproOnly</div><div class="ttdoc">Prepro only.</div><div class="ttdef"><b>Definition:</b> economy.h:54</div></div>
