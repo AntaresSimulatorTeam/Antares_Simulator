@@ -21,6 +21,7 @@ namespace fs = std::filesystem;
 
 void initializeStudy(Study& study)
 {
+    study.parameters.include.constraints = true;
     study.parameters.derated = false;
 
     study.runtime.rangeLimits.year[rangeBegin] = 0;
