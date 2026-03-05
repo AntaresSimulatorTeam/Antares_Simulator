@@ -1020,8 +1020,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::R::AllYears::Or< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Or.html", null ],
     [ "OrtoolsUtils", "classOrtoolsUtils.html", null ],
     [ "std::out_of_range", null, [
-      [ "Antares::Expressions::Visitors::EvalResultTimeIndexOutOfRange", "classAntares_1_1Expressions_1_1Visitors_1_1EvalResultTimeIndexOutOfRange.html", null ],
-      [ "Antares::Optimisation::TimeIndexOutOfRangeException", "classAntares_1_1Optimisation_1_1TimeIndexOutOfRangeException.html", null ]
+      [ "Antares::Expressions::Visitors::EvalResultTimeIndexOutOfRange", "classAntares_1_1Expressions_1_1Visitors_1_1EvalResultTimeIndexOutOfRange.html", null ]
     ] ],
     [ "Output", "classOutput.html", null ],
     [ "find_output.output_folder_finder", "classfind__output_1_1output__folder__finder.html", null ],

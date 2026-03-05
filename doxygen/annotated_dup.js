@@ -396,8 +396,7 @@ var annotated_dup =
         [ "EvaluationContextProvider", "classAntares_1_1Optimisation_1_1EvaluationContextProvider.html", "classAntares_1_1Optimisation_1_1EvaluationContextProvider" ],
         [ "LinearConstraint", "structAntares_1_1Optimisation_1_1LinearConstraint.html", "structAntares_1_1Optimisation_1_1LinearConstraint" ],
         [ "ReadLinearConstraintVisitor", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearConstraintVisitor" ],
-        [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor" ],
-        [ "TimeIndexOutOfRangeException", "classAntares_1_1Optimisation_1_1TimeIndexOutOfRangeException.html", "classAntares_1_1Optimisation_1_1TimeIndexOutOfRangeException" ]
+        [ "ReadLinearExpressionVisitor", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html", "classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor" ]
       ] ],
       [ "Optimization", null, [
         [ "ConstraintSlackAnalysis", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis.html", "classAntares_1_1Optimization_1_1ConstraintSlackAnalysis" ],
