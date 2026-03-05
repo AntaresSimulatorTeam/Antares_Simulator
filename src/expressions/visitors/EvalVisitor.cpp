@@ -373,15 +373,15 @@ EvaluationResult EvaluationResult::timeShift(int shift) const
 
 EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
-    std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
-    std::vector<double> v(values.size(), 0.);
+    const std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
+    std::vector<double> to_return(values.size(), 0.);
 
     for (int shift = from; shift <= to; ++shift)
     {
         std::vector<double> shifted_values = shiftVector(values, shift);
-        v += shifted_values;
+        to_return += shifted_values;
     }
-    return EvaluationResult(v);
+    return EvaluationResult(to_return);
 }
 
 EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
