@@ -431,7 +431,6 @@ bool XCast::runWithPredicate(PredicateT& predicate)
                     {
                         column[hourInTheYear + h] = std::round(dailyResults[h]);
                     }
-
                 }
 
                 hourInTheYear += HOURS_PER_DAY;
