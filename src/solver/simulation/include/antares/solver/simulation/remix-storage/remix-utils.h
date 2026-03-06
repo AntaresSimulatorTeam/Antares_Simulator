@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ranges>
+#include <algorithm>
 #include <span>
 #include <vector>
 
