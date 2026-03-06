@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1State.html":[8,0,0,12,6,47],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640":[8,0,0,12,6,47,7],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a16e0a881b1060114b68be90fc25f7b71":[8,0,0,12,6,47,15],
 "classAntares_1_1Solver_1_1Variable_1_1State.html#a1f96b8a70272676a148555c82a33b15d":[8,0,0,12,6,47,16],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "classBindingConstraintData.html#aab672ae25e7c606ae9b2bc7aa5b66a87":[8,0,41,6],
 "classBindingConstraintData.html#abccd79f07fff696164c58c0045108374":[8,0,41,10],
 "classBindingConstraintDay.html":[8,0,42],
-"classBindingConstraintDay.html#a2e34353696b4c761e4f3abd6eab832d9":[8,0,42,1]
+"classBindingConstraintDay.html#a2e34353696b4c761e4f3abd6eab832d9":[8,0,42,1],
+"classBindingConstraintDay.html#a87a591c566d4137c2e2cf53f888bf657":[8,0,42,0]
 };

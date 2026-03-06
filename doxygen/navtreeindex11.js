@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html#a5c68b3a5f40d0e50ab75c6d7d89ec9d1":[8,0,0,9,0,23,5],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html#a7e976bc367293d85530fc5aa471bb1f8":[8,0,0,9,0,23,3],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html#a8d268014f4edfe0737f52833468293cb":[8,0,0,9,0,23,2],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html#ad549fb6b168d1b058eb38cd4bd04a7d9":[8,0,0,9,0,23,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html":[8,0,0,10,1,1,0],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesAlreadyExists.html#aa9633d22b551047078ab499d383ce03d":[8,0,0,10,1,1,0,0],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html":[8,0,0,10,1,1,1],
-"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#a74b250302d4ebed6a69a1bc2941b2e21":[8,0,0,10,1,1,1,0]
+"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1DataSeriesNotExist.html#a74b250302d4ebed6a69a1bc2941b2e21":[8,0,0,10,1,1,1,0],
+"classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository_1_1Empty.html":[8,0,0,10,1,1,2]
 };

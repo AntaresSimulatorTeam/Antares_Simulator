@@ -9,7 +9,7 @@ var classAntares_1_1Data_1_1DataSeriesHydro =
     [ "LoadMaxPower", "classAntares_1_1Data_1_1DataSeriesHydro.html#a37aeddd3e9114bb641232329690fdc1b", null ],
     [ "reset", "classAntares_1_1Data_1_1DataSeriesHydro.html#aea8f189d6acbbb0466c7486ae273d5cd", null ],
     [ "resizeTS", "classAntares_1_1Data_1_1DataSeriesHydro.html#a616c1fd7dcb52246088125bf27dffba5", null ],
-    [ "resizeTSinDeratedMode", "classAntares_1_1Data_1_1DataSeriesHydro.html#a6f8ecab515a85c4d122736fdd3a652f4", null ],
+    [ "resizeTSinDeratedMode", "classAntares_1_1Data_1_1DataSeriesHydro.html#a26b1368aa141c185a7c3478b855132ed", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1DataSeriesHydro.html#a5ab15d36fd0a050b8f358197178c7d9f", null ],
     [ "TScount", "classAntares_1_1Data_1_1DataSeriesHydro.html#ac19100162bc273064d4f906c0344c2c9", null ],
     [ "maxHourlyGenPower", "classAntares_1_1Data_1_1DataSeriesHydro.html#a99d584445157a6e0de16f55d063f2519", null ],

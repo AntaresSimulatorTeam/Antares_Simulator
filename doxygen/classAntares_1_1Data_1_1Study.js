@@ -5,7 +5,7 @@ var classAntares_1_1Data_1_1Study =
     [ "Ptr", "classAntares_1_1Data_1_1Study.html#a69a144b636623dd0c0a2fec221e61c84", null ],
     [ "Set", "classAntares_1_1Data_1_1Study.html#ac84095305b6524e9b8fecda02070e825", null ],
     [ "SetsOfAreas", "classAntares_1_1Data_1_1Study.html#aab54ffdf4fbc75b5d4e5461d4f649750", null ],
-    [ "Study", "classAntares_1_1Data_1_1Study.html#ac7be7a2a3105799743468871378ad4fd", null ],
+    [ "Study", "classAntares_1_1Data_1_1Study.html#a1bf73f04b6aae3931db2aa22e5b16c99", null ],
     [ "~Study", "classAntares_1_1Data_1_1Study.html#aef6c85631895b8500f68b7df86dd2c28", null ],
     [ "areaAdd", "classAntares_1_1Data_1_1Study.html#ab496531b39e59036ae03075ae7dced49", null ],
     [ "checkForFilenameLimits", "classAntares_1_1Data_1_1Study.html#ac0b3d7a7b4a4d6fe581961e7bac5d87a", null ],
@@ -70,6 +70,5 @@ var classAntares_1_1Data_1_1Study =
     [ "scenarioRules", "classAntares_1_1Data_1_1Study.html#ab38f6175f709dd6eb830dab471b5ec16", null ],
     [ "setsOfAreas", "classAntares_1_1Data_1_1Study.html#ab79f4691a33e445f73d06782389a8a2c", null ],
     [ "simulationComments", "classAntares_1_1Data_1_1Study.html#a186e82a3044153d9bf628f19e66f0484", null ],
-    [ "simulationName", "classAntares_1_1Data_1_1Study.html#a05064bd6addd1e9f42f39eaa6ef75f29", null ],
-    [ "usedByTheSolver", "classAntares_1_1Data_1_1Study.html#af416e6cf886489dce4c7c1f8d6129a55", null ]
+    [ "simulationName", "classAntares_1_1Data_1_1Study.html#a05064bd6addd1e9f42f39eaa6ef75f29", null ]
 ];

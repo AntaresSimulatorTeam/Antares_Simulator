@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"classHydroPower.html#a7536d229dba6901a38d7d0e86ac42a86":[8,0,146,0],
 "classHydroPower.html#ac001ea4d2bd31e114bf555c831565ddd":[8,0,146,2],
 "classHydroPowerGroup.html":[8,0,148],
 "classHydroPowerGroup.html#a83aee8659878014b25a079764befe8fa":[8,0,148,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX25 =
 "classNamer.html":[8,0,204],
 "classNamer.html#a1787da47d06a799afc09c1823b6b0d06":[8,0,204,9],
 "classNamer.html#a4dfba44a9dff565fa3b9f9fc15155862":[8,0,204,11],
-"classNamer.html#a529faa6e41852c7352156e09d8ec42af":[8,0,204,1]
+"classNamer.html#a529faa6e41852c7352156e09d8ec42af":[8,0,204,1],
+"classNamer.html#a6ad7cc40b38cccce1bd9ae7820cf380e":[8,0,204,4]
 };

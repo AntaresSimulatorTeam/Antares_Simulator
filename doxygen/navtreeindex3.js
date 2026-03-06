@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"classAntares_1_1Data_1_1BindingConstraint.html#a001678b985fc640d024ac507331b2f26":[8,0,0,3,17,49],
 "classAntares_1_1Data_1_1BindingConstraint.html#a009bd29e4ba5b4243884f9fabe2525c8":[8,0,0,3,17,17],
 "classAntares_1_1Data_1_1BindingConstraint.html#a015217d086e11b123a8ea325c80f1fa2":[8,0,0,3,17,7],
 "classAntares_1_1Data_1_1BindingConstraint.html#a015217d086e11b123a8ea325c80f1fa2a086fb5b01817595b701b9c42c33f7b01":[8,0,0,3,17,7,1],
@@ -202,13 +203,13 @@ var NAVTREEINDEX3 =
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a046191c957df17bcd0617341ba5efff8":[8,0,0,3,49,5],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a13623a3a63da5fa15a050c052fa95839":[8,0,0,3,49,2],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a20242c15ed354fc694cee9d0f393be20":[8,0,0,3,49,14],
+"classAntares_1_1Data_1_1DataSeriesHydro.html#a26b1368aa141c185a7c3478b855132ed":[8,0,0,3,49,9],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a37aeddd3e9114bb641232329690fdc1b":[8,0,0,3,49,6],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a3abe93b1e9efea9d7b499e5c72c3f790":[8,0,0,3,49,0],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a4bf8ff859c00e267dc3a871701dd5325":[8,0,0,3,49,15],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a4d05de80cabc362f9a2f17f3ae929b88":[8,0,0,3,49,3],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a5ab15d36fd0a050b8f358197178c7d9f":[8,0,0,3,49,10],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a616c1fd7dcb52246088125bf27dffba5":[8,0,0,3,49,8],
-"classAntares_1_1Data_1_1DataSeriesHydro.html#a6f8ecab515a85c4d122736fdd3a652f4":[8,0,0,3,49,9],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a8b0f2bb769e0e067377916614b0f65ed":[8,0,0,3,49,16],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a9059611c7cee449d1916ad462cd60536":[8,0,0,3,49,1],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#a93a0b52ec251f04201b93278b6e644b1":[8,0,0,3,49,17],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "classAntares_1_1Data_1_1HydroAllocation.html#a667149a426e8f80232b6d85508338f62":[8,0,0,3,41,3],
 "classAntares_1_1Data_1_1HydroAllocation.html#a69eca70f84767b75e461d1a89f686592":[8,0,0,3,41,14],
 "classAntares_1_1Data_1_1HydroAllocation.html#a7449921464cfe64faff4e7a04a22aacd":[8,0,0,3,41,2],
-"classAntares_1_1Data_1_1HydroAllocation.html#a757b4161921a1277a498260a5f0e7925":[8,0,0,3,41,16],
-"classAntares_1_1Data_1_1HydroAllocation.html#a7a3b300353dbe58198903a7a917ba833":[8,0,0,3,41,15]
+"classAntares_1_1Data_1_1HydroAllocation.html#a757b4161921a1277a498260a5f0e7925":[8,0,0,3,41,16]
 };
