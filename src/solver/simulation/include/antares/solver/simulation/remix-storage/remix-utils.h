@@ -1,10 +1,7 @@
 #pragma once
 
-#include <algorithm>
-#include <numeric>
 #include <ranges>
 #include <span>
-#include <stdexcept>
 #include <vector>
 
 namespace Antares::Solver::Simulation
