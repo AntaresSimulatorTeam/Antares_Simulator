@@ -21,6 +21,7 @@ target_sources(${local_target}
 
 target_include_directories(${local_target}
         PUBLIC
+		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs/antares/utils/include>
 		$<BUILD_INTERFACE:${include_dir}>)
 
 set_target_properties(${local_target} PROPERTIES FOLDER storage-remix)

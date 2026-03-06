@@ -1,6 +1,7 @@
 project(Expressions)
 
 add_subdirectory(antlr-interface)
+
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/PortFieldSumNode.cpp
@@ -9,7 +10,6 @@ set(SRC_Expressions
         nodes/ParentNode.cpp
         nodes/TimeSumNode.cpp
         nodes/FunctionNode.cpp
-
 
         visitors/AstDOTStyleVisitor.cpp
         visitors/CloneVisitor.cpp
@@ -70,14 +70,22 @@ set(SRC_Expressions
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
-add_library(expressions
-        ${SRC_Expressions})
-add_library(Antares::expressions ALIAS expressions)
+
+add_library(expressions ${SRC_Expressions})
 
 target_include_directories(expressions
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+        # This following line is supposed to give access to "utils" from current target : 
+        # $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs/antares/utils/include>
+        # It does not work, strangely (at least on Windows) : it has no effect 
+        # on include directory list of current target, and thus compilation fails to find utils headers.
+        # Note that it works elsewhere, in other cmake files.
+        # Work around :
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../libs/antares/utils/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+add_library(Antares::expressions ALIAS expressions)
+
 target_link_libraries(expressions
         PUBLIC
         Boost::headers
@@ -99,8 +107,8 @@ endif ()
 
 
 add_library(expressions-iterators
-        iterators/pre-order.cpp
-        include/antares/expressions/iterators/pre-order.h
+            iterators/pre-order.cpp
+            include/antares/expressions/iterators/pre-order.h
 )
 add_library(Antares::expressions-iterators ALIAS expressions-iterators)
 

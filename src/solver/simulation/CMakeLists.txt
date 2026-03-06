@@ -68,6 +68,7 @@ target_sources(antares-solver-simulation
 
 target_include_directories(antares-solver-simulation
         PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs/antares/utils/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
