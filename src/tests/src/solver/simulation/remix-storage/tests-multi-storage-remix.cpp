@@ -9,8 +9,10 @@
 
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/utils/vector-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
 
+using namespace Antares::Utils;
 using namespace Antares::Solver::Simulation;
 
 template<unsigned int nb_hours>

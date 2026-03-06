@@ -16,6 +16,10 @@ add_boost_test(tests-on-remix-utils
 
 set_target_properties(tests-on-remix-utils PROPERTIES FOLDER Unit-tests/storage-remix)
 
+# Access to vector utils
+target_include_directories(tests-on-remix-utils PUBLIC ${PROJECT_SOURCE_DIR}/libs/antares/utils/include)
+
+
 #---------------------------------------
 # Unit tests on remix algo components
 #---------------------------------------
@@ -53,6 +57,9 @@ add_boost_test(tests-on-multi-storage-remix
         test_utils_unit)
 
 set_target_properties(tests-on-multi-storage-remix PROPERTIES FOLDER Unit-tests/storage-remix)
+
+# Access to vector utils
+target_include_directories(tests-on-multi-storage-remix PUBLIC ${PROJECT_SOURCE_DIR}/libs/antares/utils/include)
 
 #-----------------------------
 # Unit tests on extractSTS-functions
