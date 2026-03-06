@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
-#include "antares/utils/vector-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
+#include "antares/utils/vector-utils.h"
 
 using namespace Antares::Utils;
 
