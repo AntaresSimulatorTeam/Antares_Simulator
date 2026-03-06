@@ -115,8 +115,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear,
     return false; // No need to call the solver to exhibit an optimal solution
 }
 
-bool Adequacy::year(Progression::Task& progression,
-                    Variable::State& state,
+bool Adequacy::year(Variable::State& state,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
@@ -351,22 +350,12 @@ bool Adequacy::year(Progression::Task& progression,
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
         addTimeMeasure(durationCollector, currentProblem.timeMeasure);
-
-        ++progression;
     }
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
     return true;
-}
-
-void Adequacy::incrementProgression(Progression::Task& progression) const
-{
-    for (uint w = 0; w < pNbWeeks; ++w)
-    {
-        ++progression;
-    }
 }
 
 // Retrieve weighted average balance for each area
