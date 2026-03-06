@@ -65,8 +65,7 @@ static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& ar
     return true;
 }
 
-bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder,
-                                                             bool usedBySolver)
+bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& folder)
 {
     YString filePath;
     Matrix<>::BufferType fileContent;
@@ -75,40 +74,14 @@ bool HydroMaxTimeSeriesReader::loadDailyMaxPowersAndEnergies(const AnyString& fo
     filePath.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
                      << areaID_ << ".txt";
 
-    //  It is necessary to load maxpower_ txt file, whether loading is called from old GUI
-    //  or from solver.
+    //  It is necessary to load maxpower_ txt file.
 
-    if (!usedBySolver)
-    {
-        bool enabledModeIsChanged = false;
-
-        if (JIT::enabled)
-        {
-            JIT::enabled = false; // Allowing to read the area's daily max power and energy
-            enabledModeIsChanged = true;
-        }
-
-        ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath,
-                                                        4U,
-                                                        DAYS_PER_YEAR,
-                                                        Matrix<>::optFixedSize,
-                                                        &fileContent)
-              && ret;
-
-        if (enabledModeIsChanged)
-        {
-            JIT::enabled = true; // Back to the previous loading mode.
-        }
-    }
-    else
-    {
-        ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath,
-                                                        4U,
-                                                        DAYS_PER_YEAR,
-                                                        Matrix<>::optFixedSize,
-                                                        &fileContent)
-              && ret;
-    }
+    ret = hydro_.dailyMaxPumpAndGen.loadFromCSVFile(filePath,
+                                                    4U,
+                                                    DAYS_PER_YEAR,
+                                                    Matrix<>::optFixedSize,
+                                                    &fileContent)
+          && ret;
     return ret;
 }
 
@@ -138,9 +111,9 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
 
-bool HydroMaxTimeSeriesReader::read(const AnyString& folder, bool usedBySolver)
+bool HydroMaxTimeSeriesReader::read(const AnyString& folder)
 {
-    bool ret = loadDailyMaxPowersAndEnergies(folder, usedBySolver);
+    bool ret = loadDailyMaxPowersAndEnergies(folder);
     ret = checkPower(hydro_.dailyMaxPumpAndGen, areaName_) && ret;
     copyDailyMaxEnergy();
     hydro_.series->buildHourlyMaxPowerFromDailyTS(hydro_.dailyMaxPumpAndGen[genMaxP],

@@ -270,7 +270,7 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
 
     logs.info() << "  :: log filename: " << logs.logfile();
 
-    pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
+    pStudy = std::make_unique<Antares::Data::Study>();
 
     pParameters = &(pStudy->parameters);
     readDataForTheStudy(options);
@@ -320,7 +320,6 @@ void Application::prepare(int argc, const char* argv[])
 
     // Options
     Data::StudyLoadOptions options;
-    options.usedByTheSolver = true;
 
     // Bind pSettings / options members to command line arguments
     // Something like bind("--foo", options.foo);

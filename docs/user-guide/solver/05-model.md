@@ -462,6 +462,33 @@ All constraints (1) to (23) previously defined for regular operation conditions 
 
 Besides, in the expression of constraints , all occurrences of are replaced by $D_n + S_n$
 
+### Loop flow
+In Antares Simulator, a loop flow is an fixed amount of power flowing circularly through the grid when all "nodes" are perfectly balanced (no import and no export).
+For a given link, user can ask to include the related passive loop flow.
+For details on including loop flow, see [Links](02-inputs.md#lnks)).
+
+When loop flow is not included for link $l$, relations between $F\_l$, $F\_l^+$ and $F\_l^-$ are given in [Balance between load and generation](#balance-between-load-and-generation).
+
+Including a loop flow for a link $l$ implies :
+$$
+F\_l - F\_l^+ + F\_l^- = LF\_l
+$$
+
+where $LF\_l$ is the passive loop flow on $l$.
+
+In that case, variables bounds change, and we have : 
+$$
+-C\_l^- \leq F\_l \leq C\_l^+
+$$
+
+$$
+0 \leq F\_l^+ \leq C\_l^+ - LF\_l
+$$
+
+$$
+0 \leq F\_l^- \leq C\_l^- + LF\_l
+$$
+
 ## Antares as a SCOPF ("flow-based model")
 
 When problems $\mathcal{P}^k$ do not include any instance of so-called "binding constraints" and if no market pools are defined, the flows within the grid are only committed to meet the bounds set on the initial transmission capacities, potentially reinforced by investments (problem ).In other words, there are no electrical laws enforcing any particular pattern on the flows, even though hurdles costs and may influence flow directions through an economic signal.

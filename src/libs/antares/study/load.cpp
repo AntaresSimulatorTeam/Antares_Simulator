@@ -76,7 +76,7 @@ bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& option
 
 void Study::parameterFiller(const StudyLoadOptions& options)
 {
-    if (usedByTheSolver && !options.prepareOutput)
+    if (!options.prepareOutput)
     {
         parameters.noOutput = true;
         parameters.yearByYear = false;
@@ -87,37 +87,22 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
-    if (usedByTheSolver)
+    // We have time-series to import
+    if (parameters.exportTimeSeriesInInput && header.version != StudyVersion::latest())
     {
-        // We have time-series to import
-        if (parameters.exportTimeSeriesInInput && header.version != StudyVersion::latest())
-        {
-            logs.info() << "Stochastic TS stored in input parametrized."
-                           " Disabling Store in input because study is not at latest version."
-                           " This prevents writing data in unsupported format at the study version";
-            parameters.exportTimeSeriesInInput = 0;
-        }
+        logs.info() << "Stochastic TS stored in input parametrized."
+                       " Disabling Store in input because study is not at latest version."
+                       " This prevents writing data in unsupported format at the study version";
+        parameters.exportTimeSeriesInInput = 0;
     }
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study
-    prepareOutput(); // will abort early if not usedByTheSolver
+    prepareOutput();
 
     // calendar update
-    if (usedByTheSolver)
-    {
-        calendar.reset({parameters.dayOfThe1stJanuary,
-                        parameters.firstWeekday,
-                        parameters.firstMonthInYear,
-                        false});
-    }
-    else
-    {
-        calendar.reset({parameters.dayOfThe1stJanuary,
-                        parameters.firstWeekday,
-                        parameters.firstMonthInYear,
-                        parameters.leapYear});
-    }
+    calendar.reset(
+      {parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, false});
 
     calendarOutput.reset({parameters.dayOfThe1stJanuary,
                           parameters.firstWeekday,

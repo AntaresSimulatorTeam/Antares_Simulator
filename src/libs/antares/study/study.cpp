@@ -40,10 +40,9 @@ static inline void ClearAndShrink(StringT& string)
     string.shrink();
 }
 
-Study::Study(bool forTheSolver):
+Study::Study():
     areas(*this),
-    pQueueService(std::make_shared<Yuni::Job::QueueService>()),
-    usedByTheSolver(forTheSolver)
+    pQueueService(std::make_shared<Yuni::Job::QueueService>())
 {
     // TS generators
     for (uint i = 0; i != timeSeriesCount; ++i)
@@ -270,7 +269,7 @@ void Study::prepareOutput()
 {
     pStartTime = DateTime::Now();
 
-    if (parameters.noOutput || !usedByTheSolver)
+    if (parameters.noOutput)
     {
         return;
     }
@@ -328,7 +327,7 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     auto output = f.str();
     resultWriter.addEntryFromBuffer(path.c_str(), output);
 
-    if (usedByTheSolver and !parameters.noOutput)
+    if (!parameters.noOutput)
     {
         // Write all available areas as a reminder
         {

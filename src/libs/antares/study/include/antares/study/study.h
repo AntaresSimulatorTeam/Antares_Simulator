@@ -78,11 +78,8 @@ public:
     //@{
     /*!
     ** \brief Default Constructor
-    **
-    ** \param forTheSolver True to indicate that the study will be used for a simulation
-    **   Consequently some preparations / shortcuts should be done
     */
-    Study(bool forTheSolver = false);
+    Study();
     //! Destructor
     virtual ~Study();
     //@}
@@ -403,15 +400,8 @@ public:
     ** \warning These variables should not be used directly
     */
     void* cacheTSGenerator[timeSeriesCount];
-    //@}
 
-    /*!
-    ** \brief A non-zero value when the study will be used by the solver
-    **
-    ** If it is the case, some data may not be kept in memory, and some calculations
-    ** must be done.
-    */
-    const bool usedByTheSolver;
+    //@}
 
     Solver::ModelerData* getModelerData() const
     {

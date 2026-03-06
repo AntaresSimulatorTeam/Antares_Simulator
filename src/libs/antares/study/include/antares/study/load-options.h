@@ -57,9 +57,6 @@ public:
     bool forceParallel;
     uint maxNbYearsInParallel;
 
-    //! A non-zero value if the data will be used for a simulation
-    bool usedByTheSolver;
-
     //! All options related to linear & quadratic optimization
     Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
 

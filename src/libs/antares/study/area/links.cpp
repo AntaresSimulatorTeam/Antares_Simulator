@@ -438,6 +438,107 @@ bool AreaLinksInternalLoadFromProperty(AreaLink& link, const String& key, const 
 }
 } // anonymous namespace
 
+void AreaLink::checkLoadedData()
+{
+    const uint nbDirectTS = directCapacities.timeSeries.width;
+    const uint nbIndirectTS = indirectCapacities.timeSeries.width;
+    if (nbDirectTS != nbIndirectTS)
+    {
+        logLinkDataCheckErrorDirectIndirect(*this, nbDirectTS, nbIndirectTS);
+    }
+
+    auto& directHurdlesCost = parameters[fhlHurdlesCostDirect];
+    auto& indirectHurdlesCost = parameters[fhlHurdlesCostIndirect];
+    auto& loopFlow = parameters[fhlLoopFlow];
+    auto& PShiftMinus = parameters[fhlPShiftMinus];
+    auto& PShiftPlus = parameters[fhlPShiftPlus];
+
+    for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
+    {
+        const double* directCapacitiesPtr = directCapacities[indexTS];
+        const double* indirectCapacitiesPtr = indirectCapacities[indexTS];
+
+        // Checks on direct capacities
+        for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            if (directCapacitiesPtr[h] < 0.)
+            {
+                logLinkDataCheckError(*this, "direct capacity < 0", h);
+            }
+            if (directCapacitiesPtr[h] < loopFlow[h])
+            {
+                logLinkDataCheckError(*this, "direct capacity < loop flow", h);
+            }
+        }
+
+        // Checks on indirect capacities
+        for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
+        {
+            if (indirectCapacitiesPtr[h] < 0.)
+            {
+                logLinkDataCheckError(*this, "indirect capacitity < 0", h);
+            }
+            if (indirectCapacitiesPtr[h] + loopFlow[h] < 0)
+            {
+                logLinkDataCheckError(*this, "indirect capacity + loop flow < 0", h);
+            }
+        }
+    }
+    // Checks on hurdle costs
+    for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
+    {
+        if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
+        {
+            logLinkDataCheckError(*this, "hurdle costs direct + hurdle cost indirect < 0", h);
+        }
+    }
+
+    // Checks on P. shift min and max
+    for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
+    {
+        if (PShiftPlus[h] < PShiftMinus[h])
+        {
+            logLinkDataCheckError(*this, "phase shift plus < phase shift minus", h);
+        }
+    }
+}
+
+bool areaLinksPostProcessLoadedLink(Study& study, AreaLink& link)
+{
+    link.overrideTransmissionCapacityAccordingToGlobalParameter(
+      study.parameters.transmissionCapacities);
+
+    if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
+    {
+        link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
+        link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
+    }
+
+    switch (link.transmissionCapacities)
+    {
+    case Data::LocalTransmissionCapacities::enabled:
+        break;
+    case Data::LocalTransmissionCapacities::null:
+    {
+        // Ignore transmission capacities
+        link.directCapacities.timeSeries.zero();
+        link.indirectCapacities.timeSeries.zero();
+        break;
+    }
+    case Data::LocalTransmissionCapacities::infinite:
+    {
+        // Copper plate mode
+        auto infinity = +std::numeric_limits<double>::infinity();
+        link.directCapacities.fill(infinity);
+        link.indirectCapacities.fill(infinity);
+        break;
+    }
+    default:
+        return false;
+    }
+    return true;
+}
+
 bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const fs::path& folder)
 {
     // Assert
@@ -483,73 +584,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
 
         ret = link.loadTimeSeries(study.header.version, folder) && ret;
 
-        // Checks on loaded link's data
-        if (study.usedByTheSolver)
-        {
-            const uint nbDirectTS = link.directCapacities.timeSeries.width;
-            const uint nbIndirectTS = link.indirectCapacities.timeSeries.width;
-            if (nbDirectTS != nbIndirectTS)
-            {
-                logLinkDataCheckErrorDirectIndirect(link, nbDirectTS, nbIndirectTS);
-            }
-
-            auto& directHurdlesCost = link.parameters[fhlHurdlesCostDirect];
-            auto& indirectHurdlesCost = link.parameters[fhlHurdlesCostIndirect];
-            auto& loopFlow = link.parameters[fhlLoopFlow];
-            auto& PShiftMinus = link.parameters[fhlPShiftMinus];
-            auto& PShiftPlus = link.parameters[fhlPShiftPlus];
-
-            for (uint indexTS = 0; indexTS < nbDirectTS; ++indexTS)
-            {
-                const double* directCapacities = link.directCapacities[indexTS];
-                const double* indirectCapacities = link.indirectCapacities[indexTS];
-
-                // Checks on direct capacities
-                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
-                {
-                    if (directCapacities[h] < 0.)
-                    {
-                        logLinkDataCheckError(link, "direct capacity < 0", h);
-                    }
-                    if (directCapacities[h] < loopFlow[h])
-                    {
-                        logLinkDataCheckError(link, "direct capacity < loop flow", h);
-                    }
-                }
-
-                // Checks on indirect capacities
-                for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
-                {
-                    if (indirectCapacities[h] < 0.)
-                    {
-                        logLinkDataCheckError(link, "indirect capacitity < 0", h);
-                    }
-                    if (indirectCapacities[h] + loopFlow[h] < 0)
-                    {
-                        logLinkDataCheckError(link, "indirect capacity + loop flow < 0", h);
-                    }
-                }
-            }
-            // Checks on hurdle costs
-            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
-            {
-                if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
-                {
-                    logLinkDataCheckError(link,
-                                          "hurdle costs direct + hurdle cost indirect < 0",
-                                          h);
-                }
-            }
-
-            // Checks on P. shift min and max
-            for (unsigned int h = 0; h < HOURS_PER_YEAR; h++)
-            {
-                if (PShiftPlus[h] < PShiftMinus[h])
-                {
-                    logLinkDataCheckError(link, "phase shift plus < phase shift minus", h);
-                }
-            }
-        }
+        link.checkLoadedData();
 
         // Inifile
         const IniFile::Property* p = s->firstProperty;
@@ -564,41 +599,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
             }
         }
 
-        // From the solver only
-        if (study.usedByTheSolver)
-        {
-            link.overrideTransmissionCapacityAccordingToGlobalParameter(
-              study.parameters.transmissionCapacities);
-
-            if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
-            {
-                link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
-                link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
-            }
-
-            switch (link.transmissionCapacities)
-            {
-            case Data::LocalTransmissionCapacities::enabled:
-                break;
-            case Data::LocalTransmissionCapacities::null:
-            {
-                // Ignore transmission capacities
-                link.directCapacities.timeSeries.zero();
-                link.indirectCapacities.timeSeries.zero();
-                break;
-            }
-            case Data::LocalTransmissionCapacities::infinite:
-            {
-                // Copper plate mode
-                auto infinity = +std::numeric_limits<double>::infinity();
-                link.directCapacities.fill(infinity);
-                link.indirectCapacities.fill(infinity);
-                break;
-            }
-            default:
-                return false;
-            }
-        }
+        ret = areaLinksPostProcessLoadedLink(study, link) & ret;
     }
 
     return ret;
