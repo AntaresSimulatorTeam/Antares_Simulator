@@ -1,4 +1,4 @@
-#Output files
+# Output files
 
 [//]: # (TODO: update this page, list all output files)
 _**This section is under construction**_
@@ -341,7 +341,6 @@ The section [duration\_ms] contains the following fields:
 
 
 **problem_build_time** and **solve_time** are totals for each week of each year, more detailed values can be found in output folder: optimization/week-by-week/year\_**n**.txt
-
 
 
 [^16] : this output variable was introduced both in **8.8** and **9.2**, meaning that **9.0** and **9.1** don't have it.
