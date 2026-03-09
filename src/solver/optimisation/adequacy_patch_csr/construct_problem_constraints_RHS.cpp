@@ -145,13 +145,12 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     rhs -= sumPmin;
                 }
 
-                // Add short term storage net production (injection - withdrawal)
+                // Add short term storage withdrawal
                 const auto& shortTermStorageResults
-                  = problemeHebdo_->ResultatsHoraires[Area].ShortTermStorage;
-                for (const auto& storageResults : shortTermStorageResults)
+                  = problemeHebdo_->ResultatsHoraires[Area].ShortTermStorage[triggeredHour];
+                for (const auto& storageResults : shortTermStorageResults.withdrawal)
                 {
-                    rhs += storageResults.injection[triggeredHour]
-                           - storageResults.withdrawal[triggeredHour];
+                    rhs += storageResults;
                 }
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
