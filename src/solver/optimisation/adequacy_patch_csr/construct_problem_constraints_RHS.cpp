@@ -179,6 +179,14 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
                 double load = problemeHebdo_->ConsommationsAbattues[triggeredHour]
                                 .ConsommationAbattueDuPays[Area];
 
+                // Add short term storage injection
+                const auto& shortTermStorageResults
+                  = problemeHebdo_->ResultatsHoraires[Area].ShortTermStorage[triggeredHour];
+                for (const auto& storageResults : shortTermStorageResults.injection)
+                {
+                    load += storageResults;
+                }
+
                 SecondMembre[Cnt] = load;
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
