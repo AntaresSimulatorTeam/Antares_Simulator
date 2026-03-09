@@ -97,8 +97,10 @@ void CsrQuadraticProblem::setFictitiousLoadConstraints(ConstraintBuilder& builde
       .hour = hour,
       .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
       .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro,
-      .DefaillanceNegativeUtiliserConsoAbattue = problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue,
-      .DefaillanceNegativeUtiliserPMinThermique = problemeHebdo_->DefaillanceNegativeUtiliserPMinThermique,
+      .DefaillanceNegativeUtiliserConsoAbattue = problemeHebdo_
+                                                   ->DefaillanceNegativeUtiliserConsoAbattue,
+      .DefaillanceNegativeUtiliserPMinThermique = problemeHebdo_
+                                                    ->DefaillanceNegativeUtiliserPMinThermique,
       .numberOfConstraintCsrFictitiousLoad = hourlyCsrProblem_.numberOfConstraintCsrFictitiousLoad,
       .NombreDePays = problemeHebdo_->NombreDePays};
 
