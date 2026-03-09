@@ -10,7 +10,7 @@
 struct CsrMaxEnsLoadData
 {
     const std::vector<adqPatchParamsMode>& areaMode;
-    const uint32_t hour;
+    const int hour;
     const uint32_t NombreDePays;
     std::map<int, int>& numberOfConstraintCsrMaxEnsLoad;
 };
