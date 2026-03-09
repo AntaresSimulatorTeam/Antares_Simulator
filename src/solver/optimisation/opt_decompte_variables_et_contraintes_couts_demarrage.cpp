@@ -24,7 +24,7 @@
 
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (!problemeHebdo->OptimisationNotFastMode)
+    if (problemeHebdo->OptimisationFastMode)
     {
         return;
     }

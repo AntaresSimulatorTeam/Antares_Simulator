@@ -30,7 +30,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBL
 
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (!problemeHebdo->OptimisationNotFastMode)
+    if (problemeHebdo->OptimisationFastMode)
     {
         return;
     }

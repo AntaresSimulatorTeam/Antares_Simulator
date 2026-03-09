@@ -279,7 +279,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 
-    if (problemeHebdo->OptimisationNotFastMode)
+    if (!problemeHebdo->OptimisationFastMode)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                                       false);

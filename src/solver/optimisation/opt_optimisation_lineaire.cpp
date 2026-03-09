@@ -224,7 +224,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
 
 void runThermalHeuristic(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (problemeHebdo->OptimisationNotFastMode)
+    if (!problemeHebdo->OptimisationFastMode)
     {
         OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
     }

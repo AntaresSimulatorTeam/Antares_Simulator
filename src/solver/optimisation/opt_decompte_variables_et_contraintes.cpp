@@ -291,7 +291,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     // Reserves
     // OPT_DecompteDesVariablesEtDesContraintesReserves(problemeHebdo);
-    if (problemeHebdo->OptimisationNotFastMode)
+    if (!problemeHebdo->OptimisationFastMode)
     {
         OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(problemeHebdo);
         if (problemeHebdo->allReserves)
