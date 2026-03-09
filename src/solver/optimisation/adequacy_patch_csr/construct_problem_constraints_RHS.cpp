@@ -101,7 +101,8 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
 
                 // Add sum of all thermal dispatchable generation (STt)
                 const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
-                const auto& productionThermique = problemeHebdo_->ResultatsHoraires[Area].ProductionThermique[triggeredHour];
+                const auto& productionThermique
+                  = problemeHebdo_->ResultatsHoraires[Area].ProductionThermique[triggeredHour];
                 for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
                 {
                     rhs += productionThermique.ProductionThermiqueDuPalier[index];
@@ -117,11 +118,14 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                 if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
                 {
                     double maxAllMustRunGeneration = 0.0;
-                    double allMustRunGen = problemeHebdo_->AllMustRunGeneration[triggeredHour].AllMustRunGenerationOfArea[Area];
+                    double allMustRunGen = problemeHebdo_->AllMustRunGeneration[triggeredHour]
+                                             .AllMustRunGenerationOfArea[Area];
                     if (allMustRunGen > 0.0)
                         maxAllMustRunGeneration = allMustRunGen;
 
-                    double consommationAbattue = problemeHebdo_->ConsommationsAbattues[triggeredHour].ConsommationAbattueDuPays[Area];
+                    double consommationAbattue
+                      = problemeHebdo_->ConsommationsAbattues[triggeredHour]
+                          .ConsommationAbattueDuPays[Area];
                     double maxMoinsConsommationBrute = 0.0;
                     if (-(consommationAbattue + allMustRunGen) > 0.0)
                         maxMoinsConsommationBrute = -(consommationAbattue + allMustRunGen);
@@ -133,11 +137,21 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                 if (!problemeHebdo_->DefaillanceNegativeUtiliserPMinThermique[Area])
                 {
                     double sumPmin = 0.0;
-                    for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
+                    for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques;
+                         index++)
                     {
                         sumPmin += paliersThermiques.PminDuPalierThermiquePendantUneHeure[index];
                     }
                     rhs -= sumPmin;
+                }
+
+                // Add short term storage net production (injection - withdrawal)
+                const auto& shortTermStorageResults
+                  = problemeHebdo_->ResultatsHoraires[Area].ShortTermStorage;
+                for (const auto& storageResults : shortTermStorageResults)
+                {
+                    rhs += storageResults.injection[triggeredHour]
+                           - storageResults.withdrawal[triggeredHour];
                 }
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
