@@ -65,3 +65,7 @@ src/CMakeUserPresets.json
 .cache/
 build-debug/
 _codeql_detected_source_root
+
+#doxygen
+doxygen-awesome-css/
+html/
