@@ -126,14 +126,13 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     bfTerm = std::max(0.0, ftMinusLt);
                 }
 
-                // Add short term storage net production (injection - withdrawal)
+                // Add short term storage withdrawal
                 double stsNetProduction = 0.0;
                 const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
                                                         .ShortTermStorage;
                 for (const auto& storageResults: shortTermStorageResults)
                 {
-                    stsNetProduction += storageResults.injection[triggeredHour]
-                                        - storageResults.withdrawal[triggeredHour];
+                    stsNetProduction += storageResults.withdrawal[triggeredHour];
                 }
 
                 // RHS = STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt) + STS_net_production
@@ -164,6 +163,14 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
 
                 double load = problemeHebdo_->ConsommationsAbattues[triggeredHour]
                                 .ConsommationAbattueDuPays[Area];
+
+                const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
+                                                        .ShortTermStorage;
+                for (const auto& storageResults: shortTermStorageResults)
+                {
+                    load += storageResults.injection[triggeredHour];
+                }
+
 
                 SecondMembre[Cnt] = load;
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
