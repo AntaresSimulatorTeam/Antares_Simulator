@@ -32,7 +32,7 @@
 struct ReserveVariablesBoundsSetter
 {
     PROBLEME_HEBDO* problemeHebdo;
-    const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
     std::vector<double>& Xmin;
     std::vector<double>& Xmax;
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees;
@@ -40,11 +40,11 @@ struct ReserveVariablesBoundsSetter
 
     ReserveVariablesBoundsSetter(PROBLEME_HEBDO* hebdo):
         problemeHebdo(hebdo),
-        ProblemeAResoudre(hebdo->ProblemeAResoudre),
-        Xmin(ProblemeAResoudre->Xmin),
-        Xmax(ProblemeAResoudre->Xmax),
+        problemeAResoudre(*hebdo->ProblemeAResoudre),
+        Xmin(problemeAResoudre.Xmin),
+        Xmax(problemeAResoudre.Xmax),
         AdresseOuPlacerLaValeurDesVariablesOptimisees(
-          ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees)
+          problemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees)
     {
     }
 

@@ -41,17 +41,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
     struct ReserveVariablesRightSidesSetter
     {
         PROBLEME_HEBDO* problemeHebdo;
-        const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
+        PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
         std::vector<double>& SecondMembre;
         std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux;
         int pdtJour = 0, pdtHebdo = 0, pdtGlobal = 0, pays = 0;
 
         ReserveVariablesRightSidesSetter(PROBLEME_HEBDO* hebdo):
             problemeHebdo(hebdo),
-            ProblemeAResoudre(hebdo->ProblemeAResoudre),
-            SecondMembre(ProblemeAResoudre->SecondMembre),
+            problemeAResoudre(*hebdo->ProblemeAResoudre),
+            SecondMembre(problemeAResoudre.SecondMembre),
             AdresseOuPlacerLaValeurDesCoutsMarginaux(
-              ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux)
+              problemeAResoudre.AdresseOuPlacerLaValeurDesCoutsMarginaux)
         {
         }
 

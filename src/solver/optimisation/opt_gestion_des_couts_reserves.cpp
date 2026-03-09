@@ -33,14 +33,14 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
     struct ReserveCostsInitializer
     {
         PROBLEME_HEBDO* problemeHebdo;
-        const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
+        const PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
         VariableManagement::VariableManager variableManager;
         std::vector<double>& CoutLineaire;
         int pdtHebdo;
 
         ReserveCostsInitializer(PROBLEME_HEBDO* hebdo):
             problemeHebdo(hebdo),
-            ProblemeAResoudre(hebdo->ProblemeAResoudre),
+            problemeAResoudre(*hebdo->ProblemeAResoudre),
             variableManager(VariableManagerFromProblemHebdo(hebdo)),
             CoutLineaire(hebdo->ProblemeAResoudre->CoutLineaire),
             pdtHebdo(0)
@@ -56,13 +56,13 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
         void initReserveCosts(const CAPACITY_RESERVATION& reserve)
         {
             int var = variableManager.InternalExcessReserve(reserve.globalReserveIndex, pdtHebdo);
-            if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+            if (var >= 0 && var < problemeAResoudre.NombreDeVariables)
             {
                 CoutLineaire[var] = reserve.spillageCost;
             }
 
             var = variableManager.InternalUnsatisfiedReserve(reserve.globalReserveIndex, pdtHebdo);
-            if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+            if (var >= 0 && var < problemeAResoudre.NombreDeVariables)
             {
                 CoutLineaire[var] = reserve.unsuppliedCost;
             }

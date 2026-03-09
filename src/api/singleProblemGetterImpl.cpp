@@ -252,7 +252,7 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 
     OPT_MaxDesPmaxHydrauliques(&pb_);
 
-    if (pb_.OptimisationAvecCoutsDeDemarrage)
+    if (!pb_.OptimisationFastMode)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(&pb_);
     }

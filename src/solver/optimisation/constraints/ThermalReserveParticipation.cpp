@@ -17,9 +17,6 @@ void ThermalReserveParticipation::add(int pays, int reserve, int cluster, int pd
         // P^on : Participation of running units
         // P^off : Participation of off units
 
-        int globalClusterIdx = data.thermalClusters[pays]
-                                 .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
-
         builder.updateHourWithinWeek(pdt)
           .ThermalClusterReserveParticipation(reserveParticipation.globalIndexClusterParticipation,
                                               1.0)

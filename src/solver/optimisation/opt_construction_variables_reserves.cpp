@@ -41,7 +41,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
     {
         PROBLEME_HEBDO* problemeHebdo;
         bool Simulation;
-        const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
+        PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre;
         int& NombreDeVariables;
         VariableNamer& variableNamer;
         VariableManagement::VariableManager variableManager;
@@ -49,8 +49,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
         ReserveVariablesInitializer(PROBLEME_HEBDO* hebdo, bool sim, VariableNamer& namer):
             problemeHebdo(hebdo),
             Simulation(sim),
-            ProblemeAResoudre(hebdo->ProblemeAResoudre),
-            NombreDeVariables(ProblemeAResoudre->NombreDeVariables),
+            problemeAResoudre(*hebdo->ProblemeAResoudre),
+            NombreDeVariables(problemeAResoudre.NombreDeVariables),
             variableNamer(namer),
             variableManager(VariableManagerFromProblemHebdo(hebdo))
         {
@@ -67,14 +67,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
             {
                 // For Unsatisfied Reserves
                 variableManager.InternalUnsatisfiedReserve(reserveIndex, pdt) = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.InternalUnsatisfiedReserve(NombreDeVariables, reserveName);
                 NombreDeVariables++;
 
                 // For Excess Reserves
                 variableManager.InternalExcessReserve(reserveIndex, pdt) = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.InternalExcessReserve(NombreDeVariables, reserveName);
                 NombreDeVariables++;
@@ -101,7 +101,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   clusterReserveParticipation.globalIndexClusterParticipation,
                   pdt)
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfRunningUnitsToReserve(NombreDeVariables,
                                                                    clusterName,
@@ -115,7 +115,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       clusterReserveParticipation.globalIndexClusterParticipation,
                       pdt)
                       = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                    problemeAResoudre.TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
                     variableNamer.ParticipationOfOffUnitsToReserve(NombreDeVariables,
                                                                    clusterName,
@@ -126,9 +126,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                       clusterReserveParticipation.globalIndexClusterParticipation,
                       pdt)
                       = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                    problemeAResoudre.TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_DES_DEUX_COTES;
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables]
+                    problemeAResoudre.VariablesEntieres[NombreDeVariables]
                       = problemeHebdo->OptimisationAvecVariablesEntieres;
                     variableNamer.PowerOfOffUnitsParticipatingToReserve(NombreDeVariables,
                                                                         clusterName,
@@ -141,7 +141,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   clusterReserveParticipation.globalIndexClusterParticipation,
                   pdt)
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ThermalClusterReserveParticipation(NombreDeVariables,
                                                                  clusterName,
@@ -169,7 +169,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   clusterReserveParticipation.globalIndexClusterParticipation,
                   pdt)
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfSTStorageReleaseToReserve(NombreDeVariables,
                                                                        clusterName,
@@ -181,7 +181,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   clusterReserveParticipation.globalIndexClusterParticipation,
                   pdt)
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfSTStorageStoreToReserve(NombreDeVariables,
                                                                      clusterName,
@@ -199,7 +199,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                                                                 NombreDeVariables,
                                                                 clusterName,
                                                                 reserveName);
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
             }
@@ -224,7 +224,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   clusterReserveParticipation.globalIndexClusterParticipation,
                   pdt)
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfHydroReleaseToReserve(NombreDeVariables,
                                                                    clusterName,
@@ -236,7 +236,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   clusterReserveParticipation.globalIndexClusterParticipation,
                   pdt)
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 variableNamer.ParticipationOfHydroStoreToReserve(NombreDeVariables,
                                                                  clusterName,
@@ -249,7 +249,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
                   clusterReserveParticipation.globalIndexClusterParticipation,
                   pdt)
                   = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                problemeAResoudre.TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 
                 variableNamer.ParticipationOfHydroToReserve(type,
