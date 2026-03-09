@@ -20,12 +20,21 @@ on:
         description: "Set the release as latest"
         required: true
         type: boolean
+      generate_results:
+        description: "Generate results?"
+        required: true
+        type: boolean
+        default: false
 jobs:
   release:
     name: Release pushed tag
     runs-on: ubuntu-22.04
+    outputs:
+      release_url: ${{ steps.create_release.outputs.release_url }}
+      tag: ${{ steps.create_release.outputs.tag }}
     steps:
     - name: Create release
+      id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.event.inputs.release_tag }}
@@ -40,7 +49,10 @@ jobs:
             --notes="Run tests: $tests"\
             --target="$target_branch" \
             --latest=$latest
-  
+        # Get release URL from gh CLI
+        REL=$(gh release view "$tag" --repo="$GITHUB_REPOSITORY" --json url --jq '.url') || true
+        echo "release_url=${REL}" >> $GITHUB_OUTPUT
+        echo "tag=${tag}" >> $GITHUB_OUTPUT
 
   ubuntu:
     name: Release - Ubuntu
@@ -81,3 +93,30 @@ jobs:
     with:
       run-tests: ${{ inputs.run-tests }}
       target_branch: ${{ inputs.target_branch }}
+
+  generate_results:
+    name: Generate Results
+    needs:
+      - ubuntu
+      - windows
+    # Only run this job if the `generate_results` input is true AND all the required build jobs succeeded.
+    # If you'd like to generate results even when some builds fail, replace this condition with a less strict one
+    # (for example, exclude some jobs) or add a new input like `allow_partial_results` to control that behavior.
+    if: ${{ github.event.inputs.generate_results == 'true' && needs.ubuntu.result == 'success' && needs.windows.result == 'success' }}
+    # ASSUMPTION: we call the `main` ref of that repository. Change the ref if you prefer a tag or SHA.
+    uses: AntaresSimulatorTeam/SimTest/.github/workflows/generate-reference.yml@main
+    permissions:
+      contents: write
+      actions: read
+    with:
+      # Map inputs expected by the external reusable workflow
+      release_tag: ${{ github.event.inputs.release_tag }}
+      antares_tag: ${{ github.event.inputs.release_tag }}
+      antares_tests_tag: ''
+      target_branch: ''
+    # Note: the external reusable workflow currently does not declare secrets in its 'workflow_call',
+    # so we cannot pass SIMTEST_PAT here. If the remote workflow needs a PAT, update its 'on: workflow_call: secrets:'
+    # to declare the secret, then re-add mapping here.
+    secrets:
+      SIMTEST_PAT: ${{ secrets.SIMTEST_REPO_PAT }}
+

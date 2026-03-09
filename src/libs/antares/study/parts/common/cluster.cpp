@@ -88,7 +88,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
           && ret;
 
-    if (s.usedByTheSolver && s.parameters.derated)
+    if (s.parameters.derated)
     {
         series.timeSeries.averageTimeseries();
     }

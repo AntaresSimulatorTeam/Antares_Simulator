@@ -250,36 +250,12 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
           if (study.parameters.compatibility.hydroPmax
               == Parameters::Compatibility::HydroPmax::Hourly)
           {
-              // GUI part patch :
-              // We need to know, when estimating the RAM required by the solver, if the current
-              // area is hydro modulable. Therefore, reading the area's daily max power at this
-              // stage is necessary.
+              ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
 
-              if (!study.usedByTheSolver)
-              {
-                  bool enabledModeIsChanged = false;
-                  if (JIT::enabled)
-                  {
-                      JIT::enabled = false; // Allowing to read the area's daily max power
-                      enabledModeIsChanged = true;
-                  }
+              // Check is moved here, because in case of old study
+              // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.
 
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
-
-                  if (enabledModeIsChanged)
-                  {
-                      JIT::enabled = true; // Back to the previous loading mode.
-                  }
-              }
-              else
-              {
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
-
-                  // Check is moved here, because in case of old study
-                  // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.
-
-                  ret = area.hydro.CheckDailyMaxEnergy(area.name) && ret;
-              }
+              ret = area.hydro.CheckDailyMaxEnergy(area.name) && ret;
           }
 
           fs::path capacityPath = folder / "common" / "capacity";
@@ -330,11 +306,6 @@ bool PartHydro::checkReservoirLevels(const Study& study)
 
     for (const auto& [areaName, area]: study.areas)
     {
-        if (!study.usedByTheSolver)
-        {
-            return true;
-        }
-
         auto& col = area->hydro.inflowPattern[0];
         bool errorInflow = false;
         for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)

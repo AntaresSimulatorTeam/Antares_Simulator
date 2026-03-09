@@ -20,8 +20,7 @@ StudyLoadOptions::StudyLoadOptions():
     forceMode(SimulationMode::Unknown),
     enableParallel(false),
     forceParallel(false),
-    maxNbYearsInParallel(0),
-    usedByTheSolver(false)
+    maxNbYearsInParallel(0)
 {
 }
 

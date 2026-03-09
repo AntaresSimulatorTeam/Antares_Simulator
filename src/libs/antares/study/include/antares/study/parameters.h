@@ -72,8 +72,7 @@ public:
     ** is disabled.
     ** Another case would be the directives given by the command line.
     **
-    ** \note This method is automatically called from `loadFromFile()` if the
-    **  flag options.usedByTheSolver is set.
+    ** \note This method is automatically called from `loadFromFile()`.
     ** \see loadFromFile()
     */
     void prepareForSimulation(const StudyLoadOptions& options);
@@ -300,7 +299,7 @@ public:
     struct IncludeOptions
     {
         //! Include binding constraints
-        bool constraints;
+        bool constraints = true;
         //! Hurdle costs
         bool hurdleCosts;
 

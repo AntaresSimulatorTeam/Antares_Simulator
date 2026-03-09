@@ -118,8 +118,7 @@ public:
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated,
                                StudyVersion version,
-                               Parameters::Compatibility::HydroPmax hydroPmax,
-                               bool useBySolver);
+                               Parameters::Compatibility::HydroPmax hydroPmax);
 }; // class DataSeriesHydro
 } // namespace Antares::Data
 

@@ -289,15 +289,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     thermalPlantTotalCountMustRun = 0;
     // Calendar
     logs.info() << "Generating calendar informations";
-    if (study.usedByTheSolver)
-    {
-        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
-    }
-    else
-    {
-        study.calendar.reset(
-          {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
-    }
+    study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
     logs.debug() << "  :: generating calendar dedicated to the output";
     study.calendarOutput.reset(
       {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});

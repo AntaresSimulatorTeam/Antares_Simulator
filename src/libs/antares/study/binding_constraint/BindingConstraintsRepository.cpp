@@ -122,18 +122,15 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
     logs.info(); // space for beauty
     logs.info() << "Loading constraints...";
 
-    if (study.usedByTheSolver)
+    if (options.ignoreConstraints)
     {
-        if (options.ignoreConstraints)
-        {
-            logs.info() << "  The constraints have been disabled by the user";
-            return true;
-        }
-        if (!study.parameters.include.constraints)
-        {
-            logs.info() << "  The constraints shall be ignored due to the optimization preferences";
-            return true;
-        }
+        logs.info() << "  The constraints have been disabled by the user";
+        return true;
+    }
+    if (!study.parameters.include.constraints)
+    {
+        logs.info() << "  The constraints shall be ignored due to the optimization preferences";
+        return true;
     }
 
     EnvForLoading env(study.areas, study.header.version);
@@ -178,9 +175,9 @@ bool BindingConstraintsRepository::loadFromFolder(Study& study,
         }
     }
 
-    // When ran from the solver and if the simplex is in `weekly` mode,
+    // When the simplex is in `weekly` mode,
     // all weekly constraints will become daily ones.
-    if (study.usedByTheSolver && sorDay == study.parameters.simplexOptimizationRange)
+    if (sorDay == study.parameters.simplexOptimizationRange)
     {
         changeConstraintsWeeklyToDaily();
     }
@@ -200,11 +197,6 @@ void BindingConstraintsRepository::changeConstraintsWeeklyToDaily()
               constraint.setTimeGranularity(BindingConstraint::typeDaily);
           }
       });
-}
-
-void BindingConstraintsRepository::reverseWeightSign(const AreaLink* lnk)
-{
-    each([&lnk](BindingConstraint& constraint) { constraint.reverseWeightSign(lnk); });
 }
 
 BindingConstraintsRepository::iterator BindingConstraintsRepository::begin()

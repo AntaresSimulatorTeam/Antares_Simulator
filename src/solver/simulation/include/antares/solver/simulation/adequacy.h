@@ -58,8 +58,7 @@ protected:
     std::string getSimulationTableHeader() const;
     bool simulationBegin();
 
-    bool year(Progression::Task& progression,
-              Variable::State& state,
+    bool year(Variable::State& state,
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
@@ -67,8 +66,6 @@ protected:
               OptimizationStatisticsWriter& optWriter,
               Benchmarking::DurationCollector& durationCollector,
               const Antares::Data::Area::ScratchMap& scratchmap);
-
-    void incrementProgression(Progression::Task& progression) const;
 
     void simulationEnd();
 
