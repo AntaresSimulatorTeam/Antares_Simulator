@@ -17,9 +17,9 @@ void CsrFlowDissociation::add()
             && data.extremityAreaMode[interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            builder.DirectFlux(interco, 1.0)
-              .DirectFluxPositif(interco, -1.0)
-              .IndirectFluxPositif(interco, 1.0);
+            builder.FluxDirect(interco, 1.0)
+              .FluxDirectPositif(interco, -1.0)
+              .FluxIndirectPositif(interco, 1.0);
 
             data.numberOfConstraintCsrFlowDissociation[interco] = builder.data.nombreDeContraintes;
 

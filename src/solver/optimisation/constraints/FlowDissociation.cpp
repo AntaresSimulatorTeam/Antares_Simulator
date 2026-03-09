@@ -19,9 +19,9 @@ void FlowDissociation::add(int pdt, int interco)
         namer.FlowDissociation(builder.data.nombreDeContraintes);
 
         builder.updateHourWithinWeek(pdt);
-        builder.DirectFlux(interco, 1.0)
-          .DirectFluxPositif(interco, -1.0)
-          .IndirectFluxPositif(interco, 1.0);
+        builder.FluxDirect(interco, 1.0)
+          .FluxDirectPositif(interco, -1.0)
+          .FluxIndirectPositif(interco, 1.0);
 
         builder.equalTo();
 
