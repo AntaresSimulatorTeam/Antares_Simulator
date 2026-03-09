@@ -73,7 +73,7 @@ TimeDependentLinearExpression applyOperation(const std::vector<TimeDependentLine
 
     for (std::size_t t = 0; t < maxSize; ++t)
     {
-        for (int c = 0; c < lhs.size(); ++c)
+        for (std::size_t c = 0; c < lhs.size(); ++c)
         {
             const auto& e = lhs[c];
             row[c] = &(e.size() < maxSize ? e[0] : e[t]);

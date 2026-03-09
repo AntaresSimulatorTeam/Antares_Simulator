@@ -338,7 +338,7 @@ void SimulationHandler::create()
 // Basic study builder
 // =========================
 StudyBuilder::StudyBuilder():
-    study(std::make_unique<Study>(true)),
+    study(std::make_unique<Study>()),
     simulation(*study)
 {
     // Make logs shrink to errors (and higher) only

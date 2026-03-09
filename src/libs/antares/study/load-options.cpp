@@ -11,7 +11,6 @@ namespace Antares::Data
 StudyLoadOptions::StudyLoadOptions():
     nbYears(0),
     prepareOutput(false),
-    loadOnlyNeeded(false),
     forceYearByYear(false),
     forceDerated(false),
     noTimeseriesImportIntoInput(false),
@@ -21,8 +20,7 @@ StudyLoadOptions::StudyLoadOptions():
     forceMode(SimulationMode::Unknown),
     enableParallel(false),
     forceParallel(false),
-    maxNbYearsInParallel(0),
-    usedByTheSolver(false)
+    maxNbYearsInParallel(0)
 {
 }
 

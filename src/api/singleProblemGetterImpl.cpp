@@ -361,7 +361,7 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
     SingleOptimOptions options;
 
     std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
-      Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.ProblemeAResoudre->isMIP(),
+      Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.OptimisationAvecVariablesEntieres,
                                                          options.solverName);
     fillProblem(*linearProblem, id);
 
@@ -381,9 +381,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
     const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
       = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-    Optimisation::OptimEntityContainer optimEntityContainer(problem,
-                                                            modelerDataSeries,
-                                                            modelerScenarioGroupRepository);
+    Optimisation::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
     {
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));

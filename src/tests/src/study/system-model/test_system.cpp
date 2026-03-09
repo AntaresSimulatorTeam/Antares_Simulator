@@ -43,7 +43,8 @@ static Antares::IO::Inputs::YmlModel::Variable GiveMeOneVar()
             .upper_bound = "4",
             .variable_type = Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS,
             .time_dependent = true,
-            .scenario_dependent = true};
+            .scenario_dependent = true,
+            .location = "dummy-location"};
 }
 
 // port1 sends and port2 receives

@@ -136,17 +136,6 @@ public:
     */
     void clear();
 
-    bool forceReload(bool /*reload*/) const
-    {
-        pModified = true;
-        return true;
-    }
-
-    void markAsModified() const
-    {
-        pModified = true;
-    }
-
     uint size() const;
 
     /*!

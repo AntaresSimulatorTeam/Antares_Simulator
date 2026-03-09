@@ -42,14 +42,14 @@ public:
                                              int offset = 0,
                                              int delta = 0);
 
-    int& NTCDirect(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
+    int& DirectFlux(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
-    int& IntercoDirectCost(unsigned int index,
+    int& DirectFluxPositif(unsigned int index,
                            unsigned int hourInWeek,
                            int offset = 0,
                            int delta = 0);
 
-    int& IntercoIndirectCost(unsigned int index,
+    int& IndirectFluxPositif(unsigned int index,
                              unsigned int hourInWeek,
                              int offset = 0,
                              int delta = 0);

@@ -88,7 +88,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
           && ret;
 
-    if (s.usedByTheSolver && s.parameters.derated)
+    if (s.parameters.derated)
     {
         series.timeSeries.averageTimeseries();
     }
@@ -99,19 +99,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 }
 
 #undef SEP
-
-void Cluster::invalidateArea()
-{
-    if (parentArea)
-    {
-        parentArea->forceReload();
-    }
-}
-
-bool Cluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
-}
 
 void Cluster::reset()
 {

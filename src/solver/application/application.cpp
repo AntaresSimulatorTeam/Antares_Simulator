@@ -122,13 +122,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
     options.ignoreConstraints = pSettings.ignoreConstraints;
-    options.loadOnlyNeeded = true;
 
     // Load the study from a folder
     Benchmarking::Timer timer;
@@ -139,7 +138,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
         {
             logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
         }
 
         if (study.areas.empty())
@@ -185,11 +183,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
-    // Removing all callbacks, which are no longer needed
-    logs.callback.clear();
     logs.info();
 
     if (pSettings.noOutput)
@@ -233,7 +229,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Checking for filename length limits
     if (!pSettings.noOutput)
     {
-        if (!study.checkForFilenameLimits(true))
+        if (!study.checkForFilenameLimits())
         {
             throw Error::InvalidFileName();
         }
@@ -245,6 +241,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         throw Error::RuntimeInfoInitialization();
     }
+
+    // Removing all callbacks, which are no longer needed
+    logs.callback.clear();
+    logs.info();
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
@@ -270,30 +270,12 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
 
     logs.info() << "  :: log filename: " << logs.logfile();
 
-    pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
+    pStudy = std::make_unique<Antares::Data::Study>();
 
     pParameters = &(pStudy->parameters);
     readDataForTheStudy(options);
 
     postParametersChecks();
-
-    pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
-    if (pSettings.noOutput)
-    {
-        pSettings.displayProgression = false;
-    }
-
-    if (pSettings.displayProgression)
-    {
-        auto& filename = pStudy->buffer;
-        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, *resultWriter);
-        pStudy->progression.start();
-    }
-    else
-    {
-        logs.info() << "  The progression is disabled";
-    }
 }
 
 void Application::postParametersChecks() const
@@ -338,7 +320,6 @@ void Application::prepare(int argc, const char* argv[])
 
     // Options
     Data::StudyLoadOptions options;
-    options.usedByTheSolver = true;
 
     // Bind pSettings / options members to command line arguments
     // Something like bind("--foo", options.foo);
@@ -438,9 +419,6 @@ void Application::execute()
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
-
-    // Stop the display of the progression
-    pStudy->progression.stop();
 }
 
 void Application::resetLogFilename() const
@@ -552,7 +530,7 @@ Application::~Application()
     {
         try
         {
-            logs.info() << LOG_UI_SOLVER_DONE;
+            logs.info() << "[END] Quitting the solver gracefully";
         }
         catch (...)
         {

@@ -116,9 +116,7 @@ AreaConnectionFixture::AreaConnectionFixture():
 
     auto scenario = std::make_unique<Scenario>("SG");
     scenarioGroupRepository.addScenario("SG", std::move(scenario));
-    optimContainer = std::make_unique<OptimEntityContainer>(linearProblem,
-                                                            &data,
-                                                            &scenarioGroupRepository);
+    optimContainer = std::make_unique<OptimEntityContainer>(linearProblem);
     optimContainer->addFromSystemComponents(modelerData->system->Components());
 }
 
@@ -147,7 +145,7 @@ void AreaConnectionFixture::addComponentsVariablesToLP()
             optimContainer->addStartColumn();
 
             // All variables are time-dependent here
-            for (auto t = 0; t <= fill_ctx.getLocalLastTimeStep(); ++t)
+            for (unsigned t = 0; t <= fill_ctx.getLocalLastTimeStep(); ++t)
             {
                 auto name = buildVariableName(component.Id(), variable.Id(), {}, t);
                 linearProblem.addVariable(-999, 999, false, name);
@@ -215,6 +213,7 @@ BOOST_FIXTURE_TEST_CASE(injecting_spillage_and_unsupplied_energy_bounds, AreaCon
     // 2. Adding constraints from GEMS area connections
     ComponentToAreaConnectionFiller filler(problemeHebdo.get(),
                                            *optimContainer,
+                                           &data,
                                            scenarioGroupRepository);
     filler.addConstraints(fill_ctx);
 

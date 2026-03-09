@@ -23,6 +23,14 @@ void DynamicAggregationSingleYear::addResultsToSets(const PROBLEME_HEBDO& pb)
     }
 }
 
+void DynamicAggregationSingleYear::reset()
+{
+    for (auto& [_, setData]: setsData_)
+    {
+        setData.reset();
+    }
+}
+
 void DynamicAggregationSingleYear::appendToSurveyForSet(const std::string& setName,
                                                         SurveyResults& survey,
                                                         Category::Precision precision) const

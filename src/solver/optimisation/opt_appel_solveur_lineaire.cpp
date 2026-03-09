@@ -18,7 +18,6 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
-#include "antares/solver/optimisation/MipDetection.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -69,6 +68,7 @@ static void fillModelerComponents(
     {
         fillersCollection.push_back(
           std::make_unique<ComponentFiller>(component,
+                                            modelerData->dataSeries.get(),
                                             optimEntityContainer,
                                             modelerData->scenarioGroupRepository,
                                             Solver::Config::Location::SUBPROBLEMS,
@@ -126,9 +126,14 @@ void fillLinearProblem(FillContext& fillCtx,
         fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
           problemeHebdo,
           optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
           problemeHebdo->modelerData->scenarioGroupRepository));
-        fillersCollection.push_back(
-          std::make_unique<ThermalCapacityFiller>(problemeHebdo, optimEntityContainer));
+
+        fillersCollection.push_back(std::make_unique<ThermalCapacityFiller>(
+          problemeHebdo,
+          optimEntityContainer,
+          problemeHebdo->modelerData->dataSeries.get(),
+          problemeHebdo->modelerData->scenarioGroupRepository));
     }
 
     LinearProblemBuilder linearProblemBuilder(fillersCollection);
@@ -162,8 +167,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     const auto& modelerData = problemeHebdo->modelerData;
     bool hasModelerData = modelerData != nullptr;
-    const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                       || Antares::Optimization::hasModelerIntegerVariables(modelerData);
+    const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
     LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
@@ -174,9 +178,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                            ->scenarioGroupRepository
                                                                       : nullptr;
 
-    OptimEntityContainer optimEntityContainer(ortoolsProblem,
-                                              modelerDataSeries,
-                                              modelerScenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(ortoolsProblem);
 
     Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
                                                                  ? &modelerData
@@ -249,7 +251,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         FillSimulationTable(*simulationTable,
                             ortoolsProblem,
                             ::getObjectiveValue(solver.get()),
-
                             *modelerData,
                             optimEntityContainer,
                             fillCtx,
@@ -333,8 +334,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
     {
         const auto& modelerData = problemeHebdo->modelerData;
         bool hasModelerData = modelerData != nullptr;
-        const bool isMip = problemeHebdo->ProblemeAResoudre->isMIP()
-                           || Antares::Optimization::hasModelerIntegerVariables(modelerData);
+        const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
         LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
@@ -343,15 +343,14 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         const ScenarioGroupRepository* modelerScenarioGroupRepository
           = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
-        OptimEntityContainer optimEntityContainer(infeasibleProblem,
-                                                  modelerDataSeries,
-                                                  modelerScenarioGroupRepository);
+        OptimEntityContainer optimEntityContainer(infeasibleProblem);
         Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
                                                                      ? &modelerData
                                                                           ->bendersDecomposition
                                                                      : nullptr;
 
         fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
+
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());

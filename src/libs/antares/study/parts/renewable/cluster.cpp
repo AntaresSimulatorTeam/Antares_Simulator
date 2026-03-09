@@ -43,23 +43,6 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     series.timeSeries = cluster.series.timeSeries;
     cluster.series.timeSeries.unloadFromMemory();
     series.timeseriesNumbers.clear();
-
-    // The parent must be invalidated to make sure that the clusters are really
-    // re-written at the next 'Save' from the user interface.
-    if (parentArea)
-    {
-        parentArea->forceReload();
-    }
-}
-
-bool Data::RenewableCluster::forceReload(bool reload) const
-{
-    return series.forceReload(reload);
-}
-
-void Data::RenewableCluster::markAsModified() const
-{
-    series.markAsModified();
 }
 
 void Data::RenewableCluster::reset()

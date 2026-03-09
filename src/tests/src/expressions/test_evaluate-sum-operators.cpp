@@ -96,8 +96,8 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
                       {{"p", {"p", VariabilityType::VARYING_IN_TIME_ONLY, "p"}},
                        {"five", {"five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}},
                       0)),
-    scenarioGroupRepo_(makeScenarioGroupRepo(component_)),
-    components_({component_})
+    components_({component_}),
+    scenarioGroupRepo_(makeScenarioGroupRepo(component_))
 {
     // Parameter p : make assocaited time-series
     auto ts = std::make_unique<TimeSeriesSet>("p", 3);
@@ -105,13 +105,16 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
     data_.addDataSeries(std::move(ts));
 
     // Creation of a OptimEntityContainer
-    optimEntityContainer_ = std::make_unique<OptimEntityContainer>(linearProblem_,
-                                                                   &data_,
-                                                                   &scenarioGroupRepo_);
+    optimEntityContainer_ = std::make_unique<OptimEntityContainer>(linearProblem_);
     optimEntityContainer_->addFromSystemComponents(components_);
 
     // And finally, creation of the evaluation visitor (purpose of this fixture)
-    evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_, fillCtx_, component_);
+    evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_,
+                                                fillCtx_,
+                                                component_,
+                                                &data_,
+                                                &scenarioGroupRepo_.scenario(
+                                                  component_.getScenarioGroupId()));
 }
 
 // =================================================

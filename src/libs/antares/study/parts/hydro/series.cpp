@@ -107,26 +107,6 @@ void DataSeriesHydro::resizeTS(uint nbSeries)
     ror.reset(nbSeries, HOURS_PER_YEAR);
 }
 
-bool DataSeriesHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = ror.forceReload(reload) && ret;
-    ret = storage.forceReload(reload) && ret;
-    ret = mingen.forceReload(reload) && ret;
-    ret = maxHourlyGenPower.forceReload(reload) && ret;
-    ret = maxHourlyPumpPower.forceReload(reload) && ret;
-    return ret;
-}
-
-void DataSeriesHydro::markAsModified() const
-{
-    ror.markAsModified();
-    storage.markAsModified();
-    mingen.markAsModified();
-    maxHourlyGenPower.markAsModified();
-    maxHourlyPumpPower.markAsModified();
-}
-
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
                                        const fs::path& folder,
                                        StudyVersion studyVersion)
@@ -237,10 +217,9 @@ uint DataSeriesHydro::TScount() const
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             StudyVersion studyVersion,
-                                            Parameters::Compatibility::HydroPmax hydroPmax,
-                                            bool usedBySolver)
+                                            Parameters::Compatibility::HydroPmax hydroPmax)
 {
-    if (!(derated && usedBySolver))
+    if (!derated)
     {
         return;
     }

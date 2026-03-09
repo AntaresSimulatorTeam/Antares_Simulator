@@ -151,17 +151,17 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned varIndex,
     SetThermalClusterElementName(varIndex, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NTCDirect(unsigned varIndex)
+void VariableNamer::DirectFlux(unsigned varIndex)
 {
     SetLinkElementName(varIndex, "NTCDirect");
 }
 
-void VariableNamer::IntercoDirectCost(unsigned varIndex)
+void VariableNamer::DirectFluxPositif(unsigned varIndex)
 {
     SetLinkElementName(varIndex, "IntercoDirectCost");
 }
 
-void VariableNamer::IntercoIndirectCost(unsigned varIndex)
+void VariableNamer::IndirectFluxPositif(unsigned varIndex)
 {
     SetLinkElementName(varIndex, "IntercoIndirectCost");
 }

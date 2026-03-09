@@ -31,7 +31,7 @@ struct Fixture
     Fixture()
     {
         // Create studies
-        study = std::make_shared<Study>(true);
+        study = std::make_shared<Study>();
 
         // Add areas to studies
         area_1 = study->areaAdd("Area1");
@@ -121,7 +121,6 @@ BOOST_FIXTURE_TEST_CASE(Testing_load_power_credits_both_matrix_equal_width_and_d
     bool ret = true;
     study->parameters.derated = true;
     StudyVersion studyVersion(9, 1);
-    bool usedBySolver = true;
 
     auto& maxHourlyGenPower = area_1->hydro.series->maxHourlyGenPower.timeSeries;
     auto& maxHourlyPumpPower = area_1->hydro.series->maxHourlyPumpPower.timeSeries;

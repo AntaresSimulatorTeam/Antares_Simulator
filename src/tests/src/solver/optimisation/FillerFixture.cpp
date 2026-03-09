@@ -138,7 +138,10 @@ void FillerFixture::fillProblemWithThermalCapacityConnectionFiller(
 {
     problemeHebdo->NombreDePasDeTempsPourUneOptimisation = fillCtx.getLocalNumberOfTimeSteps();
 
-    ThermalCapacityFiller filler(problemeHebdo.get(), optimEntityContainer);
+    ThermalCapacityFiller filler(problemeHebdo.get(),
+                                 optimEntityContainer,
+                                 &linearProblemData,
+                                 scenarioGroupRepository);
     filler.addVariables(fillCtx);
     filler.addConstraints(fillCtx);
     filler.addObjectives(fillCtx);

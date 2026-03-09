@@ -33,7 +33,10 @@ class ThermalCapacityFiller final: public Optimisation::LinearProblemApi::Linear
 {
 public:
     explicit ThermalCapacityFiller(PROBLEME_HEBDO* problemeHebdo,
-                                   Optimisation::OptimEntityContainer& variableContainer);
+                                   Optimisation::OptimEntityContainer& variableContainer,
+                                   const Optimisation::LinearProblemApi::ILinearProblemData* data,
+                                   const Optimisation::ScenarioGroupRepository& scenarioGroupRepo);
+
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -42,6 +45,10 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     Optimisation::OptimEntityContainer& optimEntityContainer_;
+    Optimisation::LinearProblemApi::ILinearProblem& pb_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
+
     void processThermalCapacityField(
       const TimeDependentLinearExpression& linearExpression,
       const ModelerStudy::SystemModel::ThermalComponent& thermalCapacityConnection,
@@ -60,16 +67,7 @@ private:
                                     int clusterIndex,
                                     const std::string& namePrefix);
 
-    struct AreaAndClusters
-    {
-        unsigned int areaIndex;
-        std::unordered_map<std::string, unsigned> clusters; // name <-> global Index
-    };
-
-    AreaAndClusters& areaClusters(const std::string& areaId);
     int getClusterIndex(const std::string& areaId, const std::string& clusterId);
-
-    std::unordered_map<std::string, AreaAndClusters> areasAndClusters_;
 
     VariableManagement::VariableManager variableManager_;
 };

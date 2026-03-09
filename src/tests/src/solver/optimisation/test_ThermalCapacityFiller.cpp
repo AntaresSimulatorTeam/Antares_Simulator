@@ -194,17 +194,17 @@ system:
   - component : crypto_invest
     port: share_hold
     thermal-component:
-      area: Carthage
+      area: carthage
       cluster-id: assets
   - component : compo
     port: model_port
     thermal-component:
-      area: Persia
+      area: persia
       cluster-id: east
   - component : my_thermal_invest
     port: capacity_port
     thermal-component:
-      area: Rome
+      area: rome
       cluster-id: short)";
 
 static constexpr std::string_view dispatchableProductionVariableFormat
@@ -229,9 +229,7 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
     setData("availability_factor", {4.0, -389});
     setData("already_installed_availability_factor", {1250., -153});
 
-    OptimEntityContainer optimEntityContainer(linearProblem,
-                                              &linearProblemData,
-                                              &scenarioGroupRepository);
+    OptimEntityContainer optimEntityContainer(linearProblem);
 
     optimEntityContainer.addFromSystemComponents(modelerData->system->Components());
     unsigned int nbTimeStep = 2;
@@ -260,6 +258,7 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
         PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[i];
         const auto& areaClusters = allClusters[i];
         PaliersThermiquesDuPays.NomsDesPaliersThermiques = areaClusters;
+        PaliersThermiquesDuPays.NombreDePaliersThermiques = static_cast<int>(areaClusters.size());
         auto& NumeroDuPalierDansLEnsembleDesPaliersThermiques
           = PaliersThermiquesDuPays.NumeroDuPalierDansLEnsembleDesPaliersThermiques;
         NumeroDuPalierDansLEnsembleDesPaliersThermiques.resize(areaClusters.size());

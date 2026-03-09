@@ -332,12 +332,9 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
             return line.split(b'Output folder : ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
 
-
-def make_daily_values_from_a_string(days: str):
-    list_daily_values = [float(number) for number in re.findall(r'\d+', days)]
-    assert len(list_daily_values) == NB_DAYS_IN_WEEK, "7 daily values expected, %d given" % len(list_daily_values)
-    return list_daily_values
-
+def make_values_from_string(values: str):
+    list_values = [float(number.strip()) for number in values.split(",")]
+    return list_values
 
 def check_week_ts_has_daily_values(week_ts, list_daily_values):
     split_ts = np.array_split(week_ts, NB_DAYS_IN_WEEK)
@@ -356,7 +353,8 @@ def extract_week_ts(ts, week):
 @then('in area "{area}", week {week:d}, year {year:d}, daily mingens for cluster "{cluster}" are {days}')
 def check_thermal_cluster_min_gen_for_week(context, area, week, year, cluster, days):
     ts = context.soh.min_gen_for_thermal_cluster(area, year, cluster)
-    list_daily_values = make_daily_values_from_a_string(days)
+    list_daily_values = make_values_from_string(days)
+    assert len(list_daily_values) == NB_DAYS_IN_WEEK, "7 daily values expected, %d given" % len(list_daily_values)
     week_ts = extract_week_ts(ts, week)
     check_week_ts_has_daily_values(week_ts, list_daily_values)
 
@@ -562,7 +560,7 @@ def check_near_price_cap(context, area, year, hour, value):
     assert actual == value, f"Near price cap hours mismatch: expected {value}, got {actual}"
 
 
-def get_week_time_steps_from_mps_file_name(file_name):
+def week_hours_from_mps_filename(file_name):
     """
     Extract week number from MPS file name and generate 168 time steps.
 
@@ -592,12 +590,12 @@ def get_week_time_steps_from_mps_file_name(file_name):
     optim_nb = int(match.group(3))
 
     # Generate 168 time steps for the week
-    week_time_steps = [(week - 1) * 168 + hour for hour in range(168)]
+    week_hours = [(week - 1) * 168 + hour for hour in range(168)]
 
-    return week_time_steps
+    return week_hours
 
 
-def extract_time_step(name) -> int:
+def extract_hour(name) -> int:
     return int(name.split("hour<")[1].split(">")[0])
 
 
@@ -606,17 +604,39 @@ def extract_time_step(name) -> int:
 def check_max_generation_from_capacity_exists(context, area, cluster):
     for mps_file in context.soh.get_mps_files():
         mps_problem = mpu.load_problem(str(mps_file))
-        week_time_step = get_week_time_steps_from_mps_file_name(mps_file)
-        time_step_constraint: dict[int, str] = {}
+        week_hours = week_hours_from_mps_filename(mps_file)
+        hours_mapped_to_constraints: dict[int, str] = {}
         for c in mps_problem.get_linear_constraints():
             if c.name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
-                time_step = extract_time_step(c.name)
-                time_step_constraint[time_step] = c.name
-        assert len(week_time_step) == len(time_step_constraint), \
+                hour = extract_hour(c.name)
+                hours_mapped_to_constraints[hour] = c.name
+        assert len(week_hours) == len(hours_mapped_to_constraints), \
             f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint not found for all time steps in {mps_file}"
-        assert week_time_step == list(
-            time_step_constraint.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_time_step[0]}, {week_time_step[-1]}] in {mps_file}"
+        assert week_hours == list(
+            hours_mapped_to_constraints.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_hours[0]}, {week_hours[-1]}] in {mps_file}"
 
+@then('for first week, area balance RHS (for area {area}) is first {values_str}, then equals constant {constant_str}')
+def check_area_balance_rhs(context, area, values_str, constant_str):
+    list_values = make_values_from_string(values_str)
+    constant = float(constant_str)
+
+    mps_file_path = context.soh.get_output_file_with_name("problem-1-1--optim-nb-1.mps")
+    assert mps_file_path, f"No output file named problem-1-1--optim-nb-1.mps"
+
+    mps_problem = mpu.load_problem(mps_file_path)
+    balanced_constraints = [c for c in mps_problem.get_linear_constraints() if c.name.startswith(f"AreaBalance::area<{area}>")]
+
+    # Checking first balance constraints have expected bounds
+    first_constraints = balanced_constraints[0:len(list_values)]
+    for c, value in zip(first_constraints, list_values):
+        assert c.lower_bound == value, f"Contraint {c.name} low bound should be {str(value)}"
+        assert c.upper_bound == value, f"Contraint {c.name} up bound should be {str(value)}"
+
+    # Checking remaining balance constraints have same expected bounds
+    last_constraints = balanced_constraints[len(list_values):]
+    for c in last_constraints:
+        assert c.lower_bound == constant, f"Contraint {c.name} low bound should be {constant_str}"
+        assert c.upper_bound == constant, f"Contraint {c.name} up bound should be {constant_str}"
 
 @then(
     'enforces: DispatchableProduction {expression} < {rhs} for the thermal capacity connection between GEMS and the {cluster} thermal cluster in area {area}.')
@@ -627,12 +647,12 @@ def check_max_generation_from_capacity_constraint(context, expression, rhs, clus
         rhs = float(rhs)
         for constr_name, row in mpu.get_constraint_matrix(mps_problem).items():
             if constr_name.startswith(f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::"):
-                time_step = extract_time_step(constr_name)
+                hour = extract_hour(constr_name)
                 assert len(
                     row) == 2, f"{constr_name} must have exactly two non null coefficients: DispatchableProduction-thermal_add_on.p_max<0"
                 # Check coefficients
                 for var_name, coeff in row.items():
-                    dispatchable_production = f"DispatchableProduction::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>"
+                    dispatchable_production = f"DispatchableProduction::area<{area}>::ThermalCluster<{cluster}>::hour<{hour}>"
 
                     if var_name == dispatchable_production:
                         assert coeff == 1.0, f"the coefficient of {dispatchable_production} in {constr_name} must be = 1"
@@ -641,4 +661,4 @@ def check_max_generation_from_capacity_constraint(context, expression, rhs, clus
                             var_name], f"the coefficient of {var_name} in {constr_name} must be = {coeff}"
                     else:
                         raise ValueError(
-                            f"{var_name} should not have coefficient in MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::hour<{time_step}>")
+                            f"{var_name} should not have coefficient in MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>::hour<{hour}>")

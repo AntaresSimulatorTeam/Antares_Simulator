@@ -38,7 +38,8 @@ class ComponentToAreaConnectionFiller final
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-      Optimisation::OptimEntityContainer& variableContainer,
+      Optimisation::OptimEntityContainer& optimContainer,
+      const Optimisation::LinearProblemApi::ILinearProblemData* data,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
 
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
@@ -50,6 +51,10 @@ private:
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     Optimisation::OptimEntityContainer& optimEntityContainer_;
+    Optimisation::LinearProblemApi::ILinearProblem& pb_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
+
     std::map<std::string, unsigned> areaIndices_;
 
     // Function members

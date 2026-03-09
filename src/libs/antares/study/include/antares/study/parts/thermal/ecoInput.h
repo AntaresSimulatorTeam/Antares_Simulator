@@ -26,10 +26,6 @@ public:
     explicit EconomicInputData();
     //@}
 
-    bool forceReload(bool reload) const;
-
-    void markAsModified() const;
-
     /*!
     ** \brief Reset all values to their default ones
     */

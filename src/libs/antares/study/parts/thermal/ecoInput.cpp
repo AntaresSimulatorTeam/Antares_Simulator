@@ -63,7 +63,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
                                            Matrix<>::optImmediate,
                                            &dataBuffer)
                   && ret;
-            if (study.usedByTheSolver && study.parameters.derated)
+            if (study.parameters.derated)
             {
                 fuelcost.averageTimeseries();
             }
@@ -78,7 +78,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
                                           Matrix<>::optImmediate,
                                           &dataBuffer)
                   && ret;
-            if (study.usedByTheSolver && study.parameters.derated)
+            if (study.parameters.derated)
             {
                 co2cost.averageTimeseries();
             }
@@ -86,17 +86,6 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
     }
 
     return ret;
-}
-
-bool EconomicInputData::forceReload(bool reload) const
-{
-    return fuelcost.forceReload(reload) && co2cost.forceReload(reload);
-}
-
-void EconomicInputData::markAsModified() const
-{
-    fuelcost.markAsModified();
-    co2cost.markAsModified();
 }
 
 void EconomicInputData::reset()
