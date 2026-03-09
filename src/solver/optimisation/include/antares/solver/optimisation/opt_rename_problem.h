@@ -105,6 +105,7 @@ public:
     void BindingConstraintWeek(unsigned constrIndex, const std::string& name);
     void CsrFlowDissociation(unsigned constrIndex);
     void CsrFictitiousLoad(unsigned int constraint);
+    void CsrMaxEnsLoad(unsigned int constraint);
     void CsrAreaBalance(unsigned constrIndex);
     void ShortTermStorageCostVariation(const std::string& constrIndex_name,
                                        unsigned constrIndex,

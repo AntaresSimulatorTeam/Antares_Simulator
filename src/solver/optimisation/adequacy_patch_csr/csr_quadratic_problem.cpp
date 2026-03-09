@@ -9,6 +9,7 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -108,6 +109,18 @@ void CsrQuadraticProblem::setFictitiousLoadConstraints(ConstraintBuilder& builde
     csrFictitiousLoad.add();
 }
 
+void CsrQuadraticProblem::setMaxEnsLoadConstraints(ConstraintBuilder& builder)
+{
+    CsrMaxEnsLoadData csrMaxEnsLoadData{
+      .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
+      .hour = hourlyCsrProblem_.triggeredHour,
+      .NombreDePays = problemeHebdo_->NombreDePays,
+      .numberOfConstraintCsrMaxEnsLoad = hourlyCsrProblem_.numberOfConstraintCsrMaxEnsLoad};
+
+    CsrMaxEnsLoad csrMaxEnsLoad(builder, csrMaxEnsLoadData);
+    csrMaxEnsLoad.add();
+}
+
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
@@ -125,6 +138,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setConstraintsOnFlows(builder);
     setNodeBalanceConstraints(builder);
     setFictitiousLoadConstraints(builder);
+    setMaxEnsLoadConstraints(builder);
     setBindingConstraints(builder);
 }
 

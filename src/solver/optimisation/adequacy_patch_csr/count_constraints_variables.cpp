@@ -49,6 +49,17 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
         }
     }
 
+    // constraint: MaxEnsLoad for areas inside adequacy patch
+    // ENS <= Load
+    for (uint32_t Area = 0; Area < problemeHebdo->NombreDePays; ++Area)
+    {
+        if (problemeHebdo->adequacyPatchRuntimeData->areaMode[Area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
+            numberOfConstraints++;
+        }
+    }
+
     // Special case of the hourly binding constraints
     const auto MatrixBindingConstraints = problemeHebdo->MatriceDesContraintesCouplantes;
     for (uint32_t CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;

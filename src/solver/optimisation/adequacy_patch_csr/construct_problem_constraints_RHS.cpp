@@ -148,6 +148,31 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
     }
 }
 
+void HourlyCSRProblem::setRHSMaxEnsLoadValue()
+{
+    std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
+
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it = numberOfConstraintCsrMaxEnsLoad.find(Area);
+            if (it != numberOfConstraintCsrMaxEnsLoad.end())
+            {
+                int Cnt = it->second;
+
+                double load = problemeHebdo_->ConsommationsAbattues[triggeredHour]
+                                .ConsommationAbattueDuPays[Area];
+
+                SecondMembre[Cnt] = load;
+                logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
+                             << " (Area = " << Area << ")";
+            }
+        }
+    }
+}
+
 void HourlyCSRProblem::setRHSbindingConstraintsValue()
 {
     std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;

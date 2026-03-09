@@ -106,6 +106,7 @@ private:
     void setRHSvalueOnFlows();
     void setRHSnodeBalanceValue();
     void setRHSfictitiousLoadValue();
+    void setRHSMaxEnsLoadValue();
     void setRHSbindingConstraintsValue();
 
     // Costs
@@ -131,6 +132,7 @@ public:
     std::map<int, int> numberOfConstraintCsrEns;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
     std::map<int, int> numberOfConstraintCsrFictitiousLoad;
+    std::map<int, int> numberOfConstraintCsrMaxEnsLoad;
     std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
                                                            // contains interco 2-2
 

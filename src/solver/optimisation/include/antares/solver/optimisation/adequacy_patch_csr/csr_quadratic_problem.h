@@ -31,6 +31,7 @@ private:
     void setConstraintsOnFlows(ConstraintBuilder& builder);
     void setNodeBalanceConstraints(ConstraintBuilder& builder);
     void setFictitiousLoadConstraints(ConstraintBuilder& builder);
+    void setMaxEnsLoadConstraints(ConstraintBuilder& builder);
     void setBindingConstraints(ConstraintBuilder& builder);
 };
 
