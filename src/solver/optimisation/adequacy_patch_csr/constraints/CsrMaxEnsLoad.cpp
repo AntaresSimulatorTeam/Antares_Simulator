@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h"
+#include "CsrMaxEnsLoad.h"
 
 void CsrMaxEnsLoad::add()
 {
@@ -14,7 +14,7 @@ void CsrMaxEnsLoad::add()
 
         builder.updateHourWithinWeek(data.hour);
 
-        builder.UnsuppliedEnergy(Area, 1.0);
+        builder.PositiveUnsuppliedEnergy(Area, 1.0);
 
         data.numberOfConstraintCsrMaxEnsLoad[Area] = builder.data.nombreDeContraintes;
 

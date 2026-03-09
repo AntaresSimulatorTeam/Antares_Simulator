@@ -117,7 +117,7 @@ void CsrQuadraticProblem::setMaxEnsLoadConstraints(ConstraintBuilder& builder)
 
     CsrMaxEnsLoadData csrMaxEnsLoadData{
       .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
-      .hour = hour;
+      .hour = hour,
       .NombreDePays = problemeHebdo_->NombreDePays,
       .numberOfConstraintCsrMaxEnsLoad = hourlyCsrProblem_.numberOfConstraintCsrMaxEnsLoad};
 
