@@ -36,6 +36,7 @@
 #include "constraints/CsrFlowDissociation.h"
 #include "constraints/CsrAreaBalance.h"
 #include "constraints/CsrFictitiousLoad.h"
+#include "constraints/CsrMaxEnsLoad.h"
 #include "constraints/CsrBindingConstraintHour.h"
 #include "../constraints/constraint_builder_utils.h"
 
@@ -110,6 +111,20 @@ void CsrQuadraticProblem::setFictitiousLoadConstraints(ConstraintBuilder& builde
     csrFictitiousLoad.add();
 }
 
+void CsrQuadraticProblem::setMaxEnsLoadConstraints(ConstraintBuilder& builder)
+{
+    int hour = hourlyCsrProblem_.triggeredHour;
+
+    CsrMaxEnsLoadData csrMaxEnsLoadData{
+      .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
+      .hour = hour;
+      .NombreDePays = problemeHebdo_->NombreDePays,
+      .numberOfConstraintCsrMaxEnsLoad = hourlyCsrProblem_.numberOfConstraintCsrMaxEnsLoad};
+
+    CsrMaxEnsLoad csrMaxEnsLoad(builder, csrMaxEnsLoadData);
+    csrMaxEnsLoad.add();
+}
+
 void CsrQuadraticProblem::setBindingConstraints(ConstraintBuilder& builder)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
@@ -145,6 +160,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setConstraintsOnFlows(builder);
     setNodeBalanceConstraints(builder);
     setFictitiousLoadConstraints(builder);
+    setMaxEnsLoadConstraints(builder);
     setBindingConstraints(builder);
 }
 
