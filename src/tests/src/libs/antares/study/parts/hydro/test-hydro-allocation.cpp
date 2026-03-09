@@ -24,7 +24,7 @@ struct AllocationFixture
     Area* west{nullptr};
 
     AllocationFixture():
-        study(std::make_unique<Study>(false))
+        study(std::make_unique<Study>())
     {
         east = new Area("east"); // freed by ~AreaList
         west = new Area("west"); // freed by ~AreaList

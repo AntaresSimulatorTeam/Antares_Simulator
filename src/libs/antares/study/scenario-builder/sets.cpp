@@ -33,11 +33,6 @@ void Sets::clear()
 
 bool Sets::loadFromStudy(Study& study)
 {
-    if (not study.usedByTheSolver)
-    {
-        logs.info() << "  Loading data for the scenario builder overlay";
-    }
-
     setStudy(study);
 
     // Loading from the INI file

@@ -64,14 +64,6 @@ void Area::clearAllLinks()
     }
 }
 
-void Area::detachAllLinks()
-{
-    while (not links.empty())
-    {
-        AreaLinkRemove((links.begin())->second);
-    }
-}
-
 AreaLink* Area::findExistingLinkWith(Area& with)
 {
     if (&with == this)
@@ -235,36 +227,6 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
         }
     }
     return noErrorMinStabPow;
-}
-
-void Area::detachLinkFromID(const AreaName& id)
-{
-    auto i = links.find(id);
-    if (i != links.end())
-    {
-        links.erase(i);
-    }
-}
-
-void Area::detachLink(const AreaLink* lnk)
-{
-    assert(lnk);
-    assert(lnk->from);
-    assert(lnk->with);
-
-    lnk->from->detachLinkFromID(lnk->with->id);
-}
-
-AreaLink* Area::findLinkByID(const AreaName& id)
-{
-    auto i = links.find(id);
-    return (i != links.end()) ? i->second : nullptr;
-}
-
-const AreaLink* Area::findLinkByID(const AreaName& id) const
-{
-    auto i = links.find(id);
-    return (i != links.end()) ? i->second : nullptr;
 }
 
 void Area::buildLinksIndexes()

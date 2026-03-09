@@ -8,9 +8,7 @@
 #include <set>
 #include <stdlib.h>
 #include <vector>
-//
-#include "antares/study/parts/parts.h"
-//
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
@@ -18,6 +16,7 @@
 #include <antares/array/matrix.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/study/filter.h"
+#include "antares/study/parts/parts.h"
 
 #include "constants.h"
 #include "links.h"
@@ -43,7 +42,6 @@ public:
     //! Name mapping -> must be replaced by AreaNameMapping
     using NameMapping = std::map<AreaName, AreaName>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -76,33 +74,9 @@ public:
     */
     void clearAllLinks();
 
-    /*!
-    ** \brief Properly detach all links attached to an area
-    **
-    ** It is the safe way to add an area and it is mainly used by the GUI
-    */
-    void detachAllLinks();
-
-    /*!
-    ** \brief Try to find the attached link from another area id
-    */
-    AreaLink* findLinkByID(const AreaName& id);
-    const AreaLink* findLinkByID(const AreaName& id) const;
-
-    /*!
-    ** \brief Detach any link connected from this area to the given area
-    */
-    void detachLinkFromID(const AreaName& id);
-
-    static void detachLink(const AreaLink* lnk);
-
-    /*!
-    ** \brief Remove a link from its raw pointer
-    */
-    void detachLinkFromItsPointer(const AreaLink* lnk);
+    void buildLinksIndexes();
     //@}
 
-    void buildLinksIndexes();
     /*!
     ** \brief Ensure all data are created
     */
@@ -158,7 +132,6 @@ public:
     template<enum TimeSeriesType T>
     const XCast* xcastData() const;
 
-public:
     //! \name General
     //@{
     //! Name of the area
@@ -275,10 +248,6 @@ private:
 
 }; // class Area
 
-bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
-
-bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
-
 /*!
 ** \brief A list of areas
 **
@@ -321,15 +290,13 @@ public:
     //! Key-value type
     using value_type = Area::Map::value_type;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-    //! Destructor
-    ~AreaList();
+    ~AreaList() = default;
     //@}
 
     //! \name Iterating through all areas
@@ -442,11 +409,6 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    /*!
-    ** \brief Remove all elements in the container
-    */
-    void clear();
-
     //! Get if the container is empty
     bool empty() const;
 
@@ -457,15 +419,6 @@ public:
     ** a given area. This is mandatory when used from the solver.
     */
     void rebuildIndexes();
-
-    /*!
-    ** \brief Remove an area from its ID
-    **
-    ** \warning When used by a study, do not forget to remove all binding
-    **   constraints which depends upon this area before any call to this
-    **   routine.
-    */
-    bool remove(const AnyString& id);
 
     /*!
     ** \brief Get the total number of areas
@@ -502,22 +455,6 @@ public:
 
     //! \name Tools
     //@{
-    /*!
-    ** \brief Fix all invalid orientations
-    */
-    void fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints);
-
-    //! Remove all load timeseries
-    void removeLoadTimeseries();
-    //! Remove all hydro timeseries
-    void removeHydroTimeseries();
-    //! Remove all solar timeseries
-    void removeSolarTimeseries();
-    //! Remove all wind timeseries
-    void removeWindTimeseries();
-    //! Remove all thermal timeseries
-    void removeThermalTimeseries();
-    //@}
 
     /// create a map with the corresponding scratchpad for each area link to this numspace
     Area::ScratchMap buildScratchMap(uint numspace);
@@ -537,7 +474,6 @@ public:
     const Area* operator[](uint i) const;
     //@}
 
-public:
     //! All areas by their index
     std::vector<Area*> byIndex;
     //! All areas in the list
@@ -552,8 +488,6 @@ private:
     Study& pStudy;
 
 }; // class AreaList
-
-void AreaListDeleteLinkFromAreaPtr(AreaList* l, const Area* a);
 
 /*!
 ** \brief Establish a link between two areas
@@ -578,16 +512,6 @@ bool AreaLinksLoadFromFolder(Study& s,
                              AreaList* l,
                              Area* area,
                              const std::filesystem::path& folder);
-
-/*!
-** \brief Clear all interconnection from an area
-*/
-int AreaLinkClear(AreaList* l, Area* area);
-
-/*!
-** \brief Remove a connection
-*/
-void AreaLinkRemove(AreaLink* lnk);
 
 /*!
 ** \brief Try to find an area by its name (in lowercase)

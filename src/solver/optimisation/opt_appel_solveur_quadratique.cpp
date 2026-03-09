@@ -123,8 +123,6 @@ static void ProcessResult(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
         {
             logs.info();
 
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-
             logs.info() << "Here is the trace:";
             for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
             {

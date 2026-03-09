@@ -194,7 +194,6 @@ double calculateCSRcost(const PROBLEME_ANTARES_A_RESOUDRE& Probleme,
 void CSR_DEBUG_HANDLE(PROBLEME_ANTARES_A_RESOUDRE& Probleme)
 {
     logs.info();
-    logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     logs.info() << "Here is the trace:";
 
     for (int i = 0; i < Probleme.NombreDeVariables; i++)
