@@ -9,11 +9,11 @@ void POffUnits::add(int pays, int cluster, int pdt)
     {
         // 16 quater
         // Sum of participations to reserves is inferior to unit max power times number of off units
-        // Sum P^off  ≤ Umax (M - M^on)
+        // Sum P^off +  (Umax . M^on) ≤ Umax . M
         // P^off : total participation of turned off units to res
         // Umax : Max power of an unit
         // M : max number of running units in cluster
-        // M : actual number of running units in cluster
+        // M^on : actual number of running units in cluster
 
         int globalClusterIdx = data.thermalClusters[pays]
                                  .NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster];
