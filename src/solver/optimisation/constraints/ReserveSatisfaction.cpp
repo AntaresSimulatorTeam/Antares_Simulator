@@ -19,7 +19,8 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
     {
         // 24
 
-        // Sum(P_θ) + Sum(P_B) + Sum(P_H) = S + J^+ -J^-
+        // Sum(P_θ) + Sum(P_B) + Sum(P_H) = S + J^+ - J^-
+        // => Sum(P_θ) + Sum(P_B) + Sum(P_H) - J^+ + J^-  = S
         // P_θ : Participation power from thermal cluster θ to the reserve res
         // P_B : Participation power from Short Term Storage cluster B to the reserve res
         // P_H : Participation power from Hydro to the reserve res
@@ -35,7 +36,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
         {
             builder.ThermalClusterReserveParticipation(
               reserveParticipation.globalIndexClusterParticipation,
-              1);
+              1); // Sum(P_θ)
         }
 
         // Short Term Storage clusters reserve participation
@@ -45,7 +46,7 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
             builder.STStorageClusterReserveParticipation(
               capacityReservation.type,
               reserveParticipation.globalIndexClusterParticipation,
-              1);
+              1); // Sum(P_B)
         }
 
         // Hydro reserve participation
@@ -53,16 +54,17 @@ void ReserveSatisfaction::add(int pays, int reserve, int pdt)
         {
             builder.HydroReserveParticipation(capacityReservation.type,
                                               reserveParticipation.globalIndexClusterParticipation,
-                                              1);
+                                              1); // Sum(P_H)
         }
 
-        builder.InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1)
-          .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)
+        builder
+          .InternalUnsatisfiedReserve(capacityReservation.globalReserveIndex, 1) // J^-
+          .InternalExcessReserve(capacityReservation.globalReserveIndex, -1)     // - J^+
           .equalTo();
         data.CorrespondanceCntNativesCntOptim[pdt]
           .reservesIndices.value()
           .need[capacityReservation.globalReserveIndex]
-          = builder.data.nombreDeContraintes;
+          = builder.data.nombreDeContraintes; // S is added in second member
         ConstraintNamer namer(builder.data.NomDesContraintes);
         const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
         namer.UpdateTimeStep(hourInTheYear);
