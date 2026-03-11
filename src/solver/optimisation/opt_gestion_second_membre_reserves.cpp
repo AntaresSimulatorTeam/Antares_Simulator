@@ -110,9 +110,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                         .thermalClusterPOutBoundMin[globalClusterIdx];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = problemeHebdo->PaliersThermiquesDuPays[pays]
-                                      .PuissanceDisponibleEtCout[areaClusterId]
-                                      .PuissanceMinDuPalierThermiqueRef[pdtJour];
+                SecondMembre[cnt] = -problemeHebdo->PaliersThermiquesDuPays[pays]
+                                       .PuissanceDisponibleEtCout[areaClusterId]
+                                       .PuissanceMinDuPalierThermiqueRef[pdtJour];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 

@@ -34,7 +34,6 @@ void POutBounds::add(int pays, int cluster, int pdt)
                   .reservesIndices.value()
                   .thermalClusterPOutBoundMin[globalClusterIdx]
                   = builder.data.nombreDeContraintes;
-                ;
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
                 namer.UpdateTimeStep(hourInTheYear);

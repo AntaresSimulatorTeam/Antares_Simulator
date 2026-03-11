@@ -620,7 +620,7 @@ def check_res_participation_for_specific_year_and_cluster_hourly(context, area, 
 def check_res_participation_for_specific_year_and_group_hourly(context, area, year, res, group, comparator_and_res_part):
     expected_res_part = float(comparator_and_res_part.split(" ")[-1])
     actual_hourly_prod = context.soh.get_hourly_reserve_group_energy(area, year, res, group)
-    msg = "At least one value in reserve participation power to group " + group
+    msg = "At least one value in reserve participation power to group " + group + " "
     if "greater than" in comparator_and_res_part:
         ok = actual_hourly_prod >= expected_res_part
         if not ok.all():
