@@ -69,7 +69,7 @@ struct Constraint
     std::string id;
     std::string expression;
     std::string location;
-    std::string out_of_bounds_processing_mode = "cyclic";
+    std::string out_of_bounds_processing_mode;
 };
 
 struct ExtraOutput

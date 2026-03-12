@@ -25,7 +25,7 @@ struct Constraint
 struct ConstraintOutOfBoundsProcessing
 {
     std::string id;
-    std::string mode = "cyclic";
+    std::string mode;
 };
 
 struct Objective
