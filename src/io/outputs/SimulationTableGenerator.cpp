@@ -25,6 +25,7 @@ namespace Antares::IO::Outputs
 {
 namespace
 {
+// TODO use hasOutOfBoundsTimeShift
 bool shouldDropConstraintAtTimestep(const ModelerStudy::SystemModel::Expression& expression,
                                     unsigned timeStep,
                                     const FillContext& fillContext,
@@ -234,13 +235,15 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 
         auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
         {
-            const auto* activeConstraint = [&]() -> const IMipConstraint*
-            {
-                if (!ts.has_value())
-                {
-                    return componentConstraints[0].get();
-                }
+            const IMipConstraint* activeConstraint = nullptr;
 
+            if (!ts.has_value())
+            {
+                activeConstraint = componentConstraints[0].get();
+            }
+            else
+            {
+                // Check if we need to drop the constraint
                 if (modelConstr.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
                     && shouldDropConstraintAtTimestep(modelConstr.expression(),
@@ -248,11 +251,14 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                                                       fillContext,
                                                       evalVisitor))
                 {
-                    return nullptr;
+                    activeConstraint = nullptr;
                 }
-
-                return componentConstraints[activeConstraintIndex++].get();
-            }();
+                else
+                {
+                    // Increment index and get the constraint
+                    activeConstraint = componentConstraints[activeConstraintIndex++].get();
+                }
+            }
 
             if (!activeConstraint)
             {
