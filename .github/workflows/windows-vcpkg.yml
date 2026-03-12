@@ -158,6 +158,14 @@ jobs:
         else
           echo "VCPKG bin directory not found: $VCPKG_BIN"
         fi
+        VCPKG_TOOLS_BIN=vcpkg_installed/${triplet}/tools/arrow
+        if [ -d "$VCPKG_TOOLS_BIN" ]; then
+          for dll in "$VCPKG_TOOLS_BIN"/*.dll*; do
+            if [ -f "$dll" ]; then
+              cp -n "$dll" "${FIXED_PATH}/install/bin"
+            fi
+          done
+        fi
         cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
         export ZIP_ARCHIVE_NAME=$(ls -1 *.zip)
         echo "ZIP_ARCHIVE_NAME=$ZIP_ARCHIVE_NAME" >> $GITHUB_ENV

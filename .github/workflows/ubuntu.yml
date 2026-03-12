@@ -87,8 +87,7 @@ jobs:
     - name: Install libraries
       run: |
         sudo apt-get update
-        sudo apt-get install uuid-dev
-        sudo apt-get install xsltproc
+        sudo apt-get install -y uuid-dev xsltproc flex bison
 
     - name: Config OR-Tools URL
       run: |

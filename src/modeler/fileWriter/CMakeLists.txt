@@ -23,6 +23,7 @@ target_link_libraries(write-modeler-files
         Antares::linear-problem-data-impl
         PRIVATE
         Antares::io
+        Antares::modeler-simulation-table-file
         Antares::modeler-lib
 )
 
