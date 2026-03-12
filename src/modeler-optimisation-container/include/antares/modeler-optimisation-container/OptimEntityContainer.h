@@ -19,8 +19,9 @@ namespace Antares::Optimisation
 struct OptimComponent
 {
     std::vector<unsigned> modelVariableGlobalIndices;
-    std::vector<unsigned> modelConstraintsGlobalIndices;
+    std::vector<unsigned> modelConstraintStartLines;
     std::vector<VariabilityType> modelConstraintsVariability;
+    std::vector<unsigned> modelConstraintCounts;
 };
 
 class OptimEntityContainer
@@ -36,10 +37,27 @@ public:
     VariabilityType getConstraintVariability(const ModelerStudy::SystemModel::Component& component,
                                              unsigned index) const;
 
-     // gp : to be removed : used to avoid passing the linear problem.
-    LinearProblemApi::ILinearProblem& Problem(); 
+    [[nodiscard]] std::pair<unsigned int, VariabilityType> getConstraintData(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int index) const
+    {
+        const auto& optimComponent = optimComponents_.at(component.Index());
+        return {optimComponent.modelConstraintStartLines.at(index),
+                optimComponent.modelConstraintsVariability.at(index)};
+    }
 
-    void addStartColumn();
+    [[nodiscard]] unsigned getConstraintCount(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int index) const
+    {
+        const auto& optimComponent = optimComponents_.at(component.Index());
+        return optimComponent.modelConstraintCounts.at(index);
+    }
+
+    LinearProblemApi::ILinearProblem& Problem()
+    {
+        return linearProblem_;
+    }
 
     std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>> getComponentVariable(
       const ModelerStudy::SystemModel::Component& component,
@@ -56,14 +74,14 @@ public:
       Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);
 
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
-                            const VariabilityType& variability);
+                            const VariabilityType& variability,
+                            unsigned count = 1);
 
 private:
-    void addStartLine();
-
-    std::vector<unsigned> variableStartColumn_;
+    std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
-    std::vector<unsigned> constraintStartLine_;
     LinearProblemApi::ILinearProblem& linearProblem_;
+    const LinearProblemApi::ILinearProblemData* data_;
+    const ScenarioGroupRepository* scenarioGroupRepository_;
 };
 } // namespace Antares::Optimisation

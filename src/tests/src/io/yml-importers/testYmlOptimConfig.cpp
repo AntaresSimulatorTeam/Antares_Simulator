@@ -464,4 +464,28 @@ models:
     BOOST_CHECK_EQUAL(config.models[0].id, "model1");
 }
 
+BOOST_AUTO_TEST_CASE(parse_constraint_out_of_bounds_processing)
+{
+    std::string yaml_content = R"(
+models:
+  - id: model1
+    model-decomposition:
+      constraints:
+        - id: c1
+          location: subproblems
+    out-of-bounds-processing:
+      constraints:
+        - id: c1
+          mode: drop
+)";
+
+    Parser parser;
+    OptimConfig config = parser.parse(yaml_content);
+
+    BOOST_REQUIRE_EQUAL(config.models.size(), 1);
+    BOOST_REQUIRE_EQUAL(config.models[0].constraints_out_of_bounds_processing.size(), 1);
+    BOOST_CHECK_EQUAL(config.models[0].constraints_out_of_bounds_processing[0].id, "c1");
+    BOOST_CHECK_EQUAL(config.models[0].constraints_out_of_bounds_processing[0].mode, "drop");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

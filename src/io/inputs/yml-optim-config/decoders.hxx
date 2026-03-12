@@ -50,6 +50,22 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>
 };
 
 template<>
+struct convert<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing>
+{
+    static bool decode(const Node& node,
+                       Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing& rhs)
+    {
+        if (!node.IsMap())
+        {
+            return false;
+        }
+        rhs.id = node["id"].as<std::string>();
+        rhs.mode = node["mode"].as<std::string>("cyclic");
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Objective& rhs)
@@ -83,6 +99,14 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
         rhs.objectives = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>(
           modelDecompositionNode["objective-contributions"]);
+
+        const auto& outOfBoundsProcessingNode = node["out-of-bounds-processing"];
+        if (outOfBoundsProcessingNode && outOfBoundsProcessingNode["constraints"])
+        {
+            rhs.constraints_out_of_bounds_processing = as_fallback_default<
+              std::vector<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing>>(
+              outOfBoundsProcessingNode["constraints"]);
+        }
 
         return true;
     }

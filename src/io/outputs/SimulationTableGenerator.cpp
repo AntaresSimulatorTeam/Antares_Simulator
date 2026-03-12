@@ -7,6 +7,7 @@
 
 #include <boost/test/tools/assertion.hpp>
 
+#include <antares/expressions/iterators/pre-order.h>
 #include <antares/solver/optim-model-filler/Dimensions.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
@@ -22,6 +23,35 @@ using namespace Antares::Expressions;
 
 namespace Antares::IO::Outputs
 {
+namespace
+{
+bool shouldDropConstraintAtTimestep(const ModelerStudy::SystemModel::Expression& expression,
+                                    unsigned timeStep,
+                                    const FillContext& fillContext,
+                                    Expressions::Visitors::EvalVisitor& evalVisitor)
+{
+    Expressions::Nodes::AST preorder(expression.RootNode());
+    for (const auto& node: preorder)
+    {
+        const auto* timeShiftNode = dynamic_cast<const Expressions::Nodes::TimeShiftNode*>(&node);
+        if (!timeShiftNode)
+        {
+            continue;
+        }
+
+        const auto timeShift = static_cast<int>(
+          evalVisitor.dispatch(timeShiftNode->right()).valueAsDouble());
+        const int shiftedTimestep = static_cast<int>(timeStep) + timeShift;
+        if (shiftedTimestep < static_cast<int>(fillContext.getLocalFirstTimeStep())
+            || shiftedTimestep > static_cast<int>(fillContext.getLocalLastTimeStep()))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+} // namespace
+
 TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  const unsigned currentBlock)
@@ -187,29 +217,62 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         variability = updateVariabilityIfShouldForceScenario(variability,
                                                              forceExportForScenarioIndex);
 
-        const auto constraints = optimEntityContainer.componentConstraints(component,
-                                                                           constraintIndex,
-                                                                           nbTimeSteps);
-        ++constraintIndex;
+        const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(
+          component,
+          constraintLocalIndex,
+          optimEntityContainer.getConstraintCount(component, constraintLocalIndex));
+        ++constraintLocalIndex;
 
-        auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
+        auto idxType = updateVariabilityIfShouldForceScenario(timeIndex,
+                                                              forceExportForScenarioIndex);
+
+        auto evalVisitor = Expressions::Visitors::EvalVisitor(optimEntityContainer,
+                                                              fillContext,
+                                                              component);
+        std::size_t activeConstraintIndex = 0;
+
+        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
         {
-            const auto& c = constraints[ts.value_or(0)];
+            const auto* activeConstraint = [&]() -> const IMipConstraint*
+            {
+                if (!ts.has_value())
+                {
+                    return componentConstraints[0].get();
+                }
+
+                if (modelConstr.outOfBoundsProcessingMode()
+                      == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
+                    && shouldDropConstraintAtTimestep(modelConstr.expression(),
+                                                      *ts,
+                                                      fillContext,
+                                                      evalVisitor))
+                {
+                    return nullptr;
+                }
+
+                return componentConstraints[activeConstraintIndex++].get();
+            }();
+
+            if (!activeConstraint)
+            {
+                return;
+            }
+
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
                                                                        currentBlock)
                               : TimeBlock{.block = currentBlock + 1,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
-            simulationTable.addEntry(
-              {.block = tb.block,
-               .component = componentId,
-               .output = constraintId,
-               .absolute_time_index = tb.absoluteTimeIndex,
-               .block_time_index = tb.blockTimeIndex,
-               .scenario_index = scenIdx,
-               .value = std::nullopt,
-               .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
+            simulationTable.addEntry({.block = tb.block,
+                                      .component = componentId,
+                                      .output = constraintId,
+                                      .absolute_time_index = tb.absoluteTimeIndex,
+                                      .block_time_index = tb.blockTimeIndex,
+                                      .scenario_index = scenIdx,
+                                      .value = std::nullopt,
+                                      .status = isLp ? activeConstraint->getMipBasisStatus()
+                                                     : MipBasisStatus::NOT_AVAILABLE});
         };
 
         handleDependingOnVariability(fillContext, year, variability, handle);

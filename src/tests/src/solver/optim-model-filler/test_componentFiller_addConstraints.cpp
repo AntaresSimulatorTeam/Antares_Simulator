@@ -94,6 +94,96 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     }
 }
 
+BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_last_constraint)
+{
+    auto next_var_node = nodeRegistry.create<TimeShiftNode>(
+      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
+      literal(1));
+    auto current_var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto ct_node = nodeRegistry.create<EqualNode>(next_var_node, current_var_node);
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", ct_node, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 2, 0, 2, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+    BOOST_REQUIRE(pb->lookupConstraint("componentToto.ct1_0"));
+    BOOST_REQUIRE(pb->lookupConstraint("componentToto.ct1_1"));
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_2"));
+}
+
+BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_first_constraint)
+{
+    auto previous_var_node = nodeRegistry.create<TimeShiftNode>(
+      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
+      literal(-1));
+    auto current_var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto ct_node = nodeRegistry.create<EqualNode>(previous_var_node, current_var_node);
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", ct_node, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 2, 0, 2, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 2);
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_0"));
+    BOOST_REQUIRE(pb->lookupConstraint("componentToto.ct1_1"));
+    BOOST_REQUIRE(pb->lookupConstraint("componentToto.ct1_2"));
+}
+
+BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_multiple_boundaries)
+{
+    auto previous_var_node = nodeRegistry.create<TimeShiftNode>(
+      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
+      literal(-1));
+    auto next_var_node = nodeRegistry.create<TimeShiftNode>(
+      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
+      literal(1));
+    auto ct_node = nodeRegistry.create<EqualNode>(previous_var_node, next_var_node);
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", ct_node, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 2, 0, 2, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_0"));
+    BOOST_REQUIRE(pb->lookupConstraint("componentToto.ct1_1"));
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_2"));
+}
+
+BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_large_positive_shift)
+{
+    auto far_next_var_node = nodeRegistry.create<TimeShiftNode>(
+      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
+      literal(2));
+    auto current_var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto ct_node = nodeRegistry.create<EqualNode>(far_next_var_node, current_var_node);
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::FLOAT, literal(-5), literal(10), true, false}},
+                {{"ct1", ct_node, OutOfBoundsProcessingMode::DROP}});
+    createComponent("model", "componentToto");
+    FillContext ctx{0, 2, 0, 2, 0};
+    buildLinearProblem(ctx);
+
+    BOOST_CHECK_EQUAL(pb->constraintCount(), 1);
+    BOOST_REQUIRE(pb->lookupConstraint("componentToto.ct1_0"));
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_1"));
+    BOOST_CHECK(!pb->lookupConstraint("componentToto.ct1_2"));
+}
+
 /**
  * @brief Test case for ensuring that variable bounds are correctly set using a time-series.
  *

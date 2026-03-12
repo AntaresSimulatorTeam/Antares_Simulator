@@ -1,15 +1,85 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <optional>
 #include <ranges>
 #include <stdexcept>
 #include <variant>
 
 #include <antares/exception/RuntimeError.hpp>
+#include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/expressions/visitors/VariabilityVisitor.h"
+
+namespace
+{
+template<typename T>
+std::optional<T> buildOptional(bool condition, T value)
+{
+    if (condition)
+    {
+        return value;
+    }
+    return {};
+}
+
+bool shouldDropConstraintAtTimestep(
+  const Antares::ModelerStudy::SystemModel::Expression& expression,
+  unsigned timeStep,
+  const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
+  Antares::Expressions::Visitors::EvalVisitor& evalVisitor)
+{
+    Antares::Expressions::Nodes::AST preorder(expression.RootNode());
+    for (const auto& node: preorder)
+    {
+        const auto* timeShiftNode = dynamic_cast<const Antares::Expressions::Nodes::TimeShiftNode*>(
+          &node);
+        if (!timeShiftNode)
+        {
+            continue;
+        }
+
+        const auto timeShift = static_cast<int>(
+          evalVisitor.dispatch(timeShiftNode->right()).valueAsDouble());
+        const int shiftedTimestep = static_cast<int>(timeStep) + timeShift;
+        if (shiftedTimestep < static_cast<int>(ctx.getLocalFirstTimeStep())
+            || shiftedTimestep > static_cast<int>(ctx.getLocalLastTimeStep()))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+unsigned countActiveConstraintTimesteps(
+  const Antares::ModelerStudy::SystemModel::Constraint& constraint,
+  const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+  const Antares::ModelerStudy::SystemModel::Component& component)
+{
+    if (constraint.outOfBoundsProcessingMode()
+        != Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP)
+    {
+        return static_cast<unsigned>(ctx.getLocalNumberOfTimeSteps());
+    }
+
+    auto evalVisitor = Antares::Expressions::Visitors::EvalVisitor(optimEntityContainer,
+                                                                   ctx,
+                                                                   component);
+    unsigned activeConstraintCount = 0;
+    for (const auto timeStep: Antares::Optimisation::IntegerInterval{ctx.getLocalFirstTimeStep(),
+                                                                     ctx.getLocalLastTimeStep()})
+    {
+        if (!shouldDropConstraintAtTimestep(constraint.expression(), timeStep, ctx, evalVisitor))
+        {
+            ++activeConstraintCount;
+        }
+    }
+    return activeConstraintCount;
+}
+} // namespace
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -303,24 +373,35 @@ void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constra
 
 void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                                   const std::string& constraint_id,
-                                                  const LinearProblemApi::FillContext& ctx) const
+                                                  const LinearProblemApi::FillContext& ctx,
+                                                  const Constraint& constraint) const
 {
     const auto dims = getDimensions(ctx);
 
-    const auto& solverVariables = pb_.getVariables();
-    const bool isScenarioDependent = dims.getScenarioIndices().size() > 1;
-    for (const auto s: dims.getScenarioIndices())
+    const auto& solverVariables = optimEntityContainer_.getVariables();
+    const auto firstTimestep = dims.getTimesteps().initialTime;
+    const auto lastTimestep = dims.getTimesteps().finalTime;
+    for (const auto s: dims.getScenarioIndices()) // TODO
     {
         for (const auto t: dims.getTimesteps())
         {
-            auto name = component_.Id() + "." + constraint_id + '_' + std::to_string(t);
-            if (isScenarioDependent)
+            const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
+            if (constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP)
             {
-                name += "_" + std::to_string(s);
+                auto evalVisitor = Expressions::Visitors::EvalVisitor(optimEntityContainer_,
+                                                                      ctx,
+                                                                      component_);
+                if (shouldDropConstraintAtTimestep(constraint.expression(), t, ctx, evalVisitor))
+                {
+                    continue;
+                }
             }
-            auto* ct = pb_.addConstraint(linear_constraints.lb[t], linear_constraints.ub[t], name);
+            auto* ct = pb.addConstraint(linear_constraints.lb[localIndex],
+                                        linear_constraints.ub[localIndex],
+                                        component_.Id() + "." + constraint_id + '_'
+                                          + std::to_string(t));
 
-            const auto& coefsPerVar = linear_constraints.coef_per_var[t];
+            const auto& coefsPerVar = linear_constraints.coef_per_var[localIndex];
             for (const auto& [index, value]: coefsPerVar)
             {
                 ct->setCoefficient(solverVariables[index].get(), value);
@@ -331,24 +412,28 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
-    ReadLinearConstraintVisitor visitor(optimEntityContainer_,
-                                        ctx,
-                                        component_,
-                                        data_,
-                                        scenarioGroupRepo_);
-
     const auto& contraints = component_.getModel()->Constraints();
     for (const auto& constraint: contraints | locationFilter())
     {
+        ReadLinearConstraintVisitor visitor(optimEntityContainer_, ctx, component_);
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
         const auto variability = getVariability(root_node, component_);
 
-        optimEntityContainer_.registerConstraint(component_, variability);
+        unsigned activeConstraintCount = 1;
+        if (isTimeDependent(variability))
+        {
+            activeConstraintCount = countActiveConstraintTimesteps(constraint,
+                                                                   ctx,
+                                                                   optimEntityContainer_,
+                                                                   component_);
+        }
+
+        optimEntityContainer_.registerConstraint(component_, variability, activeConstraintCount);
 
         if (isTimeDependent(variability))
         {
-            addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx);
+            addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx, constraint);
         }
         else
         {
