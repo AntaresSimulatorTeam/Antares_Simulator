@@ -195,6 +195,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const FillContext& fillContext,
                           const ModelerStudy::SystemModel::Component& component,
                           const OptimEntityContainer& optimEntityContainer,
+                          const LinearProblemApi::ILinearProblemData* data,
+                          const LinearProblemApi::IScenario* scenario,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           unsigned year,
@@ -217,21 +219,19 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         variability = updateVariabilityIfShouldForceScenario(variability,
                                                              forceExportForScenarioIndex);
 
-        const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(
+        const auto componentConstraints = optimEntityContainer.componentConstraints(
           component,
-          constraintLocalIndex,
-          optimEntityContainer.getConstraintCount(component, constraintLocalIndex));
-        ++constraintLocalIndex;
-
-        auto idxType = updateVariabilityIfShouldForceScenario(timeIndex,
-                                                              forceExportForScenarioIndex);
+          constraintIndex,
+          optimEntityContainer.getConstraintCount(component, constraintIndex));
 
         auto evalVisitor = Expressions::Visitors::EvalVisitor(optimEntityContainer,
                                                               fillContext,
-                                                              component);
+                                                              component,
+                                                              data,
+                                                              scenario);
         std::size_t activeConstraintIndex = 0;
 
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+        auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
         {
             const auto* activeConstraint = [&]() -> const IMipConstraint*
             {
@@ -264,18 +264,19 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                               : TimeBlock{.block = currentBlock + 1,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
-            simulationTable.addEntry({.block = tb.block,
-                                      .component = componentId,
-                                      .output = constraintId,
-                                      .absolute_time_index = tb.absoluteTimeIndex,
-                                      .block_time_index = tb.blockTimeIndex,
-                                      .scenario_index = scenIdx,
-                                      .value = std::nullopt,
-                                      .status = isLp ? activeConstraint->getMipBasisStatus()
-                                                     : MipBasisStatus::NOT_AVAILABLE});
+            simulationTable.addEntry(SimulationTableEntry{.block = tb.block,
+                                                          .component = componentId,
+                                                          .output = constraintId,
+                                                          .absolute_time_index = tb.absoluteTimeIndex,
+                                                          .block_time_index = tb.blockTimeIndex,
+                                                          .scenario_index = scenIdx,
+                                                          .value = std::nullopt,
+                                                          .status = isLp ? activeConstraint->getMipBasisStatus()
+                                                                         : MipBasisStatus::NOT_AVAILABLE});
         };
 
         handleDependingOnVariability(fillContext, year, variability, handle);
+        ++constraintIndex;
     }
 }
 
@@ -448,6 +449,8 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                              fillContext,
                              component,
                              optimContainer,
+                             data,
+                             &scenario,
                              currentBlock,
                              timeConversionMode,
                              year,

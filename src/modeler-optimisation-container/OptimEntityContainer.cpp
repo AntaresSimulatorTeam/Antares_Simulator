@@ -27,7 +27,7 @@ unsigned OptimEntityContainer::getConstraintStartLine(const Component& component
                                                       unsigned index) const
 {
     const auto& optimComponent = optimComponents_.at(component.Index());
-    return constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index));
+    return optimComponent.modelConstraintStartLines.at(index);
 }
 
 VariabilityType OptimEntityContainer::getConstraintVariability(const Component& component,
@@ -35,11 +35,6 @@ VariabilityType OptimEntityContainer::getConstraintVariability(const Component& 
 {
     const auto& optimComponent = optimComponents_.at(component.Index());
     return optimComponent.modelConstraintsVariability.at(index);
-}
-
-ILinearProblem& OptimEntityContainer::Problem()
-{
-    return linearProblem_;
 }
 
 void OptimEntityContainer::addStartColumn()
@@ -103,16 +98,11 @@ void OptimEntityContainer::registerConstraint(const Component& component,
                                               const VariabilityType& variability,
                                               unsigned count)
 {
-    auto& optimComponent = getOptimComponent(component.Index());
+    auto& optimComponent = optimComponents_.at(component.Index());
     optimComponent.modelConstraintStartLines.push_back(
       static_cast<unsigned>(linearProblem_.constraintCount()));
     optimComponent.modelConstraintsVariability.push_back(variability);
     optimComponent.modelConstraintCounts.push_back(count);
-}
-
-void OptimEntityContainer::addStartLine()
-{
-    constraintStartLine_.push_back(linearProblem_.constraintCount());
 }
 
 } // namespace Antares::Optimisation

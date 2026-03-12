@@ -69,6 +69,8 @@ public:
       unsigned index,
       std::size_t nbTimeSteps) const;
 
+    void addStartColumn();
+
     void addFromSystemComponents(
       const std::vector<ModelerStudy::SystemModel::Component>& component,
       Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);
