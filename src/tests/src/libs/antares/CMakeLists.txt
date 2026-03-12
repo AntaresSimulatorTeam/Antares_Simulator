@@ -54,6 +54,7 @@ add_boost_test(tests-matrix-save
         matrix
         yuni-static-core
         antares-core
+        ortools::ortools
         Antares::exception)
 
 # Building tests on Matrix load operations
@@ -75,6 +76,7 @@ add_boost_test(tests-matrix-load
         matrix
         yuni-static-core
         antares-core
+        ortools::ortools
         Antares::exception)
 
 # Test utilities
