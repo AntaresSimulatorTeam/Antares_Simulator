@@ -7,7 +7,6 @@
 #include <variant>
 
 #include <antares/exception/RuntimeError.hpp>
-#include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
@@ -25,22 +24,19 @@ std::optional<T> buildOptional(bool condition, T value)
     return {};
 }
 
-bool shouldDropConstraintAtTimestep(
-  const Antares::ModelerStudy::SystemModel::Expression& expression,
-  unsigned timeStep,
-  const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
-  Antares::Expressions::Visitors::EvalVisitor& evalVisitor)
+bool hasOutOfBoundsTimeShift(const Antares::Expressions::Nodes::Node* node,
+                             unsigned timeStep,
+                             const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
+                             Antares::Expressions::Visitors::EvalVisitor& evalVisitor)
 {
-    Antares::Expressions::Nodes::AST preorder(expression.RootNode());
-    for (const auto& node: preorder)
+    if (!node)
     {
-        const auto* timeShiftNode = dynamic_cast<const Antares::Expressions::Nodes::TimeShiftNode*>(
-          &node);
-        if (!timeShiftNode)
-        {
-            continue;
-        }
+        return false;
+    }
 
+    if (const auto* timeShiftNode = dynamic_cast<const Antares::Expressions::Nodes::TimeShiftNode*>(
+          node))
+    {
         const auto timeShift = static_cast<int>(
           evalVisitor.dispatch(timeShiftNode->right()).valueAsDouble());
         const int shiftedTimestep = static_cast<int>(timeStep) + timeShift;
@@ -50,7 +46,28 @@ bool shouldDropConstraintAtTimestep(
             return true;
         }
     }
+
+    if (const auto* parentNode = dynamic_cast<const Antares::Expressions::Nodes::ParentNode*>(node))
+    {
+        for (const auto* operand: parentNode->getConstOperands())
+        {
+            if (hasOutOfBoundsTimeShift(operand, timeStep, ctx, evalVisitor))
+            {
+                return true;
+            }
+        }
+    }
+
     return false;
+}
+
+bool shouldDropConstraintAtTimestep(
+  const Antares::ModelerStudy::SystemModel::Expression& expression,
+  unsigned timeStep,
+  const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
+  Antares::Expressions::Visitors::EvalVisitor& evalVisitor)
+{
+    return hasOutOfBoundsTimeShift(expression.RootNode(), timeStep, ctx, evalVisitor);
 }
 
 unsigned countActiveConstraintTimesteps(
