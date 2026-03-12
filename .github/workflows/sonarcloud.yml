@@ -20,7 +20,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
-      BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
+      BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/sonar-build-wrapper # Directory where build-wrapper output will be placed
       #config in env to be accessible at each step
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
@@ -232,6 +232,15 @@ jobs:
       if: ${{ !cancelled() }}
       run: |
         gcovr --sonarqube --output coverage.xml
+
+    - name: Cleanup disk space before SonarQube Scan
+      if: ${{ !cancelled() }}
+      run: |
+        df -h
+        du -sh "$GITHUB_WORKSPACE/_build" || true
+        du -sh "${{ env.BUILD_WRAPPER_OUT_DIR }}" || true
+        rm -rf "$GITHUB_WORKSPACE/_build"
+        df -h
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
