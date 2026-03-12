@@ -59,70 +59,94 @@ PortInDefinition::PortInDefinition(const std::string& portId, const std::string&
 {
 }
 
-static void CommonPreSolve(ForbiddenNodes& f)
+static void ForbidInFunctionNodes(ForbiddenNodes& f)
 {
-    // constraint, objective and variable bounds should not contain dual or reduced_cost
-    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max(...)
+    // max(...) : fordidding children
     f.parentForbidsChild<FunctionNodeType::max, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::max, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::max, PortFieldSumNode>();
 
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in min(...)
+    // min(...) : fordidding children
     f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::min, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::min, PortFieldSumNode>();
 
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in floor(node)
+    // floor(node) : fordidding children
     f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldSumNode>();
 
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in ceil(node)
+    // ceil(node) : fordidding children
     f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldSumNode>();
 }
 
-static ForbiddenNodes ForbiddenInConstraint()
+static void ForbidConstraintSignNodes(ForbiddenNodes& f)
+{
+    f.forbidGlobally<ComparisonNode, EqualNode, LessThanOrEqualNode, GreaterThanOrEqualNode>();
+}
+
+static ForbiddenNodes ForbidNodesInConstraint()
 {
     ForbiddenNodes f;
-    CommonPreSolve(f);
+    ForbidInFunctionNodes(f);
     f.forbidGlobally<PortFieldSumNode>();
+    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
     return f;
 }
 
-static ForbiddenNodes ForbiddenInBindingConstraint()
+static ForbiddenNodes ForbidNodesInBindingConstraint()
 {
     ForbiddenNodes f;
-    CommonPreSolve(f);
+    ForbidInFunctionNodes(f);
+    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
     return f;
 }
 
-static ForbiddenNodes PreSolveNonConstraint()
+static ForbiddenNodes ForbidNodesInVariableBounds()
 {
     ForbiddenNodes f;
-    CommonPreSolve(f);
-    f.forbidGlobally<ComparisonNode,
-                     EqualNode,
-                     LessThanOrEqualNode,
-                     GreaterThanOrEqualNode,
-                     PortFieldSumNode>();
+    ForbidInFunctionNodes(f);
+    ForbidConstraintSignNodes(f);
+    f.forbidGlobally<PortFieldSumNode>();
+    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
     return f;
 }
 
-static ForbiddenNodes ForbiddenInExtraOutput()
+static ForbiddenNodes ForbidNodesInPortFieldDef()
 {
     ForbiddenNodes f;
-    // TODO check        //   f.forbidGlobally<PortFieldSumNode>();
+    ForbidInFunctionNodes(f);
+    ForbidConstraintSignNodes(f);
+    f.forbidGlobally<PortFieldSumNode>();
+    f.forbidGlobally<FunctionNodeType::reduced_cost>();
     return f;
 }
 
-const ForbiddenNodes forbiddenInConstraint = ForbiddenInConstraint();
-const ForbiddenNodes forbiddenInBindingConstraint = ForbiddenInBindingConstraint();
-const ForbiddenNodes preSolveNonConstraint = PreSolveNonConstraint();
-const ForbiddenNodes forbiddenInExtraOutput = ForbiddenInExtraOutput();
+static ForbiddenNodes ForbidNodesInObjective()
+{
+    ForbiddenNodes f;
+    ForbidInFunctionNodes(f);
+    ForbidConstraintSignNodes(f);
+    f.forbidGlobally<PortFieldSumNode>();
+    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+    return f;
+}
+
+static ForbiddenNodes ForbidNodesInExtraOutput()
+{
+    ForbiddenNodes f;
+    // TODO check : f.forbidGlobally<PortFieldSumNode>();
+    return f;
+}
+
+const ForbiddenNodes forbiddenInConstraint = ForbidNodesInConstraint();
+const ForbiddenNodes forbiddenInBindingConstraint = ForbidNodesInBindingConstraint();
+const ForbiddenNodes forbiddenInVariableBounds = ForbidNodesInVariableBounds();
+const ForbiddenNodes forbiddenInPortFieldDef = ForbidNodesInPortFieldDef();
+const ForbiddenNodes forbiddenInObjective = ForbidNodesInObjective();
+const ForbiddenNodes forbiddenInExtraOutput = ForbidNodesInExtraOutput();
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
@@ -234,20 +258,19 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
 {
     std::vector<Variable> variables;
     variables.reserve(model.variables.size());
-    const auto& forbiddenNodesInVarBounds = preSolveNonConstraint;
 
     for (const auto& variable: model.variables)
     {
         Expression lb(variable.lower_bound, convertExpressionToNode(variable.lower_bound, model));
         if (lb.RootNode())
         {
-            ForbiddenNodesVisitor(forbiddenNodesInVarBounds, variable.lower_bound)
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.lower_bound)
               .dispatch(lb.RootNode());
         }
         Expression ub(variable.upper_bound, convertExpressionToNode(variable.upper_bound, model));
         if (ub.RootNode())
         {
-            ForbiddenNodesVisitor(forbiddenNodesInVarBounds, variable.upper_bound)
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.upper_bound)
               .dispatch(ub.RootNode());
         }
         variables.emplace_back(variable.id,
@@ -331,7 +354,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
-        ForbiddenNodesVisitor(preSolveNonConstraint, pfdefinition.definition)
+        ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
           .dispatch(nodeRegistry.node);
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
@@ -411,7 +434,7 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
     for (const auto& objective: model.objectives)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression, model);
-        ForbiddenNodesVisitor(preSolveNonConstraint, objective.expression)
+        ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
           .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 Expression{objective.expression, std::move(nodeRegistry)},
