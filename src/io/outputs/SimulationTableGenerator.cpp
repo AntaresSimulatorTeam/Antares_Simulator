@@ -7,8 +7,8 @@
 
 #include <boost/test/tools/assertion.hpp>
 
-#include <antares/expressions/iterators/pre-order.h>
 #include <antares/solver/optim-model-filler/Dimensions.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/logs/logs.h"
@@ -23,36 +23,6 @@ using namespace Antares::Expressions;
 
 namespace Antares::IO::Outputs
 {
-namespace
-{
-// TODO use hasOutOfBoundsTimeShift
-bool shouldDropConstraintAtTimestep(const ModelerStudy::SystemModel::Expression& expression,
-                                    unsigned timeStep,
-                                    const FillContext& fillContext,
-                                    Expressions::Visitors::EvalVisitor& evalVisitor)
-{
-    Expressions::Nodes::AST preorder(expression.RootNode());
-    for (const auto& node: preorder)
-    {
-        const auto* timeShiftNode = dynamic_cast<const Expressions::Nodes::TimeShiftNode*>(&node);
-        if (!timeShiftNode)
-        {
-            continue;
-        }
-
-        const auto timeShift = static_cast<int>(
-          evalVisitor.dispatch(timeShiftNode->right()).valueAsDouble());
-        const int shiftedTimestep = static_cast<int>(timeStep) + timeShift;
-        if (shiftedTimestep < static_cast<int>(fillContext.getLocalFirstTimeStep())
-            || shiftedTimestep > static_cast<int>(fillContext.getLocalLastTimeStep()))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-} // namespace
-
 TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                                                  const TimeConversionMode& mode,
                                                  const unsigned currentBlock)
@@ -246,10 +216,10 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                 // Check if we need to drop the constraint
                 if (modelConstr.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
-                    && shouldDropConstraintAtTimestep(modelConstr.expression(),
-                                                      *ts,
-                                                      fillContext,
-                                                      evalVisitor))
+                    && Optimisation::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
+                                                             *ts,
+                                                             fillContext,
+                                                             evalVisitor))
                 {
                     activeConstraint = nullptr;
                 }
