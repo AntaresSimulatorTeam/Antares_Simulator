@@ -206,6 +206,12 @@ void addConstraintEntries(ISimulationTable& simulationTable,
     const bool isLp = linearProblem.isLP();
     const size_t nbTimeSteps = fillContext.getLocalNumberOfTimeSteps();
 
+    Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
+                                                   fillContext,
+                                                   component,
+                                                   data,
+                                                   scenario);
+
     unsigned constraintIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
@@ -224,11 +230,6 @@ void addConstraintEntries(ISimulationTable& simulationTable,
           constraintIndex,
           optimEntityContainer.getConstraintCount(component, constraintIndex));
 
-        auto evalVisitor = Expressions::Visitors::EvalVisitor(optimEntityContainer,
-                                                              fillContext,
-                                                              component,
-                                                              data,
-                                                              scenario);
         std::size_t activeConstraintIndex = 0;
 
         auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
