@@ -473,7 +473,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;}</div>
 <div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, uint numSpace)</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::hourForEachArea(State&amp; state, uint numSpace)</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;{</div>
 <div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <span class="comment">// For each area...</span></div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    state.study.areas.each(</div>
@@ -506,7 +506,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;}</div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::weekForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, uint numSpace)</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::weekForEachArea(State&amp; state, uint numSpace)</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;{</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    <span class="comment">// For each area...</span></div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    state.study.areas.each(</div>
@@ -541,7 +541,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;}</div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160; </div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::yearEndBuild(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, uint year, uint numSpace)</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::yearEndBuild(State&amp; state, uint year, uint numSpace)</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;{</div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    <span class="comment">// For each area...</span></div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    state.study.areas.each(</div>
@@ -593,7 +593,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;}</div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160; </div>
 <div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::weekBegin(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state)</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::weekBegin(State&amp; state)</div>
 <div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;{</div>
 <div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    <span class="keywordflow">for</span> (uint i = 0; i != pAreaCount; ++i)</div>
 <div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;    {</div>
@@ -602,7 +602,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;}</div>
 <div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
 <div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::weekEnd(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state)</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::weekEnd(State&amp; state)</div>
 <div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;{</div>
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    <span class="keywordflow">for</span> (uint i = 0; i != pAreaCount; ++i)</div>
 <div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    {</div>
@@ -620,7 +620,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;}</div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160; </div>
 <div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::hourForEachLink(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, uint numSpace)</div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::hourForEachLink(State&amp; state, uint numSpace)</div>
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;{</div>
 <div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;    <span class="keywordflow">for</span> (uint i = 0; i != pAreaCount; ++i)</div>
 <div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;    {</div>
@@ -629,7 +629,7 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;}</div>
 <div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160; </div>
 <div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::hourEnd(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, uint hourInTheYear)</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;<span class="keywordtype">void</span> Areas&lt;NextT&gt;::hourEnd(State&amp; state, uint hourInTheYear)</div>
 <div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;{</div>
 <div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    <span class="keywordflow">for</span> (uint i = 0; i != pAreaCount; ++i)</div>
 <div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    {</div>
@@ -661,7 +661,6 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Areas_html_a16da077afdeb86af0f28102537fc91a1"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Areas.html#a16da077afdeb86af0f28102537fc91a1">Antares::Solver::Variable::Areas::Areas</a></div><div class="ttdeci">Areas()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition:</b> area.hxx:13</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Areas_html_a5a6bbb2eecccd2907999bb1e8547b550"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Areas.html#a5a6bbb2eecccd2907999bb1e8547b550">Antares::Solver::Variable::Areas::RetrieveVariableList</a></div><div class="ttdeci">static void RetrieveVariableList(PredicateT &amp;predicate)</div><div class="ttdoc">Retrieve the list of all individual variables.</div><div class="ttdef"><b>Definition:</b> area.hxx:199</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Areas_html_a7ca85bb5f5592bc8827fcaf6e3bd0dc3"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Areas.html#a7ca85bb5f5592bc8827fcaf6e3bd0dc3">Antares::Solver::Variable::Areas::~Areas</a></div><div class="ttdeci">~Areas()</div><div class="ttdoc">Destructor.</div><div class="ttdef"><b>Definition:</b> area.hxx:277</div></div>
-<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:103</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_aba435529310e04ef723164ce08e52b10"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typename VCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition:</b> info.h:768</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

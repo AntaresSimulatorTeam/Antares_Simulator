@@ -274,19 +274,19 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;}</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> List&lt;NextT&gt;::hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> List&lt;NextT&gt;::hourForEachArea(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;{</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    NextT::hourForEachArea(state, numSpace);</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> List&lt;NextT&gt;::hourForEachLink(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state)</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> List&lt;NextT&gt;::hourForEachLink(State&amp; state)</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;{</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    NextT::hourForEachLink(state);</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;}</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> List&lt;NextT&gt;::hourEnd(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hourInTheYear)</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> List&lt;NextT&gt;::hourEnd(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hourInTheYear)</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;{</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    NextT::hourEnd(state, hourInTheYear);</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;}</div>
@@ -513,7 +513,6 @@ $(document).ready(function(){initNavTree('solver_2variable_2include_2antares_2so
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html_ac3fbad71dbaf7b2f1631b97274bde7aa"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ac3fbad71dbaf7b2f1631b97274bde7aa">Antares::Solver::Variable::SurveyResults::data</a></div><div class="ttdeci">Solver::Variable::Private::SurveyResultsData data</div><div class="ttdoc">Data (not related to the template parameter)</div><div class="ttdef"><b>Definition:</b> surveyresults.h:91</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html_ad402c65d36e0295eaf960a06ac40d863"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#ad402c65d36e0295eaf960a06ac40d863">Antares::Solver::Variable::SurveyResults::yearByYearResults</a></div><div class="ttdeci">bool yearByYearResults</div><div class="ttdoc">Flag to known if we are in the year-by-year mode.</div><div class="ttdef"><b>Definition:</b> surveyresults.h:121</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html_af451c9a90804b3d23c26748542da9047"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html#af451c9a90804b3d23c26748542da9047">Antares::Solver::Variable::SurveyResults::saveToFile</a></div><div class="ttdeci">void saveToFile(int dataLevel, int fileLevel, int precisionLevel)</div><div class="ttdoc">Write the data into a file.</div><div class="ttdef"><b>Definition:</b> surveyresults.cpp:680</div></div>
-<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:103</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_aba435529310e04ef723164ce08e52b10"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typename VCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition:</b> info.h:768</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

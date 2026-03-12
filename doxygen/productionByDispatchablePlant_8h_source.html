@@ -326,7 +326,7 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        NextType::yearBegin(year, numSpace);</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    }</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keywordtype">void</span> yearEndBuildPrepareDataForEachThermalCluster(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state,</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keywordtype">void</span> yearEndBuildPrepareDataForEachThermalCluster(State&amp; state,</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;                                                      uint year,</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;                                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    {</div>
@@ -344,7 +344,7 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    }</div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keywordtype">void</span> yearEndBuild(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    <span class="keywordtype">void</span> yearEndBuild(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    {</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        <span class="comment">// Next variable</span></div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        NextType::yearEndBuild(state, year, numSpace);</div>
@@ -382,7 +382,7 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        NextType::hourBegin(hourInTheYear);</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    }</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    {</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        <span class="keyword">auto</span>&amp; area = state.area;</div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        <span class="keyword">auto</span>&amp; thermal = state.thermal;</div>
@@ -465,7 +465,6 @@ $(document).ready(function(){initNavTree('productionByDispatchablePlant_8h_sourc
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">Antares::Solver::Variable::IntermediateValues</a></div><div class="ttdoc">Temporary buffer for allocating results for a single year.</div><div class="ttdef"><b>Definition:</b> intermediate.h:25</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:27</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_a6daa3b461d29421492f0bc0369b0b4dda55b6b058d10bee9d3e07fb750b82287d"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a6daa3b461d29421492f0bc0369b0b4dda55b6b058d10bee9d3e07fb750b82287d">Antares::Solver::Variable::Results::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">The count if item in the list.</div><div class="ttdef"><b>Definition:</b> results.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:103</div></div>
 <div class="ttc" id="aclassVariable_html"><div class="ttname"><a href="classVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> variable.h:8</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics.html">Antares::Solver::Variable::Economy::ProductionByDispatchablePlant::Statistics</a></div><div class="ttdef"><b>Definition:</b> productionByDispatchablePlant.h:97</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardProductionByDispatchablePlant.html">Antares::Solver::Variable::Economy::VCardProductionByDispatchablePlant</a></div><div class="ttdef"><b>Definition:</b> productionByDispatchablePlant.h:12</div></div>

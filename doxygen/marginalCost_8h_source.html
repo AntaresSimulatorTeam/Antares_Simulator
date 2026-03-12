@@ -263,7 +263,7 @@ $(document).ready(function(){initNavTree('marginalCost_8h_source.html',''); init
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        NextType::yearBegin(year, numSpace);</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    }</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> yearEndBuild(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> yearEndBuild(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    {</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="comment">// Next variable</span></div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        NextType::yearEndBuild(state, year, numSpace);</div>
@@ -293,13 +293,13 @@ $(document).ready(function(){initNavTree('marginalCost_8h_source.html',''); init
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        NextType::hourBegin(hourInTheYear);</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    }</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    {</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="comment">// Next variable</span></div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        NextType::hourForEachArea(state, numSpace);</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordtype">void</span> hourForEachLink(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordtype">void</span> hourForEachLink(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    {</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = std::abs(</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;          state.problemeHebdo-&gt;VariablesDualesDesContraintesDeNTC[state.hourInTheWeek]</div>
@@ -381,7 +381,6 @@ $(document).ready(function(){initNavTree('marginalCost_8h_source.html',''); init
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">Antares::Solver::Variable::R::AllYears::Min</a></div><div class="ttdef"><b>Definition:</b> minmax.h:141</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:27</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_a6daa3b461d29421492f0bc0369b0b4dda55b6b058d10bee9d3e07fb750b82287d"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a6daa3b461d29421492f0bc0369b0b4dda55b6b058d10bee9d3e07fb750b82287d">Antares::Solver::Variable::Results::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">The count if item in the list.</div><div class="ttdef"><b>Definition:</b> results.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:103</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html">Antares::Solver::Variable::Economy::MarginalCost::Statistics</a></div><div class="ttdef"><b>Definition:</b> marginalCost.h:96</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html">Antares::Solver::Variable::Economy::VCardMarginalCost</a></div><div class="ttdef"><b>Definition:</b> marginalCost.h:14</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost_html_a1d51dd859547dbe85f6bb044d5d7a1e9"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#a1d51dd859547dbe85f6bb044d5d7a1e9">Antares::Solver::Variable::Economy::VCardMarginalCost::decimal</a></div><div class="ttdeci">static constexpr uint8_t decimal</div><div class="ttdoc">Decimal precision.</div><div class="ttdef"><b>Definition:</b> marginalCost.h:52</div></div>

@@ -660,11 +660,6 @@ var namespaces_dup =
         [ "NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", "classAntares_1_1Expressions_1_1NodeRegistry" ],
         [ "Registry", "classAntares_1_1Expressions_1_1Registry.html", "classAntares_1_1Expressions_1_1Registry" ]
       ] ],
-      [ "Graph", null, [
-        [ "Node", "classAntares_1_1Graph_1_1Node.html", "classAntares_1_1Graph_1_1Node" ],
-        [ "Edge", "classAntares_1_1Graph_1_1Edge.html", "classAntares_1_1Graph_1_1Edge" ],
-        [ "Grid", "classAntares_1_1Graph_1_1Grid.html", "classAntares_1_1Graph_1_1Grid" ]
-      ] ],
       [ "IO", null, [
         [ "Inputs", null, [
           [ "DataSeriesCsvImporter", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter" ],
@@ -1590,11 +1585,6 @@ var namespaces_dup =
       [ "ScenarioGroupParser", "classAntares_1_1ScenarioGroupParser.html", "classAntares_1_1ScenarioGroupParser" ],
       [ "ScenarioBuilderImplVisitor", "classAntares_1_1ScenarioBuilderImplVisitor.html", "classAntares_1_1ScenarioBuilderImplVisitor" ],
       [ "IStudyLoader", "classAntares_1_1IStudyLoader.html", "classAntares_1_1IStudyLoader" ],
-      [ "areaInfo", "classAntares_1_1areaInfo.html", "classAntares_1_1areaInfo" ],
-      [ "linkInfo", "classAntares_1_1linkInfo.html", "classAntares_1_1linkInfo" ],
-      [ "State", "classAntares_1_1State.html", "classAntares_1_1State" ],
-      [ "Cycle", "classAntares_1_1Cycle.html", "classAntares_1_1Cycle" ],
-      [ "CBuilder", "classAntares_1_1CBuilder.html", "classAntares_1_1CBuilder" ],
       [ "HydroErrorsCollector", "classAntares_1_1HydroErrorsCollector.html", "classAntares_1_1HydroErrorsCollector" ],
       [ "HydroInputsChecker", "classAntares_1_1HydroInputsChecker.html", "classAntares_1_1HydroInputsChecker" ],
       [ "VENTILATION_HYDRO_RESULTS_BY_AREA", "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA.html", "structAntares_1_1VENTILATION__HYDRO__RESULTS__BY__AREA" ],

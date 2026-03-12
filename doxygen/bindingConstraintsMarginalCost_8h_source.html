@@ -316,7 +316,7 @@ $(document).ready(function(){initNavTree('bindingConstraintsMarginalCost_8h_sour
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        NextType::computeSummary(year, numSpace);</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    }</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keywordtype">void</span> weekBegin(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state)</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keywordtype">void</span> weekBegin(State&amp; state)</div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    {</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        <span class="keywordflow">if</span> (isInitialized())</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        {</div>
@@ -372,12 +372,12 @@ $(document).ready(function(){initNavTree('bindingConstraintsMarginalCost_8h_sour
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        NextType::hourBegin(hourInTheYear);</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    }</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keywordtype">void</span> hourForEachArea(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    {</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        NextType::hourForEachArea(state, numSpace);</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    }</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keywordtype">void</span> weekForEachArea(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keywordtype">void</span> weekForEachArea(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    {</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        NextType::weekForEachArea(state, numSpace);</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    }</div>
@@ -435,7 +435,7 @@ $(document).ready(function(){initNavTree('bindingConstraintsMarginalCost_8h_sour
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        NextType::template retrieveResultsForThermalCluster&lt;VCardToFindT&gt;(result, cluster);</div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    }</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordtype">void</span> hourEnd(<a class="code" href="classAntares_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hourInTheYear)</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordtype">void</span> hourEnd(State&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hourInTheYear)</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    {</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        <span class="keywordflow">if</span> (isInitialized())</div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        {</div>
@@ -576,7 +576,6 @@ $(document).ready(function(){initNavTree('bindingConstraintsMarginalCost_8h_sour
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">Antares::Solver::Variable::R::AllYears::Min</a></div><div class="ttdef"><b>Definition:</b> minmax.h:141</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:27</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html_a6daa3b461d29421492f0bc0369b0b4dda55b6b058d10bee9d3e07fb750b82287d"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html#a6daa3b461d29421492f0bc0369b0b4dda55b6b058d10bee9d3e07fb750b82287d">Antares::Solver::Variable::Results::count</a></div><div class="ttdeci">@ count</div><div class="ttdoc">The count if item in the list.</div><div class="ttdef"><b>Definition:</b> results.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1State_html"><div class="ttname"><a href="classAntares_1_1State.html">Antares::State</a></div><div class="ttdef"><b>Definition:</b> cbuilder.h:103</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost_1_1Statistics_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost_1_1Statistics.html">Antares::Solver::Variable::Economy::BindingConstMarginCost::Statistics</a></div><div class="ttdef"><b>Definition:</b> bindingConstraintsMarginalCost.h:95</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html">Antares::Solver::Variable::Economy::VCardBindingConstMarginCost</a></div><div class="ttdef"><b>Definition:</b> bindingConstraintsMarginalCost.h:13</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost_html_a0d5709ca03a0e77b2261d2333622675b"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html#a0d5709ca03a0e77b2261d2333622675b">Antares::Solver::Variable::Economy::VCardBindingConstMarginCost::categoryFileLevel</a></div><div class="ttdeci">static constexpr uint8_t categoryFileLevel</div><div class="ttdoc">File level (provided by the type of the results)</div><div class="ttdef"><b>Definition:</b> bindingConstraintsMarginalCost.h:43</div></div>

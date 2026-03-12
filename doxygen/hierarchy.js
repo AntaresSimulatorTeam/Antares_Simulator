@@ -33,9 +33,6 @@ var hierarchy =
       ] ]
     ] ],
     [ "Antares::Data::ShortTermStorage::AdditionalConstraints", "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", null ],
-    [ "Antares::Graph::Edge< NodeT >::addpWeight", "structAntares_1_1Graph_1_1Edge_1_1addpWeight.html", null ],
-    [ "Antares::linkInfo::addpWeight", "structAntares_1_1linkInfo_1_1addpWeight.html", null ],
-    [ "Antares::linkInfo::addpWeightWithImpedance", "structAntares_1_1linkInfo_1_1addpWeightWithImpedance.html", null ],
     [ "Antares::Optimisation::AddVariableVisitor", "classAntares_1_1Optimisation_1_1AddVariableVisitor.html", null ],
     [ "Antares::Solver::Simulation::Adequacy", "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html", null ],
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", null ],
@@ -56,7 +53,6 @@ var hierarchy =
     [ "AreaConnectionFixture", "structAreaConnectionFixture.html", null ],
     [ "Antares::Data::AreaDependantHydroManagementData", "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html", null ],
     [ "AreaHydroLevelData", "structAreaHydroLevelData.html", null ],
-    [ "Antares::areaInfo", "classAntares_1_1areaInfo.html", null ],
     [ "Antares::Solver::AreaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaNumberOfTSretriever.html", [
       [ "Antares::Solver::AreaLinksTransCapaNumberOfTSretriever", "classAntares_1_1Solver_1_1AreaLinksTransCapaNumberOfTSretriever.html", null ],
       [ "Antares::Solver::HydroAreaNumberOfTSretriever", "classAntares_1_1Solver_1_1HydroAreaNumberOfTSretriever.html", null ],
@@ -118,7 +114,6 @@ var hierarchy =
       [ "tests_fixture", "structtests__fixture.html", null ]
     ] ],
     [ "Antares::Date::Calendar", "classAntares_1_1Date_1_1Calendar.html", null ],
-    [ "Antares::CBuilder", "classAntares_1_1CBuilder.html", null ],
     [ "CellColumnData", "classCellColumnData.html", null ],
     [ "fixtures.check_handler", "classfixtures_1_1check__handler.html", null ],
     [ "check_on_results.check_general.check_list", "classcheck__on__results_1_1check__general_1_1check__list.html", null ],
@@ -143,9 +138,6 @@ var hierarchy =
     [ "Antares::Data::CompareClusterName", "structAntares_1_1Data_1_1CompareClusterName.html", null ],
     [ "Antares::Solver::Simulation::compareHydroCostsNoises", "structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html", null ],
     [ "Antares::Data::CompareLinkName", "structAntares_1_1Data_1_1CompareLinkName.html", null ],
-    [ "Antares::linkInfo::comparepWeight", "structAntares_1_1linkInfo_1_1comparepWeight.html", null ],
-    [ "Antares::linkInfo::comparepWeightWithImpedance", "structAntares_1_1linkInfo_1_1comparepWeightWithImpedance.html", null ],
-    [ "Antares::Graph::Edge< NodeT >::compareWeight", "structAntares_1_1Graph_1_1Edge_1_1compareWeight.html", null ],
     [ "ComparisonFixture", "structComparisonFixture.html", null ],
     [ "Antares::Data::Parameters::Compatibility", "structAntares_1_1Data_1_1Parameters_1_1Compatibility.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::Component", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html", null ],
@@ -291,7 +283,6 @@ var hierarchy =
     [ "cucumber_collector.cucumberCollector", "classcucumber__collector_1_1cucumberCollector.html", null ],
     [ "CumulationConstraint", "structCumulationConstraint.html", null ],
     [ "Antares::Data::AdequacyPatch::CurtailmentSharing", "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html", null ],
-    [ "Antares::Cycle", "classAntares_1_1Cycle.html", null ],
     [ "Antares::Solver::Simulation::CyclicIterator< T >", "classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html", null ],
     [ "Antares::Data::DailyDemand", "structAntares_1_1Data_1_1DailyDemand.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::Average< NextT, FileFilter >::Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_1_1Data.html", null ],
@@ -337,7 +328,6 @@ var hierarchy =
     [ "Antares::Solver::Simulation::Economy", "classAntares_1_1Solver_1_1Simulation_1_1Economy.html", [
       [ "Antares::Solver::Simulation::ISimulation< Economy >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
     ] ],
-    [ "Antares::Graph::Edge< NodeT >", "classAntares_1_1Graph_1_1Edge.html", null ],
     [ "Antares::Solver::Variable::Empty", "structAntares_1_1Solver_1_1Variable_1_1Empty.html", [
       [ "Antares::Solver::Variable::R::AllYears::Average< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html", null ],
       [ "Antares::Solver::Variable::R::AllYears::MinMaxBase< OpInferior, NextT >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html", null ],
@@ -571,8 +561,6 @@ var hierarchy =
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "Antares::Solver::Variable::Economy::GenerationTraits< Tag >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html", null ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
-    [ "Antares::Graph::Grid< NodeT >", "classAntares_1_1Graph_1_1Grid.html", null ],
-    [ "Antares::Graph::Grid< Antares::Data::Area >", "classAntares_1_1Graph_1_1Grid.html", null ],
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],
     [ "Antares::Solver::HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", null ],
     [ "Antares::Date::HourInterval", "structAntares_1_1Date_1_1HourInterval.html", null ],
@@ -857,7 +845,6 @@ var hierarchy =
       [ "Antares::Optimization::LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", null ],
       [ "Antares::Optimization::ThermalCapacityFiller", "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html", null ]
     ] ],
-    [ "Antares::linkInfo", "classAntares_1_1linkInfo.html", null ],
     [ "Antares::Solver::Variable::Links< VariablePerLink >", "classAntares_1_1Solver_1_1Variable_1_1Links.html", null ],
     [ "Antares::TSGenerator::LinkTSgenerationParams", "structAntares_1_1TSGenerator_1_1LinkTSgenerationParams.html", null ],
     [ "LinkVariable", "structLinkVariable.html", null ],
@@ -962,7 +949,6 @@ var hierarchy =
       [ "Antares::Solver::Variable::R::AllYears::Raw< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html", null ]
     ] ],
     [ "NoConstraintCreator", "structNoConstraintCreator.html", null ],
-    [ "Antares::Graph::Node< NodeT >", "classAntares_1_1Graph_1_1Node.html", null ],
     [ "Antares::Expressions::NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", null ],
     [ "Antares::Expressions::Visitors::NodeVisitsProvider< R, Args >", "structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html", null ],
     [ "Yuni::NonCopyable", null, [
@@ -1296,7 +1282,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::SpecifierRemover< T[N]>", "structAntares_1_1Solver_1_1Variable_1_1SpecifierRemover_3_01T_0fN_0e_4.html", null ],
     [ "StartUpCostsData", "structStartUpCostsData.html", null ],
     [ "Antares::Solver::Variable::State", "classAntares_1_1Solver_1_1Variable_1_1State.html", null ],
-    [ "Antares::State", "classAntares_1_1State.html", null ],
     [ "Antares::Solver::Variable::ThermalState::StateForAnArea", "classAntares_1_1Solver_1_1Variable_1_1ThermalState_1_1StateForAnArea.html", null ],
     [ "Antares::Solver::Variable::Adequacy::OverallCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Adequacy::SpilledEnergy< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy_1_1Statistics.html", null ],
