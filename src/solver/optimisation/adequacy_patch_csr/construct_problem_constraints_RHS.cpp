@@ -171,7 +171,6 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
                     load += storageResults.injection[triggeredHour];
                 }
 
-
                 SecondMembre[Cnt] = load;
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
