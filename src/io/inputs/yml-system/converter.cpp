@@ -156,14 +156,11 @@ static FieldRole ExposeFieldRole(const std::string& portId,
     return FieldRole::Sender;
 }
 
-static std::pair<PortFieldsRole, PortFieldsRole> ResolveFieldsRole(const Component& firstComponent,
-                                                                   const Port& firstPort,
-                                                                   const Component& secondComponent,
-                                                                   const Port& secondPort)
+static void CheckFieldsRoleCompatibility(const Component& firstComponent,
+                                         const Port& firstPort,
+                                         const Component& secondComponent,
+                                         const Port& secondPort)
 {
-    PortFieldsRole firstPortFieldsRole;
-    PortFieldsRole secondPortFieldsRole;
-
     const auto& firstPortDefs = firstComponent.getModel()->PortFieldDefinitions();
     const auto& secondPortDefs = secondComponent.getModel()->PortFieldDefinitions();
     for (const auto& field: firstPort.Type().Fields())
@@ -180,10 +177,7 @@ static std::pair<PortFieldsRole, PortFieldsRole> ResolveFieldsRole(const Compone
                 << firstPort.Id() << "' and '" << secondPort.Id() << "'";
             throw TwoFieldsOfSameRole(msg.str());
         }
-        firstPortFieldsRole.emplace(field, firstPortFieldRole);
-        secondPortFieldsRole.emplace(field, secondPortFieldRole);
     }
-    return {std::move(firstPortFieldsRole), std::move(secondPortFieldsRole)};
 }
 
 /**
@@ -223,10 +217,8 @@ static void connectComponents(const YmlSystem::Connection& connection,
     const auto& secondPort = secondComponent.findPort(secondPortId, "");
     CheckPortsType(firstPort, secondPort);
 
-    const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(firstComponent,
-                                                                               firstPort,
-                                                                               secondComponent,
-                                                                               secondPort);
+    CheckFieldsRoleCompatibility(firstComponent, firstPort, secondComponent, secondPort);
+
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
     firstComponent.addComponentConnection(firstPort.Id(),
