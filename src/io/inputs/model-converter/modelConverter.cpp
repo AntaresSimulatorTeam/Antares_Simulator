@@ -87,57 +87,42 @@ static void CommonPreSolve(ForbiddenNodes& f)
 
 static ForbiddenNodes ForbiddenInConstraint()
 {
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        CommonPreSolve(f);
-        f.forbidGlobally<PortFieldSumNode>();
-        return f;
-    }();
-    return forbidden;
+    ForbiddenNodes f;
+    CommonPreSolve(f);
+    f.forbidGlobally<PortFieldSumNode>();
+    return f;
 }
 
 static ForbiddenNodes ForbiddenInBindingConstraint()
 {
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        CommonPreSolve(f);
-        return f;
-    }();
-    return forbidden;
+    ForbiddenNodes f;
+    CommonPreSolve(f);
+    return f;
 }
 
 static ForbiddenNodes PreSolveNonConstraint()
 {
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        CommonPreSolve(f);
-        f.forbidGlobally<ComparisonNode,
-                         EqualNode,
-                         LessThanOrEqualNode,
-                         GreaterThanOrEqualNode,
-                         PortFieldSumNode>();
-        return f;
-    }();
-    return forbidden;
+    ForbiddenNodes f;
+    CommonPreSolve(f);
+    f.forbidGlobally<ComparisonNode,
+                     EqualNode,
+                     LessThanOrEqualNode,
+                     GreaterThanOrEqualNode,
+                     PortFieldSumNode>();
+    return f;
 }
 
 static ForbiddenNodes ForbiddenInExtraOutput()
 {
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        // TODO check        //   f.forbidGlobally<PortFieldSumNode>();
-        return f;
-    }();
-    return forbidden;
+    ForbiddenNodes f;
+    // TODO check        //   f.forbidGlobally<PortFieldSumNode>();
+    return f;
 }
+
+const ForbiddenNodes forbiddenInConstraint = ForbiddenInConstraint();
+const ForbiddenNodes forbiddenInBindingConstraint = ForbiddenInBindingConstraint();
+const ForbiddenNodes preSolveNonConstraint = PreSolveNonConstraint();
+const ForbiddenNodes forbiddenInExtraOutput = ForbiddenInExtraOutput();
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
@@ -249,7 +234,7 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
 {
     std::vector<Variable> variables;
     variables.reserve(model.variables.size());
-    const auto& forbiddenNodesInVarBounds = PreSolveNonConstraint();
+    const auto& forbiddenNodesInVarBounds = preSolveNonConstraint;
 
     for (const auto& variable: model.variables)
     {
@@ -346,7 +331,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
-        ForbiddenNodesVisitor(PreSolveNonConstraint(), pfdefinition.definition)
+        ForbiddenNodesVisitor(preSolveNonConstraint, pfdefinition.definition)
           .dispatch(nodeRegistry.node);
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
@@ -381,12 +366,12 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint, model, ForbiddenInConstraint());
+        addSingleConstraint(constraints, constraint, model, forbiddenInConstraint);
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model, ForbiddenInBindingConstraint());
+        addSingleConstraint(constraints, constraint, model, forbiddenInBindingConstraint);
     }
     return constraints;
 }
@@ -405,7 +390,7 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
     for (const auto& extraOutput: model.extra_outputs)
     {
         auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
-        ForbiddenNodesVisitor(ForbiddenInExtraOutput(), extraOutput.expression)
+        ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression)
           .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
                                   Expression{extraOutput.expression, std::move(nodeRegistry)});
@@ -426,7 +411,7 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
     for (const auto& objective: model.objectives)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression, model);
-        ForbiddenNodesVisitor(PreSolveNonConstraint(), objective.expression)
+        ForbiddenNodesVisitor(preSolveNonConstraint, objective.expression)
           .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 Expression{objective.expression, std::move(nodeRegistry)},
