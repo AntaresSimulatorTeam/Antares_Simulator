@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <optional>
 #include <ranges>
 #include <stdexcept>
 #include <variant>
@@ -14,16 +13,6 @@
 
 namespace
 {
-template<typename T>
-std::optional<T> buildOptional(bool condition, T value)
-{
-    if (condition)
-    {
-        return value;
-    }
-    return {};
-}
-
 bool hasOutOfBoundsTimeShift(const Antares::Expressions::Nodes::Node* node,
                              unsigned timeStep,
                              const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
