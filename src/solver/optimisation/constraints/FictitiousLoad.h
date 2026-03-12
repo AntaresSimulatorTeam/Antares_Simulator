@@ -7,6 +7,7 @@ struct FictitiousLoadData
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
     const std::vector<PALIERS_THERMIQUES>& PaliersThermiquesDuPays;
     const std::vector<bool>& DefaillanceNegativeUtiliserHydro;
+    const std::vector<ShortTermStorage::AREA_INPUT>& ShortTermStorage;
 };
 
 

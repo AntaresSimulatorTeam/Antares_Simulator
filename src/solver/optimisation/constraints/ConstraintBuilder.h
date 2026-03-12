@@ -365,7 +365,7 @@ inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
     }
 }
 
-class BindingConstraintData
+class BindingConstraintData final
 {
 public:
     const char& TypeDeContrainteCouplante;
