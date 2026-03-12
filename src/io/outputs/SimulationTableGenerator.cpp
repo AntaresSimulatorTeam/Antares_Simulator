@@ -7,6 +7,7 @@
 
 #include <boost/test/tools/assertion.hpp>
 
+#include <antares/expressions/iterators/pre-order.h>
 #include <antares/solver/optim-model-filler/Dimensions.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
