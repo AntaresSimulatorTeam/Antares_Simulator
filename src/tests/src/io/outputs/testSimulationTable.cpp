@@ -55,9 +55,13 @@ Antares::Solver::ModelerData makeStableModelerData(
     {
         copiedComponents.emplace_back(component);
     }
-    auto system = systemBuilder.withId("system").withComponents(std::move(copiedComponents)).build();
-    modelerData.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(std::move(system));
-    modelerData.dataSeries = std::make_unique<Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>();
+    auto system = systemBuilder.withId("system")
+                    .withComponents(std::move(copiedComponents))
+                    .build();
+    modelerData.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
+      std::move(system));
+    modelerData.dataSeries = std::make_unique<
+      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>();
     return modelerData;
 }
 } // namespace
@@ -990,7 +994,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedTimeDependentConstraints)
     FillContext fillContext(0, 2, 0, 2, 0);
     buildLinearProblem(fillContext);
     auto modelerData = makeStableModelerData(components);
-    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::optimEntityContainer;
+    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::
+                                          optimEntityContainer;
 
     SimulationTableCsv table;
     FillSimulationTable(table,
@@ -1027,7 +1032,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedConstraintAtFirstTimestep)
     FillContext fillContext(0, 2, 0, 2, 0);
     buildLinearProblem(fillContext);
     auto modelerData = makeStableModelerData(components);
-    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::optimEntityContainer;
+    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::
+                                          optimEntityContainer;
 
     SimulationTableCsv table;
     FillSimulationTable(table,
@@ -1066,7 +1072,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsBothBoundaryTimestepsForMixedShift
     FillContext fillContext(0, 2, 0, 2, 0);
     buildLinearProblem(fillContext);
     auto modelerData = makeStableModelerData(components);
-    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::optimEntityContainer;
+    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::
+                                          optimEntityContainer;
 
     SimulationTableCsv table;
     FillSimulationTable(table,

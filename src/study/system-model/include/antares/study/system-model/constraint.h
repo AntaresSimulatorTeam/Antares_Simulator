@@ -22,11 +22,11 @@ enum class OutOfBoundsProcessingMode
 class Constraint final
 {
 public:
-    Constraint(std::string id,
-               Expression expression,
-               Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS,
-               OutOfBoundsProcessingMode outOfBoundsProcessingMode
-               = OutOfBoundsProcessingMode::CYCLIC):
+    Constraint(
+      std::string id,
+      Expression expression,
+      Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS,
+      OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC):
         id_(std::move(id)),
         expression_(std::move(expression)),
         location_(location),

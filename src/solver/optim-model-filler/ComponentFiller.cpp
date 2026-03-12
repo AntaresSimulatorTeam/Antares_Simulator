@@ -393,12 +393,12 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
             const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
             if (constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP)
             {
-                auto evalVisitor = Expressions::Visitors::EvalVisitor(optimEntityContainer_,
-                                                                      ctx,
-                                                                      component_,
-                                                                      data_,
-                                                                      &scenarioGroupRepo_.scenario(
-                                                                        component_.getScenarioGroupId()));
+                auto evalVisitor = Expressions::Visitors::EvalVisitor(
+                  optimEntityContainer_,
+                  ctx,
+                  component_,
+                  data_,
+                  &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
                 if (shouldDropConstraintAtTimestep(constraint.expression(), t, ctx, evalVisitor))
                 {
                     continue;

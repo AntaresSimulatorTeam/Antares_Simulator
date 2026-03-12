@@ -158,8 +158,7 @@ std::string normalizeOutOfBoundsProcessingMode(const std::string& mode)
       fmt::format("Invalid out-of-bounds processing mode in optim-config.yaml: {}", mode));
 }
 
-void updateConstraintOutOfBoundsProcessing(YmlModel::Model& model,
-                                           const Model& optimConfigModel)
+void updateConstraintOutOfBoundsProcessing(YmlModel::Model& model, const Model& optimConfigModel)
 {
     for (const auto& ymlOptCfg: optimConfigModel.constraints_out_of_bounds_processing)
     {

@@ -264,15 +264,16 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                               : TimeBlock{.block = currentBlock + 1,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
-            simulationTable.addEntry(SimulationTableEntry{.block = tb.block,
-                                                          .component = componentId,
-                                                          .output = constraintId,
-                                                          .absolute_time_index = tb.absoluteTimeIndex,
-                                                          .block_time_index = tb.blockTimeIndex,
-                                                          .scenario_index = scenIdx,
-                                                          .value = std::nullopt,
-                                                          .status = isLp ? activeConstraint->getMipBasisStatus()
-                                                                         : MipBasisStatus::NOT_AVAILABLE});
+            simulationTable.addEntry(
+              SimulationTableEntry{.block = tb.block,
+                                   .component = componentId,
+                                   .output = constraintId,
+                                   .absolute_time_index = tb.absoluteTimeIndex,
+                                   .block_time_index = tb.blockTimeIndex,
+                                   .scenario_index = scenIdx,
+                                   .value = std::nullopt,
+                                   .status = isLp ? activeConstraint->getMipBasisStatus()
+                                                  : MipBasisStatus::NOT_AVAILABLE});
         };
 
         handleDependingOnVariability(fillContext, year, variability, handle);
