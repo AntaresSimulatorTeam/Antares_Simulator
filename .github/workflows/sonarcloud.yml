@@ -242,7 +242,7 @@ jobs:
       with:
         scannerVersion: 7.3.0.5189 #8.0.1.6346 hangs
         args: >
-          --define sonar.host.url=${{ env.SONAR_SERVER_URL }} --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
+          "--define sonar.host.url=${{ env.SONAR_SERVER_URL }} --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
 
     - name: Barrier
       if: ${{ !success() }}
