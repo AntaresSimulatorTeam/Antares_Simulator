@@ -72,8 +72,8 @@ private:
 class EvaluationResult
 {
 public:
-    explicit EvaluationResult(double value);
-    explicit EvaluationResult(const std::vector<double>& values);
+    EvaluationResult(double value);
+    EvaluationResult(const std::vector<double>& values);
 
     EvaluationResult operator+(const EvaluationResult& right) const
     {

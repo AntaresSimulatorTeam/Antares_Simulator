@@ -390,11 +390,9 @@ EvaluationResult EvaluationResult::timeShift(int shift) const
 {
     if (std::holds_alternative<double>(value_))
     {
-        return EvaluationResult(std::get<double>(value_));
+        return std::get<double>(value_);
     }
-
-    auto shifted_values = shiftVector(std::get<std::vector<double>>(value_), shift);
-    return EvaluationResult(shifted_values);
+    return shiftVector(std::get<std::vector<double>>(value_), shift);
 }
 
 EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
@@ -431,7 +429,7 @@ EvaluationResult EvaluationResult::operator[](int timeIndex) const
     {
         throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
     }
-    return EvaluationResult(vec.at(timeIndex));
+    return vec.at(timeIndex);
 }
 
 } // namespace Antares::Expressions::Visitors
