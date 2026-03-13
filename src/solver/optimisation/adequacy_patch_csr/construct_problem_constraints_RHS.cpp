@@ -117,20 +117,14 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                 // Add must-run generation and load terms if enabled
                 if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
                 {
-                    double maxAllMustRunGeneration = 0.0;
                     double allMustRunGen = problemeHebdo_->AllMustRunGeneration[triggeredHour]
                                              .AllMustRunGenerationOfArea[Area];
-                    if (allMustRunGen > 0.0)
-                        maxAllMustRunGeneration = allMustRunGen;
+                    double consommationAbattue = problemeHebdo_
+                                                   ->ConsommationsAbattues[triggeredHour]
+                                                   .ConsommationAbattueDuPays[Area];
 
-                    double consommationAbattue
-                      = problemeHebdo_->ConsommationsAbattues[triggeredHour]
-                          .ConsommationAbattueDuPays[Area];
-                    double maxMoinsConsommationBrute = 0.0;
-                    if (-(consommationAbattue + allMustRunGen) > 0.0)
-                        maxMoinsConsommationBrute = -(consommationAbattue + allMustRunGen);
-
-                    rhs += maxAllMustRunGeneration + maxMoinsConsommationBrute;
+                    double ftMinusLt = allMustRunGen + consommationAbattue;
+                    bfTerm = std::max(0.0, ftMinusLt);
                 }
 
                 // Subtract Pmin of thermal units if enabled
