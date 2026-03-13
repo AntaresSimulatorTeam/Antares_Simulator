@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"HoursFieldVisitor_8h_source.html":[9,0,0,4,0,0,3],
+"HydraulicSmoothingGroup_8h_source.html":[9,0,0,8,6,1,0,0,0,1,22],
 "HydroErrorsCollector_8h_source.html":[9,0,0,8,1,0,0,0,0,2,1],
 "HydroInputsChecker_8h_source.html":[9,0,0,8,1,0,0,0,0,2,2],
 "HydroPowerGroup_8h_source.html":[9,0,0,8,6,1,0,0,0,1,24],
@@ -247,7 +249,5 @@ var NAVTREEINDEX1 =
 "avail-dispatchable-generation_8h_source.html":[9,0,0,8,11,0,0,0,0,3,3],
 "availability_8cpp.html#a3e63ef1830806b4386115677e0cc8113":[7,0,0,16,18],
 "availability_8cpp.html#a6931dc8e4802e8792c952569484a6a6a":[7,0,0,16,15],
-"availability_8cpp.html#a70dc7060a974a1670f019295c2dfef56":[7,0,0,16,17],
-"availability_8cpp.html#aa30390df1cab09cfc69c1e5d3f5059e5":[7,0,0,16,11],
-"availability_8cpp.html#aff622e3098b1794af9d0a9980ebabd08":[7,0,0,16,10]
+"availability_8cpp.html#a70dc7060a974a1670f019295c2dfef56":[7,0,0,16,17]
 };

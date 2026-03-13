@@ -167,7 +167,9 @@ var NAVTREEINDEX0 =
 "ConstraintGroup_8h_source.html":[9,0,0,8,6,1,0,0,0,1,13],
 "CsrAreaBalance_8h_source.html":[9,0,0,8,6,1,0,0,0,0,0,0],
 "CsrBindingConstraintHour_8h_source.html":[9,0,0,8,6,1,0,0,0,0,0,1],
-"CsrFlowDissociation_8h_source.html":[9,0,0,8,6,1,0,0,0,0,0,2],
+"CsrFictitiousLoad_8h_source.html":[9,0,0,8,6,1,0,0,0,0,0,2],
+"CsrFlowDissociation_8h_source.html":[9,0,0,8,6,1,0,0,0,0,0,3],
+"CsrMaxEnsLoad_8h_source.html":[9,0,0,8,6,1,0,0,0,0,0,4],
 "DataSeriesRepoImporter_8h_source.html":[9,0,0,3,1,0,0,0,0,0,0,0],
 "Dimensions_8h_source.html":[9,0,0,8,5,0,0,0,0,2],
 "DivisionNode_8h_source.html":[9,0,0,2,1,0,0,1,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "HelpVisitNode_8h_source.html":[9,0,0,2,1,0,0,2,4],
 "HoursFieldBaseVisitor_8h_source.html":[9,0,0,4,0,0,0],
 "HoursFieldLexer_8h_source.html":[9,0,0,4,0,0,1],
-"HoursFieldParser_8h_source.html":[9,0,0,4,0,0,2],
-"HoursFieldVisitor_8h_source.html":[9,0,0,4,0,0,3],
-"HydraulicSmoothingGroup_8h_source.html":[9,0,0,8,6,1,0,0,0,1,22]
+"HoursFieldParser_8h_source.html":[9,0,0,4,0,0,2]
 };

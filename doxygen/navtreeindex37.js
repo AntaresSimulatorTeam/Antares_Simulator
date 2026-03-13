@@ -1,5 +1,17 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#a34b0bdcc91208d9e8632ac99863077ba":[8,0,0,7,1,10,2],
+"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#a4001e17826e701069ed7074cbcda3ec5":[8,0,0,7,1,10,4],
+"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#a4ec098fe12264c5a82b2477632e8e560":[8,0,0,7,1,10,0],
+"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#aa08581c26f7e71070378d5822ab6461d":[8,0,0,7,1,10,3],
+"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#ae490527435d4608d08fce05626af2084":[8,0,0,7,1,10,6],
+"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#af0bc2e78b4f2dd67d180ff0350bbb9d3":[8,0,0,7,1,10,1],
+"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#af998195ffe0337e1cd6aa77447be38af":[8,0,0,7,1,10,7],
+"structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html":[8,0,0,7,1,11],
+"structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html#a0dfa0417fed2a6db8287beac1afdb798":[8,0,0,7,1,11,2],
+"structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html#aaa3fc5dcf757eea5f8f5100ee1e97ed0":[8,0,0,7,1,11,1],
+"structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html#abd3afa0b0dd0b848e73f067acd5513c8":[8,0,0,7,1,11,0],
+"structAntares_1_1IO_1_1Outputs_1_1is__optional.html":[8,0,0,7,1,1],
 "structAntares_1_1IO_1_1Outputs_1_1is__optional_3_01std_1_1optional_3_01U_01_4_01_4.html":[8,0,0,7,1,2],
 "structAntares_1_1Matrix_1_1PredicateIdentity.html":[8,0,0,15,0],
 "structAntares_1_1Matrix_1_1PredicateIdentity.html#ac2895b6f73f741d1a52115a0c5549089":[8,0,0,15,0,0],
@@ -237,17 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant_1_1Statistics.html":[8,0,0,11,6,4,104,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant_1_1Statistics.html":[8,0,0,11,6,4,106,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html":[8,0,0,11,6,4,108,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[8,0,0,11,6,4,110,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[8,0,0,11,6,4,112,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics.html":[8,0,0,11,6,4,114,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[8,0,0,11,6,4,17,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[8,0,0,11,6,4,118,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[8,0,0,11,6,4,120,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html":[8,0,0,11,6,4,122,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster_1_1Statistics.html":[8,0,0,11,6,4,124,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[8,0,0,11,6,4,126,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag.html":[8,0,0,11,6,4,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html":[8,0,0,11,6,4,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy_1_1Statistics.html":[8,0,0,11,6,4,116,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions_1_1Statistics.html":[8,0,0,11,6,4,128,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[8,0,0,11,6,4,110,0]
 };

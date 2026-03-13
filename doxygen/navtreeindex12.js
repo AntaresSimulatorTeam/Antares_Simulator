@@ -1,5 +1,7 @@
 var NAVTREEINDEX12 =
 {
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#afda55cfd85c9a62af4511ebe42a7dd7d":[8,0,0,9,0,13,5],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html":[8,0,0,9,0,19],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html#a3dabf423adff977e1b6bf605676fc870":[8,0,0,9,0,19,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html#a4dd423eb5720bb83e31c83f650c0188b":[8,0,0,9,0,19,1],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html#abe4c196836975bb4159bce43b1f6335c":[8,0,0,9,0,19,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimization_1_1LinearExpression.html#a6690fab36052219d64b00479ed16e2f0":[8,0,0,10,16,9],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a87d6759f4a447a5a7843882030f26fe8":[8,0,0,10,16,19],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a8c21d5d2c3be0143604b1e67db38f7c2":[8,0,0,10,16,20],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a9e0c509e2159f6c9646ee30ad0b4a667":[8,0,0,10,16,11],
-"classAntares_1_1Optimization_1_1LinearExpression.html#aa5f76aa00928330575ae9c8b39920389":[8,0,0,10,16,8],
-"classAntares_1_1Optimization_1_1LinearExpression.html#aaaa16e91425bcf118587d40f7a71e02d":[8,0,0,10,16,13]
+"classAntares_1_1Optimization_1_1LinearExpression.html#a9e0c509e2159f6c9646ee30ad0b4a667":[8,0,0,10,16,11]
 };

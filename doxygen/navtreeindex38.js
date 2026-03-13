@@ -1,5 +1,17 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[8,0,0,11,6,4,112,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics.html":[8,0,0,11,6,4,114,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[8,0,0,11,6,4,17,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[8,0,0,11,6,4,118,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[8,0,0,11,6,4,120,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html":[8,0,0,11,6,4,122,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster_1_1Statistics.html":[8,0,0,11,6,4,124,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html":[8,0,0,11,6,4,126,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTag.html":[8,0,0,11,6,4,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html":[8,0,0,11,6,4,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy_1_1Statistics.html":[8,0,0,11,6,4,116,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions_1_1Statistics.html":[8,0,0,11,6,4,128,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html":[8,0,0,11,6,4,18],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#a3e15623113e681a7969deb1765611756":[8,0,0,11,6,4,18,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#ac9dccef6049d004e6231b2891a6ebf70":[8,0,0,11,6,4,18,0],
@@ -237,17 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html":[8,0,0,11,6,4,111],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a086bcaae893ca7d144da9feac4125a59":[8,0,0,11,6,4,111,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a1e29cf0432a1fa5caa74a0bbc30c1608":[8,0,0,11,6,4,111,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#abaab8f85c1c1d704700538da35c39dd0":[8,0,0,11,6,4,111,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#ad2fbf242cdb80795499b8a549fb55b4e":[8,0,0,11,6,4,111,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#afa929b139bcabb9a98ad8715fc874a62":[8,0,0,11,6,4,111,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html":[8,0,0,11,6,4,113],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a2c9d07393ce936e4e01613f14b2c1c5b":[8,0,0,11,6,4,113,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a359458cd3981c05c2be5752f4a4d2573":[8,0,0,11,6,4,113,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a4841456f557e4dd6b885c1ff81be4c71":[8,0,0,11,6,4,113,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a701a560058a6b0eb55430e8c463c4ca5":[8,0,0,11,6,4,113,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#ac0f3d537e433fb8602173db1d75bb1fa":[8,0,0,11,6,4,113,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html":[8,0,0,11,6,4,16],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a1fe574440a01eafe5bbc071c44c50afe":[8,0,0,11,6,4,16,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a416f29be80a14c3363740d25a38fa852":[8,0,0,11,6,4,16,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html#a434025b2227226e722e1db0ce5631e5c":[8,0,0,11,6,4,16,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#abaab8f85c1c1d704700538da35c39dd0":[8,0,0,11,6,4,111,4]
 };

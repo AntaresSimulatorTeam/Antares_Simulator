@@ -1,5 +1,7 @@
 var NAVTREEINDEX7 =
 {
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#a43b6acbf2cdebe2ea4ed4a13da85cb0a":[8,0,0,3,62,6],
+"classAntares_1_1Data_1_1StudyRuntimeInfos.html#a4f469a0171c62a239b36529b78a171a1":[8,0,0,3,62,5],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a54efdc144f837bfda2010785d3751a1c":[8,0,0,3,62,4],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a6290bc3235ea00ff7855432ea88e8d8a":[8,0,0,3,62,13],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a823b3b90b5b1c12dccbfdabbfde03d1e":[8,0,0,3,62,9],
@@ -247,7 +249,5 @@ var NAVTREEINDEX7 =
 "classAntares_1_1Error_1_1InvalidArgumentError.html":[8,0,0,5,0],
 "classAntares_1_1Error_1_1InvalidFileName.html":[8,0,0,5,6],
 "classAntares_1_1Error_1_1InvalidFileName.html#a00de22d645d8a660f22b7cca4618c0d0":[8,0,0,5,6,0],
-"classAntares_1_1Error_1_1InvalidOptimizationRange.html":[8,0,0,5,14],
-"classAntares_1_1Error_1_1InvalidOptimizationRange.html#a56863281501c16ae5e9b1e14cafeb2f5":[8,0,0,5,14,0],
-"classAntares_1_1Error_1_1InvalidSimulationMode.html":[8,0,0,5,15]
+"classAntares_1_1Error_1_1InvalidOptimizationRange.html":[8,0,0,5,14]
 };
