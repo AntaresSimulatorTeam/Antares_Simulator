@@ -64,6 +64,10 @@ set(RTESOLVER_OPT
         adequacy_patch_csr/constraints/CsrAreaBalance.cpp
         include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h
         adequacy_patch_csr/constraints/CsrBindingConstraintHour.cpp
+        include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h
+        adequacy_patch_csr/constraints/CsrFictitiousLoad.cpp
+        include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h
+        adequacy_patch_csr/constraints/CsrMaxEnsLoad.cpp
 
         include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
