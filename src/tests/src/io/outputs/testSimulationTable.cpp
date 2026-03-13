@@ -42,29 +42,6 @@ using namespace Antares::IO::Outputs;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
 
-namespace
-{
-Antares::Solver::ModelerData makeStableModelerData(
-  const std::vector<Antares::ModelerStudy::SystemModel::Component>& components)
-{
-    Antares::Solver::ModelerData modelerData;
-    Antares::ModelerStudy::SystemModel::SystemBuilder systemBuilder;
-    std::vector<Antares::ModelerStudy::SystemModel::Component> copiedComponents;
-    copiedComponents.reserve(components.size());
-    for (const auto& component: components)
-    {
-        copiedComponents.emplace_back(component);
-    }
-    auto system = systemBuilder.withId("system")
-                    .withComponents(std::move(copiedComponents))
-                    .build();
-    modelerData.system = std::make_unique<Antares::ModelerStudy::SystemModel::System>(
-      std::move(system));
-    modelerData.dataSeries = std::make_unique<
-      Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>();
-    return modelerData;
-}
-
 Antares::ModelerStudy::SystemModel::Expression makeExpression(
   const std::string& value,
   Antares::Expressions::Nodes::Node* node,
@@ -74,8 +51,6 @@ Antares::ModelerStudy::SystemModel::Expression makeExpression(
       value,
       Antares::Expressions::NodeRegistry(node, std::move(registry)));
 }
-
-} // namespace
 
 auto count_lines = [](std::string_view s)
 {
@@ -988,122 +963,6 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
     BOOST_CHECK(buffer.find("1,comp1,var4,2,2,0") != std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedTimeDependentConstraints)
-{
-    auto next_var_node = nodeRegistry.create<Nodes::TimeShiftNode>(
-      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
-      literal(1));
-    auto current_var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
-    auto ct_node = nodeRegistry.create<Nodes::EqualNode>(next_var_node, current_var_node);
-
-    createModel("model",
-                {},
-                {{"var1", ValueType::FLOAT, nullptr, nullptr, true, false}},
-                {{"ct1", ct_node, OutOfBoundsProcessingMode::DROP}});
-    createComponent("model", "componentToto");
-
-    FillContext fillContext(0, 2, 0, 2, 0);
-    buildLinearProblem(fillContext);
-    auto modelerData = makeStableModelerData(components);
-    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::
-                                          optimEntityContainer;
-
-    SimulationTableCsv table;
-    FillSimulationTable(table,
-                        *pb,
-                        45.0,
-                        modelerData,
-                        filledOptimEntityContainer,
-                        fillContext,
-                        0,
-                        TimeConversionMode::SingleBlock);
-    table.write();
-
-    const std::string buffer = table.buffer();
-    BOOST_TEST_INFO(buffer);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,1,1,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,2,2,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,3,3,") == std::string::npos);
-}
-
-BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedConstraintAtFirstTimestep)
-{
-    auto previous_var_node = nodeRegistry.create<Nodes::TimeShiftNode>(
-      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
-      literal(-1));
-    auto current_var_node = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
-    auto ct_node = nodeRegistry.create<Nodes::EqualNode>(previous_var_node, current_var_node);
-
-    createModel("model",
-                {},
-                {{"var1", ValueType::FLOAT, nullptr, nullptr, true, false}},
-                {{"ct1", ct_node, OutOfBoundsProcessingMode::DROP}});
-    createComponent("model", "componentToto");
-
-    FillContext fillContext(0, 2, 0, 2, 0);
-    buildLinearProblem(fillContext);
-    auto modelerData = makeStableModelerData(components);
-    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::
-                                          optimEntityContainer;
-
-    SimulationTableCsv table;
-    FillSimulationTable(table,
-                        *pb,
-                        45.0,
-                        modelerData,
-                        filledOptimEntityContainer,
-                        fillContext,
-                        0,
-                        TimeConversionMode::SingleBlock);
-    table.write();
-
-    const std::string buffer = table.buffer();
-    BOOST_TEST_INFO(buffer);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,1,1,") == std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,2,2,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,3,3,") != std::string::npos);
-}
-
-BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsBothBoundaryTimestepsForMixedShifts)
-{
-    auto previous_var_node = nodeRegistry.create<Nodes::TimeShiftNode>(
-      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
-      literal(-1));
-    auto next_var_node = nodeRegistry.create<Nodes::TimeShiftNode>(
-      variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
-      literal(1));
-    auto ct_node = nodeRegistry.create<Nodes::EqualNode>(previous_var_node, next_var_node);
-
-    createModel("model",
-                {},
-                {{"var1", ValueType::FLOAT, nullptr, nullptr, true, false}},
-                {{"ct1", ct_node, OutOfBoundsProcessingMode::DROP}});
-    createComponent("model", "componentToto");
-
-    FillContext fillContext(0, 2, 0, 2, 0);
-    buildLinearProblem(fillContext);
-    auto modelerData = makeStableModelerData(components);
-    auto& filledOptimEntityContainer = *this->Test::Modeler::LinearProblemBuildingFixture::
-                                          optimEntityContainer;
-
-    SimulationTableCsv table;
-    FillSimulationTable(table,
-                        *pb,
-                        45.0,
-                        modelerData,
-                        filledOptimEntityContainer,
-                        fillContext,
-                        0,
-                        TimeConversionMode::SingleBlock);
-    table.write();
-
-    const std::string buffer = table.buffer();
-    BOOST_TEST_INFO(buffer);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,1,1,") == std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,2,2,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,3,3,") == std::string::npos);
-}
-
 BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
 {
     Registry<Nodes::Node> constraintRegistry;
@@ -1114,7 +973,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
       "var1",
       0,
       VariabilityType::VARYING_IN_TIME_ONLY);
-    auto* ctNode = constraintRegistry.create<Nodes::EqualNode>(nextVarNode, currentVarNode);
+    auto* timeShiftedConstraintNode = constraintRegistry.create<Nodes::EqualNode>(nextVarNode,
+                                                                                  currentVarNode);
 
     Registry<Nodes::Node> extraOutputRegistry;
     auto* dualNode = extraOutputRegistry.create<Nodes::FunctionNode>(
@@ -1124,7 +984,9 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
 
     std::vector<Constraint> constraints;
     constraints.emplace_back("ct1",
-                             makeExpression("ct1", ctNode, std::move(constraintRegistry)),
+                             makeExpression("var1[t+1] = var1[t]",
+                                            timeShiftedConstraintNode,
+                                            std::move(constraintRegistry)),
                              Antares::Solver::Config::Location::SUBPROBLEMS,
                              OutOfBoundsProcessingMode::DROP);
 
@@ -1181,6 +1043,9 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
 
     const std::string buffer = table.buffer();
     BOOST_TEST_INFO(buffer);
+    BOOST_CHECK(buffer.find(",componentToto,ct1,1,1,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct1,2,2,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct1,3,3,") == std::string::npos);
     BOOST_CHECK(buffer.find(",componentToto,ct1_dual,1,1,0,2.5,") != std::string::npos);
     BOOST_CHECK(buffer.find(",componentToto,ct1_dual,2,2,0,-3,") != std::string::npos);
     BOOST_CHECK(buffer.find(",componentToto,ct1_dual,3,3,") == std::string::npos);
