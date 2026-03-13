@@ -144,29 +144,15 @@ static void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
-static FieldRole GetPortFieldRole(const std::string& portId,
-                                  const std::string& field,
-                                  const PortFieldMap& portFieldDefinitions)
-{
-    const auto& it = portFieldDefinitions.find(PortFieldKey{.portId = portId, .fieldId = field});
-    if (it == portFieldDefinitions.end())
-    {
-        return FieldRole::Receiver;
-    }
-    return FieldRole::Sender;
-}
-
 static void CheckFieldsRoleCompatibility(const Component& component_1,
                                          const Port& port_1,
                                          const Component& component_2,
                                          const Port& port_2)
 {
-    const auto& portDefs_1 = component_1.getModel()->PortFieldDefinitions();
-    const auto& portDefs_2 = component_2.getModel()->PortFieldDefinitions();
     for (const auto& field: port_1.Type().Fields())
     {
-        const auto portFieldRole_1 = GetPortFieldRole(port_1.Id(), field.Id(), portDefs_1);
-        const auto portFieldRole_2 = GetPortFieldRole(port_2.Id(), field.Id(), portDefs_2);
+        const auto portFieldRole_1 = port_1.fieldRole(field.Id());
+        const auto portFieldRole_2 = port_2.fieldRole(field.Id());
 
         if (portFieldRole_1 == portFieldRole_2)
         {

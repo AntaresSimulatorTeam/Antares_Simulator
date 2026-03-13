@@ -295,14 +295,14 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
     ports.reserve(model.ports.size());
     for (const auto& port: model.ports)
     {
-        const auto it = std::ranges::find_if(portTypes,
-                                             [&port](const auto& pt)
-                                             { return pt.Id() == port.type; });
-        if (it == portTypes.end())
+        const auto port_type = std::ranges::find_if(portTypes,
+                                                    [&port](const auto& pt)
+                                                    { return pt.Id() == port.type; });
+        if (port_type == portTypes.end())
         {
             throw PortTypeNotFound(port.id, port.type);
         }
-        ports.emplace_back(port.id, *it);
+        ports.emplace_back(port.id, *port_type);
     }
     return ports;
 }
@@ -314,7 +314,7 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
  * \return A vector of SystemModel::PortFieldDefinition objects.
  */
 std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Model& model,
-                                                             const std::vector<Port>& ports)
+                                                             std::vector<Port>& ports)
 {
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
@@ -352,12 +352,17 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
+
         ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
           .dispatch(nodeRegistry.node);
+
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
                                           Expression(pfdefinition.definition,
                                                      std::move(nodeRegistry)));
+
+        // A definition for a port field means this field is a sender
+        itPort->setFieldRole(itField->Id(), FieldRole::Sender);
     }
     return portFieldDefinitions;
 }
