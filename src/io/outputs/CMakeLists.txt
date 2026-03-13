@@ -35,6 +35,7 @@ target_link_libraries(modeler-simulation-table
         Antares::utils
         PRIVATE
         Antares::exception
+        Antares::result_writer
 )
 
 install(DIRECTORY include/antares
