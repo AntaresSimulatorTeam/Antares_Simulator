@@ -20,9 +20,12 @@
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
@@ -41,46 +44,6 @@ using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Outputs;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
-
-Antares::ModelerStudy::SystemModel::Expression makeExpression(
-  const std::string& value,
-  Antares::Expressions::Nodes::Node* node,
-  Antares::Expressions::Registry<Antares::Expressions::Nodes::Node> registry)
-{
-    return Antares::ModelerStudy::SystemModel::Expression(
-      value,
-      Antares::Expressions::NodeRegistry(node, std::move(registry)));
-}
-
-struct KnownDualLinearProblem: PredfinedSolutionLinearProblemMock
-{
-    KnownDualLinearProblem():
-        PredfinedSolutionLinearProblemMock(true)
-    {
-    }
-
-    void addConstraintDualValue(double value)
-    {
-        struct DualValueConstraint: MockMipConstraint
-        {
-            explicit DualValueConstraint(double value):
-                MockMipConstraint(MipBasisStatus::AT_LOWER_BOUND),
-                value_(value)
-            {
-            }
-
-            double dual() const override
-            {
-                return value_;
-            }
-
-            double value_;
-        };
-
-        constraints_.push_back(std::make_unique<DualValueConstraint>(value));
-        constraintCount_++;
-    }
-};
 
 auto count_lines = [](std::string_view s)
 {
@@ -995,85 +958,51 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
 {
-    Registry<Nodes::Node> constraintRegistry;
-    auto* nextVarNode = constraintRegistry.create<Nodes::TimeShiftNode>(
-      constraintRegistry.create<Nodes::VariableNode>("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY),
-      constraintRegistry.create<Nodes::LiteralNode>(1));
-    auto* currentVarNode = constraintRegistry.create<Nodes::VariableNode>(
-      "var1",
-      0,
-      VariabilityType::VARYING_IN_TIME_ONLY);
-    auto* timeShiftedConstraintNode = constraintRegistry.create<Nodes::EqualNode>(nextVarNode,
-                                                                                  currentVarNode);
+    auto* currentVarNode = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* nextVarNode = nodeRegistry.create<Nodes::TimeShiftNode>(currentVarNode, literal(1));
 
-    Registry<Nodes::Node> extraOutputRegistry;
-    auto* dualNode = extraOutputRegistry.create<Nodes::FunctionNode>(
-      Nodes::FunctionNodeType::dual,
-      extraOutputRegistry.create<Nodes::ParameterNode>("ct1"),
-      extraOutputRegistry.create<Nodes::LiteralNode>(0));
-
-    std::vector<Constraint> constraints;
-    constraints.emplace_back("ct1",
-                             makeExpression("var1[t+1] = var1[t]",
-                                            timeShiftedConstraintNode,
-                                            std::move(constraintRegistry)),
-                             Antares::Solver::Config::Location::SUBPROBLEMS,
-                             OutOfBoundsProcessingMode::DROP);
-
-    std::vector<ExtraOutput> extraOutputs;
-    extraOutputs.emplace_back("ct1_dual",
-                              makeExpression("dual(ct1)",
-                                             dualNode,
-                                             std::move(extraOutputRegistry)));
-
-    ModelBuilder modelBuilder;
-    auto model = modelBuilder.withId("model")
-                   .withConstraints(std::move(constraints))
-                   .withExtraOutputs(std::move(extraOutputs))
-                   .build();
-
-    ComponentBuilder componentBuilder;
-    auto component = componentBuilder.withId("componentToto")
-                       .withIndex(0)
-                       .withModel(&model)
-                       .withParameterValues({})
-                       .withScenarioGroupId("scenario_group")
-                       .build();
-
-    KnownDualLinearProblem linearProblem;
-    OptimEntityContainer optimContainer(linearProblem);
-    std::vector<Component> components = {component};
-    optimContainer.addFromSystemComponents(components);
-    optimContainer.registerConstraint(component, VariabilityType::VARYING_IN_TIME_ONLY, 2);
-
-    linearProblem.addConstraintDualValue(2.5);
-    linearProblem.addConstraintDualValue(-3.0);
-    linearProblem.addConstraintDualValue(7.0);
-
-    this->components = std::move(components);
-    scenarioGroupRepo.addScenario("scenario_group", std::make_unique<EmptyScenario>());
-    auto& modelerData = getModelerData();
+    createModel("model",
+                {},
+                {{"var1", ValueType::BOOL, literal(0), literal(1), true, false}},
+                {{"ct_drop",
+                  nodeRegistry.create<Nodes::EqualNode>(nextVarNode, currentVarNode),
+                  OutOfBoundsProcessingMode::DROP},
+                 {"ct_cyclic",
+                  nodeRegistry.create<Nodes::EqualNode>(nextVarNode, currentVarNode),
+                  OutOfBoundsProcessingMode::CYCLIC}});
+    createComponent("model", "componentToto");
 
     FillContext fillContext(0, 2, 0, 2, 0);
+    pb = std::make_unique<OrtoolsLinearProblem>(true, "scip");
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
+    optimEntityContainer->addFromSystemComponents(components);
+
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
+    for (auto& component: components)
+    {
+        fillers.push_back(std::make_unique<ComponentFiller>(component,
+                                                            &dummy_data_,
+                                                            *optimEntityContainer,
+                                                            scenarioGroupRepo,
+                                                            Config::Location::SUBPROBLEMS));
+    }
+    LinearProblemBuilder(fillers).build(fillContext);
+    BOOST_REQUIRE(pb->solve(false));
+
+    auto& modelerData = getModelerData();
     SimulationTableCsv table;
-    FillSimulationTable(table,
-                        linearProblem,
-                        45.0,
-                        modelerData,
-                        optimContainer,
-                        fillContext,
-                        0,
+    FillSimulationTable(table, *pb, 45.0, modelerData, *optimEntityContainer, fillContext, 0,
                         TimeConversionMode::SingleBlock);
     table.write();
 
     const std::string buffer = table.buffer();
     BOOST_TEST_INFO(buffer);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,1,1,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,2,2,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1,3,3,") == std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1_dual,1,1,0,2.5,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1_dual,2,2,0,-3,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct1_dual,3,3,") == std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,1,1,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,2,2,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,3,3,") == std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,1,1,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,2,2,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,3,3,") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
