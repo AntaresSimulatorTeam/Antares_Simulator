@@ -12,12 +12,10 @@ add_boost_test(tests-on-remix-utils
         ${include_dir}
         LIBS
         storage-for-remix-list-sort
+        Antares::vector-utils
         test_utils_unit)
 
 set_target_properties(tests-on-remix-utils PROPERTIES FOLDER Unit-tests/storage-remix)
-
-# Access to vector utils
-target_include_directories(tests-on-remix-utils PUBLIC ${PROJECT_SOURCE_DIR}/libs/antares/utils/include)
 
 
 #---------------------------------------
@@ -54,12 +52,10 @@ add_boost_test(tests-on-multi-storage-remix
         tests-collect_remix_debug_info.cpp
         LIBS
         shave-peaks-by-remix-storage-gen
+        Antares::vector-utils
         test_utils_unit)
 
 set_target_properties(tests-on-multi-storage-remix PROPERTIES FOLDER Unit-tests/storage-remix)
-
-# Access to vector utils
-target_include_directories(tests-on-multi-storage-remix PUBLIC ${PROJECT_SOURCE_DIR}/libs/antares/utils/include)
 
 #-----------------------------
 # Unit tests on extractSTS-functions

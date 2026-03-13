@@ -75,13 +75,6 @@ add_library(expressions ${SRC_Expressions})
 
 target_include_directories(expressions
         PUBLIC
-        # This following line is supposed to give access to "utils" from current target : 
-        # $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs/antares/utils/include>
-        # It does not work, strangely (at least on Windows) : it has no effect 
-        # on include directory list of current target, and thus compilation fails to find utils headers.
-        # Note that it works elsewhere, in other cmake files.
-        # Work around :
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../libs/antares/utils/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 add_library(Antares::expressions ALIAS expressions)
@@ -91,6 +84,7 @@ target_link_libraries(expressions
         Boost::headers
         Antares::antares-study-system-model
         Antares::logs
+        Antares::vector-utils
         fmt::fmt
         #TODO i need LinearProblemData
         linear-problem-api

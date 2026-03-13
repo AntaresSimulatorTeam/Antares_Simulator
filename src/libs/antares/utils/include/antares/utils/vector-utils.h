@@ -47,7 +47,7 @@ inline std::vector<double> operator+(std::vector<double> a, const std::vector<do
     return a;
 }
 
-inline std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b)
+inline std::vector<double>& operator+=(std::vector<double>& a, const std::vector<double>& b)
 {
     std::ranges::transform(a, b, a.begin(), std::plus<double>());
     return a;
