@@ -123,6 +123,8 @@ jobs:
         -DBUILD_TESTING=ON \
         -DBUILD_TOOLS=ON \
         -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+        -Dortools_DIR=${{ env.ORTOOLS_DIR }}/install/lib/cmake/ortools \
+        -Dabsl_DIR=${{ env.ORTOOLS_DIR }}/install/lib/cmake/absl \
         -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
 
     - name: Build
@@ -143,6 +145,14 @@ jobs:
         pushd .
         cd install/bin
         cp ${{ env.ORTOOLS_DIR }}/install/lib/*.so* .
+        VCPKG_LIB=../vcpkg_installed/x64-linux-release/lib
+        if [ -d "$VCPKG_LIB" ]; then
+          for so in "$VCPKG_LIB"/libarrow*.so* "$VCPKG_LIB"/libparquet*.so*; do
+            if [ -f "$so" ]; then
+              cp -n "$so" .
+            fi
+          done
+        fi
         tar czf ../../antares-solver_ubuntu22.04.tar.gz antares-solver libsirius_solver.so *.so*
         popd
         rm -rf install

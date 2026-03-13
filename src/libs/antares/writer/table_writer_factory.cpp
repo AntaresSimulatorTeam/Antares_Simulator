@@ -19,7 +19,7 @@
  * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
  */
 
-#include "include/antares/writer/table_writer_factory.h"
+#include <antares/writer/table_writer_factory.h>
 
 #include "csv_table_writer.h"
 #include "parquet_table_writer.h"

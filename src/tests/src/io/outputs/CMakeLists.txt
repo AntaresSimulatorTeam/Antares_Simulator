@@ -7,6 +7,7 @@ add_boost_test(testOutputs
         testMpsWriter.cpp
         LIBS
         mock-modeler-objects
+        Antares::modeler-simulation-table-file
         Antares::modeler-simulation-table
         Antares::tests::inmemory-modeler
         Antares::modeler-lib

@@ -20,8 +20,10 @@
  */
 #pragma once
 
+#include <filesystem>
 #include <stdexcept>
-#include "include/antares/writer/i_table_writer.h"
+
+#include <antares/writer/i_table_writer.h>
 
 namespace Antares::Writer
 {

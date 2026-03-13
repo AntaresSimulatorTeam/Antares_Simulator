@@ -128,6 +128,8 @@ jobs:
       run: |
         cmake -B _build -S src \
         -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
+        -Dortools_DIR="${{ env.ORTOOLS_DIR }}/install/lib/cmake/ortools" \
+        -Dabsl_DIR="${{ env.ORTOOLS_DIR }}/install/lib/cmake/absl" \
         -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
         -DVCPKG_TARGET_TRIPLET=${{ env.triplet }} \
         -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" \
@@ -157,6 +159,14 @@ jobs:
           done
         else
           echo "VCPKG bin directory not found: $VCPKG_BIN"
+        fi
+        VCPKG_TOOLS_BIN=vcpkg_installed/${triplet}/tools/arrow
+        if [ -d "$VCPKG_TOOLS_BIN" ]; then
+          for dll in "$VCPKG_TOOLS_BIN"/*.dll*; do
+            if [ -f "$dll" ]; then
+              cp -n "$dll" "${FIXED_PATH}/install/bin"
+            fi
+          done
         fi
         cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
         export ZIP_ARCHIVE_NAME=$(ls -1 *.zip)
