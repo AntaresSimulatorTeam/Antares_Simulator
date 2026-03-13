@@ -12,7 +12,13 @@ set(SRC-modeler-optimisation-container
 
 )
 
-add_library(${PROJ} ${SRC-modeler-optimisation-container})
+# This target is part of a dependency cycle; keep it static in shared builds.
+set(_modeler_optimisation_container_library_type)
+if (BUILD_SHARED_LIBS)
+    set(_modeler_optimisation_container_library_type STATIC)
+endif ()
+
+add_library(${PROJ} ${_modeler_optimisation_container_library_type} ${SRC-modeler-optimisation-container})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)

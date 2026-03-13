@@ -70,7 +70,14 @@ set(SRC_Expressions
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
+# Cyclic dependencies in this module require static linkage when global shared mode is enabled.
+set(_expressions_library_type)
+if (BUILD_SHARED_LIBS)
+    set(_expressions_library_type STATIC)
+endif ()
+
 add_library(expressions
+        ${_expressions_library_type}
         ${SRC_Expressions})
 add_library(Antares::expressions ALIAS expressions)
 

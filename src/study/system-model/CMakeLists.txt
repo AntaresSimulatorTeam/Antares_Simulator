@@ -29,7 +29,14 @@ set(SRC_model
 )
 
 source_group("SystemModel" FILES ${SRC_model})
+# This target is part of a dependency cycle; keep it static in shared builds.
+set(_study_system_model_library_type)
+if (BUILD_SHARED_LIBS)
+    set(_study_system_model_library_type STATIC)
+endif ()
+
 add_library(antares-study-system-model
+        ${_study_system_model_library_type}
         ${SRC_model})
 add_library(Antares::antares-study-system-model ALIAS antares-study-system-model)
 

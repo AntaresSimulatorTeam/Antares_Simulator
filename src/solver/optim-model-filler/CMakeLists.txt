@@ -18,7 +18,13 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
 )
 
-add_library(${PROJ} ${SRC_optim_model_filler})
+# This target is part of a dependency cycle; keep it static in shared builds.
+set(_optim_model_filler_library_type)
+if (BUILD_SHARED_LIBS)
+    set(_optim_model_filler_library_type STATIC)
+endif ()
+
+add_library(${PROJ} ${_optim_model_filler_library_type} ${SRC_optim_model_filler})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 set_target_properties(${PROJ} PROPERTIES LINKER_LANGUAGE CXX)
