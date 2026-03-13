@@ -136,9 +136,7 @@ static ForbiddenNodes ForbidNodesInObjective()
 
 static ForbiddenNodes ForbidNodesInExtraOutput()
 {
-    ForbiddenNodes f;
-    // TODO check : f.forbidGlobally<PortFieldSumNode>();
-    return f;
+    return {};
 }
 
 const ForbiddenNodes forbiddenInConstraint = ForbidNodesInConstraint();
