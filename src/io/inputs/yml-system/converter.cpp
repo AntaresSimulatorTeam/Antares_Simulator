@@ -144,9 +144,9 @@ static void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
-static FieldRole ExposeFieldRole(const std::string& portId,
-                                 const std::string& field,
-                                 const PortFieldMap& portFieldDefinitions)
+static FieldRole GetPortFieldRole(const std::string& portId,
+                                  const std::string& field,
+                                  const PortFieldMap& portFieldDefinitions)
 {
     const auto& it = portFieldDefinitions.find(PortFieldKey{.portId = portId, .fieldId = field});
     if (it == portFieldDefinitions.end())
@@ -156,25 +156,23 @@ static FieldRole ExposeFieldRole(const std::string& portId,
     return FieldRole::Sender;
 }
 
-static void CheckFieldsRoleCompatibility(const Component& firstComponent,
-                                         const Port& firstPort,
-                                         const Component& secondComponent,
-                                         const Port& secondPort)
+static void CheckFieldsRoleCompatibility(const Component& component_1,
+                                         const Port& port_1,
+                                         const Component& component_2,
+                                         const Port& port_2)
 {
-    const auto& firstPortDefs = firstComponent.getModel()->PortFieldDefinitions();
-    const auto& secondPortDefs = secondComponent.getModel()->PortFieldDefinitions();
-    for (const auto& field: firstPort.Type().Fields())
+    const auto& portDefs_1 = component_1.getModel()->PortFieldDefinitions();
+    const auto& portDefs_2 = component_2.getModel()->PortFieldDefinitions();
+    for (const auto& field: port_1.Type().Fields())
     {
-        const auto firstPortFieldRole = ExposeFieldRole(firstPort.Id(), field.Id(), firstPortDefs);
-        const auto secondPortFieldRole = ExposeFieldRole(secondPort.Id(),
-                                                         field.Id(),
-                                                         secondPortDefs);
+        const auto portFieldRole_1 = GetPortFieldRole(port_1.Id(), field.Id(), portDefs_1);
+        const auto portFieldRole_2 = GetPortFieldRole(port_2.Id(), field.Id(), portDefs_2);
 
-        if (firstPortFieldRole == secondPortFieldRole)
+        if (portFieldRole_1 == portFieldRole_2)
         {
             std::ostringstream msg;
-            msg << "Field '" << field.Id() << "' is " << firstPortFieldRole << " in both ports '"
-                << firstPort.Id() << "' and '" << secondPort.Id() << "'";
+            msg << "Field '" << field.Id() << "' is " << portFieldRole_1 << " in both ports '"
+                << port_1.Id() << "' and '" << port_2.Id() << "'";
             throw TwoFieldsOfSameRole(msg.str());
         }
     }
@@ -204,27 +202,24 @@ static void CheckFieldsRoleCompatibility(const Component& firstComponent,
 static void connectComponents(const YmlSystem::Connection& connection,
                               std::vector<Component>& components)
 {
-    const auto& firstComponentId = connection.firstEntry.componentId;
-    const auto& firstPortId = connection.firstEntry.portId;
-    const auto& secondComponentId = connection.secondEntry.componentId;
-    const auto& secondPortId = connection.secondEntry.portId;
+    const auto& componentId_1 = connection.firstEntry.componentId;
+    const auto& portId_1 = connection.firstEntry.portId;
+    const auto& componentId_2 = connection.secondEntry.componentId;
+    const auto& portId_2 = connection.secondEntry.portId;
+    CheckPortSelfConnection(componentId_1, portId_1, componentId_2, portId_2);
 
-    CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
+    auto& component_1 = findComponent(componentId_1, components);
+    const auto& port_1 = component_1.findPort(portId_1, "");
+    auto& component_2 = findComponent(componentId_2, components);
+    const auto& port_2 = component_2.findPort(portId_2, "");
+    CheckPortsType(port_1, port_2);
 
-    auto& firstComponent = findComponent(firstComponentId, components);
-    const auto& firstPort = firstComponent.findPort(firstPortId, "");
-    auto& secondComponent = findComponent(secondComponentId, components);
-    const auto& secondPort = secondComponent.findPort(secondPortId, "");
-    CheckPortsType(firstPort, secondPort);
-
-    CheckFieldsRoleCompatibility(firstComponent, firstPort, secondComponent, secondPort);
+    CheckFieldsRoleCompatibility(component_1, port_1, component_2, port_2);
 
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
-    firstComponent.addComponentConnection(firstPort.Id(),
-                                          ConnectionEnd(&secondComponent, &secondPort));
-    secondComponent.addComponentConnection(secondPort.Id(),
-                                           ConnectionEnd(&firstComponent, &firstPort));
+    component_1.addComponentConnection(port_1.Id(), ConnectionEnd(&component_2, &port_2));
+    component_2.addComponentConnection(port_2.Id(), ConnectionEnd(&component_1, &port_1));
 }
 
 /**
