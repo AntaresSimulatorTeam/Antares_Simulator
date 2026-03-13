@@ -201,10 +201,9 @@ void addConstraintEntries(ISimulationTable& simulationTable,
           constraintIndex,
           optimEntityContainer.getConstraintCount(component, constraintIndex));
 
-        std::size_t activeConstraintIndex = 0;
-
         auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
         {
+            std::size_t activeConstraintIndex = 0;
             const IMipConstraint* activeConstraint = nullptr;
 
             if (!ts.has_value())

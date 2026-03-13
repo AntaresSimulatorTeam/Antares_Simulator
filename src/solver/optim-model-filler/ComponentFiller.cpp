@@ -29,11 +29,7 @@ unsigned countActiveConstraintTimesteps(
     }
 
     const auto& scenario = scenarioGroupRepo.scenario(component.getScenarioGroupId());
-    auto evalVisitor = Antares::Expressions::Visitors::EvalVisitor(optimEntityContainer,
-                                                                   ctx,
-                                                                   component,
-                                                                   data,
-                                                                   &scenario);
+    Visitors::EvalVisitor evalVisitor(optimEntityContainer, ctx, component, data, &scenario);
     unsigned activeConstraintCount = 0;
     for (const auto timeStep: Antares::Optimisation::IntegerInterval{ctx.getLocalFirstTimeStep(),
                                                                      ctx.getLocalLastTimeStep()})
