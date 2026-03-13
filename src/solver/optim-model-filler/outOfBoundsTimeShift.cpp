@@ -3,7 +3,6 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include <antares/optimisation/linear-problem-api/linearProblemFiller.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 
 namespace Antares::Optimisation
