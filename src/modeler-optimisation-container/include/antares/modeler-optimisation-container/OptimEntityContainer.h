@@ -83,7 +83,5 @@ private:
     std::vector<unsigned int> variableStartColumn_;
     std::vector<OptimComponent> optimComponents_;
     LinearProblemApi::ILinearProblem& linearProblem_;
-    const LinearProblemApi::ILinearProblemData* data_;
-    const ScenarioGroupRepository* scenarioGroupRepository_;
 };
 } // namespace Antares::Optimisation
