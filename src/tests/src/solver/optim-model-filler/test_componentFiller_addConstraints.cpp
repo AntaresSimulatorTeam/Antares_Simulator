@@ -114,15 +114,11 @@ BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_out_of_bounds_t
         auto* ctNode = fixture.nodeRegistry.create<EqualNode>(makeNode(leftShift),
                                                               makeNode(rightShift));
 
-        fixture.createModel("model",
-                            {},
-                            {{"var1",
-                              ValueType::FLOAT,
-                              fixture.literal(-5),
-                              fixture.literal(10),
-                              true,
-                              false}},
-                            {{"ct1", ctNode, OutOfBoundsProcessingMode::DROP}});
+        fixture.createModel(
+          "model",
+          {},
+          {{"var1", ValueType::FLOAT, fixture.literal(-5), fixture.literal(10), true, false}},
+          {{"ct1", ctNode, OutOfBoundsProcessingMode::DROP}});
         fixture.createComponent("model", "componentToto");
         FillContext ctx{0, 2, 0, 2, 0};
         fixture.buildLinearProblem(ctx);

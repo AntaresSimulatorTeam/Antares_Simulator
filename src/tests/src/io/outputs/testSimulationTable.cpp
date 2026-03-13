@@ -991,7 +991,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
 
     auto& modelerData = getModelerData();
     SimulationTableCsv table;
-    FillSimulationTable(table, *pb, 45.0, modelerData, *optimEntityContainer, fillContext, 0,
+    FillSimulationTable(table,
+                        *pb,
+                        45.0,
+                        modelerData,
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
                         TimeConversionMode::SingleBlock);
     table.write();
 
