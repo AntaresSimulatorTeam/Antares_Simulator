@@ -349,7 +349,6 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
     const auto& solverVariables = pb_.getVariables();
     const auto firstTimestep = dims.getTimesteps().initialTime;
-    const auto lastTimestep = dims.getTimesteps().finalTime;
     for (const auto s: dims.getScenarioIndices()) // TODO
     {
         for (const auto t: dims.getTimesteps())
