@@ -18,6 +18,7 @@ jobs:
     env:
       SONAR_SERVER_URL: "https://sonarcloud.io"
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      VCPKG_TARGET_TRIPLET: x64-linux-release-shared
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
       BUILD_WRAPPER_OUT_DIR: ${{ github.workspace }}/_build/output # Directory where build-wrapper output will be placed
@@ -52,9 +53,9 @@ jobs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ env.VCPKG_TARGET_TRIPLET }}-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
-        restore-keys: vcpkg-cache-ubuntu-
+        restore-keys: vcpkg-cache-ubuntu-${{ env.VCPKG_TARGET_TRIPLET }}-
 
     - name: Config OR-Tools URL
       run: |
@@ -91,7 +92,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install uuid-dev
-        sudo apt-get install libboost-test-dev
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -134,7 +134,9 @@ jobs:
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
-        -DVCPKG_TARGET_TRIPLET=x64-linux-release \
+        -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }} \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBoost_USE_STATIC_LIBS=OFF \
         -DCODE_COVERAGE=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
@@ -254,7 +256,7 @@ jobs:
       uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ env.VCPKG_TARGET_TRIPLET }}-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
     - name: Display ccache statistics
       if: always()
