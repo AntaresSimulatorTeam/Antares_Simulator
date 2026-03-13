@@ -1711,42 +1711,6 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     BOOST_CHECK_EQUAL(evalVector[2], 714.5);
 }
 
-namespace
-{
-class DualValueConstraint final: public MockMipConstraint
-{
-public:
-    explicit DualValueConstraint(double dualValue):
-        MockMipConstraint(Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND),
-        dualValue_(dualValue)
-    {
-    }
-
-    double dual() const override
-    {
-        return dualValue_;
-    }
-
-private:
-    double dualValue_;
-};
-
-class KnownDualLinearProblem final: public PredfinedSolutionLinearProblemMock
-{
-public:
-    KnownDualLinearProblem():
-        PredfinedSolutionLinearProblemMock(true)
-    {
-    }
-
-    void addConstraintDualValue(double dualValue)
-    {
-        constraints_.push_back(std::make_unique<DualValueConstraint>(dualValue));
-        constraintCount_++;
-    }
-};
-} // namespace
-
 BOOST_AUTO_TEST_CASE(testDualOnDroppedConstraintKeepsDroppedTimestepAtZero)
 {
     Registry<Nodes::Node> registry;

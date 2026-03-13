@@ -444,6 +444,39 @@ struct PredfinedSolutionLinearProblemMock: MockLinearProblem
     }
 };
 
+class DualValueConstraint final: public MockMipConstraint
+{
+public:
+    explicit DualValueConstraint(double dualValue):
+        MockMipConstraint(Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND),
+        dualValue_(dualValue)
+    {
+    }
+
+    double dual() const override
+    {
+        return dualValue_;
+    }
+
+private:
+    double dualValue_;
+};
+
+class KnownDualLinearProblem: public PredfinedSolutionLinearProblemMock
+{
+public:
+    explicit KnownDualLinearProblem(bool lp = true):
+        PredfinedSolutionLinearProblemMock(lp)
+    {
+    }
+
+    void addConstraintDualValue(double dualValue)
+    {
+        constraints_.push_back(std::make_unique<DualValueConstraint>(dualValue));
+        constraintCount_++;
+    }
+};
+
 inline Antares::Optimisation::ScenarioGroupRepository makeScenarioGroupRepo(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {

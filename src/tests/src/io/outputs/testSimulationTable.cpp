@@ -75,38 +75,6 @@ Antares::ModelerStudy::SystemModel::Expression makeExpression(
       Antares::Expressions::NodeRegistry(node, std::move(registry)));
 }
 
-class DualValueConstraint final: public MockMipConstraint
-{
-public:
-    explicit DualValueConstraint(double dualValue):
-        MockMipConstraint(MipBasisStatus::AT_LOWER_BOUND),
-        dualValue_(dualValue)
-    {
-    }
-
-    double dual() const override
-    {
-        return dualValue_;
-    }
-
-private:
-    double dualValue_;
-};
-
-class KnownDualLinearProblem final: public PredfinedSolutionLinearProblemMock
-{
-public:
-    KnownDualLinearProblem():
-        PredfinedSolutionLinearProblemMock(true)
-    {
-    }
-
-    void addConstraintDualValue(double dualValue)
-    {
-        constraints_.push_back(std::make_unique<DualValueConstraint>(dualValue));
-        constraintCount_++;
-    }
-};
 } // namespace
 
 auto count_lines = [](std::string_view s)
