@@ -292,6 +292,28 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
     auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
     {
+        if (ts.has_value())
+        {
+            if (const auto* functionNode = dynamic_cast<const Nodes::FunctionNode*>(rootNode);
+                functionNode && functionNode->type() == Nodes::FunctionNodeType::dual)
+            {
+                const auto* indexNode = dynamic_cast<const Nodes::LiteralNode*>(
+                  functionNode->getOperands().at(1));
+                const auto constraintIndex = static_cast<std::size_t>(indexNode->value());
+                const auto& constraint = component.getModel()->Constraints().at(constraintIndex);
+
+                if (constraint.outOfBoundsProcessingMode()
+                      == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
+                    && Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                             *ts,
+                                                             fillContext,
+                                                             evalVisitor))
+                {
+                    return;
+                }
+            }
+        }
+
         TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                    timeConversionMode,
                                                                    currentBlock)
