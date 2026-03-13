@@ -167,7 +167,11 @@ jobs:
       with:
         args: >
           --define sonar.host.url=${{ env.SONAR_SERVER_URL }}
-          --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.jso
+          --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
+          --define sonar.plugins.download.timeout=120
+          --define sonar.ws.timeout=120
+          --define sonar.log.level=TRACE
+          --define sonar.verbose=True
 
     - name: Barrier
       if: ${{ !success() }}
