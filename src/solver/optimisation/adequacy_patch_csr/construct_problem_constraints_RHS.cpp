@@ -124,7 +124,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                                                    .ConsommationAbattueDuPays[Area];
 
                     double ftMinusLt = allMustRunGen + consommationAbattue;
-                    bfTerm = std::max(0.0, ftMinusLt);
+                    rhs += std::max(0.0, ftMinusLt);
                 }
 
                 // Subtract Pmin of thermal units if enabled
