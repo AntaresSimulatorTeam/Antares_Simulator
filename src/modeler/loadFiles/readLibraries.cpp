@@ -179,7 +179,7 @@ void updateConstraintOutOfBoundsProcessing(YmlModel::Model& model, const Model& 
             continue;
         }
 
-        throw std::runtime_error("No constraint '" + ymlOptCfg.id + "' found.");
+        throw Error::InvalidArgumentError("No constraint '" + ymlOptCfg.id + "' found.");
     }
 }
 
