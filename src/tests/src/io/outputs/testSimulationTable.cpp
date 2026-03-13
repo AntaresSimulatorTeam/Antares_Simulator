@@ -52,6 +52,36 @@ Antares::ModelerStudy::SystemModel::Expression makeExpression(
       Antares::Expressions::NodeRegistry(node, std::move(registry)));
 }
 
+struct KnownDualLinearProblem: PredfinedSolutionLinearProblemMock
+{
+    KnownDualLinearProblem():
+        PredfinedSolutionLinearProblemMock(true)
+    {
+    }
+
+    void addConstraintDualValue(double value)
+    {
+        struct DualValueConstraint: MockMipConstraint
+        {
+            explicit DualValueConstraint(double value):
+                MockMipConstraint(MipBasisStatus::AT_LOWER_BOUND),
+                value_(value)
+            {
+            }
+
+            double dual() const override
+            {
+                return value_;
+            }
+
+            double value_;
+        };
+
+        constraints_.push_back(std::make_unique<DualValueConstraint>(value));
+        constraintCount_++;
+    }
+};
+
 auto count_lines = [](std::string_view s)
 {
     int count = 0;
@@ -1020,14 +1050,9 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
     linearProblem.addConstraintDualValue(-3.0);
     linearProblem.addConstraintDualValue(7.0);
 
-    Antares::Solver::ModelerData modelerData;
-    SystemBuilder systemBuilder;
-    modelerData.system = std::make_unique<System>(
-      systemBuilder.withId("system").withComponents(std::move(components)).build());
-    modelerData.dataSeries = std::make_unique<LinearProblemData>();
-    modelerData.scenarioGroupRepository.addScenario(
-      "scenario_group",
-      std::make_unique<EmptyScenario>());
+    this->components = std::move(components);
+    scenarioGroupRepo.addScenario("scenario_group", std::make_unique<EmptyScenario>());
+    auto& modelerData = getModelerData();
 
     FillContext fillContext(0, 2, 0, 2, 0);
     SimulationTableCsv table;

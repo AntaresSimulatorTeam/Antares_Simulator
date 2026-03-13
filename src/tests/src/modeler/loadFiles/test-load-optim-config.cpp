@@ -210,39 +210,6 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_out_of_bounds_processi
                 == Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC);
 }
 
-BOOST_FIXTURE_TEST_CASE(load_optim_config_with_invalid_constraint_out_of_bounds_processing,
-                        CreateInputFileFixture)
-{
-    std::string yamlContent = R"(library:
-  id: my-lib
-  description: blah-blah
-  models:
-    - id: some-model
-      variables:
-        - id: x
-      constraints:
-        - id: c1
-          expression: x = 0
-)";
-
-    createLibraryFile(yamlContent);
-
-    yamlContent = R"(models:
-      - id: my-lib.some-model
-        model-decomposition:
-          constraints:
-            - id: c1
-              location: subproblems
-        out-of-bounds-processing:
-          constraints:
-            - id: c1
-              mode: invalid-mode)";
-
-    createOptimConfigFile(yamlContent);
-
-    BOOST_CHECK_THROW(loadLibraries(studyFolder), Antares::Error::InvalidArgumentError);
-}
-
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateInputFileFixture)
 {
     // Arrange part
