@@ -234,7 +234,6 @@ void addObjectiveValue(ISimulationTable& simulation,
 
 void addEntriesForNode(ISimulationTable& simulationTable,
                        const FillContext& fillContext,
-                       const ModelerStudy::SystemModel::Component& component,
                        Visitors::EvalVisitor& evalVisitor,
                        Visitors::VariabilityVisitor& variabilityVisitor,
                        unsigned currentBlock,
@@ -245,7 +244,6 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const std::string& outputName,
                        const Nodes::Node* rootNode)
 {
-    (void)component;
     auto value = evalVisitor.dispatch(rootNode);
     auto variability = variabilityVisitor.dispatch(rootNode);
     variability = updateVariabilityIfShouldForceScenario(variability, forceExportForScenarioIndex);
@@ -337,7 +335,6 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
         std::string outputName = extraOutputId;
         addEntriesForNode(simulationTable,
                           fillContext,
-                          component,
                           evalVisitor,
                           variabilityVisitor,
                           currentBlock,
