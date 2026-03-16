@@ -19,16 +19,16 @@ void Study::importLogsToOutputFolder(Solver::IResultWriter& resultWriter) const
     from = from.lexically_normal();
 
 #ifdef _WIN32
-        // On Windows, the access file is exclusive by default.
-        // So we have to close the file before copying it.
-        logs.closeLogfile();
+    // On Windows, the access file is exclusive by default.
+    // So we have to close the file before copying it.
+    logs.closeLogfile();
 #endif
 
     resultWriter.addEntryFromFile("simulation.log", from.string());
 
 #ifdef _WIN32
-        // Reopen the log file
-        logs.logfile(from.string());
+    // Reopen the log file
+    logs.logfile(from.string());
 #endif
 }
 

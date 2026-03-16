@@ -346,7 +346,6 @@ bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
     return (timeSeriesToGenerate & ts);
 }
 
-
 static bool SGDIntLoadFamily_General(Parameters& d,
                                      const String& key,
                                      const String& value,
