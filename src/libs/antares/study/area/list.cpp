@@ -424,10 +424,8 @@ template<class StringT>
 static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              AreaList* list,
                                              Area& area,
-                                             StringT& buffer,
-                                             const StudyLoadOptions& options)
+                                             StringT& buffer)
 {
-    (void)options;
     // Reset
     area.filterSynthesis = filterAll;
     area.filterYearByYear = filterAll;
@@ -818,7 +816,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
           logs.info() << options.logMessage;
 
           // Load a single area
-          ret = AreaListLoadFromFolderSingleArea(pStudy, this, area, buffer, options) && ret;
+          ret = AreaListLoadFromFolderSingleArea(pStudy, this, area, buffer) && ret;
       });
 
     // update nameid set
