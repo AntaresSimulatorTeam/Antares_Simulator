@@ -59,9 +59,8 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
+void ComponentToAreaConnectionFiller::addVariables([[maybe_unused]] const FillContext& ctx)
 {
-    (void)ctx;
 }
 
 std::vector<unsigned> balanceConstraintIndices(const PROBLEME_HEBDO* problemeHebdo,
