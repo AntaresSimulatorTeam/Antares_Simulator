@@ -85,6 +85,47 @@ inline std::optional<YmlMapMarker> checkKeysIfMap(const Node& node,
     return std::make_optional<YmlMapMarker>(marker);
 }
 
+inline void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
+{
+
+    // Validate map: if invalid, get marker and build an error message to throw
+    if (auto maybeMarker = checkKeysIfMap(node,
+                                      allowedFields))
+    {
+        const auto& marker = *maybeMarker;
+        // compute unexpected = actual - allowed
+        std::vector<std::string> unexpected;
+        for (const auto& actual_field_local: marker.actualSet())
+        {
+            if (allowedFields.find(actual_field_local) == allowedFields.end())
+            {
+                unexpected.push_back(actual_field_local);
+            }
+        }
+
+        // compute missing = allowed - actual
+        std::vector<std::string> missing;
+        for (const auto& allowed_field_local: allowedFields)
+        {
+            if (marker.actualSet().find(allowed_field_local) == marker.actualSet().end())
+            {
+                missing.push_back(allowed_field_local);
+            }
+        }
+
+        const std::string markedFieldsTree = marker.buildMarkedTreeForUnexpectedAndMissing(
+          unexpected,
+          missing);
+
+        throw KeyNotFound(
+          node.Mark(),
+          fmt::format("Unexpected or missing field(s) (expected {} field(s).\\n{}{}",
+                      allowedFields.size(),
+                      marker.baseTree(),
+                      markedFieldsTree));
+    }
+}
+
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
@@ -102,47 +143,9 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
             return false;
         }
 
-        // Validate map: if invalid, get marker and build an error message to throw
-        if (auto maybeMarker = checkKeysIfMap(area_conn_node,
-                                          std::unordered_set<std::string>{"injection-to-balance",
-                                                                   "spillage-bound",
-                                                                   "unsupplied-energy-bound"}))
-        {
-            const auto& marker = *maybeMarker;
-            std::unordered_set<std::string> allowedSet = {"injection-to-balance",
-                                                          "spillage-bound",
-                                                          "unsupplied-energy-bound"};
-            // compute unexpected = actual - allowed
-            std::vector<std::string> unexpected;
-            for (const auto& actual_field_local: marker.actualSet())
-            {
-                if (allowedSet.find(actual_field_local) == allowedSet.end())
-                {
-                    unexpected.push_back(actual_field_local);
-                }
-            }
-
-            // compute missing = allowed - actual
-            std::vector<std::string> missing;
-            for (const auto& allowed_field_local: allowedSet)
-            {
-                if (marker.actualSet().find(allowed_field_local) == marker.actualSet().end())
-                {
-                    missing.push_back(allowed_field_local);
-                }
-            }
-
-            const std::string markedFieldsTree = marker.buildMarkedTreeForUnexpectedAndMissing(
-              unexpected,
-              missing);
-
-            throw KeyNotFound(
-              area_conn_node.Mark(),
-              fmt::format("Unexpected or missing field(s) (expected {} field(s).\\n{}{}",
-                          allowedSet.size(),
-                          marker.baseTree(),
-                          markedFieldsTree));
-        }
+        checkFields(area_conn_node, std::unordered_set<std::string>{"injection-to-balance",
+                                                               "spillage-bound",
+                                                               "unsupplied-energy-bound"});
 
         rhs.area_connection.inject_to_balance = getFieldFromNode(area_conn_node,
                                                                  "injection-to-balance");
@@ -166,37 +169,7 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
             return false;
         }
 
-        if (auto maybeMarker = checkKeysIfMap(child_node,
-                                          std::unordered_set<std::string>{"capacity-field"}))
-        {
-            const auto& marker = *maybeMarker;
-            std::unordered_set<std::string> allowedSet = {"capacity-field"};
-            std::vector<std::string> unexpected;
-            for (const auto& actual_field_local: marker.actualSet())
-            {
-                if (allowedSet.find(actual_field_local) == allowedSet.end())
-                {
-                    unexpected.push_back(actual_field_local);
-                }
-            }
-            std::vector<std::string> missing;
-            for (const auto& allowed_field_local: allowedSet)
-            {
-                if (marker.actualSet().find(allowed_field_local) == marker.actualSet().end())
-                {
-                    missing.push_back(allowed_field_local);
-                }
-            }
-            const std::string markedFieldsTree = marker.buildMarkedTreeForUnexpectedAndMissing(
-              unexpected,
-              missing);
-            throw KeyNotFound(
-              child_node.Mark(),
-              fmt::format("Unexpected or missing field(s) (expected {} field(s).\\n{}{}",
-                          allowedSet.size(),
-                          marker.baseTree(),
-                          markedFieldsTree));
-        }
+        checkFields(child_node, std::unordered_set<std::string>{"capacity-field"});
 
         rhs.thermal_capacity_connection_field = getFieldFromNode(child_node, "capacity-field");
         return true;
