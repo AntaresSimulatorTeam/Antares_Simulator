@@ -8,9 +8,9 @@
 
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
-#include <antares/io/inputs/model-converter/ForbiddenNodes.h>
+#include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
 
-namespace Antares::IO::Inputs::ModelConverter
+namespace Antares::IO::Inputs::ForbidNodes
 {
 
 class ForbiddenNodeFound final: public std::invalid_argument

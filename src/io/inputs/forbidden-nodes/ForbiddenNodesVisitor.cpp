@@ -1,12 +1,13 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "include/antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
+#include "include/antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+
 using namespace Antares::Expressions::Nodes;
 
-namespace Antares::IO::Inputs::ModelConverter
+namespace Antares::IO::Inputs::ForbidNodes
 {
 
 std::string ErrorMessage(const std::string expr, const std::string node, const std::string parent)
@@ -205,4 +206,4 @@ void ForbiddenNodesVisitor::visitChildren(const Expressions::Nodes::ParentNode* 
     parentsStack_.pop_back();
 }
 
-} // namespace Antares::IO::Inputs::ModelConverter
+} // namespace Antares::IO::Inputs::ForbidNodes

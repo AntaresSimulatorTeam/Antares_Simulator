@@ -1,6 +1,6 @@
-#include <antares/io/inputs/model-converter/ForbiddenNodes.h>
+#include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
 
-namespace Antares::IO::Inputs::ModelConverter
+namespace Antares::IO::Inputs::ForbidNodes
 {
 bool ForbiddenNodes::isGloballyForbidden(const std::type_index& typeId) const
 {
@@ -13,4 +13,4 @@ bool ForbiddenNodes::isForbiddenByParent(const std::type_index& parentTypeId,
     const auto& it = rules_.find(parentTypeId);
     return (it != rules_.end()) && it->second.contains(nodeTypeId);
 }
-} // namespace Antares::IO::Inputs::ModelConverter
+} // namespace Antares::IO::Inputs::ForbidNodes

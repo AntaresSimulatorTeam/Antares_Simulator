@@ -10,6 +10,7 @@
 #include "antares/logs/logs.h"
 #include "antares/study/system-model/connection.h"
 #include "antares/study/system-model/system.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 
 using namespace Antares::ModelerStudy;
 using namespace Antares::ModelerStudy::SystemModel; // Mainly for type ConnexionEnd

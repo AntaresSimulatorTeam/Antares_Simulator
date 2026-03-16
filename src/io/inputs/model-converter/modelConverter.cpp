@@ -6,7 +6,7 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
-#include "antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -18,6 +18,7 @@
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::ForbidNodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
