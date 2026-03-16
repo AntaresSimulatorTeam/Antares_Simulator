@@ -345,28 +345,49 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
     const auto& solverVariables = pb_.getVariables();
     const auto firstTimestep = dims.getTimesteps().initialTime;
-    for (const auto s: dims.getScenarioIndices()) // TODO
+
+    const bool isDrop = constraint.outOfBoundsProcessingMode()
+                        == OutOfBoundsProcessingMode::DROP;
+
+    // If DROP mode is enabled, construct a single EvalVisitor and iterate timesteps once.
+    if (isDrop)
+    {
+        Expressions::Visitors::EvalVisitor evalVisitor(
+          optimEntityContainer_,
+          ctx,
+          component_,
+          data_,
+          &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
+
+        for (const auto t: dims.getTimesteps())
+        {
+            const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
+            if (Antares::Optimisation::hasOutOfBoundsTimeShift(
+                  constraint.expression().RootNode(),
+                  t,
+                  ctx,
+                  evalVisitor))
+            {
+                continue;
+            }
+
+            auto* ct = pb_.addConstraint(linear_constraints.lb[localIndex],
+                                         linear_constraints.ub[localIndex],
+                                         component_.Id() + "." + constraint_id + '_'
+                                           + std::to_string(t));
+
+            const auto& coefsPerVar = linear_constraints.coef_per_var[localIndex];
+            for (const auto& [index, value]: coefsPerVar)
+            {
+                ct->setCoefficient(solverVariables[index].get(), value);
+            }
+        }
+    }
+    else
     {
         for (const auto t: dims.getTimesteps())
         {
             const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
-            if (constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP)
-            {
-                auto evalVisitor = Expressions::Visitors::EvalVisitor(
-                  optimEntityContainer_,
-                  ctx,
-                  component_,
-                  data_,
-                  &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
-                if (Antares::Optimisation::hasOutOfBoundsTimeShift(
-                      constraint.expression().RootNode(),
-                      t,
-                      ctx,
-                      evalVisitor))
-                {
-                    continue;
-                }
-            }
             auto* ct = pb_.addConstraint(linear_constraints.lb[localIndex],
                                          linear_constraints.ub[localIndex],
                                          component_.Id() + "." + constraint_id + '_'

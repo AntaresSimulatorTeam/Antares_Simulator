@@ -175,7 +175,6 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
-    const size_t nbTimeSteps = fillContext.getLocalNumberOfTimeSteps();
 
     Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
                                                    fillContext,
