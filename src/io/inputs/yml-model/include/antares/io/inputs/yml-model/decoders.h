@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <fmt/format.h>
 #include <optional>
+#include <unordered_set>
 #include <vector>
 
 #include "antares/io/inputs/yml-model/Library.h"
@@ -58,8 +59,9 @@ inline std::string getFieldFromNode(const Node& node, const std::string& fieldNa
     return node[fieldName].as<std::string>("");
 }
 
-inline std::optional<YmlMapMarker> checkKeysIfMap(const Node& node,
-                                              const std::unordered_set<std::string>& allowedFields = {})
+inline std::optional<YmlMapMarker> checkKeysIfMap(
+  const Node& node,
+  const std::unordered_set<std::string>& allowedFields = {})
 {
     // Only validate maps here; callers must ensure node is a map before calling when necessary.
     if (!node.IsMap())
@@ -87,10 +89,8 @@ inline std::optional<YmlMapMarker> checkKeysIfMap(const Node& node,
 
 inline void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
 {
-
     // Validate map: if invalid, get marker and build an error message to throw
-    if (auto maybeMarker = checkKeysIfMap(node,
-                                      allowedFields))
+    if (auto maybeMarker = checkKeysIfMap(node, allowedFields))
     {
         const auto& marker = *maybeMarker;
         // compute unexpected = actual - allowed
@@ -117,12 +117,26 @@ inline void checkFields(const Node& node, const std::unordered_set<std::string>&
           unexpected,
           missing);
 
-        throw KeyNotFound(
-          node.Mark(),
-          fmt::format("Unexpected or missing field(s) (expected {} field(s).\\n{}{}",
-                      allowedFields.size(),
-                      marker.baseTree(),
-                      markedFieldsTree));
+        // Build a readable list of errors (one per line), then append the tree
+        std::string errors_list;
+        for (const auto& f: unexpected)
+        {
+            errors_list += fmt::format("- Unexpected field: {}\n", f);
+        }
+        for (const auto& f: missing)
+        {
+            errors_list += fmt::format("- Missing field: {}\n", f);
+        }
+
+        // Final message: brief header, individual errors, then the tree
+        const std::string message = fmt::format(
+          "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
+          allowedFields.size(),
+          errors_list,
+          marker.baseTree(),
+          markedFieldsTree);
+
+        throw KeyNotFound(node.Mark(), message);
     }
 }
 
@@ -143,9 +157,10 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
             return false;
         }
 
-        checkFields(area_conn_node, std::unordered_set<std::string>{"injection-to-balance",
-                                                               "spillage-bound",
-                                                               "unsupplied-energy-bound"});
+        checkFields(area_conn_node,
+                    std::unordered_set<std::string>{"injection-to-balance",
+                                                    "spillage-bound",
+                                                    "unsupplied-energy-bound"});
 
         rhs.area_connection.inject_to_balance = getFieldFromNode(area_conn_node,
                                                                  "injection-to-balance");
