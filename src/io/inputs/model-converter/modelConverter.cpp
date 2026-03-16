@@ -120,7 +120,6 @@ static ForbiddenNodes ForbidNodesInPortFieldDef()
     ForbidInFunctionNodes(f);
     ForbidConstraintSignNodes(f);
     f.forbidGlobally<PortFieldSumNode>();
-    f.forbidGlobally<FunctionNodeType::reduced_cost>();
     return f;
 }
 
@@ -392,6 +391,8 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
 
     for (const auto& constraint: model.constraints)
     {
+        // gp : TODO > For more readability, make a a function that returns a converted constraint.
+        // constraints.emplace_back(convertConstraint(constraint, model, forbiddenInConstraint));
         addSingleConstraint(constraints, constraint, model, forbiddenInConstraint);
     }
 

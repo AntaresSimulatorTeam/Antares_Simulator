@@ -250,6 +250,25 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
                                            connection.thermalComponent.clusterId);
 }
 
+void checkForNonLinearityInVariableBounds(const Component& component)
+{
+    //for (const auto& variable: component.getModel()->Variables())
+    //{
+    //    ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.Id())
+    //      .dispatch(variable.Bounds().node);
+    //}
+}
+
+void checkForNonLinearityInConnections(const std::vector<Component>& components)
+{
+    for (const auto& component: components)
+    {
+        checkForNonLinearityInVariableBounds(component);
+        //checkForNonLinearityInConstraints(component);
+        //checkForNonLinearityInObjectives(component);
+    }
+}
+
 System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& libraries)
 {
     // Create components from system
@@ -276,6 +295,8 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
                      << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
+
+    checkForNonLinearityInConnections(components);
 
     // Create area connections from system
     for (const auto& connection: ymlSystem.areaConnections)
