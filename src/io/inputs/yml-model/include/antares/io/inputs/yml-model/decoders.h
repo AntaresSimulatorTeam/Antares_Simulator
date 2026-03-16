@@ -58,9 +58,8 @@ inline std::string getFieldFromNode(const Node& node, const std::string& fieldNa
     return node[fieldName].as<std::string>("");
 }
 
-inline std::optional<YmlMapMarker> isValidMap(const Node& node,
-                                              const unsigned& nbFields,
-                                              const std::vector<std::string>& allowedFields = {})
+inline std::optional<YmlMapMarker> checkKeysIfMap(const Node& node,
+                                              const std::unordered_set<std::string>& allowedFields = {})
 {
     // Only validate maps here; callers must ensure node is a map before calling when necessary.
     if (!node.IsMap())
@@ -70,16 +69,10 @@ inline std::optional<YmlMapMarker> isValidMap(const Node& node,
 
     YmlMapMarker marker(node);
 
-    std::unordered_set<std::string> allowedSet;
-    for (const auto& f: allowedFields)
-    {
-        allowedSet.insert(f);
-    }
-
     // If allowedFields provided, check equality of key sets
-    if (!allowedSet.empty())
+    if (!allowedFields.empty())
     {
-        if (marker.actualSet() == allowedSet)
+        if (marker.actualSet() == allowedFields)
         {
             return std::nullopt; // valid
         }
@@ -88,17 +81,9 @@ inline std::optional<YmlMapMarker> isValidMap(const Node& node,
         return std::make_optional<YmlMapMarker>(marker);
     }
 
-    // No allowedFields given: use size-based check
-    if (node.size() == nbFields)
-    {
-        return std::nullopt; // valid
-    }
-
     // invalid size: return marker so caller can build an error message
     return std::make_optional<YmlMapMarker>(marker);
 }
-
-static constexpr unsigned kExpectedNbFields = 3;
 
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
@@ -118,9 +103,8 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         }
 
         // Validate map: if invalid, get marker and build an error message to throw
-        if (auto maybeMarker = isValidMap(area_conn_node,
-                                          kExpectedNbFields,
-                                          std::vector<std::string>{"injection-to-balance",
+        if (auto maybeMarker = checkKeysIfMap(area_conn_node,
+                                          std::unordered_set<std::string>{"injection-to-balance",
                                                                    "spillage-bound",
                                                                    "unsupplied-energy-bound"}))
         {
@@ -182,10 +166,8 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
             return false;
         }
 
-        constexpr unsigned kExpectedThermalNbFields = 1;
-        if (auto maybeMarker = isValidMap(child_node,
-                                          kExpectedThermalNbFields,
-                                          std::vector<std::string>{"capacity-field"}))
+        if (auto maybeMarker = checkKeysIfMap(child_node,
+                                          std::unordered_set<std::string>{"capacity-field"}))
         {
             const auto& marker = *maybeMarker;
             std::unordered_set<std::string> allowedSet = {"capacity-field"};
