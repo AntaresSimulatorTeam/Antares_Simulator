@@ -27,8 +27,6 @@ public:
 
     bool loadSeries(const std::filesystem::path& folder, StudyVersion studyVersion) const;
 
-    void saveProperties(IniFile& ini) const;
-
     std::string id;
 
     std::shared_ptr<Series> series = std::make_shared<Series>();

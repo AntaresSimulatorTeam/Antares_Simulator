@@ -154,27 +154,6 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(costVariationWithdrawal, 0.0);
 }
 
-bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
-{
-    try
-    {
-        std::ofstream fout(path);
-        fout << std::setprecision(14);
-
-        for (const auto& x: vect)
-        {
-            fout << x << '\n';
-        }
-    }
-    catch (...)
-    {
-        logs.error() << "Error while trying to save series file: " << path;
-        return false;
-    }
-
-    return true;
-}
-
 bool Series::validate(const std::string& id, StudyVersion studyVersion) const
 {
     return validateSizes(id, studyVersion) && validateMaxInjection(id) && validateMaxWithdrawal(id)

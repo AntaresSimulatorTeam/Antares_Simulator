@@ -223,20 +223,6 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion s
     return ret;
 }
 
-bool STStorageInput::saveToFolder(const std::string& folder) const
-{
-    // create empty list.ini if there's no sts in this area
-    Yuni::IO::Directory::Create(folder);
-    const std::string pathIni(folder + SEP + "list.ini");
-    IniFile ini;
-
-    logs.debug() << "saving file " << pathIni;
-    std::ranges::for_each(storagesByIndex,
-                          [&ini](auto& storage) { return storage.saveProperties(ini); });
-
-    return ini.save(pathIni);
-}
-
 void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 {
     for (auto& sts: storagesByIndex)
