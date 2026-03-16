@@ -193,10 +193,10 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
                   += state.hourlyResults->Reserves.value()[state.hourInTheWeek]
-                       .ValeursHorairesInternalExcessReserve[reserve.areaReserveIndex];
+                       .ValeursHorairesInternalUnsatisfied[reserve.areaReserveIndex];
                 pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
                   += state.hourlyResults->Reserves.value()[state.hourInTheWeek]
-                       .ValeursHorairesInternalUnsatisfied[reserve.areaReserveIndex];
+                       .ValeursHorairesInternalExcessReserve[reserve.areaReserveIndex];
             }
         }
 

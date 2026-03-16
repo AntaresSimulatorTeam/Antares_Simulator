@@ -520,10 +520,10 @@ enum class ReserveType
 
 enum class UnsuppliedSpilled
 {
-    //! Spilled
-    Spilled = 0,
     //! Unsupplied
-    Unsupplied,
+    Unsupplied = 0,
+    //! Spilled
+    Spilled,
 
     //! The highest value
     Count
