@@ -23,7 +23,7 @@ unsigned countActiveConstraintTimesteps(
   const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepo)
 {
     if (constraint.outOfBoundsProcessingMode()
-        != Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP)
+        == Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC)
     {
         return static_cast<unsigned>(ctx.getLocalNumberOfTimeSteps());
     }

@@ -215,7 +215,7 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
                                                                            activeConstraintCount);
 
     if (constraint.outOfBoundsProcessingMode()
-        != ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP)
+        == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC)
     {
         for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
         {
