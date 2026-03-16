@@ -147,12 +147,6 @@ jobs:
       run: |
         build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
 
-    - name: Free up disk space
-      run: |
-        df -h
-        rm -rf ${{env.ORTOOLS_DIR}}
-        df -h
-
     - name: Test and generate coverage
       if: ${{ !cancelled() }}
       run: |
