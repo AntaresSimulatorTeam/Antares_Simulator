@@ -641,14 +641,13 @@ var namespaces_dup =
           [ "makeLegendTitle", "AstDOTStyleVisitor_8cpp.html#aa120bed530f6d1de917bcb09d17a0e79", null ],
           [ "operator*", "LinearStatus_8h.html#a22569a31feed8f5e60952e5b6ea04b76", null ],
           [ "operator+", "LinearStatus_8h.html#af8cf5dc6b7e86ceeea180179b3256894", null ],
+          [ "operator+=", "EvalVisitor_8cpp.html#ad8518bdb47883d77834469b2c03a8043", null ],
           [ "operator-", "LinearStatus_8h.html#afd6fbaf8fbb07ee1a5a8763b87b8becd", null ],
           [ "operator-", "LinearStatus_8h.html#af71df5e028efb45b1f5e93fd269bf058", null ],
           [ "operator/", "LinearStatus_8h.html#a2107c367587a1b8952c3d2015b64e955", null ],
           [ "operator<", "LinearStatus_8h.html#aac3a8628b0f5434ac592bf08ed0a3290", null ],
           [ "pair", "LinearStatus_8h.html#aa8b1e3f8d2f183e7432dde28d9bb3515", null ],
           [ "ProcessElementLegend", "AstDOTStyleVisitor_8cpp.html#a11bbd5b1795cb8de53364f93836932bf", null ],
-          [ "shift", "EvalVisitor_8cpp.html#a09f964371a3b0e83977e807aa3053638", null ],
-          [ "shift", "EvalVisitor_8cpp.html#a346dd320163c606a1dc319fe2b4da1cb", null ],
           [ "trimAndFormat", "PrintVisitor_8h.html#ab5ded562bde75e4a3dd84cca95675982", null ],
           [ "tryVisit", "NodeVisitor_8h.html#a1223b5e8ad3c7f529adba9a8c80778d2", null ],
           [ "CeilOp", "EvalVisitor_8cpp.html#ab0a99a93aef08bc6b32b00d2741dad73", null ],
@@ -1896,6 +1895,13 @@ var namespaces_dup =
       [ "results_remover", "classresults__remover_1_1results__remover.html", "classresults__remover_1_1results__remover" ]
     ] ],
     [ "Simulation", null, [
+      [ "accumulateByDay", "sim__binding__constraints__rhs_8cpp.html#a3c514958495bb0d352fb8a5a5d3272ad", null ],
+      [ "computeMustrunDailyTerms", "sim__binding__constraints__rhs_8cpp.html#aff9738aa6141e0adb482443e4e68d985", null ],
+      [ "computeMustrunHourlyTerms", "sim__binding__constraints__rhs_8cpp.html#a524d72b44d6ec5820537010d1165d931", null ],
+      [ "fetchBindingConstraintRHS", "sim__binding__constraints__rhs_8cpp.html#af805589f66c6d21072273290732e4b63", null ],
+      [ "filterByMustrunCluster", "sim__binding__constraints__rhs_8cpp.html#a43d632744c2da1046c2161be300fee9f", null ],
+      [ "operator*", "sim__binding__constraints__rhs_8cpp.html#a5df1482f0d072c204c4b13054c895a93", null ],
+      [ "operator+=", "sim__binding__constraints__rhs_8cpp.html#a96a7bac3fd221f3c7143047e14f4d9a1", null ],
       [ "setBindingConstraintsRHS", "sim__binding__constraints__rhs_8h.html#afad00fb25244815afedc70fe7775be9a", null ]
     ] ],
     [ "solver_input_handler", null, [
