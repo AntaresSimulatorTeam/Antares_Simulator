@@ -73,8 +73,27 @@ Feature: reserves tests
 	  And in area "AREA", during year 1, for group "NUCLEAR" and reserve "Res_down", reserve participation power is always equal to 0 MWh
     And in area "AREA", during year 1, for cluster "thermal_expensive_res_part" and reserve "Res_down", reserve participation power is always equal to 0 MWh
 	  And in area "AREA", during year 1, for group "COAL" and reserve "Res_down", reserve participation power is always equal to 0 MWh
-
     And the annual system cost is 7.35269e+07
+	
+@fast @short
+# Lot 1 : Intégration de la participation du thermique allumé à des réserves à la hausse et baisse
+# Le test précédent avec une seule unité de 50 MWh dans le cluster thermal_all_cheap
+# production minimale a 1 MWh et maximale a 19 MWh => production à 11 MWh (1 min + 10 reserve à la baisse) et donc 8 MWh dans la reserve a la hausse
+  Scenario: lot_1_simple_up_and_down_min_max_gen
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves_tests/lot_1_simple_up_and_down_min_max_gen"
+    When I run antares simulator
+    Then the simulation succeeds
+    And the simulation takes less than 20 seconds
+    And in area "AREA", during year 1, hourly production of "thermal_all_cheap" is always equal to 11 MWh
+    And in area "AREA", during year 1, hourly production of "thermal_expensive_prod" is always equal to 0 MWh
+    And in area "AREA", during year 1, hourly production of "thermal_expensive_res_part" is always equal to 100 MWh
+    And in area "AREA", during year 1, for cluster "thermal_all_cheap" and reserve "Res_up", reserve participation power is always equal to 8 MWh
+    And in area "AREA", during year 1, for cluster "thermal_expensive_prod" and reserve "Res_up", reserve participation power is always equal to 20 MWh
+    And in area "AREA", during year 1, for cluster "thermal_expensive_res_part" and reserve "Res_up", reserve participation power is always equal to 0 MWh
+    And in area "AREA", during year 1, for cluster "thermal_all_cheap" and reserve "Res_down", reserve participation power is always equal to 10 MWh
+    And in area "AREA", during year 1, for cluster "thermal_expensive_prod" and reserve "Res_down", reserve participation power is always equal to 0 MWh
+    And in area "AREA", during year 1, for cluster "thermal_expensive_res_part" and reserve "Res_down", reserve participation power is always equal to 0 MWh
+    And the annual system cost is 8.1304944e+07
 
 @fast @short
 # Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
