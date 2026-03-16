@@ -134,11 +134,12 @@ jobs:
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
-        -DVCPKG_TARGET_TRIPLET=x64-linux-release \
+        -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic \
         -DCODE_COVERAGE=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
         -DBUILD_TESTING=ON \
+        -DBoost_USE_STATIC_LIBS=OFF \
         -DMZ_CODE_COVERAGE=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'

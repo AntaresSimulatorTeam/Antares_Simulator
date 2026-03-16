@@ -64,6 +64,6 @@ macro(link_antlr4 proj)
     if (MSVC)
         target_link_libraries(${proj} PUBLIC antlr4_shared) # vcpkg triplet x64-windows provides shared lib
     else ()
-        target_link_libraries(${proj} PUBLIC antlr4_static) # vcpkg triplet x64-linux provides static lib
+        target_link_libraries(${proj} PUBLIC antlr4_shared) # vcpkg triplet x64-linux provides static lib
     endif ()
 endmacro()
