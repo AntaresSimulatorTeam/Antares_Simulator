@@ -346,27 +346,25 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
     const auto& solverVariables = pb_.getVariables();
     const auto firstTimestep = dims.getTimesteps().initialTime;
 
-    const bool isDrop = constraint.outOfBoundsProcessingMode()
-                        == OutOfBoundsProcessingMode::DROP;
+    const bool isDrop = constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP;
 
     // If DROP mode is enabled, construct a single EvalVisitor and iterate timesteps once.
     if (isDrop)
     {
-        Expressions::Visitors::EvalVisitor evalVisitor(
-          optimEntityContainer_,
-          ctx,
-          component_,
-          data_,
-          &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
+        Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer_,
+                                                       ctx,
+                                                       component_,
+                                                       data_,
+                                                       &scenarioGroupRepo_.scenario(
+                                                         component_.getScenarioGroupId()));
 
         for (const auto t: dims.getTimesteps())
         {
             const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
-            if (Antares::Optimisation::hasOutOfBoundsTimeShift(
-                  constraint.expression().RootNode(),
-                  t,
-                  ctx,
-                  evalVisitor))
+            if (Antares::Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                               t,
+                                                               ctx,
+                                                               evalVisitor))
             {
                 continue;
             }
