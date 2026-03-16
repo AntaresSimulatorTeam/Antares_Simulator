@@ -12,7 +12,7 @@
 #include "yaml-cpp/yaml.h"
 
 // Forward declaration of getBaseTreeOnce implemented in decoders_utils.cpp
-std::string getBaseTreeOnce(const std::filesystem::path& nodeTagPath);
+std::string getBaseTree(const std::filesystem::path& nodeTagPath);
 
 namespace YAML
 {
@@ -22,14 +22,16 @@ namespace YAML
 class YmlMapMarker
 {
 public:
-    explicit YmlMapMarker(const Node& node)
-        : node_(node), nodeTagPath_(node.Tag())
+    explicit YmlMapMarker(const Node& node):
+        node_(node),
+        nodeTagPath_(node.Tag())
     {
         // collect keys and line numbers
         for (const auto& entry: node_)
         {
             const Node keyNode = entry.first;
-            std::string keyName = keyNode.IsDefined() ? keyNode.as<std::string>() : std::string("<unknown>");
+            std::string keyName = keyNode.IsDefined() ? keyNode.as<std::string>()
+                                                      : std::string("<unknown>");
             const auto mark = keyNode.Mark();
             const int line = static_cast<int>(mark.line) + 1;
             actualKeysLine_.emplace(keyName, line);
@@ -37,25 +39,41 @@ public:
         }
 
         // compute depth and indentation
-        depthParts_ = static_cast<std::size_t>(std::distance(nodeTagPath_.begin(), nodeTagPath_.end()));
+        depthParts_ = static_cast<std::size_t>(
+          std::distance(nodeTagPath_.begin(), nodeTagPath_.end()));
         if (depthParts_ == 0)
         {
             depthParts_ = 1;
         }
         indentSpaces_ = (depthParts_ - 1) * 4;
 
-        // getBaseTreeOnce is defined elsewhere (decoders_utils.cpp)
-        baseTree_ = ::getBaseTreeOnce(nodeTagPath_);
+        baseTree_ = getBaseTree(nodeTagPath_);
     }
 
-    const std::unordered_map<std::string, int>& actualKeysLine() const { return actualKeysLine_; }
-    const std::unordered_set<std::string>& actualSet() const { return actualSet_; }
-    const std::string& baseTree() const { return baseTree_; }
-    std::size_t indentSpaces() const { return indentSpaces_; }
+    const std::unordered_map<std::string, int>& actualKeysLine() const
+    {
+        return actualKeysLine_;
+    }
+
+    const std::unordered_set<std::string>& actualSet() const
+    {
+        return actualSet_;
+    }
+
+    const std::string& baseTree() const
+    {
+        return baseTree_;
+    }
+
+    std::size_t indentSpaces() const
+    {
+        return indentSpaces_;
+    }
 
     // build marked tree for unexpected and missing lists
-    std::string buildMarkedTreeForUnexpectedAndMissing(const std::vector<std::string>& unexpected,
-                                                       const std::vector<std::string>& missing) const
+    std::string buildMarkedTreeForUnexpectedAndMissing(
+      const std::vector<std::string>& unexpected,
+      const std::vector<std::string>& missing) const
     {
         std::string markedFieldsTree;
         for (const auto& keyName: unexpected)
@@ -81,7 +99,8 @@ public:
         return markedFieldsTree;
     }
 
-    // build marked tree that lists all present keys with their lines (used when node.size()>expected)
+    // build marked tree that lists all present keys with their lines (used when
+    // node.size()>expected)
     std::string buildMarkedTreeAllPresent() const
     {
         std::string markedFieldsTree;
@@ -108,4 +127,3 @@ private:
 };
 
 } // namespace YAML
-

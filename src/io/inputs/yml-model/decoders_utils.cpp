@@ -6,23 +6,6 @@
 
 #include "antares/io/inputs/yml-model/decoders.h"
 
-namespace
-{
-// Thread-safe accessor for the per-process printed-tags cache.
-// Using a function-local static avoids mutable global state.
-std::unordered_set<std::string>& printedTags()
-{
-    static std::unordered_set<std::string> cache;
-    return cache;
-}
-
-std::mutex& printedTagsMutex()
-{
-    static std::mutex mtx;
-    return mtx;
-}
-} // namespace
-
 // Implement printPathTree here (moved out of header to a single TU)
 std::string printPathTree(const std::filesystem::path& p)
 {
@@ -48,14 +31,8 @@ std::string printPathTree(const std::filesystem::path& p)
     return treeStr;
 }
 
-std::string getBaseTreeOnce(const std::filesystem::path& nodeTagPath)
+std::string getBaseTree(const std::filesystem::path& nodeTagPath)
 {
-    const std::string tagStr = nodeTagPath.string();
-    const std::lock_guard<std::mutex> lock(printedTagsMutex());
-    if (!printedTags().insert(tagStr).second)
-    {
-        return {};
-    }
     return printPathTree(nodeTagPath);
 }
 
