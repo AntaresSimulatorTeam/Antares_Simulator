@@ -427,6 +427,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              StringT& buffer,
                                              const StudyLoadOptions& options)
 {
+    (void)options;
     // Reset
     area.filterSynthesis = filterAll;
     area.filterYearByYear = filterAll;

@@ -245,6 +245,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const std::string& outputName,
                        const Nodes::Node* rootNode)
 {
+    (void)component;
     auto value = evalVisitor.dispatch(rootNode);
     auto variability = variabilityVisitor.dispatch(rootNode);
     variability = updateVariabilityIfShouldForceScenario(variability, forceExportForScenarioIndex);
