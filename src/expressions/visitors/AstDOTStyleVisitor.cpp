@@ -6,7 +6,6 @@
 #include <algorithm>
 
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/expressions/visitors/EvalVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
