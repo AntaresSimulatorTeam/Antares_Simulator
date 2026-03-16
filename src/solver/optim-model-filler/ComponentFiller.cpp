@@ -8,6 +8,7 @@
 #include <antares/exception/RuntimeError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/logs/logs.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/visitors/VariabilityVisitor.h"
@@ -366,6 +367,8 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
                                                                ctx,
                                                                evalVisitor))
             {
+                logs.debug() << "Constraint " << constraint_id
+                             << " was ignored because it is marked as DROP for t = " << t;
                 continue;
             }
 
