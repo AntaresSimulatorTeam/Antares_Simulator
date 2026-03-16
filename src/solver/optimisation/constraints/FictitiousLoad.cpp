@@ -16,8 +16,16 @@ void FictitiousLoad::add(int pdt, int pays)
 
     builder.updateHourWithinWeek(pdt);
     ExportPaliers(data.PaliersThermiquesDuPays[pays], builder);
-    auto coeff = data.DefaillanceNegativeUtiliserHydro[pays] ? -1 : 0;
-    builder.HydProd(pays, coeff).NegativeUnsuppliedEnergy(pays, 1.0);
+
+    if (data.DefaillanceNegativeUtiliserHydro[pays])
+    {
+        builder.HydProd(pays, -1.0);
+        for (const auto& storage: data.ShortTermStorage[pays])
+        {
+            builder.ShortTermStorageWithdrawal(storage.clusterGlobalIndex, -1.0);
+        }
+    }
+    builder.NegativeUnsuppliedEnergy(pays, 1.0);
 
     builder.lessThan();
     builder.build();

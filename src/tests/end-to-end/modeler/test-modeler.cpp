@@ -367,7 +367,7 @@ public:
 
         auto zero = fixture.literal(0);
         auto ct_node = fixture.nodeRegistry.template create<Nodes::GreaterThanOrEqualNode>(lhs,
-                                                                                            zero);
+                                                                                           zero);
         fixture.createModelWithOneFloatVar("some_model",
                                            parameterIds,
                                            "x",
