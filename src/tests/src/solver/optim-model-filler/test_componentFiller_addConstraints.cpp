@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_out_of_bounds_t
         FillContext ctx{0, 2, 0, 2, 0};
         fixture.buildLinearProblem(ctx);
 
-        BOOST_CHECK_EQUAL(fixture.pb->constraintCount(), expectedCount);
+        BOOST_REQUIRE_EQUAL(fixture.pb->constraintCount(), expectedCount);
         for (unsigned i = 0; i < expectedConstraints.size(); ++i)
         {
             BOOST_CHECK_EQUAL(fixture.pb->lookupConstraint("componentToto.ct1_" + to_string(i))
@@ -131,11 +131,15 @@ BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_out_of_bounds_t
                               expectedConstraints[i]);
         }
     };
-
+    // var1[t+1] = var1 => 2 constraints
     runCase(1, 0, 2, {true, true, false});
+    // var1[t-1] = var1 => 2 constraint
     runCase(-1, 0, 2, {false, true, true});
+    // var1[t-1] = var1[t+1] => 1 constraint
     runCase(-1, 1, 1, {false, true, false});
+    // var1[t+2] = var1 => 1 constraint
     runCase(2, 0, 1, {true, false, false});
+    // NB : var1 = var1[t]
 }
 
 /**
