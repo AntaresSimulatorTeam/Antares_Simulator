@@ -237,14 +237,6 @@ bool STStorageInput::saveToFolder(const std::string& folder) const
     return ini.save(pathIni);
 }
 
-bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
-{
-    Yuni::IO::Directory::Create(folder);
-    return std::ranges::all_of(storagesByIndex,
-                               [&folder](auto& storage)
-                               { return storage.saveSeries(folder + SEP + storage.id); });
-}
-
 void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 {
     for (auto& sts: storagesByIndex)

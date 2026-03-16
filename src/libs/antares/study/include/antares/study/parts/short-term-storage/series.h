@@ -23,8 +23,6 @@ public:
     bool loadFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion);
     void fillDefaultSeriesIfEmpty();
 
-    bool saveToFolder(const std::string& folder) const;
-
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
     TimeSeriesNumbers inflowsTSNumbers;

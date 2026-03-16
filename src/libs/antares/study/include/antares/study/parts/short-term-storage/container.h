@@ -32,8 +32,6 @@ public:
 
     bool saveToFolder(const std::string& folder) const;
 
-    bool saveDataSeriesToFolder(const std::string& folder) const;
-
     std::vector<STStorageCluster> storagesByIndex;
     void resizeTimeseriesNumbers(unsigned int nbYears);
 
