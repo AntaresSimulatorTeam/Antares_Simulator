@@ -406,13 +406,14 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
     const auto& contraints = component_.getModel()->Constraints();
+    ReadLinearConstraintVisitor visitor(optimEntityContainer_,
+                                        ctx,
+                                        component_,
+                                        data_,
+                                        scenarioGroupRepo_);
+
     for (const auto& constraint: contraints | locationFilter())
     {
-        ReadLinearConstraintVisitor visitor(optimEntityContainer_,
-                                            ctx,
-                                            component_,
-                                            data_,
-                                            scenarioGroupRepo_);
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
         const auto variability = getVariability(root_node, component_);
