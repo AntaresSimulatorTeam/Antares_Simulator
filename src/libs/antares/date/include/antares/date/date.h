@@ -163,11 +163,11 @@ class Calendar final
 {
 public:
     //! Short string representation with maximum 42 characters
-    using ShortString42 = Yuni::CString<41, true>;
+    using ShortString42 = Yuni::CString<41, false>;
     //! Short string representation with maximum 12 characters
-    using ShortString12 = Yuni::CString<11, true>;
+    using ShortString12 = Yuni::CString<11, false>;
     //! Short string representation with maximum 8 characters
-    using ShortString8 = Yuni::CString<7, true>;
+    using ShortString8 = Yuni::CString<7, false>;
 
     enum
     {
