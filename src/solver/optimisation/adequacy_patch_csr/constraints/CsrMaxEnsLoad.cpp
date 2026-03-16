@@ -14,7 +14,7 @@ void CsrMaxEnsLoad::add()
 
         builder.updateHourWithinWeek(data.hour);
 
-        builder.UnsuppliedEnergy(Area, 1.0);
+        builder.PositiveUnsuppliedEnergy(Area, 1.0);
 
         data.numberOfConstraintCsrMaxEnsLoad[Area] = builder.data.nombreDeContraintes;
 

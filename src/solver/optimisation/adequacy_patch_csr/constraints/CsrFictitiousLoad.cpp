@@ -19,7 +19,7 @@ void CsrFictitiousLoad::add()
         // Where RHS = STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt)
         // The RHS is computed in setRHSfictitiousLoadValue() based on results from
         // the first linear optimization step (thermal gen, hydro, etc.)
-        builder.Spillage(Area, 1.0);
+        builder.NegativeUnsuppliedEnergy(Area, 1.0);
 
         data.numberOfConstraintCsrFictitiousLoad[Area] = builder.data.nombreDeContraintes;
 
