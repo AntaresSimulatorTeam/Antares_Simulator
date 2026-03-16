@@ -30,9 +30,13 @@ void FileContent::addItemToSection(const string& section, const string& key, con
     sections_[section][key] = value;
 }
 
-void FileContent::addDurationItem(const string& name, unsigned int duration, int nbCalls)
+void FileContent::addDurationItem(const string& name,
+                                  unsigned int duration_ms,
+                                  const std::string& duration,
+                                  int nbCalls)
 {
-    addItemToSection("durations_ms", name, duration);
+    addItemToSection("durations_ms", name, duration_ms);
+    addItemToSection("durations", name, duration);
     addItemToSection("number_of_calls", name, nbCalls);
 }
 
