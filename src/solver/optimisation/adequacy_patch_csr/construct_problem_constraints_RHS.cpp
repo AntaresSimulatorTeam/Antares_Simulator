@@ -59,7 +59,7 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 void HourlyCSRProblem::setRHSfictitiousLoadValue()
 {
     // constraint: FictitiousLoad for all areas inside adequacy patch
-    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt)
+    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt) + STS_net_production
     // where:
     //   STt = sum of thermal dispatchable generation (from first optimization step)
     //   STmint = sum of Pmin of thermal units
@@ -69,6 +69,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
     //   BT = DefaillanceNegativeUtiliserPMinThermique
     //   BH = DefaillanceNegativeUtiliserHydro
     //   BF = DefaillanceNegativeUtiliserConsoAbattue
+    //   STS_net_production = net withdrawals from short-term storage (from first optimization step)
     for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
