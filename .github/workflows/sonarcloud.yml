@@ -126,7 +126,7 @@ jobs:
 
     - name: Init submodule
       run: |
-        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 --remote src/tests/resources/Antares_Simulator_Tests_NR
 
     - name: Configure
       run: |
@@ -150,7 +150,7 @@ jobs:
     - name: Free up disk space
       run: |
         df -h
-        rm -rf {{ env.ORTOOLS_DIR }}
+        rm -rf ${{ env.ORTOOLS_DIR }}
         df -h
 
     - name: Test and generate coverage
@@ -238,6 +238,12 @@ jobs:
       if: ${{ !cancelled() }}
       run: |
         gcovr --sonarqube --output coverage.xml
+
+    - name: Remove Antares_Simulator_Tests_NR
+      run: |
+        df -h
+        rm -rf src/tests/resources/Antares_Simulator_Tests_NR
+        df -h
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
