@@ -18,8 +18,12 @@ runs:
   - name: Download & extract OR-Tools
     shell: bash
     run: |
-           mkdir "${{inputs.ortools-dir}}"
+           mkdir -p "${{inputs.ortools-dir}}"
            cd "${{inputs.ortools-dir}}"
            curl -Ls -o ortools.zip ${{inputs.ortools-url}}
            unzip ortools.zip
            rm ortools.zip
+           if [ -d "lib" -a -d "include" -a ! -d "install" ]; then
+             mkdir -p install
+             mv lib include install/
+           fi

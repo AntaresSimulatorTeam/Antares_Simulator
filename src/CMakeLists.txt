@@ -56,6 +56,48 @@ include("cmake/antlr4-generate.cmake")
 #CMake Macro to display message
 include("cmake/messages.cmake")
 
+# If an ORTOOLS_DIR is provided (either cache var `ortools_DIR` or env var ORTOOLS_DIR),
+# prefer the precompiled OR-Tools install and its bundled absl by adjusting
+# `CMAKE_PREFIX_PATH` and setting `ortools_DIR`/`absl_DIR` so `find_package`
+# resolves OR-Tools/absl from that install before vcpkg.
+if(NOT DEFINED ortools_DIR AND DEFINED ENV{ORTOOLS_DIR})
+    # Expect the env to point to the OR-Tools repo root used in CI; the install
+    # lives under <ORTOOLS_DIR>/install
+    set(_ortools_install_prefix "$ENV{ORTOOLS_DIR}/install")
+    list(INSERT CMAKE_PREFIX_PATH 0 "${_ortools_install_prefix}")
+    set(ortools_DIR "${_ortools_install_prefix}/lib/cmake/ortools" CACHE PATH "Precompiled OR-Tools CMake dir" FORCE)
+    set(absl_DIR "${_ortools_install_prefix}/lib/cmake/absl" CACHE PATH "OR-Tools provided absl CMake dir" FORCE)
+    message(STATUS "Using OR-Tools install from ENV{ORTOOLS_DIR}: ${_ortools_install_prefix}")
+    message(STATUS "Set ortools_DIR=${ortools_DIR}")
+    message(STATUS "Set absl_DIR=${absl_DIR}")
+endif()
+
+# If user passed ortools_DIR on the command line, derive absl_DIR from it when
+# absl_DIR is not set so that OR-Tools' absl is preferred automatically.
+if(DEFINED ortools_DIR)
+    # ortools_DIR typically points to .../install/lib/cmake/ortools or .../lib/cmake/ortools
+    get_filename_component(_cmake_dir "${ortools_DIR}" DIRECTORY)
+    # _cmake_dir -> .../lib/cmake
+    get_filename_component(_lib_dir "${_cmake_dir}" DIRECTORY)
+    # _lib_dir -> .../lib
+    # Prepend install prefix (one level up) to CMAKE_PREFIX_PATH to prioritize it
+    get_filename_component(_install_prefix "${_lib_dir}" DIRECTORY)
+    list(INSERT CMAKE_PREFIX_PATH 0 "${_install_prefix}")
+    if(NOT DEFINED absl_DIR)
+        set(absl_DIR "${_cmake_dir}/absl" CACHE PATH "Derived absl CMake dir from ortools_DIR" FORCE)
+        message(STATUS "Derived absl_DIR=${absl_DIR} from ortools_DIR=${ortools_DIR}")
+    endif()
+    if(NOT DEFINED Protobuf_DIR)
+        set(_maybe_protobuf_dir "${_cmake_dir}/protobuf")
+        if(EXISTS "${_maybe_protobuf_dir}")
+            set(Protobuf_DIR "${_maybe_protobuf_dir}" CACHE PATH "Derived Protobuf CMake dir from ortools_DIR" FORCE)
+            message(STATUS "Derived Protobuf_DIR=${Protobuf_DIR} from ortools_DIR=${ortools_DIR}")
+        else()
+            message(STATUS "Could not derive Protobuf_DIR at ${_maybe_protobuf_dir}; you may need to set -DProtobuf_DIR if configure fails.")
+        endif()
+    endif()
+endif()
+
 set(ANTARES_VERSION_TAG "")
 
 if (${ANTARES_BETA})
@@ -186,6 +228,51 @@ message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools: ${BUILD_ORTOOLS}")
+
+# When using a precompiled OR-Tools bundle, prefer the libraries shipped with
+# that bundle (absl, protobuf, etc). New option `ORTOOLS_INSTALL_DIR` accepts
+# the install prefix (the directory that contains `lib/` and `include/`). If
+# provided, we set `ortools_DIR`, `absl_DIR` and `Protobuf_DIR` to the
+# corresponding cmake config directories from that install. This avoids using
+# `CMAKE_PREFIX_PATH` globally which can interfere with vcpkg resolution.
+option(ORTOOLS_INSTALL_DIR "Path to a precompiled OR-Tools install prefix" "" CACHE PATH "Precompiled OR-Tools install prefix (contains lib/ include/)")
+if(ORTOOLS_INSTALL_DIR)
+    # Normalize: allow user to pass either the install root or the pack's lib/cmake/ortools
+    if(EXISTS "${ORTOOLS_INSTALL_DIR}/lib/cmake/ortools")
+        set(_ortools_cmake_dir "${ORTOOLS_INSTALL_DIR}/lib/cmake/ortools")
+        set(_install_prefix "${ORTOOLS_INSTALL_DIR}")
+    elseif(EXISTS "${ORTOOLS_INSTALL_DIR}")
+        # If the path looks like .../lib/cmake/ortools
+        get_filename_component(_maybe ${ORTOOLS_INSTALL_DIR} REALPATH)
+        if(EXISTS "${_maybe}/lib/cmake/ortools")
+            set(_ortools_cmake_dir "${_maybe}/lib/cmake/ortools")
+            set(_install_prefix "${_maybe}")
+        else()
+            # fallback: assume user passed the cmake dir directly
+            set(_ortools_cmake_dir "${ORTOOLS_INSTALL_DIR}")
+            get_filename_component(_install_prefix "${_ortools_cmake_dir}" DIRECTORY)
+            get_filename_component(_install_prefix "${_install_prefix}" DIRECTORY)
+        endif()
+    endif()
+
+    if(EXISTS "${_ortools_cmake_dir}")
+        set(ortools_DIR "${_ortools_cmake_dir}" CACHE PATH "Precompiled OR-Tools CMake dir" FORCE)
+        message(STATUS "Using OR-Tools install from ORTOOLS_INSTALL_DIR: ${_install_prefix}")
+        message(STATUS "Set ortools_DIR=${ortools_DIR}")
+
+        # Derive absl and protobuf config dirs from the same install prefix if present
+        if(EXISTS "${_install_prefix}/lib/cmake/absl")
+            set(absl_DIR "${_install_prefix}/lib/cmake/absl" CACHE PATH "OR-Tools provided absl CMake dir" FORCE)
+            message(STATUS "Set absl_DIR=${absl_DIR}")
+        endif()
+        if(EXISTS "${_install_prefix}/lib/cmake/protobuf")
+            set(Protobuf_DIR "${_install_prefix}/lib/cmake/protobuf" CACHE PATH "OR-Tools provided protobuf CMake dir" FORCE)
+            message(STATUS "Set Protobuf_DIR=${Protobuf_DIR}")
+        endif()
+    else()
+        message(WARNING "ORTOOLS_INSTALL_DIR was provided but could not be resolved: ${ORTOOLS_INSTALL_DIR}")
+    endif()
+endif()
 
 option(BUILD_MERSENNE_TWISTER_PYBIND11 "Build pybind11 bindings for Mersenne-Twister" OFF)
 if (${BUILD_MERSENNE_TWISTER_PYBIND11})
