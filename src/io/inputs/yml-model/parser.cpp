@@ -4,7 +4,6 @@
 #include "antares/io/inputs/yml-model/parser.h"
 
 #include "antares/io/inputs/yml-model/Library.h"
-
 #include "antares/io/inputs/yml-model/decoders.h"
 
 namespace Antares::IO::Inputs::YmlModel

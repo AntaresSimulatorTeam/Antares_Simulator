@@ -60,8 +60,8 @@ std::pair<std::string, std::string> splitLibraryModelString(const std::string& s
 }
 
 const Model& getModel(const std::vector<Library>& libraries,
-                             const std::string& libraryId,
-                             const std::string& modelId)
+                      const std::string& libraryId,
+                      const std::string& modelId)
 {
     auto lib = std::ranges::find_if(libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
@@ -80,8 +80,8 @@ const Model& getModel(const std::vector<Library>& libraries,
 }
 
 Component createComponent(const YmlSystem::Component& c,
-                                 const std::vector<Library>& libraries,
-                                 unsigned int componentIndex)
+                          const std::vector<Library>& libraries,
+                          unsigned int componentIndex)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -122,9 +122,9 @@ Component& findComponent(const std::string& id, std::vector<Component>& componen
 }
 
 void CheckPortSelfConnection(const std::string& firstComponentId,
-                                    const std::string& firstPortId,
-                                    const std::string& secondComponentId,
-                                    const std::string& secondPortId)
+                             const std::string& firstPortId,
+                             const std::string& secondComponentId,
+                             const std::string& secondPortId)
 {
     if (firstComponentId == secondComponentId && firstPortId == secondPortId)
     {
@@ -147,8 +147,8 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
 }
 
 FieldRole ExposeFieldRole(const std::string& portId,
-                                 const std::string& field,
-                                 const PortFieldMap& portFieldDefinitions)
+                          const std::string& field,
+                          const PortFieldMap& portFieldDefinitions)
 {
     const auto& it = portFieldDefinitions.find(PortFieldKey{.portId = portId, .fieldId = field});
     if (it == portFieldDefinitions.end())
@@ -159,9 +159,9 @@ FieldRole ExposeFieldRole(const std::string& portId,
 }
 
 std::pair<PortFieldsRole, PortFieldsRole> ResolveFieldsRole(const Component& firstComponent,
-                                                                   const Port& firstPort,
-                                                                   const Component& secondComponent,
-                                                                   const Port& secondPort)
+                                                            const Port& firstPort,
+                                                            const Component& secondComponent,
+                                                            const Port& secondPort)
 {
     PortFieldsRole firstPortFieldsRole;
     PortFieldsRole secondPortFieldsRole;
@@ -209,8 +209,7 @@ std::pair<PortFieldsRole, PortFieldsRole> ResolveFieldsRole(const Component& fir
  * @throw std::invalid_argument if a component or port is not found, if the ports are not
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
-void connectComponents(const YmlSystem::Connection& connection,
-                              std::vector<Component>& components)
+void connectComponents(const YmlSystem::Connection& connection, std::vector<Component>& components)
 {
     const auto& firstComponentId = connection.firstEntry.componentId;
     const auto& firstPortId = connection.firstEntry.portId;
@@ -248,8 +247,7 @@ void connectComponents(const YmlSystem::Connection& connection,
  * @throw std::invalid_argument if a component is not found, or if the connection could not be
  * established
  */
-void connectAreas(const YmlSystem::AreaConnection& connection,
-                         std::vector<Component>& components)
+void connectAreas(const YmlSystem::AreaConnection& connection, std::vector<Component>& components)
 {
     auto& component = findComponent(connection.componentId, components);
     component.addAreaConnection(connection.portId, connection.areaId);
@@ -269,7 +267,7 @@ void connectAreas(const YmlSystem::AreaConnection& connection,
  * established
  */
 void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
-                                   std::vector<Component>& components)
+                            std::vector<Component>& components)
 {
     // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
