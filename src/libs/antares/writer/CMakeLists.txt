@@ -66,15 +66,25 @@ target_link_libraries(result_writer
         PUBLIC
         Antares::benchmarking
         yuni-static-core
+        # parquet_writer is a SHARED library (DLL on Windows). Since result_writer
+        # is STATIC, consumers inherit its shared library dependencies at link time.
+        # Using PUBLIC ensures MSVC's project reference system copies the DLL to
+        # all consuming targets' output directories.
+        parquet_writer
         PRIVATE
         MINIZIP::minizip
         logs
         inifile
         io
         Antares::concurrency
-	parquet_writer
 )
 
+
+install(TARGETS parquet_writer
+        RUNTIME DESTINATION bin    # .dll on Windows
+        LIBRARY DESTINATION lib    # .so on Linux
+        ARCHIVE DESTINATION lib    # .lib import library on Windows
+)
 
 install(DIRECTORY include/antares
         DESTINATION "include"
