@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
@@ -64,11 +66,7 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
     assert(pStudy != nullptr);
 
     // Checking in a first time if the name already exists
-    RulesScenarioName id = name;
-    std::transform(id.begin(),
-                   id.end(),
-                   id.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+    RulesScenarioName id = boost::to_lower_copy(name);
     if (exists(id))
     {
         return nullptr;

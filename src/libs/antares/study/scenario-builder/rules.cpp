@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/logs/logs.h>
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/study.h"
@@ -104,16 +106,8 @@ bool Rules::readThermalCluster(const std::vector<std::string>& splitKey,
     }
     else
     {
-        std::string pNameLower = pName;
-        std::string activeRuleLower = study_.parameters.activeRulesScenario;
-        std::transform(pNameLower.begin(),
-                       pNameLower.end(),
-                       pNameLower.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
-        std::transform(activeRuleLower.begin(),
-                       activeRuleLower.end(),
-                       activeRuleLower.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
+        std::string pNameLower = boost::to_lower_copy(pName);
+        std::string activeRuleLower = boost::to_lower_copy(study_.parameters.activeRulesScenario);
         bool isTheActiveRule = (pNameLower == activeRuleLower);
         if (!updaterMode and isTheActiveRule)
         {
@@ -158,16 +152,8 @@ bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey,
     }
     else
     {
-        std::string pNameLower = pName;
-        std::string activeRuleLower = study_.parameters.activeRulesScenario;
-        std::transform(pNameLower.begin(),
-                       pNameLower.end(),
-                       pNameLower.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
-        std::transform(activeRuleLower.begin(),
-                       activeRuleLower.end(),
-                       activeRuleLower.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
+        std::string pNameLower = boost::to_lower_copy(pName);
+        std::string activeRuleLower = boost::to_lower_copy(study_.parameters.activeRulesScenario);
         bool isTheActiveRule = (pNameLower == activeRuleLower);
         if (!updaterMode and isTheActiveRule)
         {
