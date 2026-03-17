@@ -1,9 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <algorithm>
 #include <cassert>
-#include <cctype>
 #include <fstream>
 
 #include <boost/algorithm/string/trim.hpp>
@@ -13,15 +11,11 @@
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/area/scratchpad.h>
-#include "antares/antares/antares.h"
 #include "antares/array/matrix.h"
 #include "antares/study//study.h"
 #include "antares/study/area/area.h"
 #include "antares/study/parts/load/prepro.h"
-#include "antares/study/parts/parts.h"
 #include "antares/utils/utils.h"
-
-#define SEP IO::Separator
 
 using namespace Yuni;
 

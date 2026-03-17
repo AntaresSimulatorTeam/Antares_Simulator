@@ -7,8 +7,6 @@
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
 
-#include <algorithm>
-#include <cctype>
 #include <memory>
 #include <vector>
 

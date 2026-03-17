@@ -3,9 +3,6 @@
 
 #include "antares/solver/simulation/apply-scenario.h"
 
-#include <algorithm>
-#include <cctype>
-
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/study/scenario-builder/sets.h>

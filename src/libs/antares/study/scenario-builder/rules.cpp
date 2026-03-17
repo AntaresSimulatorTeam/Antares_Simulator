@@ -3,9 +3,6 @@
 
 #include "antares/study/scenario-builder/rules.h"
 
-#include <algorithm>
-#include <cctype>
-
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/logs/logs.h>

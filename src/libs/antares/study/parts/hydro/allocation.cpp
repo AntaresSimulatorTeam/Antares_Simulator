@@ -3,9 +3,6 @@
 
 #include "antares/study/parts/hydro/allocation.h"
 
-#include <algorithm>
-#include <cctype>
-
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/utils/utils.h>

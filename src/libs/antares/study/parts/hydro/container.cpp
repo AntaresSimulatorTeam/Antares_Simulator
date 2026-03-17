@@ -3,9 +3,6 @@
 
 #include "antares/study/parts/hydro/container.h"
 
-#include <algorithm>
-#include <cctype>
-
 #include <boost/algorithm/string/case_conv.hpp>
 
 #include <antares/inifile/inifile.h>

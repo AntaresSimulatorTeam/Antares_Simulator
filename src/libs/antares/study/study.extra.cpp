@@ -3,21 +3,12 @@
 
 #include "antares/study/study.h"
 
-#include <algorithm>
-#include <cctype>
-
 #include <boost/algorithm/string/case_conv.hpp>
-
-#include <yuni/yuni.h>
 
 #include "antares/study/scenario-builder/sets.h"
 
-using namespace Yuni;
-
 namespace Antares::Data
 {
-// The path to the Icon file to use when writing a study
-String StudyIconFile;
 
 void Study::scenarioRulesCreate()
 {

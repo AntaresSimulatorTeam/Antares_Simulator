@@ -3,9 +3,6 @@
 
 #include "antares/study/scenario-builder/sets.h"
 
-#include <algorithm>
-#include <cctype>
-
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
