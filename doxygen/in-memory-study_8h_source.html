@@ -276,240 +276,238 @@ $(document).ready(function(){initNavTree('in-memory-study_8h_source.html',''); i
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">Antares::Data::ShortTermStorage::STStorageCluster</a>* addSTSToArea(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area,</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                                                                <span class="keyword">const</span> std::string&amp; stsName);</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="keywordtype">void</span> addScratchpadToEachArea(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">// -------------------------------</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="comment">// Simulation results retrieval</span></div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="comment">// -------------------------------</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">// Simulation results retrieval</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">// -------------------------------</span></div>
-<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="classaverageResults.html">  155</a></span>&#160;<span class="keyword">class </span><a class="code" href="classaverageResults.html">averageResults</a> final</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;{</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a>(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html">Variable::R::AllYears::AverageData</a>&amp; <a class="code" href="classaverageResults.html">averageResults</a>):</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        averageResults_(<a class="code" href="classaverageResults.html">averageResults</a>)</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    }</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span>* hours()</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    {</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> averageResults_.hourly.data();</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordtype">double</span> hour(<span class="keywordtype">unsigned</span> hour)</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    {</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordflow">return</span> averageResults_.hourly[hour];</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    }</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span>* days()</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    {</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <span class="keywordflow">return</span> averageResults_.daily.data();</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    }</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    <span class="keywordtype">double</span> day(<span class="keywordtype">unsigned</span> day)</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keywordflow">return</span> averageResults_.daily[day];</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    }</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span>* weeks()</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        <span class="keywordflow">return</span> averageResults_.weekly.data();</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    }</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordtype">double</span> week(<span class="keywordtype">unsigned</span> week)</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    {</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keywordflow">return</span> averageResults_.weekly[week];</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    }</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html">Variable::R::AllYears::AverageData</a>&amp; averageResults_;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;};</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno"><a class="line" href="classOutputRetriever.html">  197</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOutputRetriever.html">OutputRetriever</a> final</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;{</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <a class="code" href="classOutputRetriever.html">OutputRetriever</a>(<a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; simulation):</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        simulation_(simulation)</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    {</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    }</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> overallCost(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> levelForSTSgroup(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area, <span class="keywordtype">unsigned</span> groupNb);</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> withdrawalForSTSgroup(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area, <span class="keywordtype">unsigned</span> groupNb);</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> load(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> hydroStorage(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> flow(<a class="code" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a>* link);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> thermalGeneration(<a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> thermalNbUnitsON(<a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster);</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* retrieveAreaResults(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* retrieveLinkResults(<a class="code" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a>* link);</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* retrieveResultsForThermalCluster(</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;      <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster);</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; simulation_;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;};</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160; </div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveAreaResults(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area)</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;{</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    simulation_.variables.retrieveResultsForArea&lt;VCard&gt;(&amp;result, area);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;}</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveLinkResults(<a class="code" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a>* link)</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;{</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    simulation_.variables.retrieveResultsForLink&lt;VCard&gt;(&amp;result, link);</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;}</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveResultsForThermalCluster(</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster)</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;{</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    simulation_.variables.retrieveResultsForThermalCluster&lt;VCard&gt;(&amp;result, cluster);</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;}</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
-<div class="line"><a name="l00253"></a><span class="lineno"><a class="line" href="classScenarioBuilderRule.html">  253</a></span>&#160;<span class="keyword">class </span><a class="code" href="classScenarioBuilderRule.html">ScenarioBuilderRule</a> final</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;{</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <a class="code" href="classScenarioBuilderRule.html">ScenarioBuilderRule</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html">loadTSNumberData</a>&amp; load()</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    {</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;load;</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    }</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">BindingConstraintsTSNumberData</a>&amp; bcGroup()</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    {</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;binding_constraints;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    }</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html">hydroTSNumberData</a>&amp; hydro()</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    {</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;hydro;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    }</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="comment">// index = area index</span></div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    std::vector&lt;ShortTermAdditionalConstraintsTSNumberData&gt;&amp; stsAdditionalConstraints()</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    {</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;shortTermStorageAdditionalConstraints;</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    }</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Rules::Ptr</a> rules_;</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;};</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00153"></a><span class="lineno"><a class="line" href="classaverageResults.html">  153</a></span>&#160;<span class="keyword">class </span><a class="code" href="classaverageResults.html">averageResults</a> final</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;{</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a>(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html">Variable::R::AllYears::AverageData</a>&amp; <a class="code" href="classaverageResults.html">averageResults</a>):</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        averageResults_(<a class="code" href="classaverageResults.html">averageResults</a>)</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    {</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span>* hours()</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    {</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        <span class="keywordflow">return</span> averageResults_.hourly.data();</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">double</span> hour(<span class="keywordtype">unsigned</span> hour)</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    {</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">return</span> averageResults_.hourly[hour];</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    }</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span>* days()</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keywordflow">return</span> averageResults_.daily.data();</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    }</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keywordtype">double</span> day(<span class="keywordtype">unsigned</span> day)</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    {</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="keywordflow">return</span> averageResults_.daily[day];</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    }</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span>* weeks()</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keywordflow">return</span> averageResults_.weekly.data();</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordtype">double</span> week(<span class="keywordtype">unsigned</span> week)</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    {</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordflow">return</span> averageResults_.weekly[week];</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    }</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html">Variable::R::AllYears::AverageData</a>&amp; averageResults_;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;};</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
+<div class="line"><a name="l00195"></a><span class="lineno"><a class="line" href="classOutputRetriever.html">  195</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOutputRetriever.html">OutputRetriever</a> final</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;{</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="classOutputRetriever.html">OutputRetriever</a>(<a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; simulation):</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        simulation_(simulation)</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    {</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    }</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> overallCost(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> levelForSTSgroup(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area, <span class="keywordtype">unsigned</span> groupNb);</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> withdrawalForSTSgroup(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area, <span class="keywordtype">unsigned</span> groupNb);</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> load(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> hydroStorage(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> flow(<a class="code" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a>* link);</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> thermalGeneration(<a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <a class="code" href="classaverageResults.html">averageResults</a> thermalNbUnitsON(<a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster);</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* retrieveAreaResults(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* retrieveLinkResults(<a class="code" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a>* link);</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* retrieveResultsForThermalCluster(</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;      <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster);</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; simulation_;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;};</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveAreaResults(<a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* area)</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;{</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    simulation_.variables.retrieveResultsForArea&lt;VCard&gt;(&amp;result, area);</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;}</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveLinkResults(<a class="code" href="classAntares_1_1Data_1_1AreaLink.html">AreaLink</a>* link)</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;{</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    simulation_.variables.retrieveResultsForLink&lt;VCard&gt;(&amp;result, link);</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;}</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> VCard&gt;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* OutputRetriever::retrieveResultsForThermalCluster(</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;  <a class="code" href="classAntares_1_1Data_1_1ThermalCluster.html">ThermalCluster</a>* cluster)</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;{</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Variable::Storage&lt;VCard&gt;::ResultsType</a>* result = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    simulation_.variables.retrieveResultsForThermalCluster&lt;VCard&gt;(&amp;result, cluster);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;}</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
+<div class="line"><a name="l00251"></a><span class="lineno"><a class="line" href="classScenarioBuilderRule.html">  251</a></span>&#160;<span class="keyword">class </span><a class="code" href="classScenarioBuilderRule.html">ScenarioBuilderRule</a> final</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;{</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <a class="code" href="classScenarioBuilderRule.html">ScenarioBuilderRule</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study);</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html">loadTSNumberData</a>&amp; load()</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    {</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;load;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    }</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">BindingConstraintsTSNumberData</a>&amp; bcGroup()</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    {</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;binding_constraints;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    }</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160; </div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html">hydroTSNumberData</a>&amp; hydro()</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    {</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;hydro;</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    }</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="comment">// index = area index</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    std::vector&lt;ShortTermAdditionalConstraintsTSNumberData&gt;&amp; stsAdditionalConstraints()</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    {</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;        <span class="keywordflow">return</span> rules_-&gt;shortTermStorageAdditionalConstraints;</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    }</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Rules::Ptr</a> rules_;</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;};</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="comment">// =====================</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="comment">// Simulation handler</span></div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="comment">// =====================</span></div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="comment">// Simulation handler</span></div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="comment">// =====================</span></div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
-<div class="line"><a name="l00287"></a><span class="lineno"><a class="line" href="classTestingSimulationObserver.html">  287</a></span>&#160;<span class="keyword">class </span><a class="code" href="classTestingSimulationObserver.html">TestingSimulationObserver</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html">Solver::Simulation::ISimulationObserver</a></div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;{</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00290"></a><span class="lineno"><a class="line" href="structTestingSimulationObserver_1_1Variable.html">  290</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structTestingSimulationObserver_1_1Variable.html">Variable</a></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    {</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <span class="comment">// All comparisons with NaN return false, except for !=</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        <span class="comment">// For example (NaN == 4.) =&gt; false</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        <span class="comment">// (NaN == NaN) =&gt; false</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        <span class="comment">// Using any other arbitrary value (infinity, 0, etc.) may result in false positives</span></div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="comment">// or false negatives</span></div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        <span class="keywordtype">double</span> Xmin = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        <span class="keywordtype">double</span> Xmax = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        <span class="keywordtype">double</span> objectiveCoefficient = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    };</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno"><a class="line" href="structTestingSimulationObserver_1_1Constraint.html">  302</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structTestingSimulationObserver_1_1Constraint.html">Constraint</a></div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    {</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <span class="keywordtype">double</span> rhs = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        std::map&lt;std::string, double&gt; coefficients;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    };</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
+<div class="line"><a name="l00285"></a><span class="lineno"><a class="line" href="classTestingSimulationObserver.html">  285</a></span>&#160;<span class="keyword">class </span><a class="code" href="classTestingSimulationObserver.html">TestingSimulationObserver</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulationObserver.html">Solver::Simulation::ISimulationObserver</a></div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;{</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00288"></a><span class="lineno"><a class="line" href="structTestingSimulationObserver_1_1Variable.html">  288</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structTestingSimulationObserver_1_1Variable.html">Variable</a></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    {</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        <span class="comment">// All comparisons with NaN return false, except for !=</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        <span class="comment">// For example (NaN == 4.) =&gt; false</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <span class="comment">// (NaN == NaN) =&gt; false</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        <span class="comment">// Using any other arbitrary value (infinity, 0, etc.) may result in false positives</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        <span class="comment">// or false negatives</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        <span class="keywordtype">double</span> Xmin = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordtype">double</span> Xmax = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        <span class="keywordtype">double</span> objectiveCoefficient = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    };</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160; </div>
+<div class="line"><a name="l00300"></a><span class="lineno"><a class="line" href="structTestingSimulationObserver_1_1Constraint.html">  300</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structTestingSimulationObserver_1_1Constraint.html">Constraint</a></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    {</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        <span class="keywordtype">double</span> rhs = std::numeric_limits&lt;double&gt;::quiet_NaN();</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        std::map&lt;std::string, double&gt; coefficients;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    };</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno"><a class="line" href="structTestingSimulationObserver_1_1SingleProblem.html">  306</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structTestingSimulationObserver_1_1SingleProblem.html">SingleProblem</a></div>
 <div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
-<div class="line"><a name="l00308"></a><span class="lineno"><a class="line" href="structTestingSimulationObserver_1_1SingleProblem.html">  308</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structTestingSimulationObserver_1_1SingleProblem.html">SingleProblem</a></div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    {</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        std::map&lt;std::string, Variable&gt; variables;</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        std::map&lt;std::string, Constraint&gt; constraints;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    };</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    {</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        std::map&lt;std::string, Variable&gt; variables;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        std::map&lt;std::string, Constraint&gt; constraints;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    };</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    std::map&lt;std::pair&lt;int, std::string&gt;, <a class="code" href="structTestingSimulationObserver_1_1SingleProblem.html">SingleProblem</a>&gt; problems;</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    std::map&lt;std::pair&lt;int, std::string&gt;, <a class="code" href="structTestingSimulationObserver_1_1SingleProblem.html">SingleProblem</a>&gt; problems;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="keywordtype">void</span> notifyHebdoProblem(<span class="keyword">const</span> <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;                            <span class="keywordtype">int</span> optimizationNumber,</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;                            std::string_view name) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;};</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
-<div class="line"><a name="l00322"></a><span class="lineno"><a class="line" href="classSimulationHandler.html">  322</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSimulationHandler.html">SimulationHandler</a> final</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;{</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study):</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        study_(study)</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    {</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    }</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keywordtype">void</span> notifyHebdoProblem(<span class="keyword">const</span> <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>&amp; problemeHebdo,</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                            <span class="keywordtype">int</span> optimizationNumber,</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;                            std::string_view name) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;};</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
+<div class="line"><a name="l00320"></a><span class="lineno"><a class="line" href="classSimulationHandler.html">  320</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSimulationHandler.html">SimulationHandler</a> final</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;{</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a>(<a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study):</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        study_(study)</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    {</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    }</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    ~<a class="code" href="classSimulationHandler.html">SimulationHandler</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    ~<a class="code" href="classSimulationHandler.html">SimulationHandler</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a>(<span class="keyword">const</span> <a class="code" href="classSimulationHandler.html">SimulationHandler</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classSimulationHandler.html">SimulationHandler</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a>(<span class="keyword">const</span> <a class="code" href="classSimulationHandler.html">SimulationHandler</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classSimulationHandler.html">SimulationHandler</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keywordtype">void</span> create();</div>
 <div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordtype">void</span> create();</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keywordtype">void</span> run()</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    {</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        simulation_-&gt;run();</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    }</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; rawSimu()</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    {</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <span class="keywordflow">return</span> *simulation_;</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    }</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keyword">const</span> <a class="code" href="classTestingSimulationObserver.html">TestingSimulationObserver</a>&amp; getObserver()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        <span class="keywordflow">return</span> observer_;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    }</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    std::shared_ptr&lt;ISimulation&lt;Economy&gt;&gt; simulation_;</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a> durationCollector_;</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <a class="code" href="classSettings.html">Settings</a> settings_;</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study_;</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a> resultWriter_;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <a class="code" href="classTestingSimulationObserver.html">TestingSimulationObserver</a> observer_;</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;};</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160; </div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordtype">void</span> run()</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    {</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        simulation_-&gt;run();</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    }</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">ISimulation&lt;Economy&gt;</a>&amp; rawSimu()</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        <span class="keywordflow">return</span> *simulation_;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    <span class="keyword">const</span> <a class="code" href="classTestingSimulationObserver.html">TestingSimulationObserver</a>&amp; getObserver()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        <span class="keywordflow">return</span> observer_;</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    }</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160; </div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    std::shared_ptr&lt;ISimulation&lt;Economy&gt;&gt; simulation_;</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <a class="code" href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a> durationCollector_;</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <a class="code" href="classSettings.html">Settings</a> settings_;</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>&amp; study_;</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a> resultWriter_;</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <a class="code" href="classTestingSimulationObserver.html">TestingSimulationObserver</a> observer_;</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;};</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160; </div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment">// =========================</span></div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="comment">// Basic study builder</span></div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="comment">// =========================</span></div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;<span class="comment">// Basic study builder</span></div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="comment">// =========================</span></div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
-<div class="line"><a name="l00366"></a><span class="lineno"><a class="line" href="structStudyBuilder.html">  366</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structStudyBuilder.html">StudyBuilder</a></div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;{</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <a class="code" href="structStudyBuilder.html">StudyBuilder</a>();</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keywordtype">void</span> simulationBetweenDays(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> firstDay, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> lastDay);</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* addAreaToStudy(<span class="keyword">const</span> std::string&amp; areaName);</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    <span class="keywordtype">void</span> setNumberMCyears(<span class="keywordtype">unsigned</span> nbYears);</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keywordtype">void</span> playOnlyYear(<span class="keywordtype">unsigned</span> year);</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    <span class="keywordtype">void</span> giveWeightToYear(<span class="keywordtype">float</span> weight, <span class="keywordtype">unsigned</span> year);</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    <span class="comment">// Data members</span></div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    std::unique_ptr&lt;Data::Study&gt; study;</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a> simulation;</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;};</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160; </div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;std::shared_ptr&lt;Antares::Data::BindingConstraint&gt; addBindingConstraints(<a class="code" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;                                                                        std::string name,</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                                                                        std::string group);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
+<div class="line"><a name="l00364"></a><span class="lineno"><a class="line" href="structStudyBuilder.html">  364</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structStudyBuilder.html">StudyBuilder</a></div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;{</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <a class="code" href="structStudyBuilder.html">StudyBuilder</a>();</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keywordtype">void</span> simulationBetweenDays(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> firstDay, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> lastDay);</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* addAreaToStudy(<span class="keyword">const</span> std::string&amp; areaName);</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keywordtype">void</span> setNumberMCyears(<span class="keywordtype">unsigned</span> nbYears);</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    <span class="keywordtype">void</span> playOnlyYear(<span class="keywordtype">unsigned</span> year);</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    <span class="keywordtype">void</span> giveWeightToYear(<span class="keywordtype">float</span> weight, <span class="keywordtype">unsigned</span> year);</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160; </div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    <span class="comment">// Data members</span></div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;    std::unique_ptr&lt;Data::Study&gt; study;</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    <a class="code" href="classSimulationHandler.html">SimulationHandler</a> simulation;</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;};</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;std::shared_ptr&lt;Antares::Data::BindingConstraint&gt; addBindingConstraints(<a class="code" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a>&amp; study,</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                                                                        std::string name,</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                                                                        std::string group);</div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1AreaLink_html"><div class="ttname"><a href="classAntares_1_1Data_1_1AreaLink.html">Antares::Data::AreaLink</a></div><div class="ttdoc">Definition of a link between two areas (Interconnection)</div><div class="ttdef"><b>Definition:</b> links.h:41</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html">Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData</a></div><div class="ttdef"><b>Definition:</b> BindingConstraintsTSNumbersData.h:15</div></div>
@@ -526,22 +524,22 @@ $(document).ready(function(){initNavTree('in-memory-study_8h_source.html',''); i
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Simulation_1_1ISimulation_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html">Antares::Solver::Simulation::ISimulation&lt; Economy &gt;</a></div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html">Antares::Solver::Variable::R::AllYears::AverageData</a></div><div class="ttdef"><b>Definition:</b> averagedata.h:15</div></div>
 <div class="ttc" id="aclassBenchmarking_1_1DurationCollector_html"><div class="ttname"><a href="classBenchmarking_1_1DurationCollector.html">Benchmarking::DurationCollector</a></div><div class="ttdef"><b>Definition:</b> DurationCollector.h:19</div></div>
-<div class="ttc" id="aclassOutputRetriever_html"><div class="ttname"><a href="classOutputRetriever.html">OutputRetriever</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:198</div></div>
-<div class="ttc" id="aclassScenarioBuilderRule_html"><div class="ttname"><a href="classScenarioBuilderRule.html">ScenarioBuilderRule</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:254</div></div>
+<div class="ttc" id="aclassOutputRetriever_html"><div class="ttname"><a href="classOutputRetriever.html">OutputRetriever</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:196</div></div>
+<div class="ttc" id="aclassScenarioBuilderRule_html"><div class="ttname"><a href="classScenarioBuilderRule.html">ScenarioBuilderRule</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:252</div></div>
 <div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Command line settings for launching the simulation.</div><div class="ttdef"><b>Definition:</b> options.h:19</div></div>
 <div class="ttc" id="aclassShortTermStorageAddConstraintConfig_html"><div class="ttname"><a href="classShortTermStorageAddConstraintConfig.html">ShortTermStorageAddConstraintConfig</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:63</div></div>
 <div class="ttc" id="aclassShortTermStorageConfig_html"><div class="ttname"><a href="classShortTermStorageConfig.html">ShortTermStorageConfig</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:116</div></div>
-<div class="ttc" id="aclassSimulationHandler_html"><div class="ttname"><a href="classSimulationHandler.html">SimulationHandler</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:323</div></div>
-<div class="ttc" id="aclassTestingSimulationObserver_html"><div class="ttname"><a href="classTestingSimulationObserver.html">TestingSimulationObserver</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:288</div></div>
+<div class="ttc" id="aclassSimulationHandler_html"><div class="ttname"><a href="classSimulationHandler.html">SimulationHandler</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:321</div></div>
+<div class="ttc" id="aclassTestingSimulationObserver_html"><div class="ttname"><a href="classTestingSimulationObserver.html">TestingSimulationObserver</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:286</div></div>
 <div class="ttc" id="aclassThermalClusterConfig_html"><div class="ttname"><a href="classThermalClusterConfig.html">ThermalClusterConfig</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:47</div></div>
 <div class="ttc" id="aclassTimeSeriesConfigurer_html"><div class="ttname"><a href="classTimeSeriesConfigurer.html">TimeSeriesConfigurer</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:24</div></div>
-<div class="ttc" id="aclassaverageResults_html"><div class="ttname"><a href="classaverageResults.html">averageResults</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:156</div></div>
+<div class="ttc" id="aclassaverageResults_html"><div class="ttname"><a href="classaverageResults.html">averageResults</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:154</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Storage_html_aba435529310e04ef723164ce08e52b10"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Storage.html#aba435529310e04ef723164ce08e52b10">Antares::Solver::Variable::Storage::ResultsType</a></div><div class="ttdeci">VariableAccessor&lt; typename VCardT::ResultsType, VCardT::columnCount &gt;::Type ResultsType</div><div class="ttdoc">The true type used for the results.</div><div class="ttdef"><b>Definition:</b> info.h:768</div></div>
 <div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:385</div></div>
-<div class="ttc" id="astructStudyBuilder_html"><div class="ttname"><a href="structStudyBuilder.html">StudyBuilder</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:367</div></div>
-<div class="ttc" id="astructTestingSimulationObserver_1_1Constraint_html"><div class="ttname"><a href="structTestingSimulationObserver_1_1Constraint.html">TestingSimulationObserver::Constraint</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:303</div></div>
-<div class="ttc" id="astructTestingSimulationObserver_1_1SingleProblem_html"><div class="ttname"><a href="structTestingSimulationObserver_1_1SingleProblem.html">TestingSimulationObserver::SingleProblem</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:310</div></div>
-<div class="ttc" id="astructTestingSimulationObserver_1_1Variable_html"><div class="ttname"><a href="structTestingSimulationObserver_1_1Variable.html">TestingSimulationObserver::Variable</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:291</div></div>
+<div class="ttc" id="astructStudyBuilder_html"><div class="ttname"><a href="structStudyBuilder.html">StudyBuilder</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:365</div></div>
+<div class="ttc" id="astructTestingSimulationObserver_1_1Constraint_html"><div class="ttname"><a href="structTestingSimulationObserver_1_1Constraint.html">TestingSimulationObserver::Constraint</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:301</div></div>
+<div class="ttc" id="astructTestingSimulationObserver_1_1SingleProblem_html"><div class="ttname"><a href="structTestingSimulationObserver_1_1SingleProblem.html">TestingSimulationObserver::SingleProblem</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:308</div></div>
+<div class="ttc" id="astructTestingSimulationObserver_1_1Variable_html"><div class="ttname"><a href="structTestingSimulationObserver_1_1Variable.html">TestingSimulationObserver::Variable</a></div><div class="ttdef"><b>Definition:</b> in-memory-study.h:289</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
