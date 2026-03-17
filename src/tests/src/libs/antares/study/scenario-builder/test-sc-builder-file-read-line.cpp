@@ -281,7 +281,8 @@ BOOST_FIXTURE_TEST_CASE(
     std::vector<std::string> splitKey = {"t", "area 1", yearNumber, "th-cluster-11"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_11.get(), std::stoul(yearNumber)),
+    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_11.get(),
+                                                         std::stoul(yearNumber)),
                       std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
@@ -298,7 +299,8 @@ BOOST_FIXTURE_TEST_CASE(
     std::vector<std::string> splitKey = {"t", "area 1", yearNumber, "th-cluster-12"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_12.get(), std::stoul(yearNumber)),
+    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_12.get(),
+                                                         std::stoul(yearNumber)),
                       std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
@@ -315,7 +317,8 @@ BOOST_FIXTURE_TEST_CASE(
     std::vector<std::string> splitKey = {"t", "area 3", yearNumber, "th-cluster-31"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.thermal[area_3->index].get(thCluster_31.get(), std::stoul(yearNumber)),
+    BOOST_CHECK_EQUAL(my_rule.thermal[area_3->index].get(thCluster_31.get(),
+                                                         std::stoul(yearNumber)),
                       std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
@@ -443,7 +446,8 @@ BOOST_FIXTURE_TEST_CASE(
     std::vector<std::string> splitKey = {"hfl", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level, false));
 
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_2->index), 1.);
+    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_2->index),
+                      1.);
 
     BOOST_CHECK(my_rule.apply());
     BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_2->index][std::stoul(yearNumber)], 1.);
@@ -458,7 +462,8 @@ BOOST_FIXTURE_TEST_CASE(
     std::vector<std::string> splitKey = {"hfl", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level, false));
 
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_3->index), 0.);
+    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_3->index),
+                      0.);
 
     BOOST_CHECK(my_rule.apply());
     BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_3->index][std::stoul(yearNumber)], 0.);
