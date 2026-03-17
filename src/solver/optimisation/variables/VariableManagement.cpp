@@ -98,18 +98,18 @@ int& VariableManager::DirectFlow(unsigned int index, unsigned int hourInWeek, in
 }
 
 int& VariableManager::PositiveDirectFlow(unsigned int index,
-                                        unsigned int hourInWeek,
-                                        int offset,
-                                        int delta)
+                                         unsigned int hourInWeek,
+                                         int offset,
+                                         int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirectPositif[index];
 }
 
 int& VariableManager::PositiveIndirectFlow(unsigned int index,
-                                          unsigned int hourInWeek,
-                                          int offset,
-                                          int delta)
+                                           unsigned int hourInWeek,
+                                           int offset,
+                                           int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxIndirectPositif[index];

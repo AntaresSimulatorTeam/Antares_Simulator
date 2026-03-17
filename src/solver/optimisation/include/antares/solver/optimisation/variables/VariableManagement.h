@@ -45,14 +45,14 @@ public:
     int& DirectFlow(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
     int& PositiveDirectFlow(unsigned int index,
-                           unsigned int hourInWeek,
-                           int offset = 0,
-                           int delta = 0);
+                            unsigned int hourInWeek,
+                            int offset = 0,
+                            int delta = 0);
 
     int& PositiveIndirectFlow(unsigned int index,
-                             unsigned int hourInWeek,
-                             int offset = 0,
-                             int delta = 0);
+                              unsigned int hourInWeek,
+                              int offset = 0,
+                              int delta = 0);
 
     int& ShortTermStorageInjection(unsigned int index,
                                    unsigned int hourInWeek,
