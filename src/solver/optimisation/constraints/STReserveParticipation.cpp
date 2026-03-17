@@ -5,11 +5,11 @@ void STReserveParticipation::add(int pays, int reserve, int cluster, int pdt)
     if (!data.Simulation)
     {
         // 15 (o & p)
-        // Participation to the up reserve is the sum of the release and store participation
+        // Participation to the up / down reserve is the sum of the release and store participation
         // constraint : P_res = H_res + Π_res
         // H : Release participation to reserve
         // Π : Store participation to reserve
-        // P : Up Reserve Participation
+        // P : Up / down Reserve Participation
 
         CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
                                                       .areaCapacityReservations[reserve];
