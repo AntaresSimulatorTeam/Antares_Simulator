@@ -28,32 +28,8 @@ jobs:
       PYTHON_VERSION: "3.12"
 
     steps:
-    # Disk space on / is insufficient; remove unused SDKs and caches manually
-    # (Don't create loopback PVs / LVM volumes on the runner root.)
-    - name: Free root space (manual cleanup)
-      run: |
-        set -euo pipefail
-        echo "Disk usage before cleanup:"
-        df -h || true
-        echo "Top-level usage on / (before):"
-        sudo du -xh --max-depth=1 / 2>/dev/null | sort -hr | head -n 20 || true
-        echo "Removing known unused SDKs and caches (android, dotnet, haskell, CodeQL)..."
-        sudo rm -rf /usr/share/dotnet || true
-        sudo rm -rf /usr/local/lib/android || true
-        sudo rm -rf /opt/ghc || true
-        sudo rm -rf /opt/hostedtoolcache/CodeQL || true
-        # Clean apt and pip caches
-        sudo apt-get clean -y || true
-        sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* || true
-        python -m pip cache purge || true
-        rm -rf /home/runner/.cache/pip || true
-        # Clear /tmp
-        sudo rm -rf /tmp/* /var/tmp/* || true
-        echo "Disk usage after cleanup:"
-        df -h || true
-        echo "Top-level usage on / (after):"
-        sudo du -xh --max-depth=1 / 2>/dev/null | sort -hr | head -n 20 || true
-      shell: bash
+    # Disk-space cleanup will run later (after apt/pip installs) to avoid
+    # removing caches needed by installers during the job.
 
     - uses: actions/checkout@v6
       with:
@@ -137,6 +113,31 @@ jobs:
 
     - name: Disk usage after installing python dependencies
       run: df -h
+
+    - name: Free root space (manual cleanup)
+      run: |
+        set -euo pipefail
+        echo "Disk usage before cleanup:"
+        df -h || true
+        echo "Top-level usage on / (before):"
+        sudo du -xh --max-depth=1 / 2>/dev/null | sort -hr | head -n 20 || true
+        echo "Removing known unused SDKs and caches (android, dotnet, haskell, CodeQL)..."
+        sudo rm -rf /usr/share/dotnet || true
+        sudo rm -rf /usr/local/lib/android || true
+        sudo rm -rf /opt/ghc || true
+        sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+        echo "Cleaning apt and pip caches..."
+        sudo apt-get clean -y || true
+        sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* || true
+        python -m pip cache purge || true
+        rm -rf /home/runner/.cache/pip || true
+        echo "Clearing /tmp..."
+        sudo rm -rf /tmp/* /var/tmp/* || true
+        echo "Disk usage after cleanup:"
+        df -h || true
+        echo "Top-level usage on / (after):"
+        sudo du -xh --max-depth=1 / 2>/dev/null | sort -hr | head -n 20 || true
+      shell: bash
 
     - name: Read simtest version
       run: |
