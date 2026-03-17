@@ -43,7 +43,7 @@ inline std::vector<double> operator-(const std::vector<double>& v, const double 
 
 inline std::vector<double> operator+(std::vector<double> a, const std::vector<double>& b)
 {
-    // Caution : 
+    // Caution :
     // std::transform processes the min(a.size(), b.size()) first elements of a and b.
     // If a and b have diffrent size, no exception or undefined behavior.
     rng::transform(a, b, a.begin(), std::plus<double>());

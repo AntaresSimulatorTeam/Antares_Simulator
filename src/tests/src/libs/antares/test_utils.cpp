@@ -15,9 +15,6 @@ namespace fs = std::filesystem;
 namespace tt = boost::test_tools;
 using namespace Antares;
 
-namespace
-{
-
 BOOST_AUTO_TEST_SUITE(utils)
 
 BOOST_AUTO_TEST_CASE(test_string_conversion)

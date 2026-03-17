@@ -38,6 +38,7 @@ add_boost_test(tests-on-hydro-remix
         test-hydro-remix.cpp
         LIBS
         shave-peaks-by-remix-storage-gen
+        Antares::vector-utils
         test_utils_unit)
 
 set_target_properties(tests-on-hydro-remix PROPERTIES FOLDER Unit-tests/storage-remix)
