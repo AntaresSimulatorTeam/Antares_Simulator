@@ -7,6 +7,7 @@
 #include <cctype>
 
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
@@ -119,14 +120,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
           }
 
           RulesScenarioName name = section.name;
-          auto start = std::find_if(name.begin(),
-                                    name.end(),
-                                    [](unsigned char c) { return !std::isspace(c); });
-          auto end = std::find_if(name.rbegin(),
-                                  name.rend(),
-                                  [](unsigned char c) { return !std::isspace(c); })
-                       .base();
-          name = (start < end) ? std::string(start, end) : "";
+          boost::trim(name);
           if (name.empty())
           {
               return;

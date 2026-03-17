@@ -6,6 +6,8 @@
 #include <cctype>
 #include <fstream>
 
+#include <boost/algorithm/string/trim.hpp>
+
 #include <yuni/io/file.h>
 
 #include <antares/inifile/inifile.h>
@@ -310,14 +312,7 @@ bool AreaList::loadListFromFile(const fs::path& filename)
         ++line;
         // The area name
         name = buffer;
-        auto start = std::find_if(name.begin(),
-                                  name.end(),
-                                  [](unsigned char c) { return !std::isspace(c); });
-        auto end = std::find_if(name.rbegin(),
-                                name.rend(),
-                                [](unsigned char c) { return !std::isspace(c); })
-                     .base();
-        name = (start < end) ? std::string(start, end) : "";
+        boost::trim(name);
         if (name.empty())
         {
             continue;
