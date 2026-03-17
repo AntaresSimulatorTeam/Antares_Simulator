@@ -23,8 +23,8 @@ target_include_directories(parquet_writer
 
 target_link_libraries(parquet_writer
   PRIVATE
-  Arrow::arrow_static
-  Parquet::parquet_static)
+  "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
+  "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 
 add_library(result_writer
         # Helper class
