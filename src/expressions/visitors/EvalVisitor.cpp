@@ -30,10 +30,10 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
+    optimContainer_(optimContainer),
     component_(component),
     data_(data),
     scenario_(scenario),
-    optimContainer_(optimContainer),
     evalContext_(&component, data, scenario),
     fillContext_(fillContext)
 {

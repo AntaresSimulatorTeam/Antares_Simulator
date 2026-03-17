@@ -335,6 +335,11 @@ public:
                               const OptimEntityContainer& variableContainer,
                               const LinearProblemApi::FillContext& fillContext) const override
     {
+        (void)linearProblem;
+        (void)solution;
+        (void)modelerData;
+        (void)variableContainer;
+        (void)fillContext;
     }
 };
 
