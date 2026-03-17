@@ -22,11 +22,12 @@
 
 #include <stdexcept>
 #include "include/antares/writer/i_table_writer.h"
+#include "parquet_writer_export.h"
 
 namespace Antares::Writer
 {
 
-class ParquetTableWriter final: public ITableWriter
+class PARQUET_WRITER_EXPORT ParquetTableWriter final: public ITableWriter
 {
 public:
     void writeTable(const std::filesystem::path& filePath,

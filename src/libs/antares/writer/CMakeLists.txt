@@ -1,5 +1,31 @@
 project(result-writer)
 
+include(GenerateExportHeader)
+
+find_package(Parquet REQUIRED)
+find_package(Arrow REQUIRED)
+
+add_library(parquet_writer SHARED
+        parquet_table_writer.cpp
+        parquet_table_writer.h)
+
+generate_export_header(parquet_writer)
+
+set_target_properties(parquet_writer PROPERTIES
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN YES
+)
+
+target_include_directories(parquet_writer
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated parquet_writer_export.h
+)
+
+target_link_libraries(parquet_writer
+  PRIVATE
+  Arrow::arrow_static
+  Parquet::parquet_static)
+
 add_library(result_writer
         # Helper class
 
@@ -19,8 +45,6 @@ add_library(result_writer
         include/antares/writer/table_format.h
         include/antares/writer/table_writer_factory.h
         include/antares/writer/writer_factory.h
-        parquet_table_writer.cpp
-        parquet_table_writer.h
         private/ensure_queue_started.h
         private/immediate_file_writer.h
         private/zip_writer.h
@@ -38,9 +62,6 @@ target_include_directories(result_writer
         ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
 
-find_package(Parquet REQUIRED)
-find_package(Arrow REQUIRED)
-
 target_link_libraries(result_writer
         PUBLIC
         Antares::benchmarking
@@ -51,9 +72,9 @@ target_link_libraries(result_writer
         inifile
         io
         Antares::concurrency
-        Arrow::arrow_static
-        Parquet::parquet_static
+	parquet_writer
 )
+
 
 install(DIRECTORY include/antares
         DESTINATION "include"

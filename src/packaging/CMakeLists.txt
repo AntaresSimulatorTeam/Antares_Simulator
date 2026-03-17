@@ -29,6 +29,7 @@ set(TARGET_LIBS #No alias
         path
         mersenne
         result_writer
+	parquet_writer
         series
         antares-core
         antares-solver-hydro
