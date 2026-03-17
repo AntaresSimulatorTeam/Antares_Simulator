@@ -6,6 +6,7 @@
 #include <antares/expressions/iterators/pre-order.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/expressions/expression.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodes.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
@@ -59,92 +60,6 @@ PortInDefinition::PortInDefinition(const std::string& portId, const std::string&
                        + " , found another port in the definition: " + portInDefId)
 {
 }
-
-static void ForbidInFunctionNodes(ForbiddenNodes& f)
-{
-    // max(...) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::max, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::max, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::max, PortFieldSumNode>();
-
-    // min(...) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::min, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::min, PortFieldSumNode>();
-
-    // floor(node) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::floor, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::floor, PortFieldSumNode>();
-
-    // ceil(node) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::ceil, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::ceil, PortFieldSumNode>();
-}
-
-static void ForbidConstraintSignNodes(ForbiddenNodes& f)
-{
-    f.forbidGlobally<ComparisonNode, EqualNode, LessThanOrEqualNode, GreaterThanOrEqualNode>();
-}
-
-static ForbiddenNodes ForbidNodesInConstraint()
-{
-    ForbiddenNodes f;
-    ForbidInFunctionNodes(f);
-    f.forbidGlobally<PortFieldSumNode>();
-    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-    return f;
-}
-
-static ForbiddenNodes ForbidNodesInBindingConstraint()
-{
-    ForbiddenNodes f;
-    ForbidInFunctionNodes(f);
-    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-    return f;
-}
-
-static ForbiddenNodes ForbidNodesInVariableBounds()
-{
-    ForbiddenNodes f;
-    ForbidInFunctionNodes(f);
-    ForbidConstraintSignNodes(f);
-    f.forbidGlobally<PortFieldSumNode>();
-    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-    return f;
-}
-
-static ForbiddenNodes ForbidNodesInPortFieldDef()
-{
-    ForbiddenNodes f;
-    ForbidInFunctionNodes(f);
-    ForbidConstraintSignNodes(f);
-    f.forbidGlobally<PortFieldSumNode>();
-    return f;
-}
-
-static ForbiddenNodes ForbidNodesInObjective()
-{
-    ForbiddenNodes f;
-    ForbidInFunctionNodes(f);
-    ForbidConstraintSignNodes(f);
-    f.forbidGlobally<PortFieldSumNode>();
-    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-    return f;
-}
-
-static ForbiddenNodes ForbidNodesInExtraOutput()
-{
-    return {};
-}
-
-const ForbiddenNodes forbiddenInConstraint = ForbidNodesInConstraint();
-const ForbiddenNodes forbiddenInBindingConstraint = ForbidNodesInBindingConstraint();
-const ForbiddenNodes forbiddenInVariableBounds = ForbidNodesInVariableBounds();
-const ForbiddenNodes forbiddenInPortFieldDef = ForbidNodesInPortFieldDef();
-const ForbiddenNodes forbiddenInObjective = ForbidNodesInObjective();
-const ForbiddenNodes forbiddenInExtraOutput = ForbidNodesInExtraOutput();
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
