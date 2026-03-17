@@ -130,8 +130,7 @@ var namespaces_dup =
           [ "loadFile", "study_2parts_2short-term-storage_2series_8cpp.html#a4962670e8610fc649842fa6e24047379", null ],
           [ "loadFile", "study_2include_2antares_2study_2parts_2short-term-storage_2series_8h.html#a5b32cb3861953782a0f92557715f81dc", null ],
           [ "makeGroupsOfHours", "makeGroupsOfHoursFromString_8h.html#a7b2bda6a6499c17a8307745c24191347", null ],
-          [ "validate", "additionalConstraints_8h.html#a90b7bb23c7be952dd66742310df027f5", null ],
-          [ "writeVectorToFile", "study_2parts_2short-term-storage_2series_8cpp.html#aeb138d0608f278cb40944db7441933fe", null ]
+          [ "validate", "additionalConstraints_8h.html#a90b7bb23c7be952dd66742310df027f5", null ]
         ] ],
         [ "Solar", null, [
           [ "Container", "classAntares_1_1Data_1_1Solar_1_1Container.html", "classAntares_1_1Data_1_1Solar_1_1Container" ],
@@ -455,7 +454,6 @@ var namespaces_dup =
         [ "PreproHydroLoadFromFolder", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2prepro_8h.html#a2f4424ec130989dd2a168a01a9493950", null ],
         [ "RenewableGenerationModellingToCString", "fwd_8cpp.html#a7fc54f0a2f37f2355183a34fcdfdf9a7", null ],
         [ "requires", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a67251db487558e91d37243c1407f9c50", null ],
-        [ "saveAreaLinksTimeSeriesToFolder", "links_8cpp.html#abb9322722c39e99acc2744bb840ffd6a", null ],
         [ "SeedToCString", "fwd_8cpp.html#a7cbe18cedf5e03a92d44427aaea2e615", null ],
         [ "SeedToID", "fwd_8cpp.html#ac1d79c69943228d5831120d98bafef6c", null ],
         [ "SheddingPolicyToCString", "fwd_8cpp.html#a532378c822f20c83d460cde93f4cb0bf", null ],

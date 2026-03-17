@@ -38,7 +38,6 @@ var classAntares_1_1Data_1_1Sets =
     [ "rebuildAllFromRules", "classAntares_1_1Data_1_1Sets.html#a443ccf7f2c98943a09f30302328c70b9", null ],
     [ "resultSize", "classAntares_1_1Data_1_1Sets.html#a0bd190f4d414171806a8df933a1d2adf", null ],
     [ "resultSize", "classAntares_1_1Data_1_1Sets.html#a3b36d26a585cedb0b55b2b2c9edc745c", null ],
-    [ "saveToFile", "classAntares_1_1Data_1_1Sets.html#a979a8bde7a08c7fe9003de21a51f43c4", null ],
     [ "size", "classAntares_1_1Data_1_1Sets.html#a44268296e2434e430b37b954af841b0f", null ],
     [ "toString", "classAntares_1_1Data_1_1Sets.html#af34f7de80b65b61ebc3d8524d1e25397", null ]
 ];

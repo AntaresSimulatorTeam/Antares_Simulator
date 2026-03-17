@@ -33,7 +33,6 @@ var classAntares_1_1Data_1_1Study =
     [ "prepareOutput", "classAntares_1_1Data_1_1Study.html#a2c8bcf73d2e4e9791c1e555f8b9b3ef9", null ],
     [ "reduceMemoryUsage", "classAntares_1_1Data_1_1Study.html#ae01e3f757080cc0d6fcaedd7b0dc059f", null ],
     [ "relocate", "classAntares_1_1Data_1_1Study.html#a49eefb80ce95af89f83fb66d1c9d979d", null ],
-    [ "resetFolderIcon", "classAntares_1_1Data_1_1Study.html#a028ccc0514af980405d4ac1ca94d71ed", null ],
     [ "resizeAllTimeseriesNumbers", "classAntares_1_1Data_1_1Study.html#af9ad1a7b6c23244c61ed1d54db2b78d4", null ],
     [ "saveAboutTheStudy", "classAntares_1_1Data_1_1Study.html#a3f09b156f174f3569d4275e8f760f2ea", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1Study.html#a00b28d976a7a0c044601385aa12269d3", null ],

@@ -3,7 +3,6 @@ var classAntares_1_1Data_1_1ShortTermStorage_1_1Series =
     [ "Series", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a63a30f3b718652d55b02f1e6cef097dc", null ],
     [ "fillDefaultSeriesIfEmpty", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a19dcd50b1ec52a15d6612d19fe9f9420", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#ac3b2b3f6d56e34a258a7c11f29a7c3cb", null ],
-    [ "saveToFolder", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#ab1aca3a787d4cfd11df94ed0dfa11b9b", null ],
     [ "validate", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#ab505f9c99e6019549fdea55d99b61034", null ],
     [ "costInjection", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a9d31754e63c0b358e81185c345a0f57c", null ],
     [ "costLevel", "classAntares_1_1Data_1_1ShortTermStorage_1_1Series.html#a852bf40d22eb418265166985163c4764", null ],

@@ -6,7 +6,6 @@ var structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams =
     [ "checkAdqPatchParams", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a0c951b8ab3c2ef254cf5e4e260137590", null ],
     [ "checkAdqPatchSimulationModeEconomyOnly", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#aafbda319fe706010aa04f3f5be772e3e", null ],
     [ "reset", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#ad95b1c8da4d3568b9ae35959953bb640", null ],
-    [ "saveToINI", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a68396c97bd74e23aff6729789143d52f", null ],
     [ "updateFromKeyValue", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a01e73f48ced94858d77759e29cb7f052", null ],
     [ "curtailmentSharing", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a2ba6547c870c1e0d683c9589942404b8", null ],
     [ "enabled", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html#a225dad6b92cb785a90187c9185bb3e44", null ],

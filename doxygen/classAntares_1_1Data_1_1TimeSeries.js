@@ -14,7 +14,6 @@ var classAntares_1_1Data_1_1TimeSeries =
     [ "reset", "classAntares_1_1Data_1_1TimeSeries.html#a8c9852ce8855a49cf4b8975f4e3d3001", null ],
     [ "resize", "classAntares_1_1Data_1_1TimeSeries.html#a078539cd01806a66cf9fdc73ab5ebc12", null ],
     [ "roundAllEntries", "classAntares_1_1Data_1_1TimeSeries.html#a16ac2210ded5a0681cda2fb0bcf87fbc", null ],
-    [ "saveToFile", "classAntares_1_1Data_1_1TimeSeries.html#a19105277afe9e7571fe33546248ebe28", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1TimeSeries.html#ae3f9002c882d8d4c9e9741e0f7afe609", null ],
     [ "unloadFromMemory", "classAntares_1_1Data_1_1TimeSeries.html#ace9a21508d42697346216042b034e280", null ],
     [ "timeSeries", "classAntares_1_1Data_1_1TimeSeries.html#a9a058e7e7986055de297402ba56380ed", null ],
