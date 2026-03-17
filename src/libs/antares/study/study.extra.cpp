@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <yuni/yuni.h>
 
 #include "antares/study/scenario-builder/sets.h"
@@ -41,10 +43,7 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
 {
     out = basename;
     AreaName id = out;
-    std::transform(id.begin(),
-                   id.end(),
-                   id.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
+    boost::to_lower(id);
 
     if (areas.find(id))
     {
@@ -59,10 +58,7 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
             out = basename;
             out += "-" + std::to_string(i);
             id = out;
-            std::transform(id.begin(),
-                           id.end(),
-                           id.begin(),
-                           [](unsigned char c) { return std::tolower(c); });
+            boost::to_lower(id);
         } while (areas.find(id));
     }
     return true;

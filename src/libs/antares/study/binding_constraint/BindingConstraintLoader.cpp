@@ -12,6 +12,8 @@
 #include <memory>
 #include <vector>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include "yuni/core/string/string.h"
 
 #include <antares/utils/utils.h>
@@ -43,10 +45,7 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
         if (p->key == "id")
         {
             bc->pID = p->value;
-            std::transform(bc->pID.begin(),
-                           bc->pID.end(),
-                           bc->pID.begin(),
-                           [](unsigned char c) { return std::tolower(c); });
+            boost::to_lower(bc->pID);
             continue;
         }
         if (p->key == "enabled")

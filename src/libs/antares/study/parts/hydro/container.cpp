@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/inifile/inifile.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/study.h"
@@ -101,10 +103,7 @@ static bool loadProperties(Study& study,
     for (; property; property = property->next)
     {
         AreaName id = property->key;
-        std::transform(id.begin(),
-                       id.end(),
-                       id.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
+        boost::to_lower(id);
 
         Area* area = study.areas.find(id);
         if (area)
