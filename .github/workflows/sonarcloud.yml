@@ -93,6 +93,9 @@ jobs:
         sudo apt-get install uuid-dev
         sudo apt-get install libboost-test-dev
 
+    - name: Disk usage after installing libraries
+      run: df -h
+
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
@@ -100,6 +103,9 @@ jobs:
         buildtype: Debug
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
+
+    - name: Disk usage after downloading precompiled libraries
+      run: df -h
 
     - name: Set up Python
       uses: actions/setup-python@v6
@@ -113,6 +119,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip3 install -r src/tests/examples/requirements.txt
+
+    - name: Disk usage after installing python dependencies
+      run: df -h
 
     - name: Read simtest version
       run: |
@@ -143,9 +152,15 @@ jobs:
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
+    - name: Disk usage after configure
+      run: df -h
+
     - name: Build
       run: |
         build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
+
+    - name: Disk usage after build
+      run: df -h
 
     - name: Test and generate coverage
       if: ${{ !cancelled() }}
@@ -153,11 +168,19 @@ jobs:
         cd $GITHUB_WORKSPACE/_build
         ctest -C Release --output-on-failure -L "unit|end-to-end"
 
+    - name: Disk usage after unit/end-to-end tests
+      if: ${{ !cancelled() }}
+      run: df -h
+
     - name: Run unfeasibility-related tests
       if: ${{ !cancelled() }}
       run: |
         cd _build
         ctest -C Release --output-on-failure -R "^unfeasible$"
+
+    - name: Disk usage after unfeasibility tests
+      if: ${{ !cancelled() }}
+      run: df -h
 
     - name: Run short-tests
       if: ${{ !cancelled() }}
@@ -166,6 +189,10 @@ jobs:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: short-tests
         os: ${{ matrix.os }}
+
+    - name: Disk usage after short-tests
+      if: ${{ !cancelled() }}
+      run: df -h
 
     - name: Run tests on adequacy patch (CSR)
       if: ${{ !cancelled() }}
@@ -228,10 +255,18 @@ jobs:
       with:
         feature: "features/solver-features/hybrid_studies.feature"
 
+    - name: Disk usage after all test suites
+      if: ${{ !cancelled() }}
+      run: df -h
+
     - name: Collect coverage into one XML report
       if: ${{ !cancelled() }}
       run: |
         gcovr --sonarqube --output coverage.xml
+
+    - name: Disk usage after collecting coverage
+      if: ${{ !cancelled() }}
+      run: df -h
 
     - name: Remove Antares_Simulator_Tests_NR
       run: |
@@ -249,6 +284,10 @@ jobs:
         scannerVersion: 7.3.0.5189 #8.0.1.6346 hangs
         args: >
           --define sonar.host.url=${{ env.SONAR_SERVER_URL }} --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
+
+    - name: Disk usage before SonarQube scan
+      if: ${{ !cancelled() }}
+      run: df -h
 
     - name: Barrier
       if: ${{ !success() }}
