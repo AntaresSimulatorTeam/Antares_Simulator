@@ -359,33 +359,30 @@ BOOST_AUTO_TEST_CASE(ShiftResult_EmptyVector)
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), emptyVec.begin(), emptyVec.end());
 }
 
-BOOST_AUTO_TEST_CASE(TimeSum_DoubleValue)
+BOOST_AUTO_TEST_CASE(TimeSum_on_double___exception_raised)
 {
     const EvaluationResult eval(4.0);
-    const EvaluationResult sum = eval.timeSum(-2, 2);
-    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
-
-    BOOST_CHECK_THROW((void)eval.timeSum(-1, 0).valuesAsVector(), EvalResultTypeError);
+    BOOST_CHECK_THROW(eval.timeSumOnVector(-1, 0), EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
 {
-    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    const auto sum = eval.timeSum(0, 2).valuesAsVector();
-    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvalResultTypeError);
-    const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
+    const EvaluationResult evalResult(std::vector<double>{1.0, 2.0, 3.0});
+    BOOST_CHECK_THROW(evalResult.timeSumOnVector(-1, 0).valueAsDouble(), EvalResultTypeError);
 
+    const auto sum = evalResult.timeSumOnVector(0, 2).valuesAsVector();
+
+    const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
     BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
 }
 
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_NegativeShift)
 {
-    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    const auto sum = eval.timeSum(-1, 0).valuesAsVector();
-    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvalResultTypeError);
+    const EvaluationResult evalResult(std::vector<double>{1.0, 2.0, 3.0});
+    BOOST_CHECK_THROW(evalResult.timeSumOnVector(-1, 0).valueAsDouble(), EvalResultTypeError);
 
+    const auto sum = evalResult.timeSumOnVector(-1, 0).valuesAsVector();
     const std::vector<double> expected{3.0 + 1.0, 1.0 + 2.0, 2.0 + 3.0};
-
     BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
 }
 
@@ -1513,76 +1510,67 @@ BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_parameter, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(p)");
 }
 
-BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
+BOOST_AUTO_TEST_CASE(shift_empty_vector)
 {
     std::vector<int> emptyVector;
     std::vector<int> result = shiftVector(emptyVector, 5);
     BOOST_CHECK(result.empty());
 }
 
-BOOST_AUTO_TEST_CASE(testZeroShift)
+BOOST_AUTO_TEST_CASE(shift_vector_with_zero)
 {
-    std::vector<int> zeroShiftVector = {1, 2, 3, 4, 5};
-    std::vector<int> result = shiftVector(zeroShiftVector, 0);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
-                                  result.end(),
-                                  zeroShiftVector.begin(),
-                                  zeroShiftVector.end());
+    std::vector<int> v = {1, 2, 3, 4, 5};
+    std::vector<int> result = shiftVector(v, 0);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
 }
 
-BOOST_AUTO_TEST_CASE(testPositiveShift)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_positive_shift)
 {
-    std::vector<int> positiveShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expected = {3, 4, 5, 1, 2};
-    std::vector<int> result = shiftVector(positiveShiftVector, 2);
+    std::vector<int> result = shiftVector(v, 2);
     BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(testNegativeShift)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_negative_shift)
 {
-    std::vector<int> negativeShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expected = {4, 5, 1, 2, 3};
-    std::vector<int> result = shiftVector(negativeShiftVector, -2);
+    std::vector<int> result = shiftVector(v, -2);
     BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(testShiftEqualToSize)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_shift_equal_to_vector_size)
 {
-    std::vector<int> equalShiftVector = {1, 2, 3, 4, 5};
-    std::vector<int> result = shiftVector(equalShiftVector, 5);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
-                                  result.end(),
-                                  equalShiftVector.begin(),
-                                  equalShiftVector.end());
+    std::vector<int> v = {1, 2, 3, 4, 5};
+    std::vector<int> result = shiftVector(v, 5);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
 }
 
-BOOST_AUTO_TEST_CASE(testShiftGreaterThanSize)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_shift_greater_than_vector_size)
 {
-    std::vector<int> greaterShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expected = {3, 4, 5, 1, 2};
-    std::vector<int> result = shiftVector(greaterShiftVector, 7);
+    std::vector<int> result = shiftVector(v, 7);
     BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(testSingleElementVector)
+BOOST_AUTO_TEST_CASE(shift_a_one_element_vector)
 {
-    std::vector<int> singleElementVector = {42};
-    std::vector<int> result = shiftVector(singleElementVector, 3);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
-                                  result.end(),
-                                  singleElementVector.begin(),
-                                  singleElementVector.end());
+    std::vector<int> v = {42};
+    std::vector<int> result = shiftVector(v, 3);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
 }
 
 BOOST_AUTO_TEST_CASE(testLargeShiftValues)
 {
-    std::vector<int> largeShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expectedPositive = {4, 5, 1, 2, 3};
     std::vector<int> expectedNegative = {3, 4, 5, 1, 2};
     // 1000003 % 5 = 3.
-    std::vector<int> resultPositive = shiftVector(largeShiftVector, 1000003);
+    std::vector<int> resultPositive = shiftVector(v, 1000003);
     // -1000003 % 5 = -3 and (-3 + 5) % 5 = 2
-    std::vector<int> resultNegative = shiftVector(largeShiftVector, -1000003);
+    std::vector<int> resultNegative = shiftVector(v, -1000003);
     BOOST_CHECK_EQUAL_COLLECTIONS(resultPositive.begin(),
                                   resultPositive.end(),
                                   expectedPositive.begin(),

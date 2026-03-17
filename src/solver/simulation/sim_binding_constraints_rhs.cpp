@@ -14,6 +14,8 @@ using namespace Antares::Data;
 using clusterWeightMap = Antares::Data::BindingConstraint::clusterWeightMap;
 using TimeSerie = std::span<const double>;
 
+namespace Simulation
+{
 TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
                                     const BindingConstraintGroupRepository& bcGroups,
                                     int year)
@@ -167,8 +169,6 @@ static void setRHSforWeeklyBC(PROBLEME_HEBDO& problem,
     problem.MatriceDesContraintesCouplantes[bcIndex].SecondMembreDeLaContrainteCouplante[0] = sum;
 }
 
-namespace Simulation
-{
 void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
                               const BindingConstraintsRepository& bindingConstraints,
                               const BindingConstraintGroupRepository& bcGroups,

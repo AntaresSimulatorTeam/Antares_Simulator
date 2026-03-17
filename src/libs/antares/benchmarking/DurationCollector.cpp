@@ -3,21 +3,39 @@
 
 #include "antares/benchmarking/DurationCollector.h"
 
+#include <iomanip>
+#include <iostream>
 #include <numeric>
 #include <string>
 
 namespace Benchmarking
 {
 
+static std::string formatDuration(int64_t duration_ms)
+{
+    int hours = duration_ms / (1000 * 60 * 60);
+    duration_ms %= (1000 * 60 * 60);
+    int minutes = duration_ms / (1000 * 60);
+    duration_ms %= (1000 * 60);
+    int seconds = duration_ms / 1000;
+    std::ostringstream oss;
+    oss << std::setfill('0') << std::setw(2) << hours << "h" << std::setfill('0') << std::setw(2)
+        << minutes << "m" << std::setfill('0') << std::setw(2) << seconds << "s";
+    return oss.str();
+}
+
 void DurationCollector::toFileContent(FileContent& file_content)
 {
     for (const auto& [name, durations]: duration_items_)
     {
-        const int64_t duration_sum = accumulate(durations.begin(),
-                                                durations.end(),
-                                                static_cast<int64_t>(0));
+        int64_t duration_sum = accumulate(durations.begin(),
+                                          durations.end(),
+                                          static_cast<int64_t>(0));
 
-        file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
+        file_content.addDurationItem(name,
+                                     (unsigned int)duration_sum,
+                                     formatDuration(duration_sum),
+                                     (int)durations.size());
     }
 }
 
