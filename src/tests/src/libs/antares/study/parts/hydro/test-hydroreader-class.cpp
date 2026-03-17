@@ -70,8 +70,8 @@ struct Fixture
         study->areas.rebuildIndexes();
         dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
         reader = std::make_shared<HydroMaxTimeSeriesReader>(area_1->hydro,
-                                                            area_1->id.to<std::string>(),
-                                                            area_1->name.to<std::string>());
+                                                            area_1->id,
+                                                            area_1->name);
 
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();

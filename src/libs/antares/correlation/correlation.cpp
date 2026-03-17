@@ -108,8 +108,8 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
             continue;
         }
 
-        const AreaName::Size offset = p->key.find('%');
-        if (offset == AreaName::npos or !offset or offset == p->key.size() - 1)
+        const size_t offset = p->key.find('%');
+        if (offset == std::string::npos or !offset or offset == p->key.size() - 1)
         {
             logs.error() << ini.filename() << ": '" << p->key << "': invalid token";
             continue;

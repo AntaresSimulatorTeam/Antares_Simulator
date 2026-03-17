@@ -6,6 +6,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -61,7 +62,9 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode = false);
+    bool readLine(const std::vector<std::string>& splitKey,
+                  const String& value,
+                  bool updaterMode = false);
 
     //! Get the number of areas
     uint areaCount() const;
@@ -109,28 +112,30 @@ public:
 
 private:
     // Member methods
-    bool readThermalCluster(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readRenewableCluster(const AreaName::Vector& instrs,
+    bool readThermalCluster(const std::vector<std::string>& instrs,
+                            const String& value,
+                            bool updaterMode);
+    bool readRenewableCluster(const std::vector<std::string>& instrs,
                               const String& value,
                               bool updaterMode);
-    bool readLoad(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readWind(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readHydro(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readSolar(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readInitialHydroLevels(const AreaName::Vector& instrs,
+    bool readLoad(const std::vector<std::string>& instrs, const String& value, bool updaterMode);
+    bool readWind(const std::vector<std::string>& instrs, const String& value, bool updaterMode);
+    bool readHydro(const std::vector<std::string>& instrs, const String& value, bool updaterMode);
+    bool readSolar(const std::vector<std::string>& instrs, const String& value, bool updaterMode);
+    bool readInitialHydroLevels(const std::vector<std::string>& instrs,
                                 const String& value,
                                 bool updaterMode);
-    bool readFinalHydroLevels(const AreaName::Vector& instrs,
+    bool readFinalHydroLevels(const std::vector<std::string>& instrs,
                               const String& value,
                               bool updaterMode);
-    bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
+    bool readLink(const std::vector<std::string>& instrs, const String& value, bool updaterMode);
+    bool readBindingConstraints(const std::vector<std::string>& splitKey, const String& value);
 
-    bool readShortTermStorageInflows(const AreaName::Vector& splitKey,
+    bool readShortTermStorageInflows(const std::vector<std::string>& splitKey,
                                      const String& value,
                                      bool updaterMode);
 
-    bool readShortTermStorageAdditionalConstraints(const AreaName::Vector& splitKey,
+    bool readShortTermStorageAdditionalConstraints(const std::vector<std::string>& splitKey,
                                                    const String& value,
                                                    bool updaterMode);
 

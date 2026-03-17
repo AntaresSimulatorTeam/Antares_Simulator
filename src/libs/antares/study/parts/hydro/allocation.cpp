@@ -3,6 +3,9 @@
 
 #include "antares/study/parts/hydro/allocation.h"
 
+#include <algorithm>
+#include <cctype>
+
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
@@ -143,7 +146,10 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path
               if (!Utils::isZero(coeff))
               {
                   AreaName areaname = p->key;
-                  areaname.toLower();
+                  std::transform(areaname.begin(),
+                                 areaname.end(),
+                                 areaname.begin(),
+                                 [](unsigned char c) { return std::tolower(c); });
                   pValues[areaname] = coeff;
               }
           }

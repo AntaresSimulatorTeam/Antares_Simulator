@@ -3,6 +3,9 @@
 
 #include "antares/study/study.h"
 
+#include <algorithm>
+#include <cctype>
+
 #include <yuni/yuni.h>
 
 #include "antares/study/scenario-builder/sets.h"
@@ -38,7 +41,10 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
 {
     out = basename;
     AreaName id = out;
-    id.toLower();
+    std::transform(id.begin(),
+                   id.end(),
+                   id.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
 
     if (areas.find(id))
     {
@@ -51,9 +57,12 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
                 return false;
             }
             out = basename;
-            out << "-" << i;
+            out += "-" + std::to_string(i);
             id = out;
-            id.toLower();
+            std::transform(id.begin(),
+                           id.end(),
+                           id.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
         } while (areas.find(id));
     }
     return true;

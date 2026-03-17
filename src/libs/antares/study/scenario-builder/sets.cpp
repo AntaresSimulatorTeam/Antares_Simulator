@@ -3,6 +3,9 @@
 
 #include "antares/study/scenario-builder/sets.h"
 
+#include <algorithm>
+#include <cctype>
+
 #include <antares/logs/logs.h>
 #include "antares/study/study.h"
 
@@ -62,7 +65,10 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
 
     // Checking in a first time if the name already exists
     RulesScenarioName id = name;
-    id.toLower();
+    std::transform(id.begin(),
+                   id.end(),
+                   id.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
     if (exists(id))
     {
         return nullptr;
@@ -115,8 +121,15 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
           }
 
           RulesScenarioName name = section.name;
-          name.trim(" \t");
-          if (!name)
+          auto start = std::find_if(name.begin(),
+                                    name.end(),
+                                    [](unsigned char c) { return !std::isspace(c); });
+          auto end = std::find_if(name.rbegin(),
+                                  name.rend(),
+                                  [](unsigned char c) { return !std::isspace(c); })
+                       .base();
+          name = (start < end) ? std::string(start, end) : "";
+          if (name.empty())
           {
               return;
           }
@@ -124,7 +137,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
           // Create a new ruleset
           Rules::Ptr rulesetptr = createNew(name);
           Rules& ruleset = *rulesetptr;
-          AreaName::Vector splitKey;
+          std::vector<std::string> splitKey;
 
           for (auto* p = section.firstProperty; p != nullptr; p = p->next)
           {

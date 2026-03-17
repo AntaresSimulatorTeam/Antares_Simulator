@@ -6,6 +6,7 @@
 
 #include <bit>
 #include <map>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -40,13 +41,13 @@ class StudyRuntimeInfos;
 class Correlation;
 
 //! Name of a single area
-using AreaName = Yuni::CString<ant_k_area_name_max_length, true>;
+using AreaName = std::string;
 //! Name of a single link
-using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, true>;
+using AreaLinkName = std::string;
 
-using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, true>;
+using ConstraintName = std::string;
 
-using RulesScenarioName = Yuni::CString<64, true>;
+using RulesScenarioName = std::string;
 
 //! Name mapping
 using AreaNameMapping = std::map<AreaName, AreaName>;

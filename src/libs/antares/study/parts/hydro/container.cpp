@@ -3,6 +3,9 @@
 
 #include "antares/study/parts/hydro/container.h"
 
+#include <algorithm>
+#include <cctype>
+
 #include <antares/inifile/inifile.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/study.h"
@@ -98,7 +101,10 @@ static bool loadProperties(Study& study,
     for (; property; property = property->next)
     {
         AreaName id = property->key;
-        id.toLower();
+        std::transform(id.begin(),
+                       id.end(),
+                       id.begin(),
+                       [](unsigned char c) { return std::tolower(c); });
 
         Area* area = study.areas.find(id);
         if (area)

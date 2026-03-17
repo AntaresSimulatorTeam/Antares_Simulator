@@ -7,6 +7,8 @@
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
 
+#include <algorithm>
+#include <cctype>
 #include <memory>
 #include <vector>
 
@@ -41,7 +43,10 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
         if (p->key == "id")
         {
             bc->pID = p->value;
-            bc->pID.toLower(); // force the lowercase
+            std::transform(bc->pID.begin(),
+                           bc->pID.end(),
+                           bc->pID.begin(),
+                           [](unsigned char c) { return std::tolower(c); });
             continue;
         }
         if (p->key == "enabled")
@@ -149,13 +154,13 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     }
 
     // Checking for validity
-    if (!bc->pName)
+    if (bc->pName.empty())
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name
                      << "]: Invalid binding constraint name";
         return {};
     }
-    if (!bc->pID)
+    if (bc->pID.empty())
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name
                      << "]: Invalid binding constraint id";

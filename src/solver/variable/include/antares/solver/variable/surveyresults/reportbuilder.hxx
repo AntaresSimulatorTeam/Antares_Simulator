@@ -299,7 +299,7 @@ private:
                 // The new output
                 std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
                 path /= "areas";
-                path /= area.id.to<std::string>();
+                path /= area.id;
 
                 results.data.output = path.string();
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
@@ -334,8 +334,7 @@ private:
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
                 std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
-                path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal"
-                        / cluster->id();
+                path /= std::filesystem::path("areas") / area.id / "thermal" / cluster->id();
 
                 results.data.output = path.string();
 

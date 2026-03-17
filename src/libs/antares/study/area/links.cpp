@@ -172,7 +172,7 @@ bool AreaLink::loadTimeSeries(const StudyVersion& version, const fs::path& folde
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter& writer) const
 {
     std::string filename = with->id + ".txt";
-    fs::path path = fs::path("ts-numbers") / "ntc" / from->id.to<std::string>() / filename;
+    fs::path path = fs::path("ts-numbers") / "ntc" / from->id / filename;
 
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer);
