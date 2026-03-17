@@ -6,14 +6,15 @@
 #include <algorithm>
 #include <sstream>
 
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/logs/logs.h"
 #include "antares/study/system-model/connection.h"
 #include "antares/study/system-model/system.h"
-#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 
 using namespace Antares::ModelerStudy;
 using namespace Antares::ModelerStudy::SystemModel; // Mainly for type ConnexionEnd
+using namespace Antares::IO::Inputs::ForbidNodes;
 
 namespace Antares::IO::Inputs::SystemConverter
 {
@@ -251,12 +252,22 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
                                            connection.thermalComponent.clusterId);
 }
 
+//static ForbiddenNodes ForbidNonLinearNodes()
+//{
+//    ForbiddenNodes f;
+//    ForbidInFunctionNodes(f);
+//    ForbidConstraintSignNodes(f);
+//    f.forbidGlobally<PortFieldSumNode>();
+//    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
+//    return f;
+//}
+
 void checkForNonLinearityInVariableBounds(const Component& component)
 {
     //for (const auto& variable: component.getModel()->Variables())
     //{
-    //    ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.Id())
-    //      .dispatch(variable.Bounds().node);
+    //     ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.Id())
+    //       .dispatch(variable.Bounds().node);
     //}
 }
 
@@ -265,8 +276,8 @@ void checkForNonLinearityInConnections(const std::vector<Component>& components)
     for (const auto& component: components)
     {
         checkForNonLinearityInVariableBounds(component);
-        //checkForNonLinearityInConstraints(component);
-        //checkForNonLinearityInObjectives(component);
+        // checkForNonLinearityInConstraints(component);
+        // checkForNonLinearityInObjectives(component);
     }
 }
 
