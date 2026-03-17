@@ -28,9 +28,6 @@ jobs:
       PYTHON_VERSION: "3.12"
 
     steps:
-    # Disk-space cleanup will run later (after apt/pip installs) to avoid
-    # removing caches needed by installers during the job.
-
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -84,9 +81,6 @@ jobs:
         sudo apt-get install uuid-dev
         sudo apt-get install libboost-test-dev
 
-    - name: Disk usage after installing libraries
-      run: df -h
-
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
@@ -94,9 +88,6 @@ jobs:
         buildtype: Debug
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
-
-    - name: Disk usage after downloading precompiled libraries
-      run: df -h
 
     - name: Set up Python
       uses: actions/setup-python@v6
@@ -111,33 +102,19 @@ jobs:
         python -m pip install --upgrade pip
         pip3 install -r src/tests/examples/requirements.txt
 
-    - name: Disk usage after installing python dependencies
-      run: df -h
-
-    - name: Free root space (manual cleanup)
+    # Disk space on / is insufficient; remove unused SDKs and caches after
+    # all apt/pip installs are done so we don't break their cache lookups.
+    - name: Free root space (remove unused SDKs and caches)
       run: |
-        set -euo pipefail
-        echo "Disk usage before cleanup:"
-        df -h || true
-        echo "Top-level usage on / (before):"
-        sudo du -xh --max-depth=1 / 2>/dev/null | sort -hr | head -n 20 || true
-        echo "Removing known unused SDKs and caches (android, dotnet, haskell, CodeQL)..."
         sudo rm -rf /usr/share/dotnet || true
         sudo rm -rf /usr/local/lib/android || true
         sudo rm -rf /opt/ghc || true
         sudo rm -rf /opt/hostedtoolcache/CodeQL || true
-        echo "Cleaning apt and pip caches..."
         sudo apt-get clean -y || true
         sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* || true
         python -m pip cache purge || true
         rm -rf /home/runner/.cache/pip || true
-        echo "Clearing /tmp..."
         sudo rm -rf /tmp/* /var/tmp/* || true
-        echo "Disk usage after cleanup:"
-        df -h || true
-        echo "Top-level usage on / (after):"
-        sudo du -xh --max-depth=1 / 2>/dev/null | sort -hr | head -n 20 || true
-      shell: bash
 
     - name: Read simtest version
       run: |
@@ -168,15 +145,9 @@ jobs:
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DPython3_EXECUTABLE='${{ steps.setup-python.outputs.python-path }}'
 
-    - name: Disk usage after configure
-      run: df -h
-
     - name: Build
       run: |
         build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build _build --config Release -j$(nproc)
-
-    - name: Disk usage after build
-      run: df -h
 
     - name: Test and generate coverage
       if: ${{ !cancelled() }}
@@ -184,19 +155,11 @@ jobs:
         cd $GITHUB_WORKSPACE/_build
         ctest -C Release --output-on-failure -L "unit|end-to-end"
 
-    - name: Disk usage after unit/end-to-end tests
-      if: ${{ !cancelled() }}
-      run: df -h
-
     - name: Run unfeasibility-related tests
       if: ${{ !cancelled() }}
       run: |
         cd _build
         ctest -C Release --output-on-failure -R "^unfeasible$"
-
-    - name: Disk usage after unfeasibility tests
-      if: ${{ !cancelled() }}
-      run: df -h
 
     - name: Run short-tests
       if: ${{ !cancelled() }}
@@ -205,10 +168,6 @@ jobs:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: short-tests
         os: ${{ matrix.os }}
-
-    - name: Disk usage after short-tests
-      if: ${{ !cancelled() }}
-      run: df -h
 
     - name: Run tests on adequacy patch (CSR)
       if: ${{ !cancelled() }}
@@ -271,24 +230,14 @@ jobs:
       with:
         feature: "features/solver-features/hybrid_studies.feature"
 
-    - name: Disk usage after all test suites
-      if: ${{ !cancelled() }}
-      run: df -h
-
     - name: Collect coverage into one XML report
       if: ${{ !cancelled() }}
       run: |
         gcovr --sonarqube --output coverage.xml
 
-    - name: Disk usage after collecting coverage
-      if: ${{ !cancelled() }}
-      run: df -h
-
     - name: Remove Antares_Simulator_Tests_NR
       run: |
-        df -h
         rm -rf src/tests/resources/Antares_Simulator_Tests_NR
-        df -h
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
@@ -300,10 +249,6 @@ jobs:
         scannerVersion: 7.3.0.5189 #8.0.1.6346 hangs
         args: >
           --define sonar.host.url=${{ env.SONAR_SERVER_URL }} --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
-
-    - name: Disk usage before SonarQube scan
-      if: ${{ !cancelled() }}
-      run: df -h
 
     - name: Barrier
       if: ${{ !success() }}
