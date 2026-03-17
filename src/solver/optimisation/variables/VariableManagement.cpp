@@ -91,13 +91,13 @@ int& VariableManager::NumberBreakingDownDispatchableUnits(unsigned int index,
       .NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[index];
 }
 
-int& VariableManager::FluxDirect(unsigned int index, unsigned int hourInWeek, int offset, int delta)
+int& VariableManager::DirectFlow(unsigned int index, unsigned int hourInWeek, int offset, int delta)
 {
     auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirect[index];
 }
 
-int& VariableManager::FluxDirectPositif(unsigned int index,
+int& VariableManager::PositiveDirectFlow(unsigned int index,
                                         unsigned int hourInWeek,
                                         int offset,
                                         int delta)
@@ -106,7 +106,7 @@ int& VariableManager::FluxDirectPositif(unsigned int index,
     return CorrespondanceVarNativesVarOptim_[pdt].NumeroDeVariableDuFluxDirectPositif[index];
 }
 
-int& VariableManager::FluxIndirectPositif(unsigned int index,
+int& VariableManager::PositiveIndirectFlow(unsigned int index,
                                           unsigned int hourInWeek,
                                           int offset,
                                           int delta)

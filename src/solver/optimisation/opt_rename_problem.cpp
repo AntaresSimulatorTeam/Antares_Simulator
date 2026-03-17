@@ -151,19 +151,19 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned varIndex,
     SetThermalClusterElementName(varIndex, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::FluxDirect(unsigned varIndex)
+void VariableNamer::DirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "FluxDirect");
+    SetLinkElementName(varIndex, "DirectFlow");
 }
 
-void VariableNamer::FluxDirectPositif(unsigned varIndex)
+void VariableNamer::PositiveDirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "FluxDirectPositif");
+    SetLinkElementName(varIndex, "PositiveDirectFlow");
 }
 
-void VariableNamer::FluxIndirectPositif(unsigned varIndex)
+void VariableNamer::PositiveIndirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "FluxIndirectPositif");
+    SetLinkElementName(varIndex, "PositiveIndirectFlow");
 }
 
 void VariableNamer::SetShortTermStorageVariableName(unsigned varIndex,

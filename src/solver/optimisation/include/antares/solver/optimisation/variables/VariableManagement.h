@@ -42,14 +42,14 @@ public:
                                              int offset = 0,
                                              int delta = 0);
 
-    int& FluxDirect(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
+    int& DirectFlow(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
-    int& FluxDirectPositif(unsigned int index,
+    int& PositiveDirectFlow(unsigned int index,
                            unsigned int hourInWeek,
                            int offset = 0,
                            int delta = 0);
 
-    int& FluxIndirectPositif(unsigned int index,
+    int& PositiveIndirectFlow(unsigned int index,
                              unsigned int hourInWeek,
                              int offset = 0,
                              int delta = 0);
