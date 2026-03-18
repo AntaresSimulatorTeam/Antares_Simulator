@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <map>
+#include <string>
+#include <vector>
 #include <utility>
 
 #include "antares/study/system-model/component.h"
@@ -15,14 +18,12 @@ Antares::ModelerStudy::SystemModel::Model createModelWithoutParameters();
 
 Antares::ModelerStudy::SystemModel::Component createComponent(
   const Antares::ModelerStudy::SystemModel::Model& model,
-  const std::string& id = "component",
-  unsigned index = 0);
+  const std::string& id = "component");
 
 Antares::ModelerStudy::SystemModel::Component createComponent(
   const Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id,
-  std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameter_values,
-  unsigned index = 0);
+  std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameter_values);
 
 std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,

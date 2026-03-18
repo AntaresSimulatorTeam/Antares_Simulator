@@ -705,7 +705,6 @@ ModelerData OneParameterOneVariableOneConstraint()
     std::vector<Component> components;
     components.emplace_back(ComponentBuilder()
                               .withId("component")
-                              .withIndex(0)
                               .withModel(&libraries.at(0).Models().at("model"))
                               .withParameterValues(parameterValues)
                               .withScenarioGroupId("scenario_group")

@@ -133,6 +133,5 @@ struct LinearProblemBuildingFixture
     }
 
 private:
-    int componentIndex_ = 0;
 };
 } // namespace Test::Modeler
