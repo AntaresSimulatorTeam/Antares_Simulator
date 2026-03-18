@@ -90,7 +90,9 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
             }
         }
 
-        optimComponents_.push_back({.modelVariableGlobalIndices = modelVariableGlobalIndices});
+        optimComponents_.push_back({.modelVariableGlobalIndices = modelVariableGlobalIndices,
+                                    .modelConstraintsGlobalIndices = {},
+                                    .modelConstraintsVariability = {}});
     }
 }
 

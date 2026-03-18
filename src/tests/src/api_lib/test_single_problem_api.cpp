@@ -71,10 +71,9 @@ std::unique_ptr<Study> buildStudy(bool thermal, bool hydro)
     }
 
     // TODO StudyBuilder should have a `run` method that
-    // calls addScratchpadToEachArea and initializeRuntimeInfos
+    // initializeRuntimeInfos
     // auto study = builder.run();
     builder.study->initializeRuntimeInfos();
-    addScratchpadToEachArea(*builder.study);
 
     // TODO this is HORRIBLE
     // more specifically, this resize is usually done when loading from files. It's all good, except
@@ -580,7 +579,6 @@ BOOST_AUTO_TEST_CASE(weeks_independent_multiple_areas_all_compliant)
     loadTSconfig2.setDimensions(1).fillColumnWith(0, 120.);
 
     builder.study->initializeRuntimeInfos();
-    addScratchpadToEachArea(*builder.study);
     area1->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
     area2->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
 
@@ -635,7 +633,6 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_multiple_areas_one_non_compliant)
     loadTSconfig2.setDimensions(1).fillColumnWith(0, 120.);
 
     builder.study->initializeRuntimeInfos();
-    addScratchpadToEachArea(*builder.study);
     area1->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
     area2->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
 

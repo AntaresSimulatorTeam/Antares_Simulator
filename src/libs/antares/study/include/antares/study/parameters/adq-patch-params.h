@@ -110,7 +110,6 @@ struct AdqPatchParams
     void reset();
     void addExcludedVariables(std::vector<std::string>&) const;
     bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
-    void saveToINI(IniFile& ini) const;
     bool checkAdqPatchParams(const SimulationMode simulationMode,
                              const AreaList& areas,
                              const bool includeHurdleCostParameters) const;
