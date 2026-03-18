@@ -29,8 +29,8 @@ def get_transitive_deps(vcpkg_dir, direct_deps, triplet=None):
                     pkg = pkg.split("[")[0].strip()
                     if pkg != dep:
                         transitive_deps.add(pkg)
-        except subprocess.CalledProcessError:
-            pass
+        except subprocess.CalledProcessError as e:
+            print(f"Warning: Failed to get dependencies for {dep}: {e.returncode}", file=sys.stderr)
 
     return transitive_deps
 
@@ -77,37 +77,43 @@ def main():
         print(f"Error: vcpkg directory not found at {vcpkg_dir}")
         sys.exit(1)
 
+    if not (vcpkg_dir / ".git").exists():
+        print(f"Error: vcpkg directory is not a git repository (not initialized)")
+        sys.exit(1)
+
     print("Comparing vcpkg baseline versions:")
     print(f"  Old: {args.old_commit}")
     print(f"  New: {args.new_commit}")
-    print(f"  Project: {vcpkg_json_path}")
+    print(f"  Project: <project_root>/src/vcpkg.json")
     print()
 
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
 
-        subprocess.run(
-            [
-                "git",
-                "-C",
-                vcpkg_dir,
-                "show",
-                f"{args.old_commit}:versions/baseline.json",
-            ],
-            stdout=open(temp_path / "baseline_old.json", "wb"),
-            check=True,
-        )
-        subprocess.run(
-            [
-                "git",
-                "-C",
-                vcpkg_dir,
-                "show",
-                f"{args.new_commit}:versions/baseline.json",
-            ],
-            stdout=open(temp_path / "baseline_new.json", "wb"),
-            check=True,
-        )
+        with open(temp_path / "baseline_old.json", "wb") as f:
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    vcpkg_dir,
+                    "show",
+                    f"{args.old_commit}:versions/baseline.json",
+                ],
+                stdout=f,
+                check=True,
+            )
+        with open(temp_path / "baseline_new.json", "wb") as f:
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    vcpkg_dir,
+                    "show",
+                    f"{args.new_commit}:versions/baseline.json",
+                ],
+                stdout=f,
+                check=True,
+            )
 
         with open(temp_path / "baseline_old.json") as f:
             old_data = json.load(f)
