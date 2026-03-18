@@ -114,13 +114,6 @@ public:
     ** \return True if succeeded, false otherwise
     */
     bool saveToFolder(const AnyString& newfolder);
-
-    /*!
-    ** \brief Reset the folder icon (Windows only)
-    **
-    ** \return True if the operation succeeded
-    */
-    bool resetFolderIcon() const;
     //@}
 
     //! \name Areas

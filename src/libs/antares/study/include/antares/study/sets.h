@@ -165,7 +165,6 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename);
 
-    bool saveToFile(const Yuni::String& filename) const;
     /*!
     ** \brief format the string to match the options
     */
