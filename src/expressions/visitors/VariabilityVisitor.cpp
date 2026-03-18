@@ -64,7 +64,7 @@ VariabilityType VariabilityVisitor::visit(const Nodes::VariableNode* var)
 
 VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
 {
-    const auto systemParameter = context_.getParameter(param->value());
+    const auto systemParameter = evalContext_.getParameter(param->value());
     return systemParameter.type;
 }
 
@@ -98,7 +98,7 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        VariabilityVisitor visitor(optimEntityContainer_, *component);
+        VariabilityVisitor visitor(optimEntityContainer_, *component, data_, scenario_);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
@@ -136,9 +136,7 @@ VariabilityType VariabilityVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto constraintIndexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int constraintIndex = static_cast<unsigned int>(constraintIndexNode->value());
-    const auto& [_, variability] = optimEntityContainer_.getConstraintData(component_,
-                                                                           constraintIndex);
-    return variability;
+    return optimEntityContainer_.getConstraintVariability(component_, constraintIndex);
 }
 
 VariabilityType VariabilityVisitor::visitPow(const Nodes::FunctionNode* node)
@@ -173,10 +171,14 @@ VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNode* node)
 }
 
 VariabilityVisitor::VariabilityVisitor(const OptimEntityContainer& optimEntityContainer,
-                                       const ModelerStudy::SystemModel::Component& component):
+                                       const ModelerStudy::SystemModel::Component& component,
+                                       const LinearProblemApi::ILinearProblemData* data,
+                                       const LinearProblemApi::IScenario* scenario):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
-    context_(optimEntityContainer.getEvaluationContext(component))
+    data_(data),
+    scenario_(scenario),
+    evalContext_(&component, data, scenario)
 {
 }
 

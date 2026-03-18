@@ -129,13 +129,6 @@ public:
 
     void copyFrom(const PartHydro& rhs);
 
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
-
     /*!
     ** \brief Load daily max energy
     */

@@ -68,11 +68,11 @@ if(Python3_Interpreter_FOUND)
         )
 
       add_test(
-        NAME api-named-mps
-        COMMAND Python3::Interpreter -m pytest -m json --api-exe-path=$<TARGET_FILE:antares-api> --write-mps
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
+              NAME antares-problem-generator-named-mps
+              COMMAND Python3::Interpreter -m pytest -m json --antares-problem-generator-exe=$<TARGET_FILE:antares-problem-generator>
+              WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
       )
-      
+
       add_test(
         NAME milp-cbc
         COMMAND Python3::Interpreter -m pytest -m json --antares-simu-path=$<TARGET_FILE:antares-solver> --solver coin

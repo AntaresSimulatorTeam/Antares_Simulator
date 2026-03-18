@@ -1,7 +1,7 @@
 import pytest
 
 from actions_on_study.study_run import *
-from actions_on_study.api_run import *
+from actions_on_study.antares_problem_generator import *
 from actions_on_study.results_remover import *
 from check_on_results.check_general import check_list
 
@@ -45,17 +45,18 @@ def simulation(study_path, antares_simu_path, solver_name, named_mps_problems, p
     return study_run(study_path, antares_simu_path, solver_name, named_mps_problems, parallel)
 
 @pytest.fixture
-def api(study_path, api_exe_path, write_mps, output_dir="20210110-0900eco"):
-    return api_run(study_path, api_exe_path, write_mps, output_dir)
+def antares_problem_generator(study_path, antares_problem_generator_exe):
+    return AntaresProblemGeneratorRun(study_path, antares_problem_generator_exe)
 
 @pytest.fixture
-def is_api(api_exe_path):
-    return  api_exe_path != ""
+def is_problem_generation(antares_problem_generator_exe):
+    return antares_problem_generator_exe != ""
 
 @pytest.fixture(autouse=True)
-def check_runner(request, is_api, resultsRemover):
+def check_runner(request, is_problem_generation, resultsRemover):
     # Actions done before the current test
-    mode = request.getfixturevalue('api') if is_api else request.getfixturevalue('simulation')
+    mode = request.getfixturevalue('antares_problem_generator') if is_problem_generation else request.getfixturevalue(
+        'simulation')
     
     my_check_handler = check_handler(mode, resultsRemover)
 

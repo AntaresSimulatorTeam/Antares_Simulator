@@ -173,37 +173,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     series.timeSeries = cluster.series.timeSeries;
     cluster.series.timeSeries.unloadFromMemory();
     series.timeseriesNumbers.clear();
-
-    // The parent must be invalidated to make sure that the clusters are really
-    // re-written at the next 'Save' from the user interface.
-    if (parentArea)
-    {
-        parentArea->forceReload();
-    }
-}
-
-bool Data::ThermalCluster::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = modulation.forceReload(reload) && ret;
-    ret = series.forceReload(reload) && ret;
-    if (prepro)
-    {
-        ret = prepro->forceReload(reload) && ret;
-    }
-    ret = ecoInput.forceReload(reload) && ret;
-    return ret;
-}
-
-void Data::ThermalCluster::markAsModified() const
-{
-    modulation.markAsModified();
-    series.markAsModified();
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
-    ecoInput.markAsModified();
 }
 
 void Data::ThermalCluster::calculationOfSpinning()

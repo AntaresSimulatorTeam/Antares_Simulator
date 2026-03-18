@@ -49,7 +49,6 @@ public:
 
     using NamePair = std::pair<Yuni::String, Yuni::String>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -64,14 +63,6 @@ public:
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
-    //! \name Area
-    //@{
-    /*!
-    ** \brief Detach the link from the areas
-    */
-    void detach();
-    //@}
-
     //! \name Data management
     //@{
     /*!
@@ -84,32 +75,11 @@ public:
 
     void resetToDefaultValues();
 
-    /*!
-    ** \brief Invalidate all matrices
-    **
-    ** \param reload True to load all missing data
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the data associated to the link as modified
-    */
-    void markAsModified() const;
-    //@}
-
-    bool isVisibleOnLayer(const size_t& layerID) const;
-
     Yuni::String getName() const;
 
     bool isLinkPhysical() const;
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
-private:
-    bool linkLoadTimeSeries_for_version_below_810(const std::filesystem::path& folder);
-    bool linkLoadTimeSeries_for_version_820_and_later(const std::filesystem::path& folder);
-    NamePair getNamePair() const;
-
-public:
     //! \name Graph
     //@{
     //! The orginal Area
@@ -190,6 +160,13 @@ public:
     int linkWidth;
 
     friend struct CompareLinkName;
+
+    void checkLoadedData();
+
+private:
+    bool linkLoadTimeSeries_for_version_below_810(const std::filesystem::path& folder);
+    bool linkLoadTimeSeries_for_version_820_and_later(const std::filesystem::path& folder);
+    NamePair getNamePair() const;
 }; // class AreaLink
 
 struct CompareLinkName final

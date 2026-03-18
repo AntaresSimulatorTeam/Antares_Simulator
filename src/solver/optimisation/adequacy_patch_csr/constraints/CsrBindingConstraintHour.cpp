@@ -25,7 +25,7 @@ void CsrBindingConstraintHour::add(int CntCouplante)
         if (data.originAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && data.extremityAreaMode[Interco] == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            builder.NTCDirect(Interco, Poids);
+            builder.DirectFlux(Interco, Poids);
         }
     }
 

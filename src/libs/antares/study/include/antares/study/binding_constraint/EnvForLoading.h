@@ -23,6 +23,11 @@ public:
     {
     }
 
+    EnvForLoading(const EnvForLoading&) = default;
+    EnvForLoading& operator=(const EnvForLoading&) = default;
+    EnvForLoading(EnvForLoading&&) noexcept = default;
+    EnvForLoading& operator=(EnvForLoading&&) noexcept = default;
+
     //! INI file
     std::filesystem::path iniFilename;
     //! Current section

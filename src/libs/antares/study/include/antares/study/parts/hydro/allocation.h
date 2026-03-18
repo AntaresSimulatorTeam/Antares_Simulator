@@ -39,8 +39,6 @@ public:
     */
     void remove(const AreaName& areaid);
 
-    void rename(const AreaName& oldid, const AreaName& newid);
-
     /*!
     ** \brief Get the coefficient for a specific area
     */

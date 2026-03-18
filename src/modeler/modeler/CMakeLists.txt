@@ -13,6 +13,7 @@ target_link_libraries(modeler-lib
         Antares::modeler-parameters
         Antares::optim-model-filler
         Antares::linear-problem-api
+        Antares::structured-linear-problem
         # TODO FIXME don't depend on implementations
         Antares::linear-problem-mpsolver-impl
 )

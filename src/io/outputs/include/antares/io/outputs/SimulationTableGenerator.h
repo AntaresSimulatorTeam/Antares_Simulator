@@ -73,47 +73,8 @@ void addVariableEntries(ISimulationTable& simulationTable,
                         const Optimisation::OptimEntityContainer& optimEntityContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
-                        std::optional<unsigned> scenario);
+                        unsigned year);
 
-void addConstraintEntries(ISimulationTable& simulationTable,
-                          const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                          const ModelerStudy::SystemModel::Component& component,
-                          const Optimisation::OptimEntityContainer& optimEntityContainer,
-                          unsigned currentBlock,
-                          const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
-                          bool forceExportForScenarioIndex);
-
-void addPortEntries(ISimulationTable& simulationTable,
-                    const Optimisation::LinearProblemApi::FillContext& fillContext,
-                    const ModelerStudy::SystemModel::Component& component,
-                    const Optimisation::OptimEntityContainer& optimEntityContainer,
-                    unsigned currentBlock,
-                    const TimeConversionMode& timeConversionMode,
-                    std::optional<unsigned> scenario,
-                    bool forceExportForScenarioIndex);
-
-void addExtraOutputEntries(ISimulationTable& simulationTable,
-                           const Optimisation::LinearProblemApi::FillContext& fillContext,
-                           const ModelerStudy::SystemModel::Component& component,
-                           const Optimisation::OptimEntityContainer& optimEntityContainer,
-                           unsigned currentBlock,
-                           const TimeConversionMode& timeConversionMode,
-                           std::optional<unsigned> scenario,
-                           bool forceExportForScenarioIndex);
-
-void addEntriesForNode(ISimulationTable& simulationTable,
-                       const Optimisation::LinearProblemApi::FillContext& fillContext,
-                       const ModelerStudy::SystemModel::Component& component,
-                       const Optimisation::OptimEntityContainer& optimEntityContainer,
-                       unsigned currentBlock,
-                       const TimeConversionMode& timeConversionMode,
-                       std::optional<unsigned> scenario,
-                       bool forceExportForScenarioIndex,
-                       const std::string& componentId,
-                       const std::string& outputName,
-                       const Expressions::Nodes::Node* rootNode);
 /**
  * Fill modeler outputs in the simulation table
  * @param simulationTable the simulation table to fill

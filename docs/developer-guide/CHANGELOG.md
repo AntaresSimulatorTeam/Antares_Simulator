@@ -4,6 +4,148 @@ toc_depth: 2
 
 # Antares Changelog
 
+
+### 10.0.0-rc1
+
+#### Major changes
+
+* Remove GUI (legacy UI)
+
+#### New features
+
+* Hybrid studies with bounds from modeler [ANT-4033] (#3355)
+* Thermal capacity Investment with integer variables [ANT-4342] (#3369)
+* Improve handling for MIP variables in hybrid studies (#3422)
+
+#### Improvements
+
+* Fix MILP problems in hybrid studies [ANT-4551] (#3407)
+* Refactor options.cpp, add tests (#3340)
+* Hybrid studies: turn YAML area connections into a dictionary (#3381)
+* Index thermal clusters only once [ANT-4522] (#3425)
+* Fix: digest [ANT-4630] (#3455)
+* Fix dynamic district aggregation (#3429)
+* Improve handling for modeler error (#3393)
+* Add warning in antares-api if weeks are dependent (#3398)
+* Performance scaling tests for expression sum (#3424)
+* Fix unit tests binding constraints (#3453)
+* Feature/tiny move (#3408)
+* Remove unnecessary code and cleanup:
+  - Remove GUI code (#3411, #3417, #3438, #3439, #3440, #3441, #3442, #3443, #3444)
+  - Remove JIT::usedFromGUI (#3419)
+  - Remove loadOnlyNeeded (#3440)
+  - Remove unused core/preprocessor/vaargs.h (#3420)
+  - Remove ts-generator binary (#3334)
+  - Remove code only used by GUI (#3417)
+  - Remove functions related to rename (#3444)
+  - Remove unused code from class Study (#3442)
+  - Optimize variable name building (avoid concat) (#3423)
+
+#### Bugfixes
+
+* Fix: install optim-model-filler (#3394)
+* Fix Benders decomposition (#3395)
+* Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
+* Fix: windows runtime libraries (#3435)
+
+#### Tests
+
+* Cucumber tests: new checks for area connection (#3443)
+* Fix Cucumber test_launcher_8.feature (#3426)
+
+
+#### Documentation
+
+* Fix: execution_info.ini doc format in readthedoc (#3405)
+* Update documentation for ticket ANT-4033 (#3445)
+* Fix itemization in port field (#3454)
+
+#### CI/Chore
+
+* chore(ci): update cache action to AntaresSimulatorTeam/cache to avoid deprecated action (#3390)
+* CI: Bump actions/upload-artifact from 6 to 7 (#3447)
+* chore: update sonar.projectVersion & simtest.json (#3412)
+* Allow generating results on release (#3427)
+
+#### For developers
+
+* Refactor AGENTS.md using progressive disclosure pattern (#3396)
+* Docker solution for clang-format (#3389)
+* MPS Generator ADR (#3410)
+* Update simtest (#3415)
+* Fix compilation warnings (#3401)
+
+
+### 9.3.7
+
+#### Feature
+
+* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
+
+#### Improvements
+
+* Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
+* Improve performance for sum operations in expressions
+
+#### Bugfixes
+
+* Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
+
+### 9.3.6
+
+#### New features
+
+* feat: resolution mode [ANT-4380] (#3339)
+* Dynamic aggregation [ANT-2739] (#3342)
+* Investment with integer variables for hybrid studies [ANT-4046] (#3372)
+* [100% optional] Use customized mps generator in the simulator (#3346)
+* [100%] print mps in api mode (#3314)
+* Modeler: operators ceil and floor [ANT-4295] (#3316)
+* feat(api): check week independency (#3387)
+
+#### Improvements
+
+* Remove usage of raw pointers around MPSolver, use std::shared_ptr (#3348)
+* Refactor AverageData year management (#3332)
+* Simplify, fix and slightly extend output variable classes (#3337)
+* Use a custom MPS writer in antares-modeler [ANT-4324] (#3302)
+* Change PMax computation for STS in remix hydro (#3363)
+* Remove ts-generator binary (#3334)
+* Shorten header/copyright notice (#3353)
+* Residual consumption [ANT-2444] (#3330)
+
+#### Bugfixes
+
+* fix: hourly PMax not clamped up to PMax Hydro Écrêtée (#3361)
+* fix: Offset overwritten instead of accumulated [ANT-4467] (#3385)
+* Fix naming for daily binding constraints (#3362)
+* Fix missing elements from digest.txt [ANT-4446] (#3388)
+* fix test "single_problem_thermal_first_week_nominal_case" (#3380)
+* fix: API save study meta data (#3356)
+* APIv2 - Fix wrong size for TS numbers (#3391)
+* Fix TODO & add tests in hydro allocation (#3343)
+* test: Handle new study directory "invalid-studies" (#3246)
+
+#### Tests
+
+* Add tests on `SurveyResults` (#3338)
+* constraints builder tests: adding tests + improvements (#3305)
+* Add unit tests for `IntermediateValues::computeStatisticsForTheCurrentYear` (#3344)
+* Add tests on time aggregation + formatting to a survey report (#3345)
+
+#### Documentation
+
+* Add documentation on missing parameters (#3347)
+* Add doc for execution_info.ini durations (#3359)
+* Add doc for resolution mode (#3371)
+* Add AGENTS.md for coding agents (#3368)
+
+#### CI/Chore
+
+* update simtest version (#3360)
+* chore(simtest): update version to v9.3.6b (#3386)
+* [oracle 8] update python version to get ortools (#3379)
+
 ### 9.3.5
 #### Improvements
 * New option Adequacy patch debug files [ANT-4034] (#3297)

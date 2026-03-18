@@ -15,7 +15,6 @@
 #include "antares/study/fwd.h"
 
 #include "BindingConstraint.h"
-#include "BindingConstraintSaver.h"
 
 namespace Antares::Data
 {

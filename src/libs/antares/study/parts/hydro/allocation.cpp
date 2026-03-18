@@ -39,17 +39,6 @@ void HydroAllocation::remove(const AreaName& areaid)
     }
 }
 
-void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
-{
-    auto i = pValues.find(oldid);
-    if (i != pValues.end())
-    {
-        double coeff = i->second;
-        pValues.erase(i);
-        pValues[newid] = coeff;
-    }
-}
-
 double HydroAllocation::fromArea(const Area& area) const
 {
     return fromArea(area.id);

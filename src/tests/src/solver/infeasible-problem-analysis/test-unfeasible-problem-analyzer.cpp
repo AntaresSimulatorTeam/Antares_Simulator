@@ -328,8 +328,7 @@ struct DummyOptPeriodStringGenerator: OptPeriodStringGenerator
 struct NullWriterExtension final: Solver::NullResultWriter
 {
     // hack to read variables and constraints names
-    void addEntryFromBuffer(const std::filesystem::path& entryPath,
-                            std::string& mpsToWrite) override
+    void addEntryFromBuffer(const std::filesystem::path&, std::string& mpsToWrite) override
     {
         mps = mpsToWrite;
     }
@@ -397,7 +396,7 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 class EmptySimulationTable final: public ISimulationTable
 {
 public:
-    void addEntry(const SimulationTableEntry& entry) override
+    void addEntry(const SimulationTableEntry&) override
     {
     }
 
@@ -459,7 +458,7 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
                                             writer,
                                             &simulationTableCsv);
 
-    const auto expectedMps = R"(* Antares Simulator
+    const auto expectedMps = R"(* Antares Simulator MPSGenerator
 * Number of variables: 1
 * Number of constraints: 2
 NAME problem-myTest--optim-nb-1.mps
@@ -522,7 +521,7 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             generator,
                                             writer,
                                             &simulationTableCsv);
-    const auto expectedMps = R"(* Antares Simulator
+    const auto expectedMps = R"(* Antares Simulator MPSGenerator
 * Number of variables: 1
 * Number of constraints: 2
 NAME problem-myTest--optim-nb-1.mps

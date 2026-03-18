@@ -265,22 +265,20 @@ bool XCast::loadFromFolder(const fs::path& folder)
     p = folder / "translation.txt";
 
     ret = translation.loadFromCSVFile(p.string(), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
-    if (!JIT::usedFromGUI)
+
+    if (translation.empty())
     {
-        if (translation.empty())
+        // This is not really an error
+        useTranslation = tsTranslationNone;
+        translation.reset(1, HOURS_PER_YEAR);
+    }
+    else
+    {
+        if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
         {
-            // This is not really an error
+            logs.warning() << folder << ": invalid size for the time-series translation.";
+            translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
             useTranslation = tsTranslationNone;
-            translation.reset(1, HOURS_PER_YEAR);
-        }
-        else
-        {
-            if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
-            {
-                logs.warning() << folder << ": invalid size for the time-series translation.";
-                translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
-                useTranslation = tsTranslationNone;
-            }
         }
     }
 
@@ -390,24 +388,6 @@ bool XCast::saveToFolder(const AnyString& folder) const
         return IO::File::CreateEmptyFile(buffer) && ret;
     }
     return ini.save(buffer) && ret;
-}
-
-bool XCast::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = data.forceReload(reload) && ret;
-    ret = K.forceReload(reload) && ret;
-    ret = translation.forceReload(reload) && ret;
-    ret = conversion.forceReload(reload) && ret;
-    return ret;
-}
-
-void XCast::markAsModified() const
-{
-    data.markAsModified();
-    K.markAsModified();
-    translation.markAsModified();
-    conversion.markAsModified();
 }
 
 void XCast::copyFrom(const XCast& rhs)

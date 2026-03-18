@@ -9,6 +9,7 @@
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/study/parameters/adq-patch-params.h"
@@ -44,10 +45,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
-void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
-                                                            const int,
-                                                            const int,
-                                                            const int);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 
@@ -104,7 +102,8 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo,
                                                              int NumIntervalle);
 void fillLinearProblem(Optimisation::LinearProblemApi::FillContext& fillCtx,
-                       const PROBLEME_HEBDO* problemeHebdo,
+                       PROBLEME_HEBDO* problemeHebdo,
                        Optimisation::OptimEntityContainer& optimEntityContainer,
-                       bool namedProblems);
+                       bool namedProblems,
+                       Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

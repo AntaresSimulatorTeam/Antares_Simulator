@@ -1,9 +1,8 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include "variables/VariableManagerUtils.h"
 
 namespace
 {
@@ -106,7 +105,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
         {
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
-            int var = variableManager.NTCDirect(interco, pdtJour);
+            int var = variableManager.DirectFlux(interco, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = 0.0;
@@ -114,14 +113,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
             if (CoutDeTransport.IntercoGereeAvecDesCouts)
             {
-                var = variableManager.IntercoDirectCost(interco, pdtJour);
+                var = variableManager.DirectFluxPositif(interco, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var] = CoutDeTransport
                                                              .CoutDeTransportOrigineVersExtremite
                                                                [pdtHebdo];
                 }
-                var = variableManager.IntercoIndirectCost(interco, pdtJour);
+                var = variableManager.IndirectFluxPositif(interco, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var] = CoutDeTransport
@@ -301,14 +300,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 ProblemeAResoudre->CoutLineaire[var] = LEVEL_COST;
             }
 
-            var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
+            var = variableManager.UnsuppliedEnergy(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = problemeHebdo
                                                          ->CoutDeDefaillancePositive[pays];
             }
 
-            var = variableManager.NegativeUnsuppliedEnergy(pays, pdtJour);
+            var = variableManager.Spillage(pays, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = problemeHebdo

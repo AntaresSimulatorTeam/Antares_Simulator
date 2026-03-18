@@ -111,11 +111,6 @@ int TimeSeries::saveToFolder(const std::string& areaID,
     return timeSeries.saveToCSVFile(buffer, 0);
 }
 
-int TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) const
-{
-    return timeSeries.saveToCSVFile(filename, 6, false, saveEvenIfAllZero);
-}
-
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
 {
     return timeSeries[getSeriesIndex(year)][timestep];
@@ -184,16 +179,6 @@ void TimeSeries::averageTimeseries()
 void TimeSeries::unloadFromMemory() const
 {
     timeSeries.unloadFromMemory();
-}
-
-bool TimeSeries::forceReload(bool reload) const
-{
-    return timeSeries.forceReload(reload);
-}
-
-void TimeSeries::markAsModified() const
-{
-    timeSeries.markAsModified();
 }
 
 } // namespace Antares::Data

@@ -136,17 +136,6 @@ public:
     */
     void clear();
 
-    bool forceReload(bool /*reload*/) const
-    {
-        pModified = true;
-        return true;
-    }
-
-    void markAsModified() const
-    {
-        pModified = true;
-    }
-
     uint size() const;
 
     /*!
@@ -176,7 +165,6 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename);
 
-    bool saveToFile(const Yuni::String& filename) const;
     /*!
     ** \brief format the string to match the options
     */

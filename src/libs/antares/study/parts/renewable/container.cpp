@@ -17,18 +17,6 @@ PartRenewable::PartRenewable()
 {
 }
 
-bool PartRenewable::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = list.forceReload(reload) && ret;
-    return ret;
-}
-
-void PartRenewable::markAsModified() const
-{
-    list.markAsModified();
-}
-
 PartRenewable::~PartRenewable()
 {
 }

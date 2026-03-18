@@ -319,22 +319,24 @@ The following table contains a list of new output variables in recent versions.
 
 Each simulation produces a file "execution\_info.ini" at the root of the output folder. This file contains information about the execution of the simulation, such as version of Antares used, options selected in generaldata.ini, information about the study (nb of areas...) and different steps duration.
 
+The section [duration] contains the same fields as [duration\_ms] with values in hours, minutes and seconds for longer studies.
+
 The section [duration\_ms] contains the following fields:
 
-**full_exec**: total duration
-- **loading**: loading of all files
+- **full_exec**: total duration
+  - **loading**: loading of all files
     - **study_loading**: loading of legacy solver files
     - **modeler_loading**: loading and parsing of files related to modeler: models, system, optim-config
-- **simulation**:
+  - **simulation**:
     - **tsgen_thermal, tsgen_wind, tsgen_solar, tsgen_load, tsgen_hydro**: if we need to generate time series for a type
     - **mc_years**: all monte-carlo years
-        - **hydro_ventilation**: running hydro heuristics
-        - **problem_build_time**: building of the optmimization problem (legacy + modeler)
-        - **solve_time**: solver resolution
-        - **export_simulation_tables**: modeler related, creation and writing of simulation tables
-        - **post_processing**: balance and flow quad
-        - **yby_export**: export and writing of results for a year (year-by-year parameter)
-        - **synthesis_compute**: results aggregation for mc-all
+      - **hydro_ventilation**: running hydro heuristics
+      - **problem_build_time**: building of the optimization problem (legacy + modeler)
+      - **solve_time**: solver resolution
+      - **export_simulation_tables**: modeler related, creation and writing of simulation tables
+      - **post_processing**: balance and flow quad
+      - **yby_export**: export and writing of results for a year (year-by-year parameter)
+      - **synthesis_compute**: results aggregation for mc-all
     - **synthesis_export**: export and writing of mc-all results
 
 

@@ -15,7 +15,6 @@ class Properties final
 public:
     bool validate();
     bool loadKey(const IniFile::Property* p);
-    void save(IniFile& ini) const;
 
     /// Not optional   Injection nominal capacity, >= 0
     std::optional<double> injectionNominalCapacity;

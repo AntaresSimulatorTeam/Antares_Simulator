@@ -6,7 +6,7 @@ from check_on_results.check_general import check_interface
 from utils.find_reference import find_reference_folder
 from utils.find_output import find_dated_output_folder, find_simulation_folder
 from utils.assertions import check
-from check_on_results.mps_utils import *
+from shared_utils.mps_utils import *
 
 tol = 1e-12
 @printNameDecorator
@@ -46,21 +46,19 @@ class compare_mps_files(check_interface):
     def compare_models(self, pair, ref_mps, out_mps):
         ref_model = load_problem(ref_mps)
         out_model = load_problem(out_mps)
-        
 
         # problem type
         self.checkProblemType(pair, ref_model, out_model)
-        #compare nb variables
+        # compare nb variables
         self.compare_variable_numbers(pair, ref_model, out_model)
 
-        #compare nb constraints
+        # compare nb constraints
         self.compare_constraint_numbers(pair, ref_model, out_model)
-        
-        #compare variable
+
+        # compare variable
         # 
         self.compare_variables(pair, ref_model, out_model)
 
-     
         # Compare constraint bounds
         self.compare_constraint_properties(pair, ref_model, out_model)
         # Compare constraint matrix
@@ -78,13 +76,14 @@ class compare_mps_files(check_interface):
             if var.is_integral:
                 is_lp = False
                 break
-        
+
         return is_lp
-    def check_numbers(self, left, right, msg:str):
+
+    def check_numbers(self, left, right, msg: str):
         if math.isinf(left):
             check(math.isinf(right), msg)
         else:
-            check(abs(left-right)< tol, msg)
+            check(abs(left - right) < tol, msg)
 
     def compare_variables(self, pair, ref_model, out_model):
         ref_vars = extract_variables(ref_model)
@@ -94,32 +93,28 @@ class compare_mps_files(check_interface):
                   f"Difference in variable name {ref_var['name']} != {out_var['name']} between files {pair[0]} and {pair[1]}")
             check(ref_var['is_integral'] == out_var['is_integral'],
                   f"Difference in type of variable {ref_var['is_integral']} != {out_var['is_integral']} between files {pair[0]} and {pair[1]}")
-            self.check_numbers(ref_var['xmin'] , out_var['xmin'] ,
-                  f"Difference in lower bound of variable {ref_var['name']}: {ref_var['xmin']} != {out_var['xmin']} between files {pair[0]} and {pair[1]}")
-            self.check_numbers(ref_var['xmax'] , out_var['xmax'],
-                  f"Difference in upper bound of variable {ref_var['name']}: {ref_var['xmax']} != {out_var['xmax']} between files {pair[0]} and {pair[1]}")
-            self.check_numbers(ref_var['cost'] , out_var['cost'] ,
-                  f"Difference in cost of variable {ref_var['name']}: {ref_var['cost']} != {out_var['cost']} between files {pair[0]} and {pair[1]}")
-    
-    
-
-
+            self.check_numbers(ref_var['xmin'], out_var['xmin'],
+                               f"Difference in lower bound of variable {ref_var['name']}: {ref_var['xmin']} != {out_var['xmin']} between files {pair[0]} and {pair[1]}")
+            self.check_numbers(ref_var['xmax'], out_var['xmax'],
+                               f"Difference in upper bound of variable {ref_var['name']}: {ref_var['xmax']} != {out_var['xmax']} between files {pair[0]} and {pair[1]}")
+            self.check_numbers(ref_var['cost'], out_var['cost'],
+                               f"Difference in cost of variable {ref_var['name']}: {ref_var['cost']} != {out_var['cost']} between files {pair[0]} and {pair[1]}")
 
     def compare_constraint_properties(self, pair, ref_model, out_model):
-                # get_constraint_bounds Returns dict{ constr_name : (sense, rhs) }
+        # get_constraint_bounds Returns dict{ constr_name : (sense, rhs) }
         ref_constr_bounds = get_constraint_bounds(ref_model)
         out_constr_bounds = get_constraint_bounds(out_model)
         check(ref_constr_bounds.keys() == out_constr_bounds.keys(),
-      f"Constraint sets differ between files {pair[0]} and {pair[1]}")
+              f"Constraint sets differ between files {pair[0]} and {pair[1]}")
 
         for name, (ref_sense, ref_rhs) in ref_constr_bounds.items():
             out_sense, out_rhs = out_constr_bounds[name]
 
-            self.check_numbers(ref_sense , out_sense,
-                f"Difference in constraint sense for {name}")
+            self.check_numbers(ref_sense, out_sense,
+                               f"Difference in constraint sense for {name}")
 
-            self.check_numbers(ref_rhs , out_rhs,
-                f"Difference in constraint rhs for {name}: {ref_rhs} != {out_rhs}, between files {pair[0]} and {pair[1]}")
+            self.check_numbers(ref_rhs, out_rhs,
+                               f"Difference in constraint rhs for {name}: {ref_rhs} != {out_rhs}, between files {pair[0]} and {pair[1]}")
 
     def compare_matrices(self, pair, ref_model, out_model):
         # Returns { constraint_name : { variable_name : coefficient } }
@@ -128,23 +123,23 @@ class compare_mps_files(check_interface):
 
         # Check same constraint set
         check(ref_constr_matrix.keys() == out_constr_matrix.keys(),
-            f"Difference in constraint set between files {pair[0]} and {pair[1]}")
+              f"Difference in constraint set between files {pair[0]} and {pair[1]}")
 
         for constr_name, ref_row in ref_constr_matrix.items():
             out_row = out_constr_matrix[constr_name]
 
             # Check same variable set for this constraint
             check(ref_row.keys() == out_row.keys(),
-                f"Difference in variables for constraint {constr_name} "
-                f"between files {pair[0]} and {pair[1]}")
+                  f"Difference in variables for constraint {constr_name} "
+                  f"between files {pair[0]} and {pair[1]}")
 
             # Check coefficients
             for var_name, ref_coef in ref_row.items():
                 out_coef = out_row[var_name]
 
-                self.check_numbers(ref_coef , out_coef,
-                    f"Difference in coefficient for constraint {constr_name}, "
-                    f"variable {var_name} between files {pair[0]} and {pair[1]}")
+                self.check_numbers(ref_coef, out_coef,
+                                   f"Difference in coefficient for constraint {constr_name}, "
+                                   f"variable {var_name} between files {pair[0]} and {pair[1]}")
 
     def compare_constraint_numbers(self, pair, ref_model, out_model):
         ref_nb_constrs = ref_model.num_constraints
@@ -157,8 +152,6 @@ class compare_mps_files(check_interface):
         out_nb_vars = out_model.num_variables
         check(ref_nb_vars == out_nb_vars,
               f"Difference in number of variables between files {pair[0]} and {pair[1]}")
-
-        
 
     def compare_files(self, pair, ref_mps, out_mps):
         ref_content = open(ref_mps).read()

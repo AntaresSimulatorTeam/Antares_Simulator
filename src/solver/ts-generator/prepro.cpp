@@ -120,16 +120,6 @@ bool PreproAvailability::validate() const
     return errors == 0;
 }
 
-bool PreproAvailability::forceReload(bool reload) const
-{
-    return data.forceReload(reload);
-}
-
-void PreproAvailability::markAsModified() const
-{
-    data.markAsModified();
-}
-
 void PreproAvailability::reset()
 {
     data.reset(preproAvailabilityMax, DAYS_PER_YEAR, true);
@@ -164,11 +154,15 @@ bool PreproAvailability::normalizeAndCheckNPO()
             normalized = true;
         }
 
-        if (columnNPOMin[y] > columnNPOMax[y] && ++errors < maxErrors)
+        if (columnNPOMin[y] > columnNPOMax[y])
         {
-            logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
-                         << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
-                         << ')';
+            ++errors;
+            if (errors < maxErrors)
+            {
+                logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
+                             << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
+                             << ')';
+            }
         }
     }
 
@@ -182,7 +176,6 @@ bool PreproAvailability::normalizeAndCheckNPO()
         logs.info() << "  NPO max for entity '" << id << "' has been normalized";
     }
 
-    data.markAsModified();
     return (0 == errors);
 }
 

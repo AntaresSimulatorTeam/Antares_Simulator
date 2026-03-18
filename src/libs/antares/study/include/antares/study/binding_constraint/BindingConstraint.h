@@ -31,7 +31,6 @@ struct CompareBindingConstraintName;
 class BindingConstraint final: public Yuni::NonCopyable<BindingConstraint>
 {
     friend class BindingConstraintLoader;
-    friend class BindingConstraintSaver;
 
 public:
     enum Type
@@ -184,10 +183,6 @@ public:
     const Matrix<>& RHSTimeSeries() const;
     Matrix<>& RHSTimeSeries();
 
-    bool hasAllWeightedLinksOnLayer(size_t layerID);
-
-    bool hasAllWeightedClustersOnLayer(size_t layerID);
-
     //! \name Links
     //@{
     /*!
@@ -312,23 +307,6 @@ public:
     */
     void clearAndReset(const AnyString& name, Type newType, Operator op);
     //@}
-
-    /*!
-    ** \brief Invalidate all matrices
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
-
-    /*!
-    ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
-    **
-    ** This method is used when reverting an interconnection or thermal cluster
-    */
-    void reverseWeightSign(const AreaLink* lnk);
 
     /*!
     ** \brief Get if the given binding constraint is identical

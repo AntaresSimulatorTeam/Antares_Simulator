@@ -57,18 +57,6 @@ public:
     std::vector<std::shared_ptr<ClusterT>> all() const;
 
     /*!
-    ** \brief Rename a cluster
-    **
-    ** \param idToFind ID of the cluster to rename
-    ** \param newName The new name for the cluster
-    ** \return True if the operation succeeded (the cluster has been renamed)
-    **   false otherwise (not found or if another cluster has the same name)
-    **
-    ** The indexes for clusters will be rebuilt.
-    */
-    bool rename(std::string idToFind, std::string newName);
-
-    /*!
     ** \brief Remove properly a cluster
     */
     virtual bool remove(const std::string& id);
@@ -97,24 +85,11 @@ public:
 
     //@}
 
-    /*!
-    ** \brief Invalidate all clusters
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the clusters as modified
-    */
-    void markAsModified() const;
-
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
-#ifdef BUILD_UI
-    virtual bool saveToFolder(const AnyString& folder) const = 0;
-#endif
     ///@}
 
     /*!

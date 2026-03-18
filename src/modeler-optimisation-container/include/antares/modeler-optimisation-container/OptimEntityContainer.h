@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-
 #pragma once
 #include <span>
 #include <vector>
@@ -22,110 +21,49 @@ struct OptimComponent
     std::vector<unsigned> modelVariableGlobalIndices;
     std::vector<unsigned> modelConstraintsGlobalIndices;
     std::vector<VariabilityType> modelConstraintsVariability;
-    EvaluationContext evaluationContext;
 };
 
 class OptimEntityContainer
 {
 public:
-    OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem,
-                         const LinearProblemApi::ILinearProblemData* data,
-                         const ScenarioGroupRepository* scenarioGroupRepository);
+    OptimEntityContainer(LinearProblemApi::ILinearProblem& linearProblem);
 
-    [[nodiscard]] unsigned int getVariableStartColumn(
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned int index) const
-    {
-        const auto& optimComponent = optimComponents_.at(component.Index());
-        return variableStartColumn_.at(optimComponent.modelVariableGlobalIndices.at(index));
-    }
+    unsigned getVariableStartColumn(const ModelerStudy::SystemModel::Component& component,
+                                    unsigned index) const;
 
-    [[nodiscard]] const EvaluationContext& getEvaluationContext(
-      const Antares::ModelerStudy::SystemModel::Component& component) const
-    {
-        const auto& optimComponent = optimComponents_.at(component.Index());
-        return optimComponent.evaluationContext;
-    }
+    unsigned getConstraintStartLine(const ModelerStudy::SystemModel::Component& component,
+                                    unsigned index) const;
+    VariabilityType getConstraintVariability(const ModelerStudy::SystemModel::Component& component,
+                                             unsigned index) const;
 
-    [[nodiscard]] std::pair<unsigned int, VariabilityType> getConstraintData(
-      const Antares::ModelerStudy::SystemModel::Component& component,
-      unsigned int index) const
-    {
-        const auto& optimComponent = optimComponents_.at(component.Index());
-        return {constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index)),
-                optimComponent.modelConstraintsVariability.at(index)};
-    }
+     // gp : to be removed : used to avoid passing the linear problem.
+    LinearProblemApi::ILinearProblem& Problem(); 
 
-    LinearProblemApi::ILinearProblem& Problem()
-    {
-        return linearProblem_;
-    }
+    void addStartColumn();
 
-    void addStartColumn()
-    {
-        variableStartColumn_.push_back(linearProblem_.variableCount());
-    }
+    std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>> getComponentVariable(
+      const ModelerStudy::SystemModel::Component& component,
+      unsigned index,
+      std::size_t nbTimeSteps) const;
 
-    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipVariable>>& getVariables()
-      const
-    {
-        return linearProblem_.getVariables();
-    }
-
-    [[nodiscard]] std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>>
-    getComponentVariable(const Antares::ModelerStudy::SystemModel::Component& component,
-                         unsigned int index,
-                         std::size_t nbTimeSteps) const
-    {
-        const auto& variables = linearProblem_.getVariables();
-        unsigned int startColumn = getVariableStartColumn(component, index);
-        return {variables.data() + startColumn, nbTimeSteps};
-    }
-
-    [[nodiscard]] std::pair<std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>>,
-                            VariabilityType>
-    getComponentConstraint(const Antares::ModelerStudy::SystemModel::Component& component,
-                           unsigned int index,
-                           std::size_t nbTimeSteps) const
-    {
-        const auto& constraints = linearProblem_.getConstraints();
-        const auto [startLine, timeIndex] = getConstraintData(component, index);
-        return {{constraints.data() + startLine, nbTimeSteps}, timeIndex};
-    }
-
-    [[nodiscard]] const std::vector<std::unique_ptr<LinearProblemApi::IMipConstraint>>&
-    getConstraints() const
-    {
-        return linearProblem_.getConstraints();
-    }
-
-    [[nodiscard]] OptimComponent& getOptimComponent(size_t index)
-    {
-        return optimComponents_.at(index);
-    }
+    std::span<const std::unique_ptr<LinearProblemApi::IMipConstraint>> componentConstraints(
+      const ModelerStudy::SystemModel::Component& component,
+      unsigned index,
+      std::size_t nbTimeSteps) const;
 
     void addFromSystemComponents(
-      const std::vector<Antares::ModelerStudy::SystemModel::Component>& component,
+      const std::vector<ModelerStudy::SystemModel::Component>& component,
       Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);
+
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
                             const VariabilityType& variability);
 
-    unsigned constraintGLobalIndex() const
-    {
-        return static_cast<unsigned int>(constraintStartLine_.size());
-    }
-
 private:
-    std::vector<unsigned int> variableStartColumn_;
-    std::vector<OptimComponent> optimComponents_;
-    std::vector<unsigned int> constraintStartLine_;
-    LinearProblemApi::ILinearProblem& linearProblem_;
-    const LinearProblemApi::ILinearProblemData* data_;
-    const ScenarioGroupRepository* scenarioGroupRepository_;
+    void addStartLine();
 
-    void addStartLine()
-    {
-        constraintStartLine_.push_back(linearProblem_.constraintCount());
-    }
+    std::vector<unsigned> variableStartColumn_;
+    std::vector<OptimComponent> optimComponents_;
+    std::vector<unsigned> constraintStartLine_;
+    LinearProblemApi::ILinearProblem& linearProblem_;
 };
 } // namespace Antares::Optimisation

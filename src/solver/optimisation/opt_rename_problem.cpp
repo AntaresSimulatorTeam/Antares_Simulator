@@ -151,17 +151,17 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned varIndex,
     SetThermalClusterElementName(varIndex, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NTCDirect(unsigned varIndex)
+void VariableNamer::DirectFlux(unsigned varIndex)
 {
     SetLinkElementName(varIndex, "NTCDirect");
 }
 
-void VariableNamer::IntercoDirectCost(unsigned varIndex)
+void VariableNamer::DirectFluxPositif(unsigned varIndex)
 {
     SetLinkElementName(varIndex, "IntercoDirectCost");
 }
 
-void VariableNamer::IntercoIndirectCost(unsigned varIndex)
+void VariableNamer::IndirectFluxPositif(unsigned varIndex)
 {
     SetLinkElementName(varIndex, "IntercoIndirectCost");
 }
@@ -248,13 +248,17 @@ void VariableNamer::FinalStorage(unsigned varIndex)
     SetAreaElementNameHour(varIndex, "FinalStorage");
 }
 
-void VariableNamer::PositiveUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
 {
+    // TODO : what is "PositiveUnsuppliedEnergy" ?
+    // We mean "UnsuppliedEnergy". To be replaced.
     SetAreaElementNameHour(varIndex, "PositiveUnsuppliedEnergy");
 }
 
-void VariableNamer::NegativeUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::Spillage(unsigned varIndex)
 {
+    // TODO : what is "NegativeUnsuppliedEnergy" ?
+    // Should be replaced with "Spillage".
     SetAreaElementNameHour(varIndex, "NegativeUnsuppliedEnergy");
 }
 
@@ -286,6 +290,21 @@ void ConstraintNamer::AreaBalance(unsigned constrIndex)
 void ConstraintNamer::FictiveLoads(unsigned constrIndex)
 {
     SetAreaElementNameHour(constrIndex, "FictiveLoads");
+}
+
+void ConstraintNamer::CsrFictitiousLoad(unsigned int constraint)
+{
+    SetAreaElementNameHour(constraint, "CsrFictitiousLoad");
+}
+
+void ConstraintNamer::CsrMaxEnsLoad(unsigned int constraint)
+{
+    SetAreaElementNameHour(constraint, "CsrMaxEnsLoad");
+}
+
+void ConstraintNamer::MaxUnsuppliedEnergy(unsigned constrIndex)
+{
+    SetAreaElementNameHour(constrIndex, "MaxUnsupEnergy");
 }
 
 void ConstraintNamer::HydroPower(unsigned constrIndex)

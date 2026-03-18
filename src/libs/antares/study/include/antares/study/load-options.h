@@ -29,8 +29,6 @@ public:
     uint nbYears;
     //! True to prepare the output folder
     bool prepareOutput;
-    //! True to load only the strictly required data
-    bool loadOnlyNeeded;
     //! Force the year-by-year flag
     bool forceYearByYear;
 
@@ -58,9 +56,6 @@ public:
     //! Force a maximum number of MC years computed simultaneously
     bool forceParallel;
     uint maxNbYearsInParallel;
-
-    //! A non-zero value if the data will be used for a simulation
-    bool usedByTheSolver;
 
     //! All options related to linear & quadratic optimization
     Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;

@@ -5,18 +5,48 @@
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/parameters/modelerParameters.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 
 #include "ModelerData.h"
+
+namespace Antares::Optimisation
+{
+class BendersDecomposition;
+
+namespace LinearProblemApi
+{
+/** \brief Context for filling linear problem data.
+ * Contains temporal information
+ */
+class FillContext;
+class IMipSolution;
+} // namespace LinearProblemApi
+} // namespace Antares::Optimisation
 
 namespace Antares::Solver
 {
 class ILoader;
 class IWriter;
 
+struct ProblemEntity
+{
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> problem;
+    std::unique_ptr<Optimisation::OptimEntityContainer> optimEntityContainer;
+};
+
+ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
+                           const Config::Location& location,
+                           const std::string& problemId,
+                           Optimisation::BendersDecomposition* bendersDecomposition,
+                           const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx,
+                           const ResolutionMode& resolutionMode,
+                           const std::optional<std::string>& solver);
+
 class Modeler final
 {
 public:
     Modeler(ILoader& loader, IWriter& writer);
+
     void run();
 
     class ModelerError: public std::runtime_error
@@ -45,6 +75,14 @@ public:
     }
 
 private:
+    Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
+
+    void writeSubProblemSimulationTable(
+      const Optimisation::LinearProblemApi::IMipSolution* solution,
+      const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
+      const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
+    void exportMps() const;
+    void exportStructureFile() const;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     ModelerParameters parameters_;

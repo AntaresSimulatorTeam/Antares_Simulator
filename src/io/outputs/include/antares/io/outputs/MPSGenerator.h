@@ -35,23 +35,22 @@ class MPSGenerator
 public:
     explicit MPSGenerator(const Antares::Optimisation::LinearProblemApi::ILinearProblem& lp,
                           const std::string& name);
-    std::string run();
+    std::string run() const;
 
 private:
     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
-    std::string out_;
     std::string name_;
     std::vector<std::string> exportableConstraintsNames_;
     std::vector<std::string> exportableVariablesNames_;
     //--//
-    void writeHeader();
-    void writeName();
-    void writeRows();
-    void writeColumns();
-    void writeRhs();
-    void writeRanges();
-    void writeBounds();
-    void writeEnd();
+    void writeHeader(std::string& mps) const;
+    void writeName(std::string& mps) const;
+    void writeRows(std::string& mps) const;
+    void writeColumns(std::string& mps) const;
+    void writeRhs(std::string& mps) const;
+    void writeRanges(std::string& mps) const;
+    void writeBounds(std::string& mps) const;
+    void writeEnd(std::string& mps) const;
 };
 
 template<class T>

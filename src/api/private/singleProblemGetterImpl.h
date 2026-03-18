@@ -1,9 +1,10 @@
 
-
 #pragma once
 
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/lps/LpsFromAntares.h"
+#include "antares/solver/modeler/Modeler.h"
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optimisation/HebdoProblemToLpsTranslator.h"
 #include "antares/solver/simulation/random.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -34,8 +35,9 @@ class SingleProblemGetter final
 {
 public:
     explicit SingleProblemGetter(const std::filesystem::path& studyPath);
-    explicit SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study);
-    ConstantDataFromAntares getConstantData();
+    explicit SingleProblemGetter(
+      std::pair<std::unique_ptr<Data::Study>, Solver::IResultWriter::Ptr>&& loadedPair);
+    ConstantDataFromAntares getConstantData() const;
     WeeklyDataFromAntares getWeeklyData(WeeklyProblemId id);
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> getWeeklyProblem(
       WeeklyProblemId id);
@@ -46,13 +48,19 @@ public:
     int nbYears() const;
     int nbWeeks() const;
     bool areWeeksIndependent() const;
+    Solver::ProblemEntity getMasterProblem() const;
+    void writeMasterAndStructure() const;
+    void printProblems();
     std::set<int> playedYears() const;
 
 private:
+    void initConstantData();
+
     const YearlyData& getYearlyData(unsigned year);
     YearlyData computeHydroLevels(unsigned year, const std::vector<double>& initialLevel);
     void initializeRandomNumbers();
-    void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem) const;
+    void fillProblem(Optimisation::LinearProblemApi::ILinearProblem& problem,
+                     const WeeklyProblemId& id);
     void setWeeklyData(WeeklyProblemId& id);
     Antares::Data::Area::ScratchMap scratchmap_;
     HebdoProblemToLpsTranslator translator_;
@@ -70,5 +78,6 @@ private:
     std::vector<NameMemo> variablesMemo_;
     std::vector<NameMemo> constraintsMemo_;
     std::set<int> randomPrepared_;
+    std::shared_ptr<IResultWriter> resultWriter_;
 };
 } // namespace Antares::Solver::Implementation

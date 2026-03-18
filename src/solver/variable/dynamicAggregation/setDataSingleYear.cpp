@@ -25,6 +25,30 @@ SetDataSingleYear::SetDataSingleYear(const std::set<Data::Area*, Data::CompareAr
     }
 }
 
+void SetDataSingleYear::reset()
+{
+    for (auto& results: thermalResults_)
+    {
+        std::ranges::fill(results, 0);
+    }
+    for (auto& results: renewableResults_)
+    {
+        std::ranges::fill(results, 0);
+    }
+    for (auto& results: stsInjectionResults_)
+    {
+        std::ranges::fill(results, 0);
+    }
+    for (auto& results: stsWithdrawalResults_)
+    {
+        std::ranges::fill(results, 0);
+    }
+    for (auto& results: stsLevelResults_)
+    {
+        std::ranges::fill(results, 0);
+    }
+}
+
 void SetDataSingleYear::addResultsToSet(const PROBLEME_HEBDO& pb)
 {
     for (const auto* area: set_)

@@ -58,24 +58,24 @@ ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsign
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
-                                                double coeff,
-                                                int offset,
-                                                int delta)
+ConstraintBuilder& ConstraintBuilder::DirectFlux(unsigned int index,
+                                                 double coeff,
+                                                 int offset,
+                                                 int delta)
 {
-    AddVariable(variableManager_.NTCDirect(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.DirectFlux(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoDirectCost(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::DirectFluxPositif(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.IntercoDirectCost(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.DirectFluxPositif(index, hourInWeek_), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::IndirectFluxPositif(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.IntercoIndirectCost(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.IndirectFluxPositif(index, hourInWeek_), coeff);
     return *this;
 }
 
@@ -182,15 +182,15 @@ ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double co
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::UnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.PositiveUnsuppliedEnergy(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.UnsuppliedEnergy(index, hourInWeek_), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::Spillage(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.NegativeUnsuppliedEnergy(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.Spillage(index, hourInWeek_), coeff);
     return *this;
 }
 

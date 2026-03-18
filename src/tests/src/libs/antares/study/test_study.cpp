@@ -37,22 +37,6 @@ BOOST_AUTO_TEST_CASE(area_add)
     BOOST_CHECK_EQUAL(areaA->id, "a");
 }
 
-#ifdef BUILD_UI
-BOOST_FIXTURE_TEST_CASE(area_rename, OneAreaStudy)
-{
-    BOOST_CHECK(study->areaRename(areaA, "B"));
-    BOOST_CHECK(areaA->name == "B");
-    BOOST_CHECK(areaA->id == "b");
-}
-
-BOOST_FIXTURE_TEST_CASE(area_delete, OneAreaStudy)
-{
-    BOOST_CHECK_EQUAL(study->areas.size(), 1);
-    BOOST_CHECK(study->areaDelete(areaA));
-    BOOST_CHECK(study->areas.empty());
-}
-#endif
-
 BOOST_AUTO_TEST_SUITE_END() // areas
 
 // Check that disabled objects are indeed removed from computations
@@ -166,15 +150,6 @@ struct ThermalClusterStudy: public OneAreaStudy
 
     ThermalCluster* cluster;
 };
-
-#ifdef BUILD_UI
-BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
-{
-    BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
-    BOOST_CHECK_EQUAL(cluster->name(), "Renamed");
-    BOOST_CHECK_EQUAL(cluster->id(), "renamed");
-}
-#endif // BUILD_UI
 
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
@@ -302,15 +277,6 @@ struct RenewableClusterStudy: public OneAreaStudy
     RenewableCluster* cluster;
 };
 
-#ifdef BUILD_UI
-BOOST_FIXTURE_TEST_CASE(renewable_cluster_rename, RenewableClusterStudy)
-{
-    BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
-    BOOST_CHECK(cluster->name() == "Renamed");
-    BOOST_CHECK(cluster->id() == "renamed");
-}
-#endif // BUILD_UI
-
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 {
     // gp : remove() only used in GUI (will go away when removing the GUI)
@@ -365,11 +331,7 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 {
     auto s = std::make_unique<Study>();
-    BOOST_CHECK(s->checkForFilenameLimits(true)); // empty areas should return true
-
-    BOOST_CHECK(study->checkForFilenameLimits(true));
-    BOOST_CHECK(study->checkForFilenameLimits(false));
-    BOOST_CHECK(study->checkForFilenameLimits(true, "abc"));
+    BOOST_CHECK(s->checkForFilenameLimits()); // empty areas should return true
 
 #ifdef YUNI_OS_WINDOWS
     std::string area1name(128, 'a');
@@ -377,7 +339,7 @@ BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
     auto areaB = study->areaAdd(area1name);
     auto areaC = study->areaAdd(area2name);
     AreaAddLinkBetweenAreas(areaB, areaC);
-    BOOST_CHECK(!study->checkForFilenameLimits(true));
+    BOOST_CHECK(!study->checkForFilenameLimits());
 #endif
 }
 

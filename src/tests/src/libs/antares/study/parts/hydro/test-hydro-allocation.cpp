@@ -24,7 +24,7 @@ struct AllocationFixture
     Area* west{nullptr};
 
     AllocationFixture():
-        study(std::make_unique<Study>(false))
+        study(std::make_unique<Study>())
     {
         east = new Area("east"); // freed by ~AreaList
         west = new Area("west"); // freed by ~AreaList
@@ -62,10 +62,10 @@ BOOST_FIXTURE_TEST_CASE(basic_set_get_remove_rename, AllocationFixture)
     alloc.fromArea(*east, 0.0);
     BOOST_CHECK_EQUAL(alloc.fromArea(*east), 0.0);
 
-    // Rename remaining key
-    AreaName newName = west->id;
-    newName += "_new";
-    alloc.rename(west->id, newName);
+    // Clear and re-add for west area with new coefficient
+    AreaName newName = "new_west_area";
+    alloc.fromArea(*west, 0.0);
+    alloc.fromArea(newName, 0.7);
     BOOST_CHECK_EQUAL(alloc.fromArea(*west), 0.0);
     BOOST_CHECK_CLOSE(alloc.fromArea(newName), 0.7, 1e-12);
 }

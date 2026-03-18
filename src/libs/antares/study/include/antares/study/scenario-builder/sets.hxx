@@ -52,15 +52,6 @@ inline Rules::Ptr Sets::find(const RulesScenarioName& lname) const
     return nullptr;
 }
 
-#ifdef BUILD_UI
-template<class StringT>
-inline bool Sets::saveToINIFile(const StringT& filename)
-{
-    const AnyString adapter(filename);
-    return internalSaveToIniFile(adapter);
-}
-#endif
-
 template<class StringT>
 bool Sets::loadFromINIFile(const StringT& filename)
 {
