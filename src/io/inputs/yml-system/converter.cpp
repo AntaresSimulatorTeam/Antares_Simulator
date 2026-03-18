@@ -301,7 +301,7 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                      << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
 
-    // checkForNonLinearityInConnections(components);
+    checkForNonLinearityInConnections(components);
 
     // Create area connections from system
     for (const auto& connection: ymlSystem.areaConnections)
