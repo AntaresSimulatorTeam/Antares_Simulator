@@ -605,42 +605,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* areaList, Area* area, const
     return ret;
 } // End AreaLinksLoadFromFolder(...)
 
-bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
-{
-    // Initialize
-    String capacitiesFolder;
-    capacitiesFolder << folder << SEP << "capacities";
-    if (!IO::Directory::Create(capacitiesFolder))
-    {
-        logs.error() << capacitiesFolder << ": Impossible to create the folder";
-        return false;
-    }
-
-    String filename;
-    bool success = true;
-
-    auto end = area->links.end();
-    for (auto i = area->links.begin(); i != end; ++i)
-    {
-        auto& link = *(i->second);
-
-        // Save parameters : 6 time series
-        filename.clear() << folder << SEP << link.with->id << "_parameters.txt";
-        success = link.parameters.saveToCSVFile(filename) && success;
-
-        // Save direct capacities time series
-        filename.clear() << capacitiesFolder << SEP << link.with->id << "_direct.txt";
-        success = link.directCapacities.saveToFile(filename, true) && success;
-
-        // Save indirect capacities time series
-
-        filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
-        success = link.indirectCapacities.saveToFile(filename, true) && success;
-    }
-
-    return success;
-}
-
 String AreaLink::getName() const
 {
     String s;

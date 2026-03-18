@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
       {allClusters.at(1).at(1) /*== east*/},
       {allClusters.at(2).front() /*== short*/}};
     int totalNbClusters = 0;
-    for (int i = 0; i < nbAreas; i++)
+    for (size_t i = 0; i < nbAreas; i++)
     {
         PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[i];
         const auto& areaClusters = allClusters[i];
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
         totalNbClusters += areaClusters.size();
     }
 
-    for (int pdt = 0; pdt < nbTimeStep; ++pdt)
+    for (unsigned int pdt = 0; pdt < nbTimeStep; ++pdt)
     {
         auto& numeroDeVariableDuPalierThermique = problemeHebdo
                                                     ->CorrespondanceVarNativesVarOptim[pdt]
@@ -279,7 +279,7 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
                   pdt * totalNbClusters);
         std::vector<std::string> dispatchableProductionVariables(totalNbClusters);
         int clusterGlobalIndex = 0;
-        for (int areaIndex = 0; areaIndex < nbAreas; areaIndex++)
+        for (size_t areaIndex = 0; areaIndex < nbAreas; areaIndex++)
         {
             const auto& areaName = areas[areaIndex];
 
@@ -320,9 +320,9 @@ BOOST_AUTO_TEST_CASE(add_two_max_generation_from_capacity_constraints)
       std::vector{my_thermal_invest_invested_capacity_t0, my_thermal_invest_invested_capacity_t1},
       std::vector{-175000., 21420.}); // == already_installed_availability_factor *
                                       // already_installed_capacity ==(1250.,-153)*(-140)
-    for (int pdt = 0; pdt < nbTimeStep; ++pdt)
+    for (unsigned int pdt = 0; pdt < nbTimeStep; ++pdt)
     {
-        for (int areaIndex = 0; areaIndex < nbAreas; areaIndex++)
+        for (size_t areaIndex = 0; areaIndex < nbAreas; areaIndex++)
         {
             const auto& area = areas[areaIndex];
             const auto& cluster = connectedClusterPerAreas[areaIndex];
