@@ -282,16 +282,27 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
     return portFieldDefinitions;
 }
 
-static void addSingleConstraint(std::vector<Constraint>& constraints,
-                                const YmlModel::Constraint& constraint,
-                                const YmlModel::Model& model,
-                                const ForbiddenNodes& forbiddenNodes)
+static Constraint createConstraint(const YmlModel::Constraint& constraint,
+                                   const YmlModel::Model& model,
+                                   const ForbiddenNodes& forbiddenNodes)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
     ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
-    constraints.emplace_back(constraint.id,
-                             Expression{constraint.expression, std::move(nodeRegistry)},
-                             convertLocation(constraint.location));
+    return {constraint.id,
+            Expression{constraint.expression, std::move(nodeRegistry)},
+            convertLocation(constraint.location)};
+}
+
+static Constraint createBindingConstraint(const YmlModel::Constraint& constraint,
+                                          const YmlModel::Model& model,
+                                          const ForbiddenNodes& forbiddenNodes)
+{
+    auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
+    ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
+    return {constraint.id,
+            Expression{constraint.expression, std::move(nodeRegistry)},
+            convertLocation(constraint.location),
+            true /* isBindingConstraint */};
 }
 
 /**
@@ -307,14 +318,12 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
 
     for (const auto& constraint: model.constraints)
     {
-        // gp : TODO > For more readability, make a a function that returns a converted constraint.
-        // constraints.emplace_back(convertConstraint(constraint, model, forbiddenInConstraint));
-        addSingleConstraint(constraints, constraint, model, forbiddenInConstraint);
+        constraints.push_back(createConstraint(constraint, model, forbiddenInConstraint));
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model, forbiddenInBindingConstraint);
+        constraints.push_back(createBindingConstraint(constraint, model, forbiddenInConstraint));
     }
     return constraints;
 }

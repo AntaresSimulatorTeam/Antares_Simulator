@@ -18,10 +18,12 @@ class Constraint final
 public:
     Constraint(std::string id,
                Expression expression,
-               Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS):
+               Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS,
+               bool isBindingConstraint = false):
         id_(std::move(id)),
         expression_(std::move(expression)),
-        location_(location)
+        location_(location),
+        isBindingConstraint_(isBindingConstraint)
     {
     }
 
@@ -40,9 +42,15 @@ public:
         return location_;
     }
 
+    bool isBindingConstraint() const
+    {
+        return isBindingConstraint_;
+    }
+
 private:
     std::string id_;
     Expression expression_;
+    bool isBindingConstraint_ = false;
     Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;
 };
 

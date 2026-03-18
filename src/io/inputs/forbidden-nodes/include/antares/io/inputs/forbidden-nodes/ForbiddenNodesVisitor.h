@@ -72,4 +72,4 @@ private:
     const ModelerStudy::SystemModel::Component* component_ = nullptr;
 };
 
-} // namespace Antares::IO::Inputs::ModelConverter
+} // namespace Antares::IO::Inputs::ForbidNodes
