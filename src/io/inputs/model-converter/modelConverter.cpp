@@ -323,7 +323,8 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
 
     for (const auto& constraint: model.binding_constraints)
     {
-        constraints.push_back(createBindingConstraint(constraint, model, forbiddenInConstraint));
+        constraints.push_back(
+          createBindingConstraint(constraint, model, forbiddenInBindingConstraint));
     }
     return constraints;
 }

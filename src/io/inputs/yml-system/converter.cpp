@@ -260,10 +260,12 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
 void checkForNonLinearityInConnections(const std::vector<Component>& components)
 {
     // We only need to check for non-linearity in binding constraints
+    auto filterBC = std::views::filter([](const auto& c) { return c.isBindingConstraint(); });
+
     for (const auto& component: components)
     {
         // We have to filter contraints and take only binding constraints.
-        for (const auto& constraint: component.getModel()->Constraints())
+        for (const auto& constraint: component.getModel()->Constraints() | filterBC)
         {
             const auto& expression = constraint.expression();
             ForbiddenNodesVisitor visitor(forbidNonLinearNodes, expression.Value(), &component);
