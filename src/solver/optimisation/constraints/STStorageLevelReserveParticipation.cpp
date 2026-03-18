@@ -30,7 +30,7 @@ void STStorageLevelReserveParticipation::add(int pays, int cluster, int pdt)
             {
                 if (capacityReservation.AllSTStorageReservesParticipation.contains(cluster))
                 {
-                    RESERVE_PARTICIPATION_STSTORAGE reserveParticipations
+                    RESERVE_PARTICIPATION_STSTORAGE& reserveParticipations
                       = capacityReservation.AllSTStorageReservesParticipation[cluster];
                     builder.STStorageClusterReserveParticipation(
                       capacityReservation.type,
