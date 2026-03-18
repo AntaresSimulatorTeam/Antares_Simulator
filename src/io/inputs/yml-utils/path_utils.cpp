@@ -3,9 +3,10 @@
 
 #include <filesystem>
 #include <iterator>
-#include <mutex>
 #include <string>
-#include <unordered_set>
+
+namespace Antares::IO::Inputs::YmlUtils
+{
 
 std::string printPathTree(const std::filesystem::path& p)
 {
@@ -34,3 +35,5 @@ std::string getBaseTree(const std::filesystem::path& nodeTagPath)
 {
     return printPathTree(nodeTagPath);
 }
+
+} // namespace Antares::IO::Inputs::YmlUtils

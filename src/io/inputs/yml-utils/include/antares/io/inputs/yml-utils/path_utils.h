@@ -6,6 +6,11 @@
 #include <filesystem>
 #include <string>
 
+namespace Antares::IO::Inputs::YmlUtils
+{
+
 std::string printPathTree(const std::filesystem::path& p);
 
 std::string getBaseTree(const std::filesystem::path& nodeTagPath);
+
+} // namespace Antares::IO::Inputs::YmlUtils

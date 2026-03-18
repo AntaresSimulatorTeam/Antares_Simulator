@@ -43,7 +43,7 @@ inline void checkMandatoryField(const Node& node, const std::string& nodeName)
         throw KeyNotFound(node.Mark(),
                           fmt::format("{} id is mandatory in library\n{}",
                                       nodeName,
-                                      printPathTree(nodePath)));
+                                      Antares::IO::Inputs::YmlUtils::printPathTree(nodePath)));
     }
 }
 

@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 #include "antares/io/inputs/yml-utils/path_utils.h"
 
@@ -42,7 +43,7 @@ public:
         }
         indentSpaces_ = (depthParts_ - 1) * 4;
 
-        baseTree_ = getBaseTree(nodeTagPath_);
+        baseTree_ = Antares::IO::Inputs::YmlUtils::getBaseTree(nodeTagPath_);
     }
 
     const std::unordered_map<std::string, int>& actualKeysLine() const
