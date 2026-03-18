@@ -102,6 +102,7 @@ set(TARGET_LIBS #No alias
         optim-model-filler
         yml-system
         yml-model
+		yml-utils
         model-converter
         modeler-parameters
         data-series-csv-importer
@@ -113,7 +114,7 @@ set(TARGET_LIBS #No alias
         yml-optim-config
         enums
         modeler-checks
-	structured-linear-problem
+		structured-linear-problem
 )
 
 install(TARGETS ${TARGET_LIBS}
