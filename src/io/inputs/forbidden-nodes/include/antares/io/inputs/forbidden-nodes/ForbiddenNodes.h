@@ -77,16 +77,6 @@ private:
     std::map<std::type_index, std::set<std::type_index>> rules_; // Parent --> set of children
 };
 
-// Helper functions for configuring forbidden nodes
-void ForbidInFunctionNodes(ForbiddenNodes& f);
-void ForbidConstraintSignNodes(ForbiddenNodes& f);
-ForbiddenNodes ForbidNodesInConstraint();
-ForbiddenNodes ForbidNodesInBindingConstraint();
-ForbiddenNodes ForbidNodesInVariableBounds();
-ForbiddenNodes ForbidNodesInPortFieldDef();
-ForbiddenNodes ForbidNodesInObjective();
-ForbiddenNodes ForbidNodesInExtraOutput();
-
 // Global forbidden nodes instances
 extern const ForbiddenNodes forbiddenInConstraint;
 extern const ForbiddenNodes forbiddenInBindingConstraint;
@@ -94,5 +84,6 @@ extern const ForbiddenNodes forbiddenInVariableBounds;
 extern const ForbiddenNodes forbiddenInPortFieldDef;
 extern const ForbiddenNodes forbiddenInObjective;
 extern const ForbiddenNodes forbiddenInExtraOutput;
+extern const ForbiddenNodes forbidNonLinearNodes;
 
 } // namespace Antares::IO::Inputs::ForbidNodes

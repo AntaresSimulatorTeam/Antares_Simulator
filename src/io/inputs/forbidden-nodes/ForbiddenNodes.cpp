@@ -1,5 +1,5 @@
-#include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
 
 namespace Antares::IO::Inputs::ForbidNodes
 {
@@ -96,11 +96,25 @@ ForbiddenNodes ForbidNodesInExtraOutput()
     return {};
 }
 
+static ForbiddenNodes ForbidNonLinearNodes()
+{
+    ForbiddenNodes f;
+    f.forbidGlobally<FunctionNodeType::reduced_cost,
+                     FunctionNodeType::dual,
+                     FunctionNodeType::max,
+                     FunctionNodeType::min,
+                     FunctionNodeType::floor,
+                     FunctionNodeType::ceil,
+                     FunctionNodeType::pow>();
+    return f;
+}
+
 const ForbiddenNodes forbiddenInConstraint = ForbidNodesInConstraint();
 const ForbiddenNodes forbiddenInBindingConstraint = ForbidNodesInBindingConstraint();
 const ForbiddenNodes forbiddenInVariableBounds = ForbidNodesInVariableBounds();
 const ForbiddenNodes forbiddenInPortFieldDef = ForbidNodesInPortFieldDef();
 const ForbiddenNodes forbiddenInObjective = ForbidNodesInObjective();
 const ForbiddenNodes forbiddenInExtraOutput = ForbidNodesInExtraOutput();
+const ForbiddenNodes forbidNonLinearNodes = ForbidNonLinearNodes();
 
 } // namespace Antares::IO::Inputs::ForbidNodes

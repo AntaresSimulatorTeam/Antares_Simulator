@@ -6,6 +6,11 @@
 #include <algorithm>
 #include <sstream>
 
+// gp : For the visit (dispatch(...)) of the nodes.
+// gp : Including ForbiddenNodesVisitor.h should be enough, but for some reason we need to include
+//      ExpressionsNodes.h as well.
+// gp : TODO: find a way to avoid including ExpressionsNodes.h
+#include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/logs/logs.h"
@@ -252,32 +257,18 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
                                            connection.thermalComponent.clusterId);
 }
 
-//static ForbiddenNodes ForbidNonLinearNodes()
-//{
-//    ForbiddenNodes f;
-//    ForbidInFunctionNodes(f);
-//    ForbidConstraintSignNodes(f);
-//    f.forbidGlobally<PortFieldSumNode>();
-//    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-//    return f;
-//}
-
-void checkForNonLinearityInVariableBounds(const Component& component)
-{
-    //for (const auto& variable: component.getModel()->Variables())
-    //{
-    //     ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.Id())
-    //       .dispatch(variable.Bounds().node);
-    //}
-}
-
 void checkForNonLinearityInConnections(const std::vector<Component>& components)
 {
+    // We only need to check for non-linearity in binding constraints
     for (const auto& component: components)
     {
-        checkForNonLinearityInVariableBounds(component);
-        // checkForNonLinearityInConstraints(component);
-        // checkForNonLinearityInObjectives(component);
+        // We have to filter contraints and take only binding constraints.
+        for (const auto& constraint: component.getModel()->Constraints())
+        {
+            const auto& expression = constraint.expression();
+            ForbiddenNodesVisitor visitor(forbidNonLinearNodes, expression.Value(), &component);
+            visitor.dispatch(expression.RootNode());
+        }
     }
 }
 
@@ -308,7 +299,7 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                      << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
 
-    checkForNonLinearityInConnections(components);
+    // checkForNonLinearityInConnections(components);
 
     // Create area connections from system
     for (const auto& connection: ymlSystem.areaConnections)

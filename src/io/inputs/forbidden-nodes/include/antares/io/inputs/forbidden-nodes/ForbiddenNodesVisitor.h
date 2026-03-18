@@ -9,6 +9,7 @@
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
 #include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
+#include "antares/study/system-model/component.h"
 
 namespace Antares::IO::Inputs::ForbidNodes
 {
@@ -25,6 +26,10 @@ class ForbiddenNodesVisitor final: public Expressions::Visitors::NodeVisitor<voi
 {
 public:
     explicit ForbiddenNodesVisitor(const ForbiddenNodes& forbid, const std::string& expression);
+    explicit ForbiddenNodesVisitor(const ForbiddenNodes& forbid,
+                                   const std::string& expression,
+                                   const ModelerStudy::SystemModel::Component* component);
+
     [[nodiscard]] std::string name() const override;
 
     void visit(const Expressions::Nodes::SumNode*) override;
@@ -64,6 +69,7 @@ private:
     const ForbiddenNodes& forbiddenNodes_;
     std::vector<std::pair<std::string, std::type_index>> parentsStack_;
     const std::string& expression_;
+    const ModelerStudy::SystemModel::Component* component_ = nullptr;
 };
 
 } // namespace Antares::IO::Inputs::ModelConverter

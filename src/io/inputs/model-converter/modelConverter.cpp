@@ -4,7 +4,7 @@
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
 #include <antares/expressions/iterators/pre-order.h>
-#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h> // gp : why do we need this inclusion ?
 #include "antares/expressions/expression.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodes.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"

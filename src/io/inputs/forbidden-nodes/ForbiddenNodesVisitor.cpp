@@ -34,6 +34,16 @@ ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbiddenNode
 {
 }
 
+// Constructor called to check expressions after component were built, so we have access to the
+// component and its ports fields definitions.
+ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbid,
+                                             const std::string& expression,
+                                             const ModelerStudy::SystemModel::Component* component):
+    ForbiddenNodesVisitor::ForbiddenNodesVisitor(forbid, expression)
+{
+    component_ = component;
+}
+
 std::string ForbiddenNodesVisitor::name() const
 {
     return "ForbiddenNodesVisitor";
@@ -102,11 +112,37 @@ void ForbiddenNodesVisitor::visit(const ParameterNode*)
 
 void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
 {
+    // gp : could be dead code, considering visit(const PortFieldSumNode* portFieldSumNode)
     checkIsForbidden(portFieldNode, typeIndexOf<PortFieldNode>());
 }
 
 void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
+    if (component_)
+    {
+        std::string localPortId = portFieldSumNode->getPortName();
+        std::string fieldId = portFieldSumNode->getFieldName();
+
+        for (const auto connectionEnd: component_->componentConnectionsViaPort(localPortId))
+        {
+            auto* connectedComponent = connectionEnd.component();
+            auto* connectedPort = connectionEnd.port();
+
+            // Expression (as a string) at connected port field
+            const auto expr_str = connectedComponent
+                                    ->expressionAtPortField(connectedPort->Id(), fieldId)
+                                    .Value();
+            // Expression (as a root node) at connected port field
+            const auto* nodeToVisit = connectedComponent->nodeAtPortField(connectedPort->Id(),
+                                                                          fieldId);
+
+            ForbiddenNodesVisitor visitor(forbiddenNodes_, expr_str);
+
+            visitor.dispatch(nodeToVisit);
+        }
+        return;
+    }
+
     checkIsForbidden(portFieldSumNode, typeIndexOf<PortFieldSumNode>());
 }
 
