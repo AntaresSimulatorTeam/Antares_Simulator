@@ -42,6 +42,7 @@ var namespaceAntares_1_1Optimisation =
     [ "checkTimeSteps", "namespaceAntares_1_1Optimisation.html#a156d5abad9c6bc2cf8dfb5919a160ad4", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a48c69d82095c9d4b7ac778aad53b0afa", null ],
     [ "getDimensions", "namespaceAntares_1_1Optimisation.html#a4f35767787ea7ad2c4ffa35bbb2254bb", null ],
+    [ "hasOutOfBoundsTimeShift", "namespaceAntares_1_1Optimisation.html#a55fdb18c03e90a50d292491bba7eaefd", null ],
     [ "isConstant", "namespaceAntares_1_1Optimisation.html#a96064a4e8b65de4e3b9f166ac4ee1024", null ],
     [ "isScenarioDependent", "namespaceAntares_1_1Optimisation.html#a71ec14c30f5e16e800f48711698122f1", null ],
     [ "isTimeConstant", "namespaceAntares_1_1Optimisation.html#ab67b00c9c72a890f2f1637226018f390", null ],

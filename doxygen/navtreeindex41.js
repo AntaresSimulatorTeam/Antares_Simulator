@@ -1,5 +1,16 @@
 var NAVTREEINDEX41 =
 {
+"structCumulationConstraint.html#a13563bb2050269e5ebafc1a8edd2da92":[8,0,96,0],
+"structCumulationConstraint.html#a4d3d494de407e18a424494aa5c647713":[8,0,96,1],
+"structDEMAND__FLEX__DOWN__POOL.html":[8,0,100],
+"structDEMAND__FLEX__DOWN__POOL.html#a4b91aa5f6b0605c637f074c435c46bdd":[8,0,100,0],
+"structDEMAND__FLEX__UP__POOL.html":[8,0,101],
+"structDEMAND__FLEX__UP__POOL.html#af984221093cc2b5d97fe9b7ca6bc1562":[8,0,101,0],
+"structDEMAND__MARKET__POOL.html":[8,0,102],
+"structDEMAND__MARKET__POOL.html#a39a0643c2eee267c6ee3a987506a5a0c":[8,0,102,0],
+"structDONNEES__ANNUELLES.html":[8,0,103],
+"structDONNEES__ANNUELLES.html#a0a55d18ec598c1bc4c7244c68e8d0acf":[8,0,103,7],
+"structDONNEES__ANNUELLES.html#a285c24ba96771edd7ad6a0f9d6c709bb":[8,0,103,14],
 "structDONNEES__ANNUELLES.html#a32fafb68a12664845fe25df8a44d70b8":[8,0,103,3],
 "structDONNEES__ANNUELLES.html#a3a6f462e2ad6a15754861d3876db74a3":[8,0,103,5],
 "structDONNEES__ANNUELLES.html#a3e3060acaf9b0174f806cc0cb8cbeae6":[8,0,103,2],
@@ -238,16 +249,5 @@ var NAVTREEINDEX41 =
 "structFixture_1_1Link.html#a7c093b966b7b2389166b2a7da7a1a156":[8,0,129,1,0],
 "structFixture_1_1Link.html#af0b5f8052ca2570165cbad0885f467a9":[8,0,129,1,1],
 "structFixture_1_1Renewable.html":[8,0,129,2],
-"structFixture_1_1Renewable.html#a164aa89da7dc27649540bc1876d68a0c":[8,0,129,2,1],
-"structFixture_1_1Renewable.html#a8f6e9698637c7c2faa3dcc29aada526d":[8,0,129,2,0],
-"structFixture_1_1STSAdditionalConstraints.html":[8,0,129,3],
-"structFixture_1_1STSAdditionalConstraints.html#a6d9bd1fa8d8c33b8e9d3ec2416d55af5":[8,0,129,3,2],
-"structFixture_1_1STSAdditionalConstraints.html#aabbf8d25963c82abee981f2c1574e42e":[8,0,129,3,1],
-"structFixture_1_1STSAdditionalConstraints.html#ac8db8b3f561a8412c39bbde053028562":[8,0,129,3,0],
-"structFixture_1_1STSInflows.html":[8,0,129,4],
-"structFixture_1_1STSInflows.html#a0148d9a54c76aea1d11da44cc0882431":[8,0,129,4,1],
-"structFixture_1_1STSInflows.html#ad926a89cd506c6220494720d540f8dd8":[8,0,129,4,0],
-"structFixture_1_1STSInflows.html#ae11aaaa7ca63398e2207bbafb017f974":[8,0,129,4,2],
-"structFixture_1_1Thermal.html":[8,0,129,5],
-"structFixture_1_1Thermal.html#a1be1f508074a7dd41bff86155d9e3aee":[8,0,129,5,0]
+"structFixture_1_1Renewable.html#a164aa89da7dc27649540bc1876d68a0c":[8,0,129,2,1]
 };

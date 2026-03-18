@@ -1,5 +1,16 @@
 var NAVTREEINDEX39 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html#aaf26f774664dda8eae99f942da0c8403":[8,0,0,11,6,4,109,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html#af4e8b15981a6925a63d75ac6ec03dab4":[8,0,0,11,6,4,109,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html":[8,0,0,11,6,4,111],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a086bcaae893ca7d144da9feac4125a59":[8,0,0,11,6,4,111,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#a1e29cf0432a1fa5caa74a0bbc30c1608":[8,0,0,11,6,4,111,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#abaab8f85c1c1d704700538da35c39dd0":[8,0,0,11,6,4,111,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#ad2fbf242cdb80795499b8a549fb55b4e":[8,0,0,11,6,4,111,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html#afa929b139bcabb9a98ad8715fc874a62":[8,0,0,11,6,4,111,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html":[8,0,0,11,6,4,113],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a2c9d07393ce936e4e01613f14b2c1c5b":[8,0,0,11,6,4,113,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a359458cd3981c05c2be5752f4a4d2573":[8,0,0,11,6,4,113,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a4841456f557e4dd6b885c1ff81be4c71":[8,0,0,11,6,4,113,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#a701a560058a6b0eb55430e8c463c4ca5":[8,0,0,11,6,4,113,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardResidualLoad.html#ac0f3d537e433fb8602173db1d75bb1fa":[8,0,0,11,6,4,113,2],
@@ -238,16 +249,5 @@ var NAVTREEINDEX39 =
 "structAreaConnectionFixture.html#aa79b50615755f1228a6501e139a531a7":[8,0,35,1],
 "structAreaConnectionFixture.html#acc839b38b2de76387847565012d11b4b":[8,0,35,10],
 "structAreaConnectionFixture.html#ad2399db2fa23d94fb0d3f3701e09e5af":[8,0,35,0],
-"structAreaConnectionFixture.html#afe91e3acd1527a554625e82226dcd77a":[8,0,35,2],
-"structAreaHydroLevelData.html":[8,0,37],
-"structAreaHydroLevelData.html#a60dfa4b1e0ae400a70a631828f5299a1":[8,0,37,0],
-"structAreaHydroLevelData.html#ab24ec75f870f2e34d7233909364cc9dd":[8,0,37,1],
-"structBOUND__FLEX__DOWN__NODE.html":[8,0,51],
-"structBOUND__FLEX__DOWN__NODE.html#a890184842464aadcca63cb2970421d3a":[8,0,51,0],
-"structBOUND__FLEX__UP__NODE.html":[8,0,52],
-"structBOUND__FLEX__UP__NODE.html#a3f87b04f2db3a6a0c9c867c821567314":[8,0,52,0],
-"structBasicProblemFixture.html":[8,0,40],
-"structBasicProblemFixture.html#a1978c05b0ad1387ca3ae897b9fe5a699":[8,0,40,0],
-"structBasicProblemFixture.html#a380c59a3e6aef2db1c4bf8caf53aab7f":[8,0,40,3],
-"structBasicProblemFixture.html#a6e17f314e6680796a5e840d6baa65b32":[8,0,40,5]
+"structAreaConnectionFixture.html#afe91e3acd1527a554625e82226dcd77a":[8,0,35,2]
 };

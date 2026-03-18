@@ -734,6 +734,7 @@ var namespaces_dup =
           [ "YmlOptimConfig", null, [
             [ "Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable" ],
             [ "Constraint", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint" ],
+            [ "ConstraintOutOfBoundsProcessing", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing" ],
             [ "Objective", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective" ],
             [ "Model", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model" ],
             [ "OptimConfig", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig.html", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig" ],
@@ -776,8 +777,8 @@ var namespaces_dup =
             [ "DailyBlocks", "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52add38c1a30e05c3a66419dc5abed2771b", null ],
             [ "WeeklyBlocks", "SimulationTableGenerator_8h.html#ad34c3f3a36ca379aa9e2e41dd2775e52a5ae68a535ceaa166cf8c89637789763c", null ]
           ] ],
-          [ "addConstraintEntries", "SimulationTableGenerator_8cpp.html#a4a61a5a7edc567393c10a82bab92fc07", null ],
-          [ "addEntriesForNode", "SimulationTableGenerator_8cpp.html#adcf87801a236e508660035eed910250f", null ],
+          [ "addConstraintEntries", "SimulationTableGenerator_8cpp.html#a50132b403b47edbb2f6995a4b9d72295", null ],
+          [ "addEntriesForNode", "SimulationTableGenerator_8cpp.html#a30c7cede3b549e12b2f8e7f03ede0e38", null ],
           [ "addExtraOutputEntries", "SimulationTableGenerator_8cpp.html#ab0be20d83677e151029abc8ea2de6665", null ],
           [ "addObjectiveValue", "SimulationTableGenerator_8cpp.html#ac242159fb15504f18063ccd689fd10d0", null ],
           [ "addPortEntries", "SimulationTableGenerator_8cpp.html#a9805d7115799df27d4ec3eae75066cca", null ],
@@ -839,6 +840,10 @@ var namespaces_dup =
           [ "FieldRole", "connection_8h.html#a30dcd9191930b1afa420e123a7234456", [
             [ "Sender", "connection_8h.html#a30dcd9191930b1afa420e123a7234456a8aace3ec18d83874d22850b7eee93c7d", null ],
             [ "Receiver", "connection_8h.html#a30dcd9191930b1afa420e123a7234456aa9d093d11bc6e98b0c8e586ffa545c85", null ]
+          ] ],
+          [ "OutOfBoundsProcessingMode", "study_2system-model_2include_2antares_2study_2system-model_2constraint_8h.html#a123e0032777af46df1e9ae93caea116c", [
+            [ "CYCLIC", "study_2system-model_2include_2antares_2study_2system-model_2constraint_8h.html#a123e0032777af46df1e9ae93caea116cab970fa647bc2f4761a80276428780061", null ],
+            [ "DROP", "study_2system-model_2include_2antares_2study_2system-model_2constraint_8h.html#a123e0032777af46df1e9ae93caea116cabf8f3be424eb6a72b21549fbb24ffb57", null ]
           ] ],
           [ "ScenarioDependent", "timeAndScenarioType_8h.html#a9fcb90f553c0df726b365defc71d4d2b", [
             [ "NO", "timeAndScenarioType_8h.html#a9fcb90f553c0df726b365defc71d4d2bac2f3f489a00553e7a01d369c103c7251", null ],
@@ -2089,6 +2094,7 @@ var namespaces_dup =
       [ "convert< Antares::IO::Inputs::YmlModel::Library >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Variable >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Constraint >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint_01_4.html", null ],
+      [ "convert< Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Objective >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Objective_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::Model >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Model_01_4.html", null ],
       [ "convert< Antares::IO::Inputs::YmlOptimConfig::OptimConfig >", "structYAML_1_1convert_3_01Antares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig_01_4.html", null ],
