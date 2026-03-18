@@ -12,17 +12,26 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
+enum class OutOfBoundsProcessingMode
+{
+    CYCLIC,
+    DROP
+};
+
 /// A constraint linking variables and parameters of a model together
 class Constraint final
 {
 public:
-    Constraint(std::string id,
-               Expression expression,
-               Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS,
-               bool isBindingConstraint = false):
+    Constraint(
+      std::string id,
+      Expression expression,
+      Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS,
+      OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC,
+      bool isBindingConstraint = false):
         id_(std::move(id)),
         expression_(std::move(expression)),
         location_(location),
+        outOfBoundsProcessingMode_(outOfBoundsProcessingMode),
         isBindingConstraint_(isBindingConstraint)
     {
     }
@@ -42,6 +51,11 @@ public:
         return location_;
     }
 
+    [[nodiscard]] OutOfBoundsProcessingMode outOfBoundsProcessingMode() const
+    {
+        return outOfBoundsProcessingMode_;
+    }
+
     bool isBindingConstraint() const
     {
         return isBindingConstraint_;
@@ -52,6 +66,7 @@ private:
     Expression expression_;
     bool isBindingConstraint_ = false;
     Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;
+    OutOfBoundsProcessingMode outOfBoundsProcessingMode_ = OutOfBoundsProcessingMode::CYCLIC;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

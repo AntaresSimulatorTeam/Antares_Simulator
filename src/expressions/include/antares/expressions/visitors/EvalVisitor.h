@@ -73,7 +73,6 @@ class EvaluationResult
 {
 public:
     explicit EvaluationResult(double value);
-
     explicit EvaluationResult(const std::vector<double>& values);
 
     EvaluationResult operator+(const EvaluationResult& right) const
@@ -148,6 +147,8 @@ public:
         throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
+    void toConstantVector(const size_t size);
+
     [[nodiscard]] double getValueInVector(unsigned index) const
     {
         if (const auto* v = std::get_if<std::vector<double>>(&value_))
@@ -162,7 +163,7 @@ public:
     // gp : They could be free function instead.
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult timeShift(int time_shift) const;
-    EvaluationResult timeSum(int from, int to) const;
+    EvaluationResult timeSumOnVector(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
 
     template<typename Op>

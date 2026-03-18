@@ -28,18 +28,6 @@ jobs:
       PYTHON_VERSION: "3.12"
 
     steps:
-    # Disk space on / is insufficient, leading to errors
-    # We use this 'hack' to remove unused stuff (android, dotnet, etc.) and change partition layout
-    - name: Maximize build space
-      uses: easimon/maximize-build-space@v10
-      with:
-        root-reserve-mb: 5120
-        swap-size-mb: 1024
-        remove-dotnet: true
-        remove-android: true
-        remove-haskell: true
-        remove-codeql: true
-
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -114,6 +102,20 @@ jobs:
         python -m pip install --upgrade pip
         pip3 install -r src/tests/examples/requirements.txt
 
+    # Disk space on / is insufficient; remove unused SDKs and caches after
+    # all apt/pip installs are done so we don't break their cache lookups.
+    - name: Free root space (remove unused SDKs and caches)
+      run: |
+        sudo rm -rf /usr/share/dotnet || true
+        sudo rm -rf /usr/local/lib/android || true
+        sudo rm -rf /opt/ghc || true
+        sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+        sudo apt-get clean -y || true
+        sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* || true
+        python -m pip cache purge || true
+        rm -rf /home/runner/.cache/pip || true
+        sudo rm -rf /tmp/* /var/tmp/* || true
+
     - name: Read simtest version
       run: |
         echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
@@ -126,7 +128,7 @@ jobs:
 
     - name: Init submodule
       run: |
-        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 --remote src/tests/resources/Antares_Simulator_Tests_NR
 
     - name: Configure
       run: |
@@ -137,7 +139,7 @@ jobs:
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCODE_COVERAGE=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
+        -DCMAKE_PREFIX_PATH="${{env.ORTOOLS_DIR}}/install" \
         -DBUILD_TESTING=ON \
         -DMZ_CODE_COVERAGE=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
@@ -233,6 +235,10 @@ jobs:
       run: |
         gcovr --sonarqube --output coverage.xml
 
+    - name: Remove Antares_Simulator_Tests_NR
+      run: |
+        rm -rf src/tests/resources/Antares_Simulator_Tests_NR
+
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
       uses: SonarSource/sonarqube-scan-action@v7.0.0
@@ -240,6 +246,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
+        scannerVersion: 7.3.0.5189 #8.0.1.6346 hangs
         args: >
           --define sonar.host.url=${{ env.SONAR_SERVER_URL }} --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
 

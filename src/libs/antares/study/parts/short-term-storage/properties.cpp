@@ -94,25 +94,6 @@ bool Properties::loadKey(const IniFile::Property* p)
     return false;
 }
 
-void Properties::save(IniFile& ini) const
-{
-    IniFile::Section* s = ini.addSection(this->name);
-
-    s->add("name", this->name);
-    s->add("group", this->groupName);
-    s->add("reservoircapacity", this->reservoirCapacity);
-    s->add("initiallevel", this->initialLevel);
-    s->add("injectionnominalcapacity", this->injectionNominalCapacity);
-    s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
-
-    s->add("efficiency", this->injectionEfficiency);
-    s->add("efficiencyWithdrawal", this->withdrawalEfficiency);
-    s->add("initialleveloptim", this->initialLevelOptim);
-    s->add("penalize-variation-injection", this->penalizeVariationInjection);
-    s->add("penalize-variation-withdrawal", this->penalizeVariationWithdrawal);
-    s->add("enabled", this->enabled);
-}
-
 bool Properties::validate()
 {
     auto checkMandatory = [this](const std::optional<double>& prop, const std::string& label)

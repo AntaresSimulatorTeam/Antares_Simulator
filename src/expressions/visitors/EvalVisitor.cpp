@@ -8,6 +8,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
@@ -15,6 +16,12 @@ using namespace Antares::Optimisation;
 
 namespace Antares::Expressions::Visitors
 {
+
+std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b)
+{
+    std::ranges::transform(a, b, a.begin(), std::plus<double>());
+    return a;
+}
 
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,
@@ -24,10 +31,10 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
+    optimContainer_(optimContainer),
     component_(component),
     data_(data),
     scenario_(scenario),
-    optimContainer_(optimContainer),
     evalContext_(&component, data, scenario),
     fillContext_(fillContext)
 {
@@ -101,17 +108,17 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (systemParameter.type == VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (isConstant(systemParameter.type))
     {
         return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
     }
-    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
-    {
-        return EvaluationResult(
-          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0));
-    }
 
     unsigned year = fillContext_.getYear();
+    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    {
+        return EvaluationResult(evalContext_.getParameterValue(node->value(), year, 0));
+    }
+
     std::vector<double> params;
     params.reserve(fillContext_.getLocalNumberOfTimeSteps());
     for (auto t = fillContext_.getGlobalFirstTimeStep(); t <= fillContext_.getGlobalLastTimeStep();
@@ -181,25 +188,25 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
-    const auto expression = dispatch(node->expression());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    auto result = dispatch(node->expression());
     const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
-
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-    return expression.timeSum(from, to);
+
+    result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
+    return result.timeSumOnVector(from, to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
-    const EvaluationResult expression = dispatch(node->child());
-    return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
+    const EvaluationResult result = dispatch(node->child());
+    return result.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
 EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
+    const auto& constraint = component_.getModel()->Constraints().at(cstrIndex);
     const auto& variability = optimContainer_.getConstraintVariability(component_, cstrIndex);
 
     if (isTimeConstant(variability))
@@ -211,12 +218,41 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
     // The constraint depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
+    const auto activeConstraintCount = optimContainer_.getConstraintCount(component_, cstrIndex);
     const auto componentConstraints = optimContainer_.componentConstraints(component_,
                                                                            cstrIndex,
-                                                                           nbTimeStep);
-    for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
+                                                                           activeConstraintCount);
+
+    if (constraint.outOfBoundsProcessingMode()
+        == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC)
     {
-        constraintValues[constraintInd] = componentConstraints[constraintInd]->dual();
+        for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
+        {
+            constraintValues[constraintInd] = componentConstraints[constraintInd]->dual();
+        }
+        return EvaluationResult{constraintValues};
+    }
+
+    std::size_t activeConstraintIndex = 0;
+    for (unsigned timeStep = fillContext_.getLocalFirstTimeStep();
+         timeStep <= fillContext_.getLocalLastTimeStep();
+         ++timeStep)
+    {
+        const auto localTimeStep = timeStep - fillContext_.getLocalFirstTimeStep();
+        if (Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                  timeStep,
+                                                  fillContext_,
+                                                  *this))
+        {
+            continue;
+        }
+
+        if (activeConstraintIndex >= componentConstraints.size())
+        {
+            throw std::runtime_error("Inconsistent number of active constraints for dual().");
+        }
+
+        constraintValues[localTimeStep] = componentConstraints[activeConstraintIndex++]->dual();
     }
 
     return EvaluationResult{constraintValues};
@@ -335,6 +371,15 @@ size_t EvaluationResult::size() const
     return 1;
 }
 
+void EvaluationResult::toConstantVector(const size_t size)
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        const double value = std::get<double>(value_);
+        value_ = std::vector<double>(size, value);
+    }
+}
+
 double EvaluationResult::value(unsigned i) const
 {
     if (std::holds_alternative<std::vector<double>>(value_))
@@ -350,32 +395,28 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-double shift(double value, int)
+EvaluationResult EvaluationResult::timeShift(int shift) const
 {
-    return value;
+    if (std::holds_alternative<double>(value_))
+    {
+        return EvaluationResult(std::get<double>(value_));
+    }
+
+    auto shifted_values = shiftVector(std::get<std::vector<double>>(value_), shift);
+    return EvaluationResult(shifted_values);
 }
 
-std::vector<double> shift(const std::vector<double>& values, int timeShift)
+EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
-    return shiftVector(values, timeShift);
-}
+    const std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
+    std::vector<double> to_return(values.size(), 0.);
 
-EvaluationResult EvaluationResult::timeShift(int time_shift) const
-{
-    return EvaluationResult(
-      std::visit([&time_shift](const auto& l) -> std::variant<double, std::vector<double>>
-                 { return shift(l, time_shift); },
-                 value_));
-}
-
-EvaluationResult EvaluationResult::timeSum(int from, int to) const
-{
-    EvaluationResult ret(0.);
     for (int shift = from; shift <= to; ++shift)
     {
-        ret += timeShift(shift);
+        std::vector<double> shifted_values = shiftVector(values, shift);
+        to_return += shifted_values;
     }
-    return ret;
+    return EvaluationResult(to_return);
 }
 
 EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const

@@ -21,7 +21,8 @@ FictitiousLoadData Group1::GetFictitiousLoadData()
 {
     return {.CorrespondanceCntNativesCntOptim = problemeHebdo_->CorrespondanceCntNativesCntOptim,
             .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
-            .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro};
+            .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro,
+            .ShortTermStorage = problemeHebdo_->ShortTermStorage};
 }
 
 MaxUnsupEnergyData Group1::GetMaxUnsupEnergyData()

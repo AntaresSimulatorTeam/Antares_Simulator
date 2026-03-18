@@ -35,9 +35,9 @@ ComponentToAreaConnectionFiller::ComponentToAreaConnectionFiller(
     problemeHebdo_(problemeHebdo),
     modelerSystem_(problemeHebdo->modelerData->system.get()),
     optimEntityContainer_(optimEntityContainer),
+    pb_(optimEntityContainer_.Problem()),
     data_(data),
-    scenarioGroupRepo_(scenarioGroupRepo),
-    pb_(optimEntityContainer_.Problem())
+    scenarioGroupRepo_(scenarioGroupRepo)
 {
     areaIndices_ = associateIndicesToAreas(problemeHebdo_);
     checkAreasFromConnexionsExist();
@@ -59,7 +59,7 @@ void ComponentToAreaConnectionFiller::checkAreasFromConnexionsExist()
     }
 }
 
-void ComponentToAreaConnectionFiller::addVariables(const FillContext& ctx)
+void ComponentToAreaConnectionFiller::addVariables([[maybe_unused]] const FillContext& ctx)
 {
 }
 

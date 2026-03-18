@@ -61,6 +61,19 @@ PortInDefinition::PortInDefinition(const std::string& portId, const std::string&
 {
 }
 
+static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::string& mode)
+{
+    if (mode.empty() || mode == "cyclic")
+    {
+        return OutOfBoundsProcessingMode::CYCLIC;
+    }
+    if (mode == "drop")
+    {
+        return OutOfBoundsProcessingMode::DROP;
+    }
+    throw std::invalid_argument("Invalid out-of-bounds processing mode: " + mode);
+}
+
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
 {
     return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound};
@@ -290,7 +303,8 @@ static Constraint createConstraint(const YmlModel::Constraint& constraint,
     ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
     return {constraint.id,
             Expression{constraint.expression, std::move(nodeRegistry)},
-            convertLocation(constraint.location)};
+            convertLocation(constraint.location),
+            convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode)};
 }
 
 static Constraint createBindingConstraint(const YmlModel::Constraint& constraint,
@@ -302,6 +316,7 @@ static Constraint createBindingConstraint(const YmlModel::Constraint& constraint
     return {constraint.id,
             Expression{constraint.expression, std::move(nodeRegistry)},
             convertLocation(constraint.location),
+            convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode),
             true /* isBindingConstraint */};
 }
 
