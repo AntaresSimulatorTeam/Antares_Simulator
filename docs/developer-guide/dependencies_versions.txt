@@ -1,7 +1,7 @@
 Comparing vcpkg baseline versions:
   Old: b322364f06308bdd24823f9d8f03fe0cc86fd46f
   New: 62159a45e18f3a9ac0548628dcaf74fcb60c6ff9
-  Project: /home/marechaljas/CLionProjects/Antares_Simulator/src/vcpkg.json
+  Project: <project_root>/src/vcpkg.json
 
 ====================================================================================================
 DIRECT DEPENDENCIES (from vcpkg.json)
