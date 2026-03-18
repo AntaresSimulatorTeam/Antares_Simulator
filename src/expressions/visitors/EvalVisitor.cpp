@@ -8,6 +8,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
@@ -201,6 +202,7 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
+    const auto& constraint = component_.getModel()->Constraints().at(cstrIndex);
     const auto& variability = optimContainer_.getConstraintVariability(component_, cstrIndex);
 
     if (isTimeConstant(variability))
@@ -212,12 +214,41 @@ EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
     // The constraint depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
+    const auto activeConstraintCount = optimContainer_.getConstraintCount(component_, cstrIndex);
     const auto componentConstraints = optimContainer_.componentConstraints(component_,
                                                                            cstrIndex,
-                                                                           nbTimeStep);
-    for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
+                                                                           activeConstraintCount);
+
+    if (constraint.outOfBoundsProcessingMode()
+        == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC)
     {
-        constraintValues[constraintInd] = componentConstraints[constraintInd]->dual();
+        for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
+        {
+            constraintValues[constraintInd] = componentConstraints[constraintInd]->dual();
+        }
+        return EvaluationResult{constraintValues};
+    }
+
+    std::size_t activeConstraintIndex = 0;
+    for (unsigned timeStep = fillContext_.getLocalFirstTimeStep();
+         timeStep <= fillContext_.getLocalLastTimeStep();
+         ++timeStep)
+    {
+        const auto localTimeStep = timeStep - fillContext_.getLocalFirstTimeStep();
+        if (Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                  timeStep,
+                                                  fillContext_,
+                                                  *this))
+        {
+            continue;
+        }
+
+        if (activeConstraintIndex >= componentConstraints.size())
+        {
+            throw std::runtime_error("Inconsistent number of active constraints for dual().");
+        }
+
+        constraintValues[localTimeStep] = componentConstraints[activeConstraintIndex++]->dual();
     }
 
     return EvaluationResult{constraintValues};

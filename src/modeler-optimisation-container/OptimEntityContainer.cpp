@@ -27,7 +27,7 @@ unsigned OptimEntityContainer::getConstraintStartLine(const Component& component
                                                       unsigned index) const
 {
     const auto& optimComponent = optimComponents_.at(component.Index());
-    return constraintStartLine_.at(optimComponent.modelConstraintsGlobalIndices.at(index));
+    return optimComponent.modelConstraintStartLines.at(index);
 }
 
 VariabilityType OptimEntityContainer::getConstraintVariability(const Component& component,
@@ -35,11 +35,6 @@ VariabilityType OptimEntityContainer::getConstraintVariability(const Component& 
 {
     const auto& optimComponent = optimComponents_.at(component.Index());
     return optimComponent.modelConstraintsVariability.at(index);
-}
-
-ILinearProblem& OptimEntityContainer::Problem()
-{
-    return linearProblem_;
 }
 
 void OptimEntityContainer::addStartColumn()
@@ -95,25 +90,22 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
             }
         }
 
-        optimComponents_.push_back({.modelVariableGlobalIndices = modelVariableGlobalIndices,
-                                    .modelConstraintsGlobalIndices = {},
-                                    .modelConstraintsVariability = {}});
+        optimComponents_.push_back(
+          OptimComponent{.modelVariableGlobalIndices = modelVariableGlobalIndices,
+                         .modelConstraintStartLines = {},
+                         .modelConstraintsVariability = {}});
     }
 }
 
 void OptimEntityContainer::registerConstraint(const Component& component,
-                                              const VariabilityType& variability)
+                                              const VariabilityType& variability,
+                                              unsigned count)
 {
-    unsigned globalIndex = (unsigned)constraintStartLine_.size();
     auto& optimComponent = optimComponents_.at(component.Index());
-    optimComponent.modelConstraintsGlobalIndices.push_back(globalIndex);
+    optimComponent.modelConstraintStartLines.push_back(
+      static_cast<unsigned>(linearProblem_.constraintCount()));
     optimComponent.modelConstraintsVariability.push_back(variability);
-    addStartLine();
-}
-
-void OptimEntityContainer::addStartLine()
-{
-    constraintStartLine_.push_back(linearProblem_.constraintCount());
+    optimComponent.modelConstraintCounts.push_back(count);
 }
 
 } // namespace Antares::Optimisation

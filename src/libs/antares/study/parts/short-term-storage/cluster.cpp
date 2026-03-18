@@ -66,13 +66,4 @@ bool STStorageCluster::loadSeries(const std::filesystem::path& folder,
     return ret;
 }
 
-void STStorageCluster::saveProperties(IniFile& ini) const
-{
-    properties.save(ini);
-}
-
-bool STStorageCluster::saveSeries(const std::string& path) const
-{
-    return series->saveToFolder(path);
-}
 } // namespace Antares::Data::ShortTermStorage
