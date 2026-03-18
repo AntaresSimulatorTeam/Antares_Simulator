@@ -1,6 +1,13 @@
 Antares Changelog
 =================
 
+8.8.20 (03/2026)
+--------------------
+## Bugfix
+
+- Add 2 constraints in adq patch [ANT-4365] (#3409)
+- Add sts prod to constraint fictitious load (#3446)
+
 8.8.19 (12/2025)
 --------------------
 ## Bugfix
