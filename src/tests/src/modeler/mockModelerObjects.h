@@ -4,8 +4,8 @@
 #pragma once
 #include <map>
 #include <string>
-#include <vector>
 #include <utility>
+#include <vector>
 
 #include "antares/study/system-model/component.h"
 
@@ -23,7 +23,8 @@ Antares::ModelerStudy::SystemModel::Component createComponent(
 Antares::ModelerStudy::SystemModel::Component createComponent(
   const Antares::ModelerStudy::SystemModel::Model& model,
   const std::string& id,
-  std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue> parameter_values);
+  std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
+    parameter_values);
 
 std::pair<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
 build_context_parameter_with(const std::string& id,
