@@ -257,11 +257,14 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
                                            connection.thermalComponent.clusterId);
 }
 
-void checkForNonLinearityInConnections(const std::vector<Component>& components)
+void checkForNonLinearityBehindConnections(const std::vector<Component>& components)
 {
-    // We only need to check for non-linearity in binding constraints
+    // Now that connections are made between components, we need to check for 
+    // linearity of binding constraints in the current component's model.
+    // If the constaints expressions hold a sum_connections(...) operator containing 
+    // port field resolution, we must check that, on the port field other side, only 
+    // a linear expression is found.
     auto filterBC = std::views::filter([](const auto& c) { return c.isBindingConstraint(); });
-
     for (const auto& component: components)
     {
         // We have to filter contraints and take only binding constraints.
@@ -301,7 +304,7 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                      << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
 
-    checkForNonLinearityInConnections(components);
+    checkForNonLinearityBehindConnections(components);
 
     // Create area connections from system
     for (const auto& connection: ymlSystem.areaConnections)

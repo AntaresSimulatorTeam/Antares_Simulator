@@ -12,11 +12,11 @@
 
 library:
   id: library-eo
-  description: Library for test case about therma cluster income
+  description: Library for test case : computing a thermal cluster income
 
   port-types:
     - id: flow
-      description: A port which transfers power flow
+      description: A port which transfers power flow, a port to transfer dual(balance)
       fields:
         - id: flow
         - id: price
