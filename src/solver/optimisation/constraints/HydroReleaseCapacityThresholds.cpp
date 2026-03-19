@@ -25,7 +25,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
                 {
                     builder.HydroReleaseReserveParticipation(
                       reserveParticipations.globalIndexClusterParticipation,
-                      -1);
+                      -1); // - Sum(H^on_re-)
                 }
             }
 
@@ -33,7 +33,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             {
                 if (data.hydroOfArea[pays].PresenceDHydrauliqueModulable)
                 {
-                    builder.HydProd(pays, 1);
+                    builder.HydProd(pays, 1); // H
                 }
                 builder.greaterThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]
@@ -61,7 +61,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
                 {
                     builder.HydroReleaseReserveParticipation(
                       reserveParticipations.globalIndexClusterParticipation,
-                      1);
+                      1); // Sum(H^on_re+)
                 }
             }
 
@@ -69,7 +69,7 @@ void HydroReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
             {
                 if (data.hydroOfArea[pays].PresenceDHydrauliqueModulable)
                 {
-                    builder.HydProd(pays, 1);
+                    builder.HydProd(pays, 1); // H
                 }
                 builder.lessThan();
                 data.CorrespondanceCntNativesCntOptim[pdt]

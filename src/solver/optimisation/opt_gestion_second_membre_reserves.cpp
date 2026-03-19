@@ -295,12 +295,13 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                         .HydroReleaseCapacityThresholdsMax[globalClusterIdx];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = hydroCluster.ContrainteDePmaxHydrauliqueHoraire[pdtJour];
+                SecondMembre[cnt] = hydroCluster
+                                      .ContrainteDePmaxHydrauliqueHoraire[pdtJour]; // Hmax
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 
             cnt = CorrespondanceCntNativesCntOptim.reservesIndices.value()
-                    .HydroReleaseCapacityThresholdsMin[globalClusterIdx];
+                    .HydroReleaseCapacityThresholdsMin[globalClusterIdx]; // Hmin
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = hydroCluster.MingenHoraire[pdtJour];
