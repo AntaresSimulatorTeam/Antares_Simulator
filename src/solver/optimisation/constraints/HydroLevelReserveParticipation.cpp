@@ -29,7 +29,7 @@ void HydroLevelReserveParticipation::add(int pays, int cluster, int pdt)
             {
                 if (capacityReservation.AllHydroReservesParticipation.size())
                 {
-                    RESERVE_PARTICIPATION_HYDRO reserveParticipations
+                    RESERVE_PARTICIPATION_HYDRO& reserveParticipations
                       = capacityReservation.AllHydroReservesParticipation[cluster];
                     builder.HydroReserveParticipation(
                       type,
