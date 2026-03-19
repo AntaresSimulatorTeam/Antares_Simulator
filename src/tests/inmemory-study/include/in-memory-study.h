@@ -147,8 +147,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
 Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
                                                                 const std::string& stsName);
 
-void addScratchpadToEachArea(Data::Study& study);
-
 // -------------------------------
 // Simulation results retrieval
 // -------------------------------
