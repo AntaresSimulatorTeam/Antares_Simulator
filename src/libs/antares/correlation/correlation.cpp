@@ -108,6 +108,10 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
             continue;
         }
 
+
+        // First case corresponds to "not found"
+        // Second corresponds to "%" in first position
+        // Third correspond to "%" in last position
         const size_t offset = p->key.find('%');
         if (offset == std::string::npos or !offset or offset == p->key.size() - 1)
         {
