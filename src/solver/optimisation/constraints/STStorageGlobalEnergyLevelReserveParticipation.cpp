@@ -8,11 +8,14 @@ void STStorageGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, 
     {
         // 15 (i)
         // Stock participation is energy constrained (optional constraints)
-        //  Sum(P_{res,t_st} * R_{min,res} +/- J_down/up * R_{lambda,t_st}) <= n_min * R_up
-        // R_t : stock level at time t
-        // P_{res,t_st} : power participation for reserve down res at time t_st
-        // R_{min,res} : max power participation ratio
-        // R_up : max stock level
+        // Sum(P_{res,t_st} * R_{min,res} - J_up * R_{lambda,t_st}) <= n_min * R_up * -
+        // J_up
+        //
+        // Sum(P_{res,t_st} * R_{min,res} + J_down * R_{lambda,t_st}) <= n_min * R_up *
+        // J_down
+        //
+        // R_t : stock level at time t P_{res,t_st} : power participation for reserve down
+        // res at time t_st R_{min,res} : max power participation ratio R_up : max stock level
 
         for (auto type: {ReserveType::DOWN, ReserveType::UP})
         {

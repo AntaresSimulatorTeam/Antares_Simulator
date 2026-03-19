@@ -11,7 +11,7 @@ void STReleaseCapacityThresholds::add(int pays, int cluster, int pdt)
         // capacity thresholds Hmin + Sum(H^on_re-) <= H <= Hmax - Sum(H^on_re+) H^on_re- :
         // Release Participation of cluster to Down reserves H^on_re+ : Release Participation of
         // cluster to Up reserves H : Release Power output from cluster Hmax : Maximum Release
-        // Power from cluster
+        // Power from cluster Hmin : Minimal release of power from cluster
 
         // 15 (m) (1) : H - Sum(H^on_re-) >= Hmin
         {
