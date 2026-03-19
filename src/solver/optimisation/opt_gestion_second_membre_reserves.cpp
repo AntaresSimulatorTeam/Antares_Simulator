@@ -389,13 +389,15 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     double level_min = hydroCluster.NiveauHoraireInf[pdtHebdo];
 
                     SecondMembre[cnt] = -reserve.energyActivationRatio
-                                        * reserve.referenceActivationDuration * level_min;
+                                        * reserve.referenceActivationDuration
+                                        * level_min; // J_down * n_min * R_up
                 }
                 else
                 {
                     double level_max = hydroCluster.NiveauHoraireSup[pdtHebdo];
                     SecondMembre[cnt] = reserve.energyActivationRatio
-                                        * reserve.referenceActivationDuration * level_max;
+                                        * reserve.referenceActivationDuration
+                                        * level_max; // J_up * n_min * R_down
                 }
 
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;

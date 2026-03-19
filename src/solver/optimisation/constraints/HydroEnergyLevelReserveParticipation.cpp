@@ -10,13 +10,17 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
     {
         if (!data.Simulation)
         {
-            // 15 (s) (1)
-            // Participation of down reserves requires a sufficient level of stock
-            //  Sum(P_{res,t_st} * R_{min,res} +/- J_res * R_{lambda,t_st}) <= n_min * R_up
+            // 15 (s)
+            // Participation of reserves requires a sufficient level of stock
+            //  Sum(P_{res,t_st} * R_{min,res} +/- J_res * R_{lambda,t_st}) <= n_min * R_up/down *
+            //  J_res
             // R_t : stock level at time t
             // P_{res,t_st} : power participation for reserve down res at time t_st
             // R_{min,res} : max power participation ratio
             // R_up : max stock level
+            // R_down : min stock level
+            // J_res : maximum activation of res over several time steps
+            // n_min : number of time steps that must have the min amount of stock to contract res
             {
                 double sign = capacityReservation.type == ReserveType::UP ? -1. : 1.;
 
@@ -28,18 +32,21 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
 
                 for (int t = 0; t < capacityReservation.referenceActivationDuration; t++)
                 {
-                    builder.HydroReserveParticipation(
+                    builder.HydroReserveParticipation( // P_{res,t_st}
                       capacityReservation.type,
                       reserveParticipation.globalIndexClusterParticipation,
-                      capacityReservation.powerActivationRatio,
+                      capacityReservation.powerActivationRatio, // R_{min,res}
                       t,
-                      builder.data.NombreDePasDeTempsPourUneOptimisation);
+                      builder.data
+                        .NombreDePasDeTempsPourUneOptimisation); // P_{res,t_st} * R_{min,res}
 
-                    builder.HydroLevel(globalClusterIdx,
-                                       sign * capacityReservation.energyActivationRatio,
-                                       t,
-                                       builder.data.NombreDePasDeTempsPourUneOptimisation);
-                }
+                    builder.HydroLevel( // R_{lambda,t_st}
+                      globalClusterIdx,
+                      sign * capacityReservation.energyActivationRatio, // +/- J_res
+                      t,
+                      builder.data
+                        .NombreDePasDeTempsPourUneOptimisation); // +/- J_res * R_{lambda,t_st}
+                } // Sum over t
 
                 builder.lessThan();
 
@@ -47,7 +54,8 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
                   .reservesIndices.value()
                   .HydroEnergyLevelParticipation[reserveParticipation
                                                    .globalIndexClusterParticipation]
-                  = builder.data.nombreDeContraintes;
+                  = builder.data
+                      .nombreDeContraintes; // n_min * R_up/down * J_res constraint index for RHS
 
                 ConstraintNamer namer(builder.data.NomDesContraintes);
                 const int hourInTheYear = builder.data.weekInTheYear * 168 + pdt;
