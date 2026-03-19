@@ -36,7 +36,7 @@ public:
     //! Smart pointer
     using Ptr = std::shared_ptr<Rules>;
     //! Map
-    using Map = std::map<RulesScenarioName, Ptr>;
+    using Map = std::map<std::string, Ptr>;
     //! Map ID
     using MappingID = std::map<int, Ptr>;
 
@@ -70,8 +70,8 @@ public:
     uint areaCount() const;
 
     //! Name of the rules set
-    const RulesScenarioName& name() const;
-    void setName(RulesScenarioName name);
+    const std::string& name() const;
+    void setName(std::string name);
 
     /*!
     ** \brief Apply the changes to the timeseries number matrices
@@ -150,7 +150,7 @@ private:
     //! Total number of areas
     uint pAreaCount;
     //! Name of the rules
-    RulesScenarioName pName;
+    std::string pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
     std::map<std::string, std::vector<uint>> disabledClustersOnRuleActive;
 

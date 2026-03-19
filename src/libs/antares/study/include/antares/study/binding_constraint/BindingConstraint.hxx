@@ -6,12 +6,12 @@
 
 namespace Antares::Data
 {
-inline const ConstraintName& BindingConstraint::name() const
+inline const std::string& BindingConstraint::name() const
 {
     return pName;
 }
 
-inline const ConstraintName& BindingConstraint::id() const
+inline const std::string& BindingConstraint::id() const
 {
     return pID;
 }

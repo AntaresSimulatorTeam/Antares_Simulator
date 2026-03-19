@@ -59,12 +59,12 @@ bool Sets::loadFromStudy(Study& study)
     return r;
 }
 
-Rules::Ptr Sets::createNew(const RulesScenarioName& name)
+Rules::Ptr Sets::createNew(const std::string& name)
 {
     assert(pStudy != nullptr);
 
     // Checking in a first time if the name already exists
-    RulesScenarioName id = boost::to_lower_copy(name);
+    std::string id = boost::to_lower_copy(name);
     if (exists(id))
     {
         return nullptr;
@@ -78,7 +78,7 @@ Rules::Ptr Sets::createNew(const RulesScenarioName& name)
     return newRulesSet;
 }
 
-bool Sets::remove(const RulesScenarioName& lname)
+bool Sets::remove(const std::string& lname)
 {
     // Checking in a first time if the name already exists
     if (lname.empty())
@@ -116,7 +116,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
               return;
           }
 
-          RulesScenarioName name = section.name;
+          std::string name = section.name;
           boost::trim(name);
           if (name.empty())
           {

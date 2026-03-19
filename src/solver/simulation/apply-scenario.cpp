@@ -16,7 +16,7 @@ void ApplyCustomScenario(Data::Study& study)
     auto& rulename = parameters.activeRulesScenario;
     logs.info() << "Preparing time-series numbers... (" << rulename << ')';
     logs.info() << "  :: Scenario Builder, active target: " << rulename;
-    Data::RulesScenarioName id = boost::to_lower_copy(rulename);
+    std::string id = boost::to_lower_copy(rulename);
 
     study.scenarioRulesLoadIfNotAvailable();
     if (study.scenarioRules)

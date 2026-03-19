@@ -42,12 +42,6 @@ class Correlation;
 
 //! Name of a single area
 using AreaName = std::string;
-//! Name of a single link
-using AreaLinkName = std::string;
-
-using ConstraintName = std::string;
-
-using RulesScenarioName = std::string;
 
 //! Name mapping
 using AreaNameMapping = std::map<AreaName, AreaName>;
