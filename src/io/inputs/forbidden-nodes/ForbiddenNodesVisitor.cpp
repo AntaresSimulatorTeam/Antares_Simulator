@@ -137,7 +137,6 @@ void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
                                                                           fieldId);
 
             ForbiddenNodesVisitor visitor(forbiddenNodes_, expr_str);
-
             visitor.dispatch(nodeToVisit);
         }
         return;

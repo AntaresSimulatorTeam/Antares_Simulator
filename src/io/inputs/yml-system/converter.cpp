@@ -261,13 +261,13 @@ void checkForNonLinearityBehindConnections(const std::vector<Component>& compone
 {
     // Now that connections are made between components, we need to check for 
     // linearity of binding constraints in the current component's model.
-    // If the constaints expressions hold a sum_connections(...) operator containing 
-    // port field resolution, we must check that, on the port field other side, only 
+    // Thus, if the constaints expressions hold a sum_connections(...) operator containing 
+    // port field resolution, we have to make sure that, on the port field other side, only 
     // a linear expression is found.
     auto filterBC = std::views::filter([](const auto& c) { return c.isBindingConstraint(); });
     for (const auto& component: components)
     {
-        // We have to filter contraints and take only binding constraints.
+        // We only consider binding constraints.
         for (const auto& binding_constraint: component.getModel()->Constraints() | filterBC)
         {
             const auto& expression = binding_constraint.expression();
