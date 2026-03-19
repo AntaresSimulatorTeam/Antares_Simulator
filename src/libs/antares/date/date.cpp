@@ -610,7 +610,6 @@ void Calendar::reset()
         // days
         for (uint d = 0; d != maxDaysInYear; ++d)
         {
-            auto& str = text.daysYear[d];
             auto& dayinfo = days[d];
             std::ostringstream oss;
             uint day = d + 1;
@@ -652,7 +651,7 @@ void Calendar::reset()
             {
                 oss << (dayinfo.dayMonth + 1);
             }
-            str = oss.str();
+            text.daysYear[d] = oss.str();
         }
     }
 }
