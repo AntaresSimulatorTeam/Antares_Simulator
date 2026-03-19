@@ -492,7 +492,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
       std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
         paramsAndValues)
     {
-        components.emplace_back(createComponent(model, id, paramsAndValues, components.size()));
+        components.emplace_back(createComponent(model, id, paramsAndValues));
         optimEntityContainer.addFromSystemComponents(components);
         return &components.back();
     }

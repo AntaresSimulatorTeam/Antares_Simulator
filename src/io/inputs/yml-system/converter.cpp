@@ -78,8 +78,7 @@ static const Model& getModel(const std::vector<Library>& libraries,
 }
 
 static Component createComponent(const YmlSystem::Component& c,
-                                 const std::vector<Library>& libraries,
-                                 unsigned int componentIndex)
+                                 const std::vector<Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -99,7 +98,6 @@ static Component createComponent(const YmlSystem::Component& c,
     }
 
     auto component = component_builder.withId(c.id)
-                       .withIndex(componentIndex)
                        .withModel(&model)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
@@ -281,7 +279,6 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
 {
     // Create components from system
     std::vector<Component> components;
-    unsigned int componentIndex = 0;
     for (const auto& c: ymlSystem.components)
     {
         auto it = std::ranges::find_if(std::as_const(components),
@@ -291,8 +288,7 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
             throw std::invalid_argument("System has at least two components with the same id ('"
                                         + c.id + "'), this is not supported");
         }
-        components.push_back(createComponent(c, libraries, componentIndex));
-        ++componentIndex;
+        components.push_back(createComponent(c, libraries));
         logs.debug() << "Loaded component `" << c.id << "`";
     }
 

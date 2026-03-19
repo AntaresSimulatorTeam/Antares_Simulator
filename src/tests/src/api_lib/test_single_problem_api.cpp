@@ -71,10 +71,9 @@ std::unique_ptr<Study> buildStudy(bool thermal, bool hydro)
     }
 
     // TODO StudyBuilder should have a `run` method that
-    // calls addScratchpadToEachArea and initializeRuntimeInfos
+    // initializeRuntimeInfos
     // auto study = builder.run();
     builder.study->initializeRuntimeInfos();
-    addScratchpadToEachArea(*builder.study);
 
     // TODO this is HORRIBLE
     // more specifically, this resize is usually done when loading from files. It's all good, except
@@ -104,9 +103,9 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 504);
 
     const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
-                                              "PositiveUnsuppliedEnergy::area<area>::hour<0>");
+                                              "UnsuppliedEnergy::area<area>::hour<0>");
     const auto spilledVariable = findIndex(constantData.VariablesMeaning,
-                                           "NegativeUnsuppliedEnergy::area<area>::hour<0>");
+                                           "Spillage::area<area>::hour<0>");
 
     const auto areaBalanceConstraint = findIndex(constantData.ConstraintsMeaning,
                                                  "AreaBalance::area<area>::hour<0>");
@@ -172,9 +171,9 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                                              "HydProd::area<area>::hour<0>");
 
     const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
-                                              "PositiveUnsuppliedEnergy::area<area>::hour<0>");
+                                              "UnsuppliedEnergy::area<area>::hour<0>");
     const auto spilledVariable = findIndex(constantData.VariablesMeaning,
-                                           "NegativeUnsuppliedEnergy::area<area>::hour<0>");
+                                           "Spillage::area<area>::hour<0>");
 
     const auto areaHydroLevel = findIndex(constantData.ConstraintsMeaning,
                                           "AreaHydroLevel::area<area>::hour<0>");
@@ -580,7 +579,6 @@ BOOST_AUTO_TEST_CASE(weeks_independent_multiple_areas_all_compliant)
     loadTSconfig2.setDimensions(1).fillColumnWith(0, 120.);
 
     builder.study->initializeRuntimeInfos();
-    addScratchpadToEachArea(*builder.study);
     area1->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
     area2->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
 
@@ -635,7 +633,6 @@ BOOST_AUTO_TEST_CASE(weeks_not_independent_multiple_areas_one_non_compliant)
     loadTSconfig2.setDimensions(1).fillColumnWith(0, 120.);
 
     builder.study->initializeRuntimeInfos();
-    addScratchpadToEachArea(*builder.study);
     area1->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
     area2->hydro.deltaBetweenFinalAndInitialLevels.resize(builder.study->parameters.nbYears);
 
@@ -708,7 +705,6 @@ ModelerData OneParameterOneVariableOneConstraint()
     std::vector<Component> components;
     components.emplace_back(ComponentBuilder()
                               .withId("component")
-                              .withIndex(0)
                               .withModel(&libraries.at(0).Models().at("model"))
                               .withParameterValues(parameterValues)
                               .withScenarioGroupId("scenario_group")

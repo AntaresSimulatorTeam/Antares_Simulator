@@ -26,7 +26,7 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-        builder.updateHourWithinWeek(pdt).DirectFlux(interco,
+        builder.updateHourWithinWeek(pdt).DirectFlow(interco,
                                                      poids,
                                                      offset,
                                                      builder.data.NombreDePasDeTemps);
