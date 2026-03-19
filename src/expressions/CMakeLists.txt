@@ -1,6 +1,7 @@
 project(Expressions)
 
 add_subdirectory(antlr-interface)
+
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/PortFieldSumNode.cpp
@@ -10,13 +11,11 @@ set(SRC_Expressions
         nodes/TimeSumNode.cpp
         nodes/FunctionNode.cpp
 
-
         visitors/AstDOTStyleVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
         visitors/InvalidNode.cpp
-        visitors/LinearityVisitor.cpp
         visitors/NodeVisitor.cpp
         visitors/PrintVisitor.cpp
         visitors/VariabilityVisitor.cpp
@@ -55,11 +54,10 @@ set(SRC_Expressions
         include/antares/expressions/visitors/EvalVisitor.h
         include/antares/expressions/visitors/InvalidNode.h
         include/antares/expressions/visitors/LinearStatus.h
-        include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h
         include/antares/expressions/visitors/PrintVisitor.h
         include/antares/expressions/visitors/VariabilityVisitor.h
-        include/antares/expressions/visitors/VariadicNodeFunctionVisit.h
+        include/antares/expressions/visitors/HelpVisitNode.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h
@@ -72,19 +70,21 @@ set(SRC_Expressions
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
-add_library(expressions
-        ${SRC_Expressions})
-add_library(Antares::expressions ALIAS expressions)
+
+add_library(expressions ${SRC_Expressions})
 
 target_include_directories(expressions
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+add_library(Antares::expressions ALIAS expressions)
+
 target_link_libraries(expressions
         PUBLIC
         Boost::headers
         Antares::antares-study-system-model
         Antares::logs
+        Antares::vector-utils
         fmt::fmt
         #TODO i need LinearProblemData
         linear-problem-api
@@ -101,8 +101,8 @@ endif ()
 
 
 add_library(expressions-iterators
-        iterators/pre-order.cpp
-        include/antares/expressions/iterators/pre-order.h
+            iterators/pre-order.cpp
+            include/antares/expressions/iterators/pre-order.h
 )
 add_library(Antares::expressions-iterators ALIAS expressions-iterators)
 

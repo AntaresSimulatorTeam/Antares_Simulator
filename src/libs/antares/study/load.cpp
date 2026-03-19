@@ -1,30 +1,16 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <fmt/format.h>
+#include <fstream>
+#include <sstream>
 
 #include <antares/solver/modeler/loadFiles/loadFiles.h>
 #include "antares/exception/LoadingError.hpp"
 #include "antares/study/study.h"
-#include "antares/study/ui-runtimeinfos.h"
 #include "antares/study/version.h"
+
+#include "include/antares/study/fwd.h"
 
 namespace fs = std::filesystem;
 
@@ -49,57 +35,48 @@ bool Study::internalLoadHeader(const fs::path& path)
     return true;
 }
 
-bool Study::loadFromFolder(const std::string& path, const StudyLoadOptions& options)
+bool Study::loadFromFolder(const std::string& path,
+                           const StudyLoadOptions& options,
+                           Benchmarking::DurationCollector& durationCollector)
 {
     fs::path normPath = path;
     normPath = normPath.lexically_normal();
-    return internalLoadFromFolder(normPath, options);
+    return internalLoadFromFolder(normPath, options, durationCollector);
 }
 
 bool Study::internalLoadIni(const fs::path& path, const StudyLoadOptions& options)
 {
     if (!internalLoadHeader(path))
     {
-        if (options.loadOnlyNeeded)
-        {
-            return false;
-        }
+        return false;
     }
 
-    // The simulation settings
-    if (!simulationComments.loadFromFolder(options))
+    // The simulation settings (comments.txt)
+    fs::path commentsPath = folderSettings / "comments.txt";
+    std::ifstream file(commentsPath);
+    if (file)
     {
-        if (options.loadOnlyNeeded)
-        {
-            return false;
-        }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        simulationComments = buffer.str();
     }
+
     // Load the general data
     fs::path generalDataPath = folderSettings / "generaldata.ini";
-    bool errorWhileLoading = !parameters.loadFromFile(generalDataPath, header.version);
-
-    parameters.validateOptions(options);
-
-    parameters.fixBadValues();
-
-    if (errorWhileLoading)
+    if (!parameters.loadFromFile(generalDataPath, header.version))
     {
-        if (options.loadOnlyNeeded)
-        {
-            return false;
-        }
+        return false;
     }
 
-    // Load the layer data
-    fs::path layersPath = path / "layers" / "layers.ini";
-    loadLayers(layersPath);
+    parameters.validateOptions(options);
+    parameters.fixBadValues();
 
     return true;
 }
 
 void Study::parameterFiller(const StudyLoadOptions& options)
 {
-    if (usedByTheSolver && !options.prepareOutput)
+    if (!options.prepareOutput)
     {
         parameters.noOutput = true;
         parameters.yearByYear = false;
@@ -110,49 +87,22 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 
     // We can not run the simulation if the study folder is not in the latest
     // version and that we would like to re-importe the generated timeseries
-    if (usedByTheSolver)
+    // We have time-series to import
+    if (parameters.exportTimeSeriesInInput && header.version != StudyVersion::latest())
     {
-        // We have time-series to import
-        if (parameters.exportTimeSeriesInInput && header.version != StudyVersion::latest())
-        {
-            logs.info() << "Stochastic TS stored in input parametrized."
-                           " Disabling Store in input because study is not at latest version."
-                           " This prevents writing data in unsupported format at the study version";
-            parameters.exportTimeSeriesInInput = 0;
-        }
+        logs.info() << "Stochastic TS stored in input parametrized."
+                       " Disabling Store in input because study is not at latest version."
+                       " This prevents writing data in unsupported format at the study version";
+        parameters.exportTimeSeriesInInput = 0;
     }
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study
-    prepareOutput(); // will abort early if not usedByTheSolver
-
-    // Scenario Rules sets, only available since v3.6
-    // After two consecutive load, some scenario builder data
-    // may still exist.
-    scenarioRulesDestroy();
-
-    if (JIT::usedFromGUI && uiinfo)
-    {
-        // Post-processing when loaded from the User-Interface
-        uiinfo->reload();
-        uiinfo->reloadBindingConstraints();
-    }
+    prepareOutput();
 
     // calendar update
-    if (usedByTheSolver)
-    {
-        calendar.reset({parameters.dayOfThe1stJanuary,
-                        parameters.firstWeekday,
-                        parameters.firstMonthInYear,
-                        false});
-    }
-    else
-    {
-        calendar.reset({parameters.dayOfThe1stJanuary,
-                        parameters.firstWeekday,
-                        parameters.firstMonthInYear,
-                        parameters.leapYear});
-    }
+    calendar.reset(
+      {parameters.dayOfThe1stJanuary, parameters.firstWeekday, parameters.firstMonthInYear, false});
 
     calendarOutput.reset({parameters.dayOfThe1stJanuary,
                           parameters.firstWeekday,
@@ -163,11 +113,10 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions& options)
+bool Study::internalLoadFromFolder(const fs::path& path,
+                                   const StudyLoadOptions& options,
+                                   Benchmarking::DurationCollector& durationCollector)
 {
-    // IO statistics
-    Statistics::LogsDumper statisticsDumper;
-
     // Check if the path is correct
     if (!fs::exists(path))
     {
@@ -189,36 +138,41 @@ bool Study::internalLoadFromFolder(const fs::path& path, const StudyLoadOptions&
         return false;
     }
 
-    // -------------------------
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
+    bool ret = true;
 
-    // In case parallel mode was not chosen, only 1 core is allowed
-    if (!options.enableParallel && !options.forceParallel)
+    durationCollector("study_loading") << [this, &options, &ret]
     {
-        maxNbYearsInParallel = 1;
-    }
+        // -------------------------
+        // Logical cores
+        // -------------------------
+        // Getting the number of logical cores to use before loading and creating the areas :
+        // Areas need this number to be up-to-date at construction.
+        getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
-    // End logical core --------
+        // In case parallel mode was not chosen, only 1 core is allowed
+        if (!options.enableParallel && !options.forceParallel)
+        {
+            maxNbYearsInParallel = 1;
+        }
 
-    // Areas - Raw Data
-    bool ret = areas.loadFromFolder(options);
+        // End logical core --------
 
-    logs.info() << "Loading correlation matrices...";
-    // Correlation matrices
-    ret = internalLoadCorrelationMatrices(options) && ret;
-    // Binding constraints
-    ret = internalLoadBindingConstraints(options) && ret;
-    // Sets of areas & links
-    ret = internalLoadSets() && ret;
+        // Areas - Raw Data
+        ret = areas.loadFromFolder(options) && ret;
 
-    parameterFiller(options);
+        logs.info() << "Loading correlation matrices...";
+        // Correlation matrices
+        ret = internalLoadCorrelationMatrices() && ret;
+        // Binding constraints
+        ret = internalLoadBindingConstraints(options) && ret;
+        // Sets of areas & links
+        ret = internalLoadSets() && ret;
+
+        parameterFiller(options);
+    };
 
     // Modeler components for hybrid studies
-    loadModelerComponents();
+    durationCollector("modeler_loading") << [this] { loadModelerComponents(); };
 
     return ret;
 }
@@ -227,8 +181,15 @@ void Study::loadModelerComponents()
 {
     try
     {
-        modelerInput_ = std::make_unique<Modeler::Data>(Solver::LoadFiles::loadAll(folder));
-        checkModelerDataCompatibility();
+        auto data = Solver::LoadFiles::loadAll(folder);
+        if (data.has_value())
+        {
+            // Move the ModelerData out of the optional to avoid copying
+            // (ModelerData contains unique_ptr members and is move-only: it can be moved but not
+            // copied).
+            modelerInput_ = std::make_unique<Solver::ModelerData>(std::move(*data));
+            checkModelerDataCompatibility();
+        }
     }
     catch (const Error::LoadingError& e)
     {
@@ -236,8 +197,8 @@ void Study::loadModelerComponents()
     }
     catch (const std::exception& e)
     {
-        logs.info() << "No modeler inputs were loaded";
-        logs.info() << "Modeler inputs error: " << e.what();
+        logs.error() << "No modeler inputs were loaded";
+        logs.error() << "Modeler inputs error: " << e.what();
     }
 
     if (fs::exists(folder / "parameters.yml"))
@@ -249,10 +210,18 @@ void Study::loadModelerComponents()
 /**
  * Checks that the modeler data is compatible with the solver for hybrid studies.
  * Currently, unsupported cases in the solver are :
- * - variables that are not scenario dependent
+ * - variables that are not scenario dependent (allowed only in benders-decomposition mode)
  */
 void Study::checkModelerDataCompatibility() const
 {
+    // Scenario-independent variables are allowed in benders-decomposition mode for investment
+    // studies
+    if (modelerInput_->resolutionMode == Solver::ResolutionMode::BENDERS_DECOMPOSITION)
+    {
+        return;
+    }
+
+    // For sequential-subproblems mode, scenario-independent variables are not supported
     for (auto& component: modelerInput_->system->Components())
     {
         for (auto& variable: component.getModel()->Variables())
@@ -260,8 +229,10 @@ void Study::checkModelerDataCompatibility() const
             if (!variable.IsScenarioDependent())
             {
                 throw Error::LoadingError(fmt::format(
-                  "Scenario-independent variables are not supported in hybrid studies. "
-                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\").",
+                  "Scenario-independent variables are not supported in hybrid studies with "
+                  "sequential-subproblems resolution mode. "
+                  "Please review variable \"{}\" in model \"{}\" (used in component \"{}\"). "
+                  "Use resolution-mode: benders-decomposition for investment studies.",
                   variable.Id(),
                   component.getModel()->Id(),
                   component.Id()));
@@ -270,31 +241,31 @@ void Study::checkModelerDataCompatibility() const
     }
 }
 
-bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
+bool Study::internalLoadCorrelationMatrices()
 {
     // Load
-    if (!options.loadOnlyNeeded || timeSeriesLoad & parameters.timeSeriesToGenerate)
+    if (timeSeriesLoad & parameters.timeSeriesToGenerate)
     {
         fs::path loadPath = folderInput / "load" / "prepro" / "correlation.ini";
         preproLoadCorrelation.loadFromFile(*this, loadPath.string());
     }
 
     // Solar
-    if (!options.loadOnlyNeeded || timeSeriesSolar & parameters.timeSeriesToGenerate)
+    if (timeSeriesSolar & parameters.timeSeriesToGenerate)
     {
         fs::path solarPath = folderInput / "solar" / "prepro" / "correlation.ini";
         preproSolarCorrelation.loadFromFile(*this, solarPath.string());
     }
 
     // Wind
-    if (!options.loadOnlyNeeded || timeSeriesWind & parameters.timeSeriesToGenerate)
+    if (timeSeriesWind & parameters.timeSeriesToGenerate)
     {
         fs::path windPath = folderInput / "wind" / "prepro" / "correlation.ini";
         preproWindCorrelation.loadFromFile(*this, windPath.string());
     }
 
     // Hydro
-    if (!options.loadOnlyNeeded || timeSeriesHydro & parameters.timeSeriesToGenerate)
+    if (timeSeriesHydro & parameters.timeSeriesToGenerate)
     {
         fs::path hydroPath = folderInput / "hydro" / "prepro" / "correlation.ini";
         preproHydroCorrelation.loadFromFile(*this, hydroPath.string());
@@ -307,12 +278,11 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     // All checks are performed in 'loadFromFolder'
     // (actually internalLoadFromFolder)
     fs::path constraintPath = folderInput / "bindingconstraints";
-    bool r = bindingConstraints.loadFromFolder(*this, options, constraintPath);
-    if (r)
+    if (!bindingConstraints.loadFromFolder(*this, options, constraintPath))
     {
-        r &= bindingConstraintsGroups.buildFrom(bindingConstraints);
+        return false;
     }
-    return (!r && options.loadOnlyNeeded) ? false : r;
+    return bindingConstraintsGroups.buildFrom(bindingConstraints);
 }
 
 bool Study::internalLoadSets()
@@ -337,38 +307,6 @@ bool Study::internalLoadSets()
 
     logs.warning() << "Impossible to load the sets of areas";
     return false;
-}
-
-void Study::reloadCorrelation()
-{
-    StudyLoadOptions options;
-    options.loadOnlyNeeded = false;
-    internalLoadCorrelationMatrices(options);
-}
-
-// TODO remove with GUI
-bool Study::reloadXCastData()
-{
-    // if changes are required, please update AreaListLoadFromFolderSingleArea()
-    bool ret = true;
-    areas.each(
-      [this, &ret](Area& area)
-      {
-          assert(area.load.prepro);
-          assert(area.solar.prepro);
-          assert(area.wind.prepro);
-
-          // Load
-          fs::path loadPath = folderInput / "load" / "prepro" / area.id.to<std::string>();
-          ret = area.load.prepro->loadFromFolder(loadPath.string()) && ret;
-          // Solar
-          fs::path solarPath = folderInput / "solar" / "prepro" / area.id.to<std::string>();
-          ret = area.solar.prepro->loadFromFolder(solarPath.string()) && ret;
-          // Wind
-          fs::path windPath = folderInput / "wind" / "prepro" / area.id.to<std::string>();
-          ret = area.wind.prepro->loadFromFolder(windPath.string()) && ret;
-      });
-    return ret;
 }
 
 } // namespace Antares::Data

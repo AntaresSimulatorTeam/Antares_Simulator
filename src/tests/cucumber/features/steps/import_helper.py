@@ -1,9 +1,19 @@
+import sys
 from importlib import import_module
 from pkgutil import iter_modules
 from os import walk
 from pathlib import Path
 
 import os
+
+
+def import_shared_utils():
+    # Add the parent directory (tests) to sys.path so we can import shared_utils
+    tests_dir = Path(__file__).parents[3]
+    if str(tests_dir) not in sys.path:
+        sys.path.insert(0, str(tests_dir))
+
+
 
 
 def import_steps(steps_dir: Path):

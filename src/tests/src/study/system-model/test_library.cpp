@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -170,12 +152,12 @@ BOOST_AUTO_TEST_CASE(port_type_basic)
     PortField field1("field1");
     PortField field2("field2");
     std::vector fields = {field1, field2};
-    PortType portType("myId", std::move(fields), "");
+    PortType portType("myId", std::move(fields));
     BOOST_CHECK_EQUAL(portType.Id(), "myId");
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "field1");
     BOOST_CHECK_EQUAL(portType.Fields()[1].Id(), "field2");
-    BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().has_value(), false);
+    BOOST_CHECK_EQUAL(portType.areaConnection().has_value(), false);
 }
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
@@ -183,27 +165,47 @@ BOOST_AUTO_TEST_CASE(port_type_with_area_connection)
     PortField field1("firstField");
     PortField field2("secondField");
     std::vector fields = {field1, field2};
-    PortType portType("portTypeId", std::move(fields), "secondField");
+    PortType portType("portTypeId", std::move(fields), {"secondField", "", ""});
     BOOST_CHECK_EQUAL(portType.Id(), "portTypeId");
     BOOST_REQUIRE_EQUAL(portType.Fields().size(), 2);
     BOOST_CHECK_EQUAL(portType.Fields()[0].Id(), "firstField");
     BOOST_CHECK_EQUAL(portType.Fields()[1].Id(), "secondField");
-    BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().has_value(), true);
-    BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().value(), "secondField");
+    BOOST_CHECK_EQUAL(portType.areaConnection().has_value(), true);
+    BOOST_CHECK_EQUAL(portType.areaConnection()->inject_to_balance, "secondField");
 }
 
 BOOST_AUTO_TEST_CASE(port_type_with_area_connection_error)
 {
-    auto shouldThrow = []
+    auto shouldNotThrow = []
     {
         PortField field1("firstField");
         std::vector fields = {field1};
-        return PortType("portTypeId", std::move(fields), "secondField");
+        return PortType("portTypeId", std::move(fields), {"secondField", "", ""});
     };
-    BOOST_CHECK_EXCEPTION(shouldThrow(),
-                          std::invalid_argument,
-                          checkMessage("Field \"secondField\" selected for area connections was "
-                                       "not defined in PortType \"portTypeId\"."));
+
+    BOOST_CHECK_NO_THROW(shouldNotThrow());
 }
 
+BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_last_field_undefined__exception_raised)
+{
+    auto shouldNotThrow = []
+    {
+        std::vector fields = {PortField("field-1"), PortField("field-2")};
+        return PortType("portTypeId", std::move(fields), {"field-1", "field-2", "field-3"});
+    };
+    BOOST_CHECK_NO_THROW(shouldNotThrow());
+}
+
+BOOST_AUTO_TEST_CASE(port_type_with_area_connection_having_all_fields_defined)
+{
+    std::vector fields = {PortField("field-1"), PortField("field-2"), PortField("field-3")};
+    PortType portType("portTypeId", std::move(fields), {"field-3", "field-2", "field-1"});
+
+    BOOST_CHECK(portType.areaConnection().has_value());
+
+    AreaConnection areaConnection = portType.areaConnection().value();
+    BOOST_CHECK_EQUAL(areaConnection.inject_to_balance, "field-3");
+    BOOST_CHECK_EQUAL(areaConnection.spillage_bound, "field-2");
+    BOOST_CHECK_EQUAL(areaConnection.unsupplied_energy_bound, "field-1");
+}
 BOOST_AUTO_TEST_SUITE_END()

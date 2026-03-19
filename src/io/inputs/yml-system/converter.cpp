@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/io/inputs/yml-system/converter.h"
 
@@ -96,8 +78,7 @@ static const Model& getModel(const std::vector<Library>& libraries,
 }
 
 static Component createComponent(const YmlSystem::Component& c,
-                                 const std::vector<Library>& libraries,
-                                 unsigned int componentIndex)
+                                 const std::vector<Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -117,7 +98,6 @@ static Component createComponent(const YmlSystem::Component& c,
     }
 
     auto component = component_builder.withId(c.id)
-                       .withIndex(componentIndex)
                        .withModel(&model)
                        .withScenarioGroupId(c.scenarioGroup)
                        .withParameterValues(parameters)
@@ -135,18 +115,6 @@ static Component& findComponent(const std::string& id, std::vector<Component>& c
         throw std::invalid_argument("Component with id '" + id + "' not found in system.");
     }
     return *it;
-}
-
-static const Port& findPort(const Component& component, const std::string& portId)
-{
-    const auto& ports = component.getModel()->Ports();
-    const auto& it = ports.find(portId);
-    if (it == ports.end())
-    {
-        throw std::invalid_argument("Port with id '" + portId + "' not found in component '"
-                                    + component.Id() + "'.");
-    }
-    return it->second;
 }
 
 static void CheckPortSelfConnection(const std::string& firstComponentId,
@@ -248,9 +216,9 @@ static void connectComponents(const YmlSystem::Connection& connection,
     CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
 
     auto& firstComponent = findComponent(firstComponentId, components);
-    const auto& firstPort = findPort(firstComponent, firstPortId);
+    const auto& firstPort = firstComponent.findPort(firstPortId, "");
     auto& secondComponent = findComponent(secondComponentId, components);
-    const auto& secondPort = findPort(secondComponent, secondPortId);
+    const auto& secondPort = secondComponent.findPort(secondPortId, "");
     CheckPortsType(firstPort, secondPort);
 
     const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(firstComponent,
@@ -279,16 +247,38 @@ static void connectComponents(const YmlSystem::Connection& connection,
 static void connectAreas(const YmlSystem::AreaConnection& connection,
                          std::vector<Component>& components)
 {
-    // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
     component.addAreaConnection(connection.portId, connection.areaId);
+}
+
+/**
+ * @brief Uses a YmlSystem::ThermalCapacityConnection to connect (areas, clusters) and components
+ * via ports
+ *
+ * @param connection A YmlSystem::ThermalCapacityConnection object containing the connection
+ * details.
+ * @param components An unordered map of component IDs to SystemModel::Component objects.
+ *
+ * @return void
+ *
+ * @throw std::invalid_argument if a component is not found, or if the connection could not be
+ * established
+ */
+static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
+                                   std::vector<Component>& components)
+{
+    // TODO : check that area exists in legacy study? seems complicated here
+    auto& component = findComponent(connection.componentId, components);
+
+    component.addThermalCapacityConnection(connection.portId,
+                                           connection.thermalComponent.areaId,
+                                           connection.thermalComponent.clusterId);
 }
 
 System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& libraries)
 {
     // Create components from system
     std::vector<Component> components;
-    unsigned int componentIndex = 0;
     for (const auto& c: ymlSystem.components)
     {
         auto it = std::ranges::find_if(std::as_const(components),
@@ -298,8 +288,7 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
             throw std::invalid_argument("System has at least two components with the same id ('"
                                         + c.id + "'), this is not supported");
         }
-        components.push_back(createComponent(c, libraries, componentIndex));
-        ++componentIndex;
+        components.push_back(createComponent(c, libraries));
         logs.debug() << "Loaded component `" << c.id << "`";
     }
 
@@ -317,6 +306,14 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         connectAreas(connection, components);
         logs.debug() << "Loaded area connection (component=`" << connection.componentId
                      << "` area=`" << connection.areaId << "`)";
+    }
+    // Create thermal capacity connections from system
+    for (const auto& connection: ymlSystem.thermalCapacityConnections)
+    {
+        connectThermalCapacity(connection, components);
+        logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
+                     << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
+                     << connection.thermalComponent.clusterId << "`)";
     }
 
     // Build system from components and connections

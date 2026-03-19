@@ -1,24 +1,6 @@
 
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
@@ -87,6 +69,7 @@ struct Constraint
     std::string id;
     std::string expression;
     std::string location;
+    std::string out_of_bounds_processing_mode;
 };
 
 struct ExtraOutput
@@ -116,15 +99,20 @@ struct Model
     std::vector<ExtraOutput> extra_outputs;
 };
 
+struct AreaConnection
+{
+    std::string inject_to_balance;
+    std::string spillage_bound;
+    std::string unsupplied_energy_bound;
+};
+
 struct PortType
 {
     std::string id;
     std::string description;
-    // Small optimization: we only need the name of the fields
-    // No need for an intermediate struct "field" with just a string "name" member
     std::vector<std::string> fields;
-    // Also, we only need the injection-field of the area-connection
-    std::string area_connection_injection_field;
+    std::string thermal_capacity_connection_field;
+    AreaConnection area_connection;
 };
 
 struct Library

@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
@@ -115,6 +97,39 @@ struct convert<Antares::IO::Inputs::YmlSystem::AreaConnection>
 };
 
 template<>
+struct convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
+{
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::ThermalComponent& rhs)
+    {
+        if (!node.IsMap() || node.size() != 2)
+        {
+            return false;
+        }
+        rhs.areaId = node["area"].as<std::string>();
+        rhs.clusterId = node["cluster-id"].as<std::string>();
+        return true;
+    }
+};
+
+template<>
+struct convert<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>
+{
+    static bool decode(const Node& node,
+                       Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection& rhs)
+    {
+        if (!node.IsMap() || node.size() != 3)
+        {
+            return false;
+        }
+        rhs.componentId = node["component"].as<std::string>();
+        rhs.portId = node["port"].as<std::string>();
+        rhs.thermalComponent = as_fallback_default<
+          Antares::IO::Inputs::YmlSystem::ThermalComponent>(node["thermal-component"]);
+        return true;
+    }
+};
+
+template<>
 struct convert<Antares::IO::Inputs::YmlSystem::System>
 {
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::System& rhs)
@@ -127,6 +142,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::System>
           std::vector<Antares::IO::Inputs::YmlSystem::Connection>>(node["connections"]);
         rhs.areaConnections = as_fallback_default<
           std::vector<Antares::IO::Inputs::YmlSystem::AreaConnection>>(node["area-connections"]);
+        rhs.thermalCapacityConnections = as_fallback_default<
+          std::vector<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>>(
+          node["thermal-capacity-connections"]);
         return true;
     }
 };

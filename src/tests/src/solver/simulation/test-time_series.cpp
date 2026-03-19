@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 //
 // Created by marechaljas on 07/04/23.
 //
@@ -144,14 +127,17 @@ struct Fixture
 
 BOOST_AUTO_TEST_SUITE(BC_TimeSeries)
 
-BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries, Fixture)
+BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries_equality, Fixture)
 {
     bool loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(study->bindingConstraints.size(), 1);
     CheckEqual(study->bindingConstraints.find("dummy_name")->RHSTimeSeries(),
                expected_equality_series);
+}
 
+BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries_lower_bound, Fixture)
+{
     {
         std::ofstream constraints(working_tmp_dir / "bindingconstraints"
                                   / "bindingconstraints.ini");
@@ -164,11 +150,14 @@ BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries, Fixture)
                     << "group = dummy_group\n";
         constraints.close();
     }
-    loading_ok = study->internalLoadBindingConstraints(options);
+    bool loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
     CheckEqual(study->bindingConstraints.find("dummy_name")->RHSTimeSeries(),
                expected_lower_bound_series);
+}
 
+BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries_upper_bound, Fixture)
+{
     {
         std::ofstream constraints(working_tmp_dir / "bindingconstraints"
                                   / "bindingconstraints.ini");
@@ -181,7 +170,7 @@ BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries, Fixture)
                     << "group = dummy_group\n";
         constraints.close();
     }
-    loading_ok = study->internalLoadBindingConstraints(options);
+    bool loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
     CheckEqual(study->bindingConstraints.find("dummy_name")->RHSTimeSeries(),
                expected_upper_bound_series);

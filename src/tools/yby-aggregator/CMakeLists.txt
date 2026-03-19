@@ -50,7 +50,7 @@ set(YBY_AGGREGATOR_LIBS
         yuni-static-core
         Antares::sys
         Antares::locale
-        ${wxWidgets_LIBRARIES} ${CMAKE_THREADS_LIBS_INIT})
+        ${CMAKE_THREADS_LIBS_INIT})
 
 # The new ant library
 target_include_directories(${execname}
@@ -63,7 +63,7 @@ target_link_libraries(${execname}
         ${YBY_AGGREGATOR_LIBS}
         antares-solver-ts-generator
         Antares::memory
-        Antares::utils
+        Antares::study-utils
 )
 
 import_std_libs(${execname})

@@ -1,21 +1,5 @@
-// Copyright 2007-2025, RTE (https://www.rte-france.com)
-// See AUTHORS.txt
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
-// This file is part of Antares-Simulator,
-// Adequacy and Performance assessment for interconnected energy networks.
-//
-// Antares_Simulator is free software: you can redistribute it and/or modify
-// it under the terms of the Mozilla Public Licence 2.0 as published by
-// the Mozilla Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// Antares_Simulator is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// Mozilla Public Licence 2.0 for more details.
-//
-// You should have received a copy of the Mozilla Public Licence 2.0
-// along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #include "inmemory-modeler.h"
 
@@ -31,6 +15,7 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
+using namespace Antares::Solver;
 
 namespace Test::Modeler
 {
@@ -56,17 +41,15 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
     pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
-    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb,
-                                                                  &dummy_data,
-                                                                  &scenarioGroupRepo);
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
     optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {
-        auto cf = std::make_unique<ComponentFiller>(
-          component,
-          *optimEntityContainer,
-          scenarioGroupRepo,
-          Antares::Modeler::Config::Location::SUBPROBLEMS);
+        auto cf = std::make_unique<ComponentFiller>(component,
+                                                    &dummy_data,
+                                                    *optimEntityContainer,
+                                                    scenarioGroupRepo,
+                                                    Config::Location::SUBPROBLEMS);
         fillers.push_back(std::move(cf));
     }
     LinearProblemApi::LinearProblemBuilder linear_problem_builder(fillers);
@@ -98,10 +81,8 @@ void LinearProblemBuildingFixture::createComponent(
                        .withModel(&models.at(modelId))
                        .withScenarioGroupId(scenarioGroupId)
                        .withParameterValues(std::move(parameterValues))
-                       .withIndex(componentIndex_)
                        .build();
     components.emplace_back(component);
-    componentIndex_++;
 }
 
 Nodes::Node* LinearProblemBuildingFixture::literal(double value)
@@ -185,9 +166,12 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
                                fromBool<ScenarioDependent>(scenarioDependent));
     }
     std::vector<Constraint> constraints;
-    for (const auto& [id, expression]: constraintsData)
+    for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
     {
-        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+        constraints.emplace_back(id,
+                                 createExpression(expression, nodeRegistry),
+                                 Antares::Solver::Config::Location::SUBPROBLEMS,
+                                 outOfBoundsProcessingMode);
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)
@@ -222,9 +206,12 @@ void LinearProblemBuildingFixture::createModelWithMultipleObjectives(
                                fromBool<ScenarioDependent>(scenarioDependent));
     }
     std::vector<Constraint> constraints;
-    for (const auto& [id, expression]: constraintsData)
+    for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
     {
-        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+        constraints.emplace_back(id,
+                                 createExpression(expression, nodeRegistry),
+                                 Antares::Solver::Config::Location::SUBPROBLEMS,
+                                 outOfBoundsProcessingMode);
     }
 
     std::vector<Objective> objectives;

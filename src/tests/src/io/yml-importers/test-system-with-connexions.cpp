@@ -13,6 +13,94 @@ using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
 using namespace Antares::ModelerStudy;
 
+BOOST_AUTO_TEST_SUITE(readYamlInput)
+// This yaml lib contains only a port type.
+// Note that : an empty model is added to prevent parser from failing when reading the lib
+static const auto onlyPortTypeYmlLib = R"(
+library:
+  id: my_lib
+  description: test model library
+
+  port-types:
+    - id:  power_flow
+      description: power flow
+      fields:
+        - id: flow
+      area-connection:
+        injection-to-balance: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
+  models:
+    - id: empty model
+      description: we need this empty model, otherwise parser fails !
+)"s;
+
+BOOST_AUTO_TEST_CASE(port_type_area_connection_is_read_correctly)
+{
+    YmlModel::Parser parserModel;
+    SystemModel::Library library = ModelConverter::convert(parserModel.parse(onlyPortTypeYmlLib));
+
+    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
+
+    SystemModel::PortType portType = library.PortTypes().begin()->second;
+
+    auto fields = portType.Fields();
+    BOOST_CHECK_EQUAL(fields.size(), 1);
+    BOOST_CHECK_EQUAL(fields[0].Id(), "flow");
+
+    auto area_connection = portType.areaConnection();
+    BOOST_CHECK(area_connection.has_value());
+    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
+    BOOST_CHECK(area_connection->spillage_bound.empty());
+    BOOST_CHECK(area_connection->unsupplied_energy_bound.empty());
+}
+
+// This yaml lib contains only a port type, but with a more complete area connection.
+// Note that : as previously (and for same reason), an empty model is added.
+static const auto onlyPortTypeYmlLib2 = R"(
+library:
+  id: my_lib
+  description: test model library
+
+  port-types:
+    - id: power_flow
+      description: power flow
+      fields:
+        - id: flow
+        - id: to-area-bound
+        - id: from-area-bound
+      area-connection:
+        injection-to-balance: flow
+        spillage-bound: to-area-bound
+        unsupplied-energy-bound: from-area-bound
+
+  models:
+    - id: empty model
+      description: we need this empty model, otherwise parser fails !
+)"s;
+
+BOOST_AUTO_TEST_CASE(port_type_area_connection_is_more_complete_and_is_still_read_correctly)
+{
+    YmlModel::Parser parserModel;
+    SystemModel::Library library = ModelConverter::convert(parserModel.parse(onlyPortTypeYmlLib2));
+
+    BOOST_CHECK_EQUAL(library.PortTypes().size(), 1);
+
+    SystemModel::PortType portType = library.PortTypes().begin()->second;
+
+    auto fields = portType.Fields();
+    BOOST_CHECK_EQUAL(fields.size(), 3);
+    BOOST_CHECK_EQUAL(fields[0].Id(), "flow");
+    BOOST_CHECK_EQUAL(fields[1].Id(), "to-area-bound");
+    BOOST_CHECK_EQUAL(fields[2].Id(), "from-area-bound");
+
+    auto area_connection = portType.areaConnection();
+    BOOST_CHECK(area_connection.has_value());
+    BOOST_CHECK_EQUAL(area_connection->inject_to_balance, "flow");
+    BOOST_CHECK_EQUAL(area_connection->spillage_bound, "to-area-bound");
+    BOOST_CHECK_EQUAL(area_connection->unsupplied_energy_bound, "from-area-bound");
+}
+
 static const auto libraryYaml = R"(
 library:
   id: my_lib
@@ -24,7 +112,9 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
+        injection-to-balance: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
 
   models:
     - id: balance_node
@@ -149,3 +239,137 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     BOOST_CHECK_EQUAL(component_NL->areaConnectedToPort("injection_port").value(),
                       "some_other_area");
 }
+
+static const auto thermalConnectionLib = R"(
+library:
+  id: invest_lib
+
+  port-types:
+    - id: capacity_port
+      fields:
+        - id: capacity
+      thermal-capacity-connection: # Explicitly use "capacity" in the name as later on there might be other thermal hybrid connections involving thermal generation
+        capacity-field: capacity
+  models:
+    - id: thermal_invest
+      parameters:
+        - id: investment_cost
+          scenario-dependent: false
+          time-dependent: false
+        - id: max_investment
+          scenario-dependent: false
+          time-dependent: false
+        - id: availability_factor
+          scenario-dependent: true
+          time-dependent: true
+        - id: already_installed_capacity
+          scenario-dependent: false
+          time-dependent: false
+        - id: already_installed_availability_factor
+          scenario-dependent: true
+          time-dependent: true
+        # Integer investment (do not define max_investment in this case)
+        - id: unit_size
+          scenario-dependent: false
+          time-dependent: false
+        - id: max_units
+          scenario-dependent: false
+          time-dependent: false
+
+      variables:
+        - id: invested_capacity
+          lower-bound: 0
+          upper-bound: max_investment # or unit_size * max_units
+          variable-type: continuous
+        # Integer investment
+        - id: invested_units
+          lower-bound: 0
+          upper-bound: max_units
+          variable-type: integer
+
+      constraints:
+        # Integer investment
+        - id: units_capa_relationship
+          expression: invested_capacity = unit_size * invested_units
+
+      ports:
+        - id: capacity_port
+          type: capacity_port
+
+      port-field-definitions:
+        - port: capacity_port
+          field: capacity
+          definition: availability_factor * invested_capacity + already_installed_availability_factor * already_installed_capacity
+
+      objective-contributions:
+        - id: objective
+          expression: investment_cost * invested_capacity
+)";
+
+static const auto thermalConnectionSystem = R"(
+system:
+  id: my_system
+  description: some descrition for my system
+
+  model-libraries: my_lib
+
+  components:
+  - id: my_thermal_invest
+    model: invest_lib.thermal_invest
+    parameters:
+    - id: investment_cost
+      scenario-dependent: false
+      time-dependent: false
+      value: 0
+    - id: max_investment
+      scenario-dependent: false
+      time-dependent: false
+      value: 0
+    - id: availability_factor
+      scenario-dependent: true
+      time-dependent: true
+      value: dd
+    - id: already_installed_capacity
+      scenario-dependent: false
+      time-dependent: false
+      value: 0
+    - id: already_installed_availability_factor
+      scenario-dependent: true
+      time-dependent: true
+      value: 0
+        # Integer investment (do not define max_investment in this case)
+    - id: unit_size
+      scenario-dependent: false
+      time-dependent: false
+      value: 0
+    - id: max_units
+      scenario-dependent: false
+      time-dependent: false
+      value: 0
+
+
+  thermal-capacity-connections:
+  - component : my_thermal_invest
+    port: capacity_port
+    thermal-component:
+      area: fr
+      cluster-id: nuclear1)";
+
+BOOST_AUTO_TEST_CASE(thermal_capacity_connectivity)
+{
+    YmlModel::Parser parserModel;
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(thermalConnectionLib)));
+    YmlSystem::Parser parserSystem;
+    YmlSystem::System system = parserSystem.parse(thermalConnectionSystem);
+    auto systemModel = SystemConverter::convert(system, libraries);
+    const auto& thermalInvestComponent = systemModel.Components().at(0);
+    const auto& connection = thermalInvestComponent.portToThermalCapacityConnections();
+    BOOST_CHECK_EQUAL(connection.size(), 1);
+    const auto& [portId, thermalConnection] = *connection.begin();
+
+    BOOST_CHECK_EQUAL(portId, "capacity_port");
+    BOOST_CHECK_EQUAL(thermalConnection.areaId, "fr");
+    BOOST_CHECK_EQUAL(thermalConnection.clusterId, "nuclear1");
+}
+BOOST_AUTO_TEST_SUITE_END()

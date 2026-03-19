@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/parts/hydro/container.h"
 
@@ -268,36 +250,12 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
           if (study.parameters.compatibility.hydroPmax
               == Parameters::Compatibility::HydroPmax::Hourly)
           {
-              // GUI part patch :
-              // We need to know, when estimating the RAM required by the solver, if the current
-              // area is hydro modulable. Therefore, reading the area's daily max power at this
-              // stage is necessary.
+              ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
 
-              if (!study.usedByTheSolver)
-              {
-                  bool enabledModeIsChanged = false;
-                  if (JIT::enabled)
-                  {
-                      JIT::enabled = false; // Allowing to read the area's daily max power
-                      enabledModeIsChanged = true;
-                  }
+              // Check is moved here, because in case of old study
+              // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.
 
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
-
-                  if (enabledModeIsChanged)
-                  {
-                      JIT::enabled = true; // Back to the previous loading mode.
-                  }
-              }
-              else
-              {
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
-
-                  // Check is moved here, because in case of old study
-                  // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.
-
-                  ret = area.hydro.CheckDailyMaxEnergy(area.name) && ret;
-              }
+              ret = area.hydro.CheckDailyMaxEnergy(area.name) && ret;
           }
 
           fs::path capacityPath = folder / "common" / "capacity";
@@ -348,11 +306,6 @@ bool PartHydro::checkReservoirLevels(const Study& study)
 
     for (const auto& [areaName, area]: study.areas)
     {
-        if (!study.usedByTheSolver)
-        {
-            return true;
-        }
-
         auto& col = area->hydro.inflowPattern[0];
         bool errorInflow = false;
         for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
@@ -641,47 +594,6 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
     // Write the ini file
     buffer.clear() << folder << SEP << "hydro.ini";
     return ini.save(buffer) && ret;
-}
-
-bool PartHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = creditModulation.forceReload(reload) && ret;
-    ret = inflowPattern.forceReload(reload) && ret;
-    ret = reservoirLevel.forceReload(reload) && ret;
-    ret = waterValues.forceReload(reload) && ret;
-    ret = dailyNbHoursAtGenPmax.forceReload(reload) && ret;
-    ret = dailyNbHoursAtPumpPmax.forceReload(reload) && ret;
-
-    if (series)
-    {
-        ret = series->forceReload(reload) && ret;
-    }
-    if (prepro)
-    {
-        ret = prepro->forceReload(reload) && ret;
-    }
-
-    return ret;
-}
-
-void PartHydro::markAsModified() const
-{
-    inflowPattern.markAsModified();
-    reservoirLevel.markAsModified();
-    waterValues.markAsModified();
-    creditModulation.markAsModified();
-    dailyNbHoursAtGenPmax.markAsModified();
-    dailyNbHoursAtPumpPmax.markAsModified();
-
-    if (series)
-    {
-        series->markAsModified();
-    }
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
 }
 
 void PartHydro::copyFrom(const PartHydro& rhs)

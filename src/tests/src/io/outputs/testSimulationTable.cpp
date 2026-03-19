@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -38,9 +20,12 @@
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
@@ -56,7 +41,7 @@ using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Antares::IO;
+using namespace Antares::IO::Outputs;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
 
@@ -165,7 +150,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
                                .output = "var2",
                                .absolute_time_index = std::nullopt,
                                .block_time_index = std::nullopt,
-                               .scenario_index = std::nullopt,
+                               .scenario_index = 0,
                                .value = std::nullopt,
                                .status = std::nullopt};
 
@@ -173,7 +158,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp2,var2,None,None,None,None,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp2,var2,None,None,0,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
@@ -202,14 +187,14 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
 {
     SimulationTableCsv table;
     const size_t numEntries = 3;
-    for (int i = 0; i < numEntries; ++i)
+    for (size_t i = 0; i < numEntries; ++i)
     {
         SimulationTableEntry entry{.block = static_cast<unsigned>(i + 1),
                                    .component = "comp" + std::to_string(i),
                                    .output = "var" + std::to_string(i),
                                    .absolute_time_index = i * 10,
                                    .block_time_index = i % 168,
-                                   .scenario_index = i % 10,
+                                   .scenario_index = static_cast<unsigned>(i % 10),
                                    .value = static_cast<double>(i) * 0.1,
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
@@ -365,7 +350,7 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
                                              .output = "var_" + std::to_string(i),
                                              .absolute_time_index = i,
                                              .block_time_index = i % 24,
-                                             .scenario_index = t,
+                                             .scenario_index = static_cast<unsigned>(t),
                                              .value = static_cast<double>(i),
                                              .status = MipBasisStatus::BASIC};
 
@@ -406,7 +391,7 @@ BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
                                    .output = "variable_" + std::to_string(i % 50),
                                    .absolute_time_index = i,
                                    .block_time_index = i % 168,
-                                   .scenario_index = i % 10,
+                                   .scenario_index = static_cast<unsigned>(i % 10),
                                    .value = static_cast<double>(i) * 0.001,
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
@@ -516,7 +501,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
             optimEntityContainer->addStartColumn();
             if (var.isTimeDependent())
             {
-                for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
+                for (unsigned t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {
                     linearProblem->addVariable(0, 0, false, "");
                 }
@@ -537,12 +522,16 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
+            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer,
+                                                                   compo,
+                                                                   &dummy_data_,
+                                                                   &scenarioGroupRepo.scenario(
+                                                                     compo.getScenarioGroupId()))
                                                   .dispatch(constraint.expression().RootNode());
             optimEntityContainer->registerConstraint(compo, constraint_variability);
             if (isTimeDependent(constraint_variability))
             {
-                for (int t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
+                for (unsigned t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {
                     linearProblem->addConstraint(0, 0, "");
                 }
@@ -556,11 +545,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
 
     void setOptimEntityContainer(MockLinearProblem* linearProblem)
     {
-        scenarioGroupRepository = std::make_unique<ScenarioGroupRepository>();
-        optimEntityContainer = std::make_unique<OptimEntityContainer>(
-          *linearProblem,
-          &dummy_data_,
-          scenarioGroupRepository.get());
+        optimEntityContainer = std::make_unique<OptimEntityContainer>(*linearProblem);
     }
 
     void PrepareData()
@@ -574,7 +559,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
                                                                       // dependent
         };
         auto var1_node = variable("var1", 0);
-        auto var4_node = variable("var4", 8954);
+        auto var4_node = variable("var4", 8954, VariabilityType::VARYING_IN_TIME_AND_SCENARIO);
         auto three = literal(3);
         auto ct1_node = nodeRegistry.create<Nodes::LessThanOrEqualNode>(var1_node, three);
         auto ct2_node = nodeRegistry.create<Nodes::GreaterThanOrEqualNode>(multiply(var1_node,
@@ -593,9 +578,8 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& compo: components)
         {
             const auto& compoId = compo.Id();
-            scenarioGroupRepository->addScenario(compo.getScenarioGroupId(),
-                                                 std::make_unique<Scenario>(
-                                                   compo.getScenarioGroupId()));
+            scenarioGroupRepo.addScenario(compo.getScenarioGroupId(),
+                                          std::make_unique<Scenario>(compo.getScenarioGroupId()));
             addRandomVariables(fillContext, linearProblem, compo);
         }
 
@@ -619,8 +603,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         setOptimEntityContainer(linearProblem);
         AddRandomVariablesAndContraints(fillContext, linearProblem);
     }
-
-    std::unique_ptr<ScenarioGroupRepository> scenarioGroupRepository = nullptr;
 
     std::unique_ptr<OptimEntityContainer> optimEntityContainer = nullptr;
 };
@@ -686,7 +668,7 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
 
     std::vector<SimulationTableEntry> originalEntries = {
       {1, "comp1", "var1", 10, 5, 1, 123.456, MipBasisStatus::BASIC},
-      {2, "comp2", "var2", std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt},
+      {2, "comp2", "var2", std::nullopt, std::nullopt, 0, std::nullopt, std::nullopt},
       {3, "comp3", "var3", 20, 10, 2, -456.789, MipBasisStatus::AT_UPPER_BOUND}};
 
     for (const auto& entry: originalEntries)
@@ -701,12 +683,12 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
     std::istringstream stream(csvOutput);
     std::string line;
 
-    int entryIndex = 0;
+    size_t entryIndex = 0;
     while (std::getline(stream, line) && entryIndex < originalEntries.size())
     {
         const auto& original = originalEntries[entryIndex];
 
-        // Basic checks that the line contains expected components
+        // Basic checks that line contains expected components
         BOOST_CHECK(line.find(std::to_string(original.block)) != std::string::npos);
         BOOST_CHECK(line.find(original.component.value()) != std::string::npos);
         BOOST_CHECK(line.find(original.output) != std::string::npos);
@@ -817,6 +799,218 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
                                              TimeConversionMode::SingleBlock););
 }
 
+BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        1,
+                        TimeConversionMode::WeeklyBlocks);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("2,comp1,var4,169,1") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp1,var4,170,2") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, day 2 globally
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        1,
+                        TimeConversionMode::DailyBlocks);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("2,comp1,var4,25,1") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp1,var4,26,2") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, single block
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,var4,1,1") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,2,2") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocalStep)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        1,
+                        TimeConversionMode::WeeklyBlocks);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("2,comp1,constraint2,169,1,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("2,comp1,constraint2,170,2,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock,
+                        true);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,constraint1,None,None,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutputs)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
+{
+    SimulationTableCsv table;
+    FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
+    MockLinearProblem linearProblem(true);
+
+    build(fillContext, &linearProblem);
+    FillSimulationTable(table,
+                        linearProblem,
+                        45.0,
+                        getModelerData(),
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_CHECK(buffer.find("1,comp1,var1,None,None,0,") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,1,1,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var2,2,2,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,1,1,0") != std::string::npos);
+    BOOST_CHECK(buffer.find("1,comp1,var4,2,2,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
+{
+    auto* currentVarNode = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* nextVarNode = nodeRegistry.create<Nodes::TimeShiftNode>(currentVarNode, literal(1));
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::BOOL, literal(0), literal(1), true, false}},
+                {{"ct_drop",
+                  nodeRegistry.create<Nodes::EqualNode>(nextVarNode, currentVarNode),
+                  OutOfBoundsProcessingMode::DROP},
+                 {"ct_cyclic",
+                  nodeRegistry.create<Nodes::EqualNode>(nextVarNode, currentVarNode),
+                  OutOfBoundsProcessingMode::CYCLIC}});
+    createComponent("model", "componentToto");
+
+    FillContext fillContext(0, 2, 0, 2, 0);
+    pb = std::make_unique<OrtoolsLinearProblem>(true, "scip");
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
+    optimEntityContainer->addFromSystemComponents(components);
+
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
+    for (auto& component: components)
+    {
+        fillers.push_back(std::make_unique<ComponentFiller>(component,
+                                                            &dummy_data_,
+                                                            *optimEntityContainer,
+                                                            scenarioGroupRepo,
+                                                            Config::Location::SUBPROBLEMS));
+    }
+    LinearProblemBuilder(fillers).build(fillContext);
+    BOOST_REQUIRE(pb->solve(false));
+
+    auto& modelerData = getModelerData();
+    SimulationTableCsv table;
+    FillSimulationTable(table,
+                        *pb,
+                        45.0,
+                        modelerData,
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_TEST_INFO(buffer);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,1,1,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,2,2,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,3,3,") == std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,1,1,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,2,2,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,3,3,") != std::string::npos);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(EdgeCaseStressTests)
@@ -829,7 +1023,7 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
                                .output = "",
                                .absolute_time_index = std::nullopt,
                                .block_time_index = std::nullopt,
-                               .scenario_index = std::nullopt,
+                               .scenario_index = 0,
                                .value = std::nullopt,
                                .status = std::nullopt};
 
@@ -837,7 +1031,7 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
     table.write();
 
     std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("0,,,None,None,None,None,None") != std::string::npos);
+    BOOST_CHECK(buffer.find("0,,,None,None,0,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
@@ -877,7 +1071,7 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
                                        .output = "var_" + std::to_string(i),
                                        .absolute_time_index = i,
                                        .block_time_index = i,
-                                       .scenario_index = cycle,
+                                       .scenario_index = static_cast<unsigned>(cycle),
                                        .value = static_cast<double>(i),
                                        .status = MipBasisStatus::BASIC};
             table.addEntry(entry);
@@ -957,6 +1151,10 @@ BOOST_AUTO_TEST_CASE(ConvertTimeStep)
     BOOST_CHECK_EQUAL(result.block, 1);
     BOOST_CHECK_EQUAL(*result.blockTimeIndex, 43);    // 42 + 1
     BOOST_CHECK_EQUAL(*result.absoluteTimeIndex, 43); // 42 + 1
+    auto result0 = convertBlockTimeStepToAbsoluteTimeStep(0, TimeConversionMode::SingleBlock, 99);
+    BOOST_CHECK_EQUAL(result0.block, 1);
+    BOOST_CHECK_EQUAL(*result0.blockTimeIndex, 1);
+    BOOST_CHECK_EQUAL(*result0.absoluteTimeIndex, 1);
 
     // Daily blocks - exactly at day boundary
     auto result1 = convertBlockTimeStepToAbsoluteTimeStep(23, TimeConversionMode::DailyBlocks, 0);
@@ -979,6 +1177,11 @@ BOOST_AUTO_TEST_CASE(ConvertTimeStep)
     BOOST_CHECK_EQUAL(result4.block, 2);
     BOOST_CHECK_EQUAL(*result4.blockTimeIndex, 1);
     BOOST_CHECK_EQUAL(*result4.absoluteTimeIndex, 169);
+
+    auto result5 = convertBlockTimeStepToAbsoluteTimeStep(167, TimeConversionMode::WeeklyBlocks, 1);
+    BOOST_CHECK_EQUAL(result5.block, 2);
+    BOOST_CHECK_EQUAL(*result5.blockTimeIndex, 168);
+    BOOST_CHECK_EQUAL(*result5.absoluteTimeIndex, 336);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1141,7 +1344,7 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
                                        .output = "output_" + std::to_string(i),
                                        .absolute_time_index = i * 10,
                                        .block_time_index = i * 5,
-                                       .scenario_index = i % 3,
+                                       .scenario_index = static_cast<unsigned>(i % 3),
                                        .value = i * 2.5,
                                        .status = static_cast<MipBasisStatus>(i % 6)};
             table.addEntry(entry);

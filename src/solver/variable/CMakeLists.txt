@@ -77,6 +77,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/all.h
         include/antares/solver/variable/economy/economy_base.h
         include/antares/solver/variable/economy/links.h
+        include/antares/solver/variable/economy/economy_base.h
 
         # Variables for Economy
         include/antares/solver/variable/economy/max-mrg-utils.h
@@ -99,8 +100,6 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/STStorageWithdrawalByCluster.h
         include/antares/solver/variable/economy/STStorageLevelsByCluster.h
         include/antares/solver/variable/economy/STStorageCashFlowByCluster.h
-        include/antares/solver/variable/economy/unsupliedEnergy.h
-        include/antares/solver/variable/economy/unsupliedEnergyCsr.h
         include/antares/solver/variable/economy/priceCSR.h
         include/antares/solver/variable/economy/domesticUnsuppliedEnergy.h
         include/antares/solver/variable/economy/localMatchingRuleViolations.h
@@ -124,6 +123,8 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
+        include/antares/solver/variable/economy/residual.h
+        include/antares/solver/variable/economy/unsupliedEnergy.h
 
         # Links
         include/antares/solver/variable/economy/links/flowLinear.h
@@ -139,6 +140,15 @@ set(SRC_VARIABLE_ECONOMY
 
         # Binding constraints
         include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
+
+        # Dynamic aggregation
+        dynamicAggregation/setDataBase.cpp
+        dynamicAggregation/setDataSingleYear.cpp
+        dynamicAggregation/setDataAllYears.cpp
+        dynamicAggregation/dynamicAggregationSingleYear.cpp
+        dynamicAggregation/dynamicAggregationAllYears.cpp
+        include/antares/solver/variable/dynamicAggregation/dynamicAggregation.h
+        include/antares/solver/variable/dynamicAggregation/setData.h
 )
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 

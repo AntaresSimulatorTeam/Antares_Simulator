@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <cassert>
 #include <cmath>
@@ -32,6 +14,9 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
+#include "antares/utils/vector-utils.h"
+
+using namespace Antares::Utils;
 
 #define EPSILON 1e-6
 
@@ -297,7 +282,7 @@ std::span<const double> weekSubRange(const std::vector<double>& v, unsigned firs
 std::vector<double> extractSTSpmax(const PROPERTIES& sts_properties, const unsigned firstHourOfWeek)
 {
     auto subrange = weekSubRange(sts_properties.series->maxWithdrawalModulation, firstHourOfWeek);
-    return subrange * sts_properties.withdrawalEfficiency;
+    return subrange * sts_properties.withdrawalNominalCapacity;
 }
 
 std::vector<double> extractSTSlowRuleCurve(const PROPERTIES& sts_properties,

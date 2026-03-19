@@ -1,29 +1,14 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define BOOST_TEST_MODULE "test time series"
 
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/antares/constants.h"
+#include "antares/solver/variable/categories.h"
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/writer/in_memory_writer.h"
 
@@ -44,13 +29,65 @@ struct StudyFixture
 
 BOOST_AUTO_TEST_SUITE(surveyresults)
 
-BOOST_FIXTURE_TEST_CASE(no_variable_constructor_does_not_throw, StudyFixture)
+BOOST_FIXTURE_TEST_CASE(survey_result_hourly, StudyFixture)
 {
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
-    // At least one area was required to trigger a std::bad_alloc throw
-    Antares::Data::addAreaToListOfAreas(study->areas, "dummyArea");
-    BOOST_CHECK_NO_THROW(SurveyResults survey(*study, "out", writer););
+
+    unsigned int nbVariables = 2;
+    SurveyResults survey(*study, nbVariables, "out", writer);
+
+    // Loop
+    survey.data.columnIndex = nbVariables;
+    {
+        survey.captions[0][0] = "hello";
+        survey.captions[1][0] = "unit";
+        survey.captions[2][0] = "N/A";
+    }
+    {
+        survey.captions[0][1] = "world";
+        survey.captions[1][1] = "unit2";
+        survey.captions[2][1] = "N/A";
+    }
+    for (unsigned int h = 0; h < HOURS_PER_YEAR; ++h)
+    {
+        survey.values[0][h] = h + 1;
+        survey.values[1][h] = h * h + 3;
+    }
+    // Hourly
+    {
+        const std::string filename = "hourly.txt";
+        survey.data.filename = filename;
+        survey.saveToFile(Category::DataLevel::setOfAreas,
+                          Category::FileLevel::va,
+                          Category::Precision::hourly);
+
+        BOOST_REQUIRE(writer.getMap().contains(filename));
+        const auto& content = writer.getMap().at(filename);
+        // Header
+        BOOST_CHECK_NE(content.find("system	hourly				hello	world\n"),
+                       std::string::npos);
+        // Some values
+        BOOST_CHECK_NE(content.find("	9	01	JAN	08:00	9	67\n"),
+                       std::string::npos);
+    }
+    // Annual
+    // ⚠ SurveyResults does not perform temporal aggregation;
+    // it simply writes its content. Temporal aggregation must be done beforehand.
+    if (false)
+    {
+        const std::string filename = "annual.txt";
+        survey.data.filename = filename;
+        survey.saveToFile(Category::DataLevel::setOfAreas,
+                          Category::FileLevel::va,
+                          Category::Precision::annual);
+        BOOST_REQUIRE(writer.getMap().contains(filename));
+        const auto& content = writer.getMap().at(filename);
+        // Some values
+        // NO AGGREGATION HERE
+        BOOST_CHECK_NE(content.find("	9	01	JAN	08:00	9	67\n"),
+                       std::string::npos);
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

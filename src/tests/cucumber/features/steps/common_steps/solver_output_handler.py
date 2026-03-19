@@ -44,7 +44,7 @@ class solver_output_handler:
     def get_simu_time(self) -> float:
         execution_info = configparser.ConfigParser()
         execution_info.read(os.path.join(self.study_output_path, "execution_info.ini"))
-        return float(execution_info['durations_ms']['total']) / 1000
+        return float(execution_info['durations_ms']['simulation']) / 1000
 
     def get_optim1_simulation_table(self):
         absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-1.csv"))
@@ -177,6 +177,15 @@ class solver_output_handler:
         # Return NPCAP HOURS indicator at a specific hour (0-based index)
         df = self.__get_values_hourly(area, year)
         return int(df["NPCAP HOURS"]["Hours"].iloc[hour])
+
+    def get_mps_files(self):
+        return list(Path(self.study_output_path).glob("*.mps"))
+
+    def get_output_file_with_name(self, filename: str):
+        path = Path(self.study_output_path) / filename
+        if path.is_file():
+            return str(path)
+        return None
 
     def get_values_annual(self, area: str, year: int) -> pd.DataFrame:
         """Retourne le DataFrame des résultats annuels provenant de values-annual.txt"""

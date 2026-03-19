@@ -1,23 +1,7 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
+#include <fmt/format.h>
 #include <string>
 #include <yaml-cpp/yaml.h>
 
@@ -27,6 +11,7 @@
 #include <antares/io/inputs/model-converter/modelConverter.h>
 #include <antares/io/inputs/yml-model/parser.h>
 #include <antares/logs/logs.h>
+#include "antares/exception/InvalidArgumentError.hpp"
 #include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/modeler/loadFiles/readOptimConfig.h"
@@ -84,10 +69,15 @@ std::vector<SystemModel::Library> convertIntoSystemLibs(const std::vector<YmlMod
     return libraries;
 }
 
-std::vector<YmlModel::Library> loadLibrariesFromYaml(const fs::path& studyPath)
+std::optional<std::vector<YmlModel::Library>> loadLibrariesFromYaml(const fs::path& studyPath)
 {
     std::vector<YmlModel::Library> yml_libs;
     const fs::path directoryPath = studyPath / "input" / "model-libraries";
+    if (!fs::exists(directoryPath))
+    {
+        logs.warning() << "Model library missing";
+        return {};
+    }
     for (const auto& entry: fs::directory_iterator(directoryPath))
     {
         if (entry.path().extension() != ".yml")
@@ -109,7 +99,7 @@ static std::pair<std::string, std::string> splitModelId(const std::string& model
     return {result[0], result[1]}; // We assume the format is always libraryId.modelId
 }
 
-YmlModel::Model& fetchModelInLibrairies(const YmlOptimConfig::Model& optimConfigModel,
+YmlModel::Model& fetchModelInLibrairies(const Model& optimConfigModel,
                                         std::vector<YmlModel::Library>& ymlLibs)
 {
     const auto [libId, modelId] = splitModelId(optimConfigModel.id);
@@ -145,28 +135,92 @@ void update(std::vector<U>& out, const std::vector<V>& yml_in, const std::string
     }
 }
 
-void updateSystemModel(YmlModel::Model& model, const YmlOptimConfig::Model& optimConfigModel)
+void updateSystemModel(YmlModel::Model& model, const Model& optimConfigModel)
 {
     update(model.variables, optimConfigModel.variables, "variable");
     update(model.constraints, optimConfigModel.constraints, "constraint");
     update(model.objectives, optimConfigModel.objectives, "objective");
 }
 
-void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
-                                    const YmlOptimConfig::OptimConfig& ymlOptimConfig)
+namespace
 {
-    for (const auto& optimConfigModel: ymlOptimConfig)
+std::string normalizeOutOfBoundsProcessingMode(const std::string& mode)
+{
+    if (mode.empty() || mode == "cyclic")
     {
-        auto& model = fetchModelInLibrairies(optimConfigModel, ymlLibs);
-        updateSystemModel(model, optimConfigModel);
+        return "cyclic";
+    }
+    if (mode == "drop")
+    {
+        return "drop";
+    }
+    throw Error::InvalidArgumentError(
+      fmt::format("Invalid out-of-bounds processing mode in optim-config.yaml: {}", mode));
+}
+
+void updateConstraintOutOfBoundsProcessing(YmlModel::Model& model, const Model& optimConfigModel)
+{
+    for (const auto& ymlOptCfg: optimConfigModel.constraints_out_of_bounds_processing)
+    {
+        auto predicate = [&ymlOptCfg](const auto& v) { return v.id == ymlOptCfg.id; };
+        auto element = std::ranges::find_if(model.constraints, predicate);
+        if (element != model.constraints.end())
+        {
+            element->out_of_bounds_processing_mode = normalizeOutOfBoundsProcessingMode(
+              ymlOptCfg.mode);
+            continue;
+        }
+
+        auto bindingConstraint = std::ranges::find_if(model.binding_constraints, predicate);
+        if (bindingConstraint != model.binding_constraints.end())
+        {
+            bindingConstraint->out_of_bounds_processing_mode = normalizeOutOfBoundsProcessingMode(
+              ymlOptCfg.mode);
+            continue;
+        }
+
+        throw Error::InvalidArgumentError("No constraint '" + ymlOptCfg.id + "' found.");
     }
 }
 
-std::vector<SystemModel::Library> loadLibraries(const fs::path& studyPath)
+Solver::ResolutionMode convertResolutionMode(std::string ymlMode)
+{
+    if (ymlMode == "benders-decomposition")
+    {
+        return Solver::ResolutionMode::BENDERS_DECOMPOSITION;
+    }
+    if (ymlMode == "sequential-subproblems" || ymlMode.empty())
+    {
+        return Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
+    }
+    throw Error::InvalidArgumentError(
+      fmt::format("Invalid resolution mode in optim-config.yaml: {}", ymlMode));
+}
+} // namespace
+
+void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
+                                    const OptimConfig& ymlOptimConfig)
+{
+    for (const auto& optimConfigModel: ymlOptimConfig.models)
+    {
+        auto& model = fetchModelInLibrairies(optimConfigModel, ymlLibs);
+        updateSystemModel(model, optimConfigModel);
+        updateConstraintOutOfBoundsProcessing(model, optimConfigModel);
+    }
+}
+
+std::optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>> loadLibraries(
+  const fs::path& studyPath)
 {
     auto ymlLibraries = loadLibrariesFromYaml(studyPath);
-    const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
-    updateLibrariesWithOptimConfig(ymlLibraries, ymlOptimConfig);
-    return convertIntoSystemLibs(ymlLibraries);
+    if (ymlLibraries.has_value())
+    {
+        const auto ymlOptimConfig = loadOptimConfigFromYaml(studyPath);
+        updateLibrariesWithOptimConfig(ymlLibraries.value(), ymlOptimConfig);
+        return std::make_optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>>(
+          convertIntoSystemLibs(ymlLibraries.value()),
+          convertResolutionMode(ymlOptimConfig.resolution_mode));
+    }
+    return {};
 }
 } // namespace Antares::Solver::LoadFiles

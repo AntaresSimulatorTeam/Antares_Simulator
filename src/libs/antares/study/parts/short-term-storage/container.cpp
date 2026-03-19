@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 // clang-format off
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 // clang-format on
@@ -238,28 +221,6 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion s
     }
 
     return ret;
-}
-
-bool STStorageInput::saveToFolder(const std::string& folder) const
-{
-    // create empty list.ini if there's no sts in this area
-    Yuni::IO::Directory::Create(folder);
-    const std::string pathIni(folder + SEP + "list.ini");
-    IniFile ini;
-
-    logs.debug() << "saving file " << pathIni;
-    std::ranges::for_each(storagesByIndex,
-                          [&ini](auto& storage) { return storage.saveProperties(ini); });
-
-    return ini.save(pathIni);
-}
-
-bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
-{
-    Yuni::IO::Directory::Create(folder);
-    return std::ranges::all_of(storagesByIndex,
-                               [&folder](auto& storage)
-                               { return storage.saveSeries(folder + SEP + storage.id); });
 }
 
 void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_LOGS_LOGS_H__
 #define __ANTARES_LIBS_LOGS_LOGS_H__
 
@@ -33,29 +16,6 @@
 ** \defgroup logs Logs
 ** \ingroup toolbox
 */
-
-/*! Name of the app to use into logs */
-#define LOG_APPLICATION_NAME "antares"
-/*! Vendor */
-#define LOG_APPLICATION_VENDOR "RTE"
-
-/*! Special message to the interface */
-#define LOG_UI "[UI] "
-
-/*! Special message to the interface for notifying about a progression change */
-#define LOG_PROGRESSION "[UI] progression: "
-
-/*! Inform the GUI that the progression map is ready */
-#define LOG_UI_PROGRESSION_MAP "[UI] Progression map: "
-
-/*! Ask to the GUI to show the messages */
-#define LOG_UI_DISPLAY_MESSAGES_ON "[UI] Display messages: On"
-/*! Ask to the GUI to hide the messages */
-#define LOG_UI_DISPLAY_MESSAGES_OFF "[UI] Display messages: Off"
-/*! Ask to the GUI to hide the progress bar */
-#define LOG_UI_HIDE_PROGRESSBAR "[UI] Progression: Off"
-/*! Inform the GUI that the solver has properly ended */
-#define LOG_UI_SOLVER_DONE "[UI] Quitting the solver gracefully"
 
 // This section is only dedicated to includes from a c++ file
 #include <yuni/core/logs.h>
@@ -88,7 +48,6 @@ extern Yuni::Logs::Logger<LoggingHandlers, LoggingDecorators> logs;
 enum LogLevel
 {
     logUnknown = 0,
-    logProgress, /* not really a real log level */
     logFatal,
     logError,
     logWarning,

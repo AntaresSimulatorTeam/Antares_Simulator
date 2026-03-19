@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define BOOST_TEST_MODULE "test short term storage"
 
 #define WIN32_LEAN_AND_MEAN
@@ -446,31 +429,6 @@ BOOST_FIXTURE_TEST_CASE(check_container_properties_empty_file, Fixture)
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
 }
-
-#ifdef BUILD_UI
-BOOST_FIXTURE_TEST_CASE(check_file_save, Fixture)
-{
-    createIniFile(true);
-
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
-
-    fs::remove(work_dir / "list.ini");
-
-    BOOST_CHECK(container.saveToFolder(work_dir.string()));
-    BOOST_CHECK(container.createSTStorageClustersFromIniFile(work_dir));
-}
-
-BOOST_FIXTURE_TEST_CASE(check_series_save, Fixture)
-{
-    resizeFillVectors(series, 0.123456789, HOURS_PER_YEAR);
-
-    BOOST_CHECK(series.saveToFolder(work_dir.string()));
-    resizeFillVectors(series, 0, 0);
-
-    BOOST_CHECK(series.loadFromFolder(work_dir, StudyVersion::latest()));
-    BOOST_CHECK(series.validate("", StudyVersion::latest()));
-}
-#endif
 
 BOOST_AUTO_TEST_SUITE_END()
 

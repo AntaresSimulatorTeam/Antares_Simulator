@@ -3,7 +3,7 @@
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
-using namespace Antares::Modeler;
+using namespace Antares::Solver;
 
 std::vector<Constraint> TwoConstraintsCreator_OneSubPb_OneMaster::Create(
   Antares::Expressions::Registry<Node>& nodeRegistry)

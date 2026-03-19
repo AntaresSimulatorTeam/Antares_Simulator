@@ -1,32 +1,12 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <cmath>
 #include <spx_constantes_externes.h>
 
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include "variables/VariableManagement.h"
-#include "variables/VariableManagerUtils.h"
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,
@@ -75,8 +55,7 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays,
 
 void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                                   const int PremierPdtDeLIntervalle,
-                                  const int DernierPdtDeLIntervalle,
-                                  const int optimizationNumber)
+                                  const int DernierPdtDeLIntervalle)
 {
     // OUTPUT
     std::vector<double>& Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
@@ -84,47 +63,16 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     std::vector<double*>& AdresseOuPlacerLaValeurDesVariablesOptimisees
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-    const bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
-    const bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        const ALL_MUST_RUN_GENERATION& AllMustRunGeneration = problemeHebdo
-                                                                ->AllMustRunGeneration[pdtHebdo];
-        const CONSOMMATIONS_ABATTUES& ConsommationsAbattues = problemeHebdo
-                                                                ->ConsommationsAbattues[pdtHebdo];
-
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-
-            if (reserveJm1 && opt1)
-            {
-                ResidualLoadInArea += problemeHebdo->ReserveJMoins1[pays]
-                                        .ReserveHoraireJMoins1[pdtHebdo];
-            }
-
-            int var = variableManager.PositiveUnsuppliedEnergy(pays, pdtJour);
+            int var = variableManager.UnsuppliedEnergy(pays, pdtJour);
             Xmin[var] = 0.0;
-
-            double MaxAllMustRunGenerationOfArea = 0.;
-            if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.)
-            {
-                MaxAllMustRunGenerationOfArea = AllMustRunGeneration
-                                                  .AllMustRunGenerationOfArea[pays];
-            }
-
-            ResidualLoadInArea += MaxAllMustRunGenerationOfArea;
-            if (ResidualLoadInArea >= 0.)
-            {
-                Xmax[var] = ResidualLoadInArea + 1e-5;
-            }
-            else
-            {
-                Xmax[var] = 0.;
-            }
+            Xmax[var] = LINFINI_ANTARES;
 
             problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive[pdtHebdo]
               = 0.0;
@@ -227,8 +175,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
-                                                            const int DernierPdtDeLIntervalle,
-                                                            const int optimizationNumber)
+                                                            const int DernierPdtDeLIntervalle)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -254,7 +201,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            int var = variableManager.NTCDirect(interco, pdtJour);
+            int var = variableManager.DirectFlow(interco, pdtJour);
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
             Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
@@ -293,7 +240,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
             if (CoutDeTransport.IntercoGereeAvecDesCouts)
             {
-                var = variableManager.IntercoDirectCost(interco, pdtJour);
+                var = variableManager.PositiveDirectFlow(interco, pdtJour);
 
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                 {
@@ -315,7 +262,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 AdresseOuPlacerLaValeurDesCoutsReduits[var] = nullptr;
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
 
-                var = variableManager.IntercoIndirectCost(interco, pdtJour);
+                var = variableManager.PositiveIndirectFlow(interco, pdtJour);
                 if (CoutDeTransport.IntercoGereeAvecLoopFlow)
                 {
                     Xmax[var] = ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]
@@ -464,10 +411,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
 
             {
-                var = variableManager.NegativeUnsuppliedEnergy(pays, pdtJour);
+                var = variableManager.Spillage(pays, pdtJour);
 
                 Xmin[var] = 0.0;
-
                 Xmax[var] = LINFINI_ANTARES;
 
                 problemeHebdo->ResultatsHoraires[pays]
@@ -480,10 +426,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         }
     }
 
-    setBoundsForUnsuppliedEnergy(problemeHebdo,
-                                 PremierPdtDeLIntervalle,
-                                 DernierPdtDeLIntervalle,
-                                 optimizationNumber);
+    setBoundsForUnsuppliedEnergy(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
     setBoundsForShortTermStorage(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 

@@ -1,21 +1,5 @@
-// Copyright 2007-2025, RTE (https://www.rte-france.com)
-// See AUTHORS.txt
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
-// This file is part of Antares-Simulator,
-// Adequacy and Performance assessment for interconnected energy networks.
-//
-// Antares_Simulator is free software: you can redistribute it and/or modify
-// it under the terms of the Mozilla Public Licence 2.0 as published by
-// the Mozilla Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// Antares_Simulator is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// Mozilla Public Licence 2.0 for more details.
-//
-// You should have received a copy of the Mozilla Public Licence 2.0
-// along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #pragma once
 #include <map>
@@ -28,13 +12,14 @@
 #include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
-#include "antares/solver/modeler/data.h"
+#include "antares/solver/modeler/ModelerData.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 #include "antares/study/system-model/model.h"
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimisation;
+using namespace Antares::Solver;
 
 namespace Test::Modeler
 {
@@ -57,6 +42,7 @@ struct ConstraintData
 {
     std::string id;
     Antares::Expressions::Nodes::Node* expression;
+    OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC;
 };
 
 struct LinearProblemBuildingFixture
@@ -66,7 +52,7 @@ struct LinearProblemBuildingFixture
     std::unique_ptr<Antares::Optimisation::LinearProblemApi::ILinearProblem> pb;
     std::vector<Component> components;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData dummy_data_;
-    Antares::Modeler::Data modelerData;
+    ModelerData modelerData;
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
     std::unique_ptr<Antares::Optimisation::OptimEntityContainer> optimEntityContainer;
 
@@ -135,17 +121,17 @@ struct LinearProblemBuildingFixture
 
     void buildLinearProblem();
 
-    Antares::Modeler::Data& getModelerData()
+    ModelerData& getModelerData()
     {
         SystemBuilder systemBuilder;
         auto system = systemBuilder.withId("system").withComponents(std::move(components)).build();
         modelerData.system = std::make_unique<System>(std::move(system));
         modelerData.dataSeries = std::make_unique<
           Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
+        modelerData.scenarioGroupRepository = std::move(scenarioGroupRepo);
         return modelerData;
     }
 
 private:
-    int componentIndex_ = 0;
 };
 } // namespace Test::Modeler
