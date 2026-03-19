@@ -108,7 +108,6 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
             continue;
         }
 
-
         // First case corresponds to "not found"
         // Second corresponds to "%" in first position
         // Third correspond to "%" in last position
