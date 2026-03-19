@@ -178,15 +178,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a82c723b66cef17c9c4af3d88985120d7"><td class="memItemLeft" align="right" valign="top"><a id="a82c723b66cef17c9c4af3d88985120d7"></a>
 <a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NumberBreakingDownDispatchableUnits</b> (unsigned int index, double coeff)</td></tr>
 <tr class="separator:a82c723b66cef17c9c4af3d88985120d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa94eae5818968090faa12e7f39e66a57"><td class="memItemLeft" align="right" valign="top"><a id="aa94eae5818968090faa12e7f39e66a57"></a>
-<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>DirectFlux</b> (unsigned int index, double coeff, int offset=0, int delta=0)</td></tr>
-<tr class="separator:aa94eae5818968090faa12e7f39e66a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2834810c3187a8d0599d03a4f2015778"><td class="memItemLeft" align="right" valign="top"><a id="a2834810c3187a8d0599d03a4f2015778"></a>
-<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>DirectFluxPositif</b> (unsigned int index, double coeff)</td></tr>
-<tr class="separator:a2834810c3187a8d0599d03a4f2015778"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe8f3a3350929310a5a31da4fecbd48e"><td class="memItemLeft" align="right" valign="top"><a id="afe8f3a3350929310a5a31da4fecbd48e"></a>
-<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>IndirectFluxPositif</b> (unsigned int index, double coeff)</td></tr>
-<tr class="separator:afe8f3a3350929310a5a31da4fecbd48e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b648fad2d93b4b439139da80d16672"><td class="memItemLeft" align="right" valign="top"><a id="a29b648fad2d93b4b439139da80d16672"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>DirectFlow</b> (unsigned int index, double coeff, int offset=0, int delta=0)</td></tr>
+<tr class="separator:a29b648fad2d93b4b439139da80d16672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1683bef5b4806a766cdb875170a4d976"><td class="memItemLeft" align="right" valign="top"><a id="a1683bef5b4806a766cdb875170a4d976"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>PositiveDirectFlow</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a1683bef5b4806a766cdb875170a4d976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dca3e7ccbeee667dcfce894f71bb05d"><td class="memItemLeft" align="right" valign="top"><a id="a5dca3e7ccbeee667dcfce894f71bb05d"></a>
+<a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>PositiveIndirectFlow</b> (unsigned int index, double coeff)</td></tr>
+<tr class="separator:a5dca3e7ccbeee667dcfce894f71bb05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed4cbe71d2334bcc88fd05fee2d011db"><td class="memItemLeft" align="right" valign="top"><a id="aed4cbe71d2334bcc88fd05fee2d011db"></a>
 <a class="el" href="classConstraintBuilder.html">ConstraintBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ShortTermStorageInjection</b> (unsigned int index, double coeff, int offset=0, int delta=0)</td></tr>
 <tr class="separator:aed4cbe71d2334bcc88fd05fee2d011db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -262,7 +262,7 @@ Math:
 |coeffn1 coeffn2 .. coeffnn||varn| |sign_n|   |rhsn|       |constraintn||sign_n||rhsn|
 
 it propose a set of methods  to attach 'Variables' to the Constraint
-ex: calling DirectFlux() implies adding Direct Flux Variable to the current Constraint
+ex: calling DirectFlow() implies adding Direct Flux Variable to the current Constraint
 finally the build() method gather all variables and put them into the matrix
 </pre> </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a6154a8e04e39b9b4bcdf080cfa2c7acc"></a>
