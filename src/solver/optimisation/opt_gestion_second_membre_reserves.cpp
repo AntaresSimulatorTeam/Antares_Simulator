@@ -339,7 +339,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = reserves.referenceGlobalActivationDuration.down
-                                    * reserves.maxGlobalEnergyActivationRatio.down * level_max;
+                                    * reserves.maxGlobalEnergyActivationRatio.down
+                                    * level_max; // n_min * R_up * J_down
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 
@@ -348,7 +349,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
             if (cnt >= 0)
             {
                 SecondMembre[cnt] = -reserves.referenceGlobalActivationDuration.up
-                                    * reserves.maxGlobalEnergyActivationRatio.up * level_min;
+                                    * reserves.maxGlobalEnergyActivationRatio.up
+                                    * level_min; // n_min * R_down * -J_up
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
         }

@@ -8,11 +8,19 @@ void HydroGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, int 
     {
         // 15 (t)
         // Stock participation is energy constrained (optional constraints)
-        //  Sum(P_{res,t_st} * R_{min,res} +/- J_down/up * R_{lambda,t_st}) <= n_min * R_up
+        // 
+        // Sum(P_{res,t_st} * R_{min,res} - J_up * R_{lambda,t_st}) <= n_min_down * R_down * -J_up
+        //
+        // Sum(P_{res,t_st} * R_{min,res} + J_down * R_{lambda,t_st}) <= n_min_up * R_up * J_down
+        //
         // R_t : stock level at time t
-        // P_{res,t_st} : power participation for reserve down res at time t_st
+        // P_{res,t_st} : power participation for reserve res at time t_st
         // R_{min,res} : max power participation ratio
+        // R_{lambda,t_st}) : reservoir energy level
         // R_up : max stock level
+        // R_down : min stock level
+        // n_min_up : reference Global Activation Duration up
+        // n_min_down : reference Global Activation Duration down
 
         for (ReserveType type: {ReserveType::DOWN, ReserveType::UP})
         {
@@ -20,7 +28,8 @@ void HydroGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, int 
             int timeMax = data.areaReserves[pays].referenceGlobalActivationDuration[type];
             double maxGlobalEnergyActivationRatio = (type == ReserveType::UP ? -1 : 1)
                                                     * data.areaReserves[pays]
-                                                        .maxGlobalEnergyActivationRatio[type];
+                                                        .maxGlobalEnergyActivationRatio
+                                                          [type]; // J = -J_up or + Jdown
             for (int t = 0; t < timeMax; t++)
             {
                 for (auto& capacityReservation:
@@ -32,16 +41,16 @@ void HydroGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, int 
                           = capacityReservation.AllHydroReservesParticipation[cluster];
                         builder.HydroReserveParticipation(
                           type,
-                          reserveParticipation.globalIndexClusterParticipation,
-                          capacityReservation.powerActivationRatio,
+                          reserveParticipation.globalIndexClusterParticipation, // P_{res,t_st}
+                          capacityReservation.powerActivationRatio,             // R_{min,res}
                           t,
                           builder.data.NombreDePasDeTempsPourUneOptimisation);
                     }
                 }
                 if (builder.NumberOfVariables() > 0)
                 {
-                    builder.HydroLevel(globalClusterIdx,
-                                       maxGlobalEnergyActivationRatio,
+                    builder.HydroLevel(globalClusterIdx,               // R_{lambda,t_st})
+                                       maxGlobalEnergyActivationRatio, // J
                                        t,
                                        builder.data.NombreDePasDeTempsPourUneOptimisation);
                 }
