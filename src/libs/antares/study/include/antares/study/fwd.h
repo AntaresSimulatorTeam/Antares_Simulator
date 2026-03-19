@@ -40,13 +40,13 @@ class StudyRuntimeInfos;
 class Correlation;
 
 //! Name of a single area
-using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
+using AreaName = Yuni::CString<ant_k_area_name_max_length, true>;
 //! Name of a single link
-using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
+using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, true>;
 
-using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
+using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, true>;
 
-using RulesScenarioName = Yuni::CString<64, false>;
+using RulesScenarioName = Yuni::CString<64, true>;
 
 //! Name mapping
 using AreaNameMapping = std::map<AreaName, AreaName>;

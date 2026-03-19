@@ -22,7 +22,10 @@ public:
     void addItemToSection(const std::string& section,
                           const std::string& key,
                           const std::string& value);
-    void addDurationItem(const std::string& name, unsigned int duration, int nbCalls);
+    void addDurationItem(const std::string& name,
+                         unsigned int duration_ms,
+                         const std::string& duration,
+                         int nbCalls);
 
     std::string saveToBufferAsIni();
 

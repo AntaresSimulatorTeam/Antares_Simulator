@@ -10,7 +10,6 @@
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
-
 /**
  * Read Linear Expression Visitor
  * Visits a Node and produces a Linear Expression (defined by an offset and non-zero

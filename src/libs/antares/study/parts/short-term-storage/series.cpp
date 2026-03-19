@@ -154,57 +154,6 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(costVariationWithdrawal, 0.0);
 }
 
-bool writeVectorToFile(const std::string& path, const std::vector<double>& vect)
-{
-    try
-    {
-        std::ofstream fout(path);
-        fout << std::setprecision(14);
-
-        for (const auto& x: vect)
-        {
-            fout << x << '\n';
-        }
-    }
-    catch (...)
-    {
-        logs.error() << "Error while trying to save series file: " << path;
-        return false;
-    }
-
-    return true;
-}
-
-bool Series::saveToFolder(const std::string& folder) const
-{
-    logs.debug() << "Saving series into folder: " << folder;
-    if (!Yuni::IO::Directory::Create(folder))
-    {
-        logs.warning() << "Couldn't create dir: " << folder;
-        return false;
-    }
-
-    bool ret = true;
-
-    auto checkWrite = [&ret, &folder](const std::string& name, const std::vector<double>& content)
-    { ret = writeVectorToFile(folder + SEP + name, content) && ret; };
-
-    checkWrite("PMAX-injection.txt", maxInjectionModulation);
-    checkWrite("PMAX-withdrawal.txt", maxWithdrawalModulation);
-    inflows.saveToFile(folder + SEP + "inflows.txt", true);
-    checkWrite("lower-rule-curve.txt", lowerRuleCurve);
-    checkWrite("upper-rule-curve.txt", upperRuleCurve);
-
-    checkWrite("cost-injection.txt", costInjection);
-    checkWrite("cost-withdrawal.txt", costWithdrawal);
-    checkWrite("cost-level.txt", costLevel);
-
-    checkWrite("cost-variation-injection.txt", costVariationInjection);
-    checkWrite("cost-variation-withdrawal.txt", costVariationWithdrawal);
-
-    return ret;
-}
-
 bool Series::validate(const std::string& id, StudyVersion studyVersion) const
 {
     return validateSizes(id, studyVersion) && validateMaxInjection(id) && validateMaxWithdrawal(id)

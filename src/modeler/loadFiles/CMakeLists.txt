@@ -43,7 +43,7 @@ target_link_libraries(load-modeler-files
         Antares::data-series-csv-importer
         Antares::modeler-lib
         Antares::scenario-group-parser
-        Antares::utils
+        Antares::study-utils
         Antares::modeler-checks
         fmt::fmt
 )

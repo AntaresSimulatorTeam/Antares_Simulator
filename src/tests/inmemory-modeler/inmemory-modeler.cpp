@@ -168,9 +168,12 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
                                fromBool<ScenarioDependent>(scenarioDependent));
     }
     std::vector<Constraint> constraints;
-    for (const auto& [id, expression]: constraintsData)
+    for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
     {
-        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+        constraints.emplace_back(id,
+                                 createExpression(expression, nodeRegistry),
+                                 Antares::Solver::Config::Location::SUBPROBLEMS,
+                                 outOfBoundsProcessingMode);
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)
@@ -205,9 +208,12 @@ void LinearProblemBuildingFixture::createModelWithMultipleObjectives(
                                fromBool<ScenarioDependent>(scenarioDependent));
     }
     std::vector<Constraint> constraints;
-    for (const auto& [id, expression]: constraintsData)
+    for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
     {
-        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+        constraints.emplace_back(id,
+                                 createExpression(expression, nodeRegistry),
+                                 Antares::Solver::Config::Location::SUBPROBLEMS,
+                                 outOfBoundsProcessingMode);
     }
 
     std::vector<Objective> objectives;

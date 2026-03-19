@@ -6,7 +6,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include "antares/exception/InvalidArgumentError.hpp"
-#include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;

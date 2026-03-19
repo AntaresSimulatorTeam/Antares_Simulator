@@ -56,6 +56,130 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
     }
 }
 
+void HourlyCSRProblem::setRHSfictitiousLoadValue()
+{
+    // constraint: FictitiousLoad for all areas inside adequacy patch
+    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt) + STS_net_production
+    // where:
+    //   STt = sum of thermal dispatchable generation (from first optimization step)
+    //   STmint = sum of Pmin of thermal units
+    //   Ht = hydro generation (from first optimization step)
+    //   Ft = must-run generation
+    //   Lt = load
+    //   BT = DefaillanceNegativeUtiliserPMinThermique
+    //   BH = DefaillanceNegativeUtiliserHydro
+    //   BF = DefaillanceNegativeUtiliserConsoAbattue
+    //   STS_net_production = net withdrawals from short-term storage (from first optimization step)
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it = numberOfConstraintCsrFictitiousLoad.find(Area);
+            if (it != numberOfConstraintCsrFictitiousLoad.end())
+            {
+                int Cnt = it->second;
+
+                // Start with thermal dispatchable generation (STt)
+                double stt = 0.0;
+
+                const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
+                const auto& productionThermique = problemeHebdo_->ResultatsHoraires[Area]
+                                                    .ProductionThermique[triggeredHour];
+                for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
+                {
+                    stt += productionThermique.ProductionThermiqueDuPalier[index];
+                }
+
+                // Subtract (1-BT)*STmint term
+                // If BT is false: subtract STmint (sum of Pmin)
+                // If BT is true: subtract 0 (i.e., use full STt)
+                double stmint = 0.0;
+                if (!problemeHebdo_->DefaillanceNegativeUtiliserPMinThermique[Area])
+                {
+                    for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques;
+                         index++)
+                    {
+                        stmint += paliersThermiques.PminDuPalierThermiquePendantUneHeure[index];
+                    }
+                }
+
+                // Add BH*Ht term (hydro generation if enabled)
+                double ht = 0.0;
+                if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
+                {
+                    ht = problemeHebdo_->ResultatsHoraires[Area].TurbinageHoraire[triggeredHour];
+                }
+
+                // Add BF*Max(0, Ft - Lt) term
+                double bfTerm = 0.0;
+                if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
+                {
+                    double allMustRunGen = problemeHebdo_->AllMustRunGeneration[triggeredHour]
+                                             .AllMustRunGenerationOfArea[Area];
+                    double consommationAbattue = problemeHebdo_
+                                                   ->ConsommationsAbattues[triggeredHour]
+                                                   .ConsommationAbattueDuPays[Area];
+
+                    // Ft = allMustRunGen (must-run generation)
+                    // Lt = -consommationAbattue (load is negative in this context)
+                    double ftMinusLt = allMustRunGen + consommationAbattue;
+                    bfTerm = std::max(0.0, ftMinusLt);
+                }
+
+                // Add short term storage withdrawal
+                double stsNetProduction = 0.0;
+                const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
+                                                        .ShortTermStorage;
+                for (const auto& storageResults: shortTermStorageResults)
+                {
+                    stsNetProduction += storageResults.withdrawal[triggeredHour];
+                }
+
+                // RHS = STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt) + STS_net_production
+                double rhs = stt - stmint + ht + bfTerm + stsNetProduction;
+
+                problemeAResoudre_.SecondMembre[Cnt] = rhs;
+                logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
+                             << "] = " << problemeAResoudre_.SecondMembre[Cnt]
+                             << " (Area = " << Area << ")";
+            }
+        }
+    }
+}
+
+void HourlyCSRProblem::setRHSMaxEnsLoadValue()
+{
+    std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
+
+    for (uint32_t Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it = numberOfConstraintCsrMaxEnsLoad.find(Area);
+            if (it != numberOfConstraintCsrMaxEnsLoad.end())
+            {
+                int Cnt = it->second;
+
+                double load = problemeHebdo_->ConsommationsAbattues[triggeredHour]
+                                .ConsommationAbattueDuPays[Area];
+
+                const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
+                                                        .ShortTermStorage;
+                for (const auto& storageResults: shortTermStorageResults)
+                {
+                    load += storageResults.injection[triggeredHour];
+                }
+
+                SecondMembre[Cnt] = load;
+                logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
+                             << " (Area = " << Area << ")";
+            }
+        }
+    }
+}
+
 void HourlyCSRProblem::setRHSbindingConstraintsValue()
 {
     std::vector<double>& SecondMembre = problemeAResoudre_.SecondMembre;
