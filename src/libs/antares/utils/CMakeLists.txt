@@ -11,6 +11,7 @@ add_library(Antares::utils ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
         PRIVATE
+        Boost::headers
         yuni-static-core
         Antares::logs
 )
