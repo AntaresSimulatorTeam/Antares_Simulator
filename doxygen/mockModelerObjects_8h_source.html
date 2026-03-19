@@ -131,34 +131,36 @@ $(document).ready(function(){initNavTree('mockModelerObjects_8h_source.html','')
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;antares/study/system-model/component.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithParameters(</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;  std::vector&lt;Antares::ModelerStudy::SystemModel::Parameter&gt; params);</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;antares/study/system-model/component.h&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithParameters();</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithoutParameters();</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a>&amp; model,</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span> = <span class="stringliteral">&quot;component&quot;</span>,</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keywordtype">unsigned</span> index = 0);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a>&amp; model,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  std::map&lt;std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue&gt; parameter_values,</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keywordtype">unsigned</span> index = 0);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;std::pair&lt;std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue&gt;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;build_context_parameter_with(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                             <span class="keyword">const</span> std::string&amp; value,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                             <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a>&amp; type = Antares::</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                               Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);</div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:58</div></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithParameters(</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;  std::vector&lt;Antares::ModelerStudy::SystemModel::Parameter&gt; params);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithParameters();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a> createModelWithoutParameters();</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a>&amp; model,</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span> = <span class="stringliteral">&quot;component&quot;</span>);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a> createComponent(</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a>&amp; model,</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  std::map&lt;std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue&gt;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    parameter_values);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;std::pair&lt;std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue&gt;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;build_context_parameter_with(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                             <span class="keyword">const</span> std::string&amp; value,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                             <span class="keyword">const</span> <a class="code" href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a>&amp; type = Antares::</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                               Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);</div>
+<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Component_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">Antares::ModelerStudy::SystemModel::Component</a></div><div class="ttdef"><b>Definition:</b> component.h:57</div></div>
 <div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1Model_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html">Antares::ModelerStudy::SystemModel::Model</a></div><div class="ttdef"><b>Definition:</b> model.h:44</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_html_a1e55658b769471a302044e59ca6ee351"><div class="ttname"><a href="namespaceAntares_1_1Optimisation.html#a1e55658b769471a302044e59ca6ee351">Antares::Optimisation::VariabilityType</a></div><div class="ttdeci">VariabilityType</div><div class="ttdoc">Represents the time and scenario variation of a value.</div><div class="ttdef"><b>Definition:</b> variabilityType.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
