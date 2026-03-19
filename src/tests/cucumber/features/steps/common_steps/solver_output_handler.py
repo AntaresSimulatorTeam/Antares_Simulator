@@ -217,18 +217,6 @@ class solver_output_handler:
         sub = df.xs('HARD COAL', axis=1, level=0)
         return float(sub.iloc[0, 0])
 
-    def get_annual_unsupplied_energy(self, area: str, year: int) -> float:
-        """Return unsupplied energy for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('UNSP. ENRG', axis=1, level=0)
-        return float(sub.iloc[0, 0])
-
-    def get_annual_spilled_energy(self, area: str, year: int) -> float:
-        """Return spilled energy for annual results"""
-        df = self.__get_values_annual(area, year)
-        sub = df.xs('SPIL. ENRG', axis=1, level=0)
-        return float(sub.iloc[0, 0])
-
     def get_annual_n_dispatched_units(self, area: str, year: int) -> int:
         """Return number of dispatched units for annual results"""
         df = self.__get_values_annual(area, year)
