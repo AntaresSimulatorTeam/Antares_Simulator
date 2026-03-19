@@ -40,6 +40,8 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 namespace Utils
 {
 
+bool compareCaseInsensitive(const std::string& str1, const std::string& str2);
+
 bool isZero(double d);
 double round(double d, unsigned precision);
 double ceil(double d);

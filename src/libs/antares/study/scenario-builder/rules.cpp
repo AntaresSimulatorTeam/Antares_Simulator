@@ -3,9 +3,8 @@
 
 #include "antares/study/scenario-builder/rules.h"
 
-#include <boost/algorithm/string/case_conv.hpp>
-
 #include <antares/logs/logs.h>
+#include <antares/utils/utils.h>
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 #include "antares/study/study.h"
 
@@ -103,9 +102,8 @@ bool Rules::readThermalCluster(const std::vector<std::string>& splitKey,
     }
     else
     {
-        std::string pNameLower = boost::to_lower_copy(pName);
-        std::string activeRuleLower = boost::to_lower_copy(study_.parameters.activeRulesScenario);
-        bool isTheActiveRule = (pNameLower == activeRuleLower);
+        bool isTheActiveRule = Utils::compareCaseInsensitive(pName,
+                                                             study_.parameters.activeRulesScenario);
         if (!updaterMode and isTheActiveRule)
         {
             std::string clusterId = area->id + "." + clustername;
@@ -149,9 +147,8 @@ bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey,
     }
     else
     {
-        std::string pNameLower = boost::to_lower_copy(pName);
-        std::string activeRuleLower = boost::to_lower_copy(study_.parameters.activeRulesScenario);
-        bool isTheActiveRule = (pNameLower == activeRuleLower);
+        bool isTheActiveRule = Utils::compareCaseInsensitive(pName,
+                                                             study_.parameters.activeRulesScenario);
         if (!updaterMode and isTheActiveRule)
         {
             std::string clusterId = area->id + "." + clustername;
