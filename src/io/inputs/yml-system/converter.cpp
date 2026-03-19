@@ -265,9 +265,9 @@ void checkForNonLinearityInConnections(const std::vector<Component>& components)
     for (const auto& component: components)
     {
         // We have to filter contraints and take only binding constraints.
-        for (const auto& constraint: component.getModel()->Constraints() | filterBC)
+        for (const auto& binding_constraint: component.getModel()->Constraints() | filterBC)
         {
-            const auto& expression = constraint.expression();
+            const auto& expression = binding_constraint.expression();
             ForbiddenNodesVisitor visitor(forbidNonLinearNodes, expression.Value(), &component);
             visitor.dispatch(expression.RootNode());
         }
