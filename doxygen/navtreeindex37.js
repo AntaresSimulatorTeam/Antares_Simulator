@@ -1,17 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1IO_1_1Outputs_1_1MpsColumnEntry.html":[8,0,0,7,1,13],
-"structAntares_1_1IO_1_1Outputs_1_1MpsColumnEntry.html#a3112b35f110438fde4cb40c924906cf5":[8,0,0,7,1,13,1],
-"structAntares_1_1IO_1_1Outputs_1_1MpsColumnEntry.html#aefb796a86388efc5bfe6534e47679d4d":[8,0,0,7,1,13,0],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html":[8,0,0,7,1,10],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#a31b5e7a5d205c674508cca95c1d2c261":[8,0,0,7,1,10,5],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#a34b0bdcc91208d9e8632ac99863077ba":[8,0,0,7,1,10,2],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#a4001e17826e701069ed7074cbcda3ec5":[8,0,0,7,1,10,4],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#a4ec098fe12264c5a82b2477632e8e560":[8,0,0,7,1,10,0],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#aa08581c26f7e71070378d5822ab6461d":[8,0,0,7,1,10,3],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#ae490527435d4608d08fce05626af2084":[8,0,0,7,1,10,6],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#af0bc2e78b4f2dd67d180ff0350bbb9d3":[8,0,0,7,1,10,1],
-"structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html#af998195ffe0337e1cd6aa77447be38af":[8,0,0,7,1,10,7],
 "structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html":[8,0,0,7,1,11],
 "structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html#a0dfa0417fed2a6db8287beac1afdb798":[8,0,0,7,1,11,2],
 "structAntares_1_1IO_1_1Outputs_1_1TimeBlock.html#aaa3fc5dcf757eea5f8f5100ee1e97ed0":[8,0,0,7,1,11,1],
@@ -249,5 +237,17 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html":[8,0,0,11,6,4,92,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows_1_1Statistics.html":[8,0,0,11,6,4,96,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[8,0,0,11,6,4,15,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR_1_1Statistics.html":[8,0,0,11,6,4,100,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR_1_1Statistics.html":[8,0,0,11,6,4,100,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Price_1_1Statistics.html":[8,0,0,11,6,4,98,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlant_1_1Statistics.html":[8,0,0,11,6,4,102,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant_1_1Statistics.html":[8,0,0,11,6,4,104,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProfitByPlant_1_1Statistics.html":[8,0,0,11,6,4,106,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html":[8,0,0,11,6,4,108,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html":[8,0,0,11,6,4,110,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html":[8,0,0,11,6,4,112,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics.html":[8,0,0,11,6,4,114,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html":[8,0,0,11,6,4,17,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html":[8,0,0,11,6,4,118,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html":[8,0,0,11,6,4,120,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html":[8,0,0,11,6,4,122,0]
 };

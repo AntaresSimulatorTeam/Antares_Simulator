@@ -1,6 +1,5 @@
 var NAVTREEINDEX25 =
 {
-"classHydraulicSmoothingGroup.html#aedd8f967c204c600ed992ac73b69bf13":[8,0,147,1],
 "classHydroPower.html":[8,0,150],
 "classHydroPower.html#a5adbb80ce19ed4eee75f77670bbae7e7":[8,0,150,1],
 "classHydroPower.html#a7536d229dba6901a38d7d0e86ac42a86":[8,0,150,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX25 =
 "classMyStudyFinder.html#a748a79050702c60bb65b7fc018913d62":[8,0,207,1],
 "classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[8,0,207,4],
 "classMyStudyFinder.html#af2ed39729a10dcdf4c864d62e67a690b":[8,0,207,2],
-"classNamer.html":[8,0,208]
+"classNamer.html":[8,0,208],
+"classNamer.html#a1787da47d06a799afc09c1823b6b0d06":[8,0,208,9]
 };

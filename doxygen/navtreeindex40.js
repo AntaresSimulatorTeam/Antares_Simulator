@@ -1,17 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structAreaHydroLevelData.html":[8,0,37],
-"structAreaHydroLevelData.html#a60dfa4b1e0ae400a70a631828f5299a1":[8,0,37,0],
-"structAreaHydroLevelData.html#ab24ec75f870f2e34d7233909364cc9dd":[8,0,37,1],
-"structBOUND__FLEX__DOWN__NODE.html":[8,0,51],
-"structBOUND__FLEX__DOWN__NODE.html#a890184842464aadcca63cb2970421d3a":[8,0,51,0],
-"structBOUND__FLEX__UP__NODE.html":[8,0,52],
-"structBOUND__FLEX__UP__NODE.html#a3f87b04f2db3a6a0c9c867c821567314":[8,0,52,0],
-"structBasicProblemFixture.html":[8,0,40],
-"structBasicProblemFixture.html#a1978c05b0ad1387ca3ae897b9fe5a699":[8,0,40,0],
-"structBasicProblemFixture.html#a380c59a3e6aef2db1c4bf8caf53aab7f":[8,0,40,3],
-"structBasicProblemFixture.html#a6e17f314e6680796a5e840d6baa65b32":[8,0,40,5],
-"structBasicProblemFixture.html#a747b7be2857828ab0b6feab97c66e93c":[8,0,40,1],
 "structBasicProblemFixture.html#a99cb1176b9e498c7e868b38ae0f547b2":[8,0,40,6],
 "structBasicProblemFixture.html#abe6fa8ad0dc387898733c97b7849b15e":[8,0,40,2],
 "structBasicProblemFixture.html#aca2baa4d20185f045643e77254e1a801":[8,0,40,4],
@@ -249,5 +237,17 @@ var NAVTREEINDEX40 =
 "structCsvCreationFixture.html#a9a4f917679a071414c3b32074e2f6330":[8,0,95,0],
 "structCsvCreationFixture.html#ac04a4dcb4f50ce11e406ca2b69060b3c":[8,0,95,3],
 "structCsvCreationFixture.html#ade9150efaf9e36b65635c48e71eb38d1":[8,0,95,2],
-"structCumulationConstraint.html":[8,0,96]
+"structCumulationConstraint.html":[8,0,96],
+"structCumulationConstraint.html#a13563bb2050269e5ebafc1a8edd2da92":[8,0,96,0],
+"structCumulationConstraint.html#a4d3d494de407e18a424494aa5c647713":[8,0,96,1],
+"structDEMAND__FLEX__DOWN__POOL.html":[8,0,100],
+"structDEMAND__FLEX__DOWN__POOL.html#a4b91aa5f6b0605c637f074c435c46bdd":[8,0,100,0],
+"structDEMAND__FLEX__UP__POOL.html":[8,0,101],
+"structDEMAND__FLEX__UP__POOL.html#af984221093cc2b5d97fe9b7ca6bc1562":[8,0,101,0],
+"structDEMAND__MARKET__POOL.html":[8,0,102],
+"structDEMAND__MARKET__POOL.html#a39a0643c2eee267c6ee3a987506a5a0c":[8,0,102,0],
+"structDONNEES__ANNUELLES.html":[8,0,103],
+"structDONNEES__ANNUELLES.html#a0a55d18ec598c1bc4c7244c68e8d0acf":[8,0,103,7],
+"structDONNEES__ANNUELLES.html#a285c24ba96771edd7ad6a0f9d6c709bb":[8,0,103,14],
+"structDONNEES__ANNUELLES.html#a32fafb68a12664845fe25df8a44d70b8":[8,0,103,3]
 };

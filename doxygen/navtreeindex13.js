@@ -1,6 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classAntares_1_1Optimization_1_1LinearExpression.html#af59b80c13d6d996e608a3c5bfe0e4232":[8,0,0,10,16,4],
 "classAntares_1_1Optimization_1_1LinearExpression.html#af72ff2d45f0b393c7a0730db8a6779d2":[8,0,0,10,16,16],
 "classAntares_1_1Optimization_1_1STS.html":[8,0,0,10,12],
 "classAntares_1_1Optimization_1_1STS.html#a1d70039b56e08af3948d24e2368bf77e":[8,0,0,10,12,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html#a54811710311850dc0120a5a916a77bd7":[8,0,0,11,5,22,3],
 "classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html#a7e27d1d5685d6bb487cd197925d62171":[8,0,0,11,5,22,1],
 "classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html#a9ce7edd2e9f063b61d6652a759036fc8":[8,0,0,11,5,22,2],
-"classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html#aabca13d95fd7be9b27a3c19b3470e52b":[8,0,0,11,5,22,0]
+"classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html#aabca13d95fd7be9b27a3c19b3470e52b":[8,0,0,11,5,22,0],
+"classAntares_1_1Solver_1_1Simulation_1_1CyclicIterator.html#adc9d53cd7e3e33b817ce17d800e2d80a":[8,0,0,11,5,22,4]
 };

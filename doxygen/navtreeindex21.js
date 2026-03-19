@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa67ba324885ff7541d1c6beae1ecc385":[8,0,0,11,6,45,1],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa697be12f5e996ecd53e7fc33c70d10b":[8,0,0,11,6,45,6],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#aa76ce3b33b6c65bbf59db028d278ae34":[8,0,0,11,6,45,36],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#ab0e212d228b794bee094820716f31201":[8,0,0,11,6,45,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "classBindingConstraintDayGroup.html#af3126ce99b8e10081b5c10f7487ff102":[8,0,44,0],
 "classBindingConstraintHour.html":[8,0,46],
 "classBindingConstraintHour.html#a7adbfc31f706154144a22cf4a6c720ea":[8,0,46,1],
-"classBindingConstraintHour.html#aedb1c1878acff8c811c223d6c84a05c7":[8,0,46,0]
+"classBindingConstraintHour.html#aedb1c1878acff8c811c223d6c84a05c7":[8,0,46,0],
+"classBindingConstraintWeek.html":[8,0,48]
 };
