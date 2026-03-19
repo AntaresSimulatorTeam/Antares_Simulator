@@ -1,0 +1,16 @@
+models:
+  - id: lib_example_3_1.node_2gen_1load
+    model-decomposition:
+      constraints:
+        - id: balance
+          location: subproblems
+        - id: constant_power_gen1
+          location: subproblems
+        - id: redondant_constant_power_gen1
+          location: subproblems
+    out-of-bounds-processing:
+      constraints:
+        - id: constant_power_gen1
+          mode: drop
+        - id: redondant_constant_power_gen1
+          mode: drop

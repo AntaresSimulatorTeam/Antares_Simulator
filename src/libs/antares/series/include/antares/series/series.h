@@ -72,8 +72,6 @@ public:
                      const std::string& folder,
                      const std::string& prefix) const;
 
-    int saveToFile(const std::string& filename, bool saveEvenIfAllZero) const;
-
     double getCoefficient(uint32_t year, uint32_t timestep) const;
     const double* getColumn(uint32_t year) const;
     uint32_t getSeriesIndex(uint32_t year) const;

@@ -403,6 +403,44 @@ For investment studies with `benders-decomposition`, it's common to place invest
 operational
 decisions in `subproblems`.
 
+### Out-of-bounds processing for shifted constraints
+
+The **out-of-bounds-processing** section lets you control how time-shifted constraints are handled when a shifted term
+falls outside the current optimization block, for example `x[t+1]` on the last timestep of a block.
+
+This configuration currently applies to constraints only.
+
+Example:
+
+~~~yaml
+models:
+  - id: andromede.my_storage
+    model-decomposition:
+      constraints:
+        - id: level_dynamics
+          location: subproblems
+    out-of-bounds-processing:
+      constraints:
+        - id: level_dynamics
+          mode: drop
+~~~
+
+**Configuration keys:**
+
+- **out-of-bounds-processing**:
+    - **constraints** (optional): override out-of-bounds handling for specific constraints
+    - Each entry requires:
+        - **id**: Constraint ID as defined in the [model library](#models)
+        - **mode**: One of `cyclic` or `drop`
+
+**Modes:**
+
+- `cyclic` (default): shifted terms wrap around within the local block
+- `drop`: the constraint is not instantiated for timesteps where at least one shifted term falls outside the local
+  block
+
+Each configured constraint `id` must reference an existing constraint of the model.
+
 ## Data series
 
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define

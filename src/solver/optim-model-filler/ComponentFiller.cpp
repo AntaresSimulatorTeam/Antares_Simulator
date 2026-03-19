@@ -8,8 +8,44 @@
 #include <antares/exception/RuntimeError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
+#include <antares/logs/logs.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/visitors/VariabilityVisitor.h"
+
+namespace
+{
+unsigned countActiveConstraintTimesteps(
+  const Antares::ModelerStudy::SystemModel::Constraint& constraint,
+  const Antares::Optimisation::LinearProblemApi::FillContext& ctx,
+  const Antares::Optimisation::OptimEntityContainer& optimEntityContainer,
+  const Antares::ModelerStudy::SystemModel::Component& component,
+  const Antares::Optimisation::LinearProblemApi::ILinearProblemData* data,
+  const Antares::Optimisation::ScenarioGroupRepository& scenarioGroupRepo)
+{
+    if (constraint.outOfBoundsProcessingMode()
+        == Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC)
+    {
+        return static_cast<unsigned>(ctx.getLocalNumberOfTimeSteps());
+    }
+
+    const auto& scenario = scenarioGroupRepo.scenario(component.getScenarioGroupId());
+    Visitors::EvalVisitor evalVisitor(optimEntityContainer, ctx, component, data, &scenario);
+    unsigned activeConstraintCount = 0;
+    for (const auto timeStep: Antares::Optimisation::IntegerInterval{ctx.getLocalFirstTimeStep(),
+                                                                     ctx.getLocalLastTimeStep()})
+    {
+        if (!Antares::Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                            timeStep,
+                                                            ctx,
+                                                            evalVisitor))
+        {
+            ++activeConstraintCount;
+        }
+    }
+    return activeConstraintCount;
+}
+} // namespace
 
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Nodes;
@@ -303,24 +339,62 @@ void ComponentFiller::addStaticConstraint(const LinearConstraint& linear_constra
 
 void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                                   const std::string& constraint_id,
-                                                  const LinearProblemApi::FillContext& ctx) const
+                                                  const LinearProblemApi::FillContext& ctx,
+                                                  const Constraint& constraint) const
 {
     const auto dims = getDimensions(ctx);
 
     const auto& solverVariables = pb_.getVariables();
-    const bool isScenarioDependent = dims.getScenarioIndices().size() > 1;
-    for (const auto s: dims.getScenarioIndices())
+    const auto firstTimestep = dims.getTimesteps().initialTime;
+
+    const bool isDrop = constraint.outOfBoundsProcessingMode() == OutOfBoundsProcessingMode::DROP;
+
+    // If DROP mode is enabled, construct a single EvalVisitor and iterate timesteps once.
+    if (isDrop)
+    {
+        Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer_,
+                                                       ctx,
+                                                       component_,
+                                                       data_,
+                                                       &scenarioGroupRepo_.scenario(
+                                                         component_.getScenarioGroupId()));
+
+        for (const auto t: dims.getTimesteps())
+        {
+            const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
+            if (Antares::Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                               t,
+                                                               ctx,
+                                                               evalVisitor))
+            {
+                logs.debug() << "Constraint " << constraint_id
+                             << " was ignored because it is marked as DROP for t = " << t;
+                continue;
+            }
+
+            auto* ct = pb_.addConstraint(linear_constraints.lb[localIndex],
+                                         linear_constraints.ub[localIndex],
+                                         component_.Id() + "." + constraint_id + '_'
+                                           + std::to_string(t));
+
+            const auto& coefsPerVar = linear_constraints.coef_per_var[localIndex];
+            for (const auto& [index, value]: coefsPerVar)
+            {
+                ct->setCoefficient(solverVariables[index].get(), value);
+            }
+        }
+    }
+    else
     {
         for (const auto t: dims.getTimesteps())
         {
-            auto name = component_.Id() + "." + constraint_id + '_' + std::to_string(t);
-            if (isScenarioDependent)
-            {
-                name += "_" + std::to_string(s);
-            }
-            auto* ct = pb_.addConstraint(linear_constraints.lb[t], linear_constraints.ub[t], name);
+            const auto localIndex = static_cast<std::size_t>(t - firstTimestep);
+            auto* ct = pb_.addConstraint(linear_constraints.lb[localIndex],
+                                         linear_constraints.ub[localIndex],
+                                         component_.Id() + "." + constraint_id + '_'
+                                           + std::to_string(t));
 
-            const auto& coefsPerVar = linear_constraints.coef_per_var[t];
+            const auto& coefsPerVar = linear_constraints.coef_per_var[localIndex];
             for (const auto& [index, value]: coefsPerVar)
             {
                 ct->setCoefficient(solverVariables[index].get(), value);
@@ -331,24 +405,35 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
 
 void ComponentFiller::addConstraints(const LinearProblemApi::FillContext& ctx)
 {
+    const auto& contraints = component_.getModel()->Constraints();
     ReadLinearConstraintVisitor visitor(optimEntityContainer_,
                                         ctx,
                                         component_,
                                         data_,
                                         scenarioGroupRepo_);
 
-    const auto& contraints = component_.getModel()->Constraints();
     for (const auto& constraint: contraints | locationFilter())
     {
         auto* root_node = constraint.expression().RootNode();
         auto linear_constraints = visitor.dispatch(root_node);
         const auto variability = getVariability(root_node, component_);
 
-        optimEntityContainer_.registerConstraint(component_, variability);
+        unsigned activeConstraintCount = 1;
+        if (isTimeDependent(variability))
+        {
+            activeConstraintCount = countActiveConstraintTimesteps(constraint,
+                                                                   ctx,
+                                                                   optimEntityContainer_,
+                                                                   component_,
+                                                                   data_,
+                                                                   scenarioGroupRepo_);
+        }
+
+        optimEntityContainer_.registerConstraint(component_, variability, activeConstraintCount);
 
         if (isTimeDependent(variability))
         {
-            addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx);
+            addTimeDependentConstraints(linear_constraints, constraint.Id(), ctx, constraint);
         }
         else
         {

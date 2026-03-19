@@ -4,8 +4,7 @@ toc_depth: 2
 
 # Antares Changelog
 
-
-### 10.0.0-rc1
+### 10.0.0
 
 #### Major changes
 
@@ -16,9 +15,12 @@ toc_depth: 2
 * Hybrid studies with bounds from modeler [ANT-4033] (#3355)
 * Thermal capacity Investment with integer variables [ANT-4342] (#3369)
 * Improve handling for MIP variables in hybrid studies (#3422)
+* Add constraint fictitious load to adq patch [ANT-4365] (#3413)
+* Add sts prod to fictitious load [ANT-3739] (#3397)
 
 #### Improvements
 
+* Write longer durations in execution_info.ini (#3476)
 * Fix MILP problems in hybrid studies [ANT-4551] (#3407)
 * Refactor options.cpp, add tests (#3340)
 * Hybrid studies: turn YAML area connections into a dictionary (#3381)
@@ -30,16 +32,17 @@ toc_depth: 2
 * Performance scaling tests for expression sum (#3424)
 * Fix unit tests binding constraints (#3453)
 * Feature/tiny move (#3408)
+* Remove constraint builder (#3469)
 * Remove unnecessary code and cleanup:
-  - Remove GUI code (#3411, #3417, #3438, #3439, #3440, #3441, #3442, #3443, #3444)
-  - Remove JIT::usedFromGUI (#3419)
-  - Remove loadOnlyNeeded (#3440)
-  - Remove unused core/preprocessor/vaargs.h (#3420)
-  - Remove ts-generator binary (#3334)
-  - Remove code only used by GUI (#3417)
-  - Remove functions related to rename (#3444)
-  - Remove unused code from class Study (#3442)
-  - Optimize variable name building (avoid concat) (#3423)
+    - Remove GUI code (#3411, #3417, #3438, #3439, #3440, #3441, #3442, #3443, #3444)
+    - Remove JIT::usedFromGUI (#3419)
+    - Remove loadOnlyNeeded (#3440)
+    - Remove unused core/preprocessor/vaargs.h (#3420)
+    - Remove ts-generator binary (#3334)
+    - Remove code only used by GUI (#3417)
+    - Remove functions related to rename (#3444)
+    - Remove unused code from class Study (#3442)
+    - Optimize variable name building (avoid concat) (#3423)
 
 #### Bugfixes
 
@@ -52,7 +55,6 @@ toc_depth: 2
 
 * Cucumber tests: new checks for area connection (#3443)
 * Fix Cucumber test_launcher_8.feature (#3426)
-
 
 #### Documentation
 
@@ -73,8 +75,8 @@ toc_depth: 2
 * Docker solution for clang-format (#3389)
 * MPS Generator ADR (#3410)
 * Update simtest (#3415)
-* Fix compilation warnings (#3401)
-
+* Fix compilation warnings (#3401, #3491)
+* Fix failure of sonar scans due to disk space limitation (#3495, #3497)
 
 ### 9.3.7
 
@@ -147,52 +149,65 @@ toc_depth: 2
 * [oracle 8] update python version to get ortools (#3379)
 
 ### 9.3.5
+
 #### Improvements
+
 * New option Adequacy patch debug files [ANT-4034] (#3297)
 * Add time infos to API [ANT-4261] (#3315)
 * Add more details for steps durations [ANT-4263] (#3319)
 * APIv2 - Fix initial hydro levels (#3326)
+
 #### CI
 
 * Bump actions/cache from 4 to 5 (#3293)
 * Bump actions/upload-artifact from 5 to 6 (#3294)
 
 ### 9.3.4
+
 #### Improvements
+
 * Various fixes for the "single problem API" (#3313, #3311, #3312, #3309)
 * Bump SonarSource/sonarqube-scan-action from 6.0.0 to 7.0.0 (#3295)
 
 ### 9.3.3
 
 #### New features
+
 * Add support for Gurobi-specific solver parameters (#3264)
 
 #### Improvements
+
 * Add error handling to antlr parsing [ANT-4032] (#3254)
 * Small improvements for slack analysis (#3255)
 * setObjectiveOffset API [ANT-4168] (#3251)
 
 #### Bugfixes
+
 * Additional constraints : bad unexpected input management [ANT-4297]
 * Add week number to additional constraint name (#3300)
 
 #### Modeler
+
 * Modeler 6.5: valid location [ANT-4045] (#3258)
 * Consistency in Node Composition for Modeler (#3242)
 * Modeler scenarized constant parameter [ANT-3800] (#3275)
 * Time dependent objective is not supported (#3257)
 
 #### CI
+
 * Fix: sonar hit ccache properly (#3196)
 
 #### Build
+
 * Add a few missing install directives (#3266)
 
 #### Doc
+
 * Fix on readthedoc rendering (#3245)
 * FunctionNode doc (#3270)
 
 #### Code quality
+
 * refactor: TimeIndex -> TimeScenarioVariability (#3261)
 * Expose studyPath instead of study (#3267)
 * Add SingleProblemGetter::getProblemIds() for problem IDs (#3268)
@@ -203,15 +218,16 @@ toc_depth: 2
 * Fix Mdeb's trailing zeroes [ANT-2334] (#3303)
 
 #### Technical cleaning
+
 Modeler : restore models as const [ANT-4051] (#3273)
 Remove useless if/else for links loop-flow (#3262)
 Remove unused LpsFromAntares data members (#3289)
 
 #### Tests
+
 Storage remix tests : trial for improvement [ANT-4022] (#3244)
 Expressions : tests sum operator (#3260)
 collectRemixDebugInfo (#3278)
-
 
 ### 9.3.2
 
@@ -223,6 +239,7 @@ collectRemixDebugInfo (#3278)
     - Some of those warnings are kept as warning and now non-blocking. Mainly those related deprecated options or values
 
 #### New features
+
 * Modeler 5.5: Add dual and reduced\_cost operators [ANT-3621] (#3177)
 * Modeler 5.6, 5.7: max, min and pow operators [ANT-3642] (#3212)
 * Modeler 6.2: Variables in investment problems [ANT-3885] [ANT-3913] (#3166)
@@ -230,6 +247,7 @@ collectRemixDebugInfo (#3278)
 * Add debug files to hydro remix [ANT-4028] (#3206)
 
 #### Improvements
+
 * Ascending compatibility [ANT-3989](#3161)
 * Add a deprecated message to the GUI [ANT-4042] (#3238)(#3240)
 * Fix: Reduce log spam and improve information (#3232)
@@ -237,11 +255,13 @@ collectRemixDebugInfo (#3278)
 * Add thread number in logs [ANT-2174] (#3138)
 
 #### Bugfixes
+
 * Infaisabilité avec l'hydro avec min gen et sans reservoir management [ANT-3748] (#3181)
 * Fix segfault caused by expression[t] [ANT-4049] (#3201)
 * Fix LolpCsr floor, LoldCsr spatial aggregate value (#3169)(#3168)(#3151)
 
 #### Modeler
+
 * Add ExportBehavior for structure files (#3210)
 * 6.1: Several objectives [ANT-3887] (#3090)
 * 6.2 Load E2E [ANT-3885] (#3185)
@@ -251,23 +271,27 @@ collectRemixDebugInfo (#3278)
 * Improve study model (#3093)
 
 #### CI
+
 * Cache improvements (#3128)(#3154)(#3179)(#3219)(#3140)
 * Fix continuous delivery title (#3183)
 * Use boolean type instead of string type for "Run all tests" (#3175)
 * Update CD title and tag (#3163)
 
 #### Build
+
 * testing cmake unity build (#3191)
 * On Windows : avoiding a compilation collision between antlr4 and Yuni (#3178)
 * Remove compile option unsuported on Clang (#3068)
 * Remove study dependency in exception (#3164)
 
 #### Doc
+
 * Doc on expressions : move and complete expressions [ANT-4117] (#3217)
 * Update doc for objective contributions (#3158)
 * Update XPRESS doc regarding MILP problems (#3160)
 
 #### Code quality
+
 * Factorize lolp and lold traits (#3145)
 * Deduplicate code in lolp vcards (#3144)(#3143)
 * Simplify chained templates for variables (#3142)(#3131)(#3129)(#3127)
@@ -282,6 +306,7 @@ collectRemixDebugInfo (#3278)
 * Fix a few code smells following #3093 (#3123)
 
 #### Technical cleaning
+
 * Remove unused dummy\_data (#3221)
 * Remove unused OptimComponent::index (#3218)
 * Wrap getDisplayName and getIcon inside BUILD\_UI (#3216)
@@ -293,6 +318,7 @@ collectRemixDebugInfo (#3278)
 * Remove unused "Hashable" class (#3115)
 
 #### Tests
+
 * Add 2 hydro remix tests [ANT-4022] (#3213)
 * handle invalid-studies (#3250)
 * update expectations 015 Hydro power (#3249)

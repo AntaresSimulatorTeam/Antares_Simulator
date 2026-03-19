@@ -173,16 +173,6 @@ bool AdqPatchParams::updateFromKeyValue(const Yuni::String& key, const Yuni::Str
     return curtailmentSharing.updateFromKeyValue(key, value);
 }
 
-void AdqPatchParams::saveToINI(IniFile& ini) const
-{
-    auto* section = ini.addSection("adequacy patch");
-    section->add("include-adq-patch", enabled);
-    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
-                 setToZeroOutsideInsideLinks);
-
-    curtailmentSharing.addProperties(section);
-}
-
 bool AdqPatchParams::checkAdqPatchParams(const SimulationMode simulationMode,
                                          const AreaList& areas,
                                          const bool includeHurdleCostParameters) const
