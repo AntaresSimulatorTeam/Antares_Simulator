@@ -12,7 +12,7 @@
 
 library:
   id: library-eo
-  description: Library for test case : computing a thermal cluster income
+  description: Library for case of computing a thermal cluster income
 
   port-types:
     - id: flow
@@ -93,5 +93,5 @@ library:
       extra-outputs:
         - id: income
           expression: sum(sum_connections(balance_port.price) - generation_cost)
-        - id: dual(balance) from area
+        - id: dual_of_balance_constraint_from_area
           expression: sum(sum_connections(balance_port.price))
