@@ -259,10 +259,10 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
 
 void checkForNonLinearityBehindConnections(const std::vector<Component>& components)
 {
-    // Now that connections are made between components, we need to check for 
+    // Now that connections are made between components, we need to check for
     // linearity of binding constraints in the current component's model.
-    // Thus, if the constaints expressions hold a sum_connections(...) operator containing 
-    // port field resolution, we have to make sure that, on the port field other side, only 
+    // Thus, if the constaints expressions hold a sum_connections(...) operator containing
+    // port field resolution, we have to make sure that, on the port field other side, only
     // a linear expression is found.
     auto filterBC = std::views::filter([](const auto& c) { return c.isBindingConstraint(); });
     for (const auto& component: components)

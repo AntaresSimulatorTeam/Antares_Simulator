@@ -92,6 +92,6 @@ library:
           expression: sum(generation_cost * generation)
       extra-outputs:
         - id: income
-          expression: sum(sum_connections(balance_port.price) - generation_cost)
-        - id: dual_of_balance_constraint_from_area
-          expression: sum(sum_connections(balance_port.price))
+          expression: sum_connections(balance_port.price) - generation_cost
+        - id: dual(balance) from area
+          expression: sum_connections(balance_port.price)

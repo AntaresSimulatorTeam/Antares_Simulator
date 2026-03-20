@@ -133,5 +133,7 @@ Feature: 10 - Modeler extra outputs
     When I run antares modeler
     Then the simulation succeeds
     And the modeler outputs contain the following entries
-      | block | component         | output                               | timestep | scenario | value |
-      | 1     | base_zone         | balance_port.price                   | 1        | 0        | 10    |
+      | block | component         | output                    | timestep | scenario | value |
+      | 1     | base_zone         | balance_port.price        | 1        | 0        | 10    |
+      | 1     | gas_base_zone     | dual(balance) from area   | 1        | 0        | 10    |
+	  | 1     | gas_base_zone     | income                    | 1        | 0        | 0     |
