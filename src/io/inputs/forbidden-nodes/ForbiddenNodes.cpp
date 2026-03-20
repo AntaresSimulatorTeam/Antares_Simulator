@@ -93,7 +93,7 @@ ForbiddenNodes ForbidNodesInObjective()
 
 ForbiddenNodes ForbidNodesInExtraOutput()
 {
-    return {};
+    return {}; // Nothing is forbidden
 }
 
 static ForbiddenNodes ForbidNonLinearNodes()
