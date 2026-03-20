@@ -4,6 +4,18 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 10.0.1
+
+#### Features
+
+* Add "drop constraint" for out of timebound constraints [ANT-4643] (#3485)
+* Rename "PositiveUnsuppliedEnergy" variable to "UnsuppliedEnergy" (#3477)
+* Rename "NegativeUnsuppliedEnergy" variable to "Spillage" (#3477)
+
+#### For developers
+
+* Remove unused code following GUI removal (#3500, #3494)
+
 ### 10.0.0
 
 #### Major changes
