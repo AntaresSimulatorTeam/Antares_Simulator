@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/runtime/runtime.h"
 
@@ -152,15 +134,17 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
         {
             // We have here too much hours, the interval will be reduced
             // Log Entry
-            logs.info() << "    Partial week detected. Not allowed in "
-                        << SimulationModeToCString(study.parameters.mode);
-            logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
-                        << (1 + b);
+            logs.warning() << "    Partial week detected. Not allowed in "
+                           << SimulationModeToCString(study.parameters.mode);
+            logs.warning() << "    Time interval that has been requested: " << (1 + a) << ".."
+                           << (1 + b);
             // Reducing
             while (b > a and 0 != ((b - a + 1) % 168))
             {
                 --b;
             }
+            logs.warning() << "    Time interval that will be simulated:  " << (1 + a) << ".."
+                           << (1 + b);
         }
     }
 
@@ -352,15 +336,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     mode = gd.mode;
     // Calendar
     logs.info() << "Generating calendar informations";
-    if (study.usedByTheSolver)
-    {
-        study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
-    }
-    else
-    {
-        study.calendar.reset(
-          {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});
-    }
+    study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
     logs.debug() << "  :: generating calendar dedicated to the output";
     study.calendarOutput.reset(
       {gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, gd.leapYear});

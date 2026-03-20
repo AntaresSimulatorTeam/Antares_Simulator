@@ -21,10 +21,8 @@
 #include "antares/solver/optimisation/opt_gestion_des_couts_reserves.h"
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/simulation.h"
-
-#include "variables/VariableManagerUtils.h"
 
 void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                                              const int PremierPdtDeLIntervalle,

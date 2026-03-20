@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/parts/hydro/series.h"
 
@@ -124,26 +106,6 @@ void DataSeriesHydro::resizeTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
-}
-
-bool DataSeriesHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = ror.forceReload(reload) && ret;
-    ret = storage.forceReload(reload) && ret;
-    ret = mingen.forceReload(reload) && ret;
-    ret = maxHourlyGenPower.forceReload(reload) && ret;
-    ret = maxHourlyPumpPower.forceReload(reload) && ret;
-    return ret;
-}
-
-void DataSeriesHydro::markAsModified() const
-{
-    ror.markAsModified();
-    storage.markAsModified();
-    mingen.markAsModified();
-    maxHourlyGenPower.markAsModified();
-    maxHourlyPumpPower.markAsModified();
 }
 
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
@@ -256,10 +218,9 @@ uint DataSeriesHydro::TScount() const
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             StudyVersion studyVersion,
-                                            Parameters::Compatibility::HydroPmax hydroPmax,
-                                            bool usedBySolver)
+                                            Parameters::Compatibility::HydroPmax hydroPmax)
 {
-    if (!(derated && usedBySolver))
+    if (!derated)
     {
         return;
     }

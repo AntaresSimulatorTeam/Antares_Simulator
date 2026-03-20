@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <yuni/yuni.h>
 
@@ -138,16 +120,6 @@ bool PreproAvailability::validate() const
     return errors == 0;
 }
 
-bool PreproAvailability::forceReload(bool reload) const
-{
-    return data.forceReload(reload);
-}
-
-void PreproAvailability::markAsModified() const
-{
-    data.markAsModified();
-}
-
 void PreproAvailability::reset()
 {
     data.reset(preproAvailabilityMax, DAYS_PER_YEAR, true);
@@ -182,11 +154,15 @@ bool PreproAvailability::normalizeAndCheckNPO()
             normalized = true;
         }
 
-        if (columnNPOMin[y] > columnNPOMax[y] && ++errors < maxErrors)
+        if (columnNPOMin[y] > columnNPOMax[y])
         {
-            logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
-                         << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
-                         << ')';
+            ++errors;
+            if (errors < maxErrors)
+            {
+                logs.error() << id << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
+                             << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
+                             << ')';
+            }
         }
     }
 
@@ -200,7 +176,6 @@ bool PreproAvailability::normalizeAndCheckNPO()
         logs.info() << "  NPO max for entity '" << id << "' has been normalized";
     }
 
-    data.markAsModified();
     return (0 == errors);
 }
 

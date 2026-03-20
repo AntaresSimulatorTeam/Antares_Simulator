@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define BOOST_TEST_MODULE test - lib - antares - matrix tests
 
 #define WIN32_LEAN_AND_MEAN
@@ -56,8 +39,6 @@ All loadFromCSVFile(...) entries (some directions to test this big method):
 modified
                         + optQuiet = 2,				//! Do not produce warnings/errors
                         + optImmediate = 4,			//! Do not postpone the loading
-                        + optMarkAsModified = 8,	//! mark the matrix as modified after
-loading
                         + optNoWarnIfEmpty = 16,	//! Do not warn if the file is empty
                         + optNeverFails = 32,		//! The loading never fails
         4. Error type returned by loadFromFileToBuffer(...)
@@ -853,12 +834,7 @@ BOOST_AUTO_TEST_CASE(mtx_is_marked_modified__load_is_done___mtx_no_more_modified
     // Testing load
     Matrix_mock_load_to_buffer<int, int> mtx;
     mtx.jit = new JIT::Informations(); // Giving matrix a defaut jit information
-    mtx.markAsModified();
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file",
-                                    0,
-                                    0,
-                                    Matrix<>::optImmediate | Matrix<>::optMarkAsModified,
-                                    fake_buffer));
+    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optImmediate, fake_buffer));
 
     delete fake_buffer;
 

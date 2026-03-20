@@ -1,24 +1,5 @@
-
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/simulation/adequacy.h"
 
@@ -138,8 +119,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear,
     return false; // No need to call the solver to exhibit an optimal solution
 }
 
-bool Adequacy::year(Progression::Task& progression,
-                    Variable::State& state,
+bool Adequacy::year(Variable::State& state,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
@@ -374,22 +354,12 @@ bool Adequacy::year(Progression::Task& progression,
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
         addTimeMeasure(durationCollector, currentProblem.timeMeasure);
-
-        ++progression;
     }
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
     return true;
-}
-
-void Adequacy::incrementProgression(Progression::Task& progression) const
-{
-    for (uint w = 0; w < pNbWeeks; ++w)
-    {
-        ++progression;
-    }
 }
 
 // Retrieve weighted average balance for each area

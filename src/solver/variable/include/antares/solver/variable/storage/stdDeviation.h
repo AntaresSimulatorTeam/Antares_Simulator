@@ -1,28 +1,13 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_STORAGE_STD_DEVIATION_H__
 #define __SOLVER_VARIABLE_STORAGE_STD_DEVIATION_H__
 
 #include <cmath>
 #include <float.h>
+
+#include "antares/solver/variable/storage/empty.h"
 
 using HighPrecision = long double;
 
@@ -43,19 +28,12 @@ public:
         categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
     };
 
-    struct Data
-    {
-        double value;
-        uint32_t indice;
-    };
-
     //! Name of the filter
     static const char* Name()
     {
         return "std deviation";
     }
 
-protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
         stdDeviationHourly.assign(HOURS_PER_YEAR, 0.);
@@ -164,7 +142,6 @@ protected:
                                                         precision);
     }
 
-public:
     std::vector<HighPrecision> stdDeviationMonthly;
     std::vector<HighPrecision> stdDeviationWeekly;
     std::vector<HighPrecision> stdDeviationDaily;
@@ -241,38 +218,11 @@ private:
         break;
         case Category::annual:
         {
-            const double d = *array - results.avgdata.allYears * results.avgdata.allYears;
+            const double d = *array - (double)results.avgdata.year * (double)results.avgdata.year;
             *target = squareRootChecked(d);
         }
         break;
         }
-
-        // Next column index
-        ++report.data.columnIndex;
-    }
-
-    template<class S, unsigned int Size, class VCardT, int PrecisionT, class A>
-    void InternalExportValuesMC(SurveyResults& report, const S& /*results*/, const A& array) const
-    {
-        if (not(PrecisionT & Category::annual))
-        {
-            return;
-        }
-        assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-        // Caption
-        report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = report.variableUnit;
-        report.captions[2][report.data.columnIndex] = "std";
-
-        // Precision
-        report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
-          VCardT::decimal>::Value();
-
-        // Non applicability
-        report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
-
-        (void)::memcpy(report.data.matrix[report.data.columnIndex], array, Size * sizeof(double));
 
         // Next column index
         ++report.data.columnIndex;

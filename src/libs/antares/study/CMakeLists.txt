@@ -10,7 +10,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/sets.h
         include/antares/study/scenario-builder/sets.hxx
         scenario-builder/sets.cpp
-        include/antares/study/scenario-builder/updater.hxx
         scenario-builder/BindingConstraintsTSNumbersData.cpp
         scenario-builder/NTCTSNumberData.cpp
         include/antares/study/scenario-builder/NTCTSNumberData.h
@@ -54,14 +53,6 @@ set(SRC_AREAS
         area/list.cpp
 )
 source_group("study\\area" FILES ${SRC_AREAS})
-
-
-set(SRC_STUDY_AREA_UI
-        include/antares/study/area/ui.h
-        area/ui.cpp
-)
-source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
-
 
 set(SRC_STUDY_PART_COMMON
         parts/common/cluster.cpp
@@ -150,12 +141,6 @@ set(SRC_STUDY_PART_HYDRO
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 
-set(SRC_STUDY_UI
-        include/antares/study/ui-runtimeinfos.h
-        ui-runtimeinfos.cpp
-)
-source_group(study\\UI FILES ${SRC_STUDY_UI})
-
 set(SRC_STUDY_PARAMETERS
         include/antares/study/parameters.h
         parameters.cpp
@@ -186,8 +171,6 @@ set(SRC_STUDY_BINDING_CONSTRAINT
         binding_constraint/BindingConstraintsRepository.cpp
         binding_constraint/BindingConstraintLoader.cpp
         include/antares/study/binding_constraint/BindingConstraintLoader.h
-        binding_constraint/BindingConstraintSaver.cpp
-        include/antares/study/binding_constraint/BindingConstraintSaver.h
         include/antares/study/binding_constraint/EnvForLoading.h
         include/antares/study/binding_constraint/BindingConstraintStructures.h
         binding_constraint/BindingConstraintGroup.cpp
@@ -239,11 +222,9 @@ set(SRC_STUDY
         study.cpp
         duplicates.cpp
         include/antares/study/duplicates.h
-        include/antares/study/correlation-updater.hxx
         study.importprepro.cpp
         importlogs.cpp
         load.cpp
-        save.cpp
         study.extra.cpp
         include/antares/study/version.h
         version.cpp
@@ -251,20 +232,6 @@ set(SRC_STUDY
         cleaner/cleaner.cpp
         include/antares/study/cleaner/versions.h
         cleaner/cleaner-v20.cpp
-        output.cpp
-        include/antares/study/output.h
-        include/antares/study/output.hxx
-        layerdata.cpp
-        include/antares/study/layerdata.h
-
-        # progression
-        include/antares/study/progression/progression.h
-        include/antares/study/progression/progression.hxx
-        progression/progression.cpp
-
-        # Simulation
-        include/antares/study/simulation.h
-        simulation.cpp
 
         # Filter
         include/antares/study/filter.h
@@ -285,8 +252,6 @@ set(SRC_ALL
         ${SRC_STDCXX}
         ${SRC_AREAS}
         ${SRC_XCAST}
-        ${SRC_STUDY_AREA_UI}
-        ${SRC_STUDY_UI}
         ${SRC_STUDY_PARAMETERS}
         ${SRC_STUDY_FINDER}
         ${SRC_STUDY_BINDING_CONSTRAINT}

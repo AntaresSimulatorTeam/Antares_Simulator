@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <algorithm>
 #include <sstream>
@@ -26,6 +8,7 @@
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
+#include "antares/solver/optimisation/MipDetection.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -316,7 +299,9 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                                        != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
 
     problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
-                                                 == Antares::Data::UnitCommitmentMode::ucMILP);
+                                                 == Antares::Data::UnitCommitmentMode::ucMILP)
+                                                || Antares::Optimization::
+                                                  hasModelerIntegerVariables(problem.modelerData);
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
@@ -491,9 +476,9 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
         for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
         {
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index] = NombrePaliers
-                                                                                       + cluster
-                                                                                           ->index;
+            cluster->globalIndex = static_cast<int>(NombrePaliers + cluster->index);
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
+              = cluster->globalIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[cluster->index]
               = cluster->nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[cluster->index] = cluster->minStablePower;

@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include "in-memory-study.h"
@@ -58,17 +41,6 @@ Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
     auto& storages = area->shortTermStorage.storagesByIndex;
     storages.push_back(sts);
     return &storages.back();
-}
-
-void addScratchpadToEachArea(Study& study)
-{
-    for (auto& [_, area]: study.areas)
-    {
-        for (unsigned i = 0; i < study.maxNbYearsInParallel; ++i)
-        {
-            area->scratchpad.emplace_back(study.runtime, *area);
-        }
-    }
 }
 
 TimeSeriesConfigurer& TimeSeriesConfigurer::setDimensions(unsigned columnCount, unsigned rowCount)
@@ -342,7 +314,6 @@ void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problem
 void SimulationHandler::create()
 {
     study_.initializeRuntimeInfos();
-    addScratchpadToEachArea(study_);
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
                                                          durationCollector_,
@@ -355,7 +326,7 @@ void SimulationHandler::create()
 // Basic study builder
 // =========================
 StudyBuilder::StudyBuilder():
-    study(std::make_unique<Study>(true)),
+    study(std::make_unique<Study>()),
     simulation(*study)
 {
     // Make logs shrink to errors (and higher) only

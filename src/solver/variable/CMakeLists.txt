@@ -123,6 +123,7 @@ set(SRC_VARIABLE_ECONOMY
         include/antares/solver/variable/economy/nearPriceCap.h
         include/antares/solver/variable/economy/avail-dispatchable-generation.h
         include/antares/solver/variable/economy/dispatchable-generation-margin.h
+        include/antares/solver/variable/economy/residual.h
         include/antares/solver/variable/economy/unsupliedEnergy.h
 
         # Reserves
@@ -162,6 +163,15 @@ set(SRC_VARIABLE_ECONOMY
 
         # Binding constraints
         include/antares/solver/variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
+
+        # Dynamic aggregation
+        dynamicAggregation/setDataBase.cpp
+        dynamicAggregation/setDataSingleYear.cpp
+        dynamicAggregation/setDataAllYears.cpp
+        dynamicAggregation/dynamicAggregationSingleYear.cpp
+        dynamicAggregation/dynamicAggregationAllYears.cpp
+        include/antares/solver/variable/dynamicAggregation/dynamicAggregation.h
+        include/antares/solver/variable/dynamicAggregation/setData.h
 )
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 

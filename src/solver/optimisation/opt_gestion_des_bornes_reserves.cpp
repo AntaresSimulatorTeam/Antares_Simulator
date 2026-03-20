@@ -22,12 +22,8 @@
 #include "antares/solver/optimisation/opt_gestion_des_bornes_reserves.h"
 
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-#include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
-
-#include "variables/VariableManagement.h"
-#include "variables/VariableManagerUtils.h"
 
 struct ReserveVariablesBoundsSetter
 {

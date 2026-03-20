@@ -39,7 +39,11 @@ jobs:
       - name: Set up Python
         run: |
           dnf update -y
-          dnf install -y python3 python3-pip
+          dnf config-manager --set-enabled ol8_appstream
+          dnf makecache
+          dnf install -y python3.12
+          python3 --version
+          dnf install -y python3.12-pip
 
       - name: Install libraries
         run: |
@@ -138,13 +142,13 @@ jobs:
           rm -rf install
 
       - name: Installer TGZ push
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: oracle-targz
           path: _build/*.tar.gz
 
       - name: Installer RPM push
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: oracle-rpm
           path: _build/*.rpm

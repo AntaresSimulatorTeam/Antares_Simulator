@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
 
@@ -25,7 +7,9 @@
 
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFlowDissociation.h"
+#include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -105,6 +89,39 @@ void CsrQuadraticProblem::setBindingConstraints(ConstraintBuilder& builder)
     }
 }
 
+void CsrQuadraticProblem::setFictitiousLoadConstraints(ConstraintBuilder& builder)
+{
+    int hour = hourlyCsrProblem_.triggeredHour;
+
+    CsrFictitiousLoadData csrFictitiousLoadData{
+      .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
+      .hour = hour,
+      .PaliersThermiquesDuPays = problemeHebdo_->PaliersThermiquesDuPays,
+      .DefaillanceNegativeUtiliserHydro = problemeHebdo_->DefaillanceNegativeUtiliserHydro,
+      .DefaillanceNegativeUtiliserConsoAbattue = problemeHebdo_
+                                                   ->DefaillanceNegativeUtiliserConsoAbattue,
+      .DefaillanceNegativeUtiliserPMinThermique = problemeHebdo_
+                                                    ->DefaillanceNegativeUtiliserPMinThermique,
+      .numberOfConstraintCsrFictitiousLoad = hourlyCsrProblem_.numberOfConstraintCsrFictitiousLoad,
+      .NombreDePays = problemeHebdo_->NombreDePays};
+
+    CsrFictitiousLoad csrFictitiousLoad(builder, csrFictitiousLoadData);
+    csrFictitiousLoad.add();
+}
+
+void CsrQuadraticProblem::setMaxEnsLoadConstraints(ConstraintBuilder& builder)
+{
+    int hour = hourlyCsrProblem_.triggeredHour;
+    CsrMaxEnsLoadData csrMaxEnsLoadData{
+      .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
+      .hour = hour,
+      .NombreDePays = problemeHebdo_->NombreDePays,
+      .numberOfConstraintCsrMaxEnsLoad = hourlyCsrProblem_.numberOfConstraintCsrMaxEnsLoad};
+
+    CsrMaxEnsLoad csrMaxEnsLoad(builder, csrMaxEnsLoadData);
+    csrMaxEnsLoad.add();
+}
+
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
@@ -121,6 +138,8 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     auto builder = ConstraintBuilder(builder_data);
     setConstraintsOnFlows(builder);
     setNodeBalanceConstraints(builder);
+    setFictitiousLoadConstraints(builder);
+    setMaxEnsLoadConstraints(builder);
     setBindingConstraints(builder);
 }
 

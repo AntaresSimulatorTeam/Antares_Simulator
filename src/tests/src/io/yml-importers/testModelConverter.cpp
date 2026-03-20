@@ -1,22 +1,5 @@
-/* * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -35,7 +18,7 @@
 using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::YmlModel;
 using namespace Antares::ModelerStudy;
-using namespace Antares::Modeler::Config;
+using namespace Antares::Solver::Config;
 
 struct Fixture
 {
@@ -71,8 +54,8 @@ BOOST_FIXTURE_TEST_CASE(port_type_with_empty_fields_exception, Fixture)
 // Test library with port types and fields
 BOOST_FIXTURE_TEST_CASE(portType_with_fields_properly_translated, Fixture)
 {
-    YmlModel::PortType portType1{"port1", "flow port", {"field1", "field2"}, ""};
-    YmlModel::PortType portType2{"port2", "impedance port", {"field3", "field4"}, ""};
+    YmlModel::PortType portType1{"port1", "flow port", {"field1", "field2"}, "", {}};
+    YmlModel::PortType portType2{"port2", "impedance port", {"field3", "field4"}, "", {}};
     library.port_types = {portType1, portType2};
     SystemModel::Library lib = ModelConverter::convert(library);
     BOOST_REQUIRE_EQUAL(lib.PortTypes().at("port1").Fields().size(), 2);
@@ -98,15 +81,15 @@ bool portTypeAlreadyExists(const ModelConverter::PortTypeWithThisIdAlreadyExists
 // Test port types for exceptions
 BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
 {
-    YmlModel::PortType portType1{"port1", "empty port", {}, ""};
+    YmlModel::PortType portType1{"port1", "empty port", {}, "", {}};
     library.port_types = {portType1};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
                           ModelConverter::PortTypeDoesntContainsFields,
                           emptyFields);
 
     // same name
-    YmlModel::PortType portType2{"port2", "flow port", {"field1", "field2"}, ""};
-    YmlModel::PortType portType3{"port2", "impedance port", {"field3", "field4"}, ""};
+    YmlModel::PortType portType2{"port2", "flow port", {"field1", "field2"}, "", {}};
+    YmlModel::PortType portType3{"port2", "impedance port", {"field3", "field4"}, "", {}};
     library.port_types = {portType2, portType3};
     BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
                           ModelConverter::PortTypeWithThisIdAlreadyExists,
@@ -215,7 +198,7 @@ BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
 // Test library with models and ports
 BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
 {
-    YmlModel::PortType portType1{"flow", "description", {"abc"}, ""};
+    YmlModel::PortType portType1{"flow", "description", {"abc"}, "", {}};
     library.port_types = {portType1};
 
     YmlModel::Model model1{.id = "model1",
@@ -255,7 +238,7 @@ bool typeNotFound(const ModelConverter::PortTypeNotFound& ex)
 BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
 {
     // test port already exists
-    YmlModel::PortType portType1{"flow", "description", {"abc"}, ""};
+    YmlModel::PortType portType1{"flow", "description", {"abc"}, "", {}};
     library.port_types = {portType1};
 
     // test port type not found
@@ -374,7 +357,7 @@ BOOST_FIXTURE_TEST_CASE(multiple_models_properly_translated, Fixture)
 // Test library with ports field definitions
 BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixture)
 {
-    YmlModel::PortType portType1{"flow", "description", {"field1"}, ""};
+    YmlModel::PortType portType1{"flow", "description", {"field1"}, "", {}};
     library.port_types = {portType1};
 
     YmlModel::Model model1{.id = "model1",
@@ -421,7 +404,7 @@ bool portInDef(const ModelConverter::PortInDefinition& ex)
 // Test library ports field definitions errors
 BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
 {
-    YmlModel::PortType portType1{"flow", "description", {"field1"}, ""};
+    YmlModel::PortType portType1{"flow", "description", {"field1"}, "", {}};
     library.port_types = {portType1};
 
     YmlModel::Model model1{.id = "model1",

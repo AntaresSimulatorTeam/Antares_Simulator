@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/parts/short-term-storage/properties.h"
 
@@ -110,25 +92,6 @@ bool Properties::loadKey(const IniFile::Property* p)
     }
 
     return false;
-}
-
-void Properties::save(IniFile& ini) const
-{
-    IniFile::Section* s = ini.addSection(this->name);
-
-    s->add("name", this->name);
-    s->add("group", this->groupName);
-    s->add("reservoircapacity", this->reservoirCapacity);
-    s->add("initiallevel", this->initialLevel);
-    s->add("injectionnominalcapacity", this->injectionNominalCapacity);
-    s->add("withdrawalnominalcapacity", this->withdrawalNominalCapacity);
-
-    s->add("efficiency", this->injectionEfficiency);
-    s->add("efficiencyWithdrawal", this->withdrawalEfficiency);
-    s->add("initialleveloptim", this->initialLevelOptim);
-    s->add("penalize-variation-injection", this->penalizeVariationInjection);
-    s->add("penalize-variation-withdrawal", this->penalizeVariationWithdrawal);
-    s->add("enabled", this->enabled);
 }
 
 bool Properties::validate()

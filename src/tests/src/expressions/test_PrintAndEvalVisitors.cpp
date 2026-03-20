@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -54,10 +36,11 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
             return 123.45; // Mock return value for testing
         }
 
-        [[nodiscard]] virtual std::span<const double> getData(const std::string& dataSetId,
-                                                              unsigned timeSeriesNumber,
-                                                              unsigned firstHour,
-                                                              unsigned lastHour) const
+        [[nodiscard]] virtual std::span<const double> getData(
+          [[maybe_unused]] const std::string& dataSetId,
+          [[maybe_unused]] unsigned timeSeriesNumber,
+          [[maybe_unused]] unsigned firstHour,
+          [[maybe_unused]] unsigned lastHour) const
         {
             static std::vector<double> data = {123.45};
             return data;
@@ -170,7 +153,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnSingleValue)
 {
     EvaluationResult res1(5.0);
     EvaluationResult res2 = -res1;
-    BOOST_CHECK_THROW((void)res2.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res2.valuesAsVector(), EvalResultTypeError);
     BOOST_CHECK_EQUAL(std::get<double>(res2.value()), -5.0);
 }
 
@@ -178,7 +161,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_OperatorNegationOnVector)
 {
     EvaluationResult res1({5.0, 986.});
     EvaluationResult res2 = -res1;
-    BOOST_CHECK_THROW(res2.valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW(res2.valueAsDouble(), EvalResultTypeError);
 
     const std::vector<double> expected_result{-5.0, -986.};
 
@@ -294,7 +277,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket)
     const EvaluationResult res1(vec);
 
     BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
-    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvalResultTypeError);
     BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), vec[0]);
     BOOST_CHECK_EQUAL(res1[1].valueAsDouble(), vec[1]);
     BOOST_CHECK_EQUAL(res1[2].valueAsDouble(), vec[2]);
@@ -305,8 +288,8 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_operator_bracket_one_value)
     const EvaluationResult res1(2025.03);
 
     BOOST_CHECK_NO_THROW(res1[0].valueAsDouble());
-    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvaluationResult::EvalResultTypeError);
-    BOOST_CHECK_THROW((void)res1[0].getValueInVector(0), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].valuesAsVector(), EvalResultTypeError);
+    BOOST_CHECK_THROW((void)res1[0].getValueInVector(0), EvalResultTypeError);
     BOOST_CHECK_EQUAL(res1[0].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[10].valueAsDouble(), 2025.03);
     BOOST_CHECK_EQUAL(res1[2000].valueAsDouble(), 2025.03);
@@ -322,7 +305,7 @@ BOOST_AUTO_TEST_CASE(EvaluationResult_invalid_index)
     for (const int size = static_cast<int>(vec.size());
          const auto& invalidIndex: {-40, size, size + 56})
     {
-        BOOST_CHECK_THROW(res1[invalidIndex], EvaluationResult::EvalResultTimeIndexOutOfRange);
+        BOOST_CHECK_THROW(res1[invalidIndex], EvalResultTimeIndexOutOfRange);
     }
 }
 
@@ -330,8 +313,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_DoubleValue)
 {
     const EvaluationResult eval(4.0);
     const EvaluationResult shiftedEval = eval.timeShift(2);
-    BOOST_CHECK_THROW((void)eval.timeShift(2).valuesAsVector(),
-                      EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)eval.timeShift(2).valuesAsVector(), EvalResultTypeError);
     BOOST_CHECK_NO_THROW(eval.timeShift(2).valueAsDouble());
 
     BOOST_CHECK_EQUAL(eval.timeShift(2).valueAsDouble(), 4.0);
@@ -345,7 +327,7 @@ BOOST_AUTO_TEST_CASE(ShiftResult_VectorValue_PositiveShift)
 {
     EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
 
-    BOOST_CHECK_THROW(eval.timeShift(2).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW(eval.timeShift(2).valueAsDouble(), EvalResultTypeError);
     BOOST_CHECK_NO_THROW((void)eval.timeShift(2).valuesAsVector());
     const auto res = eval.timeShift(1).valuesAsVector();
     const std::vector<double> expected{2.0, 3.0, 1.0};
@@ -377,34 +359,30 @@ BOOST_AUTO_TEST_CASE(ShiftResult_EmptyVector)
     BOOST_CHECK_EQUAL_COLLECTIONS(res.begin(), res.end(), emptyVec.begin(), emptyVec.end());
 }
 
-BOOST_AUTO_TEST_CASE(TimeSum_DoubleValue)
+BOOST_AUTO_TEST_CASE(TimeSum_on_double___exception_raised)
 {
     const EvaluationResult eval(4.0);
-    const EvaluationResult sum = eval.timeSum(-2, 2);
-    BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
-
-    BOOST_CHECK_THROW((void)eval.timeSum(-1, 0).valuesAsVector(),
-                      EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW(eval.timeSumOnVector(-1, 0), EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_PositiveShift)
 {
-    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    const auto sum = eval.timeSum(0, 2).valuesAsVector();
-    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
-    const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
+    const EvaluationResult evalResult(std::vector<double>{1.0, 2.0, 3.0});
+    BOOST_CHECK_THROW(evalResult.timeSumOnVector(-1, 0).valueAsDouble(), EvalResultTypeError);
 
+    const auto sum = evalResult.timeSumOnVector(0, 2).valuesAsVector();
+
+    const std::vector<double> expected(3.0, 1.0 + 2.0 + 3.0);
     BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
 }
 
 BOOST_AUTO_TEST_CASE(TimeSum_VectorValue_NegativeShift)
 {
-    const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    const auto sum = eval.timeSum(-1, 0).valuesAsVector();
-    BOOST_CHECK_THROW(eval.timeSum(-1, 0).valueAsDouble(), EvaluationResult::EvalResultTypeError);
+    const EvaluationResult evalResult(std::vector<double>{1.0, 2.0, 3.0});
+    BOOST_CHECK_THROW(evalResult.timeSumOnVector(-1, 0).valueAsDouble(), EvalResultTypeError);
 
+    const auto sum = evalResult.timeSumOnVector(-1, 0).valuesAsVector();
     const std::vector<double> expected{3.0 + 1.0, 1.0 + 2.0, 2.0 + 3.0};
-
     BOOST_CHECK_EQUAL_COLLECTIONS(sum.begin(), sum.end(), expected.begin(), expected.end());
 }
 
@@ -414,7 +392,7 @@ BOOST_AUTO_TEST_CASE(AlltimeSum_DoubleValue)
     const EvaluationResult sum = eval.alltimeSum(5);
     BOOST_CHECK_EQUAL(sum.valueAsDouble(), 20.0); // 4.0 * 5 = 20.0
 
-    BOOST_CHECK_THROW((void)sum.valuesAsVector(), EvaluationResult::EvalResultTypeError);
+    BOOST_CHECK_THROW((void)sum.valuesAsVector(), EvalResultTypeError);
 }
 
 BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue)
@@ -427,7 +405,7 @@ BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue)
 BOOST_AUTO_TEST_CASE(AlltimeSum_VectorValue_OutOfRange)
 {
     const EvaluationResult eval(std::vector<double>{1.0, 2.0, 3.0});
-    BOOST_CHECK_THROW(eval.alltimeSum(4), EvaluationResult::EvalResultTimeIndexOutOfRange);
+    BOOST_CHECK_THROW(eval.alltimeSum(4), EvalResultTimeIndexOutOfRange);
 }
 
 BOOST_AUTO_TEST_CASE(print_single_literal)
@@ -605,7 +583,11 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
     auto param = build_context_parameter_with("my-param", value);
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
-    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+    EvalVisitor visitor(optimEntityContainer,
+                        ctx,
+                        *compo,
+                        &data,
+                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double num = 221.3;
     Node* equalLiteralParam = create<EqualNode>(create<LiteralNode>(num), &root);
@@ -675,7 +657,11 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
 
-    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+    EvalVisitor visitor(optimEntityContainer,
+                        ctx,
+                        *compo,
+                        &data,
+                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -692,7 +678,11 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
     const auto compoName = components.back().Id() + "1245";
     const auto* compo = addComponent(compoName, model, {param});
 
-    EvalVisitor visitor(optimEntityContainer, ctx, *compo);
+    EvalVisitor visitor(optimEntityContainer,
+                        ctx,
+                        *compo,
+                        &data,
+                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -701,8 +691,8 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
 
 struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearProblemData
 {
-    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
-                                 [[maybe_unused]] const unsigned scenario,
+    [[nodiscard]] double getData(const std::string& dataSetId,
+                                 const unsigned /*scenario*/,
                                  unsigned hour) const override
     {
         if (const auto [ok, value] = IsParameterRegistered(dataSetId, hour); ok)
@@ -713,22 +703,23 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     }
 
     [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
-                                                  unsigned timeSeriesNumber,
+                                                  unsigned /*timeSeriesNumber*/,
                                                   unsigned firstHour,
                                                   unsigned lastHour) const override
     {
         if (const auto [ok, value] = IsParameterRegistered(dataSetId); ok)
         {
-            return value;
+            lastData_ = value;
+            return lastData_;
         }
-        std::vector<double> data(lastHour - firstHour + 1);
+        lastData_.resize(lastHour - firstHour + 1);
         auto v = firstHour;
-        for (int i = 0; i < data.size(); ++i)
+        for (std::size_t i = 0; i < lastData_.size(); ++i)
         {
-            data[i] = v;
+            lastData_[i] = v;
             ++v;
         }
-        return data;
+        return lastData_;
     }
 
     MockLinearProblemData(const std::map<std::string, std::vector<double>>& parametersValues = {}):
@@ -764,12 +755,13 @@ struct MockLinearProblemData: Antares::Optimisation::LinearProblemApi::ILinearPr
     }
 
     std::map<std::string, std::vector<double>> parametersValues = {};
+    mutable std::vector<double> lastData_;
 };
 
 struct TimeDependentParameterFixture
 
 {
-    ParameterNode root = ParameterNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
+    ParameterNode paramNode = ParameterNode("my-param", VariabilityType::VARYING_IN_TIME_ONLY);
     const std::string value = "dummy";
     MockLinearProblemData dummy_data;
     unsigned hour_0 = 0;
@@ -780,12 +772,10 @@ struct TimeDependentParameterFixture
     std::vector<Component> components;
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo;
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem,
-                                                               &dummy_data,
-                                                               &scenarioGroupRepo);
+    OptimEntityContainer optimContainer = OptimEntityContainer(linearProblem);
 
-    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> visitor;
-    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, hour_1, hour_0, hour_1, hour_1};
+    std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> evalVisitor;
+    Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 1, 0, 1, 1};
 
     TimeDependentParameterFixture(
       std::map<std::string, ParameterTypeAndValue> additionnalParams = {})
@@ -807,16 +797,21 @@ struct TimeDependentParameterFixture
         components.push_back(createComponent(model, compoName, additionnalParams));
         scenarioGroupRepo = makeScenarioGroupRepo(components.front());
         optimContainer.addFromSystemComponents(components);
-        visitor = std::make_unique<EvalVisitor>(optimContainer, ctx, components.front());
+        evalVisitor = std::make_unique<EvalVisitor>(optimContainer,
+                                                    ctx,
+                                                    components.front(),
+                                                    &dummy_data,
+                                                    &scenarioGroupRepo.scenario(
+                                                      components.front().getScenarioGroupId()));
     }
 };
 
 BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_param, TimeDependentParameterFixture)
 {
-    const auto eval = visitor->dispatch(&root).valuesAsVector();
+    const auto result = evalVisitor->dispatch(&paramNode).valuesAsVector();
 
-    BOOST_CHECK_EQUAL(eval[0], hour_0);
-    BOOST_CHECK_EQUAL(eval[1], hour_1);
+    BOOST_CHECK_EQUAL(result[0], hour_0);
+    BOOST_CHECK_EQUAL(result[1], hour_1);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
@@ -827,7 +822,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_shifted_literal, MyDummyFixture)
                       13.0);
     BOOST_CHECK_THROW(
       (void)defaultComponentEvalVisitor->dispatch(&time_shift_node).valuesAsVector(),
-      EvaluationResult::EvalResultTypeError);
+      EvalResultTypeError);
 }
 
 template<typename NodeType>
@@ -852,11 +847,13 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
-                        {first, last /*two hours*/, first, last, 0},
-                        components.back());
+                        {first, last /*three hours*/, first, last, 0},
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -902,12 +899,14 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
                         {first, last /*three hours*/, first, last, 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -945,12 +944,14 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
                         {first, last /*three hours*/, first, last, 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     return visitor.dispatch(&root);
 }
 
@@ -983,12 +984,14 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     const std::vector<Component> components{createComponent(model, compoName, {param})};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
                         {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -1047,12 +1050,14 @@ void evaluate_time_dependent_operation()
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     EvalVisitor visitor(optimContainer,
-                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
-                        components.back());
+                        {hour_0, hour_1 /*three hours*/, hour_0, hour_1, 0},
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(literal.value(), hour_0));
@@ -1084,11 +1089,13 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(literal.value(),
@@ -1128,11 +1135,13 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     MockLinearProblem linearProblem = MockLinearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &dummy_data, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
     EvalVisitor visitor(optimContainer,
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
-                        components.back());
+                        components.back(),
+                        &dummy_data,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     const auto eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -1170,7 +1179,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(evaluate_time_dependent_operations_time_index_node
     evaluate_time_dependent_operation_on_TimeIndexNode<T>(&literal_node);
 }
 
-BOOST_FIXTURE_TEST_CASE(multiplication_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_multiplication_node, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* mult = create<MultiplicationNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1182,7 +1191,7 @@ BOOST_FIXTURE_TEST_CASE(multiplication_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(mult).valueAsDouble(), num1 * num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(division_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_division_node, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1194,7 +1203,7 @@ BOOST_FIXTURE_TEST_CASE(division_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(div).valueAsDouble(), num1 / num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(division_by_zero, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_division_by_zero, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 0.;
     Node* div = create<DivisionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1235,7 +1244,7 @@ BOOST_FIXTURE_TEST_CASE(DivisionNodeFull, MyDummyFixture)
                       EvalVisitorDivisionException);
 }
 
-BOOST_FIXTURE_TEST_CASE(subtraction_node, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_subtraction_node, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* sub = create<SubtractionNode>(create<LiteralNode>(num1), create<LiteralNode>(num2));
@@ -1247,7 +1256,7 @@ BOOST_FIXTURE_TEST_CASE(subtraction_node, MyDummyFixture)
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(sub).valueAsDouble(), num1 - num2);
 }
 
-BOOST_FIXTURE_TEST_CASE(functionNode_max, MyDummyFixture)
+BOOST_FIXTURE_TEST_CASE(print_functionNode_max, MyDummyFixture)
 {
     double num1 = 22.0, num2 = 8;
     Node* max = create<FunctionNode>(FunctionNodeType::max,
@@ -1265,13 +1274,13 @@ BOOST_FIXTURE_TEST_CASE(functionNode_max_timeDepdentParameter, TimeDependentPara
 {
     LiteralNode num1(22.0);
     LiteralNode num2(8);
-    auto max = FunctionNode(FunctionNodeType::max, &num1, &num2, &root);
+    auto max = FunctionNode(FunctionNodeType::max, &num1, &num2, &paramNode);
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&max);
 
     BOOST_CHECK_EQUAL(printed, "max(22.000000, 8.000000, my-param)");
-    const auto& values = visitor->dispatch(&max).valuesAsVector();
+    const auto& values = evalVisitor->dispatch(&max).valuesAsVector();
     BOOST_CHECK_EQUAL(values.size(), 2 /*two timesteps*/);
     BOOST_CHECK_EQUAL(values[0], 22.0);
 }
@@ -1297,13 +1306,13 @@ BOOST_AUTO_TEST_CASE(functionNode_min_timeDepdentParameter)
     fixture.dummy_data.addParams(
       std::make_pair<std::string, std::vector<double>>("P2", {-400, 1568}));
     ParameterNode second("Param2", VariabilityType::VARYING_IN_TIME_ONLY);
-    auto min = FunctionNode(FunctionNodeType::min, &fixture.root, &second);
+    auto min = FunctionNode(FunctionNodeType::min, &fixture.paramNode, &second);
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&min);
 
     BOOST_CHECK_EQUAL(printed, "min(my-param, Param2)");
-    const auto& values = fixture.visitor->dispatch(&min).valuesAsVector();
+    const auto& values = fixture.evalVisitor->dispatch(&min).valuesAsVector();
     BOOST_CHECK_EQUAL(values.size(), 2 /*two timesteps*/);
     BOOST_CHECK_EQUAL(values[0], -400); // min(0, -400)
     BOOST_CHECK_EQUAL(values[1], 1);    // min(1, 1568)
@@ -1319,7 +1328,7 @@ BOOST_FIXTURE_TEST_CASE(functionNode_pow, MyDummyFixture)
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(pow);
 
-    BOOST_CHECK_EQUAL(printed, "22.000000^(2.000000)");
+    BOOST_CHECK_EQUAL(printed, "pow(22.000000, 2.000000)");
     BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(pow).valueAsDouble(),
                       std::pow(num1, num2));
 }
@@ -1327,14 +1336,14 @@ BOOST_FIXTURE_TEST_CASE(functionNode_pow, MyDummyFixture)
 BOOST_FIXTURE_TEST_CASE(functionNode_pow_timeDepdentParameter, TimeDependentParameterFixture)
 {
     LiteralNode num2(2);
-    auto pow = FunctionNode(FunctionNodeType::pow, &root, &num2);
+    auto pow = FunctionNode(FunctionNodeType::pow, &paramNode, &num2);
 
     PrintVisitor printVisitor;
     const auto printed = printVisitor.dispatch(&pow);
 
-    BOOST_CHECK_EQUAL(printed, "my-param^(2.000000)");
-    BOOST_CHECK_EQUAL(visitor->dispatch(&pow).value(0), std::pow(0, 2));
-    BOOST_CHECK_EQUAL(visitor->dispatch(&pow).value(1), std::pow(1, 2));
+    BOOST_CHECK_EQUAL(printed, "pow(my-param, 2.000000)");
+    BOOST_CHECK_EQUAL(evalVisitor->dispatch(&pow).value(0), std::pow(0, 2));
+    BOOST_CHECK_EQUAL(evalVisitor->dispatch(&pow).value(1), std::pow(1, 2));
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_node, MyDummyFixture)
@@ -1462,7 +1471,7 @@ BOOST_FIXTURE_TEST_CASE(PrintDualNode, MyDummyFixture)
                                       create<ParameterNode>("constraint"),
                                       create<LiteralNode>(0));
     PrintVisitor printVisitor;
-    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint)");
+    BOOST_CHECK(printVisitor.dispatch(dual) == "dual(constraint)[0.000000]");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
@@ -1473,76 +1482,95 @@ BOOST_FIXTURE_TEST_CASE(PrintReducedCostNode, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(reducedCost) == "reduced_cost(var)");
 }
 
-BOOST_AUTO_TEST_CASE(testShiftEmptyVector)
+BOOST_FIXTURE_TEST_CASE(print_floor_applied_to_a_literal, MyDummyFixture)
+{
+    Node* floor_node = create<FunctionNode>(FunctionNodeType::floor, create<LiteralNode>(2.3));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(floor_node) == "floor(2.300000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_floor_applied_to_a_parameter, MyDummyFixture)
+{
+    Node* floor_node = create<FunctionNode>(FunctionNodeType::floor, create<ParameterNode>("p"));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(floor_node) == "floor(p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_literal, MyDummyFixture)
+{
+    Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, create<LiteralNode>(3.7));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(3.700000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_ceil_applied_to_a_parameter, MyDummyFixture)
+{
+    Node* ceil_node = create<FunctionNode>(FunctionNodeType::ceil, create<ParameterNode>("p"));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(ceil_node) == "ceil(p)");
+}
+
+BOOST_AUTO_TEST_CASE(shift_empty_vector)
 {
     std::vector<int> emptyVector;
     std::vector<int> result = shiftVector(emptyVector, 5);
     BOOST_CHECK(result.empty());
 }
 
-BOOST_AUTO_TEST_CASE(testZeroShift)
+BOOST_AUTO_TEST_CASE(shift_vector_with_zero)
 {
-    std::vector<int> zeroShiftVector = {1, 2, 3, 4, 5};
-    std::vector<int> result = shiftVector(zeroShiftVector, 0);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
-                                  result.end(),
-                                  zeroShiftVector.begin(),
-                                  zeroShiftVector.end());
+    std::vector<int> v = {1, 2, 3, 4, 5};
+    std::vector<int> result = shiftVector(v, 0);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
 }
 
-BOOST_AUTO_TEST_CASE(testPositiveShift)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_positive_shift)
 {
-    std::vector<int> positiveShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expected = {3, 4, 5, 1, 2};
-    std::vector<int> result = shiftVector(positiveShiftVector, 2);
+    std::vector<int> result = shiftVector(v, 2);
     BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(testNegativeShift)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_negative_shift)
 {
-    std::vector<int> negativeShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expected = {4, 5, 1, 2, 3};
-    std::vector<int> result = shiftVector(negativeShiftVector, -2);
+    std::vector<int> result = shiftVector(v, -2);
     BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(testShiftEqualToSize)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_shift_equal_to_vector_size)
 {
-    std::vector<int> equalShiftVector = {1, 2, 3, 4, 5};
-    std::vector<int> result = shiftVector(equalShiftVector, 5);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
-                                  result.end(),
-                                  equalShiftVector.begin(),
-                                  equalShiftVector.end());
+    std::vector<int> v = {1, 2, 3, 4, 5};
+    std::vector<int> result = shiftVector(v, 5);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
 }
 
-BOOST_AUTO_TEST_CASE(testShiftGreaterThanSize)
+BOOST_AUTO_TEST_CASE(shift_vector_with_a_shift_greater_than_vector_size)
 {
-    std::vector<int> greaterShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expected = {3, 4, 5, 1, 2};
-    std::vector<int> result = shiftVector(greaterShiftVector, 7);
+    std::vector<int> result = shiftVector(v, 7);
     BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), expected.begin(), expected.end());
 }
 
-BOOST_AUTO_TEST_CASE(testSingleElementVector)
+BOOST_AUTO_TEST_CASE(shift_a_one_element_vector)
 {
-    std::vector<int> singleElementVector = {42};
-    std::vector<int> result = shiftVector(singleElementVector, 3);
-    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(),
-                                  result.end(),
-                                  singleElementVector.begin(),
-                                  singleElementVector.end());
+    std::vector<int> v = {42};
+    std::vector<int> result = shiftVector(v, 3);
+    BOOST_CHECK_EQUAL_COLLECTIONS(result.begin(), result.end(), v.begin(), v.end());
 }
 
 BOOST_AUTO_TEST_CASE(testLargeShiftValues)
 {
-    std::vector<int> largeShiftVector = {1, 2, 3, 4, 5};
+    std::vector<int> v = {1, 2, 3, 4, 5};
     std::vector<int> expectedPositive = {4, 5, 1, 2, 3};
     std::vector<int> expectedNegative = {3, 4, 5, 1, 2};
     // 1000003 % 5 = 3.
-    std::vector<int> resultPositive = shiftVector(largeShiftVector, 1000003);
+    std::vector<int> resultPositive = shiftVector(v, 1000003);
     // -1000003 % 5 = -3 and (-3 + 5) % 5 = 2
-    std::vector<int> resultNegative = shiftVector(largeShiftVector, -1000003);
+    std::vector<int> resultNegative = shiftVector(v, -1000003);
     BOOST_CHECK_EQUAL_COLLECTIONS(resultPositive.begin(),
                                   resultPositive.end(),
                                   expectedPositive.begin(),
@@ -1555,38 +1583,38 @@ BOOST_AUTO_TEST_CASE(testLargeShiftValues)
 
 BOOST_AUTO_TEST_CASE(TrimLeadingWhitespace)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   example"), "+example");
+    BOOST_CHECK_EQUAL(trimAndFormat("   example"), "+example");
 }
 
 BOOST_AUTO_TEST_CASE(PreserveLeadingMinus)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   -value"), "-value");
+    BOOST_CHECK_EQUAL(trimAndFormat("   -value"), "-value");
 }
 
 BOOST_AUTO_TEST_CASE(PreserveLeadingPlus)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   +text"), "+text");
+    BOOST_CHECK_EQUAL(trimAndFormat("   +text"), "+text");
 }
 
 BOOST_AUTO_TEST_CASE(AddPlusIfNoSign)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("noSign"), "+noSign");
+    BOOST_CHECK_EQUAL(trimAndFormat("noSign"), "+noSign");
 }
 
 BOOST_AUTO_TEST_CASE(HandleAlreadySignedString)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("-already"), "-already");
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("+already"), "+already");
+    BOOST_CHECK_EQUAL(trimAndFormat("-already"), "-already");
+    BOOST_CHECK_EQUAL(trimAndFormat("+already"), "+already");
 }
 
 BOOST_AUTO_TEST_CASE(HandleOnlySpaces)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat("   "), "");
+    BOOST_CHECK_EQUAL(trimAndFormat("   "), "");
 }
 
 BOOST_AUTO_TEST_CASE(HandleEmptyString)
 {
-    BOOST_CHECK_EQUAL(PrintVisitor::trimAndFormat(""), "");
+    BOOST_CHECK_EQUAL(trimAndFormat(""), "");
 }
 
 BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
@@ -1619,7 +1647,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepo = makeScenarioGroupRepo(
       components.back());
     PredfinedSolutionLinearProblemMock linearProblem(true);
-    OptimEntityContainer optimContainer(linearProblem, &testData, &scenarioGroupRepo);
+    OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
     optimContainer.addStartColumn();
@@ -1636,7 +1664,11 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
                                       0,
                                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
-    EvalVisitor visitor(optimContainer, fillContext, components.back());
+    EvalVisitor visitor(optimContainer,
+                        fillContext,
+                        components.back(),
+                        &testData,
+                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 

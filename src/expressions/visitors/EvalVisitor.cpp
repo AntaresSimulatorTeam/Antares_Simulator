@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/expressions/visitors/EvalVisitor.h"
 
@@ -29,19 +11,31 @@
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 
+using namespace Antares::Optimisation;
+
 namespace Antares::Expressions::Visitors
 {
 
-EvalVisitor::EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
-                         const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component& component):
+std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b)
+{
+    std::ranges::transform(a, b, a.begin(), std::plus<double>());
+    return a;
+}
+
+EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
+                         const LinearProblemApi::FillContext& fillContext,
+                         const ModelerStudy::SystemModel::Component& component,
+                         const LinearProblemApi::ILinearProblemData* data,
+                         const LinearProblemApi::IScenario* scenario):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
     optimContainer_(optimContainer),
-    evalContext_(optimContainer.getEvaluationContext(component)),
-    fillContext_(fillContext),
-    component_(component)
+    component_(component),
+    data_(data),
+    scenario_(scenario),
+    evalContext_(&component, data, scenario),
+    fillContext_(fillContext)
 {
 }
 
@@ -87,8 +81,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::GreaterThanOrEqualNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 {
-    if (node->variability() == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        || node->variability() == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (isTimeConstant(node->variability()))
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
@@ -114,17 +107,17 @@ EvaluationResult EvalVisitor::visit(const Nodes::VariableNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::ParameterNode* node)
 {
     const auto systemParameter = evalContext_.getParameter(node->value());
-    if (systemParameter.type == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO)
+    if (isConstant(systemParameter.type))
     {
         return EvaluationResult{evalContext_.getSystemParameterValueAsDouble(node->value())};
     }
-    if (systemParameter.type == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
-    {
-        return EvaluationResult(
-          evalContext_.getParameterValue(node->value(), fillContext_.getYear(), 0));
-    }
 
     unsigned year = fillContext_.getYear();
+    if (systemParameter.type == VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    {
+        return EvaluationResult(evalContext_.getParameterValue(node->value(), year, 0));
+    }
+
     std::vector<double> params;
     params.reserve(fillContext_.getLocalNumberOfTimeSteps());
     for (auto t = fillContext_.getGlobalFirstTimeStep(); t <= fillContext_.getGlobalLastTimeStep();
@@ -164,7 +157,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::PortFieldSumNode* node)
     {
         auto* component = connectionEnd.component();
         auto* port = connectionEnd.port();
-        EvalVisitor visitor(optimContainer_, fillContext_, *component);
+        EvalVisitor visitor(optimContainer_, fillContext_, *component, data_, scenario_);
         const auto* nodeToVisit = component->nodeAtPortField(port->Id(), fieldId);
         auto dispatchResult = visitor.dispatch(nodeToVisit);
         result += dispatchResult;
@@ -190,58 +183,68 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
-    const auto expression = dispatch(node->expression());
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
+    auto result = dispatch(node->expression());
     const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
-
-    // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue],
     const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-    return expression.timeSum(from, to);
+
+    result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
+    return result.timeSumOnVector(from, to);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
-    const EvaluationResult expression = dispatch(node->child());
-    return expression.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
+    const EvaluationResult result = dispatch(node->child());
+    return result.alltimeSum(fillContext_.getLocalNumberOfTimeSteps());
 }
 
-EvaluationResult EvalVisitor::handleDual(const Nodes::FunctionNode* node)
+EvaluationResult EvalVisitor::visitDual(const Nodes::FunctionNode* node)
 {
     const auto indexNode = dynamic_cast<Nodes::LiteralNode*>(node->getOperands().at(1));
     unsigned int cstrIndex = static_cast<unsigned int>(indexNode->value());
-    const auto& [_, timeIndex] = optimContainer_.getConstraintData(component_, cstrIndex);
+    const auto& variability = optimContainer_.getConstraintVariability(component_, cstrIndex);
 
-    if (timeIndex == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        || timeIndex == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (isTimeConstant(variability))
     {
-        const auto componentConstraints = optimContainer_.getComponentConstraint(
-          component_,
-          cstrIndex,
-          1 /* single timestep*/);
-        return EvaluationResult(componentConstraints.first[0]->dual());
+        const auto constraints = optimContainer_.componentConstraints(component_, cstrIndex, 1);
+        return EvaluationResult(constraints[0]->dual());
     }
-    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+
+    // The constraint depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
     std::vector<double> constraintValues(nbTimeStep, 0.0);
-    const auto componentConstraints = optimContainer_.getComponentConstraint(component_,
-                                                                             cstrIndex,
-                                                                             nbTimeStep);
+    const auto componentConstraints = optimContainer_.componentConstraints(component_,
+                                                                           cstrIndex,
+                                                                           nbTimeStep);
     for (unsigned constraintInd = 0; constraintInd < nbTimeStep; ++constraintInd)
     {
-        constraintValues[constraintInd] = componentConstraints.first[constraintInd]->dual();
+        constraintValues[constraintInd] = componentConstraints[constraintInd]->dual();
     }
 
     return EvaluationResult{constraintValues};
 }
 
-EvaluationResult EvalVisitor::handlePow(const Nodes::FunctionNode* node)
+auto PowerOp = [](const auto& a, const auto& b) { return std::pow(a, b); };
+auto FloorOp = [](double d) { return std::floor(d); };
+auto CeilOp = [](double d) { return std::ceil(d); };
+
+EvaluationResult EvalVisitor::visitPow(const Nodes::FunctionNode* node)
 {
     const auto numbers = node->getOperands();
     auto base = dispatch(numbers.at(0));
     auto exponent = dispatch(numbers.at(1));
-    return base.evaluateBinaryOperation(exponent,
-                                        [](const auto& a, const auto& b)
-                                        { return std::pow(a, b); });
+    return base.evaluateBinaryOperation(exponent, PowerOp);
+}
+
+EvaluationResult EvalVisitor::visitFloor(const Nodes::FunctionNode* node)
+{
+    auto* floor_arg = node->getOperands()[0];
+    return dispatch(floor_arg).evaluateUnaryOperation(FloorOp);
+}
+
+EvaluationResult EvalVisitor::visitCeil(const Nodes::FunctionNode* node)
+{
+    auto* ceil_arg = node->getOperands()[0];
+    return dispatch(ceil_arg).evaluateUnaryOperation(CeilOp);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
@@ -249,31 +252,31 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
     switch (node->type())
     {
     case Nodes::FunctionNodeType::reduced_cost:
-        return handleReducedCost(node);
+        return visitReducedCost(node);
     case Nodes::FunctionNodeType::dual:
-        return handleDual(node);
+        return visitDual(node);
     case Nodes::FunctionNodeType::max:
-        return applyOperation(variadicFunction(*this, node),
-                              [](const auto& elements)
-                              { return *std::max_element(elements.begin(), elements.end()); });
+        return applyOperation(visitChildrenNodes(node),
+                              [](const auto& v) { return *std::ranges::max_element(v); });
     case Nodes::FunctionNodeType::min:
-        return applyOperation(variadicFunction(*this, node),
-                              [](const auto& elements)
-                              { return *std::min_element(elements.begin(), elements.end()); });
+        return applyOperation(visitChildrenNodes(node),
+                              [](const auto& v) { return *std::ranges::min_element(v); });
     case Nodes::FunctionNodeType::pow:
-        return handlePow(node);
+        return visitPow(node);
+    case Nodes::FunctionNodeType::floor:
+        return visitFloor(node);
+    case Nodes::FunctionNodeType::ceil:
+        return visitCeil(node);
     default:
         return EvaluationResult(0);
     }
 }
 
-EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
+EvaluationResult EvalVisitor::visitReducedCost(const Nodes::FunctionNode* node)
 {
     const auto varNode = dynamic_cast<Nodes::VariableNode*>(node->getOperands().at(0));
 
-    if (const auto timeIndex = varNode->variability();
-        timeIndex == Optimisation::VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO
-        || timeIndex == Optimisation::VariabilityType::VARYING_IN_SCENARIO_ONLY)
+    if (isTimeConstant(varNode->variability()))
     {
         const std::span componentVariables = optimContainer_.getComponentVariable(
           component_,
@@ -281,9 +284,10 @@ EvaluationResult EvalVisitor::handleReducedCost(const Nodes::FunctionNode* node)
           1 /* single timestep*/);
         return EvaluationResult(componentVariables[0]->reducedCost());
     }
-    // VARYING_IN_TIME_ONLY or VARYING_IN_TIME_AND_SCENARIO)
+
+    // The variable depends on time
     const unsigned nbTimeStep = fillContext_.getLocalNumberOfTimeSteps();
-    std::vector<double> varValues(nbTimeStep, 0.0);
+    std::vector<double> varValues(nbTimeStep, 0.);
     const std::span componentVariables = optimContainer_.getComponentVariable(component_,
                                                                               varNode->Index(),
                                                                               nbTimeStep);
@@ -332,6 +336,15 @@ size_t EvaluationResult::size() const
     return 1;
 }
 
+void EvaluationResult::toConstantVector(const size_t size)
+{
+    if (std::holds_alternative<double>(value_))
+    {
+        const double value = std::get<double>(value_);
+        value_ = std::vector<double>(size, value);
+    }
+}
+
 double EvaluationResult::value(unsigned i) const
 {
     if (std::holds_alternative<std::vector<double>>(value_))
@@ -347,22 +360,28 @@ EvaluationResult::EvaluationResult(const std::variant<double, std::vector<double
 {
 }
 
-EvaluationResult EvaluationResult::timeShift(int time_shift) const
+EvaluationResult EvaluationResult::timeShift(int shift) const
 {
-    return EvaluationResult(
-      std::visit([&time_shift](const auto& l) -> std::variant<double, std::vector<double>>
-                 { return shift(l, time_shift); },
-                 value_));
+    if (std::holds_alternative<double>(value_))
+    {
+        return EvaluationResult(std::get<double>(value_));
+    }
+
+    auto shifted_values = shiftVector(std::get<std::vector<double>>(value_), shift);
+    return EvaluationResult(shifted_values);
 }
 
-EvaluationResult EvaluationResult::timeSum(int from, int to) const
+EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
-    EvaluationResult ret(0.);
+    const std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
+    std::vector<double> to_return(values.size(), 0.);
+
     for (int shift = from; shift <= to; ++shift)
     {
-        ret += timeShift(shift);
+        std::vector<double> shifted_values = shiftVector(values, shift);
+        to_return += shifted_values;
     }
-    return ret;
+    return EvaluationResult(to_return);
 }
 
 EvaluationResult EvaluationResult::alltimeSum(int numberOfTimeStep) const
@@ -387,11 +406,6 @@ EvaluationResult EvaluationResult::operator[](int timeIndex) const
         throw EvalResultTimeIndexOutOfRange("timeIndex is out of range");
     }
     return EvaluationResult(vec.at(timeIndex));
-}
-
-std::vector<double> EvaluationResult::shift(const std::vector<double>& values, int timeShift)
-{
-    return shiftVector(values, timeShift);
 }
 
 } // namespace Antares::Expressions::Visitors

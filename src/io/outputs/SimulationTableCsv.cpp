@@ -1,28 +1,12 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/io/outputs/SimulationTableCsv.h"
 
 #include "antares/io/outputs/SimulationTableEntry.h"
 
+namespace Antares::IO::Outputs
+{
 SimulationTableCsv::SimulationTableCsv()
 
 {
@@ -31,7 +15,7 @@ SimulationTableCsv::SimulationTableCsv()
     storage_.addStringColumn("output");
     storage_.addOptionalColumn<unsigned int>("absolute_time_index");
     storage_.addOptionalColumn<unsigned int>("block_time_index");
-    storage_.addOptionalColumn<unsigned int>("scenario_index");
+    storage_.addIntegralColumn<unsigned int>("scenario_index");
     storage_.addOptionalColumn<double>("value");
     storage_.addOptionalColumn<Antares::Optimisation::LinearProblemApi::MipBasisStatus>(
       "basis_status");
@@ -104,3 +88,4 @@ std::string SimulationTableCsv::buffer() const
 {
     return buffer_.str();
 }
+} // namespace Antares::IO::Outputs

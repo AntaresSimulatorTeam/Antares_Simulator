@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <exception>
 #include <fstream>
@@ -32,18 +14,8 @@
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
 
-void Write(const OrtoolsLinearProblem& problem, const std::filesystem::path& path)
-{
-    std::string out;
-    problem.mpSolver_->ExportModelAsMpsFormat(/* fixed_format (ignored) */ false,
-                                              /* obfuscate */ false,
-                                              &out);
-    std::ofstream of(path);
-    of << out;
-}
-
 OrtoolsLinearProblem::OrtoolsLinearProblem(bool isMip, const std::string& solverName):
-    mpSolver_(MPSolverFactory(isMip, solverName)),
+    mpSolver_(std::shared_ptr<MPSolver>(MPSolverFactory(isMip, solverName))),
     objective_(mpSolver_->MutableObjective()),
     isLP_(!isMip)
 {
@@ -213,11 +185,6 @@ bool OrtoolsLinearProblem::isMaximization() const
     return objective_->maximization();
 }
 
-MPSolver* OrtoolsLinearProblem::MpSolver() const
-{
-    return mpSolver_;
-}
-
 OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 {
     if (verboseSolver)
@@ -227,7 +194,7 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solve(bool verboseSolver)
 
     auto mpStatus = mpSolver_->Solve(params_);
 
-    solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_);
+    solution_ = std::make_unique<OrtoolsMipSolution>(mpStatus, mpSolver_.get());
     return solution_.get();
 }
 
@@ -242,7 +209,7 @@ OrtoolsMipSolution* OrtoolsLinearProblem::solution(bool verboseSolver)
 
 double OrtoolsLinearProblem::objectiveValue() const
 {
-    return ::getObjectiveValue(mpSolver_);
+    return ::getObjectiveValue(mpSolver_.get());
 }
 
 double OrtoolsLinearProblem::infinity() const

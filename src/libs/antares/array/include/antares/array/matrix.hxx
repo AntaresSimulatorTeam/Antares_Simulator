@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 #define __ANTARES_LIBS_ARRAY_MATRIX_HXX__
 
@@ -371,13 +354,6 @@ inline void Matrix<T, ReadWriteT>::fillUnit()
 }
 
 template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::forceReload(bool reload) const
-{
-    JIT::Invalidate(jit);
-    return (reload) ? loadAllJITData() : true;
-}
-
-template<class T, class ReadWriteT>
 inline void Matrix<T, ReadWriteT>::reset(uint w, uint h, bool fixedSize)
 {
     resize(w, h, fixedSize);
@@ -483,8 +459,6 @@ void Matrix<T, ReadWriteT>::pasteToColumn(uint x, const U* data)
             column[y] = (T)data[y];
         }
     }
-
-    markAsModified();
 }
 
 template<class T, class ReadWriteT>
@@ -497,8 +471,6 @@ void Matrix<T, ReadWriteT>::fillColumn(uint x, const T& value)
     {
         column[y] = value;
     }
-
-    markAsModified();
 }
 
 template<class T, class ReadWriteT>
@@ -508,17 +480,6 @@ inline void Matrix<T, ReadWriteT>::columnToZero(uint x)
     ColumnType& column = entry[x];
 
     (void)::memset((void*)column, 0, sizeof(T) * height);
-
-    markAsModified();
-}
-
-template<class T, class ReadWriteT>
-inline void Matrix<T, ReadWriteT>::markAsModified() const
-{
-    if (jit)
-    {
-        jit->markAsModified();
-    }
 }
 
 template<class T, class ReadWriteT>
@@ -547,7 +508,6 @@ template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::reset()
 {
     clear();
-    markAsModified();
 }
 
 template<class T, class ReadWriteT>
@@ -607,7 +567,6 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
             jit->options = jit->options | optFixedSize;
         }
     }
-    markAsModified();
 }
 
 namespace // anonymous
@@ -1056,15 +1015,6 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
                                 maxHeight,
                                 (options & optFixedSize),
                                 options);
-
-        // Mark as modified
-        if (0 != (options & optMarkAsModified))
-        {
-            if (jit)
-            {
-                jit->markAsModified();
-            }
-        }
         break;
     }
     case Yuni::IO::errNotFound:
@@ -1348,7 +1298,6 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
             }
         }
     }
-    markAsModified();
     logs.debug() << "  :: end resizeWithoutDataLost";
 }
 
@@ -1486,7 +1435,6 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
 {
     assert((void*)(&rhs) != (void*)this and "Undefined behavior");
 
-    rhs.forceReload(true);
     if (rhs.empty())
     {
         clear();
@@ -1531,8 +1479,6 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
             jit->maxHeight = rhs.jit->maxHeight;
         }
     }
-    // mark the matrix as modified
-    markAsModified();
 }
 
 template<class T, class ReadWriteT>
@@ -1666,7 +1612,6 @@ void Matrix<T, ReadWriteT>::circularShiftRows(uint count)
         {
             circularShiftRows(column, count);
         }
-        markAsModified();
     }
 }
 
@@ -1710,7 +1655,6 @@ void Matrix<T, ReadWriteT>::circularShiftRows(uint column, uint count)
     reverseRows(column, 0, count);
     reverseRows(column, count, height);
     reverseRows(column, 0, height);
-    markAsModified();
 }
 
 template<class T, class ReadWriteT>

@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 
@@ -204,24 +186,24 @@ ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsign
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NTCDirect(unsigned int index,
-                                                double coeff,
-                                                int offset,
-                                                int delta)
+ConstraintBuilder& ConstraintBuilder::DirectFlux(unsigned int index,
+                                                 double coeff,
+                                                 int offset,
+                                                 int delta)
 {
-    AddVariable(variableManager_.NTCDirect(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.DirectFlux(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoDirectCost(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::DirectFluxPositif(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.IntercoDirectCost(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.DirectFluxPositif(index, hourInWeek_), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IntercoIndirectCost(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::IndirectFluxPositif(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.IntercoIndirectCost(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.IndirectFluxPositif(index, hourInWeek_), coeff);
     return *this;
 }
 
@@ -331,15 +313,15 @@ ConstraintBuilder& ConstraintBuilder::FinalStorage(unsigned int index, double co
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::PositiveUnsuppliedEnergy(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::UnsuppliedEnergy(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.PositiveUnsuppliedEnergy(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.UnsuppliedEnergy(index, hourInWeek_), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::NegativeUnsuppliedEnergy(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::Spillage(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.NegativeUnsuppliedEnergy(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.Spillage(index, hourInWeek_), coeff);
     return *this;
 }
 

@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 #define __ANTARES_LIBS_STUDY_PARTS_COMMON_CLUSTER_LIST_H__
 
@@ -78,18 +61,6 @@ public:
     std::vector<std::shared_ptr<ClusterT>> all() const;
 
     /*!
-    ** \brief Rename a cluster
-    **
-    ** \param idToFind ID of the cluster to rename
-    ** \param newName The new name for the cluster
-    ** \return True if the operation succeeded (the cluster has been renamed)
-    **   false otherwise (not found or if another cluster has the same name)
-    **
-    ** The indexes for clusters will be rebuilt.
-    */
-    bool rename(std::string idToFind, std::string newName);
-
-    /*!
     ** \brief Remove properly a cluster
     */
     virtual bool remove(const std::string& id);
@@ -137,16 +108,6 @@ public:
 
     //@}
 
-    /*!
-    ** \brief Invalidate all clusters
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the clusters as modified
-    */
-    void markAsModified() const;
-
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);
@@ -161,9 +122,6 @@ public:
     bool loadReserveParticipations(Area& area, const std::filesystem::path& file);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
-#ifdef BUILD_UI
-    virtual bool saveToFolder(const AnyString& folder) const = 0;
-#endif
     ///@}
 
     /*!

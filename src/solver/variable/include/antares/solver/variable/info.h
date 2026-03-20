@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_INFO_H__
 #define __SOLVER_VARIABLE_INFO_H__
 
@@ -501,31 +484,39 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
     {
         if (*results.isPrinted)
         {
-            const Data::PartThermal& thermal = results.data.area->thermal;
-            const auto& shortTermStorage = results.data.area->shortTermStorage;
-            const auto& hydro = results.data.area->hydro;
-            for (uint i = 0; i != container.size(); ++i)
+            const uint8_t categoryFileLevel = VCardT::categoryFileLevel;
+            const bool thermal_details = categoryFileLevel & Category::FileLevel::de;
+            const bool renewable_details = categoryFileLevel & Category::FileLevel::de_res;
+            const bool st_storage_details = categoryFileLevel & Category::FileLevel::de_sts;
+
+            if (thermal_details)
             {
-                if (!vcard_caption_traits<VCardT>::apply(results, i))
+                auto& thermal = results.data.area->thermal;
+                for (uint i = 0; i != container.size(); ++i)
                 {
                     results.variableCaption = thermal.list.enabledClusterAt(i)->name();
+                    container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
                 }
-
-                container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+            }
+            else if (renewable_details)
+            {
+                auto& renewable = results.data.area->renewable;
+                for (uint i = 0; i != container.size(); ++i)
+                {
+                    results.variableCaption = renewable.list.enabledClusterAt(i)->name();
+                    container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+                }
+            }
+            else if (st_storage_details)
+            {
+                auto& st_storage_part = results.data.area->shortTermStorage;
+                for (uint i = 0; i != container.size(); ++i)
+                {
+                    results.variableCaption = st_storage_part.storagesByIndex[i].properties.name;
+                    container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
+                }
             }
         }
-    }
-
-    static bool setClusterReserveCaption(SurveyResults& results, uint reserveParticipationIdx)
-    {
-        assert(results.data.area && "Area is NULL");
-
-        auto& thermal = results.data.area->thermal;
-        auto [clusterName, reserveName] = thermal.list.reserveParticipationClusterAt(
-          results.data.area,
-          reserveParticipationIdx);
-        results.variableCaption = clusterName + " - " + reserveName;
-        return true;
     }
 
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
@@ -569,6 +560,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             results.variableCaption = st_storage_part.storagesByIndex[idx].properties.name;
             return true;
         }
+
         return true;
     }
 

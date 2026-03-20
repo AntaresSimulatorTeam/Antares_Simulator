@@ -3,7 +3,7 @@
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
-using namespace Antares::Modeler;
+using namespace Antares::Solver;
 
 Objective makeObjectiveFromVariable(Registry<Nodes::Node>& nodeRegistry,
                                     const std::string varId,

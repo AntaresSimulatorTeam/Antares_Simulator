@@ -25,9 +25,7 @@
 
 #include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include "variables/VariableManagement.h"
-#include "variables/VariableManagerUtils.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
   PROBLEME_HEBDO* problemeHebdo,

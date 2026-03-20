@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
@@ -129,8 +112,6 @@ private:
 public:
     void operator()()
     {
-        Progression::Task progression(study, y, Solver::Progression::sectYear);
-
         // Index of the current year in the list of structures
         uint indexYear = randomForParallelYears.yearNumberToIndex[y];
 
@@ -165,8 +146,7 @@ public:
         std::list<uint> failedWeekList;
 
         OptimizationStatisticsWriter optWriter(pResultWriter, y);
-        bool yearFailed = !simulation_->year(progression,
-                                             state,
+        bool yearFailed = !simulation_->year(state,
                                              numSpace,
                                              randomForCurrentYear,
                                              failedWeekList,
@@ -233,7 +213,6 @@ public:
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
         numspaceManager.freeNumSpace(numSpace);
-        simulation_->incrementProgression(progression);
 
         aggregationMutex.unlock();
 
@@ -257,11 +236,8 @@ inline ISimulation<ImplementationType>::ISimulation(
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
-    // Ask to the interface to show the messages
-    logs.info();
-    logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
-
     // Running !
+    logs.info();
     logs.checkpoint() << "Running the simulation (" << ImplementationType::Name() << ')';
     logs.info() << "Allocating resources...";
 
@@ -282,9 +258,7 @@ inline void ISimulation<ImplementationType>::checkWriter() const
 }
 
 template<class ImplementationType>
-inline ISimulation<ImplementationType>::~ISimulation()
-{
-}
+inline ISimulation<ImplementationType>::~ISimulation() = default;
 
 template<class ImplementationType>
 void ISimulation<ImplementationType>::run()
@@ -293,8 +267,8 @@ void ISimulation<ImplementationType>::run()
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
-    // Computing the max number columns a report of any kind can contain.
-    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
 
     logs.info() << "Allocating resources...";
 
@@ -401,7 +375,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 
         // The target folder
         String newPath;
-        newPath << ImplementationType::Name() << IO::Separator;
+        newPath << ImplementationType::Name() << Yuni::IO::Separator;
         if (synthesis)
         {
             newPath << "mc-all";
@@ -410,7 +384,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         {
             CString<10, false> tmp;
             tmp = (year + 1);
-            newPath << "mc-ind" << IO::Separator << "00000";
+            newPath << "mc-ind" << Yuni::IO::Separator << "00000";
             newPath.overwriteRight(tmp);
         }
 

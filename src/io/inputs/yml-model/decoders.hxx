@@ -1,26 +1,10 @@
 
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+
+#include <optional>
 
 #include "antares/io/inputs/yml-model/Library.h"
 
@@ -224,9 +208,69 @@ struct convert<Antares::IO::Inputs::YmlModel::Model>
     }
 };
 
+std::string getFieldFromNode(const Node& node, const std::string& fieldName)
+{
+    if (node[fieldName].IsNull())
+    {
+        return {};
+    }
+    return node[fieldName].as<std::string>("");
+}
+
+bool isValidMap(const Node& node, const unsigned& nbFields)
+{
+    if (node.IsMap() && node.size() == nbFields)
+    {
+        return true;
+    }
+    return false;
+}
+
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortType>
 {
+    static bool convertAreaConnectionFields(const Node& node,
+                                            Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        auto child_node = node["area-connection"];
+        if (!child_node.IsDefined())
+        {
+            return true;
+        }
+
+        const unsigned expectedNbFields = 3;
+        if (!isValidMap(child_node, expectedNbFields))
+        {
+            return false;
+        }
+
+        rhs.area_connection.inject_to_balance = getFieldFromNode(child_node,
+                                                                 "injection-to-balance");
+        rhs.area_connection.spillage_bound = getFieldFromNode(child_node, "spillage-bound");
+        rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(child_node,
+                                                                       "unsupplied-energy-bound");
+        return true;
+    }
+
+    static bool convertThermalCapacityField(const Node& node,
+                                            Antares::IO::Inputs::YmlModel::PortType& rhs)
+    {
+        auto child_node = node["thermal-capacity-connection"];
+        if (!child_node.IsDefined())
+        {
+            return true;
+        }
+
+        const unsigned expectedNbFields = 1;
+        if (!isValidMap(child_node, expectedNbFields))
+        {
+            return false;
+        }
+
+        rhs.thermal_capacity_connection_field = getFieldFromNode(child_node, "capacity-field");
+        return true;
+    }
+
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortType& rhs)
     {
         if (!node.IsMap())
@@ -239,18 +283,15 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         {
             rhs.fields.push_back(field["id"].as<std::string>());
         }
-        if (node["area-connection"].IsDefined())
+        if (!convertThermalCapacityField(node, rhs))
         {
-            if (node["area-connection"].size() != 1)
-            {
-                // Must have exactly one area connection field definition
-                return false;
-            }
-            for (const auto& field: node["area-connection"])
-            {
-                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
-            }
+            return false;
         }
+        if (!convertAreaConnectionFields(node, rhs))
+        {
+            return false;
+        }
+
         return true;
     }
 };
