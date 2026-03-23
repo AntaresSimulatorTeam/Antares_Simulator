@@ -299,7 +299,7 @@ struct convert<Antares::IO::Inputs::YmlModel::Port>
         {
             return false;
         }
-        checkMandatoryField(node, "Port");
+        checkMandatoryField(node, "port");
         rhs.id = node["id"].as<std::string>();
         rhs.type = node["type"].as<std::string>();
         return true;
