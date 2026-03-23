@@ -189,7 +189,8 @@ def main():
     else:
         print("No transitive dependency changes.")
 
-    print(f"\nTotal changes: {len(changes)} ({len(direct_changes)} direct, {len(transitive_changes)} transitive)")
+    print(
+        f"\nTotal changes: {len(changes)} for which {len(direct_changes)} are direct dependencies and {len(transitive_changes)} are transitive dependencies.")
 
 
 if __name__ == "__main__":
