@@ -39,7 +39,7 @@ inline T as_fallback_default(const Node& n)
 
 inline void checkMandatoryField(const Node& node, const std::string& nodeName)
 {
-    if (!node["id"].IsDefined() || node["id"].IsNull())
+    if (!node[nodeName].IsDefined() || node[nodeName].IsNull())
     {
         std::filesystem::path nodePath(node.Tag());
         throw KeyNotFound(node.Mark(),
