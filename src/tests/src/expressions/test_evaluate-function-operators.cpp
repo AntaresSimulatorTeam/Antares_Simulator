@@ -84,8 +84,7 @@ CreateEvalVisitor::CreateEvalVisitor():
       model_,
       "component-id",
       {{"p", {"p", VariabilityType::VARYING_IN_TIME_ONLY, "p"}},
-       {"p-const", {"p-const", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "4.5"}}},
-      0)),
+       {"p-const", {"p-const", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "4.5"}}})),
     components_({component_}),
     scenarioGroupRepo_(makeScenarioGroupRepo(component_))
 {

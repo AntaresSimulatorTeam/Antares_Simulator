@@ -81,10 +81,8 @@ void LinearProblemBuildingFixture::createComponent(
                        .withModel(&models.at(modelId))
                        .withScenarioGroupId(scenarioGroupId)
                        .withParameterValues(std::move(parameterValues))
-                       .withIndex(componentIndex_)
                        .build();
     components.emplace_back(component);
-    componentIndex_++;
 }
 
 Nodes::Node* LinearProblemBuildingFixture::literal(double value)
