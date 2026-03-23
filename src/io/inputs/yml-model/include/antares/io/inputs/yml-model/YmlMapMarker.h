@@ -11,8 +11,8 @@
 
 #include "yaml-cpp/yaml.h"
 
-// Forward declaration of getBaseTreeOnce implemented in decoders_utils.cpp
-std::string getBaseTree(const std::filesystem::path& nodeTagPath);
+// Forward declaration of printPathTree implemented in decoders.cpp
+std::string printPathTree(const std::filesystem::path& p);
 
 namespace YAML
 {
@@ -47,7 +47,7 @@ public:
         }
         indentSpaces_ = (depthParts_ - 1) * 4;
 
-        baseTree_ = getBaseTree(nodeTagPath_);
+        baseTree_ = printPathTree(nodeTagPath_);
     }
 
     const std::unordered_map<std::string, int>& actualKeysLine() const
