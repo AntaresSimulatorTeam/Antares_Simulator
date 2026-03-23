@@ -1,9 +1,9 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <unordered_set>
-
 #include "antares/io/inputs/yml-model/decoders.h"
+
+#include <unordered_set>
 
 std::string printPathTree(const std::filesystem::path& p)
 {
@@ -153,7 +153,8 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFiel
                                                 "spillage-bound",
                                                 "unsupplied-energy-bound"});
 
-    rhs.area_connection.inject_to_balance = getFieldFromNode(area_conn_node, "injection-to-balance");
+    rhs.area_connection.inject_to_balance = getFieldFromNode(area_conn_node,
+                                                             "injection-to-balance");
     rhs.area_connection.spillage_bound = getFieldFromNode(area_conn_node, "spillage-bound");
     rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(area_conn_node,
                                                                    "unsupplied-energy-bound");
@@ -215,7 +216,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Parameter>::decode(
     {
         return false;
     }
-    checkMandatoryField(node, "parameter");
+    checkMandatoryIdField(node, "parameter");
     rhs.id = node["id"].as<std::string>();
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
@@ -258,7 +259,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
     {
         return false;
     }
-    checkMandatoryField(node, "variable");
+    checkMandatoryIdField(node, "variable");
     rhs.id = node["id"].as<std::string>();
     rhs.lower_bound = node["lower-bound"].as<std::string>("");
     rhs.upper_bound = node["upper-bound"].as<std::string>("");
@@ -270,15 +271,14 @@ bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Port>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Port& rhs)
+bool convert<Antares::IO::Inputs::YmlModel::Port>::decode(const Node& node,
+                                                          Antares::IO::Inputs::YmlModel::Port& rhs)
 {
     if (!node.IsMap())
     {
         return false;
     }
-    checkMandatoryField(node, "Port");
+    checkMandatoryIdField(node, "Port");
     rhs.id = node["id"].as<std::string>();
     rhs.type = node["type"].as<std::string>();
     return true;
@@ -307,7 +307,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Constraint>::decode(
     {
         return false;
     }
-    checkMandatoryField(node, "constraint");
+    checkMandatoryIdField(node, "constraint");
     rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
@@ -322,7 +322,7 @@ bool convert<Antares::IO::Inputs::YmlModel::ExtraOutput>::decode(
     {
         return false;
     }
-    checkMandatoryField(node, "extra-output");
+    checkMandatoryIdField(node, "extra-output");
     rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<std::string>();
     return true;
@@ -336,7 +336,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Objective>::decode(
     {
         return false;
     }
-    checkMandatoryField(node, "objective");
+    checkMandatoryIdField(node, "objective");
     rhs.id = node["id"].as<std::string>();
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
@@ -351,7 +351,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
     {
         return false;
     }
-    checkMandatoryField(node, "model");
+    checkMandatoryIdField(node, "model");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Parameter>>(
