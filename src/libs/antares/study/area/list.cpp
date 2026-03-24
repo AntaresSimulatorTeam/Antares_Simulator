@@ -158,49 +158,6 @@ bool AreaList::empty() const
     return areas.empty();
 }
 
-AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], bool warning)
-{
-    // Asserts
-    assert(l);
-    assert(area);
-    assert(with);
-
-    if (!l->empty())
-    {
-        logs.debug() << "    . " << area << " -> " << with;
-
-        AreaName givenName = area;
-        AreaName name = transformNameIntoID(givenName);
-        Area* a = AreaListLFind(l, name.c_str());
-        if (a)
-        {
-            givenName = with;
-            name.clear();
-            name = transformNameIntoID(givenName);
-            Area* b = l->find(name);
-            if (b && !a->findExistingLinkWith(*b))
-            {
-                return AreaAddLinkBetweenAreas(a, b, warning);
-            }
-        }
-    }
-    return nullptr;
-}
-
-AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with)
-{
-    auto i = areas.find(area);
-    if (i != areas.end())
-    {
-        auto j = areas.find(with);
-        if (j != areas.end())
-        {
-            return (*(i->second)).findExistingLinkWith(*(j->second));
-        }
-    }
-    return nullptr;
-}
-
 const AreaLink* AreaList::findLink(const AreaName& area, const AreaName& with) const
 {
     auto i = areas.find(area);
@@ -970,7 +927,7 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
     each([n](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-AreaLink* AreaList::findLinkFromINIKey(const AnyString& key)
+const AreaLink* AreaList::findLinkFromINIKey(const AnyString& key) const
 {
     if (key.empty())
     {
