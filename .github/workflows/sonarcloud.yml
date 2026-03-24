@@ -64,7 +64,7 @@ jobs:
         # Ensure directory exists and point ccache at it
         mkdir -p ${{ env.CCACHE_DIR }}
         # Increase size to reduce evictions; adjust to suit your CI quota
-        ccache --set-config=max_size=5G
+        ccache --set-config=max_size=1G
         ccache --set-config=compression=true
         ccache --show-config || true
         ccache -p
