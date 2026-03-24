@@ -69,12 +69,12 @@ protected:
     const std::string& expression_;
 };
 
-class ForbiddenNodesVisitorWithComponent final: public ForbiddenNodesVisitor
+class ForbiddenNodesInComponentVisitor final: public ForbiddenNodesVisitor
 {
 public:
-    ForbiddenNodesVisitorWithComponent(const ForbiddenNodes& forbid,
-                                       const std::string& expression,
-                                       const ModelerStudy::SystemModel::Component& component);
+    ForbiddenNodesInComponentVisitor(const ForbiddenNodes& forbid,
+                                     const std::string& expression,
+                                     const ModelerStudy::SystemModel::Component& component);
 
     void visit(const Expressions::Nodes::PortFieldSumNode* portFieldSumNode) override;
 

@@ -34,7 +34,7 @@ ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbiddenNode
 {
 }
 
-ForbiddenNodesVisitorWithComponent::ForbiddenNodesVisitorWithComponent(
+ForbiddenNodesInComponentVisitor::ForbiddenNodesInComponentVisitor(
   const ForbiddenNodes& forbid,
   const std::string& expression,
   const ModelerStudy::SystemModel::Component& component):
@@ -120,7 +120,7 @@ void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
     // keep empty
 }
 
-void ForbiddenNodesVisitorWithComponent::visit(const PortFieldSumNode* portFieldSumNode)
+void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
     const std::string localPortId = portFieldSumNode->getPortName();
     const std::string fieldId = portFieldSumNode->getFieldName();
