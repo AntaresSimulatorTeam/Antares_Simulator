@@ -61,7 +61,7 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode = false);
+    bool readLine(const AreaName::Vector& splitKey, const String& value);
 
     //! Get the number of areas
     uint areaCount() const;
@@ -109,35 +109,24 @@ public:
 
 private:
     // Member methods
-    bool readThermalCluster(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readRenewableCluster(const AreaName::Vector& instrs,
-                              const String& value,
-                              bool updaterMode);
-    bool readLoad(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readWind(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readHydro(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readSolar(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readInitialHydroLevels(const AreaName::Vector& instrs,
-                                const String& value,
-                                bool updaterMode);
-    bool readFinalHydroLevels(const AreaName::Vector& instrs,
-                              const String& value,
-                              bool updaterMode);
-    bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
+    bool readThermalCluster(const AreaName::Vector& instrs, const String& value);
+    bool readRenewableCluster(const AreaName::Vector& instrs, const String& value);
+    bool readLoad(const AreaName::Vector& instrs, const String& value);
+    bool readWind(const AreaName::Vector& instrs, const String& value);
+    bool readHydro(const AreaName::Vector& instrs, const String& value);
+    bool readSolar(const AreaName::Vector& instrs, const String& value);
+    bool readInitialHydroLevels(const AreaName::Vector& instrs, const String& value);
+    bool readFinalHydroLevels(const AreaName::Vector& instrs, const String& value);
+    bool readLink(const AreaName::Vector& instrs, const String& value);
     bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
 
-    bool readShortTermStorageInflows(const AreaName::Vector& splitKey,
-                                     const String& value,
-                                     bool updaterMode);
+    bool readShortTermStorageInflows(const AreaName::Vector& splitKey, const String& value);
 
     bool readShortTermStorageAdditionalConstraints(const AreaName::Vector& splitKey,
-                                                   const String& value,
-                                                   bool updaterMode);
+                                                   const String& value);
 
-    Data::Area* getArea(const AreaName& areaname, bool updaterMode);
-    const Data::AreaLink* getLink(const AreaName& fromAreaName,
-                                  const AreaName& toAreaName,
-                                  bool updaterMode) const;
+    Data::Area* getArea(const AreaName& areaname);
+    const Data::AreaLink* getLink(const AreaName& fromAreaName, const AreaName& toAreaName) const;
     bool checkGroupExists(const std::string& groupName) const;
 
     // Member data
