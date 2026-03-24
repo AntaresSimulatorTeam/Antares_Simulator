@@ -34,7 +34,6 @@ public:
     const Model* model = nullptr;
     std::map<std::string, ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
-    unsigned index = 0;
 
     void reset()
     {
@@ -114,11 +113,6 @@ public:
 
     std::optional<ThermalComponent> thermalCapacityConnectedToPort(const std::string& portId) const;
 
-    unsigned int Index() const
-    {
-        return data_.index;
-    }
-
     const Port& findPort(const std::string& portId, const std::string& prefixMessage) const;
 
 private:
@@ -140,7 +134,6 @@ class ComponentBuilder final
 public:
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
-    ComponentBuilder& withIndex(unsigned int index);
     ComponentBuilder& withParameterValues(
       std::map<std::string, ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);

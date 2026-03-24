@@ -11,18 +11,13 @@
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/utils/vector-utils.h"
 
 using namespace Antares::Optimisation;
+using namespace Antares::Utils;
 
 namespace Antares::Expressions::Visitors
 {
-
-std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b)
-{
-    std::ranges::transform(a, b, a.begin(), std::plus<double>());
-    return a;
-}
-
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,

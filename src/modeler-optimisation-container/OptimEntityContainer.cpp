@@ -19,21 +19,21 @@ OptimEntityContainer::OptimEntityContainer(LinearProblemApi::ILinearProblem& lin
 unsigned OptimEntityContainer::getVariableStartColumn(const Component& component,
                                                       unsigned index) const
 {
-    const auto& optimComponent = optimComponents_.at(component.Index());
+    const auto& optimComponent = optimComponents_.at(component.Id());
     return variableStartColumn_.at(optimComponent.modelVariableGlobalIndices.at(index));
 }
 
 unsigned OptimEntityContainer::getConstraintStartLine(const Component& component,
                                                       unsigned index) const
 {
-    const auto& optimComponent = optimComponents_.at(component.Index());
+    const auto& optimComponent = optimComponents_.at(component.Id());
     return optimComponent.modelConstraintStartLines.at(index);
 }
 
 VariabilityType OptimEntityContainer::getConstraintVariability(const Component& component,
                                                                unsigned index) const
 {
-    const auto& optimComponent = optimComponents_.at(component.Index());
+    const auto& optimComponent = optimComponents_.at(component.Id());
     return optimComponent.modelConstraintsVariability.at(index);
 }
 
@@ -66,7 +66,6 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
                                                    Solver::Config::Location targetLocation)
 {
     optimComponents_.clear();
-    optimComponents_.reserve(components.size());
     unsigned variableGlobalIndex = 0;
     for (const auto& component: components)
     {
@@ -90,10 +89,12 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
             }
         }
 
-        optimComponents_.push_back(
-          OptimComponent{.modelVariableGlobalIndices = modelVariableGlobalIndices,
-                         .modelConstraintStartLines = {},
-                         .modelConstraintsVariability = {}});
+        optimComponents_.emplace(component.Id(),
+                                 OptimComponent{.modelVariableGlobalIndices =
+                                                  std::move(modelVariableGlobalIndices),
+                                                .modelConstraintStartLines = {},
+                                                .modelConstraintsVariability = {},
+                                                .modelConstraintCounts = {}});
     }
 }
 
@@ -101,7 +102,7 @@ void OptimEntityContainer::registerConstraint(const Component& component,
                                               const VariabilityType& variability,
                                               unsigned count)
 {
-    auto& optimComponent = optimComponents_.at(component.Index());
+    auto& optimComponent = optimComponents_.at(component.Id());
     optimComponent.modelConstraintStartLines.push_back(
       static_cast<unsigned>(linearProblem_.constraintCount()));
     optimComponent.modelConstraintsVariability.push_back(variability);
