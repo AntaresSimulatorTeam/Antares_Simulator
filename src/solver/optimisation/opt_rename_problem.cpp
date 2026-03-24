@@ -151,19 +151,19 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned varIndex,
     SetThermalClusterElementName(varIndex, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::DirectFlux(unsigned varIndex)
+void VariableNamer::DirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "NTCDirect");
+    SetLinkElementName(varIndex, "DirectFlow");
 }
 
-void VariableNamer::DirectFluxPositif(unsigned varIndex)
+void VariableNamer::PositiveDirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "IntercoDirectCost");
+    SetLinkElementName(varIndex, "PositiveDirectFlow");
 }
 
-void VariableNamer::IndirectFluxPositif(unsigned varIndex)
+void VariableNamer::PositiveIndirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "IntercoIndirectCost");
+    SetLinkElementName(varIndex, "PositiveIndirectFlow");
 }
 
 void VariableNamer::SetShortTermStorageVariableName(unsigned varIndex,
@@ -250,16 +250,12 @@ void VariableNamer::FinalStorage(unsigned varIndex)
 
 void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
 {
-    // TODO : what is "PositiveUnsuppliedEnergy" ?
-    // We mean "UnsuppliedEnergy". To be replaced.
-    SetAreaElementNameHour(varIndex, "PositiveUnsuppliedEnergy");
+    SetAreaElementNameHour(varIndex, "UnsuppliedEnergy");
 }
 
 void VariableNamer::Spillage(unsigned varIndex)
 {
-    // TODO : what is "NegativeUnsuppliedEnergy" ?
-    // Should be replaced with "Spillage".
-    SetAreaElementNameHour(varIndex, "NegativeUnsuppliedEnergy");
+    SetAreaElementNameHour(varIndex, "Spillage");
 }
 
 void VariableNamer::AreaBalance(unsigned varIndex)

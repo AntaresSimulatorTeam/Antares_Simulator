@@ -258,11 +258,11 @@ bool Rules::readFinalHydroLevels(const AreaName::Vector& splitKey,
     return true;
 }
 
-Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
-                               const AreaName& toAreaName,
-                               bool updaterMode)
+const Data::AreaLink* Rules::getLink(const AreaName& fromAreaName,
+                                     const AreaName& toAreaName,
+                                     bool updaterMode) const
 {
-    Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);
+    const Data::AreaLink* link = study_.areas.findLink(fromAreaName, toAreaName);
     if (!link && !updaterMode)
     {
         // silently ignore the error
@@ -290,7 +290,7 @@ bool Rules::readLink(const AreaName::Vector& splitKey, const String& value, bool
         return false;
     }
 
-    AreaLink* link = getLink(fromAreaName, toAreaName, updaterMode);
+    const AreaLink* link = getLink(fromAreaName, toAreaName, updaterMode);
     if (!link)
     {
         return false;

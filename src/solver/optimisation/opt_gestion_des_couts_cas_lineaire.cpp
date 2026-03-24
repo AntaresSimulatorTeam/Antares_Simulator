@@ -105,7 +105,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
         {
             const COUTS_DE_TRANSPORT& CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
-            int var = variableManager.DirectFlux(interco, pdtJour);
+            int var = variableManager.DirectFlow(interco, pdtJour);
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutLineaire[var] = 0.0;
@@ -113,14 +113,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
 
             if (CoutDeTransport.IntercoGereeAvecDesCouts)
             {
-                var = variableManager.DirectFluxPositif(interco, pdtJour);
+                var = variableManager.PositiveDirectFlow(interco, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var] = CoutDeTransport
                                                              .CoutDeTransportOrigineVersExtremite
                                                                [pdtHebdo];
                 }
-                var = variableManager.IndirectFluxPositif(interco, pdtJour);
+                var = variableManager.PositiveIndirectFlow(interco, pdtJour);
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     ProblemeAResoudre->CoutLineaire[var] = CoutDeTransport

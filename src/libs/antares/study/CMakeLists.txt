@@ -270,7 +270,7 @@ target_link_libraries(study
         yuni-static-core
         Antares::date #parameters
         Antares::inifile #parameters
-        Antares::utils #area.hxx
+        Antares::study-utils #area.hxx
         Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
         Antares::correlation
         Antares::path

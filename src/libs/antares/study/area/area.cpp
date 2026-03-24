@@ -64,64 +64,29 @@ void Area::clearAllLinks()
     }
 }
 
-AreaLink* Area::findExistingLinkWith(Area& with)
+const AreaLink* Area::findExistingLinkWith(const Area& with) const
 {
     if (&with == this)
     {
         return nullptr;
     }
 
-    if (not links.empty())
+    for (const auto& [key, link]: links)
     {
-        const AreaLink::Map::iterator end = links.end();
-        for (AreaLink::Map::iterator i = links.begin(); i != end; ++i)
+        if (link->from == &with || link->with == &with)
         {
-            if (i->second->from == &with or i->second->with == &with)
-            {
-                return i->second;
-            }
+            return link;
         }
     }
-    if (!with.links.empty())
-    {
-        for (auto i = with.links.begin(); i != with.links.end(); ++i)
-        {
-            if (i->second->from == this or i->second->with == this)
-            {
-                return i->second;
-            }
-        }
-    }
-    return nullptr;
-}
 
-const AreaLink* Area::findExistingLinkWith(const Area& with) const
-{
-    if (&with != this)
+    for (const auto& [key, link]: with.links)
     {
-        if (not links.empty())
+        if (link->from == this || link->with == this)
         {
-            const auto end = links.end();
-            for (auto i = links.begin(); i != end; ++i)
-            {
-                if (i->second->from == &with or i->second->with == &with)
-                {
-                    return i->second;
-                }
-            }
-        }
-        if (!with.links.empty())
-        {
-            const auto end = with.links.end();
-            for (auto i = with.links.begin(); i != end; ++i)
-            {
-                if (i->second->from == this or i->second->with == this)
-                {
-                    return i->second;
-                }
-            }
+            return link;
         }
     }
+
     return nullptr;
 }
 

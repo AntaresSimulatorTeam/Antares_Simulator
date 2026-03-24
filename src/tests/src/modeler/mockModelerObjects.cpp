@@ -27,11 +27,10 @@ std::pair<std::string, ParameterTypeAndValue> build_context_parameter_with(
     return {id, {.id = id, .type = type, .value = value}};
 }
 
-Component createComponent(const Model& model, const std::string& id, unsigned index)
+Component createComponent(const Model& model, const std::string& id)
 {
     ComponentBuilder component_builder;
     return component_builder.withId(id)
-      .withIndex(index)
       .withModel(&model)
       .withParameterValues({})
       .withScenarioGroupId("scenario_group")
@@ -40,12 +39,10 @@ Component createComponent(const Model& model, const std::string& id, unsigned in
 
 Component createComponent(const Model& model,
                           const std::string& id,
-                          std::map<std::string, ParameterTypeAndValue> parameter_values,
-                          unsigned index)
+                          std::map<std::string, ParameterTypeAndValue> parameter_values)
 {
     ComponentBuilder component_builder;
     return component_builder.withId(id)
-      .withIndex(index)
       .withModel(&model)
       .withParameterValues(parameter_values)
       .withScenarioGroupId("scenario_group")

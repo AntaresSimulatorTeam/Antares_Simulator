@@ -135,9 +135,9 @@ private:
                                                    bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
-    Data::AreaLink* getLink(const AreaName& fromAreaName,
-                            const AreaName& toAreaName,
-                            bool updaterMode);
+    const Data::AreaLink* getLink(const AreaName& fromAreaName,
+                                  const AreaName& toAreaName,
+                                  bool updaterMode) const;
     bool checkGroupExists(const std::string& groupName) const;
 
     // Member data

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <unordered_map>
 #include <span>
 #include <vector>
 
@@ -41,7 +42,7 @@ public:
       const Antares::ModelerStudy::SystemModel::Component& component,
       unsigned int index) const
     {
-        const auto& optimComponent = optimComponents_.at(component.Index());
+        const auto& optimComponent = optimComponents_.at(component.Id());
         return {optimComponent.modelConstraintStartLines.at(index),
                 optimComponent.modelConstraintsVariability.at(index)};
     }
@@ -50,7 +51,7 @@ public:
       const Antares::ModelerStudy::SystemModel::Component& component,
       unsigned int index) const
     {
-        const auto& optimComponent = optimComponents_.at(component.Index());
+        const auto& optimComponent = optimComponents_.at(component.Id());
         return optimComponent.modelConstraintCounts.at(index);
     }
 
@@ -81,7 +82,7 @@ public:
 
 private:
     std::vector<unsigned int> variableStartColumn_;
-    std::vector<OptimComponent> optimComponents_;
+    std::unordered_map<std::string, OptimComponent> optimComponents_;
     LinearProblemApi::ILinearProblem& linearProblem_;
 };
 } // namespace Antares::Optimisation

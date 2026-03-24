@@ -109,7 +109,7 @@ Feature: hybrid (simulator+modeler) studies
   @fast @short
   Scenario: Thermal capacity connection: on one node (= area, thermal cluster = continuous_generator_candidate), one timestep and one scenario with two candidates: one continuous and one discrete..
 
-    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/13_2_thermal_add_on/"
+    Given the solver study path is "Antares_Simulator_Tests_NR/valid-milp/13_2_thermal_add_on/"
     When I run antares simulator with --named-mps-problems
 #    Then the simulation succeeds
 #    And the simulation takes less than 15 seconds
