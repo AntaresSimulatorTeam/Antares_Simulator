@@ -19,9 +19,6 @@ public:
     void writeTable(const std::filesystem::path& filePath,
                     const std::vector<std::string>& header,
                     const std::vector<std::vector<std::string>>& rows) override;
-
-private:
-    static std::string escape(const std::string& cell);
 };
 
 } // namespace Antares::Writer

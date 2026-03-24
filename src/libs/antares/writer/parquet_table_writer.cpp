@@ -21,9 +21,9 @@
 
 #include "parquet_table_writer.h"
 
-#include <stdexcept>
 #include <filesystem>
 #include <sstream>
+#include <stdexcept>
 
 // Arrow / Parquet
 #include <arrow/api.h>
@@ -33,6 +33,7 @@
 namespace Antares::Writer
 {
 
+// gp : not responsibility of a particular writer : we have the same check for csv writer
 static void ensureParentDir(const std::filesystem::path& file)
 {
     auto p = file.parent_path();
@@ -50,8 +51,13 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
 {
     // Basic validation
     if (header.empty())
+    {
         throw std::invalid_argument("ParquetTableWriter: header is empty");
+    }
 
+    // gp : check rows are well_formed before writing : not the mission of a writer, should be
+    // gp : checked before the writer is built. Besides, it does not depend on the writer (csv /
+    // gp : parquet).
     const size_t ncols = header.size();
     for (size_t r = 0; r < rows.size(); ++r)
     {
@@ -69,7 +75,7 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
     // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
     fields.reserve(static_cast<int>(ncols));
-    for (const auto& name : header)
+    for (const auto& name: header)
     {
         // Duplicate names are allowed by Arrow but discouraged; keep as-is.
         fields.push_back(arrow::field(name, arrow::utf8()));
@@ -83,7 +89,7 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
     for (size_t c = 0; c < ncols; ++c)
     {
         arrow::StringBuilder builder;
-        for (const auto& row : rows)
+        for (const auto& row: rows)
         {
             const std::string& cell = row[c];
             // Treat empty string as empty value, not null
@@ -91,8 +97,8 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
             if (!st.ok())
             {
                 std::ostringstream oss;
-                oss << "ParquetTableWriter: failed to append cell in column " << c
-                    << ": " << st.ToString();
+                oss << "ParquetTableWriter: failed to append cell in column " << c << ": "
+                    << st.ToString();
                 throw std::runtime_error(oss.str());
             }
         }
@@ -101,8 +107,8 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
         if (!st_fin.ok())
         {
             std::ostringstream oss;
-            oss << "ParquetTableWriter: failed to finalize column " << c
-                << ": " << st_fin.ToString();
+            oss << "ParquetTableWriter: failed to finalize column " << c << ": "
+                << st_fin.ToString();
             throw std::runtime_error(oss.str());
         }
         columns.push_back(std::move(array));
@@ -130,8 +136,11 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
     // Chunk size: write all at once or in default 1024; use total rows if small
     const int64_t chunk_size = std::max<int64_t>(1, std::min<int64_t>(1024, table->num_rows()));
 
-    auto st_write = parquet::arrow::WriteTable(*table, arrow::default_memory_pool(), outfile,
-                                               chunk_size, props);
+    auto st_write = parquet::arrow::WriteTable(*table,
+                                               arrow::default_memory_pool(),
+                                               outfile,
+                                               chunk_size,
+                                               props);
     if (!st_write.ok())
     {
         std::ostringstream oss;

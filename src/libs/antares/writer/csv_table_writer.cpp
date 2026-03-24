@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-std::string CsvTableWriter::escape(const std::string& cell)
+std::string escape(const std::string& cell)
 {
     bool needs_quotes = cell.find_first_of(",\n\r\t\"") != std::string::npos;
     if (!needs_quotes)
@@ -50,7 +50,7 @@ void CsvTableWriter::writeTable(const fs::path& filePath,
         {
             if (i)
                 out.put(',');
-            out << CsvTableWriter::escape(cols[i]);
+            out << escape(cols[i]);
         }
         out.put('\n');
     };

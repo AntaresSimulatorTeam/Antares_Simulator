@@ -28,6 +28,8 @@ void SimulationTableCsvFile::write()
     // Build table vectors
     std::vector<std::string> header;
     std::vector<std::vector<std::string>> rows;
+    // gp : Here we convert to row format, we don't "export". To be renamed.
+    // gp : Plus : this function should return the row format for more clarity.
     exportTable(header, rows);
 
     // Choose writer based on file extension
