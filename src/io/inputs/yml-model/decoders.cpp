@@ -191,16 +191,7 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::decode(
     {
         rhs.fields.push_back(field["id"].as<std::string>());
     }
-    if (!convertThermalCapacityField(node, rhs))
-    {
-        return false;
-    }
-    if (!convertAreaConnectionFields(node, rhs))
-    {
-        return false;
-    }
-
-    return true;
+    return convertThermalCapacityField(node, rhs) && convertAreaConnectionFields(node, rhs);
 }
 
 bool convert<Antares::IO::Inputs::YmlModel::Parameter>::decode(
