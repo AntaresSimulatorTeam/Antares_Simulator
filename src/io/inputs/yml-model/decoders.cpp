@@ -87,24 +87,19 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
     {
         const auto& marker = *maybeMarker;
         // compute unexpected = actual - allowed
-        std::vector<std::string> unexpected;
-        for (const auto& actual_field_local: marker.actualSet())
-        {
-            if (allowedFields.find(actual_field_local) == allowedFields.end())
+        auto diffSet = [](const std::unordered_set<std::string>& setA, const std::unordered_set<std::string>& setB) {
+            std::vector<std::string> diff;
+            for (const auto& item: setA)
             {
-                unexpected.push_back(actual_field_local);
+                if (setB.find(item) == setB.end())
+                {
+                    diff.push_back(item);
+                }
             }
-        }
-
-        // compute missing = allowed - actual
-        std::vector<std::string> missing;
-        for (const auto& allowed_field_local: allowedFields)
-        {
-            if (marker.actualSet().find(allowed_field_local) == marker.actualSet().end())
-            {
-                missing.push_back(allowed_field_local);
-            }
-        }
+            return diff;
+        };
+        const auto unexpected = diffSet(marker.actualSet(), allowedFields);
+        const auto missing = diffSet(allowedFields, marker.actualSet());
 
         const std::string markedFieldsTree = marker.buildMarkedTreeForUnexpectedAndMissing(
           unexpected,
