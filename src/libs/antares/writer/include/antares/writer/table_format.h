@@ -11,4 +11,4 @@ enum class TableFormat
     CSV,
     Parquet
 };
-}
+} // namespace Antares::Writer

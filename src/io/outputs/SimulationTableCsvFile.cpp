@@ -4,8 +4,8 @@
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 
 #include <antares/logs/logs.h>
-#include <antares/writer/table_writer_factory.h>
 #include <antares/writer/table_format.h>
+#include <antares/writer/table_writer_factory.h>
 
 namespace Antares::IO::Outputs
 {

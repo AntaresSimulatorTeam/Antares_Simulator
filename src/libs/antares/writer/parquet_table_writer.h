@@ -21,6 +21,7 @@
 #pragma once
 
 #include <stdexcept>
+
 #include "include/antares/writer/i_table_writer.h"
 #include "parquet_writer_export.h"
 

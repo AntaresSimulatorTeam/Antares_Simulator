@@ -90,7 +90,7 @@ void SimulationTableCsv::exportTable(std::vector<std::string>& header,
     {
         auto& outRow = rows[r];
         outRow.reserve(columns.size());
-        for (const auto& col : columns)
+        for (const auto& col: columns)
         {
             outRow.push_back(col->toString(r));
         }
