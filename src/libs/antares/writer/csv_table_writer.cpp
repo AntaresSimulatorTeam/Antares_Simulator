@@ -35,17 +35,19 @@ std::string escape(const std::string& cell)
     return out;
 }
 
-void write_line(std::ofstream& out, const std::vector<std::string>& cols)
+std::string make_line(const std::vector<std::string>& cols)
 {
+    std::string out;
     for (size_t i = 0; i < cols.size(); ++i)
     {
         if (i)
         {
-            out.put(',');
+            out += ',';
         }
-        out << escape(cols[i]);
+        out += escape(cols[i]);
     }
-    out.put('\n');
+    out+= '\n';
+    return out;
 };
 
 void CsvTableWriter::writeTable(const fs::path& filePath,
@@ -70,12 +72,12 @@ void CsvTableWriter::writeTable(const fs::path& filePath,
 
     if (!header.empty())
     {
-        write_line(out, header);
+        out << make_line(header);
     }
 
     for (const auto& r: rows)
     {
-        write_line(out, r);
+        out << make_line(r);
     }
 }
 
