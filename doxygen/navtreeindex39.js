@@ -1,7 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a010d69528b95fd6e9d32611d597f605d":[8,0,0,11,6,6,0,9,6],
-"structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a020057f73f46233b224a00499c7f32ab":[8,0,0,11,6,6,0,9,7],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a259a2d881d92d9432aa0133343e9a273":[8,0,0,11,6,6,0,9,3],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a622ac0eef11558ca6d7597d63495651f":[8,0,0,11,6,6,0,9,2],
 "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7eced0a5c80c17d3b3fd318d40662509":[8,0,0,11,6,6,0,9,9],
@@ -249,5 +247,7 @@ var NAVTREEINDEX39 =
 "structCommonFixture.html#a4f9e23bd2b1a51312d117fb7308b8a55":[8,0,57,6],
 "structCommonFixture.html#a63a6dca7ef2f76e7adf9c1de859b828d":[8,0,57,2],
 "structCommonFixture.html#a673cfdc1de1cd2460da44ec34ac86799":[8,0,57,5],
-"structCommonFixture.html#a7e857d7a36118588d9b0496d3e320fa2":[8,0,57,0]
+"structCommonFixture.html#a7e857d7a36118588d9b0496d3e320fa2":[8,0,57,0],
+"structCommonFixture.html#aa805477ed6aee7b227ba37f024d589ac":[8,0,57,1],
+"structCommonFixture.html#aab7556b97e8491a2c8698c82e2459272":[8,0,57,3]
 };

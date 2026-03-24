@@ -1,7 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#acf654917ca1d5e727121a5ef495e21e2":[8,0,0,11,6,4,100,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ade5f43e5f156f24ab8c7a8a0fa4b190e":[8,0,0,11,6,4,100,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ae0316c1641b6d9971a21b1cc36baafa9":[8,0,0,11,6,4,100,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#aee8895307cf06adb4e45df9cb070909e":[8,0,0,11,6,4,100,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#aef21c1b43f6701163f1dc0d2a564313c":[8,0,0,11,6,4,100,13],
@@ -249,5 +247,7 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html":[8,0,0,11,6,4,116],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html#a1365a19a27a5c5a7809eb195bb6b3b8d":[8,0,0,11,6,4,116,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html#a43a415531163b36409cfdede685a8f77":[8,0,0,11,6,4,116,6],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html#a57b41e69c8bd66ebe775dab928987c78":[8,0,0,11,6,4,116,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html#a57b41e69c8bd66ebe775dab928987c78":[8,0,0,11,6,4,116,7],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html#a595cdf57a82d99e0c37d40503a2078a0":[8,0,0,11,6,4,116,15],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy.html#a63df0d82a202a6d3de9d1e382ed9eae8":[8,0,0,11,6,4,116,2]
 };

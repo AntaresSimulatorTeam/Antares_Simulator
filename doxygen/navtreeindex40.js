@@ -1,7 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structCommonFixture.html#aa805477ed6aee7b227ba37f024d589ac":[8,0,57,1],
-"structCommonFixture.html#aab7556b97e8491a2c8698c82e2459272":[8,0,57,3],
 "structCommonFixture.html#abf9bdc1f6baaa402775a5479ef363c3d":[8,0,57,8],
 "structCommonFixture.html#ac429fdaa75158dfb6377334918c99c44":[8,0,57,7],
 "structComparisonFixture.html":[8,0,58],
@@ -249,5 +247,7 @@ var NAVTREEINDEX40 =
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a7c7c78743e9d95ece9ffec02351b78a0":[8,0,7,1,2],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a88656304f9d641395c44c458ab298c73":[8,0,7,1,9],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#acc8a14e426846c498830c1f157537b48":[8,0,7,1,3],
-"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#aecf0090b42e0b4c62545e8b444a78374":[8,0,7,1,1]
+"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#aecf0090b42e0b4c62545e8b444a78374":[8,0,7,1,1],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#afb432f7bf185d7fb86c75b4c97e67d66":[8,0,7,1,8],
+"structDuplicateFixture.html":[8,0,105]
 };

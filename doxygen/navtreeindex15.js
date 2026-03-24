@@ -1,7 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ad603fc24d59c893ba4e90ef930cce96f":[8,0,0,11,6,54,15],
-"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ae2aca29028eb0f59a5fd80df96b92f32":[8,0,0,11,6,54,13],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ae76e99bf2489e9c12e0e69f2a29dbc30":[8,0,0,11,6,54,2],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#aec0c82b48d9670836c7dd4531baec482":[8,0,0,11,6,54,14],
 "classAntares_1_1Solver_1_1Variable_1_1DynamicAggregationAllYears.html":[8,0,0,11,6,16],
@@ -249,5 +247,7 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a37fed7707edf654ae9b5809c4ccbe210":[8,0,0,11,6,4,50,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a5bdcf0cbcd660e46897d9fab6386c3bd":[8,0,0,11,6,4,50,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a644130b285b7c963c3f4cb0daf88a1b1":[8,0,0,11,6,4,50,18],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a69bce610e893b4c230dafcf53be4da15":[8,0,0,11,6,4,50,5]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a69bce610e893b4c230dafcf53be4da15":[8,0,0,11,6,4,50,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a7330693f1307b71e2ad57e84786507a8":[8,0,0,11,6,4,50,11],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a7b6daa98b58e50f769e12fafb1adf23f":[8,0,0,11,6,4,50,1]
 };

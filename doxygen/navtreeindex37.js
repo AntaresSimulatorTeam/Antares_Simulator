@@ -1,7 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[8,0,0,11,5,34],
-"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html#a876ea3f3d75c932d1e568cbfd0ccd141":[8,0,0,11,5,34,0],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[8,0,0,11,5,11],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a3cfaabf2ec52301ec164d66953252590":[8,0,0,11,5,11,0],
 "structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a73f94d610c09a9c2e287fda28f12b137":[8,0,0,11,5,11,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#a8e78abb773ac0495e6faea3812f3f77d":[8,0,0,11,6,4,69,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#abf030717b49d1bc5c612f9ffbd437db9":[8,0,0,11,6,4,69,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#aefe72102f3bfce0e85016f8a185396fc":[8,0,0,11,6,4,69,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html":[8,0,0,11,6,4,59]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html":[8,0,0,11,6,4,59],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#a76595bdd6c0f2e76f5c4294b4f485ed0":[8,0,0,11,6,4,59,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#aced4e0865cb18c815e20390897886ff5":[8,0,0,11,6,4,59,2]
 };

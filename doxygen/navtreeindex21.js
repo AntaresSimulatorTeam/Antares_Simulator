@@ -1,7 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html#ad6a9eceba6ecfd9a81f07604f1c65b09":[8,0,0,12,4,7],
-"classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html#ae7084bec543fa3700b134c34c9370400":[8,0,0,12,4,4],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html":[8,0,0,12,0,1],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html#a175b3adeb69892346cb5eaea5464e8cc":[8,0,0,12,0,1,0],
 "classAntares_1_1TSGenerator_1_1Predicate_1_1Load.html#a379825c576f1eccdd7d186c043584dbf":[8,0,0,12,0,1,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX21 =
 "classConstraintNamer.html#aeeeec53c733938b067735fc49a2882c2":[8,0,73,12],
 "classCsrAreaBalance.html":[8,0,85],
 "classCsrAreaBalance.html#a27a90676dc51c5667a14a8cbfb88e2dd":[8,0,85,1],
-"classCsrAreaBalance.html#adc9b6c39ac2c1ab26fd25267b011e850":[8,0,85,0]
+"classCsrAreaBalance.html#adc9b6c39ac2c1ab26fd25267b011e850":[8,0,85,0],
+"classCsrBindingConstraintHour.html":[8,0,87],
+"classCsrBindingConstraintHour.html#a792d159c0c24327da6f5266e671b1db0":[8,0,87,1]
 };

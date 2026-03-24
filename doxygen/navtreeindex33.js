@@ -1,7 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"libs_2fswalker_2job_8h_source.html":[9,0,0,4,1,2],
-"libs_2fswalker_2statistics_8h_source.html":[9,0,0,4,1,4],
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2linearProblem_8h_source.html":[9,0,0,7,0,0,0,0,0,5],
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipConstraint_8h_source.html":[9,0,0,7,0,0,0,0,0,8],
 "linear-problem-api_2include_2antares_2optimisation_2linear-problem-api_2mipSolution_8h_source.html":[9,0,0,7,0,0,0,0,0,9],
@@ -249,5 +247,7 @@ var NAVTREEINDEX33 =
 "opt__structure__probleme__a__resoudre_8h_source.html":[9,0,0,8,6,1,0,0,0,15],
 "opt__time__writer_8h_source.html":[9,0,0,8,8,0,0,0,0,12],
 "optimConfig_8h.html#a212e08571d583e009b56ee75c9e62a50":[7,0,0,14,1,1],
-"optimConfig_8h.html#a487ce8a7604f9a2b9716cbf6a2554ada":[7,0,0,14,1,3]
+"optimConfig_8h.html#a487ce8a7604f9a2b9716cbf6a2554ada":[7,0,0,14,1,3],
+"optimConfig_8h.html#a53d2c58bc0c80d21d146a3c3ec3bdce5":[7,0,0,14,1,0],
+"optimConfig_8h.html#a53d2c58bc0c80d21d146a3c3ec3bdce5a89a1533c37ec9254f22b5e0f29c9c0ff":[7,0,0,14,1,0,0]
 };

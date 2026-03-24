@@ -415,7 +415,6 @@ var namespaces_dup =
         [ "AreaLinksLoadFromFolder", "links_8cpp.html#a4c24e592fa1ae6a0c2f065307d0a83ed", null ],
         [ "areaLinksPostProcessLoadedLink", "links_8cpp.html#a092607ebc979d39b2c30d3999bb24307", null ],
         [ "AreaListAddFromNames", "study_2area_2list_8cpp.html#a73366c3dc97c520da68a09a5ce116995", null ],
-        [ "AreaListAddLink", "study_2area_2list_8cpp.html#a5d17455c0381550ef5a9780f57319e55", null ],
         [ "AreaListClearAllLinks", "libs_2antares_2study_2include_2antares_2study_2area_2area_8h.html#a7f700a21563ebd6e80d684c22d14d188", null ],
         [ "AreaListEnsureDataHydroPrepro", "study_2area_2list_8cpp.html#a3e192abe2a8eb7279dbc205c4e33c96b", null ],
         [ "AreaListEnsureDataHydroTimeSeries", "study_2area_2list_8cpp.html#a5b38ed65d78c097519a449b80755a665", null ],

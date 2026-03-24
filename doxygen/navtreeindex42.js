@@ -1,7 +1,5 @@
 var NAVTREEINDEX42 =
 {
-"structMyDummyFixture.html#adf8353bba45cd4aeb4f6fc527dcee020":[8,0,206,3],
-"structNbDispUnitsMinBoundSinceMinUpTimeData.html":[8,0,210],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html#a02f32d864d1d9fdf2addf08fdb2b3e5e":[8,0,210,2],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html#a7192fbd2b41e5a691cbd746431279147":[8,0,210,1],
 "structNbDispUnitsMinBoundSinceMinUpTimeData.html#a9bea088101603f5d94e925de2a6a74e0":[8,0,210,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX42 =
 "structRenewableClusterStudy.html":[8,0,257],
 "structRenewableClusterStudy.html#a13ff5c540803af4438d2f9d28163b905":[8,0,257,0],
 "structRenewableClusterStudy.html#a599566de6186e559ac293caedb427389":[8,0,257,1],
-"structSOLDE__MOYEN__DES__ECHANGES.html":[8,0,286]
+"structSOLDE__MOYEN__DES__ECHANGES.html":[8,0,286],
+"structSOLDE__MOYEN__DES__ECHANGES.html#a0f3289b3f05c7f6fcbec75786aa4e43d":[8,0,286,0],
+"structSTS__holder.html":[8,0,296]
 };
