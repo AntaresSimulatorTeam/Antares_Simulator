@@ -101,6 +101,7 @@ set(TARGET_LIBS #No alias
         modeler-optimisation-container
         expressions
         optim-model-filler
+		forbidden-nodes
         yml-system
         yml-model
         model-converter

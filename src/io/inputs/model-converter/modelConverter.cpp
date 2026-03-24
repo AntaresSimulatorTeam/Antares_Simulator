@@ -4,9 +4,10 @@
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
 #include <antares/expressions/iterators/pre-order.h>
-#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h> // gp : why do we need this inclusion ?
 #include "antares/expressions/expression.h"
-#include "antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodes.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
@@ -18,6 +19,7 @@
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::ForbidNodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
@@ -57,86 +59,6 @@ PortInDefinition::PortInDefinition(const std::string& portId, const std::string&
     std::runtime_error("In port-field-definitions, for port: " + portId
                        + " , found another port in the definition: " + portInDefId)
 {
-}
-
-static void CommonPreSolve(ForbiddenNodes& f)
-{
-    // constraint, objective and variable bounds should not contain dual or reduced_cost
-    f.forbidGlobally<FunctionNodeType::reduced_cost, FunctionNodeType::dual>();
-
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in max(...)
-    f.parentForbidsChild<FunctionNodeType::max, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::max, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::max, PortFieldSumNode>();
-
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in min(...)
-    f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::min, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::min, PortFieldSumNode>();
-
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in floor(node)
-    f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::floor, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::floor, PortFieldSumNode>();
-
-    // Forbid VariableNode, PortFieldNode, and PortFieldSumNode in ceil(node)
-    f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
-    f.parentForbidsChild<FunctionNodeType::ceil, PortFieldNode>();
-    f.parentForbidsChild<FunctionNodeType::ceil, PortFieldSumNode>();
-}
-
-static ForbiddenNodes ForbiddenInConstraint()
-{
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        CommonPreSolve(f);
-        f.forbidGlobally<PortFieldSumNode>();
-        return f;
-    }();
-    return forbidden;
-}
-
-static ForbiddenNodes ForbiddenInBindingConstraint()
-{
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        CommonPreSolve(f);
-        return f;
-    }();
-    return forbidden;
-}
-
-static ForbiddenNodes PreSolveNonConstraint()
-{
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        CommonPreSolve(f);
-        f.forbidGlobally<ComparisonNode,
-                         EqualNode,
-                         LessThanOrEqualNode,
-                         GreaterThanOrEqualNode,
-                         PortFieldSumNode>();
-        return f;
-    }();
-    return forbidden;
-}
-
-static ForbiddenNodes ForbiddenInExtraOutput()
-{
-    static ForbiddenNodes forbidden = []()
-    {
-        // Initialization code executed ONCE
-        ForbiddenNodes f;
-        // TODO check        //   f.forbidGlobally<PortFieldSumNode>();
-        return f;
-    }();
-    return forbidden;
 }
 
 static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::string& mode)
@@ -262,20 +184,19 @@ std::vector<Variable> convertVariables(const YmlModel::Model& model)
 {
     std::vector<Variable> variables;
     variables.reserve(model.variables.size());
-    const auto& forbiddenNodesInVarBounds = PreSolveNonConstraint();
 
     for (const auto& variable: model.variables)
     {
         Expression lb(variable.lower_bound, convertExpressionToNode(variable.lower_bound, model));
         if (lb.RootNode())
         {
-            ForbiddenNodesVisitor(forbiddenNodesInVarBounds, variable.lower_bound)
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.lower_bound)
               .dispatch(lb.RootNode());
         }
         Expression ub(variable.upper_bound, convertExpressionToNode(variable.upper_bound, model));
         if (ub.RootNode())
         {
-            ForbiddenNodesVisitor(forbiddenNodesInVarBounds, variable.upper_bound)
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.upper_bound)
               .dispatch(ub.RootNode());
         }
         variables.emplace_back(variable.id,
@@ -302,14 +223,14 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
     ports.reserve(model.ports.size());
     for (const auto& port: model.ports)
     {
-        const auto it = std::ranges::find_if(portTypes,
-                                             [&port](const auto& pt)
-                                             { return pt.Id() == port.type; });
-        if (it == portTypes.end())
+        const auto port_type = std::ranges::find_if(portTypes,
+                                                    [&port](const auto& pt)
+                                                    { return pt.Id() == port.type; });
+        if (port_type == portTypes.end())
         {
             throw PortTypeNotFound(port.id, port.type);
         }
-        ports.emplace_back(port.id, *it);
+        ports.emplace_back(port.id, *port_type);
     }
     return ports;
 }
@@ -321,7 +242,7 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
  * \return A vector of SystemModel::PortFieldDefinition objects.
  */
 std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Model& model,
-                                                             const std::vector<Port>& ports)
+                                                             std::vector<Port>& ports)
 {
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
@@ -359,28 +280,33 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
             throw PortInDefinition(pfdefinition.port,
                                    dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
-        ForbiddenNodesVisitor(PreSolveNonConstraint(), pfdefinition.definition)
+
+        ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
           .dispatch(nodeRegistry.node);
+
         portFieldDefinitions.emplace_back(*itPort,
                                           *itField,
                                           Expression(pfdefinition.definition,
                                                      std::move(nodeRegistry)));
+
+        // A definition for a port field means this field is a sender
+        itPort->setFieldRole(itField->Id(), FieldRole::Sender);
     }
     return portFieldDefinitions;
 }
 
-static void addSingleConstraint(std::vector<Constraint>& constraints,
-                                const YmlModel::Constraint& constraint,
-                                const YmlModel::Model& model,
-                                const ForbiddenNodes& forbiddenNodes)
+static Constraint createConstraint(const YmlModel::Constraint& constraint,
+                                   const YmlModel::Model& model,
+                                   const ForbiddenNodes& forbiddenNodes,
+                                   bool isBindingConstraint = false)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
     ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
-    constraints.emplace_back(constraint.id,
-                             Expression{constraint.expression, std::move(nodeRegistry)},
-                             convertLocation(constraint.location),
-                             convertOutOfBoundsProcessingMode(
-                               constraint.out_of_bounds_processing_mode));
+    return {constraint.id,
+            Expression{constraint.expression, std::move(nodeRegistry)},
+            convertLocation(constraint.location),
+            convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode),
+            isBindingConstraint};
 }
 
 /**
@@ -396,12 +322,13 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint, model, ForbiddenInConstraint());
+        constraints.push_back(createConstraint(constraint, model, forbiddenInConstraint));
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model, ForbiddenInBindingConstraint());
+        constraints.push_back(
+          createConstraint(constraint, model, forbiddenInBindingConstraint, true));
     }
     return constraints;
 }
@@ -420,7 +347,7 @@ std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
     for (const auto& extraOutput: model.extra_outputs)
     {
         auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
-        ForbiddenNodesVisitor(ForbiddenInExtraOutput(), extraOutput.expression)
+        ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression)
           .dispatch(nodeRegistry.node);
         extraOutputs.emplace_back(extraOutput.id,
                                   Expression{extraOutput.expression, std::move(nodeRegistry)});
@@ -441,7 +368,7 @@ std::vector<Objective> convertObjectives(const YmlModel::Model& model)
     for (const auto& objective: model.objectives)
     {
         auto nodeRegistry = convertExpressionToNode(objective.expression, model);
-        ForbiddenNodesVisitor(PreSolveNonConstraint(), objective.expression)
+        ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
           .dispatch(nodeRegistry.node);
         objectives.emplace_back(objective.id,
                                 Expression{objective.expression, std::move(nodeRegistry)},

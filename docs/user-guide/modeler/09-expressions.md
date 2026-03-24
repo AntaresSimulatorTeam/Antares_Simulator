@@ -20,7 +20,7 @@ mind that all these elements cannot be used in any kind of expression.
 It depends on the context of the expression inside the model.
 For instance, if the expression is used to define the **lower-bound** of a **variable**, it cannot contain a reference
 to any **variable**.
-For more precision see [Cases where elements can be used in expressions]
+For more precision see [Cases where elements can be used in expressions](#cases-where-elements-can-be-used-in-expressions)
 
 Here is the list of elements possibly composing an expression :
 
@@ -155,11 +155,19 @@ For scenario-dependent parameters, variables, and port fields, you can use this 
 
 You can aggregate incoming ports using the following operator :
 
-**sum_connections(port.field)** : where "port" is the port **id** and "field" is the field **id**, this operator
-computes the
+**sum_connections(port.field)**
+
+where "port" is the port **id** and "field" is the field **id**, this operator computes the
 sum of values of this port field, on all incoming connections from other models.  
 Note that the resulting sum can be time-dependent and/or scenario-dependent, depending on the port definition.
 
+Note that **sum_connections** operator is the only context where **port field** are used in receiver mode.
+
+When this operator is used in another context than **extra output**, expressions coming from connected sender **port field** 
+must be linear : they cannot contain operators such as **dual**, **reduced_cost**, **power**, **max**, **min**, **floor**, **ceil** (see further).
+
+In the context of **extra output**, there is no such restriction.
+  
 _Examples:_
 
 ~~~yaml
@@ -168,13 +176,17 @@ expression: sum_connections(dc_port.flow) = 0
 
 ### Dual operators
 
-In some cases, we need to access dual results of variables / constraints of the linear problem.
-Depending on the case, the dual unary operator is :
+By **dual operators**, we mean unary operators **dual** and **reduced_cost**.
+Any optimization problem supplies these 2 optimization results.
+So these 2 operators can only be used in expressions held in **extra output** context, either directly, 
+or indirectly through a connection between components, that is through a port field.
 
-- dual result of a **variable** whose id is **my_var** is accessed by **-reduced_cost(myVar)**
-- dual result of a **constraint** whose if is **my_constraint** is accessed by **dual(myConstraint)**
+Si, in some cases, we need to access the dual of a variable / constraint of the linear problem :
 
-Note that dual results can only used within an expression whose context is an extra output.
+- dual of a variable **my_var** is accessed by **-reduced_cost(myVar)**
+- dual of a constraint **my_constraint** is accessed by **dual(myConstraint)**
+
+Note that these 2 operators are non linear operators.
 
 _Exemple_ :
 
@@ -219,8 +231,8 @@ models:
 ### Floor and ceil operators
 
 The unary operators **floor(X)** and **ceil(X)** return, respectively, the greatest integer less
-than or equal to `X` and the smallest integer greater than or equal to `X`. When `X` is
- time-dependent (a parameter, variable, or port field with time dimension), the operators apply
+than or equal to `X` and the smallest integer greater than or equal to `X`. 
+When `X` is time-dependent (a parameter, variable, or port field with time dimension), the operators apply
 pointwise on the underlying time-series.
 
 In the context of a linear problem construction (any context but **extra-output**), the argument of
@@ -304,7 +316,7 @@ In following tables :
 
 - **L** means : only linear multiplication or division is allowed
 - **NL** means non linear multiplication or division is allowed
-- **NV** : the operator applies to non-variable elements only (that is literals and parameters).
+- **NV** : the operator applies to non-variable elements only (that is **literals** and **parameters**).
 
 ---
 
@@ -324,7 +336,7 @@ In following tables :
 | constraints             | ?        | no   | NV    | NV      | yes | yes       |       
 | binding-constraints     | ?        | no   | NV    | NV      | yes | yes       |     
 | objective-contributions | no       | no   | NV    | NV      | yes | no        |    
-| port-field-definitions  | ?        | no   | NV    | NV      | yes | yes       |   
+| port-field-definitions  | ?        | yes  | yes   | yes     | yes | yes       |   
 | variable bounds         | ?        | no   | NV    | NV      | yes | yes       |  
 | extra-output            | ?        | yes  | yes   | yes     | yes | yes       | 
 
@@ -338,6 +350,23 @@ In following tables :
 | port-field-definitions  | yes      | yes       | no   |
 | variable bounds         | no       | yes       | no   |
 | extra-output            | yes      | yes       | yes  |
+
+### Particular context : port-field-definition
+
+In previous tables, non-linear operators (**dual**, **reduced_cost**, **power**, **max**, **min**, **floor**, **ceil**) are forbidden 
+in expressions held in many contexts, but not in the **port-field-definitions** context.
+
+But it does mean there are no restriction on non linear operator in the context of **port-field-definition**,
+indeed :
+
+Defining a port field expression necessarily takes place in a component where the port field is use in **sender** mode : 
+the defined expression will be fetched from another connected component using the port field in receiver mode.
+
+If the receiver of the expression defined by a **port-field-definition** uses it in an **extra output** context,
+there is no restriction on this expression.
+Otherwise, it has to be linear, that is contain no non-linear operator. 
+
+
 
 
  

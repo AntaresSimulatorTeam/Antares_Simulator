@@ -8,9 +8,10 @@
 
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
-#include <antares/io/inputs/model-converter/ForbiddenNodes.h>
+#include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
+#include "antares/study/system-model/component.h"
 
-namespace Antares::IO::Inputs::ModelConverter
+namespace Antares::IO::Inputs::ForbidNodes
 {
 
 class ForbiddenNodeFound final: public std::invalid_argument
@@ -21,10 +22,11 @@ public:
                                 const std::string parent = "");
 };
 
-class ForbiddenNodesVisitor final: public Expressions::Visitors::NodeVisitor<void>
+class ForbiddenNodesVisitor: public Expressions::Visitors::NodeVisitor<void>
 {
 public:
     explicit ForbiddenNodesVisitor(const ForbiddenNodes& forbid, const std::string& expression);
+
     [[nodiscard]] std::string name() const override;
 
     void visit(const Expressions::Nodes::SumNode*) override;
@@ -60,10 +62,24 @@ private:
     void visitChildren(const Expressions::Nodes::ParentNode* node,
                        const std::type_index& nodeTypeId);
 
+protected:
     // Data members
     const ForbiddenNodes& forbiddenNodes_;
     std::vector<std::pair<std::string, std::type_index>> parentsStack_;
     const std::string& expression_;
 };
 
-} // namespace Antares::IO::Inputs::ModelConverter
+class ForbiddenNodesInComponentVisitor final: public ForbiddenNodesVisitor
+{
+public:
+    ForbiddenNodesInComponentVisitor(const ForbiddenNodes& forbid,
+                                     const std::string& expression,
+                                     const ModelerStudy::SystemModel::Component& component);
+
+    void visit(const Expressions::Nodes::PortFieldSumNode* portFieldSumNode) override;
+
+private:
+    const ModelerStudy::SystemModel::Component& component_;
+};
+
+} // namespace Antares::IO::Inputs::ForbidNodes

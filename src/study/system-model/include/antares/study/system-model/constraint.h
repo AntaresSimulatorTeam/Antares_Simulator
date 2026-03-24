@@ -26,9 +26,11 @@ public:
       std::string id,
       Expression expression,
       Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS,
-      OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC):
+      OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC,
+      bool isBindingConstraint = false):
         id_(std::move(id)),
         expression_(std::move(expression)),
+        isBindingConstraint_(isBindingConstraint),
         location_(location),
         outOfBoundsProcessingMode_(outOfBoundsProcessingMode)
     {
@@ -54,9 +56,15 @@ public:
         return outOfBoundsProcessingMode_;
     }
 
+    [[nodiscard]] bool isBindingConstraint() const
+    {
+        return isBindingConstraint_;
+    }
+
 private:
     std::string id_;
     Expression expression_;
+    bool isBindingConstraint_ = false;
     Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;
     OutOfBoundsProcessingMode outOfBoundsProcessingMode_ = OutOfBoundsProcessingMode::CYCLIC;
 };

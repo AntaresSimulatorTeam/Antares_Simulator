@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <sstream>
 
+#include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/logs/logs.h"
 #include "antares/study/system-model/connection.h"
@@ -13,6 +15,7 @@
 
 using namespace Antares::ModelerStudy;
 using namespace Antares::ModelerStudy::SystemModel; // Mainly for type ConnexionEnd
+using namespace Antares::IO::Inputs::ForbidNodes;
 
 namespace Antares::IO::Inputs::SystemConverter
 {
@@ -143,46 +146,24 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
-FieldRole ExposeFieldRole(const std::string& portId,
-                          const std::string& field,
-                          const PortFieldMap& portFieldDefinitions)
+ void CheckFieldsRoleCompatibility(const Component& component_1,
+                                         const Port& port_1,
+                                         const Component& component_2,
+                                         const Port& port_2)
 {
-    const auto& it = portFieldDefinitions.find(PortFieldKey{.portId = portId, .fieldId = field});
-    if (it == portFieldDefinitions.end())
+    for (const auto& field: port_1.Type().Fields())
     {
-        return FieldRole::Receiver;
-    }
-    return FieldRole::Sender;
-}
+        const auto portFieldRole_1 = port_1.fieldRole(field.Id());
+        const auto portFieldRole_2 = port_2.fieldRole(field.Id());
 
-std::pair<PortFieldsRole, PortFieldsRole> ResolveFieldsRole(const Component& firstComponent,
-                                                            const Port& firstPort,
-                                                            const Component& secondComponent,
-                                                            const Port& secondPort)
-{
-    PortFieldsRole firstPortFieldsRole;
-    PortFieldsRole secondPortFieldsRole;
-
-    const auto& firstPortDefs = firstComponent.getModel()->PortFieldDefinitions();
-    const auto& secondPortDefs = secondComponent.getModel()->PortFieldDefinitions();
-    for (const auto& field: firstPort.Type().Fields())
-    {
-        const auto firstPortFieldRole = ExposeFieldRole(firstPort.Id(), field.Id(), firstPortDefs);
-        const auto secondPortFieldRole = ExposeFieldRole(secondPort.Id(),
-                                                         field.Id(),
-                                                         secondPortDefs);
-
-        if (firstPortFieldRole == secondPortFieldRole)
+        if (portFieldRole_1 == portFieldRole_2)
         {
             std::ostringstream msg;
-            msg << "Field '" << field.Id() << "' is " << firstPortFieldRole << " in both ports '"
-                << firstPort.Id() << "' and '" << secondPort.Id() << "'";
+            msg << "Field '" << field.Id() << "' is " << portFieldRole_1 << " in both ports '"
+                << port_1.Id() << "' and '" << port_2.Id() << "'";
             throw TwoFieldsOfSameRole(msg.str());
         }
-        firstPortFieldsRole.emplace(field, firstPortFieldRole);
-        secondPortFieldsRole.emplace(field, secondPortFieldRole);
     }
-    return {std::move(firstPortFieldsRole), std::move(secondPortFieldsRole)};
 }
 
 /**
@@ -208,29 +189,24 @@ std::pair<PortFieldsRole, PortFieldsRole> ResolveFieldsRole(const Component& fir
  */
 void connectComponents(const YmlSystem::Connection& connection, std::vector<Component>& components)
 {
-    const auto& firstComponentId = connection.firstEntry.componentId;
-    const auto& firstPortId = connection.firstEntry.portId;
-    const auto& secondComponentId = connection.secondEntry.componentId;
-    const auto& secondPortId = connection.secondEntry.portId;
+    const auto& componentId_1 = connection.firstEntry.componentId;
+    const auto& portId_1 = connection.firstEntry.portId;
+    const auto& componentId_2 = connection.secondEntry.componentId;
+    const auto& portId_2 = connection.secondEntry.portId;
+    CheckPortSelfConnection(componentId_1, portId_1, componentId_2, portId_2);
 
-    CheckPortSelfConnection(firstComponentId, firstPortId, secondComponentId, secondPortId);
+    auto& component_1 = findComponent(componentId_1, components);
+    const auto& port_1 = component_1.findPort(portId_1, "");
+    auto& component_2 = findComponent(componentId_2, components);
+    const auto& port_2 = component_2.findPort(portId_2, "");
+    CheckPortsType(port_1, port_2);
 
-    auto& firstComponent = findComponent(firstComponentId, components);
-    const auto& firstPort = firstComponent.findPort(firstPortId, "");
-    auto& secondComponent = findComponent(secondComponentId, components);
-    const auto& secondPort = secondComponent.findPort(secondPortId, "");
-    CheckPortsType(firstPort, secondPort);
+    CheckFieldsRoleCompatibility(component_1, port_1, component_2, port_2);
 
-    const auto [firstPortFieldsRole, secondPortFieldsRole] = ResolveFieldsRole(firstComponent,
-                                                                               firstPort,
-                                                                               secondComponent,
-                                                                               secondPort);
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
-    firstComponent.addComponentConnection(firstPort.Id(),
-                                          ConnectionEnd(&secondComponent, &secondPort));
-    secondComponent.addComponentConnection(secondPort.Id(),
-                                           ConnectionEnd(&firstComponent, &firstPort));
+    component_1.addComponentConnection(port_1.Id(), ConnectionEnd(&component_2, &port_2));
+    component_2.addComponentConnection(port_2.Id(), ConnectionEnd(&component_1, &port_1));
 }
 
 /**
@@ -276,6 +252,28 @@ void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connecti
 
 } // anonymous namespace
 
+void checkForNonLinearityBehindConnections(const std::vector<Component>& components)
+{
+    // Now that connections are made between components, we need to check for
+    // linearity of binding constraints in the current component's model.
+    // Thus, if the constaints expressions hold a sum_connections(...) operator containing
+    // port field resolution, we have to make sure that, on the port field other side, only
+    // a linear expression is found.
+    auto filterBC = std::views::filter([](const auto& c) { return c.isBindingConstraint(); });
+    for (const auto& component: components)
+    {
+        // We only consider binding constraints.
+        for (const auto& binding_constraint: component.getModel()->Constraints() | filterBC)
+        {
+            const auto& expression = binding_constraint.expression();
+            ForbiddenNodesInComponentVisitor visitor(forbidNonLinearNodes,
+                                                     expression.Value(),
+                                                     component);
+            visitor.dispatch(expression.RootNode());
+        }
+    }
+}
+
 System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& libraries)
 {
     // Create components from system
@@ -300,6 +298,8 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
                      << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
+
+    checkForNonLinearityBehindConnections(components);
 
     // Create area connections from system
     for (const auto& connection: ymlSystem.areaConnections)

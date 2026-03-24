@@ -1,0 +1,81 @@
+# Copyright (c) 2024, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+
+#-----------------------------------------------------------------------------------------
+# Study case 10_6 : be able to compute the income of a thermal cluster
+#-----------------------------------------------------------------------------------------
+# Small test case with one node (1 thermal cluster, 1 one load)
+#
+# To achieve this goal, we need to compute (for a thermal cluster) : 
+#     sum_on_connections(dual(balance)) - cluster generation cost
+# where 'balance' is a balance constraint located in another area component, connected 
+# to the thermal cluster through a port.
+#
+# More precisely, we need to compute : 
+#     sum_connections(balance_port.price) 
+# inside the thermal cluster, where balance_port is a port shared between the thermal cluster 
+# and the area holding the balance constaint.
+#
+# Expected results :
+# As there is only one thermal cluster to satisfy the load, and this cluster is powerful 
+# enough for this, dual(balance) is exactly the cluster's generation cost.
+# So the quantity balance_port.price (= dual(balance)) is the cluster generation cost,
+# and the income of the cluster equals 0.
+
+system:
+  id: case_10_6
+  description: One timestep problem
+  components:
+    - id: base_zone
+      model: library-eo.area
+      parameters:
+      - id: spillage_cost
+        time-dependent: false
+        scenario-dependent: false
+        value: 10000
+      - id: ens_cost
+        time-dependent: false
+        scenario-dependent: false
+        value: 20000
+
+    - id: load_base_zone
+      model: library-eo.load
+      parameters:
+        - id: load_value
+          time-dependent: false
+          scenario-dependent: false
+          value : 90
+
+    - id: gas_base_zone
+      model: library-eo.simple_gen
+      parameters:
+        - id: p_max_cluster
+          scenario-dependent: false 
+          time-dependent: false
+          value: 100
+        - id: generation_cost
+          scenario-dependent: false 
+          time-dependent: false
+          value: 10
+
+  connections:
+    - component1: base_zone
+      port1: balance_port
+      component2: load_base_zone
+      port2: balance_port
+
+    - component1: base_zone
+      port1: balance_port
+      component2: gas_base_zone
+      port2: balance_port
+

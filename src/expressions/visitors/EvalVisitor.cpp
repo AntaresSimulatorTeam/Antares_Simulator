@@ -136,6 +136,10 @@ EvaluationResult EvalVisitor::visit(const Nodes::NegationNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::PortFieldNode* node)
 {
+    // gp : what's the point of this function ?
+    // gp : indeed, it seems that, considering function visit below
+    // gp : (visit(const Nodes::PortFieldSumNode* node)), we never call the current function.
+    // gp : in this case, it should be empty, at least to make it clear it's dead code.
     std::string portId = node->getPortName();
     std::string fieldId = node->getFieldName();
 
