@@ -30,9 +30,9 @@ public:
       bool isBindingConstraint = false):
         id_(std::move(id)),
         expression_(std::move(expression)),
+        isBindingConstraint_(isBindingConstraint),
         location_(location),
-        outOfBoundsProcessingMode_(outOfBoundsProcessingMode),
-        isBindingConstraint_(isBindingConstraint)
+        outOfBoundsProcessingMode_(outOfBoundsProcessingMode)
     {
     }
 
