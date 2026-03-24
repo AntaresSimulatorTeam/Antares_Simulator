@@ -56,7 +56,7 @@ public:
         return outOfBoundsProcessingMode_;
     }
 
-    bool isBindingConstraint() const
+    [[nodiscard]] bool isBindingConstraint() const
     {
         return isBindingConstraint_;
     }
