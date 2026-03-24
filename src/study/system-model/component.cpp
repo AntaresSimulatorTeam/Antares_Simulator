@@ -301,12 +301,6 @@ ComponentBuilder& ComponentBuilder::withModel(const Model* model)
     return *this;
 }
 
-ComponentBuilder& ComponentBuilder::withIndex(unsigned int index)
-{
-    data_.index = index;
-    return *this;
-}
-
 /**
  * \brief Sets the parameter values of the component. The parameters included should be all of the
  * model's parameters.

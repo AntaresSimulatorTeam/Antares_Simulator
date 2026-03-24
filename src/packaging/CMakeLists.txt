@@ -23,7 +23,8 @@ set(TARGET_LIBS #No alias
         array
         date
         inifile
-        StudyUtils
+        study-utils
+		vector-utils
         utils
         correlation
         path

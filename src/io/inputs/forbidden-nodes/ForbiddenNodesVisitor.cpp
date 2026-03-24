@@ -34,14 +34,13 @@ ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbiddenNode
 {
 }
 
-// Constructor called to check expressions after component were built, so we have access to the
-// component and its ports fields definitions.
-ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbid,
-                                             const std::string& expression,
-                                             const ModelerStudy::SystemModel::Component* component):
-    ForbiddenNodesVisitor::ForbiddenNodesVisitor(forbid, expression)
+ForbiddenNodesInComponentVisitor::ForbiddenNodesInComponentVisitor(
+  const ForbiddenNodes& forbid,
+  const std::string& expression,
+  const ModelerStudy::SystemModel::Component& component):
+    ForbiddenNodesVisitor(forbid, expression),
+    component_(component)
 {
-    component_ = component;
 }
 
 std::string ForbiddenNodesVisitor::name() const
@@ -118,31 +117,29 @@ void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
 
 void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
-    if (component_)
+    // keep empty
+}
+
+void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSumNode)
+{
+    const std::string localPortId = portFieldSumNode->getPortName();
+    const std::string fieldId = portFieldSumNode->getFieldName();
+
+    for (const auto connectionEnd: component_.componentConnectionsViaPort(localPortId))
     {
-        std::string localPortId = portFieldSumNode->getPortName();
-        std::string fieldId = portFieldSumNode->getFieldName();
+        auto* connectedComponent = connectionEnd.component();
+        auto* connectedPort = connectionEnd.port();
 
-        for (const auto connectionEnd: component_->componentConnectionsViaPort(localPortId))
-        {
-            auto* connectedComponent = connectionEnd.component();
-            auto* connectedPort = connectionEnd.port();
+        // Expression (as a string) at connected port field
+        const auto expr_str = connectedComponent
+                                ->expressionAtPortField(connectedPort->Id(), fieldId)
+                                .Value();
+        // Expression (as a root node) at connected port field
+        const auto* nodeToVisit = connectedComponent->nodeAtPortField(connectedPort->Id(), fieldId);
 
-            // Expression (as a string) at connected port field
-            const auto expr_str = connectedComponent
-                                    ->expressionAtPortField(connectedPort->Id(), fieldId)
-                                    .Value();
-            // Expression (as a root node) at connected port field
-            const auto* nodeToVisit = connectedComponent->nodeAtPortField(connectedPort->Id(),
-                                                                          fieldId);
-
-            ForbiddenNodesVisitor visitor(forbiddenNodes_, expr_str);
-            visitor.dispatch(nodeToVisit);
-        }
-        return;
+        ForbiddenNodesVisitor visitor(forbiddenNodes_, expr_str);
+        visitor.dispatch(nodeToVisit);
     }
-
-    checkIsForbidden(portFieldSumNode, typeIndexOf<PortFieldSumNode>());
 }
 
 void ForbiddenNodesVisitor::visit(const TimeShiftNode* timeShiftNode)

@@ -7,6 +7,9 @@
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-help.h"
+#include "antares/utils/vector-utils.h"
+
+using namespace Antares::Utils;
 
 constexpr unsigned maxNbLoops = 1000;
 const std::string shave_peak_remix_storage_error_msg_start = "Remix storage input : ";

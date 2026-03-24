@@ -4,6 +4,7 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 10.0.x
 ### 10.0.0
 
 #### Major changes
@@ -77,6 +78,16 @@ toc_depth: 2
 * Update simtest (#3415)
 * Fix compilation warnings (#3401, #3491)
 * Fix failure of sonar scans due to disk space limitation (#3495, #3497)
+
+## Branch 9.3.x
+
+### 9.3.8
+
+#### Bugfixes
+* Fix dynamic district aggregation (#3429)
+* Fix digest [ANT-4630] (#3455)
+* 9.3 Add constraint fictitious load to adq patch [ANT-4365] (#3487)
+* 9.3 Add short-term storage prod to fictitious load [ANT-3739] (#3486)
 
 ### 9.3.7
 
@@ -1032,6 +1043,18 @@ collectRemixDebugInfo (#3278)
 * Fix invalid index causing segfault in `test-study` test (#1902)
 
 ## Branch 8.8.x (end of support 12/2025)
+
+### 8.8.20
+
+#### Bugfixes
+* Add 2 constraints in adq patch [ANT-4365] (#3409)
+* Add short-term storage prod to constraint fictitious load (#3446)
+
+### 8.8.19
+
+#### Bugfixes
+* Fix infeasability in hydro heuristic with mingen [ANT-3755] (#3152)
+* Don't throw an error for empty reservoir [ANT-4212] (#3291)
 
 ### 8.8.18 (08/2025)
 

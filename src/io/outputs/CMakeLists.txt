@@ -32,7 +32,7 @@ target_link_libraries(modeler-simulation-table
         Antares::optim-model-filler
         Antares::antares-study-system-model
         Antares::modeler-lib
-        Antares::utils
+        Antares::study-utils
         PRIVATE
         Antares::exception
 )
