@@ -22,7 +22,7 @@ jobs:
       #config in env to be accessible at each step
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
-      CCACHE_SLOPPINESS: time_macros,include_file_mtime
+      CCACHE_SLOPPINESS: time_macros,include_file_mtime,include_file_ctime
       PYTHON_VERSION: "3.12"
 
     steps:
@@ -68,6 +68,7 @@ jobs:
         ccache --set-config=compression=true
         ccache --show-config || true
         ccache -p
+        ccache -z
       shell: bash
 
     - name: Install Build Wrapper
