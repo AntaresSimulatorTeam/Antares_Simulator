@@ -129,7 +129,7 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
           marker.baseTree(),
           markedFieldsTree);
 
-        throw KeyNotFound(node.Mark(), message);
+        throw Exception(node.Mark(), message);
     }
 }
 
