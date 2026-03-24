@@ -87,7 +87,9 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
     {
         const auto& marker = *maybeMarker;
         // compute unexpected = actual - allowed
-        auto diffSet = [](const std::unordered_set<std::string>& setA, const std::unordered_set<std::string>& setB) {
+        auto diffSet = [](const std::unordered_set<std::string>& setA,
+                          const std::unordered_set<std::string>& setB)
+        {
             std::vector<std::string> diff;
             for (const auto& item: setA)
             {

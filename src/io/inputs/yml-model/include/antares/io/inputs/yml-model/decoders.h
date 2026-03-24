@@ -91,8 +91,7 @@ struct convert<Antares::IO::Inputs::YmlModel::Port>
 template<>
 struct convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>
 {
-    static bool decode(const Node& node,
-                       Antares::IO::Inputs::YmlModel::PortFieldDefinition& rhs);
+    static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortFieldDefinition& rhs);
 };
 
 template<>
