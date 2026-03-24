@@ -34,6 +34,18 @@ BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
     BOOST_CHECK(libraryObj.models.empty());
 }
 
+BOOST_AUTO_TEST_CASE(library_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            description: "test_description"
+            port-types: []
+            models: []
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YmlModel::LibraryIdNotDefined);
+}
+
 // Test library with id and description
 BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
 {

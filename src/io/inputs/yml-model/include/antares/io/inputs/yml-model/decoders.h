@@ -49,8 +49,9 @@ std::optional<YmlMapMarker> checkKeysIfMap(
 void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields);
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::PortType>
+class convert<Antares::IO::Inputs::YmlModel::PortType>
 {
+public:
     static bool convertAreaConnectionFields(const Node& node,
                                             Antares::IO::Inputs::YmlModel::PortType& rhs);
     static bool convertThermalCapacityField(const Node& node,
@@ -59,62 +60,72 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::Library>
+class convert<Antares::IO::Inputs::YmlModel::Library>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Library& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::Parameter>
+class convert<Antares::IO::Inputs::YmlModel::Parameter>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Parameter& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::ValueType>
+class convert<Antares::IO::Inputs::YmlModel::ValueType>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::ValueType& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::Variable>
+class convert<Antares::IO::Inputs::YmlModel::Variable>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Variable& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::Port>
+class convert<Antares::IO::Inputs::YmlModel::Port>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Port& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>
+class convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::PortFieldDefinition& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::Constraint>
+class convert<Antares::IO::Inputs::YmlModel::Constraint>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Constraint& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::ExtraOutput>
+class convert<Antares::IO::Inputs::YmlModel::ExtraOutput>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::ExtraOutput& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::Objective>
+class convert<Antares::IO::Inputs::YmlModel::Objective>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Objective& rhs);
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlModel::Model>
+class convert<Antares::IO::Inputs::YmlModel::Model>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlModel::Model& rhs);
 };
 } // namespace YAML

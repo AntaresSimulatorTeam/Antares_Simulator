@@ -79,8 +79,7 @@ const Model& getModel(const std::vector<Library>& libraries,
     return search->second;
 }
 
-static Component createComponent(const YmlSystem::Component& c,
-                                 const std::vector<Library>& libraries)
+Component createComponent(const YmlSystem::Component& c, const std::vector<Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 

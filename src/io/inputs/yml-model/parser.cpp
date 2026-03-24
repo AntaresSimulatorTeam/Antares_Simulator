@@ -8,6 +8,10 @@
 
 namespace Antares::IO::Inputs::YmlModel
 {
+LibraryIdNotDefined::LibraryIdNotDefined():
+    std::runtime_error("Library id is not defined")
+{
+}
 
 namespace
 {
@@ -74,7 +78,7 @@ Library Parser::parse(const std::string& content)
         }
         else
         {
-            throw std::runtime_error("Library id is not defined");
+            throw LibraryIdNotDefined();
         }
     }
     auto library = root["library"].as<Library>();
