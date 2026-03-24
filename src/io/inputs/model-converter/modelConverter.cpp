@@ -297,19 +297,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
 
 static Constraint createConstraint(const YmlModel::Constraint& constraint,
                                    const YmlModel::Model& model,
-                                   const ForbiddenNodes& forbiddenNodes)
-{
-    auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
-    ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
-    return {constraint.id,
-            Expression{constraint.expression, std::move(nodeRegistry)},
-            convertLocation(constraint.location),
-            convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode)};
-}
-
-static Constraint createBindingConstraint(const YmlModel::Constraint& constraint,
-                                          const YmlModel::Model& model,
-                                          const ForbiddenNodes& forbiddenNodes)
+                                   const ForbiddenNodes& forbiddenNodes,
+                                   bool isBindingConstraint = false)
 {
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
     ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
@@ -317,7 +306,7 @@ static Constraint createBindingConstraint(const YmlModel::Constraint& constraint
             Expression{constraint.expression, std::move(nodeRegistry)},
             convertLocation(constraint.location),
             convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode),
-            true /* isBindingConstraint */};
+            isBindingConstraint};
 }
 
 /**
@@ -339,7 +328,7 @@ std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
     for (const auto& constraint: model.binding_constraints)
     {
         constraints.push_back(
-          createBindingConstraint(constraint, model, forbiddenInBindingConstraint));
+          createConstraint(constraint, model, forbiddenInBindingConstraint, true));
     }
     return constraints;
 }
