@@ -35,6 +35,19 @@ std::string escape(const std::string& cell)
     return out;
 }
 
+void write_line(std::ofstream& out, const std::vector<std::string>& cols)
+{
+    for (size_t i = 0; i < cols.size(); ++i)
+    {
+        if (i)
+        {
+            out.put(',');
+        }
+        out << escape(cols[i]);
+    }
+    out.put('\n');
+};
+
 void CsvTableWriter::writeTable(const fs::path& filePath,
                                 const std::vector<std::string>& header,
                                 const std::vector<std::vector<std::string>>& rows)
@@ -55,27 +68,14 @@ void CsvTableWriter::writeTable(const fs::path& filePath,
         throw std::runtime_error("CsvTableWriter: cannot open output file: " + filePath.string());
     }
 
-    auto write_line = [&out](const std::vector<std::string>& cols)
-    {
-        for (size_t i = 0; i < cols.size(); ++i)
-        {
-            if (i)
-            {
-                out.put(',');
-            }
-            out << escape(cols[i]);
-        }
-        out.put('\n');
-    };
-
     if (!header.empty())
     {
-        write_line(header);
+        write_line(out, header);
     }
 
     for (const auto& r: rows)
     {
-        write_line(r);
+        write_line(out, r);
     }
 }
 
