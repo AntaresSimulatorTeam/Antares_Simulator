@@ -63,7 +63,7 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
         {
             std::string begin = token.substr(0, pos);
             std::string end = token.substr(pos + 1);
-            pairs.push_back({begin, end});
+            pairs.emplace_back(begin, end);
         }
         else
         {
