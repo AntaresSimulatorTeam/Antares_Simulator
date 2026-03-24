@@ -9,9 +9,17 @@
 #include "antares/io/inputs/yml-model/parser.h"
 #include "antares/study/system-model/library.h"
 
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
+// clang-format on
+
 using namespace std::string_literals;
 using namespace Antares::IO::Inputs;
 using namespace Antares::ModelerStudy;
+using namespace Antares::IO::Inputs::ForbidNodes;
 
 BOOST_AUTO_TEST_SUITE(readYamlInput)
 // This yaml lib contains only a port type.
@@ -372,4 +380,85 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connectivity)
     BOOST_CHECK_EQUAL(thermalConnection.areaId, "fr");
     BOOST_CHECK_EQUAL(thermalConnection.clusterId, "nuclear1");
 }
+
+BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___exception_raised)
+{
+    // This library defines :
+    // - a port field defintion with a non linear expressions in a model
+    // - a binding constraint trying to reach the previous non-linear expression via a port.
+    const auto yml_lib = R"(
+      library:
+        id: my_lib
+        description: whatever
+      
+        port-types:
+          - id: transfering_expression
+            description: A port to transfer a non linear expression
+            fields:
+              - id: my_field
+      
+        models:
+          - id: area
+            variables:
+              - id: var_1
+                lower-bound: 0
+                upper-bound: 1
+                variable-type: continuous
+              - id: var_2
+                lower-bound: 0
+                upper-bound: 1
+                variable-type: continuous
+            ports:
+              - id: convey_non_linear_expr
+                type: transfering_expression
+            port-field-definitions:
+              - port: convey_non_linear_expr
+                field: my_field
+                definition: dual(my_constraint)
+            binding-constraints:
+              - id: my_constraint
+                expression: var_1 - var_2 = 0
+      
+          - id: some_model
+            ports:
+              - id: convey_non_linear_expr
+                type: transfering_expression
+            binding-constraints:
+              - id: my_other_constraint
+                expression: sum_connections(convey_non_linear_expr.my_field) # Forbidden ==> causes a failure
+    )";
+
+    // This system defines 2 components from previous models, and connects them through a port
+    // field.
+    const auto yml_system = R"(
+      system:
+        id: some system
+        description: whatever
+        components:
+          - id: my_area
+            model: my_lib.area
+      
+          - id: model_instance
+            model: my_lib.some_model
+      
+        connections:
+          - component1: my_area
+            port1: convey_non_linear_expr
+            component2: model_instance
+            port2: convey_non_linear_expr
+    )";
+
+    YmlModel::Parser parserModel;
+    std::vector<SystemModel::Library> libraries;
+    libraries.push_back(ModelConverter::convert(parserModel.parse(yml_lib)));
+
+    YmlSystem::Parser parserSystem;
+    YmlSystem::System system = parserSystem.parse(yml_system);
+
+    std::string err_msg = "'FunctionNode::dual' is not allowed in expression 'dual(my_constraint)'";
+    BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
+                          ForbiddenNodeFound,
+                          checkMessage(err_msg));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

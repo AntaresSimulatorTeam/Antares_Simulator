@@ -46,7 +46,8 @@ private:
 
     void addTimeDependentConstraints(const LinearConstraint& linear_constraints,
                                      const std::string& constraint_id,
-                                     const LinearProblemApi::FillContext& ctx) const;
+                                     const LinearProblemApi::FillContext& ctx,
+                                     const ModelerStudy::SystemModel::Constraint& constraint) const;
 
     void addStaticObjective(const Optimization::LinearExpression& expression) const;
 

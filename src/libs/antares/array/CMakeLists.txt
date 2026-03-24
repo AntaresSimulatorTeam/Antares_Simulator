@@ -15,7 +15,7 @@ target_link_libraries(array
         io #matrix.hxx
         jit #jit.hxx require logs
         Antares::memory
-        Antares::utils
+        Antares::study-utils
 )
 
 target_include_directories(array

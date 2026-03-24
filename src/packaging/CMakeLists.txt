@@ -23,7 +23,8 @@ set(TARGET_LIBS #No alias
         array
         date
         inifile
-        StudyUtils
+        study-utils
+		vector-utils
         utils
         correlation
         path
@@ -101,6 +102,7 @@ set(TARGET_LIBS #No alias
         modeler-optimisation-container
         expressions
         optim-model-filler
+		forbidden-nodes
         yml-system
         yml-model
         model-converter

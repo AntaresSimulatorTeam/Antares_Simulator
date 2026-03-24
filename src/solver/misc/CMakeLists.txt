@@ -23,7 +23,7 @@ target_link_libraries(${PROJ}
         PRIVATE
         Antares::logs
         Antares::exception
-        Antares::utils
+        Antares::study-utils
         PUBLIC
         yuni-static-core
         Antares::study

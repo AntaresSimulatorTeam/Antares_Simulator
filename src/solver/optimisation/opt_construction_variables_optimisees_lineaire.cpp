@@ -26,7 +26,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            variableManager.DirectFlux(interco, pdt) = NombreDeVariables;
+            variableManager.DirectFlow(interco, pdt) = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
 
             const auto origin = problemeHebdo->NomsDesPays
@@ -34,20 +34,20 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             const auto destination = problemeHebdo->NomsDesPays
                                        [problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
             variableNamer.updateExtremities(origin, destination);
-            variableNamer.DirectFlux(NombreDeVariables);
+            variableNamer.DirectFlow(NombreDeVariables);
             NombreDeVariables++;
 
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
-                variableManager.DirectFluxPositif(interco, pdt) = NombreDeVariables;
+                variableManager.PositiveDirectFlow(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.DirectFluxPositif(NombreDeVariables);
+                variableNamer.PositiveDirectFlow(NombreDeVariables);
                 NombreDeVariables++;
-                variableManager.IndirectFluxPositif(interco, pdt) = NombreDeVariables;
+                variableManager.PositiveIndirectFlow(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IndirectFluxPositif(NombreDeVariables);
+                variableNamer.PositiveIndirectFlow(NombreDeVariables);
                 NombreDeVariables++;
             }
         }

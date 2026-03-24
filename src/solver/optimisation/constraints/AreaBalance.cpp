@@ -29,14 +29,14 @@ void AreaBalance::add(int pdt, int pays)
     int interco = data.IndexDebutIntercoOrigine[pays];
     while (interco >= 0)
     {
-        builder.DirectFlux(interco, 1.0);
+        builder.DirectFlow(interco, 1.0);
         interco = data.IndexSuivantIntercoOrigine[interco];
     }
 
     interco = data.IndexDebutIntercoExtremite[pays];
     while (interco >= 0)
     {
-        builder.DirectFlux(interco, -1.0);
+        builder.DirectFlow(interco, -1.0);
         interco = data.IndexSuivantIntercoExtremite[interco];
     }
 

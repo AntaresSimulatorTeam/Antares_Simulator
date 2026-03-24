@@ -142,18 +142,47 @@ void updateSystemModel(YmlModel::Model& model, const Model& optimConfigModel)
     update(model.objectives, optimConfigModel.objectives, "objective");
 }
 
-void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
-                                    const OptimConfig& ymlOptimConfig)
+namespace
 {
-    for (const auto& optimConfigModel: ymlOptimConfig.models)
+std::string normalizeOutOfBoundsProcessingMode(const std::string& mode)
+{
+    if (mode.empty() || mode == "cyclic")
     {
-        auto& model = fetchModelInLibrairies(optimConfigModel, ymlLibs);
-        updateSystemModel(model, optimConfigModel);
+        return "cyclic";
+    }
+    if (mode == "drop")
+    {
+        return "drop";
+    }
+    throw Error::InvalidArgumentError(
+      fmt::format("Invalid out-of-bounds processing mode in optim-config.yaml: {}", mode));
+}
+
+void updateConstraintOutOfBoundsProcessing(YmlModel::Model& model, const Model& optimConfigModel)
+{
+    for (const auto& ymlOptCfg: optimConfigModel.constraints_out_of_bounds_processing)
+    {
+        auto predicate = [&ymlOptCfg](const auto& v) { return v.id == ymlOptCfg.id; };
+        auto element = std::ranges::find_if(model.constraints, predicate);
+        if (element != model.constraints.end())
+        {
+            element->out_of_bounds_processing_mode = normalizeOutOfBoundsProcessingMode(
+              ymlOptCfg.mode);
+            continue;
+        }
+
+        auto bindingConstraint = std::ranges::find_if(model.binding_constraints, predicate);
+        if (bindingConstraint != model.binding_constraints.end())
+        {
+            bindingConstraint->out_of_bounds_processing_mode = normalizeOutOfBoundsProcessingMode(
+              ymlOptCfg.mode);
+            continue;
+        }
+
+        throw Error::InvalidArgumentError("No constraint '" + ymlOptCfg.id + "' found.");
     }
 }
 
-namespace
-{
 Solver::ResolutionMode convertResolutionMode(std::string ymlMode)
 {
     if (ymlMode == "benders-decomposition")
@@ -168,6 +197,17 @@ Solver::ResolutionMode convertResolutionMode(std::string ymlMode)
       fmt::format("Invalid resolution mode in optim-config.yaml: {}", ymlMode));
 }
 } // namespace
+
+void updateLibrariesWithOptimConfig(std::vector<YmlModel::Library>& ymlLibs,
+                                    const OptimConfig& ymlOptimConfig)
+{
+    for (const auto& optimConfigModel: ymlOptimConfig.models)
+    {
+        auto& model = fetchModelInLibrairies(optimConfigModel, ymlLibs);
+        updateSystemModel(model, optimConfigModel);
+        updateConstraintOutOfBoundsProcessing(model, optimConfigModel);
+    }
+}
 
 std::optional<std::pair<std::vector<SystemModel::Library>, ResolutionMode>> loadLibraries(
   const fs::path& studyPath)

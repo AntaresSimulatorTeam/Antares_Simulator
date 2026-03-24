@@ -8,6 +8,7 @@ set(SRC_optim_model_filler
         LinearExpression.cpp
         TimeDependentLinearExpression.cpp
         Dimensions.cpp
+        outOfBoundsTimeShift.cpp
         include/antares/solver/optim-model-filler/BendersDecomposition.h
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
@@ -16,6 +17,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/Dimensions.h
         include/antares/solver/optim-model-filler/LinearExpression.h
         include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
+        include/antares/solver/optim-model-filler/outOfBoundsTimeShift.h
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})
