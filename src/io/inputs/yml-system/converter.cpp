@@ -271,8 +271,8 @@ void checkForNonLinearityBehindConnections(const std::vector<Component>& compone
         for (const auto& binding_constraint: component.getModel()->Constraints() | filterBC)
         {
             const auto& expression = binding_constraint.expression();
-            Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitorWithComponent visitor(
-                forbidNonLinearNodes, expression.Value(), component);
+            Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitorWithComponent
+              visitor(forbidNonLinearNodes, expression.Value(), component);
             visitor.dispatch(expression.RootNode());
         }
     }
