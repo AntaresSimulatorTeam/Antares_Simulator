@@ -77,6 +77,7 @@ jobs:
     - name: Install libraries
       run: |
         sudo apt-get update
+        sudo apt-get install ninja-build lld
         sudo apt-get install uuid-dev
         sudo apt-get install libboost-test-dev
 
@@ -131,9 +132,12 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -B _build -S src \
+        cmake -G Ninja -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS="-fuse-ld=lld" \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCODE_COVERAGE=ON \
