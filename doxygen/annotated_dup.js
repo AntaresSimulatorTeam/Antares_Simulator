@@ -229,6 +229,12 @@ var annotated_dup =
           [ "DataSeriesCsvImporter", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html", [
             [ "DataSeriesRepoImporter", "classAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter_1_1DataSeriesRepoImporter.html", "classAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter_1_1DataSeriesRepoImporter" ]
           ] ],
+          [ "ForbidNodes", null, [
+            [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes" ],
+            [ "ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound" ],
+            [ "ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor" ],
+            [ "ForbiddenNodesInComponentVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor" ]
+          ] ],
           [ "ModelConverter", null, [
             [ "ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor" ],
             [ "AntaresErrorListener", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener" ],
@@ -238,9 +244,6 @@ var annotated_dup =
             [ "ReducedCostNoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName" ],
             [ "DualNoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
-            [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes" ],
-            [ "ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodeFound.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodeFound" ],
-            [ "ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor" ],
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
             [ "PortWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists" ],
             [ "PortTypeWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists" ],

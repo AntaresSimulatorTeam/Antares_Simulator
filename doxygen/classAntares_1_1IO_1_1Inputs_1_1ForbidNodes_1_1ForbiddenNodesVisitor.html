@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::IO::Inputs::ModelConverter::ForbiddenNodesVisitor Class Reference</title>
+<title>Antares Simulator: Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitor Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -125,84 +125,86 @@ $(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Inputs_1_1ModelC
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor-members.html">List of all members</a>  </div>
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::IO::Inputs::ModelConverter::ForbiddenNodesVisitor Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
+<div class="title">Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitor Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for Antares::IO::Inputs::ModelConverter::ForbiddenNodesVisitor:</div>
+Inheritance diagram for Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitor:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor.png" usemap="#Antares::IO::Inputs::ModelConverter::ForbiddenNodesVisitor_map" alt=""/>
-  <map id="Antares::IO::Inputs::ModelConverter::ForbiddenNodesVisitor_map" name="Antares::IO::Inputs::ModelConverter::ForbiddenNodesVisitor_map">
-<area href="classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html" alt="Antares::Expressions::Visitors::NodeVisitor&lt; void &gt;" shape="rect" coords="0,56,348,80"/>
-<area href="classAntares_1_1Expressions_1_1IName.html" alt="Antares::Expressions::IName" shape="rect" coords="0,0,348,24"/>
+  <img src="classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.png" usemap="#Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitor_map" alt=""/>
+  <map id="Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitor_map" name="Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitor_map">
+<area href="classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html" alt="Antares::Expressions::Visitors::NodeVisitor&lt; void &gt;" shape="rect" coords="0,56,402,80"/>
+<area href="classAntares_1_1Expressions_1_1IName.html" alt="Antares::Expressions::IName" shape="rect" coords="0,0,402,24"/>
+<area href="classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor.html" alt="Antares::IO::Inputs::ForbidNodes::ForbiddenNodesInComponentVisitor" shape="rect" coords="0,168,402,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afadfac824e919bddbdaa0538b7a822e0"><td class="memItemLeft" align="right" valign="top"><a id="afadfac824e919bddbdaa0538b7a822e0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ForbiddenNodesVisitor</b> (const <a class="el" href="classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html">ForbiddenNodes</a> &amp;forbid, const std::string &amp;expression)</td></tr>
-<tr class="separator:afadfac824e919bddbdaa0538b7a822e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7c9291cd0d446093af4ac367cf402bc"><td class="memItemLeft" align="right" valign="top"><a id="af7c9291cd0d446093af4ac367cf402bc"></a>
+<tr class="memitem:a5b4fa78e24f10b1b4263dc9433a053cf"><td class="memItemLeft" align="right" valign="top"><a id="a5b4fa78e24f10b1b4263dc9433a053cf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ForbiddenNodesVisitor</b> (const <a class="el" href="classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html">ForbiddenNodes</a> &amp;forbid, const std::string &amp;expression)</td></tr>
+<tr class="separator:a5b4fa78e24f10b1b4263dc9433a053cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23ba17d726108b3bf12911935a9f499b"><td class="memItemLeft" align="right" valign="top"><a id="a23ba17d726108b3bf12911935a9f499b"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const override</td></tr>
-<tr class="separator:af7c9291cd0d446093af4ac367cf402bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b8f2e0e3cebbebc17bbaecdb296cd90"><td class="memItemLeft" align="right" valign="top"><a id="a3b8f2e0e3cebbebc17bbaecdb296cd90"></a>
+<tr class="separator:a23ba17d726108b3bf12911935a9f499b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a5ade9f2d9737f31d615b1f364fa635"><td class="memItemLeft" align="right" valign="top"><a id="a4a5ade9f2d9737f31d615b1f364fa635"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1SumNode.html">Expressions::Nodes::SumNode</a> *) override</td></tr>
-<tr class="separator:a3b8f2e0e3cebbebc17bbaecdb296cd90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a952eada9a242fc2c3489cc1f162daa80"><td class="memItemLeft" align="right" valign="top"><a id="a952eada9a242fc2c3489cc1f162daa80"></a>
+<tr class="separator:a4a5ade9f2d9737f31d615b1f364fa635"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31a58772c803ca629783133cf69dfbb3"><td class="memItemLeft" align="right" valign="top"><a id="a31a58772c803ca629783133cf69dfbb3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1SubtractionNode.html">Expressions::Nodes::SubtractionNode</a> *) override</td></tr>
-<tr class="separator:a952eada9a242fc2c3489cc1f162daa80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a806513d4dc0c66aba01530d763288a8e"><td class="memItemLeft" align="right" valign="top"><a id="a806513d4dc0c66aba01530d763288a8e"></a>
+<tr class="separator:a31a58772c803ca629783133cf69dfbb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab32c6d532bca5a62656ad254d7b890a1"><td class="memItemLeft" align="right" valign="top"><a id="ab32c6d532bca5a62656ad254d7b890a1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html">Expressions::Nodes::MultiplicationNode</a> *) override</td></tr>
-<tr class="separator:a806513d4dc0c66aba01530d763288a8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10631e1d185610b26e828f56c311cc29"><td class="memItemLeft" align="right" valign="top"><a id="a10631e1d185610b26e828f56c311cc29"></a>
+<tr class="separator:ab32c6d532bca5a62656ad254d7b890a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75f45097c8d4b3f1ed61a232e2968bfd"><td class="memItemLeft" align="right" valign="top"><a id="a75f45097c8d4b3f1ed61a232e2968bfd"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1DivisionNode.html">Expressions::Nodes::DivisionNode</a> *) override</td></tr>
-<tr class="separator:a10631e1d185610b26e828f56c311cc29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a119f5f357f7c781f1234b6803a7a8a87"><td class="memItemLeft" align="right" valign="top"><a id="a119f5f357f7c781f1234b6803a7a8a87"></a>
+<tr class="separator:a75f45097c8d4b3f1ed61a232e2968bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a010f5c122434a9585b57c4c2477efe4f"><td class="memItemLeft" align="right" valign="top"><a id="a010f5c122434a9585b57c4c2477efe4f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1EqualNode.html">Expressions::Nodes::EqualNode</a> *) override</td></tr>
-<tr class="separator:a119f5f357f7c781f1234b6803a7a8a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5750d174b43c7294e22e7573d96931da"><td class="memItemLeft" align="right" valign="top"><a id="a5750d174b43c7294e22e7573d96931da"></a>
+<tr class="separator:a010f5c122434a9585b57c4c2477efe4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a049e174b20bd1c7423ba345ce78cf435"><td class="memItemLeft" align="right" valign="top"><a id="a049e174b20bd1c7423ba345ce78cf435"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1LessThanOrEqualNode.html">Expressions::Nodes::LessThanOrEqualNode</a> *) override</td></tr>
-<tr class="separator:a5750d174b43c7294e22e7573d96931da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cd170dc6d5a42405c370e3541b7d89b"><td class="memItemLeft" align="right" valign="top"><a id="a3cd170dc6d5a42405c370e3541b7d89b"></a>
+<tr class="separator:a049e174b20bd1c7423ba345ce78cf435"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab84a1d45d0420a901d466003693cb08e"><td class="memItemLeft" align="right" valign="top"><a id="ab84a1d45d0420a901d466003693cb08e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1GreaterThanOrEqualNode.html">Expressions::Nodes::GreaterThanOrEqualNode</a> *) override</td></tr>
-<tr class="separator:a3cd170dc6d5a42405c370e3541b7d89b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af90eb8b54a56dab07635a96733c77f20"><td class="memItemLeft" align="right" valign="top"><a id="af90eb8b54a56dab07635a96733c77f20"></a>
+<tr class="separator:ab84a1d45d0420a901d466003693cb08e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29ba1fb3518bf9bdb017869ddada3da0"><td class="memItemLeft" align="right" valign="top"><a id="a29ba1fb3518bf9bdb017869ddada3da0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html">Expressions::Nodes::NegationNode</a> *) override</td></tr>
-<tr class="separator:af90eb8b54a56dab07635a96733c77f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57c9ddd45593e1cac3222233337ef0c5"><td class="memItemLeft" align="right" valign="top"><a id="a57c9ddd45593e1cac3222233337ef0c5"></a>
+<tr class="separator:a29ba1fb3518bf9bdb017869ddada3da0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8aaac2c4203bda4e8c5704f359bb9951"><td class="memItemLeft" align="right" valign="top"><a id="a8aaac2c4203bda4e8c5704f359bb9951"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1LiteralNode.html">Expressions::Nodes::LiteralNode</a> *) override</td></tr>
-<tr class="separator:a57c9ddd45593e1cac3222233337ef0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f0c080758b90b2d81a7b0af548e5b10"><td class="memItemLeft" align="right" valign="top"><a id="a7f0c080758b90b2d81a7b0af548e5b10"></a>
+<tr class="separator:a8aaac2c4203bda4e8c5704f359bb9951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dd556abd0119a3808d7d92d3fd99051"><td class="memItemLeft" align="right" valign="top"><a id="a0dd556abd0119a3808d7d92d3fd99051"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html">Expressions::Nodes::VariableNode</a> *) override</td></tr>
-<tr class="separator:a7f0c080758b90b2d81a7b0af548e5b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a847d2af5514fe2343d81eb9977a7981c"><td class="memItemLeft" align="right" valign="top"><a id="a847d2af5514fe2343d81eb9977a7981c"></a>
+<tr class="separator:a0dd556abd0119a3808d7d92d3fd99051"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa51974da8927e76077f4e831847b95f3"><td class="memItemLeft" align="right" valign="top"><a id="aa51974da8927e76077f4e831847b95f3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1ParameterNode.html">Expressions::Nodes::ParameterNode</a> *) override</td></tr>
-<tr class="separator:a847d2af5514fe2343d81eb9977a7981c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99d08a9b5a761495f6448e32ba9c860a"><td class="memItemLeft" align="right" valign="top"><a id="a99d08a9b5a761495f6448e32ba9c860a"></a>
+<tr class="separator:aa51974da8927e76077f4e831847b95f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0af9cc4774ae2daa3c213d10f56ba0bb"><td class="memItemLeft" align="right" valign="top"><a id="a0af9cc4774ae2daa3c213d10f56ba0bb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html">Expressions::Nodes::PortFieldNode</a> *) override</td></tr>
-<tr class="separator:a99d08a9b5a761495f6448e32ba9c860a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba921de08e492d92de8dde65bb190f09"><td class="memItemLeft" align="right" valign="top"><a id="aba921de08e492d92de8dde65bb190f09"></a>
+<tr class="separator:a0af9cc4774ae2daa3c213d10f56ba0bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27adf329aad3df6c6b8c2b97c8698da7"><td class="memItemLeft" align="right" valign="top"><a id="a27adf329aad3df6c6b8c2b97c8698da7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1PortFieldSumNode.html">Expressions::Nodes::PortFieldSumNode</a> *) override</td></tr>
-<tr class="separator:aba921de08e492d92de8dde65bb190f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77fbd73b828d649120a922d7c3103f19"><td class="memItemLeft" align="right" valign="top"><a id="a77fbd73b828d649120a922d7c3103f19"></a>
+<tr class="separator:a27adf329aad3df6c6b8c2b97c8698da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a876e8233e1d89d64b81ad9d198814b"><td class="memItemLeft" align="right" valign="top"><a id="a8a876e8233e1d89d64b81ad9d198814b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode.html">Expressions::Nodes::TimeShiftNode</a> *) override</td></tr>
-<tr class="separator:a77fbd73b828d649120a922d7c3103f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfeed42d4738ba982e7e577461bc8a45"><td class="memItemLeft" align="right" valign="top"><a id="adfeed42d4738ba982e7e577461bc8a45"></a>
+<tr class="separator:a8a876e8233e1d89d64b81ad9d198814b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a386186a048f6476e1c2c7ba17a8b2319"><td class="memItemLeft" align="right" valign="top"><a id="a386186a048f6476e1c2c7ba17a8b2319"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode.html">Expressions::Nodes::TimeIndexNode</a> *) override</td></tr>
-<tr class="separator:adfeed42d4738ba982e7e577461bc8a45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad029c6ae85aaa0ba1547964d721ea293"><td class="memItemLeft" align="right" valign="top"><a id="ad029c6ae85aaa0ba1547964d721ea293"></a>
+<tr class="separator:a386186a048f6476e1c2c7ba17a8b2319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab659bb8d9ebe0d7c38d1a5727fda65a4"><td class="memItemLeft" align="right" valign="top"><a id="ab659bb8d9ebe0d7c38d1a5727fda65a4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode.html">Expressions::Nodes::TimeSumNode</a> *) override</td></tr>
-<tr class="separator:ad029c6ae85aaa0ba1547964d721ea293"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ad186168299c8f3610028911932210a"><td class="memItemLeft" align="right" valign="top"><a id="a7ad186168299c8f3610028911932210a"></a>
+<tr class="separator:ab659bb8d9ebe0d7c38d1a5727fda65a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef8a7bbae923c3470b23b917cace951d"><td class="memItemLeft" align="right" valign="top"><a id="aef8a7bbae923c3470b23b917cace951d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html">Expressions::Nodes::AllTimeSumNode</a> *) override</td></tr>
-<tr class="separator:a7ad186168299c8f3610028911932210a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e7e7b91162a7e9e3467cd0326a54ba4"><td class="memItemLeft" align="right" valign="top"><a id="a2e7e7b91162a7e9e3467cd0326a54ba4"></a>
+<tr class="separator:aef8a7bbae923c3470b23b917cace951d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1b3f4f1d7cccbc86aeca29a47b603c1"><td class="memItemLeft" align="right" valign="top"><a id="ab1b3f4f1d7cccbc86aeca29a47b603c1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1FunctionNode.html">Expressions::Nodes::FunctionNode</a> *) override</td></tr>
-<tr class="separator:a2e7e7b91162a7e9e3467cd0326a54ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ab1b3f4f1d7cccbc86aeca29a47b603c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html">Antares::Expressions::Visitors::NodeVisitor&lt; void &gt;</a></td></tr>
 <tr class="memitem:a699b72990c9623ee0f1d196a5a2adc9f inherit pub_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html#a699b72990c9623ee0f1d196a5a2adc9f">dispatch</a> (const <a class="el" href="classAntares_1_1Expressions_1_1Nodes_1_1Node.html">Nodes::Node</a> *node, Args... args)</td></tr>
 <tr class="separator:a699b72990c9623ee0f1d196a5a2adc9f inherit pub_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,6 +267,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a c
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classAntares_1_1Expressions_1_1IName.html">IName</a> &amp;other) const =default</td></tr>
 <tr class="separator:a74b368fed0799e65df95309f6ec6f351 inherit pub_methods_classAntares_1_1Expressions_1_1IName"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:aaf710f04c0d5bec095581f413c0b741e"><td class="memItemLeft" align="right" valign="top"><a id="aaf710f04c0d5bec095581f413c0b741e"></a>
+const <a class="el" href="classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html">ForbiddenNodes</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>forbiddenNodes_</b></td></tr>
+<tr class="separator:aaf710f04c0d5bec095581f413c0b741e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7ddc1207b32895c9ebfcf7588691cca"><td class="memItemLeft" align="right" valign="top"><a id="ae7ddc1207b32895c9ebfcf7588691cca"></a>
+std::vector&lt; std::pair&lt; std::string, std::type_index &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parentsStack_</b></td></tr>
+<tr class="separator:ae7ddc1207b32895c9ebfcf7588691cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c2b78a29bc6ed65d474c0eab67aab6b"><td class="memItemLeft" align="right" valign="top"><a id="a5c2b78a29bc6ed65d474c0eab67aab6b"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>expression_</b></td></tr>
+<tr class="separator:a5c2b78a29bc6ed65d474c0eab67aab6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html">Antares::Expressions::Visitors::NodeVisitor&lt; void &gt;</a></td></tr>
@@ -273,15 +287,15 @@ std::vector&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>
 <tr class="separator:aea09e2d220b25a522141a0d230f8ddc0 inherit pro_methods_classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/io/inputs/model-converter/include/antares/io/inputs/model-converter/<a class="el" href="ForbiddenNodesVisitor_8h_source.html">ForbiddenNodesVisitor.h</a></li>
-<li>src/io/inputs/model-converter/ForbiddenNodesVisitor.cpp</li>
+<li>src/io/inputs/forbidden-nodes/include/antares/io/inputs/forbidden-nodes/<a class="el" href="ForbiddenNodesVisitor_8h_source.html">ForbiddenNodesVisitor.h</a></li>
+<li>src/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>IO</b></li><li class="navelem"><b>Inputs</b></li><li class="navelem"><b>ModelConverter</b></li><li class="navelem"><a class="el" href="classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor.html">ForbiddenNodesVisitor</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>IO</b></li><li class="navelem"><b>Inputs</b></li><li class="navelem"><b>ForbidNodes</b></li><li class="navelem"><a class="el" href="classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.html">ForbiddenNodesVisitor</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

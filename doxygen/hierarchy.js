@@ -563,7 +563,7 @@ var hierarchy =
     [ "FixtureMultipleTS", "classFixtureMultipleTS.html", null ],
     [ "FixtureStudyOnly", "structFixtureStudyOnly.html", null ],
     [ "FlowDissociationData", "structFlowDissociationData.html", null ],
-    [ "Antares::IO::Inputs::ModelConverter::ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", null ],
+    [ "Antares::IO::Inputs::ForbidNodes::ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", null ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
     [ "Antares::Solver::Variable::Economy::GenerationTraits< Tag >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html", null ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
@@ -670,7 +670,9 @@ var hierarchy =
         [ "Antares::Expressions::Visitors::PrintVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PrintVisitor.html", null ]
       ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< void >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
-        [ "Antares::IO::Inputs::ModelConverter::ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor.html", null ]
+        [ "Antares::IO::Inputs::ForbidNodes::ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.html", [
+          [ "Antares::IO::Inputs::ForbidNodes::ForbiddenNodesInComponentVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor.html", null ]
+        ] ]
       ] ],
       [ "Antares::Expressions::Visitors::NodeVisitor< bool, const Nodes::Node * >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Expressions::Visitors::CompareVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1CompareVisitor.html", null ]
@@ -752,8 +754,8 @@ var hierarchy =
       [ "Antares::Expressions::Visitors::EvalVisitorNotImplemented", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html", null ],
       [ "Antares::Expressions::Visitors::InvalidNode", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html", null ],
       [ "Antares::Expressions::Visitors::NodeTypeShouldBeInExtraOutput", "classAntares_1_1Expressions_1_1Visitors_1_1NodeTypeShouldBeInExtraOutput.html", null ],
+      [ "Antares::IO::Inputs::ForbidNodes::ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
-      [ "Antares::IO::Inputs::ModelConverter::ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodeFound.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
       [ "Antares::IO::Inputs::SystemConverter::TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
       [ "Antares::Optimisation::AddVariableVisitor::BoundsSizeMismatch", "classAntares_1_1Optimisation_1_1AddVariableVisitor_1_1BoundsSizeMismatch.html", null ],

@@ -658,6 +658,30 @@ var namespaces_dup =
       [ "IO", null, [
         [ "Inputs", null, [
           [ "DataSeriesCsvImporter", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter" ],
+          [ "ForbidNodes", null, [
+            [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes" ],
+            [ "ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound" ],
+            [ "ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor" ],
+            [ "ForbiddenNodesInComponentVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor" ],
+            [ "ErrorMessage", "ForbiddenNodesVisitor_8cpp.html#a64bd10ab5e5efe59233872f26a76ea33", null ],
+            [ "ForbidConstraintSignNodes", "ForbiddenNodes_8cpp.html#ab4219dba8e964f322a0c1a0b8dd23df8", null ],
+            [ "ForbidInFunctionNodes", "ForbiddenNodes_8cpp.html#a44d0d6b2ce58fb05edf3f6452322caa4", null ],
+            [ "ForbidNodesInBindingConstraint", "ForbiddenNodes_8cpp.html#ad396356c74db70de342b4d4f57ced4de", null ],
+            [ "ForbidNodesInConstraint", "ForbiddenNodes_8cpp.html#a4fa054506bf4131503a1a16236006364", null ],
+            [ "ForbidNodesInExtraOutput", "ForbiddenNodes_8cpp.html#aa7678ca9766e25385ef346b21b3f9a6e", null ],
+            [ "ForbidNodesInObjective", "ForbiddenNodes_8cpp.html#acd50f3f38b89618d8bf2469c03822263", null ],
+            [ "ForbidNodesInPortFieldDef", "ForbiddenNodes_8cpp.html#aa67cf8785d0ca27cca22f66e29c90e03", null ],
+            [ "ForbidNodesInVariableBounds", "ForbiddenNodes_8cpp.html#a0c0aa2a8e14712ed1c6c891d013cb3b7", null ],
+            [ "functionNodeTypeIndex", "ForbiddenNodesVisitor_8cpp.html#abd549a7c0edd51ac18a71a7d71f347b8", null ],
+            [ "typeIndexOf", "ForbiddenNodes_8h.html#ab1f8710009c5f6849bdcadd52f4d2b3a", null ],
+            [ "forbiddenInBindingConstraint", "ForbiddenNodes_8cpp.html#a9883d4db8897ba5b89880ca8d5ca089c", null ],
+            [ "forbiddenInConstraint", "ForbiddenNodes_8cpp.html#a558c246917266f37695fca1a9e8ed2f8", null ],
+            [ "forbiddenInExtraOutput", "ForbiddenNodes_8cpp.html#aff97a9a96c3c56cadb21e95e65ad785d", null ],
+            [ "forbiddenInObjective", "ForbiddenNodes_8cpp.html#aff1dcac0c51fc7e301e5aee0d732b14f", null ],
+            [ "forbiddenInPortFieldDef", "ForbiddenNodes_8cpp.html#afec5f528b9016040a4107433b445fbee", null ],
+            [ "forbiddenInVariableBounds", "ForbiddenNodes_8cpp.html#a4d5f653b4fa36c81aa621fc92d1e2b3a", null ],
+            [ "forbidNonLinearNodes", "ForbiddenNodes_8cpp.html#a2e2a93c66b717edf84ec6579623b1c42", null ]
+          ] ],
           [ "ModelConverter", null, [
             [ "ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor" ],
             [ "AntaresErrorListener", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener" ],
@@ -667,9 +691,6 @@ var namespaces_dup =
             [ "ReducedCostNoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName" ],
             [ "DualNoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
-            [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodes" ],
-            [ "ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodeFound.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodeFound" ],
-            [ "ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ForbiddenNodesVisitor" ],
             [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
             [ "PortWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists" ],
             [ "PortTypeWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists" ],
@@ -688,16 +709,13 @@ var namespaces_dup =
             [ "convertModels", "modelConverter_8cpp.html#adef6660f4dfcfdf04bc5f701377155f1", null ],
             [ "convertObjectives", "modelConverter_8cpp.html#a2abea11398aadc21fbbd984135d708f5", null ],
             [ "convertParameters", "modelConverter_8cpp.html#a25808bf603cc8a83cb1b06fd083dc9de", null ],
-            [ "convertPortFieldDefinitions", "modelConverter_8cpp.html#adf7a16e405558f1c54f994679f5eda1b", null ],
+            [ "convertPortFieldDefinitions", "modelConverter_8cpp.html#a6246bb5227118f43efbd431232cf949c", null ],
             [ "convertPorts", "modelConverter_8cpp.html#ad976a8baec13a3acc87bda2197e83558", null ],
             [ "convertPortTypes", "modelConverter_8cpp.html#a561469b6b14b831db569ccd71aeab89c", null ],
             [ "convertType", "modelConverter_8cpp.html#a1363b64e5b67aed1d14775057e9dc413", null ],
             [ "convertVariables", "modelConverter_8cpp.html#a2c67b6096c44fe5dd3d813b6d0e9d507", null ],
-            [ "ErrorMessage", "ForbiddenNodesVisitor_8cpp.html#a39e15fd558fdf195c78c8cf9c81c0bb7", null ],
             [ "ExpressionsToIds", "convertorVisitor_8cpp.html#a5979644e8f14ddeb13ce77bf8d554564", null ],
-            [ "extractSumOperands", "convertorVisitor_8cpp.html#afa5c8a0bd8efdf755de9122b85b0d7b9", null ],
-            [ "functionNodeTypeIndex", "ForbiddenNodesVisitor_8cpp.html#a792357b9afca72bb2fbcaff9b72e2183", null ],
-            [ "typeIndexOf", "ForbiddenNodes_8h.html#a76a476bfeb2882d284fca3f2fe5b0377", null ]
+            [ "extractSumOperands", "convertorVisitor_8cpp.html#afa5c8a0bd8efdf755de9122b85b0d7b9", null ]
           ] ],
           [ "SystemConverter", null, [
             [ "ErrorWhileSplittingLibraryAndModel", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel.html", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ErrorWhileSplittingLibraryAndModel" ],
@@ -705,6 +723,7 @@ var namespaces_dup =
             [ "ModelNotFound", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ModelNotFound" ],
             [ "TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
             [ "ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
+            [ "checkForNonLinearityBehindConnections", "converter_8cpp.html#ac6f6349118464daedd302c582fa5f032", null ],
             [ "convert", "converter_8cpp.html#a9f842fbbb321672e7e73e2b80a544ee5", null ],
             [ "convert", "converter_8h.html#ada2347e748f40b1e85c758563ccbd5e0", null ]
           ] ],
@@ -834,10 +853,9 @@ var namespaces_dup =
           [ "SystemBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1SystemBuilder" ],
           [ "Variable", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable.html", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Variable" ],
           [ "PortFieldMap", "model_8h.html#a72ba82401cdd03be114f76a428891517", null ],
-          [ "PortFieldsRole", "connection_8h.html#ae45ef4db58e6ad298f4f4c2295387e97", null ],
-          [ "FieldRole", "connection_8h.html#a30dcd9191930b1afa420e123a7234456", [
-            [ "Sender", "connection_8h.html#a30dcd9191930b1afa420e123a7234456a8aace3ec18d83874d22850b7eee93c7d", null ],
-            [ "Receiver", "connection_8h.html#a30dcd9191930b1afa420e123a7234456aa9d093d11bc6e98b0c8e586ffa545c85", null ]
+          [ "FieldRole", "port_8h.html#a30dcd9191930b1afa420e123a7234456", [
+            [ "Sender", "port_8h.html#a30dcd9191930b1afa420e123a7234456a8aace3ec18d83874d22850b7eee93c7d", null ],
+            [ "Receiver", "port_8h.html#a30dcd9191930b1afa420e123a7234456aa9d093d11bc6e98b0c8e586ffa545c85", null ]
           ] ],
           [ "OutOfBoundsProcessingMode", "study_2system-model_2include_2antares_2study_2system-model_2constraint_8h.html#a123e0032777af46df1e9ae93caea116c", [
             [ "CYCLIC", "study_2system-model_2include_2antares_2study_2system-model_2constraint_8h.html#a123e0032777af46df1e9ae93caea116cab970fa647bc2f4761a80276428780061", null ],
@@ -860,7 +878,7 @@ var namespaces_dup =
           [ "fromBool", "timeAndScenarioType_8h.html#a1ec198537ff13af974a5dac7cd20ee8d", null ],
           [ "getConnectionField", "portType_8cpp.html#a5b98aaee910ac96798b010a1c3599679", null ],
           [ "isEmpty", "portType_8cpp.html#ae25c2ee4d96cf9586d5619fff8e2562b", null ],
-          [ "operator<<", "connection_8h.html#a4abb4fd7c458500f26ff69554f194304", null ],
+          [ "operator<<", "port_8h.html#a4abb4fd7c458500f26ff69554f194304", null ],
           [ "operator<<", "enum__operators_8h.html#a5b42803d363465d2075144cd54313270", null ],
           [ "operator==", "portType_8cpp.html#a5f72d81c70aac087bc14e5f150aeffb3", null ]
         ] ]
@@ -1797,12 +1815,6 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -1811,6 +1823,12 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
