@@ -146,10 +146,10 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
- void CheckFieldsRoleCompatibility(const Component& component_1,
-                                         const Port& port_1,
-                                         const Component& component_2,
-                                         const Port& port_2)
+void CheckFieldsRoleCompatibility(const Component& component_1,
+                                  const Port& port_1,
+                                  const Component& component_2,
+                                  const Port& port_2)
 {
     for (const auto& field: port_1.Type().Fields())
     {
