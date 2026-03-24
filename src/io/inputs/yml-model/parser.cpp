@@ -3,25 +3,18 @@
 
 #include "antares/io/inputs/yml-model/parser.h"
 
-#include <stdexcept>
-
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 
 namespace Antares::IO::Inputs::YmlModel
 {
+LibraryIdNotDefined::LibraryIdNotDefined():
+    std::runtime_error("Library id is not defined")
+{
+}
 
 namespace
 {
-class LibraryIdNotDefined final: public std::runtime_error
-{
-public:
-    LibraryIdNotDefined():
-        std::runtime_error("Library id is not defined")
-    {
-    }
-};
-
 void tagNodes(YAML::Node& node);
 
 void visitMap(YAML::Node& node)

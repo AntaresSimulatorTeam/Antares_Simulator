@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             port-types: []
             models: []
     )"s;
-    BOOST_CHECK_THROW(parser.parse(library), std::runtime_error);
+    BOOST_CHECK_THROW(parser.parse(library), YmlModel::LibraryIdNotDefined);
 }
 
 // Test library with id and description
