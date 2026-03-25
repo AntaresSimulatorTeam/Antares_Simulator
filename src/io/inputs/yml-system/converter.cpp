@@ -23,8 +23,6 @@ namespace Antares::IO::Inputs::SystemConverter
 namespace
 {
 
-
-
 std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
     size_t pos = s.find('.');
@@ -260,9 +258,8 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                                        [&c](const Component& compo) { return compo.Id() == c.id; });
         if (it != components.end())
         {
-            throw IO::Inputs::InputError(
-              "System has at least two components with the same id ('" + c.id
-              + "'), this is not supported");
+            throw IO::Inputs::InputError("System has at least two components with the same id ('"
+                                         + c.id + "'), this is not supported");
         }
         components.push_back(createComponent(c, libraries));
         logs.debug() << "Loaded component `" << c.id << "`";

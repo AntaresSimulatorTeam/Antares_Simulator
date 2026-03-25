@@ -5,8 +5,29 @@
 
 #include <unordered_set>
 
+#include <antares/io/inputs/InputError.h>
+
 namespace YAML
 {
+
+namespace
+{
+/// Throws InputError if the node is present but is not a YAML map.
+/// Returns false silently when the node is absent or null (permitting as_fallback_default).
+bool requireMap(const Node& node, const char* typeName)
+{
+    if (node.IsMap())
+    {
+        return true;
+    }
+    if (node.IsDefined() && !node.IsNull())
+    {
+        throw Antares::IO::Inputs::InputError(
+          std::string("Expected a YAML mapping for '") + typeName + "'");
+    }
+    return false;
+}
+} // namespace
 
 void checkMandatoryIdField(const Node& node, const std::string& nodeName)
 {
@@ -118,7 +139,8 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFiel
 
     if (!area_conn_node.IsMap())
     {
-        return false;
+        throw Antares::IO::Inputs::InputError(
+          "Expected a YAML mapping for 'area-connection' in port-type");
     }
 
     checkFields(area_conn_node,
@@ -146,7 +168,8 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertThermalCapacityFie
 
     if (!child_node.IsMap())
     {
-        return false;
+        throw Antares::IO::Inputs::InputError(
+          "Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
     }
 
     checkFields(child_node, std::unordered_set<std::string>{"capacity-field"});
@@ -159,7 +182,7 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::PortType& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "port-type"))
     {
         return false;
     }
@@ -176,7 +199,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Parameter>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::Parameter& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "parameter"))
     {
         return false;
     }
@@ -193,6 +216,11 @@ bool convert<Antares::IO::Inputs::YmlModel::ValueType>::decode(
 {
     if (!node.IsScalar())
     {
+        if (node.IsDefined() && !node.IsNull())
+        {
+            throw Antares::IO::Inputs::InputError(
+              "Expected a scalar value for 'variable-type'");
+        }
         return false;
     }
     const auto value = node.as<std::string>();
@@ -210,7 +238,9 @@ bool convert<Antares::IO::Inputs::YmlModel::ValueType>::decode(
     }
     else
     {
-        return false;
+        throw Antares::IO::Inputs::InputError(
+          "Unknown variable-type: '" + value
+          + "'. Expected one of: 'continuous', 'integer', 'boolean'");
     }
     return true;
 }
@@ -219,7 +249,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::Variable& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "variable"))
     {
         return false;
     }
@@ -238,7 +268,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
 bool convert<Antares::IO::Inputs::YmlModel::Port>::decode(const Node& node,
                                                           Antares::IO::Inputs::YmlModel::Port& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "port"))
     {
         return false;
     }
@@ -252,9 +282,8 @@ bool convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::PortFieldDefinition& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "port-field-definition"))
     {
-        // port field definition not mandatory
         return false;
     }
     rhs.port = node["port"].as<std::string>();
@@ -267,7 +296,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Constraint>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::Constraint& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "constraint"))
     {
         return false;
     }
@@ -282,7 +311,7 @@ bool convert<Antares::IO::Inputs::YmlModel::ExtraOutput>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::ExtraOutput& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "extra-output"))
     {
         return false;
     }
@@ -296,7 +325,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Objective>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::Objective& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMap(node, "objective"))
     {
         return false;
     }
@@ -313,7 +342,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
 {
     if (!node.IsMap())
     {
-        return false;
+        throw Antares::IO::Inputs::InputError("Expected a YAML mapping for 'model'");
     }
     checkMandatoryIdField(node, "model");
     rhs.id = node["id"].as<std::string>();

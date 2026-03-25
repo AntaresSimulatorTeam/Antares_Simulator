@@ -19,8 +19,8 @@ target_include_directories(yml-optim-config
 target_link_libraries(yml-optim-config
         PRIVATE
         yaml-cpp::yaml-cpp
-        Antares::exception
         PUBLIC
+        Antares::input-error
         Antares::antares-study-system-model
 )
 

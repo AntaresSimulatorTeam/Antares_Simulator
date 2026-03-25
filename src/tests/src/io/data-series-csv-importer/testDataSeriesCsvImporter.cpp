@@ -10,8 +10,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/io/inputs/InputError.h>
+#include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
 using namespace std;

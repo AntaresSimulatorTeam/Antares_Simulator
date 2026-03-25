@@ -14,4 +14,3 @@ public:
     using Error::LoadingError::LoadingError;
 };
 } // namespace Antares::IO::Inputs
-

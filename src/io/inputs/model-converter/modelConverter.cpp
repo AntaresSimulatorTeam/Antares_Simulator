@@ -230,9 +230,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                             { return field.Id() == pfdefinition.field; });
         if (itField == portFields.end())
         {
-            throw IO::Inputs::InputError("In port-field-definitions, for port: "
-                                         + pfdefinition.port + " , field not found: "
-                                         + pfdefinition.field);
+            throw IO::Inputs::InputError("In port-field-definitions, for port: " + pfdefinition.port
+                                         + " , field not found: " + pfdefinition.field);
         }
 
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
@@ -245,10 +244,9 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
-            throw IO::Inputs::InputError(
-              "In port-field-definitions, for port: " + pfdefinition.port
-              + " , found another port in the definition: "
-              + dynamic_cast<const PortFieldNode&>(*it).getPortName());
+            throw IO::Inputs::InputError("In port-field-definitions, for port: " + pfdefinition.port
+                                         + " , found another port in the definition: "
+                                         + dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
 
         ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
