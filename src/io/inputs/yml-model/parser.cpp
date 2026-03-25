@@ -64,55 +64,6 @@ LibraryIdNotDefined::LibraryIdNotDefined():
 {
 }
 
-namespace
-{
-void tagNodes(YAML::Node& node);
-
-void visitMap(YAML::Node& node)
-{
-    for (auto it = node.begin(); it != node.end(); ++it)
-    {
-        YAML::Node child = it->second;
-        child.SetTag(node.Tag() + "/" + it->first.as<std::string>());
-        tagNodes(child);
-    }
-}
-
-void visitSequence(YAML::Node& node)
-{
-    for (std::size_t i = 0; i < node.size(); ++i)
-    {
-        YAML::Node child = node[i];
-
-        auto childIdNode = child["id"];
-        std::string childName = "__without__id__";
-        if (childIdNode.IsDefined() && !childIdNode.IsNull())
-        {
-            childName = childIdNode.as<std::string>();
-        }
-        child.SetTag(node.Tag() + "/" + childName);
-
-        tagNodes(child);
-    }
-}
-
-void tagNodes(YAML::Node& node)
-{
-    if (!node || node.IsNull())
-    {
-        return;
-    }
-
-    if (node.IsMap())
-    {
-        visitMap(node);
-    }
-    else if (node.IsSequence())
-    {
-        visitSequence(node);
-    }
-}
-} // anonymous namespace
 
 Library Parser::parse(const std::string& content)
 {
