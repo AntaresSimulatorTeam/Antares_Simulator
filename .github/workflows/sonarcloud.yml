@@ -66,7 +66,6 @@ jobs:
         # Increase size to reduce evictions; adjust to suit your CI quota
         ccache --set-config=max_size=1G
         ccache --set-config=compression=true
-        ccache --show-config || true
         ccache -p
         ccache -z
       shell: bash
