@@ -1,9 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#a55c14dadc09b2aa4d21ce2523a0c518e":[8,0,0,9,0,13,3],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#a64c205efd12d2722e9a55a2413ad9aa1":[8,0,0,9,0,13,8],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#a798216481fdec23a67a9b66967fced01":[8,0,0,9,0,13,10],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#a7dd834dc209f16b707f118018c6704d6":[8,0,0,9,0,13,11],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#a9cf1ed9ff4800bf88be702eb315ff94a":[8,0,0,9,0,13,12],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#aafa89e1b53f2e8666fe11b14e78b4a17":[8,0,0,9,0,13,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1StructuredMipVariable.html#ac91c13d647f82a002dc88c9b40356db3":[8,0,0,9,0,13,7],
@@ -249,5 +245,9 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html":[8,0,0,10,21],
 "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html#a693122d1ec6e7b771b5610c3a7331184":[8,0,0,10,21,0],
 "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html#a983d58d81819247aa20530d628d7a109":[8,0,0,10,21,1],
-"classAntares_1_1Optimization_1_1LinearExpression.html":[8,0,0,10,16]
+"classAntares_1_1Optimization_1_1LinearExpression.html":[8,0,0,10,16],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a001af0a89872effba90f21cb78613f67":[8,0,0,10,16,7],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a011bd434ab7a74fa9e871e055bb02975":[8,0,0,10,16,10],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a11a4d9233621b309b2c8fdb618970b04":[8,0,0,10,16,17],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a21bddbc6ba6b61339e58c4b68cbbdc20":[8,0,0,10,16,15]
 };

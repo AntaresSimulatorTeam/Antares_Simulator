@@ -1,9 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a10009ff7f2fc40ba5bc7b1fd21b1cede":[8,0,0,11,6,4,46,19],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a20b9ec997f774cf2127a7df80a259caa":[8,0,0,11,6,4,46,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a368c8a8acac3c4ff7961c76cdf11dc3d":[8,0,0,11,6,4,46,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a3866a47eb5113bf63ed11575c9167dff":[8,0,0,11,6,4,46,14],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a57e752cb983460b21ce6798f97dca37a":[8,0,0,11,6,4,46,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a5deb56d2bbc6e5f13b72b829c8103da9":[8,0,0,11,6,4,46,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a61d410aa222c050f945d8dd5938c4e25":[8,0,0,11,6,4,46,6],
@@ -249,5 +245,9 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#a6d5f3b73e3e35a0158f03b9ef528c92e":[8,0,0,11,6,4,40,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#a73db974d6b02307ae5dcae9811287aef":[8,0,0,11,6,4,40,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#a78bbcf092d394d7cc86cc4002905ab41":[8,0,0,11,6,4,40,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#a7cdd7ad76b642509b760b28dfb7f8bea":[8,0,0,11,6,4,40,10]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#a7cdd7ad76b642509b760b28dfb7f8bea":[8,0,0,11,6,4,40,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#a91695ebfd5fea56a7e033ad33ebe7d9c":[8,0,0,11,6,4,40,11],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#aaf3a849589f966649dbf674db7ef479f":[8,0,0,11,6,4,40,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#abdcb83d26409d9c3c5ca4b98b4258c17":[8,0,0,11,6,4,40,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#acb86084f3a9cd029967f57bdb3f24fcd":[8,0,0,11,6,4,40,1]
 };

@@ -1,9 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"classAntares_1_1IniFile.html#a06acf136758c4ce722cdc0afc88eb8cd":[8,0,0,26,22],
-"classAntares_1_1IniFile.html#a072c2782308977e7a081f799b159ee05":[8,0,0,26,10],
-"classAntares_1_1IniFile.html#a2d6fd096ed353185ffb459562cd55c9b":[8,0,0,26,8],
-"classAntares_1_1IniFile.html#a36b611ee4924c2e02d293ddd22f59bf0":[8,0,0,26,16],
 "classAntares_1_1IniFile.html#a48712ebe4688a922dfc30e348b67a263":[8,0,0,26,6],
 "classAntares_1_1IniFile.html#a5693d2cdf4825febbb2395e867bf079d":[8,0,0,26,5],
 "classAntares_1_1IniFile.html#a6f40170daf66853753e4cf72e6ab0ca0":[8,0,0,26,11],
@@ -249,5 +245,9 @@ var NAVTREEINDEX10 =
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html#a7020792ae271097f4977c8afe1bd6f91":[8,0,0,8,0,15,3],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html#ab637f998223a7a0c5a715e11adf7acf6":[8,0,0,8,0,15,7],
 "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html#ac0e2dfbdd64e5e517ce1c42c2f094871":[8,0,0,8,0,15,8],
-"classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html#ac9df450d1aee03ca6898fa02e59c7344":[8,0,0,8,0,15,6]
+"classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html#ac9df450d1aee03ca6898fa02e59c7344":[8,0,0,8,0,15,6],
+"classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html":[8,0,0,8,0,16],
+"classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html#a01875e5db2037e77014d946af6cc5fa2":[8,0,0,8,0,16,2],
+"classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html#a4deb4f479d86a4ed0244ba4f37d9d4e3":[8,0,0,8,0,16,0],
+"classAntares_1_1ModelerStudy_1_1SystemModel_1_1Objective.html#ae19be1319f18c2abe356df5e6f7abb6c":[8,0,0,8,0,16,3]
 };

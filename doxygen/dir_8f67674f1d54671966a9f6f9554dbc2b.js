@@ -1,5 +1,4 @@
 var dir_8f67674f1d54671966a9f6f9554dbc2b =
 [
-    [ "include", "dir_5434d30d74841264b97666d89aeeaf46.html", "dir_5434d30d74841264b97666d89aeeaf46" ],
-    [ "decoders.hxx", "yml-optim-config_2decoders_8hxx_source.html", null ]
+    [ "include", "dir_5434d30d74841264b97666d89aeeaf46.html", "dir_5434d30d74841264b97666d89aeeaf46" ]
 ];

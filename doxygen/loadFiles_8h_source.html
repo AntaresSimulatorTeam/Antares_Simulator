@@ -162,18 +162,19 @@ $(document).ready(function(){initNavTree('loadFiles_8h_source.html',''); initRes
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keyword">const</span> std::filesystem::path&amp; studyPath);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> handleYamlError(<span class="keyword">const</span> YAML::Exception&amp; e, <span class="keyword">const</span> std::string&amp; filename);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">   39</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">ErrorLoadingYaml</a> final: <span class="keyword">public</span> std::runtime_error</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">ErrorLoadingYaml</a>(<span class="keyword">const</span> std::string&amp; s):</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        runtime_error(s)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;};</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;} <span class="comment">// namespace Antares::Solver::LoadFiles</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">Antares::Solver::LoadFiles::ErrorLoadingYaml</a></div><div class="ttdoc">Generic error class for all loading errors to catch in the main.</div><div class="ttdef"><b>Definition:</b> loadFiles.h:40</div></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;std::string markYamlError(<span class="keyword">const</span> YAML::Exception&amp; e, <span class="keyword">const</span> std::string&amp; filename);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">ErrorLoadingYaml</a> final: <span class="keyword">public</span> std::runtime_error</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">ErrorLoadingYaml</a>(<span class="keyword">const</span> std::string&amp; s):</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        runtime_error(s)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <span class="comment">// namespace Antares::Solver::LoadFiles</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1LoadFiles_1_1ErrorLoadingYaml.html">Antares::Solver::LoadFiles::ErrorLoadingYaml</a></div><div class="ttdoc">Generic error class for all loading errors to catch in the main.</div><div class="ttdef"><b>Definition:</b> loadFiles.h:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
