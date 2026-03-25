@@ -295,7 +295,13 @@ public:
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-    ~AreaList() = default;
+
+    /*!
+     ** \brief Destructor
+     **
+     ** Frees all Area instances owned by this list.
+     */
+    ~AreaList();
     //@}
 
     //! \name Iterating through all areas
