@@ -57,11 +57,11 @@ bool ScenarizedRuleCurvesLoader::load()
     bool ret = true;
 
     fs::path filePath = path / "maxDailyReservoirLevels.txt";
-    ret &= max_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent);
+    ret = max_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
     filePath = path / "minDailyReservoirLevels.txt";
-    ret &= min_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent);
+    ret = min_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
     filePath = path / "avgDailyReservoirLevels.txt";
-    ret &= avg_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent);
+    ret = avg_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
 
     return ret;
 }

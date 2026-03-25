@@ -85,34 +85,19 @@ protected:
 class StandardRuleCurvesLoader: public RuleCurvesLoader
 {
 public:
-    StandardRuleCurvesLoader(const std::filesystem::path& baseFolder,
-                             const std::string& areaID,
-                             TimeSeries& max,
-                             TimeSeries& avg,
-                             TimeSeries& min):
-        RuleCurvesLoader(baseFolder, areaID, max, avg, min)
-
-    {
-    }
+    using RuleCurvesLoader::RuleCurvesLoader;
 
 private:
-    bool load() final;
+    bool load() override final;
 };
 
 class ScenarizedRuleCurvesLoader: public RuleCurvesLoader
 {
 public:
-    ScenarizedRuleCurvesLoader(const std::filesystem::path& baseFolder,
-                               const std::string& areaID,
-                               TimeSeries& max,
-                               TimeSeries& avg,
-                               TimeSeries& min):
-        RuleCurvesLoader(baseFolder, areaID, max, avg, min)
-    {
-    }
+    using RuleCurvesLoader::RuleCurvesLoader;
 
 private:
-    bool load() final;
+    bool load() override final;
 };
 
 class RuleCurvesLoaderService

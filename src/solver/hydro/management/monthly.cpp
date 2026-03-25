@@ -255,7 +255,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
 
           else
           {
-              const auto& ruleCurves = area.hydro.series->ruleCurves.avg.getColumn(y);
+              const auto* ruleCurves = area.hydro.series->ruleCurves.avg.getColumn(y);
 
               for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
               {

@@ -87,17 +87,17 @@ bool HydroInputsChecker::checkRuleCurves(uint year)
     areas_.each(
       [this, &ret, &year](const Data::Area& area)
       {
-          const auto& minRuleCurves = area.hydro.series->ruleCurves.min.getColumn(year);
-          const auto& avgRuleCurves = area.hydro.series->ruleCurves.avg.getColumn(year);
-          const auto& maxRuleCurves = area.hydro.series->ruleCurves.max.getColumn(year);
+          const auto* minRuleCurves = area.hydro.series->ruleCurves.min.getColumn(year);
+          const auto* avgRuleCurves = area.hydro.series->ruleCurves.avg.getColumn(year);
+          const auto* maxRuleCurves = area.hydro.series->ruleCurves.max.getColumn(year);
 
           const auto& tsIndex = area.hydro.series->ruleCurves.timeseriesNumbers[year];
 
           for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
           {
-              if (minRuleCurves[day] < 0 || avgRuleCurves[day] < 0
-                  || minRuleCurves[day] > maxRuleCurves[day] || avgRuleCurves[day] > 1.
-                  || maxRuleCurves[day] > 1.)
+                if (minRuleCurves[day] < 0 || avgRuleCurves[day] < 0
+                    || minRuleCurves[day] > maxRuleCurves[day] || avgRuleCurves[day] > 1.
+                    || maxRuleCurves[day] > 1.)
               {
                   errorCollector_(area.name)
                     << "Reservoir levels in area " << area.id
