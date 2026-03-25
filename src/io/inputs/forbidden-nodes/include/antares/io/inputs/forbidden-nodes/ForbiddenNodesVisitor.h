@@ -8,18 +8,29 @@
 
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
+#include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
 #include "antares/study/system-model/component.h"
 
 namespace Antares::IO::Inputs::ForbidNodes
 {
 
-class ForbiddenNodeFound final: public std::invalid_argument
+class ForbiddenNodeFound final: public IO::Inputs::InputError
 {
 public:
     explicit ForbiddenNodeFound(const std::string expr,
                                 const std::string node,
                                 const std::string parent = "");
+};
+
+class UnknownFunctionNodeType final: public IO::Inputs::InputError
+{
+public:
+    explicit UnknownFunctionNodeType(const std::string& functionName):
+        IO::Inputs::InputError("ForbiddenNodesVisitor > function '" + functionName
+                               + "' is unknown.")
+    {
+    }
 };
 
 class ForbiddenNodesVisitor: public Expressions::Visitors::NodeVisitor<void>

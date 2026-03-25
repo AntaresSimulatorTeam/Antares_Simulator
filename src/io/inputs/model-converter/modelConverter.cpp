@@ -24,40 +24,50 @@ using namespace Antares::IO::Inputs::ForbidNodes;
 namespace Antares::IO::Inputs::ModelConverter
 {
 UnknownTypeException::UnknownTypeException(const std::string& type):
-    std::runtime_error("Unknown variable type: " + type)
+    IO::Inputs::InputError("Unknown variable type: " + type)
 {
 }
 
 PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id):
-    std::runtime_error("This port type doesn't contains fields: " + id)
+    IO::Inputs::InputError("This port type doesn't contains fields: " + id)
 {
 }
 
 PortTypeWithThisIdAlreadyExists::PortTypeWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Port type with this id already exists: " + id)
+    IO::Inputs::InputError("Port type with this id already exists: " + id)
 {
 }
 
 PortTypeNotFound::PortTypeNotFound(const std::string& portId, const std::string& portTypeId):
-    std::runtime_error("For the port: " + portId + " , port type not found: " + portTypeId)
+    IO::Inputs::InputError("For the port: " + portId + " , port type not found: " + portTypeId)
 {
 }
 
 PortNotFoundForDefinition::PortNotFoundForDefinition(const std::string& portId):
-    std::runtime_error("In port-field-definitions, port not found: " + portId)
+    IO::Inputs::InputError("In port-field-definitions, port not found: " + portId)
 {
 }
 
 FieldNotFoundForDefinition::FieldNotFoundForDefinition(const std::string& portId,
                                                        const std::string& fieldId):
-    std::runtime_error("In port-field-definitions, for port: " + portId
-                       + " , field not found: " + fieldId)
+    IO::Inputs::InputError("In port-field-definitions, for port: " + portId
+                           + " , field not found: " + fieldId)
 {
 }
 
 PortInDefinition::PortInDefinition(const std::string& portId, const std::string& portInDefId):
-    std::runtime_error("In port-field-definitions, for port: " + portId
-                       + " , found another port in the definition: " + portInDefId)
+    IO::Inputs::InputError("In port-field-definitions, for port: " + portId
+                           + " , found another port in the definition: " + portInDefId)
+{
+}
+
+InvalidOutOfBoundsMode::InvalidOutOfBoundsMode(const std::string& mode):
+    IO::Inputs::InputError("Invalid out-of-bounds processing mode: " + mode)
+{
+}
+
+UnknownLocation::UnknownLocation(const std::string& location):
+    IO::Inputs::InputError("Unknown location: " + location)
 {
 }
 
@@ -71,7 +81,7 @@ static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::str
     {
         return OutOfBoundsProcessingMode::DROP;
     }
-    throw std::invalid_argument("Invalid out-of-bounds processing mode: " + mode);
+    throw InvalidOutOfBoundsMode(mode);
 }
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
@@ -148,7 +158,7 @@ Solver::Config::Location convertLocation(const std::string& locationStr)
         return Solver::Config::Location::SUBPROBLEMS;
     }
 
-    throw std::runtime_error("Unknown location: " + locationStr);
+    throw UnknownLocation(locationStr);
 }
 
 /**

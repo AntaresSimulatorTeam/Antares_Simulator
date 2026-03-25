@@ -23,7 +23,7 @@ std::string ErrorMessage(const std::string expr, const std::string node, const s
 ForbiddenNodeFound::ForbiddenNodeFound(const std::string expr,
                                        const std::string node,
                                        const std::string parent):
-    invalid_argument(ErrorMessage(expr, node, parent))
+    IO::Inputs::InputError(ErrorMessage(expr, node, parent))
 {
 }
 
@@ -189,9 +189,7 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
     case FunctionNodeType::ceil:
         return typeIndexOf<FunctionNodeType::ceil>();
     default:
-        std::string err_msg = "ForbiddenNodesVisitor > ";
-        err_msg += "function '" + functionNode->name() + "' is unknown.";
-        throw std::invalid_argument(err_msg);
+        throw UnknownFunctionNodeType(functionNode->name());
     }
 }
 

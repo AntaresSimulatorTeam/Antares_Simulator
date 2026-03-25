@@ -86,7 +86,7 @@ private:
 };
 
 NoPortWithThisId::NoPortWithThisId(const std::string& name):
-    runtime_error("No port found for this identifier: " + name)
+    IO::Inputs::InputError("No port found for this identifier: " + name)
 {
 }
 
@@ -273,10 +273,10 @@ std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
     return static_cast<Node*>(registry_.create<SumNode>(operands));
 }
 
-class NotImplemented final: public std::runtime_error
+class NotImplemented final: public IO::Inputs::InputError
 {
 public:
-    using std::runtime_error::runtime_error;
+    using IO::Inputs::InputError::InputError;
 };
 
 static bool isPortRegistered(const std::string& portId, const std::vector<YmlModel::Port>& ports)
@@ -379,8 +379,8 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 
     if (argIds.size() != 1)
     {
-        throw std::invalid_argument("dual operator expects exactly one constraint id got: "
-                                    + boost::algorithm::join(argIds, ", "));
+        throw IO::Inputs::InputError("dual operator expects exactly one constraint id got: "
+                                     + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string constraint_id = argIds[0];
@@ -421,8 +421,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
 
     if (argIds.size() != 1)
     {
-        throw std::invalid_argument("reduced_cost operator expects exactly one variable id got: "
-                                    + boost::algorithm::join(argIds, ", "));
+        throw IO::Inputs::InputError("reduced_cost operator expects exactly one variable id got: "
+                                     + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string var_id = argIds[0];
@@ -446,8 +446,8 @@ std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("max operator expects at least 2 operands got "
-                                    + std::to_string(nodes.size()));
+        throw IO::Inputs::InputError("max operator expects at least 2 operands got "
+                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
 }
@@ -457,8 +457,8 @@ std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("min operator expects at least 2 operands got "
-                                    + std::to_string(nodes.size()));
+        throw IO::Inputs::InputError("min operator expects at least 2 operands got "
+                                     + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
 }
@@ -470,7 +470,7 @@ Node* ConvertorVisitor::extractOneArgument(ExprParser::ArgListContext* context,
     if (size_t size = nodes.size(); size > 1)
     {
         std::string err_msg = opName + "() expects 1 argument, but has " + std::to_string(size);
-        throw std::invalid_argument(err_msg);
+        throw IO::Inputs::InputError(err_msg);
     }
     return nodes[0];
 }
@@ -495,7 +495,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     if (!arglist || arglist->expr().empty())
     {
         std::string err_msg = functionName + " operator expects an argument, got nothing";
-        throw std::invalid_argument(err_msg);
+        throw IO::Inputs::InputError(err_msg);
     }
 
     if (functionName == "reduced_cost")
@@ -523,7 +523,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
         return visitCeil(arglist);
     }
 
-    throw std::invalid_argument("Invalid function: '" + functionName + "'");
+    throw IO::Inputs::InputError("Invalid function: '" + functionName + "'");
 }
 
 template<class T>

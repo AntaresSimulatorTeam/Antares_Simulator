@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <antares/io/inputs/InputError.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 
@@ -11,14 +12,29 @@
 namespace Antares::IO::Inputs::SystemConverter
 {
 
-struct TwoFieldsOfSameRole final: std::invalid_argument
+struct TwoFieldsOfSameRole final: IO::Inputs::InputError
 {
-    using std::invalid_argument::invalid_argument;
+    using IO::Inputs::InputError::InputError;
 };
 
-struct ConnectingPortToItSelf final: std::invalid_argument
+struct ConnectingPortToItSelf final: IO::Inputs::InputError
 {
-    using std::invalid_argument::invalid_argument;
+    using IO::Inputs::InputError::InputError;
+};
+
+struct ComponentNotFound final: IO::Inputs::InputError
+{
+    using IO::Inputs::InputError::InputError;
+};
+
+struct IncompatiblePortTypes final: IO::Inputs::InputError
+{
+    using IO::Inputs::InputError::InputError;
+};
+
+struct DuplicateComponentId final: IO::Inputs::InputError
+{
+    using IO::Inputs::InputError::InputError;
 };
 
 ModelerStudy::SystemModel::System convert(

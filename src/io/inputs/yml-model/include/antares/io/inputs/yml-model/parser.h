@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <stdexcept>
 
+#include "antares/io/inputs/InputError.h"
 #include "Library.h"
 
 namespace Antares::IO::Inputs::YmlModel
 {
-class LibraryIdNotDefined final: public std::runtime_error
+class LibraryIdNotDefined final: public IO::Inputs::InputError
 {
 public:
     LibraryIdNotDefined();

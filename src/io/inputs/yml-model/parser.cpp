@@ -60,7 +60,7 @@ void tagNodes(YAML::Node& node)
 } // anonymous namespace
 
 LibraryIdNotDefined::LibraryIdNotDefined():
-    std::runtime_error("Library id is not defined")
+    IO::Inputs::InputError("Library id is not defined")
 {
 }
 

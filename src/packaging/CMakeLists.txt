@@ -102,6 +102,7 @@ set(TARGET_LIBS #No alias
         expressions
         optim-model-filler
 		forbidden-nodes
+        input-error
         yml-system
         yml-model
 		yml-utils

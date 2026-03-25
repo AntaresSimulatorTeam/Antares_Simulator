@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
@@ -100,7 +99,7 @@ BOOST_AUTO_TEST_CASE(identifierNotFound)
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::runtime_error,
+                          NoParameterOrVariableWithThisName,
                           checkMessage("No parameter or variable found for this identifier: abc"));
 }
 
@@ -215,7 +214,7 @@ BOOST_AUTO_TEST_CASE(portfield)
     BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldNode");
 
     expression = "port2.field1";
-    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), std::runtime_error);
+    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(portfieldSum)
@@ -241,7 +240,7 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
     BOOST_CHECK_EQUAL(portFieldSumNode->getFieldName(), "field1");
 
     expression = "port2.field1";
-    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), std::runtime_error);
+    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), InputError);
 }
 
 YmlModel::Model createYmlModel()
@@ -422,7 +421,7 @@ BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForDualOperator)
     std::string badExpression = "dual(abc)";
     std::string expected_msg = "dual called with unknown constraint 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
-                          std::runtime_error,
+                          InputError,
                           checkMessage(expected_msg));
 }
 
@@ -431,7 +430,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
     std::string expression = "dual()";
     std::string expected_msg = "dual operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(expected_msg));
 }
 
@@ -440,7 +439,7 @@ BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
     std::string expression = "dual(constraintA, e^(iPi) + 1 = 0)";
     auto err_msg = "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -490,7 +489,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
     std::string badExpression = "reduced_cost(abc)";
     std::string err_msg = "reduced_cost called with unknown variable 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
-                          std::runtime_error,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -499,7 +498,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctio
     std::string expression = "reduced_cost(varB, 2)";
     std::string err_msg = "reduced_cost operator expects exactly one variable id got: varB, 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -508,7 +507,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOper
     std::string expression = "reduced_cost()";
     std::string err_msg = "reduced_cost operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -578,7 +577,7 @@ BOOST_FIXTURE_TEST_CASE(MaxOperatorWrongNumberOfParameter, SupplyModelForFunctio
 {
     std::string expression = "max(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage("max operator expects at least 2 operands got 1"));
 }
 
@@ -586,7 +585,7 @@ BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctio
 {
     std::string expression = "min(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage("min operator expects at least 2 operands got 1"));
 }
 
@@ -735,7 +734,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFun
 
     std::string err_msg = "floor operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -746,7 +745,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
 
     std::string err_msg = "floor() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -796,7 +795,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_no_arg, SupplyModelForFunc
 
     std::string err_msg = "ceil operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -807,7 +806,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
 
     std::string err_msg = "ceil() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 

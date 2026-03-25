@@ -5,6 +5,7 @@
 
 #include <filesystem>
 
+#include <antares/io/inputs/InputError.h>
 #include <antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h>
 
 /**
@@ -13,6 +14,19 @@
  */
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
+
+class DataSeriesFileError final: public IO::Inputs::InputError
+{
+public:
+    using IO::Inputs::InputError::InputError;
+};
+
+class DataSeriesParseError final: public IO::Inputs::InputError
+{
+public:
+    using IO::Inputs::InputError::InputError;
+};
+
 class DataSeriesRepoImporter final
 {
 public:

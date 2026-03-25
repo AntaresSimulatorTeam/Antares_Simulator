@@ -19,6 +19,7 @@ target_include_directories(yml-model
 # Link dependencies (if any)
 target_link_libraries(yml-model
         PUBLIC
+        Antares::input-error
         fmt::fmt
         Antares::yml-utils
         PRIVATE

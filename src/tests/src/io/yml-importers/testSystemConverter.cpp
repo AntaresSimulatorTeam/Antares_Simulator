@@ -8,6 +8,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/yml-system/converter.h>
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/parser.h"
 #include "antares/study/system-model/library.h"
@@ -116,7 +117,7 @@ BOOST_FIXTURE_TEST_CASE(library_not_existing, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(model_not_existing, LibraryObjects)
@@ -133,7 +134,7 @@ BOOST_FIXTURE_TEST_CASE(model_not_existing, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
@@ -155,7 +156,7 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 static const auto libraryYaml_1 = R"(
@@ -395,7 +396,8 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
                              .secondCompo = "DD",
                              .secondPort = "injection_port"}});
     YmlSystem::System systemObj = parserSystem.parse(system);
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries),
+                      SystemConverter::ComponentNotFound);
 }
 
 BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
@@ -429,7 +431,7 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj,
                                                    {ModelConverter::convert(
                                                      YmlModel::Parser().parse(libraryYaml_1))}),
-                          std::invalid_argument,
+                          SystemConverter::DuplicateComponentId,
                           checkMessage("System has at least two components with the same id "
                                        "('N'), this is not supported"));
 }
