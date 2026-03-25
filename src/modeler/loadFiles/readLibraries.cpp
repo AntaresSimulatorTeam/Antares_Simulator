@@ -12,6 +12,7 @@
 #include <antares/io/inputs/yml-model/parser.h>
 #include <antares/logs/logs.h>
 #include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/exception/LoadingError.hpp"
 #include "antares/io/inputs/yml-optim-config/OptimConfig.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/modeler/loadFiles/readOptimConfig.h"
@@ -22,7 +23,7 @@ namespace fs = std::filesystem;
 
 namespace Antares::Solver::LoadFiles
 {
-static YmlModel::Library loadSingleLibrary(const fs::path& filePath)
+YmlModel::Library loadSingleLibrary(const fs::path& filePath)
 {
     std::string libraryStr;
     try
@@ -35,17 +36,14 @@ static YmlModel::Library loadSingleLibrary(const fs::path& filePath)
         throw ErrorLoadingYaml(e.what());
     }
 
-    YmlModel::Parser parser;
-    YmlModel::Library libraryObj;
-
     try
     {
-        return parser.parse(libraryStr);
+        return YmlModel::Parser::parse(libraryStr);
     }
     catch (const YAML::Exception& e)
     {
-        handleYamlError(e, filePath.string());
-        throw ErrorLoadingYaml(e.what());
+        auto&& err = markYamlError(e, filePath.string());
+        throw Error::LoadingError(err);
     }
 }
 
@@ -92,7 +90,7 @@ std::optional<std::vector<YmlModel::Library>> loadLibrariesFromYaml(const fs::pa
     return yml_libs;
 }
 
-static std::pair<std::string, std::string> splitModelId(const std::string& modelId)
+std::pair<std::string, std::string> splitModelId(const std::string& modelId)
 {
     std::vector<std::string> result;
     boost::split(result, modelId, boost::is_any_of("."));

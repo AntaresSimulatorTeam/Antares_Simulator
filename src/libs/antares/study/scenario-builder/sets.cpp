@@ -129,7 +129,7 @@ bool Sets::internalLoadFromINIFile(const AnyString& filename)
           for (auto* p = section.firstProperty; p != nullptr; p = p->next)
           {
               p->key.split(splitKey, ",", true, false);
-              ruleset.readLine(splitKey, p->value, false);
+              ruleset.readLine(splitKey, p->value);
           }
 
           ruleset.sendWarningsForDisabledClusters();

@@ -102,11 +102,10 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
             throw PortTypeWithThisIdAlreadyExists(ymlPortType.id);
         }
 
-        PortType portType(ymlPortType.id,
-                          std::move(fields),
-                          convert_to_system(ymlPortType.area_connection),
-                          ymlPortType.thermal_capacity_connection_field);
-        out.emplace_back(std::move(portType));
+        out.emplace_back(ymlPortType.id,
+                         std::move(fields),
+                         convert_to_system(ymlPortType.area_connection),
+                         ymlPortType.thermal_capacity_connection_field);
     }
     return out;
 }

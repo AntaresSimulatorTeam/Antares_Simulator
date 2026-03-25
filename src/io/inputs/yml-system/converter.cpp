@@ -6,10 +6,6 @@
 #include <algorithm>
 #include <sstream>
 
-// gp : For the visit (dispatch(...)) of the nodes.
-// gp : Including ForbiddenNodesVisitor.h should be enough, but for some reason we need to include
-//      ExpressionsNodes.h as well.
-// gp : TODO: find a way to avoid including ExpressionsNodes.h
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/yml-system/system.h"
@@ -24,6 +20,8 @@ using namespace Antares::IO::Inputs::ForbidNodes;
 namespace Antares::IO::Inputs::SystemConverter
 {
 
+namespace
+{
 class ErrorWhileSplittingLibraryAndModel final: public std::runtime_error
 {
 public:
@@ -51,7 +49,7 @@ public:
     }
 };
 
-static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
+std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
     size_t pos = s.find('.');
     if (pos == std::string::npos)
@@ -64,9 +62,9 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static const Model& getModel(const std::vector<Library>& libraries,
-                             const std::string& libraryId,
-                             const std::string& modelId)
+const Model& getModel(const std::vector<Library>& libraries,
+                      const std::string& libraryId,
+                      const std::string& modelId)
 {
     auto lib = std::ranges::find_if(libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
@@ -84,8 +82,7 @@ static const Model& getModel(const std::vector<Library>& libraries,
     return search->second;
 }
 
-static Component createComponent(const YmlSystem::Component& c,
-                                 const std::vector<Library>& libraries)
+Component createComponent(const YmlSystem::Component& c, const std::vector<Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -112,7 +109,7 @@ static Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
-static Component& findComponent(const std::string& id, std::vector<Component>& components)
+Component& findComponent(const std::string& id, std::vector<Component>& components)
 
 {
     const auto it = std::ranges::find_if(components,
@@ -124,10 +121,10 @@ static Component& findComponent(const std::string& id, std::vector<Component>& c
     return *it;
 }
 
-static void CheckPortSelfConnection(const std::string& firstComponentId,
-                                    const std::string& firstPortId,
-                                    const std::string& secondComponentId,
-                                    const std::string& secondPortId)
+void CheckPortSelfConnection(const std::string& firstComponentId,
+                             const std::string& firstPortId,
+                             const std::string& secondComponentId,
+                             const std::string& secondPortId)
 {
     if (firstComponentId == secondComponentId && firstPortId == secondPortId)
     {
@@ -138,7 +135,7 @@ static void CheckPortSelfConnection(const std::string& firstComponentId,
     }
 }
 
-static void CheckPortsType(const Port& firstPort, const Port& secondPort)
+void CheckPortsType(const Port& firstPort, const Port& secondPort)
 {
     if (firstPort.Type() != secondPort.Type())
     {
@@ -149,10 +146,10 @@ static void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
-static void CheckFieldsRoleCompatibility(const Component& component_1,
-                                         const Port& port_1,
-                                         const Component& component_2,
-                                         const Port& port_2)
+void CheckFieldsRoleCompatibility(const Component& component_1,
+                                  const Port& port_1,
+                                  const Component& component_2,
+                                  const Port& port_2)
 {
     for (const auto& field: port_1.Type().Fields())
     {
@@ -190,8 +187,7 @@ static void CheckFieldsRoleCompatibility(const Component& component_1,
  * @throw std::invalid_argument if a component or port is not found, if the ports are not
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
-static void connectComponents(const YmlSystem::Connection& connection,
-                              std::vector<Component>& components)
+void connectComponents(const YmlSystem::Connection& connection, std::vector<Component>& components)
 {
     const auto& componentId_1 = connection.firstEntry.componentId;
     const auto& portId_1 = connection.firstEntry.portId;
@@ -224,8 +220,7 @@ static void connectComponents(const YmlSystem::Connection& connection,
  * @throw std::invalid_argument if a component is not found, or if the connection could not be
  * established
  */
-static void connectAreas(const YmlSystem::AreaConnection& connection,
-                         std::vector<Component>& components)
+void connectAreas(const YmlSystem::AreaConnection& connection, std::vector<Component>& components)
 {
     auto& component = findComponent(connection.componentId, components);
     component.addAreaConnection(connection.portId, connection.areaId);
@@ -244,8 +239,8 @@ static void connectAreas(const YmlSystem::AreaConnection& connection,
  * @throw std::invalid_argument if a component is not found, or if the connection could not be
  * established
  */
-static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
-                                   std::vector<Component>& components)
+void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
+                            std::vector<Component>& components)
 {
     // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
@@ -254,6 +249,8 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
                                            connection.thermalComponent.areaId,
                                            connection.thermalComponent.clusterId);
 }
+
+} // anonymous namespace
 
 void checkForNonLinearityBehindConnections(const std::vector<Component>& components)
 {
