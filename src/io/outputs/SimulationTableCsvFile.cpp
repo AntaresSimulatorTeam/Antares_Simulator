@@ -10,8 +10,10 @@
 namespace Antares::IO::Outputs
 {
 SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outputFolder,
-                                               const std::string& simulationId):
-    SimulationTableCsv()
+                                               const std::string& simulationId,
+                                               bool parquetFormatRequired):
+    SimulationTableCsv(),
+    parquetFormatRequired_(parquetFormatRequired)
 {
     if (!std::filesystem::exists(outputFolder))
     {
@@ -32,13 +34,7 @@ void SimulationTableCsvFile::write()
     // gp : Plus : this function should return the row format for more clarity.
     exportTable(header, rows);
 
-    // Choose writer based on file extension
-    Antares::Writer::TableFormat fmt = Antares::Writer::TableFormat::CSV;
-    if (output_file_.extension() == ".parquet")
-    {
-        fmt = Antares::Writer::TableFormat::Parquet;
-    }
-    auto writer = Antares::Writer::makeTableWriter(fmt);
+    auto writer = Antares::Writer::makeTableWriter(parquetFormatRequired_);
     writer->writeTable(output_file_, header, rows);
 }
 } // namespace Antares::IO::Outputs

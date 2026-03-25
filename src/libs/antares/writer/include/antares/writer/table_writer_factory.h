@@ -4,11 +4,10 @@
 #pragma once
 
 #include "i_table_writer.h"
-#include "table_format.h"
 
 namespace Antares::Writer
 {
 
-ITableWriter::Ptr makeTableWriter(TableFormat fmt);
+ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired);
 
 } // namespace Antares::Writer

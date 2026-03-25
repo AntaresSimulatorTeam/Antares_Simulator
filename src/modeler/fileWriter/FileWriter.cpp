@@ -44,8 +44,11 @@ void FileWriter::writeSimulationTable(
 {
     // gp : We are in file writer, and though we build a simulation table AND write it on disk.
     // gp : Building the simulation table is not the responsibility of the writer, it should have
-    // gp : been not earlier.
-    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+    // gp : been done earlier, and the table should be passed as argument.
+    // gp : Doing so, we would dramatically reduce the number of arguments of this function.
+    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_,
+                                                        simulationId_,
+                                                        parquetFormatRequired_);
     IO::Outputs::FillSimulationTable(simulationTable,
                                      linearProblem,
                                      solution.getObjectiveValue(),
@@ -54,12 +57,16 @@ void FileWriter::writeSimulationTable(
                                      fillContext,
                                      0,
                                      IO::Outputs::TimeConversionMode::SingleBlock);
+
+    // gp : Simulation table and writing it should be decoupled and separate classes.
+    // gp : We should have a simulation table writer that takes a simulation table at constuction.
     simulationTable.writeHeaderToBuffer();
     simulationTable.write();
 }
 
-FileWriter::FileWriter(std::filesystem::path path):
-    studyPath_(std::move(path))
+FileWriter::FileWriter(std::filesystem::path path, bool parquetFormatRequired):
+    studyPath_(std::move(path)),
+    parquetFormatRequired_(parquetFormatRequired)
 {
 }
 

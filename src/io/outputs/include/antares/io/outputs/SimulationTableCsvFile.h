@@ -13,11 +13,13 @@ class SimulationTableCsvFile final: public SimulationTableCsv
 {
 public:
     SimulationTableCsvFile(const std::filesystem::path& outputFolder,
-                           const std::string& simulationId);
+                           const std::string& simulationId,
+                           bool parquetFormatRequired);
 
     void write() override;
 
 private:
     std::filesystem::path output_file_;
+    bool parquetFormatRequired_ = false;
 };
 } // namespace Antares::IO::Outputs

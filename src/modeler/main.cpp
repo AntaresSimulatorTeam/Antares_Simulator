@@ -52,7 +52,7 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        Solver::FileWriter writer(studyPath);
+        Solver::FileWriter writer(studyPath, parquetFormat);
         Solver::Modeler modeler(loader, writer);
         modeler.run();
     }

@@ -27,16 +27,12 @@
 namespace Antares::Writer
 {
 
-ITableWriter::Ptr makeTableWriter(TableFormat fmt)
+ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired)
 {
-    switch (fmt)
+    if (parquetFormatRequired)
     {
-    case TableFormat::CSV:
-        return std::make_shared<CsvTableWriter>();
-    case TableFormat::Parquet:
         return std::make_shared<ParquetTableWriter>();
     }
-    // Fallback to CSV
     return std::make_shared<CsvTableWriter>();
 }
 

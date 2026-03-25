@@ -36,13 +36,15 @@ public:
       const ModelerData& modelerData,
       const Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
-    explicit FileWriter(std::filesystem::path path);
+
+    explicit FileWriter(std::filesystem::path path, bool parquetFormatRequired);
 
     const std::filesystem::path& outputPath() const;
 
 private:
     const std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
+    bool parquetFormatRequired_ = false;
     std::string simulationId_;
 };
 } // namespace Antares::Solver
