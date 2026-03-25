@@ -95,9 +95,9 @@ bool HydroInputsChecker::checkRuleCurves(uint year)
 
           for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
           {
-                if (minRuleCurves[day] < 0 || avgRuleCurves[day] < 0
-                    || minRuleCurves[day] > maxRuleCurves[day] || avgRuleCurves[day] > 1.
-                    || maxRuleCurves[day] > 1.)
+              if (minRuleCurves[day] < 0 || avgRuleCurves[day] < 0
+                  || minRuleCurves[day] > maxRuleCurves[day] || avgRuleCurves[day] > 1.
+                  || maxRuleCurves[day] > 1.)
               {
                   errorCollector_(area.name)
                     << "Reservoir levels in area " << area.id
