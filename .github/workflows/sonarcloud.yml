@@ -47,7 +47,7 @@ jobs:
         echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Install ccache
-      run: sudo apt-get install -y ccache
+      run: sudo apt-get install -y ccache uuid-dev
 
       # Can't use ubuntu cache. Cache hit is only single digit %
     - name: Restore ccache cache
@@ -72,12 +72,6 @@ jobs:
 
     - name: Install Build Wrapper
       uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v7.0.0
-
-    - name: Install libraries
-      run: |
-        sudo apt-get update
-        sudo apt-get install uuid-dev
-        sudo apt-get install libboost-test-dev
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
