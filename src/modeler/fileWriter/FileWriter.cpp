@@ -51,7 +51,7 @@ void FileWriter::writeSimulationTable(
                                      fillContext,
                                      0,
                                      IO::Outputs::TimeConversionMode::SingleBlock);
-    simulationTable.writeHeader();
+    simulationTable.writeHeaderToBuffer();
     simulationTable.write();
 }
 

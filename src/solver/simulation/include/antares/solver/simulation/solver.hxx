@@ -154,9 +154,10 @@ public:
                                              optWriter,
                                              pDurationCollector,
                                              scratchmap);
+        
         if (!study.parameters.noOutput)
         {
-            auto& simTable = simulation_->getSimulationTable(numSpace);
+            auto& simTable = simulation_->getSimulationTable(numSpace); 
 
             auto buffers = simTable.moveBuffers();
 
@@ -504,13 +505,14 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     }
 
     pQueueService->start();
-
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
+
     if (!study.parameters.noOutput)
     {
         aggregateAndWriteSimulationTables();
     }
+
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution

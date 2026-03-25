@@ -21,7 +21,7 @@ public:
 
     // const std::string& buffer() const;
     [[nodiscard]] std::string buffer() const override;
-    void writeHeader();
+    void writeHeaderToBuffer();
 
 protected:
     // Export the current table into header + rows of string cells

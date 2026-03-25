@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_SUITE(SimulationTableCsvTests)
 BOOST_AUTO_TEST_CASE(Constructor_WritesHeader)
 {
     SimulationTableCsv table;
-    table.writeHeader();
+    table.writeHeaderToBuffer();
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("block,component,output,absolute_time_index,block_time_index,scenario_"
                             "index,value,basis_status")
@@ -396,7 +396,7 @@ BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
     }
-    table.writeHeader();
+    table.writeHeaderToBuffer();
     table.write();
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -643,7 +643,7 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
                        1,
                        TimeConversionMode::SingleBlock,
                        0);
-    table.writeHeader();
+    table.writeHeaderToBuffer();
     table.write();
     std::string buffer = table.buffer();
 
@@ -1126,7 +1126,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
                                    .value = 123.45,
                                    .status = MipBasisStatus::BASIC};
         table.addEntry(entry);
-        table.writeHeader();
+        table.writeHeaderToBuffer();
         table.write();
     } // File should be closed here
 

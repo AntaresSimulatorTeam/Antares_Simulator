@@ -49,12 +49,10 @@ std::string SimulationTableCsv::getHeader() const
     return os.str();
 }
 
-void SimulationTableCsv::writeHeader()
+void SimulationTableCsv::writeHeaderToBuffer()
 {
     buffer_ << getHeader() << '\n';
 }
-
-const std::string NONE = "None";
 
 void SimulationTableCsv::write()
 {
