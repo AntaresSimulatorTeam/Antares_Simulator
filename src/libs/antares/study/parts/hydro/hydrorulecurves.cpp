@@ -25,6 +25,93 @@ namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
+class RuleCurvesLoader
+{
+public:
+    RuleCurvesLoader(const std::filesystem::path& baseFolder,
+                     const std::string& areaID,
+                     TimeSeries& max,
+                     TimeSeries& avg,
+                     TimeSeries& min):
+        baseFolder_(baseFolder),
+        areaID_(areaID),
+        max_(max),
+        avg_(avg),
+        min_(min)
+    {
+    }
+
+    virtual ~RuleCurvesLoader() = default;
+    virtual bool load() = 0;
+
+protected:
+    const std::filesystem::path& baseFolder_;
+    const std::string& areaID_;
+    TimeSeries& max_;
+    TimeSeries& avg_;
+    TimeSeries& min_;
+};
+
+class StandardRuleCurvesLoader: public RuleCurvesLoader
+{
+public:
+    using RuleCurvesLoader::RuleCurvesLoader;
+
+private:
+    bool load() override final
+    {
+        const fs::path filePath = baseFolder_ / "common" / "capacity"
+                                  / std::string("reservoir_" + areaID_ + ".txt");
+
+        Matrix<double> standardRuleCurves;
+        standardRuleCurves.reset(3L, DAYS_PER_YEAR, true);
+
+        Matrix<>::BufferType fileContent;
+
+        bool ret = standardRuleCurves.loadFromCSVFile(filePath.string(),
+                                                      3,
+                                                      DAYS_PER_YEAR,
+                                                      Matrix<>::optFixedSize,
+                                                      &fileContent);
+
+        min_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
+        min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);
+        avg_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
+        avg_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::average]);
+        max_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
+        max_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::maximum]);
+
+        return ret;
+    }
+};
+
+class ScenarizedRuleCurvesLoader: public RuleCurvesLoader
+{
+public:
+    using RuleCurvesLoader::RuleCurvesLoader;
+
+private:
+    bool load() override final
+    {
+        const fs::path path = baseFolder_ / "series" / areaID_;
+        Matrix<>::BufferType fileContent;
+
+        bool ret = true;
+
+        fs::path filePath = path / "maxDailyReservoirLevels.txt";
+        ret = max_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent)
+              && ret;
+        filePath = path / "minDailyReservoirLevels.txt";
+        ret = min_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent)
+              && ret;
+        filePath = path / "avgDailyReservoirLevels.txt";
+        ret = avg_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent)
+              && ret;
+
+        return ret;
+    }
+};
+
 RuleCurves::RuleCurves(TimeSeriesNumbers& timeseriesNumbers):
     timeseriesNumbers(timeseriesNumbers),
     max(timeseriesNumbers),
@@ -47,49 +134,6 @@ void RuleCurves::averageTimeSeries()
     max.averageTimeseries();
     min.averageTimeseries();
     avg.averageTimeseries();
-}
-
-bool ScenarizedRuleCurvesLoader::load()
-{
-    const fs::path path = baseFolder_ / "series" / areaID_;
-    Matrix<>::BufferType fileContent;
-
-    bool ret = true;
-
-    fs::path filePath = path / "maxDailyReservoirLevels.txt";
-    ret = max_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
-    filePath = path / "minDailyReservoirLevels.txt";
-    ret = min_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
-    filePath = path / "avgDailyReservoirLevels.txt";
-    ret = avg_.timeSeries.loadFromCSVFile(filePath.string(), 1, DAYS_PER_YEAR, &fileContent) && ret;
-
-    return ret;
-}
-
-bool StandardRuleCurvesLoader::load()
-{
-    const fs::path filePath = baseFolder_ / "common" / "capacity"
-                              / std::string("reservoir_" + areaID_ + ".txt");
-
-    Matrix<double> standardRuleCurves;
-    standardRuleCurves.reset(3L, DAYS_PER_YEAR, true);
-
-    Matrix<>::BufferType fileContent;
-
-    bool ret = standardRuleCurves.loadFromCSVFile(filePath.string(),
-                                                  3,
-                                                  DAYS_PER_YEAR,
-                                                  Matrix<>::optFixedSize,
-                                                  &fileContent);
-
-    min_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
-    min_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::minimum]);
-    avg_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
-    avg_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::average]);
-    max_.timeSeries.reset(1U, DAYS_PER_YEAR, true);
-    max_.timeSeries.pasteToColumn(0, standardRuleCurves[RuleCurves::maximum]);
-
-    return ret;
 }
 
 std::unique_ptr<RuleCurvesLoader> RuleCurvesLoaderService::createRuleCurvesLoader(

@@ -52,53 +52,7 @@ public:
     TimeSeries avg;
 };
 
-class RuleCurvesLoader
-{
-public:
-    RuleCurvesLoader(
-
-      const std::filesystem::path& baseFolder,
-      const std::string& areaID,
-      TimeSeries& max,
-      TimeSeries& avg,
-      TimeSeries& min):
-        baseFolder_(baseFolder),
-        areaID_(areaID),
-        max_(max),
-        avg_(avg),
-        min_(min)
-
-    {
-    }
-
-    virtual ~RuleCurvesLoader() = default;
-    virtual bool load() = 0;
-
-protected:
-    const std::filesystem::path& baseFolder_;
-    const std::string& areaID_;
-    TimeSeries& max_;
-    TimeSeries& avg_;
-    TimeSeries& min_;
-};
-
-class StandardRuleCurvesLoader: public RuleCurvesLoader
-{
-public:
-    using RuleCurvesLoader::RuleCurvesLoader;
-
-private:
-    bool load() override final;
-};
-
-class ScenarizedRuleCurvesLoader: public RuleCurvesLoader
-{
-public:
-    using RuleCurvesLoader::RuleCurvesLoader;
-
-private:
-    bool load() override final;
-};
+class RuleCurvesLoader;
 
 class RuleCurvesLoaderService
 {
