@@ -100,7 +100,7 @@ BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(library_not_existing, LibraryObjects)
@@ -397,7 +397,7 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
                              .secondPort = "injection_port"}});
     YmlSystem::System systemObj = parserSystem.parse(system);
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries),
-                      SystemConverter::ComponentNotFound);
+                      InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
@@ -408,7 +408,7 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
                              .secondCompo = "D",
                              .secondPort = "yosh!"}});
     YmlSystem::System systemObj = parserSystem.parse(system);
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
@@ -431,7 +431,7 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj,
                                                    {ModelConverter::convert(
                                                      YmlModel::Parser().parse(libraryYaml_1))}),
-                          SystemConverter::DuplicateComponentId,
+                          InputError,
                           checkMessage("System has at least two components with the same id "
                                        "('N'), this is not supported"));
 }

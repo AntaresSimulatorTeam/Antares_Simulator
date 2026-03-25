@@ -92,7 +92,7 @@ Component& findComponent(const std::string& id, std::vector<Component>& componen
                                          [&id](const Component& c) { return c.Id() == id; });
     if (it == components.end())
     {
-        throw std::invalid_argument("Component with id '" + id + "' not found in system.");
+        throw IO::Inputs::InputError("Component with id '" + id + "' not found in system.");
     }
     return *it;
 }
@@ -118,7 +118,7 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
         std::ostringstream msg;
         msg << "Ports '" << firstPort.Id() << "' and '" << secondPort.Id()
             << "' are not of the same type!";
-        throw std::invalid_argument(msg.str());
+        throw IO::Inputs::InputError(msg.str());
     }
 }
 
@@ -160,7 +160,7 @@ void CheckFieldsRoleCompatibility(const Component& component_1,
  *
  * @return void
  *
- * @throw std::invalid_argument if a component or port is not found, if the ports are not
+ * @throw IO::Inputs::InputError if a component or port is not found, if the ports are not
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
 void connectComponents(const YmlSystem::Connection& connection, std::vector<Component>& components)
@@ -193,7 +193,7 @@ void connectComponents(const YmlSystem::Connection& connection, std::vector<Comp
  *
  * @return void
  *
- * @throw std::invalid_argument if a component is not found, or if the connection could not be
+ * @throw IO::Inputs::InputError if a component is not found, or if the connection could not be
  * established
  */
 void connectAreas(const YmlSystem::AreaConnection& connection, std::vector<Component>& components)
@@ -212,7 +212,7 @@ void connectAreas(const YmlSystem::AreaConnection& connection, std::vector<Compo
  *
  * @return void
  *
- * @throw std::invalid_argument if a component is not found, or if the connection could not be
+ * @throw IO::Inputs::InputError if a component is not found, or if the connection could not be
  * established
  */
 void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
@@ -260,8 +260,9 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                                        [&c](const Component& compo) { return compo.Id() == c.id; });
         if (it != components.end())
         {
-            throw std::invalid_argument("System has at least two components with the same id ('"
-                                        + c.id + "'), this is not supported");
+            throw IO::Inputs::InputError(
+              "System has at least two components with the same id ('" + c.id
+              + "'), this is not supported");
         }
         components.push_back(createComponent(c, libraries));
         logs.debug() << "Loaded component `" << c.id << "`";

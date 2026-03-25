@@ -20,13 +20,6 @@ std::string ErrorMessage(const std::string expr, const std::string node, const s
     return fmt::format("'{}' is not allowed in expression '{}'", node, expr);
 }
 
-ForbiddenNodeFound::ForbiddenNodeFound(const std::string expr,
-                                       const std::string node,
-                                       const std::string parent):
-    IO::Inputs::InputError(ErrorMessage(expr, node, parent))
-{
-}
-
 ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbiddenNodes,
                                              const std::string& expression):
     forbiddenNodes_(forbiddenNodes),
@@ -189,7 +182,8 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
     case FunctionNodeType::ceil:
         return typeIndexOf<FunctionNodeType::ceil>();
     default:
-        throw UnknownFunctionNodeType(functionNode->name());
+        throw IO::Inputs::InputError("ForbiddenNodesVisitor > function '"
+                                     + functionNode->name() + "' is unknown.");
     }
 }
 
@@ -212,7 +206,7 @@ void ForbiddenNodesVisitor::checkIsGloballyForbidden(const std::type_index& node
 {
     if (forbiddenNodes_.isGloballyForbidden(nodeTypeId))
     {
-        throw ForbiddenNodeFound(expression_, node->name());
+        throw IO::Inputs::InputError(ErrorMessage(expression_, node->name(), ""));
     }
 }
 
@@ -223,7 +217,7 @@ void ForbiddenNodesVisitor::checkIsForbiddenByParent(const std::type_index& node
     {
         if (forbiddenNodes_.isForbiddenByParent(parentTypeIndex, nodeTypeId))
         {
-            throw ForbiddenNodeFound(expression_, node->name(), parentNodeName);
+            throw IO::Inputs::InputError(ErrorMessage(expression_, node->name(), parentNodeName));
         }
     }
 }

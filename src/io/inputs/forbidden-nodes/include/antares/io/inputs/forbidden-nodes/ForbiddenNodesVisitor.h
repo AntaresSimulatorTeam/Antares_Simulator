@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <fmt/format.h>
 #include <optional>
 #include <ranges>
 
@@ -15,23 +14,6 @@
 namespace Antares::IO::Inputs::ForbidNodes
 {
 
-class ForbiddenNodeFound final: public IO::Inputs::InputError
-{
-public:
-    explicit ForbiddenNodeFound(const std::string expr,
-                                const std::string node,
-                                const std::string parent = "");
-};
-
-class UnknownFunctionNodeType final: public IO::Inputs::InputError
-{
-public:
-    explicit UnknownFunctionNodeType(const std::string& functionName):
-        IO::Inputs::InputError("ForbiddenNodesVisitor > function '" + functionName
-                               + "' is unknown.")
-    {
-    }
-};
 
 class ForbiddenNodesVisitor: public Expressions::Visitors::NodeVisitor<void>
 {

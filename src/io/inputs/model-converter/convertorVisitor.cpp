@@ -269,12 +269,6 @@ std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
     return static_cast<Node*>(registry_.create<SumNode>(operands));
 }
 
-class NotImplemented final: public IO::Inputs::InputError
-{
-public:
-    using IO::Inputs::InputError::InputError;
-};
-
 static bool isPortRegistered(const std::string& portId, const std::vector<YmlModel::Port>& ports)
 {
     for (const auto& [id, _]: ports)
@@ -619,7 +613,7 @@ std::any ConvertorVisitor::visitShiftMuldiv(ExprParser::ShiftMuldivContext* cont
 std::any ConvertorVisitor::visitRightMuldiv(
   [[maybe_unused]] ExprParser::RightMuldivContext* context)
 {
-    throw NotImplemented("Node right mul div not implemented yet");
+    throw IO::Inputs::InputError("Node right mul div not implemented yet");
 }
 
 std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionContext* context)

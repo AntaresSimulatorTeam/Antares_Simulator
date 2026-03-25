@@ -601,7 +601,7 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
     auto err_msg = "'FunctionNode::min' is not allowed to contain 'VariableNode' in expression '"
                    + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -617,7 +617,7 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in ";
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -631,7 +631,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
 
     std::string err_msg = "'LessThanOrEqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -646,7 +646,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
     std::string err_msg = "'GreaterThanOrEqualNode' is not allowed in expression '" + expression
                           + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -660,7 +660,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
 
     std::string err_msg = "'EqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -674,7 +674,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
     std::string err_msg = "'FunctionNode::floor' is not allowed to contain 'VariableNode' in ";
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -824,7 +824,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes
                           "expression '"
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 

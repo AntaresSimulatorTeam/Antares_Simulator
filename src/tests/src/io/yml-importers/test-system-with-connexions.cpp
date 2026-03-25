@@ -457,7 +457,7 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___
 
     std::string err_msg = "'FunctionNode::dual' is not allowed in expression 'dual(my_constraint)'";
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 

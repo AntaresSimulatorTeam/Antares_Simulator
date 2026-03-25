@@ -12,21 +12,6 @@
 namespace Antares::IO::Inputs::SystemConverter
 {
 
-struct ComponentNotFound final: IO::Inputs::InputError
-{
-    using IO::Inputs::InputError::InputError;
-};
-
-struct IncompatiblePortTypes final: IO::Inputs::InputError
-{
-    using IO::Inputs::InputError::InputError;
-};
-
-struct DuplicateComponentId final: IO::Inputs::InputError
-{
-    using IO::Inputs::InputError::InputError;
-};
-
 ModelerStudy::SystemModel::System convert(
   const YmlSystem::System& ymlSystem,
   const std::vector<ModelerStudy::SystemModel::Library>& libraries);

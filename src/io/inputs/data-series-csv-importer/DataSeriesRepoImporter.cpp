@@ -26,7 +26,7 @@ inline const char* ParseOneDouble(const char* ptr,
     auto [p, ec] = std::from_chars(ptr, end, value);
     if (ec == std::errc::invalid_argument)
     {
-        throw DataSeriesParseError(errorMessagePrefix + ": \"" + *p + "\" is not a number");
+        throw IO::Inputs::InputError(errorMessagePrefix + ": \"" + *p + "\" is not a number");
     }
     return p;
 }
@@ -91,7 +91,7 @@ static bool ParseRow(const char* first,
                 std::ostringstream oss;
                 oss << errorMessagePrefix << ": row (" << rowIndex << ") has more columns ("
                     << colIndex + 1 << ") than the expected (" << columns.front().size() << ").";
-                throw DataSeriesParseError(oss.str());
+                throw IO::Inputs::InputError(oss.str());
             }
         }
     }
@@ -100,7 +100,7 @@ static bool ParseRow(const char* first,
         std::ostringstream oss;
         oss << errorMessagePrefix << ": row (" << rowIndex << ") has less columns (" << colIndex
             << ") than the expected (" << columns.front().size() << ").";
-        throw DataSeriesParseError(oss.str());
+        throw IO::Inputs::InputError(oss.str());
     }
     return colIndex != 0;
 }
@@ -112,8 +112,8 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
     auto sz = std::filesystem::file_size(filename, ec);
     if (ec)
     {
-        throw DataSeriesFileError("Error reading CSV file( " + filename.string()
-                                  + "):" + ec.message());
+        throw IO::Inputs::InputError("Error reading CSV file( " + filename.string()
+                                     + "):" + ec.message());
     }
     if (sz == 0)
     {
@@ -124,7 +124,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
 
     if (!file.is_open())
     {
-        throw DataSeriesFileError("Failed to open file: " + fileName);
+        throw IO::Inputs::InputError("Failed to open file: " + fileName);
     }
 
     std::vector<std::vector<double>> columns;
@@ -174,7 +174,7 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
 {
     if (!is_directory(path))
     {
-        throw DataSeriesFileError("Not a directory: " + path.string());
+        throw IO::Inputs::InputError("Not a directory: " + path.string());
     }
     using std::views::filter;
     auto pathFilter = filter(static_cast<bool (*)(const fs::path&)>(&fs::is_regular_file));
