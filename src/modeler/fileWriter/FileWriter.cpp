@@ -42,6 +42,9 @@ void FileWriter::writeSimulationTable(
   const Optimisation::OptimEntityContainer& variableContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
+    // gp : We are in file writer, and though we build a simulation table AND write it on disk.
+    // gp : Building the simulation table is not the responsibility of the writer, it should have
+    // gp : been not earlier.
     IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
     IO::Outputs::FillSimulationTable(simulationTable,
                                      linearProblem,

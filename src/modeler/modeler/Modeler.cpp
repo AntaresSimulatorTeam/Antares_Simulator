@@ -197,6 +197,8 @@ void Modeler::writeSubProblemSimulationTable(
         if (!parameters_.noOutput)
         {
             auto& subproblem_1_1 = subproblems_[0];
+            // gp : we should first build the simulation table, then write it, the writer should not
+            // gp : be responsible for building the simulation table 
             writer_.writeSimulationTable(*subproblem_1_1,
                                          *solution,
                                          data_,
@@ -303,6 +305,8 @@ void Modeler::run()
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
         auto* solution = solveSubproblem();
+        // gp : we should first build the simulation table, then write it.
+        // gp : we need two steps here.
         writeSubProblemSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
     }
 }

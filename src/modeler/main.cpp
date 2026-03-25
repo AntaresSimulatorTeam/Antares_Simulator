@@ -14,7 +14,17 @@ using namespace Antares;
 static void usage()
 {
     std::cout << "Usage:\n"
-              << "antares-modeler <path/to/study>\n";
+              << "antares-modeler <path/to/study> [--parquet]\n";
+}
+
+bool parquetFormatRequired(int argc, const char** argv)
+{
+    std::string parquetOption = argv[2];
+    if (argc == 3 && parquetOption == "--parquet")
+    {
+        return true;
+    }
+    return false;
 }
 
 int main(int argc, const char** argv)
@@ -27,7 +37,10 @@ int main(int argc, const char** argv)
         return EXIT_FAILURE;
     }
 
+    // Options parsing
     std::filesystem::path studyPath(argv[1]);
+    bool parquetFormat = parquetFormatRequired(argc, argv);
+
     logs.info() << "Study path: " << studyPath;
 
     if (!std::filesystem::is_directory(studyPath))
