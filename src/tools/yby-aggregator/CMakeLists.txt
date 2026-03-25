@@ -63,7 +63,7 @@ target_link_libraries(${execname}
         ${YBY_AGGREGATOR_LIBS}
         antares-solver-ts-generator
         Antares::memory
-        Antares::utils
+        Antares::study-utils
 )
 
 import_std_libs(${execname})

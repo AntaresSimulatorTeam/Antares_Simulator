@@ -43,17 +43,6 @@ Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
     return &storages.back();
 }
 
-void addScratchpadToEachArea(Study& study)
-{
-    for (auto& [_, area]: study.areas)
-    {
-        for (unsigned i = 0; i < study.maxNbYearsInParallel; ++i)
-        {
-            area->scratchpad.emplace_back(study.runtime, *area);
-        }
-    }
-}
-
 TimeSeriesConfigurer& TimeSeriesConfigurer::setDimensions(unsigned columnCount, unsigned rowCount)
 {
     ts_->resize(columnCount, rowCount);
@@ -325,7 +314,6 @@ void TestingSimulationObserver::notifyHebdoProblem(const PROBLEME_HEBDO& problem
 void SimulationHandler::create()
 {
     study_.initializeRuntimeInfos();
-    addScratchpadToEachArea(study_);
     simulation_ = std::make_shared<ISimulation<Economy>>(study_,
                                                          settings_,
                                                          durationCollector_,

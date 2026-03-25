@@ -17,12 +17,13 @@
 // clang-format off
 #include <unit_test_utils.h>
 
-#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
-#include "antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodes.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 // clang-format on
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::ForbidNodes;
 using namespace Antares::IO::Inputs::ModelConverter;
 
 static Nodes::LiteralNode* toLiteral(Nodes::Node* n)

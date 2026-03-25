@@ -94,6 +94,54 @@ BOOST_AUTO_TEST_CASE(ct_with_ten_vars__pb_contains_ten_ct)
     }
 }
 
+BOOST_AUTO_TEST_CASE(ct_with_drop_out_of_bounds_processing_skips_out_of_bounds_timesteps)
+{
+    const auto runCase = [&](int leftShift,
+                             int rightShift,
+                             unsigned expectedCount,
+                             std::array<bool, 3> expectedConstraints)
+    {
+        LinearProblemBuildingFixture fixture;
+        auto* currentVar = fixture.variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+        const auto makeNode = [&](int shift) -> Node*
+        {
+            if (shift == 0)
+            {
+                return currentVar;
+            }
+            return fixture.nodeRegistry.create<TimeShiftNode>(currentVar, fixture.literal(shift));
+        };
+        auto* ctNode = fixture.nodeRegistry.create<EqualNode>(makeNode(leftShift),
+                                                              makeNode(rightShift));
+
+        fixture.createModel(
+          "model",
+          {},
+          {{"var1", ValueType::FLOAT, fixture.literal(-5), fixture.literal(10), true, false}},
+          {{"ct1", ctNode, OutOfBoundsProcessingMode::DROP}});
+        fixture.createComponent("model", "componentToto");
+        FillContext ctx{0, 2, 0, 2, 0};
+        fixture.buildLinearProblem(ctx);
+
+        BOOST_REQUIRE_EQUAL(fixture.pb->constraintCount(), expectedCount);
+        for (unsigned i = 0; i < expectedConstraints.size(); ++i)
+        {
+            BOOST_CHECK_EQUAL(fixture.pb->lookupConstraint("componentToto.ct1_" + to_string(i))
+                                != nullptr,
+                              expectedConstraints[i]);
+        }
+    };
+    // var1[t+1] = var1 => 2 constraints
+    runCase(1, 0, 2, {true, true, false});
+    // var1[t-1] = var1 => 2 constraint
+    runCase(-1, 0, 2, {false, true, true});
+    // var1[t-1] = var1[t+1] => 1 constraint
+    runCase(-1, 1, 1, {false, true, false});
+    // var1[t+2] = var1 => 1 constraint
+    runCase(2, 0, 1, {true, false, false});
+    // NB : var1 = var1[t]
+}
+
 /**
  * @brief Test case for ensuring that variable bounds are correctly set using a time-series.
  *

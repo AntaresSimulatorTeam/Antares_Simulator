@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <unordered_map>
 #include <span>
 #include <vector>
 
@@ -19,8 +20,9 @@ namespace Antares::Optimisation
 struct OptimComponent
 {
     std::vector<unsigned> modelVariableGlobalIndices;
-    std::vector<unsigned> modelConstraintsGlobalIndices;
+    std::vector<unsigned> modelConstraintStartLines;
     std::vector<VariabilityType> modelConstraintsVariability;
+    std::vector<unsigned> modelConstraintCounts;
 };
 
 class OptimEntityContainer
@@ -36,10 +38,27 @@ public:
     VariabilityType getConstraintVariability(const ModelerStudy::SystemModel::Component& component,
                                              unsigned index) const;
 
-     // gp : to be removed : used to avoid passing the linear problem.
-    LinearProblemApi::ILinearProblem& Problem(); 
+    [[nodiscard]] std::pair<unsigned int, VariabilityType> getConstraintData(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int index) const
+    {
+        const auto& optimComponent = optimComponents_.at(component.Id());
+        return {optimComponent.modelConstraintStartLines.at(index),
+                optimComponent.modelConstraintsVariability.at(index)};
+    }
 
-    void addStartColumn();
+    [[nodiscard]] unsigned getConstraintCount(
+      const Antares::ModelerStudy::SystemModel::Component& component,
+      unsigned int index) const
+    {
+        const auto& optimComponent = optimComponents_.at(component.Id());
+        return optimComponent.modelConstraintCounts.at(index);
+    }
+
+    LinearProblemApi::ILinearProblem& Problem()
+    {
+        return linearProblem_;
+    }
 
     std::span<const std::unique_ptr<LinearProblemApi::IMipVariable>> getComponentVariable(
       const ModelerStudy::SystemModel::Component& component,
@@ -51,19 +70,19 @@ public:
       unsigned index,
       std::size_t nbTimeSteps) const;
 
+    void addStartColumn();
+
     void addFromSystemComponents(
       const std::vector<ModelerStudy::SystemModel::Component>& component,
       Solver::Config::Location targetLocation = Solver::Config::Location::SUBPROBLEMS);
 
     void registerConstraint(const ModelerStudy::SystemModel::Component& component,
-                            const VariabilityType& variability);
+                            const VariabilityType& variability,
+                            unsigned count = 1);
 
 private:
-    void addStartLine();
-
-    std::vector<unsigned> variableStartColumn_;
-    std::vector<OptimComponent> optimComponents_;
-    std::vector<unsigned> constraintStartLine_;
+    std::vector<unsigned int> variableStartColumn_;
+    std::unordered_map<std::string, OptimComponent> optimComponents_;
     LinearProblemApi::ILinearProblem& linearProblem_;
 };
 } // namespace Antares::Optimisation

@@ -22,6 +22,7 @@ target_link_libraries(yml-system
         PUBLIC
         Antares::antares-study-system-model
         PRIVATE
+        Antares::forbidden-nodes
         yaml-cpp::yaml-cpp
 )
 
