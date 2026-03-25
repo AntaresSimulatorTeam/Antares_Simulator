@@ -1,5 +1,6 @@
 set(SOURCES
         parser.cpp
+        decoders.cpp
         include/antares/io/inputs/yml-optim-config/decoders.h
         include/antares/io/inputs/yml-optim-config/parser.h
 )

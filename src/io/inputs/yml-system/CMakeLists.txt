@@ -1,6 +1,7 @@
 set(SOURCES
         parser.cpp
         converter.cpp
+        decoders.cpp
         include/antares/io/inputs/yml-system/decoders.h
         include/antares/io/inputs/yml-system/parser.h
         include/antares/io/inputs/yml-system/converter.h
