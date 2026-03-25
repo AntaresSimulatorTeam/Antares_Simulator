@@ -12,16 +12,6 @@
 namespace Antares::IO::Inputs::SystemConverter
 {
 
-struct TwoFieldsOfSameRole final: IO::Inputs::InputError
-{
-    using IO::Inputs::InputError::InputError;
-};
-
-struct ConnectingPortToItSelf final: IO::Inputs::InputError
-{
-    using IO::Inputs::InputError::InputError;
-};
-
 struct ComponentNotFound final: IO::Inputs::InputError
 {
     using IO::Inputs::InputError::InputError;

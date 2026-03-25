@@ -345,7 +345,7 @@ BOOST_FIXTURE_TEST_CASE(SystemWithAConnectionOfTwoSendingPorts, PrepareYaml)
 
     YmlSystem::System systemObj = parserSystem.parse(system);
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries),
-                      SystemConverter::TwoFieldsOfSameRole);
+                      InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
@@ -358,7 +358,7 @@ BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
 
     YmlSystem::System systemObj = parserSystem.parse(system);
     BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries),
-                      SystemConverter::ConnectingPortToItSelf);
+                      InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)

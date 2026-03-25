@@ -22,39 +22,15 @@ namespace Antares::IO::Inputs::SystemConverter
 
 namespace
 {
-class ErrorWhileSplittingLibraryAndModel final: public std::runtime_error
-{
-public:
-    explicit ErrorWhileSplittingLibraryAndModel(const std::string& s):
-        runtime_error("'.' not found while splitting library and model: " + s)
-    {
-    }
-};
 
-class LibraryNotFound final: public std::runtime_error
-{
-public:
-    explicit LibraryNotFound(const std::string& s):
-        runtime_error("No library found with this name: " + s)
-    {
-    }
-};
 
-class ModelNotFound final: public std::runtime_error
-{
-public:
-    explicit ModelNotFound(const std::string& s):
-        runtime_error("No model found with this name: " + s)
-    {
-    }
-};
 
 std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
     size_t pos = s.find('.');
     if (pos == std::string::npos)
     {
-        throw ErrorWhileSplittingLibraryAndModel(s);
+        throw IO::Inputs::InputError("'.' not found while splitting library and model: " + s);
     }
 
     std::string library = s.substr(0, pos);
@@ -70,13 +46,13 @@ const Model& getModel(const std::vector<Library>& libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
-        throw LibraryNotFound(libraryId);
+        throw IO::Inputs::InputError("No library found with this name: " + libraryId);
     }
 
     auto search = lib->Models().find(modelId);
     if (search == lib->Models().end())
     {
-        throw ModelNotFound(modelId);
+        throw IO::Inputs::InputError("No model found with this name: " + modelId);
     }
 
     return search->second;
@@ -131,7 +107,7 @@ void CheckPortSelfConnection(const std::string& firstComponentId,
         std::ostringstream msg;
         msg << "Can not connect Port '" << firstPortId << "' from component '" << firstComponentId
             << "' to itself!";
-        throw ConnectingPortToItSelf(msg.str());
+        throw IO::Inputs::InputError(msg.str());
     }
 }
 
@@ -161,7 +137,7 @@ void CheckFieldsRoleCompatibility(const Component& component_1,
             std::ostringstream msg;
             msg << "Field '" << field.Id() << "' is " << portFieldRole_1 << " in both ports '"
                 << port_1.Id() << "' and '" << port_2.Id() << "'";
-            throw TwoFieldsOfSameRole(msg.str());
+            throw IO::Inputs::InputError(msg.str());
         }
     }
 }

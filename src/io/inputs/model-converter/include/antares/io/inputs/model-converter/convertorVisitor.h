@@ -9,42 +9,6 @@
 
 namespace Antares::IO::Inputs::ModelConverter
 {
-class NoPortWithThisId final: public IO::Inputs::InputError
-{
-public:
-    explicit NoPortWithThisId(const std::string& name);
-};
-
-class NoParameterOrVariableWithThisName final: public IO::Inputs::InputError
-{
-public:
-    explicit NoParameterOrVariableWithThisName(const std::string& name):
-        IO::Inputs::InputError("No parameter or variable found for this identifier: " + name)
-    {
-    }
-};
-
-class ReducedCostNoVariableWithThisName final: public IO::Inputs::InputError
-{
-public:
-    explicit ReducedCostNoVariableWithThisName(const std::string& modelName,
-                                               const std::string& varName):
-        IO::Inputs::InputError("reduced_cost called with unknown variable '" + varName
-                               + "' in model '" + modelName + "'")
-    {
-    }
-};
-
-class DualNoConstraintWithThisName final: public IO::Inputs::InputError
-{
-public:
-    explicit DualNoConstraintWithThisName(const std::string& modelName,
-                                          const std::string& constraintName):
-        IO::Inputs::InputError("dual called with unknown constraint '" + constraintName
-                               + "' in model '" + modelName + "'")
-    {
-    }
-};
 
 class AntlrParsingError final: public IO::Inputs::InputError
 {

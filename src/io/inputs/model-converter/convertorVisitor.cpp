@@ -85,11 +85,6 @@ private:
     const YmlModel::Model& model_;
 };
 
-NoPortWithThisId::NoPortWithThisId(const std::string& name):
-    IO::Inputs::InputError("No port found for this identifier: " + name)
-{
-}
-
 class AntaresErrorListener: public antlr4::BaseErrorListener
 {
 public:
@@ -187,7 +182,8 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
             return static_cast<Node*>(registry_.create<VariableNode>(var.id, index, v));
         }
     }
-    throw NoParameterOrVariableWithThisName(identifier);
+    throw IO::Inputs::InputError("No parameter or variable found for this identifier: "
+                                 + identifier);
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
@@ -300,7 +296,7 @@ PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContex
     {
         return registry_.create<PortFieldNode>(portId, portField);
     }
-    throw NoPortWithThisId(portId);
+    throw IO::Inputs::InputError("No port found for this identifier: " + portId);
 }
 
 std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
@@ -412,7 +408,8 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw DualNoConstraintWithThisName(model_.id, constraint_id);
+    throw IO::Inputs::InputError("dual called with unknown constraint '" + constraint_id
+                                 + "' in model '" + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
@@ -438,7 +435,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
         }
         ++index;
     }
-    throw ReducedCostNoVariableWithThisName(model_.id, var_id);
+    throw IO::Inputs::InputError("reduced_cost called with unknown variable '" + var_id
+                                 + "' in model '" + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
