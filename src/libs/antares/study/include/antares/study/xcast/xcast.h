@@ -19,8 +19,6 @@ class XCast final: private Yuni::NonCopyable<XCast>
 public:
     //! Vector
     using Vector = std::vector<XCast*>;
-    //! Vector with the const qualifier
-    using VectorConst = std::vector<const XCast*>;
 
     /*!
     ** \brief All coefficients
