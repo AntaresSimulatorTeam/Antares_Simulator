@@ -473,11 +473,6 @@ bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text)
 
 const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
-
-const char* CompatibilityHydroRuleCurvesToCString(
-  const Parameters::Compatibility::HydroRuleCurves mode);
-bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
-                                          const std::string& text);
 } // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARAMETERS_H__

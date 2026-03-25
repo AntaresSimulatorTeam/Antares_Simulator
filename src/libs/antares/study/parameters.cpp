@@ -198,20 +198,6 @@ bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
     return false;
 }
 
-const char* CompatibilityHydroRuleCurvesToCString(
-  const Parameters::Compatibility::HydroRuleCurves mode)
-{
-    switch (mode)
-    {
-    case Parameters::Compatibility::HydroRuleCurves::Single:
-        return "single";
-    case Parameters::Compatibility::HydroRuleCurves::Scenarized:
-        return "scenarized";
-    default:
-        return "Unknown";
-    }
-}
-
 bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
                                           const std::string& text)
 {
