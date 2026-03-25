@@ -41,7 +41,6 @@ add_library(result_writer
         in_memory_writer.cpp
         include/antares/writer/i_table_writer.h
         include/antares/writer/in_memory_writer.h # Public (for tests)
-        include/antares/writer/result_format.h
         include/antares/writer/table_format.h
         include/antares/writer/table_writer_factory.h
         include/antares/writer/writer_factory.h
