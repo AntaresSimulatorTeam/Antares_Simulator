@@ -1,8 +1,9 @@
 set(SOURCES
         parser.cpp
+        decoders.cpp
         include/antares/io/inputs/yml-model/decoders.h
-        decoders_utils.cpp
         include/antares/io/inputs/yml-model/parser.h
+        include/antares/io/inputs/yml-model/YmlMapMarker.h
 )
 
 # Create the library

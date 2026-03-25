@@ -18,8 +18,9 @@ inline T as_fallback_default(const Node& n)
 }
 
 template<>
-struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
+class convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Variable& rhs)
     {
         if (!node.IsMap())
@@ -33,8 +34,9 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Variable>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>
+class convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Constraint& rhs)
     {
         if (!node.IsMap())
@@ -48,8 +50,9 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Constraint>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing>
+class convert<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing>
 {
+public:
     static bool decode(const Node& node,
                        Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing& rhs)
     {
@@ -64,8 +67,9 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcess
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
+class convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Objective& rhs)
     {
         if (!node.IsMap())
@@ -80,8 +84,9 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Objective>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
+class convert<Antares::IO::Inputs::YmlOptimConfig::Model>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::Model& rhs)
     {
         rhs.id = node["id"].as<std::string>();
@@ -111,8 +116,9 @@ struct convert<Antares::IO::Inputs::YmlOptimConfig::Model>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
+class convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlOptimConfig::OptimConfig& rhs)
     {
         if (!node.IsMap())
