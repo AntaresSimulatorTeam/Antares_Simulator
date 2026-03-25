@@ -5,30 +5,6 @@
 
 #include <unordered_set>
 
-std::string printPathTree(const std::filesystem::path& p)
-{
-    std::string treeStr;
-    std::size_t depth = 0;
-    for (const auto& part: p)
-    {
-        if (depth == 0)
-        {
-            treeStr += part.string();
-            treeStr += '\n';
-        }
-        else
-        {
-            treeStr += std::string((depth - 1) * 4, ' ');
-            // "└── " is a u8 and it does not display correctly
-            treeStr += "|__ ";
-            treeStr += part.string();
-            treeStr += '\n';
-        }
-        ++depth;
-    }
-    return treeStr;
-}
-
 namespace YAML
 {
 
@@ -362,15 +338,4 @@ bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Library>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Library& rhs)
-{
-    rhs.id = node["id"].as<std::string>();
-    rhs.description = node["description"].as<std::string>("");
-    rhs.port_types = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::PortType>>(
-      node["port-types"]);
-    rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlModel::Model>>();
-    return true;
-}
 } // namespace YAML
