@@ -46,8 +46,8 @@ jobs:
       run: |
         echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
-    - name: Install ccache
-      run: sudo apt-get install -y ccache uuid-dev
+    - name: Install APT deps
+      run: sudo apt-get install -y ccache uuid-dev ninja-build lld
 
       # Can't use ubuntu cache. Cache hit is only single digit %
     - name: Restore ccache cache
