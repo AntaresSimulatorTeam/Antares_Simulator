@@ -64,7 +64,6 @@ LibraryIdNotDefined::LibraryIdNotDefined():
 {
 }
 
-
 Library Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
