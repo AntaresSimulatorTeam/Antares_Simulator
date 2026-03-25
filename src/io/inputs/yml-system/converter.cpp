@@ -82,8 +82,7 @@ const Model& getModel(const std::vector<Library>& libraries,
     return search->second;
 }
 
-Component createComponent(const YmlSystem::Component& c,
-                          const std::vector<Library>& libraries)
+Component createComponent(const YmlSystem::Component& c, const std::vector<Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -148,9 +147,9 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
 }
 
 void CheckFieldsRoleCompatibility(const Component& component_1,
-                                         const Port& port_1,
-                                         const Component& component_2,
-                                         const Port& port_2)
+                                  const Port& port_1,
+                                  const Component& component_2,
+                                  const Port& port_2)
 {
     for (const auto& field: port_1.Type().Fields())
     {
