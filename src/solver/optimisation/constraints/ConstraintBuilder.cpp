@@ -58,24 +58,24 @@ ConstraintBuilder& ConstraintBuilder::NumberBreakingDownDispatchableUnits(unsign
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::DirectFlux(unsigned int index,
+ConstraintBuilder& ConstraintBuilder::DirectFlow(unsigned int index,
                                                  double coeff,
                                                  int offset,
                                                  int delta)
 {
-    AddVariable(variableManager_.DirectFlux(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.DirectFlow(index, hourInWeek_, offset, delta), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::DirectFluxPositif(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::PositiveDirectFlow(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.DirectFluxPositif(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.PositiveDirectFlow(index, hourInWeek_), coeff);
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::IndirectFluxPositif(unsigned int index, double coeff)
+ConstraintBuilder& ConstraintBuilder::PositiveIndirectFlow(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.IndirectFluxPositif(index, hourInWeek_), coeff);
+    AddVariable(variableManager_.PositiveIndirectFlow(index, hourInWeek_), coeff);
     return *this;
 }
 

@@ -162,6 +162,54 @@ BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_decomposition, CreateI
     BOOST_CHECK(modelConstraints[2].location() == Location::SUBPROBLEMS);
 }
 
+BOOST_FIXTURE_TEST_CASE(load_optim_config_with_constraint_out_of_bounds_processing,
+                        CreateInputFileFixture)
+{
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: blah-blah
+  models:
+    - id: some-model
+      variables:
+        - id: x
+          time-dependent: true
+          scenario-dependent: false
+      constraints:
+        - id: c1
+          expression: x[t+1] = x
+        - id: c2
+          expression: x = x
+)";
+
+    createLibraryFile(yamlContent);
+
+    yamlContent = R"(models:
+      - id: my-lib.some-model
+        model-decomposition:
+          constraints:
+            - id: c1
+              location: subproblems
+            - id: c2
+              location: subproblems
+        out-of-bounds-processing:
+          constraints:
+            - id: c1
+              mode: drop)";
+
+    createOptimConfigFile(yamlContent);
+
+    auto res = loadLibraries(studyFolder);
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
+
+    const auto& modelConstraints = libraries[0].Models().at("some-model").Constraints();
+
+    BOOST_CHECK(modelConstraints[0].outOfBoundsProcessingMode()
+                == Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP);
+    BOOST_CHECK(modelConstraints[1].outOfBoundsProcessingMode()
+                == Antares::ModelerStudy::SystemModel::OutOfBoundsProcessingMode::CYCLIC);
+}
+
 BOOST_FIXTURE_TEST_CASE(load_optim_config_with_objective_decomposition, CreateInputFileFixture)
 {
     // Arrange part

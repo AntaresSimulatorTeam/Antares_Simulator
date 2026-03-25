@@ -1,12 +1,13 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "include/antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
+#include "include/antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+
 using namespace Antares::Expressions::Nodes;
 
-namespace Antares::IO::Inputs::ModelConverter
+namespace Antares::IO::Inputs::ForbidNodes
 {
 
 std::string ErrorMessage(const std::string expr, const std::string node, const std::string parent)
@@ -30,6 +31,15 @@ ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbiddenNode
                                              const std::string& expression):
     forbiddenNodes_(forbiddenNodes),
     expression_(expression)
+{
+}
+
+ForbiddenNodesInComponentVisitor::ForbiddenNodesInComponentVisitor(
+  const ForbiddenNodes& forbid,
+  const std::string& expression,
+  const ModelerStudy::SystemModel::Component& component):
+    ForbiddenNodesVisitor(forbid, expression),
+    component_(component)
 {
 }
 
@@ -101,12 +111,35 @@ void ForbiddenNodesVisitor::visit(const ParameterNode*)
 
 void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
 {
+    // gp : could be dead code, considering visit(const PortFieldSumNode* portFieldSumNode)
     checkIsForbidden(portFieldNode, typeIndexOf<PortFieldNode>());
 }
 
 void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
-    checkIsForbidden(portFieldSumNode, typeIndexOf<PortFieldSumNode>());
+    // keep empty
+}
+
+void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSumNode)
+{
+    const std::string localPortId = portFieldSumNode->getPortName();
+    const std::string fieldId = portFieldSumNode->getFieldName();
+
+    for (const auto connectionEnd: component_.componentConnectionsViaPort(localPortId))
+    {
+        auto* connectedComponent = connectionEnd.component();
+        auto* connectedPort = connectionEnd.port();
+
+        // Expression (as a string) at connected port field
+        const auto expr_str = connectedComponent
+                                ->expressionAtPortField(connectedPort->Id(), fieldId)
+                                .Value();
+        // Expression (as a root node) at connected port field
+        const auto* nodeToVisit = connectedComponent->nodeAtPortField(connectedPort->Id(), fieldId);
+
+        ForbiddenNodesVisitor visitor(forbiddenNodes_, expr_str);
+        visitor.dispatch(nodeToVisit);
+    }
 }
 
 void ForbiddenNodesVisitor::visit(const TimeShiftNode* timeShiftNode)
@@ -205,4 +238,4 @@ void ForbiddenNodesVisitor::visitChildren(const Expressions::Nodes::ParentNode* 
     parentsStack_.pop_back();
 }
 
-} // namespace Antares::IO::Inputs::ModelConverter
+} // namespace Antares::IO::Inputs::ForbidNodes

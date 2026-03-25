@@ -34,6 +34,18 @@ BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
     BOOST_CHECK(libraryObj.models.empty());
 }
 
+BOOST_AUTO_TEST_CASE(library_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            description: "test_description"
+            port-types: []
+            models: []
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YmlModel::LibraryIdNotDefined);
+}
+
 // Test library with id and description
 BOOST_AUTO_TEST_CASE(library_id_and_description_parsed_properly)
 {
@@ -249,11 +261,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
 
             models: []
         )"s;
-    BOOST_REQUIRE_THROW(YmlModel::Library libraryObj = parser.parse(library),
-                        YAML::TypedBadConversion<YmlModel::PortType>);
-    // When the previous line was written, the exception thrown is
-    // YAML::TypedBadConversion<PortType>; this may change, see
-    // https://github.com/jbeder/yaml-cpp/commit/3d2888cc8a45da2f420454ad728cdfad01a3d54f
+    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
 }
 
 BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
@@ -271,11 +279,7 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
 
             models: []
         )"s;
-    BOOST_REQUIRE_THROW(YmlModel::Library libraryObj = parser.parse(library),
-                        YAML::TypedBadConversion<YmlModel::PortType>);
-    // When the previous line was written, the exception thrown is
-    // YAML::TypedBadConversion<PortType>; this may change, see
-    // https://github.com/jbeder/yaml-cpp/commit/3d2888cc8a45da2f420454ad728cdfad01a3d54f
+    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
 }
 
 // Test library with multiple port types
