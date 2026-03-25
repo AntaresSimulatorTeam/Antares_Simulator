@@ -168,8 +168,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
           auto& data = area.hydro.managementData[y];
           auto& areaMonthlyData = hydro_specific_map[&area].monthly;
 
-          const auto& minLvl = area.hydro.series->ruleCurves.min.getColumn(y);
-          const auto& maxLvl = area.hydro.series->ruleCurves.max.getColumn(y);
+          const auto* minLvl = area.hydro.series->ruleCurves.min.getColumn(y);
+          const auto* maxLvl = area.hydro.series->ruleCurves.max.getColumn(y);
           int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
           double lvi = -1.;
