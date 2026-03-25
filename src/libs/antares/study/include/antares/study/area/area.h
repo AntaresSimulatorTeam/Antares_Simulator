@@ -35,8 +35,6 @@ public:
     using Map = std::map<AreaName, Area*>;
     using Vector = std::vector<Area*>;
     using ScratchMap = std::map<const Area*, AreaScratchpad&>;
-    //! Name mapping -> must be replaced by AreaNameMapping
-    using NameMapping = std::map<AreaName, AreaName>;
 
     //! \name Constructor & Destructor
     //@{
