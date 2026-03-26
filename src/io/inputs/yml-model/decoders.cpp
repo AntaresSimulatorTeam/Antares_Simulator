@@ -22,8 +22,8 @@ bool requireMap(const Node& node, const char* typeName)
     }
     if (node.IsDefined() && !node.IsNull())
     {
-        throw Antares::IO::Inputs::InputError(
-          std::string("Expected a YAML mapping for '") + typeName + "'");
+        throw Antares::IO::Inputs::InputError(std::string("Expected a YAML mapping for '")
+                                              + typeName + "'");
     }
     return false;
 }
@@ -218,8 +218,7 @@ bool convert<Antares::IO::Inputs::YmlModel::ValueType>::decode(
     {
         if (node.IsDefined() && !node.IsNull())
         {
-            throw Antares::IO::Inputs::InputError(
-              "Expected a scalar value for 'variable-type'");
+            throw Antares::IO::Inputs::InputError("Expected a scalar value for 'variable-type'");
         }
         return false;
     }

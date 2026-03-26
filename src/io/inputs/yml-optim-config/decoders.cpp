@@ -20,8 +20,8 @@ bool requireMap(const Node& node, const char* typeName)
     }
     if (node.IsDefined() && !node.IsNull())
     {
-        throw Antares::IO::Inputs::InputError(
-          std::string("Expected a YAML mapping for '") + typeName + "'");
+        throw Antares::IO::Inputs::InputError(std::string("Expected a YAML mapping for '")
+                                              + typeName + "'");
     }
     return false;
 }
@@ -93,10 +93,12 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::Model>::decode(
     rhs.variables = as_fallback_default<std::vector<Antares::IO::Inputs::YmlOptimConfig::Variable>>(
       modelDecompositionNode["variables"]);
 
-    rhs.constraints = as_fallback_default<std::vector<Antares::IO::Inputs::YmlOptimConfig::Constraint>>(
+    rhs.constraints = as_fallback_default<
+      std::vector<Antares::IO::Inputs::YmlOptimConfig::Constraint>>(
       modelDecompositionNode["constraints"]);
 
-    rhs.objectives = as_fallback_default<std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>(
+    rhs.objectives = as_fallback_default<
+      std::vector<Antares::IO::Inputs::YmlOptimConfig::Objective>>(
       modelDecompositionNode["objective-contributions"]);
 
     const auto& outOfBoundsProcessingNode = node["out-of-bounds-processing"];
@@ -132,4 +134,3 @@ bool convert<Antares::IO::Inputs::YmlOptimConfig::OptimConfig>::decode(
 }
 
 } // namespace YAML
-

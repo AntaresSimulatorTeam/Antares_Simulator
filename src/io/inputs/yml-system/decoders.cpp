@@ -20,8 +20,8 @@ bool requireMap(const Node& node, const char* typeName)
     }
     if (node.IsDefined() && !node.IsNull())
     {
-        throw Antares::IO::Inputs::InputError(
-          std::string("Expected a YAML mapping for '") + typeName + "'");
+        throw Antares::IO::Inputs::InputError(std::string("Expected a YAML mapping for '")
+                                              + typeName + "'");
     }
     return false;
 }
@@ -31,9 +31,9 @@ void requireSize(const Node& node, std::size_t expected, const char* typeName)
 {
     if (node.size() != expected)
     {
-        throw Antares::IO::Inputs::InputError(
-          std::string("Expected ") + std::to_string(expected) + " field(s) for '" + typeName
-          + "', got " + std::to_string(node.size()));
+        throw Antares::IO::Inputs::InputError(std::string("Expected ") + std::to_string(expected)
+                                              + " field(s) for '" + typeName + "', got "
+                                              + std::to_string(node.size()));
     }
 }
 } // namespace
@@ -154,6 +154,3 @@ bool convert<Antares::IO::Inputs::YmlSystem::System>::decode(
 }
 
 } // namespace YAML
-
-
-

@@ -35,9 +35,8 @@ template<>
 class convert<Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing>
 {
 public:
-    static bool decode(
-      const Node& node,
-      Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing& rhs);
+    static bool decode(const Node& node,
+                       Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing& rhs);
 };
 
 template<>
