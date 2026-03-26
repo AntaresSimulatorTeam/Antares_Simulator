@@ -155,7 +155,7 @@ AreaList::AreaList(Study& study):
 
 AreaList::~AreaList()
 {
-    for (auto& area: areas | std::views::values)
+    for (auto* area: areas | std::views::values)
     {
         delete area;
     }
