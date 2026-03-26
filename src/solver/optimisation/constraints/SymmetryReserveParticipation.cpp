@@ -1,4 +1,5 @@
 #include "antares/solver/optimisation/constraints/SymmetryReserveParticipation.h"
+#define EPSILON 1e-4
 
 template<ValidReserveParticipation T>
 void SymmetryReserveParticipation::add(
@@ -47,8 +48,8 @@ void SymmetryReserveParticipation::applyReserveParticipationSymmetry(
     {
         auto refMaxPower = reserveParticipationRefWithName.reserveParticipation.get().maxPower;
         auto targetMaxPower = reserveParticipationWithName.reserveParticipation.get().maxPower;
-        if (abs(refMaxPower) > 10e-4
-            && abs(targetMaxPower) > 10e-4) // disableing symetries in case of zero division
+        if (abs(refMaxPower) > EPSILON
+            && abs(targetMaxPower) > EPSILON) // disableing symetries in case of zero division
         {
             builder.ThermalClusterReserveParticipation(refIndex, 1 / refMaxPower)
               .ThermalClusterReserveParticipation(targetIndex, -1 / targetMaxPower);
@@ -60,12 +61,12 @@ void SymmetryReserveParticipation::applyReserveParticipationSymmetry(
         auto targetMaxRelease = reserveParticipationWithName.reserveParticipation.get().maxRelease;
         auto refMaxStore = reserveParticipationRefWithName.reserveParticipation.get().maxStore;
         auto targetMaxStore = reserveParticipationWithName.reserveParticipation.get().maxStore;
-        if (abs(refMaxRelease) > 10e-4 && abs(targetMaxRelease) > 10e-4)
+        if (abs(refMaxRelease) > EPSILON && abs(targetMaxRelease) > EPSILON)
         {
             builder.STStorageReleaseClusterReserveParticipation(refIndex, 1 / refMaxRelease)
               .STStorageReleaseClusterReserveParticipation(targetIndex, -1 / targetMaxRelease);
         }
-        if (abs(refMaxStore) > 10e-4 && abs(targetMaxStore) > 10e-4)
+        if (abs(refMaxStore) > EPSILON && abs(targetMaxStore) > EPSILON)
         {
             builder.STStorageStoreClusterReserveParticipation(refIndex, 1 / refMaxStore)
               .STStorageStoreClusterReserveParticipation(targetIndex, -1 / targetMaxStore);
@@ -78,12 +79,12 @@ void SymmetryReserveParticipation::applyReserveParticipationSymmetry(
         auto refMaxStore = reserveParticipationRefWithName.reserveParticipation.get().maxStore;
         auto targetMaxStore = reserveParticipationWithName.reserveParticipation.get().maxStore;
 
-        if (abs(refMaxRelease) > 10e-4 && abs(targetMaxRelease) > 10e-4)
+        if (abs(refMaxRelease) > EPSILON && abs(targetMaxRelease) > EPSILON)
         {
             builder.HydroReleaseReserveParticipation(refIndex, 1 / refMaxRelease)
               .HydroReleaseReserveParticipation(targetIndex, -1 / targetMaxRelease);
         }
-        if (abs(refMaxStore) > 10e-4 && abs(targetMaxStore) > 10e-4)
+        if (abs(refMaxStore) > EPSILON && abs(targetMaxStore) > EPSILON)
         {
             builder.HydroStoreReserveParticipation(refIndex, 1 / refMaxStore)
               .HydroStoreReserveParticipation(targetIndex, -1 / targetMaxStore);

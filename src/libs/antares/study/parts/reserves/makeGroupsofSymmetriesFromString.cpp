@@ -20,15 +20,43 @@
  */
 #include "antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h"
 
+#include <set>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
 #include <boost/algorithm/string.hpp>
 
-#include "antares/study/parts/common/CustomErrorListener.h"
 #include "antares/study/parts/reserves/SymmetryCollectorVisitor.h"
 
 #include "SymmetryFieldLexer.h"
+#include "antlr4-runtime.h"
 
 namespace Antares::Data::Symmetries
 {
+
+template<typename ErrorType>
+requires std::is_base_of_v<std::invalid_argument, ErrorType>
+class CustomErrorListener final: public antlr4::BaseErrorListener
+{
+public:
+    void syntaxError(antlr4::Recognizer* recognizer,
+                     antlr4::Token* offendingSymbol,
+                     size_t line,
+                     size_t charPositionInLine,
+                     const std::string& msg,
+                     std::exception_ptr e) override
+    {
+        std::ostringstream os;
+        os << "Syntax error while parsing reserves for thermal at line " << line << ":"
+           << charPositionInLine << " - " << msg << std::endl;
+        if (offendingSymbol)
+        {
+            os << "Offending symbol: " << offendingSymbol->getText() << std::endl;
+        }
+        throw ErrorType(os.str());
+    }
+};
 
 class GroupsSymmetries
 {
