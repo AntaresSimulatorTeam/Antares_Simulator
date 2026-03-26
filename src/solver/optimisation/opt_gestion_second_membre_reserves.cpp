@@ -428,7 +428,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                 // Thermal Cluster
                 if (areaReserve.type == ReserveType::UP)
                 {
-                    for (const auto& [clusterId, clusterReserveParticipation]:
+                    for (const auto& [_, clusterReserveParticipation]:
                          areaReserve.AllThermalReservesParticipation)
                     {
                         reserveVariablesRightSidesSetter.setThermalReserveUpParticipationRightSides(
@@ -437,7 +437,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                 }
 
                 // Short Term Storage Cluster
-                for (const auto& [clusterId, clusterReserveParticipation]:
+                for (const auto& [_, clusterReserveParticipation]:
                      areaReserve.AllSTStorageReservesParticipation)
                 {
                     reserveVariablesRightSidesSetter.setSTStorageReserveParticipationRightSides(

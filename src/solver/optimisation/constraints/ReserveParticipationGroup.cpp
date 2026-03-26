@@ -138,7 +138,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     }
 
                     // Thermal cluster Symmetries
-                    for (const auto& [clusterId, symmetries]:
+                    for (const auto& [_, symmetries]:
                          data.areaReserves[pays].ThermalReservesParticipationSymmetries)
                     {
                         // Add symmetry constraint between first element and all others
@@ -155,7 +155,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     uint32_t reserve = 0;
                     for (const auto& areaReserve: data.areaReserves[pays].areaCapacityReservations)
                     {
-                        for (const auto& [clusterId, clusterReserveParticipation]:
+                        for (const auto& [_, clusterReserveParticipation]:
                              areaReserve.AllSTStorageReservesParticipation)
                         {
                             // 15 (k)
@@ -182,7 +182,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     }
 
                     // ShortTerm Storage cluster Symmetries
-                    for (const auto& [clusterId, symmetries]:
+                    for (const auto& [_, symmetries]:
                          data.areaReserves[pays].STStorageReservesParticipationSymmetries)
                     {
                         for (const auto& symmetry: symmetries)

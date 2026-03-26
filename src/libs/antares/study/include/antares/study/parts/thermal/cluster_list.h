@@ -85,6 +85,24 @@ public:
     void ensureDataPrepro();
 
     /*!
+     ** @brief Get the cluster and reserve names for a given index of reserveParticipation
+     ** @param area The area where to look for the reserveParticipation
+     ** @param index Global index of the reserveParicipation
+     ** @return the cluster and reserve names
+     */
+    std::pair<std::string, ReserveName> reserveParticipationClusterAt(const Area* area,
+                                                                      unsigned int index) const;
+
+    /*!
+     ** @brief Get the group and reserve names for a given index of reserveParticipation
+     ** @param area The area where to look for the reserveParticipation
+     ** @param index Global index of the reserveParicipation
+     ** @return the group and reserve names
+     */
+    std::pair<std::string, ReserveName> reserveParticipationGroupAt(const Area* area,
+                                                                    unsigned int index) const;
+
+    /*!
      ** \brief Load data related to the preprocessor from a list of thermal clusters from a folder
      ** \ingroup thermalclusters
      **

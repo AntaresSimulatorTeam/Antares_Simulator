@@ -482,4 +482,56 @@ bool ThermalClusterList::loadEconomicCosts(Study& study, const fs::path& folder)
                                });
 }
 
+std::pair<std::string, ReserveName> ThermalClusterList::reserveParticipationClusterAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (const auto& reserveName:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        for (const auto& cluster: allClusters_)
+        {
+            if (cluster->reserveParticipationContainer
+                && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
+                  reserveName))
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster->name(), reserveName};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    throw std::out_of_range("This cluster reserve participation index has not been found in all "
+                            "the reserve participations");
+}
+
+std::pair<std::string, ReserveName> ThermalClusterList::reserveParticipationGroupAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int column = 0;
+    for (const auto& reserveName:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveName))
+        {
+            for (auto group: area->allCapacityReservations->reserveGroupPartThermal.at(reserveName))
+            {
+                if (column == index)
+                {
+                    return {group, reserveName};
+                }
+                column++;
+            }
+        }
+    }
+    throw std::out_of_range("This group reserve participation index has not been found in all the "
+                            "reserve participations");
+}
+
 } // namespace Antares::Data

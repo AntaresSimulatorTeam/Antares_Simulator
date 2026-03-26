@@ -102,8 +102,8 @@ std::vector<std::set<std::string>> makeGroupsOfSymmetries(const std::string& sym
     catch (std::exception& e)
     {
         std::ostringstream os;
-        os << "Exception thrown while parsing '" << symmetriesField << "' : " << e.what()
-           << std::endl;
+        os << "Exception thrown while parsing reserves symmetries groups '" << symmetriesField
+           << "' : " << e.what() << std::endl;
         throw SymmetriesError(os.str());
     }
 }

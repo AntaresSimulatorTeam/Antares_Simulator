@@ -9,6 +9,10 @@ void SymmetryReserveParticipation::add(
 {
     if (!data.Simulation)
     {
+        if (symmetry.empty())
+        {
+            return;
+        }
         auto& reserveParticipationRefWithName = symmetry[0];
 
         for (size_t i = 1; i < symmetry.size(); ++i)

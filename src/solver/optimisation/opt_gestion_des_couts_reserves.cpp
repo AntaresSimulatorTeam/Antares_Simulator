@@ -123,7 +123,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                 reserveCostsInitializer.initReserveCosts(areaReserve);
 
                 // Thermal clusters
-                for (const auto& [clusterId, clusterReserveParticipation]:
+                for (const auto& [_, clusterReserveParticipation]:
                      areaReserve.AllThermalReservesParticipation)
                 {
                     reserveCostsInitializer.initThermalReserveParticipationCosts(
@@ -132,7 +132,7 @@ void OPT_InitialiserLesCoutsLineaireReserves(PROBLEME_HEBDO* problemeHebdo,
                 }
 
                 // Short Term Storage clusters
-                for (const auto& [clusterId, clusterReserveParticipation]:
+                for (const auto& [_, clusterReserveParticipation]:
                      areaReserve.AllSTStorageReservesParticipation)
                 {
                     reserveCostsInitializer.initSTStorageReserveParticipationCosts(
