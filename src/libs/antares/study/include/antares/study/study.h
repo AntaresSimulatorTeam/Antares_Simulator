@@ -127,11 +127,6 @@ public:
     */
     bool modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename);
 
-    /*!
-    ** \brief Add an area and make all required initialization
-    */
-    Area* areaAdd(const AreaName& name);
-
     //! \name Time-series
     //@{
     /*!

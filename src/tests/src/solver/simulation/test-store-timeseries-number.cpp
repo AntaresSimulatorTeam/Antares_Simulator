@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(sts_area_cluster_inflows_timeseries_numbers_store_values)
     study->parameters.storeTimeseriesNumbers = true;
 
     // Create an area
-    auto area = study->areaAdd("fr");
+    auto area = addAreaToListOfAreas(study->areas, "fr");
     auto& clusters = area->shortTermStorage.storagesByIndex;
 
     // Add one STS cluster
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(sts_area_cluster_additional_constraints_timeseries_numbers_
     study->parameters.storeTimeseriesNumbers = true;
 
     // Create an area
-    auto area = study->areaAdd("fr");
+    auto area = addAreaToListOfAreas(study->areas, "fr");
     auto& clusters = area->shortTermStorage.storagesByIndex;
 
     // Add one STS cluster

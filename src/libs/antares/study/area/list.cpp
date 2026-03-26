@@ -225,6 +225,10 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
 {
     if (!name || !lname)
     {
+        if (name.empty())
+        {
+            logs.warning() << "ignoring invalid area name: `" << name;
+        }
         return nullptr;
     }
     // Look up
@@ -262,7 +266,6 @@ bool AreaList::loadListFromFile(const fs::path& filename)
 
     // Initialization of the strings
     AreaName name;
-    AreaName lname;
     // Each lines in the file
     std::string buffer;
     uint line = 0;
@@ -277,21 +280,8 @@ bool AreaList::loadListFromFile(const fs::path& filename)
             continue;
         }
 
-        lname.clear();
-        lname = transformNameIntoID(name);
-        if (lname.empty())
-        {
-            logs.warning() << "ignoring invalid area name: `" << name << "`, " << filename
-                           << ": line " << line;
-            continue;
-        }
-        if (CheckForbiddenCharacterInAreaName(name))
-        {
-            logs.error() << "character '*' is forbidden in area name: `" << name << "`";
-            continue;
-        }
         // Add the area in the list
-        AreaListAddFromNames(*this, name, lname);
+        addAreaToListOfAreas(*this, name);
     }
 
     switch (areas.size())
