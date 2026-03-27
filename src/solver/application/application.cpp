@@ -153,6 +153,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
 
+        study.parameters.parquetFmtForSimuTables = pSettings.parquetFmtForSimuTables;
+
         if (pSettings.forceZipOutput)
         {
             pParameters->resultFormat = Antares::Data::zipArchive;

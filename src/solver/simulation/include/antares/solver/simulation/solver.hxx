@@ -575,14 +575,6 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
 
     yearSimulationBuffers_.clear();
 }
-
-template<class ImplementationType>
-OptimisationsSimulationTable& ISimulation<ImplementationType>::getSimulationTable(uint numSpace)
-{
-    // Cette méthode doit être implémentée dans la classe dérivée (Economy)
-    // pour retourner la table spécifique à l'espace numérique
-    return ImplementationType::getSimulationTable(numSpace);
-}
 } // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_SOLVER_HXX__

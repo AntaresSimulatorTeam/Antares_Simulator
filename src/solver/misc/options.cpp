@@ -67,6 +67,10 @@ void addParameterOptions(Yuni::GetOpt::Parser& parser,
                    'z',
                    "zip-output",
                    "Force the write output into a single zip archive");
+    parser.addFlag(settings.parquetFmtForSimuTables,
+                   ' ',
+                   "parquet",
+                   "Parquet format for simulation tables");
 }
 
 void addOptimizationOptions(Yuni::GetOpt::Parser& parser,
