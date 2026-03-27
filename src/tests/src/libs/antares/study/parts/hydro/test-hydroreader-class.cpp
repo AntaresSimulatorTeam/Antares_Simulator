@@ -67,6 +67,11 @@ struct Fixture
 
         // Add areas
         area_1 = addAreaToListOfAreas(study->areas, "Area1");
+        if (area_1)
+        {
+            area_1->createMissingData();
+            area_1->resetToDefaultValues();
+        }
         study->areas.rebuildIndexes();
         dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
         reader = std::make_shared<HydroMaxTimeSeriesReader>(area_1->hydro,

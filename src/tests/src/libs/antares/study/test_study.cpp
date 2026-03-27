@@ -18,6 +18,11 @@ struct OneAreaStudy
     {
         study = std::make_unique<Study>();
         areaA = addAreaToListOfAreas(study->areas, "A");
+        if (areaA)
+        {
+            areaA->createMissingData();
+            areaA->resetToDefaultValues();
+        }
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
     }
@@ -267,7 +272,6 @@ struct RenewableClusterStudy: public OneAreaStudy
 {
     RenewableClusterStudy()
     {
-        areaA = addAreaToListOfAreas(study->areas, "A");
         auto newCluster = std::make_shared<RenewableCluster>(areaA);
         newCluster->setName("WindCluster");
         areaA->renewable.list.addToCompleteList(newCluster);

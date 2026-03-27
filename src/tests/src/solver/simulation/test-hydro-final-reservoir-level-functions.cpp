@@ -32,6 +32,15 @@ struct Fixture
         area_1 = addAreaToListOfAreas(study->areas, "Area1");
         area_2 = addAreaToListOfAreas(study->areas, "Area2");
 
+        for (auto* area: {area_1, area_2})
+        {
+            if (area)
+            {
+                area->createMissingData();
+                area->resetToDefaultValues();
+            }
+        }
+
         area_1->hydro.reservoirManagement = true;
         area_2->hydro.reservoirManagement = true;
 

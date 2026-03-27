@@ -35,6 +35,11 @@ struct Fixture
 
         // Add areas to studies
         area_1 = addAreaToListOfAreas(study->areas, "Area1");
+        if (area_1)
+        {
+            area_1->createMissingData();
+            area_1->resetToDefaultValues();
+        }
         study->areas.rebuildIndexes();
 
         // Create necessary folders and files for these two areas

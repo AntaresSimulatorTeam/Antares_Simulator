@@ -60,6 +60,14 @@ struct Fixture
         area_1 = addAreaToListOfAreas(study->areas, "Area 1");
         area_2 = addAreaToListOfAreas(study->areas, "Area 2");
         area_3 = addAreaToListOfAreas(study->areas, "Area 3");
+        for (auto* area: {area_1, area_2, area_3})
+        {
+            if (area)
+            {
+                area->createMissingData();
+                area->resetToDefaultValues();
+            }
+        }
         study->areas.rebuildIndexes();
 
         // Load : set the nb of ready made TS
