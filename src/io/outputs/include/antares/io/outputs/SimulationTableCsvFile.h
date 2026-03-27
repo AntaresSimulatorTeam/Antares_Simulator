@@ -14,7 +14,7 @@ class SimulationTableCsvFile final: public SimulationTableCsv
 public:
     SimulationTableCsvFile(const std::filesystem::path& outputFolder,
                            const std::string& simulationId,
-                           bool parquetFormatRequired);
+                           bool parquetFormatRequired = false);
 
     void write() override;
 

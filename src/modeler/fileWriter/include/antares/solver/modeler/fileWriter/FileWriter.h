@@ -37,7 +37,7 @@ public:
       const Optimisation::OptimEntityContainer& variableContainer,
       const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
 
-    explicit FileWriter(std::filesystem::path path, bool parquetFormatRequired);
+    explicit FileWriter(std::filesystem::path path, bool parquetFormatRequired = false);
 
     const std::filesystem::path& outputPath() const;
 
