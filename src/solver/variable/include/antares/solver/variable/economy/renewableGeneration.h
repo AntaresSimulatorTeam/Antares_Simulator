@@ -231,6 +231,17 @@ public:
                                                                                digestLevel,
                                                                                dataLevel);
             }
+
+            // Advance columnIndex for columns this area doesn't have so that subsequent
+            // variables align correctly across all areas (different areas may have different
+            // numbers of renewable groups).
+            const uint maxCols = results.data.study.parameters.variablesPrintInfo
+                                     .getMaxColumns(VCardType::Caption());
+            const uint actualCols = nbColumns_ * static_cast<uint>(ResultsType::count);
+            if (maxCols > actualCols)
+            {
+                results.data.columnIndex += maxCols - actualCols;
+            }
         }
         // Ask to build the digest to next variable
         NextType::buildDigest(results, digestLevel, dataLevel);

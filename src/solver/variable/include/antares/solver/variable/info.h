@@ -391,6 +391,17 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                     results.variableCaption = st_storage_part.storagesByIndex[i].properties.name;
                     container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
                 }
+
+                // Advance columnIndex for clusters this area doesn't have so that subsequent
+                // variables align correctly across all areas (different areas may have different
+                // numbers of ST storage clusters).
+                const uint maxCols = results.data.study.parameters.variablesPrintInfo
+                                         .getMaxColumns(VCardT::Caption());
+                const uint actualCols = container.size() * static_cast<uint>(CleanType::count);
+                if (maxCols > actualCols)
+                {
+                    results.data.columnIndex += maxCols - actualCols;
+                }
             }
         }
     }

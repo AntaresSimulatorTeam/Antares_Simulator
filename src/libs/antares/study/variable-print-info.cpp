@@ -38,7 +38,7 @@ void VariablePrintInfo::reverse()
     to_be_printed_ = !to_be_printed_;
 }
 
-uint VariablePrintInfo::getMaxColumnsCount()
+uint VariablePrintInfo::getMaxColumnsCount() const
 {
     return maxNumberColumns_;
 }
@@ -117,6 +117,15 @@ void AllVariablesPrintInfo::setPrintStatus(unsigned int index, bool printStatus)
 void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
 {
     allVarsPrintInfo.at(to_uppercase(varname)).setMaxColumns(maxColumnsNumber);
+}
+
+uint AllVariablesPrintInfo::getMaxColumns(const std::string& varname) const
+{
+    std::string upper = varname;
+    auto it = allVarsPrintInfo.find(to_uppercase(upper));
+    if (it != allVarsPrintInfo.end())
+        return it->second.getMaxColumnsCount();
+    return 0;
 }
 
 [[deprecated("Only needed by the GUI, to be removed")]]

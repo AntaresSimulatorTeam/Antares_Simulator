@@ -29,7 +29,7 @@ public:
     bool isPrinted() const;
     void reverse();
 
-    uint getMaxColumnsCount();
+    uint getMaxColumnsCount() const;
     void setMaxColumns(uint maxColumnsNumber);
 
     bool isPrintedOnDataLevel(uint dataLevel) const
@@ -92,6 +92,7 @@ public:
     void setPrintStatus(unsigned int index, bool printStatus);
 
     void setMaxColumns(std::string varname, uint maxColumnsNumber);
+    uint getMaxColumns(const std::string& varname) const;
     std::string name_of(unsigned int index) const;
 
     void prepareForSimulation(bool isThematicTrimmingEnabled,
