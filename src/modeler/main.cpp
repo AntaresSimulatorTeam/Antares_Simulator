@@ -19,11 +19,17 @@ static void usage()
 
 bool parquetFormatRequired(int argc, const char** argv)
 {
+    if (argc <= 2)
+    {
+        return false;
+    }
+
     std::string parquetOption = argv[2];
-    if (argc == 3 && parquetOption == "--parquet")
+    if (parquetOption == "--parquet")
     {
         return true;
     }
+
     return false;
 }
 
