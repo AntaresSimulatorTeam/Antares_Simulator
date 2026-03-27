@@ -46,9 +46,9 @@ std::string make_line(const std::vector<std::string>& cols)
         }
         out += escape(cols[i]);
     }
-    out+= '\n';
+    out += '\n';
     return out;
-};
+}
 
 void CsvTableWriter::writeTable(const fs::path& filePath,
                                 const std::vector<std::string>& header,

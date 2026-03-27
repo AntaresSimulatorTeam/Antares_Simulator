@@ -154,10 +154,10 @@ public:
                                              optWriter,
                                              pDurationCollector,
                                              scratchmap);
-        
+
         if (!study.parameters.noOutput)
         {
-            auto& simTable = simulation_->getSimulationTable(numSpace); 
+            auto& simTable = simulation_->getSimulationTable(numSpace);
 
             auto buffers = simTable.moveBuffers();
 

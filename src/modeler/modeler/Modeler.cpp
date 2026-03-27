@@ -198,7 +198,7 @@ void Modeler::writeSubProblemSimulationTable(
         {
             auto& subproblem_1_1 = subproblems_[0];
             // gp : we should first build the simulation table, then write it, the writer should not
-            // gp : be responsible for building the simulation table 
+            // gp : be responsible for building the simulation table
             writer_.writeSimulationTable(*subproblem_1_1,
                                          *solution,
                                          data_,
