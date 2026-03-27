@@ -395,8 +395,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 // Advance columnIndex for clusters this area doesn't have so that subsequent
                 // variables align correctly across all areas (different areas may have different
                 // numbers of ST storage clusters).
-                const uint maxCols = results.data.study.parameters.variablesPrintInfo
-                                         .getMaxColumns(VCardT::Caption());
+                const uint maxCols = results.data.study.parameters.variablesPrintInfo.getMaxColumns(
+                  VCardT::Caption());
                 const uint actualCols = container.size() * static_cast<uint>(CleanType::count);
                 if (maxCols > actualCols)
                 {

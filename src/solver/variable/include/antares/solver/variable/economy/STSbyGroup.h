@@ -285,8 +285,8 @@ public:
             // Advance columnIndex for columns this area doesn't have so that subsequent
             // variables align correctly across all areas (different areas may have different
             // numbers of STS groups).
-            const uint maxCols = results.data.study.parameters.variablesPrintInfo
-                                     .getMaxColumns(VCardType::Caption());
+            const uint maxCols = results.data.study.parameters.variablesPrintInfo.getMaxColumns(
+              VCardType::Caption());
             const uint actualCols = nbColumns_ * static_cast<uint>(ResultsType::count);
             if (maxCols > actualCols)
             {

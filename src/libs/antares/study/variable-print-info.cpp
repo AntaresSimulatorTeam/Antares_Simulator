@@ -124,7 +124,9 @@ uint AllVariablesPrintInfo::getMaxColumns(const std::string& varname) const
     std::string upper = varname;
     auto it = allVarsPrintInfo.find(to_uppercase(upper));
     if (it != allVarsPrintInfo.end())
+    {
         return it->second.getMaxColumnsCount();
+    }
     return 0;
 }
 
