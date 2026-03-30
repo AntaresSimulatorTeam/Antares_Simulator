@@ -1,6 +1,9 @@
 # Parameters
 
-The modeler parameters are currently held in a **parameters.yml** file under the study root directory. 
+The modeler parameters are currently held in a **parameters.yml** file under the study root directory.
+
+**Note:** In hybrid (solver + modeler) studies, `parameters.yml` is ignored. Use command-line options to set solver parameters instead.
+This file is only used in pure modeler mode (`antares-modeler`). 
 
 ## Solver parameters
 
@@ -13,8 +16,8 @@ The modeler parameters are currently held in a **parameters.yml** file under the
     - `glpk` (Linux only)
     - `highs`
     - `pdlp` (LP only)
-- **Required:** **no**
-- **Default value:** `sirius`
+    - `gurobi`
+- **Required:** **yes**
 - **Usage:** the solver to use for optimization problem resolution
 
 ### solver-logs
@@ -35,13 +38,15 @@ The modeler parameters are currently held in a **parameters.yml** file under the
 
 ### first-time-step
 - **Expected value:** positive integer (0 accepted)
-- **Required:** yes
+- **Required:** no
+- **Default value:** `0`
 - **Usage:** first timestamp to include in the simulation horizon. Must be included in the definition of 
   [data-series](02-inputs.md#data-series) that are time-dependent.
 
 ### last-time-step
 - **Expected value:** positive integer (0 accepted)
-- **Required:** yes
+- **Required:** no
+- **Default value:** `167`
 - **Usage:** last timestamp to include in the simulation horizon. Must be included in the definition of 
   [data-series](02-inputs.md#data-series) that are time-dependent.
 
