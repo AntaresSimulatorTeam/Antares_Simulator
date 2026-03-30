@@ -1,7 +1,5 @@
 var classAntares_1_1Data_1_1XCast =
 [
-    [ "Vector", "classAntares_1_1Data_1_1XCast.html#a19cae376dc69fe024b1cb7e5cbfa6ce5", null ],
-    [ "VectorConst", "classAntares_1_1Data_1_1XCast.html#ab5e71d03b61631448538a3d4b4e15c97", null ],
     [ "Distribution", "classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613", [
       [ "dtNone", "classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613aa79006cba5f7d4a21e8181fd3e25ccb3", null ],
       [ "dtUniform", "classAntares_1_1Data_1_1XCast.html#a6d97c533d309ba1bde2763d7117ba613af18b5e24f48fe83423a90db41dfdebb4", null ],

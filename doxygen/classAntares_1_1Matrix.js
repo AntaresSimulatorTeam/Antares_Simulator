@@ -8,7 +8,6 @@ var classAntares_1_1Matrix =
     [ "ReadWriteType", "classAntares_1_1Matrix.html#a80e0939138dcfbdae3a7deb8c7473afd", null ],
     [ "Type", "classAntares_1_1Matrix.html#a445a7818d4a99a9435189b353cab5365", null ],
     [ "TypePtr", "classAntares_1_1Matrix.html#a717f5a135a420868745d8eda5edf98b1", null ],
-    [ "Vector", "classAntares_1_1Matrix.html#ac337b2d554d79ad37af99e8d372db5f5", null ],
     [ "Options", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2", [
       [ "optNone", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aeace5101cedad1888fbf3accbe4509ae", null ],
       [ "optFixedSize", "classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140", null ],

@@ -1,6 +1,5 @@
 var classAntares_1_1Data_1_1Cluster =
 [
-    [ "Set", "classAntares_1_1Data_1_1Cluster.html#ac628c51bf1d31a38f417a1b11df94af6", null ],
     [ "Cluster", "classAntares_1_1Data_1_1Cluster.html#a705f8abd19dd13377d25fe20d2e1ee7a", null ],
     [ "~Cluster", "classAntares_1_1Data_1_1Cluster.html#a49a9f9dbb0c8b93957c22557ad0a305f", null ],
     [ "getFullName", "classAntares_1_1Data_1_1Cluster.html#a183bbf7ff5ecbc2bd4e2a76d4c1f9245", null ],

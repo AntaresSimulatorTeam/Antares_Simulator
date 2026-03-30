@@ -1,9 +1,6 @@
 var classAntares_1_1Data_1_1ThermalCluster =
 [
     [ "DivModulation", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation" ],
-    [ "Set", "classAntares_1_1Data_1_1ThermalCluster.html#ab67a172d64a398d01133439f4d1ade1e", null ],
-    [ "SetPointer", "classAntares_1_1Data_1_1ThermalCluster.html#a25434c932081e4817018d1c67def58c3", null ],
-    [ "Vector", "classAntares_1_1Data_1_1ThermalCluster.html#a2fbd7ee2f2daf836cfafe86dd5b5be82", null ],
     [ "ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#adbae5e0bff6e2a24eb11d6064d0ea213", null ],
     [ "ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#a8f60c0a7c1e1003310c551337e86688a", null ],
     [ "~ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#a3b42fc7c68561bcc31f95c0144875a48", null ],
