@@ -11,6 +11,10 @@ DynamicAggregationSingleYear::DynamicAggregationSingleYear(Data::Study& study):
 {
     for (const auto& set: study_.setsOfAreas)
     {
+        if (!study_.setsOfAreas.hasOutput(set.first))
+        {
+            continue;
+        }
         setsData_.try_emplace(set.first, *set.second);
     }
 }

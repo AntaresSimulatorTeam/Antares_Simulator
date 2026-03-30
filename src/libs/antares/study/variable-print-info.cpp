@@ -199,8 +199,13 @@ std::vector<std::string> AllVariablesPrintInfo::namesOfDisabledVariables()
 unsigned computeMaxColumnsForDynamicDistricts(const Sets& setsOfAreas)
 {
     std::size_t ret = 0;
-    for (const auto& [_, set]: setsOfAreas)
+    for (const auto& [setId, set]: setsOfAreas)
     {
+        if (!setsOfAreas.hasOutput(setId))
+        {
+            continue;
+        }
+
         std::set<std::string> thermalGroupNames, renewableGroupNames, stsGroupNames;
         for (const auto* area: *set)
         {
