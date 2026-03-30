@@ -182,8 +182,8 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
     case FunctionNodeType::ceil:
         return typeIndexOf<FunctionNodeType::ceil>();
     default:
-        throw IO::Inputs::InputError("ForbiddenNodesVisitor > function '"
-                                     + functionNode->name() + "' is unknown.");
+        throw IO::Inputs::InputError("ForbiddenNodesVisitor > function '" + functionNode->name()
+                                     + "' is unknown.");
     }
 }
 

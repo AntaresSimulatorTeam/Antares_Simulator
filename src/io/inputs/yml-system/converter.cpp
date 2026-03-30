@@ -24,8 +24,6 @@ namespace Antares::IO::Inputs::SystemConverter
 namespace
 {
 
-
-
 std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
     size_t pos = s.find('.');
@@ -257,7 +255,8 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         for (const auto& c: ymlSystem.components)
         {
             auto it = std::ranges::find_if(std::as_const(components),
-                                           [&c](const Component& compo) { return compo.Id() == c.id; });
+                                           [&c](const Component& compo)
+                                           { return compo.Id() == c.id; });
             if (it != components.end())
             {
                 throw IO::Inputs::InputError(
@@ -289,8 +288,9 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         for (const auto& connection: ymlSystem.thermalCapacityConnections)
         {
             connectThermalCapacity(connection, components);
-            logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
-                         << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
+            logs.debug() << "Loaded thermal-capacity connection (component=`"
+                         << connection.componentId << "` area=`"
+                         << connection.thermalComponent.areaId << "` clusterId=`"
                          << connection.thermalComponent.clusterId << "`)";
         }
 

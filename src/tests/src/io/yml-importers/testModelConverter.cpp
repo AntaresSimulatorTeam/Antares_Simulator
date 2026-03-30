@@ -83,17 +83,13 @@ BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
 {
     YmlModel::PortType portType1{"port1", "empty port", {}, "", {}};
     library.port_types = {portType1};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          InputError,
-                          emptyFields);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, emptyFields);
 
     // same name
     YmlModel::PortType portType2{"port2", "flow port", {"field1", "field2"}, "", {}};
     YmlModel::PortType portType3{"port2", "impedance port", {"field3", "field4"}, "", {}};
     library.port_types = {portType2, portType3};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          InputError,
-                          portTypeAlreadyExists);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portTypeAlreadyExists);
 }
 
 // Test library with models
@@ -253,9 +249,7 @@ BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
                           .objectives = {},
                           .extra_outputs = {}};
     library.models = {model};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          InputError,
-                          typeNotFound);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, typeNotFound);
 }
 
 // Test library with models and constraints
@@ -418,9 +412,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .objectives = {},
                            .extra_outputs = {}};
     library.models = {model1};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          InputError,
-                          portNotFoundForDef);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portNotFoundForDef);
 
     YmlModel::Model model2{.id = "model2",
                            .description = "description",
@@ -433,9 +425,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .objectives = {},
                            .extra_outputs = {}};
     library.models = {model2};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          InputError,
-                          fieldNotFoundForDef);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, fieldNotFoundForDef);
 
     YmlModel::Model model3{.id = "model3",
                            .description = "description",
@@ -449,9 +439,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .objectives = {},
                            .extra_outputs = {}};
     library.models = {model3};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          InputError,
-                          portInDef);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portInDef);
 }
 
 // Test one model with extra outputs

@@ -14,7 +14,6 @@
 namespace Antares::IO::Inputs::ForbidNodes
 {
 
-
 class ForbiddenNodesVisitor: public Expressions::Visitors::NodeVisitor<void>
 {
 public:
