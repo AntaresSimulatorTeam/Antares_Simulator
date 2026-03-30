@@ -13,7 +13,7 @@ std::pair<std::string, std::string> OptimisationsSimulationTable::moveBuffers()
 {
     std::pair<std::string, std::string> result{std::move(firstOptimBuffer_),
                                                std::move(secondOptimBuffer_)};
-    clear();
+    clear(); // gp : if we move, buffers get cleared, so no need to clear again.
     return result;
 }
 

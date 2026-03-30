@@ -18,9 +18,11 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
     {
         throw std::runtime_error("could not find output Folder: " + outputFolder.string());
     }
-    const auto simulationTableSuffix = std::string(simulationId.empty() ? "" : "--" + simulationId)
-                                       + ".csv";
-    output_file_ = outputFolder / ("simulation_table" + simulationTableSuffix);
+    const auto simulation_id = std::string(simulationId.empty() ? "" : "--" + simulationId);
+    output_file_ = outputFolder / ("simulation_table" + simulation_id);
+    std::string ext = parquetFormatRequired_ ? "parquet" : "csv";
+    output_file_ += "." + ext;
+
     Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
@@ -28,10 +30,7 @@ void SimulationTableCsvFile::write()
 {
     // Build table vectors
     std::vector<std::string> header;
-    std::vector<std::vector<std::string>> rows;
-    // gp : Here we convert to row format, we don't "export". To be renamed.
-    // gp : Plus : this function should return the row format for more clarity.
-    exportTable(header, rows);
+    std::vector<std::vector<std::string>> rows = storageIntoRows();
 
     auto writer = Antares::Writer::makeTableWriter(parquetFormatRequired_);
     writer->writeTable(output_file_, header, rows);

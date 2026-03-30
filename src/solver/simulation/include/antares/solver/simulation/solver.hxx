@@ -551,35 +551,26 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
     std::string globalFirstBuffer;
     std::string globalSecondBuffer;
 
-    // gp : We don't need to iterate over years and then find the year in the map.
-    // gp : Looping over values should be enough :
-    //   for (auto& pair_of_buffers : yearSimulationBuffers_ | std::views::values)
-    //   {
-    //      globalFirstBuffer += pair_of_buffers.first;
-    //      globalSecondBuffer += pair_of_buffers.second;
-    //   }
-
-    for (uint year = 0; year < study.parameters.nbYears; ++year)
+    for (auto& pair_of_buffers : yearSimulationBuffers_ | std::views::values)
     {
-        auto it = yearSimulationBuffers_.find(year);
-        if (it != yearSimulationBuffers_.end())
-        {
-            globalFirstBuffer += it->second.first;
-            globalSecondBuffer += it->second.second;
-        }
+        globalFirstBuffer += pair_of_buffers.first;
+        globalSecondBuffer += pair_of_buffers.second;
     }
+
     const auto header = ImplementationType::getSimulationTableHeader() + "\n";
-    if (!globalFirstBuffer.empty())
+    
+    if (study.parameters.parquetFmtForSimuTables)
+    {
+
+    }
+    else
     {
         std::string writerEntry = header + std::move(globalFirstBuffer);
         pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
-    }
-    if (!globalSecondBuffer.empty())
-    {
+
         std::string writerEntry = header + std::move(globalSecondBuffer);
         pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
     }
-
     yearSimulationBuffers_.clear();
 }
 } // namespace Antares::Solver::Simulation

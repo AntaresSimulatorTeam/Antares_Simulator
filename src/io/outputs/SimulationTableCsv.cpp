@@ -75,10 +75,9 @@ void SimulationTableCsv::write()
     }
 }
 
-void SimulationTableCsv::exportTable(std::vector<std::string>& header,
-                                     std::vector<std::vector<std::string>>& rows) const
+std::vector<std::vector<std::string>> SimulationTableCsv::storageIntoRows() const
 {
-    header = storage_.columnNames();
+    std::vector<std::vector<std::string>> rows; // to return
     const size_t row_count = storage_.rowCount();
     const auto& columns = storage_.columns();
 
@@ -93,6 +92,7 @@ void SimulationTableCsv::exportTable(std::vector<std::string>& header,
             outRow.push_back(col->toString(r));
         }
     }
+    return rows;
 }
 
 void SimulationTableCsv::clear()

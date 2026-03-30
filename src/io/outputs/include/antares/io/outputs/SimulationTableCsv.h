@@ -3,6 +3,7 @@
 
 #pragma once
 #include <filesystem>
+#include <vector>
 
 #include "antares/io/outputs/storage.h"
 
@@ -24,9 +25,7 @@ public:
     void writeHeaderToBuffer();
 
 protected:
-    // Export the current table into header + rows of string cells
-    void exportTable(std::vector<std::string>& header,
-                     std::vector<std::vector<std::string>>& rows) const;
+    std::vector<std::vector<std::string>> storageIntoRows() const;
 
 private:
     std::ostringstream buffer_;
