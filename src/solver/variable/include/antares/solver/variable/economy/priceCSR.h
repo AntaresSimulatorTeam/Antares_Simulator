@@ -61,7 +61,7 @@ struct VCardPriceCSR
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardPrice VCardForSpatialAggregate;
+    typedef VCardPriceCSR VCardForSpatialAggregate;
 
     //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
