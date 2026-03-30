@@ -162,12 +162,12 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFiel
         return false;
     }
 
-    checkFields(areaConnNode, std::unordered_set<std::string>{"injection-to-balance",
-                                                               "spillage-bound",
-                                                               "unsupplied-energy-bound"});
+    checkFields(areaConnNode,
+                std::unordered_set<std::string>{"injection-to-balance",
+                                                "spillage-bound",
+                                                "unsupplied-energy-bound"});
 
-    rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode,
-                                                             "injection-to-balance");
+    rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
     rhs.area_connection.spillage_bound = getFieldFromNode(areaConnNode, "spillage-bound");
     rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(areaConnNode,
                                                                    "unsupplied-energy-bound");
@@ -359,7 +359,8 @@ bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
     rhs.ports = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Port>>(
       node["ports"]);
     rhs.port_field_definitions = as_fallback_default<
-      std::vector<Antares::IO::Inputs::YmlModel::PortFieldDefinition>>(node["port-field-definitions"]);
+      std::vector<Antares::IO::Inputs::YmlModel::PortFieldDefinition>>(
+      node["port-field-definitions"]);
     rhs.constraints = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(
       node["constraints"]);
     rhs.binding_constraints = as_fallback_default<
