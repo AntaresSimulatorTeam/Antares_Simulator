@@ -17,9 +17,6 @@ namespace Antares::Data
 class XCast final: private Yuni::NonCopyable<XCast>
 {
 public:
-    //! Vector
-    using Vector = std::vector<XCast*>;
-
     /*!
     ** \brief All coefficients
     */
