@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
 
 #include "enum_operators.h"
@@ -44,6 +45,104 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             models: []
     )"s;
     BOOST_CHECK_THROW(parser.parse(library), YmlModel::LibraryIdNotDefined);
+}
+
+BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types: []
+            models:
+                - id: "model_id"
+                  parameters:
+                    - time-dependent: false
+                  variables: []
+                  ports: []
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(variable_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types: []
+            models:
+                - id: "model_id"
+                  parameters: []
+                  variables:
+                    - lower-bound: 0
+                      upper-bound: 1
+                  ports: []
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(model_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types: []
+            models:
+                - description: "missing id"
+                  parameters: []
+                  variables: []
+                  ports: []
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(port_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types:
+                - id: "port_type"
+                  fields: []
+            models:
+                - id: "model_id"
+                  parameters: []
+                  variables: []
+                  ports:
+                    - type: "port_type"
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+        c: 3
+    )");
+    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
+                      YAML::Exception);
+}
+
+BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
+{
+    BOOST_CHECK_EQUAL(printPathTree(std::filesystem::path("lib/model/port")),
+                      std::string("lib\n|__ model\n    |__ port\n"));
 }
 
 // Test library with id and description
