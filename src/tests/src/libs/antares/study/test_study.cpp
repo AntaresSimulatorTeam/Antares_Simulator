@@ -360,4 +360,11 @@ BOOST_FIXTURE_TEST_CASE(cpu_count, OneAreaStudy)
     BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, 120), 1);
 }
 
+BOOST_AUTO_TEST_CASE(add_area_with_empty_name_returns_nullptr)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = addAreaToListOfAreas(study->areas, "");
+    BOOST_CHECK(area == nullptr);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // version
