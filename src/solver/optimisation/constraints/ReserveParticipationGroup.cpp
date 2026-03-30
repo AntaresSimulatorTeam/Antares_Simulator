@@ -71,224 +71,220 @@ ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
  */
 void ReserveParticipationGroup::BuildConstraints()
 {
-    {
-        auto data = GetReserveDataFromProblemHebdo();
-        PMaxReserve pMaxReserve(builder_, data);
-        OffUnitsThermalParticipatingToReserves offUnitsThermalParticipatingToReserves(builder_,
+    auto data = GetReserveDataFromProblemHebdo();
+    PMaxReserve pMaxReserve(builder_, data);
+    OffUnitsThermalParticipatingToReserves offUnitsThermalParticipatingToReserves(builder_, data);
+    POffUnits pOffUnits(builder_, data);
+    ThermalReserveParticipation thermalReserveParticipation(builder_, data);
+    ReserveSatisfaction reserveSatisfaction(builder_, data);
+    STReleaseMaxReserve stReleaseMaxReserve(builder_, data);
+    STStoreMaxReserve stStoreMaxReserve(builder_, data);
+    STReserveParticipation stReserveParticipation(builder_, data);
+    STStorageEnergyLevelReserveParticipation stStorageEnergyLevelReserveParticipation(builder_,
                                                                                       data);
-        POffUnits pOffUnits(builder_, data);
-        ThermalReserveParticipation thermalReserveParticipation(builder_, data);
-        ReserveSatisfaction reserveSatisfaction(builder_, data);
-        STReleaseMaxReserve stReleaseMaxReserve(builder_, data);
-        STStoreMaxReserve stStoreMaxReserve(builder_, data);
-        STReserveParticipation stReserveParticipation(builder_, data);
-        STStorageEnergyLevelReserveParticipation stStorageEnergyLevelReserveParticipation(builder_,
+    HydroEnergyLevelReserveParticipation hydroEnergyLevelReserveParticipation(builder_, data);
+    HydroReleaseMaxReserve hydroReleaseMaxReserve(builder_, data);
+    HydroStoreMaxReserve hydroStoreMaxReserve(builder_, data);
+    HydroReserveParticipation hydroReserveParticipation(builder_, data);
+
+    SymmetryReserveParticipation symmetryReserveParticipation(builder_, data);
+
+    POutCapacityThresholds pOutCapacityThresholds(builder_, data);
+    POutBounds pOutBounds(builder_, data);
+    STReleaseCapacityThresholds STReleaseCapacityThresholds(builder_, data);
+    STStoreCapacityThresholds STStoreCapacityThresholds(builder_, data);
+    HydroReleaseCapacityThresholds HydroReleaseCapacityThresholds(builder_, data);
+    HydroStoreCapacityThresholds HydroStoreCapacityThresholds(builder_, data);
+    HydroLevelReserveParticipation HydroLevelReserveParticipation(builder_, data);
+    STStorageLevelReserveParticipation STStorageLevelReserveParticipation(builder_, data);
+    STStorageGlobalEnergyLevelReserveParticipation STStorageGlobalEnergyLevelReserveParticipation(
+      builder_,
+      data);
+    HydroGlobalEnergyLevelReserveParticipation HydroGlobalEnergyLevelReserveParticipation(builder_,
                                                                                           data);
-        HydroEnergyLevelReserveParticipation hydroEnergyLevelReserveParticipation(builder_, data);
-        HydroReleaseMaxReserve hydroReleaseMaxReserve(builder_, data);
-        HydroStoreMaxReserve hydroStoreMaxReserve(builder_, data);
-        HydroReserveParticipation hydroReserveParticipation(builder_, data);
 
-        SymmetryReserveParticipation symmetryReserveParticipation(builder_, data);
-
-        POutCapacityThresholds pOutCapacityThresholds(builder_, data);
-        POutBounds pOutBounds(builder_, data);
-        STReleaseCapacityThresholds STReleaseCapacityThresholds(builder_, data);
-        STStoreCapacityThresholds STStoreCapacityThresholds(builder_, data);
-        HydroReleaseCapacityThresholds HydroReleaseCapacityThresholds(builder_, data);
-        HydroStoreCapacityThresholds HydroStoreCapacityThresholds(builder_, data);
-        HydroLevelReserveParticipation HydroLevelReserveParticipation(builder_, data);
-        STStorageLevelReserveParticipation STStorageLevelReserveParticipation(builder_, data);
-        STStorageGlobalEnergyLevelReserveParticipation
-          STStorageGlobalEnergyLevelReserveParticipation(builder_, data);
-        HydroGlobalEnergyLevelReserveParticipation HydroGlobalEnergyLevelReserveParticipation(
-          builder_,
-          data);
-
-        for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+    for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
+    {
+        // Adding constraints for ReservesUp and ReservesDown
+        for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
         {
-            // Adding constraints for ReservesUp and ReservesDown
-            for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
+            // Thermal clusters reserve participations
             {
-                // Thermal clusters reserve participations
-                {
-                    const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
-                                                                          ->PaliersThermiquesDuPays
-                                                                            [pays];
-                    for (int cluster = 0;
-                         cluster < PaliersThermiquesDuPays.NombreDePaliersThermiques;
-                         cluster++)
-                    {
-                        // 16 quater
-                        pOffUnits.add(pays, cluster, pdt);
-                    }
-
-                    uint32_t reserve = 0;
-                    for (const auto& areaReserve: data.areaReserves[pays].areaCapacityReservations)
-                    {
-                        // 24
-                        reserveSatisfaction.add(pays, reserve, pdt);
-
-                        for (const auto& [clusterId, clusterReserveParticipation]:
-                             areaReserve.AllThermalReservesParticipation)
-                        {
-                            // 16 bis
-                            pMaxReserve.add(pays, reserve, clusterId, pdt);
-
-                            if (areaReserve.type == ReserveType::UP
-                                && clusterReserveParticipation.maxPowerOff > 0)
-                            {
-                                // 16 ter
-                                offUnitsThermalParticipatingToReserves.add(pays,
-                                                                           reserve,
-                                                                           clusterId,
-                                                                           pdt);
-                            }
-
-                            // 17 quinquies & sexies
-                            thermalReserveParticipation.add(pays, reserve, clusterId, pdt);
-                        }
-                        reserve++;
-                    }
-
-                    // Thermal cluster Symmetries
-                    for (const auto& [_, symmetries]:
-                         data.areaReserves[pays].ThermalReservesParticipationSymmetries)
-                    {
-                        // Add symmetry constraint between first element and all others
-                        for (const auto& symmetry: symmetries)
-                        {
-                            // 18
-                            symmetryReserveParticipation.add(pays, symmetry, pdt);
-                        }
-                    }
-                }
-
-                // ShortTerm Storage reserve participations
-                {
-                    uint32_t reserve = 0;
-                    for (const auto& areaReserve: data.areaReserves[pays].areaCapacityReservations)
-                    {
-                        for (const auto& [_, clusterReserveParticipation]:
-                             areaReserve.AllSTStorageReservesParticipation)
-                        {
-                            // 15 (k)
-                            stReleaseMaxReserve.add(pays,
-                                                    reserve,
-                                                    clusterReserveParticipation.clusterIdInArea,
-                                                    pdt);
-                            // 15 (l)
-                            stStoreMaxReserve.add(pays,
-                                                  reserve,
-                                                  clusterReserveParticipation.clusterIdInArea,
-                                                  pdt);
-                            // 15 (o & p)
-                            stReserveParticipation.add(pays,
-                                                       reserve,
-                                                       clusterReserveParticipation.clusterIdInArea,
-                                                       pdt);
-
-                            // 15 (h)
-                            stStorageEnergyLevelReserveParticipation
-                              .add(pays, clusterReserveParticipation.clusterIdInArea, reserve, pdt);
-                        }
-                        reserve++;
-                    }
-
-                    // ShortTerm Storage cluster Symmetries
-                    for (const auto& [_, symmetries]:
-                         data.areaReserves[pays].STStorageReservesParticipationSymmetries)
-                    {
-                        for (const auto& symmetry: symmetries)
-                        {
-                            // 18
-                            symmetryReserveParticipation.add(pays, symmetry, pdt);
-                        }
-                    }
-                }
-
-                // Hydro reserve participations
-                {
-                    uint32_t reserve = 0;
-                    for (const auto& areaReserve: data.areaReserves[pays].areaCapacityReservations)
-                    {
-                        for (const auto& clusterReserveParticipation:
-                             areaReserve.AllHydroReservesParticipation)
-                        {
-                            // 15 (a)
-                            hydroReleaseMaxReserve.add(pays,
-                                                       reserve,
-                                                       clusterReserveParticipation.clusterIdInArea,
-                                                       pdt);
-                            // 15 (b)
-                            hydroStoreMaxReserve.add(pays,
-                                                     reserve,
-                                                     clusterReserveParticipation.clusterIdInArea,
-                                                     pdt);
-                            // 15 (e & f)
-                            hydroReserveParticipation
-                              .add(pays, reserve, clusterReserveParticipation.clusterIdInArea, pdt);
-
-                            // 15 (s)
-                            hydroEnergyLevelReserveParticipation
-                              .add(pays, clusterReserveParticipation.clusterIdInArea, reserve, pdt);
-                        }
-                        reserve++;
-                    }
-                }
-
-                // Hydro Symmetries
-                for (const auto& symmetry:
-                     data.areaReserves[pays].HydroReservesParticipationSymmetries)
-                {
-                    // 18
-                    symmetryReserveParticipation.add(pays, symmetry, pdt);
-                }
-
-                // Thermal Clusters
                 const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
                                                                       ->PaliersThermiquesDuPays
                                                                         [pays];
                 for (int cluster = 0; cluster < PaliersThermiquesDuPays.NombreDePaliersThermiques;
                      cluster++)
                 {
-                    // 17 bis
-                    pOutCapacityThresholds.add(pays, cluster, pdt);
-
-                    // 17 ter
-                    pOutBounds.add(pays, cluster, pdt);
+                    // 16 quater
+                    pOffUnits.add(pays, cluster, pdt);
                 }
 
-                // Short Term Storage Clusters
-                const auto& STStorageDuPays = problemeHebdo_->ShortTermStorage[pays];
-                for (int cluster = 0; cluster < STStorageDuPays.size(); cluster++)
+                uint32_t reserve = 0;
+                for (const auto& areaReserve: data.areaReserves[pays].areaCapacityReservations)
                 {
-                    // 15 (m)
-                    STReleaseCapacityThresholds.add(pays, cluster, pdt);
-                    // 15 (n)
-                    STStoreCapacityThresholds.add(pays, cluster, pdt);
-                    // 15 (g)
-                    STStorageLevelReserveParticipation.add(pays, cluster, pdt);
-                    // 15 (i)
-                    STStorageGlobalEnergyLevelReserveParticipation.add(pays, cluster, pdt);
+                    // 24
+                    reserveSatisfaction.add(pays, reserve, pdt);
+
+                    for (const auto& [clusterId, clusterReserveParticipation]:
+                         areaReserve.AllThermalReservesParticipation)
+                    {
+                        // 16 bis
+                        pMaxReserve.add(pays, reserve, clusterId, pdt);
+
+                        if (areaReserve.type == ReserveType::UP
+                            && clusterReserveParticipation.maxPowerOff > 0)
+                        {
+                            // 16 ter
+                            offUnitsThermalParticipatingToReserves.add(pays,
+                                                                       reserve,
+                                                                       clusterId,
+                                                                       pdt);
+                        }
+
+                        // 17 quinquies & sexies
+                        thermalReserveParticipation.add(pays, reserve, clusterId, pdt);
+                    }
+                    reserve++;
                 }
 
-                // Hydro
-                // Check if the Hydro is participating to the reserves
-                if (std::ranges::any_of(
-                      problemeHebdo_->allReserves.value()[pays].areaCapacityReservations,
-                      [](CAPACITY_RESERVATION& res)
-                      { return res.AllHydroReservesParticipation.size() > 0; }))
+                // Thermal cluster Symmetries
+                for (const auto& [_, symmetries]:
+                     data.areaReserves[pays].ThermalReservesParticipationSymmetries)
                 {
-                    // 15 (c)
-                    HydroReleaseCapacityThresholds.add(pays, 0, pdt);
-                    // 15 (d)
-                    HydroStoreCapacityThresholds.add(pays, 0, pdt);
-                    // 15 (r)
-                    HydroLevelReserveParticipation.add(pays, 0, pdt);
-                    // 15 (t)
-                    HydroGlobalEnergyLevelReserveParticipation.add(pays, 0, pdt);
+                    // Add symmetry constraint between first element and all others
+                    for (const auto& symmetry: symmetries)
+                    {
+                        // 18
+                        symmetryReserveParticipation.add(pays, symmetry, pdt);
+                    }
                 }
+            }
+
+            // ShortTerm Storage reserve participations
+            {
+                uint32_t reserve = 0;
+                for (const auto& areaReserve: data.areaReserves[pays].areaCapacityReservations)
+                {
+                    for (const auto& [_, clusterReserveParticipation]:
+                         areaReserve.AllSTStorageReservesParticipation)
+                    {
+                        // 15 (k)
+                        stReleaseMaxReserve.add(pays,
+                                                reserve,
+                                                clusterReserveParticipation.clusterIdInArea,
+                                                pdt);
+                        // 15 (l)
+                        stStoreMaxReserve.add(pays,
+                                              reserve,
+                                              clusterReserveParticipation.clusterIdInArea,
+                                              pdt);
+                        // 15 (o & p)
+                        stReserveParticipation.add(pays,
+                                                   reserve,
+                                                   clusterReserveParticipation.clusterIdInArea,
+                                                   pdt);
+
+                        // 15 (h)
+                        stStorageEnergyLevelReserveParticipation
+                          .add(pays, clusterReserveParticipation.clusterIdInArea, reserve, pdt);
+                    }
+                    reserve++;
+                }
+
+                // ShortTerm Storage cluster Symmetries
+                for (const auto& [_, symmetries]:
+                     data.areaReserves[pays].STStorageReservesParticipationSymmetries)
+                {
+                    for (const auto& symmetry: symmetries)
+                    {
+                        // 18
+                        symmetryReserveParticipation.add(pays, symmetry, pdt);
+                    }
+                }
+            }
+
+            // Hydro reserve participations
+            {
+                uint32_t reserve = 0;
+                for (const auto& areaReserve: data.areaReserves[pays].areaCapacityReservations)
+                {
+                    for (const auto& clusterReserveParticipation:
+                         areaReserve.AllHydroReservesParticipation)
+                    {
+                        // 15 (a)
+                        hydroReleaseMaxReserve.add(pays,
+                                                   reserve,
+                                                   clusterReserveParticipation.clusterIdInArea,
+                                                   pdt);
+                        // 15 (b)
+                        hydroStoreMaxReserve.add(pays,
+                                                 reserve,
+                                                 clusterReserveParticipation.clusterIdInArea,
+                                                 pdt);
+                        // 15 (e & f)
+                        hydroReserveParticipation.add(pays,
+                                                      reserve,
+                                                      clusterReserveParticipation.clusterIdInArea,
+                                                      pdt);
+
+                        // 15 (s)
+                        hydroEnergyLevelReserveParticipation
+                          .add(pays, clusterReserveParticipation.clusterIdInArea, reserve, pdt);
+                    }
+                    reserve++;
+                }
+            }
+
+            // Hydro Symmetries
+            for (const auto& symmetry: data.areaReserves[pays].HydroReservesParticipationSymmetries)
+            {
+                // 18
+                symmetryReserveParticipation.add(pays, symmetry, pdt);
+            }
+
+            // Thermal Clusters
+            const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
+                                                                  ->PaliersThermiquesDuPays[pays];
+            for (int cluster = 0; cluster < PaliersThermiquesDuPays.NombreDePaliersThermiques;
+                 cluster++)
+            {
+                // 17 bis
+                pOutCapacityThresholds.add(pays, cluster, pdt);
+
+                // 17 ter
+                pOutBounds.add(pays, cluster, pdt);
+            }
+
+            // Short Term Storage Clusters
+            const auto& STStorageDuPays = problemeHebdo_->ShortTermStorage[pays];
+            for (int cluster = 0; cluster < STStorageDuPays.size(); cluster++)
+            {
+                // 15 (m)
+                STReleaseCapacityThresholds.add(pays, cluster, pdt);
+                // 15 (n)
+                STStoreCapacityThresholds.add(pays, cluster, pdt);
+                // 15 (g)
+                STStorageLevelReserveParticipation.add(pays, cluster, pdt);
+                // 15 (i)
+                STStorageGlobalEnergyLevelReserveParticipation.add(pays, cluster, pdt);
+            }
+
+            // Hydro
+            // Check if the Hydro is participating to the reserves
+            if (std::ranges::any_of(
+                  problemeHebdo_->allReserves.value()[pays].areaCapacityReservations,
+                  [](CAPACITY_RESERVATION& res)
+                  { return res.AllHydroReservesParticipation.size() > 0; }))
+            {
+                // 15 (c)
+                HydroReleaseCapacityThresholds.add(pays, 0, pdt);
+                // 15 (d)
+                HydroStoreCapacityThresholds.add(pays, 0, pdt);
+                // 15 (r)
+                HydroLevelReserveParticipation.add(pays, 0, pdt);
+                // 15 (t)
+                HydroGlobalEnergyLevelReserveParticipation.add(pays, 0, pdt);
             }
         }
     }
