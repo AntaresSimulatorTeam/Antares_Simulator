@@ -32,9 +32,6 @@ public:
         productionFactor
     };
 
-    //! Set of renewable clusters
-    using Set = std::set<RenewableCluster*, CompareClusterName>;
-
     //! \name Constructor & Destructor
     //@{
     /*!

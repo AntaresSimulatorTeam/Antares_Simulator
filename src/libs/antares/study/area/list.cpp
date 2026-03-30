@@ -153,6 +153,14 @@ AreaList::AreaList(Study& study):
 {
 }
 
+AreaList::~AreaList()
+{
+    for (auto* area: areas | std::views::values)
+    {
+        delete area;
+    }
+}
+
 bool AreaList::empty() const
 {
     return areas.empty();

@@ -32,15 +32,9 @@ class Area final: private Yuni::NonCopyable<Area>
 {
 public:
     using NameSet = std::set<AreaName>;
-    using Set = std::set<Area*, CompareAreaName>;
-    using LinkMap = std::map<Area*, AreaLink::Set, CompareAreaName>;
     using Map = std::map<AreaName, Area*>;
     using Vector = std::vector<Area*>;
-    using VectorConst = std::vector<const Area*>;
-    using List = std::list<Area*>;
     using ScratchMap = std::map<const Area*, AreaScratchpad&>;
-    //! Name mapping -> must be replaced by AreaNameMapping
-    using NameMapping = std::map<AreaName, AreaName>;
 
     //! \name Constructor & Destructor
     //@{
@@ -295,7 +289,13 @@ public:
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-    ~AreaList() = default;
+
+    /*!
+     ** \brief Destructor
+     **
+     ** Frees all Area instances owned by this list.
+     */
+    ~AreaList();
     //@}
 
     //! \name Iterating through all areas

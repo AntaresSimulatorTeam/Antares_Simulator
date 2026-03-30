@@ -22,7 +22,7 @@ jobs:
       #config in env to be accessible at each step
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
-      CCACHE_SLOPPINESS: time_macros,include_file_mtime
+      CCACHE_SLOPPINESS: time_macros,include_file_mtime,include_file_ctime
       PYTHON_VERSION: "3.12"
 
     steps:
@@ -46,8 +46,8 @@ jobs:
       run: |
         echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
-    - name: Install ccache
-      run: sudo apt-get install -y ccache
+    - name: Install APT deps
+      run: sudo apt-get install -y ccache uuid-dev ninja-build lld
 
       # Can't use ubuntu cache. Cache hit is only single digit %
     - name: Restore ccache cache
@@ -64,20 +64,14 @@ jobs:
         # Ensure directory exists and point ccache at it
         mkdir -p ${{ env.CCACHE_DIR }}
         # Increase size to reduce evictions; adjust to suit your CI quota
-        ccache --set-config=max_size=5G
+        ccache --set-config=max_size=1G
         ccache --set-config=compression=true
-        ccache --show-config || true
         ccache -p
+        ccache -z
       shell: bash
 
     - name: Install Build Wrapper
       uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v7.0.0
-
-    - name: Install libraries
-      run: |
-        sudo apt-get update
-        sudo apt-get install uuid-dev
-        sudo apt-get install libboost-test-dev
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -130,9 +124,12 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -B _build -S src \
+        cmake -G Ninja -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS="-fuse-ld=lld" \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCODE_COVERAGE=ON \

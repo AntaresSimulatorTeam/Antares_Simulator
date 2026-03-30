@@ -36,8 +36,6 @@ public:
     using Ptr = std::shared_ptr<Rules>;
     //! Map
     using Map = std::map<RulesScenarioName, Ptr>;
-    //! Map ID
-    using MappingID = std::map<int, Ptr>;
 
     //! \name Constructor & Destructor
     //@{

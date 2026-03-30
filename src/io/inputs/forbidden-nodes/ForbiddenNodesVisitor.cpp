@@ -108,7 +108,7 @@ void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
     checkIsForbidden(portFieldNode, typeIndexOf<PortFieldNode>());
 }
 
-void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
+void ForbiddenNodesVisitor::visit(const PortFieldSumNode*)
 {
     // keep empty
 }
