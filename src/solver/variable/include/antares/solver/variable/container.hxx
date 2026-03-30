@@ -11,6 +11,7 @@
 
 namespace Antares::Solver::Variable::Container
 {
+
 template<class NextT>
 inline void List<NextT>::initializeFromStudy(Data::Study& study)
 {
@@ -205,6 +206,22 @@ inline void List<NextT>::retrieveResultsForLink(
     NextT::template retrieveResultsForLink<VCardToFindT>(result, link);
 }
 
+static uint findOriginalSetIndex(const Data::Study& study, uint filteredIndex)
+{
+    for (uint i = 0; i < study.setsOfAreas.size(); ++i)
+    {
+        if (study.setsOfAreas.hasOutput(i) && study.setsOfAreas.resultSize(i))
+        {
+            if (filteredIndex == 0)
+            {
+                return i;
+            }
+            --filteredIndex;
+        }
+    }
+    return 0;
+}
+
 template<class NextT>
 void List<NextT>::buildSurveyReport(SurveyResults& results,
                                     int dataLevel,
@@ -230,20 +247,7 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va
         && dynamicAggregationAllYears_)
     {
-        uint filteredIdx = results.data.setOfAreasIndex;
-        uint originalIdx = 0;
-        for (uint i = 0; i < pStudy->setsOfAreas.size(); ++i)
-        {
-            if (pStudy->setsOfAreas.hasOutput(i) && pStudy->setsOfAreas.resultSize(i))
-            {
-                if (filteredIdx == 0)
-                {
-                    originalIdx = i;
-                    break;
-                }
-                --filteredIdx;
-            }
-        }
+        uint originalIdx = findOriginalSetIndex(*pStudy, results.data.setOfAreasIndex);
         const auto& setName = pStudy->setsOfAreas.nameByIndex(originalIdx);
         dynamicAggregationAllYears_
           ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
@@ -282,20 +286,7 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     // Append dynamic aggregation columns for sets of areas, values files only
     if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va)
     {
-        uint filteredIdx = results.data.setOfAreasIndex;
-        uint originalIdx = 0;
-        for (uint i = 0; i < pStudy->setsOfAreas.size(); ++i)
-        {
-            if (pStudy->setsOfAreas.hasOutput(i) && pStudy->setsOfAreas.resultSize(i))
-            {
-                if (filteredIdx == 0)
-                {
-                    originalIdx = i;
-                    break;
-                }
-                --filteredIdx;
-            }
-        }
+        uint originalIdx = findOriginalSetIndex(*pStudy, results.data.setOfAreasIndex);
         const auto& setName = pStudy->setsOfAreas.nameByIndex(originalIdx);
         dynamicAggregationSingleYear_[numSpace]
           .appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
