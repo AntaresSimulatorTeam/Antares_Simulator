@@ -553,10 +553,10 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
 
     // gp : We don't need to iterate over years and then find the year in the map.
     // gp : Looping over values should be enough :
-    //   for (auto& v : yearSimulationBuffers_ | std::views::values)
+    //   for (auto& pair_of_buffers : yearSimulationBuffers_ | std::views::values)
     //   {
-    //      globalFirstBuffer += v.first;
-    //      globalSecondBuffer += v.second;
+    //      globalFirstBuffer += pair_of_buffers.first;
+    //      globalSecondBuffer += pair_of_buffers.second;
     //   }
 
     for (uint year = 0; year < study.parameters.nbYears; ++year)
