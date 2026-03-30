@@ -548,10 +548,17 @@ void ISimulation<ImplementationType>::storeYearBuffers(uint year,
 template<class ImplementationType>
 void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
 {
-    std::lock_guard lock(buffersMutex_);
     std::string globalFirstBuffer;
     std::string globalSecondBuffer;
-    // dans l'ordre des années
+
+    // gp : We don't need to iterate over years and then find the year in the map.
+    // gp : Looping over values should be enough :
+    //   for (auto& v : yearSimulationBuffers_ | std::views::values)
+    //   {
+    //      globalFirstBuffer += v.first;
+    //      globalSecondBuffer += v.second;
+    //   }
+
     for (uint year = 0; year < study.parameters.nbYears; ++year)
     {
         auto it = yearSimulationBuffers_.find(year);
