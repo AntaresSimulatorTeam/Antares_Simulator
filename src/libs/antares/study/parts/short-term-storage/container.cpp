@@ -306,7 +306,7 @@ std::pair<std::string, ReserveName> STStorageInput::reserveParticipationGroupAt(
   const Area* area,
   unsigned int index) const
 {
-    int column = 0;
+    uint column = 0;
     for (const auto& reserveName:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {

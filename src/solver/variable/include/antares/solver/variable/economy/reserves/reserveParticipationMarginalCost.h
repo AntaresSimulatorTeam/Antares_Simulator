@@ -199,7 +199,7 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto& area = state.area;
-        int column = 0;
+        uint column = 0;
 
         if (state.study.parameters.reservesEnabled)
         {
@@ -236,7 +236,7 @@ public:
             assert(NULL != results.data.area);
             results.variableUnit = VCardType::Unit();
             // Write the data for the current year
-            int column = 0;
+            uint column = 0;
             for (const auto& reserveName:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)

@@ -79,17 +79,31 @@ void ReserveParticipationGroup::BuildConstraints()
         POffUnits pOffUnits(builder_, data);
         ThermalReserveParticipation thermalReserveParticipation(builder_, data);
         ReserveSatisfaction reserveSatisfaction(builder_, data);
-        STReleaseMaxReserve STReleaseMaxReserve(builder_, data);
-        STStoreMaxReserve STStoreMaxReserve(builder_, data);
-        STReserveParticipation STReserveParticipation(builder_, data);
-        STStorageEnergyLevelReserveParticipation STStorageEnergyLevelReserveParticipation(builder_,
+        STReleaseMaxReserve stReleaseMaxReserve(builder_, data);
+        STStoreMaxReserve stStoreMaxReserve(builder_, data);
+        STReserveParticipation stReserveParticipation(builder_, data);
+        STStorageEnergyLevelReserveParticipation stStorageEnergyLevelReserveParticipation(builder_,
                                                                                           data);
-        HydroEnergyLevelReserveParticipation HydroEnergyLevelReserveParticipation(builder_, data);
-        HydroReleaseMaxReserve HydroReleaseMaxReserve(builder_, data);
-        HydroStoreMaxReserve HydroStoreMaxReserve(builder_, data);
-        HydroReserveParticipation HydroReserveParticipation(builder_, data);
+        HydroEnergyLevelReserveParticipation hydroEnergyLevelReserveParticipation(builder_, data);
+        HydroReleaseMaxReserve hydroReleaseMaxReserve(builder_, data);
+        HydroStoreMaxReserve hydroStoreMaxReserve(builder_, data);
+        HydroReserveParticipation hydroReserveParticipation(builder_, data);
 
         SymmetryReserveParticipation symmetryReserveParticipation(builder_, data);
+
+        POutCapacityThresholds pOutCapacityThresholds(builder_, data);
+        POutBounds pOutBounds(builder_, data);
+        STReleaseCapacityThresholds STReleaseCapacityThresholds(builder_, data);
+        STStoreCapacityThresholds STStoreCapacityThresholds(builder_, data);
+        HydroReleaseCapacityThresholds HydroReleaseCapacityThresholds(builder_, data);
+        HydroStoreCapacityThresholds HydroStoreCapacityThresholds(builder_, data);
+        HydroLevelReserveParticipation HydroLevelReserveParticipation(builder_, data);
+        STStorageLevelReserveParticipation STStorageLevelReserveParticipation(builder_, data);
+        STStorageGlobalEnergyLevelReserveParticipation
+          STStorageGlobalEnergyLevelReserveParticipation(builder_, data);
+        HydroGlobalEnergyLevelReserveParticipation HydroGlobalEnergyLevelReserveParticipation(
+          builder_,
+          data);
 
         for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
@@ -159,23 +173,23 @@ void ReserveParticipationGroup::BuildConstraints()
                              areaReserve.AllSTStorageReservesParticipation)
                         {
                             // 15 (k)
-                            STReleaseMaxReserve.add(pays,
+                            stReleaseMaxReserve.add(pays,
                                                     reserve,
                                                     clusterReserveParticipation.clusterIdInArea,
                                                     pdt);
                             // 15 (l)
-                            STStoreMaxReserve.add(pays,
+                            stStoreMaxReserve.add(pays,
                                                   reserve,
                                                   clusterReserveParticipation.clusterIdInArea,
                                                   pdt);
                             // 15 (o & p)
-                            STReserveParticipation.add(pays,
+                            stReserveParticipation.add(pays,
                                                        reserve,
                                                        clusterReserveParticipation.clusterIdInArea,
                                                        pdt);
 
                             // 15 (h)
-                            STStorageEnergyLevelReserveParticipation
+                            stStorageEnergyLevelReserveParticipation
                               .add(pays, clusterReserveParticipation.clusterIdInArea, reserve, pdt);
                         }
                         reserve++;
@@ -202,21 +216,21 @@ void ReserveParticipationGroup::BuildConstraints()
                              areaReserve.AllHydroReservesParticipation)
                         {
                             // 15 (a)
-                            HydroReleaseMaxReserve.add(pays,
+                            hydroReleaseMaxReserve.add(pays,
                                                        reserve,
                                                        clusterReserveParticipation.clusterIdInArea,
                                                        pdt);
                             // 15 (b)
-                            HydroStoreMaxReserve.add(pays,
+                            hydroStoreMaxReserve.add(pays,
                                                      reserve,
                                                      clusterReserveParticipation.clusterIdInArea,
                                                      pdt);
                             // 15 (e & f)
-                            HydroReserveParticipation
+                            hydroReserveParticipation
                               .add(pays, reserve, clusterReserveParticipation.clusterIdInArea, pdt);
 
                             // 15 (s)
-                            HydroEnergyLevelReserveParticipation
+                            hydroEnergyLevelReserveParticipation
                               .add(pays, clusterReserveParticipation.clusterIdInArea, reserve, pdt);
                         }
                         reserve++;
@@ -230,30 +244,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     // 18
                     symmetryReserveParticipation.add(pays, symmetry, pdt);
                 }
-            }
-        }
-    }
 
-    {
-        auto data = GetReserveDataFromProblemHebdo();
-        POutCapacityThresholds pOutCapacityThresholds(builder_, data);
-        POutBounds pOutBounds(builder_, data);
-        STReleaseCapacityThresholds STReleaseCapacityThresholds(builder_, data);
-        STStoreCapacityThresholds STStoreCapacityThresholds(builder_, data);
-        HydroReleaseCapacityThresholds HydroReleaseCapacityThresholds(builder_, data);
-        HydroStoreCapacityThresholds HydroStoreCapacityThresholds(builder_, data);
-        HydroLevelReserveParticipation HydroLevelReserveParticipation(builder_, data);
-        STStorageLevelReserveParticipation STStorageLevelReserveParticipation(builder_, data);
-        STStorageGlobalEnergyLevelReserveParticipation
-          STStorageGlobalEnergyLevelReserveParticipation(builder_, data);
-        HydroGlobalEnergyLevelReserveParticipation HydroGlobalEnergyLevelReserveParticipation(
-          builder_,
-          data);
-
-        for (int pdt = 0; pdt < problemeHebdo_->NombreDePasDeTempsPourUneOptimisation; pdt++)
-        {
-            for (uint32_t pays = 0; pays < problemeHebdo_->NombreDePays; pays++)
-            {
                 // Thermal Clusters
                 const PALIERS_THERMIQUES& PaliersThermiquesDuPays = problemeHebdo_
                                                                       ->PaliersThermiquesDuPays

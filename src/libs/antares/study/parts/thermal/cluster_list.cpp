@@ -514,7 +514,7 @@ std::pair<std::string, ReserveName> ThermalClusterList::reserveParticipationGrou
   const Area* area,
   unsigned int index) const
 {
-    int column = 0;
+    uint column = 0;
     for (const auto& reserveName:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {

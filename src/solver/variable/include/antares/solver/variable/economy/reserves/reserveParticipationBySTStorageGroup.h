@@ -205,7 +205,7 @@ public:
         if (state.study.parameters.reservesEnabled)
         {
             auto& area = state.area;
-            int column = 0;
+            uint column = 0;
             for (const auto& reserveName:
                  area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
             {
@@ -246,7 +246,7 @@ public:
         {
             assert(NULL != results.data.area);
             // Write the data for the current year
-            int column = 0;
+            uint column = 0;
             for (const auto& reserveName:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)
