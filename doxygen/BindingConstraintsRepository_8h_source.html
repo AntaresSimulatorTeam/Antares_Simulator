@@ -216,7 +216,7 @@ $(document).ready(function(){initNavTree('BindingConstraintsRepository_8h_source
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> std::shared_ptr&lt;BindingConstraint&gt;&amp; s)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keywordflow">return</span> (s-&gt;name()).contains(pFilter);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keywordflow">return</span> (s-&gt;name()).find(pFilter) != std::string::npos;</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    }</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keyword">private</span>:</div>

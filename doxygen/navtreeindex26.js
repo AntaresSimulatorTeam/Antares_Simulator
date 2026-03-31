@@ -1,8 +1,5 @@
 var NAVTREEINDEX26 =
 {
-"classPROBLEME__ANTARES__A__RESOUDRE.html#aafa67b209f191cb4a00e98f8a8f20047":[8,0,241,25],
-"classPROBLEME__ANTARES__A__RESOUDRE.html#ab352b8126b5bdd8598c2d77103c5f80d":[8,0,241,24],
-"classPROBLEME__ANTARES__A__RESOUDRE.html#ab5fa11cc0bdb1d7e9dae1d64ad132ba3":[8,0,241,28],
 "classPROBLEME__ANTARES__A__RESOUDRE.html#ab8263104f238a20acd5f590952a86c28":[8,0,241,23],
 "classPROBLEME__ANTARES__A__RESOUDRE.html#ac85467c427f838e4361e2d54c0549fc0":[8,0,241,4],
 "classPROBLEME__ANTARES__A__RESOUDRE.html#acdf3cc8e06f23098aae6646b4f3699f1":[8,0,241,22],
@@ -67,8 +64,8 @@ var NAVTREEINDEX26 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[8,0,249,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[8,0,249,7],
 "classPublicStudy.html":[8,0,251],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,251,1],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,251,0],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[8,0,251,1],
 "classQuadraticProblemMatrix.html":[8,0,253],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[8,0,253,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[8,0,253,0],
@@ -249,5 +246,8 @@ var NAVTREEINDEX26 =
 "classSimulationHandler.html#a89cc255ddaa3d75ae3f3bfba301a00cc":[8,0,284,1],
 "classSimulationHandler.html#a982c1417b7c352a5b9169f23ae72cfe8":[8,0,284,4],
 "classSimulationHandler.html#a9a1ca578fa7e880e88b9d72b3d1650cb":[8,0,284,3],
-"classSimulationHandler.html#a9c6e83d92d740b559abe8b96acdf2d87":[8,0,284,2]
+"classSimulationHandler.html#a9c6e83d92d740b559abe8b96acdf2d87":[8,0,284,2],
+"classSimulationHandler.html#a9e4d75e33622e80cb7dd6b1e1fb17835":[8,0,284,6],
+"classSimulationHandler.html#af40af37f9e55af847120e4f350c88c8a":[8,0,284,5],
+"classSimulationHandler.html#af41b1e986949715db1fba23ba73ea9a9":[8,0,284,7]
 };

@@ -1,11 +1,5 @@
 var NAVTREEINDEX43 =
 {
-"structPredfinedSolutionLinearProblemMock.html#aa850951e7d48f862083b1ebf397b437d":[8,0,238,0],
-"structPredicateIdentity.html":[8,0,239],
-"structPredicateIdentity.html#a457ebcdaa7b385c46f80f85b68e6741b":[8,0,239,0],
-"structPrepareYaml.html":[8,0,240],
-"structPrepareYaml.html#a273cde8f4d2ee83fc4b3660638ced6ec":[8,0,240,0],
-"structPrepareYaml.html#a3132a2dfb547a7b8d2329f5d4f4c06d7":[8,0,240,3],
 "structPrepareYaml.html#a6d7a390c720141b0eb066703076f8bf1":[8,0,240,1],
 "structPrepareYaml.html#ae178284de2027aaec282020edecb88d4":[8,0,240,2],
 "structPrepareYaml.html#aee37e9fa6924aa5992087f67fcd4c957":[8,0,240,4],
@@ -157,9 +151,9 @@ var NAVTREEINDEX43 =
 "structStudyFixture.html#a79050046161e92da8d3cd1d036aeee12":[8,0,301,6],
 "structStudyFixture.html#a7bb40e5d558cca55d2e8635fb9b8741c":[8,0,301,5],
 "structStudyFixture.html#a7f9294e12e51c105bfe982bcc69ec640":[8,0,301,12],
-"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,301,2],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,301,1],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,301,0],
+"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,301,2],
 "structStudyFixture.html#ad030b15ed14595081f9c90fb6f7c2049":[8,0,301,8],
 "structStudyFixture.html#ae65400ddc7129fa01c5ae1ae44a6e00f":[8,0,301,10],
 "structStudyFixture.html#aebfb8a290fdbc5cc45b4fa56787601a9":[8,0,301,11],
@@ -249,5 +243,11 @@ var NAVTREEINDEX43 =
 "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#a92923271aab191d68618f2e099a0ea0d":[8,0,21,0,2,3],
 "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#abc1a037c4a01443a7fbc6a83b4cd3658":[8,0,21,0,2,17],
 "structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#ac549ec9ac83f8eda9eb4776c54bb84f1":[8,0,21,0,2,10],
-"structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#acc9a10e2848577bce276e87d368bb5d9":[8,0,21,0,2,22]
+"structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#acc9a10e2848577bce276e87d368bb5d9":[8,0,21,0,2,22],
+"structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#aed0e711b17cb69c8ffbe5bc0ae1b072a":[8,0,21,0,2,4],
+"structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#aedc08193ed389147c5396f69e46612b3":[8,0,21,0,2,16],
+"structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#afd06dc895b766328cf0a338211ffdd26":[8,0,21,0,2,2],
+"structTest_1_1Modeler_1_1VariableData.html":[8,0,21,0,0],
+"structTest_1_1Modeler_1_1VariableData.html#a060252001500c0e97733801b376c6bd5":[8,0,21,0,0,2],
+"structTest_1_1Modeler_1_1VariableData.html#a3f1f8291d40162ef8cac67040822eb5e":[8,0,21,0,0,1]
 };

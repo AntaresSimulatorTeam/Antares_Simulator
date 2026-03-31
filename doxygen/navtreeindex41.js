@@ -1,11 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a1936212c7690eb1cdb17ecda56af03e1":[8,0,6,1,4],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a8a033a1876d06e40340834d0b734c12a":[8,0,6,1,5],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a8e33d6df888a75cc3829cf71ded17499":[8,0,6,1,6],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#aa1428a7dd20f8d7536c6dee6db23432b":[8,0,6,1,8],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#ab897a47fec0dc10a6635b9abd86d2d63":[8,0,6,1,9],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#acbdfc3e5644e2b678a0f3ccd91a16719":[8,0,6,1,1],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#ae6ff8968c793aec042de953194e70f5f":[8,0,6,1,2],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#aefd19c2026a5abbe626156aeb2a23c80":[8,0,6,1,3],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#af31623be933995bc437772bb4246b27b":[8,0,6,1,0],
@@ -233,8 +227,8 @@ var NAVTREEINDEX41 =
 "structInputFixture.html#ae5cc7310bbfbc0b87ee5712bb4e4f62d":[8,0,161,22],
 "structInputFixture.html#ae7e762eeef60cce51097c8ba5cf9f245":[8,0,161,14],
 "structInputFixture.html#aeb3d7f53766e66fa2589dd8cf5a9f611":[8,0,161,3],
-"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,161,0],
 "structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,161,1],
+"structInputFixture.html#af84cca9c84d5de2cc19a28f1dd4b7be8":[8,0,161,0],
 "structLEVEL__FLEX__DOWN__NODE.html":[8,0,167],
 "structLEVEL__FLEX__DOWN__NODE.html#adb586b5229c47e72dc6503a2b621e37d":[8,0,167,0],
 "structLEVEL__FLEX__UP__NODE.html":[8,0,168],
@@ -249,5 +243,11 @@ var NAVTREEINDEX41 =
 "structLibraryObjects.html#acd96135fd5d49a4b8a3a67effa20df95":[8,0,170,4],
 "structLibraryObjects.html#adae772ab3f2e166d8ef4926bbd6fede2":[8,0,170,5],
 "structLinkVariable.html":[8,0,173],
-"structLinkVariable.html#a3abcd16d64c34eb14c4b00a4a98d27ab":[8,0,173,0]
+"structLinkVariable.html#a3abcd16d64c34eb14c4b00a4a98d27ab":[8,0,173,0],
+"structLinkVariable.html#a5d7f6e53048a351c148e66793ce1b740":[8,0,173,3],
+"structLinkVariable.html#a945661bfedc896693b452659cf77bf5f":[8,0,173,1],
+"structLinkVariable.html#aacafd5f774750e8957c2735fa251f8e9":[8,0,173,2],
+"structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[8,0,173,4],
+"structMaxHydroPowerData.html":[8,0,178],
+"structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[8,0,178,2]
 };

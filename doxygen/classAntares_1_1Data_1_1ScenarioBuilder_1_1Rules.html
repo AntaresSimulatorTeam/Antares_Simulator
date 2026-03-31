@@ -148,10 +148,10 @@ Public Types</h2></td></tr>
 using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Ptr</a> = std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html">Rules</a> &gt;</td></tr>
 <tr class="memdesc:ab92e5188f3d27cd9007e2a83663e9452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smart pointer. <br /></td></tr>
 <tr class="separator:ab92e5188f3d27cd9007e2a83663e9452"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6900c79a3b6dd1602ba339b36840d0ef"><td class="memItemLeft" align="right" valign="top"><a id="a6900c79a3b6dd1602ba339b36840d0ef"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a6900c79a3b6dd1602ba339b36840d0ef">Map</a> = std::map&lt; RulesScenarioName, <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Ptr</a> &gt;</td></tr>
-<tr class="memdesc:a6900c79a3b6dd1602ba339b36840d0ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map. <br /></td></tr>
-<tr class="separator:a6900c79a3b6dd1602ba339b36840d0ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affb9a128b5f6acf7c98c24b86112018a"><td class="memItemLeft" align="right" valign="top"><a id="affb9a128b5f6acf7c98c24b86112018a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#affb9a128b5f6acf7c98c24b86112018a">Map</a> = std::map&lt; std::string, <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab92e5188f3d27cd9007e2a83663e9452">Ptr</a> &gt;</td></tr>
+<tr class="memdesc:affb9a128b5f6acf7c98c24b86112018a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map. <br /></td></tr>
+<tr class="separator:affb9a128b5f6acf7c98c24b86112018a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -213,21 +213,21 @@ std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1S
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a5cdee301d4da5027ef38727efcb968d8">reset</a> ()</td></tr>
 <tr class="memdesc:a5cdee301d4da5027ef38727efcb968d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize data from the study. <br /></td></tr>
 <tr class="separator:a5cdee301d4da5027ef38727efcb968d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad79abe3a2c6b87266a8e4ea1cdbabf88"><td class="memItemLeft" align="right" valign="top"><a id="ad79abe3a2c6b87266a8e4ea1cdbabf88"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ad79abe3a2c6b87266a8e4ea1cdbabf88">readLine</a> (const AreaName::Vector &amp;splitKey, const String &amp;value)</td></tr>
-<tr class="memdesc:ad79abe3a2c6b87266a8e4ea1cdbabf88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load information from a single line (extracted from an INI file) <br /></td></tr>
-<tr class="separator:ad79abe3a2c6b87266a8e4ea1cdbabf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47b64460fdc04eab31fb930990eaa374"><td class="memItemLeft" align="right" valign="top"><a id="a47b64460fdc04eab31fb930990eaa374"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a47b64460fdc04eab31fb930990eaa374">readLine</a> (const std::vector&lt; std::string &gt; &amp;splitKey, const String &amp;value)</td></tr>
+<tr class="memdesc:a47b64460fdc04eab31fb930990eaa374"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load information from a single line (extracted from an INI file) <br /></td></tr>
+<tr class="separator:a47b64460fdc04eab31fb930990eaa374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed916e900c247af23ee0a7df2c395c8d"><td class="memItemLeft" align="right" valign="top"><a id="aed916e900c247af23ee0a7df2c395c8d"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#aed916e900c247af23ee0a7df2c395c8d">areaCount</a> () const</td></tr>
 <tr class="memdesc:aed916e900c247af23ee0a7df2c395c8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of areas. <br /></td></tr>
 <tr class="separator:aed916e900c247af23ee0a7df2c395c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab41d23d1487e495fe5d1fa1c01b1c244"><td class="memItemLeft" align="right" valign="top"><a id="ab41d23d1487e495fe5d1fa1c01b1c244"></a>
-const RulesScenarioName &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab41d23d1487e495fe5d1fa1c01b1c244">name</a> () const</td></tr>
-<tr class="memdesc:ab41d23d1487e495fe5d1fa1c01b1c244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the rules set. <br /></td></tr>
-<tr class="separator:ab41d23d1487e495fe5d1fa1c01b1c244"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70696fc88ba8e5d9e8458de2b0e7fc0f"><td class="memItemLeft" align="right" valign="top"><a id="a70696fc88ba8e5d9e8458de2b0e7fc0f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (RulesScenarioName <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#ab41d23d1487e495fe5d1fa1c01b1c244">name</a>)</td></tr>
-<tr class="separator:a70696fc88ba8e5d9e8458de2b0e7fc0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74ec134c0d206bfb0f2d074a77fc28c3"><td class="memItemLeft" align="right" valign="top"><a id="a74ec134c0d206bfb0f2d074a77fc28c3"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a74ec134c0d206bfb0f2d074a77fc28c3">name</a> () const</td></tr>
+<tr class="memdesc:a74ec134c0d206bfb0f2d074a77fc28c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the rules set. <br /></td></tr>
+<tr class="separator:a74ec134c0d206bfb0f2d074a77fc28c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a592f9152c51c890615b6b841e7085161"><td class="memItemLeft" align="right" valign="top"><a id="a592f9152c51c890615b6b841e7085161"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (std::string <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a74ec134c0d206bfb0f2d074a77fc28c3">name</a>)</td></tr>
+<tr class="separator:a592f9152c51c890615b6b841e7085161"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81fb4bfde443963f030633355998f8a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a81fb4bfde443963f030633355998f8a0">apply</a> ()</td></tr>
 <tr class="memdesc:a81fb4bfde443963f030633355998f8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the changes to the timeseries number matrices.  <a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html#a81fb4bfde443963f030633355998f8a0">More...</a><br /></td></tr>
 <tr class="separator:a81fb4bfde443963f030633355998f8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>

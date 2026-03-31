@@ -206,11 +206,8 @@ var namespaces_dup =
         [ "StudyVersion", "classAntares_1_1Data_1_1StudyVersion.html", "classAntares_1_1Data_1_1StudyVersion" ],
         [ "XCast", "classAntares_1_1Data_1_1XCast.html", "classAntares_1_1Data_1_1XCast" ],
         [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ],
-        [ "AreaLinkName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a027026a27086b201caa32bf0d16e82d5", null ],
-        [ "AreaName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#adfc553cb0bb17d74f1e2e4e906279ec0", null ],
+        [ "AreaName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a4d923326f04185f1b0e012946f617a2d", null ],
         [ "AreaNameMapping", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a757462004019be4d70a2be7300aaec69", null ],
-        [ "ConstraintName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a22ec89c113f4439a372f06c19d075635", null ],
-        [ "RulesScenarioName", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a1c9d085d0b850eb749db7b553d5dcbc2", null ],
         [ "AreaNodalOptimization", "libs_2antares_2study_2include_2antares_2study_2area_2constants_8h.html#adc8894eb1410d8f8ce36ee3b1188e83d", [
           [ "anoNonDispatchPower", "libs_2antares_2study_2include_2antares_2study_2area_2constants_8h.html#adc8894eb1410d8f8ce36ee3b1188e83da05fbf549956b243f0f8fb53bd2069ae3", null ],
           [ "anoDispatchHydroPower", "libs_2antares_2study_2include_2antares_2study_2area_2constants_8h.html#adc8894eb1410d8f8ce36ee3b1188e83dacfc07ef5c36d39924312d5504ae638d3", null ],
@@ -495,7 +492,6 @@ var namespaces_dup =
         [ "antaresSeedDefaultValue", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a3244a44273ecadf23d5147801d42085d", null ],
         [ "antaresSeedIncrement", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#af048e5d54a0e2e783c87ac14c5f84e8b", null ],
         [ "nbDaysInYear", "libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h.html#a099af11532655dd2964f55a9f3002449", null ],
-        [ "StudyIconFile", "study_8h.html#ac41bcb9b3dd859f34b0b2dc6ffcc5a74", null ],
         [ "timeSeriesCount", "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#affa3d918be92f1016e56794f61026a5a", null ]
       ] ],
       [ "Date", null, [
@@ -1574,6 +1570,7 @@ var namespaces_dup =
         [ "ceil", "utils_8h.html#a85a087be35e2e1b888638717aaf71cab", null ],
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#ad7848a35534130d9e658b91eef55321d", null ],
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#a5c195397128b4459eacc09d2d83e24f3", null ],
+        [ "compareCaseInsensitive", "utils_8h.html#a6018cc51f58245da1ba8cb0eee9d3662", null ],
         [ "floor", "utils_8h.html#a28e4efa05d04724ebaabf457c1d64271", null ],
         [ "giveNumbersToStrings", "utils_8h.html#a6211fc221fca79ebe1b7f17cfa9ff4b5", null ],
         [ "giveNumbersToStrings", "utils_8h.html#a02f264835becd9b85fc7ecfed3f5e91a", null ],
