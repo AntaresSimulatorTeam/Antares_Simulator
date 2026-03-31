@@ -306,7 +306,8 @@ void Modeler::run()
     {
         auto* solution = solveSubproblem();
         // gp : we should first build the simulation table, then write it.
-        // gp : we need two steps here.
+        // gp : Instead of that, both are stronlgy coupled.
+        // gp : We need two steps here.
         writeSubProblemSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
     }
 }
