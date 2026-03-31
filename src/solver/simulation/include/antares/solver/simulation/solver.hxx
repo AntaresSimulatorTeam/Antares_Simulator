@@ -567,7 +567,9 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
         std::string writerEntry = header + std::move(globalFirstBuffer);
         pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
 
-        std::string writerEntry = header + std::move(globalSecondBuffer);
+        writerEntry.clear();
+
+        writerEntry = header + std::move(globalSecondBuffer);
         pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
     }
     yearSimulationBuffers_.clear();
