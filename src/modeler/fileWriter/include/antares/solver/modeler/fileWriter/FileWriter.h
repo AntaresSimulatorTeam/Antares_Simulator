@@ -6,39 +6,14 @@
 
 #include "antares/solver/modeler/IWriter.h"
 
-namespace Antares::Optimisation::LinearProblemApi
-{
-class ILinearProblem;
-class ILinearProblemData;
-class FillContext;
-} // namespace Antares::Optimisation::LinearProblemApi
-
-namespace Antares::Optimization
-{
-class VariableDictionary;
-}
-
-namespace Antares::ModelerStudy::SystemModel
-{
-class Component;
-}
-
 namespace Antares::Solver
 {
 class FileWriter: public IWriter
 {
 public:
     void init(const std::string& simulationId) override;
-
-    void writeSimulationTable(
-      const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-      const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const ModelerData& modelerData,
-      const Optimisation::OptimEntityContainer& variableContainer,
-      const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
-
+    void writeSimulationTable(IO::Outputs::SimulationTableCsv& SimulationTable) const override;
     explicit FileWriter(std::filesystem::path path, bool parquetFormatRequired = false);
-
     const std::filesystem::path& outputPath() const;
 
 private:

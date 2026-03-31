@@ -18,14 +18,13 @@ public:
     void addEntry(const SimulationTableEntry& entry);
     [[nodiscard]] std::string headerCsvFormat() const;
     std::vector<std::string> rawHeader() const;
-    void write();
+    void writeToBuffer();
     void clear();
 
     // const std::string& buffer() const;
     [[nodiscard]] std::string buffer() const;
     void writeHeaderToBuffer();
 
-protected:
     std::vector<std::vector<std::string>> storageIntoRows() const;
 
 private:

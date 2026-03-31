@@ -19,11 +19,11 @@ std::pair<std::string, std::string> OptimisationsSimulationTable::moveBuffers()
 
 void OptimisationsSimulationTable::write()
 {
-    firstOptimSimulationTable_.write();
+    firstOptimSimulationTable_.writeToBuffer();
     firstOptimBuffer_ += firstOptimSimulationTable_.buffer();
     firstOptimSimulationTable_.clear();
 
-    secondOptimSimulationTable_.write();
+    secondOptimSimulationTable_.writeToBuffer();
     secondOptimBuffer_ += secondOptimSimulationTable_.buffer();
     secondOptimSimulationTable_.clear();
 }

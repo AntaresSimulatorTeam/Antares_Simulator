@@ -9,14 +9,14 @@
 
 namespace Antares::IO::Outputs
 {
-class SimulationTableCsvFile final: public SimulationTableCsv
+class SimulationTableCsvFile
 {
 public:
     SimulationTableCsvFile(const std::filesystem::path& outputFolder,
                            const std::string& simulationId,
                            bool parquetFormatRequired = false);
 
-    void write();
+    void write(const SimulationTableCsv& simuTable);
 
 private:
     std::filesystem::path output_file_;

@@ -15,6 +15,7 @@
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/io/outputs/MPSGenerator.h"
+#include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
@@ -24,6 +25,7 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver
 {
@@ -197,18 +199,29 @@ IMipSolution* Modeler::solveSubproblem()
     return solution;
 }
 
-void Modeler::makeSimulationTable(const IMipSolution* solution,
-                                  const OptimEntityContainer& subproblemOptimEntityContainer,
-                                  const FillContext& timeScenarioCtx) const
+SimulationTableCsv Modeler::makeSimulationTable(
+  const IMipSolution* solution,
+  const OptimEntityContainer& subproblemOptimEntityContainer,
+  const FillContext& timeScenarioCtx) const
 {
     auto& subproblem_1_1 = subproblems_[0];
-    // gp : we should first build the simulation table, then write it, the writer should not
-    // gp : be responsible for building the simulation table
-    writer_.writeSimulationTable(*subproblem_1_1,
-                                 *solution,
-                                 data_,
-                                 subproblemOptimEntityContainer,
-                                 timeScenarioCtx);
+
+    SimulationTableCsv simulationTable;
+
+    FillSimulationTable(simulationTable,
+                        *subproblem_1_1,
+                        solution->getObjectiveValue(),
+                        data_,
+                        subproblemOptimEntityContainer,
+                        timeScenarioCtx,
+                        0,
+                        IO::Outputs::TimeConversionMode::SingleBlock);
+    return simulationTable;
+}
+
+void Modeler::writeSimulationTable(SimulationTableCsv& simulationTable)
+{
+    writer_.writeSimulationTable(simulationTable);
 }
 
 void Modeler::exportMps() const
@@ -313,7 +326,10 @@ void Modeler::run()
         // gp : We need two steps here.
         if (!parameters_.noOutput)
         {
-            makeSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
+            auto simulationTable = makeSimulationTable(solution,
+                                                       *subproblemOptimEntityContainer,
+                                                       timeScenarioCtx);
+            writeSimulationTable(simulationTable);
         }
     }
 }

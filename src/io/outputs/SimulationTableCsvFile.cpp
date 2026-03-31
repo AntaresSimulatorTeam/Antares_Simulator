@@ -11,7 +11,6 @@ namespace Antares::IO::Outputs
 SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outputFolder,
                                                const std::string& simulationId,
                                                bool parquetFormatRequired):
-    SimulationTableCsv(),
     parquetFormatRequired_(parquetFormatRequired)
 {
     if (!std::filesystem::exists(outputFolder))
@@ -26,11 +25,11 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
     Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
-void SimulationTableCsvFile::write()
+void SimulationTableCsvFile::write(const SimulationTableCsv& simuTable)
 {
     // Build table vectors
-    std::vector<std::string> header = rawHeader();
-    std::vector<std::vector<std::string>> rows = storageIntoRows();
+    std::vector<std::string> header = simuTable.rawHeader();
+    std::vector<std::vector<std::string>> rows = simuTable.storageIntoRows();
 
     auto writer = Antares::Writer::makeTableWriter(parquetFormatRequired_);
     writer->writeTable(output_file_, header, rows);

@@ -59,7 +59,7 @@ std::vector<std::string> SimulationTableCsv::rawHeader() const
     return storage_.columnNames();
 }
 
-void SimulationTableCsv::write()
+void SimulationTableCsv::writeToBuffer()
 {
     const size_t row_count = storage_.rowCount();
     const auto& columns = storage_.columns();
