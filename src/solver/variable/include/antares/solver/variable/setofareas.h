@@ -7,6 +7,7 @@
 #include <antares/study/study.h>
 
 #include "state.h"
+#include "variable.h"
 
 namespace Antares::Solver::Variable
 {

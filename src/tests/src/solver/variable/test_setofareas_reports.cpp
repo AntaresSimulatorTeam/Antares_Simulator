@@ -5,9 +5,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <atomic>
-#include <filesystem>
-#include <fstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -17,8 +14,8 @@
 #include "antares/antares/constants.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/variable/container.h"
-#include "antares/solver/variable/variable.h"
 #include "antares/solver/variable/setofareas.h"
+#include "antares/solver/variable/variable.h"
 #include "antares/study/area/area.h"
 #include "antares/study/parts/common/cluster.h"
 #include "antares/study/sets.h"
@@ -143,30 +140,19 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
     cluster->enabled = true;
     area->thermal.list.addToCompleteList(cluster);
 
-    static std::atomic<unsigned> counter = 0;
-    const auto iniPath = std::filesystem::temp_directory_path()
-                         / ("antares-setofareas-" + std::to_string(counter++) + ".ini");
-
+    for (const auto& district: districts)
     {
-        std::ofstream iniFile(iniPath);
-        BOOST_REQUIRE(iniFile.is_open());
+        auto set = std::make_shared<Antares::Data::Sets::SetAreasType>();
+        set->insert(area);
 
-        for (const auto& district: districts)
-        {
-            iniFile << '[' << district.id << "]\n";
-            iniFile << "caption = " << district.caption << '\n';
-            if (!district.output)
-            {
-                iniFile << "output = false\n";
-            }
-            iniFile << "+ = area1\n\n";
-        }
+        Antares::Data::Sets::Options options;
+        options.caption = district.caption;
+        options.output = district.output;
+        options.resultSize = 1;
+
+        study->setsOfAreas.add(district.id, set, options);
     }
-
-    BOOST_REQUIRE(study->setsOfAreas.loadFromFile(iniPath));
-    Antares::Data::SetHandlerAreas handler(study->areas);
-    study->setsOfAreas.rebuildAllFromRules(handler);
-    std::filesystem::remove(iniPath);
+    study->setsOfAreas.rebuildIndexes();
 
     Antares::Data::VariablePrintInfo variableInfo(Category::FileLevel::va,
                                                   Category::DataLevel::area);
@@ -225,7 +211,8 @@ std::vector<std::string> exportedDistrictFiles(const MapT& map)
     std::vector<std::string> paths;
     for (const auto& [path, _]: map)
     {
-        if (path.find("out/areas/@ ") != std::string::npos && path.find("values-hourly.txt") != std::string::npos)
+        if (path.find("out/areas/@ ") != std::string::npos
+            && path.find("values-hourly.txt") != std::string::npos)
         {
             paths.push_back(path);
         }
@@ -296,8 +283,8 @@ BOOST_AUTO_TEST_CASE(exports_two_enabled_districts)
 
 BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
 {
-    auto study = makeStudyWithDistricts(
-      {{"district-disabled", "Disabled district", false}, {"district-enabled", "Enabled district", true}});
+    auto study = makeStudyWithDistricts({{"district-disabled", "Disabled district", false},
+                                         {"district-enabled", "Enabled district", true}});
 
     Benchmarking::DurationCollector durationCollector;
     Antares::Solver::InMemoryWriter writer(durationCollector);
