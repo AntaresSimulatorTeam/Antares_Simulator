@@ -67,7 +67,7 @@ def print_cmd():
             vs.append(f"{m.group(1)}.{m.group(2)}")
     a, b, c = cur()
     print(f"version: {a}.{b}.{c}")
-    print(f"sonar.projectVersion: {a}.{b}.{c}")
+    print("sonar.projectVersion: " + re.search(r"^sonar\.projectVersion=(.+)$", t(R / "sonar-project.properties"), re.M).group(1))
     print(f"supported study versions: {', '.join(vs)}")
 
 def stage_cmd(vn):
