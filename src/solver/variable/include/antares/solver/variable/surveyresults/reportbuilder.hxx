@@ -425,7 +425,6 @@ private:
         // alias to the set of sets of areas
         const Data::Study::SetsOfAreas& sets = results.data.study.setsOfAreas;
 
-        unsigned int indx = 0;
         for (unsigned int i = 0; i != sets.size(); ++i)
         {
             if (!sets.hasOutput(i) || !sets.resultSize(i))
@@ -441,7 +440,6 @@ private:
             path /= std::filesystem::path("areas") / setId;
 
             results.data.output = path.string();
-            results.data.setOfAreasIndex = indx++;
             results.data.setOfAreasName = setName;
 
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);

@@ -172,10 +172,11 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(results,
-                                                                      dataLevel,
-                                                                      fileLevel,
-                                                                      precision);
+        const auto* set = findSetByName(results.data.setOfAreasName);
+        if (set)
+        {
+            set->buildSurveyReport(results, dataLevel, fileLevel, precision);
+        }
     }
 }
 
@@ -190,12 +191,26 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(results,
-                                                                            dataLevel,
-                                                                            fileLevel,
-                                                                            precision,
-                                                                            numSpace);
+        const auto* set = findSetByName(results.data.setOfAreasName);
+        if (set)
+        {
+            set->buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+        }
     }
+}
+
+template<class NextT>
+const typename SetsOfAreas<NextT>::NextType* SetsOfAreas<NextT>::findSetByName(
+  const Data::Study::SetsOfAreas::IDType& setName) const
+{
+    for (uint i = 0; i != pNames.size(); ++i)
+    {
+        if (pNames[i] == setName)
+        {
+            return pSetsOfAreas[i].get();
+        }
+    }
+    return nullptr;
 }
 
 template<class NextT>

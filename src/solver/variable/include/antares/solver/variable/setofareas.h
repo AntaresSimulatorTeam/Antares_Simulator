@@ -172,6 +172,8 @@ public:
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link);
 
+    const NextType* findSetByName(const Data::Study::SetsOfAreas::IDType& setName) const;
+
 public:
     //! Area list
     typedef std::vector<std::unique_ptr<NextType>> SetOfAreasVector;
