@@ -28,12 +28,32 @@ def apply(path, rules):
             raise SystemExit(f"{path}: no match for {a}")
     w(path, s)
 
+def latest_cpp_version():
+    p = S / "libs/antares/study/version.cpp"
+    vs, on = [], False
+    for line in t(p).splitlines():
+        on = on or "supportedVersions" in line
+        if on and "});" in line:
+            break
+        m = re.search(r"StudyVersion\((\d+), (\d+)\)", line)
+        if m:
+            vs.append((int(m.group(1)), int(m.group(2))))
+    return vs[-1]
+
 def bump_version_cpp(major, minor):
     p = S / "libs/antares/study/version.cpp"
     s = t(p)
-    if f"StudyVersion({major}, {minor})" not in s:
-        s = s.replace("  // Add new versions here", f"  StudyVersion({major}, {minor}),\n  // Add new versions here", 1)
-        w(p, s)
+    if f"StudyVersion({major}, {minor})" in s:
+        return
+    lines = s.splitlines()
+    for i, line in enumerate(lines):
+        if line.strip() == "// Add new versions here":
+            if not lines[i - 1].rstrip().endswith(","):
+                lines[i - 1] += ","
+            lines.insert(i, f"  StudyVersion({major}, {minor}),")
+            w(p, "\n".join(lines) + "\n")
+            return
+    raise SystemExit(f"{p}: missing version marker")
 
 def print_cmd():
     c = t(S / "libs/antares/study/version.cpp")
@@ -61,7 +81,7 @@ def stage_cmd(vn):
         (r"^set\(ANTARES_RC \d+\)$", f"set(ANTARES_RC {int(tag.startswith('-rc') and tag[3:] or 0)})"),
     ])
     apply(S / "vcpkg.json", [(r'^  "version-string": ".*",$', f'  "version-string": "{a}.{b}.{c}",')])
-    if a > cur()[0]:
+    if (a, b) != latest_cpp_version():
         bump_version_cpp(a, b)
 
 def main(argv):
