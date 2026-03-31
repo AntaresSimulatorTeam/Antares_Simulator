@@ -22,7 +22,7 @@ public:
     void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
     Antares::IO::Outputs::ISimulationTable* firstOptimSimulationTable();
     Antares::IO::Outputs::ISimulationTable* secondOptimSimulationTable();
-    [[nodiscard]] std::string getHeader() const;
+    [[nodiscard]] std::string headerCsvFormat() const;
 
 private:
     Antares::IO::Outputs::SimulationTableCsv firstOptimSimulationTable_;

@@ -29,7 +29,7 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
 void SimulationTableCsvFile::write()
 {
     // Build table vectors
-    std::vector<std::string> header;
+    std::vector<std::string> header = rawHeader();
     std::vector<std::vector<std::string>> rows = storageIntoRows();
 
     auto writer = Antares::Writer::makeTableWriter(parquetFormatRequired_);

@@ -16,7 +16,8 @@ class SimulationTableCsv: public ISimulationTable
 public:
     SimulationTableCsv();
     void addEntry(const SimulationTableEntry& entry) override;
-    [[nodiscard]] std::string getHeader() const;
+    [[nodiscard]] std::string headerCsvFormat() const;
+    std::vector<std::string> rawHeader() const;
     void write() override;
     void clear() override;
 

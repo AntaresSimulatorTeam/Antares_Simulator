@@ -60,7 +60,7 @@ std::string Adequacy::getSimulationTableHeader() const
 {
     if (!simulationTables_.empty())
     {
-        return simulationTables_.at(0).getHeader();
+        return simulationTables_.at(0).headerCsvFormat();
     }
     return "";
 }

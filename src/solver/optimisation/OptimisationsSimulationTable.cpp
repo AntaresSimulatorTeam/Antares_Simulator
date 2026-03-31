@@ -45,7 +45,7 @@ ISimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
     return &secondOptimSimulationTable_;
 }
 
-std::string OptimisationsSimulationTable::getHeader() const
+std::string OptimisationsSimulationTable::headerCsvFormat() const
 {
-    return firstOptimSimulationTable_.getHeader();
+    return firstOptimSimulationTable_.headerCsvFormat();
 }
