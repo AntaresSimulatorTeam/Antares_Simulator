@@ -205,21 +205,6 @@ PROBLEME_HEBDO makeProblemHebdo()
     return pb;
 }
 
-template<class MapT>
-std::vector<std::string> exportedDistrictFiles(const MapT& map)
-{
-    std::vector<std::string> paths;
-    for (const auto& [path, _]: map)
-    {
-        if (path.find("out/areas/@ ") != std::string::npos
-            && path.find("values-hourly.txt") != std::string::npos)
-        {
-            paths.push_back(path);
-        }
-    }
-    return paths;
-}
-
 void feedDynamicAggregation(TestVariableTree& variables, Antares::Data::Study& study)
 {
     State state(study);
@@ -247,12 +232,12 @@ BOOST_AUTO_TEST_CASE(exports_one_enabled_district)
     variables.exportSurveyResults(true, "out", 0, writer);
 
     const auto& files = writer.getMap();
-    const auto paths = exportedDistrictFiles(files);
-    BOOST_REQUIRE_EQUAL(paths.size(), 1u);
-    BOOST_CHECK_EQUAL(paths[0], "out/areas/@ district-1/values-hourly.txt");
-    const auto fileIt = files.find(paths[0]);
+    const auto fileIt = files.find("out/areas/@ district-1/values-hourly.txt");
     BOOST_REQUIRE(fileIt != files.end());
-    BOOST_CHECK(!fileIt->second.empty());
+    BOOST_CHECK_NE(fileIt->second.find("\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
+                   std::string::npos);
+    BOOST_CHECK_NE(fileIt->second.find("\tEXP\tstd\tmin\tmax"),
+                   std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(exports_two_enabled_districts)
@@ -269,16 +254,20 @@ BOOST_AUTO_TEST_CASE(exports_two_enabled_districts)
     variables.exportSurveyResults(true, "out", 0, writer);
 
     const auto& files = writer.getMap();
-    const auto paths = exportedDistrictFiles(files);
-    BOOST_REQUIRE_EQUAL(paths.size(), 2u);
-    BOOST_CHECK_EQUAL(paths[0], "out/areas/@ district-1/values-hourly.txt");
-    BOOST_CHECK_EQUAL(paths[1], "out/areas/@ district-2/values-hourly.txt");
-    const auto firstFileIt = files.find(paths[0]);
+    const auto firstFileIt = files.find("out/areas/@ district-1/values-hourly.txt");
     BOOST_REQUIRE(firstFileIt != files.end());
-    BOOST_CHECK(!firstFileIt->second.empty());
-    const auto secondFileIt = files.find(paths[1]);
+    BOOST_CHECK_NE(firstFileIt->second.find(
+                     "\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
+                   std::string::npos);
+    BOOST_CHECK_NE(firstFileIt->second.find("\tEXP\tstd\tmin\tmax"),
+                   std::string::npos);
+    const auto secondFileIt = files.find("out/areas/@ district-2/values-hourly.txt");
     BOOST_REQUIRE(secondFileIt != files.end());
-    BOOST_CHECK(!secondFileIt->second.empty());
+    BOOST_CHECK_NE(secondFileIt->second.find(
+                     "\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
+                   std::string::npos);
+    BOOST_CHECK_NE(secondFileIt->second.find("\tEXP\tstd\tmin\tmax"),
+                   std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
@@ -295,12 +284,13 @@ BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
     variables.exportSurveyResults(true, "out", 0, writer);
 
     const auto& files = writer.getMap();
-    const auto paths = exportedDistrictFiles(files);
-    BOOST_REQUIRE_EQUAL(paths.size(), 1u);
-    BOOST_CHECK_EQUAL(paths[0], "out/areas/@ district-enabled/values-hourly.txt");
-    const auto fileIt = files.find(paths[0]);
+    BOOST_CHECK(files.find("out/areas/@ district-disabled/values-hourly.txt") == files.end());
+    const auto fileIt = files.find("out/areas/@ district-enabled/values-hourly.txt");
     BOOST_REQUIRE(fileIt != files.end());
-    BOOST_CHECK(!fileIt->second.empty());
+    BOOST_CHECK_NE(fileIt->second.find("\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD\tGROUP1_TH_PROD"),
+                   std::string::npos);
+    BOOST_CHECK_NE(fileIt->second.find("\tEXP\tstd\tmin\tmax"),
+                   std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
