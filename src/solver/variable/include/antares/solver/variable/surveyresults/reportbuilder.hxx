@@ -436,11 +436,13 @@ private:
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
             std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
-            std::string setId = "@ " + sets.nameByIndex(i);
+            const auto& setName = sets.nameByIndex(i);
+            std::string setId = "@ " + setName;
             path /= std::filesystem::path("areas") / setId;
 
             results.data.output = path.string();
             results.data.setOfAreasIndex = indx++;
+            results.data.setOfAreasName = setName;
 
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
