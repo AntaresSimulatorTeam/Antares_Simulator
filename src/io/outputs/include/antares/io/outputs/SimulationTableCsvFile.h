@@ -16,7 +16,7 @@ public:
                            const std::string& simulationId,
                            bool parquetFormatRequired = false);
 
-    void write() override;
+    void write();
 
 private:
     std::filesystem::path output_file_;

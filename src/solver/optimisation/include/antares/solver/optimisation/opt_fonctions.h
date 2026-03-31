@@ -27,7 +27,7 @@ using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
 
 namespace Antares::IO::Outputs
 {
-class ISimulationTable;
+class SimulationTableCsv;
 }
 class OptimisationsSimulationTable;
 void OPT_OptimisationHebdomadaireLineaire(
@@ -67,7 +67,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Antares::Solver::IResultWriter& writer,
-                         Antares::IO::Outputs::ISimulationTable* simulationTable);
+                         Antares::IO::Outputs::SimulationTableCsv* simulationTable);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

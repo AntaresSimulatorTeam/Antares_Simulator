@@ -5,7 +5,6 @@ set(SOURCES
         MPSGenerator.cpp
         ExportableName.cpp
         include/antares/io/outputs/SimulationTableEntry.h
-        include/antares/io/outputs/ISimulationTable.h
         include/antares/io/outputs/SimulationTableCsv.h
         include/antares/io/outputs/SimulationTableCsvFile.h
         include/antares/io/outputs/SimulationTableGenerator.h

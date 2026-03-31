@@ -5,7 +5,6 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/simulation/solver_utils.h"
 
 using namespace Yuni;

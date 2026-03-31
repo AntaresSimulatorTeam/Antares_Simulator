@@ -7,22 +7,20 @@
 
 #include "antares/io/outputs/storage.h"
 
-#include "ISimulationTable.h"
-
 namespace Antares::IO::Outputs
 {
-class SimulationTableCsv: public ISimulationTable
+class SimulationTableCsv
 {
 public:
     SimulationTableCsv();
-    void addEntry(const SimulationTableEntry& entry) override;
+    void addEntry(const SimulationTableEntry& entry);
     [[nodiscard]] std::string headerCsvFormat() const;
     std::vector<std::string> rawHeader() const;
-    void write() override;
-    void clear() override;
+    void write();
+    void clear();
 
     // const std::string& buffer() const;
-    [[nodiscard]] std::string buffer() const override;
+    [[nodiscard]] std::string buffer() const;
     void writeHeaderToBuffer();
 
 protected:

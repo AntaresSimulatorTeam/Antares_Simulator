@@ -393,28 +393,6 @@ void setupMinimalProblem(PROBLEME_HEBDO& problemeHebdo, ProblemFeasibility feasi
 
 } // namespace
 
-class EmptySimulationTable final: public ISimulationTable
-{
-public:
-    void addEntry(const SimulationTableEntry&) override
-    {
-    }
-
-    void clear() override
-    {
-    }
-
-    [[nodiscard]] std::string buffer() const override
-    {
-        return "";
-    }
-
-    /// Write the table to the given file path, using the concrete export format
-    void write() override
-    {
-    }
-};
-
 /**
  * These two tests verify the behavior of OPT_AppelDuSimplexe regarding
  * the solver's handling of problem feasibility and naming logic for MPS export.
@@ -448,7 +426,7 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
-    EmptySimulationTable simulationTableCsv;
+    SimulationTableCsv simulationTableCsv;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
@@ -512,7 +490,7 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     SingleOptimOptions options;
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
-    EmptySimulationTable simulationTableCsv;
+    SimulationTableCsv simulationTableCsv;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
