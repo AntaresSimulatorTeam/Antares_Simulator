@@ -17,9 +17,10 @@ Suggestions archi :
   - elle imprime la simulation table
   Ce sont 2 choses différentes, à découpler : 
      FillSimulationTable(simulationTable, ...);
-	 
 	 writer_.writeSimulationTable(...);
 	 
+- There are many writers : FileWriter, CsvTableWriter, ParquetTableWriter.
+  So one of these writers is useless : FileWriter is my favorite to removal / renaming.
 
 - classe ISimulationTable semble inutile, car elle n'a qu'une seule fille.
   Devrions nous la supprimer ?
