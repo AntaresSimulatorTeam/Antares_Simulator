@@ -77,7 +77,7 @@ public:
 private:
     Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
 
-    void writeSubProblemSimulationTable(
+    void makeSimulationTable(
       const Optimisation::LinearProblemApi::IMipSolution* solution,
       const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;

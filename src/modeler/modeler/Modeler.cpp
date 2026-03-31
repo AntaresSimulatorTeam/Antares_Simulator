@@ -27,6 +27,19 @@ using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Solver
 {
+
+bool checkSolution(const IMipSolution* solution)
+{
+    auto status = solution->getStatus();
+    if (status == MipStatus::OPTIMAL || status == MipStatus::FEASIBLE)
+    {
+        return true;
+    }
+
+    logs.error() << "Problem during linear optimization";
+    return false;
+}
+
 Modeler::Modeler(ILoader& loader, IWriter& writer):
     loader_{loader},
     writer_{writer}
@@ -184,32 +197,18 @@ IMipSolution* Modeler::solveSubproblem()
     return solution;
 }
 
-void Modeler::writeSubProblemSimulationTable(
-  const IMipSolution* solution,
-  const OptimEntityContainer& subproblemOptimEntityContainer,
-  const FillContext& timeScenarioCtx) const
+void Modeler::makeSimulationTable(const IMipSolution* solution,
+                                  const OptimEntityContainer& subproblemOptimEntityContainer,
+                                  const FillContext& timeScenarioCtx) const
 {
-    switch (solution->getStatus())
-    {
-    case MipStatus::OPTIMAL:
-    case MipStatus::FEASIBLE:
-    {
-        if (!parameters_.noOutput)
-        {
-            auto& subproblem_1_1 = subproblems_[0];
-            // gp : we should first build the simulation table, then write it, the writer should not
-            // gp : be responsible for building the simulation table
-            writer_.writeSimulationTable(*subproblem_1_1,
-                                         *solution,
-                                         data_,
-                                         subproblemOptimEntityContainer,
-                                         timeScenarioCtx);
-        }
-    }
-    break;
-    default:
-        logs.error() << "Problem during linear optimization";
-    }
+    auto& subproblem_1_1 = subproblems_[0];
+    // gp : we should first build the simulation table, then write it, the writer should not
+    // gp : be responsible for building the simulation table
+    writer_.writeSimulationTable(*subproblem_1_1,
+                                 *solution,
+                                 data_,
+                                 subproblemOptimEntityContainer,
+                                 timeScenarioCtx);
 }
 
 void Modeler::exportMps() const
@@ -294,8 +293,8 @@ void Modeler::run()
     // if simulation table or mps are requested
     if (!parameters_.noOutput || parameters_.exportMps)
     {
-        const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
-        writer_.init(simulationTableSuffix);
+        const auto simulationId = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
+        writer_.init(simulationId);
     }
     if (parameters_.exportMps)
     {
@@ -305,10 +304,17 @@ void Modeler::run()
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
         auto* solution = solveSubproblem();
+        if (!checkSolution(solution))
+        {
+            return;
+        }
         // gp : we should first build the simulation table, then write it.
         // gp : Instead of that, both are stronlgy coupled.
         // gp : We need two steps here.
-        writeSubProblemSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
+        if (!parameters_.noOutput)
+        {
+            makeSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
+        }
     }
 }
 
