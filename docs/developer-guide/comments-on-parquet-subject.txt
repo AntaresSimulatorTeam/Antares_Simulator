@@ -15,12 +15,13 @@ Suggestions archi :
   
 - La classe SimulationTableCsv contient les données, et n'a rien à voir avec le format d'impression.
   Cette classe devrait s'appeler SimulationTable et ne pas hériter (de ISimulationTable)
+  
 - La classe SimulationTableCsvFile imprime (aussi) en parquet (voir methode write) 
-  alors qu'elle comport "Csv" dans son nom.
+  alors qu'elle comporte "Csv" dans son nom.
 
 - La classe SimulationTableCsvFile est en fait un writer.
-  Elle devrait être construite à partir d'une simulation table et d'un chemin de fichier,
-  et pas hériter de SimulationTableCsv.
+  Elle devrait être construite (via son constructeur) à partir d'une simulation table et d'un chemin de fichier,
+  et ne pas hériter de SimulationTableCsv (qui est la table elle-même).
   De plus, elle devrait être splittée en 2 : un writer csv et un writer parquet.
   
 - Représentation de la simulation table :
