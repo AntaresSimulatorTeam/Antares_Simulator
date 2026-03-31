@@ -26,7 +26,7 @@ void BindingConstraintWeek::add(int cntCouplante)
         int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
         for (int pdt = 0; pdt < builder.data.NombreDePasDeTempsPourUneOptimisation; pdt++)
         {
-            builder.updateHourWithinWeek(pdt).DirectFlux(interco,
+            builder.updateHourWithinWeek(pdt).DirectFlow(interco,
                                                          poids,
                                                          offset,
                                                          builder.data.NombreDePasDeTemps);

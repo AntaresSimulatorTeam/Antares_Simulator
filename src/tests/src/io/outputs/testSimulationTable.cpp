@@ -20,9 +20,12 @@
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
+#include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/writer/i_writer.h"
@@ -951,6 +954,61 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
     BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
     BOOST_CHECK(buffer.find("1,comp1,var4,1,1,0") != std::string::npos);
     BOOST_CHECK(buffer.find("1,comp1,var4,2,2,0") != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
+{
+    auto* currentVarNode = variable("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    auto* nextVarNode = nodeRegistry.create<Nodes::TimeShiftNode>(currentVarNode, literal(1));
+
+    createModel("model",
+                {},
+                {{"var1", ValueType::BOOL, literal(0), literal(1), true, false}},
+                {{"ct_drop",
+                  nodeRegistry.create<Nodes::EqualNode>(nextVarNode, currentVarNode),
+                  OutOfBoundsProcessingMode::DROP},
+                 {"ct_cyclic",
+                  nodeRegistry.create<Nodes::EqualNode>(nextVarNode, currentVarNode),
+                  OutOfBoundsProcessingMode::CYCLIC}});
+    createComponent("model", "componentToto");
+
+    FillContext fillContext(0, 2, 0, 2, 0);
+    pb = std::make_unique<OrtoolsLinearProblem>(true, "scip");
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
+    optimEntityContainer->addFromSystemComponents(components);
+
+    std::vector<std::unique_ptr<LinearProblemFiller>> fillers;
+    for (auto& component: components)
+    {
+        fillers.push_back(std::make_unique<ComponentFiller>(component,
+                                                            &dummy_data_,
+                                                            *optimEntityContainer,
+                                                            scenarioGroupRepo,
+                                                            Config::Location::SUBPROBLEMS));
+    }
+    LinearProblemBuilder(fillers).build(fillContext);
+    BOOST_REQUIRE(pb->solve(false));
+
+    auto& modelerData = getModelerData();
+    SimulationTableCsv table;
+    FillSimulationTable(table,
+                        *pb,
+                        45.0,
+                        modelerData,
+                        *optimEntityContainer,
+                        fillContext,
+                        0,
+                        TimeConversionMode::SingleBlock);
+    table.write();
+
+    const std::string buffer = table.buffer();
+    BOOST_TEST_INFO(buffer);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,1,1,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,2,2,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_drop,3,3,") == std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,1,1,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,2,2,") != std::string::npos);
+    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,3,3,") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

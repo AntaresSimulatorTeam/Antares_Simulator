@@ -427,7 +427,7 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__rea
     AreaName yearNumber = "8";
     String level = "0.342";
     std::vector<std::string> splitKey = {"hfl", "area 1", yearNumber};
-    my_rule.readLine(splitKey, level, false);
+    my_rule.readLine(splitKey, level);
 
     BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_1->index),
                       std::stod(level));
@@ -444,7 +444,7 @@ BOOST_FIXTURE_TEST_CASE(
     AreaName yearNumber = "1";
     String level = "2.4";
     std::vector<std::string> splitKey = {"hfl", "area 2", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level, false));
+    BOOST_CHECK(my_rule.readLine(splitKey, level));
 
     BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_2->index),
                       1.);
@@ -460,7 +460,7 @@ BOOST_FIXTURE_TEST_CASE(
     AreaName yearNumber = "3";
     String level = "-5.2";
     std::vector<std::string> splitKey = {"hfl", "area 3", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level, false));
+    BOOST_CHECK(my_rule.readLine(splitKey, level));
 
     BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_3->index),
                       0.);

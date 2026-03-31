@@ -32,15 +32,9 @@ class Area final: private Yuni::NonCopyable<Area>
 {
 public:
     using NameSet = std::set<AreaName>;
-    using Set = std::set<Area*, CompareAreaName>;
-    using LinkMap = std::map<Area*, AreaLink::Set, CompareAreaName>;
     using Map = std::map<AreaName, Area*>;
     using Vector = std::vector<Area*>;
-    using VectorConst = std::vector<const Area*>;
-    using List = std::list<Area*>;
     using ScratchMap = std::map<const Area*, AreaScratchpad&>;
-    //! Name mapping -> must be replaced by AreaNameMapping
-    using NameMapping = std::map<AreaName, AreaName>;
 
     //! \name Constructor & Destructor
     //@{
@@ -100,7 +94,6 @@ public:
     ** \param with Any area
     ** \return A pointer to an existing link if found, NULL otherwise
     */
-    AreaLink* findExistingLinkWith(Area& with);
     const AreaLink* findExistingLinkWith(const Area& with) const;
 
     //! \name Memory management
@@ -296,7 +289,13 @@ public:
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-    ~AreaList() = default;
+
+    /*!
+     ** \brief Destructor
+     **
+     ** Frees all Area instances owned by this list.
+     */
+    ~AreaList();
     //@}
 
     //! \name Iterating through all areas
@@ -434,13 +433,12 @@ public:
     ** \param area The name of the first area (in lowercase)
     ** \param with The name of the second area (in lowercase)
     */
-    AreaLink* findLink(const AreaName& area, const AreaName& with);
     const AreaLink* findLink(const AreaName& area, const AreaName& with) const;
 
     /*!
     ** \brief Try to find the link from a given INI key (<area1>%<area2>)
     */
-    AreaLink* findLinkFromINIKey(const AnyString& key);
+    const AreaLink* findLinkFromINIKey(const AnyString& key) const;
 
     /*!
     ** \brief Try to find the cluster from a given INI key (<area>.<cluster>)
@@ -549,15 +547,6 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
 Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname);
-
-/*!
-** \brief Try to establish a link between two areas
-**
-** \param l The list of areas
-** \param area The area to make a link
-** \param with The area to link with
-*/
-AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], bool warning = true);
 
 void AreaListClearAllLinks(AreaList* l);
 

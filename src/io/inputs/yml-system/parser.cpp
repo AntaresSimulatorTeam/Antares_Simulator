@@ -3,9 +3,8 @@
 
 #include "antares/io/inputs/yml-system/parser.h"
 
+#include "antares/io/inputs/yml-system/decoders.h"
 #include "antares/io/inputs/yml-system/system.h"
-
-#include "decoders.hxx"
 
 namespace Antares::IO::Inputs::YmlSystem
 {

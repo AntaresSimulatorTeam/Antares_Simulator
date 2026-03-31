@@ -42,17 +42,17 @@ public:
                                              int offset = 0,
                                              int delta = 0);
 
-    int& DirectFlux(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
+    int& DirectFlow(unsigned int index, unsigned int hourInWeek, int offset = 0, int delta = 0);
 
-    int& DirectFluxPositif(unsigned int index,
-                           unsigned int hourInWeek,
-                           int offset = 0,
-                           int delta = 0);
+    int& PositiveDirectFlow(unsigned int index,
+                            unsigned int hourInWeek,
+                            int offset = 0,
+                            int delta = 0);
 
-    int& IndirectFluxPositif(unsigned int index,
-                             unsigned int hourInWeek,
-                             int offset = 0,
-                             int delta = 0);
+    int& PositiveIndirectFlow(unsigned int index,
+                              unsigned int hourInWeek,
+                              int offset = 0,
+                              int delta = 0);
 
     int& ShortTermStorageInjection(unsigned int index,
                                    unsigned int hourInWeek,

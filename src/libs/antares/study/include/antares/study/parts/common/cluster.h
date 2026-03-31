@@ -28,9 +28,6 @@ struct CompareClusterName final
 class Cluster
 {
 public:
-    using Set = std::set<Cluster*, CompareClusterName>;
-
-public:
     Cluster(Area* parent);
 
     virtual ~Cluster() = default;

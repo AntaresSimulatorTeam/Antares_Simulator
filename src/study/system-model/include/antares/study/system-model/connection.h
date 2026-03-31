@@ -11,20 +11,6 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
-// Define an enumeration for the role of a ConnectionEnd
-enum class FieldRole
-{
-    Sender,
-    Receiver
-};
-
-inline std::ostream& operator<<(std::ostream& os, const SystemModel::FieldRole& role)
-{
-    return role == SystemModel::FieldRole::Sender ? os << "Sender" : os << "Receiver";
-}
-
-using PortFieldsRole = std::map<PortField, FieldRole>;
-
 class Component;
 
 class ConnectionEnd final
