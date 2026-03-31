@@ -22,7 +22,7 @@ add_boost_test(test-dynamic-aggregation
     in-memory-study)
 
 add_boost_test(test-setofareas-reports
-    SRC test_setofareas_reports.cpp dummyVariable.h
+    SRC test_setofareas_reports.cpp
     LIBS
     antares-solver-variable
     result_writer)
