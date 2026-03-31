@@ -174,8 +174,7 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        const auto* set = findSetById(results.data.setOfAreasName);
-        if (set)
+        if (const auto* set = findSetById(results.data.setOfAreasName))
         {
             set->buildSurveyReport(results, dataLevel, fileLevel, precision);
         }
@@ -193,8 +192,7 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        const auto* set = findSetById(results.data.setOfAreasName);
-        if (set)
+        if (const auto* set = findSetById(results.data.setOfAreasName))
         {
             set->buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
         }
