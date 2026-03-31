@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <filesystem>
+
 #include <vector>
 
 #include "antares/io/outputs/storage.h"
+
+#include "SimulationTableEntry.h"
 
 namespace Antares::IO::Outputs
 {

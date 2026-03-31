@@ -4,8 +4,9 @@
 #pragma once
 #include <optional>
 #include <string>
-#include <type_traits>
+#include <sstream>
 #include <vector>
+#include <iomanip>
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
 
