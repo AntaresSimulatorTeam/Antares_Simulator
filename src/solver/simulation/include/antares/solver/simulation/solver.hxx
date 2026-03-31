@@ -551,17 +551,16 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
     std::string globalFirstBuffer;
     std::string globalSecondBuffer;
 
-    for (auto& pair_of_buffers : yearSimulationBuffers_ | std::views::values)
+    for (auto& pair_of_buffers: yearSimulationBuffers_ | std::views::values)
     {
         globalFirstBuffer += pair_of_buffers.first;
         globalSecondBuffer += pair_of_buffers.second;
     }
 
     const auto header = ImplementationType::getSimulationTableHeader() + "\n";
-    
+
     if (study.parameters.parquetFmtForSimuTables)
     {
-
     }
     else
     {
