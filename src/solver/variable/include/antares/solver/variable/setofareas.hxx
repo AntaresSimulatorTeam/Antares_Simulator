@@ -18,6 +18,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     // Reserving the memory
     pSetsOfAreas.reserve(sets.size());
     pOriginalSets.reserve(sets.size());
+    pIds.reserve(sets.size());
 
     // For each set...
     for (uint setIndex = 0; setIndex != sets.size(); ++setIndex)
@@ -59,6 +60,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         assert(!originalSet->empty());
         pOriginalSets.push_back(originalSet);
 
+        pIds.push_back(sets.nameByIndex(setIndex));
         pNames.push_back(setname);
     }
 }
@@ -172,7 +174,7 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        const auto* set = findSetByName(results.data.setOfAreasName);
+        const auto* set = findSetById(results.data.setOfAreasName);
         if (set)
         {
             set->buildSurveyReport(results, dataLevel, fileLevel, precision);
@@ -191,7 +193,7 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        const auto* set = findSetByName(results.data.setOfAreasName);
+        const auto* set = findSetById(results.data.setOfAreasName);
         if (set)
         {
             set->buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
@@ -200,12 +202,12 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-const typename SetsOfAreas<NextT>::NextType* SetsOfAreas<NextT>::findSetByName(
-  const Data::Study::SetsOfAreas::IDType& setName) const
+const typename SetsOfAreas<NextT>::NextType* SetsOfAreas<NextT>::findSetById(
+  const Data::Study::SetsOfAreas::IDType& setId) const
 {
     for (uint i = 0; i != pNames.size(); ++i)
     {
-        if (pNames[i] == setName)
+        if (pIds[i] == setId)
         {
             return pSetsOfAreas[i].get();
         }

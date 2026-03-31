@@ -172,7 +172,7 @@ public:
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link);
 
-    const NextType* findSetByName(const Data::Study::SetsOfAreas::IDType& setName) const;
+    const NextType* findSetById(const Data::Study::SetsOfAreas::IDType& setId) const;
 
 public:
     //! Area list
@@ -184,6 +184,7 @@ public:
     //! The study
     const Data::Study* pStudy;
 
+    typename Data::Study::SetsOfAreas::IDType::Vector pIds;
     typename Data::Study::SetsOfAreas::IDType::Vector pNames;
 
 }; // class SetsOfAreas
