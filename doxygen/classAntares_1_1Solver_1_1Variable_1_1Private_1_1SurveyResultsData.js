@@ -16,7 +16,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData =
     [ "output", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a8d4bef0c437f1e77a24b040eb2f1618a", null ],
     [ "rowCaptions", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#abfc8f9d45cae21569cf684578574d8e8", null ],
     [ "rowIndex", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a912ec992fc0bea726ccb7b0231489d23", null ],
-    [ "setOfAreasIndex", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a7b91731b99d89988e93c46f2e766f20a", null ],
+    [ "setOfAreasName", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a12c41b0efe7fcbbc36f3db3af8b28def", null ],
     [ "study", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a5c90e1c367fadea7702b6f188e3ef4ee", null ],
     [ "thermalCluster", "classAntares_1_1Solver_1_1Variable_1_1Private_1_1SurveyResultsData.html#a23ebed34c565225ec56100af9d478c61", null ]
 ];

@@ -550,22 +550,22 @@ $(document).ready(function(){initNavTree('reportbuilder_8hxx_source.html',''); i
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        <span class="comment">// alias to the set of sets of areas</span></div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;        <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Sets.html">Data::Study::SetsOfAreas</a>&amp; sets = results.data.study.setsOfAreas;</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> indx = 0;</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i != sets.size(); ++i)</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        {</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            <span class="keywordflow">if</span> (!sets.<a class="code" href="classAntares_1_1Data_1_1Sets.html#a2d84c0fdfab0aa9cf7c5b45aa44f7b88">hasOutput</a>(i) || !sets.<a class="code" href="classAntares_1_1Data_1_1Sets.html#a3b36d26a585cedb0b55b2b2c9edc745c">resultSize</a>(i))</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;            {</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;            }</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160; </div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;            logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; sets.caption(i);</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;            <span class="comment">// The new output</span></div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;            std::filesystem::path path = <span class="keyword">static_cast&lt;</span>std::string<span class="keyword">&gt;</span>(results.data.originalOutput);</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;            std::string setId = <span class="stringliteral">&quot;@ &quot;</span> + sets.nameByIndex(i);</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i != sets.size(); ++i)</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        {</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;            <span class="keywordflow">if</span> (!sets.<a class="code" href="classAntares_1_1Data_1_1Sets.html#a2d84c0fdfab0aa9cf7c5b45aa44f7b88">hasOutput</a>(i) || !sets.<a class="code" href="classAntares_1_1Data_1_1Sets.html#a3b36d26a585cedb0b55b2b2c9edc745c">resultSize</a>(i))</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            {</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;            }</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;            logs.info() &lt;&lt; <span class="stringliteral">&quot;Exporting results : &quot;</span> &lt;&lt; sets.caption(i);</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;            <span class="comment">// The new output</span></div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;            std::filesystem::path path = <span class="keyword">static_cast&lt;</span>std::string<span class="keyword">&gt;</span>(results.data.originalOutput);</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; setName = sets.nameByIndex(i);</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;            std::string setId = <span class="stringliteral">&quot;@ &quot;</span> + setName;</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;            path /= std::filesystem::path(<span class="stringliteral">&quot;areas&quot;</span>) / setId;</div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160; </div>
 <div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;            results.data.output = path.string();</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;            results.data.setOfAreasIndex = indx++;</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;            results.data.setOfAreasName = setName;</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;            SurveyReportBuilderFile&lt;GlobalT, NextT, CDataLevel&gt;::Run(list, results, numSpace);</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        }</div>
