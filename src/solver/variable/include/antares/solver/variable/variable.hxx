@@ -310,12 +310,23 @@ inline void IVariable<ChildT, NextT, VCardT>::buildAnnualSurveyReport(SurveyResu
 }
 
 template<class ChildT, class NextT, class VCardT>
+inline bool IVariable<ChildT, NextT, VCardT>::hasColumn() const
+{
+    //Leverage the fact that dynamicType has columnCount = -1
+    if (VCardType::columnCount > 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results,
                                                           int digestLevel,
                                                           int dataLevel) const
 {
     // Generate the Digest for the local results (areas part)
-    if (VCardType::columnCount > 0
+    if (hasColumn()
         && (VCardType::categoryDataLevel & Category::DataLevel::setOfAreas
             || VCardType::categoryDataLevel & Category::DataLevel::area
             || VCardType::categoryDataLevel & Category::DataLevel::link))
