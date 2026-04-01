@@ -280,6 +280,12 @@ bool AreaList::loadListFromFile(const fs::path& filename)
             continue;
         }
 
+        if (CheckForbiddenCharacterInAreaName(name))
+        {
+            logs.error() << "Invalid area name: `" << name << "` contains forbidden character `*`";
+            return false;
+        }
+
         // Add the area in the list
         addAreaToListOfAreas(*this, name);
     }
