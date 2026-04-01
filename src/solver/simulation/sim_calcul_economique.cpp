@@ -166,7 +166,7 @@ static void importShortTermStorages(Data::Parameters parameters,
                         {
                             auto& symmetries = areaReserves
                                                  .STStorageReservesParticipationSymmetries[idx];
-                            if (symmetries.size() <= symIdx)
+                            if (static_cast<std::size_t>(symIdx) >= symmetries.size())
                             {
                                 symmetries.resize(
                                   cluster.reserveParticipationContainer.value().getNbSymGroups());
@@ -232,7 +232,8 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
                          hydro.reserveParticipationContainer.value().symmetricalIndices(
                            reserveName))
                     {
-                        if (areaReserves.HydroReservesParticipationSymmetries.size() <= symIdx)
+                        if (static_cast<std::size_t>(symIdx)
+                            >= areaReserves.HydroReservesParticipationSymmetries.size())
                         {
                             areaReserves.HydroReservesParticipationSymmetries.resize(
                               hydro.reserveParticipationContainer.value().getNbSymGroups());
@@ -553,7 +554,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                         {
                             auto& symmetries = areaReserves.ThermalReservesParticipationSymmetries
                                                  [cluster->index];
-                            if (symmetries.size() <= symIdx)
+                            if (static_cast<std::size_t>(symIdx) >= symmetries.size())
                             {
                                 symmetries.resize(
                                   cluster->reserveParticipationContainer.value().getNbSymGroups());

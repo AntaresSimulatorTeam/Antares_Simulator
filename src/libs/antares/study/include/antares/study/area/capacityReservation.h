@@ -37,7 +37,7 @@ using ReserveName = std::string;
 namespace Antares::Data
 {
 
-void static errorIfNegativeValue(const std::string& propertyName,
+inline void errorIfNegativeValue(const std::string& propertyName,
                                  double value,
                                  const std::string& areaName,
                                  const std::optional<std::string>& clusterName = std::nullopt,

@@ -278,7 +278,7 @@ std::pair<std::string, ReserveName> STStorageInput::reserveParticipationClusterA
   const Area* area,
   unsigned int index) const
 {
-    int globalReserveParticipationIdx = 0;
+    unsigned int globalReserveParticipationIdx = 0;
 
     for (const auto& reserveName:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)

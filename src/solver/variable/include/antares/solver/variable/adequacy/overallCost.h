@@ -246,7 +246,7 @@ public:
         return waterValueCost + storageReserveCost + hydroReserveCost;
     }
 
-    double calculateThermalCosts(const State& state, const Area* area, auto& thermal)
+    double calculateThermalCosts(const Area* area, auto& thermal)
     {
         double totalCost = 0.0;
 
@@ -271,7 +271,7 @@ public:
         currentHourValue += calculateHydroCosts(state, area);
 
         // Thermal costs
-        currentHourValue += calculateThermalCosts(state, area, thermal);
+        currentHourValue += calculateThermalCosts(area, thermal);
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

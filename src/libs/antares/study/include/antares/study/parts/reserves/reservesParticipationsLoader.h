@@ -143,7 +143,7 @@ public:
 
         if (!reserve || !cluster)
         {
-            derived().reportMissing(area, reserveName, clusterName.value_or(""), reserve, cluster);
+            derived().reportMissing(area, reserveName, reserve, cluster);
             return;
         }
 
@@ -286,7 +286,6 @@ public:
 
     static void reportMissing(const Area& area,
                               const std::string& reserveName,
-                              const std::string& clusterName,
                               bool reserveOK,
                               bool clusterOK)
     {
@@ -387,7 +386,6 @@ public:
 
     static void reportMissing(const Area& area,
                               const std::string& reserveName,
-                              const std::string& clusterName,
                               bool reserveOK,
                               bool clusterOK)
     {
@@ -479,7 +477,6 @@ public:
 
     static void reportMissing(const Area& area,
                               const std::string& reserveName,
-                              const std::string&,
                               bool reserveOK,
                               bool)
     {
@@ -490,7 +487,7 @@ public:
         }
     }
 
-    static void reportLackOfReserveParticipation(const Area& area, const std::string& clusterName)
+    static void reportLackOfReserveParticipation(const Area& area, const std::string&)
     {
         logs.error() << "Area " << area.name
                      << ", hydro : trying to add symmetries without any reserve participation";
