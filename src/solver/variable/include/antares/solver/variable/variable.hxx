@@ -312,7 +312,7 @@ inline void IVariable<ChildT, NextT, VCardT>::buildAnnualSurveyReport(SurveyResu
 template<class ChildT, class NextT, class VCardT>
 inline bool IVariable<ChildT, NextT, VCardT>::hasColumn() const
 {
-    //Leverage the fact that dynamicType has columnCount = -1
+    // Leverage the fact that dynamicType has columnCount = -1
     if (VCardType::columnCount > 0)
     {
         return true;
