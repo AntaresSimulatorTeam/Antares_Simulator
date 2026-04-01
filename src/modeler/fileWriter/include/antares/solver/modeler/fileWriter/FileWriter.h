@@ -17,9 +17,9 @@ public:
     const std::filesystem::path& outputPath() const;
 
 private:
-    const std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
-    bool parquetFormatRequired_ = false;
+    std::filesystem::path output_file_;
     std::string simulationId_;
+    bool parquetFormatRequired_ = false;
 };
 } // namespace Antares::Solver

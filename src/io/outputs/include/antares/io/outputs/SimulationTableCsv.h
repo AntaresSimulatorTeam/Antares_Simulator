@@ -23,6 +23,9 @@ public:
 
     // const std::string& buffer() const;
     [[nodiscard]] std::string buffer() const;
+
+    // gp : never called in production code, only from tests
+    // gp : should be moved as a free function in tests
     void writeHeaderToBuffer();
 
     std::vector<std::vector<std::string>> storageIntoRows() const;

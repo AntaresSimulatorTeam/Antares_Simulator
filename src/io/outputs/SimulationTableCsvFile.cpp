@@ -13,10 +13,6 @@ SimulationTableCsvFile::SimulationTableCsvFile(const std::filesystem::path& outp
                                                bool parquetFormatRequired):
     parquetFormatRequired_(parquetFormatRequired)
 {
-    if (!std::filesystem::exists(outputFolder))
-    {
-        throw std::runtime_error("could not find output Folder: " + outputFolder.string());
-    }
     const auto simulation_id = std::string(simulationId.empty() ? "" : "--" + simulationId);
     output_file_ = outputFolder / ("simulation_table" + simulation_id);
     std::string ext = parquetFormatRequired_ ? "parquet" : "csv";

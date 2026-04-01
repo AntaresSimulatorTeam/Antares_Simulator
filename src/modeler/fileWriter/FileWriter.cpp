@@ -7,24 +7,30 @@
 #include <fstream>
 
 #include <antares/logs/logs.h>
-#include "antares/io/outputs/SimulationTableCsvFile.h"
+#include <antares/writer/table_writer_factory.h>
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/modeler/Modeler.h"
 
 using namespace Antares::IO::Outputs;
+namespace fs = std::filesystem;
 
 namespace Antares::Solver
 {
 void FileWriter::init(const std::string& simulationId)
 {
-    outputPath_ = studyPath_ / "output";
     simulationId_ = simulationId;
-    logs.info() << "Output folder : " << outputPath_;
-    if (!std::filesystem::is_directory(outputPath_)
-        && !std::filesystem::create_directory(outputPath_))
+
+    if (!fs::is_directory(outputPath_) && !fs::create_directory(outputPath_))
     {
-        throw Solver::Modeler::ModelerError(
-          "Failed to create output directory. Exiting simulation.");
+        throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
     }
+
+    const auto simulation_id = std::string(simulationId.empty() ? "" : "--" + simulationId);
+    output_file_ = outputPath_ / ("simulation_table" + simulation_id);
+    std::string ext = parquetFormatRequired_ ? "parquet" : "csv";
+    output_file_ += "." + ext;
+
+    Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
 const std::filesystem::path& FileWriter::outputPath() const
@@ -34,15 +40,18 @@ const std::filesystem::path& FileWriter::outputPath() const
 
 void FileWriter::writeSimulationTable(SimulationTableCsv& SimulationTable) const
 {
-    IO::Outputs::SimulationTableCsvFile writer(outputPath_, simulationId_, parquetFormatRequired_);
-    SimulationTable.writeHeaderToBuffer();
-    writer.write(SimulationTable);
+    std::vector<std::string> header = SimulationTable.rawHeader();
+    std::vector<std::vector<std::string>> rows = SimulationTable.storageIntoRows();
+
+    auto writer = Antares::Writer::makeTableWriter(parquetFormatRequired_);
+    writer->writeTable(output_file_, header, rows);
 }
 
 FileWriter::FileWriter(std::filesystem::path path, bool parquetFormatRequired):
-    studyPath_(std::move(path)),
+    outputPath_(std::move(path) / "output"),
     parquetFormatRequired_(parquetFormatRequired)
 {
+    logs.info() << "Output folder : " << outputPath_;
 }
 
 } // namespace Antares::Solver

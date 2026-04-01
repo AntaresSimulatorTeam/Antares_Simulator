@@ -3,7 +3,7 @@
 
 #pragma once
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
-#include "antares/io/outputs/SimulationTableCsvFile.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/parameters/modelerParameters.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"

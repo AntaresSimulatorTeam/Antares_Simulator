@@ -21,8 +21,8 @@ Suggestions archi :
 	 
   ==> DONE
 	 
-- There are many writers : FileWriter, CsvTableWriter, ParquetTableWriter.
-  So one of these writers is useless : FileWriter is my favorite to removal / renaming.
+- There are many writers : FileWriter, SimulationTableCsvFile (yes, it's a writer), CsvTableWriter, ParquetTableWriter.
+  So one of these writers is useless : SimulationTableCsvFile is my favorite for removal.
 
 - classe ISimulationTable semble inutile, car elle n'a qu'une seule fille.
   Devrions nous la supprimer ?
