@@ -11,7 +11,7 @@
 #include "antares/expressions/nodes/FunctionNode.h"
 #include "antares/expressions/nodes/Node.h"
 
-namespace Antares::IO::Inputs::ModelConverter
+namespace Antares::IO::Inputs::ForbidNodes
 {
 
 template<typename NodeType>
@@ -77,4 +77,13 @@ private:
     std::map<std::type_index, std::set<std::type_index>> rules_; // Parent --> set of children
 };
 
-} // namespace Antares::IO::Inputs::ModelConverter
+// Global forbidden nodes instances
+extern const ForbiddenNodes forbiddenInConstraint;
+extern const ForbiddenNodes forbiddenInBindingConstraint;
+extern const ForbiddenNodes forbiddenInVariableBounds;
+extern const ForbiddenNodes forbiddenInPortFieldDef;
+extern const ForbiddenNodes forbiddenInObjective;
+extern const ForbiddenNodes forbiddenInExtraOutput;
+extern const ForbiddenNodes forbidNonLinearNodes;
+
+} // namespace Antares::IO::Inputs::ForbidNodes

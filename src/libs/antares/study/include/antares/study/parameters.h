@@ -415,7 +415,7 @@ public:
     //! \name Scenariio Builder - Rules
     //@{
     //! The current active rules for building scenarios (useful if building mode == custom)
-    RulesScenarioName activeRulesScenario;
+    std::string activeRulesScenario;
     //@}
 
     //! \name Output

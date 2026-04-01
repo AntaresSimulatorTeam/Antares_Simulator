@@ -6,6 +6,9 @@
 #include <stdexcept>
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/utils/vector-utils.h"
+
+using namespace Antares::Utils;
 
 namespace Antares::Solver::Simulation
 {

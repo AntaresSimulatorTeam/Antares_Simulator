@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
 
 #include "enum_operators.h"
@@ -32,6 +33,116 @@ BOOST_AUTO_TEST_CASE(EmptyLibrary_is_valid)
     BOOST_CHECK(libraryObj.description.empty());
     BOOST_CHECK(libraryObj.port_types.empty());
     BOOST_CHECK(libraryObj.models.empty());
+}
+
+BOOST_AUTO_TEST_CASE(library_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            description: "test_description"
+            port-types: []
+            models: []
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YmlModel::LibraryIdNotDefined);
+}
+
+BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types: []
+            models:
+                - id: "model_id"
+                  parameters:
+                    - time-dependent: false
+                  variables: []
+                  ports: []
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(variable_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types: []
+            models:
+                - id: "model_id"
+                  parameters: []
+                  variables:
+                    - lower-bound: 0
+                      upper-bound: 1
+                  ports: []
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(model_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types: []
+            models:
+                - description: "missing id"
+                  parameters: []
+                  variables: []
+                  ports: []
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(port_without_id_throws)
+{
+    YmlModel::Parser parser;
+    const auto library = R"(
+        library:
+            id: "lib_id"
+            description: "desc"
+            port-types:
+                - id: "port_type"
+                  fields: []
+            models:
+                - id: "model_id"
+                  parameters: []
+                  variables: []
+                  ports:
+                    - type: "port_type"
+                  constraints: []
+                  objective-contributions: []
+        )"s;
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
+}
+
+BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
+{
+    const auto node = YAML::Load(R"(
+        a: 1
+        c: 3
+    )");
+    BOOST_CHECK_THROW((YAML::checkFields(node, std::unordered_set<std::string>{"a", "b"})),
+                      YAML::Exception);
+}
+
+BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
+{
+    BOOST_CHECK_EQUAL(printPathTree(std::filesystem::path("lib/model/port")),
+                      std::string("lib\n|__ model\n    |__ port\n"));
 }
 
 // Test library with id and description
@@ -249,11 +360,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
 
             models: []
         )"s;
-    BOOST_REQUIRE_THROW(YmlModel::Library libraryObj = parser.parse(library),
-                        YAML::TypedBadConversion<YmlModel::PortType>);
-    // When the previous line was written, the exception thrown is
-    // YAML::TypedBadConversion<PortType>; this may change, see
-    // https://github.com/jbeder/yaml-cpp/commit/3d2888cc8a45da2f420454ad728cdfad01a3d54f
+    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
 }
 
 BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
@@ -271,11 +378,7 @@ BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)
 
             models: []
         )"s;
-    BOOST_REQUIRE_THROW(YmlModel::Library libraryObj = parser.parse(library),
-                        YAML::TypedBadConversion<YmlModel::PortType>);
-    // When the previous line was written, the exception thrown is
-    // YAML::TypedBadConversion<PortType>; this may change, see
-    // https://github.com/jbeder/yaml-cpp/commit/3d2888cc8a45da2f420454ad728cdfad01a3d54f
+    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
 }
 
 // Test library with multiple port types

@@ -41,14 +41,14 @@ starting with the 9.0 version of Antares Simulator.
 
 This software suite has been tested under:
 
-* Ubuntu 20.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
+* Ubuntu 22.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
 * Microsoft Windows with Visual Studio 2022 (64-bit) [![Status][windows_ci_svg]][windows_ci_link]
-* Centos7 [![Status][centos_ci_svg]][centos_ci_link]
-* Oracle Linux [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
+* Centos7 (deprecated) [![Status][centos_ci_svg]][centos_ci_link]
+* Oracle Linux 8 [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
 
-Antares Simulator is built using CMake.
-For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/)
-or [its sources](docs/developer-guide/0-Introduction.md).
+Build instructions [here](docs/developer-guide/3-Build.md)
+
+For installation instructions, please visit the [documentation website](https://antares-simulator.readthedocs.io/) or [its sources](docs/developer-guide/0-Introduction.md).
 
 # Source Code Content
 
@@ -56,7 +56,6 @@ or [its sources](docs/developer-guide/0-Introduction.md).
 * [CERTIFICATE](CERTIFICATE.txt)     - A standard DCO that has to be signed by every contributor
 * [CONTRIBUTING](CONTRIBUTING.md)         - How to submit patches and discuss code evolutions
 * [COPYING](COPYING.txt)            - The MPL v2 license.
-* [NEWS](NEWS.md)                 - Important modifications between the releases.
 * [README](README.md)             - This file.
 * [ROADMAP](ROADMAP.txt)            - Main orientations for further developments
 * [THANKS](THANKS.txt)             - Attribution notices for external libraries and contributors.

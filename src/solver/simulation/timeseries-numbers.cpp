@@ -708,10 +708,10 @@ static Checks buildChecksFromStudy(const AreaList& areas)
     // LINKS
     for (const auto& [_, area]: areas)
     {
-        const std::string areaID = area->id.to<std::string>();
+        const std::string areaID = area->id;
         for (const auto& [_, link]: area->links)
         {
-            const std::string areaID2 = link->with->id.to<std::string>();
+            const std::string areaID2 = link->with->id;
             toCheck.emplace_back(&link->timeseriesNumbers, "link " + areaID + " / " + areaID2);
         }
     }
@@ -719,7 +719,7 @@ static Checks buildChecksFromStudy(const AreaList& areas)
     // HYDRO
     for (const auto& [_, area]: areas)
     {
-        const std::string areaID = area->id.to<std::string>();
+        const std::string areaID = area->id;
         toCheck.emplace_back(&area->hydro.series->timeseriesNumbers, "hydro " + areaID);
     }
 

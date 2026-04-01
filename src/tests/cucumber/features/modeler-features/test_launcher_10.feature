@@ -126,3 +126,14 @@ Feature: 10 - Modeler extra outputs
       | 1     | oil_base_zone | generation_reduced_cost | 1        | 0        | 20     |
       | 1     | oil_base_zone | generation_reduced_cost | 2        | 0        | -5     |
       | 1     | oil_base_zone | generation_reduced_cost | 3        | 0        | -19990 |
+
+  @fast
+  Scenario: 10.6: be able to compute the income of a thermal cluster, through a port.
+    Given the modeler study path is "modeler/10_6"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the modeler outputs contain the following entries
+      | block | component         | output                    | timestep | scenario | value |
+      | 1     | base_zone         | balance_port.price        | 1        | 0        | 10    |
+      | 1     | gas_base_zone     | dual(balance) from area   | 1        | 0        | 10    |
+	  | 1     | gas_base_zone     | income                    | 1        | 0        | 0     |

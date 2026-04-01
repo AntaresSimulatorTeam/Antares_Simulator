@@ -81,7 +81,7 @@ add_boost_test(tests-matrix-load
 add_boost_test(test-utils
         SRC test_utils.cpp
         LIBS
-        Antares::utils
+        Antares::study-utils
         yuni-static-core)
 
 add_boost_test(logs-accumulation

@@ -8,6 +8,7 @@
 #include <boost/test/tools/assertion.hpp>
 
 #include <antares/solver/optim-model-filler/Dimensions.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/logs/logs.h"
@@ -165,6 +166,8 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                           const FillContext& fillContext,
                           const ModelerStudy::SystemModel::Component& component,
                           const OptimEntityContainer& optimEntityContainer,
+                          const LinearProblemApi::ILinearProblemData* data,
+                          const LinearProblemApi::IScenario* scenario,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           unsigned year,
@@ -172,7 +175,12 @@ void addConstraintEntries(ISimulationTable& simulationTable,
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
-    const size_t nbTimeSteps = fillContext.getLocalNumberOfTimeSteps();
+
+    Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
+                                                   fillContext,
+                                                   component,
+                                                   data,
+                                                   scenario);
 
     unsigned constraintIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
@@ -187,14 +195,44 @@ void addConstraintEntries(ISimulationTable& simulationTable,
         variability = updateVariabilityIfShouldForceScenario(variability,
                                                              forceExportForScenarioIndex);
 
-        const auto constraints = optimEntityContainer.componentConstraints(component,
-                                                                           constraintIndex,
-                                                                           nbTimeSteps);
-        ++constraintIndex;
+        const auto componentConstraints = optimEntityContainer.componentConstraints(
+          component,
+          constraintIndex,
+          optimEntityContainer.getConstraintCount(component, constraintIndex));
 
+        std::size_t activeConstraintIndex = 0;
         auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
         {
-            const auto& c = constraints[ts.value_or(0)];
+            const IMipConstraint* activeConstraint = nullptr;
+
+            if (!ts.has_value())
+            {
+                activeConstraint = componentConstraints[0].get();
+            }
+            else
+            {
+                // Check if we need to drop the constraint
+                if (modelConstr.outOfBoundsProcessingMode()
+                      == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
+                    && Optimisation::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
+                                                             *ts,
+                                                             fillContext,
+                                                             evalVisitor))
+                {
+                    activeConstraint = nullptr;
+                }
+                else
+                {
+                    // Increment index and get the constraint
+                    activeConstraint = componentConstraints[activeConstraintIndex++].get();
+                }
+            }
+
+            if (!activeConstraint)
+            {
+                return;
+            }
+
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
                                                                        currentBlock)
@@ -202,17 +240,19 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry(
-              {.block = tb.block,
-               .component = componentId,
-               .output = constraintId,
-               .absolute_time_index = tb.absoluteTimeIndex,
-               .block_time_index = tb.blockTimeIndex,
-               .scenario_index = scenIdx,
-               .value = std::nullopt,
-               .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
+              SimulationTableEntry{.block = tb.block,
+                                   .component = componentId,
+                                   .output = constraintId,
+                                   .absolute_time_index = tb.absoluteTimeIndex,
+                                   .block_time_index = tb.blockTimeIndex,
+                                   .scenario_index = scenIdx,
+                                   .value = std::nullopt,
+                                   .status = isLp ? activeConstraint->getMipBasisStatus()
+                                                  : MipBasisStatus::NOT_AVAILABLE});
         };
 
         handleDependingOnVariability(fillContext, year, variability, handle);
+        ++constraintIndex;
     }
 }
 
@@ -236,6 +276,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                        const FillContext& fillContext,
                        Visitors::EvalVisitor& evalVisitor,
                        Visitors::VariabilityVisitor& variabilityVisitor,
+                       const ModelerStudy::SystemModel::Component& component,
                        unsigned currentBlock,
                        const TimeConversionMode& timeConversionMode,
                        unsigned year,
@@ -250,6 +291,28 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
     auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
     {
+        if (ts.has_value())
+        {
+            if (const auto* functionNode = dynamic_cast<const Nodes::FunctionNode*>(rootNode);
+                functionNode && functionNode->type() == Nodes::FunctionNodeType::dual)
+            {
+                const auto* indexNode = dynamic_cast<const Nodes::LiteralNode*>(
+                  functionNode->getOperands().at(1));
+                const auto constraintIndex = static_cast<std::size_t>(indexNode->value());
+                const auto& constraint = component.getModel()->Constraints().at(constraintIndex);
+
+                if (constraint.outOfBoundsProcessingMode()
+                      == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
+                    && Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                             *ts,
+                                                             fillContext,
+                                                             evalVisitor))
+                {
+                    return;
+                }
+            }
+        }
+
         TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                    timeConversionMode,
                                                                    currentBlock)
@@ -337,6 +400,7 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
                           fillContext,
                           evalVisitor,
                           variabilityVisitor,
+                          component,
                           currentBlock,
                           timeConversionMode,
                           year,
@@ -383,6 +447,8 @@ void FillSimulationTable(ISimulationTable& simulationTable,
                              fillContext,
                              component,
                              optimContainer,
+                             data,
+                             &scenario,
                              currentBlock,
                              timeConversionMode,
                              year,

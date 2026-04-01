@@ -38,8 +38,6 @@ public:
 
     //! Pointer
     using MatrixPtr = Matrix<T>*;
-    //! Vector
-    using Vector = std::set<MatrixPtr>;
 
     //! Column type
     using ColumnType = typename Antares::Memory::Stored<T>::Type;

@@ -7,7 +7,6 @@
 
 #include "yaml-cpp/yaml.h"
 
-// Implement convert specializations
 namespace YAML
 {
 
@@ -28,8 +27,9 @@ inline T as_fallback_default(const Node& n)
 }
 
 template<>
-struct convert<Antares::IO::Inputs::YmlSystem::Parameter>
+class convert<Antares::IO::Inputs::YmlSystem::Parameter>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Parameter& rhs)
     {
         if (!node.IsMap())
@@ -45,8 +45,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::Parameter>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlSystem::Component>
+class convert<Antares::IO::Inputs::YmlSystem::Component>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Component& rhs)
     {
         if (!node.IsMap())
@@ -63,8 +64,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::Component>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlSystem::Connection>
+class convert<Antares::IO::Inputs::YmlSystem::Connection>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::Connection& rhs)
     {
         if (!node.IsMap() || node.size() != 4)
@@ -81,8 +83,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::Connection>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlSystem::AreaConnection>
+class convert<Antares::IO::Inputs::YmlSystem::AreaConnection>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::AreaConnection& rhs)
     {
         if (!node.IsMap() || node.size() != 3)
@@ -97,8 +100,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::AreaConnection>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
+class convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::ThermalComponent& rhs)
     {
         if (!node.IsMap() || node.size() != 2)
@@ -112,8 +116,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::ThermalComponent>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>
+class convert<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>
 {
+public:
     static bool decode(const Node& node,
                        Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection& rhs)
     {
@@ -130,8 +135,9 @@ struct convert<Antares::IO::Inputs::YmlSystem::ThermalCapacityConnection>
 };
 
 template<>
-struct convert<Antares::IO::Inputs::YmlSystem::System>
+class convert<Antares::IO::Inputs::YmlSystem::System>
 {
+public:
     static bool decode(const Node& node, Antares::IO::Inputs::YmlSystem::System& rhs)
     {
         rhs.id = node["id"].as<std::string>();

@@ -22,6 +22,12 @@ struct Constraint
     std::string location;
 };
 
+struct ConstraintOutOfBoundsProcessing
+{
+    std::string id;
+    std::string mode;
+};
+
 struct Objective
 {
     std::string id;
@@ -35,6 +41,7 @@ struct Model
     std::vector<Variable> variables;
     std::vector<Constraint> constraints;
     std::vector<Objective> objectives;
+    std::vector<ConstraintOutOfBoundsProcessing> constraints_out_of_bounds_processing;
 };
 
 struct OptimConfig

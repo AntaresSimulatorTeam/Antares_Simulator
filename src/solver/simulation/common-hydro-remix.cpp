@@ -14,6 +14,9 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
+#include "antares/utils/vector-utils.h"
+
+using namespace Antares::Utils;
 
 #define EPSILON 1e-6
 
@@ -405,7 +408,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           catch (std::exception& e)
           {
               std::string msg = "(year, area, week) = (" + std::to_string(problem.year) + ", "
-                                + area.id.to<std::string>() + ", "
+                                + area.id + ", "
                                 + std::to_string((firstHourOfWeek + 1) / HOURS_IN_WEEK)
                                 + ") : " + e.what();
               logs.warning(msg);

@@ -83,7 +83,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
-    fs::path seriesPath = folder / parentArea->id.to<std::string>() / id() / "series.txt";
+    fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
     ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
           && ret;

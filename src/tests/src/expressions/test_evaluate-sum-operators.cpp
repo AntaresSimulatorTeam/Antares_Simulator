@@ -94,8 +94,7 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
       createComponent(model_,
                       "component-id",
                       {{"p", {"p", VariabilityType::VARYING_IN_TIME_ONLY, "p"}},
-                       {"five", {"five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}},
-                      0)),
+                       {"five", {"five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO, "5"}}})),
     components_({component_}),
     scenarioGroupRepo_(makeScenarioGroupRepo(component_))
 {

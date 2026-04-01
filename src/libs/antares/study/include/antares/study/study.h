@@ -441,11 +441,6 @@ private:
     std::unique_ptr<Solver::ModelerData> modelerInput_;
 }; // class Study
 
-/*!
-** \brief Icon to use for studies
-*/
-extern YString StudyIconFile;
-
 std::filesystem::path StudyCreateOutputPath(SimulationMode mode,
                                             ResultFormat fmt,
                                             const std::filesystem::path& folder,
