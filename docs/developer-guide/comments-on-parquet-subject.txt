@@ -19,6 +19,8 @@ Suggestions archi :
      FillSimulationTable(simulationTable, ...);
 	 writer_.writeSimulationTable(...);
 	 
+  ==> DONE
+	 
 - There are many writers : FileWriter, CsvTableWriter, ParquetTableWriter.
   So one of these writers is useless : FileWriter is my favorite to removal / renaming.
 
@@ -26,9 +28,11 @@ Suggestions archi :
   Devrions nous la supprimer ?
   En effet, on peut imaginer que seule la facon d'imprimer cette table peut changer : csv ou parquet.
   Mais pas la table elle-meme n'a pas de raison de changer, donc l'interface semble inutile.
+  ==> DONE
   
 - La classe SimulationTableCsv contient les données, et n'a rien à voir avec le format d'impression.
   Cette classe devrait s'appeler SimulationTable et ne pas hériter (de ISimulationTable)
+  ==> DONE (au renommage près)
   
 - La classe SimulationTableCsvFile imprime (aussi) en parquet (voir methode write) 
   alors qu'elle comporte "Csv" dans son nom.
