@@ -32,6 +32,12 @@ namespace Antares::Solver
 
 bool checkSolution(const IMipSolution* solution)
 {
+    if (!solution)
+    {
+        logs.error() << "Solution to linear optimization is empty";
+        return false;
+    }
+
     auto status = solution->getStatus();
     if (status == MipStatus::OPTIMAL || status == MipStatus::FEASIBLE)
     {
@@ -199,11 +205,17 @@ IMipSolution* Modeler::solveSubproblem()
     return solution;
 }
 
+IMipSolution* Modeler::subProbSolution()
+{
+    return subProbSolution_;
+}
+
 SimulationTableCsv Modeler::makeSimulationTable(
   const IMipSolution* solution,
   const OptimEntityContainer& subproblemOptimEntityContainer,
   const FillContext& timeScenarioCtx) const
 {
+    // gp : subproblem_1_1 is defined the same way in multiple places
     auto& subproblem_1_1 = subproblems_[0];
 
     SimulationTableCsv simulationTable;
@@ -316,17 +328,15 @@ void Modeler::run()
     }
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-        auto* solution = solveSubproblem();
-        if (!checkSolution(solution))
+        subProbSolution_ = solveSubproblem();
+        if (!checkSolution(subProbSolution_))
         {
             return;
         }
-        // gp : we should first build the simulation table, then write it.
-        // gp : Instead of that, both are stronlgy coupled.
-        // gp : We need two steps here.
+
         if (!parameters_.noOutput)
         {
-            auto simulationTable = makeSimulationTable(solution,
+            auto simulationTable = makeSimulationTable(subProbSolution_,
                                                        *subproblemOptimEntityContainer,
                                                        timeScenarioCtx);
             writeSimulationTable(simulationTable);

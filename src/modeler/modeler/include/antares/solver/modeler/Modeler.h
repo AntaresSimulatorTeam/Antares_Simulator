@@ -59,8 +59,8 @@ public:
         }
     };
 
-    ILoader& loader_;
-    IWriter& writer_;
+    ILoader& loader_; // gp : make it private
+    IWriter& writer_; // gp : make it private
 
     [[nodiscard]] const std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>&
     masterProblem() const
@@ -75,6 +75,9 @@ public:
         return subproblems_;
     }
 
+    // gp : defined only for unit test, which is not a good sign on design. 
+    Optimisation::LinearProblemApi::IMipSolution* subProbSolution();
+
 private:
     Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
 
@@ -88,6 +91,8 @@ private:
     void exportStructureFile() const;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
+
+    Optimisation::LinearProblemApi::IMipSolution* subProbSolution_;
     ModelerParameters parameters_;
     ModelerData data_;
 };
