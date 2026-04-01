@@ -24,6 +24,7 @@
 
 #include <antares/inifile/inifile.h>
 #include <antares/study/area/area.h>
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 
 namespace Antares::Data
 {

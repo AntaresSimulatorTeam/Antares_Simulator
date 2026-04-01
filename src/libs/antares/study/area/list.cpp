@@ -183,8 +183,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFil
             ret = false;
         }
     }
-    fs::path filePath = folderInput / "reserves" / area.id.to<std::string>()
-                        / (section.name.to<std::string>() + ".txt");
+    fs::path filePath = folderInput / "reserves" / area.id / (std::string(section.name.c_str()) + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
     area.allCapacityReservations.value().areaCapacityReservations.emplace(section.name,
                                                                           capacityReservation);
@@ -693,7 +692,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             && study.parameters.reservesEnabled)
         {
             fs::path reservesHydroIniPath = study.folderInput / "hydro" / "common"
-                                            / area.id.to<std::string>() / "reserves.ini";
+                                            / area.id / "reserves.ini";
             area.hydro.loadReserveParticipations(area, reservesHydroIniPath);
         }
     }
@@ -731,7 +730,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             && study.parameters.reservesEnabled)
         {
             fs::path reservesThermal = study.folderInput / "thermal" / "clusters"
-                                       / area.id.to<std::string>() / "reserves.ini";
+                                       / area.id / "reserves.ini";
             area.thermal.list.loadReserveParticipations(area, reservesThermal);
         }
     }
@@ -748,7 +747,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             && study.parameters.reservesEnabled)
         {
             fs::path reservesIniFilePath = study.folderInput / "st-storage" / "clusters"
-                                           / area.id.to<std::string>() / "reserves.ini";
+                                           / area.id / "reserves.ini";
             area.shortTermStorage.loadReserveParticipations(area, reservesIniFilePath);
         }
     }
@@ -1224,7 +1223,7 @@ void validateCapacityReservations(const Area& area)
 bool loadReservesParameters(fs::path& folderInput, Area& area)
 {
     bool ret = true;
-    fs::path reservesIni = folderInput / "reserves" / area.id.to<std::string>() / "reserves.ini";
+    fs::path reservesIni = folderInput / "reserves" / area.id / "reserves.ini";
     IniFile ini;
     area.allCapacityReservations.emplace();
     if (ini.open(reservesIni, false))
