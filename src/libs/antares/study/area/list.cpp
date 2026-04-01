@@ -231,6 +231,12 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
         }
         return nullptr;
     }
+
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "Invalid area name: `" << name << "` contains forbidden character `*`";
+        return nullptr;
+    }
     // Look up
     if (!AreaListLFind(&list, lname.c_str()))
     {
@@ -276,12 +282,6 @@ bool AreaList::loadListFromFile(const fs::path& filename)
         if (name.empty())
         {
             continue;
-        }
-
-        if (CheckForbiddenCharacterInAreaName(name))
-        {
-            logs.error() << "Invalid area name: `" << name << "` contains forbidden character `*`";
-            return false;
         }
 
         // Add the area in the list

@@ -367,4 +367,12 @@ BOOST_AUTO_TEST_CASE(add_area_with_empty_name_returns_nullptr)
     BOOST_CHECK(area == nullptr);
 }
 
+BOOST_AUTO_TEST_CASE(add_area_with_forbidden_character_returns_nullptr)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = addAreaToListOfAreas(study->areas, "area*name");
+    BOOST_CHECK(area == nullptr);
+    BOOST_CHECK_EQUAL(study->areas.size(), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // version
