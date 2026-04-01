@@ -268,10 +268,8 @@ bool AreaList::loadListFromFile(const fs::path& filename)
     AreaName name;
     // Each lines in the file
     std::string buffer;
-    uint line = 0;
     while (std::getline(file, buffer))
     {
-        ++line;
         // The area name
         name = buffer;
         boost::trim(name);
