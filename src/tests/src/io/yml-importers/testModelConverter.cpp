@@ -380,6 +380,23 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
     BOOST_CHECK_EQUAL(pfd1.Definition().Value(), "param1");
 }
 
+BOOST_FIXTURE_TEST_CASE(port_fields_definitions_forbid_usage_of_sum_connections, Fixture)
+{
+    library.port_types = {};
+    YmlModel::Model model1{.id = "model1",
+                           .description = "description",
+                           .parameters = {},
+                           .variables = {},
+                           .ports = {},
+                           .port_field_definitions = {{"port", "field", "sum_connections(port.field)"}},
+                           .constraints = {},
+                           .binding_constraints = {},
+                           .objectives = {},
+                           .extra_outputs = {}};
+    library.models = {model1};
+    BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
+}
+
 bool portNotFoundForDef(const ModelConverter::PortNotFoundForDefinition& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "In port-field-definitions, port not found: port2");
