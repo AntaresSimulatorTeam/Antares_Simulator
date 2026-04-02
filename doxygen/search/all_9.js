@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['jit_905',['JIT',['../classJIT.html',1,'']]],
-  ['jit_906',['jit',['../classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24',1,'Antares::Matrix']]],
-  ['jobfilereader_907',['JobFileReader',['../classJobFileReader.html',1,'JobFileReader'],['../classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c',1,'JobFileReader::JobFileReader()']]],
-  ['join_908',['Join',['../classAntares_1_1Solver_1_1Variable_1_1Join.html',1,'Antares::Solver::Variable']]],
-  ['join_909',['join',['../classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f',1,'Antares::Concurrency::FutureSet']]],
-  ['jsoncollector_910',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
-  ['just_5fin_5ftime_5fmanager_911',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
+  ['jit_902',['JIT',['../classJIT.html',1,'']]],
+  ['jit_903',['jit',['../classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24',1,'Antares::Matrix']]],
+  ['jobfilereader_904',['JobFileReader',['../classJobFileReader.html',1,'JobFileReader'],['../classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c',1,'JobFileReader::JobFileReader()']]],
+  ['join_905',['Join',['../classAntares_1_1Solver_1_1Variable_1_1Join.html',1,'Antares::Solver::Variable']]],
+  ['join_906',['join',['../classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f',1,'Antares::Concurrency::FutureSet']]],
+  ['jsoncollector_907',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
+  ['just_5fin_5ftime_5fmanager_908',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
 ];

@@ -7,7 +7,6 @@ var classAntares_1_1Data_1_1Study =
     [ "SetsOfAreas", "classAntares_1_1Data_1_1Study.html#aab54ffdf4fbc75b5d4e5461d4f649750", null ],
     [ "Study", "classAntares_1_1Data_1_1Study.html#a1bf73f04b6aae3931db2aa22e5b16c99", null ],
     [ "~Study", "classAntares_1_1Data_1_1Study.html#aef6c85631895b8500f68b7df86dd2c28", null ],
-    [ "areaAdd", "classAntares_1_1Data_1_1Study.html#ab496531b39e59036ae03075ae7dced49", null ],
     [ "checkForFilenameLimits", "classAntares_1_1Data_1_1Study.html#ac0b3d7a7b4a4d6fe581961e7bac5d87a", null ],
     [ "checkModelerDataCompatibility", "classAntares_1_1Data_1_1Study.html#a43caa627f54b086a1b26b352e7400ac2", null ],
     [ "clear", "classAntares_1_1Data_1_1Study.html#acd6521d444413475db5e715adb608ef7", null ],
