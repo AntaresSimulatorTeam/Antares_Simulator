@@ -18,30 +18,49 @@ Suggestions archi :
   Ce sont 2 choses différentes, à découpler : 
      FillSimulationTable(simulationTable, ...);
 	 writer_.writeSimulationTable(...);
-	 
+  ------------
   ==> DONE
+  ------------
 	 
 - There are many writers : FileWriter, SimulationTableCsvFile (yes, it's a writer), CsvTableWriter, ParquetTableWriter.
   So one of these writers is useless : SimulationTableCsvFile is my favorite for removal.
+  ------------
+  ==> DONE
+  ------------
 
 - classe ISimulationTable semble inutile, car elle n'a qu'une seule fille.
   Devrions nous la supprimer ?
   En effet, on peut imaginer que seule la facon d'imprimer cette table peut changer : csv ou parquet.
   Mais pas la table elle-meme n'a pas de raison de changer, donc l'interface semble inutile.
+  ------------
   ==> DONE
+  ------------
   
 - La classe SimulationTableCsv contient les données, et n'a rien à voir avec le format d'impression.
   Cette classe devrait s'appeler SimulationTable et ne pas hériter (de ISimulationTable)
+  -----------------------------
   ==> DONE (au renommage près)
+  -----------------------------
   
-- La classe SimulationTableCsvFile imprime (aussi) en parquet (voir methode write) 
+- La classe SimulationTableCsvFile imprime (aussi) en parquet (voir methode write)
   alors qu'elle comporte "Csv" dans son nom.
+  -----------------------------
+  ==> DONE (classe suppimée)
+  -----------------------------
 
 - La classe SimulationTableCsvFile est en fait un writer.
   Elle devrait être construite (via son constructeur) à partir d'une simulation table et d'un chemin de fichier,
   et ne pas hériter de SimulationTableCsv (qui est la table elle-même).
   De plus, elle devrait être splittée en 2 : un writer csv et un writer parquet.
-  
+  -----------------------------
+  ==> DONE (classe suppimée)
+  -----------------------------
+
+- Maintenant, la classe FileWriter (classe existante) remplace SimulationTableCsvFile, supprimée.
+  Mais, comme SimulationTableCsvFile, elle pourrait sans doute etre splittée en 2 entre : 
+  - CsvTableWriter
+  - ParquetTableWriter
+
 - Représentation de la simulation table :
   On stocke la simulation table en colonne : voir la donnée SimulationTableCsv :: storage_
   + lorsqu'on imprime en csv, on convertit cette donnée en lignes avant d'imprimer
