@@ -313,11 +313,7 @@ template<class ChildT, class NextT, class VCardT>
 inline bool IVariable<ChildT, NextT, VCardT>::hasColumn() const
 {
     // Leverage the fact that dynamicType has columnCount = -1
-    if (VCardType::columnCount > 0)
-    {
-        return true;
-    }
-    return false;
+    return VCardType::columnCount > 0;
 }
 
 template<class ChildT, class NextT, class VCardT>
