@@ -668,6 +668,8 @@ var namespaces_dup =
             [ "ForbidNodesInObjective", "ForbiddenNodes_8cpp.html#acd50f3f38b89618d8bf2469c03822263", null ],
             [ "ForbidNodesInPortFieldDef", "ForbiddenNodes_8cpp.html#aa67cf8785d0ca27cca22f66e29c90e03", null ],
             [ "ForbidNodesInVariableBounds", "ForbiddenNodes_8cpp.html#a0c0aa2a8e14712ed1c6c891d013cb3b7", null ],
+            [ "forbidPortFieldsInFunctionNodes", "ForbiddenNodes_8cpp.html#a678f2f44291c0bdc22cd56be4f357f96", null ],
+            [ "forbidVariablesInFunctionNodes", "ForbiddenNodes_8cpp.html#a6d1ad808f7089d303852cd600ed6cac8", null ],
             [ "functionNodeTypeIndex", "ForbiddenNodesVisitor_8cpp.html#abd549a7c0edd51ac18a71a7d71f347b8", null ],
             [ "typeIndexOf", "ForbiddenNodes_8h.html#ab1f8710009c5f6849bdcadd52f4d2b3a", null ],
             [ "forbiddenInBindingConstraint", "ForbiddenNodes_8cpp.html#a9883d4db8897ba5b89880ca8d5ca089c", null ],
