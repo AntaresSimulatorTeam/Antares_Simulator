@@ -427,7 +427,7 @@ BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_varia
                           .extra_outputs = {}};
     library.models = {model};
 
-    BOOST_CHECK_NO_THROW(ModelConverter::convert(library), std::invalid_argument);
+    BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
 }
 
 bool portNotFoundForDef(const ModelConverter::PortNotFoundForDefinition& ex)
