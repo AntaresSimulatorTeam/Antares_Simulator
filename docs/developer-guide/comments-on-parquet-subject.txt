@@ -37,10 +37,12 @@ Suggestions archi :
   ------------
   
 - La classe SimulationTableCsv contient les données, et n'a rien à voir avec le format d'impression.
-  Cette classe devrait s'appeler SimulationTable et ne pas hériter (de ISimulationTable)
-  -----------------------------
-  ==> DONE (au renommage près)
-  -----------------------------
+  Cette classe devrait : 
+  - s'appeler SimulationTable
+  - ne pas hériter (de ISimulationTable)
+  ------------
+  ==> DONE
+  ------------
   
 - La classe SimulationTableCsvFile imprime (aussi) en parquet (voir methode write)
   alors qu'elle comporte "Csv" dans son nom.
