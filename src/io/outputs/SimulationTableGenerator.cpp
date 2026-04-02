@@ -65,7 +65,7 @@ std::string BuildModelerConstraintName(const std::string& componentId,
     return key;
 }
 
-void addVariableEntries(SimulationTableCsv& simulationTable,
+void addVariableEntries(SimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
                         const ModelerStudy::SystemModel::Component& component,
@@ -161,7 +161,7 @@ void handleDependingOnVariability(
     }
 }
 
-void addConstraintEntries(SimulationTableCsv& simulationTable,
+void addConstraintEntries(SimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
                           const ModelerStudy::SystemModel::Component& component,
@@ -256,7 +256,7 @@ void addConstraintEntries(SimulationTableCsv& simulationTable,
     }
 }
 
-void addObjectiveValue(SimulationTableCsv& simulation,
+void addObjectiveValue(SimulationTable& simulation,
                        double objectiveValue,
                        unsigned currentBlock,
                        unsigned year)
@@ -272,7 +272,7 @@ void addObjectiveValue(SimulationTableCsv& simulation,
                          .status = MipBasisStatus::NOT_AVAILABLE});
 }
 
-void addEntriesForNode(SimulationTableCsv& simulationTable,
+void addEntriesForNode(SimulationTable& simulationTable,
                        const FillContext& fillContext,
                        Visitors::EvalVisitor& evalVisitor,
                        Visitors::VariabilityVisitor& variabilityVisitor,
@@ -332,7 +332,7 @@ void addEntriesForNode(SimulationTableCsv& simulationTable,
     handleDependingOnVariability(fillContext, year, variability, handle);
 }
 
-void addPortEntries(SimulationTableCsv& simulationTable,
+void addPortEntries(SimulationTable& simulationTable,
                     const FillContext& fillContext,
                     const ModelerStudy::SystemModel::Component& component,
                     Visitors::EvalVisitor& evalVisitor,
@@ -381,7 +381,7 @@ void addPortEntries(SimulationTableCsv& simulationTable,
     }
 }
 
-void addExtraOutputEntries(SimulationTableCsv& simulationTable,
+void addExtraOutputEntries(SimulationTable& simulationTable,
                            const FillContext& fillContext,
                            const ModelerStudy::SystemModel::Component& component,
                            Visitors::EvalVisitor& evalVisitor,
@@ -411,7 +411,7 @@ void addExtraOutputEntries(SimulationTableCsv& simulationTable,
     }
 }
 
-void FillSimulationTable(SimulationTableCsv& simulationTable,
+void FillSimulationTable(SimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
                          const Solver::ModelerData& modelerData,

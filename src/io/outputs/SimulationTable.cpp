@@ -1,13 +1,13 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 
 #include "antares/io/outputs/SimulationTableEntry.h"
 
 namespace Antares::IO::Outputs
 {
-SimulationTableCsv::SimulationTableCsv()
+SimulationTable::SimulationTable()
 
 {
     storage_.addIntegralColumn<unsigned int>("block");
@@ -21,7 +21,7 @@ SimulationTableCsv::SimulationTableCsv()
       "basis_status");
 }
 
-void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
+void SimulationTable::addEntry(const SimulationTableEntry& entry)
 {
     storage_.addValue("block", entry.block);
     storage_.addValue("component", entry.component);
@@ -33,7 +33,7 @@ void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
     storage_.addValue("basis_status", entry.status);
 }
 
-std::string SimulationTableCsv::headerCsvFormat() const
+std::string SimulationTable::headerCsvFormat() const
 {
     std::ostringstream os;
     bool first = true;
@@ -49,17 +49,17 @@ std::string SimulationTableCsv::headerCsvFormat() const
     return os.str();
 }
 
-void SimulationTableCsv::writeHeaderToBuffer()
+void SimulationTable::writeHeaderToBuffer()
 {
     buffer_ << headerCsvFormat() << '\n';
 }
 
-std::vector<std::string> SimulationTableCsv::rawHeader() const
+std::vector<std::string> SimulationTable::rawHeader() const
 {
     return storage_.columnNames();
 }
 
-void SimulationTableCsv::writeToBuffer()
+void SimulationTable::writeToBuffer()
 {
     const size_t row_count = storage_.rowCount();
     const auto& columns = storage_.columns();
@@ -80,7 +80,7 @@ void SimulationTableCsv::writeToBuffer()
     }
 }
 
-std::vector<std::vector<std::string>> SimulationTableCsv::storageIntoRows() const
+std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
 {
     std::vector<std::vector<std::string>> rows; // to return
     const size_t row_count = storage_.rowCount();
@@ -100,13 +100,13 @@ std::vector<std::vector<std::string>> SimulationTableCsv::storageIntoRows() cons
     return rows;
 }
 
-void SimulationTableCsv::clear()
+void SimulationTable::clear()
 {
     storage_.clear();
     buffer_.str("");
 }
 
-std::string SimulationTableCsv::buffer() const
+std::string SimulationTable::buffer() const
 {
     return buffer_.str();
 }

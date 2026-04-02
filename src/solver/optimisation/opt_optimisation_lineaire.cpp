@@ -129,7 +129,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
                            Solver::Simulation::ISimulationObserver& simulationObserver,
-                           Antares::IO::Outputs::SimulationTableCsv* simulationTable)
+                           Antares::IO::Outputs::SimulationTable* simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;

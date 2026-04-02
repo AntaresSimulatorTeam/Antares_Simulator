@@ -3,7 +3,7 @@
 
 #pragma once
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/parameters/modelerParameters.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
@@ -81,12 +81,12 @@ public:
 private:
     Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
 
-    IO::Outputs::SimulationTableCsv makeSimulationTable(
+    IO::Outputs::SimulationTable makeSimulationTable(
       const Optimisation::LinearProblemApi::IMipSolution* solution,
       const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
 
-    void writeSimulationTable(IO::Outputs::SimulationTableCsv&); // gp : const ?
+    void writeSimulationTable(IO::Outputs::SimulationTable&); // gp : const ?
     void exportMps() const;
     void exportStructureFile() const;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;

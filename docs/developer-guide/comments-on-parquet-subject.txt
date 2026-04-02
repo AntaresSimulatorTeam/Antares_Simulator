@@ -60,6 +60,9 @@ Suggestions archi :
   Mais, comme SimulationTableCsvFile, elle pourrait sans doute etre splittée en 2 entre : 
   - CsvTableWriter
   - ParquetTableWriter
+  
+- La classe SimulationTableCsv contient des methode d'impression dans dans buffer (std::string).
+  Si cela ne sert que pour l'impression cvs, alors cela doit etre integré au writer cvs.
 
 - Représentation de la simulation table :
   On stocke la simulation table en colonne : voir la donnée SimulationTableCsv :: storage_

@@ -210,7 +210,7 @@ IMipSolution* Modeler::subProbSolution()
     return subProbSolution_;
 }
 
-SimulationTableCsv Modeler::makeSimulationTable(
+SimulationTable Modeler::makeSimulationTable(
   const IMipSolution* solution,
   const OptimEntityContainer& subproblemOptimEntityContainer,
   const FillContext& timeScenarioCtx) const
@@ -218,7 +218,7 @@ SimulationTableCsv Modeler::makeSimulationTable(
     // gp : subproblem_1_1 is defined the same way in multiple places
     auto& subproblem_1_1 = subproblems_[0];
 
-    SimulationTableCsv simulationTable;
+    SimulationTable simulationTable;
 
     FillSimulationTable(simulationTable,
                         *subproblem_1_1,
@@ -231,7 +231,7 @@ SimulationTableCsv Modeler::makeSimulationTable(
     return simulationTable;
 }
 
-void Modeler::writeSimulationTable(SimulationTableCsv& simulationTable)
+void Modeler::writeSimulationTable(SimulationTable& simulationTable)
 {
     writer_.writeSimulationTable(simulationTable);
 }

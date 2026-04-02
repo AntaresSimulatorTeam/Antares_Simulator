@@ -4,7 +4,7 @@
 #pragma once
 #include <filesystem>
 
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 
 namespace Antares::Solver
 {
@@ -14,7 +14,7 @@ class IWriter
 public:
     virtual ~IWriter() = default;
     virtual void init(const std::string& simulationId) = 0;
-    virtual void writeSimulationTable(IO::Outputs::SimulationTableCsv& simuTable) const = 0;
+    virtual void writeSimulationTable(IO::Outputs::SimulationTable& simuTable) const = 0;
     virtual const std::filesystem::path& outputPath() const = 0;
 };
 } // namespace Antares::Solver

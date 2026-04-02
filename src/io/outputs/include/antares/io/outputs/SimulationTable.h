@@ -11,10 +11,10 @@
 
 namespace Antares::IO::Outputs
 {
-class SimulationTableCsv
+class SimulationTable
 {
 public:
-    SimulationTableCsv();
+    SimulationTable();
     void addEntry(const SimulationTableEntry& entry);
     [[nodiscard]] std::string headerCsvFormat() const;
     std::vector<std::string> rawHeader() const;

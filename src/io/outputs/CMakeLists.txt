@@ -1,10 +1,10 @@
 set(SOURCES
-        SimulationTableCsv.cpp
+        SimulationTable.cpp
         SimulationTableGenerator.cpp
         MPSGenerator.cpp
         ExportableName.cpp
         include/antares/io/outputs/SimulationTableEntry.h
-        include/antares/io/outputs/SimulationTableCsv.h
+        include/antares/io/outputs/SimulationTable.h
         include/antares/io/outputs/SimulationTableGenerator.h
         include/antares/io/outputs/columns.h
         include/antares/io/outputs/storage.h

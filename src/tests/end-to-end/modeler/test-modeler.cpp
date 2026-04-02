@@ -13,7 +13,7 @@
 #include <antares/solver/modeler/Modeler.h>
 #include <antares/study/system-model/variabilityType.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
@@ -203,7 +203,7 @@ public:
         return dummy;
     }
 
-    void writeSimulationTable(SimulationTableCsv& simuTable) const override
+    void writeSimulationTable(SimulationTable& simuTable) const override
     {
     }
 };
@@ -330,7 +330,7 @@ public:
         return dummy;
     }
 
-    void writeSimulationTable(SimulationTableCsv& simuTable) const override
+    void writeSimulationTable(SimulationTable& simuTable) const override
     {
     }
 };

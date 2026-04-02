@@ -35,12 +35,12 @@ void OptimisationsSimulationTable::writeTo(const std::string& filePrefix,
     writer.addEntryFromBuffer(filePrefix + "--optim-nb-2.csv", secondOptimBuffer_);
 }
 
-SimulationTableCsv* OptimisationsSimulationTable::firstOptimSimulationTable()
+SimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
 {
     return &firstOptimSimulationTable_;
 }
 
-SimulationTableCsv* OptimisationsSimulationTable::secondOptimSimulationTable()
+SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 {
     return &secondOptimSimulationTable_;
 }

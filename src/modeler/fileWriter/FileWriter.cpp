@@ -8,7 +8,7 @@
 
 #include <antares/logs/logs.h>
 #include <antares/writer/table_writer_factory.h>
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/modeler/Modeler.h"
 
 using namespace Antares::IO::Outputs;
@@ -38,7 +38,7 @@ const std::filesystem::path& FileWriter::outputPath() const
     return outputPath_;
 }
 
-void FileWriter::writeSimulationTable(SimulationTableCsv& SimulationTable) const
+void FileWriter::writeSimulationTable(SimulationTable& SimulationTable) const
 {
     std::vector<std::string> header = SimulationTable.rawHeader();
     std::vector<std::vector<std::string>> rows = SimulationTable.storageIntoRows();
