@@ -27,7 +27,7 @@
 
 namespace Antares::Data
 {
-template<typename Derived /*, typename ParticipationT*/>
+template<typename Derived>
 class ReserveParticipationLoader
 {
 public:
@@ -44,14 +44,13 @@ public:
           {
               if (section.name != "symmetries")
               {
-                  auto& derivedObj = derived();
-                  auto [participation, clusterName] = derivedObj.readCapacityReservationSection(
+                  auto [participation, clusterName] = Derived::readCapacityReservationSection(
                     section);
-                  derivedObj.validateCapacityInputs(area.name,
-                                                    participation,
-                                                    clusterName,
-                                                    section.name);
-                  derivedObj.addCapacityReservation(area, participation, clusterName, section.name);
+                  Derived::validateCapacityInputs(area.name,
+                                                  participation,
+                                                  clusterName,
+                                                  section.name);
+                  Derived::addCapacityReservation(area, participation, clusterName, section.name);
               }
           });
 
@@ -60,22 +59,11 @@ public:
           {
               if (section.name == "symmetries")
               {
-                  derived().readSymmetrySection(area, section);
+                  Derived::readSymmetrySection(area, section);
               }
           });
 
         return true;
-    }
-
-private:
-    Derived& derived()
-    {
-        return static_cast<Derived&>(*this);
-    }
-
-    const Derived& derived() const
-    {
-        return static_cast<const Derived&>(*this);
     }
 };
 
@@ -102,20 +90,20 @@ class ReserveLoaderMixin: public ReserveParticipationLoader<Derived>
 public:
     using participation_type = ParticipationT;
 
-    std::pair<ParticipationT, std::optional<std::string>> readCapacityReservationSection(
+    static std::pair<ParticipationT, std::optional<std::string>> readCapacityReservationSection(
       const IniFile::Section& section)
     {
         participation_type rp{};
         std::optional<std::string> clusterName;
 
-        derived().readProperties(section, clusterName, rp);
+        Derived::readProperties(section, clusterName, rp);
         return {rp, clusterName};
     }
 
-    void validateCapacityInputs(const std::string& areaName,
-                                const participation_type& rp,
-                                const std::optional<std::string>& clusterName,
-                                const std::string& reserveName)
+    static void validateCapacityInputs(const std::string& areaName,
+                                       const participation_type& rp,
+                                       const std::optional<std::string>& clusterName,
+                                       const std::string& reserveName)
     {
         if ((!clusterName || clusterName.value().empty())
             && !std::is_same<Derived, HydroReserveLoader>::value)
@@ -129,29 +117,29 @@ public:
                              areaName,
                              clusterName,
                              reserveName);
-        derived().validateSpecificInputs(areaName, rp, clusterName.value_or(""), reserveName);
+        Derived::validateSpecificInputs(areaName, rp, clusterName.value_or(""), reserveName);
     }
 
-    void addCapacityReservation(Area& area,
-                                participation_type& rp,
-                                const std::optional<std::string>& clusterName,
-                                const std::string& reserveName)
+    static void addCapacityReservation(Area& area,
+                                       participation_type& rp,
+                                       const std::optional<std::string>& clusterName,
+                                       const std::string& reserveName)
     {
         const auto* reserve = area.allCapacityReservations.value().getReserveByName(reserveName);
-        auto* cluster = derived().findCluster(area, clusterName.value_or(""));
+        auto* cluster = Derived::findCluster(area, clusterName.value_or(""));
 
         if (!reserve || !cluster)
         {
-            derived().reportMissing(area, reserveName, clusterName.value_or(""), reserve, cluster);
+            Derived::reportMissing(area, reserveName, clusterName.value_or(""), reserve, cluster);
             return;
         }
 
         rp.capacityReservation = reserve;
 
-        auto& container = derived().getContainer(cluster);
+        auto& container = Derived::getContainer(cluster);
         if (container && container->isParticipatingInReserve(reserveName))
         {
-            derived().duplicateParticipation(area.name, clusterName.value_or(""), reserveName);
+            Derived::duplicateParticipation(area.name, clusterName.value_or(""), reserveName);
         }
         else if (!container)
         {
@@ -162,22 +150,7 @@ public:
         addGroupToResIndex(area, reserveName, cluster);
     }
 
-    template<class ClusterT>
-    void addGroupToResIndex(Area& area, const std::string& reserveName, ClusterT* cluster)
-    {
-        if constexpr (std::is_same_v<ClusterT, ShortTermStorage::STStorageCluster>)
-        {
-            area.allCapacityReservations.value().reserveGroupPartSTS[reserveName].insert(
-              cluster->getGroup());
-        }
-        else if constexpr (std::is_same_v<ClusterT, ThermalCluster>)
-        {
-            area.allCapacityReservations.value().reserveGroupPartThermal[reserveName].insert(
-              cluster->getGroup());
-        }
-    }
-
-    void readSymmetrySection(Area& area, const IniFile::Section& section)
+    static void readSymmetrySection(Area& area, const IniFile::Section& section)
     {
         for (auto* p = section.firstProperty; p; p = p->next)
         {
@@ -186,16 +159,16 @@ public:
 
             auto symGroups = Symmetries::makeGroupsOfSymmetries(p->value);
 
-            auto* cluster = derived().findCluster(area, clusterName);
+            auto* cluster = Derived::findCluster(area, clusterName);
             if (!cluster)
             {
-                derived().reportInvalidSymmetry(area, clusterName);
+                Derived::reportInvalidSymmetry(area, clusterName);
                 continue;
             }
-            auto& reserveContainer = derived().getContainer(cluster);
+            auto& reserveContainer = Derived::getContainer(cluster);
             if (!reserveContainer.has_value())
             {
-                derived().reportLackOfReserveParticipation(area, clusterName);
+                Derived::reportLackOfReserveParticipation(area, clusterName);
             }
             else
             {
@@ -208,14 +181,19 @@ public:
     }
 
 private:
-    Derived& derived()
+    template<class ClusterT>
+    static void addGroupToResIndex(Area& area, const std::string& reserveName, ClusterT* cluster)
     {
-        return static_cast<Derived&>(*this);
-    }
-
-    const Derived& derived() const
-    {
-        return static_cast<const Derived&>(*this);
+        if constexpr (std::is_same_v<ClusterT, ShortTermStorage::STStorageCluster>)
+        {
+            area.allCapacityReservations.value().reserveGroupPartSTS[reserveName].insert(
+              cluster->getGroup());
+        }
+        else if constexpr (std::is_same_v<ClusterT, ThermalCluster>)
+        {
+            area.allCapacityReservations.value().reserveGroupPartThermal[reserveName].insert(
+              cluster->getGroup());
+        }
     }
 };
 
