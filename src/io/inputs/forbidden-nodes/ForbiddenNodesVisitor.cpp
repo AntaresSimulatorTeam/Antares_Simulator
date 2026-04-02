@@ -3,7 +3,10 @@
 
 #include "include/antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 
+#include <fmt/format.h>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/io/inputs/InputError.h"
 
 using namespace Antares::Expressions::Nodes;
 
@@ -181,8 +184,8 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
     case FunctionNodeType::ceil:
         return typeIndexOf<FunctionNodeType::ceil>();
     default:
-        throw IO::Inputs::InputError("ForbiddenNodesVisitor > function '" + functionNode->name()
-                                     + "' is unknown.");
+        throw InputError("ForbiddenNodesVisitor > function '" + functionNode->name()
+                         + "' is unknown.");
     }
 }
 

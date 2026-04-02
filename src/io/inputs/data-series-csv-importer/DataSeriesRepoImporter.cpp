@@ -26,7 +26,7 @@ inline const char* ParseOneDouble(const char* ptr,
     auto [p, ec] = std::from_chars(ptr, end, value);
     if (ec == std::errc::invalid_argument)
     {
-        throw IO::Inputs::InputError(errorMessagePrefix + ": \"" + *p + "\" is not a number");
+        throw InputError(errorMessagePrefix + ": \"" + *p + "\" is not a number");
     }
     return p;
 }
