@@ -13,7 +13,7 @@ class FileWriter: public IWriter
 public:
     void init(const std::string& simulationId) override;
     void writeSimulationTable(IO::Outputs::SimulationTableCsv& SimulationTable) const override;
-    explicit FileWriter(std::filesystem::path path, bool parquetFormatRequired = false);
+    explicit FileWriter(const std::filesystem::path& studyPath, bool parquetFormatRequired = false);
     const std::filesystem::path& outputPath() const;
 
 private:

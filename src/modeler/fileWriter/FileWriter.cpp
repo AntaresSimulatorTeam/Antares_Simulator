@@ -47,10 +47,14 @@ void FileWriter::writeSimulationTable(SimulationTableCsv& SimulationTable) const
     writer->writeTable(output_file_, header, rows);
 }
 
-FileWriter::FileWriter(std::filesystem::path path, bool parquetFormatRequired):
-    outputPath_(std::move(path) / "output"),
+FileWriter::FileWriter(const std::filesystem::path& studyPath, bool parquetFormatRequired):
     parquetFormatRequired_(parquetFormatRequired)
 {
+    if (!fs::exists(studyPath))
+    {
+        throw std::runtime_error("Could not find output Folder: " + studyPath.string());
+    }
+    outputPath_ = std::move(studyPath) / "output";
     logs.info() << "Output folder : " << outputPath_;
 }
 

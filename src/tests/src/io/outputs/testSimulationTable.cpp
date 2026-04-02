@@ -16,7 +16,6 @@
 
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
-#include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -25,10 +24,10 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
-#include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
 
 #include "UtilMocks.h"
@@ -1099,25 +1098,32 @@ BOOST_AUTO_TEST_SUITE(SimulationTableCsvFileTests)
 
 BOOST_FIXTURE_TEST_CASE(Constructor_ValidPath, TempDirFixture)
 {
-    BOOST_CHECK_NO_THROW(SimulationTableCsvFile(tempDir, "test_sim"));
+    BOOST_CHECK_NO_THROW({
+        FileWriter fileWriter(tempDir);
+        fileWriter.init("test_sim");
+    });
 }
 
 BOOST_FIXTURE_TEST_CASE(Constructor_InvalidPath, TempDirFixture)
 {
     std::filesystem::path invalidPath = tempDir / "nonexistent";
-    BOOST_CHECK_THROW(SimulationTableCsvFile(invalidPath, "test_sim"), std::runtime_error);
+    BOOST_CHECK_THROW(FileWriter fileWriter(invalidPath), std::runtime_error);
 }
 
 BOOST_FIXTURE_TEST_CASE(Constructor_EmptySimulationId, TempDirFixture)
 {
-    BOOST_CHECK_NO_THROW(SimulationTableCsvFile(tempDir, ""));
+    BOOST_CHECK_NO_THROW({
+        FileWriter fileWriter(tempDir);
+        fileWriter.init("");
+    });
 }
 
 BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
 {
     {
         SimulationTableCsv table;
-        SimulationTableCsvFile writer(tempDir, "test_sim");
+        FileWriter writer(tempDir);
+        writer.init("test_sim");
 
         SimulationTableEntry entry{.block = 1,
                                    .component = "test_comp",
@@ -1128,12 +1134,11 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
                                    .value = 123.45,
                                    .status = MipBasisStatus::BASIC};
         table.addEntry(entry);
-        table.writeHeaderToBuffer();
-        writer.write(table);
-    } // File should be closed here
+        writer.writeSimulationTable(table);
+    }
 
     // Check file was created and contains expected content
-    auto expectedFile = tempDir / "simulation_table--test_sim.csv";
+    auto expectedFile = tempDir / "output" / "simulation_table--test_sim.csv";
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     std::ifstream file(expectedFile);
@@ -1337,7 +1342,8 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
     std::string simulationId = "integration_test";
     {
         SimulationTableCsv table;
-        SimulationTableCsvFile writer(tempDir, simulationId);
+        FileWriter writer(tempDir);
+        writer.init(simulationId);
 
         // Add multiple entries
         for (int i = 0; i < 5; ++i)
@@ -1353,11 +1359,11 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
             table.addEntry(entry);
         }
 
-        writer.write(table);
+        writer.writeSimulationTable(table);
     }
 
     // Verify file exists and has correct name
-    auto expectedFile = tempDir / ("simulation_table--" + simulationId + ".csv");
+    auto expectedFile = tempDir / "output" / ("simulation_table--" + simulationId + ".csv");
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     // Read and verify content
