@@ -24,8 +24,8 @@ BOOST_AUTO_TEST_SUITE(study_duplicates)
 struct DuplicateFixture: public Antares::UnitTests::CaptureAntaresLogs
 {
     std::unique_ptr<Study> study = std::make_unique<Study>();
-    Data::Area* areaA = study->areaAdd("A");
-    Data::Area* areaB = study->areaAdd("B");
+    Data::Area* areaA = addAreaToListOfAreas(study->areas, "A");
+    Data::Area* areaB = addAreaToListOfAreas(study->areas, "B");
 
     void addBindingConstraint(const std::string& name)
     {

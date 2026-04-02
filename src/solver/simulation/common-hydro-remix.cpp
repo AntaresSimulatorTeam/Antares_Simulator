@@ -408,7 +408,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           catch (std::exception& e)
           {
               std::string msg = "(year, area, week) = (" + std::to_string(problem.year) + ", "
-                                + area.id.to<std::string>() + ", "
+                                + area.id + ", "
                                 + std::to_string((firstHourOfWeek + 1) / HOURS_IN_WEEK)
                                 + ") : " + e.what();
               logs.warning(msg);

@@ -163,10 +163,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         loadingException = std::current_exception();
     }
 
-    // This settings can only be enabled from the solver
-    // Prepare the output for the study
-    study.prepareOutput();
-
     // Initialize the result writer
     prepareWriter(study, pDurationCollector);
 

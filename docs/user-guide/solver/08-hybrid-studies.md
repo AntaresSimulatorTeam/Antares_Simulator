@@ -107,6 +107,36 @@ The nature of this contribution depends on the field :
 These fields are independent : you don't have to define the 3 of them at the same time, you can define only one (as long as its value is an existing port in the same port type).
 
 These fields must be present in the **area-connection** section of a port type, even if they are not defined (= corresponding value is empty). 
+
+#### Connecting modeler components to thermal clusters
+Hybrid studies can also connect a modeler component to a legacy thermal cluster. This is used for investment studies, where a new capacity expression from the modeler side limits the thermal cluster production.
+
+The setup is similar to `area-connection`:
+
+- in the model library, the port type may define a `thermal-capacity-connection` field, which names the port field used as the capacity expression
+- in the system file, `thermal-capacity-connections` links a component port to a thermal cluster identified by its `area` and `cluster-id`
+
+Model library:
+~~~yaml
+port-types:
+  - id: capacity_port
+    fields:
+      - id: capacity
+    thermal-capacity-connection:
+      capacity-field: capacity
+~~~
+
+System file:
+~~~yaml
+thermal-capacity-connections:
+  - component: my_thermal_invest
+    port: capacity_port
+    thermal-component:
+      area: fr
+      cluster-id: nuclear1
+~~~
+
+The linked port field is then used as an upper bound on the thermal cluster dispatchable production, hour by hour. When this connection is present, the legacy thermal capacity time series is ignored for that cluster and replaced by the expression coming from the modeler port.
  
 #### Adding a linear expression in optimization model
 When you connect a component to an area via a port (containing an **area-connection** section), you must respect conventions on the GEMS side.
