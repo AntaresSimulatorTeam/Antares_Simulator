@@ -19,6 +19,7 @@ var classAntares_1_1Solver_1_1Variable_1_1IVariable =
     [ "computeSpatialAggregateWith", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#aed9a5fdd43ad5b62a92dab7d5ae280d9", null ],
     [ "getMaxNumberColumns", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a7a84989703c231ef468e264dc7bc1e5d", null ],
     [ "getPrintStatusFromStudy", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a408dbd793470d952afc8cb56780a8eec", null ],
+    [ "hasColumn", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a38ef697bc0ba4937d9d4c212dafe32c1", null ],
     [ "hourBegin", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ad54826cf399a2470b97d73ed0e51245e", null ],
     [ "hourEnd", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5025496594988ba4d08c77805e69db69", null ],
     [ "hourForEachArea", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5c3f05d20ded3bcfc6b05017ae2b0957", null ],
