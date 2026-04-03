@@ -17,7 +17,6 @@ public:
     using Ptr = std::shared_ptr<ITableWriter>;
     virtual ~ITableWriter() = default;
 
-    // Header + rows of string cells
     virtual void writeTable(const std::filesystem::path& filePath,
                             const std::vector<std::string>& header,
                             const std::vector<std::vector<std::string>>& rows)

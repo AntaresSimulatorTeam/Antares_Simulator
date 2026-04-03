@@ -43,7 +43,6 @@ void FileWriter::writeSimulationTable(SimulationTable& SimulationTable) const
 {
     std::vector<std::string> header = SimulationTable.rawHeader();
     std::vector<std::vector<std::string>> rows = SimulationTable.storageIntoRows();
-    makeTableWriter();
     auto writer = makeTableWriter(parquetFormatRequired_);
     writer->writeTable(output_file_, header, rows);
 }

@@ -36,8 +36,4 @@ ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired)
     return std::make_shared<CsvTableWriter>();
 }
 
-void makeTableWriter()
-{
-}
-
 } // namespace Antares::Writer

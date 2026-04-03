@@ -22,14 +22,13 @@ set_target_properties(simulation-table-writers PROPERTIES
     VISIBILITY_INLINES_HIDDEN YES
 )
 
-if(MSVC)
-    set_target_properties(simulation-table-writers PROPERTIES
-        WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
+set_target_properties(simulation-table-writers PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 
 target_include_directories(simulation-table-writers
     PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated parquet_writer_export.h
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
 )
 
 target_link_libraries(simulation-table-writers
@@ -38,9 +37,6 @@ target_link_libraries(simulation-table-writers
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 
 add_library(result_writer
-        # Helper class
-
-
         # Add entry to zip, using a job queue (private)
         # Generic factory (public API)
         # Immediate file writer (private)
