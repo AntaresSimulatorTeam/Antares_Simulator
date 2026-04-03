@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "antares/io/outputs/SimulationTable.h"
 
 namespace Antares::Writer
 {
@@ -18,8 +19,7 @@ public:
     virtual ~ITableWriter() = default;
 
     virtual void writeTable(const std::filesystem::path& filePath,
-                            const std::vector<std::string>& header,
-                            const std::vector<std::vector<std::string>>& rows)
+                            const IO::Outputs::SimulationTable& simuTable)
       = 0;
 };
 

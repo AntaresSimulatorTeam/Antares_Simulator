@@ -7,6 +7,7 @@
 #include <fstream>
 #include <stdexcept>
 
+using namespace Antares::IO::Outputs;
 namespace fs = std::filesystem;
 
 namespace Antares::Writer
@@ -51,9 +52,11 @@ std::string make_line(const std::vector<std::string>& cols)
 }
 
 void CsvTableWriter::writeTable(const fs::path& filePath,
-                                const std::vector<std::string>& header,
-                                const std::vector<std::vector<std::string>>& rows)
+                                const SimulationTable& simuTable)
 {
+    std::vector<std::string> header = simuTable.columnNames();
+    std::vector<std::vector<std::string>> rows = simuTable.storageIntoRows();
+
     if (filePath.empty())
     {
         throw std::invalid_argument("CsvTableWriter: empty output path");

@@ -54,9 +54,14 @@ void SimulationTable::writeHeaderToBuffer()
     buffer_ << headerCsvFormat() << '\n';
 }
 
-std::vector<std::string> SimulationTable::rawHeader() const
+std::vector<std::string> SimulationTable::columnNames() const
 {
     return storage_.columnNames();
+}
+
+const std::vector<std::unique_ptr<IColumn>>& SimulationTable::columns() const
+{
+    return storage_.columns();
 }
 
 void SimulationTable::writeToBuffer()
@@ -88,13 +93,13 @@ std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
 
     rows.clear();
     rows.resize(row_count);
-    for (size_t r = 0; r < row_count; ++r)
+    for (size_t row_index = 0; row_index < row_count; ++row_index)
     {
-        auto& outRow = rows[r];
-        outRow.reserve(columns.size());
-        for (const auto& col: columns)
+        auto& row = rows[row_index];
+        row.reserve(columns.size());
+        for (const auto& column: columns)
         {
-            outRow.push_back(col->toString(r));
+            row.push_back(column->toString(row_index));
         }
     }
     return rows;

@@ -32,8 +32,7 @@ class SIMULATION_TABLE_WRITERS_EXPORT ParquetTableWriter final: public ITableWri
 {
 public:
     void writeTable(const std::filesystem::path& filePath,
-                    const std::vector<std::string>& header,
-                    const std::vector<std::vector<std::string>>& rows) override;
+                    const IO::Outputs::SimulationTable& simuTable) override;
 };
 
 } // namespace Antares::Writer

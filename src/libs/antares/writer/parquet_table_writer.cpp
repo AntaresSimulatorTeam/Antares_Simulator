@@ -30,6 +30,8 @@
 #include <arrow/io/api.h>
 #include <parquet/arrow/writer.h>
 
+using namespace Antares::IO::Outputs;
+
 namespace Antares::Writer
 {
 
@@ -46,36 +48,25 @@ static void ensureParentDir(const std::filesystem::path& file)
 }
 
 void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
-                                    const std::vector<std::string>& header,
-                                    const std::vector<std::vector<std::string>>& rows)
+                                    const SimulationTable& simuTable)
 {
+    std::vector<std::string> colNames = simuTable.columnNames();
+    const auto& columns = simuTable.columns();
+
     // Basic validation
-    if (header.empty())
+    if (colNames.empty())
     {
         throw std::invalid_argument("ParquetTableWriter: header is empty");
     }
 
-    // gp : check rows are well_formed before writing : not the mission of a writer, should be
-    // gp : checked before the writer is built. Besides, it does not depend on the writer (csv /
-    // gp : parquet).
-    const size_t ncols = header.size();
-    for (size_t r = 0; r < rows.size(); ++r)
-    {
-        if (rows[r].size() != ncols)
-        {
-            std::ostringstream oss;
-            oss << "ParquetTableWriter: row " << r << " has " << rows[r].size()
-                << " columns, expected " << ncols;
-            throw std::invalid_argument(oss.str());
-        }
-    }
+    const size_t ncols = colNames.size();
 
     ensureParentDir(filePath);
 
     // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
     fields.reserve(static_cast<int>(ncols));
-    for (const auto& name: header)
+    for (const auto& name: colNames)
     {
         // Duplicate names are allowed by Arrow but discouraged; keep as-is.
         fields.push_back(arrow::field(name, arrow::utf8()));
@@ -83,39 +74,42 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
     auto schema = arrow::schema(std::move(fields));
 
     // Build columns using StringBuilder
-    std::vector<std::shared_ptr<arrow::Array>> columns;
-    columns.reserve(ncols);
+    std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
+    arrow_columns.reserve(ncols);
 
-    for (size_t c = 0; c < ncols; ++c)
+    arrow::StringBuilder builder;
+
+    size_t col_index = 0;
+    for (const auto& column: columns)
     {
-        arrow::StringBuilder builder;
-        for (const auto& row: rows)
+        for (size_t row = 0; row < column->size(); ++row)
         {
-            const std::string& cell = row[c];
-            // Treat empty string as empty value, not null
+            const std::string& cell = column->toString(row);
             auto st = builder.Append(cell);
             if (!st.ok())
             {
                 std::ostringstream oss;
-                oss << "ParquetTableWriter: failed to append cell in column " << c << ": "
-                    << st.ToString();
+                oss << "ParquetTableWriter: failed to append cell in column " << colNames[col_index]
+                    << ": " << st.ToString();
                 throw std::runtime_error(oss.str());
             }
         }
+
         std::shared_ptr<arrow::Array> array;
         auto st_fin = builder.Finish(&array);
         if (!st_fin.ok())
         {
             std::ostringstream oss;
-            oss << "ParquetTableWriter: failed to finalize column " << c << ": "
+            oss << "ParquetTableWriter: failed to finalize column " << colNames[col_index] << ": "
                 << st_fin.ToString();
             throw std::runtime_error(oss.str());
         }
-        columns.push_back(std::move(array));
+        arrow_columns.push_back(std::move(array));
+        col_index++;
     }
 
     // Make table
-    auto table = arrow::Table::Make(schema, std::move(columns), static_cast<int64_t>(rows.size()));
+    auto table = arrow::Table::Make(schema, std::move(arrow_columns), static_cast<int64_t>(ncols));
 
     // Open output file
     std::shared_ptr<arrow::io::FileOutputStream> outfile;

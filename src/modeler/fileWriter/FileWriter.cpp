@@ -41,10 +41,8 @@ const std::filesystem::path& FileWriter::outputPath() const
 
 void FileWriter::writeSimulationTable(SimulationTable& SimulationTable) const
 {
-    std::vector<std::string> header = SimulationTable.rawHeader();
-    std::vector<std::vector<std::string>> rows = SimulationTable.storageIntoRows();
     auto writer = makeTableWriter(parquetFormatRequired_);
-    writer->writeTable(output_file_, header, rows);
+    writer->writeTable(output_file_, SimulationTable);
 }
 
 FileWriter::FileWriter(const std::filesystem::path& studyPath, bool parquetFormatRequired):
