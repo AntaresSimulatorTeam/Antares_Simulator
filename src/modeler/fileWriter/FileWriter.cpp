@@ -12,6 +12,7 @@
 #include "antares/solver/modeler/Modeler.h"
 
 using namespace Antares::IO::Outputs;
+using namespace Antares::Writer;
 namespace fs = std::filesystem;
 
 namespace Antares::Solver
@@ -42,8 +43,8 @@ void FileWriter::writeSimulationTable(SimulationTable& SimulationTable) const
 {
     std::vector<std::string> header = SimulationTable.rawHeader();
     std::vector<std::vector<std::string>> rows = SimulationTable.storageIntoRows();
-
-    auto writer = Antares::Writer::makeTableWriter(parquetFormatRequired_);
+    makeTableWriter();
+    auto writer = makeTableWriter(parquetFormatRequired_);
     writer->writeTable(output_file_, header, rows);
 }
 

@@ -7,7 +7,7 @@ add_boost_test(testOutputs
         testMpsWriter.cpp
         LIBS
         mock-modeler-objects
-        Antares::modeler-simulation-table
+        Antares::simulation-table
         Antares::tests::inmemory-modeler
         Antares::modeler-lib
         Antares::write-modeler-files
@@ -18,4 +18,4 @@ target_compile_definitions(testOutputs PRIVATE
         CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
-copy_project_shared_lib(parquet_writer testOutputs)
+copy_project_shared_lib(simulation-table-writers testOutputs)

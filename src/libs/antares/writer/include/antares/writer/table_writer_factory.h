@@ -7,7 +7,9 @@
 
 namespace Antares::Writer
 {
-
+// gp : here we return a shared ptr. Why not rather a unique ptr ?
 ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired);
+
+void makeTableWriter();
 
 } // namespace Antares::Writer

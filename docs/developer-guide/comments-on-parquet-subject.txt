@@ -63,7 +63,7 @@ Suggestions archi :
   - CsvTableWriter
   - ParquetTableWriter
   
-- La classe SimulationTableCsv contient des methode d'impression dans dans buffer (std::string).
+- La classe SimulationTableCsv contient des methodes d'impression dans un buffer (std::string).
   Si cela ne sert que pour l'impression cvs, alors cela doit etre integré au writer cvs.
 
 - Représentation de la simulation table :

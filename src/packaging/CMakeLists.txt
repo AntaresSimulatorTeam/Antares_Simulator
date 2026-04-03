@@ -30,7 +30,7 @@ set(TARGET_LIBS #No alias
         path
         mersenne
         result_writer
-	parquet_writer
+		simulation-table-writers
         series
         antares-core
         antares-solver-hydro
@@ -110,7 +110,7 @@ set(TARGET_LIBS #No alias
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
-        modeler-simulation-table
+        simulation-table
         scenario-builder-antlr
         scenario-group-parser
         yml-optim-config

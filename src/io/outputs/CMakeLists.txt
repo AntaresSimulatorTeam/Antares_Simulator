@@ -13,17 +13,17 @@ set(SOURCES
 )
 
 # Create the library
-add_library(modeler-simulation-table STATIC ${SOURCES})
-add_library(Antares::modeler-simulation-table ALIAS modeler-simulation-table)
+add_library(simulation-table STATIC ${SOURCES})
+add_library(Antares::simulation-table ALIAS simulation-table)
 
 # Specify include directories
-target_include_directories(modeler-simulation-table
+target_include_directories(simulation-table
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 # Link dependencies
-target_link_libraries(modeler-simulation-table
+target_link_libraries(simulation-table
         PUBLIC
         Antares::linear-problem-data-impl
         Antares::optim-model-filler
