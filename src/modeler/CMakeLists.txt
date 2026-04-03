@@ -19,8 +19,7 @@ target_link_libraries(antares-modeler
         Antares::modeler-lib
         Antares::simulation-table
         Antares::write-modeler-files
-        Antares::logs
-        simulation-table-writers)
+        Antares::logs)
 
 import_std_libs(antares-modeler)
 executable_strip(antares-modeler)

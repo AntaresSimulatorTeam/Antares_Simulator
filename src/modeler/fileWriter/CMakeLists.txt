@@ -25,8 +25,6 @@ target_link_libraries(write-modeler-files
         Antares::modeler-lib
 )
 
-copy_project_shared_lib(simulation-table-writers write-modeler-files)
-
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
