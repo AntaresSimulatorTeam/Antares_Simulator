@@ -394,9 +394,7 @@ BOOST_FIXTURE_TEST_CASE(port_fields_definitions_forbid_usage_of_sum_connections,
 
     std::string err_msg = "'PortFieldSumNode' is not allowed in expression "
                           "'sum_connections(port.field)'";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          std::invalid_argument,
-                          checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_variable, Fixture)
