@@ -72,6 +72,10 @@ Suggestions archi :
   + lorsqu'on imprime parquet, on devrait se servir de la représentation en colonnes.
     Au lieu de ça, on convertit en lignes, puis on convertit en colonnes avant d'imprimer.
   Cela peut donc être simplifié.
+  ------------
+  ==> DONE
+  ------------
+
   
 
 Questions :
@@ -81,4 +85,9 @@ Questions :
   Pour le solver, il faudrait une option à part pour imprimer ces simulation tables.
   
 - 
+
+A améliorer :
+-----------
+- Pour l'instant les tables arrow que l'on remplit avant impression ne contiennent que des 
+  string. Or, on peut typer les colonnes dans arrow. A faire.
   
