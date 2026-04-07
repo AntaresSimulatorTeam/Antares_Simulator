@@ -12,6 +12,7 @@ on:
     - doc/*
     - dependabot/**
     - tests/*
+    - copilot/*
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
