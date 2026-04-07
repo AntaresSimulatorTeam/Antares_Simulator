@@ -152,23 +152,20 @@ std::unique_ptr<Data::Study> makeStudyWithDistricts(
     }
     study->setsOfAreas.rebuildIndexes();
 
-    Data::VariablePrintInfo variableInfo(Category::FileLevel::va,
-                                                  Category::DataLevel::area);
+    Data::VariablePrintInfo variableInfo(Category::FileLevel::va, Category::DataLevel::area);
     variableInfo.setMaxColumns(0);
     study->parameters.variablesPrintInfo.add("dummy", variableInfo);
 
     Data::VariablePrintInfo setVariableInfo(Category::FileLevel::va,
-                                                     Category::DataLevel::setOfAreas);
+                                            Category::DataLevel::setOfAreas);
     setVariableInfo.setMaxColumns(1);
     study->parameters.variablesPrintInfo.add("Set Report Variable", setVariableInfo);
 
-    Data::VariablePrintInfo flowLinInfo(Category::FileLevel::va,
-                                                 Category::DataLevel::link);
+    Data::VariablePrintInfo flowLinInfo(Category::FileLevel::va, Category::DataLevel::link);
     flowLinInfo.enablePrint(false);
     study->parameters.variablesPrintInfo.add("FLOW LIN.", flowLinInfo);
 
-    Data::VariablePrintInfo flowQuadInfo(Category::FileLevel::va,
-                                                  Category::DataLevel::link);
+    Data::VariablePrintInfo flowQuadInfo(Category::FileLevel::va, Category::DataLevel::link);
     flowQuadInfo.enablePrint(false);
     study->parameters.variablesPrintInfo.add("FLOW QUAD.", flowQuadInfo);
 
@@ -203,7 +200,9 @@ std::unique_ptr<PROBLEME_HEBDO> makeProblemHebdo()
     return pb;
 }
 
-std::pair<std::unique_ptr<State>, std::unique_ptr<PROBLEME_HEBDO>> feedDynamicAggregation(TestVariableTree& variables, Data::Study& study)
+std::pair<std::unique_ptr<State>, std::unique_ptr<PROBLEME_HEBDO>> feedDynamicAggregation(
+  TestVariableTree& variables,
+  Data::Study& study)
 {
     auto state = std::make_unique<State>(study);
     auto pb = makeProblemHebdo();
