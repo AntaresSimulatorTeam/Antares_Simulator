@@ -60,13 +60,6 @@ class ThermalCluster final: public Cluster
 public:
     Pollutant emissions;
 
-    //! Set of thermal clusters
-    using Set = std::set<ThermalCluster*, CompareClusterName>;
-    //! Set of thermal clusters (pointer)
-    using SetPointer = std::set<ThermalCluster*>;
-    //! Vector of thermal clusters
-    using Vector = std::vector<Data::ThermalCluster*>;
-
     explicit ThermalCluster(Data::Area* parent);
 
     ThermalCluster() = delete;

@@ -44,8 +44,8 @@ struct OneProblemWithReservesTwoAreas
     {
         problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         study = std::make_unique<Study>();
-        areaA = study->areaAdd("A");
-        areaB = study->areaAdd("B");
+        areaA = addAreaToListOfAreas(study->areas, "A");
+        areaB = addAreaToListOfAreas(study->areas, "B");
         CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;

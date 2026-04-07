@@ -6,6 +6,7 @@
 
 #include <map>
 #include <memory>
+#include <vector>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -35,9 +36,7 @@ public:
     //! Smart pointer
     using Ptr = std::shared_ptr<Rules>;
     //! Map
-    using Map = std::map<RulesScenarioName, Ptr>;
-    //! Map ID
-    using MappingID = std::map<int, Ptr>;
+    using Map = std::map<std::string, Ptr>;
 
     //! \name Constructor & Destructor
     //@{
@@ -61,14 +60,14 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode = false);
+    bool readLine(const std::vector<std::string>& splitKey, const String& value);
 
     //! Get the number of areas
     uint areaCount() const;
 
     //! Name of the rules set
-    const RulesScenarioName& name() const;
-    void setName(RulesScenarioName name);
+    const std::string& name() const;
+    void setName(std::string name);
 
     /*!
     ** \brief Apply the changes to the timeseries number matrices
@@ -109,35 +108,24 @@ public:
 
 private:
     // Member methods
-    bool readThermalCluster(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readRenewableCluster(const AreaName::Vector& instrs,
-                              const String& value,
-                              bool updaterMode);
-    bool readLoad(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readWind(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readHydro(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readSolar(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readInitialHydroLevels(const AreaName::Vector& instrs,
-                                const String& value,
-                                bool updaterMode);
-    bool readFinalHydroLevels(const AreaName::Vector& instrs,
-                              const String& value,
-                              bool updaterMode);
-    bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
+    bool readThermalCluster(const std::vector<std::string>& instrs, const String& value);
+    bool readRenewableCluster(const std::vector<std::string>& instrs, const String& value);
+    bool readLoad(const std::vector<std::string>& instrs, const String& value);
+    bool readWind(const std::vector<std::string>& instrs, const String& value);
+    bool readHydro(const std::vector<std::string>& instrs, const String& value);
+    bool readSolar(const std::vector<std::string>& instrs, const String& value);
+    bool readInitialHydroLevels(const std::vector<std::string>& instrs, const String& value);
+    bool readFinalHydroLevels(const std::vector<std::string>& instrs, const String& value);
+    bool readLink(const std::vector<std::string>& instrs, const String& value);
+    bool readBindingConstraints(const std::vector<std::string>& splitKey, const String& value);
 
-    bool readShortTermStorageInflows(const AreaName::Vector& splitKey,
-                                     const String& value,
-                                     bool updaterMode);
+    bool readShortTermStorageInflows(const std::vector<std::string>& splitKey, const String& value);
 
-    bool readShortTermStorageAdditionalConstraints(const AreaName::Vector& splitKey,
-                                                   const String& value,
-                                                   bool updaterMode);
+    bool readShortTermStorageAdditionalConstraints(const std::vector<std::string>& splitKey,
+                                                   const String& value);
 
-    Data::Area* getArea(const AreaName& areaname, bool updaterMode);
-    Data::AreaLink* getLink(const AreaName& fromAreaName,
-                            const AreaName& toAreaName,
-                            bool updaterMode);
+    Data::Area* getArea(const AreaName& areaname);
+    const Data::AreaLink* getLink(const AreaName& fromAreaName, const AreaName& toAreaName) const;
     bool checkGroupExists(const std::string& groupName) const;
 
     // Member data
@@ -145,7 +133,7 @@ private:
     //! Total number of areas
     uint pAreaCount;
     //! Name of the rules
-    RulesScenarioName pName;
+    std::string pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
     std::map<std::string, std::vector<uint>> disabledClustersOnRuleActive;
 

@@ -103,9 +103,9 @@ BOOST_AUTO_TEST_CASE(single_problem_thermal_first_week_nominal_case)
     BOOST_CHECK_EQUAL(constantData.ConstraintesCount, 504);
 
     const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
-                                              "PositiveUnsuppliedEnergy::area<area>::hour<0>");
+                                              "UnsuppliedEnergy::area<area>::hour<0>");
     const auto spilledVariable = findIndex(constantData.VariablesMeaning,
-                                           "NegativeUnsuppliedEnergy::area<area>::hour<0>");
+                                           "Spillage::area<area>::hour<0>");
 
     const auto areaBalanceConstraint = findIndex(constantData.ConstraintsMeaning,
                                                  "AreaBalance::area<area>::hour<0>");
@@ -171,9 +171,9 @@ BOOST_AUTO_TEST_CASE(single_problem_hydro_two_weeks_nominal_case)
                                              "HydProd::area<area>::hour<0>");
 
     const auto unsuppliedVariable = findIndex(constantData.VariablesMeaning,
-                                              "PositiveUnsuppliedEnergy::area<area>::hour<0>");
+                                              "UnsuppliedEnergy::area<area>::hour<0>");
     const auto spilledVariable = findIndex(constantData.VariablesMeaning,
-                                           "NegativeUnsuppliedEnergy::area<area>::hour<0>");
+                                           "Spillage::area<area>::hour<0>");
 
     const auto areaHydroLevel = findIndex(constantData.ConstraintsMeaning,
                                           "AreaHydroLevel::area<area>::hour<0>");
@@ -705,7 +705,6 @@ ModelerData OneParameterOneVariableOneConstraint()
     std::vector<Component> components;
     components.emplace_back(ComponentBuilder()
                               .withId("component")
-                              .withIndex(0)
                               .withModel(&libraries.at(0).Models().at("model"))
                               .withParameterValues(parameterValues)
                               .withScenarioGroupId("scenario_group")

@@ -3,6 +3,9 @@
 
 #include "antares/study/parts/hydro/container.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
+
+#include <antares/inifile/inifile.h>
 #include <antares/study/area/capacityReservation.h>
 #include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
@@ -101,7 +104,7 @@ static bool loadProperties(Study& study,
     for (; property; property = property->next)
     {
         AreaName id = property->key;
-        id.toLower();
+        boost::to_lower(id);
 
         Area* area = study.areas.find(id);
         if (area)

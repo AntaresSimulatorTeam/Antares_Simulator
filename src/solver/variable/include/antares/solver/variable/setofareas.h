@@ -7,6 +7,7 @@
 #include <antares/study/study.h>
 
 #include "state.h"
+#include "variable.h"
 
 namespace Antares::Solver::Variable
 {
@@ -172,6 +173,8 @@ public:
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link);
 
+    const NextType* findSetById(const Data::Study::SetsOfAreas::IDType& setId) const;
+
 public:
     //! Area list
     typedef std::vector<std::unique_ptr<NextType>> SetOfAreasVector;
@@ -182,6 +185,7 @@ public:
     //! The study
     const Data::Study* pStudy;
 
+    typename Data::Study::SetsOfAreas::IDType::Vector pIds;
     typename Data::Study::SetsOfAreas::IDType::Vector pNames;
 
 }; // class SetsOfAreas

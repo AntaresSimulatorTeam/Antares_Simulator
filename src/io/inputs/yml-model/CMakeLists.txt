@@ -1,6 +1,7 @@
 set(SOURCES
         parser.cpp
-        decoders.hxx
+        decoders.cpp
+        include/antares/io/inputs/yml-model/decoders.h
         include/antares/io/inputs/yml-model/parser.h
 )
 
@@ -16,6 +17,9 @@ target_include_directories(yml-model
 
 # Link dependencies (if any)
 target_link_libraries(yml-model
+        PUBLIC
+        fmt::fmt
+        Antares::yml-utils
         PRIVATE
         yaml-cpp::yaml-cpp
 )

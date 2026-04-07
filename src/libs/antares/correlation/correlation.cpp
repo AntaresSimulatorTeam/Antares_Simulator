@@ -108,8 +108,11 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
             continue;
         }
 
-        const AreaName::Size offset = p->key.find('%');
-        if (offset == AreaName::npos or !offset or offset == p->key.size() - 1)
+        // First case corresponds to "not found"
+        // Second corresponds to "%" in first position
+        // Third correspond to "%" in last position
+        const size_t offset = p->key.find('%');
+        if (offset == std::string::npos or !offset or offset == p->key.size() - 1)
         {
             logs.error() << ini.filename() << ": '" << p->key << "': invalid token";
             continue;
@@ -409,7 +412,7 @@ void Correlation::set(Matrix<>& m, const Area& from, const Area& to, double v)
 
 static inline uint FindMappedAreaName(const AreaName& name,
                                       const Study& study,
-                                      const Area::NameMapping& mapping)
+                                      const AreaNameMapping& mapping)
 {
     auto i = mapping.find(name);
     if (i != mapping.end())
@@ -426,7 +429,7 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
                                  const Study& studySource,
                                  uint areaSource,
                                  uint areaTarget,
-                                 const Area::NameMapping& mapping,
+                                 const AreaNameMapping& mapping,
                                  const Study& study)
 {
     // for (uint x = 0; x <= areaSource; ++x)
@@ -458,7 +461,7 @@ static void CopyFromSingleMatrix(const Matrix<>& mxsrc,
 void Correlation::copyFrom(const Correlation& source,
                            const Study& studySource,
                            const AreaName& areaSource,
-                           const Area::NameMapping& mapping,
+                           const AreaNameMapping& mapping,
                            const Study& study)
 {
     if (study.areas.size() <= 1)

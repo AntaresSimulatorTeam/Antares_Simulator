@@ -356,51 +356,6 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     }
 }
 
-Area* Study::areaAdd(const AreaName& name)
-{
-    if (name.empty())
-    {
-        return nullptr;
-    }
-    if (CheckForbiddenCharacterInAreaName(name))
-    {
-        logs.error() << "character '*' is forbidden in area name: `" << name << "`";
-        return nullptr;
-    }
-
-    // Result
-    Area* area = nullptr;
-    logs.info() << "adding new area " << name;
-
-    // The new scope is mandatory to rebuild the correlation matrices
-    // and the scenario builder data
-    {
-        // Adding an area
-        AreaName newName;
-        if (not modifyAreaNameIfAlreadyTaken(newName, name) or newName.empty())
-        {
-            logs.error() << "Impossible to find a name for a new area";
-            return nullptr;
-        }
-
-        // Adding an area
-        area = addAreaToListOfAreas(areas, newName);
-        if (not area)
-        {
-            return nullptr;
-        }
-
-        // Rebuild indexes for all areas
-        areas.rebuildIndexes();
-
-        // Default values for the area
-        area->createMissingData();
-        area->resetToDefaultValues();
-    }
-
-    return area;
-}
-
 template<>
 inline void Study::destroyTSGeneratorData<TimeSeriesType::timeSeriesLoad>()
 

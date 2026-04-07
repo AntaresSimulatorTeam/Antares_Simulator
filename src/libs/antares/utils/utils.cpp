@@ -5,56 +5,14 @@
 
 #include <sstream>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/logs/logs.h>
 
 using namespace Yuni;
 
 namespace Antares
 {
-void BeautifyName(YString& out, AnyString oldname)
-{
-    out.clear();
-    if (oldname.empty())
-    {
-        return;
-    }
-
-    oldname.trim(" \r\n\t");
-    if (oldname.empty())
-    {
-        return;
-    }
-
-    out.reserve(oldname.size());
-
-    auto end = oldname.utf8end();
-    for (auto i = oldname.utf8begin(); i != end; ++i)
-    {
-        auto& utf8char = *i;
-        // simple char
-        char c = (char)utf8char;
-
-        if (c == ' ' or (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z')
-            or (c >= '0' and c <= '9') or c == '_' or c == '-' or c == '(' or c == ')' or c == ','
-            or c == '&')
-        {
-            out += c;
-        }
-        else
-        {
-            out += ' ';
-        }
-    }
-
-    out.trim(" \t\r\n");
-
-    while (std::string(out.c_str()).find("  ") != std::string::npos)
-    {
-        out.replace("  ", " ");
-    }
-
-    out.trim(" \t\r\n");
-}
 
 template<>
 void TransformNameIntoID(const AnyString& name, std::string& out)
@@ -69,13 +27,6 @@ std::string transformNameIntoID(const std::string& name)
     std::string out;
     TransformNameIntoID(name, out);
     return out;
-}
-
-void BeautifyName(std::string& out, const std::string& oldname)
-{
-    YString yuniOut;
-    BeautifyName(yuniOut, oldname);
-    out = yuniOut.c_str();
 }
 
 std::tm getCurrentTime()
@@ -114,7 +65,7 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
         {
             std::string begin = token.substr(0, pos);
             std::string end = token.substr(pos + 1);
-            pairs.push_back({begin, end});
+            pairs.emplace_back(begin, end);
         }
         else
         {
@@ -129,6 +80,11 @@ std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std:
 
 namespace Utils
 {
+
+bool compareCaseInsensitive(const std::string& str1, const std::string& str2)
+{
+    return boost::algorithm::to_lower_copy(str1) == boost::algorithm::to_lower_copy(str2);
+}
 
 bool isZero(double d)
 {

@@ -15,6 +15,7 @@ add_boost_test(TestYmlModel
         Antares::exception
         Antares::expressions
         Antares::model-converter
+        Antares::forbidden-nodes
         Antares::yml-model
         Antares::yml-optim-config
         Antares::yml-system

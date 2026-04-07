@@ -55,6 +55,7 @@ _build*
 .vscode/
 *.dll
 .idea/
+src/tests/resources/modeler/**/output/
 
 # pytest
 __pycache__

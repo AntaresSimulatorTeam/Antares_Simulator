@@ -3,16 +3,12 @@
 
 #include "antares/study/study.h"
 
-#include <yuni/yuni.h>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include "antares/study/scenario-builder/sets.h"
 
-using namespace Yuni;
-
 namespace Antares::Data
 {
-// The path to the Icon file to use when writing a study
-String StudyIconFile;
 
 void Study::scenarioRulesCreate()
 {
@@ -38,7 +34,7 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
 {
     out = basename;
     AreaName id = out;
-    id.toLower();
+    boost::to_lower(id);
 
     if (areas.find(id))
     {
@@ -51,9 +47,9 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
                 return false;
             }
             out = basename;
-            out << "-" << i;
+            out += "-" + std::to_string(i);
             id = out;
-            id.toLower();
+            boost::to_lower(id);
         } while (areas.find(id));
     }
     return true;

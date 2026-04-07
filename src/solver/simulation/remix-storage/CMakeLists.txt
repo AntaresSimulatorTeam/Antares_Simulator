@@ -27,6 +27,7 @@ set_target_properties(${local_target} PROPERTIES FOLDER storage-remix)
 
 target_link_libraries(${local_target}
 		PRIVATE
+		Antares::vector-utils
 		storage-for-remix-list-sort)
 
 # Lib : sorting list of storage for remix

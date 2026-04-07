@@ -60,7 +60,7 @@ public:
     OneProblemWithoutReservesOneArea()
     {
         study = std::make_unique<Study>();
-        areaA = study->areaAdd("A");
+        areaA = addAreaToListOfAreas(study->areas, "A");
     }
 
     std::unique_ptr<Study> study;
@@ -81,7 +81,7 @@ public:
     OneProblemWithReservesOneArea()
     {
         study = std::make_unique<Study>();
-        areaA = study->areaAdd("A");
+        areaA = addAreaToListOfAreas(study->areas, "A");
         CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
@@ -152,8 +152,8 @@ struct OneProblemWithReservesTwoAreas
     {
         problemeHebdo = std::make_unique<PROBLEME_HEBDO>();
         study = std::make_unique<Study>();
-        areaA = study->areaAdd("A");
-        areaB = study->areaAdd("B");
+        areaA = addAreaToListOfAreas(study->areas, "A");
+        areaB = addAreaToListOfAreas(study->areas, "B");
         CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_SUITE(reserves_operations_load)
 BOOST_AUTO_TEST_CASE(reserve_add)
 {
     auto study = std::make_unique<Study>();
-    const auto areaA = study->areaAdd("A");
+    const auto areaA = addAreaToListOfAreas(study->areas, "A");
     CapacityReservation tmpCapacityReservationUp;
     tmpCapacityReservationUp.type = ReserveType::UP;
     tmpCapacityReservationUp.unsuppliedCost = 0;
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(reserve_add)
 BOOST_AUTO_TEST_CASE(reserve_add_double)
 {
     auto study = std::make_unique<Study>();
-    const auto areaA = study->areaAdd("A");
+    const auto areaA = addAreaToListOfAreas(study->areas, "A");
     CapacityReservation tmpCapacityReservation;
 
     CapacityReservation tmpCapacityReservationTwo;

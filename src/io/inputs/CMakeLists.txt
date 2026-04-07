@@ -1,5 +1,7 @@
 OMESSAGE("Antares IO-Inputs")
 
+add_subdirectory(forbidden-nodes)
+add_subdirectory(yml-utils)
 add_subdirectory(model-converter)
 add_subdirectory(yml-model)
 add_subdirectory(yml-optim-config)

@@ -96,7 +96,7 @@ struct FixtureFull: private ThermalIniFile
 
     FixtureFull()
     {
-        area = study->areaAdd("area");
+        area = addAreaToListOfAreas(study->areas, "area");
         study->parameters.include.thermal.minUPTime = true;
         study->parameters.include.thermal.minStablePower = true;
         study->parameters.include.reserve.spinning = true;

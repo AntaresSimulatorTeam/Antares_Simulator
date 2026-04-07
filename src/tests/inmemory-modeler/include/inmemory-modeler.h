@@ -42,6 +42,7 @@ struct ConstraintData
 {
     std::string id;
     Antares::Expressions::Nodes::Node* expression;
+    OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC;
 };
 
 struct LinearProblemBuildingFixture
@@ -132,6 +133,5 @@ struct LinearProblemBuildingFixture
     }
 
 private:
-    int componentIndex_ = 0;
 };
 } // namespace Test::Modeler
