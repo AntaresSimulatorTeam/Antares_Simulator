@@ -211,6 +211,7 @@ jobs:
         feature: "features/modeler-features"
 
     - name: Run unit and end-to-end tests
+      id: unit_tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
       run: |
         cd _build
@@ -222,6 +223,13 @@ jobs:
       with:
         name: MPS-diff
         path: ${{ github.workspace }}/src/tests/mps
+
+    - name: Upload unit test directory on failure
+      if: ${{ failure() && steps.unit_tests.outcome == 'failure' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: unit-tests-directory
+        path: _build/tests
 
     - name: Run tests for adequacy patch (CSR)
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
