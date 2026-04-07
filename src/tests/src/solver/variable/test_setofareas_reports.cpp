@@ -67,9 +67,8 @@ public:
         };
     };
 
-    void initializeFromStudy(Antares::Data::Study& study)
+    void initializeFromStudy(Data::Study& study)
     {
-        (void)study;
         NextT::initializeFromStudy(study);
     }
 
@@ -77,9 +76,8 @@ public:
     {
     }
 
-    void getPrintStatusFromStudy(Antares::Data::Study& study)
+    void getPrintStatusFromStudy(Data::Study& study)
     {
-        (void)study;
         isPrinted_[0] = true;
         isNonApplicable_[0] = false;
         NextT::getPrintStatusFromStudy(study);
@@ -119,10 +117,10 @@ struct DistrictDefinition
     bool output = true;
 };
 
-std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
+std::unique_ptr<Data::Study> makeStudyWithDistricts(
   const std::vector<DistrictDefinition>& districts)
 {
-    auto study = std::make_unique<Antares::Data::Study>();
+    auto study = std::make_unique<Data::Study>();
     study->parameters.simulationDays.first = 0;
     study->parameters.simulationDays.end = 7;
     study->parameters.nbYears = 1;
@@ -133,7 +131,7 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
     auto* area = Antares::Data::addAreaToListOfAreas(study->areas, "area1");
     area->index = 0;
 
-    auto cluster = std::make_shared<Antares::Data::ThermalCluster>(area);
+    auto cluster = std::make_shared<Data::ThermalCluster>(area);
     cluster->setName("thermal1");
     cluster->setGroup("group1");
     cluster->index = 0;
@@ -142,10 +140,10 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
 
     for (const auto& district: districts)
     {
-        auto set = std::make_shared<Antares::Data::Sets::SetAreasType>();
+        auto set = std::make_shared<Data::Sets::SetAreasType>();
         set->insert(area);
 
-        Antares::Data::Sets::Options options;
+        Data::Sets::Options options;
         options.caption = district.caption;
         options.output = district.output;
         options.resultSize = 1;
@@ -154,22 +152,22 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
     }
     study->setsOfAreas.rebuildIndexes();
 
-    Antares::Data::VariablePrintInfo variableInfo(Category::FileLevel::va,
+    Data::VariablePrintInfo variableInfo(Category::FileLevel::va,
                                                   Category::DataLevel::area);
     variableInfo.setMaxColumns(0);
     study->parameters.variablesPrintInfo.add("dummy", variableInfo);
 
-    Antares::Data::VariablePrintInfo setVariableInfo(Category::FileLevel::va,
+    Data::VariablePrintInfo setVariableInfo(Category::FileLevel::va,
                                                      Category::DataLevel::setOfAreas);
     setVariableInfo.setMaxColumns(1);
     study->parameters.variablesPrintInfo.add("Set Report Variable", setVariableInfo);
 
-    Antares::Data::VariablePrintInfo flowLinInfo(Category::FileLevel::va,
+    Data::VariablePrintInfo flowLinInfo(Category::FileLevel::va,
                                                  Category::DataLevel::link);
     flowLinInfo.enablePrint(false);
     study->parameters.variablesPrintInfo.add("FLOW LIN.", flowLinInfo);
 
-    Antares::Data::VariablePrintInfo flowQuadInfo(Category::FileLevel::va,
+    Data::VariablePrintInfo flowQuadInfo(Category::FileLevel::va,
                                                   Category::DataLevel::link);
     flowQuadInfo.enablePrint(false);
     study->parameters.variablesPrintInfo.add("FLOW QUAD.", flowQuadInfo);
@@ -183,18 +181,18 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
     return study;
 }
 
-PROBLEME_HEBDO makeProblemHebdo()
+std::unique_ptr<PROBLEME_HEBDO> makeProblemHebdo()
 {
-    PROBLEME_HEBDO pb;
-    pb.HeureDansLAnnee = 0;
-    pb.year = 0;
-    pb.NombreDePays = 1;
-    pb.ResultatsHoraires.resize(1);
+    auto pb = std::make_unique<PROBLEME_HEBDO>();
+    pb->HeureDansLAnnee = 0;
+    pb->year = 0;
+    pb->NombreDePays = 1;
+    pb->ResultatsHoraires.resize(1);
 
-    auto& areaResults = pb.ResultatsHoraires[0];
-    areaResults.ProductionThermique.resize(Antares::Constants::nbHoursInAWeek);
+    auto& areaResults = pb->ResultatsHoraires[0];
+    areaResults.ProductionThermique.resize(Constants::nbHoursInAWeek);
 
-    for (unsigned h = 0; h < Antares::Constants::nbHoursInAWeek; ++h)
+    for (unsigned h = 0; h < Constants::nbHoursInAWeek; ++h)
     {
         PRODUCTION_THERMIQUE_OPTIMALE thermalProd;
         thermalProd.ProductionThermiqueDuPalier.resize(1);
@@ -205,16 +203,17 @@ PROBLEME_HEBDO makeProblemHebdo()
     return pb;
 }
 
-void feedDynamicAggregation(TestVariableTree& variables, Antares::Data::Study& study)
+std::pair<std::unique_ptr<State>, std::unique_ptr<PROBLEME_HEBDO>> feedDynamicAggregation(TestVariableTree& variables, Data::Study& study)
 {
     // State contains large fixed-size arrays (~315KB); allocate on heap to avoid stack overflow
     // on platforms with limited stack size (e.g. Windows default 1MB stack).
     auto state = std::make_unique<State>(study);
-    PROBLEME_HEBDO pb = makeProblemHebdo();
-    state->problemeHebdo = &pb;
+    auto pb = makeProblemHebdo();
+    state->problemeHebdo = pb.get();
     state->numSpace = 0;
     variables.weekBegin(*state);
     variables.computeSpatialAggregatesSummary(variables, 0, 0);
+    return {std::move(state), std::move(pb)};
 }
 
 } // namespace
@@ -226,11 +225,11 @@ BOOST_AUTO_TEST_CASE(exports_one_enabled_district)
     auto study = makeStudyWithDistricts({{"district-1", "District 1", true}});
 
     Benchmarking::DurationCollector durationCollector;
-    Antares::Solver::InMemoryWriter writer(durationCollector);
+    Solver::InMemoryWriter writer(durationCollector);
     TestVariableTree variables;
 
     variables.initializeFromStudy(*study);
-    feedDynamicAggregation(variables, *study);
+    auto keep_alive = feedDynamicAggregation(variables, *study);
     variables.exportSurveyResults(true, "out", 0, writer);
 
     const auto& files = writer.getMap();
@@ -248,11 +247,11 @@ BOOST_AUTO_TEST_CASE(exports_two_enabled_districts)
       {{"district-1", "District 1", true}, {"district-2", "District 2", true}});
 
     Benchmarking::DurationCollector durationCollector;
-    Antares::Solver::InMemoryWriter writer(durationCollector);
+    Solver::InMemoryWriter writer(durationCollector);
     TestVariableTree variables;
 
     variables.initializeFromStudy(*study);
-    feedDynamicAggregation(variables, *study);
+    auto keep_alive = feedDynamicAggregation(variables, *study);
     variables.exportSurveyResults(true, "out", 0, writer);
 
     const auto& files = writer.getMap();
@@ -276,11 +275,11 @@ BOOST_AUTO_TEST_CASE(skips_disabled_district_and_exports_enabled_one)
                                          {"district-enabled", "Enabled district", true}});
 
     Benchmarking::DurationCollector durationCollector;
-    Antares::Solver::InMemoryWriter writer(durationCollector);
+    Solver::InMemoryWriter writer(durationCollector);
     TestVariableTree variables;
 
     variables.initializeFromStudy(*study);
-    feedDynamicAggregation(variables, *study);
+    auto keep_alive = feedDynamicAggregation(variables, *study);
     variables.exportSurveyResults(true, "out", 0, writer);
 
     const auto& files = writer.getMap();
