@@ -207,11 +207,13 @@ PROBLEME_HEBDO makeProblemHebdo()
 
 void feedDynamicAggregation(TestVariableTree& variables, Antares::Data::Study& study)
 {
-    State state(study);
+    // State contains large fixed-size arrays (~315KB); allocate on heap to avoid stack overflow
+    // on platforms with limited stack size (e.g. Windows default 1MB stack).
+    auto state = std::make_unique<State>(study);
     PROBLEME_HEBDO pb = makeProblemHebdo();
-    state.problemeHebdo = &pb;
-    state.numSpace = 0;
-    variables.weekBegin(state);
+    state->problemeHebdo = &pb;
+    state->numSpace = 0;
+    variables.weekBegin(*state);
     variables.computeSpatialAggregatesSummary(variables, 0, 0);
 }
 
