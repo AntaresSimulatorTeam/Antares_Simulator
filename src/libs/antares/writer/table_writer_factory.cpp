@@ -24,16 +24,18 @@
 #include "csv_table_writer.h"
 #include "parquet_table_writer.h"
 
+namespace fs = std::filesystem;
+
 namespace Antares::Writer
 {
 
-ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired)
+ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired, fs::path& filePath)
 {
     if (parquetFormatRequired)
     {
-        return std::make_shared<ParquetTableWriter>();
+        return std::make_shared<ParquetTableWriter>(filePath);
     }
-    return std::make_shared<CsvTableWriter>();
+    return std::make_shared<CsvTableWriter>(filePath);
 }
 
 } // namespace Antares::Writer

@@ -51,26 +51,31 @@ std::string make_line(const std::vector<std::string>& cols)
     return out;
 }
 
-void CsvTableWriter::writeTable(const fs::path& filePath,
-                                const SimulationTable& simuTable)
+CsvTableWriter::CsvTableWriter(std::filesystem::path& filePath):
+    ITableWriter(filePath)
+{
+    output_file_.replace_extension(".csv");
+}
+
+void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
 {
     std::vector<std::string> header = simuTable.columnNames();
     std::vector<std::vector<std::string>> rows = simuTable.storageIntoRows();
 
-    if (filePath.empty())
+    if (output_file_.empty())
     {
         throw std::invalid_argument("CsvTableWriter: empty output path");
     }
 
-    if (filePath.has_parent_path())
+    if (output_file_.has_parent_path())
     {
-        fs::create_directories(filePath.parent_path());
+        fs::create_directories(output_file_.parent_path());
     }
 
-    std::ofstream out(filePath, std::ios::binary);
+    std::ofstream out(output_file_, std::ios::binary);
     if (!out)
     {
-        throw std::runtime_error("CsvTableWriter: cannot open output file: " + filePath.string());
+        throw std::runtime_error("CsvTableWriter: cannot open output file: " + output_file_.string());
     }
 
     if (!header.empty())

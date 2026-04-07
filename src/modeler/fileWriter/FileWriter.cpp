@@ -28,9 +28,8 @@ void FileWriter::init(const std::string& simulationId)
 
     const auto simulation_id = std::string(simulationId.empty() ? "" : "--" + simulationId);
     output_file_ = outputPath_ / ("simulation_table" + simulation_id);
-    std::string ext = parquetFormatRequired_ ? "parquet" : "csv";
-    output_file_ += "." + ext;
 
+    writer_ = makeTableWriter(parquetFormatRequired_, output_file_);
     Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
@@ -41,8 +40,7 @@ const std::filesystem::path& FileWriter::outputPath() const
 
 void FileWriter::writeSimulationTable(SimulationTable& SimulationTable) const
 {
-    auto writer = makeTableWriter(parquetFormatRequired_);
-    writer->writeTable(output_file_, SimulationTable);
+    writer_->writeTable(SimulationTable);
 }
 
 FileWriter::FileWriter(const std::filesystem::path& studyPath, bool parquetFormatRequired):

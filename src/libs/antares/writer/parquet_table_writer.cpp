@@ -47,8 +47,13 @@ static void ensureParentDir(const std::filesystem::path& file)
     }
 }
 
-void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
-                                    const SimulationTable& simuTable)
+ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
+    ITableWriter(filePath)
+{
+    output_file_.replace_extension(".parquet");
+}
+
+void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
 {
     std::vector<std::string> colNames = simuTable.columnNames();
     const auto& columns = simuTable.columns();
@@ -61,7 +66,7 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
 
     const size_t ncols = colNames.size();
 
-    ensureParentDir(filePath);
+    ensureParentDir(output_file_);
 
     // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
@@ -113,11 +118,11 @@ void ParquetTableWriter::writeTable(const std::filesystem::path& filePath,
 
     // Open output file
     std::shared_ptr<arrow::io::FileOutputStream> outfile;
-    auto st_out = arrow::io::FileOutputStream::Open(filePath.string());
+    auto st_out = arrow::io::FileOutputStream::Open(output_file_.string());
     if (!st_out.ok())
     {
         std::ostringstream oss;
-        oss << "ParquetTableWriter: cannot open output file '" << filePath.string()
+        oss << "ParquetTableWriter: cannot open output file '" << output_file_.string()
             << "': " << st_out.status().ToString();
         throw std::runtime_error(oss.str());
     }

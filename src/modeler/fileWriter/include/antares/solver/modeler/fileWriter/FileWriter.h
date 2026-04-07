@@ -5,6 +5,7 @@
 #include <filesystem>
 
 #include "antares/solver/modeler/IWriter.h"
+#include "antares/writer/i_table_writer.h"
 
 namespace Antares::Solver
 {
@@ -20,6 +21,7 @@ private:
     std::filesystem::path outputPath_;
     std::filesystem::path output_file_;
     std::string simulationId_;
+    Writer::ITableWriter::Ptr writer_;
     bool parquetFormatRequired_ = false;
 };
 } // namespace Antares::Solver

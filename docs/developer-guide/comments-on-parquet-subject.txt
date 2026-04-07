@@ -59,10 +59,12 @@ Suggestions archi :
   -----------------------------
 
 - Maintenant, la classe FileWriter (classe existante) remplace SimulationTableCsvFile, supprimée.
-  Mais, comme SimulationTableCsvFile, elle pourrait sans doute etre splittée en 2 entre : 
-  - CsvTableWriter
-  - ParquetTableWriter
-  
+  Mais, comme SimulationTableCsvFile, elle pourrait sans doute etre : 
+  - soit splittée en 2 entre : 
+    + CsvTableWriter
+    + ParquetTableWriter
+  - soit supprimée car ces 2 writer existent déjà.
+   
 - La classe SimulationTableCsv contient des methodes d'impression dans un buffer (std::string).
   Si cela ne sert que pour l'impression cvs, alors cela doit etre integré au writer cvs.
 

@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "antares/io/outputs/SimulationTable.h"
 
 namespace Antares::Writer
@@ -16,11 +17,17 @@ class ITableWriter
 {
 public:
     using Ptr = std::shared_ptr<ITableWriter>;
-    virtual ~ITableWriter() = default;
 
-    virtual void writeTable(const std::filesystem::path& filePath,
-                            const IO::Outputs::SimulationTable& simuTable)
-      = 0;
+    ITableWriter(std::filesystem::path& filePath):
+        output_file_(filePath)
+    {
+    }
+
+    virtual ~ITableWriter() = default;
+    virtual void writeTable(const IO::Outputs::SimulationTable& simuTable) const = 0;
+
+protected:
+    std::filesystem::path& output_file_;
 };
 
 } // namespace Antares::Writer
