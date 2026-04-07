@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(hourly_values_are_copied_from_state)
     // Attach area
     auto itArea = study->areas.begin();
     BOOST_REQUIRE(itArea != study->areas.end());
-    state.area = itArea->second;
+    state.area = itArea->second.get();
     // Create real weekly problem structure with one country
     PROBLEME_HEBDO weeklyProblem;
     weeklyProblem.NombreDePays = 1;

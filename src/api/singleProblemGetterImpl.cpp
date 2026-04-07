@@ -447,7 +447,7 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
             continue;
         }
         auto inflows = area->hydro.series->storage.getColumn(year);
-        auto& level = hydroLevels[area];
+        auto& level = hydroLevels[area.get()];
 
         // Initialize first week level
         uint firstDay = calendar.weeks[0].daysYear.first;

@@ -151,14 +151,6 @@ AreaList::AreaList(Study& study):
 {
 }
 
-AreaList::~AreaList()
-{
-    for (auto* area: areas | std::views::values)
-    {
-        delete area;
-    }
-}
-
 bool AreaList::empty() const
 {
     return areas.empty();
@@ -188,7 +180,7 @@ void AreaList::rebuildIndexes()
     auto end = areas.end();
     for (auto i = areas.begin(); i != end; ++i, ++indx)
     {
-        Area* area = i->second;
+        Area* area = i->second.get();
         byIndex[indx] = area;
         area->index = indx;
     }
@@ -204,7 +196,7 @@ Area* AreaList::add(Area* a)
         [[maybe_unused]] unsigned count = (uint)areas.size(); // used for assert
 
         // Adding the area in the list
-        areas[a->id] = a;
+        areas[a->id] = std::unique_ptr<Area>(a);
         rebuildIndexes();
 
         assert(areas.size() == (count + 1) and "Invalid count of areas in the map");
@@ -778,27 +770,27 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 Area* AreaList::find(const AreaName& id)
 {
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 const Area* AreaList::find(const AreaName& id) const
 {
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 Area* AreaList::findFromName(const AreaName& name)
 {
     AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 const Area* AreaList::findFromName(const AreaName& name) const
 {
     AreaName id = transformNameIntoID(name);
     auto i = this->areas.find(id);
-    return (i != this->areas.end()) ? i->second : nullptr;
+    return (i != this->areas.end()) ? i->second.get() : nullptr;
 }
 
 Area* AreaListLFind(AreaList* l, const char lname[])
@@ -806,7 +798,7 @@ Area* AreaListLFind(AreaList* l, const char lname[])
     if (l && !l->areas.empty() && lname)
     {
         auto i = l->areas.find(AreaName(lname));
-        return (i != l->areas.end()) ? i->second : nullptr;
+        return (i != l->areas.end()) ? i->second.get() : nullptr;
     }
     return nullptr;
 }
@@ -818,9 +810,9 @@ Area* AreaListFindPtr(AreaList* l, const Area* ptr)
         auto end = l->areas.end();
         for (auto i = l->areas.begin(); i != end; ++i)
         {
-            if (ptr == i->second)
+            if (ptr == i->second.get())
             {
-                return i->second;
+                return i->second.get();
             }
         }
     }
