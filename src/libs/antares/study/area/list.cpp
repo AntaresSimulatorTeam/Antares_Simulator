@@ -17,9 +17,9 @@
 #include "antares/study/area/area.h"
 #include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/parts/load/prepro.h"
-#include "antares/utils/utils.h"
 #include "antares/study/parts/parts.h"
 #include "antares/study/study.h"
+#include "antares/utils/utils.h"
 
 #define SEP IO::Separator
 
@@ -688,8 +688,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
             && study.parameters.reservesEnabled)
         {
-            fs::path reservesHydroIniPath = study.folderInput / "hydro" / "common"
-                                            / area.id / "reserves.ini";
+            fs::path reservesHydroIniPath = study.folderInput / "hydro" / "common" / area.id
+                                            / "reserves.ini";
             area.hydro.loadReserveParticipations(area, reservesHydroIniPath);
         }
     }
@@ -726,8 +726,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
             && study.parameters.reservesEnabled)
         {
-            fs::path reservesThermal = study.folderInput / "thermal" / "clusters"
-                                       / area.id / "reserves.ini";
+            fs::path reservesThermal = study.folderInput / "thermal" / "clusters" / area.id
+                                       / "reserves.ini";
             area.thermal.list.loadReserveParticipations(area, reservesThermal);
         }
     }
@@ -743,8 +743,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
             && study.parameters.reservesEnabled)
         {
-            fs::path reservesIniFilePath = study.folderInput / "st-storage" / "clusters"
-                                           / area.id / "reserves.ini";
+            fs::path reservesIniFilePath = study.folderInput / "st-storage" / "clusters" / area.id
+                                           / "reserves.ini";
             area.shortTermStorage.loadReserveParticipations(area, reservesIniFilePath);
         }
     }

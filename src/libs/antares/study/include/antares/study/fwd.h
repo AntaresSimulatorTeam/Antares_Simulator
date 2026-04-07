@@ -6,8 +6,8 @@
 
 #include <bit>
 #include <map>
-#include <string>
 #include <ranges>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
