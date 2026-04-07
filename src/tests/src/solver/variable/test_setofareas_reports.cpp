@@ -205,8 +205,6 @@ std::unique_ptr<PROBLEME_HEBDO> makeProblemHebdo()
 
 std::pair<std::unique_ptr<State>, std::unique_ptr<PROBLEME_HEBDO>> feedDynamicAggregation(TestVariableTree& variables, Data::Study& study)
 {
-    // State contains large fixed-size arrays (~315KB); allocate on heap to avoid stack overflow
-    // on platforms with limited stack size (e.g. Windows default 1MB stack).
     auto state = std::make_unique<State>(study);
     auto pb = makeProblemHebdo();
     state->problemeHebdo = pb.get();
