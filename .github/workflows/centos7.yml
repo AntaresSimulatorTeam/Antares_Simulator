@@ -131,8 +131,44 @@ jobs:
         --build-arg RUN_TESTS=${{ env.RUN_TESTS }} \
         -f ${{ env.DOCKERFILE }} .
 
+    - name: Prepare diagnostics directory
+      if: ${{ env.RUN_TESTS == 'true' }}
+      run: mkdir -p diagnostics
+
+    - name: Run tests with diagnostics
+      if: ${{ env.RUN_TESTS == 'true' }}
+      run: |
+        docker run --rm \
+          --name antares-tests \
+          --ulimit core=-1 \
+          --cap-add=SYS_PTRACE \
+          --security-opt seccomp=unconfined \
+          -e BUILD_TYPE=RelWithDebInfo \
+          -v "${{ github.workspace }}/diagnostics:/diagnostics" \
+          antares:centos7 \
+          bash -lc '
+            set -o pipefail
+            ulimit -c unlimited
+            mkdir -p /diagnostics/cores
+            echo "/diagnostics/cores/core.%e.%p" > /proc/sys/kernel/core_pattern || true
+            cd _build
+            ctest -C "$BUILD_TYPE" --output-on-failure --timeout 300 -L "unit|end-to-end" 2>&1 | tee /diagnostics/ctest.log
+            status=${PIPESTATUS[0]}
+            shopt -s nullglob
+            for core in /diagnostics/cores/core.*; do
+              exe_name=$(file "$core" | sed -n "s/.*from '\''\([^'\''']*\)'\''.*/\1/p")
+              if [ -n "$exe_name" ]; then
+                exe_path=$(find /workspace/Antares_Simulator/_build -type f -name "$exe_name" -perm -111 | head -n 1)
+                if [ -n "$exe_path" ]; then
+                  gdb -batch -ex "set pagination off" -ex "thread apply all bt full" -ex "info registers" "$exe_path" "$core" > "/diagnostics/${exe_name}.gdb.txt" 2>&1 || true
+                fi
+              fi
+            done
+            exit "$status"
+          '
 
     - name: create a container without starting it && retrieve the .tgz
+      if: always()
       run: |
         container_id=$(docker create antares:centos7)
         docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive         
@@ -142,10 +178,18 @@ jobs:
         docker rm $container_id
 
     - name: Push artifacts
+      if: always()
       uses: actions/upload-artifact@v7
       with:
         name: centos-targz
         path: archive/*.tar.gz
+
+    - name: Upload diagnostics
+      if: ${{ always() && env.RUN_TESTS == 'true' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: centos7-diagnostics
+        path: diagnostics/**
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
