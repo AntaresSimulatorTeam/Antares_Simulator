@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "parquet_table_writer.h"
 
@@ -34,18 +16,6 @@ using namespace Antares::IO::Outputs;
 
 namespace Antares::Writer
 {
-
-// gp : not responsibility of a particular writer : we have the same check for csv writer
-static void ensureParentDir(const std::filesystem::path& file)
-{
-    auto p = file.parent_path();
-    if (!p.empty())
-    {
-        std::error_code ec;
-        std::filesystem::create_directories(p, ec);
-        // Best effort; ignore error as writer will fail on open if directory truly invalid
-    }
-}
 
 ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
     ITableWriter(filePath)
@@ -65,8 +35,6 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
     }
 
     const size_t ncols = colNames.size();
-
-    ensureParentDir(output_file_);
 
     // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
