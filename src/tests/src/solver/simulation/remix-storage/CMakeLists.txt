@@ -68,7 +68,6 @@ add_boost_test(tests-on-extractSTS-functions
         ${include_dir}
         LIBS
         antares-solver-simulation
-        model_antares
         test_utils_unit)
 
 set_target_properties(tests-on-extractSTS-functions PROPERTIES FOLDER Unit-tests/storage-remix)
