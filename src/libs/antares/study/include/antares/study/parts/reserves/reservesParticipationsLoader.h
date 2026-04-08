@@ -42,7 +42,11 @@ public:
         ini.each(
           [&](const IniFile::Section& section)
           {
-              if (section.name != "symmetries")
+              if (section.name == "symmetries")
+              {
+                  Derived::readSymmetrySection(area, section);
+              }
+              else
               {
                   auto [participation, clusterName] = Derived::readCapacityReservationSection(
                     section);
@@ -51,15 +55,6 @@ public:
                                                   clusterName,
                                                   section.name);
                   Derived::addCapacityReservation(area, participation, clusterName, section.name);
-              }
-          });
-
-        ini.each(
-          [&](const IniFile::Section& section)
-          {
-              if (section.name == "symmetries")
-              {
-                  Derived::readSymmetrySection(area, section);
               }
           });
 
