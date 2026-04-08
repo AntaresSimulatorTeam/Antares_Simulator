@@ -11,6 +11,9 @@ set(SRC_SIMU_TABLE
 add_library(simulation-table STATIC ${SRC_SIMU_TABLE})
 add_library(Antares::simulation-table ALIAS simulation-table)
 
+set_target_properties(simulation-table PROPERTIES
+        POSITION_INDEPENDENT_CODE ON)
+
 target_include_directories(simulation-table
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
