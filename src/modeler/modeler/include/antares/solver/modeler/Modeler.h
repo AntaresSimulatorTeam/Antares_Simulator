@@ -75,7 +75,7 @@ public:
         return subproblems_;
     }
 
-    // gp : defined only for unit test, which is not a good sign on design. 
+    // gp : defined only for unit test, which is not a good sign on design.
     Optimisation::LinearProblemApi::IMipSolution* subProbSolution();
 
 private:

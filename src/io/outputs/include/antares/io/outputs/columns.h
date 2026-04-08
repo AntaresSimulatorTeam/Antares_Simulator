@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <optional>
-#include <string>
-#include <sstream>
-#include <vector>
 #include <iomanip>
+#include <optional>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
 

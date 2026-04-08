@@ -75,7 +75,8 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
     std::ofstream out(output_file_, std::ios::binary);
     if (!out)
     {
-        throw std::runtime_error("CsvTableWriter: cannot open output file: " + output_file_.string());
+        throw std::runtime_error("CsvTableWriter: cannot open output file: "
+                                 + output_file_.string());
     }
 
     if (!header.empty())

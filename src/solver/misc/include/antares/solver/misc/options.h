@@ -41,7 +41,7 @@ public:
     //! True to disable the writing in the output folder
     bool noOutput = false;
 
-    // In case we print simulation tables, do we print it in csv or parquet ? 
+    // In case we print simulation tables, do we print it in csv or parquet ?
     bool parquetFmtForSimuTables = false;
 
     Yuni::String PID;
