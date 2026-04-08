@@ -144,26 +144,29 @@ Inheritance diagram for Antares::Data::AreaList:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aea8963b7e886a8866f2e13eb6b73d8c9"><td class="memItemLeft" align="right" valign="top"><a id="aea8963b7e886a8866f2e13eb6b73d8c9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#aea8963b7e886a8866f2e13eb6b73d8c9">iterator</a> = Area::Map::iterator</td></tr>
-<tr class="memdesc:aea8963b7e886a8866f2e13eb6b73d8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">An iterator. <br /></td></tr>
-<tr class="separator:aea8963b7e886a8866f2e13eb6b73d8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2f650f57fbeeca1564ed6de586d4d46"><td class="memItemLeft" align="right" valign="top"><a id="aa2f650f57fbeeca1564ed6de586d4d46"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa2f650f57fbeeca1564ed6de586d4d46">const_iterator</a> = Area::Map::const_iterator</td></tr>
-<tr class="memdesc:aa2f650f57fbeeca1564ed6de586d4d46"><td class="mdescLeft">&#160;</td><td class="mdescRight">A const iterator. <br /></td></tr>
-<tr class="separator:aa2f650f57fbeeca1564ed6de586d4d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a777c16ee5fcae16517432f0fccf9dd72"><td class="memItemLeft" align="right" valign="top"><a id="a777c16ee5fcae16517432f0fccf9dd72"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a777c16ee5fcae16517432f0fccf9dd72">reverse_iterator</a> = Area::Map::reverse_iterator</td></tr>
-<tr class="memdesc:a777c16ee5fcae16517432f0fccf9dd72"><td class="mdescLeft">&#160;</td><td class="mdescRight">An iterator. <br /></td></tr>
-<tr class="separator:a777c16ee5fcae16517432f0fccf9dd72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5aef474e6f29374505a9b1088f1c7182"><td class="memItemLeft" align="right" valign="top"><a id="a5aef474e6f29374505a9b1088f1c7182"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a5aef474e6f29374505a9b1088f1c7182">const_reverse_iterator</a> = Area::Map::const_reverse_iterator</td></tr>
-<tr class="memdesc:a5aef474e6f29374505a9b1088f1c7182"><td class="mdescLeft">&#160;</td><td class="mdescRight">A const iterator. <br /></td></tr>
-<tr class="separator:a5aef474e6f29374505a9b1088f1c7182"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0200d28c9d74cab0394f522fb7e4ef88"><td class="memItemLeft" align="right" valign="top"><a id="a0200d28c9d74cab0394f522fb7e4ef88"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a0200d28c9d74cab0394f522fb7e4ef88">value_type</a> = Area::Map::value_type</td></tr>
-<tr class="memdesc:a0200d28c9d74cab0394f522fb7e4ef88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key-value type. <br /></td></tr>
-<tr class="separator:a0200d28c9d74cab0394f522fb7e4ef88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1139f7f87122823be271d606e0b590b"><td class="memItemLeft" align="right" valign="top"><a id="ae1139f7f87122823be271d606e0b590b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>OwningAreaMap</b> = std::map&lt; AreaName, std::unique_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &gt; &gt;</td></tr>
+<tr class="separator:ae1139f7f87122823be271d606e0b590b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8ffc8e2dc090b3f67e63e123bd922d9"><td class="memItemLeft" align="right" valign="top"><a id="aa8ffc8e2dc090b3f67e63e123bd922d9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa8ffc8e2dc090b3f67e63e123bd922d9">iterator</a> = OwningAreaMap::iterator</td></tr>
+<tr class="memdesc:aa8ffc8e2dc090b3f67e63e123bd922d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">An iterator. <br /></td></tr>
+<tr class="separator:aa8ffc8e2dc090b3f67e63e123bd922d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a0ec3dd611e49ef2d87faacf8fe35e6"><td class="memItemLeft" align="right" valign="top"><a id="a9a0ec3dd611e49ef2d87faacf8fe35e6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a9a0ec3dd611e49ef2d87faacf8fe35e6">const_iterator</a> = OwningAreaMap::const_iterator</td></tr>
+<tr class="memdesc:a9a0ec3dd611e49ef2d87faacf8fe35e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A const iterator. <br /></td></tr>
+<tr class="separator:a9a0ec3dd611e49ef2d87faacf8fe35e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebcfd6d676255947bb269e61b554c2ba"><td class="memItemLeft" align="right" valign="top"><a id="aebcfd6d676255947bb269e61b554c2ba"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#aebcfd6d676255947bb269e61b554c2ba">reverse_iterator</a> = OwningAreaMap::reverse_iterator</td></tr>
+<tr class="memdesc:aebcfd6d676255947bb269e61b554c2ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">An iterator. <br /></td></tr>
+<tr class="separator:aebcfd6d676255947bb269e61b554c2ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33569d3f065fd3e9f0fe49939800a67f"><td class="memItemLeft" align="right" valign="top"><a id="a33569d3f065fd3e9f0fe49939800a67f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a33569d3f065fd3e9f0fe49939800a67f">const_reverse_iterator</a> = OwningAreaMap::const_reverse_iterator</td></tr>
+<tr class="memdesc:a33569d3f065fd3e9f0fe49939800a67f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A const iterator. <br /></td></tr>
+<tr class="separator:a33569d3f065fd3e9f0fe49939800a67f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ac8dc7e2676a84d0858a170460ef9df"><td class="memItemLeft" align="right" valign="top"><a id="a8ac8dc7e2676a84d0858a170460ef9df"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a8ac8dc7e2676a84d0858a170460ef9df">value_type</a> = OwningAreaMap::value_type</td></tr>
+<tr class="memdesc:a8ac8dc7e2676a84d0858a170460ef9df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key-value type. <br /></td></tr>
+<tr class="separator:a8ac8dc7e2676a84d0858a170460ef9df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -172,9 +175,6 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa431d0a45abd90c77f87c4b457e1cb3c">AreaList</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study)</td></tr>
 <tr class="memdesc:aa431d0a45abd90c77f87c4b457e1cb3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
 <tr class="separator:aa431d0a45abd90c77f87c4b457e1cb3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1c4a464812ae2f175409270f5b12ccd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#ad1c4a464812ae2f175409270f5b12ccd">~AreaList</a> ()</td></tr>
-<tr class="memdesc:ad1c4a464812ae2f175409270f5b12ccd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classAntares_1_1Data_1_1AreaList.html#ad1c4a464812ae2f175409270f5b12ccd">More...</a><br /></td></tr>
-<tr class="separator:ad1c4a464812ae2f175409270f5b12ccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Iterating through all areas</div></td></tr>
 <tr class="memitem:af6603405158b284ccb8849ffa1aeb0ba"><td class="memTemplParams" colspan="2"><a id="af6603405158b284ccb8849ffa1aeb0ba"></a>
 template&lt;class PredicateT &gt; </td></tr>
@@ -187,34 +187,34 @@ template&lt;class PredicateT &gt; </td></tr>
 <tr class="memdesc:a5a7cd3333567343603c242b6c2ac3760"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterate through all areas (const) <br /></td></tr>
 <tr class="separator:a5a7cd3333567343603c242b6c2ac3760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea49460e01b9cc350b6ba64371f50555"><td class="memItemLeft" align="right" valign="top"><a id="aea49460e01b9cc350b6ba64371f50555"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aea8963b7e886a8866f2e13eb6b73d8c9">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> ()</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa8ffc8e2dc090b3f67e63e123bd922d9">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> ()</td></tr>
 <tr class="separator:aea49460e01b9cc350b6ba64371f50555"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae113973dbdd81b1151de824d27102d7"><td class="memItemLeft" align="right" valign="top"><a id="aae113973dbdd81b1151de824d27102d7"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa2f650f57fbeeca1564ed6de586d4d46">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a9a0ec3dd611e49ef2d87faacf8fe35e6">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () const</td></tr>
 <tr class="separator:aae113973dbdd81b1151de824d27102d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f4db4f16270eb8567ba95f9f053c715"><td class="memItemLeft" align="right" valign="top"><a id="a9f4db4f16270eb8567ba95f9f053c715"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa2f650f57fbeeca1564ed6de586d4d46">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin</b> () const</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a9a0ec3dd611e49ef2d87faacf8fe35e6">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin</b> () const</td></tr>
 <tr class="separator:a9f4db4f16270eb8567ba95f9f053c715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a735562993e89c7aa5e9dc6819e5dfb93"><td class="memItemLeft" align="right" valign="top"><a id="a735562993e89c7aa5e9dc6819e5dfb93"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aea8963b7e886a8866f2e13eb6b73d8c9">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa8ffc8e2dc090b3f67e63e123bd922d9">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
 <tr class="separator:a735562993e89c7aa5e9dc6819e5dfb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25a7077e70bbbcf92a4cd29259e00785"><td class="memItemLeft" align="right" valign="top"><a id="a25a7077e70bbbcf92a4cd29259e00785"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa2f650f57fbeeca1564ed6de586d4d46">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a9a0ec3dd611e49ef2d87faacf8fe35e6">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> () const</td></tr>
 <tr class="separator:a25a7077e70bbbcf92a4cd29259e00785"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a531f04775f8eec9d5000607d98a5d16e"><td class="memItemLeft" align="right" valign="top"><a id="a531f04775f8eec9d5000607d98a5d16e"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aa2f650f57fbeeca1564ed6de586d4d46">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cend</b> () const</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a9a0ec3dd611e49ef2d87faacf8fe35e6">const_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cend</b> () const</td></tr>
 <tr class="separator:a531f04775f8eec9d5000607d98a5d16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64d36da06d0f5a109ad2ccf02829794b"><td class="memItemLeft" align="right" valign="top"><a id="a64d36da06d0f5a109ad2ccf02829794b"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a777c16ee5fcae16517432f0fccf9dd72">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin</b> ()</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aebcfd6d676255947bb269e61b554c2ba">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin</b> ()</td></tr>
 <tr class="separator:a64d36da06d0f5a109ad2ccf02829794b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2d2defa71286eeade5875f2a759a789"><td class="memItemLeft" align="right" valign="top"><a id="ae2d2defa71286eeade5875f2a759a789"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a5aef474e6f29374505a9b1088f1c7182">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin</b> () const</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a33569d3f065fd3e9f0fe49939800a67f">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin</b> () const</td></tr>
 <tr class="separator:ae2d2defa71286eeade5875f2a759a789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d4de41f36da390dafe4cc6e26c0b375"><td class="memItemLeft" align="right" valign="top"><a id="a7d4de41f36da390dafe4cc6e26c0b375"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a777c16ee5fcae16517432f0fccf9dd72">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend</b> ()</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#aebcfd6d676255947bb269e61b554c2ba">reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend</b> ()</td></tr>
 <tr class="separator:a7d4de41f36da390dafe4cc6e26c0b375"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84d69fe3f7cb47978e7e8a98e41cfe70"><td class="memItemLeft" align="right" valign="top"><a id="a84d69fe3f7cb47978e7e8a98e41cfe70"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a5aef474e6f29374505a9b1088f1c7182">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend</b> () const</td></tr>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html#a33569d3f065fd3e9f0fe49939800a67f">const_reverse_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend</b> () const</td></tr>
 <tr class="separator:a84d69fe3f7cb47978e7e8a98e41cfe70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Internal Data TS-Generators / Series</div></td></tr>
 <tr class="memitem:a36530908200e0ccdd4ba62a126e73080"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a36530908200e0ccdd4ba62a126e73080">ensureDataIsInitialized</a> (<a class="el" href="classAntares_1_1Data_1_1Parameters.html">Parameters</a> &amp;params)</td></tr>
@@ -296,10 +296,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 std::vector&lt; <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#abc0bdb59b3d70e7a2a6b61ba4376a391">byIndex</a></td></tr>
 <tr class="memdesc:abc0bdb59b3d70e7a2a6b61ba4376a391"><td class="mdescLeft">&#160;</td><td class="mdescRight">All areas by their index. <br /></td></tr>
 <tr class="separator:abc0bdb59b3d70e7a2a6b61ba4376a391"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33794771a577c317dc7450f55cd12da6"><td class="memItemLeft" align="right" valign="top"><a id="a33794771a577c317dc7450f55cd12da6"></a>
-Area::Map&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a33794771a577c317dc7450f55cd12da6">areas</a></td></tr>
-<tr class="memdesc:a33794771a577c317dc7450f55cd12da6"><td class="mdescLeft">&#160;</td><td class="mdescRight">All areas in the list. <br /></td></tr>
-<tr class="separator:a33794771a577c317dc7450f55cd12da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9240a550aeb4629b7fc90898aa5b06d"><td class="memItemLeft" align="right" valign="top"><a id="ac9240a550aeb4629b7fc90898aa5b06d"></a>
+OwningAreaMap&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#ac9240a550aeb4629b7fc90898aa5b06d">areas</a></td></tr>
+<tr class="memdesc:ac9240a550aeb4629b7fc90898aa5b06d"><td class="mdescLeft">&#160;</td><td class="mdescRight">All areas in the list. <br /></td></tr>
+<tr class="separator:ac9240a550aeb4629b7fc90898aa5b06d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a923c210f204c832ab5721052fd8f1c06"><td class="memItemLeft" align="right" valign="top"><a id="a923c210f204c832ab5721052fd8f1c06"></a>
 Area::NameSet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1AreaList.html#a923c210f204c832ab5721052fd8f1c06">nameidSet</a></td></tr>
 <tr class="memdesc:a923c210f204c832ab5721052fd8f1c06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name set (must be updated by updateNameSet) <br /></td></tr>
@@ -332,28 +332,7 @@ const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</t
 <div class="line">&lt;<span class="keywordflow">do</span> some stuff here to fill the area list&gt;</div>
 <div class="line">...</div>
 <div class="line">printf(<span class="stringliteral">&quot;Area name : `%s`\n&quot;</span>, (*(l-&gt;byIndex[2])).name);</div>
-</div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad1c4a464812ae2f175409270f5b12ccd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1c4a464812ae2f175409270f5b12ccd">&#9670;&nbsp;</a></span>~AreaList()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">Antares::Data::AreaList::~AreaList </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Destructor. </p>
-<p>Frees all <a class="el" href="classAntares_1_1Data_1_1Area.html" title="Definition for a single area.">Area</a> instances owned by this list. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
+</div><!-- fragment --> </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a36530908200e0ccdd4ba62a126e73080"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a36530908200e0ccdd4ba62a126e73080">&#9670;&nbsp;</a></span>ensureDataIsInitialized()</h2>
 

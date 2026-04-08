@@ -1,12 +1,12 @@
 var classAntares_1_1Data_1_1AreaList =
 [
-    [ "const_iterator", "classAntares_1_1Data_1_1AreaList.html#aa2f650f57fbeeca1564ed6de586d4d46", null ],
-    [ "const_reverse_iterator", "classAntares_1_1Data_1_1AreaList.html#a5aef474e6f29374505a9b1088f1c7182", null ],
-    [ "iterator", "classAntares_1_1Data_1_1AreaList.html#aea8963b7e886a8866f2e13eb6b73d8c9", null ],
-    [ "reverse_iterator", "classAntares_1_1Data_1_1AreaList.html#a777c16ee5fcae16517432f0fccf9dd72", null ],
-    [ "value_type", "classAntares_1_1Data_1_1AreaList.html#a0200d28c9d74cab0394f522fb7e4ef88", null ],
+    [ "const_iterator", "classAntares_1_1Data_1_1AreaList.html#a9a0ec3dd611e49ef2d87faacf8fe35e6", null ],
+    [ "const_reverse_iterator", "classAntares_1_1Data_1_1AreaList.html#a33569d3f065fd3e9f0fe49939800a67f", null ],
+    [ "iterator", "classAntares_1_1Data_1_1AreaList.html#aa8ffc8e2dc090b3f67e63e123bd922d9", null ],
+    [ "OwningAreaMap", "classAntares_1_1Data_1_1AreaList.html#ae1139f7f87122823be271d606e0b590b", null ],
+    [ "reverse_iterator", "classAntares_1_1Data_1_1AreaList.html#aebcfd6d676255947bb269e61b554c2ba", null ],
+    [ "value_type", "classAntares_1_1Data_1_1AreaList.html#a8ac8dc7e2676a84d0858a170460ef9df", null ],
     [ "AreaList", "classAntares_1_1Data_1_1AreaList.html#aa431d0a45abd90c77f87c4b457e1cb3c", null ],
-    [ "~AreaList", "classAntares_1_1Data_1_1AreaList.html#ad1c4a464812ae2f175409270f5b12ccd", null ],
     [ "add", "classAntares_1_1Data_1_1AreaList.html#af5eca7e4e62a281705747d882e6f4834", null ],
     [ "areaLinkCount", "classAntares_1_1Data_1_1AreaList.html#a9bf75cb25f5addebf28679b96fc0e20a", null ],
     [ "begin", "classAntares_1_1Data_1_1AreaList.html#aea49460e01b9cc350b6ba64371f50555", null ],
@@ -40,7 +40,7 @@ var classAntares_1_1Data_1_1AreaList =
     [ "saveLinkListToBuffer", "classAntares_1_1Data_1_1AreaList.html#a1ac3d8c5b01e4f25868257f32befa80d", null ],
     [ "size", "classAntares_1_1Data_1_1AreaList.html#aef727d85346e2144e5978719f78b516e", null ],
     [ "updateNameIDSet", "classAntares_1_1Data_1_1AreaList.html#a600e35fa262c7fea7de82a4f95c4cc7a", null ],
-    [ "areas", "classAntares_1_1Data_1_1AreaList.html#a33794771a577c317dc7450f55cd12da6", null ],
+    [ "areas", "classAntares_1_1Data_1_1AreaList.html#ac9240a550aeb4629b7fc90898aa5b06d", null ],
     [ "byIndex", "classAntares_1_1Data_1_1AreaList.html#abc0bdb59b3d70e7a2a6b61ba4376a391", null ],
     [ "nameidSet", "classAntares_1_1Data_1_1AreaList.html#a923c210f204c832ab5721052fd8f1c06", null ]
 ];
