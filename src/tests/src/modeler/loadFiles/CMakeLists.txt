@@ -8,6 +8,7 @@ add_boost_test(test-load-yaml-files
         test-load-optim-config.cpp
         LIBS
         Antares::modeler-parameters
+        Antares::study
         Antares::load-modeler-files
         Antares::modeler-lib
         test_utils_unit
