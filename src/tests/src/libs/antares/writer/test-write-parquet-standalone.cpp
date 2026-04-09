@@ -10,6 +10,7 @@
 // Arrow / Parquet
 #include <arrow/api.h>
 #include <arrow/io/api.h>
+#include <parquet/arrow/reader.h>
 #include <parquet/arrow/writer.h>
 
 namespace fs = std::filesystem;
@@ -68,11 +69,11 @@ std::shared_ptr<arrow::Table> buildTable(const std::vector<int>& ids,
     return arrow::Table::Make(schema, {ids_, names_, scores_});
 }
 
-void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& path)
+void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& file_path)
 {
     // --- 1. Open output file ---
     std::shared_ptr<arrow::io::FileOutputStream> outfile;
-    ARROW_THROW_ASSIGN(outfile, arrow::io::FileOutputStream::Open(path.string()));
+    ARROW_THROW_ASSIGN(outfile, arrow::io::FileOutputStream::Open(file_path.string()));
 
     // --- 2. Configure Parquet writer ---
     auto writer_props = parquet::WriterProperties::Builder()
@@ -93,6 +94,22 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& pa
                                                   arrow_props));
 }
 
+// =======================================================
+// Reading a Parquet file into an Arrow table
+// =======================================================
+std::shared_ptr<arrow::Table> readParquet(const fs::path& file_path)
+{
+    std::shared_ptr<arrow::io::ReadableFile> infile;
+    ARROW_THROW_ASSIGN(infile, arrow::io::ReadableFile::Open(file_path.string()));
+
+    std::unique_ptr<parquet::arrow::FileReader> reader;
+    ARROW_THROW_NOT_OK(parquet::arrow::OpenFile(infile, arrow::default_memory_pool(), &reader));
+
+    std::shared_ptr<arrow::Table> table;
+    ARROW_THROW_NOT_OK(reader->ReadTable(&table));
+    return table;
+}
+
 BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_regular_table_in_parquet___output_file_content_ok)
 {
     std::vector<int> ids = {1, 2, 3};
@@ -105,6 +122,41 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_regular_table_in_parquet___output_
     writeParquet(table, file_path);
 
     BOOST_CHECK(fs::exists(file_path));
+
+    // --- Read back and verify ---
+    auto read_table = readParquet(file_path);
+
+    // Combine all chunks into a single contiguous table
+    std::shared_ptr<arrow::Table> combined;
+    ARROW_THROW_NOT_OK(read_table->CombineChunks(arrow::default_memory_pool()).Value(&combined));
+
+    BOOST_REQUIRE_EQUAL(combined->num_rows(), static_cast<int64_t>(ids.size()));
+    BOOST_REQUIRE_EQUAL(combined->num_columns(), 3);
+
+    // Check "id" column (Int32)
+    auto id_col = std::static_pointer_cast<arrow::Int32Array>(combined->column(0)->chunk(0));
+    for (int i = 0; i < static_cast<int>(ids.size()); ++i)
+    {
+        BOOST_CHECK(!id_col->IsNull(i));
+        BOOST_CHECK_EQUAL(id_col->Value(i), ids[i]);
+    }
+
+    // Check "name" column (Utf8/String)
+    auto name_col = std::static_pointer_cast<arrow::StringArray>(combined->column(1)->chunk(0));
+    for (int i = 0; i < static_cast<int>(names.size()); ++i)
+    {
+        BOOST_CHECK(!name_col->IsNull(i));
+        BOOST_CHECK_EQUAL(name_col->GetString(i), names[i]);
+    }
+
+    // Check "score" column (Double)
+    auto score_col = std::static_pointer_cast<arrow::DoubleArray>(combined->column(2)->chunk(0));
+    for (int i = 0; i < static_cast<int>(scores.size()); ++i)
+    {
+        BOOST_CHECK(!score_col->IsNull(i));
+        BOOST_CHECK_EQUAL(score_col->Value(i), scores[i]);
+    }
+
     fs::remove(file_path);
 }
 
@@ -188,9 +240,51 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_nullable_table_in_parquet___output
 
     auto nullableTable = buildNullableTable(ids, names, scores);
 
-    auto file_path = fs::temp_directory_path() / "test_output.parquet";
+    auto file_path = fs::temp_directory_path() / "test_output_nullable.parquet";
     writeParquet(nullableTable, file_path);
 
     BOOST_CHECK(fs::exists(file_path));
+
+    // --- Read back and verify ---
+    auto read_table = readParquet(file_path);
+    std::shared_ptr<arrow::Table> combined;
+    ARROW_THROW_NOT_OK(read_table->CombineChunks(arrow::default_memory_pool()).Value(&combined));
+
+    BOOST_REQUIRE_EQUAL(combined->num_rows(), static_cast<int64_t>(ids.size()));
+    BOOST_REQUIRE_EQUAL(combined->num_columns(), 3);
+
+    // Check "id" column — ids[0] is nullopt
+    auto id_col = std::static_pointer_cast<arrow::Int32Array>(combined->column(0)->chunk(0));
+    for (int i = 0; i < static_cast<int>(ids.size()); ++i)
+    {
+        BOOST_CHECK_EQUAL(id_col->IsNull(i), !ids[i].has_value());
+        if (ids[i].has_value())
+        {
+            BOOST_CHECK_EQUAL(id_col->Value(i), *ids[i]);
+        }
+    }
+
+    // Check "name" column — names[1] is nullopt
+    auto name_col = std::static_pointer_cast<arrow::StringArray>(combined->column(1)->chunk(0));
+    for (int i = 0; i < static_cast<int>(names.size()); ++i)
+    {
+        BOOST_CHECK_EQUAL(name_col->IsNull(i), !names[i].has_value());
+        if (names[i].has_value())
+        {
+            BOOST_CHECK_EQUAL(name_col->GetString(i), *names[i]);
+        }
+    }
+
+    // Check "score" column — scores[2] is nullopt
+    auto score_col = std::static_pointer_cast<arrow::DoubleArray>(combined->column(2)->chunk(0));
+    for (int i = 0; i < static_cast<int>(scores.size()); ++i)
+    {
+        BOOST_CHECK_EQUAL(score_col->IsNull(i), !scores[i].has_value());
+        if (scores[i].has_value())
+        {
+            BOOST_CHECK_EQUAL(score_col->Value(i), *scores[i]);
+        }
+    }
+
     fs::remove(file_path);
 }
