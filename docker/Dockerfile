@@ -56,7 +56,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DCMAKE_TOOLCHAIN_FILE=/workspace/Antares_Simulator/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-    -DCMAKE_BUILD_TYPE=debug \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DBUILD_TESTING=OFF \
     -DBUILD_TOOLS=ON \
     -DBUILD_UI=OFF \
