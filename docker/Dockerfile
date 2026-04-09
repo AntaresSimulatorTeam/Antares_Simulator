@@ -56,7 +56,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DCMAKE_TOOLCHAIN_FILE=/workspace/Antares_Simulator/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DVCPKG_TARGET_TRIPLET=x64-linux-release \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DBUILD_TESTING=OFF \
     -DBUILD_TOOLS=ON \
     -DBUILD_UI=OFF \
@@ -88,6 +88,6 @@ RUN cd _build && \
     pushd . && \
     cd install/bin && \
     cp /ortools/install/lib64/*.so* . && \
-    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so *.so* && \
+    tar czf ../../antares-solver_centos7.tar.gz antares-solver *.so* && \
     popd && \
     rm -rf install
