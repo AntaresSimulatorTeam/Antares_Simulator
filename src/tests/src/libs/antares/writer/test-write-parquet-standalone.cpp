@@ -124,17 +124,14 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_regular_table_in_parquet___output_
     BOOST_CHECK(fs::exists(file_path));
 
     // --- Read back and verify ---
+    // chunk_size=1024 and we only have 3 rows: single row group, single chunk per column
     auto read_table = readParquet(file_path);
 
-    // Combine all chunks into a single contiguous table
-    std::shared_ptr<arrow::Table> combined;
-    ARROW_THROW_NOT_OK(read_table->CombineChunks(arrow::default_memory_pool()).Value(&combined));
-
-    BOOST_REQUIRE_EQUAL(combined->num_rows(), static_cast<int64_t>(ids.size()));
-    BOOST_REQUIRE_EQUAL(combined->num_columns(), 3);
+    BOOST_REQUIRE_EQUAL(read_table->num_rows(), static_cast<int64_t>(ids.size()));
+    BOOST_REQUIRE_EQUAL(read_table->num_columns(), 3);
 
     // Check "id" column (Int32)
-    auto id_col = std::static_pointer_cast<arrow::Int32Array>(combined->column(0)->chunk(0));
+    auto id_col = std::static_pointer_cast<arrow::Int32Array>(read_table->column(0)->chunk(0));
     for (int i = 0; i < static_cast<int>(ids.size()); ++i)
     {
         BOOST_CHECK(!id_col->IsNull(i));
@@ -142,7 +139,7 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_regular_table_in_parquet___output_
     }
 
     // Check "name" column (Utf8/String)
-    auto name_col = std::static_pointer_cast<arrow::StringArray>(combined->column(1)->chunk(0));
+    auto name_col = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
     for (int i = 0; i < static_cast<int>(names.size()); ++i)
     {
         BOOST_CHECK(!name_col->IsNull(i));
@@ -150,7 +147,7 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_regular_table_in_parquet___output_
     }
 
     // Check "score" column (Double)
-    auto score_col = std::static_pointer_cast<arrow::DoubleArray>(combined->column(2)->chunk(0));
+    auto score_col = std::static_pointer_cast<arrow::DoubleArray>(read_table->column(2)->chunk(0));
     for (int i = 0; i < static_cast<int>(scores.size()); ++i)
     {
         BOOST_CHECK(!score_col->IsNull(i));
@@ -246,15 +243,14 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_nullable_table_in_parquet___output
     BOOST_CHECK(fs::exists(file_path));
 
     // --- Read back and verify ---
+    // chunk_size=1024 and we only have 3 rows: single row group, single chunk per column
     auto read_table = readParquet(file_path);
-    std::shared_ptr<arrow::Table> combined;
-    ARROW_THROW_NOT_OK(read_table->CombineChunks(arrow::default_memory_pool()).Value(&combined));
 
-    BOOST_REQUIRE_EQUAL(combined->num_rows(), static_cast<int64_t>(ids.size()));
-    BOOST_REQUIRE_EQUAL(combined->num_columns(), 3);
+    BOOST_REQUIRE_EQUAL(read_table->num_rows(), static_cast<int64_t>(ids.size()));
+    BOOST_REQUIRE_EQUAL(read_table->num_columns(), 3);
 
     // Check "id" column — ids[0] is nullopt
-    auto id_col = std::static_pointer_cast<arrow::Int32Array>(combined->column(0)->chunk(0));
+    auto id_col = std::static_pointer_cast<arrow::Int32Array>(read_table->column(0)->chunk(0));
     for (int i = 0; i < static_cast<int>(ids.size()); ++i)
     {
         BOOST_CHECK_EQUAL(id_col->IsNull(i), !ids[i].has_value());
@@ -265,7 +261,7 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_nullable_table_in_parquet___output
     }
 
     // Check "name" column — names[1] is nullopt
-    auto name_col = std::static_pointer_cast<arrow::StringArray>(combined->column(1)->chunk(0));
+    auto name_col = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
     for (int i = 0; i < static_cast<int>(names.size()); ++i)
     {
         BOOST_CHECK_EQUAL(name_col->IsNull(i), !names[i].has_value());
@@ -276,7 +272,7 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_nullable_table_in_parquet___output
     }
 
     // Check "score" column — scores[2] is nullopt
-    auto score_col = std::static_pointer_cast<arrow::DoubleArray>(combined->column(2)->chunk(0));
+    auto score_col = std::static_pointer_cast<arrow::DoubleArray>(read_table->column(2)->chunk(0));
     for (int i = 0; i < static_cast<int>(scores.size()); ++i)
     {
         BOOST_CHECK_EQUAL(score_col->IsNull(i), !scores[i].has_value());
