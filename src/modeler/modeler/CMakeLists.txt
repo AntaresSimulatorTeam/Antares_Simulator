@@ -14,13 +14,15 @@ target_link_libraries(modeler-lib
         Antares::optim-model-filler
         Antares::linear-problem-api
         Antares::structured-linear-problem
-        # TODO FIXME don't depend on implementations
         Antares::linear-problem-mpsolver-impl
+        Antares::linear-problem-data-impl
+        Antares::load-modeler-files
 )
 
 target_include_directories(modeler-lib
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/study/system-model/include>
 )
 
 install(DIRECTORY include/antares

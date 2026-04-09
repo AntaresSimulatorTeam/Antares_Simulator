@@ -27,6 +27,7 @@ target_link_libraries(utils
         ortools::ortools
         sirius_solver
         Antares::study
+        antares-solver-simulation
         Antares::result_writer
         Antares::optimization-options
         antares-core
