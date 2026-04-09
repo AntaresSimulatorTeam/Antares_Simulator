@@ -329,10 +329,11 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
     const auto lowRuleCurve = extractSTSlowRuleCurve(stsProperties, firstHourOfWeek);
     const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
-    const double initLevel = levels[0];
     const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
     const double withdrawalEff = stsProperties.withdrawalEfficiency;
     const double injectionEff = stsProperties.injectionEfficiency;
+    const double initLevel = levels[0] - inflows[0] - injectionEff * injection[0]
+                             + withdrawalEff * withdrawal[0];
 
     return makeSTSforRemix(withdrawal,
                            unsupE,
