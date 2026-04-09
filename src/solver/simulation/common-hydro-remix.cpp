@@ -332,7 +332,7 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     }
     else
     {
-        size_t size = withdrawal.size();  // voir point 2 ci-dessous
+        size_t size = withdrawal.size();
         overflows.assign(size, 0.0);
     }
 

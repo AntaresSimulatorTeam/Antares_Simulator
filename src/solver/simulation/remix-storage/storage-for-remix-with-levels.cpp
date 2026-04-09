@@ -73,7 +73,7 @@ void StorageForRemixWithLevels::update()
 
 void StorageForRemixWithLevels::checkLevels()
 {
-    if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= ruleCurveLow_ -TOLERANCE))
+    if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= ruleCurveLow_ - TOLERANCE))
     {
         throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "levels computed from input don't respect reservoir bounds");
