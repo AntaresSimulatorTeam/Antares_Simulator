@@ -65,22 +65,18 @@ public:
 
     [[nodiscard]] const IColumn& getColumn(const std::string& name) const
     {
-        const auto it = name_to_index_.find(name);
-        if (it == name_to_index_.end())
+        const auto it = std::ranges::find_if(columns_,
+                                             [&name](const auto& c) { return c->name() == name; });
+        if (it == columns_.end())
         {
             throw std::runtime_error("Column not found: " + name);
         }
-        return *columns_.at(it->second);
+        return **it;
     }
 
     [[nodiscard]] const std::vector<std::unique_ptr<IColumn>>& columns() const
     {
         return columns_;
-    }
-
-    [[nodiscard]] const std::vector<std::string>& columnNames() const
-    {
-        return columnNames_;
     }
 
     void clear() const
@@ -95,28 +91,27 @@ private:
     template<typename ColumnType>
     void addColumn(const std::string& name)
     {
-        if (name_to_index_.contains(name))
+        auto it = std::ranges::find_if(columns_,
+                                       [&name](const auto& c) { return c->name() == name; });
+        if (it != columns_.end())
         {
             throw std::runtime_error("Column already exists: " + name);
         }
-
-        std::size_t index = columns_.size();
         auto col = std::make_unique<ColumnType>(name);
         columns_.push_back(std::move(col));
-        columnNames_.push_back(name);
-        name_to_index_.emplace(std::move(name), index);
     }
 
     // Access column by name
     template<typename ColumnType>
     ColumnType& getColumn(const std::string& name)
     {
-        const auto it = name_to_index_.find(name);
-        if (it == name_to_index_.end())
+        const auto it = std::ranges::find_if(columns_,
+                                             [&name](const auto& c) { return c->name() == name; });
+        if (it == columns_.end())
         {
             throw std::runtime_error("Column not found: " + name);
         }
-        return dynamic_cast<ColumnType&>(*columns_[it->second]);
+        return dynamic_cast<ColumnType&>(**it);
     }
 
     // Access column by index
@@ -131,7 +126,5 @@ private:
     }
 
     std::vector<std::unique_ptr<IColumn>> columns_;
-    std::vector<std::string> columnNames_;
-    std::unordered_map<std::string, size_t> name_to_index_;
 };
 } // namespace Antares::IO::Outputs

@@ -37,14 +37,14 @@ std::string SimulationTable::headerCsvFormat() const
 {
     std::ostringstream os;
     bool first = true;
-    for (const auto& col_name: storage_.columnNames())
+    for (const auto& column: storage_.columns())
     {
         if (!first)
         {
             os << ',';
         }
         first = false;
-        os << col_name;
+        os << column->name();
     }
     return os.str();
 }
@@ -52,11 +52,6 @@ std::string SimulationTable::headerCsvFormat() const
 void SimulationTable::writeHeaderToBuffer()
 {
     buffer_ << headerCsvFormat() << '\n';
-}
-
-std::vector<std::string> SimulationTable::columnNames() const
-{
-    return storage_.columnNames();
 }
 
 const std::vector<std::unique_ptr<IColumn>>& SimulationTable::columns() const

@@ -43,29 +43,22 @@ ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
 
 void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
 {
-    std::vector<std::string> colNames = simuTable.columnNames();
     const auto& columns = simuTable.columns();
     const size_t ncols = columns.size();
 
     // Basic validations
-    if (colNames.empty())
+    if (columns.empty())
     {
-        throw std::invalid_argument("ParquetTableWriter: header is empty");
-    }
-
-    if (colNames.size() != columns.size())
-    {
-        std::string err_msg = "ParquetTableWriter: header and simulation table not equally sized";
-        throw std::invalid_argument(err_msg);
+        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
     }
 
     // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
     fields.reserve(ncols);
-    for (const auto& name: colNames)
+    for (const auto& column: columns)
     {
         // Duplicate names are allowed by Arrow but discouraged; keep as-is.
-        fields.push_back(arrow::field(name, arrow::utf8()));
+        fields.push_back(arrow::field(column->name(), arrow::utf8()));
     }
     auto schema = arrow::schema(std::move(fields));
 
@@ -75,7 +68,6 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
 
     arrow::StringBuilder builder;
 
-    size_t col_index = 0;
     for (const auto& column: columns)
     {
         for (size_t row = 0; row < column->size(); ++row)
@@ -85,7 +77,7 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
             if (!st.ok())
             {
                 std::ostringstream oss;
-                oss << "ParquetTableWriter: failed to append cell in column " << colNames[col_index]
+                oss << "ParquetTableWriter: failed to append cell in column " << column->name()
                     << ": " << st.ToString();
                 throw std::runtime_error(oss.str());
             }
@@ -96,12 +88,11 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
         if (!st_fin.ok())
         {
             std::ostringstream oss;
-            oss << "ParquetTableWriter: failed to finalize column " << colNames[col_index] << ": "
+            oss << "ParquetTableWriter: failed to finalize column " << column->name() << ": "
                 << st_fin.ToString();
             throw std::runtime_error(oss.str());
         }
         arrow_columns.push_back(std::move(array));
-        col_index++;
     }
 
     // Make table

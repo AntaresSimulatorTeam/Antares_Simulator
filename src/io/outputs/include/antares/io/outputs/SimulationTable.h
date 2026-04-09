@@ -17,7 +17,6 @@ public:
     SimulationTable();
     void addEntry(const SimulationTableEntry& entry);
     [[nodiscard]] std::string headerCsvFormat() const;
-    std::vector<std::string> columnNames() const;
     const std::vector<std::unique_ptr<IColumn>>& columns() const;
     void writeToBuffer();
     void clear();

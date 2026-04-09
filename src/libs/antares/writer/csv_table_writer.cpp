@@ -59,7 +59,7 @@ CsvTableWriter::CsvTableWriter(std::filesystem::path& filePath):
 
 void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
 {
-    std::vector<std::string> header = simuTable.columnNames();
+    const auto& columns = simuTable.columns();
     std::vector<std::vector<std::string>> rows = simuTable.storageIntoRows();
 
     if (output_file_.empty())
@@ -79,9 +79,13 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
                                  + output_file_.string());
     }
 
-    if (!header.empty())
+    std::vector<std::string> names;
+    std::ranges::transform(columns,
+                           std::back_inserter(names),
+                           [](const auto& col) { return col->name(); });
+    if (!names.empty())
     {
-        out << make_line(header);
+        out << make_line(names);
     }
 
     for (const auto& r: rows)
