@@ -28,6 +28,7 @@ std::unique_ptr<Antares::Data::Study> makeStudy()
     study->parameters.dayOfThe1stJanuary = Antares::monday;
     study->parameters.firstWeekday = Antares::monday;
     study->parameters.firstMonthInYear = Antares::january;
+    study->parameters.leapYear = false;
     study->maxNbYearsInParallel = 1;
 
     study->initializeRuntimeInfos();
