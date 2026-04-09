@@ -63,19 +63,20 @@ target_include_directories(single_problem_api
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>)
 
 target_link_libraries(single_problem_api
-        PRIVATE
+        PUBLIC
         antares-solver-simulation
         model_antares
         Antares::hydro
         Antares::file-tree-study-loader
-        PUBLIC
+        Antares::optim-model-filler
         Antares::study
         Antares::lps)
 
 # TODO move
 add_executable(antares-problem-generator main.cpp)
 target_link_libraries(antares-problem-generator
-	single_problem_api)
+        single_problem_api
+        Antares::optim-model-filler)
 
 install(DIRECTORY include/antares
         DESTINATION "include")

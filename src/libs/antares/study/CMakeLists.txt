@@ -271,28 +271,31 @@ target_link_libraries(study
         Antares::date #parameters
         Antares::inifile #parameters
         Antares::study-utils #area.hxx
-        Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
-        Antares::correlation
+        Antares::correlation # study.h includes correlation.h
         Antares::path
         Antares::mersenne
         Antares::result_writer #study.h
         Antares::series
         Antares::array
+        Antares::optimization-options # parameters.h includes options.h
         antares-core
-        antares-solver-simulation
-        Antares::hydro
+        Antares::scenario-builder-utils
+        Antares::enums
+        antares-solver-ts-generator # thermal/cluster.h includes ts-generator/law.h
+        Antares::modeler-lib # study.h includes ModelerData.h
+        Antares::modeler-optimisation-container # ModelerData.h includes scenarioGroupRepo.h
+        PRIVATE
+        Antares::exception
+        Antares::solverUtils
         Antares::antares-study-system-model
         linear-problem-api
         Antares::load-modeler-files
         Antares::modeler-parameters
-        Antares::modeler-lib
-        Antares::scenario-builder-utils
-        Antares::enums
-        PRIVATE
-        Antares::exception
+        antares-solver-simulation
+        Antares::hydro
+        antares-solver-variable
         fmt::fmt
         Antares::benchmarking
-        antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface
 )
 

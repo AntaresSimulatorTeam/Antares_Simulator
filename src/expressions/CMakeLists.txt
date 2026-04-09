@@ -86,11 +86,9 @@ target_link_libraries(expressions
         Antares::logs
         Antares::vector-utils
         fmt::fmt
-        #TODO i need LinearProblemData
-        linear-problem-api
+        Antares::linear-problem-api
         Antares::optim-model-filler
         Antares::modeler-optimisation-container
-        Antares::optim-model-filler
         PRIVATE
         Antares::exception
 )

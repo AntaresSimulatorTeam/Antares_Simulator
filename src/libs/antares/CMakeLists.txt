@@ -50,8 +50,6 @@ add_library(Antares::antares-core ALIAS antares-core)
 target_include_directories(antares-core
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs>
 )
 
 target_link_libraries(antares-core
@@ -59,7 +57,6 @@ target_link_libraries(antares-core
         yuni-static-core
         Antares::logs
         Antares::exception
-        Antares::study
         Antares::config
 )
 

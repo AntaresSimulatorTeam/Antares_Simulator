@@ -202,6 +202,7 @@ set(SRC_MODEL
 )
 
 add_library(model_antares ${SRC_MODEL})
+add_library(Antares::model ALIAS model_antares)
 if (NOT MSVC)
     target_compile_options(model_antares
             PUBLIC

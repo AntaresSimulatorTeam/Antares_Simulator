@@ -12,9 +12,8 @@ add_library(${PROJ} ${SRC_LOCATOR})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
 
 target_link_libraries(${PROJ}
-        PUBLIC
-        study
         PRIVATE
+        study
         yuni-static-core
         Antares::resources
 )
