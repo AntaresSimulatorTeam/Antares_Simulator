@@ -7,4 +7,6 @@ add_boost_test(test-modeler-checks
         Antares::modeler-checks
         Antares::modeler-lib
         test_utils_unit
+        Antares::study
+        Antares::load-modeler-files
 )
