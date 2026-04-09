@@ -63,11 +63,6 @@ public:
         return columns_.empty() ? 0 : (*columns_.begin())->size();
     }
 
-    [[nodiscard]] const std::unordered_map<std::string, size_t>& columnsNameToIndex() const
-    {
-        return name_to_index_;
-    }
-
     [[nodiscard]] const IColumn& getColumn(const std::string& name) const
     {
         const auto it = name_to_index_.find(name);
@@ -106,7 +101,7 @@ private:
         }
 
         std::size_t index = columns_.size();
-        auto col = std::make_unique<ColumnType>();
+        auto col = std::make_unique<ColumnType>(name);
         columns_.push_back(std::move(col));
         columnNames_.push_back(name);
         name_to_index_.emplace(std::move(name), index);

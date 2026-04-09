@@ -6,6 +6,8 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+//#include <map>
+//#include <functional>
 
 // Arrow / Parquet
 #include <arrow/api.h>
@@ -17,6 +19,22 @@ using namespace Antares::IO::Outputs;
 namespace Antares::Writer
 {
 
+//std::map<std::string, std::function<const std::shared_ptr<arrow::DataType>&(std::string)>> names_to_data_types = {
+//    {"string", [](const std::string&){ return arrow::utf8(); }},
+//    {"optional_string", [](const std::string&){ return arrow::utf8(); }},
+//    {"unsigned int", [](const std::string&){ return arrow::uint32(); }},
+//    {"optional_unsigned int", [](const std::string&){ return arrow::uint32(); }},
+//    {"double", [](const std::string&){ return arrow::float64(); }},
+//    {"optional_double", [](const std::string&){ return arrow::float64(); }},
+//    {"Antares::Optimisation::LinearProblemApi::MipBasisStatus",
+//     [](const std::string&){ return arrow::utf8(); }}, // no direct mapping, store as string
+//};
+//
+//std::shared_ptr<arrow::DataType> associatedArrowType()
+//{
+//
+//}
+
 ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
     ITableWriter(filePath)
 {
@@ -27,18 +45,23 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
 {
     std::vector<std::string> colNames = simuTable.columnNames();
     const auto& columns = simuTable.columns();
+    const size_t ncols = columns.size();
 
-    // Basic validation
+    // Basic validations
     if (colNames.empty())
     {
         throw std::invalid_argument("ParquetTableWriter: header is empty");
     }
 
-    const size_t ncols = colNames.size();
+    if (colNames.size() != columns.size())
+    {
+        std::string err_msg = "ParquetTableWriter: header and simulation table not equally sized";
+        throw std::invalid_argument(err_msg);
+    }
 
     // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
-    fields.reserve(static_cast<int>(ncols));
+    fields.reserve(ncols);
     for (const auto& name: colNames)
     {
         // Duplicate names are allowed by Arrow but discouraged; keep as-is.
@@ -82,7 +105,7 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
     }
 
     // Make table
-    auto table = arrow::Table::Make(schema, std::move(arrow_columns), static_cast<int64_t>(ncols));
+    auto table = arrow::Table::Make(schema, std::move(arrow_columns));
 
     // Open output file
     std::shared_ptr<arrow::io::FileOutputStream> outfile;

@@ -15,11 +15,30 @@ namespace Antares::IO::Outputs
 class IColumn
 {
 public:
+    IColumn(const std::string name):
+        name_(name)
+    {
+    }
+
     virtual ~IColumn() = default;
+
+    // gp : not sure that toString(index) should stay in this class : it's only used if
+    // gp : we want to write the simulation table in csv format,
+    // gp : so it's not a responsibility of the column to know how to format itself as a string, but
+    // gp : rather of the csv writer to know how to format a column value as a string.
     [[nodiscard]] virtual std::string toString(size_t index) const = 0;
+
     [[nodiscard]] virtual size_t size() const = 0;
     virtual void reserve(size_t capacity) = 0;
     virtual void clear() = 0;
+
+    std::string name()
+    {
+        return name_;
+    }
+
+protected:
+    std::string name_;
 };
 
 template<typename T>
@@ -71,7 +90,10 @@ template<typename T>
 class TypedColumn final: public IColumn
 {
 public:
-    TypedColumn() = default;
+    TypedColumn(std::string name):
+        IColumn(name)
+    {
+    }
 
     void add(const T& value)
     {
@@ -113,11 +135,15 @@ private:
 };
 
 using StringColumn = TypedColumn<std::string>;
+
 template<typename T>
 concept Integral = std::is_integral_v<T>;
+
 template<Integral T>
 using IntegralColumn = TypedColumn<T>;
+
 using DoubleColumn = TypedColumn<double>;
+
 template<typename T>
 using OptionalColumn = TypedColumn<std::optional<T>>;
 } // namespace Antares::IO::Outputs
