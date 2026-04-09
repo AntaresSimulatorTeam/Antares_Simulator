@@ -6,8 +6,6 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
-//#include <map>
-//#include <functional>
 
 // Arrow / Parquet
 #include <arrow/api.h>
@@ -15,25 +13,46 @@
 #include <parquet/arrow/writer.h>
 
 using namespace Antares::IO::Outputs;
+using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Writer
 {
 
-//std::map<std::string, std::function<const std::shared_ptr<arrow::DataType>&(std::string)>> names_to_data_types = {
-//    {"string", [](const std::string&){ return arrow::utf8(); }},
-//    {"optional_string", [](const std::string&){ return arrow::utf8(); }},
-//    {"unsigned int", [](const std::string&){ return arrow::uint32(); }},
-//    {"optional_unsigned int", [](const std::string&){ return arrow::uint32(); }},
-//    {"double", [](const std::string&){ return arrow::float64(); }},
-//    {"optional_double", [](const std::string&){ return arrow::float64(); }},
-//    {"Antares::Optimisation::LinearProblemApi::MipBasisStatus",
-//     [](const std::string&){ return arrow::utf8(); }}, // no direct mapping, store as string
-//};
-//
-//std::shared_ptr<arrow::DataType> associatedArrowType()
-//{
-//
-//}
+std::shared_ptr<arrow::DataType> associatedArrowType(const std::unique_ptr<IColumn>& column)
+{
+    if (dynamic_cast<StringColumn*>(column.get()))
+    {
+        return arrow::utf8();
+    }
+    else if (dynamic_cast<IntegralColumn<unsigned>*>(column.get()))
+    {
+        return arrow::uint32();
+    }
+    else if (dynamic_cast<DoubleColumn*>(column.get()))
+    {
+        return arrow::float64();
+    }
+    else if (dynamic_cast<OptionalColumn<std::string>*>(column.get()))
+    {
+        return arrow::utf8();
+    }
+    else if (dynamic_cast<OptionalColumn<unsigned>*>(column.get()))
+    {
+        return arrow::uint32();
+    }
+    else if (dynamic_cast<OptionalColumn<double>*>(column.get()))
+    {
+        return arrow::float64();
+    }
+    else if (dynamic_cast<OptionalColumn<MipBasisStatus>*>(column.get()))
+    {
+        return arrow::int8();
+    }
+    else
+    {
+        throw std::invalid_argument("ParquetTableWriter: column type unknown");
+    }
+}
 
 ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
     ITableWriter(filePath)
@@ -44,7 +63,6 @@ ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
 void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
 {
     const auto& columns = simuTable.columns();
-    const size_t ncols = columns.size();
 
     // Basic validations
     if (columns.empty())
@@ -52,19 +70,18 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
         throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
     }
 
-    // Schema: all columns as UTF8 strings
+    // Schema: a column storing type is adapted depending on column type.
     arrow::FieldVector fields;
-    fields.reserve(ncols);
+    fields.reserve(columns.size());
     for (const auto& column: columns)
     {
-        // Duplicate names are allowed by Arrow but discouraged; keep as-is.
-        fields.push_back(arrow::field(column->name(), arrow::utf8()));
+        fields.push_back(arrow::field(column->name(), associatedArrowType(column)));
     }
     auto schema = arrow::schema(std::move(fields));
 
     // Build columns using StringBuilder
     std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
-    arrow_columns.reserve(ncols);
+    arrow_columns.reserve(columns.size());
 
     arrow::StringBuilder builder;
 

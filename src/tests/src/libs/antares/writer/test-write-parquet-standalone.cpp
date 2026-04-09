@@ -140,22 +140,22 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_regular_table_in_parquet___output_
     BOOST_REQUIRE_EQUAL(read_table->num_columns(), 3);
 
     // Check "id" column (Int32)
-    auto column_of_ids = std::static_pointer_cast<arrow::Int32Array>(read_table->column(0)->chunk(0));
-    BOOST_CHECK_EQUAL(column_of_ids->Value(0), ids[0]);
-    BOOST_CHECK_EQUAL(column_of_ids->Value(1), ids[1]);
-    BOOST_CHECK_EQUAL(column_of_ids->Value(2), ids[2]);
+    auto col_ids = std::static_pointer_cast<arrow::Int32Array>(read_table->column(0)->chunk(0));
+    BOOST_CHECK_EQUAL(col_ids->Value(0), ids[0]);
+    BOOST_CHECK_EQUAL(col_ids->Value(1), ids[1]);
+    BOOST_CHECK_EQUAL(col_ids->Value(2), ids[2]);
 
     // Check "name" column (Utf8/String)
-    auto column_of_names = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
-    BOOST_CHECK_EQUAL(column_of_names->GetString(0), names[0]);
-    BOOST_CHECK_EQUAL(column_of_names->GetString(1), names[1]);
-    BOOST_CHECK_EQUAL(column_of_names->GetString(2), names[2]);
+    auto col_names = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
+    BOOST_CHECK_EQUAL(col_names->GetString(0), names[0]);
+    BOOST_CHECK_EQUAL(col_names->GetString(1), names[1]);
+    BOOST_CHECK_EQUAL(col_names->GetString(2), names[2]);
 
     // Check "score" column (Double)
-    auto column_of_scores = std::static_pointer_cast<arrow::DoubleArray>(read_table->column(2)->chunk(0));
-    BOOST_CHECK_EQUAL(column_of_scores->Value(0), scores[0]);
-    BOOST_CHECK_EQUAL(column_of_scores->Value(1), scores[1]);
-    BOOST_CHECK_EQUAL(column_of_scores->Value(2), scores[2]);
+    auto col_scores = std::static_pointer_cast<arrow::DoubleArray>(read_table->column(2)->chunk(0));
+    BOOST_CHECK_EQUAL(col_scores->Value(0), scores[0]);
+    BOOST_CHECK_EQUAL(col_scores->Value(1), scores[1]);
+    BOOST_CHECK_EQUAL(col_scores->Value(2), scores[2]);
 
     fs::remove(file_path);
 }
@@ -262,22 +262,22 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_nullable_table_in_parquet___output
     BOOST_REQUIRE_EQUAL(read_table->num_columns(), 3);
 
     // Check "id" column — ids[0] is nullopt
-    auto column_of_ids = std::static_pointer_cast<arrow::Int32Array>(read_table->column(0)->chunk(0));
-    BOOST_CHECK(column_of_ids->IsNull(0));
-    BOOST_CHECK_EQUAL(column_of_ids->Value(1), *ids[1]);
-    BOOST_CHECK_EQUAL(column_of_ids->Value(2), *ids[2]);
+    auto col_ids = std::static_pointer_cast<arrow::Int32Array>(read_table->column(0)->chunk(0));
+    BOOST_CHECK(col_ids->IsNull(0));
+    BOOST_CHECK_EQUAL(col_ids->Value(1), *ids[1]);
+    BOOST_CHECK_EQUAL(col_ids->Value(2), *ids[2]);
 
     // Check "name" column — names[1] is nullopt, stored as empty string via AppendEmptyValue
-    auto column_of_names = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
-    BOOST_CHECK_EQUAL(column_of_names->GetString(0), *names[0]);
-    BOOST_CHECK(column_of_names->GetString(1).empty());
-    BOOST_CHECK_EQUAL(column_of_names->GetString(2), *names[2]);
+    auto col_names = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
+    BOOST_CHECK_EQUAL(col_names->GetString(0), *names[0]);
+    BOOST_CHECK(col_names->GetString(1).empty());
+    BOOST_CHECK_EQUAL(col_names->GetString(2), *names[2]);
 
     // Check "score" column — scores[2] is nullopt
-    auto column_of_scores = std::static_pointer_cast<arrow::DoubleArray>(read_table->column(2)->chunk(0));
-    BOOST_CHECK_EQUAL(column_of_scores->Value(0), *scores[0]);
-    BOOST_CHECK_EQUAL(column_of_scores->Value(1), *scores[1]);
-    BOOST_CHECK(column_of_scores->IsNull(2));
+    auto col_scores = std::static_pointer_cast<arrow::DoubleArray>(read_table->column(2)->chunk(0));
+    BOOST_CHECK_EQUAL(col_scores->Value(0), *scores[0]);
+    BOOST_CHECK_EQUAL(col_scores->Value(1), *scores[1]);
+    BOOST_CHECK(col_scores->IsNull(2));
 
     fs::remove(file_path);
 }
