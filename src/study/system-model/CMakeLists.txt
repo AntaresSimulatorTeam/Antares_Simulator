@@ -39,9 +39,10 @@ target_include_directories(antares-study-system-model
 )
 target_link_libraries(antares-study-system-model
         PUBLIC
-        Antares::expressions
+        Antares::system-model-base
         PRIVATE
         Antares::exception
+        Antares::expressions
 )
 install(DIRECTORY include/antares
         DESTINATION "include"
