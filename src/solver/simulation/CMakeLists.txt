@@ -89,15 +89,6 @@ target_link_libraries(antares-solver-simulation
 		Antares::modeler-simulation-table
 )
 
-# GNU ld is single-pass: circular dep between antares-solver-simulation
-# and model_antares requires re-scanning to resolve all symbols.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_link_options(antares-solver-simulation
-        PUBLIC
-        "LINKER:--start-group"
-    )
-endif()
-
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
