@@ -11,6 +11,7 @@
 #include <arrow/api.h>
 #include <arrow/io/api.h>
 #include <parquet/arrow/writer.h>
+#include "columnToArrowAdapter.h"
 
 using namespace Antares::IO::Outputs;
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -18,7 +19,7 @@ using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::Writer
 {
 
-std::shared_ptr<arrow::DataType> associatedArrowType(const std::unique_ptr<IColumn>& column)
+std::shared_ptr<arrow::DataType> arrowStorageType(const std::unique_ptr<IColumn>& column)
 {
     if (dynamic_cast<StringColumn*>(column.get()))
     {
@@ -70,52 +71,24 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
         throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
     }
 
-    // Schema: a column storing type is adapted depending on column type.
+    // ========================
+    // Make the arrow table
+    // ========================
     arrow::FieldVector fields;
-    fields.reserve(columns.size());
-    for (const auto& column: columns)
+    std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
+    for (const auto& column : columns)
     {
-        fields.push_back(arrow::field(column->name(), associatedArrowType(column)));
+        auto columnAdapter = makeColumnAdapter(column);
+        fields.push_back(columnAdapter->makeField());
+        arrow_columns.push_back(columnAdapter->makeArray());
     }
     auto schema = arrow::schema(std::move(fields));
-
-    // Build columns using StringBuilder
-    std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
-    arrow_columns.reserve(columns.size());
-
-    arrow::StringBuilder builder;
-
-    for (const auto& column: columns)
-    {
-        for (size_t row = 0; row < column->size(); ++row)
-        {
-            const std::string& cell = column->toString(row);
-            auto st = builder.Append(cell);
-            if (!st.ok())
-            {
-                std::ostringstream oss;
-                oss << "ParquetTableWriter: failed to append cell in column " << column->name()
-                    << ": " << st.ToString();
-                throw std::runtime_error(oss.str());
-            }
-        }
-
-        std::shared_ptr<arrow::Array> array;
-        auto st_fin = builder.Finish(&array);
-        if (!st_fin.ok())
-        {
-            std::ostringstream oss;
-            oss << "ParquetTableWriter: failed to finalize column " << column->name() << ": "
-                << st_fin.ToString();
-            throw std::runtime_error(oss.str());
-        }
-        arrow_columns.push_back(std::move(array));
-    }
-
-    // Make table
     auto table = arrow::Table::Make(schema, std::move(arrow_columns));
 
-    // Open output file
+
+    // ========================
+    // Write the arrow table
+    // ========================
     std::shared_ptr<arrow::io::FileOutputStream> outfile;
     auto st_out = arrow::io::FileOutputStream::Open(output_file_.string());
     if (!st_out.ok())

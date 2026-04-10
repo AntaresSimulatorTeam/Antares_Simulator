@@ -32,7 +32,7 @@ public:
     virtual void reserve(size_t capacity) = 0;
     virtual void clear() = 0;
 
-    std::string name()
+    std::string name() const
     {
         return name_;
     }
