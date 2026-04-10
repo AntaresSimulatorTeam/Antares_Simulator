@@ -5,7 +5,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <antares/study/system-model/variabilityType.h>
+#include <antares/study/system-model-base/variabilityType.h>
 #include "antares/exception/RuntimeError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
 #include "antares/optimisation/linear-problem-api/linearProblemBuilder.h"
