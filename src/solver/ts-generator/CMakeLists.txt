@@ -48,9 +48,15 @@ add_library(antares-solver-ts-generator
 
 find_package(fmt REQUIRED)
 target_link_libraries(antares-solver-ts-generator
+        PUBLIC
+        # studydata.h (PUBLIC header) includes correlation.h which uses these types;
+        # consumers of this library need these include paths to compile studydata.h.
+        Antares::correlation # studydata.h -> correlation.h
+        Antares::array       # correlation.h -> antares/array/matrix.h
+        Antares::inifile     # correlation.h -> antares/inifile/inifile.h
+        Antares::enums       # antares/study/fwd.h -> antares/enums/Enum.hpp
         PRIVATE
         result_writer
-        array
         benchmarking
         Antares::study
         Antares::misc
@@ -61,6 +67,10 @@ target_link_libraries(antares-solver-ts-generator
 target_include_directories(antares-solver-ts-generator
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # studydata.h and correlation.h include antares/study/*.h headers;
+        # study cannot be a PUBLIC link dep (circular: study PUBLIC links ts-generator),
+        # so we expose the include directory directly.
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares/study/include>
 )
 
 install(DIRECTORY include/antares
