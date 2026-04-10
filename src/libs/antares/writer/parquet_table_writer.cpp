@@ -13,31 +13,18 @@
 #include <parquet/arrow/writer.h>
 
 #include "columnToArrowAdapter.h"
+#include "parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
+namespace fs = std::filesystem;
 
 namespace Antares::Writer
 {
 
-ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
-    ITableWriter(filePath)
-{
-    output_file_.replace_extension(".parquet");
-}
-
-void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
+std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::SimulationTable& simuTable)
 {
     const auto& columns = simuTable.columns();
 
-    // Basic validations
-    if (columns.empty())
-    {
-        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
-    }
-
-    // ========================
-    // Make the arrow table
-    // ========================
     arrow::FieldVector fields;
     std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
     for (const auto& column: columns)
@@ -47,40 +34,48 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
         arrow_columns.push_back(columnAdapter->makeArray());
     }
     auto schema = arrow::schema(std::move(fields));
-    auto table = arrow::Table::Make(schema, std::move(arrow_columns));
+    return arrow::Table::Make(schema, std::move(arrow_columns));
+}
 
-    // ========================
-    // Write the arrow table
-    // ========================
+void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& file_path)
+{
+    // --- 1. Open output file ---
     std::shared_ptr<arrow::io::FileOutputStream> outfile;
-    auto st_out = arrow::io::FileOutputStream::Open(output_file_.string());
-    if (!st_out.ok())
+    ARROW_THROW_ASSIGN(outfile, arrow::io::FileOutputStream::Open(file_path.string()));
+
+    // --- 2. Configure Parquet writer ---
+    auto writer_props = parquet::WriterProperties::Builder()
+                          .compression(arrow::Compression::SNAPPY)
+                          ->version(parquet::ParquetVersion::PARQUET_2_6)
+                          ->build();
+
+    auto arrow_props = parquet::ArrowWriterProperties::Builder().store_schema()->build();
+
+    // --- 3. Write ---
+    ARROW_THROW_NOT_OK(parquet::arrow::WriteTable(*table,
+                                                  arrow::default_memory_pool(),
+                                                  outfile,
+                                                  /*chunk_size=*/1024,
+                                                  writer_props,
+                                                  arrow_props));
+}
+
+ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
+    ITableWriter(filePath)
+{
+    output_file_.replace_extension(".parquet");
+}
+
+void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
+{
+    // Basic validations
+    if (simuTable.columns().empty())
     {
-        std::ostringstream oss;
-        oss << "ParquetTableWriter: cannot open output file '" << output_file_.string()
-            << "': " << st_out.status().ToString();
-        throw std::runtime_error(oss.str());
+        throw std::invalid_argument("ParquetTableWriter: simulation table is empty");
     }
-    outfile = *st_out;
 
-    // Parquet write with default properties
-    parquet::WriterProperties::Builder props_builder;
-    auto props = props_builder.build();
-
-    // Chunk size: write all at once or in default 1024; use total rows if small
-    const int64_t chunk_size = std::max<int64_t>(1, std::min<int64_t>(1024, table->num_rows()));
-
-    auto st_write = parquet::arrow::WriteTable(*table,
-                                               arrow::default_memory_pool(),
-                                               outfile,
-                                               chunk_size,
-                                               props);
-    if (!st_write.ok())
-    {
-        std::ostringstream oss;
-        oss << "ParquetTableWriter: failed to write table: " << st_write.ToString();
-        throw std::runtime_error(oss.str());
-    }
+    auto table = makeArrowTable(simuTable);
+    writeParquet(table, output_file_);
 }
 
 } // namespace Antares::Writer
