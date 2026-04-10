@@ -14,46 +14,9 @@
 #include "columnToArrowAdapter.h"
 
 using namespace Antares::IO::Outputs;
-using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Writer
 {
-
-std::shared_ptr<arrow::DataType> arrowStorageType(const std::unique_ptr<IColumn>& column)
-{
-    if (dynamic_cast<StringColumn*>(column.get()))
-    {
-        return arrow::utf8();
-    }
-    else if (dynamic_cast<IntegralColumn<unsigned>*>(column.get()))
-    {
-        return arrow::uint32();
-    }
-    else if (dynamic_cast<DoubleColumn*>(column.get()))
-    {
-        return arrow::float64();
-    }
-    else if (dynamic_cast<OptionalColumn<std::string>*>(column.get()))
-    {
-        return arrow::utf8();
-    }
-    else if (dynamic_cast<OptionalColumn<unsigned>*>(column.get()))
-    {
-        return arrow::uint32();
-    }
-    else if (dynamic_cast<OptionalColumn<double>*>(column.get()))
-    {
-        return arrow::float64();
-    }
-    else if (dynamic_cast<OptionalColumn<MipBasisStatus>*>(column.get()))
-    {
-        return arrow::int8();
-    }
-    else
-    {
-        throw std::invalid_argument("ParquetTableWriter: column type unknown");
-    }
-}
 
 ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
     ITableWriter(filePath)

@@ -37,6 +37,34 @@ private:
 };
 
 // ================================
+// Class DoubleColumnAdapter
+// ================================
+class DoubleColumnAdapter: public IColumnAdapter
+{
+public:
+    DoubleColumnAdapter(const IO::Outputs::DoubleColumn* column);
+    std::shared_ptr<arrow::Field> makeField() const override;
+    std::shared_ptr<arrow::Array> makeArray() const override;
+
+private:
+    const IO::Outputs::DoubleColumn* column_;
+};
+
+// ================================
+// Class IntColumnAdapter
+// ================================
+class IntColumnAdapter: public IColumnAdapter
+{
+public:
+    IntColumnAdapter(const IO::Outputs::IntegralColumn<unsigned>* column);
+    std::shared_ptr<arrow::Field> makeField() const override;
+    std::shared_ptr<arrow::Array> makeArray() const override;
+
+private:
+    const IO::Outputs::IntegralColumn<unsigned>* column_;
+};
+
+// ================================
 // Class OptStringColumnAdapter
 // ================================
 class OptStringColumnAdapter: public IColumnAdapter
@@ -48,6 +76,50 @@ public:
 
 private:
     const IO::Outputs::OptionalColumn<std::string>* column_;
+};
+
+// ================================
+// Class OptDoubleColumnAdapter
+// ================================
+class OptDoubleColumnAdapter: public IColumnAdapter
+{
+public:
+    OptDoubleColumnAdapter(const IO::Outputs::OptionalColumn<double>* column);
+    std::shared_ptr<arrow::Field> makeField() const override;
+    std::shared_ptr<arrow::Array> makeArray() const override;
+
+private:
+    const IO::Outputs::OptionalColumn<double>* column_;
+};
+
+// ================================
+// Class OptIntColumnAdapter
+// ================================
+class OptIntColumnAdapter: public IColumnAdapter
+{
+public:
+    OptIntColumnAdapter(const IO::Outputs::OptionalColumn<unsigned>* column);
+    std::shared_ptr<arrow::Field> makeField() const override;
+    std::shared_ptr<arrow::Array> makeArray() const override;
+
+private:
+    const IO::Outputs::OptionalColumn<unsigned>* column_;
+};
+
+// ================================
+// Class OptMipBasisStatusColumnAdapter
+// ================================
+class OptMipBasisStatusColumnAdapter: public IColumnAdapter
+{
+public:
+    OptMipBasisStatusColumnAdapter(
+      const IO::Outputs::OptionalColumn<
+        Optimisation::LinearProblemApi::MipBasisStatus>* column);
+    std::shared_ptr<arrow::Field> makeField() const override;
+    std::shared_ptr<arrow::Array> makeArray() const override;
+
+private:
+    const IO::Outputs::OptionalColumn<Optimisation::LinearProblemApi::MipBasisStatus>* column_;
 };
 
 // ===========================
