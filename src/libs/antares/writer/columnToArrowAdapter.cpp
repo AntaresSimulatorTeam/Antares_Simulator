@@ -4,27 +4,10 @@
 #include "columnToArrowAdapter.h"
 
 #include <stdexcept>
+#include "parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
 using namespace Antares::Optimisation::LinearProblemApi;
-
-// Helper: throw on Arrow errors
-#define ARROW_THROW_NOT_OK(expr)                      \
-    do                                                \
-    {                                                 \
-        arrow::Status _st = (expr);                   \
-        if (!_st.ok())                                \
-            throw std::runtime_error(_st.ToString()); \
-    } while (0)
-
-#define ARROW_THROW_ASSIGN(lhs, expr)                           \
-    do                                                          \
-    {                                                           \
-        auto _res = (expr);                                     \
-        if (!_res.ok())                                         \
-            throw std::runtime_error(_res.status().ToString()); \
-        lhs = std::move(_res).ValueOrDie();                     \
-    } while (0)
 
 namespace Antares::Writer
 {

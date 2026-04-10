@@ -1,6 +1,6 @@
 #pragma once
-#include <memory>
 #include <algorithm>
+#include <memory>
 #include <stdexcept>
 #include <unordered_map>
 

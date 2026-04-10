@@ -11,6 +11,7 @@
 #include <arrow/api.h>
 #include <arrow/io/api.h>
 #include <parquet/arrow/writer.h>
+
 #include "columnToArrowAdapter.h"
 
 using namespace Antares::IO::Outputs;
@@ -39,7 +40,7 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
     // ========================
     arrow::FieldVector fields;
     std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
-    for (const auto& column : columns)
+    for (const auto& column: columns)
     {
         auto columnAdapter = makeColumnAdapter(column);
         fields.push_back(columnAdapter->makeField());
@@ -47,7 +48,6 @@ void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
     }
     auto schema = arrow::schema(std::move(fields));
     auto table = arrow::Table::Make(schema, std::move(arrow_columns));
-
 
     // ========================
     // Write the arrow table
