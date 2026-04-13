@@ -5,9 +5,8 @@ add_boost_test(tests-simple-study
       LIBS
       antares-solver-hydro
       antares-solver-variable
-      antares-solver-simulation
+      $<LINK_GROUP:RESCAN,antares-solver-simulation,model_antares>
       antares-solver-ts-generator
-      model_antares
       Antares::tests::in-memory-study)
 
 # antares-solver-simulation and model_antares are mutually dependent (circular).

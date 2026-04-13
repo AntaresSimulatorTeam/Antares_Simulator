@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
+cmake_minimum_required(VERSION 3.24) # 3.14: FetchContent_MakeAvailable; 3.24: LINK_GROUP generator expression
 
 # Version
 set(ANTARES_VERSION_HI 10)
@@ -129,7 +129,6 @@ if (WIN32)
         set(COMPILER_LIB_INCLUDE "gcc")
     endif (MSVC)
 endif (WIN32)
-
 #
 # Beta
 #
