@@ -3,15 +3,14 @@
 
 #include "singleProblemGetterModelerImpl.h"
 
+#include "antares/logs/logs.h"
 #include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
-#include "antares/writer/i_writer.h"
 
 namespace Antares::Solver::Implementation
 {
 
-SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::path& modelerPath):
-    resultWriter_(std::make_shared<NullResultWriter>())
+SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::path& modelerPath)
 {
     auto loader = std::make_unique<Antares::Solver::LoadFiles::FileLoader>(modelerPath);
     auto writer = std::make_unique<Antares::Solver::FileWriter>(modelerPath);

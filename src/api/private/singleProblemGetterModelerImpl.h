@@ -5,14 +5,8 @@
 
 #include <filesystem>
 #include <memory>
-#include <string>
-#include <vector>
 
-#include "antares/solver/lps/LpsFromAntares.h"
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/optim-model-filler/BendersDecomposition.h"
-#include "antares/study/study.h"
-#include "antares/writer/i_writer.h"
 
 namespace Antares::Solver::Implementation
 {
@@ -26,8 +20,6 @@ public:
 
 private:
     std::unique_ptr<Modeler> modeler_;
-    std::unique_ptr<Antares::Data::Study> study_;
-    Solver::IResultWriter::Ptr resultWriter_;
 };
 
 } // namespace Antares::Solver::Implementation
