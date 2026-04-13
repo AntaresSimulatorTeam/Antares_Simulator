@@ -5,6 +5,7 @@ add_boost_test(tests-simple-study
       LIBS
       antares-solver-hydro
       antares-solver-variable
-      $<LINK_GROUP:RESCAN,antares-solver-simulation,model_antares>
+      antares-solver-simulation
       antares-solver-ts-generator
+      model_antares
       Antares::tests::in-memory-study)

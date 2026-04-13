@@ -5,7 +5,8 @@ add_boost_test(tests-binding_constraints
      test_binding_constraints.cpp
      test_binding_constraints_with_mustrun.cpp
      LIBS
-     $<LINK_GROUP:RESCAN,model_antares,antares-solver-simulation>
+     model_antares
+     antares-solver-simulation
      antares-solver-hydro
      antares-solver-ts-generator
      Antares::tests::in-memory-study)

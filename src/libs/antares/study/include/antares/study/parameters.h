@@ -441,7 +441,7 @@ public:
     bool namedProblems;
 
     // All options related to linear & quadratic optimization
-    Antares::Solver::Optimization::OptimizationOptions optOptions;
+    Solver::Optimization::OptimizationOptions optOptions;
 
 private:
     void resetPlayedYears(uint nbOfYears);

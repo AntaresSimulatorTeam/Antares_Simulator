@@ -4,5 +4,6 @@ add_boost_test(test-unfeasible-problem-analyzer
   test-unfeasible-problem-analyzer.cpp
   LIBS
   infeasible_problem_analysis
-  $<LINK_GROUP:RESCAN,model_antares,antares-solver-simulation>
+        model_antares
+        antares-solver-simulation
 )
