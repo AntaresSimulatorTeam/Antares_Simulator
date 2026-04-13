@@ -147,9 +147,9 @@ struct HourInterval
 struct DayInterval
 {
     //! The very first day
-    uint first;
+    uint first{0};
     //! The last day (not included)
-    uint end;
+    uint end{0};
 
     uint numberOfWeeks() const;
 
