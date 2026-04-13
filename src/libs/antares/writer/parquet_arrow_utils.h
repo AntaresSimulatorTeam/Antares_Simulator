@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <stdexcept>
 #include <arrow/status.h>
+#include <stdexcept>
 
 // Throw std::runtime_error on Arrow Status failure.
 // Use instead of ARROW_RETURN_NOT_OK in non-returning contexts (tests, constructors, etc.).

@@ -4,6 +4,7 @@
 #include "columnToArrowAdapter.h"
 
 #include <stdexcept>
+
 #include "parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
