@@ -253,10 +253,7 @@ void Modeler::buildProblems()
 
     timeScenarioCtx_ = std::make_unique<FillContext>(timeScenarioCtx);
 
-    // Sub problem
-
     // Master
-
     auto masterEntities = buildProblem(data_,
                                        Config::Location::MASTER,
                                        "master",
@@ -265,6 +262,7 @@ void Modeler::buildProblems()
                                        ResolutionMode::BENDERS_DECOMPOSITION,
                                        std::nullopt);
     masterProblem_ = std::move(masterEntities.problem);
+
     // Subproblem
     auto [subproblem, subproblemOptimEntityContainer] = buildProblem(data_,
                                                                      Config::Location::SUBPROBLEMS,
@@ -274,6 +272,7 @@ void Modeler::buildProblems()
                                                                      data_.resolutionMode,
                                                                      parameters_.solver);
     subproblems_.emplace_back(std::move(subproblem));
+    subproblemOptimEntityContainer_ = std::move(subproblemOptimEntityContainer);
 
     auto& subproblem_1_1 = subproblems_[0];
     // gp : class SystemLinearProblemBuilder should be renamed into ComponentFillersBuilder
