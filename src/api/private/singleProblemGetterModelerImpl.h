@@ -22,13 +22,9 @@ class SingleProblemGetterModeler final
 public:
     explicit SingleProblemGetterModeler(const std::filesystem::path& modelerPath);
 
-    std::vector<std::string> getProblemIds() const;
-
     void printProblems() const;
 
 private:
-    void initModeler();
-
     std::unique_ptr<Modeler> modeler_;
     std::unique_ptr<Antares::Data::Study> study_;
     Solver::IResultWriter::Ptr resultWriter_;
