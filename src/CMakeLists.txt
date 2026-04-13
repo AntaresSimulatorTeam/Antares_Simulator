@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
+cmake_minimum_required(VERSION 3.24) # 3.14: FetchContent_MakeAvailable; 3.24: LINK_GROUP generator expression
 
 # Version
 set(ANTARES_VERSION_HI 10)
@@ -129,14 +129,6 @@ if (WIN32)
         set(COMPILER_LIB_INCLUDE "gcc")
     endif (MSVC)
 endif (WIN32)
-
-# GNU ld is single-pass for static libraries: circular dependencies between
-# libraries (e.g. antares-solver-simulation <-> model_antares) cause unresolved
-# symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_link_options("LINKER:--start-group")
-endif()
-
 #
 # Beta
 #

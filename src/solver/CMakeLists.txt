@@ -92,6 +92,11 @@ target_link_libraries(antares-solver
         PRIVATE
         solver-lib
         Antares::application
+        # GNU ld is single-pass for static libraries: circular dependencies between
+        # antares-solver-simulation <-> model_antares require re-scanning.
+        # LINK_GROUP:RESCAN wraps these libraries in --start-group/--end-group on
+        # GNU ld; it is a no-op on linkers that don't support grouping.
+        $<LINK_GROUP:RESCAN,antares-solver-simulation,model_antares>
 )
 
 target_include_directories(antares-solver
