@@ -188,7 +188,7 @@ public:
 
     ConstraintBuilder& Pumping(unsigned int index, double coeff);
 
-    ConstraintBuilder& HydroLevel(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& HydroLevel(unsigned int index, double coeff);
 
     ConstraintBuilder& Overflow(unsigned int index, double coeff);
 

@@ -579,8 +579,6 @@ struct PROBLEME_HEBDO
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<::AREA_INPUT> ShortTermStorage;
 
-    uint32_t NumberOfHydros = 0;
-
     /* Optimization problem */
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;

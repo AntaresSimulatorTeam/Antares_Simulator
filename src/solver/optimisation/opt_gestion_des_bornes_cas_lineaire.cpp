@@ -385,8 +385,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
 
             var = variableManager.Overflow(pays, pdtJour);
-
-            problemeHebdo->ResultatsHoraires[pays].debordementsHoraires[pdtHebdo] = 0.;
             if (var >= 0)
             {
                 Xmin[var] = 0.0;

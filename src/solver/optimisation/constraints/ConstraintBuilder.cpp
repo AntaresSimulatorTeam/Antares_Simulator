@@ -292,12 +292,9 @@ ConstraintBuilder& ConstraintBuilder::Pumping(unsigned int index, double coeff)
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index,
-                                                 double coeff,
-                                                 int offset,
-                                                 int delta)
+ConstraintBuilder& ConstraintBuilder::HydroLevel(unsigned int index, double coeff)
 {
-    AddVariable(variableManager_.HydroLevel(index, hourInWeek_, offset, delta), coeff);
+    AddVariable(variableManager_.HydroLevel(index, hourInWeek_), coeff);
     return *this;
 }
 

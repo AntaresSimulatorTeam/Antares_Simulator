@@ -255,6 +255,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
 
 StudyRuntimeInfos::StudyRuntimeInfos():
     nbYears(0),
+    counts({}),
     quadraticOptimizationHasFailed(false)
 {
 }
@@ -334,6 +335,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     nbYears = gd.nbYears;
     mode = gd.mode;
+
+    counts = {};
+
     // Calendar
     logs.info() << "Generating calendar informations";
     study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});

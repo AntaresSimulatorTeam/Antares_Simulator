@@ -6,7 +6,6 @@
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
-#include <antares/study/area/capacityReservation.h>
 #include <antares/study/parameters.h>
 #include <antares/study/version.h>
 

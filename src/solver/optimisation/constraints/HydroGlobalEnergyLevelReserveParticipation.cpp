@@ -40,10 +40,7 @@ void HydroGlobalEnergyLevelReserveParticipation::add(int pays, int cluster, int 
                 }
                 if (builder.NumberOfVariables() > 0)
                 {
-                    builder.HydroLevel(globalClusterIdx,
-                                       maxGlobalEnergyActivationRatio,
-                                       t,
-                                       builder.data.NombreDePasDeTempsPourUneOptimisation);
+                    builder.HydroLevel(globalClusterIdx, maxGlobalEnergyActivationRatio);
                 }
             }
 

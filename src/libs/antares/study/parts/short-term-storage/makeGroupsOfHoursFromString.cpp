@@ -10,8 +10,6 @@
 //
 #include <BaseErrorListener.h>
 
-#include "antares/study/parts/common/CustomErrorListener.h"
-
 #include "HoursFieldLexer.h"
 //
 #include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
