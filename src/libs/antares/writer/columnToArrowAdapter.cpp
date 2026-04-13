@@ -213,7 +213,7 @@ OptMipBasisStatusColumnAdapter::OptMipBasisStatusColumnAdapter(
 
 std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
 {
-    return arrow::field(column_->name(), arrow::int8());
+    return arrow::field(column_->name(), arrow::uint32());
 }
 
 std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
