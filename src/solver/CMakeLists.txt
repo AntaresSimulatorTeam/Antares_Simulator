@@ -88,6 +88,16 @@ target_link_libraries(solver-lib
         ${ANTARES_SOLVER_LIBS}
 )
 
+# antares-solver-simulation and model_antares are mutually dependent (circular).
+# On GNU ld (single-pass), we need --start-group/--end-group to re-scan both.
+# CMake 3.24+ LINK_GROUP:RESCAN generates this pair automatically and correctly.
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24" AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_link_libraries(solver-lib
+            INTERFACE
+            $<LINK_GROUP:RESCAN,antares-solver-simulation,model_antares>
+    )
+endif()
+
 target_link_libraries(antares-solver
         PRIVATE
         solver-lib
