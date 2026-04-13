@@ -19,7 +19,7 @@ SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::pa
     auto loader = std::make_unique<Antares::Solver::LoadFiles::FileLoader>(modelerPath);
     auto writer = std::make_unique<Antares::Solver::FileWriter>(modelerPath);
     modeler_ = std::make_unique<Modeler>(*loader, *writer);
-    modeler_->run();
+    modeler_->buildProblems();
 }
 
 std::vector<std::string> SingleProblemGetterModeler::getProblemIds() const

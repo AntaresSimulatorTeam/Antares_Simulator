@@ -186,7 +186,6 @@ IMipSolution* Modeler::solveSubproblem()
 
 void Modeler::writeSubProblemSimulationTable(
   const IMipSolution* solution,
-  const OptimEntityContainer& subproblemOptimEntityContainer,
   const FillContext& timeScenarioCtx) const
 {
     switch (solution->getStatus())
@@ -200,7 +199,7 @@ void Modeler::writeSubProblemSimulationTable(
             writer_.writeSimulationTable(*subproblem_1_1,
                                          *solution,
                                          data_,
-                                         subproblemOptimEntityContainer,
+                                         *subproblemOptimEntityContainer_,
                                          timeScenarioCtx);
         }
     }
@@ -238,7 +237,7 @@ void Modeler::exportStructureFile() const
     writer.write(of);
 }
 
-void Modeler::run()
+void Modeler::buildProblems()
 {
     Utils::TimeMeasurement measure;
 
@@ -253,6 +252,8 @@ void Modeler::run()
       parameters_.lastTimeStep,  // global = local
       0};
 
+    timeScenarioCtx_ = std::make_unique<FillContext>(timeScenarioCtx);
+
     // Sub problem
 
     // Master
@@ -261,7 +262,7 @@ void Modeler::run()
                                        Config::Location::MASTER,
                                        "master",
                                        &data_.bendersDecomposition,
-                                       timeScenarioCtx,
+                                       *timeScenarioCtx_,
                                        ResolutionMode::BENDERS_DECOMPOSITION,
                                        std::nullopt);
     masterProblem_ = std::move(masterEntities.problem);
@@ -270,7 +271,7 @@ void Modeler::run()
                                                                      Config::Location::SUBPROBLEMS,
                                                                      "1-1",
                                                                      &data_.bendersDecomposition,
-                                                                     timeScenarioCtx,
+                                                                     *timeScenarioCtx_,
                                                                      data_.resolutionMode,
                                                                      parameters_.solver);
     subproblems_.emplace_back(std::move(subproblem));
@@ -288,7 +289,11 @@ void Modeler::run()
     measure.tick();
     logs.info();
     logs.info() << "Modeler build took " << measure.toStringInSeconds();
+}
 
+void Modeler::run()
+{
+    buildProblems();
     // if simulation table or mps are requested
     if (!parameters_.noOutput || parameters_.exportMps)
     {
@@ -303,7 +308,7 @@ void Modeler::run()
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
         auto* solution = solveSubproblem();
-        writeSubProblemSimulationTable(solution, *subproblemOptimEntityContainer, timeScenarioCtx);
+        writeSubProblemSimulationTable(solution, *timeScenarioCtx_);
     }
 }
 
