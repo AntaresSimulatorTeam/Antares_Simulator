@@ -14,22 +14,6 @@ SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::pa
 
 SingleProblemGetterModeler::~SingleProblemGetterModeler() = default;
 
-std::vector<std::string> SingleProblemGetterModeler::getProblemIds() const
-{
-    return impl_->getProblemIds();
-}
-
-std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
-SingleProblemGetterModeler::getProblem(const std::string& problemId)
-{
-    return impl_->getProblem(problemId);
-}
-
-Solver::ProblemEntity SingleProblemGetterModeler::getMasterProblem() const
-{
-    return impl_->getMasterProblem();
-}
-
 void SingleProblemGetterModeler::printProblems() const
 {
     impl_->printProblems();

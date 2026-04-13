@@ -23,10 +23,7 @@ public:
     explicit SingleProblemGetterModeler(const std::filesystem::path& modelerPath);
 
     std::vector<std::string> getProblemIds() const;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> getProblem(
-      const std::string& problemId);
 
-    Solver::ProblemEntity getMasterProblem() const;
     void printProblems() const;
 
 private:

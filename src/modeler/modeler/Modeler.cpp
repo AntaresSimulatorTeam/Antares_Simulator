@@ -184,9 +184,8 @@ IMipSolution* Modeler::solveSubproblem()
     return solution;
 }
 
-void Modeler::writeSubProblemSimulationTable(
-  const IMipSolution* solution,
-  const FillContext& timeScenarioCtx) const
+void Modeler::writeSubProblemSimulationTable(const IMipSolution* solution,
+                                             const FillContext& timeScenarioCtx) const
 {
     switch (solution->getStatus())
     {
