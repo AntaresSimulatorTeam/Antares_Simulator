@@ -692,7 +692,7 @@ On picking any area in the primary list, the user gets direct access to all data
     - Adjust the values associated with the current first day of the year (function name: shift rows)
 
 ## Reserves
-Reserves can be enabled in the "settings/generaldata.ini" file by setting the "reserves" parameter to "enabled" in the "[compatibility]" section.
+Reserves can be enabled in the "settings/generaldata.ini" file by setting the "reserves" parameter to "enabled" in the "[general]" section.
 
 If reserves are enabled, the following files are required:
 
@@ -741,14 +741,14 @@ participation-cost-off = 1
 ```ini
 [res_1_up]
 cluster-name = st1
-max-turbining = 20
-max-pumping = 30
+max-release = 20
+max-store = 30
 participation-cost = 3
 
 [res_1_down]
 cluster-name = st1
-max-turbining = 20
-max-pumping = 20
+max-release = 20
+max-store = 20
 participation-cost = 2
 ```
 
@@ -756,14 +756,14 @@ participation-cost = 2
 ```ini
 [res_1_up]
 cluster-name = lt
-max-turbining = 20
-max-pumping = 30
+max-release = 20
+max-store = 30
 participation-cost = 1
 
 [res_1_down]
 cluster-name = lt
-max-turbining = 20
-max-pumping = 20
+max-release = 20
+max-store = 20
 participation-cost = 1
 ```
 
@@ -776,14 +776,14 @@ lt = [res_1_up, res_1_down]
 
 [res_1_up]
 cluster-name = lt
-max-turbining = 20
-max-pumping = 30
+max-release = 20
+max-store = 30
 participation-cost = 1
 
 [res_1_down]
 cluster-name = lt
-max-turbining = 20
-max-pumping = 20
+max-release = 20
+max-store = 20
 participation-cost = 1
 ```
 
