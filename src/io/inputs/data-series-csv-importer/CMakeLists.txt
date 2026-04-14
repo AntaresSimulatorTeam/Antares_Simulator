@@ -17,6 +17,7 @@ find_package(Boost REQUIRED COMPONENTS iostreams)
 target_link_libraries(data-series-csv-importer
         PUBLIC
         Antares::linear-problem-data-impl
+	Antares::logs
         PRIVATE
         Boost::headers
         Boost::iostreams

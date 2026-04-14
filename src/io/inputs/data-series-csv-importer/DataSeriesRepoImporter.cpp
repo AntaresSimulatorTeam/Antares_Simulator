@@ -10,6 +10,7 @@
 #include <boost/iostreams/stream.hpp>
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
+#include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
 namespace fs = std::filesystem;
@@ -190,6 +191,7 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
         auto timeSeriesSet = std::make_unique<TimeSeriesSet>(entry.path().stem().string(),
                                                              readCSV(entry, csvSeparator));
         repo.addDataSeries(std::move(timeSeriesSet));
+        Antares::logs.debug() << "Loaded timeseries " << entry.path().string();
     }
     return repo;
 }
