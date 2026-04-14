@@ -56,8 +56,12 @@ class modeler_output_handler:
         return df
 
     def get_simulation_table_entry(self, component: str, output: str, block: int, timestep: int, scenario: int):
-        df = self.simulation_table[(self.simulation_table["component"] == component)
-                                   & (self.simulation_table["output"] == output)]
+        df = self.simulation_table
+        if component in (None, "", "None"):
+            df = df[pd.isna(df["component"])]
+        else:
+            df = df[df["component"] == component]
+        df = df[df["output"] == output]
         if not pd.isna(block):
             df = df[df["block"] == block]
         if pd.isna(timestep):

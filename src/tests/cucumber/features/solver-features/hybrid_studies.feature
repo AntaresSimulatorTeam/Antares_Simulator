@@ -125,5 +125,9 @@ Feature: hybrid (simulator+modeler) studies
     When I run antares simulator with --named-mps-problems
     Then the simulation succeeds
     And the simulation takes less than 10 seconds
-	And the objective value is 186360
-	Then for first week, area balance RHS (for area unique) is first -12, -13, -14, -15, -16, then equals constant -11
+    And the modeler outputs contain the following entries
+      | component    | output                                 | scenario | value         |
+      | modeler_load | balance_port.unsupplied-energy-bound   | 0        | 100           |
+      | modeler_load | balance_port.unsupplied-energy-bound   | 1        | 50            |
+      |              | OBJECTIVE_VALUE                        | 0        | 15123350.2028 |
+      |              | OBJECTIVE_VALUE                        | 1        | 6723362.9588  |
