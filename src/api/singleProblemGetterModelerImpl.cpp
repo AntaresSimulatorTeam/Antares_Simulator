@@ -10,12 +10,15 @@
 namespace Antares::Solver::Implementation
 {
 
-SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::path& modelerPath)
+SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::path& studyPath)
 {
-    auto loader = std::make_unique<Antares::Solver::LoadFiles::FileLoader>(modelerPath);
-    auto writer = std::make_unique<Antares::Solver::FileWriter>(modelerPath);
+    auto loader = std::make_unique<Antares::Solver::LoadFiles::FileLoader>(studyPath);
+    auto writer = std::make_unique<Antares::Solver::FileWriter>(studyPath);
+    writer->init("");
     modeler_ = std::make_unique<Modeler>(*loader, *writer);
     modeler_->buildProblems();
+    modeler_->exportMps();
+    modeler_->exportStructureFile();
 }
 
 void SingleProblemGetterModeler::printProblems() const
