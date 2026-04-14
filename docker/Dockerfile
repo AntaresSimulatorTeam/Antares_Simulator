@@ -48,7 +48,7 @@ ENV CCACHE_BASEDIR=/workspace
 ENV CCACHE_COMPRESS=1
 ENV PATH="/usr/lib/ccache:$PATH"
 
-ARG RUN_TESTS=false
+ARG RUN_TESTS=OFF
 
 RUN  source /opt/rh/devtoolset-11/enable && \
      source /opt/rh/rh-git227/enable && \
