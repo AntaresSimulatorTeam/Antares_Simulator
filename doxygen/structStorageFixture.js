@@ -9,6 +9,7 @@ var structStorageFixture =
     [ "levels", "structStorageFixture.html#a28d7f8d1ab2a2ea51feafdc132c80781", null ],
     [ "lowRuleCurve", "structStorageFixture.html#a449afe4c02f2d6f63334610ae6f411c6", null ],
     [ "maxCapacity", "structStorageFixture.html#a61680e1819b323591c90612d3b0c7c00", null ],
+    [ "ovf", "structStorageFixture.html#a4362cdea2f812c2c7c47098cdc75b79b", null ],
     [ "pmax", "structStorageFixture.html#ae98cbde445ae764e77d88085d47dcd1d", null ],
     [ "unsupE", "structStorageFixture.html#a748db3b9643131bcf519527e980df9d4", null ],
     [ "upRuleCurve", "structStorageFixture.html#afafe2e8d99080e6e9fe37a71d74d12ec", null ],

@@ -1080,7 +1080,7 @@ var namespaces_dup =
           [ "finalizeOptimizationStatistics", "common-eco-adq_8cpp.html#a11dfb84267c82f2f802941ba9861c8a3", null ],
           [ "interpolateWaterValue", "common-hydro-levels_8cpp.html#a771c320a359d85099c258f03801f797a", null ],
           [ "makeHydroForRemix", "create-storage-for-remix_8h.html#ae6f9d99b0234188a21f7f321b59195ea", null ],
-          [ "makeSTSforRemix", "create-storage-for-remix_8h.html#ace00959a46995b55b45a31d07ef97469", null ],
+          [ "makeSTSforRemix", "create-storage-for-remix_8h.html#afb173be824c9f1e4d0dc1f78822f90ca", null ],
           [ "min_on_subrange", "remix-utils_8h.html#a92ad7706cca8395dbff04130ad54a1a3", null ],
           [ "prepareClustersInMustRunMode", "common-eco-adq_8cpp.html#ac509e7fc9182372967c38e3055559b52", null ],
           [ "PrepareRandomNumbers", "common-eco-adq_8cpp.html#acf7a9024f8a18f667ceff51d36c9e74a", null ],
