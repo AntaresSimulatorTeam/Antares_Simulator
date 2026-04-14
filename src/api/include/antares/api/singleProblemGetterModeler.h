@@ -5,10 +5,8 @@
 
 #include <filesystem>
 #include <memory>
-#include <string>
-#include <vector>
 
-#include "antares/solver/modeler/Modeler.h"
+#include <antares/optimisation/linear-problem-api/linearProblem.h>
 
 namespace Antares::Solver::Implementation
 {
@@ -23,12 +21,7 @@ public:
     explicit SingleProblemGetterModeler(const std::filesystem::path& modelerPath);
     ~SingleProblemGetterModeler();
 
-    std::vector<std::string> getProblemIds() const;
-    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> getProblem(
-      const std::string& problemId);
-
     void printProblems() const;
-    Solver::ProblemEntity getMasterProblem() const;
 
 private:
     std::unique_ptr<Implementation::SingleProblemGetterModeler> impl_;
