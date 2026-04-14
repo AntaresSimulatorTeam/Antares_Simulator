@@ -59,7 +59,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
     -DCMAKE_TOOLCHAIN_FILE=/workspace/Antares_Simulator/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DVCPKG_TARGET_TRIPLET=x64-linux-release \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=$([ "$RUN_TESTS" = "true" ] && echo ON || echo OFF) \
+    -DBUILD_TESTING=$RUN_TESTS \
     -DBUILD_TOOLS=ON \
     -DBUILD_UI=OFF \
     -DCMAKE_PREFIX_PATH=/ortools/install
