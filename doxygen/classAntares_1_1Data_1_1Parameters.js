@@ -56,7 +56,7 @@ var classAntares_1_1Data_1_1Parameters =
     [ "nbYears", "classAntares_1_1Data_1_1Parameters.html#afd5b783afaaee5a8706c7fd2d01147ff", null ],
     [ "ncMode", "classAntares_1_1Data_1_1Parameters.html#a45cff9ebdb86a19b15529df124351afc", null ],
     [ "noOutput", "classAntares_1_1Data_1_1Parameters.html#a25f410507572844e9e01762c448cbabb", null ],
-    [ "optOptions", "classAntares_1_1Data_1_1Parameters.html#ad30e975a01e24d4315e021672d73cae9", null ],
+    [ "optOptions", "classAntares_1_1Data_1_1Parameters.html#a685931d65645c37bae0f88f05c671ed3", null ],
     [ "policy", "classAntares_1_1Data_1_1Parameters.html#aeeedda0cb5d5615ea0ba3b13634fb553", null ],
     [ "power", "classAntares_1_1Data_1_1Parameters.html#ab775874cd6c7f76e8130ba3ebc3f0623", null ],
     [ "readonly", "classAntares_1_1Data_1_1Parameters.html#a0152f7b9abd76ffa7f4c1269c9ec45d4", null ],
