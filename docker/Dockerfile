@@ -71,7 +71,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
 
-RUN if [ "$RUN_TESTS" = "true" ]; then \
+RUN if [ "$RUN_TESTS" = "ON" ]; then \
         source /opt/rh/devtoolset-11/enable && \
         cd _build && \
         ctest -C Release --output-on-failure -L "unit|end-to-end"; \
