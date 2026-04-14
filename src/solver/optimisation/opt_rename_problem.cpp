@@ -323,16 +323,6 @@ void VariableNamer::InternalExcessReserve(unsigned varIndex, const std::string& 
     SetThermalClusterReserveElementName(varIndex, "InternalExcessReserve", reserveName);
 }
 
-void VariableNamer::PowerOfOffUnitsParticipatingToReserve(unsigned varIndex,
-                                                          const std::string& clusterName,
-                                                          const std::string& reserveName)
-{
-    SetThermalClusterAndReserveElementName(varIndex,
-                                           "PowerOfOffUnitsParticipatingToReserve",
-                                           clusterName,
-                                           reserveName);
-}
-
 void VariableNamer::NODU(unsigned varIndex, const std::string& clusterName)
 {
     SetThermalClusterElementName(varIndex, "NODU", clusterName);
@@ -606,12 +596,12 @@ void ConstraintNamer::PMaxReserve(unsigned constrIndex,
     SetThermalClusterAndReserveElementName(constrIndex, "PMaxReserve", clusterName, reserveName);
 }
 
-void ConstraintNamer::PowerOfOffUnitsParticipatingToReserve(unsigned constrIndex,
-                                                            const std::string& clusterName,
-                                                            const std::string& reserveName)
+void ConstraintNamer::ParticipationOfOffUnitsToReserve(unsigned constrIndex,
+                                                       const std::string& clusterName,
+                                                       const std::string& reserveName)
 {
     SetThermalClusterAndReserveElementName(constrIndex,
-                                           "PowerOfOffUnitsParticipatingToReserve",
+                                           "ParticipationOfOffUnitsToReserve",
                                            clusterName,
                                            reserveName);
 }

@@ -103,9 +103,6 @@ public:
                                           const std::string& reserveName);
     void InternalUnsatisfiedReserve(unsigned varIndex, const std::string& reserveName);
     void InternalExcessReserve(unsigned varIndex, const std::string& reserveName);
-    void PowerOfOffUnitsParticipatingToReserve(unsigned varIndex,
-                                               const std::string& clusterName,
-                                               const std::string& reserveName);
     void NODU(unsigned varIndex, const std::string& clusterName);
     void NumberStoppingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
@@ -163,9 +160,10 @@ public:
     void PMaxReserve(unsigned constrIndex,
                      const std::string& clusterName,
                      const std::string& reserveName);
-    void PowerOfOffUnitsParticipatingToReserve(unsigned constrIndex,
-                                               const std::string& clusterName,
-                                               const std::string& reserveName);
+
+    void ParticipationOfOffUnitsToReserve(unsigned constrIndex,
+                                          const std::string& clusterName,
+                                          const std::string& reserveName);
     void ParticipationOfUnitsToReserve(unsigned constrIndex,
                                        const std::string& clusterName,
                                        const std::string& reserveName);

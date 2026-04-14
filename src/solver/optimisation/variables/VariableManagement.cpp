@@ -189,17 +189,6 @@ int& VariableManager::NumberOfDispatchableUnits(unsigned int index,
       .NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[index];
 }
 
-int& VariableManager::PowerOfOffUnitsParticipatingToReserve(unsigned int index,
-                                                            unsigned int hourInWeek,
-                                                            int offset,
-                                                            int delta)
-{
-    auto pdt = GetShiftedTimeStep(offset, delta, hourInWeek);
-    return CorrespondanceVarNativesVarOptim_[pdt]
-      .reservesIndices.value()
-      .offThermalClusterParticipation[index];
-}
-
 int& VariableManager::NumberStoppingDispatchableUnits(unsigned int index,
                                                       unsigned int hourInWeek,
                                                       int offset,

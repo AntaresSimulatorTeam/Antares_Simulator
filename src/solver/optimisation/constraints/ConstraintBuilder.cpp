@@ -158,13 +158,6 @@ ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int ind
     return *this;
 }
 
-ConstraintBuilder& ConstraintBuilder::PowerOfOffUnitsParticipatingToReserve(unsigned int index,
-                                                                            double coeff)
-{
-    AddVariable(variableManager_.PowerOfOffUnitsParticipatingToReserve(index, hourInWeek_), coeff);
-    return *this;
-}
-
 ConstraintBuilder& ConstraintBuilder::NumberStoppingDispatchableUnits(unsigned int index,
                                                                       double coeff)
 {
