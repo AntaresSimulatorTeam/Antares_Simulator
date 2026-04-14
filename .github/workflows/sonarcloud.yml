@@ -120,7 +120,7 @@ jobs:
 
     - name: Init submodule
       run: |
-        git submodule update --init --depth 1 --remote src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 src/tests/resources/Antares_Simulator_Tests_NR
 
     - name: Configure
       run: |
