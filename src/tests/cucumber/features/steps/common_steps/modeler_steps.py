@@ -37,7 +37,10 @@ def modeler_obj_value(context, lb, ub):
 @step('the modeler outputs contain the following entries')
 def modeler_output_values(context):
     for row in context.table:
-        ts_range = read_int_range(row, "timestep")
+        if "timestep" not in context.table.headings:
+            ts_range = [math.nan]
+        else:
+            ts_range = read_int_range(row, "timestep")
         if "scenario" not in context.table.headings:
             scenario_range = [0]
         else:
