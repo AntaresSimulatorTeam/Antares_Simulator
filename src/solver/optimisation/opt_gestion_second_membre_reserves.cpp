@@ -321,7 +321,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     .HydroLevelParticipation.down[globalClusterIdx];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = -hydroCluster.NiveauHoraireSup[pdtHebdo];
+                SecondMembre[cnt] = hydroCluster.NiveauHoraireSup[pdtHebdo];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 
@@ -329,7 +329,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     .HydroLevelParticipation.up[globalClusterIdx];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = hydroCluster.NiveauHoraireInf[pdtHebdo];
+                SecondMembre[cnt] = -hydroCluster.NiveauHoraireInf[pdtHebdo];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 
