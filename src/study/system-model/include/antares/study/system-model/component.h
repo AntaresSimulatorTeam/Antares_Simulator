@@ -7,10 +7,10 @@
 #include <optional>
 
 #include <antares/expressions/nodes/PortFieldNode.h>
+#include <antares/study/system-model-base/variabilityType.h>
 #include "antares/study/system-model/connection.h"
 
 #include "model.h"
-#include "variabilityType.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {

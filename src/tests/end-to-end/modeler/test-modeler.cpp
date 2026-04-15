@@ -11,7 +11,7 @@
 
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
-#include <antares/study/system-model/variabilityType.h>
+#include <antares/study/system-model-base/variabilityType.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
