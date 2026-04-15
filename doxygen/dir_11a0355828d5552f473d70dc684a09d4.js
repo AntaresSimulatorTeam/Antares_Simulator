@@ -45,6 +45,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "residual.h", "residual_8h_source.html", null ],
     [ "spilledEnergy.h", "economy_2spilledEnergy_8h_source.html", null ],
     [ "STSbyGroup.h", "STSbyGroup_8h_source.html", null ],
+    [ "STStorageByCluster_base.h", "STStorageByCluster__base_8h_source.html", null ],
     [ "STStorageCashFlowByCluster.h", "STStorageCashFlowByCluster_8h_source.html", null ],
     [ "STStorageInjectionByCluster.h", "STStorageInjectionByCluster_8h_source.html", null ],
     [ "STStorageLevelsByCluster.h", "STStorageLevelsByCluster_8h_source.html", null ],

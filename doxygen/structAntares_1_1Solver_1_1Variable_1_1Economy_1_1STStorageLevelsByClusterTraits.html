@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Solver::Variable::Economy::STstorageWithdrawalByCluster&lt; NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</title>
+<title>Antares Simulator: Antares::Solver::Variable::Economy::STStorageLevelsByClusterTraits Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageLevelsByClusterTraits.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,28 +124,40 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics-members.html">List of all members</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageLevelsByClusterTraits-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Solver::Variable::Economy::STstorageWithdrawalByCluster&lt; NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</div>  </div>
+<div class="title">Antares::Solver::Variable::Economy::STStorageLevelsByClusterTraits Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a58110dbde8ab1ad65137d7993aa65e78"><td class="memItemLeft" align="right" valign="top"><a id="a58110dbde8ab1ad65137d7993aa65e78"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>count</b>
- }</td></tr>
-<tr class="separator:a58110dbde8ab1ad65137d7993aa65e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:acc6646f14f463c781b44f24ecf47bcf0"><td class="memItemLeft" align="right" valign="top"><a id="acc6646f14f463c781b44f24ecf47bcf0"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Caption</b> ()</td></tr>
+<tr class="separator:acc6646f14f463c781b44f24ecf47bcf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97ad49ade086a3f48b88a81e1514cd1c"><td class="memItemLeft" align="right" valign="top"><a id="a97ad49ade086a3f48b88a81e1514cd1c"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Unit</b> ()</td></tr>
+<tr class="separator:a97ad49ade086a3f48b88a81e1514cd1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a002dbcf8adcca14472f08d4472bcce8d"><td class="memItemLeft" align="right" valign="top"><a id="a002dbcf8adcca14472f08d4472bcce8d"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b> ()</td></tr>
+<tr class="separator:a002dbcf8adcca14472f08d4472bcce8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9eed518e0a07b3c3360d47cc534f4ed"><td class="memItemLeft" align="right" valign="top"><a id="ab9eed518e0a07b3c3360d47cc534f4ed"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeStats</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;intermediateValues)</td></tr>
+<tr class="separator:ab9eed518e0a07b3c3360d47cc534f4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ef90c00ca661fcc8305b0d0a835d975"><td class="memItemLeft" align="right" valign="top"><a id="a9ef90c00ca661fcc8305b0d0a835d975"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setHourlyValue</b> (std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &gt; &amp;clusterValues, <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state)</td></tr>
+<tr class="separator:a9ef90c00ca661fcc8305b0d0a835d975"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/solver/variable/include/antares/solver/variable/economy/<a class="el" href="STStorageWithdrawalByCluster_8h_source.html">STStorageWithdrawalByCluster.h</a></li>
+<li>src/solver/variable/include/antares/solver/variable/economy/<a class="el" href="STStorageLevelsByCluster_8h_source.html">STStorageLevelsByCluster.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster.html">STstorageWithdrawalByCluster</a></li><li class="navelem"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html">Statistics</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageLevelsByClusterTraits.html">STStorageLevelsByClusterTraits</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

@@ -1,5 +1,12 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html#afdada5e20e004259bc5050c5e3dcf4b6":[8,0,0,11,6,4,36,6],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html":[8,0,0,11,6,4,50],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a1303fdc949a38b2e61112b8c1ca37ff4":[8,0,0,11,6,4,50,7],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a1a7d2a387a8c859343c43849061b2e0e":[8,0,0,11,6,4,50,14],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a20a1590f3a3e2789986aa4a01cad8bad":[8,0,0,11,6,4,50,9],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a346999a1dcaf0c497c336b6200afd78e":[8,0,0,11,6,4,50,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a37fed7707edf654ae9b5809c4ccbe210":[8,0,0,11,6,4,50,12],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a5bdcf0cbcd660e46897d9fab6386c3bd":[8,0,0,11,6,4,50,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a644130b285b7c963c3f4cb0daf88a1b1":[8,0,0,11,6,4,50,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a69bce610e893b4c230dafcf53be4da15":[8,0,0,11,6,4,50,5],
@@ -242,12 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#af18d138570a5674313d4871c6e44c506":[8,0,0,11,6,4,72,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgUsualDataFactory.html":[8,0,0,11,6,4,73],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgUsualDataFactory.html#afa487290ac52e7e1cebc93bed313a00c":[8,0,0,11,6,4,73,0],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html":[8,0,0,11,6,4,78],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a1ea8763d626fdbfb489ae1f313b09c22":[8,0,0,11,6,4,78,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a39d8c0ea48a98aae1771465069d334bc":[8,0,0,11,6,4,78,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a419ce3cceb545fa9614356eb6bdfe061":[8,0,0,11,6,4,78,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a5717b9c574eb3a113b2ba2942ebc463c":[8,0,0,11,6,4,78,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a61c97c54d79b49c78c30b985cb98e212":[8,0,0,11,6,4,78,6],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a678e00ff11b0c50ba0295de60ce283a5":[8,0,0,11,6,4,78,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a88fbffafb4e2fa8b2b6feca95be481f2":[8,0,0,11,6,4,78,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html":[8,0,0,11,6,4,78]
 };

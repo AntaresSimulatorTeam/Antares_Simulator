@@ -1,5 +1,12 @@
 var NAVTREEINDEX10 =
 {
+"classAntares_1_1MatrixSubColumn_3_01Matrix_3_01float_01_4_1_1ColumnType_01_5_01_4.html#add9ebef6c0074e81dd97dcc122627f5e":[8,0,0,23,2],
+"classAntares_1_1MatrixSubColumn_3_01U_01_5_5_01_4.html":[8,0,0,21],
+"classAntares_1_1MatrixSubColumn_3_01U_01_5_5_01_4.html#a264131dd08291dd0a54e4904be3aa38f":[8,0,0,21,0],
+"classAntares_1_1MatrixSubColumn_3_01U_01_5_5_01_4.html#a849374c850b01e4205d86ea10e8e04d2":[8,0,0,21,1],
+"classAntares_1_1Memory.html":[8,0,0,27],
+"classAntares_1_1Memory.html#a1e460bed8929aa271443f1127267089f":[8,0,0,27,1],
+"classAntares_1_1Memory.html#a818c69050b5d3c4c3998b66eb3053e93":[8,0,0,27,3],
 "classAntares_1_1Memory.html#a818e1363c749575340d34d6f3d5d07ed":[8,0,0,27,2],
 "classAntares_1_1Memory.html#a827ab4b96d7d5868766830d83e8b6d3d":[8,0,0,27,6],
 "classAntares_1_1Memory.html#ab1a595168ea1870ce436dfd2d8e69b6d":[8,0,0,27,8],
@@ -242,12 +249,5 @@ var NAVTREEINDEX10 =
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html#ac32db2732cb0ca7ba99c70817f9811ee":[8,0,0,9,0,0,1],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html#ad45e4b712a09837e30d243b2910c0ae1":[8,0,0,9,0,0,2],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html":[8,0,0,9,0,1],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html#a6bbf1e7c71525bc7effb7fef8e827796":[8,0,0,9,0,1,0],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html#a7743c66b03b83b5eecfa317600060b1a":[8,0,0,9,0,1,1],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html":[8,0,0,9,0,2],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html#a2f5bccd5b993ab5e6666a2f4b9933452":[8,0,0,9,0,2,0],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html":[8,0,0,9,0,7],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a0068b91ac66bf5e7143918063568b0e5":[8,0,0,9,0,7,9],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a0ce44b552d8f0e29bcb18fa11b97d795":[8,0,0,9,0,7,15],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a1030be994c27b07f8315634ec045fbea":[8,0,0,9,0,7,8]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html#a6bbf1e7c71525bc7effb7fef8e827796":[8,0,0,9,0,1,0]
 };

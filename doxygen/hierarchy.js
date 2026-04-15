@@ -399,9 +399,6 @@ var hierarchy =
         [ "Antares::Solver::Variable::Adequacy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html", null ],
         [ "Antares::Solver::Variable::Economy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html", null ]
       ] ],
-      [ "Antares::Solver::Variable::IVariable< STstorageInjectionByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageInjectionByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::STstorageInjectionByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster.html", null ]
-      ] ],
       [ "Antares::Solver::Variable::IVariable< HydroCost< Container::EndOfList >, Container::EndOfList, VCardHydroCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::HydroCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html", null ]
       ] ],
@@ -457,9 +454,6 @@ var hierarchy =
           [ "LargeValues", "classLargeValues.html", null ]
         ] ]
       ] ],
-      [ "Antares::Solver::Variable::IVariable< STstorageWithdrawalByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageWithdrawalByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::STstorageWithdrawalByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster.html", null ]
-      ] ],
       [ "Antares::Solver::Variable::IVariable< OperatingCost< Container::EndOfList >, Container::EndOfList, VCardOperatingCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::OperatingCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html", null ]
       ] ],
@@ -471,6 +465,9 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Variable::IVariable< ProductionByRenewablePlant< Container::EndOfList >, Container::EndOfList, VCardProductionByRenewablePlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::ProductionByRenewablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByRenewablePlant.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< STStorageByClusterBase< Traits, Container::EndOfList >, Container::EndOfList, VCardSTStorageByClusterBase< Traits > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::STStorageByClusterBase< Traits, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< ReservoirLevel< Container::EndOfList >, Container::EndOfList, VCardReservoirLevel >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::ReservoirLevel< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel.html", null ]
@@ -486,9 +483,6 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Variable::IVariable< AvailableDispatchGen< Container::EndOfList >, Container::EndOfList, VCardAvailableDispatchGen >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::AvailableDispatchGen< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html", null ]
-      ] ],
-      [ "Antares::Solver::Variable::IVariable< STstorageLevelsByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageLevelsByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::STstorageLevelsByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< PriceCSR< Container::EndOfList >, Container::EndOfList, VCardPriceCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::PriceCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html", null ]
@@ -1343,10 +1337,8 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::RowBalance< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::SpilledEnergy< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::STSbyGroup< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STSbyGroup_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::STStorageByClusterBase< Traits, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::STstorageCashFlowByCluster< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::STstorageInjectionByCluster< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageInjectionByCluster_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::STstorageLevelsByCluster< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageLevelsByCluster_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::STstorageWithdrawalByCluster< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageWithdrawalByCluster_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::ThermalAirPollutantEmissions< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ThermalAirPollutantEmissions_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::TimeSeriesValuesBase< Derived, NextT, VCardType >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::WaterValue< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValue_1_1Statistics.html", null ],
@@ -1405,10 +1397,8 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardRowBalance >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardSpilledEnergy >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardSTSbyGroup >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardSTStorageByClusterBase< Traits > >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardSTstorageCashFlowByCluster >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardSTstorageInjectionByCluster >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardSTstorageLevelsByCluster >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardSTstorageWithdrawalByCluster >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardThermalAirPollutantEmissions >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardTimeSeriesBase< TraitsType > >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardTimeSeriesValuesHydro >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1448,7 +1438,10 @@ var hierarchy =
       [ "ConstraintBuilderFixture", "structConstraintBuilderFixture.html", null ]
     ] ],
     [ "Antares::Data::ShortTermStorage::STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", null ],
+    [ "Antares::Solver::Variable::Economy::STStorageInjectionByClusterTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageInjectionByClusterTraits.html", null ],
     [ "Antares::Data::ShortTermStorage::STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ],
+    [ "Antares::Solver::Variable::Economy::STStorageLevelsByClusterTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageLevelsByClusterTraits.html", null ],
+    [ "Antares::Solver::Variable::Economy::STStorageWithdrawalByClusterTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageWithdrawalByClusterTraits.html", null ],
     [ "study_input_handler.study_input_handler", "classstudy__input__handler_1_1study__input__handler.html", null ],
     [ "study_modifier.study_modifier", "classstudy__modifier_1_1study__modifier.html", null ],
     [ "study_run.study_run", "classstudy__run_1_1study__run.html", null ],
@@ -1631,10 +1624,8 @@ var hierarchy =
     [ "Antares::Solver::Variable::Adequacy::VCardSpilledEnergy", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardSpilledEnergy", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergy.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardSTSbyGroup", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTSbyGroup.html", null ],
+    [ "Antares::Solver::Variable::Economy::VCardSTStorageByClusterBase< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardSTstorageCashFlowByCluster", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageCashFlowByCluster.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardSTstorageInjectionByCluster", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageInjectionByCluster.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardSTstorageLevelsByCluster", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageLevelsByCluster.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardSTstorageWithdrawalByCluster", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTstorageWithdrawalByCluster.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardThermalAirPollutantEmissions", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardWaterValue", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardWaterValue.html", null ],
     [ "Vec3", "structVec3.html", null ],
