@@ -184,9 +184,9 @@ private:
     std::string name_;
 };
 
-/// Optional type with debug information
 template<class T>
-using ReserveOpt = DebugOptional<T>;
+using ReserveOpt = std::optional<T>;
 
-/// Convenience macro for accessing value() with automatic file/line
-#define RESERVE_VALUE(opt) (opt).value(__FILE__, __LINE__)
+/// Optional type with debug information
+// template<class T>
+// using ReserveOpt = DebugOptional<T>;

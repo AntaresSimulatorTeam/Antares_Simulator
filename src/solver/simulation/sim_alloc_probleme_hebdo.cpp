@@ -548,6 +548,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         {
             problem.ResultatsHoraires[k].Reserves.emplace();
             problem.ResultatsHoraires[k].Reserves.value().resize(NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].HydroUsage.resize(NombreDePasDeTemps);
         }
 
         for (unsigned j = 0; j < nbPaliers; ++j)
