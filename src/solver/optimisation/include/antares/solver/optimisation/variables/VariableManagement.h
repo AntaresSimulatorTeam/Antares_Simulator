@@ -85,11 +85,6 @@ public:
                                    int offset = 0,
                                    int delta = 0);
 
-    int& PowerOfOffUnitsParticipatingToReserve(unsigned int index,
-                                               unsigned int hourInWeek,
-                                               int offset = 0,
-                                               int delta = 0);
-
     int& NumberStoppingDispatchableUnits(unsigned int index,
                                          unsigned int hourInWeek,
                                          int offset = 0,

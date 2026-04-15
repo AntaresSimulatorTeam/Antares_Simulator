@@ -25,7 +25,7 @@ void POffUnits::add(int pays, int cluster, int pdt)
                 {
                     auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation
                                                    .at(cluster);
-                    builder.PowerOfOffUnitsParticipatingToReserve(
+                    builder.OffThermalClusterReserveParticipation(
                       reserveParticipation.globalIndexClusterParticipation,
                       1);
                 }
