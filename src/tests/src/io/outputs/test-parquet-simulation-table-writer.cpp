@@ -62,10 +62,20 @@ struct OutputFileFixture
     fs::path file_path;
 };
 
-BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, OutputFileFixture)
+struct SimuTableFixture
+{
+    SimulationTable table;
+    const std::nullopt_t none = std::nullopt;
+    using enum MipBasisStatus;
+};
+
+struct LocalFixture: public OutputFileFixture, public SimuTableFixture
+{
+};
+
+BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, LocalFixture)
 {
     // Arrange
-    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
                                .component = "component-1",
                                .output = "var-1",
@@ -83,9 +93,9 @@ BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, Output
     // Assert
     BOOST_CHECK(fs::exists(file_path));
 
-    // --- Read back and make checks ---
+    // Read back the table
     auto read_table = readParquet(file_path);
-    BOOST_CHECK(read_table->num_rows() == 1);
+    BOOST_CHECK_EQUAL(read_table->num_rows(), 1);
     BOOST_CHECK_EQUAL(read_table->num_columns(), 8);
 
     // entry : block
@@ -122,18 +132,17 @@ BOOST_FIXTURE_TEST_CASE(write_SimuTable_then_read_it_back___reading_fits, Output
 }
 
 BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___read_fits,
-                        OutputFileFixture)
+                        LocalFixture)
 {
     // Arrange
-    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
-                               .component = std::nullopt,
+                               .component = none,
                                .output = "var-1",
-                               .absolute_time_index = std::nullopt,
-                               .block_time_index = std::nullopt,
+                               .absolute_time_index = none,
+                               .block_time_index = none,
                                .scenario_index = 0,
-                               .value = std::nullopt,
-                               .status = std::nullopt};
+                               .value = none,
+                               .status = none};
     table.addEntry(entry);
 
     // Act
@@ -143,9 +152,10 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
     // Assert
     BOOST_CHECK(fs::exists(file_path));
 
-    // --- Read back and make checks ---
+    // Read back the table
     auto read_table = readParquet(file_path);
-    BOOST_CHECK(read_table->num_rows() == 1);
+
+    BOOST_CHECK_EQUAL(read_table->num_rows(), 1);
     BOOST_CHECK_EQUAL(read_table->num_columns(), 8);
 
     // entry : block
@@ -179,4 +189,77 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
     // entry : status
     auto status = std::static_pointer_cast<arrow::Int32Array>(read_table->column(7)->chunk(0));
     BOOST_CHECK(!status->IsValid(0));
+}
+
+BOOST_FIXTURE_TEST_CASE(write_3_lines_table_then_read_it_back___read_fits, LocalFixture)
+{
+    // Arrange
+    SimulationTableEntry line_0{1, "c1", "var-1", 5, 5, 1, none, FREE};
+    SimulationTableEntry line_1{2, none, "var-2", 250, none, 4, 20., AT_LOWER_BOUND};
+    SimulationTableEntry line_2{3, "c3", "var-3", none, 101, 7, 30., none};
+
+    table.addEntry(line_0);
+    table.addEntry(line_1);
+    table.addEntry(line_2);
+
+    // Act
+    Antares::Writer::ParquetTableWriter writer(file_path);
+    writer.writeTable(table);
+
+    // Assert
+    BOOST_CHECK(fs::exists(file_path));
+
+    // Read back the table
+    auto read_table = readParquet(file_path);
+
+    BOOST_CHECK_EQUAL(read_table->num_rows(), 3);
+    BOOST_CHECK_EQUAL(read_table->num_columns(), 8);
+
+    // column 0 (block):
+    auto col_0 = std::static_pointer_cast<arrow::Int32Array>(read_table->column(0)->chunk(0));
+    BOOST_CHECK_EQUAL(col_0->Value(0), line_0.block);
+    BOOST_CHECK_EQUAL(col_0->Value(1), line_1.block);
+    BOOST_CHECK_EQUAL(col_0->Value(2), line_2.block);
+
+    // column 1 (component):
+    auto col_1 = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
+    BOOST_CHECK_EQUAL(col_1->Value(0), line_0.component.value());
+    BOOST_CHECK(col_1->GetString(1).empty());
+    BOOST_CHECK_EQUAL(col_1->Value(2), line_2.component.value());
+
+    // column 2 (output) :
+    auto col_2 = std::static_pointer_cast<arrow::StringArray>(read_table->column(2)->chunk(0));
+    BOOST_CHECK_EQUAL(col_2->Value(0), line_0.output);
+    BOOST_CHECK_EQUAL(col_2->Value(1), line_1.output);
+    BOOST_CHECK_EQUAL(col_2->Value(2), line_2.output);
+
+    // column 3 (absolute_time_index):
+    auto col_3 = std::static_pointer_cast<arrow::Int32Array>(read_table->column(3)->chunk(0));
+    BOOST_CHECK_EQUAL(col_3->Value(0), line_0.absolute_time_index.value());
+    BOOST_CHECK_EQUAL(col_3->Value(1), line_1.absolute_time_index.value());
+    BOOST_CHECK(!col_3->IsValid(2));
+
+    // column 4 (block_time_index):
+    auto col_4 = std::static_pointer_cast<arrow::Int32Array>(read_table->column(4)->chunk(0));
+    BOOST_CHECK_EQUAL(col_4->Value(0), line_0.block_time_index.value());
+    BOOST_CHECK(!col_4->IsValid(1));
+    BOOST_CHECK_EQUAL(col_4->Value(2), line_2.block_time_index.value());
+
+    // column 5 (scenario_index):
+    auto col_5 = std::static_pointer_cast<arrow::Int32Array>(read_table->column(5)->chunk(0));
+    BOOST_CHECK_EQUAL(col_5->Value(0), line_0.scenario_index);
+    BOOST_CHECK_EQUAL(col_5->Value(1), line_1.scenario_index);
+    BOOST_CHECK_EQUAL(col_5->Value(2), line_2.scenario_index);
+
+    // column 6 (value):
+    auto col_6 = std::static_pointer_cast<arrow::DoubleArray>(read_table->column(6)->chunk(0));
+    BOOST_CHECK(!col_6->IsValid(0));
+    BOOST_CHECK_EQUAL(col_6->Value(1), line_1.value.value());
+    BOOST_CHECK_EQUAL(col_6->Value(2), line_2.value.value());
+
+    // column 7 (status):
+    auto col_7 = std::static_pointer_cast<arrow::Int32Array>(read_table->column(7)->chunk(0));
+    BOOST_CHECK_EQUAL(col_7->Value(0), (unsigned)line_0.status.value());
+    BOOST_CHECK_EQUAL(col_7->Value(1), (unsigned)line_1.status.value());
+    BOOST_CHECK(!col_7->IsValid(2));
 }
