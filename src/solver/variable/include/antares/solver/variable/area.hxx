@@ -370,12 +370,6 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
           // Ajout de l'initialisation pour l'hydro
           state.initFromHydro();
 
-          // Calculation of reserve participation costs
-          if (state.study.parameters.reservesEnabled)
-          {
-              state.calculateReserveParticipationCosts();
-          }
-
           // Variables
           auto& variablesForArea = pAreas[area.index];
           variablesForArea.hourForEachArea(state, numSpace);
@@ -455,6 +449,12 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
               // Variables
               variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
           } // for each thermal cluster
+
+          // Calculation of reserve participation costs
+          if (state.study.parameters.reservesEnabled)
+          {
+              state.calculateReserveParticipationCosts();
+          }
       }); // for each area
 }
 
