@@ -5,6 +5,7 @@
 
 #include <filesystem>
 #include <string>
+
 #include "yaml-cpp/yaml.h"
 
 namespace Antares::IO::Inputs::YmlUtils

@@ -1,11 +1,11 @@
 // Copyright 2007-2026, RTE
 // SPDX-License-Identifier: MPL-2.0
 
+#include "antares/io/inputs/yml-utils/path_utils.h"
+
 #include <filesystem>
 #include <iterator>
 #include <string>
-
-#include "antares/io/inputs/yml-utils/path_utils.h"
 
 #include <antares/io/inputs/InputError.h>
 

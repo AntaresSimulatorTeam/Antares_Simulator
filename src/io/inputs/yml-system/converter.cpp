@@ -265,41 +265,41 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
         logs.debug() << "Loaded component `" << c.id << "`";
     }
 
-        // Create connections from system
-        for (const auto& connection: ymlSystem.connections)
-        {
-            connectComponents(connection, components);
-            logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
-                         << "` component2=`" << connection.secondEntry.componentId << "`)";
-        }
-
-        checkForNonLinearityBehindConnections(components);
-
-        // Create area connections from system
-        for (const auto& connection: ymlSystem.areaConnections)
-        {
-            connectAreas(connection, components);
-            logs.debug() << "Loaded area connection (component=`" << connection.componentId
-                         << "` area=`" << connection.areaId << "`)";
-        }
-        // Create thermal capacity connections from system
-        for (const auto& connection: ymlSystem.thermalCapacityConnections)
-        {
-            connectThermalCapacity(connection, components);
-            logs.debug() << "Loaded thermal-capacity connection (component=`"
-                         << connection.componentId << "` area=`"
-                         << connection.thermalComponent.areaId << "` clusterId=`"
-                         << connection.thermalComponent.clusterId << "`)";
-        }
-
-        // Build system from components and connections
-        SystemBuilder builder;
-        return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
-    }
-    catch (const std::invalid_argument& e)
+    // Create connections from system
+    for (const auto& connection: ymlSystem.connections)
     {
-        throw InputError(e.what());
+        connectComponents(connection, components);
+        logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
+                     << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
+
+    checkForNonLinearityBehindConnections(components);
+
+    // Create area connections from system
+    for (const auto& connection: ymlSystem.areaConnections)
+    {
+        connectAreas(connection, components);
+        logs.debug() << "Loaded area connection (component=`" << connection.componentId
+                     << "` area=`" << connection.areaId << "`)";
+    }
+    // Create thermal capacity connections from system
+    for (const auto& connection: ymlSystem.thermalCapacityConnections)
+    {
+        connectThermalCapacity(connection, components);
+        logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
+                     << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
+                     << connection.thermalComponent.clusterId << "`)";
+    }
+
+    // Build system from components and connections
+    SystemBuilder builder;
+    return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
+}
+
+catch (const std::invalid_argument& e)
+{
+    throw InputError(e.what());
+}
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter
