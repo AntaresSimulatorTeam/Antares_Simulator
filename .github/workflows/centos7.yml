@@ -7,6 +7,7 @@ on:
     branches:
     - develop
     - dependabot/**
+    - release/*
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
@@ -23,6 +24,7 @@ env:
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
   REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
+  RUN_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
@@ -126,7 +128,8 @@ jobs:
         --build-arg="VCPKG_CACHE_DIR=./vcpkg_cache" \
         --build-arg CCACHE_DIR=./.ccache \
         --build-arg CCACHE_KEY=centos7-on-${{ runner.os }} \
-        -f ${{ env.DOCKERFILE }} . 
+        --build-arg RUN_TESTS=${{ env.RUN_TESTS }} \
+        -f ${{ env.DOCKERFILE }} .
 
 
     - name: create a container without starting it && retrieve the .tgz

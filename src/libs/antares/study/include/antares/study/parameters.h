@@ -145,7 +145,7 @@ public:
     //! \name Mode
     //@{
     //! Mode of the study (adequacy, economy...)
-    SimulationMode mode;
+    SimulationMode mode{SimulationMode::Economy};
     //@}
 
     //! \name Horizon
@@ -157,17 +157,17 @@ public:
     //! \name Calendar
     //@{
     //! Number of years to study
-    uint nbYears;
+    uint nbYears{1};
     //! Simulation days interval
     Date::DayInterval simulationDays;
     //! Day of the 1st january
-    DayOfTheWeek dayOfThe1stJanuary;
+    DayOfTheWeek dayOfThe1stJanuary{monday};
     //! First day in the week
-    DayOfTheWeek firstWeekday;
+    DayOfTheWeek firstWeekday{monday};
     //! The first month of the simulation year
-    MonthName firstMonthInYear;
+    MonthName firstMonthInYear{january};
     //! Leap year
-    bool leapYear;
+    bool leapYear{false};
     //@}
 
     //! \name Additional
@@ -441,7 +441,7 @@ public:
     bool namedProblems;
 
     // All options related to linear & quadratic optimization
-    Antares::Solver::Optimization::OptimizationOptions optOptions;
+    Solver::Optimization::OptimizationOptions optOptions;
 
 private:
     void resetPlayedYears(uint nbOfYears);

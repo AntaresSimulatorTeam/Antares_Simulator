@@ -272,16 +272,18 @@ private:
 class AreaList final: public Yuni::NonCopyable<AreaList>
 {
 public:
+    using OwningAreaMap = std::map<AreaName, std::unique_ptr<Area>>;
+
     //! An iterator
-    using iterator = Area::Map::iterator;
+    using iterator = OwningAreaMap::iterator;
     //! A const iterator
-    using const_iterator = Area::Map::const_iterator;
+    using const_iterator = OwningAreaMap::const_iterator;
     //! An iterator
-    using reverse_iterator = Area::Map::reverse_iterator;
+    using reverse_iterator = OwningAreaMap::reverse_iterator;
     //! A const iterator
-    using const_reverse_iterator = Area::Map::const_reverse_iterator;
+    using const_reverse_iterator = OwningAreaMap::const_reverse_iterator;
     //! Key-value type
-    using value_type = Area::Map::value_type;
+    using value_type = OwningAreaMap::value_type;
 
     //! \name Constructor & Destructor
     //@{
@@ -289,14 +291,6 @@ public:
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-
-    /*!
-     ** \brief Destructor
-     **
-     ** Frees all Area instances owned by this list.
-     */
-    ~AreaList();
-    //@}
 
     //! \name Iterating through all areas
     //@{
@@ -475,7 +469,7 @@ public:
     //! All areas by their index
     std::vector<Area*> byIndex;
     //! All areas in the list
-    Area::Map areas;
+    OwningAreaMap areas;
 
     //! Name set (must be updated by updateNameSet)
     // used by the copy/paste

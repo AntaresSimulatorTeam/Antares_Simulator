@@ -268,27 +268,27 @@ add_library(Antares::study ALIAS study)
 target_link_libraries(study
         PUBLIC
         yuni-static-core
-        Antares::date #parameters
-        Antares::inifile #parameters
-        Antares::study-utils #area.hxx
-        Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
+        Antares::date
+        Antares::inifile
+        Antares::study-utils
+        Antares::solverUtils
         Antares::correlation
         Antares::path
         Antares::mersenne
-        Antares::result_writer #study.h
+        Antares::result_writer
         Antares::series
         Antares::array
-        antares-core
-        antares-solver-simulation
         Antares::hydro
+        Antares::scenario-builder-utils
+        Antares::enums
+        antares-solver-simulation
+        antares-core
+        PRIVATE
         Antares::antares-study-system-model
         linear-problem-api
         Antares::load-modeler-files
         Antares::modeler-parameters
         Antares::modeler-lib
-        Antares::scenario-builder-utils
-        Antares::enums
-        PRIVATE
         Antares::exception
         fmt::fmt
         Antares::benchmarking
