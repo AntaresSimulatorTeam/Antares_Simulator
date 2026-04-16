@@ -22,7 +22,7 @@ public:
 public:
     // Constructor
 
-    hydroLevelsData(std::function<void(Study&, MatrixType&)> applyToTarget);
+    explicit hydroLevelsData(std::function<void(Study&, MatrixType&)> applyToTarget);
 
     //! \name Data manupulation
     //@{
