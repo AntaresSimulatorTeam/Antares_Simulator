@@ -7,6 +7,7 @@
 #include <antares/solver/modeler/Modeler.h>
 #include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/simulation/solver.h"
 
 using namespace Antares;
@@ -39,11 +40,16 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        Solver::FileWriter writer(studyPath);
-        Solver::Modeler modeler(loader, writer);
+        FileWriter writer(studyPath);
+        Modeler modeler(loader, writer);
         modeler.run();
     }
-    catch (const Solver::Modeler::ModelerError& e)
+    catch (const LoadFiles::ErrorLoadingYaml& e)
+    {
+        logs.error() << "Modeler loading error: " << e.what() << "\nExiting simulation.";
+        return EXIT_FAILURE;
+    }
+    catch (const Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;

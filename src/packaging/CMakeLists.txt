@@ -95,6 +95,7 @@ set(TARGET_LIBS #No alias
 
         # modeler libs
         antlr-interface
+        system-model-base
         antares-study-system-model
         load-modeler-files
 		write-modeler-files

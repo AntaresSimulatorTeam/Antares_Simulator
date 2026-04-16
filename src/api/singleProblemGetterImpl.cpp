@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 
+#include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
@@ -14,7 +15,6 @@
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -23,7 +23,6 @@
 #include "antares/solver/simulation/simulation.h"
 #include "antares/writer/i_writer.h"
 
-#include "fmt/format.h"
 using namespace Optimisation::LinearProblemApi;
 
 namespace
@@ -358,11 +357,9 @@ std::unique_ptr<ILinearProblem> SingleProblemGetter::getWeeklyProblem(WeeklyProb
                                                                constraintsMemo_,
                                                                id.week);
     }
-    SingleOptimOptions options;
 
     std::unique_ptr<ILinearProblem> linearProblem = std::make_unique<
-      Antares::Optimization::LegacyOrtoolsLinearProblem>(pb_.OptimisationAvecVariablesEntieres,
-                                                         options.solverName);
+      Antares::Optimisation::LinearProblemApi::StructuredLinearProblem>();
     fillProblem(*linearProblem, id);
 
     return linearProblem;
@@ -450,7 +447,7 @@ YearlyData SingleProblemGetter::computeHydroLevels(unsigned year,
             continue;
         }
         auto inflows = area->hydro.series->storage.getColumn(year);
-        auto& level = hydroLevels[area];
+        auto& level = hydroLevels[area.get()];
 
         // Initialize first week level
         uint firstDay = calendar.weeks[0].daysYear.first;

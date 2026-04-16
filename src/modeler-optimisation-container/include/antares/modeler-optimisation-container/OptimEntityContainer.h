@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <unordered_map>
 #include <span>
+#include <unordered_map>
 #include <vector>
 
 #include <antares/optimisation/linear-problem-api/mipConstraint.h>
 #include <antares/optimisation/linear-problem-api/mipVariable.h>
+#include <antares/study/system-model-base/variabilityType.h>
 #include <antares/study/system-model/component.h>
-#include <antares/study/system-model/variabilityType.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 
 #include "EvaluationContext.h"
