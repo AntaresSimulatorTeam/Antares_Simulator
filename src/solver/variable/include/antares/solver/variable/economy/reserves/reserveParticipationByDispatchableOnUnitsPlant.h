@@ -98,11 +98,13 @@ void ReserveParticipationByDispatchableOnUnitsPlant<NextT>::populateHourlyValues
     {
         for (const auto& clusterName:
              state.reserveData.value()
+                 .at(state.area->id)
                  .reserveParticipationPerThermalClusterForYear[state.hourInTheYear]
                | std::views::keys)
         {
             for (const auto& [reserveName, reserveParticipation]:
                  state.reserveData.value()
+                   .at(state.area->id)
                    .reserveParticipationPerThermalClusterForYear[state.hourInTheYear][clusterName])
             {
                 pValuesForTheCurrentYear[numSpace]

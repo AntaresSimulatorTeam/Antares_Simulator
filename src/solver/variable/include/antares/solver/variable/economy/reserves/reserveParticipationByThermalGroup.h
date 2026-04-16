@@ -219,6 +219,7 @@ public:
                     {
                         pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
                           += state.reserveData.value()
+                               .at(area->id)
                                .reserveParticipationPerGroupForYear[state.hourInTheYear]
                                .thermalGroupsReserveParticipation[group][reserveName];
                         column++;

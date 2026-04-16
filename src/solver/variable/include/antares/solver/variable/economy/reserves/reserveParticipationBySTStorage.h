@@ -95,11 +95,13 @@ void ReserveParticipationBySTStorage<NextT>::populateHourlyValues(State& state,
     {
         for (const auto& clusterName:
              state.reserveData.value()
+                 .at(state.area->id)
                  .reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear]
                | std::views::keys)
         {
             for (const auto& [reserveName, reserveParticipation]:
                  state.reserveData.value()
+                   .at(state.area->id)
                    .reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear]
                                                                   [clusterName])
             {
