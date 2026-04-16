@@ -11,6 +11,7 @@
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
+#include "antares/io/inputs/InputError.h"
 
 namespace fs = std::filesystem;
 
@@ -91,7 +92,7 @@ static bool ParseRow(const char* first,
                 std::ostringstream oss;
                 oss << errorMessagePrefix << ": row (" << rowIndex << ") has more columns ("
                     << colIndex + 1 << ") than the expected (" << columns.front().size() << ").";
-                throw IO::Inputs::InputError(oss.str());
+                throw InputError(oss.str());
             }
         }
     }
@@ -100,7 +101,7 @@ static bool ParseRow(const char* first,
         std::ostringstream oss;
         oss << errorMessagePrefix << ": row (" << rowIndex << ") has less columns (" << colIndex
             << ") than the expected (" << columns.front().size() << ").";
-        throw IO::Inputs::InputError(oss.str());
+        throw InputError(oss.str());
     }
     return colIndex != 0;
 }
@@ -112,7 +113,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
     auto sz = std::filesystem::file_size(filename, ec);
     if (ec)
     {
-        throw IO::Inputs::InputError("Error reading CSV file( " + filename.string()
+        throw InputError("Error reading CSV file( " + filename.string()
                                      + "):" + ec.message());
     }
     if (sz == 0)
@@ -124,7 +125,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
 
     if (!file.is_open())
     {
-        throw IO::Inputs::InputError("Failed to open file: " + fileName);
+        throw InputError("Failed to open file: " + fileName);
     }
 
     std::vector<std::vector<double>> columns;
@@ -174,7 +175,7 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
 {
     if (!is_directory(path))
     {
-        throw IO::Inputs::InputError("Not a directory: " + path.string());
+        throw InputError("Not a directory: " + path.string());
     }
     using std::views::filter;
     auto pathFilter = filter(static_cast<bool (*)(const fs::path&)>(&fs::is_regular_file));
