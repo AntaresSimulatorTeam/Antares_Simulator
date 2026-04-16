@@ -27,7 +27,7 @@ namespace
 
 std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
-    size_t pos = s.find('.');
+    const size_t pos = s.find('.');
     if (pos == std::string::npos)
     {
         throw InputError("'.' not found while splitting library and model: " + s);
@@ -42,14 +42,14 @@ const Model& getModel(const std::vector<Library>& libraries,
                       const std::string& libraryId,
                       const std::string& modelId)
 {
-    auto lib = std::ranges::find_if(libraries,
+    const auto lib = std::ranges::find_if(libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
         throw InputError("No library found with this name: " + libraryId);
     }
 
-    auto search = lib->Models().find(modelId);
+    const auto search = lib->Models().find(modelId);
     if (search == lib->Models().end())
     {
         throw InputError("No model found with this name: " + modelId);
