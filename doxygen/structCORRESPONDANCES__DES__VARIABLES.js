@@ -24,6 +24,6 @@ var structCORRESPONDANCES__DES__VARIABLES =
     [ "NumeroDeVariablesVariationHydALaBaisse", "structCORRESPONDANCES__DES__VARIABLES.html#abb5a9836d85a7ff725733d62112bede0", null ],
     [ "NumeroDeVariablesVariationHydALaHausse", "structCORRESPONDANCES__DES__VARIABLES.html#a1a960a8738ad46f55a7caf69078cc256", null ],
     [ "OverflowVariable", "structCORRESPONDANCES__DES__VARIABLES.html#a3bfb3f560cadc8699f8e82ead43c90e5", null ],
-    [ "SIM_ShortTermStorage", "structCORRESPONDANCES__DES__VARIABLES.html#af68ef7192f76ea4e6c6cbb65afd7cad4", null ],
+    [ "SIM_ShortTermStorage", "structCORRESPONDANCES__DES__VARIABLES.html#a552fd5d7c474607916629814d6706f50", null ],
     [ "WithdrawalVariable", "structCORRESPONDANCES__DES__VARIABLES.html#a67aea8d5c3d6be4abf25f005d0373aab", null ]
 ];

@@ -569,6 +569,7 @@ var hierarchy =
     [ "Antares::Data::HydroAllocation", "classAntares_1_1Data_1_1HydroAllocation.html", null ],
     [ "Antares::Solver::Simulation::hydroCostNoise", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html", null ],
     [ "Antares::HydroErrorsCollector", "classAntares_1_1HydroErrorsCollector.html", null ],
+    [ "HydroInputCheckerFixture", "structHydroInputCheckerFixture.html", null ],
     [ "Antares::HydroInputsChecker", "classAntares_1_1HydroInputsChecker.html", null ],
     [ "Antares::HydroManagement", "classAntares_1_1HydroManagement.html", null ],
     [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],
@@ -1158,6 +1159,12 @@ var hierarchy =
     [ "RightT", null, [
       [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
     ] ],
+    [ "Antares::Data::RuleCurves", "classAntares_1_1Data_1_1RuleCurves.html", null ],
+    [ "Antares::Data::RuleCurvesLoader", "classAntares_1_1Data_1_1RuleCurvesLoader.html", [
+      [ "Antares::Data::ScenarizedRuleCurvesLoader", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader.html", null ],
+      [ "Antares::Data::StandardRuleCurvesLoader", "classAntares_1_1Data_1_1StandardRuleCurvesLoader.html", null ]
+    ] ],
+    [ "Antares::Data::RuleCurvesLoaderService", "classAntares_1_1Data_1_1RuleCurvesLoaderService.html", null ],
     [ "std::runtime_error", null, [
       [ "Antares::Data::AssertionError", "classAntares_1_1Data_1_1AssertionError.html", null ],
       [ "Antares::Data::UnfeasibleProblemError", "classAntares_1_1Data_1_1UnfeasibleProblemError.html", null ],

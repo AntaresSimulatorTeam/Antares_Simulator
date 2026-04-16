@@ -106,6 +106,8 @@ var annotated_dup =
         [ "AreaDependantHydroManagementData", "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html", "structAntares_1_1Data_1_1AreaDependantHydroManagementData" ],
         [ "PartHydro", "classAntares_1_1Data_1_1PartHydro.html", "classAntares_1_1Data_1_1PartHydro" ],
         [ "HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader" ],
+        [ "RuleCurves", "classAntares_1_1Data_1_1RuleCurves.html", "classAntares_1_1Data_1_1RuleCurves" ],
+        [ "RuleCurvesLoaderService", "classAntares_1_1Data_1_1RuleCurvesLoaderService.html", "classAntares_1_1Data_1_1RuleCurvesLoaderService" ],
         [ "PreproHydro", "classAntares_1_1Data_1_1PreproHydro.html", "classAntares_1_1Data_1_1PreproHydro" ],
         [ "DataSeriesHydro", "classAntares_1_1Data_1_1DataSeriesHydro.html", "classAntares_1_1Data_1_1DataSeriesHydro" ],
         [ "RenewableCluster", "classAntares_1_1Data_1_1RenewableCluster.html", "classAntares_1_1Data_1_1RenewableCluster" ],
@@ -129,6 +131,9 @@ var annotated_dup =
         [ "AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html", "classAntares_1_1Data_1_1AllVariablesPrintInfo" ],
         [ "StudyVersion", "classAntares_1_1Data_1_1StudyVersion.html", "classAntares_1_1Data_1_1StudyVersion" ],
         [ "XCast", "classAntares_1_1Data_1_1XCast.html", "classAntares_1_1Data_1_1XCast" ],
+        [ "RuleCurvesLoader", "classAntares_1_1Data_1_1RuleCurvesLoader.html", "classAntares_1_1Data_1_1RuleCurvesLoader" ],
+        [ "StandardRuleCurvesLoader", "classAntares_1_1Data_1_1StandardRuleCurvesLoader.html", "classAntares_1_1Data_1_1StandardRuleCurvesLoader" ],
+        [ "ScenarizedRuleCurvesLoader", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader.html", "classAntares_1_1Data_1_1ScenarizedRuleCurvesLoader" ],
         [ "PreproAvailability", "classAntares_1_1Data_1_1PreproAvailability.html", "classAntares_1_1Data_1_1PreproAvailability" ]
       ] ],
       [ "Date", null, [
@@ -1093,6 +1098,7 @@ var annotated_dup =
     [ "HoursFieldVisitor", "classHoursFieldVisitor.html", "classHoursFieldVisitor" ],
     [ "HydraulicSmoothingGroup", "classHydraulicSmoothingGroup.html", "classHydraulicSmoothingGroup" ],
     [ "Hydro_problem_costs", "classHydro__problem__costs.html", "classHydro__problem__costs" ],
+    [ "HydroInputCheckerFixture", "structHydroInputCheckerFixture.html", "structHydroInputCheckerFixture" ],
     [ "HydroMaxPowerStudy", "structHydroMaxPowerStudy.html", "structHydroMaxPowerStudy" ],
     [ "HydroPower", "classHydroPower.html", "classHydroPower" ],
     [ "HydroPowerData", "structHydroPowerData.html", "structHydroPowerData" ],
