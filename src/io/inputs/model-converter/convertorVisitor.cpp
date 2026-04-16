@@ -182,8 +182,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
             return static_cast<Node*>(registry_.create<VariableNode>(var.id, index, v));
         }
     }
-    throw IO::Inputs::InputError("No parameter or variable found for this identifier: "
-                                 + identifier);
+    throw InputError("No parameter or variable found for this identifier: " + identifier);
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
@@ -369,8 +368,8 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 
     if (argIds.size() != 1)
     {
-        throw IO::Inputs::InputError("dual operator expects exactly one constraint id got: "
-                                     + boost::algorithm::join(argIds, ", "));
+        throw InputError("dual operator expects exactly one constraint id got: "
+                         + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string constraint_id = argIds[0];
@@ -402,8 +401,8 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw IO::Inputs::InputError("dual called with unknown constraint '" + constraint_id
-                                 + "' in model '" + model_.id + "'");
+    throw InputError("dual called with unknown constraint '" + constraint_id + "' in model '"
+                     + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
@@ -412,8 +411,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
 
     if (argIds.size() != 1)
     {
-        throw IO::Inputs::InputError("reduced_cost operator expects exactly one variable id got: "
-                                     + boost::algorithm::join(argIds, ", "));
+        throw InputError("reduced_cost operator expects exactly one variable id got: "
+                         + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string var_id = argIds[0];
@@ -429,8 +428,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
         }
         ++index;
     }
-    throw IO::Inputs::InputError("reduced_cost called with unknown variable '" + var_id
-                                 + "' in model '" + model_.id + "'");
+    throw InputError("reduced_cost called with unknown variable '" + var_id + "' in model '"
+                     + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
@@ -438,8 +437,8 @@ std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw IO::Inputs::InputError("max operator expects at least 2 operands got "
-                                     + std::to_string(nodes.size()));
+        throw InputError("max operator expects at least 2 operands got "
+                         + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
 }
@@ -449,8 +448,8 @@ std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw IO::Inputs::InputError("min operator expects at least 2 operands got "
-                                     + std::to_string(nodes.size()));
+        throw InputError("min operator expects at least 2 operands got "
+                         + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
 }

@@ -4,6 +4,7 @@
 #ifndef __ANTARES_LIBS_DATE_DATE_H__
 #define __ANTARES_LIBS_DATE_DATE_H__
 
+#include <string>
 #include <vector>
 
 #include <yuni/yuni.h>
@@ -162,13 +163,6 @@ struct DayInterval
 class Calendar final
 {
 public:
-    //! Short string representation with maximum 42 characters
-    using ShortString42 = Yuni::CString<41, false>;
-    //! Short string representation with maximum 12 characters
-    using ShortString12 = Yuni::CString<11, false>;
-    //! Short string representation with maximum 8 characters
-    using ShortString8 = Yuni::CString<7, false>;
-
     enum
     {
         //! The maximum number of hours in a year
@@ -288,19 +282,19 @@ public:
         struct
         {
             //! Month name (January..December)
-            ShortString12 name;
+            std::string name;
             //! Short name (3 letters) and uppercase (Jan..Dec)
-            ShortString8 shortName;
+            std::string shortName;
             //! Short name (3 letters) and uppercase (JAN..DEC)
-            ShortString8 shortUpperName;
+            std::string shortUpperName;
         } months[12];
 
         //! Caption for each hour
-        ShortString42 hours[maxHoursInYear];
+        std::string hours[maxHoursInYear];
         //! Caption for each day
-        ShortString42 daysYear[maxHoursInYear];
+        std::string daysYear[maxHoursInYear];
         //! Weekdays
-        ShortString12 weekdays[7];
+        std::string weekdays[7];
     } text;
 
     struct

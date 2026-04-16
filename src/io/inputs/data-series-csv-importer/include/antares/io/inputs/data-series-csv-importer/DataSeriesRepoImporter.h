@@ -5,7 +5,6 @@
 
 #include <filesystem>
 
-#include <antares/io/inputs/InputError.h>
 #include <antares/optimisation/linear-problem-data-impl/dataSeriesRepo.h>
 
 /**

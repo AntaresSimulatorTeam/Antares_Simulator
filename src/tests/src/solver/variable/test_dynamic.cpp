@@ -20,7 +20,7 @@ std::unique_ptr<Study> createMockStudy()
     auto study = std::make_unique<Study>();
 
     // Create Area1 with thermal groups A and B
-    Area* area1 = study->areaAdd("Area1");
+    Area* area1 = addAreaToListOfAreas(study->areas, "Area1");
     area1->index = 0;
 
     auto thermalA1 = addClusterToArea(area1, "Thermal_A1");
@@ -31,7 +31,7 @@ std::unique_ptr<Study> createMockStudy()
     thermalB1->index = 1;
 
     // Create Area2 with thermal groups B and C
-    Area* area2 = study->areaAdd("Area2");
+    Area* area2 = addAreaToListOfAreas(study->areas, "Area2");
     area2->index = 1;
 
     auto thermalB2 = addClusterToArea(area2, "Thermal_B2");

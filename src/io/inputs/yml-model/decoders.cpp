@@ -131,27 +131,26 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFiel
   const Node& node,
   Antares::IO::Inputs::YmlModel::PortType& rhs)
 {
-    auto area_conn_node = node["area-connection"];
-    if (!area_conn_node.IsDefined())
+    auto areaConnNode = node["area-connection"];
+    if (!areaConnNode.IsDefined())
     {
         return true;
     }
 
-    if (!area_conn_node.IsMap())
+    if (!areaConnNode.IsMap())
     {
         throw Antares::IO::Inputs::InputError(
           "Expected a YAML mapping for 'area-connection' in port-type");
     }
 
-    checkFields(area_conn_node,
+    checkFields(areaConnNode,
                 std::unordered_set<std::string>{"injection-to-balance",
                                                 "spillage-bound",
                                                 "unsupplied-energy-bound"});
 
-    rhs.area_connection.inject_to_balance = getFieldFromNode(area_conn_node,
-                                                             "injection-to-balance");
-    rhs.area_connection.spillage_bound = getFieldFromNode(area_conn_node, "spillage-bound");
-    rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(area_conn_node,
+    rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
+    rhs.area_connection.spillage_bound = getFieldFromNode(areaConnNode, "spillage-bound");
+    rhs.area_connection.unsupplied_energy_bound = getFieldFromNode(areaConnNode,
                                                                    "unsupplied-energy-bound");
     return true;
 }
@@ -160,21 +159,21 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertThermalCapacityFie
   const Node& node,
   Antares::IO::Inputs::YmlModel::PortType& rhs)
 {
-    auto child_node = node["thermal-capacity-connection"];
-    if (!child_node.IsDefined())
+    auto childNode = node["thermal-capacity-connection"];
+    if (!childNode.IsDefined())
     {
         return true;
     }
 
-    if (!child_node.IsMap())
+    if (!childNode.IsMap())
     {
         throw Antares::IO::Inputs::InputError(
           "Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
     }
 
-    checkFields(child_node, std::unordered_set<std::string>{"capacity-field"});
+    checkFields(childNode, std::unordered_set<std::string>{"capacity-field"});
 
-    rhs.thermal_capacity_connection_field = getFieldFromNode(child_node, "capacity-field");
+    rhs.thermal_capacity_connection_field = getFieldFromNode(childNode, "capacity-field");
     return true;
 }
 
@@ -186,12 +185,13 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::decode(
     {
         return false;
     }
-    rhs.id = node["id"].as<std::string>();
+
     rhs.description = node["description"].as<std::string>("");
     for (const auto& field: node["fields"])
     {
         rhs.fields.push_back(field["id"].as<std::string>());
     }
+
     return convertThermalCapacityField(node, rhs) && convertAreaConnectionFields(node, rhs);
 }
 
@@ -203,8 +203,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Parameter>::decode(
     {
         return false;
     }
-    checkMandatoryIdField(node, "parameter");
-    rhs.id = node["id"].as<std::string>();
+
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
     return true;
@@ -252,8 +251,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
     {
         return false;
     }
-    checkMandatoryIdField(node, "variable");
-    rhs.id = node["id"].as<std::string>();
+
     rhs.lower_bound = node["lower-bound"].as<std::string>("");
     rhs.upper_bound = node["upper-bound"].as<std::string>("");
     rhs.variable_type = node["variable-type"].as<Antares::IO::Inputs::YmlModel::ValueType>(
@@ -271,8 +269,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Port>::decode(const Node& node,
     {
         return false;
     }
-    checkMandatoryIdField(node, "Port");
-    rhs.id = node["id"].as<std::string>();
+
     rhs.type = node["type"].as<std::string>();
     return true;
 }
@@ -299,8 +296,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Constraint>::decode(
     {
         return false;
     }
-    checkMandatoryIdField(node, "constraint");
-    rhs.id = node["id"].as<std::string>();
+
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
@@ -314,8 +310,7 @@ bool convert<Antares::IO::Inputs::YmlModel::ExtraOutput>::decode(
     {
         return false;
     }
-    checkMandatoryIdField(node, "extra-output");
-    rhs.id = node["id"].as<std::string>();
+
     rhs.expression = node["expression"].as<std::string>();
     return true;
 }
@@ -328,8 +323,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Objective>::decode(
     {
         return false;
     }
-    checkMandatoryIdField(node, "objective");
-    rhs.id = node["id"].as<std::string>();
+
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
@@ -339,12 +333,11 @@ bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::Model& rhs)
 {
-    if (!node.IsMap())
+    if (!requireMapNodeWithId(node, "model", rhs))
     {
         throw Antares::IO::Inputs::InputError("Expected a YAML mapping for 'model'");
     }
-    checkMandatoryIdField(node, "model");
-    rhs.id = node["id"].as<std::string>();
+
     rhs.description = node["description"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Parameter>>(
       node["parameters"]);

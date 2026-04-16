@@ -4,20 +4,18 @@
 #include <cassert>
 #include <fstream>
 
+#include <boost/algorithm/string/trim.hpp>
+
 #include <yuni/io/file.h>
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
 #include <antares/study/area/scratchpad.h>
-#include "antares/antares/antares.h"
 #include "antares/array/matrix.h"
 #include "antares/study//study.h"
 #include "antares/study/area/area.h"
 #include "antares/study/parts/load/prepro.h"
-#include "antares/study/parts/parts.h"
 #include "antares/utils/utils.h"
-
-#define SEP IO::Separator
 
 using namespace Yuni;
 
@@ -153,6 +151,14 @@ AreaList::AreaList(Study& study):
 {
 }
 
+AreaList::~AreaList()
+{
+    for (auto* area: areas | std::views::values)
+    {
+        delete area;
+    }
+}
+
 bool AreaList::empty() const
 {
     return areas.empty();
@@ -219,6 +225,16 @@ Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyStrin
 {
     if (!name || !lname)
     {
+        if (name.empty())
+        {
+            logs.warning() << "ignoring invalid area name: `" << name;
+        }
+        return nullptr;
+    }
+
+    if (CheckForbiddenCharacterInAreaName(name))
+    {
+        logs.error() << "Invalid area name: `" << name << "` contains forbidden character `*`";
         return nullptr;
     }
     // Look up
@@ -256,36 +272,20 @@ bool AreaList::loadListFromFile(const fs::path& filename)
 
     // Initialization of the strings
     AreaName name;
-    AreaName lname;
     // Each lines in the file
     std::string buffer;
-    uint line = 0;
     while (std::getline(file, buffer))
     {
-        ++line;
         // The area name
         name = buffer;
-        name.trim(" \t\n\r");
+        boost::trim(name);
         if (name.empty())
         {
             continue;
         }
 
-        lname.clear();
-        lname = transformNameIntoID(name);
-        if (lname.empty())
-        {
-            logs.warning() << "ignoring invalid area name: `" << name << "`, " << filename
-                           << ": line " << line;
-            continue;
-        }
-        if (CheckForbiddenCharacterInAreaName(name))
-        {
-            logs.error() << "character '*' is forbidden in area name: `" << name << "`";
-            continue;
-        }
         // Add the area in the list
-        AreaListAddFromNames(*this, name, lname);
+        addAreaToListOfAreas(*this, name);
     }
 
     switch (areas.size())
@@ -323,8 +323,7 @@ static void readAdqPatchMode(Study& study, Area& area)
         return;
     }
 
-    fs::path adqPath = study.folderInput / "areas" / area.id.to<std::string>()
-                       / "adequacy_patch.ini";
+    fs::path adqPath = study.folderInput / "areas" / area.id / "adequacy_patch.ini";
     IniFile ini;
     if (ini.open(adqPath))
     {
@@ -395,8 +394,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     const auto studyVersion = study.header.version;
 
     // DSM, Reserves, D-1
-    fs::path reservesPath = (study.folderInput / "reserves" / area.id.to<std::string>())
-                              .replace_extension("txt");
+    fs::path reservesPath = (study.folderInput / "reserves" / area.id).replace_extension("txt");
     ret = area.reserves.loadFromCSVFile(reservesPath.string(),
                                         fhrMax,
                                         HOURS_PER_YEAR,
@@ -442,7 +440,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.load.prepro) // Prepro
         {
-            fs::path loadPath = study.folderInput / "load" / "prepro" / area.id.to<std::string>();
+            fs::path loadPath = study.folderInput / "load" / "prepro" / area.id;
             ret = area.load.prepro->loadFromFolder(loadPath) && ret;
         }
         if (!area.load.prepro) // Series
@@ -458,7 +456,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.solar.prepro) // Prepro
         {
-            fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id.to<std::string>();
+            fs::path solarPath = study.folderInput / "solar" / "prepro" / area.id;
             ret = area.solar.prepro->loadFromFolder(solarPath) && ret;
         }
         if (!area.solar.prepro) // Series
@@ -495,9 +493,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
         case Parameters::Compatibility::HydroPmax::Daily:
         {
-            HydroMaxTimeSeriesReader reader(area.hydro,
-                                            area.id.to<std::string>(),
-                                            area.name.to<std::string>());
+            HydroMaxTimeSeriesReader reader(area.hydro, area.id, area.name);
             ret = reader.read(pathHydro.string()) && ret;
             break;
         }
@@ -520,7 +516,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         if (area.wind.prepro) // Prepro
         {
-            fs::path windPath = study.folderInput / "wind" / "prepro" / area.id.to<std::string>();
+            fs::path windPath = study.folderInput / "wind" / "prepro" / area.id;
             ret = area.wind.prepro->loadFromFolder(windPath) && ret;
         }
         if (!area.wind.prepro) // Series
@@ -550,8 +546,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Short term storage
     if (studyVersion >= StudyVersion(8, 6))
     {
-        fs::path seriesPath = study.folderInput / "st-storage" / "series"
-                              / area.id.to<std::string>();
+        fs::path seriesPath = study.folderInput / "st-storage" / "series" / area.id;
 
         ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
         ret = area.shortTermStorage.validate(studyVersion) && ret;
@@ -568,8 +563,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     readAdqPatchMode(study, area);
 
     // Nodal Optimization
-    fs::path nodalPath = study.folderInput / "areas" / area.id.to<std::string>()
-                         / "optimization.ini";
+    fs::path nodalPath = study.folderInput / "areas" / area.id / "optimization.ini";
 
     IniFile ini;
     if (!ini.open(nodalPath))
@@ -708,7 +702,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            fs::path areaPath = thermalPath / "clusters" / area.id.to<std::string>();
+            fs::path areaPath = thermalPath / "clusters" / area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, areaPath, &area) && ret;
             ret = area.thermal.list.validateClusters(pStudy.parameters) && ret;
         }
@@ -753,7 +747,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         for (auto i = areas.begin(); i != end; ++i)
         {
             Area& area = *(i->second);
-            fs::path areaPath = renewClusterPath / area.id.to<std::string>();
+            fs::path areaPath = renewClusterPath / area.id;
             ret = area.renewable.list.loadFromFolder(areaPath, &area) && ret;
             ret = area.renewable.list.validateClusters() && ret;
         }

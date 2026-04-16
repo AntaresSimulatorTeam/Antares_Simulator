@@ -3,7 +3,10 @@
 
 #include "include/antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 
+#include <fmt/format.h>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/io/inputs/InputError.h"
 
 using namespace Antares::Expressions::Nodes;
 
@@ -104,13 +107,12 @@ void ForbiddenNodesVisitor::visit(const ParameterNode*)
 
 void ForbiddenNodesVisitor::visit(const PortFieldNode* portFieldNode)
 {
-    // gp : could be dead code, considering visit(const PortFieldSumNode* portFieldSumNode)
     checkIsForbidden(portFieldNode, typeIndexOf<PortFieldNode>());
 }
 
 void ForbiddenNodesVisitor::visit(const PortFieldSumNode* portFieldSumNode)
 {
-    // keep empty
+    checkIsForbidden(portFieldSumNode, typeIndexOf<PortFieldSumNode>());
 }
 
 void ForbiddenNodesInComponentVisitor::visit(const PortFieldSumNode* portFieldSumNode)

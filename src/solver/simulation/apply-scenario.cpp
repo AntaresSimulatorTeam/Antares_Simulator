@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/apply-scenario.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/study/scenario-builder/sets.h>
 
 namespace Antares::Solver
@@ -14,8 +16,7 @@ void ApplyCustomScenario(Data::Study& study)
     auto& rulename = parameters.activeRulesScenario;
     logs.info() << "Preparing time-series numbers... (" << rulename << ')';
     logs.info() << "  :: Scenario Builder, active target: " << rulename;
-    Data::RulesScenarioName id = rulename;
-    id.toLower();
+    std::string id = boost::to_lower_copy(rulename);
 
     study.scenarioRulesLoadIfNotAvailable();
     if (study.scenarioRules)

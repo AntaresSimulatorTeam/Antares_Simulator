@@ -2,12 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <optional>
-#include <ranges>
 
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
-#include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
 #include "antares/study/system-model/component.h"
 

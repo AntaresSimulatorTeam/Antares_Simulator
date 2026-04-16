@@ -17,27 +17,37 @@ bool ForbiddenNodes::isForbiddenByParent(const std::type_index& parentTypeId,
 
 using namespace Antares::Expressions::Nodes;
 
-void ForbidInFunctionNodes(ForbiddenNodes& f)
+void forbidVariablesInFunctionNodes(ForbiddenNodes& f)
+{
+    f.parentForbidsChild<FunctionNodeType::max, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
+}
+
+void forbidPortFieldsInFunctionNodes(ForbiddenNodes& f)
 {
     // max(...) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::max, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::max, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::max, PortFieldSumNode>();
 
     // min(...) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::min, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::min, PortFieldSumNode>();
 
     // floor(node) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldSumNode>();
 
     // ceil(node) : fordidding children
-    f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldSumNode>();
+}
+
+void ForbidInFunctionNodes(ForbiddenNodes& f)
+{
+    forbidVariablesInFunctionNodes(f);
+    forbidPortFieldsInFunctionNodes(f);
 }
 
 void ForbidConstraintSignNodes(ForbiddenNodes& f)
@@ -75,7 +85,7 @@ ForbiddenNodes ForbidNodesInVariableBounds()
 ForbiddenNodes ForbidNodesInPortFieldDef()
 {
     ForbiddenNodes f;
-    ForbidInFunctionNodes(f);
+    forbidPortFieldsInFunctionNodes(f);
     ForbidConstraintSignNodes(f);
     f.forbidGlobally<PortFieldSumNode>();
     return f;
