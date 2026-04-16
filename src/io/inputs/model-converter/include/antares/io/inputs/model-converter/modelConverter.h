@@ -6,18 +6,7 @@
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/library.h"
 
-namespace Antares::Inputs::YmlModel
-{
-class Library;
-}
-
-namespace Antares::Expressions::Nodes
-{
-class Node;
-}
-
 namespace Antares::IO::Inputs::ModelConverter
 {
-
 ModelerStudy::SystemModel::Library convert(const YmlModel::Library& library);
 } // namespace Antares::IO::Inputs::ModelConverter
