@@ -3,7 +3,7 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
-## v9.3.0
+## v10.1.0
 
 ### Input
 
@@ -24,6 +24,8 @@ Antares-Simulator will read hydro reservoir levels from mentioned files, data fr
 
 The number of time series for the reservoir levels must match the number of time series used for the other hydro components (run of river, minimum generation etc.), ensuring that scenarized reservoir level data is fully integrated within the same Scenario Builder framework as the rest of the hydro time series. However, number of hydro reservoir levels times series can indeed be 1 for each type, min, avg and max.
 
+
+## v9.3.0
 
 #### Removed properties
 
