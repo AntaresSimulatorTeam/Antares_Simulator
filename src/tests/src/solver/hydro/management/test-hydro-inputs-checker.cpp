@@ -28,7 +28,7 @@ struct HydroInputCheckerFixture
         study->parameters.firstMonthInYear = january;
         uint nbYears = study->parameters.nbYears = 1;
 
-        area_1 = study->areaAdd("Area1");
+        area_1 = addAreaToListOfAreas(study->areas, "Area1");
 
         area_1->hydro.reservoirManagement = false;
         area_1->hydro.followLoadModulations = false;
