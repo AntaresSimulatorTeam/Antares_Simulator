@@ -182,8 +182,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
             return registry_.create<VariableNode>(var.id, index, v);
         }
     }
-    throw InputError("No parameter or variable found for this identifier: "
-                                 + identifier);
+    throw InputError("No parameter or variable found for this identifier: " + identifier);
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
@@ -370,7 +369,7 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
     if (argIds.size() != 1)
     {
         throw InputError("dual operator expects exactly one constraint id got: "
-                                     + boost::algorithm::join(argIds, ", "));
+                         + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string constraint_id = argIds[0];
@@ -402,8 +401,8 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw InputError("dual called with unknown constraint '" + constraint_id
-                                 + "' in model '" + model_.id + "'");
+    throw InputError("dual called with unknown constraint '" + constraint_id + "' in model '"
+                     + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
@@ -413,7 +412,7 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
     if (argIds.size() != 1)
     {
         throw InputError("reduced_cost operator expects exactly one variable id got: "
-                                     + boost::algorithm::join(argIds, ", "));
+                         + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string var_id = argIds[0];
@@ -428,8 +427,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
         }
         ++index;
     }
-    throw InputError("reduced_cost called with unknown variable '" + var_id
-                                 + "' in model '" + model_.id + "'");
+    throw InputError("reduced_cost called with unknown variable '" + var_id + "' in model '"
+                     + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
@@ -438,7 +437,7 @@ std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
     if (nodes.size() < 2)
     {
         throw InputError("max operator expects at least 2 operands got "
-                                     + std::to_string(nodes.size()));
+                         + std::to_string(nodes.size()));
     }
     return registry_.create<FunctionNode>(FunctionNodeType::max, nodes);
 }
@@ -449,7 +448,7 @@ std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
     if (nodes.size() < 2)
     {
         throw InputError("min operator expects at least 2 operands got "
-                                     + std::to_string(nodes.size()));
+                         + std::to_string(nodes.size()));
     }
     return registry_.create<FunctionNode>(FunctionNodeType::min, nodes);
 }

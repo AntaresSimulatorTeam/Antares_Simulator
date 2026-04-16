@@ -43,7 +43,8 @@ const Model& getModel(const std::vector<Library>& libraries,
                       const std::string& modelId)
 {
     const auto lib = std::ranges::find_if(libraries,
-                                    [&libraryId](const auto& l) { return l.Id() == libraryId; });
+                                          [&libraryId](const auto& l)
+                                          { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
         throw InputError("No library found with this name: " + libraryId);
@@ -260,9 +261,8 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                                            { return compo.Id() == c.id; });
             if (it != components.end())
             {
-                throw InputError(
-                  "System has at least two components with the same id ('" + c.id
-                  + "'), this is not supported");
+                throw InputError("System has at least two components with the same id ('" + c.id
+                                 + "'), this is not supported");
             }
             components.push_back(createComponent(c, libraries));
             logs.debug() << "Loaded component `" << c.id << "`";

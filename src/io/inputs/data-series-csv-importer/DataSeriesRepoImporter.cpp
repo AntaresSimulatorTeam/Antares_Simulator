@@ -113,8 +113,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
     auto sz = std::filesystem::file_size(filename, ec);
     if (ec)
     {
-        throw InputError("Error reading CSV file( " + filename.string()
-                                     + "):" + ec.message());
+        throw InputError("Error reading CSV file( " + filename.string() + "):" + ec.message());
     }
     if (sz == 0)
     {

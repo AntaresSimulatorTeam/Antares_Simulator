@@ -11,7 +11,6 @@ namespace Antares::Inputs::YmlModel
 class Library;
 }
 
-
 namespace Antares::Expressions::Nodes
 {
 class Node;
