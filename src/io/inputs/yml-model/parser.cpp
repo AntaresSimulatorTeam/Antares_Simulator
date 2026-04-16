@@ -8,10 +8,6 @@
 
 namespace Antares::IO::Inputs::YmlModel
 {
-LibraryIdNotDefined::LibraryIdNotDefined():
-    std::runtime_error("Library id is not defined")
-{
-}
 
 namespace
 {
@@ -62,6 +58,11 @@ void tagNodes(YAML::Node& node)
     }
 }
 } // anonymous namespace
+
+LibraryIdNotDefined::LibraryIdNotDefined():
+    std::runtime_error("Library id is not defined")
+{
+}
 
 Library Parser::parse(const std::string& content)
 {

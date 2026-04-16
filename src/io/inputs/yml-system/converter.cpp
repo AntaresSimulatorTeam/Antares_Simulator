@@ -146,10 +146,7 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
     }
 }
 
-void CheckFieldsRoleCompatibility(const Component& component_1,
-                                  const Port& port_1,
-                                  const Component& component_2,
-                                  const Port& port_2)
+void CheckFieldsRoleCompatibility(const Port& port_1, const Port& port_2)
 {
     for (const auto& field: port_1.Type().Fields())
     {
@@ -201,7 +198,7 @@ void connectComponents(const YmlSystem::Connection& connection, std::vector<Comp
     const auto& port_2 = component_2.findPort(portId_2, "");
     CheckPortsType(port_1, port_2);
 
-    CheckFieldsRoleCompatibility(component_1, port_1, component_2, port_2);
+    CheckFieldsRoleCompatibility(port_1, port_2);
 
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?

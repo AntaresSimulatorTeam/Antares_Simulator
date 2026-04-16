@@ -43,7 +43,7 @@ namespace fs = std::filesystem;
 const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "resources"
                            / "modeler";
 
-const std::set<std::string> ignoreList{"1_3", "1_5"};
+const std::set<std::string> ignoreList{"1_3", "1_5", "simple_system_cyclic", "simple_system_drop"};
 BOOST_AUTO_TEST_SUITE(ValidateMps)
 
 bool isProblemEmpty(const ILinearProblem& problem)

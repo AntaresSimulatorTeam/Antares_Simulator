@@ -380,6 +380,56 @@ BOOST_FIXTURE_TEST_CASE(model_port_field_definitions_properly_translated, Fixtur
     BOOST_CHECK_EQUAL(pfd1.Definition().Value(), "param1");
 }
 
+BOOST_FIXTURE_TEST_CASE(port_fields_definitions_forbid_usage_of_sum_connections, Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    YmlModel::Model model{
+      .id = "my-model",
+      .description = "description",
+      .parameters = {},
+      .variables = {},
+      .ports = {{"port", "my-port-type"}},
+      .port_field_definitions = {{"port", "field", "sum_connections(port.field)"}},
+      .constraints = {},
+      .binding_constraints = {},
+      .objectives = {},
+      .extra_outputs = {}};
+    library.models = {model};
+
+    std::string err_msg = "'PortFieldSumNode' is not allowed in expression "
+                          "'sum_connections(port.field)'";
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
+                          std::invalid_argument,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_variable, Fixture)
+{
+    YmlModel::PortType portType{"my-port-type", "description", {"field"}, "", {}};
+    library.port_types = {portType};
+
+    std::string location = "master-and-subproblems";
+
+    Variable spillage = {"spillage", "0", "100", ValueType::CONTINUOUS, true, true, location};
+    Variable ens = {"ens", "0", "100", ValueType::CONTINUOUS, true, true, location};
+
+    YmlModel::Model model{.id = "my-model",
+                          .description = "description",
+                          .parameters = {},
+                          .variables = {spillage, ens},
+                          .ports = {{"port", "my-port-type"}},
+                          .port_field_definitions = {{"port", "field", "min(spillage, ens)"}},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objectives = {},
+                          .extra_outputs = {}};
+    library.models = {model};
+
+    BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
+}
+
 bool portNotFoundForDef(const ModelConverter::PortNotFoundForDefinition& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "In port-field-definitions, port not found: port2");

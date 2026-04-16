@@ -610,7 +610,7 @@ void writeThermalTimeSeries(const std::vector<Data::ThermalCluster*>& clusters,
 {
     for (auto* cluster: clusters)
     {
-        auto areaName = cluster->parentArea->id.to<std::string>();
+        auto areaName = cluster->parentArea->id;
         auto clusterName = cluster->id();
         auto filePath = savePath / areaName / clusterName += ".txt";
 

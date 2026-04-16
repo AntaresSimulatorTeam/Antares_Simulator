@@ -35,7 +35,12 @@ void initializeStudy(Study::Ptr study, unsigned int nbYears = 1)
 // ========================
 Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 {
-    Area* area = study->areaAdd(areaName);
+    Area* area = addAreaToListOfAreas(study->areas, areaName);
+    if (area)
+    {
+        area->createMissingData();
+        area->resetToDefaultValues();
+    }
     BOOST_CHECK(area);
 
     return area;

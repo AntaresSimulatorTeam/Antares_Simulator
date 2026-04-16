@@ -1,0 +1,170 @@
+system:
+  id: simple_battery
+  model_libraries: simple_models
+  components:
+  - id: generator_generator
+    model: simple_models.generator
+    parameters:
+    - id: p_nom_min
+      time-dependent: false
+      scenario-dependent: false
+      value: 50.0
+    - id: p_nom_max
+      time-dependent: false
+      scenario-dependent: false
+      value: 50.0
+    - id: p_min_pu
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: p_max_pu
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: marginal_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 10.0
+    - id: capital_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: e_sum_min
+      time-dependent: false
+      scenario-dependent: false
+      value: -1.0e+20
+    - id: e_sum_max
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0e+20
+    - id: sign
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: efficiency
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: emission_factor
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+  - id: load_load
+    model: simple_models.load
+    parameters:
+    - id: p_set
+      time-dependent: false
+      scenario-dependent: false
+      value: 50.0
+    - id: q_set
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: sign
+      time-dependent: false
+      scenario-dependent: false
+      value: -1.0
+  - id: bus
+    model: simple_models.bus
+    parameters:
+    - id: v_nom
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: x
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: y
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: v_mag_pu_set
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: v_mag_pu_min
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: v_mag_pu_max
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0e+20
+  - id: storage_unit_battery
+    model: simple_models.storage_unit
+    parameters:
+    - id: p_nom_min
+      time-dependent: false
+      scenario-dependent: false
+      value: 40.0
+    - id: p_nom_max
+      time-dependent: false
+      scenario-dependent: false
+      value: 40.0
+    - id: p_min_pu
+      time-dependent: false
+      scenario-dependent: false
+      value: -1.0
+    - id: p_max_pu
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: sign
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: efficiency_store
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: efficiency_dispatch
+      time-dependent: false
+      scenario-dependent: false
+      value: 1.0
+    - id: standing_loss
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: max_hours
+      time-dependent: false
+      scenario-dependent: false
+      value: 5.0
+    - id: marginal_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: capital_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: marginal_cost_storage
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: spill_cost
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: inflow
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+    - id: emission_factor
+      time-dependent: false
+      scenario-dependent: false
+      value: 0.0
+  connections:
+  - component1: bus
+    port1: p_balance_port
+    component2: generator_generator
+    port2: p_balance_port
+  - component1: bus
+    port1: p_balance_port
+    component2: load_load
+    port2: p_balance_port
+  - component1: bus
+    port1: p_balance_port
+    component2: storage_unit_battery
+    port2: p_balance_port
+

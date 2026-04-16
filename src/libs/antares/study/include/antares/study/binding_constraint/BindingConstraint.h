@@ -126,7 +126,7 @@ public:
     /*!
     ** \brief Get the name of the binding constraint
     */
-    const ConstraintName& name() const;
+    const std::string& name() const;
 
     /*!
     ** \brief Set the name of the binding constraint
@@ -141,7 +141,7 @@ public:
     /*!
     ** \brief Get the ID of the binding constraint
     */
-    const ConstraintName& id() const;
+    const std::string& id() const;
     //@}
 
     //! \name Comments
@@ -338,9 +338,9 @@ public:
 
 private:
     //! Raw name
-    ConstraintName pName;
+    std::string pName;
     //! Raw ID
-    ConstraintName pID;
+    std::string pID;
     //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only
     //! store series for operatorType
     Matrix<> RHSTimeSeries_;

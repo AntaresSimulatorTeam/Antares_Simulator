@@ -230,9 +230,10 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
     if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va
         && dynamicAggregationAllYears_)
     {
-        const auto& setName = pStudy->setsOfAreas.nameByIndex(results.data.setOfAreasIndex);
-        dynamicAggregationAllYears_
-          ->appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+        dynamicAggregationAllYears_->appendToSurveyForSet(results.data.setOfAreasName,
+                                                          results,
+                                                          static_cast<Category::Precision>(
+                                                            precision));
     }
 
     // If the column index is still equals to 0, that would mean we have nothing
@@ -268,9 +269,10 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     // Append dynamic aggregation columns for sets of areas, values files only
     if (dataLevel == Category::DataLevel::setOfAreas && fileLevel == Category::FileLevel::va)
     {
-        const auto& setName = pStudy->setsOfAreas.nameByIndex(results.data.setOfAreasIndex);
-        dynamicAggregationSingleYear_[numSpace]
-          .appendToSurveyForSet(setName, results, static_cast<Category::Precision>(precision));
+        dynamicAggregationSingleYear_[numSpace].appendToSurveyForSet(
+          results.data.setOfAreasName,
+          results,
+          static_cast<Category::Precision>(precision));
     }
 
     // If the column index is still equals to 0, that would mean we have nothing

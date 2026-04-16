@@ -3,6 +3,8 @@
 
 #include "antares/study/parts/hydro/allocation.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
@@ -143,7 +145,7 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path
               if (!Utils::isZero(coeff))
               {
                   AreaName areaname = p->key;
-                  areaname.toLower();
+                  boost::to_lower(areaname);
                   pValues[areaname] = coeff;
               }
           }

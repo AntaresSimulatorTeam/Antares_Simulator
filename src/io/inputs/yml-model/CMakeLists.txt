@@ -3,7 +3,6 @@ set(SOURCES
         decoders.cpp
         include/antares/io/inputs/yml-model/decoders.h
         include/antares/io/inputs/yml-model/parser.h
-        include/antares/io/inputs/yml-model/YmlMapMarker.h
 )
 
 # Create the library
@@ -20,6 +19,7 @@ target_include_directories(yml-model
 target_link_libraries(yml-model
         PUBLIC
         fmt::fmt
+        Antares::yml-utils
         PRIVATE
         yaml-cpp::yaml-cpp
 )

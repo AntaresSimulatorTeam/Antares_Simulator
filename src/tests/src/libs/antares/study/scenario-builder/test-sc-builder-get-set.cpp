@@ -43,7 +43,7 @@ class IntegerIndex
 public:
     IntegerIndex():
         study(std::make_unique<Study>()),
-        area(study->areaAdd("area 1"))
+        area(addAreaToListOfAreas(study->areas, "area 1"))
     {
     }
 
@@ -84,8 +84,8 @@ public:
 
     explicit StructureIndex():
         study(std::make_unique<Study>()),
-        area1(study->areaAdd("area 1")),
-        area2(study->areaAdd("area 2")),
+        area1(addAreaToListOfAreas(study->areas, "area 1")),
+        area2(addAreaToListOfAreas(study->areas, "area 2")),
         link(AreaAddLinkBetweenAreas(area1, area2, false)),
         thcluster(std::make_shared<ThermalCluster>(area1)),
         rencluster(std::make_shared<RenewableCluster>(area1)),

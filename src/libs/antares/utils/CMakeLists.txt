@@ -12,6 +12,7 @@ add_library(Antares::study-utils ALIAS study-utils)
 
 target_link_libraries(study-utils
         PRIVATE
+        Boost::headers
         yuni-static-core
         Antares::logs
 )

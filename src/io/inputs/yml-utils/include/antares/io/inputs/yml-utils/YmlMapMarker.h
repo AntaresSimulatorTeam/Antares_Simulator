@@ -8,17 +8,15 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
+
+#include "antares/io/inputs/yml-utils/path_utils.h"
 
 #include "yaml-cpp/yaml.h"
-
-// Forward declaration of printPathTree implemented in decoders.cpp
-std::string printPathTree(const std::filesystem::path& p);
 
 namespace YAML
 {
 
-// Utility to collect keys and build marked-fields messages for YAML maps.
-// Kept minimal: only collects keys, their source lines, indentation and baseTree.
 class YmlMapMarker
 {
 public:
@@ -26,7 +24,6 @@ public:
         node_(node),
         nodeTagPath_(node.Tag())
     {
-        // collect keys and line numbers
         for (const auto& entry: node_)
         {
             const Node keyNode = entry.first;
@@ -38,7 +35,6 @@ public:
             actualSet_.insert(keyName);
         }
 
-        // compute depth and indentation
         depthParts_ = static_cast<std::size_t>(
           std::distance(nodeTagPath_.begin(), nodeTagPath_.end()));
         if (depthParts_ == 0)
@@ -47,7 +43,7 @@ public:
         }
         indentSpaces_ = (depthParts_ - 1) * 4;
 
-        baseTree_ = printPathTree(nodeTagPath_);
+        baseTree_ = Antares::IO::Inputs::YmlUtils::getBaseTree(nodeTagPath_);
     }
 
     const std::unordered_map<std::string, int>& actualKeysLine() const
@@ -70,7 +66,6 @@ public:
         return indentSpaces_;
     }
 
-    // build marked tree for unexpected and missing lists
     std::string buildMarkedTreeForUnexpectedAndMissing(
       const std::vector<std::string>& unexpected,
       const std::vector<std::string>& missing) const
@@ -99,8 +94,6 @@ public:
         return markedFieldsTree;
     }
 
-    // build marked tree that lists all present keys with their lines (used when
-    // node.size()>expected)
     std::string buildMarkedTreeAllPresent() const
     {
         std::string markedFieldsTree;

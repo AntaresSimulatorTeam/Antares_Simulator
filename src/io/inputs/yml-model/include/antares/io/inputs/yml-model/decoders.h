@@ -10,7 +10,8 @@
 #include <vector>
 
 #include "antares/io/inputs/yml-model/Library.h"
-#include "antares/io/inputs/yml-model/YmlMapMarker.h"
+#include "antares/io/inputs/yml-utils/YmlMapMarker.h"
+#include "antares/io/inputs/yml-utils/path_utils.h"
 
 #include "yaml-cpp/yaml.h"
 
