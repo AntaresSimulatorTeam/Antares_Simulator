@@ -333,7 +333,7 @@ bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
   const Node& node,
   Antares::IO::Inputs::YmlModel::Model& rhs)
 {
-    if (!requireMapNodeWithId(node, "model", rhs))
+    if (!requireMap(node, "model"))
     {
         throw Antares::IO::Inputs::InputError("Expected a YAML mapping for 'model'");
     }

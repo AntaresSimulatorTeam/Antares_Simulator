@@ -296,10 +296,4 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
     return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
 }
 
-catch (const std::invalid_argument& e)
-{
-    throw InputError(e.what());
-}
-}
-
 } // namespace Antares::IO::Inputs::SystemConverter
