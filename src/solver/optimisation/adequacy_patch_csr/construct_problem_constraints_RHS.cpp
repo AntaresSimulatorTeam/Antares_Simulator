@@ -123,7 +123,8 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
 
                     // Ft = max(0,must-run generation)
                     // Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
-                    bfTerm = std::max(0., allMustRunGen)- std::min(0., consommationAbattue + allMustRunGen);
+                    bfTerm = std::max(0., allMustRunGen)
+                             - std::min(0., consommationAbattue + allMustRunGen);
                 }
 
                 // Add short term storage withdrawal
@@ -166,14 +167,17 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
 
                 double load = problemeHebdo_->ConsommationsAbattues[triggeredHour]
                                 .ConsommationAbattueDuPays[Area];
-                double MaxMustRunGenOfArea = std::max(0.,problemeHebdo_->AllMustRunGeneration[triggeredHour].AllMustRunGenerationOfArea[Area]);
+                double MaxMustRunGenOfArea = std::max(0.,
+                                                      problemeHebdo_
+                                                        ->AllMustRunGeneration[triggeredHour]
+                                                        .AllMustRunGenerationOfArea[Area]);
                 load += MaxMustRunGenOfArea;
 
                 if (load >= 0.)
                 {
                     SecondMembre[Cnt] = load + 1e-5;
                 }
-                
+
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
             }
