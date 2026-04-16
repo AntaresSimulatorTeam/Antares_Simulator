@@ -13,6 +13,8 @@
 // it collides with a #include <windows.h> somewhere in Yuni
 // clang-format off
 #include <unit_test_utils.h>
+
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 // clang-format on
 
