@@ -3,21 +3,14 @@
 
 #pragma once
 
-#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/Library.h"
+#include "antares/study/system-model/library.h"
 
-namespace Antares
-{
-namespace ModelerStudy::SystemModel
+namespace Antares::Inputs::YmlModel
 {
 class Library;
 }
 
-namespace Inputs::YmlModel
-{
-class Library;
-}
-} // namespace Antares
 
 namespace Antares::Expressions::Nodes
 {
