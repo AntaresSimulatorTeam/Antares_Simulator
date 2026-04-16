@@ -155,22 +155,20 @@ $(document).ready(function(){initNavTree('ShortTermInflowsTSNumberData_8h_source
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        pArea = area;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> saveToINIFile(Yuni::IO::File::Stream&amp; file) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> setTSnumber(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">ShortTermStorage::STStorageCluster</a>* sts, <span class="keywordtype">unsigned</span> year, <span class="keywordtype">unsigned</span> value);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">unsigned</span> get(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">ShortTermStorage::STStorageCluster</a>* sts, <span class="keywordtype">unsigned</span> year) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    std::map&lt;const ShortTermStorage::STStorageCluster*, MatrixType&gt; rules_;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* pArea{<span class="keyword">nullptr</span>};</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;};</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">inline</span> CString&lt;512, false&gt; ShortTermInflowsTSNumberData::get_prefix()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">return</span> <span class="stringliteral">&quot;sts,&quot;</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <span class="comment">// namespace Antares::Data::ScenarioBuilder</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> setTSnumber(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">ShortTermStorage::STStorageCluster</a>* sts, <span class="keywordtype">unsigned</span> year, <span class="keywordtype">unsigned</span> value);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">unsigned</span> get(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">ShortTermStorage::STStorageCluster</a>* sts, <span class="keywordtype">unsigned</span> year) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::map&lt;const ShortTermStorage::STStorageCluster*, MatrixType&gt; rules_;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Area</a>* pArea{<span class="keyword">nullptr</span>};</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">inline</span> CString&lt;512, false&gt; ShortTermInflowsTSNumberData::get_prefix()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> <span class="stringliteral">&quot;sts,&quot;</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// namespace Antares::Data::ScenarioBuilder</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:32</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData_html"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData.html">Antares::Data::ScenarioBuilder::ShortTermInflowsTSNumberData</a></div><div class="ttdef"><b>Definition:</b> ShortTermInflowsTSNumberData.h:16</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData_html_a59230130a64cd58beb77fc1c0d03b352"><div class="ttname"><a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermInflowsTSNumberData.html#a59230130a64cd58beb77fc1c0d03b352">Antares::Data::ScenarioBuilder::ShortTermInflowsTSNumberData::reset</a></div><div class="ttdeci">bool reset(const Study &amp;study) override</div><div class="ttdoc">Reset data from the study.</div><div class="ttdef"><b>Definition:</b> ShortTermInflowsTSNumberData.cpp:48</div></div>
