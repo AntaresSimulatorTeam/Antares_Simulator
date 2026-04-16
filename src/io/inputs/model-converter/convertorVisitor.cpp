@@ -168,7 +168,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         if (param.id == identifier)
         {
             auto v = variability(param.time_dependent, param.scenario_dependent);
-            return registry_.create<ParameterNode>(param.id, v);
+            return static_cast<Node*>(registry_.create<ParameterNode>(param.id, v));
         }
     }
 
@@ -179,7 +179,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
         if (var.id == identifier)
         {
             auto v = variability(var.time_dependent, var.scenario_dependent);
-            return registry_.create<VariableNode>(var.id, index, v);
+            return static_cast<Node*>(registry_.create<VariableNode>(var.id, index, v));
         }
     }
     throw InputError("No parameter or variable found for this identifier: " + identifier);
@@ -208,7 +208,7 @@ std::any ConvertorVisitor::visitFullexpr(ExprParser::FullexprContext* context)
 std::any ConvertorVisitor::visitNegation(ExprParser::NegationContext* context)
 {
     Node* n = std::any_cast<Node*>(context->expr()->accept(this));
-    return registry_.create<NegationNode>(n);
+    return static_cast<Node*>(registry_.create<NegationNode>(n));
 }
 
 std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* context)
@@ -224,15 +224,15 @@ std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* contex
     std::string op = context->COMPARISON()->getText();
     if (op == "=")
     {
-        return registry_.create<EqualNode>(left, right);
+        return static_cast<Node*>(registry_.create<EqualNode>(left, right));
     }
     else if (op == "<=")
     {
-        return registry_.create<LessThanOrEqualNode>(left, right);
+        return static_cast<Node*>(registry_.create<LessThanOrEqualNode>(left, right));
     }
     else
     {
-        return registry_.create<GreaterThanOrEqualNode>(left, right);
+        return static_cast<Node*>(registry_.create<GreaterThanOrEqualNode>(left, right));
     }
 }
 
@@ -259,13 +259,13 @@ std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
     std::string op = context->op->getText();
     if (op == "-")
     {
-        return registry_.create<SubtractionNode>(left, right);
+        return static_cast<Node*>(registry_.create<SubtractionNode>(left, right));
     }
     // Sum node, flatten all operands in one vector if possible
     std::vector<Node*> operands;
     extractSumOperands(left, operands);
     extractSumOperands(right, operands);
-    return registry_.create<SumNode>(operands);
+    return static_cast<Node*>(registry_.create<SumNode>(operands));
 }
 
 static bool isPortRegistered(const std::string& portId, const std::vector<YmlModel::Port>& ports)
@@ -289,25 +289,25 @@ PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContex
     {
         return registry_.create<PortFieldNode>(portId, portField);
     }
-    throw InputError("No port found for this identifier: " + portId);
+    throw IO::Inputs::InputError("No port found for this identifier: " + portId);
 }
 
 std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
 {
-    return processPortRule(context->portFieldExpr());
+    return static_cast<Node*>(processPortRule(context->portFieldExpr()));
 }
 
 std::any ConvertorVisitor::visitNumber(ExprParser::NumberContext* context)
 {
     double d = std::stod(context->getText());
-    return registry_.create<LiteralNode>(d);
+    return static_cast<Node*>(registry_.create<LiteralNode>(d));
 }
 
 std::any ConvertorVisitor::visitTimeIndex(ExprParser::TimeIndexContext* context)
 {
     Node* expr = convertIdentifier(context->IDENTIFIER()->getText());
     auto* index = registry_.create<LiteralNode>(std::stoi(context->expr()->getText()));
-    return registry_.create<TimeIndexNode>(expr, index);
+    return static_cast<Node*>(registry_.create<TimeIndexNode>(expr, index));
 }
 
 std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context)
@@ -315,7 +315,7 @@ std::any ConvertorVisitor::buildShiftNode(Node* shifted_expr, ExprParser::ShiftC
     if (auto shift_maybe = context->shift_expr()) // [t+1], [t-1], etc.
     {
         Node* shift = std::any_cast<Node*>(shift_maybe->accept(this));
-        return registry_.create<TimeShiftNode>(shifted_expr, shift);
+        return static_cast<Node*>(registry_.create<TimeShiftNode>(shifted_expr, shift));
     }
     else // [t]
     {
@@ -337,7 +337,7 @@ std::any ConvertorVisitor::visitTimeIndexExpr(ExprParser::TimeIndexExprContext* 
 {
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));
     Node* right = std::any_cast<Node*>(visit(context->expr(1)));
-    return registry_.create<TimeIndexNode>(left, right);
+    return static_cast<Node*>(registry_.create<TimeIndexNode>(left, right));
 }
 
 std::any ConvertorVisitor::visitPortFieldExpr(ExprParser::PortFieldExprContext* context)
@@ -351,7 +351,7 @@ std::any ConvertorVisitor::visitPortFieldSum(ExprParser::PortFieldSumContext* co
     const auto portName = port->getPortName();
     const auto fieldName = port->getFieldName();
 
-    return registry_.create<PortFieldSumNode>(portName, fieldName);
+    return static_cast<Node*>(registry_.create<PortFieldSumNode>(portName, fieldName));
 }
 
 std::vector<std::string> ExpressionsToIds(const std::vector<ExprParser::ExprContext*>& expressions)
@@ -383,9 +383,9 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
             {
                 auto* constraintIdNode = registry_.create<ParameterNode>(constraint_id);
                 auto* constraintIndex = registry_.create<LiteralNode>(index);
-                return registry_.create<FunctionNode>(FunctionNodeType::dual,
-                                                      constraintIdNode,
-                                                      constraintIndex);
+                return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                                         constraintIdNode,
+                                                                         constraintIndex));
             }
             ++index;
         }
@@ -423,7 +423,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
         if (var.id == var_id)
         {
             auto* varNode = registry_.create<VariableNode>(var_id, index);
-            return registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode);
+            return static_cast<Node*>(
+              registry_.create<FunctionNode>(FunctionNodeType::reduced_cost, varNode));
         }
         ++index;
     }
@@ -439,7 +440,7 @@ std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
         throw InputError("max operator expects at least 2 operands got "
                          + std::to_string(nodes.size()));
     }
-    return registry_.create<FunctionNode>(FunctionNodeType::max, nodes);
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
 }
 
 std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
@@ -450,7 +451,7 @@ std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
         throw InputError("min operator expects at least 2 operands got "
                          + std::to_string(nodes.size()));
     }
-    return registry_.create<FunctionNode>(FunctionNodeType::min, nodes);
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
 }
 
 Node* ConvertorVisitor::extractOneArgument(ExprParser::ArgListContext* context,
@@ -460,7 +461,7 @@ Node* ConvertorVisitor::extractOneArgument(ExprParser::ArgListContext* context,
     if (size_t size = nodes.size(); size > 1)
     {
         std::string err_msg = opName + "() expects 1 argument, but has " + std::to_string(size);
-        throw InputError(err_msg);
+        throw IO::Inputs::InputError(err_msg);
     }
     return nodes[0];
 }
@@ -468,13 +469,13 @@ Node* ConvertorVisitor::extractOneArgument(ExprParser::ArgListContext* context,
 std::any ConvertorVisitor::visitFloor(ExprParser::ArgListContext* context)
 {
     Node* node = extractOneArgument(context, "floor");
-    return registry_.create<FunctionNode>(FunctionNodeType::floor, node);
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::floor, node));
 }
 
 std::any ConvertorVisitor::visitCeil(ExprParser::ArgListContext* context)
 {
     Node* node = extractOneArgument(context, "ceil");
-    return registry_.create<FunctionNode>(FunctionNodeType::ceil, node);
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::ceil, node));
 }
 
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
@@ -485,7 +486,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     if (!arglist || arglist->expr().empty())
     {
         std::string err_msg = functionName + " operator expects an argument, got nothing";
-        throw InputError(err_msg);
+        throw IO::Inputs::InputError(err_msg);
     }
 
     if (functionName == "reduced_cost")
@@ -513,7 +514,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
         return visitCeil(arglist);
     }
 
-    throw InputError("Invalid function: '" + functionName + "'");
+    throw IO::Inputs::InputError("Invalid function: '" + functionName + "'");
 }
 
 template<class T>
@@ -554,13 +555,13 @@ std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 
     auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 
-    return registry_.create<TimeSumNode>(from, to, expr);
+    return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
 
 std::any ConvertorVisitor::visitAllTimeSum(ExprParser::AllTimeSumContext* context)
 {
     auto expr = std::any_cast<Node*>(context->expr()->accept(this));
-    return registry_.create<AllTimeSumNode>(expr);
+    return static_cast<Node*>(registry_.create<AllTimeSumNode>(expr));
 }
 
 // shift related, not tested
@@ -569,7 +570,7 @@ std::any ConvertorVisitor::visitSignedAtom(ExprParser::SignedAtomContext* contex
     auto a = context->atom()->accept(this);
     if (context->op->getText() == "-")
     {
-        return registry_.create<NegationNode>(std::any_cast<Node*>(a));
+        return static_cast<Node*>(registry_.create<NegationNode>(std::any_cast<Node*>(a)));
     }
     return a;
 }
@@ -611,7 +612,7 @@ std::any ConvertorVisitor::visitShiftMuldiv(ExprParser::ShiftMuldivContext* cont
 std::any ConvertorVisitor::visitRightMuldiv(
   [[maybe_unused]] ExprParser::RightMuldivContext* context)
 {
-    throw InputError("Node right mul div not implemented yet");
+    throw IO::Inputs::InputError("Node right mul div not implemented yet");
 }
 
 std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionContext* context)
@@ -619,7 +620,7 @@ std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionCon
     auto a = context->expr()->accept(this);
     if (context->op->getText() == "-")
     {
-        return registry_.create<NegationNode>(std::any_cast<Node*>(a));
+        return static_cast<Node*>(registry_.create<NegationNode>(std::any_cast<Node*>(a)));
     }
     return a;
 }
@@ -653,7 +654,8 @@ std::any ConvertorVisitor::visitShiftPower(ExprParser::ShiftPowerContext* contex
 {
     auto base = std::any_cast<Node*>(context->shift_expr()->accept(this));
     auto exponent = std::any_cast<Node*>(context->right_expr()->accept(this));
-    return registry_.create<FunctionNode>(FunctionNodeType::pow, base, exponent);
+    return static_cast<Node*>(
+      registry_.create<FunctionNode>(FunctionNodeType::pow, base, exponent));
 }
 
 } // namespace Antares::IO::Inputs::ModelConverter
