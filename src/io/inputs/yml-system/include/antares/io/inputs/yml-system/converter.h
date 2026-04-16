@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include <antares/io/inputs/InputError.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
 

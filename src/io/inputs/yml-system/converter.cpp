@@ -8,6 +8,7 @@
 #include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/logs/logs.h"
@@ -29,7 +30,7 @@ std::pair<std::string, std::string> splitLibraryModelString(const std::string& s
     size_t pos = s.find('.');
     if (pos == std::string::npos)
     {
-        throw IO::Inputs::InputError("'.' not found while splitting library and model: " + s);
+        throw InputError("'.' not found while splitting library and model: " + s);
     }
 
     std::string library = s.substr(0, pos);
@@ -45,13 +46,13 @@ const Model& getModel(const std::vector<Library>& libraries,
                                     [&libraryId](const auto& l) { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
-        throw IO::Inputs::InputError("No library found with this name: " + libraryId);
+        throw InputError("No library found with this name: " + libraryId);
     }
 
     auto search = lib->Models().find(modelId);
     if (search == lib->Models().end())
     {
-        throw IO::Inputs::InputError("No model found with this name: " + modelId);
+        throw InputError("No model found with this name: " + modelId);
     }
 
     return search->second;
@@ -91,7 +92,7 @@ Component& findComponent(const std::string& id, std::vector<Component>& componen
                                          [&id](const Component& c) { return c.Id() == id; });
     if (it == components.end())
     {
-        throw IO::Inputs::InputError("Component with id '" + id + "' not found in system.");
+        throw InputError("Component with id '" + id + "' not found in system.");
     }
     return *it;
 }
@@ -106,7 +107,7 @@ void CheckPortSelfConnection(const std::string& firstComponentId,
         std::ostringstream msg;
         msg << "Can not connect Port '" << firstPortId << "' from component '" << firstComponentId
             << "' to itself!";
-        throw IO::Inputs::InputError(msg.str());
+        throw InputError(msg.str());
     }
 }
 
@@ -117,7 +118,7 @@ void CheckPortsType(const Port& firstPort, const Port& secondPort)
         std::ostringstream msg;
         msg << "Ports '" << firstPort.Id() << "' and '" << secondPort.Id()
             << "' are not of the same type!";
-        throw IO::Inputs::InputError(msg.str());
+        throw InputError(msg.str());
     }
 }
 
@@ -133,7 +134,7 @@ void CheckFieldsRoleCompatibility(const Port& port_1, const Port& port_2)
             std::ostringstream msg;
             msg << "Field '" << field.Id() << "' is " << portFieldRole_1 << " in both ports '"
                 << port_1.Id() << "' and '" << port_2.Id() << "'";
-            throw IO::Inputs::InputError(msg.str());
+            throw InputError(msg.str());
         }
     }
 }
@@ -259,7 +260,7 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                                            { return compo.Id() == c.id; });
             if (it != components.end())
             {
-                throw IO::Inputs::InputError(
+                throw InputError(
                   "System has at least two components with the same id ('" + c.id
                   + "'), this is not supported");
             }
@@ -300,7 +301,7 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
     }
     catch (const std::invalid_argument& e)
     {
-        throw IO::Inputs::InputError(e.what());
+        throw InputError(e.what());
     }
 }
 
