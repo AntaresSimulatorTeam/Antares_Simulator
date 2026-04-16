@@ -29,6 +29,12 @@ struct HydroInputCheckerFixture
         uint nbYears = study->parameters.nbYears = 1;
 
         area_1 = addAreaToListOfAreas(study->areas, "Area1");
+        if (area_1)
+        {
+            area_1->createMissingData();
+            area_1->resetToDefaultValues();
+        }
+        study->areas.rebuildIndexes();
 
         area_1->hydro.reservoirManagement = false;
         area_1->hydro.followLoadModulations = false;
