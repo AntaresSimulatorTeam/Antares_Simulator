@@ -95,6 +95,7 @@ set(TARGET_LIBS #No alias
 
         # modeler libs
         antlr-interface
+        system-model-base
         antares-study-system-model
         load-modeler-files
 		write-modeler-files
@@ -102,8 +103,10 @@ set(TARGET_LIBS #No alias
         expressions
         optim-model-filler
 		forbidden-nodes
+        input-error
         yml-system
         yml-model
+		yml-utils
         model-converter
         modeler-parameters
         data-series-csv-importer
@@ -117,7 +120,7 @@ set(TARGET_LIBS #No alias
         yml-optim-config
         enums
         modeler-checks
-	structured-linear-problem
+		structured-linear-problem
 )
 
 install(TARGETS ${TARGET_LIBS}

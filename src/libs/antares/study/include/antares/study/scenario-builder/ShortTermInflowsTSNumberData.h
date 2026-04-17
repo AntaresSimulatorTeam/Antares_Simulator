@@ -26,8 +26,6 @@ public:
         pArea = area;
     }
 
-    void saveToINIFile(Yuni::IO::File::Stream& file) const;
-
     void setTSnumber(const ShortTermStorage::STStorageCluster* sts, unsigned year, unsigned value);
     unsigned get(const ShortTermStorage::STStorageCluster* sts, unsigned year) const;
 

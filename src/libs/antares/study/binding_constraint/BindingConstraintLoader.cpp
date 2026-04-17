@@ -10,6 +10,8 @@
 #include <memory>
 #include <vector>
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include "yuni/core/string/string.h"
 
 #include <antares/utils/utils.h>
@@ -41,7 +43,7 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
         if (p->key == "id")
         {
             bc->pID = p->value;
-            bc->pID.toLower(); // force the lowercase
+            boost::to_lower(bc->pID);
             continue;
         }
         if (p->key == "enabled")
@@ -149,13 +151,13 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     }
 
     // Checking for validity
-    if (!bc->pName)
+    if (bc->pName.empty())
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name
                      << "]: Invalid binding constraint name";
         return {};
     }
-    if (!bc->pID)
+    if (bc->pID.empty())
     {
         logs.error() << env.iniFilename << ": in [" << env.section->name
                      << "]: Invalid binding constraint id";

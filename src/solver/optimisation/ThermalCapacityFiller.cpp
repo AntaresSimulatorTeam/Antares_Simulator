@@ -87,6 +87,8 @@ void ThermalCapacityFiller::addCapacityFieldConstraint(
         auto pdt = localIndex % problemeHebdo_->NombreDePasDeTempsPourUneOptimisation;
         IMipVariable* dispatchableProduction = getDispatchableProductionVariable(clusterIndex, pdt);
         double infinity = pb_.infinity();
+        // When a thermal-capacity-connection exists, the legacy thermal capacity timeseries
+        // is replaced by the capacity expression coming from the connected GEMS port.
         dispatchableProduction->setUb(infinity);
 
         auto* ct = pb_.addConstraint(-infinity,

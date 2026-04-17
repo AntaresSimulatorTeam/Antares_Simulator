@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <cassert>
+#include <sstream>
 
 #include <boost/algorithm/string/case_conv.hpp>
 
@@ -373,6 +374,31 @@ void Calendar::reset()
     (void)::memset(days, '\0', sizeof(days));
     (void)::memset(weeks, '\0', sizeof(weeks));
     (void)::memset(months, '\0', sizeof(months));
+    (void)::memset(&mapping, '\0', sizeof(mapping));
+
+    for (auto& monthText: text.months)
+    {
+        monthText.name.clear();
+        monthText.shortName.clear();
+        monthText.shortUpperName.clear();
+    }
+    for (auto& hourText: text.hours)
+    {
+        hourText.clear();
+    }
+    for (auto& dayText: text.daysYear)
+    {
+        dayText.clear();
+    }
+    for (auto& weekdayText: text.weekdays)
+    {
+        weekdayText.clear();
+    }
+
+    for (auto& hourText: wtext.hours)
+    {
+        hourText.clear();
+    }
 
     // Reset months relationship
     for (uint m = 0; m != MONTHS_PER_YEAR + 1; ++m)
@@ -385,11 +411,22 @@ void Calendar::reset()
         months[m].days = StandardDaysPerMonths[realmonth];
         months[m].realmonth = (MonthName)realmonth;
 
-        auto& textmonth = text.months[m];
-        textmonth.name = MonthToString(realmonth);
-        textmonth.shortName = MonthToShortString(realmonth);
-        textmonth.shortUpperName = MonthToUpperShortString(realmonth);
+        if (m < MONTHS_PER_YEAR)
+        {
+            auto& textmonth = text.months[m];
+            textmonth.name = MonthToString(realmonth);
+            textmonth.shortName = MonthToShortString(realmonth);
+            textmonth.shortUpperName = MonthToUpperShortString(realmonth);
+        }
     }
+
+    text.weekdays[0] = DayOfTheWeekToString(monday);
+    text.weekdays[1] = DayOfTheWeekToString(tuesday);
+    text.weekdays[2] = DayOfTheWeekToString(wednesday);
+    text.weekdays[3] = DayOfTheWeekToString(thursday);
+    text.weekdays[4] = DayOfTheWeekToString(friday);
+    text.weekdays[5] = DayOfTheWeekToString(saturday);
+    text.weekdays[6] = DayOfTheWeekToString(sunday);
 
     // leap year
     if (settings_.leapYear)
@@ -544,112 +581,113 @@ void Calendar::reset()
         {
             auto& hourinfo = hours[hourYear];
             auto& hourtext = text.hours[hourYear];
-            hourtext.clear();
+            std::ostringstream oss;
             // Hour in the year - 1..8760
             uint hour = hourYear + 1;
             if (hour >= 1000)
             {
-                hourtext << hour;
+                oss << hour;
             }
             else if (hour < 10)
             {
-                hourtext << "000" << hour;
+                oss << "000" << hour;
             }
             else if (hour < 100)
             {
-                hourtext << "00" << hour;
+                oss << "00" << hour;
             }
             else if (hour < 1000)
             {
-                hourtext << '0' << hour;
+                oss << '0' << hour;
             }
 
             // week
-            hourtext << " (";
+            oss << " (";
             uint week = weeks[hourinfo.week].userweek;
             if (week >= 10)
             {
-                hourtext << week;
+                oss << week;
             }
             else
             {
-                hourtext << '0' << week;
+                oss << '0' << week;
             }
-            hourtext << ')';
+            oss << ')';
 
-            hourtext << " - ";
+            oss << " - ";
 
-            hourtext << WeekdayToShortUpperString((uint)hourinfo.weekday);
-            hourtext << ' ';
-            hourtext << text.months[hourinfo.month].shortUpperName;
-            hourtext << ' ';
+            oss << WeekdayToShortUpperString((uint)hourinfo.weekday);
+            oss << ' ';
+            oss << text.months[hourinfo.month].shortUpperName;
+            oss << ' ';
             if (hourinfo.dayMonth + 1 < 10)
             {
-                hourtext << '0' << (hourinfo.dayMonth + 1);
+                oss << '0' << (hourinfo.dayMonth + 1);
             }
             else
             {
-                hourtext << (hourinfo.dayMonth + 1);
+                oss << (hourinfo.dayMonth + 1);
             }
 
-            hourtext << ' ';
+            oss << ' ';
 
             if (hourinfo.dayHour >= 10)
             {
-                hourtext << hourinfo.dayHour;
+                oss << hourinfo.dayHour;
             }
             else
             {
-                hourtext << '0' << hourinfo.dayHour;
+                oss << '0' << hourinfo.dayHour;
             }
-            hourtext << ":00";
+            oss << ":00";
+            hourtext = oss.str();
         }
 
         // days
         for (uint d = 0; d != maxDaysInYear; ++d)
         {
-            auto& str = text.daysYear[d];
-            str.clear();
             auto& dayinfo = days[d];
+            std::ostringstream oss;
             uint day = d + 1;
             if (day < 10)
             {
-                str << "00" << day;
+                oss << "00" << day;
             }
             else if (day < 100)
             {
-                str << '0' << day;
+                oss << '0' << day;
             }
             else
             {
-                str << day;
+                oss << day;
             }
 
             // week
-            str << " (";
+            oss << " (";
             uint week = weeks[dayinfo.week].userweek;
             if (week >= 10)
             {
-                str << week;
+                oss << week;
             }
             else
             {
-                str << '0' << week;
+                oss << '0' << week;
             }
 
-            str << ") - ";
-            str << WeekdayToShortUpperString((uint)dayinfo.weekday);
-            str << ' ';
-            str << text.months[dayinfo.month].shortUpperName;
-            str << ' ';
+            oss << ") - ";
+            oss << WeekdayToShortUpperString((uint)dayinfo.weekday);
+            oss << ' ';
+            oss << text.months[dayinfo.month].shortUpperName;
+            oss << ' ';
             if (dayinfo.dayMonth + 1 < 10)
             {
-                str << '0' << (dayinfo.dayMonth + 1);
+                oss << '0' << (dayinfo.dayMonth + 1);
             }
             else
             {
-                str << (dayinfo.dayMonth + 1);
+                oss << (dayinfo.dayMonth + 1);
             }
+            text.daysYear[d] = oss.str();
         }
     }
 }

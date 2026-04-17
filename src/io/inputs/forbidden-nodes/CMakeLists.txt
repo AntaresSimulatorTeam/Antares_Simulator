@@ -14,6 +14,8 @@ target_include_directories(forbidden-nodes
 )
 
 target_link_libraries(forbidden-nodes
+        PUBLIC
+        Antares::input-error
         PRIVATE
         Antares::expressions
 )

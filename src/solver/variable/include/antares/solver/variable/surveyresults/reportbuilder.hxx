@@ -299,7 +299,7 @@ private:
                 // The new output
                 std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
                 path /= "areas";
-                path /= area.id.to<std::string>();
+                path /= area.id;
 
                 results.data.output = path.string();
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
@@ -334,8 +334,7 @@ private:
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
                 std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
-                path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal"
-                        / cluster->id();
+                path /= std::filesystem::path("areas") / area.id / "thermal" / cluster->id();
 
                 results.data.output = path.string();
 
@@ -425,7 +424,6 @@ private:
         // alias to the set of sets of areas
         const Data::Study::SetsOfAreas& sets = results.data.study.setsOfAreas;
 
-        unsigned int indx = 0;
         for (unsigned int i = 0; i != sets.size(); ++i)
         {
             if (!sets.hasOutput(i) || !sets.resultSize(i))
@@ -436,11 +434,12 @@ private:
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
             std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
-            std::string setId = "@ " + sets.nameByIndex(i);
+            const auto& setName = sets.nameByIndex(i);
+            std::string setId = "@ " + setName;
             path /= std::filesystem::path("areas") / setId;
 
             results.data.output = path.string();
-            results.data.setOfAreasIndex = indx++;
+            results.data.setOfAreasName = setName;
 
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }

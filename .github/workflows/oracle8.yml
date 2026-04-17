@@ -7,6 +7,7 @@ on:
     branches:
       - develop
       - dependabot/*
+      - release/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
@@ -48,7 +49,7 @@ jobs:
       - name: Install libraries
         run: |
           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
-          dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-11 zlib-devel
+          dnf install -y unzip libuuid-devel gcc-toolset-11 zlib-devel
 
       - name: Checkout
         run: |

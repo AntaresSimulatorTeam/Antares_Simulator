@@ -179,9 +179,6 @@ public:
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
 
-    //! Daily reservoir level ({min,avg,max}x365)
-    Matrix<double> reservoirLevel;
-
     //! Daily water value ({0,1,2%...100%}x365)
     Matrix<double> waterValues;
 
@@ -205,7 +202,7 @@ public:
     double overflowSpilledCostDifference = 1.;
 
 private:
-    static bool checkReservoirLevels(const Study& study);
+    static bool checkInflowPatternAndCredModul(const Study& study);
     static bool checkProperties(Study& study);
 
 }; // class PartHydro

@@ -13,6 +13,7 @@ add_boost_test(testOutputs
         Antares::simu-table-generator
         Antares::tests::inmemory-modeler
         Antares::modeler-lib
+        Antares::load-modeler-files
         Antares::write-modeler-files
         ortools::ortools
         Boost::unit_test_framework)

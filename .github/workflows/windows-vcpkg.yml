@@ -39,7 +39,6 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       os: windows-2022
-      vcpkgPackages: boost-test
       triplet: x64-windows-release
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
@@ -186,7 +185,7 @@ jobs:
 
     - name: Init submodule Antares_Simulator_Tests_NR
       run: |
-        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 src/tests/resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}

@@ -396,7 +396,7 @@ bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string& va
     {
         for (const auto& [areaName, area]: areas_)
         {
-            set.insert(area);
+            set.insert(area.get());
         }
         return true;
     }

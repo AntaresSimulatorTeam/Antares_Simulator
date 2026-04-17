@@ -5,12 +5,10 @@
 
 #include <algorithm>
 #include <sstream>
+#include <stdexcept>
 
-// gp : For the visit (dispatch(...)) of the nodes.
-// gp : Including ForbiddenNodesVisitor.h should be enough, but for some reason we need to include
-//      ExpressionsNodes.h as well.
-// gp : TODO: find a way to avoid including ExpressionsNodes.h
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/yml-system/system.h"
 #include "antares/logs/logs.h"
@@ -24,39 +22,15 @@ using namespace Antares::IO::Inputs::ForbidNodes;
 namespace Antares::IO::Inputs::SystemConverter
 {
 
-class ErrorWhileSplittingLibraryAndModel final: public std::runtime_error
+namespace
 {
-public:
-    explicit ErrorWhileSplittingLibraryAndModel(const std::string& s):
-        runtime_error("'.' not found while splitting library and model: " + s)
-    {
-    }
-};
 
-class LibraryNotFound final: public std::runtime_error
+std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
 {
-public:
-    explicit LibraryNotFound(const std::string& s):
-        runtime_error("No library found with this name: " + s)
-    {
-    }
-};
-
-class ModelNotFound final: public std::runtime_error
-{
-public:
-    explicit ModelNotFound(const std::string& s):
-        runtime_error("No model found with this name: " + s)
-    {
-    }
-};
-
-static std::pair<std::string, std::string> splitLibraryModelString(const std::string& s)
-{
-    size_t pos = s.find('.');
+    const size_t pos = s.find('.');
     if (pos == std::string::npos)
     {
-        throw ErrorWhileSplittingLibraryAndModel(s);
+        throw InputError("'.' not found while splitting library and model: " + s);
     }
 
     std::string library = s.substr(0, pos);
@@ -64,28 +38,28 @@ static std::pair<std::string, std::string> splitLibraryModelString(const std::st
     return {library, model};
 }
 
-static const Model& getModel(const std::vector<Library>& libraries,
-                             const std::string& libraryId,
-                             const std::string& modelId)
+const Model& getModel(const std::vector<Library>& libraries,
+                      const std::string& libraryId,
+                      const std::string& modelId)
 {
-    auto lib = std::ranges::find_if(libraries,
-                                    [&libraryId](const auto& l) { return l.Id() == libraryId; });
+    const auto lib = std::ranges::find_if(libraries,
+                                          [&libraryId](const auto& l)
+                                          { return l.Id() == libraryId; });
     if (lib == libraries.end())
     {
-        throw LibraryNotFound(libraryId);
+        throw InputError("No library found with this name: " + libraryId);
     }
 
-    auto search = lib->Models().find(modelId);
+    const auto search = lib->Models().find(modelId);
     if (search == lib->Models().end())
     {
-        throw ModelNotFound(modelId);
+        throw InputError("No model found with this name: " + modelId);
     }
 
     return search->second;
 }
 
-static Component createComponent(const YmlSystem::Component& c,
-                                 const std::vector<Library>& libraries)
+Component createComponent(const YmlSystem::Component& c, const std::vector<Library>& libraries)
 {
     const auto [libraryId, modelId] = splitLibraryModelString(c.model);
 
@@ -112,47 +86,44 @@ static Component createComponent(const YmlSystem::Component& c,
     return component;
 }
 
-static Component& findComponent(const std::string& id, std::vector<Component>& components)
+Component& findComponent(const std::string& id, std::vector<Component>& components)
 
 {
     const auto it = std::ranges::find_if(components,
                                          [&id](const Component& c) { return c.Id() == id; });
     if (it == components.end())
     {
-        throw std::invalid_argument("Component with id '" + id + "' not found in system.");
+        throw InputError("Component with id '" + id + "' not found in system.");
     }
     return *it;
 }
 
-static void CheckPortSelfConnection(const std::string& firstComponentId,
-                                    const std::string& firstPortId,
-                                    const std::string& secondComponentId,
-                                    const std::string& secondPortId)
+void CheckPortSelfConnection(const std::string& firstComponentId,
+                             const std::string& firstPortId,
+                             const std::string& secondComponentId,
+                             const std::string& secondPortId)
 {
     if (firstComponentId == secondComponentId && firstPortId == secondPortId)
     {
         std::ostringstream msg;
         msg << "Can not connect Port '" << firstPortId << "' from component '" << firstComponentId
             << "' to itself!";
-        throw ConnectingPortToItSelf(msg.str());
+        throw InputError(msg.str());
     }
 }
 
-static void CheckPortsType(const Port& firstPort, const Port& secondPort)
+void CheckPortsType(const Port& firstPort, const Port& secondPort)
 {
     if (firstPort.Type() != secondPort.Type())
     {
         std::ostringstream msg;
         msg << "Ports '" << firstPort.Id() << "' and '" << secondPort.Id()
             << "' are not of the same type!";
-        throw std::invalid_argument(msg.str());
+        throw InputError(msg.str());
     }
 }
 
-static void CheckFieldsRoleCompatibility(const Component& component_1,
-                                         const Port& port_1,
-                                         const Component& component_2,
-                                         const Port& port_2)
+void CheckFieldsRoleCompatibility(const Port& port_1, const Port& port_2)
 {
     for (const auto& field: port_1.Type().Fields())
     {
@@ -164,7 +135,7 @@ static void CheckFieldsRoleCompatibility(const Component& component_1,
             std::ostringstream msg;
             msg << "Field '" << field.Id() << "' is " << portFieldRole_1 << " in both ports '"
                 << port_1.Id() << "' and '" << port_2.Id() << "'";
-            throw TwoFieldsOfSameRole(msg.str());
+            throw InputError(msg.str());
         }
     }
 }
@@ -187,11 +158,10 @@ static void CheckFieldsRoleCompatibility(const Component& component_1,
  *
  * @return void
  *
- * @throw std::invalid_argument if a component or port is not found, if the ports are not
+ * @throw IO::Inputs::InputError if a component or port is not found, if the ports are not
  *        of the same type, or if fields are incorrectly configured for sending/receiving.
  */
-static void connectComponents(const YmlSystem::Connection& connection,
-                              std::vector<Component>& components)
+void connectComponents(const YmlSystem::Connection& connection, std::vector<Component>& components)
 {
     const auto& componentId_1 = connection.firstEntry.componentId;
     const auto& portId_1 = connection.firstEntry.portId;
@@ -205,7 +175,7 @@ static void connectComponents(const YmlSystem::Connection& connection,
     const auto& port_2 = component_2.findPort(portId_2, "");
     CheckPortsType(port_1, port_2);
 
-    CheckFieldsRoleCompatibility(component_1, port_1, component_2, port_2);
+    CheckFieldsRoleCompatibility(port_1, port_2);
 
     // TODO : Do we need to connect both components to one another ?
     // TODO : Or should we rather consider the field role and only connect receiver to the sender ?
@@ -221,11 +191,10 @@ static void connectComponents(const YmlSystem::Connection& connection,
  *
  * @return void
  *
- * @throw std::invalid_argument if a component is not found, or if the connection could not be
+ * @throw IO::Inputs::InputError if a component is not found, or if the connection could not be
  * established
  */
-static void connectAreas(const YmlSystem::AreaConnection& connection,
-                         std::vector<Component>& components)
+void connectAreas(const YmlSystem::AreaConnection& connection, std::vector<Component>& components)
 {
     auto& component = findComponent(connection.componentId, components);
     component.addAreaConnection(connection.portId, connection.areaId);
@@ -241,11 +210,11 @@ static void connectAreas(const YmlSystem::AreaConnection& connection,
  *
  * @return void
  *
- * @throw std::invalid_argument if a component is not found, or if the connection could not be
+ * @throw IO::Inputs::InputError if a component is not found, or if the connection could not be
  * established
  */
-static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
-                                   std::vector<Component>& components)
+void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& connection,
+                            std::vector<Component>& components)
 {
     // TODO : check that area exists in legacy study? seems complicated here
     auto& component = findComponent(connection.componentId, components);
@@ -254,6 +223,8 @@ static void connectThermalCapacity(const YmlSystem::ThermalCapacityConnection& c
                                            connection.thermalComponent.areaId,
                                            connection.thermalComponent.clusterId);
 }
+
+} // anonymous namespace
 
 void checkForNonLinearityBehindConnections(const std::vector<Component>& components)
 {
@@ -279,50 +250,59 @@ void checkForNonLinearityBehindConnections(const std::vector<Component>& compone
 
 System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& libraries)
 {
-    // Create components from system
-    std::vector<Component> components;
-    for (const auto& c: ymlSystem.components)
+    try
     {
-        auto it = std::ranges::find_if(std::as_const(components),
-                                       [&c](const Component& compo) { return compo.Id() == c.id; });
-        if (it != components.end())
+        // Create components from system
+        std::vector<Component> components;
+        for (const auto& c: ymlSystem.components)
         {
-            throw std::invalid_argument("System has at least two components with the same id ('"
-                                        + c.id + "'), this is not supported");
+            auto it = std::ranges::find_if(std::as_const(components),
+                                           [&c](const Component& compo)
+                                           { return compo.Id() == c.id; });
+            if (it != components.end())
+            {
+                throw InputError("System has at least two components with the same id ('" + c.id
+                                 + "'), this is not supported");
+            }
+            components.push_back(createComponent(c, libraries));
+            logs.debug() << "Loaded component `" << c.id << "`";
         }
-        components.push_back(createComponent(c, libraries));
-        logs.debug() << "Loaded component `" << c.id << "`";
-    }
 
-    // Create connections from system
-    for (const auto& connection: ymlSystem.connections)
+        // Create connections from system
+        for (const auto& connection: ymlSystem.connections)
+        {
+            connectComponents(connection, components);
+            logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
+                         << "` component2=`" << connection.secondEntry.componentId << "`)";
+        }
+
+        checkForNonLinearityBehindConnections(components);
+
+        // Create area connections from system
+        for (const auto& connection: ymlSystem.areaConnections)
+        {
+            connectAreas(connection, components);
+            logs.debug() << "Loaded area connection (component=`" << connection.componentId
+                         << "` area=`" << connection.areaId << "`)";
+        }
+        // Create thermal capacity connections from system
+        for (const auto& connection: ymlSystem.thermalCapacityConnections)
+        {
+            connectThermalCapacity(connection, components);
+            logs.debug() << "Loaded thermal-capacity connection (component=`"
+                         << connection.componentId << "` area=`"
+                         << connection.thermalComponent.areaId << "` clusterId=`"
+                         << connection.thermalComponent.clusterId << "`)";
+        }
+
+        // Build system from components and connections
+        SystemBuilder builder;
+        return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
+    }
+    catch (const std::invalid_argument& e)
     {
-        connectComponents(connection, components);
-        logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
-                     << "` component2=`" << connection.secondEntry.componentId << "`)";
+        throw InputError(e.what());
     }
-
-    checkForNonLinearityBehindConnections(components);
-
-    // Create area connections from system
-    for (const auto& connection: ymlSystem.areaConnections)
-    {
-        connectAreas(connection, components);
-        logs.debug() << "Loaded area connection (component=`" << connection.componentId
-                     << "` area=`" << connection.areaId << "`)";
-    }
-    // Create thermal capacity connections from system
-    for (const auto& connection: ymlSystem.thermalCapacityConnections)
-    {
-        connectThermalCapacity(connection, components);
-        logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
-                     << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
-                     << connection.thermalComponent.clusterId << "`)";
-    }
-
-    // Build system from components and connections
-    SystemBuilder builder;
-    return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter

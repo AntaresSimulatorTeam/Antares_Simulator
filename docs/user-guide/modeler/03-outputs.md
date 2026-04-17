@@ -3,13 +3,17 @@
 _**This feature is under development and may change frequently**_  
 
 Antares modeler automatically creates an **output** directory under the study root directory, to write output files into it.  
-Currently, Antares modeler only outputs two file, one containing optimal values of the objective function and all the 
-optimization problem's variables, and one containing the optimization model.   
+Currently, Antares modeler outputs the simulation table and optionally MPS files for debugging.
 
-## Optimization model
+## MPS Files
 
-The optimization model solved by Antares modeler is written in the human-readable LP format, 
-under **output/problem.lp**. It is only meant to be used for debugging.
+When the `export-mps` parameter is set to `true` in [parameters.yml](04-parameters.md#outputs), Antares modeler exports
+the optimization model in MPS format:
+- **output/1-1.mps**: The subproblem in MPS format
+- **output/master.mps**: The master problem in MPS format (if applicable, e.g., in Benders decomposition mode)
+- **output/structure.txt**: A text file describing the Benders decomposition structure (if applicable)
+
+These files are intended for debugging and analysis purposes.
 
 ## Simulation Table
 
