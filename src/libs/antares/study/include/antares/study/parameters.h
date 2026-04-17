@@ -337,6 +337,12 @@ public:
             Hourly
         };
         HydroPmax hydroPmax = HydroPmax::Daily;
+        enum class HydroRuleCurves
+        {
+            Single,
+            Scenarized
+        };
+        HydroRuleCurves hydroRuleCurves = HydroRuleCurves::Single;
     };
 
     Compatibility compatibility;
@@ -467,7 +473,6 @@ bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text)
 
 const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
-
 } // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARAMETERS_H__

@@ -122,6 +122,8 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/allocation.cpp
         include/antares/study/parts/hydro/hydromaxtimeseriesreader.h
         parts/hydro/hydromaxtimeseriesreader.cpp
+        include/antares/study/parts/hydro/hydrorulecurves.h
+        parts/hydro/hydrorulecurves.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
 
