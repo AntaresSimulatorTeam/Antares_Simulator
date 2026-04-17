@@ -183,6 +183,7 @@ bool convert<YmlModel::PortType>::decode(
         return false;
     }
 
+    checkMandatoryIdField(node, "port-type");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     for (const auto& field: node["fields"])
@@ -202,7 +203,8 @@ bool convert<YmlModel::Parameter>::decode(
         return false;
     }
 
-    rhs.id = node["id"].as<std::string>("");
+    checkMandatoryIdField(node, "parameter");
+    rhs.id = node["id"].as<std::string>();
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
     return true;
@@ -251,6 +253,7 @@ bool convert<YmlModel::Variable>::decode(
         return false;
     }
 
+    checkMandatoryIdField(node, "variable");
     rhs.id = node["id"].as<std::string>();
     rhs.lower_bound = node["lower-bound"].as<std::string>("");
     rhs.upper_bound = node["upper-bound"].as<std::string>("");
@@ -270,6 +273,7 @@ bool convert<YmlModel::Port>::decode(const Node& node,
         return false;
     }
 
+    checkMandatoryIdField(node, "port");
     rhs.id = node["id"].as<std::string>();
     rhs.type = node["type"].as<std::string>();
     return true;
@@ -342,6 +346,7 @@ bool convert<YmlModel::Model>::decode(
         throw InputError("Expected a YAML mapping for 'model'");
     }
 
+    checkMandatoryIdField(node, "model");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(
