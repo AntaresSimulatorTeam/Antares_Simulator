@@ -406,7 +406,7 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
                              .secondCompo = "D",
                              .secondPort = "yosh!"}});
     YmlSystem::System systemObj = parserSystem.parse(system);
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
 }
 
 BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
