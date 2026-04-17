@@ -133,16 +133,11 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(
   const Node& node,
   YmlModel::PortType& rhs)
 {
-    auto areaConnNode = node["area-connection"];
-    if (!areaConnNode.IsDefined())
-    {
-        return true;
-    }
+    const auto areaConnNode = node["area-connection"];
 
-    if (!areaConnNode.IsMap())
+    if (!requireMap(areaConnNode, "area-connection"))
     {
-        throw InputError(
-          "Expected a YAML mapping for 'area-connection' in port-type");
+        return false;
     }
 
     checkFields(areaConnNode,
@@ -188,6 +183,7 @@ bool convert<YmlModel::PortType>::decode(
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     for (const auto& field: node["fields"])
     {
@@ -206,6 +202,7 @@ bool convert<YmlModel::Parameter>::decode(
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>("");
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
     return true;
@@ -254,6 +251,7 @@ bool convert<YmlModel::Variable>::decode(
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>();
     rhs.lower_bound = node["lower-bound"].as<std::string>("");
     rhs.upper_bound = node["upper-bound"].as<std::string>("");
     rhs.variable_type = node["variable-type"].as<YmlModel::ValueType>(
@@ -272,6 +270,7 @@ bool convert<YmlModel::Port>::decode(const Node& node,
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>();
     rhs.type = node["type"].as<std::string>();
     return true;
 }
@@ -299,6 +298,7 @@ bool convert<YmlModel::Constraint>::decode(
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
@@ -313,6 +313,7 @@ bool convert<YmlModel::ExtraOutput>::decode(
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
     return true;
 }
@@ -326,6 +327,7 @@ bool convert<YmlModel::Objective>::decode(
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
@@ -340,6 +342,7 @@ bool convert<YmlModel::Model>::decode(
         throw InputError("Expected a YAML mapping for 'model'");
     }
 
+    rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(
       node["parameters"]);
