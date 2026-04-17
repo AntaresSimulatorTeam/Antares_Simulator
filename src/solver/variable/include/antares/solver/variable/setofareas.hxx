@@ -18,6 +18,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     // Reserving the memory
     pSetsOfAreas.reserve(sets.size());
     pOriginalSets.reserve(sets.size());
+    pIds.reserve(sets.size());
 
     // For each set...
     for (uint setIndex = 0; setIndex != sets.size(); ++setIndex)
@@ -59,6 +60,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         assert(!originalSet->empty());
         pOriginalSets.push_back(originalSet);
 
+        pIds.push_back(sets.nameByIndex(setIndex));
         pNames.push_back(setname);
     }
 }
@@ -172,10 +174,10 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(results,
-                                                                      dataLevel,
-                                                                      fileLevel,
-                                                                      precision);
+        if (const auto* set = findSetById(results.data.setOfAreasName))
+        {
+            set->buildSurveyReport(results, dataLevel, fileLevel, precision);
+        }
     }
 }
 
@@ -190,12 +192,25 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(results,
-                                                                            dataLevel,
-                                                                            fileLevel,
-                                                                            precision,
-                                                                            numSpace);
+        if (const auto* set = findSetById(results.data.setOfAreasName))
+        {
+            set->buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+        }
     }
+}
+
+template<class NextT>
+const typename SetsOfAreas<NextT>::NextType* SetsOfAreas<NextT>::findSetById(
+  const Data::Study::SetsOfAreas::IDType& setId) const
+{
+    for (uint i = 0; i != pNames.size(); ++i)
+    {
+        if (pIds[i] == setId)
+        {
+            return pSetsOfAreas[i].get();
+        }
+    }
+    return nullptr;
 }
 
 template<class NextT>

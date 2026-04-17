@@ -38,7 +38,7 @@ public:
       const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
     explicit FileWriter(std::filesystem::path path);
 
-    const std::filesystem::path& outputPath() const;
+    const std::filesystem::path& outputPath() const override;
 
 private:
     const std::filesystem::path studyPath_;

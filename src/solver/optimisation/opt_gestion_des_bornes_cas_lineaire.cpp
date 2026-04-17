@@ -167,6 +167,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                     int var = variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdtJour);
                     Xmin[var] = 0;
                     Xmax[var] = LINFINI_ANTARES;
+                    AddressForVars[var] = &STSResult.overflow[pdtHebdo];
                 }
             }
         }

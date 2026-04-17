@@ -230,8 +230,8 @@ system:
 
 - **id**: an ID for your system. Has no effect on the simulation.
 - **description** _(optional)_: a free description of your system. Has no effect on the simulation.
-- **model-libraries**: a collection of model libraries needed for your system. Must contain at least one element, and
-  refer to IDs of model libraries found in the **input/model-libraries" directory. Beware that the ID of the library is
+- **model-libraries** _(optional)_: a collection of model libraries needed for your system. If provided, must contain at least one element, and
+  refer to IDs of model libraries found in the **input/model-libraries** directory. Beware that the ID of the library is
   one defined in its header, not the name of the file.
 
 ### Components
@@ -446,9 +446,8 @@ Each configured constraint `id` must reference an existing constraint of the mod
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define
 component parameter values.
 
-Currently, Antares modeler supports defining data-series using either tab or space seperated values files. Values must
-be separated
-using tabs, and the character `.` represents the floating point.
+Currently, Antares modeler supports defining data-series using `.csv` or `.tsv` files. Values can be separated using
+either tabs or spaces, and the character `.` represents the floating point.
 
 ### Naming
 
@@ -469,17 +468,16 @@ Example file for a simulation with 6 timestamps:
 65
 ~~~
 
-Note that Antares modeler currently does not conduct quality checks on data-series, and that it is up to you to ensure
-that the rows cover the [time horizon](04-parameters.md#horizon) of the simulation.
+Note that Antares modeler performs basic structural checks on data-series (consistent number of columns per row, valid
+numeric values), but does not validate that the data covers the full [time horizon](04-parameters.md#horizon) of the
+simulation. It is up to you to ensure the rows cover the required time steps.
 
 ### Scenario-dependent series
 
 To define a parameter value that changes depending on the scenario, define a row vector, where every data set is
 represented by a column.  
-Currently, Antares modeler does not support scenario building. Thus, please ensure that every scenario you want to
-simulate has an associated column in the scenario-dependent series file.  
-In the future, you will be able to use the [scenario builder](#scenario-builder) to map different scenarios to the data
-sets, in order to avoid duplicating data.  
+You can use the [scenario builder](#scenario-builder) to map different scenarios to the data sets, in order to avoid
+duplicating data.  
 Example file for a simulation with 4 scenarios:
 
 ~~~
@@ -507,7 +505,7 @@ All IDs in the model library and system file must respect the following:
 ### Scenario builder
 
 The **modeler-scenariobuilder.dat** file, located in the **data-series** directory, is used to map scenarios to data
-series.
+series. This feature is optional; if the file is not present, scenario groups will not be used.
 Each line consists of the association of a groupe name and Monte-carlo year -referred to as _year_- to a data series ID
 -referred to as _time serie number_-.
 
@@ -528,7 +526,6 @@ hydro_group, 2 = 7
 * A _time serie number_ is a integer, starting at 1, and refers to the column number in the corresponding
   data series file.
 * Group IDs refer to groups defined in the [components](#components) description.
-* All years of the simulation require an association to a time serie number
 
 ## Full examples
 

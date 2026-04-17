@@ -7,7 +7,7 @@ namespace Antares::Solver::Simulation
 {
 void StorageListSort::add(const double capacity, const std::shared_ptr<IStorageForRemix> sts)
 {
-    pairs_capa_storage_.push_back({capacity, sts});
+    pairs_capa_storage_.emplace_back(capacity, sts);
 }
 
 ListStorageForRemix StorageListSort::makeSortedList()

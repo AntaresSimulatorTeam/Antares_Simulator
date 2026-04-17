@@ -17,7 +17,12 @@ struct OneAreaStudy
     OneAreaStudy()
     {
         study = std::make_unique<Study>();
-        areaA = study->areaAdd("A");
+        areaA = addAreaToListOfAreas(study->areas, "A");
+        if (areaA)
+        {
+            areaA->createMissingData();
+            areaA->resetToDefaultValues();
+        }
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
     }
@@ -31,7 +36,7 @@ BOOST_AUTO_TEST_SUITE(areas_operations)
 BOOST_AUTO_TEST_CASE(area_add)
 {
     auto study = std::make_unique<Study>();
-    const auto areaA = study->areaAdd("A");
+    const auto areaA = addAreaToListOfAreas(study->areas, "A");
     BOOST_CHECK(areaA != nullptr);
     BOOST_CHECK_EQUAL(areaA->name, "A");
     BOOST_CHECK_EQUAL(areaA->id, "a");
@@ -267,7 +272,6 @@ struct RenewableClusterStudy: public OneAreaStudy
 {
     RenewableClusterStudy()
     {
-        areaA = study->areaAdd("A");
         auto newCluster = std::make_shared<RenewableCluster>(areaA);
         newCluster->setName("WindCluster");
         areaA->renewable.list.addToCompleteList(newCluster);
@@ -336,8 +340,8 @@ BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 #ifdef YUNI_OS_WINDOWS
     std::string area1name(128, 'a');
     std::string area2name(128, 'b');
-    auto areaB = study->areaAdd(area1name);
-    auto areaC = study->areaAdd(area2name);
+    auto areaB = addAreaToListOfAreas(study->areas, area1name);
+    auto areaC = addAreaToListOfAreas(study->areas, area2name);
     AreaAddLinkBetweenAreas(areaB, areaC);
     BOOST_CHECK(!study->checkForFilenameLimits());
 #endif
@@ -354,6 +358,21 @@ BOOST_FIXTURE_TEST_CASE(cpu_count, OneAreaStudy)
     // error cases
     BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(0, ncMax), 1);
     BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, 120), 1);
+}
+
+BOOST_AUTO_TEST_CASE(add_area_with_empty_name_returns_nullptr)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = addAreaToListOfAreas(study->areas, "");
+    BOOST_CHECK(area == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(add_area_with_forbidden_character_returns_nullptr)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = addAreaToListOfAreas(study->areas, "area*name");
+    BOOST_CHECK(area == nullptr);
+    BOOST_CHECK_EQUAL(study->areas.size(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version

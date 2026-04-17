@@ -125,7 +125,7 @@ public:
 
     bool operator()(const std::shared_ptr<BindingConstraint>& s) const
     {
-        return (s->name()).contains(pFilter);
+        return (s->name()).find(pFilter) != std::string::npos;
     }
 
 private:
