@@ -138,7 +138,7 @@ std::shared_ptr<arrow::Array> OptStringColumnAdapter::makeArray() const
         }
         else
         {
-            ARROW_THROW_NOT_OK(builder.AppendEmptyValue());
+            ARROW_THROW_NOT_OK(builder.AppendNull());
         }
     }
 

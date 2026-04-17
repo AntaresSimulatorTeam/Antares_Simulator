@@ -164,7 +164,7 @@ BOOST_FIXTURE_TEST_CASE(write_table_with_many_empty_entries_then_read_it_back___
 
     // entry : component
     auto component = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
-    BOOST_CHECK(component->GetString(0).empty());
+    BOOST_CHECK(!component->IsValid(0));
 
     // entry : output
     auto output = std::static_pointer_cast<arrow::StringArray>(read_table->column(2)->chunk(0));
@@ -224,7 +224,7 @@ BOOST_FIXTURE_TEST_CASE(write_3_lines_table_then_read_it_back___read_fits, Local
     // column 1 (component):
     auto col_1 = std::static_pointer_cast<arrow::StringArray>(read_table->column(1)->chunk(0));
     BOOST_CHECK_EQUAL(col_1->Value(0), line_0.component.value());
-    BOOST_CHECK(col_1->GetString(1).empty());
+    BOOST_CHECK(!col_1->IsValid(1));
     BOOST_CHECK_EQUAL(col_1->Value(2), line_2.component.value());
 
     // column 2 (output) :
