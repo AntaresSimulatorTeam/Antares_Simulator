@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"PMaxDispatchableGeneration_8h_source.html":[9,0,0,8,6,1,0,0,0,1,40],
 "PMinDispatchableGeneration_8h_source.html":[9,0,0,8,6,1,0,0,0,1,41],
 "PMinMaxDispatchableGenerationGroup_8h_source.html":[9,0,0,8,6,1,0,0,0,1,42],
 "ParameterNode_8h_source.html":[9,0,0,2,1,0,0,1,15],
@@ -96,7 +97,7 @@ var NAVTREEINDEX1 =
 "VariableManagerUtils_8h_source.html":[9,0,0,8,6,1,0,0,0,2,1],
 "VariableNode_8h_source.html":[9,0,0,2,1,0,0,1,25],
 "WindTSNumberData_8h_source.html":[9,0,0,4,0,25,0,0,0,7,18],
-"YmlMapMarker_8h_source.html":[9,0,0,3,1,6,0,0,0,0,0,1],
+"YmlMapMarker_8h_source.html":[9,0,0,3,1,7,0,0,0,0,0,1],
 "_2home_2runner_2work_2Antares_Simulator_2Antares_Simulator_2src_2expressions_2include_2antares_2dfad3c59aa4a83a6873970d713bdd5fa.html":[10,0],
 "additionalConstraints_8h.html#a90b7bb23c7be952dd66742310df027f5":[7,0,0,4,4,16],
 "additionalConstraints_8h_source.html":[9,0,0,4,0,25,0,0,0,5,4,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "classAbstractStartUpCostsGroup.html#aecd7549a6c0717047b47a36938ef7451":[8,0,25,2],
 "classAdequacyPatchRuntimeData.html":[8,0,27],
 "classAdequacyPatchRuntimeData.html#a00164f7a69dcd77f82821e5881bc5061":[8,0,27,5],
-"classAdequacyPatchRuntimeData.html#a09b517753ce28d2a3ef465104d535636":[8,0,27,4],
-"classAdequacyPatchRuntimeData.html#a162f0d8455879719f55d2b5e7c6a3c54":[8,0,27,7]
+"classAdequacyPatchRuntimeData.html#a09b517753ce28d2a3ef465104d535636":[8,0,27,4]
 };

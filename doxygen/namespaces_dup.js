@@ -662,7 +662,6 @@ var namespaces_dup =
           [ "DataSeriesCsvImporter", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter.html", "namespaceAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter" ],
           [ "ForbidNodes", null, [
             [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes" ],
-            [ "ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound" ],
             [ "ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor" ],
             [ "ForbiddenNodesInComponentVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor" ],
             [ "ErrorMessage", "ForbiddenNodesVisitor_8cpp.html#a64bd10ab5e5efe59233872f26a76ea33", null ],
@@ -689,21 +688,7 @@ var namespaces_dup =
           [ "ModelConverter", null, [
             [ "ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor" ],
             [ "AntaresErrorListener", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener" ],
-            [ "NotImplemented", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NotImplemented.html", null ],
-            [ "NoPortWithThisId", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId" ],
-            [ "NoParameterOrVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName" ],
-            [ "ReducedCostNoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName" ],
-            [ "DualNoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName" ],
             [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
-            [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
-            [ "PortWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists" ],
-            [ "PortTypeWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists" ],
-            [ "ConstraintWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConstraintWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConstraintWithThisIdAlreadyExists" ],
-            [ "PortTypeDoesntContainsFields", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeDoesntContainsFields.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeDoesntContainsFields" ],
-            [ "PortTypeNotFound", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeNotFound" ],
-            [ "PortNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition" ],
-            [ "FieldNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition" ],
-            [ "PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition" ],
             [ "convert", "modelConverter_8h.html#a0a04dc70e79a252bba53b25a7863f2db", null ],
             [ "convert_to_system", "modelConverter_8cpp.html#a410dca443f3dda026bd659d08f9d4408", null ],
             [ "convertConstraints", "modelConverter_8cpp.html#ab3894dd65ddfb8dc2f639d30e491b4e9", null ],
@@ -722,8 +707,6 @@ var namespaces_dup =
             [ "extractSumOperands", "convertorVisitor_8cpp.html#afa5c8a0bd8efdf755de9122b85b0d7b9", null ]
           ] ],
           [ "SystemConverter", null, [
-            [ "TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
-            [ "ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ],
             [ "checkForNonLinearityBehindConnections", "converter_8cpp.html#ac6f6349118464daedd302c582fa5f032", null ],
             [ "convert", "converter_8cpp.html#a9f842fbbb321672e7e73e2b80a544ee5", null ],
             [ "convert", "converter_8h.html#ada2347e748f40b1e85c758563ccbd5e0", null ]
@@ -740,7 +723,6 @@ var namespaces_dup =
             [ "AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection" ],
             [ "PortType", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType" ],
             [ "Library", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library" ],
-            [ "LibraryIdNotDefined", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1LibraryIdNotDefined.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1LibraryIdNotDefined" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ],
             [ "ValueType", "Library_8h.html#a39c9e56d286c25f88b8ac37d95f33157", [
               [ "CONTINUOUS", "Library_8h.html#a39c9e56d286c25f88b8ac37d95f33157ab1fa9dd3af034b3ef4291579aa673c07", null ],
@@ -773,7 +755,8 @@ var namespaces_dup =
           [ "YmlUtils", null, [
             [ "getBaseTree", "path__utils_8h.html#a1fd1983765ec84e77c3161a8a7b2df40", null ],
             [ "printPathTree", "path__utils_8h.html#a919685a630949eebbc5312ec44eebdda", null ]
-          ] ]
+          ] ],
+          [ "InputError", "classAntares_1_1IO_1_1Inputs_1_1InputError.html", null ]
         ] ],
         [ "Outputs", null, [
           [ "IColumn", "classAntares_1_1IO_1_1Outputs_1_1IColumn.html", "classAntares_1_1IO_1_1Outputs_1_1IColumn" ],
@@ -1830,6 +1813,12 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
+    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -1838,12 +1827,6 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
-    ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],

@@ -140,25 +140,11 @@ $(document).ready(function(){initNavTree('converter_8h_source.html',''); initRes
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>Antares::IO::Inputs::SystemConverter</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html">   14</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html">TwoFieldsOfSameRole</a> final: std::invalid_argument</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">using</span> std::invalid_argument::invalid_argument;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;};</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html">   19</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html">ConnectingPortToItSelf</a> final: std::invalid_argument</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">using</span> std::invalid_argument::invalid_argument;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">ModelerStudy::SystemModel::System</a> convert(</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keyword">const</span> <a class="code" href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">YmlSystem::System</a>&amp; ymlSystem,</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">const</span> std::vector&lt;ModelerStudy::SystemModel::Library&gt;&amp; libraries);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::SystemConverter</span></div>
-<div class="ttc" id="aclassAntares_1_1ModelerStudy_1_1SystemModel_1_1System_html"><div class="ttname"><a href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1System.html">Antares::ModelerStudy::SystemModel::System</a></div><div class="ttdef"><b>Definition:</b> system.h:17</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html">Antares::IO::Inputs::SystemConverter::ConnectingPortToItSelf</a></div><div class="ttdef"><b>Definition:</b> converter.h:20</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html">Antares::IO::Inputs::SystemConverter::TwoFieldsOfSameRole</a></div><div class="ttdef"><b>Definition:</b> converter.h:15</div></div>
-<div class="ttc" id="astructAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System_html"><div class="ttname"><a href="structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html">Antares::IO::Inputs::YmlSystem::System</a></div><div class="ttdef"><b>Definition:</b> system.h:61</div></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;ModelerStudy::SystemModel::System convert(</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  <span class="keyword">const</span> YmlSystem::System&amp; ymlSystem,</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <span class="keyword">const</span> std::vector&lt;ModelerStudy::SystemModel::Library&gt;&amp; libraries);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;} <span class="comment">// namespace Antares::IO::Inputs::SystemConverter</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

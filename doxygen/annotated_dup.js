@@ -236,32 +236,13 @@ var annotated_dup =
           ] ],
           [ "ForbidNodes", null, [
             [ "ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes" ],
-            [ "ForbiddenNodeFound", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodeFound" ],
             [ "ForbiddenNodesVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesVisitor" ],
             [ "ForbiddenNodesInComponentVisitor", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodesInComponentVisitor" ]
           ] ],
           [ "ModelConverter", null, [
             [ "ConvertorVisitor", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor" ],
             [ "AntaresErrorListener", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener" ],
-            [ "NotImplemented", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NotImplemented.html", null ],
-            [ "NoPortWithThisId", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoPortWithThisId" ],
-            [ "NoParameterOrVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1NoParameterOrVariableWithThisName" ],
-            [ "ReducedCostNoVariableWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ReducedCostNoVariableWithThisName" ],
-            [ "DualNoConstraintWithThisName", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1DualNoConstraintWithThisName" ],
-            [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ],
-            [ "UnknownTypeException", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1UnknownTypeException" ],
-            [ "PortWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortWithThisIdAlreadyExists" ],
-            [ "PortTypeWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeWithThisIdAlreadyExists" ],
-            [ "ConstraintWithThisIdAlreadyExists", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConstraintWithThisIdAlreadyExists.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConstraintWithThisIdAlreadyExists" ],
-            [ "PortTypeDoesntContainsFields", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeDoesntContainsFields.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeDoesntContainsFields" ],
-            [ "PortTypeNotFound", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeNotFound.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortTypeNotFound" ],
-            [ "PortNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortNotFoundForDefinition" ],
-            [ "FieldNotFoundForDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1FieldNotFoundForDefinition" ],
-            [ "PortInDefinition", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition.html", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1PortInDefinition" ]
-          ] ],
-          [ "SystemConverter", null, [
-            [ "TwoFieldsOfSameRole", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1TwoFieldsOfSameRole.html", null ],
-            [ "ConnectingPortToItSelf", "structAntares_1_1IO_1_1Inputs_1_1SystemConverter_1_1ConnectingPortToItSelf.html", null ]
+            [ "AntlrParsingError", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntlrParsingError.html", null ]
           ] ],
           [ "YmlModel", null, [
             [ "Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter" ],
@@ -275,7 +256,6 @@ var annotated_dup =
             [ "AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection" ],
             [ "PortType", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType" ],
             [ "Library", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library" ],
-            [ "LibraryIdNotDefined", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1LibraryIdNotDefined.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1LibraryIdNotDefined" ],
             [ "Parser", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser.html", "classAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parser" ]
           ] ],
           [ "YmlOptimConfig", null, [
@@ -297,7 +277,8 @@ var annotated_dup =
             [ "ThermalComponent", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent" ],
             [ "ThermalCapacityConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalCapacityConnection" ],
             [ "System", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System.html", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1System" ]
-          ] ]
+          ] ],
+          [ "InputError", "classAntares_1_1IO_1_1Inputs_1_1InputError.html", null ]
         ] ],
         [ "Outputs", null, [
           [ "IColumn", "classAntares_1_1IO_1_1Outputs_1_1IColumn.html", "classAntares_1_1IO_1_1Outputs_1_1IColumn" ],
