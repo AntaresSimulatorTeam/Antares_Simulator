@@ -240,6 +240,7 @@ BOOST_AUTO_TEST_CASE(make_and_write_on_disk_a_nullable_table_in_parquet___output
     std::vector<std::optional<int>> ids = {std::nullopt, 2, 3};
     std::vector<std::optional<std::string>> names = {"Alice", std::nullopt, "Charlie"};
     std::vector<std::optional<double>> scores = {85.5, 92.0, std::nullopt};
+
     auto nullableTable = buildNullableTable(ids, names, scores);
 
     auto file_path = fs::temp_directory_path() / "test_output_nullable.parquet";
