@@ -185,7 +185,7 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
         return typeIndexOf<FunctionNodeType::ceil>();
     default:
         throw InputError("ForbiddenNodesVisitor > function '" + functionNode->name()
-                                     + "' is unknown.");
+                         + "' is unknown.");
     }
 }
 
@@ -224,8 +224,7 @@ void ForbiddenNodesVisitor::checkIsForbiddenByParent(const std::type_index& node
     }
 }
 
-void ForbiddenNodesVisitor::visitChildren(const ParentNode* node,
-                                          const std::type_index& nodeTypeId)
+void ForbiddenNodesVisitor::visitChildren(const ParentNode* node, const std::type_index& nodeTypeId)
 {
     parentsStack_.emplace_back(node->name(), nodeTypeId);
     std::ranges::for_each(node->getOperands(), [this](auto* childNode) { dispatch(childNode); });

@@ -24,8 +24,7 @@ bool requireMap(const Node& node, std::string_view typeName)
     }
     if (node.IsDefined() && !node.IsNull())
     {
-        throw InputError(std::string("Expected a YAML mapping for '")
-                                              + typeName.data() + "'");
+        throw InputError(std::string("Expected a YAML mapping for '") + typeName.data() + "'");
     }
     return false;
 }
@@ -129,11 +128,15 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
     }
 }
 
-bool convert<YmlModel::PortType>::convertAreaConnectionFields(
-  const Node& node,
-  YmlModel::PortType& rhs)
+bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
+                                                              YmlModel::PortType& rhs)
 {
     const auto areaConnNode = node["area-connection"];
+
+    if (!areaConnNode.IsDefined())
+    {
+        return true;
+    }
 
     if (!requireMap(areaConnNode, "area-connection"))
     {
@@ -152,9 +155,8 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(
     return true;
 }
 
-bool convert<YmlModel::PortType>::convertThermalCapacityField(
-  const Node& node,
-  YmlModel::PortType& rhs)
+bool convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
+                                                              YmlModel::PortType& rhs)
 {
     auto childNode = node["thermal-capacity-connection"];
     if (!childNode.IsDefined())
@@ -164,8 +166,7 @@ bool convert<YmlModel::PortType>::convertThermalCapacityField(
 
     if (!childNode.IsMap())
     {
-        throw InputError(
-          "Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
+        throw InputError("Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
     }
 
     checkFields(childNode, std::unordered_set<std::string>{"capacity-field"});
@@ -174,9 +175,7 @@ bool convert<YmlModel::PortType>::convertThermalCapacityField(
     return true;
 }
 
-bool convert<YmlModel::PortType>::decode(
-  const Node& node,
-  YmlModel::PortType& rhs)
+bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& rhs)
 {
     if (!requireMap(node, "port-type"))
     {
@@ -191,12 +190,14 @@ bool convert<YmlModel::PortType>::decode(
         rhs.fields.push_back(field["id"].as<std::string>());
     }
 
-    return convertThermalCapacityField(node, rhs) && convertAreaConnectionFields(node, rhs);
+    if (!convertAreaConnectionFields(node, rhs))
+    {
+        return false;
+    }
+    return convertThermalCapacityField(node, rhs);
 }
 
-bool convert<YmlModel::Parameter>::decode(
-  const Node& node,
-  YmlModel::Parameter& rhs)
+bool convert<YmlModel::Parameter>::decode(const Node& node, YmlModel::Parameter& rhs)
 {
     if (!requireMap(node, "parameter"))
     {
@@ -210,9 +211,7 @@ bool convert<YmlModel::Parameter>::decode(
     return true;
 }
 
-bool convert<YmlModel::ValueType>::decode(
-  const Node& node,
-  YmlModel::ValueType& rhs)
+bool convert<YmlModel::ValueType>::decode(const Node& node, YmlModel::ValueType& rhs)
 {
     if (!node.IsScalar())
     {
@@ -237,16 +236,13 @@ bool convert<YmlModel::ValueType>::decode(
     }
     else
     {
-        throw InputError(
-          "Unknown variable-type: '" + value
-          + "'. Expected one of: 'continuous', 'integer', 'boolean'");
+        throw InputError("Unknown variable-type: '" + value
+                         + "'. Expected one of: 'continuous', 'integer', 'boolean'");
     }
     return true;
 }
 
-bool convert<YmlModel::Variable>::decode(
-  const Node& node,
-  YmlModel::Variable& rhs)
+bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& rhs)
 {
     if (!requireMap(node, "variable"))
     {
@@ -265,8 +261,7 @@ bool convert<YmlModel::Variable>::decode(
     return true;
 }
 
-bool convert<YmlModel::Port>::decode(const Node& node,
-                                                          YmlModel::Port& rhs)
+bool convert<YmlModel::Port>::decode(const Node& node, YmlModel::Port& rhs)
 {
     if (!requireMap(node, "port"))
     {
@@ -279,9 +274,8 @@ bool convert<YmlModel::Port>::decode(const Node& node,
     return true;
 }
 
-bool convert<YmlModel::PortFieldDefinition>::decode(
-  const Node& node,
-  YmlModel::PortFieldDefinition& rhs)
+bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
+                                                    YmlModel::PortFieldDefinition& rhs)
 {
     if (!requireMap(node, "port-field-definition"))
     {
@@ -293,9 +287,7 @@ bool convert<YmlModel::PortFieldDefinition>::decode(
     return true;
 }
 
-bool convert<YmlModel::Constraint>::decode(
-  const Node& node,
-  YmlModel::Constraint& rhs)
+bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constraint& rhs)
 {
     if (!requireMap(node, "constraint"))
     {
@@ -308,9 +300,7 @@ bool convert<YmlModel::Constraint>::decode(
     return true;
 }
 
-bool convert<YmlModel::ExtraOutput>::decode(
-  const Node& node,
-  YmlModel::ExtraOutput& rhs)
+bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOutput& rhs)
 {
     if (!requireMap(node, "extra-output"))
     {
@@ -322,9 +312,7 @@ bool convert<YmlModel::ExtraOutput>::decode(
     return true;
 }
 
-bool convert<YmlModel::Objective>::decode(
-  const Node& node,
-  YmlModel::Objective& rhs)
+bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective& rhs)
 {
     if (!requireMap(node, "objective"))
     {
@@ -337,9 +325,7 @@ bool convert<YmlModel::Objective>::decode(
     return true;
 }
 
-bool convert<YmlModel::Model>::decode(
-  const Node& node,
-  YmlModel::Model& rhs)
+bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 {
     if (!requireMap(node, "model"))
     {
@@ -349,34 +335,26 @@ bool convert<YmlModel::Model>::decode(
     checkMandatoryIdField(node, "model");
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
-    rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(
-      node["parameters"]);
-    rhs.variables = as_fallback_default<std::vector<YmlModel::Variable>>(
-      node["variables"]);
-    rhs.ports = as_fallback_default<std::vector<YmlModel::Port>>(
-      node["ports"]);
-    rhs.port_field_definitions = as_fallback_default<
-      std::vector<YmlModel::PortFieldDefinition>>(
+    rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(node["parameters"]);
+    rhs.variables = as_fallback_default<std::vector<YmlModel::Variable>>(node["variables"]);
+    rhs.ports = as_fallback_default<std::vector<YmlModel::Port>>(node["ports"]);
+    rhs.port_field_definitions = as_fallback_default<std::vector<YmlModel::PortFieldDefinition>>(
       node["port-field-definitions"]);
-    rhs.constraints = as_fallback_default<std::vector<YmlModel::Constraint>>(
-      node["constraints"]);
-    rhs.binding_constraints = as_fallback_default<
-      std::vector<YmlModel::Constraint>>(node["binding-constraints"]);
+    rhs.constraints = as_fallback_default<std::vector<YmlModel::Constraint>>(node["constraints"]);
+    rhs.binding_constraints = as_fallback_default<std::vector<YmlModel::Constraint>>(
+      node["binding-constraints"]);
     rhs.objectives = as_fallback_default<std::vector<YmlModel::Objective>>(
       node["objective-contributions"]);
-    rhs.extra_outputs = as_fallback_default<
-      std::vector<YmlModel::ExtraOutput>>(node["extra-outputs"]);
+    rhs.extra_outputs = as_fallback_default<std::vector<YmlModel::ExtraOutput>>(
+      node["extra-outputs"]);
     return true;
 }
 
-bool convert<YmlModel::Library>::decode(
-  const Node& node,
-  YmlModel::Library& rhs)
+bool convert<YmlModel::Library>::decode(const Node& node, YmlModel::Library& rhs)
 {
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
-    rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(
-      node["port-types"]);
+    rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(node["port-types"]);
     rhs.models = node["models"].as<std::vector<YmlModel::Model>>();
     return true;
 }

@@ -1,4 +1,4 @@
-    // Copyright 2007-2026, RTE (https://www.rte-france.com)
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/io/inputs/model-converter/modelConverter.h"
@@ -49,8 +49,7 @@ std::vector<PortType> convertPortTypes(const YmlModel::Library& library)
     {
         if (ymlPortType.fields.empty()) // Can't have a port type without fields
         {
-            throw InputError("This port type doesn't contains fields: "
-                                         + ymlPortType.id);
+            throw InputError("This port type doesn't contains fields: " + ymlPortType.id);
         }
         std::vector<PortField> fields;
         for (const auto& field: ymlPortType.fields)
@@ -62,8 +61,7 @@ std::vector<PortType> convertPortTypes(const YmlModel::Library& library)
         auto predicate = [&ymlPortType](const auto& p) { return p.Id() == ymlPortType.id; };
         if (std::ranges::find_if(out, predicate) != out.end())
         {
-            throw InputError("Port type with this id already exists: "
-                                         + ymlPortType.id);
+            throw InputError("Port type with this id already exists: " + ymlPortType.id);
         }
 
         out.emplace_back(ymlPortType.id,
@@ -191,8 +189,7 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
                                                     { return pt.Id() == port.type; });
         if (port_type == portTypes.end())
         {
-            throw InputError("For the port: " + port.id
-                                         + " , port type not found: " + port.type);
+            throw InputError("For the port: " + port.id + " , port type not found: " + port.type);
         }
         ports.emplace_back(port.id, *port_type);
     }
@@ -218,8 +215,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                            { return p.Id() == pfdefinition.port; });
         if (itPort == ports.end())
         {
-            throw InputError("In port-field-definitions, port not found: "
-                                         + pfdefinition.port);
+            throw InputError("In port-field-definitions, port not found: " + pfdefinition.port);
         }
 
         // second check if the field exists in type
@@ -230,7 +226,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         if (itField == portFields.end())
         {
             throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                                         + " , field not found: " + pfdefinition.field);
+                             + " , field not found: " + pfdefinition.field);
         }
 
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
@@ -244,8 +240,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
         if (it != preorder.end())
         {
             throw InputError("In port-field-definitions, for port: " + pfdefinition.port
-                                         + " , found another port in the definition: "
-                                         + dynamic_cast<const PortFieldNode&>(*it).getPortName());
+                             + " , found another port in the definition: "
+                             + dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
 
         ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
