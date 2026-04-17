@@ -16,7 +16,7 @@ namespace
 {
 /// Throws InputError if the node is present but is not a YAML map.
 /// Returns false silently when the node is absent or null (permitting as_fallback_default).
-bool requireMap(const Node& node, const char* typeName)
+bool requireMap(const Node& node, std::string_view typeName)
 {
     if (node.IsMap())
     {
@@ -25,7 +25,7 @@ bool requireMap(const Node& node, const char* typeName)
     if (node.IsDefined() && !node.IsNull())
     {
         throw InputError(std::string("Expected a YAML mapping for '")
-                                              + typeName + "'");
+                                              + typeName.data() + "'");
     }
     return false;
 }
