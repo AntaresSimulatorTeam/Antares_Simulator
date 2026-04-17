@@ -1,4 +1,4 @@
-// Copyright 2007-2026, RTE (https://www.rte-france.com)
+    // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/io/inputs/model-converter/modelConverter.h"
@@ -33,7 +33,7 @@ static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::str
     {
         return OutOfBoundsProcessingMode::DROP;
     }
-    throw IO::Inputs::InputError("Invalid out-of-bounds processing mode: " + mode);
+    throw InputError("Invalid out-of-bounds processing mode: " + mode);
 }
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
@@ -41,7 +41,7 @@ AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
     return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound};
 }
 
-std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
+std::vector<PortType> convertPortTypes(const YmlModel::Library& library)
 {
     std::vector<PortType> out;
     out.reserve(library.port_types.size());
@@ -49,7 +49,7 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
     {
         if (ymlPortType.fields.empty()) // Can't have a port type without fields
         {
-            throw IO::Inputs::InputError("This port type doesn't contains fields: "
+            throw InputError("This port type doesn't contains fields: "
                                          + ymlPortType.id);
         }
         std::vector<PortField> fields;
@@ -62,7 +62,7 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
         auto predicate = [&ymlPortType](const auto& p) { return p.Id() == ymlPortType.id; };
         if (std::ranges::find_if(out, predicate) != out.end())
         {
-            throw IO::Inputs::InputError("Port type with this id already exists: "
+            throw InputError("Port type with this id already exists: "
                                          + ymlPortType.id);
         }
 
@@ -83,13 +83,13 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
 std::vector<Parameter> convertParameters(const YmlModel::Model& model)
 {
     namespace SM = ModelerStudy::SystemModel;
-    std::vector<SM::Parameter> parameters;
+    std::vector<Parameter> parameters;
     parameters.reserve(model.parameters.size());
     for (const auto& parameter: model.parameters)
     {
         parameters.emplace_back(parameter.id,
-                                SM::fromBool<SM::TimeDependent>(parameter.time_dependent),
-                                SM::fromBool<SM::ScenarioDependent>(parameter.scenario_dependent));
+                                SM::fromBool<TimeDependent>(parameter.time_dependent),
+                                SM::fromBool<ScenarioDependent>(parameter.scenario_dependent));
     }
     return parameters;
 }
@@ -97,7 +97,7 @@ std::vector<Parameter> convertParameters(const YmlModel::Model& model)
 Solver::Config::Location convertLocation(const std::string& locationStr)
 {
     std::string locLower = locationStr;
-    std::ranges::transform(locLower, locLower.begin(), ::tolower);
+    std::ranges::transform(locLower, locLower.begin(), tolower);
     if (locLower == "master")
     {
         return Solver::Config::Location::MASTER;
@@ -111,7 +111,7 @@ Solver::Config::Location convertLocation(const std::string& locationStr)
         return Solver::Config::Location::SUBPROBLEMS;
     }
 
-    throw IO::Inputs::InputError("Unknown location: " + locationStr);
+    throw InputError("Unknown location: " + locationStr);
 }
 
 /**
@@ -133,7 +133,7 @@ ValueType convertType(YmlModel::ValueType type)
     case YmlModel::ValueType::BOOL:
         return ValueType::BOOL;
     default:
-        throw IO::Inputs::InputError("Unknown variable type: " + YmlModel::toString(type));
+        throw InputError("Unknown variable type: " + YmlModel::toString(type));
     }
 }
 
@@ -191,7 +191,7 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
                                                     { return pt.Id() == port.type; });
         if (port_type == portTypes.end())
         {
-            throw IO::Inputs::InputError("For the port: " + port.id
+            throw InputError("For the port: " + port.id
                                          + " , port type not found: " + port.type);
         }
         ports.emplace_back(port.id, *port_type);
@@ -218,7 +218,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                            { return p.Id() == pfdefinition.port; });
         if (itPort == ports.end())
         {
-            throw IO::Inputs::InputError("In port-field-definitions, port not found: "
+            throw InputError("In port-field-definitions, port not found: "
                                          + pfdefinition.port);
         }
 
@@ -229,7 +229,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                             { return field.Id() == pfdefinition.field; });
         if (itField == portFields.end())
         {
-            throw IO::Inputs::InputError("In port-field-definitions, for port: " + pfdefinition.port
+            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
                                          + " , field not found: " + pfdefinition.field);
         }
 
@@ -243,7 +243,7 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
-            throw IO::Inputs::InputError("In port-field-definitions, for port: " + pfdefinition.port
+            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
                                          + " , found another port in the definition: "
                                          + dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
