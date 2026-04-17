@@ -7,6 +7,8 @@
 
 #include <antares/io/inputs/InputError.h>
 
+using namespace Antares::IO::Inputs;
+
 namespace YAML
 {
 
@@ -22,7 +24,7 @@ bool requireMap(const Node& node, const char* typeName)
     }
     if (node.IsDefined() && !node.IsNull())
     {
-        throw Antares::IO::Inputs::InputError(std::string("Expected a YAML mapping for '")
+        throw InputError(std::string("Expected a YAML mapping for '")
                                               + typeName + "'");
     }
     return false;
@@ -37,7 +39,7 @@ void checkMandatoryIdField(const Node& node, const std::string& nodeName)
         throw KeyNotFound(node.Mark(),
                           fmt::format("{} id is mandatory in library\n{}",
                                       nodeName,
-                                      Antares::IO::Inputs::YmlUtils::printPathTree(nodePath)));
+                                      YmlUtils::printPathTree(nodePath)));
     }
 }
 
@@ -127,9 +129,9 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
     }
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFields(
+bool convert<YmlModel::PortType>::convertAreaConnectionFields(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::PortType& rhs)
+  YmlModel::PortType& rhs)
 {
     auto areaConnNode = node["area-connection"];
     if (!areaConnNode.IsDefined())
@@ -139,7 +141,7 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFiel
 
     if (!areaConnNode.IsMap())
     {
-        throw Antares::IO::Inputs::InputError(
+        throw InputError(
           "Expected a YAML mapping for 'area-connection' in port-type");
     }
 
@@ -155,9 +157,9 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFiel
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertThermalCapacityField(
+bool convert<YmlModel::PortType>::convertThermalCapacityField(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::PortType& rhs)
+  YmlModel::PortType& rhs)
 {
     auto childNode = node["thermal-capacity-connection"];
     if (!childNode.IsDefined())
@@ -167,7 +169,7 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertThermalCapacityFie
 
     if (!childNode.IsMap())
     {
-        throw Antares::IO::Inputs::InputError(
+        throw InputError(
           "Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
     }
 
@@ -177,9 +179,9 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertThermalCapacityFie
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortType>::decode(
+bool convert<YmlModel::PortType>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::PortType& rhs)
+  YmlModel::PortType& rhs)
 {
     if (!requireMap(node, "port-type"))
     {
@@ -195,9 +197,9 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::decode(
     return convertThermalCapacityField(node, rhs) && convertAreaConnectionFields(node, rhs);
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Parameter>::decode(
+bool convert<YmlModel::Parameter>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::Parameter& rhs)
+  YmlModel::Parameter& rhs)
 {
     if (!requireMap(node, "parameter"))
     {
@@ -209,43 +211,43 @@ bool convert<Antares::IO::Inputs::YmlModel::Parameter>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::ValueType>::decode(
+bool convert<YmlModel::ValueType>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::ValueType& rhs)
+  YmlModel::ValueType& rhs)
 {
     if (!node.IsScalar())
     {
         if (node.IsDefined() && !node.IsNull())
         {
-            throw Antares::IO::Inputs::InputError("Expected a scalar value for 'variable-type'");
+            throw InputError("Expected a scalar value for 'variable-type'");
         }
         return false;
     }
     const auto value = node.as<std::string>();
     if (value == "continuous")
     {
-        rhs = Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS;
+        rhs = YmlModel::ValueType::CONTINUOUS;
     }
     else if (value == "integer")
     {
-        rhs = Antares::IO::Inputs::YmlModel::ValueType::INTEGER;
+        rhs = YmlModel::ValueType::INTEGER;
     }
     else if (value == "boolean")
     {
-        rhs = Antares::IO::Inputs::YmlModel::ValueType::BOOL;
+        rhs = YmlModel::ValueType::BOOL;
     }
     else
     {
-        throw Antares::IO::Inputs::InputError(
+        throw InputError(
           "Unknown variable-type: '" + value
           + "'. Expected one of: 'continuous', 'integer', 'boolean'");
     }
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
+bool convert<YmlModel::Variable>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::Variable& rhs)
+  YmlModel::Variable& rhs)
 {
     if (!requireMap(node, "variable"))
     {
@@ -254,16 +256,16 @@ bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
 
     rhs.lower_bound = node["lower-bound"].as<std::string>("");
     rhs.upper_bound = node["upper-bound"].as<std::string>("");
-    rhs.variable_type = node["variable-type"].as<Antares::IO::Inputs::YmlModel::ValueType>(
-      Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS);
+    rhs.variable_type = node["variable-type"].as<YmlModel::ValueType>(
+      YmlModel::ValueType::CONTINUOUS);
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Port>::decode(const Node& node,
-                                                          Antares::IO::Inputs::YmlModel::Port& rhs)
+bool convert<YmlModel::Port>::decode(const Node& node,
+                                                          YmlModel::Port& rhs)
 {
     if (!requireMap(node, "port"))
     {
@@ -274,9 +276,9 @@ bool convert<Antares::IO::Inputs::YmlModel::Port>::decode(const Node& node,
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>::decode(
+bool convert<YmlModel::PortFieldDefinition>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::PortFieldDefinition& rhs)
+  YmlModel::PortFieldDefinition& rhs)
 {
     if (!requireMap(node, "port-field-definition"))
     {
@@ -288,9 +290,9 @@ bool convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Constraint>::decode(
+bool convert<YmlModel::Constraint>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::Constraint& rhs)
+  YmlModel::Constraint& rhs)
 {
     if (!requireMap(node, "constraint"))
     {
@@ -302,9 +304,9 @@ bool convert<Antares::IO::Inputs::YmlModel::Constraint>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::ExtraOutput>::decode(
+bool convert<YmlModel::ExtraOutput>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::ExtraOutput& rhs)
+  YmlModel::ExtraOutput& rhs)
 {
     if (!requireMap(node, "extra-output"))
     {
@@ -315,9 +317,9 @@ bool convert<Antares::IO::Inputs::YmlModel::ExtraOutput>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Objective>::decode(
+bool convert<YmlModel::Objective>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::Objective& rhs)
+  YmlModel::Objective& rhs)
 {
     if (!requireMap(node, "objective"))
     {
@@ -329,45 +331,45 @@ bool convert<Antares::IO::Inputs::YmlModel::Objective>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
+bool convert<YmlModel::Model>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::Model& rhs)
+  YmlModel::Model& rhs)
 {
     if (!requireMap(node, "model"))
     {
-        throw Antares::IO::Inputs::InputError("Expected a YAML mapping for 'model'");
+        throw InputError("Expected a YAML mapping for 'model'");
     }
 
     rhs.description = node["description"].as<std::string>("");
-    rhs.parameters = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Parameter>>(
+    rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(
       node["parameters"]);
-    rhs.variables = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Variable>>(
+    rhs.variables = as_fallback_default<std::vector<YmlModel::Variable>>(
       node["variables"]);
-    rhs.ports = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Port>>(
+    rhs.ports = as_fallback_default<std::vector<YmlModel::Port>>(
       node["ports"]);
     rhs.port_field_definitions = as_fallback_default<
-      std::vector<Antares::IO::Inputs::YmlModel::PortFieldDefinition>>(
+      std::vector<YmlModel::PortFieldDefinition>>(
       node["port-field-definitions"]);
-    rhs.constraints = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(
+    rhs.constraints = as_fallback_default<std::vector<YmlModel::Constraint>>(
       node["constraints"]);
     rhs.binding_constraints = as_fallback_default<
-      std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["binding-constraints"]);
-    rhs.objectives = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Objective>>(
+      std::vector<YmlModel::Constraint>>(node["binding-constraints"]);
+    rhs.objectives = as_fallback_default<std::vector<YmlModel::Objective>>(
       node["objective-contributions"]);
     rhs.extra_outputs = as_fallback_default<
-      std::vector<Antares::IO::Inputs::YmlModel::ExtraOutput>>(node["extra-outputs"]);
+      std::vector<YmlModel::ExtraOutput>>(node["extra-outputs"]);
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Library>::decode(
+bool convert<YmlModel::Library>::decode(
   const Node& node,
-  Antares::IO::Inputs::YmlModel::Library& rhs)
+  YmlModel::Library& rhs)
 {
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
-    rhs.port_types = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::PortType>>(
+    rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(
       node["port-types"]);
-    rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlModel::Model>>();
+    rhs.models = node["models"].as<std::vector<YmlModel::Model>>();
     return true;
 }
 
