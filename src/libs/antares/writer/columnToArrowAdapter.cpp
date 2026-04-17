@@ -13,25 +13,19 @@ using namespace Antares::Optimisation::LinearProblemApi;
 namespace Antares::Writer
 {
 
-// -----------------------------------------------------------------------
-// Helper: convert a vector of optional<T> into (values, is_valid) pair
-// Arrow needs a flat value buffer (any value for nulls) + a bool mask
-// -----------------------------------------------------------------------
-template<typename T>
-std::pair<std::vector<T>, std::vector<bool>> SplitOptionals(
-  const std::vector<std::optional<T>>& input)
+template<typename T, typename B>
+void addOptionalsToBuider(const std::vector<std::optional<T>>& in, B& builder)
 {
-    std::vector<T> values(input.size());
-    std::vector<bool> is_valid(input.size());
-    for (std::size_t i = 0; i < input.size(); ++i)
-    {
-        is_valid[i] = input[i].has_value();
-        values[i] = input[i].value_or(T{}); // placeholder for nulls
-    }
-    return {values, is_valid};
+    std::vector<T> values(in.size());
+    std::vector<bool> valid(in.size());
+
+    std::ranges::transform(in, values.begin(), [](auto& e) { return e.value_or(T{}); });
+    std::transform(in.begin(), in.end(), valid.begin(), [](auto& e) { return e.has_value(); });
+
+    ARROW_THROW_NOT_OK(builder.AppendValues(values, valid));
 }
 
-std::vector<std::optional<unsigned>> convertToOptInt(
+std::vector<std::optional<unsigned>> to_optional_int(
   const std::vector<std::optional<MipBasisStatus>>& v)
 {
     std::vector<std::optional<unsigned>> to_return;
@@ -169,9 +163,7 @@ std::shared_ptr<arrow::Field> OptDoubleColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptDoubleColumnAdapter::makeArray() const
 {
     arrow::DoubleBuilder builder;
-
-    auto [values, valid_values] = SplitOptionals(column_->data());
-    ARROW_THROW_NOT_OK(builder.AppendValues(values, valid_values));
+    addOptionalsToBuider(column_->data(), builder);
 
     std::shared_ptr<arrow::Array> array;
     ARROW_THROW_ASSIGN(array, builder.Finish());
@@ -194,9 +186,7 @@ std::shared_ptr<arrow::Field> OptIntColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptIntColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
-
-    auto [values, valid_values] = SplitOptionals(column_->data());
-    ARROW_THROW_NOT_OK(builder.AppendValues(values, valid_values));
+    addOptionalsToBuider(column_->data(), builder);
 
     std::shared_ptr<arrow::Array> array;
     ARROW_THROW_ASSIGN(array, builder.Finish());
@@ -220,9 +210,7 @@ std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
-
-    auto [values, valid_values] = SplitOptionals(convertToOptInt(column_->data()));
-    ARROW_THROW_NOT_OK(builder.AppendValues(values, valid_values));
+    addOptionalsToBuider(to_optional_int(column_->data()), builder);
 
     std::shared_ptr<arrow::Array> array;
     ARROW_THROW_ASSIGN(array, builder.Finish());
