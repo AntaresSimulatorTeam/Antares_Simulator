@@ -15,7 +15,7 @@ namespace Antares::IO::Outputs
 class IColumn
 {
 public:
-    IColumn(const std::string name):
+    explicit IColumn(const std::string name):
         name_(name)
     {
     }
@@ -37,7 +37,7 @@ public:
         return name_;
     }
 
-protected:
+private:
     std::string name_;
 };
 
@@ -90,7 +90,7 @@ template<typename T>
 class TypedColumn final: public IColumn
 {
 public:
-    TypedColumn(std::string name):
+    explicit TypedColumn(std::string name):
         IColumn(name)
     {
     }

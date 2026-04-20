@@ -22,7 +22,7 @@ void addOptionalsToBuider(const std::vector<std::optional<T>>& in, B& builder)
     std::ranges::transform(in, values.begin(), [](auto& e) { return e.value_or(T{}); });
     std::transform(in.begin(), in.end(), valid.begin(), [](auto& e) { return e.has_value(); });
 
-    ARROW_THROW_NOT_OK(builder.AppendValues(values, valid));
+    throwOnStatusKO(builder.AppendValues(values, valid));
 }
 
 std::vector<std::optional<unsigned>> to_optional_int(
@@ -60,11 +60,8 @@ std::shared_ptr<arrow::Field> StringColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> StringColumnAdapter::makeArray() const
 {
     arrow::StringBuilder builder;
-    ARROW_THROW_NOT_OK(builder.AppendValues(column_->data()));
-
-    std::shared_ptr<arrow::Array> array;
-    ARROW_THROW_ASSIGN(array, builder.Finish());
-    return array;
+    throwOnStatusKO(builder.AppendValues(column_->data()));
+    return throwOnResultKO(builder.Finish());
 }
 
 // ==========================
@@ -83,11 +80,8 @@ std::shared_ptr<arrow::Field> DoubleColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> DoubleColumnAdapter::makeArray() const
 {
     arrow::DoubleBuilder builder;
-    ARROW_THROW_NOT_OK(builder.AppendValues(column_->data()));
-
-    std::shared_ptr<arrow::Array> array;
-    ARROW_THROW_ASSIGN(array, builder.Finish());
-    return array;
+    throwOnStatusKO(builder.AppendValues(column_->data()));
+    return throwOnResultKO(builder.Finish());
 }
 
 // ============================
@@ -106,11 +100,8 @@ std::shared_ptr<arrow::Field> IntColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> IntColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
-    ARROW_THROW_NOT_OK(builder.AppendValues(column_->data()));
-
-    std::shared_ptr<arrow::Array> array;
-    ARROW_THROW_ASSIGN(array, builder.Finish());
-    return array;
+    throwOnStatusKO(builder.AppendValues(column_->data()));
+    return throwOnResultKO(builder.Finish());
 }
 
 // ================================
@@ -134,17 +125,15 @@ std::shared_ptr<arrow::Array> OptStringColumnAdapter::makeArray() const
     {
         if (element.has_value())
         {
-            ARROW_THROW_NOT_OK(builder.Append(*element));
+            throwOnStatusKO(builder.Append(*element));
         }
         else
         {
-            ARROW_THROW_NOT_OK(builder.AppendNull());
+            throwOnStatusKO(builder.AppendNull());
         }
     }
 
-    std::shared_ptr<arrow::Array> array;
-    ARROW_THROW_ASSIGN(array, builder.Finish());
-    return array;
+    return throwOnResultKO(builder.Finish());
 }
 
 // ================================
@@ -164,10 +153,7 @@ std::shared_ptr<arrow::Array> OptDoubleColumnAdapter::makeArray() const
 {
     arrow::DoubleBuilder builder;
     addOptionalsToBuider(column_->data(), builder);
-
-    std::shared_ptr<arrow::Array> array;
-    ARROW_THROW_ASSIGN(array, builder.Finish());
-    return array;
+    return throwOnResultKO(builder.Finish());
 }
 
 // ================================
@@ -187,10 +173,7 @@ std::shared_ptr<arrow::Array> OptIntColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
     addOptionalsToBuider(column_->data(), builder);
-
-    std::shared_ptr<arrow::Array> array;
-    ARROW_THROW_ASSIGN(array, builder.Finish());
-    return array;
+    return throwOnResultKO(builder.Finish());
 }
 
 // ========================================
@@ -211,10 +194,7 @@ std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
     addOptionalsToBuider(to_optional_int(column_->data()), builder);
-
-    std::shared_ptr<arrow::Array> array;
-    ARROW_THROW_ASSIGN(array, builder.Finish());
-    return array;
+    return throwOnResultKO(builder.Finish());
 }
 
 // ==========================

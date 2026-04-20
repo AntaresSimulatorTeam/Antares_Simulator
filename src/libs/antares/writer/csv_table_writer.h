@@ -16,7 +16,7 @@ namespace Antares::Writer
 class CsvTableWriter final: public ITableWriter
 {
 public:
-    CsvTableWriter(std::filesystem::path& filePath);
+    explicit CsvTableWriter(std::filesystem::path& filePath);
     void writeTable(const IO::Outputs::SimulationTable& simuTable) const override;
 };
 

@@ -28,7 +28,7 @@ public:
 class StringColumnAdapter: public IColumnAdapter
 {
 public:
-    StringColumnAdapter(const IO::Outputs::StringColumn* column);
+    explicit StringColumnAdapter(const IO::Outputs::StringColumn* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
@@ -42,7 +42,7 @@ private:
 class DoubleColumnAdapter: public IColumnAdapter
 {
 public:
-    DoubleColumnAdapter(const IO::Outputs::DoubleColumn* column);
+    explicit DoubleColumnAdapter(const IO::Outputs::DoubleColumn* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
@@ -56,7 +56,7 @@ private:
 class IntColumnAdapter: public IColumnAdapter
 {
 public:
-    IntColumnAdapter(const IO::Outputs::IntegralColumn<unsigned>* column);
+    explicit IntColumnAdapter(const IO::Outputs::IntegralColumn<unsigned>* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
@@ -70,7 +70,7 @@ private:
 class OptStringColumnAdapter: public IColumnAdapter
 {
 public:
-    OptStringColumnAdapter(const IO::Outputs::OptionalColumn<std::string>* column);
+    explicit OptStringColumnAdapter(const IO::Outputs::OptionalColumn<std::string>* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
@@ -84,7 +84,7 @@ private:
 class OptDoubleColumnAdapter: public IColumnAdapter
 {
 public:
-    OptDoubleColumnAdapter(const IO::Outputs::OptionalColumn<double>* column);
+    explicit OptDoubleColumnAdapter(const IO::Outputs::OptionalColumn<double>* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
@@ -98,7 +98,7 @@ private:
 class OptIntColumnAdapter: public IColumnAdapter
 {
 public:
-    OptIntColumnAdapter(const IO::Outputs::OptionalColumn<unsigned>* column);
+    explicit OptIntColumnAdapter(const IO::Outputs::OptionalColumn<unsigned>* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
@@ -112,7 +112,7 @@ private:
 class OptMipBasisStatusColumnAdapter: public IColumnAdapter
 {
 public:
-    OptMipBasisStatusColumnAdapter(
+    explicit OptMipBasisStatusColumnAdapter(
       const IO::Outputs::OptionalColumn<Optimisation::LinearProblemApi::MipBasisStatus>* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;

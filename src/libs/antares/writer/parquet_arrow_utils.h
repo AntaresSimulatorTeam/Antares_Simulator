@@ -3,25 +3,24 @@
 
 #pragma once
 
+#include <arrow/result.h>
 #include <arrow/status.h>
 #include <stdexcept>
 
-// Throw std::runtime_error on Arrow Status failure.
-// Use instead of ARROW_RETURN_NOT_OK in non-returning contexts (tests, constructors, etc.).
-#define ARROW_THROW_NOT_OK(expr)                      \
-    do                                                \
-    {                                                 \
-        arrow::Status _st = (expr);                   \
-        if (!_st.ok())                                \
-            throw std::runtime_error(_st.ToString()); \
-    } while (0)
+inline void throwOnStatusKO(const arrow::Status& status)
+{
+    if (!status.ok())
+    {
+        throw std::runtime_error(status.ToString());
+    }
+}
 
-// Assign the value of an Arrow Result<T>, or throw on failure.
-#define ARROW_THROW_ASSIGN(lhs, expr)                           \
-    do                                                          \
-    {                                                           \
-        auto _res = (expr);                                     \
-        if (!_res.ok())                                         \
-            throw std::runtime_error(_res.status().ToString()); \
-        lhs = std::move(_res).ValueOrDie();                     \
-    } while (0)
+template<typename T>
+T throwOnResultKO(arrow::Result<T> result)
+{
+    if (!result.ok())
+    {
+        throw std::runtime_error(result.status().ToString());
+    }
+    return std::move(result).ValueOrDie();
+}

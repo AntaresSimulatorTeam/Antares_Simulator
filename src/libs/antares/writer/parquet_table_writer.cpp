@@ -40,8 +40,7 @@ std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::Simulat
 void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& file_path)
 {
     // --- 1. Open output file ---
-    std::shared_ptr<arrow::io::FileOutputStream> outfile;
-    ARROW_THROW_ASSIGN(outfile, arrow::io::FileOutputStream::Open(file_path.string()));
+    auto outfile = throwOnResultKO(arrow::io::FileOutputStream::Open(file_path.string()));
 
     // --- 2. Configure Parquet writer ---
     auto writer_props = parquet::WriterProperties::Builder()
@@ -52,12 +51,12 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
     auto arrow_props = parquet::ArrowWriterProperties::Builder().store_schema()->build();
 
     // --- 3. Write ---
-    ARROW_THROW_NOT_OK(parquet::arrow::WriteTable(*table,
-                                                  arrow::default_memory_pool(),
-                                                  outfile,
-                                                  /*chunk_size=*/1024,
-                                                  writer_props,
-                                                  arrow_props));
+    throwOnStatusKO(parquet::arrow::WriteTable(*table,
+                                               arrow::default_memory_pool(),
+                                               outfile,
+                                               /*chunk_size=*/1024,
+                                               writer_props,
+                                               arrow_props));
 }
 
 ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
