@@ -13,7 +13,7 @@ namespace Antares::Solver::Variable::R::AllYears
 class MinMaxData
 {
 public:
-    struct Data
+    struct __attribute__((packed)) Data
     {
         double value;
         uint32_t index;
