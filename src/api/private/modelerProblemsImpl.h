@@ -18,7 +18,7 @@ class ModelerProblems final
 public:
     explicit ModelerProblems(const std::filesystem::path& modelerPath);
 
-    void printProblems() const;
+    void print() const;
 
 private:
     std::unique_ptr<Modeler> modeler_;

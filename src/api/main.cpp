@@ -34,8 +34,8 @@ int main(const int argc, const char** argv)
     else if (fs::exists(modelerMarker))
     {
         logs.info() << "Loading Modeler study...";
-        const ModelerProblems getter(studyPath);
-        getter.printProblems();
+        const ModelerProblems modelerProblems(studyPath);
+        modelerProblems.print();
     }
     else
     {

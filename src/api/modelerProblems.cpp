@@ -14,9 +14,9 @@ ModelerProblems::ModelerProblems(const std::filesystem::path& modelerPath):
 
 ModelerProblems::~ModelerProblems() = default;
 
-void ModelerProblems::printProblems() const
+void ModelerProblems::print() const
 {
-    impl_->printProblems();
+    impl_->print();
 }
 
 } // namespace Antares::Solver
