@@ -5,6 +5,48 @@ toc_depth: 2
 # Antares Changelog
 
 ## Branch 10.0.x
+
+### 10.0.1
+
+#### Features
+
+* Add "drop constraint" for out of timebound constraints [ANT-4643] (#3485)
+* Rename "PositiveUnsuppliedEnergy" variable to "UnsuppliedEnergy" (#3477)
+* Rename "NegativeUnsuppliedEnergy" variable to "Spillage" (#3477)
+* Modeler > Port field definition : allow non linear expressions [ANT-4646] (#3483)
+* feat: Improve modeler input error messages [ANT-4550] (#3475)
+* Add documentation for thermal-capacity-connection [ANT-4342] (#3520)
+
+#### Bugfixes
+
+Districts: fix offest with disabled set | simplify [ANT-4830]
+Relax expressions in port definition : fixes after tests [ANT-4646]
+Fix: remove dynamique variables from digest, fix error in digests (#3535)
+
+#### For developers
+
+* Remove unused code following GUI removal (#3500, #3494)
+* Extract utils for std::vector<double> (#3470)[margin of ANT-2453]
+* refactor: Remove component index (#3503)
+* Clean up find* functions
+* Update README.md (#3517)
+* Removed updaterMode parameter because it was always false (#3516)
+* chore(deps): update vcpkg baseline (#3502)
+* Use emplace_back instead of push_back where possible (#3519)
+* Add delete in AreaList desctuctor to free memory (#3524)
+* Remove unused typedefs (#3525)
+* Remove unused arguments (#3522)
+* refacto(yml-utils): add path utilities and YmlMapMarker class (#3504)
+* Add tools/antares-version.py (#3534)
+* Remove yuni strings for alias areaname, clustername...  (#3498)
+* Remove member function Study::areaAdd [ANT-4815] (#3527)
+
+#### CI/CD
+
+* Various fix for Sonar-cloud workflow (#3515, #3518)
+* Don't use package managers to install boost, use vcpkg (#3521)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+
 ### 10.0.0
 
 #### Major changes
@@ -84,6 +126,7 @@ toc_depth: 2
 ### 9.3.8
 
 #### Bugfixes
+
 * Fix dynamic district aggregation (#3429)
 * Fix digest [ANT-4630] (#3455)
 * 9.3 Add constraint fictitious load to adq patch [ANT-4365] (#3487)
@@ -1047,12 +1090,14 @@ collectRemixDebugInfo (#3278)
 ### 8.8.20
 
 #### Bugfixes
+
 * Add 2 constraints in adq patch [ANT-4365] (#3409)
 * Add short-term storage prod to constraint fictitious load (#3446)
 
 ### 8.8.19
 
 #### Bugfixes
+
 * Fix infeasability in hydro heuristic with mingen [ANT-3755] (#3152)
 * Don't throw an error for empty reservoir [ANT-4212] (#3291)
 

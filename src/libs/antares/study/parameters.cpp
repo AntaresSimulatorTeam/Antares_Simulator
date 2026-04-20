@@ -185,10 +185,6 @@ const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::Hyd
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
                                     const std::string& text)
 {
-    if (text.empty())
-    {
-        return false;
-    }
     if (text == "daily")
     {
         mode = Parameters::Compatibility::HydroPmax::Daily;
@@ -202,11 +198,6 @@ bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
     return false;
 }
 
-std::string ReservesToString(bool reservesEnabled)
-{
-    return reservesEnabled ? "enabled" : "disabled";
-}
-
 bool StringToReservesEnabled(bool& reservesEnabled, const std::string& text)
 {
     if (text.empty() || text == "disabled")
@@ -217,6 +208,22 @@ bool StringToReservesEnabled(bool& reservesEnabled, const std::string& text)
     else if (text == "enabled")
     {
         reservesEnabled = true;
+        return true;
+    }
+    return false;
+}
+
+bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
+                                          const std::string& text)
+{
+    if (text == "single")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Single;
+        return true;
+    }
+    if (text == "scenarized")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Scenarized;
         return true;
     }
     return false;
@@ -1008,6 +1015,11 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     if (key == "hydro-pmax")
     {
         return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
+    }
+
+    if (key == "hydro-rule-curves")
+    {
+        return StringToCompatibilityHydroRuleCurves(d.compatibility.hydroRuleCurves, value);
     }
 
     return false;
