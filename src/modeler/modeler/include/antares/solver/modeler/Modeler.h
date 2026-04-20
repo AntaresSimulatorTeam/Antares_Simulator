@@ -81,6 +81,9 @@ public:
 private:
     Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
 
+    void buildMasterProblem();
+    void buildSubProblem();
+
     void writeSubProblemSimulationTable(
       const Optimisation::LinearProblemApi::IMipSolution* solution,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
