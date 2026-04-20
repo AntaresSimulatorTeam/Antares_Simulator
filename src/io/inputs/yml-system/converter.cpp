@@ -5,7 +5,6 @@
 
 #include <algorithm>
 #include <sstream>
-#include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/InputError.h"
@@ -258,8 +257,8 @@ System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& l
                                        [&c](const Component& compo) { return compo.Id() == c.id; });
         if (it != components.end())
         {
-            throw IO::Inputs::InputError("System has at least two components with the same id ('"
-                                         + c.id + "'), this is not supported");
+            throw InputError("System has at least two components with the same id ('" + c.id
+                             + "'), this is not supported");
         }
         components.push_back(createComponent(c, libraries));
         logs.debug() << "Loaded component `" << c.id << "`";
