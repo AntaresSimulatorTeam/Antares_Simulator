@@ -3,7 +3,10 @@
 
 #include "include/antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 
+#include <fmt/format.h>
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include "antares/io/inputs/InputError.h"
 
 using namespace Antares::Expressions::Nodes;
 
@@ -18,13 +21,6 @@ std::string ErrorMessage(const std::string expr, const std::string node, const s
         return fmt::format(fmt::runtime(format_str), parent, node, expr);
     }
     return fmt::format("'{}' is not allowed in expression '{}'", node, expr);
-}
-
-ForbiddenNodeFound::ForbiddenNodeFound(const std::string expr,
-                                       const std::string node,
-                                       const std::string parent):
-    invalid_argument(ErrorMessage(expr, node, parent))
-{
 }
 
 ForbiddenNodesVisitor::ForbiddenNodesVisitor(const ForbiddenNodes& forbiddenNodes,
@@ -188,9 +184,8 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
     case FunctionNodeType::ceil:
         return typeIndexOf<FunctionNodeType::ceil>();
     default:
-        std::string err_msg = "ForbiddenNodesVisitor > ";
-        err_msg += "function '" + functionNode->name() + "' is unknown.";
-        throw std::invalid_argument(err_msg);
+        throw InputError("ForbiddenNodesVisitor > function '" + functionNode->name()
+                         + "' is unknown.");
     }
 }
 
@@ -213,7 +208,7 @@ void ForbiddenNodesVisitor::checkIsGloballyForbidden(const std::type_index& node
 {
     if (forbiddenNodes_.isGloballyForbidden(nodeTypeId))
     {
-        throw ForbiddenNodeFound(expression_, node->name());
+        throw IO::Inputs::InputError(ErrorMessage(expression_, node->name(), ""));
     }
 }
 
@@ -224,7 +219,7 @@ void ForbiddenNodesVisitor::checkIsForbiddenByParent(const std::type_index& node
     {
         if (forbiddenNodes_.isForbiddenByParent(parentTypeIndex, nodeTypeId))
         {
-            throw ForbiddenNodeFound(expression_, node->name(), parentNodeName);
+            throw IO::Inputs::InputError(ErrorMessage(expression_, node->name(), parentNodeName));
         }
     }
 }

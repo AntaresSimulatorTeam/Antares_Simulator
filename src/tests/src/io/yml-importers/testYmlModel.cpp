@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             port-types: []
             models: []
     )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YmlModel::LibraryIdNotDefined);
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
 {
-    BOOST_CHECK_EQUAL(printPathTree(std::filesystem::path("lib/model/port")),
+    BOOST_CHECK_EQUAL(YmlUtils::printPathTree(std::filesystem::path("lib/model/port")),
                       std::string("lib\n|__ model\n    |__ port\n"));
 }
 

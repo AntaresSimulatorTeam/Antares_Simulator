@@ -25,6 +25,10 @@ std::unique_ptr<Antares::Data::Study> makeStudy()
     study->parameters.simulationDays.first = 0;
     study->parameters.simulationDays.end = 7; // one week
     study->parameters.nbYears = 1;
+    study->parameters.dayOfThe1stJanuary = Antares::monday;
+    study->parameters.firstWeekday = Antares::monday;
+    study->parameters.firstMonthInYear = Antares::january;
+    study->parameters.leapYear = false;
     study->maxNbYearsInParallel = 1;
 
     study->initializeRuntimeInfos();
@@ -58,17 +62,17 @@ BOOST_AUTO_TEST_CASE(hourly_values_are_copied_from_state)
     BOOST_REQUIRE(itArea != study->areas.end());
     state.area = itArea->second.get();
     // Create real weekly problem structure with one country
-    PROBLEME_HEBDO weeklyProblem;
-    weeklyProblem.NombreDePays = 1;
-    weeklyProblem.NombreDePasDeTemps = nbHoursInAWeek;
-    weeklyProblem.ConsommationsAbattues.resize(nbHoursInAWeek);
+    auto weeklyProblem = std::make_unique<PROBLEME_HEBDO>();
+    weeklyProblem->NombreDePays = 1;
+    weeklyProblem->NombreDePasDeTemps = nbHoursInAWeek;
+    weeklyProblem->ConsommationsAbattues.resize(nbHoursInAWeek);
     for (unsigned int h = 0; h < nbHoursInAWeek; ++h)
     {
-        weeklyProblem.ConsommationsAbattues[h].ConsommationAbattueDuPays.resize(1);
+        weeklyProblem->ConsommationsAbattues[h].ConsommationAbattueDuPays.resize(1);
     }
 
     // Plug weekly problem into state
-    state.problemeHebdo = &weeklyProblem;
+    state.problemeHebdo = weeklyProblem.get();
 
     // Initialize variable from area (needed to store pArea)
     residualLoad.initializeFromArea(study.get(), state.area);
@@ -81,7 +85,7 @@ BOOST_AUTO_TEST_CASE(hourly_values_are_copied_from_state)
     {
         state.hourInTheYear = h;
         state.hourInTheWeek = h;
-        weeklyProblem.ConsommationsAbattues[h].ConsommationAbattueDuPays[0] = baseValue + h;
+        weeklyProblem->ConsommationsAbattues[h].ConsommationAbattueDuPays[0] = baseValue + h;
 
         residualLoad.hourForEachArea(state, state.numSpace);
     }

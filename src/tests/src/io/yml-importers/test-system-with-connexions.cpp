@@ -13,6 +13,8 @@
 // it collides with a #include <windows.h> somewhere in Yuni
 // clang-format off
 #include <unit_test_utils.h>
+
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 // clang-format on
 
@@ -457,7 +459,7 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___
 
     std::string err_msg = "'FunctionNode::dual' is not allowed in expression 'dual(my_constraint)'";
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 

@@ -23,44 +23,6 @@ using namespace Antares::IO::Inputs::ForbidNodes;
 
 namespace Antares::IO::Inputs::ModelConverter
 {
-UnknownTypeException::UnknownTypeException(const std::string& type):
-    std::runtime_error("Unknown variable type: " + type)
-{
-}
-
-PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id):
-    std::runtime_error("This port type doesn't contains fields: " + id)
-{
-}
-
-PortTypeWithThisIdAlreadyExists::PortTypeWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Port type with this id already exists: " + id)
-{
-}
-
-PortTypeNotFound::PortTypeNotFound(const std::string& portId, const std::string& portTypeId):
-    std::runtime_error("For the port: " + portId + " , port type not found: " + portTypeId)
-{
-}
-
-PortNotFoundForDefinition::PortNotFoundForDefinition(const std::string& portId):
-    std::runtime_error("In port-field-definitions, port not found: " + portId)
-{
-}
-
-FieldNotFoundForDefinition::FieldNotFoundForDefinition(const std::string& portId,
-                                                       const std::string& fieldId):
-    std::runtime_error("In port-field-definitions, for port: " + portId
-                       + " , field not found: " + fieldId)
-{
-}
-
-PortInDefinition::PortInDefinition(const std::string& portId, const std::string& portInDefId):
-    std::runtime_error("In port-field-definitions, for port: " + portId
-                       + " , found another port in the definition: " + portInDefId)
-{
-}
-
 static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::string& mode)
 {
     if (mode.empty() || mode == "cyclic")
@@ -71,7 +33,7 @@ static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::str
     {
         return OutOfBoundsProcessingMode::DROP;
     }
-    throw std::invalid_argument("Invalid out-of-bounds processing mode: " + mode);
+    throw IO::Inputs::InputError("Invalid out-of-bounds processing mode: " + mode);
 }
 
 AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
@@ -87,7 +49,8 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
     {
         if (ymlPortType.fields.empty()) // Can't have a port type without fields
         {
-            throw PortTypeDoesntContainsFields(ymlPortType.id);
+            throw IO::Inputs::InputError("This port type doesn't contains fields: "
+                                         + ymlPortType.id);
         }
         std::vector<PortField> fields;
         for (const auto& field: ymlPortType.fields)
@@ -99,7 +62,8 @@ std::vector<PortType> convertPortTypes(const ::YmlModel::Library& library)
         auto predicate = [&ymlPortType](const auto& p) { return p.Id() == ymlPortType.id; };
         if (std::ranges::find_if(out, predicate) != out.end())
         {
-            throw PortTypeWithThisIdAlreadyExists(ymlPortType.id);
+            throw IO::Inputs::InputError("Port type with this id already exists: "
+                                         + ymlPortType.id);
         }
 
         out.emplace_back(ymlPortType.id,
@@ -147,7 +111,7 @@ Solver::Config::Location convertLocation(const std::string& locationStr)
         return Solver::Config::Location::SUBPROBLEMS;
     }
 
-    throw std::runtime_error("Unknown location: " + locationStr);
+    throw IO::Inputs::InputError("Unknown location: " + locationStr);
 }
 
 /**
@@ -169,7 +133,7 @@ ValueType convertType(YmlModel::ValueType type)
     case YmlModel::ValueType::BOOL:
         return ValueType::BOOL;
     default:
-        throw UnknownTypeException(YmlModel::toString(type));
+        throw IO::Inputs::InputError("Unknown variable type: " + YmlModel::toString(type));
     }
 }
 
@@ -227,7 +191,8 @@ std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<P
                                                     { return pt.Id() == port.type; });
         if (port_type == portTypes.end())
         {
-            throw PortTypeNotFound(port.id, port.type);
+            throw IO::Inputs::InputError("For the port: " + port.id
+                                         + " , port type not found: " + port.type);
         }
         ports.emplace_back(port.id, *port_type);
     }
@@ -253,7 +218,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                            { return p.Id() == pfdefinition.port; });
         if (itPort == ports.end())
         {
-            throw PortNotFoundForDefinition(pfdefinition.port);
+            throw IO::Inputs::InputError("In port-field-definitions, port not found: "
+                                         + pfdefinition.port);
         }
 
         // second check if the field exists in type
@@ -263,7 +229,8 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                             { return field.Id() == pfdefinition.field; });
         if (itField == portFields.end())
         {
-            throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
+            throw IO::Inputs::InputError("In port-field-definitions, for port: " + pfdefinition.port
+                                         + " , field not found: " + pfdefinition.field);
         }
 
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
@@ -276,8 +243,9 @@ std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Mod
                                { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
-            throw PortInDefinition(pfdefinition.port,
-                                   dynamic_cast<const PortFieldNode&>(*it).getPortName());
+            throw IO::Inputs::InputError("In port-field-definitions, for port: " + pfdefinition.port
+                                         + " , found another port in the definition: "
+                                         + dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
 
         ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
