@@ -4,7 +4,6 @@
 #include "antares/io/inputs/yml-utils/path_utils.h"
 
 #include <filesystem>
-#include <iterator>
 #include <string>
 
 #include <antares/io/inputs/InputError.h>
@@ -40,8 +39,6 @@ std::string getBaseTree(const std::filesystem::path& nodeTagPath)
     return printPathTree(nodeTagPath);
 }
 
-namespace YAML
-{
 bool requireMap(const ::YAML::Node& node, const char* typeName)
 {
     if (node.IsMap())
@@ -50,11 +47,9 @@ bool requireMap(const ::YAML::Node& node, const char* typeName)
     }
     if (node.IsDefined() && !node.IsNull())
     {
-        throw Inputs::InputError(std::string("Expected a YAML mapping for '") + typeName + "'");
+        throw InputError(std::string("Expected a YAML mapping for '") + typeName + "'");
     }
     return false;
 }
-
-} // namespace YAML
 
 } // namespace Antares::IO::Inputs::YmlUtils

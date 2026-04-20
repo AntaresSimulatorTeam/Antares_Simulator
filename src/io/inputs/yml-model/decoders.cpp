@@ -12,24 +12,6 @@ using namespace Antares::IO::Inputs;
 namespace YAML
 {
 
-namespace
-{
-/// Throws InputError if the node is present but is not a YAML map.
-/// Returns false silently when the node is absent or null (permitting as_fallback_default).
-bool requireMap(const Node& node, std::string_view typeName)
-{
-    if (node.IsMap())
-    {
-        return true;
-    }
-    if (node.IsDefined() && !node.IsNull())
-    {
-        throw InputError(std::string("Expected a YAML mapping for '") + typeName.data() + "'");
-    }
-    return false;
-}
-} // namespace
-
 void checkMandatoryIdField(const Node& node, const std::string& nodeName)
 {
     if (!node["id"].IsDefined() || node["id"].IsNull())
@@ -145,7 +127,7 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
         return true;
     }
 
-    if (!requireMap(areaConnNode, "area-connection"))
+    if (!YmlUtils::requireMap(areaConnNode, "area-connection"))
     {
         return false;
     }
@@ -182,7 +164,7 @@ bool convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
 
 bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& rhs)
 {
-    if (!requireMap(node, "port-type"))
+    if (!YmlUtils::requireMap(node, "port-type"))
     {
         return false;
     }
@@ -204,7 +186,7 @@ bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& r
 
 bool convert<YmlModel::Parameter>::decode(const Node& node, YmlModel::Parameter& rhs)
 {
-    if (!requireMap(node, "parameter"))
+    if (!YmlUtils::requireMap(node, "parameter"))
     {
         return false;
     }
@@ -249,7 +231,7 @@ bool convert<YmlModel::ValueType>::decode(const Node& node, YmlModel::ValueType&
 
 bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& rhs)
 {
-    if (!requireMap(node, "variable"))
+    if (!YmlUtils::requireMap(node, "variable"))
     {
         return false;
     }
@@ -268,7 +250,7 @@ bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& r
 
 bool convert<YmlModel::Port>::decode(const Node& node, YmlModel::Port& rhs)
 {
-    if (!requireMap(node, "port"))
+    if (!YmlUtils::requireMap(node, "port"))
     {
         return false;
     }
@@ -282,7 +264,7 @@ bool convert<YmlModel::Port>::decode(const Node& node, YmlModel::Port& rhs)
 bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
                                                     YmlModel::PortFieldDefinition& rhs)
 {
-    if (!requireMap(node, "port-field-definition"))
+    if (!YmlUtils::requireMap(node, "port-field-definition"))
     {
         return false;
     }
@@ -294,7 +276,7 @@ bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
 
 bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constraint& rhs)
 {
-    if (!requireMap(node, "constraint"))
+    if (!YmlUtils::requireMap(node, "constraint"))
     {
         return false;
     }
@@ -307,7 +289,7 @@ bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constrain
 
 bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOutput& rhs)
 {
-    if (!requireMap(node, "extra-output"))
+    if (!YmlUtils::requireMap(node, "extra-output"))
     {
         return false;
     }
@@ -319,7 +301,7 @@ bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOut
 
 bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective& rhs)
 {
-    if (!requireMap(node, "objective"))
+    if (!YmlUtils::requireMap(node, "objective"))
     {
         return false;
     }
@@ -332,7 +314,7 @@ bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective&
 
 bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 {
-    if (!requireMap(node, "model"))
+    if (!YmlUtils::requireMap(node, "model"))
     {
         throw InputError("Expected a YAML mapping for 'model'");
     }
