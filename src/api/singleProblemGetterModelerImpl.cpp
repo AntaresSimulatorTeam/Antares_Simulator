@@ -20,24 +20,22 @@ SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::pa
     modeler_->exportStructureFile();
 }
 
+void printProblem(const Optimisation::LinearProblemApi::ILinearProblem* problem,
+                  const std::string& name)
+{
+    logs.info() << name << ": " << problem->variableCount() << " variables, "
+                << problem->constraintCount() << " constraints";
+}
+
 void SingleProblemGetterModeler::printProblems() const
 {
     const auto& master = modeler_->masterProblem();
     const auto& subproblems = modeler_->subproblems();
 
-    auto printProblem = [](const auto& problem, const char* name)
-    {
-        if (problem)
-        {
-            logs.info() << name << ": " << problem->variableCount() << " variables, "
-                        << problem->constraintCount() << " constraints";
-        }
-    };
-
-    printProblem(master, "Master problem");
+    printProblem(master.get(), "Master problem");
     for (size_t i = 0; i < subproblems.size(); ++i)
     {
-        printProblem(subproblems[i], ("Subproblem " + std::to_string(i + 1)).c_str());
+        printProblem(subproblems[i].get(), ("Subproblem " + std::to_string(i + 1)).c_str());
     }
 }
 
