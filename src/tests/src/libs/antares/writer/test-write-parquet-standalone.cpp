@@ -12,6 +12,7 @@
 #include <arrow/io/api.h>
 #include <parquet/arrow/reader.h>
 #include <parquet/arrow/writer.h>
+#include <parquet/exception.h>
 
 namespace fs = std::filesystem;
 
@@ -100,13 +101,13 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
 std::shared_ptr<arrow::Table> readParquet(const fs::path& file_path)
 {
     std::shared_ptr<arrow::io::ReadableFile> infile;
-    ARROW_THROW_ASSIGN(infile, arrow::io::ReadableFile::Open(file_path.string()));
+    PARQUET_ASSIGN_OR_THROW(infile, arrow::io::ReadableFile::Open(file_path.string()));
 
     std::unique_ptr<parquet::arrow::FileReader> reader;
-    ARROW_THROW_NOT_OK(parquet::arrow::OpenFile(infile, arrow::default_memory_pool(), &reader));
+    PARQUET_ASSIGN_OR_THROW(reader, parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
 
     std::shared_ptr<arrow::Table> table;
-    ARROW_THROW_NOT_OK(reader->ReadTable(&table));
+    PARQUET_THROW_NOT_OK(reader->ReadTable(&table));
     return table;
 }
 
