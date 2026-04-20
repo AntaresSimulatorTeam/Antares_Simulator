@@ -13,10 +13,10 @@
 namespace Antares::Solver::Implementation
 {
 
-class SingleProblemGetterModeler final
+class ModelerProblems final
 {
 public:
-    explicit SingleProblemGetterModeler(const std::filesystem::path& modelerPath);
+    explicit ModelerProblems(const std::filesystem::path& modelerPath);
 
     void printProblems() const;
 

@@ -1,14 +1,14 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "singleProblemGetterModelerImpl.h"
+#include "modelerProblemsImpl.h"
 
 #include "antares/logs/logs.h"
 
 namespace Antares::Solver::Implementation
 {
 
-SingleProblemGetterModeler::SingleProblemGetterModeler(const std::filesystem::path& studyPath)
+ModelerProblems::ModelerProblems(const std::filesystem::path& studyPath)
 {
     loader_ = std::make_unique<LoadFiles::FileLoader>(studyPath);
     writer_ = std::make_unique<FileWriter>(studyPath);
@@ -27,7 +27,7 @@ void printProblem(const Optimisation::LinearProblemApi::ILinearProblem* problem,
                 << problem->constraintCount() << " constraints";
 }
 
-void SingleProblemGetterModeler::printProblems() const
+void ModelerProblems::printProblems() const
 {
     const auto& master = modeler_->masterProblem();
     const auto& subproblems = modeler_->subproblems();

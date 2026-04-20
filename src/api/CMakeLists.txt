@@ -55,9 +55,9 @@ target_sources(single_problem_api
 	singleProblemGetter.cpp
 	singleProblemGetterImpl.cpp
 	include/antares/api/singleProblemGetter.h
-	singleProblemGetterModeler.cpp
-	singleProblemGetterModelerImpl.cpp
-	include/antares/api/singleProblemGetterModeler.h)
+	modelerProblems.cpp
+	modelerProblemsImpl.cpp
+	include/antares/api/modelerProblems.h)
 
 target_include_directories(single_problem_api
         PUBLIC

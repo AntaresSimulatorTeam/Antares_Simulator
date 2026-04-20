@@ -4,8 +4,8 @@
 #include <filesystem>
 
 #include <antares/logs/logs.h>
+#include "antares/api/modelerProblems.h"
 #include "antares/api/singleProblemGetter.h"
-#include "antares/api/singleProblemGetterModeler.h"
 
 namespace fs = std::filesystem;
 
@@ -34,7 +34,7 @@ int main(const int argc, const char** argv)
     else if (fs::exists(modelerMarker))
     {
         logs.info() << "Loading Modeler study...";
-        const SingleProblemGetterModeler getter(studyPath);
+        const ModelerProblems getter(studyPath);
         getter.printProblems();
     }
     else

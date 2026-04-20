@@ -10,20 +10,20 @@
 
 namespace Antares::Solver::Implementation
 {
-class SingleProblemGetterModeler;
+class ModelerProblems;
 }
 
 namespace Antares::Solver
 {
-class SingleProblemGetterModeler final
+class ModelerProblems final
 {
 public:
-    explicit SingleProblemGetterModeler(const std::filesystem::path& modelerPath);
-    ~SingleProblemGetterModeler();
+    explicit ModelerProblems(const std::filesystem::path& modelerPath);
+    ~ModelerProblems();
 
     void printProblems() const;
 
 private:
-    std::unique_ptr<Implementation::SingleProblemGetterModeler> impl_;
+    std::unique_ptr<Implementation::ModelerProblems> impl_;
 };
 } // namespace Antares::Solver
