@@ -324,7 +324,7 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         reserveParticipationIndexMaps.value().emplace(area->id, ReserveIndexMap{});
         for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
         {
-            loadReserveParticipations(area, reserve);
+            loadReserveParticipations(area.get(), reserve);
         }
     }
 }

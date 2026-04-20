@@ -137,8 +137,6 @@ public:
 
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& PowerOfOffUnitsParticipatingToReserve(unsigned int index, double coeff);
-
     ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index, double coeff);
 
     ConstraintBuilder& NumberStartingDispatchableUnits(unsigned int index, double coeff);

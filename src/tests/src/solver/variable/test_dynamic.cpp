@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(SetDataSingleYearAddResultsToSet_WithMockData)
     std::set<Area*, CompareAreaName> areaSet;
     for (auto& [_, area]: study->areas)
     {
-        areaSet.insert(area);
+        areaSet.insert(area.get());
     }
 
     SetDataSingleYear setData(areaSet);

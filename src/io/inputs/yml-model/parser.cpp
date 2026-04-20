@@ -8,7 +8,6 @@
 
 namespace Antares::IO::Inputs::YmlModel
 {
-
 namespace
 {
 void tagNodes(YAML::Node& node);
@@ -59,28 +58,18 @@ void tagNodes(YAML::Node& node)
 }
 } // anonymous namespace
 
-LibraryIdNotDefined::LibraryIdNotDefined():
-    std::runtime_error("Library id is not defined")
-{
-}
-
 Library Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
     auto libraryNode = root["library"];
     if (libraryNode.IsDefined() && !libraryNode.IsNull())
     {
-        auto libraryId = libraryNode["id"];
-        if (libraryId.IsDefined() && !libraryId.IsNull())
-        {
-            auto libraryName = libraryId.as<std::string>();
-            libraryNode.SetTag(libraryName);
-            tagNodes(libraryNode);
-        }
-        else
-        {
-            throw LibraryIdNotDefined();
-        }
+        libraryNode.SetTag("library");
+        checkMandatoryIdField(libraryNode, "library");
+
+        const auto libraryName = libraryNode["id"].as<std::string>();
+        libraryNode.SetTag(libraryName);
+        tagNodes(libraryNode);
     }
     auto library = root["library"].as<Library>();
 

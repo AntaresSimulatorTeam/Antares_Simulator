@@ -20,6 +20,7 @@ target_include_directories(yml-system
 # Link dependencies (if any)
 target_link_libraries(yml-system
         PUBLIC
+        Antares::input-error
         Antares::antares-study-system-model
         PRIVATE
         Antares::forbidden-nodes

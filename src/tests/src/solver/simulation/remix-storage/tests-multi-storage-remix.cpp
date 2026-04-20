@@ -38,6 +38,7 @@ struct STS_holder
                                levels,
                                pmax,
                                inflows,
+                               ovf,
                                injection,
                                lowRuleCurve,
                                upRuleCurve,

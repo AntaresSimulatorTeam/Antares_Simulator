@@ -15,9 +15,6 @@
 
 #include "yaml-cpp/yaml.h"
 
-// printPathTree is defined in decoders_utils.cpp (single TU).
-std::string printPathTree(const std::filesystem::path& p);
-
 // Implement convert specializations
 namespace YAML
 {
