@@ -78,29 +78,36 @@ std::optional<YmlMapMarker> checkKeysIfMap(const Node& node,
     return std::make_optional<YmlMapMarker>(marker);
 }
 
+auto compare_sets(const std::unordered_set<std::string>& setA,
+                  const std::unordered_set<std::string>& setB)
+{
+    // compute unexpected = actual - allowed
+    auto diffSet =
+      [](const std::unordered_set<std::string>& setA, const std::unordered_set<std::string>& setB)
+    {
+        std::vector<std::string> diff;
+        for (const auto& item: setA)
+        {
+            if (setB.find(item) == setB.end())
+            {
+                diff.push_back(item);
+            }
+        }
+        return diff;
+    };
+    const auto unexpected = diffSet(setA, setB);
+    const auto missing = diffSet(setB, setA);
+    return std::make_tuple(unexpected, missing);
+}
+
 void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
 {
     // Validate map: if invalid, get marker and build an error message to throw
     if (auto maybeMarker = checkKeysIfMap(node, allowedFields))
     {
         const auto& marker = *maybeMarker;
-        // compute unexpected = actual - allowed
-        auto diffSet = [](const std::unordered_set<std::string>& setA,
-                          const std::unordered_set<std::string>& setB)
-        {
-            std::vector<std::string> diff;
-            for (const auto& item: setA)
-            {
-                if (setB.find(item) == setB.end())
-                {
-                    diff.push_back(item);
-                }
-            }
-            return diff;
-        };
-        const auto unexpected = diffSet(marker.actualSet(), allowedFields);
-        const auto missing = diffSet(allowedFields, marker.actualSet());
 
+        const auto&& [unexpected, missing] = compare_sets(marker.actualSet(), allowedFields);
         const std::string markedFieldsTree = marker.buildMarkedTreeForUnexpectedAndMissing(
           unexpected,
           missing);
