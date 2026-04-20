@@ -144,9 +144,7 @@ bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
     }
 
     checkFields(areaConnNode,
-                std::unordered_set<std::string>{"injection-to-balance",
-                                                "spillage-bound",
-                                                "unsupplied-energy-bound"});
+                {"injection-to-balance", "spillage-bound", "unsupplied-energy-bound"});
 
     rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
     rhs.area_connection.spillage_bound = getFieldFromNode(areaConnNode, "spillage-bound");
@@ -169,7 +167,7 @@ bool convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
         throw InputError("Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
     }
 
-    checkFields(childNode, std::unordered_set<std::string>{"capacity-field"});
+    checkFields(childNode, {"capacity-field"});
 
     rhs.thermal_capacity_connection_field = getFieldFromNode(childNode, "capacity-field");
     return true;
