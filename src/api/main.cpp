@@ -35,7 +35,7 @@ int main(const int argc, const char** argv)
     {
         logs.info() << "Loading Modeler study...";
         const ModelerProblems modelerProblems(studyPath);
-        modelerProblems.print();
+        modelerProblems.logSize();
     }
     else
     {

@@ -18,7 +18,7 @@ class ModelerProblems final
 public:
     explicit ModelerProblems(const std::filesystem::path& modelerPath);
 
-    void print() const;
+    void logSize() const;
 
 private:
     std::unique_ptr<Modeler> modeler_;

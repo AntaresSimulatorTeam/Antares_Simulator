@@ -27,7 +27,7 @@ void printProblem(const Optimisation::LinearProblemApi::ILinearProblem* problem,
                 << problem->constraintCount() << " constraints";
 }
 
-void ModelerProblems::print() const
+void ModelerProblems::logSize() const
 {
     const auto& master = modeler_->masterProblem();
     const auto& subproblems = modeler_->subproblems();
