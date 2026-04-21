@@ -66,8 +66,7 @@ ReserveData ReserveParticipationGroup::GetReserveDataFromProblemHebdo()
 }
 
 /**
- * @brief build MinDownTime constraints with
- * respect to default order
+ * @brief build Reserve Participation constraints
  */
 void ReserveParticipationGroup::BuildConstraints()
 {

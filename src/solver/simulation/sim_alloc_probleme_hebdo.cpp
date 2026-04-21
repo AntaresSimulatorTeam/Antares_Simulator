@@ -37,9 +37,9 @@ void SIM_AllocationProblemeDonneesGenerales(PROBLEME_HEBDO& problem,
 
     const uint linkCount = study.runtime.interconnectionsCount();
 
-    problem.DefaillanceNegativeUtiliserPMinThermique = std::vector<bool>(nbPays, false);
-    problem.DefaillanceNegativeUtiliserHydro = std::vector<bool>(nbPays, false);
-    problem.DefaillanceNegativeUtiliserConsoAbattue = std::vector<bool>(nbPays, false);
+    problem.DefaillanceNegativeUtiliserPMinThermique.assign(nbPays, false);
+    problem.DefaillanceNegativeUtiliserHydro.assign(nbPays, false);
+    problem.DefaillanceNegativeUtiliserConsoAbattue.assign(nbPays, false);
 
     problem.CoefficientEcretementPMaxHydraulique.assign(nbPays, 0.);
 
@@ -114,8 +114,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
     uint nbPays = study.areas.size();
 
     const uint linkCount = study.runtime.interconnectionsCount();
+    const uint thermalCount = study.runtime.counts.thermalPlants;
     const uint shortTermStorageCount = study.runtime.counts.shortTermStorages;
     const uint hydroCount = study.runtime.counts.hydros;
+    const uint capacityReservationCount = study.runtime.counts.capacityReservations;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
 
@@ -138,8 +140,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.NumeroDeVariableDuFluxDirectPositif.assign(linkCount, 0);
         variablesMapping.NumeroDeVariableDuFluxIndirectPositif.assign(linkCount, 0);
 
-        variablesMapping.NumeroDeVariableDuPalierThermique
-          .assign(study.runtime.counts.thermalPlants, 0);
+        variablesMapping.NumeroDeVariableDuPalierThermique.assign(thermalCount, 0);
         variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
@@ -152,13 +153,13 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.NumeroDeVariablesVariationHydALaHausse.assign(nbPays, 0);
 
         variablesMapping.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
-          .assign(study.runtime.counts.thermalPlants, 0);
+          .assign(thermalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-          .assign(study.runtime.counts.thermalPlants, 0);
+          .assign(thermalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-          .assign(study.runtime.counts.thermalPlants, 0);
+          .assign(thermalCount, 0);
         variablesMapping.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-          .assign(study.runtime.counts.thermalPlants, 0);
+          .assign(thermalCount, 0);
 
         variablesMapping.SIM_ShortTermStorage.InjectionVariable.assign(shortTermStorageCount, 0);
         variablesMapping.SIM_ShortTermStorage.WithdrawalVariable.assign(shortTermStorageCount, 0);
@@ -173,44 +174,38 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         {
             variablesMapping.reservesIndices.emplace();
             variablesMapping.reservesIndices.value().runningThermalClusterParticipation.assign(
-              study.runtime.counts.thermalPlants * study.runtime.counts.capacityReservations,
+              thermalCount * capacityReservationCount,
               0);
-            variablesMapping.reservesIndices.value().offThermalClusterParticipation.assign(
-              study.runtime.counts.thermalPlants * study.runtime.counts.capacityReservations,
-              0);
-            variablesMapping.reservesIndices.value().thermalClusterParticipation.assign(
-              study.runtime.counts.thermalPlants * study.runtime.counts.capacityReservations,
-              0);
+            variablesMapping.reservesIndices.value()
+              .offThermalClusterParticipation.assign(thermalCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices.value()
+              .thermalClusterParticipation.assign(thermalCount * capacityReservationCount, 0);
             variablesMapping.reservesIndices.value().STStorageClusterParticipation.down.assign(
-              study.runtime.counts.shortTermStorages * study.runtime.counts.capacityReservations,
+              shortTermStorageCount * capacityReservationCount,
               0);
             variablesMapping.reservesIndices.value().STStorageClusterParticipation.up.assign(
-              study.runtime.counts.shortTermStorages * study.runtime.counts.capacityReservations,
+              shortTermStorageCount * capacityReservationCount,
               0);
             variablesMapping.reservesIndices.value().STStorageReleaseClusterParticipation.assign(
-              study.runtime.counts.shortTermStorages * study.runtime.counts.capacityReservations,
+              shortTermStorageCount * capacityReservationCount,
               0);
             variablesMapping.reservesIndices.value().STStorageStoreClusterParticipation.assign(
-              study.runtime.counts.shortTermStorages * study.runtime.counts.capacityReservations,
-              0);
-
-            variablesMapping.reservesIndices.value().HydroParticipation.up.assign(
-              study.runtime.counts.hydros * study.runtime.counts.capacityReservations,
-              0);
-            variablesMapping.reservesIndices.value().HydroParticipation.down.assign(
-              study.runtime.counts.hydros * study.runtime.counts.capacityReservations,
-              0);
-            variablesMapping.reservesIndices.value().HydroReleaseParticipation.assign(
-              study.runtime.counts.hydros * study.runtime.counts.capacityReservations,
-              0);
-            variablesMapping.reservesIndices.value().HydroStoreParticipation.assign(
-              study.runtime.counts.hydros * study.runtime.counts.capacityReservations,
+              shortTermStorageCount * capacityReservationCount,
               0);
 
             variablesMapping.reservesIndices.value()
-              .internalUnsatisfied.assign(study.runtime.counts.capacityReservations, 0);
+              .HydroParticipation.up.assign(hydroCount * capacityReservationCount, 0);
             variablesMapping.reservesIndices.value()
-              .internalExcess.assign(study.runtime.counts.capacityReservations, 0);
+              .HydroParticipation.down.assign(hydroCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices.value()
+              .HydroReleaseParticipation.assign(hydroCount * capacityReservationCount, 0);
+            variablesMapping.reservesIndices.value()
+              .HydroStoreParticipation.assign(hydroCount * capacityReservationCount, 0);
+
+            variablesMapping.reservesIndices.value()
+              .internalUnsatisfied.assign(capacityReservationCount, 0);
+            variablesMapping.reservesIndices.value().internalExcess.assign(capacityReservationCount,
+                                                                           0);
         }
 
         variablesMapping.SIM_ShortTermStorage.OverflowVariable.assign(shortTermStorageCount, 0);
@@ -254,15 +249,13 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .NumeroDeContrainteDesContraintesCouplantes.assign(activeConstraints.size(), 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche
-          .assign(study.runtime.counts.thermalPlants, 0);
+          .NumeroDeContrainteDesContraintesDeDureeMinDeMarche.assign(thermalCount, 0);
         problem.CorrespondanceCntNativesCntOptim[k]
-          .NumeroDeContrainteDesContraintesDeDureeMinDArret
-          .assign(study.runtime.counts.thermalPlants, 0);
+          .NumeroDeContrainteDesContraintesDeDureeMinDArret.assign(thermalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-          .assign(study.runtime.counts.thermalPlants, 0);
+          .assign(thermalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);
@@ -271,101 +264,90 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         {
             problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.emplace();
             problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.value().need.assign(
-              study.runtime.counts.capacityReservations,
+              capacityReservationCount,
               -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .powerOffGroupUnitsInThermalClusterParticipating.assign(
-                study.runtime.counts.thermalPlants * study.runtime.counts.capacityReservations,
-                -1);
+              .powerOffGroupUnitsInThermalClusterParticipating.assign(thermalCount
+                                                                        * capacityReservationCount,
+                                                                      -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .maxPowerOffUnitsInThermalCluster.assign(study.runtime.counts.thermalPlants, -1);
+              .maxPowerOffUnitsInThermalCluster.assign(thermalCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .thermalClusterPOutBoundMin.assign(study.runtime.counts.thermalPlants, -1);
+              .thermalClusterPOutBoundMin.assign(thermalCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .thermalClusterPOutBoundMax.assign(study.runtime.counts.thermalPlants, -1);
+              .thermalClusterPOutBoundMax.assign(thermalCount, -1);
 
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageClusterMaxReleaseParticipation.assign(
-                study.runtime.counts.shortTermStorages * study.runtime.counts.capacityReservations,
-                -1);
+              .STStorageClusterMaxReleaseParticipation.assign(shortTermStorageCount
+                                                                * capacityReservationCount,
+                                                              -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageClusterMaxStoreParticipation.assign(
-                study.runtime.counts.shortTermStorages * study.runtime.counts.capacityReservations,
-                -1);
+              .STStorageClusterMaxStoreParticipation.assign(shortTermStorageCount
+                                                              * capacityReservationCount,
+                                                            -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageClusterReleaseCapacityThresholdsMax
-              .assign(study.runtime.counts.shortTermStorages, -1);
+              .STStorageClusterReleaseCapacityThresholdsMax.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageClusterReleaseCapacityThresholdsMin
-              .assign(study.runtime.counts.shortTermStorages, -1);
+              .STStorageClusterReleaseCapacityThresholdsMin.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageClusterStoreCapacityThresholds
-              .assign(study.runtime.counts.shortTermStorages, -1);
+              .STStorageClusterStoreCapacityThresholds.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageLevelParticipation.down.assign(study.runtime.counts.shortTermStorages, -1);
+              .STStorageLevelParticipation.down.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageLevelParticipation.up.assign(study.runtime.counts.shortTermStorages, -1);
+              .STStorageLevelParticipation.up.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageEnergyLevelParticipation.assign(
-                study.runtime.counts.shortTermStorages * study.runtime.counts.capacityReservations,
-                -1);
+              .STStorageEnergyLevelParticipation.assign(shortTermStorageCount
+                                                          * capacityReservationCount,
+                                                        -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageGlobalStockEnergyLevelParticipation.up
-              .assign(study.runtime.counts.shortTermStorages, -1);
+              .STStorageGlobalStockEnergyLevelParticipation.up.assign(shortTermStorageCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .STStorageGlobalStockEnergyLevelParticipation.down
-              .assign(study.runtime.counts.shortTermStorages, -1);
+              .STStorageGlobalStockEnergyLevelParticipation.down.assign(shortTermStorageCount, -1);
 
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroMaxReleaseParticipation.assign(study.runtime.counts.hydros
-                                                     * study.runtime.counts.capacityReservations,
-                                                   -1);
+              .HydroMaxReleaseParticipation.assign(hydroCount * capacityReservationCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroMaxStoreParticipation.assign(study.runtime.counts.hydros
-                                                   * study.runtime.counts.capacityReservations,
-                                                 -1);
+              .HydroMaxStoreParticipation.assign(hydroCount * capacityReservationCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroReleaseCapacityThresholdsMax.assign(study.runtime.counts.hydros, -1);
+              .HydroReleaseCapacityThresholdsMax.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroReleaseCapacityThresholdsMin.assign(study.runtime.counts.hydros, -1);
+              .HydroReleaseCapacityThresholdsMin.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroStoreCapacityThresholds.assign(study.runtime.counts.hydros, -1);
+              .HydroStoreCapacityThresholds.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroLevelParticipation.down.assign(study.runtime.counts.hydros, -1);
+              .HydroLevelParticipation.down.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroLevelParticipation.up.assign(study.runtime.counts.hydros, -1);
+              .HydroLevelParticipation.up.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroEnergyLevelParticipation.assign(study.runtime.counts.hydros
-                                                      * study.runtime.counts.capacityReservations,
-                                                    -1);
+              .HydroEnergyLevelParticipation.assign(hydroCount * capacityReservationCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroGlobalEnergyLevelParticipationUp.assign(study.runtime.counts.hydros, -1);
+              .HydroGlobalEnergyLevelParticipationUp.assign(hydroCount, -1);
             problem.CorrespondanceCntNativesCntOptim[k]
               .reservesIndices.value()
-              .HydroGlobalEnergyLevelParticipationDown.assign(study.runtime.counts.hydros, -1);
+              .HydroGlobalEnergyLevelParticipationDown.assign(hydroCount, -1);
         }
     }
 }
@@ -562,11 +544,11 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
 
         problem.PaliersThermiquesDuPays[k].PuissanceDisponibleEtCout.resize(nbPaliers);
         problem.ResultatsHoraires[k].ProductionThermique.resize(NombreDePasDeTemps);
-        problem.ResultatsHoraires[k].HydroUsage.resize(NombreDePasDeTemps);
         if (resEnabled)
         {
             problem.ResultatsHoraires[k].Reserves.emplace();
             problem.ResultatsHoraires[k].Reserves.value().resize(NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].HydroUsage.resize(NombreDePasDeTemps);
         }
 
         for (unsigned j = 0; j < nbPaliers; ++j)

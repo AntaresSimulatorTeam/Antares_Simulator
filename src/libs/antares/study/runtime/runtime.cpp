@@ -334,6 +334,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     nbYears = gd.nbYears;
     mode = gd.mode;
+
+    counts = {};
+
     // Calendar
     logs.info() << "Generating calendar informations";
     study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});

@@ -329,7 +329,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                     .HydroLevelParticipation.up[globalClusterIdx];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = hydroCluster.NiveauHoraireInf[pdtHebdo];
+                SecondMembre[cnt] = -hydroCluster.NiveauHoraireInf[pdtHebdo];
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
             }
 

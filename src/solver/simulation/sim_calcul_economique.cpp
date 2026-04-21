@@ -285,7 +285,6 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     problem.NombreDInterconnexions = study.runtime.interconnectionsCount();
 
     problem.NumberOfShortTermStorages = study.runtime.counts.shortTermStorages;
-    problem.NumberOfHydros = study.runtime.counts.hydros;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
@@ -639,7 +638,6 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
     double levelInterpolEnd;
     double delta;
 
-    int nbHydro = 0;
     for (uint k = 0; k < nbPays; ++k)
     {
         auto& area = *study.areas.byIndex[k];

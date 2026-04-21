@@ -36,9 +36,7 @@ void HydroEnergyLevelReserveParticipation::add(int pays, int cluster, int reserv
                       builder.data.NombreDePasDeTempsPourUneOptimisation);
 
                     builder.HydroLevel(globalClusterIdx,
-                                       sign * capacityReservation.energyActivationRatio,
-                                       t,
-                                       builder.data.NombreDePasDeTempsPourUneOptimisation);
+                                       sign * capacityReservation.energyActivationRatio);
                 }
 
                 builder.lessThan();

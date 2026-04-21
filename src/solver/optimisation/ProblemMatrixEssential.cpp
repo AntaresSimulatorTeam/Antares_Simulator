@@ -3,8 +3,6 @@
 
 #include "antares/solver/optimisation/ProblemMatrixEssential.h"
 
-#include "antares/solver/optimisation/constraints/ReserveParticipationGroup.h"
-
 ProblemMatrixEssential::ProblemMatrixEssential(PROBLEME_HEBDO* problemeHebdo):
     problemeHebdo_(problemeHebdo)
 {
