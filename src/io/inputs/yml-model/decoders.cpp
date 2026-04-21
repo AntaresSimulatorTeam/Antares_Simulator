@@ -3,9 +3,11 @@
 
 #include "antares/io/inputs/yml-model/decoders.h"
 
+#include <span>
 #include <unordered_set>
 
 #include <antares/io/inputs/InputError.h>
+#include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
 
 using namespace Antares::IO::Inputs;
 
@@ -33,33 +35,6 @@ std::string getFieldFromNode(const Node& node, const std::string& fieldName)
     return node[fieldName].as<std::string>("");
 }
 
-std::optional<YmlMapMarker> checkKeysIfMap(const Node& node,
-                                           const std::unordered_set<std::string>& allowedFields)
-{
-    // Only validate maps here; callers must ensure node is a map before calling when necessary.
-    if (!node.IsMap())
-    {
-        return std::nullopt;
-    }
-
-    YmlMapMarker marker(node);
-
-    // If allowedFields provided, check equality of key sets
-    if (!allowedFields.empty())
-    {
-        if (marker.actualSet() == allowedFields)
-        {
-            return std::nullopt; // valid
-        }
-
-        // invalid map: return marker so caller can build an error message
-        return std::make_optional<YmlMapMarker>(marker);
-    }
-
-    // invalid size: return marker so caller can build an error message
-    return std::make_optional<YmlMapMarker>(marker);
-}
-
 auto compare_sets(const std::unordered_set<std::string>& setA,
                   const std::unordered_set<std::string>& setB)
 {
@@ -82,39 +57,66 @@ auto compare_sets(const std::unordered_set<std::string>& setA,
     return std::make_tuple(unexpected, missing);
 }
 
+std::string build_error_message(const std::unordered_set<std::string>& allowedFields,
+                                const YmlTreeDisplayer& displayer,
+                                std::span<const std::string> unexpected,
+                                std::span<const std::string> missing,
+                                const std::string& markedFieldsTree)
+{
+    // Build a readable list of errors (one per line), then append the tree
+    std::string errors_list;
+    for (const auto& f: unexpected)
+    {
+        errors_list += fmt::format("- Unexpected field: {}\n", f);
+    }
+    for (const auto& f: missing)
+    {
+        errors_list += fmt::format("- Missing field: {}\n", f);
+    }
+
+    // Final message: brief header, individual errors, then the tree
+    const std::string message = fmt::format(
+      "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
+      allowedFields.size(),
+      errors_list,
+      displayer.baseTree(),
+      markedFieldsTree);
+    return message;
+}
+
 void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
 {
-    // Validate map: if invalid, get marker and build an error message to throw
-    if (auto maybeMarker = checkKeysIfMap(node, allowedFields))
+    if (!node.IsMap())
     {
-        const auto& marker = *maybeMarker;
-
-        const auto&& [unexpected, missing] = compare_sets(marker.actualSet(), allowedFields);
-        const std::string markedFieldsTree = marker.buildMarkedTreeForUnexpectedAndMissing(
-          unexpected,
-          missing);
-
-        // Build a readable list of errors (one per line), then append the tree
-        std::string errors_list;
-        for (const auto& f: unexpected)
-        {
-            errors_list += fmt::format("- Unexpected field: {}\n", f);
-        }
-        for (const auto& f: missing)
-        {
-            errors_list += fmt::format("- Missing field: {}\n", f);
-        }
-
-        // Final message: brief header, individual errors, then the tree
-        const std::string message = fmt::format(
-          "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
-          allowedFields.size(),
-          errors_list,
-          marker.baseTree(),
-          markedFieldsTree);
-
-        throw Exception(node.Mark(), message);
+        return;
     }
+
+    // Extract actual key names (cheap, no line-number tracking yet)
+    std::unordered_set<std::string> actualKeys;
+    for (const auto& entry: node)
+    {
+        const Node keyNode = entry.first;
+        actualKeys.insert(keyNode.IsDefined() ? keyNode.as<std::string>()
+                                              : std::string("<unknown>"));
+    }
+
+    if (actualKeys == allowedFields)
+    {
+        return; // valid
+    }
+
+    // Invalid map: now build the displayer for error reporting
+    YmlTreeDisplayer displayer(node);
+    const auto [unexpected, missing] = compare_sets(actualKeys, allowedFields);
+    const std::string markedFieldsTree = displayer.buildMarkedTree(unexpected, missing);
+
+    const std::string message = build_error_message(allowedFields,
+                                                    displayer,
+                                                    unexpected,
+                                                    missing,
+                                                    markedFieldsTree);
+
+    throw Exception(node.Mark(), message);
 }
 
 bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,

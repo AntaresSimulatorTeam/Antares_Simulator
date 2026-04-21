@@ -5,11 +5,10 @@
 
 #include <filesystem>
 #include <fmt/format.h>
-#include <optional>
 #include <unordered_set>
 
 #include "antares/io/inputs/yml-model/Library.h"
-#include "antares/io/inputs/yml-utils/YmlMapMarker.h"
+#include "antares/io/inputs/yml-utils/YmlTreeDisplayer.h"
 
 // Implement convert specializations
 namespace YAML
@@ -35,10 +34,6 @@ void checkMandatoryIdField(const Node& node, const std::string& nodeName);
 
 /// Returns the string value of a field from a YAML node, or empty string if absent/null.
 std::string getFieldFromNode(const Node& node, const std::string& fieldName);
-
-std::optional<YmlMapMarker> checkKeysIfMap(
-  const Node& node,
-  const std::unordered_set<std::string>& allowedFields = {});
 
 void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields);
 
