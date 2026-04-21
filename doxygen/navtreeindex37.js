@@ -1,9 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#ac348cea35c836e9ebdb309ff5535544c":[8,0,0,11,28,0],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#ac89f8afdacdb72c0493b81a20423f0c5":[8,0,0,11,28,3],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#adc9c31a9de5f9a8382e341a04404904a":[8,0,0,11,28,5],
-"structAntares_1_1Solver_1_1ConstantDataFromAntares.html#ae6ecd9ab036dc5b6c8889f7ef9344757":[8,0,0,11,28,2],
 "structAntares_1_1Solver_1_1ConstantDataFromAntares.html#af9fb2c8e16c9d2386c2c91fafeda848b":[8,0,0,11,28,4],
 "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html":[8,0,0,11,1,1],
 "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html#a4bd8081695649bb320a3cad9fc7c1cf3":[8,0,0,11,1,1,4],
@@ -249,5 +245,9 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html#a65c516239c21fa067358276e53fb5a47":[8,0,0,11,6,4,31,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html#a6a24fa9c475e6c1999a5db68b84efe48":[8,0,0,11,6,4,31,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html#a958950f1f44736fc45da28923cc28719":[8,0,0,11,6,4,31,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html":[8,0,0,11,6,4,33]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html":[8,0,0,11,6,4,33],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a187b0ce388f25ea734cfcfd492a5b2a9":[8,0,0,11,6,4,33,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a6a6b4dd465765f233204539ec06048f0":[8,0,0,11,6,4,33,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#abd9111ce9a285f4c8d2efbf695b07035":[8,0,0,11,6,4,33,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#ace71c098e57b64ae01b8be5aa3704c1b":[8,0,0,11,6,4,33,0]
 };

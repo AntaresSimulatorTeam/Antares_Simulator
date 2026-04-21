@@ -1,9 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structCORRESPONDANCES__DES__VARIABLES.html#a12d02eb7713237765a1790240e67f26e":[8,0,79,10],
-"structCORRESPONDANCES__DES__VARIABLES.html#a1a960a8738ad46f55a7caf69078cc256":[8,0,79,22],
-"structCORRESPONDANCES__DES__VARIABLES.html#a243f6a0e6a1df1a687e01ba0eee200a0":[8,0,79,3],
-"structCORRESPONDANCES__DES__VARIABLES.html#a2c801fac77a59d2b0b9b6277e9961683":[8,0,79,20],
 "structCORRESPONDANCES__DES__VARIABLES.html#a3135d68a67057b48a35415ff63c84bb7":[8,0,79,2],
 "structCORRESPONDANCES__DES__VARIABLES.html#a33db44ec0932faed7922ecc6c1fd834f":[8,0,79,9],
 "structCORRESPONDANCES__DES__VARIABLES.html#a3bfb3f560cadc8699f8e82ead43c90e5":[8,0,79,23],
@@ -249,5 +245,9 @@ var NAVTREEINDEX40 =
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#af4cb6a19a317bd38a8984bb23b152863":[8,0,6,1,7],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html":[8,0,6,2],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a1a14f57c2b1c8d36940981722639f22b":[8,0,6,2,8],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a6be5bf1c6d902ffb7f8e7c7d2c9efbc3":[8,0,6,2,4]
+"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a6be5bf1c6d902ffb7f8e7c7d2c9efbc3":[8,0,6,2,4],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a8a21d4a875ac6cb67f55546fa05b68a9":[8,0,6,2,6],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a8da488096ebaba913f23ec0924bba5d6":[8,0,6,2,5],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a8e75ffe785c45559bc86991338def055":[8,0,6,2,9],
+"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#ac4118366b5485d7c5b8e9ad39364ca86":[8,0,6,2,3]
 };

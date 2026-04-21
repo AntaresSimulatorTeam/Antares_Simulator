@@ -1,9 +1,5 @@
 var NAVTREEINDEX42 =
 {
-"structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[8,0,174,4],
-"structMaxHydroPowerData.html":[8,0,179],
-"structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[8,0,179,2],
-"structMaxHydroPowerData.html#a57a9210a5c1484c39d03612d025296a6":[8,0,179,1],
 "structMaxHydroPowerData.html#a9937e11e27e4f9d41b1052320f8008cc":[8,0,179,0],
 "structMaxPumpingData.html":[8,0,181],
 "structMaxPumpingData.html#aa377de6e25e2ccfee9400d0f233df7a1":[8,0,181,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX42 =
 "structPredfinedSolutionLinearProblemMock.html#aa041c856336474bf029e4001a01c8063":[8,0,239,1],
 "structPredfinedSolutionLinearProblemMock.html#aa850951e7d48f862083b1ebf397b437d":[8,0,239,0],
 "structPredicateIdentity.html":[8,0,240],
-"structPredicateIdentity.html#a457ebcdaa7b385c46f80f85b68e6741b":[8,0,240,0]
+"structPredicateIdentity.html#a457ebcdaa7b385c46f80f85b68e6741b":[8,0,240,0],
+"structPrepareYaml.html":[8,0,241],
+"structPrepareYaml.html#a273cde8f4d2ee83fc4b3660638ced6ec":[8,0,241,0],
+"structPrepareYaml.html#a3132a2dfb547a7b8d2329f5d4f4c06d7":[8,0,241,3],
+"structPrepareYaml.html#a6d7a390c720141b0eb066703076f8bf1":[8,0,241,1]
 };

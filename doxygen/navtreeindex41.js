@@ -1,9 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a8a21d4a875ac6cb67f55546fa05b68a9":[8,0,6,2,6],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a8da488096ebaba913f23ec0924bba5d6":[8,0,6,2,5],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#a8e75ffe785c45559bc86991338def055":[8,0,6,2,9],
-"structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#ac4118366b5485d7c5b8e9ad39364ca86":[8,0,6,2,3],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#ae45ad8c58b357c942b8becd5c053d74d":[8,0,6,2,0],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#ae756b51f7593132c9b949329a102e3ce":[8,0,6,2,1],
 "structDoneesOptimisationJournaliere_1_1PROBLEME__LINEAIRE__PARTIE__VARIABLE.html#aefbff0859fe19c8a06460ae81ace9325":[8,0,6,2,7],
@@ -249,5 +245,9 @@ var NAVTREEINDEX41 =
 "structLinkVariable.html#a3abcd16d64c34eb14c4b00a4a98d27ab":[8,0,174,0],
 "structLinkVariable.html#a5d7f6e53048a351c148e66793ce1b740":[8,0,174,3],
 "structLinkVariable.html#a945661bfedc896693b452659cf77bf5f":[8,0,174,1],
-"structLinkVariable.html#aacafd5f774750e8957c2735fa251f8e9":[8,0,174,2]
+"structLinkVariable.html#aacafd5f774750e8957c2735fa251f8e9":[8,0,174,2],
+"structLinkVariable.html#ae91154f3a2da66102c38da390c69d06e":[8,0,174,4],
+"structMaxHydroPowerData.html":[8,0,179],
+"structMaxHydroPowerData.html#a3bc628ff211aeed2cccc799a6848645a":[8,0,179,2],
+"structMaxHydroPowerData.html#a57a9210a5c1484c39d03612d025296a6":[8,0,179,1]
 };

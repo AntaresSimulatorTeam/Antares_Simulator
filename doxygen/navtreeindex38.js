@@ -1,9 +1,5 @@
 var NAVTREEINDEX38 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a187b0ce388f25ea734cfcfd492a5b2a9":[8,0,0,11,6,4,33,4],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#a6a6b4dd465765f233204539ec06048f0":[8,0,0,11,6,4,33,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#abd9111ce9a285f4c8d2efbf695b07035":[8,0,0,11,6,4,33,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#ace71c098e57b64ae01b8be5aa3704c1b":[8,0,0,11,6,4,33,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#af0a63c26c3f8c6ffee2a43aad413d5e5":[8,0,0,11,6,4,33,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html":[8,0,0,11,6,4,49],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html#a0d559fe23e4c2b0cb132834f822f8120":[8,0,0,11,6,4,49,2],
@@ -249,5 +245,9 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTag.html":[8,0,0,11,6,4,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[8,0,0,11,6,4,3],
 "structAntares_1_1Solver_1_1Variable_1_1Empty.html":[8,0,0,11,6,48],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,11,6,48,0]
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html#af09b400c19dced6f209c4c3c5de88f91":[8,0,0,11,6,48,0],
+"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[8,0,0,11,6,52,0],
+"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[8,0,0,11,6,12,0],
+"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[8,0,0,11,6,14,0],
+"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[8,0,0,11,6,37]
 };

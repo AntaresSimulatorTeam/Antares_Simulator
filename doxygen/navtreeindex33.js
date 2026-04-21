@@ -1,9 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#ac71576237e35c47fe0d4a1efccef7c4ca65966f3aea4957e29d711e7eb3e656de":[7,0,0,4,104,1],
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#ac71576237e35c47fe0d4a1efccef7c4cab052fd6b4189b316331c415a212b7837":[7,0,0,4,104,0],
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#aec6a1b3d3e6d61a97cf63363e6a51a9e":[7,0,0,4,86],
-"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#aec6a1b3d3e6d61a97cf63363e6a51a9ea077a1b92738f3f4ff1e6dde6fc2312a9":[7,0,0,4,86,1],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#aec6a1b3d3e6d61a97cf63363e6a51a9ea252f4bfb1aad864eb8c9c880d5b3ca85":[7,0,0,4,86,2],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#aec6a1b3d3e6d61a97cf63363e6a51a9eab4ff9540ebbd1da5a5b8d8612a526f5f":[7,0,0,4,86,0],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#af048e5d54a0e2e783c87ac14c5f84e8b":[7,0,0,4,195],
@@ -72,8 +68,8 @@ var NAVTREEINDEX33 =
 "loadFiles_8h_source.html":[9,0,0,5,2,0,0,0,0,0,1],
 "load_2prepro_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,2,2],
 "load_8h.html":[9,0,0,8,11,0,0,0,0,1,6],
-"load_8h.html#a697ad116bbb5309aad4f301c03380366":[7,0,0,14,8,4,161],
 "load_8h.html#a697ad116bbb5309aad4f301c03380366":[9,0,0,8,11,0,0,0,0,1,6,2],
+"load_8h.html#a697ad116bbb5309aad4f301c03380366":[7,0,0,14,8,4,161],
 "load_8h_source.html":[9,0,0,8,11,0,0,0,0,1,6],
 "localMatchingRuleViolations_8h_source.html":[9,0,0,8,11,0,0,0,0,3,14],
 "locale_8h.html#a76cb6ad4b103d4a6c32448e49ed24368":[7,0,0,56],
@@ -249,5 +245,9 @@ var NAVTREEINDEX33 =
 "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af3ab202941292bf021eb25436285050ca74c506bd3d744fb5c2862229c8f2b6ce":[7,0,0,11,0,20,1],
 "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af3ab202941292bf021eb25436285050ca88c189a42c87aa49d667fc8ab76bc323":[7,0,0,11,0,20,0],
 "namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af3ab202941292bf021eb25436285050cad07995fa8f4a3a019d134fcbfca4669a":[7,0,0,11,0,20,5],
-"namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af3ab202941292bf021eb25436285050cae4ac03f6c9f00665644e868dd1fb9f1e":[7,0,0,11,0,20,4]
+"namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af3ab202941292bf021eb25436285050cae4ac03f6c9f00665644e868dd1fb9f1e":[7,0,0,11,0,20,4],
+"namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af3ab202941292bf021eb25436285050cae91836db656214f9797e10c15928e501":[7,0,0,11,0,20,3],
+"namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af9284a9ffdf8ae444cea2630c5ebc6d1":[7,0,0,11,0,23],
+"namespaceAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail.html":[7,0,0,14,8,4,0],
+"namespaceAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail.html#af00a2e0e449bc197ab122d4d4ade8507":[7,0,0,14,8,4,0,0]
 };

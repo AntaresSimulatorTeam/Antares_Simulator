@@ -1,9 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[8,0,0,11,6,52,0],
-"structAntares_1_1Solver_1_1Variable_1_1Join_1_1Statistics.html":[8,0,0,11,6,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[8,0,0,11,6,14,0],
-"structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[8,0,0,11,6,37],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_010_01_4.html":[8,0,0,11,6,38],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_011_01_4.html":[8,0,0,11,6,39],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat_3_012_01_4.html":[8,0,0,11,6,40],
@@ -249,5 +245,9 @@ var NAVTREEINDEX39 =
 "structCORRESPONDANCES__DES__VARIABLES.html":[8,0,79],
 "structCORRESPONDANCES__DES__VARIABLES.html#a00cb40bdad3a911b40db8ec64ebc6c91":[8,0,79,14],
 "structCORRESPONDANCES__DES__VARIABLES.html#a053107da074848d6ad262cd0c5a50ffe":[8,0,79,11],
-"structCORRESPONDANCES__DES__VARIABLES.html#a06ddc7eb12266d6f67784929bee25645":[8,0,79,17]
+"structCORRESPONDANCES__DES__VARIABLES.html#a06ddc7eb12266d6f67784929bee25645":[8,0,79,17],
+"structCORRESPONDANCES__DES__VARIABLES.html#a12d02eb7713237765a1790240e67f26e":[8,0,79,10],
+"structCORRESPONDANCES__DES__VARIABLES.html#a1a960a8738ad46f55a7caf69078cc256":[8,0,79,22],
+"structCORRESPONDANCES__DES__VARIABLES.html#a243f6a0e6a1df1a687e01ba0eee200a0":[8,0,79,3],
+"structCORRESPONDANCES__DES__VARIABLES.html#a2c801fac77a59d2b0b9b6277e9961683":[8,0,79,20]
 };

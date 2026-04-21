@@ -1,9 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#aedc08193ed389147c5396f69e46612b3":[8,0,21,0,2,16],
-"structTest_1_1Modeler_1_1LinearProblemBuildingFixture.html#afd06dc895b766328cf0a338211ffdd26":[8,0,21,0,2,2],
-"structTest_1_1Modeler_1_1VariableData.html":[8,0,21,0,0],
-"structTest_1_1Modeler_1_1VariableData.html#a060252001500c0e97733801b376c6bd5":[8,0,21,0,0,2],
 "structTest_1_1Modeler_1_1VariableData.html#a3f1f8291d40162ef8cac67040822eb5e":[8,0,21,0,0,1],
 "structTest_1_1Modeler_1_1VariableData.html#aa4e3ac94454aa4c43a390595f768a51d":[8,0,21,0,0,3],
 "structTest_1_1Modeler_1_1VariableData.html#ac2672ea9005f64089f56f7e1a2b15278":[8,0,21,0,0,4],
@@ -249,5 +245,9 @@ var NAVTREEINDEX44 =
 "utils_8h.html#aee0b62cf3a3ad8485f605e93b37e73e3":[7,0,0,51],
 "utils_8h_source.html":[9,0,0,4,0,28,0,0,0,0],
 "utils_8hxx.html#a7fd97617c4e7a43b49311da193ee75c1":[7,0,0,61],
-"utils_8hxx_source.html":[9,0,0,4,0,28,0,0,0,1]
+"utils_8hxx_source.html":[9,0,0,4,0,28,0,0,0,1],
+"valueType_8h.html#a2b015dee485401ea1c78381617002925":[7,0,0,10,0,31],
+"valueType_8h.html#a2b015dee485401ea1c78381617002925a5d5cd46919fa987731fb2edefe0f2a0c":[7,0,0,10,0,31,1],
+"valueType_8h.html#a2b015dee485401ea1c78381617002925aa97b2c144243b2b9d2c593ec268b62f5":[7,0,0,10,0,31,2],
+"valueType_8h.html#a2b015dee485401ea1c78381617002925ae738c26bf4ce1037fa81b039a915cbf6":[7,0,0,10,0,31,0]
 };

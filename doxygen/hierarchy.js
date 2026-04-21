@@ -1653,7 +1653,7 @@ var hierarchy =
     [ "Antares::Solver::Simulation::yearJob< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1yearJob.html", null ],
     [ "Antares::Solver::Implementation::YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", null ],
     [ "Antares::Solver::Simulation::yearRandomNumbers", "classAntares_1_1Solver_1_1Simulation_1_1yearRandomNumbers.html", null ],
-    [ "YAML::YmlMapMarker", "classYAML_1_1YmlMapMarker.html", null ],
+    [ "YAML::YmlTreeDisplayer", "classYAML_1_1YmlTreeDisplayer.html", null ],
     [ "Antares::Solver::ZipWriteJob< ContentT >", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
     [ "Enum", null, [
       [ "solver_output_handler.result_type", "classsolver__output__handler_1_1result__type.html", null ]

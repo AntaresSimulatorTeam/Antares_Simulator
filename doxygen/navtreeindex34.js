@@ -1,9 +1,5 @@
 var NAVTREEINDEX34 =
 {
-"namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af3ab202941292bf021eb25436285050cae91836db656214f9797e10c15928e501":[7,0,0,11,0,20,3],
-"namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html#af9284a9ffdf8ae444cea2630c5ebc6d1":[7,0,0,11,0,23],
-"namespaceAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail.html":[7,0,0,14,8,4,0],
-"namespaceAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail.html#af00a2e0e449bc197ab122d4d4ade8507":[7,0,0,14,8,4,0,0],
 "namespaceLocalPolicy.html":[7,0,18],
 "namespaceLocalPolicy.html#a1333fdac82eb04f896ccba5d66b48ad3":[7,0,18,9],
 "namespaceLocalPolicy.html#a3edae9b28d73d8a57ea4104248b95b99":[7,0,18,8],
@@ -249,5 +245,9 @@ var NAVTREEINDEX34 =
 "solarTSNumberData_8h_source.html":[9,0,0,4,0,25,0,0,0,7,15],
 "solar_2prepro_8hxx_source.html":[9,0,0,4,0,25,0,0,0,5,5,2],
 "solar_8h_source.html":[9,0,0,8,11,0,0,0,0,1,10],
-"solve__problem_8h_source.html":[9,0,0,8,6,0,0]
+"solve__problem_8h_source.html":[9,0,0,8,6,0,0],
+"solver_2hydro_2management_2monthly_8cpp.html#aca5e481dc01d20ffb6fd9baf8eb61458":[7,0,0,52],
+"solver_2misc_2include_2antares_2solver_2misc_2options_8h_source.html":[9,0,0,8,4,0,0,0,0,4],
+"solver_2simulation_2include_2antares_2solver_2simulation_2solver_8h_source.html":[9,0,0,8,8,0,0,0,0,22],
+"solver_2ts-generator_2include_2antares_2solver_2ts-generator_2prepro_8h_source.html":[9,0,0,8,9,0,0,0,0,4]
 };
