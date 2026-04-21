@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a5bdcf0cbcd660e46897d9fab6386c3bd":[8,0,0,11,6,4,50,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a644130b285b7c963c3f4cb0daf88a1b1":[8,0,0,11,6,4,50,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a69bce610e893b4c230dafcf53be4da15":[8,0,0,11,6,4,50,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowLinear.html#a7330693f1307b71e2ad57e84786507a8":[8,0,0,11,6,4,50,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a5717b9c574eb3a113b2ba2942ebc463c":[8,0,0,11,6,4,78,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a61c97c54d79b49c78c30b985cb98e212":[8,0,0,11,6,4,78,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a678e00ff11b0c50ba0295de60ce283a5":[8,0,0,11,6,4,78,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a88fbffafb4e2fa8b2b6feca95be481f2":[8,0,0,11,6,4,78,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a891ba48e9e4a6dd2f204e503cb2194b9":[8,0,0,11,6,4,78,4]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html#a88fbffafb4e2fa8b2b6feca95be481f2":[8,0,0,11,6,4,78,3]
 };

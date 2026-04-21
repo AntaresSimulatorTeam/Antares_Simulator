@@ -799,6 +799,10 @@ var hierarchy =
       [ "Antares::FileTreeStudyLoader", "classAntares_1_1FileTreeStudyLoader.html", null ],
       [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", null ]
     ] ],
+    [ "Antares::Writer::ITableWriter", "classAntares_1_1Writer_1_1ITableWriter.html", [
+      [ "Antares::Writer::CsvTableWriter", "classAntares_1_1Writer_1_1CsvTableWriter.html", null ],
+      [ "Antares::Writer::ParquetTableWriter", "classAntares_1_1Writer_1_1ParquetTableWriter.html", null ]
+    ] ],
     [ "Antares::Optimisation::IntegerInterval::Iterator", "classAntares_1_1Optimisation_1_1IntegerInterval_1_1Iterator.html", null ],
     [ "Antares::Solver::Simulation::ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", [
       [ "Antares::Solver::Simulation::BindingConstraintsTimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html", null ]

@@ -756,6 +756,11 @@ var annotated_dup =
       [ "Utils", null, [
         [ "TimeMeasurement", "classAntares_1_1Utils_1_1TimeMeasurement.html", "classAntares_1_1Utils_1_1TimeMeasurement" ]
       ] ],
+      [ "Writer", null, [
+        [ "CsvTableWriter", "classAntares_1_1Writer_1_1CsvTableWriter.html", "classAntares_1_1Writer_1_1CsvTableWriter" ],
+        [ "ITableWriter", "classAntares_1_1Writer_1_1ITableWriter.html", "classAntares_1_1Writer_1_1ITableWriter" ],
+        [ "ParquetTableWriter", "classAntares_1_1Writer_1_1ParquetTableWriter.html", "classAntares_1_1Writer_1_1ParquetTableWriter" ]
+      ] ],
       [ "Matrix", "classAntares_1_1Matrix.html", "classAntares_1_1Matrix" ],
       [ "I_mtx_to_buffer_dumper", "classAntares_1_1I__mtx__to__buffer__dumper.html", "classAntares_1_1I__mtx__to__buffer__dumper" ],
       [ "matrix_to_buffer_dumper_factory", "classAntares_1_1matrix__to__buffer__dumper__factory.html", "classAntares_1_1matrix__to__buffer__dumper__factory" ],
