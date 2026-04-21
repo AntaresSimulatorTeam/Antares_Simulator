@@ -7,13 +7,9 @@
 #include <fmt/format.h>
 #include <optional>
 #include <unordered_set>
-#include <vector>
 
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/io/inputs/yml-utils/YmlMapMarker.h"
-#include "antares/io/inputs/yml-utils/path_utils.h"
-
-#include "yaml-cpp/yaml.h"
 
 // Implement convert specializations
 namespace YAML

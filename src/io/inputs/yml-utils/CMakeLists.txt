@@ -14,6 +14,7 @@ target_include_directories(yml-utils
 
 target_link_libraries(yml-utils
         PUBLIC
+        Antares::input-error
         fmt::fmt
         PRIVATE
         yaml-cpp::yaml-cpp
