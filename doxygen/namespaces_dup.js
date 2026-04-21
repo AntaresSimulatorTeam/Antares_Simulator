@@ -700,7 +700,7 @@ var namespaces_dup =
             [ "convertParameters", "modelConverter_8cpp.html#a25808bf603cc8a83cb1b06fd083dc9de", null ],
             [ "convertPortFieldDefinitions", "modelConverter_8cpp.html#a6246bb5227118f43efbd431232cf949c", null ],
             [ "convertPorts", "modelConverter_8cpp.html#ad976a8baec13a3acc87bda2197e83558", null ],
-            [ "convertPortTypes", "modelConverter_8cpp.html#a561469b6b14b831db569ccd71aeab89c", null ],
+            [ "convertPortTypes", "modelConverter_8cpp.html#a1d5473db9a07af18c384efc8d904ee7a", null ],
             [ "convertType", "modelConverter_8cpp.html#a1363b64e5b67aed1d14775057e9dc413", null ],
             [ "convertVariables", "modelConverter_8cpp.html#a2c67b6096c44fe5dd3d813b6d0e9d507", null ],
             [ "ExpressionsToIds", "convertorVisitor_8cpp.html#a5979644e8f14ddeb13ce77bf8d554564", null ],
@@ -754,7 +754,9 @@ var namespaces_dup =
           ] ],
           [ "YmlUtils", null, [
             [ "getBaseTree", "path__utils_8h.html#a1fd1983765ec84e77c3161a8a7b2df40", null ],
-            [ "printPathTree", "path__utils_8h.html#a919685a630949eebbc5312ec44eebdda", null ]
+            [ "printPathTree", "path__utils_8h.html#a919685a630949eebbc5312ec44eebdda", null ],
+            [ "requireMap", "path__utils_8cpp.html#ad1e673ca91968012c1aa0bf603e441d6", null ],
+            [ "requireMap", "path__utils_8h.html#ac656c70614dac8ef5ce6915a0b5d5665", null ]
           ] ],
           [ "InputError", "classAntares_1_1IO_1_1Inputs_1_1InputError.html", null ]
         ] ],
@@ -1813,12 +1815,6 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -1827,6 +1823,12 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
@@ -2124,10 +2126,11 @@ var namespaces_dup =
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
       [ "as_fallback_default", "yml-model_2include_2antares_2io_2inputs_2yml-model_2decoders_8h.html#a1f73904464749314bdb46864a93c5dae", null ],
-      [ "checkFields", "decoders_8cpp.html#a1cc46d43e0066e102b39f34a6d36ff00", null ],
-      [ "checkKeysIfMap", "decoders_8cpp.html#a5b3c861a97951f011eb0814a5b866014", null ],
-      [ "checkMandatoryIdField", "decoders_8cpp.html#a3be392c252fb5f6f3318ebeee55671ab", null ],
-      [ "getFieldFromNode", "decoders_8cpp.html#afc5b7de82649b3ced3d8b91f2dc536fc", null ]
+      [ "checkFields", "yml-model_2decoders_8cpp.html#a1cc46d43e0066e102b39f34a6d36ff00", null ],
+      [ "checkKeysIfMap", "yml-model_2decoders_8cpp.html#a5b3c861a97951f011eb0814a5b866014", null ],
+      [ "checkMandatoryIdField", "yml-model_2decoders_8cpp.html#a3be392c252fb5f6f3318ebeee55671ab", null ],
+      [ "compare_sets", "yml-model_2decoders_8cpp.html#aeb2f4cecf24d0feb50263ce58a5a61ab", null ],
+      [ "getFieldFromNode", "yml-model_2decoders_8cpp.html#afc5b7de82649b3ced3d8b91f2dc536fc", null ]
     ] ],
     [ "Yuni", null, [
       [ "Extension", null, [
