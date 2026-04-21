@@ -255,7 +255,6 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
 
 StudyRuntimeInfos::StudyRuntimeInfos():
     nbYears(0),
-    counts({}),
     quadraticOptimizationHasFailed(false)
 {
 }
