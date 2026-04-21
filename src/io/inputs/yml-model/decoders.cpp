@@ -3,6 +3,7 @@
 
 #include "antares/io/inputs/yml-model/decoders.h"
 
+#include <span>
 #include <unordered_set>
 
 #include <antares/io/inputs/InputError.h>
@@ -56,6 +57,33 @@ auto compare_sets(const std::unordered_set<std::string>& setA,
     return std::make_tuple(unexpected, missing);
 }
 
+std::string build_error_message(const std::unordered_set<std::string>& allowedFields,
+                                const YmlTreeDisplayer& displayer,
+                                std::span<const std::string> unexpected,
+                                std::span<const std::string> missing,
+                                const std::string& markedFieldsTree)
+{
+    // Build a readable list of errors (one per line), then append the tree
+    std::string errors_list;
+    for (const auto& f: unexpected)
+    {
+        errors_list += fmt::format("- Unexpected field: {}\n", f);
+    }
+    for (const auto& f: missing)
+    {
+        errors_list += fmt::format("- Missing field: {}\n", f);
+    }
+
+    // Final message: brief header, individual errors, then the tree
+    const std::string message = fmt::format(
+      "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
+      allowedFields.size(),
+      errors_list,
+      displayer.baseTree(),
+      markedFieldsTree);
+    return message;
+}
+
 void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
 {
     if (!node.IsMap())
@@ -79,27 +107,14 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
 
     // Invalid map: now build the displayer for error reporting
     YmlTreeDisplayer displayer(node);
-    const auto&& [unexpected, missing] = compare_sets(actualKeys, allowedFields);
+    const auto [unexpected, missing] = compare_sets(actualKeys, allowedFields);
     const std::string markedFieldsTree = displayer.buildMarkedTree(unexpected, missing);
 
-    // Build a readable list of errors (one per line), then append the tree
-    std::string errors_list;
-    for (const auto& f: unexpected)
-    {
-        errors_list += fmt::format("- Unexpected field: {}\n", f);
-    }
-    for (const auto& f: missing)
-    {
-        errors_list += fmt::format("- Missing field: {}\n", f);
-    }
-
-    // Final message: brief header, individual errors, then the tree
-    const std::string message = fmt::format(
-      "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
-      allowedFields.size(),
-      errors_list,
-      displayer.baseTree(),
-      markedFieldsTree);
+    const std::string message = build_error_message(allowedFields,
+                                                    displayer,
+                                                    unexpected,
+                                                    missing,
+                                                    markedFieldsTree);
 
     throw Exception(node.Mark(), message);
 }
