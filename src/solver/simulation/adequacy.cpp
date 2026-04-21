@@ -209,7 +209,7 @@ bool Adequacy::year(Variable::State& state,
                                                      currentSimTable);
                 if (currentSimTable)
                 {
-                    currentSimTable->write();
+                    currentSimTable->writeToBuffer();
                 }
 
                 RemixHydroForAllAreas(study.areas,

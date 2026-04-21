@@ -8,7 +8,7 @@ std::pair<std::string, std::string> OptimisationsSimulationTable::moveBuffers()
     return {std::move(firstOptimBuffer_), std::move(secondOptimBuffer_)};
 }
 
-void OptimisationsSimulationTable::write()
+void OptimisationsSimulationTable::writeToBuffer()
 {
     firstOptimSimulationTable_.writeToBuffer();
     firstOptimBuffer_ += firstOptimSimulationTable_.buffer();

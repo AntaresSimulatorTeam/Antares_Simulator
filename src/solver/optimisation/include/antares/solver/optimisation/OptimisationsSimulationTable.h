@@ -14,9 +14,7 @@ class OptimisationsSimulationTable
 {
 public:
     std::pair<std::string, std::string> moveBuffers();
-
-    void write();
-
+    void writeToBuffer();
     void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
     Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
     Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();

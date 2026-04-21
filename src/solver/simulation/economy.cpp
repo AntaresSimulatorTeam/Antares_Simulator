@@ -155,7 +155,7 @@ bool Economy::year(Variable::State& state,
             weeklyOptProblems_[numSpace].solve();
             if (currentSimTable)
             {
-                currentSimTable->write();
+                currentSimTable->writeToBuffer();
             }
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
