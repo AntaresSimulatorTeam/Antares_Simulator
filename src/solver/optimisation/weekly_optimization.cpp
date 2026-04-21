@@ -11,13 +11,16 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
                                        IResultWriter& writer,
                                        Simulation::ISimulationObserver& simulationObserver,
-                                       OptimisationsSimulationTable* simulationTables):
+                                       bool writeSimuTable):
     options_(options),
     problemeHebdo_(problemeHebdo),
     writer_(writer),
-    simulationObserver_(simulationObserver),
-    simulationTables_(simulationTables)
+    simulationObserver_(simulationObserver)
 {
+    if (writeSimuTable)
+    {
+        simulationTables_ = std::make_shared<OptimisationsSimulationTable>();
+    }
 }
 
 void WeeklyOptimization::solve()
@@ -26,7 +29,12 @@ void WeeklyOptimization::solve()
                                          problemeHebdo_,
                                          writer_,
                                          simulationObserver_.get(),
-                                         simulationTables_);
+                                         simulationTables_.get());
+}
+
+OptimisationsSimulationTable* WeeklyOptimization::simulationTables()
+{
+    return simulationTables_.get();
 }
 
 } // namespace Antares::Solver::Optimization

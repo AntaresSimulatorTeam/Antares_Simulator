@@ -68,10 +68,7 @@ protected:
               const Antares::Data::Area::ScratchMap& scratchmap);
 
     void simulationEnd();
-
     void initializeState(Variable::State& state, uint numSpace);
-    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
-    std::string getSimulationTableHeader() const;
 
 private:
     uint pNbWeeks;
@@ -82,8 +79,6 @@ private:
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-
-    std::vector<OptimisationsSimulationTable> simulationTables_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

@@ -16,14 +16,20 @@ using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
+
+static std::string makeSimuTableFileName(const unsigned year, const unsigned optim_nb)
+{
+    return "simulation-table-" + std::to_string(year) + "-optim-nb-" + std::to_string(optim_nb)
+           + ".csv";
+}
+
 Economy::Economy(Data::Study& study,
                  IResultWriter& resultWriter,
                  Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
     resultWriter_(resultWriter),
-    simulationObserver_(simulationObserver),
-    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -49,25 +55,6 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
-{
-    if (numSpace >= simulationTables_.size())
-    {
-        throw std::out_of_range("Error: there is no simulation table for numSpace: "
-                                + std::to_string(numSpace));
-    }
-    return simulationTables_[numSpace];
-}
-
-std::string Economy::getSimulationTableHeader() const
-{
-    if (!simulationTables_.empty())
-    {
-        return simulationTables_.at(0).headerCsvFormat();
-    }
-    return "";
-}
-
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -82,13 +69,12 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-            auto* simulationsTables = simulationTables_.empty() ? nullptr
-                                                                : &simulationTables_[numSpace];
+            
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
                                             simulationObserver_.get(),
-                                            simulationsTables);
+                                            !study.parameters.noOutput);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -130,6 +116,7 @@ bool Economy::year(Variable::State& state,
     // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
+    auto* currentSimTable = weeklyOptProblems_[numSpace].simulationTables();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -149,10 +136,10 @@ bool Economy::year(Variable::State& state,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-        auto* currentSimTable = simulationTables_.empty() ? nullptr : &simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
+
             if (currentSimTable)
             {
                 currentSimTable->writeToBuffer();
@@ -217,6 +204,25 @@ bool Economy::year(Variable::State& state,
         }
 
         hourInTheYear += nbHoursInAWeek;
+    }
+
+    if (currentSimTable)
+    {
+        auto buffers = currentSimTable->moveBuffers();
+
+        const auto header = currentSimTable->headerCsvFormat() + "\n";
+
+        std::string writerEntry = header + std::move(buffers.first);
+        std::string file_name = makeSimuTableFileName(state.year, 1);
+        resultWriter_.addEntryFromBuffer(file_name, writerEntry);
+
+        writerEntry.clear();
+        file_name.clear();
+
+
+        writerEntry = header + std::move(buffers.second);
+        file_name = makeSimuTableFileName(state.year, 1);
+        resultWriter_.addEntryFromBuffer(file_name, writerEntry);
     }
 
     optWriter.finalize();
