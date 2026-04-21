@@ -13,8 +13,6 @@ class IResultWriter;
 class OptimisationsSimulationTable
 {
 public:
-    void clear();
-
     std::pair<std::string, std::string> moveBuffers();
 
     void write();

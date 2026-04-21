@@ -3,18 +3,9 @@
 #include "antares/writer/i_writer.h"
 using namespace Antares::IO::Outputs;
 
-void OptimisationsSimulationTable::clear()
-{
-    firstOptimBuffer_.clear();
-    secondOptimBuffer_.clear();
-}
-
 std::pair<std::string, std::string> OptimisationsSimulationTable::moveBuffers()
 {
-    std::pair<std::string, std::string> result{std::move(firstOptimBuffer_),
-                                               std::move(secondOptimBuffer_)};
-    clear(); // gp : if we move, buffers get cleared, so no need to clear again.
-    return result;
+    return {std::move(firstOptimBuffer_), std::move(secondOptimBuffer_)};
 }
 
 void OptimisationsSimulationTable::write()
