@@ -97,8 +97,7 @@ public:
                 InternalExportValues<WEEKS_PER_YEAR, VCardT>(report, minmax.weekly.values.data());
                 break;
             case Category::monthly:
-                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report,
-                                                              minmax.monthly.values.data());
+                InternalExportValues<MONTHS_PER_YEAR, VCardT>(report, minmax.monthly.values.data());
                 break;
             case Category::annual:
                 InternalExportValues<1, VCardT>(report, minmax.annual.values.data());
