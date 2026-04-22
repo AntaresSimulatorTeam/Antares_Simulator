@@ -12,7 +12,7 @@ static void initArray(bool opInferior, MinMaxData::Data& data)
 {
     const double init = opInferior ? DBL_MAX : -DBL_MAX;
     std::fill(data.values.begin(), data.values.end(), init);
-    std::fill(data.indices.begin(), data.indices.end(), static_cast<uint32_t>(-1));
+    std::fill(data.indices.begin(), data.indices.end(), static_cast<uint16_t>(-1));
 }
 
 static void mergeArray(bool opInferior,
@@ -20,7 +20,7 @@ static void mergeArray(bool opInferior,
                        MinMaxData::Data& data,
                        const double* values)
 {
-    const uint32_t y = year + 1; // The year is zero-based
+    const uint16_t y = year + 1; // The year is zero-based
     for (size_t i = 0; i < data.values.size(); ++i)
     {
         if (opInferior)
