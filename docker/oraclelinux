@@ -11,4 +11,5 @@ RUN dnf install -y python3 python3-pip && \
 # Install build tools
 RUN dnf install -y epel-release git cmake wget rpm-build && \
     dnf install -y unzip libuuid-devel gcc-toolset-9-toolchain \
-    		   perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece
+    		   perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece \
+		   bison flex
