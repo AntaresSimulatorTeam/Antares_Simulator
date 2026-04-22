@@ -28,13 +28,7 @@ namespace Antares::Solver
 {
 Modeler::Modeler(ILoader& loader, IWriter& writer):
     loader_{loader},
-    writer_{writer},
-    timeScenarioCtx_{std::make_unique<FillContext>(
-      parameters_.firstTimeStep,
-      parameters_.lastTimeStep,
-      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
-      parameters_.lastTimeStep,  // global = local
-      0)}
+    writer_{writer}
 {
     parameters_ = loader_.loadParameters();
     logs.info() << "Parameters loaded";
@@ -46,6 +40,13 @@ Modeler::Modeler(ILoader& loader, IWriter& writer):
     // Move the loaded ModelerData out of the optional to avoid copying
     // (ModelerData contains unique_ptr members and is move-only).
     data_ = std::move(*data);
+
+    timeScenarioCtx_ = std::make_unique<FillContext>(
+      parameters_.firstTimeStep,
+      parameters_.lastTimeStep,
+      parameters_.firstTimeStep, // global = local, single time block in pure modeler (for now)
+      parameters_.lastTimeStep,  // global = local
+      0);
 }
 
 class SystemLinearProblemBuilder final
