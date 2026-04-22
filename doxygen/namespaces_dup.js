@@ -954,6 +954,7 @@ var namespaces_dup =
           [ "LocationToStr", "optimConfig_8h.html#a487ce8a7604f9a2b9716cbf6a2554ada", null ]
         ] ],
         [ "Implementation", null, [
+          [ "ModelerProblems", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems.html", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems" ],
           [ "YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData" ],
           [ "NameMemo", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo" ],
           [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter" ],
@@ -963,6 +964,7 @@ var namespaces_dup =
           [ "applyTimeOffset", "singleProblemGetterImpl_8cpp.html#aebf5a59bcdfc9b83bc37307b9c7bbe27", null ],
           [ "buildMemo", "singleProblemGetterImpl_8cpp.html#ae3127a02ee96b5741ca4ee9dfe73b0a7", null ],
           [ "fillLinksProperties", "singleProblemGetterImpl_8cpp.html#aada1fdb1eb77a1728c77c4d39240dcaa", null ],
+          [ "logProblemSize", "modelerProblemsImpl_8cpp.html#a7e4cdfae32d12cd9824789b9ae4bce70", null ],
           [ "updateWeekId", "singleProblemGetterImpl_8cpp.html#a82c11a08d823fab6631bb50c211c1ca5", null ],
           [ "writeWeekMPS", "singleProblemGetterImpl_8cpp.html#a0e15df5fb4ccae2d5a629c40cc789ccd", null ],
           [ "tags", "singleProblemGetterImpl_8cpp.html#a1e92fd112582108e456dee0757bbc61b", null ]
@@ -1432,6 +1434,7 @@ var namespaces_dup =
           [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ],
           [ "computeDynamicAggregationMaxColumns", "dynamicAggregation_8h.html#a46d874edd63992243ecc6fe88f0958cb", null ]
         ] ],
+        [ "ModelerProblems", "classAntares_1_1Solver_1_1ModelerProblems.html", "classAntares_1_1Solver_1_1ModelerProblems" ],
         [ "SingleProblemGetter", "classAntares_1_1Solver_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1SingleProblemGetter" ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],

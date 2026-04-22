@@ -915,6 +915,8 @@ var hierarchy =
     [ "modeler_output_handler.modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", null ],
     [ "Antares::Solver::ModelerData", "structAntares_1_1Solver_1_1ModelerData.html", null ],
     [ "Antares::Solver::ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", null ],
+    [ "Antares::Solver::Implementation::ModelerProblems", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems.html", null ],
+    [ "Antares::Solver::ModelerProblems", "classAntares_1_1Solver_1_1ModelerProblems.html", null ],
     [ "Monster", "structMonster.html", null ],
     [ "Antares::Data::MonthlyGenerationTargetData", "structAntares_1_1Data_1_1MonthlyGenerationTargetData.html", null ],
     [ "Antares::IO::Outputs::MpsColumnEntry", "structAntares_1_1IO_1_1Outputs_1_1MpsColumnEntry.html", null ],

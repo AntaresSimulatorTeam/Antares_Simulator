@@ -1,5 +1,15 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a66f1ba49efc23ff0421294f31984944c":[8,0,0,11,6,4,46,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a6d1fcc83efae5c324b272a413bfb2ae6":[8,0,0,11,6,4,46,8],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a8c33009dabe5d754f6804b722d9df583":[8,0,0,11,6,4,46,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a98ed8b47a64ef441ff73ee1f70e6325f":[8,0,0,11,6,4,46,12],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a999e51ea89ed3ec9e522bd1b09fa2cf6":[8,0,0,11,6,4,46,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#a9f634ca57835ee13a6a7ef087514b4d1":[8,0,0,11,6,4,46,16],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#aa83c376de5d374a778fd692dbc0b96a6":[8,0,0,11,6,4,46,18],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#ab2b3875f8a249abc61bd512273534fef":[8,0,0,11,6,4,46,11],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#ac43dff18d4315de31211b09d94bb3067":[8,0,0,11,6,4,46,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#ac8b1da7c04fa4dbb8badcae7ed9a8b34":[8,0,0,11,6,4,46,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFeeAbs.html#ad7b679e2c4874a552c1c5f7e271427f0":[8,0,0,11,6,4,46,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html":[8,0,0,11,6,4,48],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability.html#a120f6326d94bc7bf5396f370c2d76cc0":[8,0,0,11,6,4,48,13],
@@ -239,15 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#acb86084f3a9cd029967f57bdb3f24fcd":[8,0,0,11,6,4,40,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#ad9b16cca4a6617a46f48a3369c8a9e1d":[8,0,0,11,6,4,40,18],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html#af170b8e6a33341d6ffaa3560c16c2c43":[8,0,0,11,6,4,40,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html":[8,0,0,11,6,4,42],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a0f638e48b61cf4991ef907450d71fbe2":[8,0,0,11,6,4,42,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a13b18489655448afde18da0af8360e03":[8,0,0,11,6,4,42,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a14e843408e9a5d2fa4a8e23c4d87d6d1":[8,0,0,11,6,4,42,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a191f16aa37a75d1ec6c33a53e3b92f1e":[8,0,0,11,6,4,42,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a21939ba15162eb0cd2c5d7c1a0b08198":[8,0,0,11,6,4,42,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a227d33959ff7bdcb64c8f85257dc742c":[8,0,0,11,6,4,42,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a2eedbe916bedefd150420b2fae372bc5":[8,0,0,11,6,4,42,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a46754442b24539256d1f68c0192bca3b":[8,0,0,11,6,4,42,14],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a6b61248b1f86041aff95c3b1d1bae6b8":[8,0,0,11,6,4,42,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html#a70e0799b1495c02d8c9f8ad2bca54854":[8,0,0,11,6,4,42,18]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows.html":[8,0,0,11,6,4,42]
 };

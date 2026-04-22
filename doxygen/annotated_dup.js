@@ -413,6 +413,7 @@ var annotated_dup =
           [ "LocationError", "classAntares_1_1Solver_1_1Checks_1_1LocationError.html", null ]
         ] ],
         [ "Implementation", null, [
+          [ "ModelerProblems", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems.html", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems" ],
           [ "YearlyData", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html", "structAntares_1_1Solver_1_1Implementation_1_1YearlyData" ],
           [ "NameMemo", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html", "structAntares_1_1Solver_1_1Implementation_1_1NameMemo" ],
           [ "SingleProblemGetter", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter" ],
@@ -697,6 +698,7 @@ var annotated_dup =
           [ "VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable" ],
           [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ]
         ] ],
+        [ "ModelerProblems", "classAntares_1_1Solver_1_1ModelerProblems.html", "classAntares_1_1Solver_1_1ModelerProblems" ],
         [ "SingleProblemGetter", "classAntares_1_1Solver_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1SingleProblemGetter" ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
         [ "NullResultWriter", "classAntares_1_1Solver_1_1NullResultWriter.html", null ],
