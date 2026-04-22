@@ -20,8 +20,8 @@ ModelerProblems::ModelerProblems(const std::filesystem::path& studyPath)
     modeler_->exportStructureFile();
 }
 
-void printProblem(const Optimisation::LinearProblemApi::ILinearProblem* problem,
-                  const std::string& name)
+void logProblemSize(const Optimisation::LinearProblemApi::ILinearProblem* problem,
+                    const std::string& name)
 {
     logs.info() << name << ": " << problem->variableCount() << " variables, "
                 << problem->constraintCount() << " constraints";
@@ -32,10 +32,10 @@ void ModelerProblems::logSize() const
     const auto& master = modeler_->masterProblem();
     const auto& subproblems = modeler_->subproblems();
 
-    printProblem(master.get(), "Master problem");
+    logProblemSize(master.get(), "Master problem");
     for (size_t i = 0; i < subproblems.size(); ++i)
     {
-        printProblem(subproblems[i].get(), ("Subproblem " + std::to_string(i + 1)).c_str());
+        logProblemSize(subproblems[i].get(), ("Subproblem " + std::to_string(i + 1)).c_str());
     }
 }
 
