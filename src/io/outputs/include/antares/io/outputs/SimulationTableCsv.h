@@ -23,6 +23,11 @@ public:
     [[nodiscard]] std::string buffer() const override;
     void writeHeader();
 
+protected:
+    // Export the current table into header + rows of string cells
+    void exportTable(std::vector<std::string>& header,
+                     std::vector<std::vector<std::string>>& rows) const;
+
 private:
     std::ostringstream buffer_;
     ColumnBasedStorage storage_;

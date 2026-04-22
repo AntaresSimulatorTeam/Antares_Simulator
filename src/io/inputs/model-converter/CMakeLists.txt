@@ -19,6 +19,8 @@ target_include_directories(model-converter
 
 # Link dependencies (if any)
 target_link_libraries(model-converter
+        PUBLIC
+        Antares::input-error
         PRIVATE
         Antares::antares-study-system-model
         Antares::yml-model

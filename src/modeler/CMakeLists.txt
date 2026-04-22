@@ -17,6 +17,7 @@ target_link_libraries(antares-modeler
         PRIVATE
         Antares::modeler-optimisation-container
         Antares::modeler-lib
+        Antares::load-modeler-files
         Antares::modeler-simulation-table
         Antares::write-modeler-files
         Antares::logs)
@@ -25,6 +26,7 @@ import_std_libs(antares-modeler)
 executable_strip(antares-modeler)
 
 copy_dependency(sirius_solver antares-modeler)
+copy_project_shared_lib(parquet_writer antares-modeler)
 
 install(TARGETS antares-modeler EXPORT antares-modeler DESTINATION bin)
 

@@ -443,8 +443,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 if (area.hydro.hardBoundsOnRuleCurves
                     && problem.CaracteristiquesHydrauliques[k].SuiviNiveauHoraire)
                 {
-                    auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
-                    auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
+                    const auto* minLvl = area.hydro.series->ruleCurves.min.getColumn(problem.year);
+                    const auto* maxLvl = area.hydro.series->ruleCurves.max.getColumn(problem.year);
 
                     for (int day = 0; day < 7; day++)
                     {
@@ -711,7 +711,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 const uint nextWeekFirstDay = study.calendar
                                                                 .hours[PasDeTempsDebut + 7 * 24]
                                                                 .dayYear;
-                                auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
+
+                                const auto& minLvl = area.hydro.series->ruleCurves.min.getColumn(
+                                  problem.year);
                                 double V = std::max(0., WSL - minLvl[nextWeekFirstDay] * rc + WNI);
 
                                 if (Utils::isZero(WGU))
@@ -856,8 +858,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     const uint nextWeekFirstDay = study.calendar
                                                                     .hours[PasDeTempsDebut + 7 * 24]
                                                                     .dayYear;
-                                    auto& maxLvl = area.hydro
-                                                     .reservoirLevel[Data::PartHydro::maximum];
+
+                                    const auto* maxLvl = area.hydro.series->ruleCurves.max
+                                                           .getColumn(problem.year);
 
                                     double V = std::max(0.,
                                                         maxLvl[nextWeekFirstDay] * rc

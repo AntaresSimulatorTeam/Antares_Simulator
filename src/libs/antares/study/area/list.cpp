@@ -499,6 +499,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
               "Value not supported for study.parameters.compatibility.hydroPmax");
         }
 
+        RuleCurvesLoaderService ruleCurvesLoaderService(area.hydro.series->ruleCurves);
+
+        ret = ruleCurvesLoaderService.LoadFromFolder(area.id,
+                                                     pathHydro,
+                                                     study.parameters.compatibility.hydroRuleCurves)
+              && ret;
+
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                                  studyVersion,
                                                  study.parameters.compatibility.hydroPmax);

@@ -11,9 +11,7 @@
 namespace Antares::Data::ScenarioBuilder
 {
 
-hydroLevelsData::hydroLevelsData(const std::string& iniFilePrefix,
-                                 std::function<void(Study&, MatrixType&)> applyToTarget):
-    addToPrefix_(iniFilePrefix),
+hydroLevelsData::hydroLevelsData(std::function<void(Study&, MatrixType&)> applyToTarget):
     applyToTarget_(applyToTarget)
 {
 }

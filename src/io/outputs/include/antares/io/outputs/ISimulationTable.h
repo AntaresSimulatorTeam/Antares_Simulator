@@ -11,13 +11,9 @@ class ISimulationTable
 {
 public:
     virtual ~ISimulationTable() = default;
-
     virtual void addEntry(const SimulationTableEntry& entry) = 0;
-
     virtual void clear() = 0;
-
     [[nodiscard]] virtual std::string buffer() const = 0;
-
     /// Write the table to the given file path, using the concrete export format
     virtual void write() = 0;
 };

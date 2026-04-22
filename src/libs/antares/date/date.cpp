@@ -374,6 +374,31 @@ void Calendar::reset()
     (void)::memset(days, '\0', sizeof(days));
     (void)::memset(weeks, '\0', sizeof(weeks));
     (void)::memset(months, '\0', sizeof(months));
+    (void)::memset(&mapping, '\0', sizeof(mapping));
+
+    for (auto& monthText: text.months)
+    {
+        monthText.name.clear();
+        monthText.shortName.clear();
+        monthText.shortUpperName.clear();
+    }
+    for (auto& hourText: text.hours)
+    {
+        hourText.clear();
+    }
+    for (auto& dayText: text.daysYear)
+    {
+        dayText.clear();
+    }
+    for (auto& weekdayText: text.weekdays)
+    {
+        weekdayText.clear();
+    }
+
+    for (auto& hourText: wtext.hours)
+    {
+        hourText.clear();
+    }
 
     // Reset months relationship
     for (uint m = 0; m != MONTHS_PER_YEAR + 1; ++m)
@@ -386,11 +411,22 @@ void Calendar::reset()
         months[m].days = StandardDaysPerMonths[realmonth];
         months[m].realmonth = (MonthName)realmonth;
 
-        auto& textmonth = text.months[m];
-        textmonth.name = MonthToString(realmonth);
-        textmonth.shortName = MonthToShortString(realmonth);
-        textmonth.shortUpperName = MonthToUpperShortString(realmonth);
+        if (m < MONTHS_PER_YEAR)
+        {
+            auto& textmonth = text.months[m];
+            textmonth.name = MonthToString(realmonth);
+            textmonth.shortName = MonthToShortString(realmonth);
+            textmonth.shortUpperName = MonthToUpperShortString(realmonth);
+        }
     }
+
+    text.weekdays[0] = DayOfTheWeekToString(monday);
+    text.weekdays[1] = DayOfTheWeekToString(tuesday);
+    text.weekdays[2] = DayOfTheWeekToString(wednesday);
+    text.weekdays[3] = DayOfTheWeekToString(thursday);
+    text.weekdays[4] = DayOfTheWeekToString(friday);
+    text.weekdays[5] = DayOfTheWeekToString(saturday);
+    text.weekdays[6] = DayOfTheWeekToString(sunday);
 
     // leap year
     if (settings_.leapYear)

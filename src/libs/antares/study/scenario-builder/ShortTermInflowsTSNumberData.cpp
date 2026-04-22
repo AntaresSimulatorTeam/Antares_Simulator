@@ -56,32 +56,4 @@ bool ShortTermInflowsTSNumberData::reset(const Study& study)
 
     return true;
 }
-
-void ShortTermInflowsTSNumberData::saveToINIFile(Yuni::IO::File::Stream& file) const
-{
-    // Prefix
-    CString<512, false> prefix;
-    prefix += get_prefix();
-
-    if (!pArea)
-    {
-        return;
-    }
-
-    for (const auto& sts: pArea->shortTermStorage.storagesByIndex)
-    {
-        for (uint year = 0; year < sts.series->inflows.timeseriesNumbers.height(); ++year)
-        {
-            const uint val = get(&sts, year);
-
-            // Equals to zero means 'auto', which is the default mode
-            if (!val)
-            {
-                continue;
-            }
-            file << prefix << pArea->id << "," << year << ',' << sts.id << " = " << val << '\n';
-        }
-    }
-}
-
 } // namespace Antares::Data::ScenarioBuilder
