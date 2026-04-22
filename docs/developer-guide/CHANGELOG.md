@@ -4,7 +4,79 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 10.1.x
+
+### 10.1.0
+
+#### Features
+
+* Multiple Hydro Rule Curves: New optional feature and compatibility flag for scenarized hydro reservoir levels (#2829)
+
+#### Bugfixes
+
+* Add behave tests for simple tests [ANT-4643] (#3545)
+* Fix remix hydro sts levels computation [ANT-4888] (#3557)
+
+#### Documentation
+
+* Fix(doc): modeler doc (#3529)
+
+#### For developers
+
+* Remove ortools dependency from antares-problem-generator [ANT-4846] (#3538)
+* replace raw Area* with unique_ptr in AreaList (#3550)
+* refacto: remove duplication in "sorties" (#3541)
+* refacto: Clean up scenario-builder (#3567)
+
+#### CI
+
+* chore(deps): bump SonarSource/sonarqube-scan-action from 7.0.0 to 7.1.0 (#3544)
+* Use fixed submodule for Antares_Simulator_Tests_NR instead of branch main (#3568)
+
 ## Branch 10.0.x
+
+### 10.0.1
+
+#### Features
+
+* Add "drop constraint" for out of timebound constraints [ANT-4643] (#3485)
+* Rename "PositiveUnsuppliedEnergy" variable to "UnsuppliedEnergy" (#3477)
+* Rename "NegativeUnsuppliedEnergy" variable to "Spillage" (#3477)
+* Modeler > Port field definition : allow non linear expressions [ANT-4646] (#3483)
+* feat: Improve modeler input error messages [ANT-4550] (#3475)
+* Add documentation for thermal-capacity-connection [ANT-4342] (#3520)
+
+#### Bugfixes
+
+Districts: fix offest with disabled set | simplify [ANT-4830]
+Relax expressions in port definition : fixes after tests [ANT-4646]
+Fix: remove dynamique variables from digest, fix error in digests (#3535)
+Fix: several issues on CentOS7 (#3561)
+
+#### For developers
+
+* Remove unused code following GUI removal (#3500, #3494)
+* Extract utils for std::vector<double> (#3470)[margin of ANT-2453]
+* refactor: Remove component index (#3503)
+* Clean up find* functions
+* Update README.md (#3517)
+* Removed updaterMode parameter because it was always false (#3516)
+* chore(deps): update vcpkg baseline (#3502)
+* Use emplace_back instead of push_back where possible (#3519)
+* Add delete in AreaList desctuctor to free memory (#3524)
+* Remove unused typedefs (#3525)
+* Remove unused arguments (#3522)
+* refacto(yml-utils): add path utilities and YmlMapMarker class (#3504)
+* Add tools/antares-version.py (#3534)
+* Remove yuni strings for alias areaname, clustername...  (#3498)
+* Remove member function Study::areaAdd [ANT-4815] (#3527)
+
+#### CI/CD
+
+* Various fix for Sonar-cloud workflow (#3515, #3518)
+* Don't use package managers to install boost, use vcpkg (#3521)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+
 ### 10.0.0
 
 #### Major changes
@@ -81,9 +153,38 @@ toc_depth: 2
 
 ## Branch 9.3.x
 
+### 9.3.9
+
+#### Features
+
+* feat: Write longer durations in execution_info.ini (#3476)
+
+#### Bugfixes
+
+* Fix: remove dynamique variables from digest, fix errors in digest (#3535)
+* Districts: fix offest with disabled set | simplify [ANT-4830] (#3533)
+* chore: update gitignore
+* Fix unit tests binding constraints (#3453)
+* Fix: windows runtime libraries (#3435)
+* Fix: several issues on CentOS7 (#3561)
+
+#### CI/CD
+
+* feat: Speed up SonarCloud job, increase cache hit rate to 100% (#3518)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+* chore(deps): bump docker/build-push-action from 6 to 7 (#3472)
+* chore(deps): bump docker/login-action from 3 to 4 (#3473)
+* ci: Bump actions/upload-artifact from 6 to 7 (#3447)
+
+#### For developers
+
+Add tools/antares-version.py (#3534)
+feat: allow generating results on release (#3427)
+
 ### 9.3.8
 
 #### Bugfixes
+
 * Fix dynamic district aggregation (#3429)
 * Fix digest [ANT-4630] (#3455)
 * 9.3 Add constraint fictitious load to adq patch [ANT-4365] (#3487)
@@ -1047,12 +1148,14 @@ collectRemixDebugInfo (#3278)
 ### 8.8.20
 
 #### Bugfixes
+
 * Add 2 constraints in adq patch [ANT-4365] (#3409)
 * Add short-term storage prod to constraint fictitious load (#3446)
 
 ### 8.8.19
 
 #### Bugfixes
+
 * Fix infeasability in hydro heuristic with mingen [ANT-3755] (#3152)
 * Don't throw an error for empty reservoir [ANT-4212] (#3291)
 

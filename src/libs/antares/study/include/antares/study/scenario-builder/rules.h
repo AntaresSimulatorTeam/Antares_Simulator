@@ -94,9 +94,9 @@ public:
     std::vector<renewableTSNumberData> renewable;
 
     //! hydro initial levels
-    hydroLevelsData hydroInitialLevels = {"hl,", initLevelApply};
+    hydroLevelsData hydroInitialLevels{initLevelApply};
     //! hydro final levels
-    hydroLevelsData hydroFinalLevels = {"hfl,", finalLevelApply};
+    hydroLevelsData hydroFinalLevels{finalLevelApply};
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;

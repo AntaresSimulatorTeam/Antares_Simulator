@@ -185,10 +185,6 @@ const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::Hyd
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
                                     const std::string& text)
 {
-    if (text.empty())
-    {
-        return false;
-    }
     if (text == "daily")
     {
         mode = Parameters::Compatibility::HydroPmax::Daily;
@@ -197,6 +193,22 @@ bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
     if (text == "hourly")
     {
         mode = Parameters::Compatibility::HydroPmax::Hourly;
+        return true;
+    }
+    return false;
+}
+
+bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
+                                          const std::string& text)
+{
+    if (text == "single")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Single;
+        return true;
+    }
+    if (text == "scenarized")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Scenarized;
         return true;
     }
     return false;
@@ -983,6 +995,11 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     if (key == "hydro-pmax")
     {
         return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
+    }
+
+    if (key == "hydro-rule-curves")
+    {
+        return StringToCompatibilityHydroRuleCurves(d.compatibility.hydroRuleCurves, value);
     }
 
     return false;

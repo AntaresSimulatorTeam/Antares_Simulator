@@ -5,5 +5,6 @@ add_subdirectory(optimisation)
 add_subdirectory(optim-model-filler)
 add_subdirectory(simulation)
 add_subdirectory(utils)
-add_subdirectory(variable)
 add_subdirectory(hydro)
+add_subdirectory(variable)
+
