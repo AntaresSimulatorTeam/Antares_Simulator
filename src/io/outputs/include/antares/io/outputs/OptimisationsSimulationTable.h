@@ -15,16 +15,10 @@ class IResultWriter;
 class OptimisationsSimulationTable
 {
 public:
-    std::pair<std::string, std::string> moveBuffers();
-    void writeToBuffer();
-    // void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
     Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
     Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
-    [[nodiscard]] std::string headerCsvFormat() const;
 
 private:
     Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;
     Antares::IO::Outputs::SimulationTable secondOptimSimulationTable_;
-    std::string firstOptimBuffer_;
-    std::string secondOptimBuffer_;
 };

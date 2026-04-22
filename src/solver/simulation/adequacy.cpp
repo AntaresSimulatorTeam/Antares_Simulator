@@ -6,18 +6,14 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include "antares/solver/simulation/solver_utils.h"
+#include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
+using namespace Antares::Writer;
 
 namespace Antares::Solver::Simulation
 {
-
-static std::string makeSimuTableFileName(const unsigned year, const unsigned optim_nb)
-{
-    return "simulation-table-" + std::to_string(year) + "-optim-nb-" + std::to_string(optim_nb)
-           + ".csv";
-}
 
 Adequacy::Adequacy(Data::Study& study,
                    IResultWriter& resultWriter,
@@ -198,10 +194,6 @@ bool Adequacy::year(Variable::State& state,
                                                      resultWriter,
                                                      simulationObserver_.get(),
                                                      simulationTables.get());
-                if (simulationTables)
-                {
-                    simulationTables->writeToBuffer();
-                }
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
@@ -344,20 +336,8 @@ bool Adequacy::year(Variable::State& state,
 
     if (simulationTables)
     {
-        auto buffers = simulationTables->moveBuffers();
-
-        const auto header = simulationTables->headerCsvFormat() + "\n";
-
-        std::string writerEntry = header + std::move(buffers.first);
-        std::string file_name = makeSimuTableFileName(state.year, 1);
-        resultWriter.addEntryFromBuffer(file_name, writerEntry);
-
-        writerEntry.clear();
-        file_name.clear();
-
-        writerEntry = header + std::move(buffers.second);
-        file_name = makeSimuTableFileName(state.year, 1);
-        resultWriter.addEntryFromBuffer(file_name, writerEntry);
+        LegacySimulationTablesWriter legacyWriter(study.folderOutput, state.year);
+        legacyWriter.write(*simulationTables);
     }
 
     optWriter.finalize();

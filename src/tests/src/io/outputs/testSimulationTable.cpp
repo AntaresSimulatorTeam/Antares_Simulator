@@ -212,40 +212,6 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
     BOOST_CHECK_EQUAL(lineCount, numEntries);
 }
 
-BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
-{
-    OptimisationsSimulationTable tables;
-
-    // First write
-    SimulationTableEntry entry1{.block = 1,
-                                .component = "comp1",
-                                .output = "var1",
-                                .absolute_time_index = 1,
-                                .block_time_index = 1,
-                                .scenario_index = 0,
-                                .value = 10.0,
-                                .status = MipBasisStatus::BASIC};
-    tables.firstOptimSimulationTable()->addEntry(entry1);
-    tables.writeToBuffer();
-
-    // Second write - should accumulate
-    SimulationTableEntry entry2{.block = 2,
-                                .component = "comp2",
-                                .output = "var2",
-                                .absolute_time_index = 2,
-                                .block_time_index = 2,
-                                .scenario_index = 1,
-                                .value = 20.0,
-                                .status = MipBasisStatus::FREE};
-    tables.firstOptimSimulationTable()->addEntry(entry2);
-    tables.writeToBuffer();
-
-    auto buffers = tables.moveBuffers();
-    // Should contain data from both writes
-    BOOST_CHECK(buffers.first.find("1,comp1,var1") != std::string::npos);
-    BOOST_CHECK(buffers.first.find("2,comp2,var2") != std::string::npos);
-}
-
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FileWriterIntegrationTests)
@@ -277,7 +243,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     tables.secondOptimSimulationTable()->addEntry(entry2);
 
     auto tempDir = std::filesystem::temp_directory_path();
-    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* optim_nb */);
+    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* year */);
     legacyWriter.write(tables);
 
     // Check that both CSV files were created
@@ -1209,52 +1175,6 @@ BOOST_AUTO_TEST_CASE(ConvertTimeStep)
     BOOST_CHECK_EQUAL(result5.block, 2);
     BOOST_CHECK_EQUAL(*result5.blockTimeIndex, 168);
     BOOST_CHECK_EQUAL(*result5.absoluteTimeIndex, 336);
-}
-
-BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_AUTO_TEST_SUITE(OptimisationsSimulationTableTests)
-
-BOOST_AUTO_TEST_CASE(Constructor_InitializesEmptyTables)
-{
-    OptimisationsSimulationTable tables;
-    auto buffers = tables.moveBuffers();
-
-    // Both buffers should contain only headers initially
-    BOOST_CHECK(buffers.first.empty());
-    BOOST_CHECK(buffers.second.empty());
-}
-
-BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
-{
-    OptimisationsSimulationTable tables;
-
-    SimulationTableEntry entry1{.block = 1,
-                                .component = "comp1",
-                                .output = "var1",
-                                .absolute_time_index = 1,
-                                .block_time_index = 1,
-                                .scenario_index = 0,
-                                .value = 10.0,
-                                .status = MipBasisStatus::BASIC};
-
-    SimulationTableEntry entry2{.block = 2,
-                                .component = "comp2",
-                                .output = "var2",
-                                .absolute_time_index = 2,
-                                .block_time_index = 2,
-                                .scenario_index = 1,
-                                .value = 20.0,
-                                .status = MipBasisStatus::FREE};
-
-    tables.firstOptimSimulationTable()->addEntry(entry1);
-    tables.secondOptimSimulationTable()->addEntry(entry2);
-
-    tables.writeToBuffer();
-
-    auto buffers = tables.moveBuffers();
-    BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
-    BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

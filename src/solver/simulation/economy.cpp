@@ -10,18 +10,14 @@
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver_utils.h"
+#include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;
+using namespace Antares::Writer;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-
-static std::string makeSimuTableFileName(const unsigned year, const unsigned optim_nb)
-{
-    return "simulation-table-" + std::to_string(year) + "-optim-nb-" + std::to_string(optim_nb)
-           + ".csv";
-}
 
 Economy::Economy(Data::Study& study,
                  IResultWriter& resultWriter,
@@ -116,7 +112,7 @@ bool Economy::year(Variable::State& state,
     // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
-    auto* currentSimTable = weeklyOptProblems_[numSpace].simulationTables();
+    auto* simulationTables = weeklyOptProblems_[numSpace].simulationTables();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -140,10 +136,6 @@ bool Economy::year(Variable::State& state,
         {
             weeklyOptProblems_[numSpace].solve();
 
-            if (currentSimTable)
-            {
-                currentSimTable->writeToBuffer();
-            }
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -206,22 +198,10 @@ bool Economy::year(Variable::State& state,
         hourInTheYear += nbHoursInAWeek;
     }
 
-    if (currentSimTable)
+    if (simulationTables)
     {
-        auto buffers = currentSimTable->moveBuffers();
-
-        const auto header = currentSimTable->headerCsvFormat() + "\n";
-
-        std::string writerEntry = header + std::move(buffers.first);
-        std::string file_name = makeSimuTableFileName(state.year, 1);
-        resultWriter_.addEntryFromBuffer(file_name, writerEntry);
-
-        writerEntry.clear();
-        file_name.clear();
-
-        writerEntry = header + std::move(buffers.second);
-        file_name = makeSimuTableFileName(state.year, 1);
-        resultWriter_.addEntryFromBuffer(file_name, writerEntry);
+        LegacySimulationTablesWriter legacyWriter(study.folderOutput, state.year);
+        legacyWriter.write(*simulationTables);
     }
 
     optWriter.finalize();
