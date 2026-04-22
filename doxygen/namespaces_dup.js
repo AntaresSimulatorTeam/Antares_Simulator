@@ -2138,10 +2138,11 @@ var namespaces_dup =
       [ "convert< Power >", "structYAML_1_1convert_3_01Power_01_4.html", null ],
       [ "convert< Monster >", "structYAML_1_1convert_3_01Monster_01_4.html", null ],
       [ "as_fallback_default", "yml-model_2include_2antares_2io_2inputs_2yml-model_2decoders_8h.html#a1f73904464749314bdb46864a93c5dae", null ],
-      [ "build_error_message", "yml-model_2decoders_8cpp.html#a6dcfe623a008026e9d3dac7adc5eaf6d", null ],
+      [ "build_error_message", "yml-model_2decoders_8cpp.html#a34f9b1d9c39e7bf135418198b25b9567", null ],
       [ "checkFields", "yml-model_2decoders_8cpp.html#a1cc46d43e0066e102b39f34a6d36ff00", null ],
       [ "checkMandatoryIdField", "yml-model_2decoders_8cpp.html#a3be392c252fb5f6f3318ebeee55671ab", null ],
       [ "compare_sets", "yml-model_2decoders_8cpp.html#aeb2f4cecf24d0feb50263ce58a5a61ab", null ],
+      [ "diffSet", "yml-model_2decoders_8cpp.html#ab51c41c080021d52febe90172ea26be2", null ],
       [ "getFieldFromNode", "yml-model_2decoders_8cpp.html#afc5b7de82649b3ced3d8b91f2dc536fc", null ]
     ] ],
     [ "Yuni", null, [
