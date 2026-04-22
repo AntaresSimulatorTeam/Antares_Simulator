@@ -15,6 +15,7 @@
 #include <inmemory-modeler.h>
 
 #include "antares/expressions/visitors/VariabilityVisitor.h"
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
@@ -27,7 +28,7 @@
 #include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
-#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
+#include "antares/writer/LegacySimulationTablesWriter.h"
 #include "antares/writer/in_memory_writer.h"
 
 #include "UtilMocks.h"
@@ -41,6 +42,7 @@ using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Outputs;
+using namespace Antares::Writer;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
 
@@ -251,8 +253,6 @@ BOOST_AUTO_TEST_SUITE(FileWriterIntegrationTests)
 BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 {
     OptimisationsSimulationTable tables;
-    Benchmarking::DurationCollector duration_collector;
-    Antares::Solver::InMemoryWriter writer(duration_collector);
 
     // Add entries to both tables
     SimulationTableEntry entry1{.block = 1,
@@ -275,20 +275,40 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 
     tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.secondOptimSimulationTable()->addEntry(entry2);
-    tables.writeToBuffer();
 
-    tables.writeTo("test_prefix", writer);
+    auto tempDir = std::filesystem::temp_directory_path();
+    LegacySimulationTablesWriter legacyWriter(tempDir, 1 /* optim_nb */);
+    legacyWriter.write(tables);
 
-    const auto& files = writer.getMap();
-    BOOST_CHECK_EQUAL(files.size(), 2);
-    BOOST_CHECK(files.count("test_prefix--optim-nb-1.csv") > 0);
-    BOOST_CHECK(files.count("test_prefix--optim-nb-2.csv") > 0);
+    // Check that both CSV files were created
+    auto file1 = tempDir / "simulation-table-1-optim-nb-1.csv";
+    auto file2 = tempDir / "simulation-table-1-optim-nb-2.csv";
 
-    // Verify content
-    BOOST_CHECK(files.at("test_prefix--optim-nb-1.csv").find("1,comp1,var1") != std::string::npos);
-    BOOST_CHECK(files.at("test_prefix--optim-nb-2.csv").find("2,comp2,var2") != std::string::npos);
+    BOOST_CHECK(std::filesystem::exists(file1));
+    BOOST_CHECK(std::filesystem::exists(file2));
+
+    // Read and verify content of first file
+    {
+        std::ifstream f(file1);
+        std::string content((std::istreambuf_iterator<char>(f)),
+                            std::istreambuf_iterator<char>());
+        BOOST_CHECK(content.find("block,component,output") != std::string::npos);
+        BOOST_CHECK(content.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
+    }
+
+    // Read and verify content of second file
+    {
+        std::ifstream f(file2);
+        std::string content((std::istreambuf_iterator<char>(f)),
+                            std::istreambuf_iterator<char>());
+        BOOST_CHECK(content.find("block,component,output") != std::string::npos);
+        BOOST_CHECK(content.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
+    }
+
+    // Remove the created files
+    std::filesystem::remove(file1);
+    std::filesystem::remove(file2);
 }
-
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(VariableDictionaryTests)

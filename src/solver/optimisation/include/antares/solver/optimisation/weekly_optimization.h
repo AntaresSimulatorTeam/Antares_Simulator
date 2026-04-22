@@ -4,7 +4,7 @@
 #pragma once
 
 #include "antares/solver/simulation/ISimulationObserver.h"
-#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 namespace Antares::Solver::Optimization

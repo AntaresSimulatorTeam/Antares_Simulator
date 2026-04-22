@@ -15,12 +15,15 @@ add_boost_test(testOutputs
         Antares::modeler-lib
         Antares::load-modeler-files
         Antares::write-modeler-files
+        Antares::simulation-table-writers
         ortools::ortools
         Boost::unit_test_framework)
 
 target_compile_definitions(testOutputs PRIVATE
         CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
+
+copy_project_shared_lib(Antares::simulation-table-writers testOutputs)
 
 # ---------------------------------------
 # test-parquet-simulation-table-writer

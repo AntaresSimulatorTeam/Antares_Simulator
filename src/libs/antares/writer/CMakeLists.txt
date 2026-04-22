@@ -17,6 +17,8 @@ add_library(simulation-table-writers SHARED
         parquet_table_writer.h
         csv_table_writer.cpp
         csv_table_writer.h
+        include/antares/writer/LegacySimulationTablesWriter.h
+        LegacySimulationTablesWriter.cpp
 )
 
 generate_export_header(simulation-table-writers)

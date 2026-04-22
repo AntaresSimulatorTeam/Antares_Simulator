@@ -10,12 +10,14 @@ namespace Antares::Solver
 class IResultWriter;
 }
 
+// gp : no namespace here. We should ass one (Antares::IO::Outputs).
+
 class OptimisationsSimulationTable
 {
 public:
     std::pair<std::string, std::string> moveBuffers();
     void writeToBuffer();
-    void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
+    // void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
     Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
     Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
     [[nodiscard]] std::string headerCsvFormat() const;
