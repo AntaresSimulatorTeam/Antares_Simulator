@@ -21,6 +21,7 @@ void FileWriter::init(const std::string& time)
 {
     outputPath_ = studyPath_ / "output" / time;
 
+    // avoid overwriting existing output by adding a suffix
     if (std::filesystem::exists(outputPath_))
     {
         std::string candidate;
@@ -33,6 +34,7 @@ void FileWriter::init(const std::string& time)
 
         outputPath_ += '-' + std::to_string(index);
     }
+
     logs.info() << "Output folder : " << outputPath_;
     if (!std::filesystem::is_directory(outputPath_)
         && !std::filesystem::create_directory(outputPath_))
