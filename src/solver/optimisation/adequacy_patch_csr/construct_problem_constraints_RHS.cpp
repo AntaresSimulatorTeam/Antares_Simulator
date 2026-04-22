@@ -104,16 +104,14 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
             {
                 int Cnt = it->second;
 
-                // Start with thermal production from first optimization step
-                double rhs = 0.0;
-
+                double st = 0.0;
                 // Add sum of all thermal dispatchable generation (STt)
                 const auto& paliersThermiques = problemeHebdo_->PaliersThermiquesDuPays[Area];
                 const auto& productionThermique
                   = problemeHebdo_->ResultatsHoraires[Area].ProductionThermique[triggeredHour];
                 for (int index = 0; index < paliersThermiques.NombreDePaliersThermiques; index++)
                 {
-                    rhs += productionThermique.ProductionThermiqueDuPalier[index];
+                    st += productionThermique.ProductionThermiqueDuPalier[index];
                 }
 
                 // Add hydro production if enabled (Ht)
@@ -161,7 +159,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                         stmint += paliersThermiques.PminDuPalierThermiquePendantUneHeure[index];
                     }
                 }
-                double rhs = rhs - stmint + ht + bfTerm + stsNetProduction;
+                double rhs = st - stmint + ht + bfTerm + stsNetProduction;
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
                 logs.debug() << Cnt << ": FictitiousLoad: RHS[" << Cnt
