@@ -41,22 +41,6 @@ void SimulationTable::addEntry(const SimulationTableEntry& entry)
     storage_.addValue("basis_status", entry.status);
 }
 
-std::string SimulationTable::headerCsvFormat() const
-{
-    std::ostringstream os;
-    bool first = true;
-    for (const auto& column: storage_.columns())
-    {
-        if (!first)
-        {
-            os << ',';
-        }
-        first = false;
-        os << column->name();
-    }
-    return os.str();
-}
-
 const std::vector<std::unique_ptr<IColumn>>& SimulationTable::columns() const
 {
     return storage_.columns();
