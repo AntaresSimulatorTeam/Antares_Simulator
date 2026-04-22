@@ -153,6 +153,12 @@ Fix: several issues on CentOS7 (#3561)
 
 ## Branch 9.3.x
 
+### 9.3.10
+
+#### Bugfixes
+
+* Fix bounds on fictitious load and max unsupplied in adequacy patch [ANT-4906] (#3575)
+
 ### 9.3.9
 
 #### Features
