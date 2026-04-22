@@ -47,7 +47,11 @@ class Modeler final
 public:
     Modeler(ILoader& loader, IWriter& writer);
 
+    void buildProblems();
     void run();
+
+    void exportMps() const;
+    void exportStructureFile() const;
 
     class ModelerError: public std::runtime_error
     {
@@ -77,14 +81,16 @@ public:
 private:
     Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
 
+    void buildMasterProblem();
+    void buildSubProblem();
+
     void writeSubProblemSimulationTable(
       const Optimisation::LinearProblemApi::IMipSolution* solution,
-      const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
-    void exportMps() const;
-    void exportStructureFile() const;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
+    std::unique_ptr<Optimisation::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
+    std::unique_ptr<Optimisation::LinearProblemApi::FillContext> timeScenarioCtx_ = nullptr;
     ModelerParameters parameters_;
     ModelerData data_;
 };
