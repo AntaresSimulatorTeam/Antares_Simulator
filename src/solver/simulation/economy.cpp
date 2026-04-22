@@ -219,7 +219,6 @@ bool Economy::year(Variable::State& state,
         writerEntry.clear();
         file_name.clear();
 
-
         writerEntry = header + std::move(buffers.second);
         file_name = makeSimuTableFileName(state.year, 1);
         resultWriter_.addEntryFromBuffer(file_name, writerEntry);

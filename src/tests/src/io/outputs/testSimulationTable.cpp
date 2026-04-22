@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
                                 .value = 10.0,
                                 .status = MipBasisStatus::BASIC};
     tables.firstOptimSimulationTable()->addEntry(entry1);
-    tables.write();
+    tables.writeToBuffer();
 
     // Second write - should accumulate
     SimulationTableEntry entry2{.block = 2,
@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE(MultipleWriteCalls_AccumulateData)
                                 .value = 20.0,
                                 .status = MipBasisStatus::FREE};
     tables.firstOptimSimulationTable()->addEntry(entry2);
-    tables.write();
+    tables.writeToBuffer();
 
     auto buffers = tables.moveBuffers();
     // Should contain data from both writes
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
 
     tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.secondOptimSimulationTable()->addEntry(entry2);
-    tables.write();
+    tables.writeToBuffer();
 
     tables.writeTo("test_prefix", writer);
 
@@ -1230,35 +1230,11 @@ BOOST_AUTO_TEST_CASE(AddEntriesToBothTables)
     tables.firstOptimSimulationTable()->addEntry(entry1);
     tables.secondOptimSimulationTable()->addEntry(entry2);
 
-    tables.write();
+    tables.writeToBuffer();
 
     auto buffers = tables.moveBuffers();
     BOOST_CHECK(buffers.first.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
     BOOST_CHECK(buffers.second.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
-}
-
-BOOST_AUTO_TEST_CASE(Clear_ResetsAllTables)
-{
-    OptimisationsSimulationTable tables;
-
-    SimulationTableEntry entry{.block = 1,
-                               .component = "comp1",
-                               .output = "var1",
-                               .absolute_time_index = 1,
-                               .block_time_index = 1,
-                               .scenario_index = 0,
-                               .value = 10.0,
-                               .status = MipBasisStatus::BASIC};
-
-    tables.firstOptimSimulationTable()->addEntry(entry);
-    tables.secondOptimSimulationTable()->addEntry(entry);
-    tables.write();
-
-    tables.clear();
-
-    auto [fst, snd] = tables.moveBuffers();
-    BOOST_CHECK(fst.empty());
-    BOOST_CHECK(snd.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

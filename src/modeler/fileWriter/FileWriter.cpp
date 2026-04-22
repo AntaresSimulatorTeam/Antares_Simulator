@@ -38,9 +38,9 @@ const std::filesystem::path& FileWriter::outputPath() const
     return outputPath_;
 }
 
-void FileWriter::writeSimulationTable(SimulationTable& SimulationTable) const
+void FileWriter::writeSimulationTable(SimulationTable& simulationTable) const
 {
-    writer_->writeTable(SimulationTable);
+    writer_->writeTable(simulationTable);
 }
 
 FileWriter::FileWriter(const std::filesystem::path& studyPath, bool parquetFormatRequired):
