@@ -6,6 +6,20 @@ toc_depth: 2
 
 ## Branch 10.1.x
 
+#### Features
+
+* Allow problem-generator to load GEMS studies [ANT-4847] (#3563)
+
+#### Bugfixes
+
+* Fix bounds on fictious load and max unsupplied in adequacy patch [ANT-4906] (#3572)
+
+#### For developers
+
+* Add parquet as a dependency. Ground work for future support of parquet files. (#3499)
+* Add missing system deps for CentOS7 & OL8 (#3589)
+* Refactoring of yml configuration error handling (#3523, #3526, #3578, #3583)
+
 ### 10.1.0
 
 #### Features
