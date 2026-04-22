@@ -9,8 +9,6 @@ on:
     - dependabot/*
     - release/*
     - copilot/*
-    # TODO REMOVE
-    - fix/docker-centos-ol8
   schedule:
   - cron: '21 2 * * *'
   workflow_call:

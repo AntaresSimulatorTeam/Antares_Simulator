@@ -6,7 +6,7 @@ Here is the breakdown:
 This is the base image providing the CentOS 7 environment and build tools.
 *   **Base:** `FROM centos:7`.
 *   **Repo Fix:** It modifies `/etc/yum.repos.d/*.repo` to point to `vault.centos.org` because CentOS 7 has reached EOL and its standard mirrors are archived.
-*   **Tools:** Installs `devtoolset-11` (GCC 11), `cmake` (via pip), `python3`, `ccache`, and various development libraries (`boost`, `wxGTK3`, etc.).
+*   **Tools:** Installs `devtoolset-11` (GCC 11), `cmake` (via pip), `python3`, `ccache`
 
 ### 2. Build Image (`docker/Dockerfile`)
 This image inherits from the dependency image and handles the actual compilation.
