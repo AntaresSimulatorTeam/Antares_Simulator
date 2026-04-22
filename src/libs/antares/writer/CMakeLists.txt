@@ -5,7 +5,7 @@ include(GenerateExportHeader)
 find_package(Parquet REQUIRED)
 find_package(Arrow REQUIRED)
 
-add_library(simulation-table-writers SHARED
+add_library(parquet_writer SHARED
         include/antares/writer/i_table_writer.h
         i_table_writer.cpp
         include/antares/writer/table_writer_factory.h
@@ -19,14 +19,14 @@ add_library(simulation-table-writers SHARED
         csv_table_writer.h
 )
 
-generate_export_header(simulation-table-writers)
+generate_export_header(parquet_writer)
 
-set_target_properties(simulation-table-writers PROPERTIES
+set_target_properties(parquet_writer PROPERTIES
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES
 )
 
-set_target_properties(simulation-table-writers PROPERTIES
+set_target_properties(parquet_writer PROPERTIES
     WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 
@@ -41,21 +41,31 @@ target_link_libraries(simulation-table-writers
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 
-add_library(Antares::simulation-table-writers ALIAS simulation-table-writers)
+add_library(Antares::parquet_writer ALIAS parquet_writer)
 
 add_library(result_writer
+        # Helper class
+
+
         # Add entry to zip, using a job queue (private)
         # Generic factory (public API)
         # Immediate file writer (private)
         # Table writers (public API + implementations)
+        csv_table_writer.cpp
+        csv_table_writer.h
         ensure_queue_started.cpp
         immediate_file_writer.cpp
         in_memory_writer.cpp
+        include/antares/writer/i_table_writer.h
         include/antares/writer/in_memory_writer.h # Public (for tests)
+        include/antares/writer/result_format.h
+        include/antares/writer/table_format.h
+        include/antares/writer/table_writer_factory.h
         include/antares/writer/writer_factory.h
         private/ensure_queue_started.h
         private/immediate_file_writer.h
         private/zip_writer.h
+        table_writer_factory.cpp
         writer_factory.cpp
         zip_writer.cpp
 )
@@ -73,11 +83,11 @@ target_link_libraries(result_writer
         PUBLIC
         Antares::benchmarking
         yuni-static-core
-        # simulation-table-writers is a SHARED library (DLL on Windows). Since result_writer
+        # parquet_writer is a SHARED library (DLL on Windows). Since result_writer
         # is STATIC, consumers inherit its shared library dependencies at link time.
         # Using PUBLIC ensures MSVC's project reference system copies the DLL to
         # all consuming targets' output directories.
-        simulation-table-writers
+        parquet_writer
         PRIVATE
         MINIZIP::minizip
         logs
@@ -87,7 +97,7 @@ target_link_libraries(result_writer
 )
 
 
-install(TARGETS simulation-table-writers
+install(TARGETS parquet_writer
         RUNTIME DESTINATION bin    # .dll on Windows
         LIBRARY DESTINATION lib    # .so on Linux
         ARCHIVE DESTINATION lib    # .lib import library on Windows

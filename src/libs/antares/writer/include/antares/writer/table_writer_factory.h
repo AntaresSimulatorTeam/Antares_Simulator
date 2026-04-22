@@ -12,4 +12,6 @@ namespace Antares::Writer
 SIMULATION_TABLE_WRITERS_EXPORT ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired,
                                                                   std::filesystem::path& filePath);
 
+ITableWriter::Ptr makeTableWriter(TableFormat fmt);
+
 } // namespace Antares::Writer

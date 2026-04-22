@@ -48,7 +48,11 @@ class Modeler final
 public:
     Modeler(ILoader& loader, IWriter& writer);
 
+    void buildProblems();
     void run();
+
+    void exportMps() const;
+    void exportStructureFile() const;
 
     class ModelerError: public std::runtime_error
     {
@@ -83,7 +87,6 @@ private:
 
     IO::Outputs::SimulationTable makeSimulationTable(
       const Optimisation::LinearProblemApi::IMipSolution* solution,
-      const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
 
     void writeSimulationTable(IO::Outputs::SimulationTable&); // gp : const ?
