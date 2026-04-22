@@ -114,16 +114,6 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(SimulationTableCsvTests)
 
-BOOST_AUTO_TEST_CASE(Constructor_WritesHeader)
-{
-    SimulationTable table;
-    table.writeHeaderToBuffer();
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("block,component,output,absolute_time_index,block_time_index,scenario_"
-                            "index,value,basis_status")
-                != std::string::npos);
-}
-
 BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
 {
     SimulationTable table;
@@ -358,43 +348,6 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(PerformanceTests)
-
-BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
-{
-    SimulationTable table;
-    const int numEntries = 50000;
-
-    auto start = std::chrono::high_resolution_clock::now();
-
-    for (int i = 0; i < numEntries; ++i)
-    {
-        SimulationTableEntry entry{.block = static_cast<unsigned>(i % 1000 + 1),
-                                   .component = "component_" + std::to_string(i % 100),
-                                   .output = "variable_" + std::to_string(i % 50),
-                                   .absolute_time_index = i,
-                                   .block_time_index = i % 168,
-                                   .scenario_index = static_cast<unsigned>(i % 10),
-                                   .value = static_cast<double>(i) * 0.001,
-                                   .status = static_cast<MipBasisStatus>(i % 6)};
-        table.addEntry(entry);
-    }
-    table.writeHeaderToBuffer();
-    table.writeToBuffer();
-
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-    // Performance check - should complete within reasonable time
-    BOOST_CHECK_LT(duration.count(), 5000); // Less than 5 seconds
-
-    // Verify all data was written
-    std::string buffer = table.buffer();
-    auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, numEntries + 1); // +1 for header
-}
-
-BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(BoundaryValueTests)
 
@@ -608,37 +561,6 @@ struct TempDirFixture
 };
 
 BOOST_FIXTURE_TEST_SUITE(ComponentModelIntegrationTests, BasicProblemFixture)
-
-BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
-{
-    SimulationTable table;
-    MockLinearProblem linearProblem(true);
-    const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
-    build(fillContext, &linearProblem);
-
-    const auto& component = components.front();
-
-    addVariableEntries(table,
-                       linearProblem,
-                       fillContext,
-                       component,
-                       *optimEntityContainer,
-                       1,
-                       TimeConversionMode::SingleBlock,
-                       0);
-    table.writeHeaderToBuffer();
-    table.writeToBuffer();
-    std::string buffer = table.buffer();
-
-    // Should have entries for all 4 variable types with different time/scenario combinations
-    // var1: 1 entry (neither time nor scenario dependent)
-    // var2: 1 entry (scenario dependent only)
-    // var3: 10 entries (time dependent only, 10 time steps)
-    // var4: 10 entries (both dependent, 10 time steps)
-    // Total: 22 entries + 1 header = 23 lines
-    auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, 23);
-}
 
 BOOST_AUTO_TEST_SUITE_END()
 

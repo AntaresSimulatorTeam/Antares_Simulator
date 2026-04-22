@@ -10,7 +10,8 @@ class OptimisationsSimulationTable
 public:
     void clear();
 
-    std::pair<std::string, std::string> moveBuffers();
+// gp : No namespace here. We should add one (Antares::IO::Outputs).
+// gp : Besides, this class could be a struct now
 
     void write();
     Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();

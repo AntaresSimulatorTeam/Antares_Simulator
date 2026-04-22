@@ -57,11 +57,6 @@ std::string SimulationTable::headerCsvFormat() const
     return os.str();
 }
 
-void SimulationTable::writeHeaderToBuffer()
-{
-    buffer_ << headerCsvFormat() << '\n';
-}
-
 const std::vector<std::unique_ptr<IColumn>>& SimulationTable::columns() const
 {
     return storage_.columns();
