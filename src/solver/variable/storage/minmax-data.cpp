@@ -15,10 +15,7 @@ static void initArray(bool opInferior, MinMaxData::Data& data)
     std::fill(data.indices.begin(), data.indices.end(), static_cast<uint16_t>(-1));
 }
 
-static void mergeArray(bool opInferior,
-                       unsigned year,
-                       MinMaxData::Data& data,
-                       const double* values)
+static void mergeArray(bool opInferior, unsigned year, MinMaxData::Data& data, const double* values)
 {
     const uint16_t y = year + 1; // The year is zero-based
     for (size_t i = 0; i < data.values.size(); ++i)
