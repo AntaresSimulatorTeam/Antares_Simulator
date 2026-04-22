@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <stdexcept>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
@@ -100,7 +101,7 @@ BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
 }
 
 BOOST_FIXTURE_TEST_CASE(library_not_existing, LibraryObjects)
@@ -405,7 +406,7 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
                              .secondCompo = "D",
                              .secondPort = "yosh!"}});
     YmlSystem::System systemObj = parserSystem.parse(system);
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
 }
 
 BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)

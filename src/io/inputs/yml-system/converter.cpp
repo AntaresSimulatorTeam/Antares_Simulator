@@ -5,7 +5,6 @@
 
 #include <algorithm>
 #include <sstream>
-#include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include "antares/io/inputs/InputError.h"
@@ -250,59 +249,50 @@ void checkForNonLinearityBehindConnections(const std::vector<Component>& compone
 
 System convert(const YmlSystem::System& ymlSystem, const std::vector<Library>& libraries)
 {
-    try
+    // Create components from system
+    std::vector<Component> components;
+    for (const auto& c: ymlSystem.components)
     {
-        // Create components from system
-        std::vector<Component> components;
-        for (const auto& c: ymlSystem.components)
+        auto it = std::ranges::find_if(std::as_const(components),
+                                       [&c](const Component& compo) { return compo.Id() == c.id; });
+        if (it != components.end())
         {
-            auto it = std::ranges::find_if(std::as_const(components),
-                                           [&c](const Component& compo)
-                                           { return compo.Id() == c.id; });
-            if (it != components.end())
-            {
-                throw InputError("System has at least two components with the same id ('" + c.id
-                                 + "'), this is not supported");
-            }
-            components.push_back(createComponent(c, libraries));
-            logs.debug() << "Loaded component `" << c.id << "`";
+            throw InputError("System has at least two components with the same id ('" + c.id
+                             + "'), this is not supported");
         }
-
-        // Create connections from system
-        for (const auto& connection: ymlSystem.connections)
-        {
-            connectComponents(connection, components);
-            logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
-                         << "` component2=`" << connection.secondEntry.componentId << "`)";
-        }
-
-        checkForNonLinearityBehindConnections(components);
-
-        // Create area connections from system
-        for (const auto& connection: ymlSystem.areaConnections)
-        {
-            connectAreas(connection, components);
-            logs.debug() << "Loaded area connection (component=`" << connection.componentId
-                         << "` area=`" << connection.areaId << "`)";
-        }
-        // Create thermal capacity connections from system
-        for (const auto& connection: ymlSystem.thermalCapacityConnections)
-        {
-            connectThermalCapacity(connection, components);
-            logs.debug() << "Loaded thermal-capacity connection (component=`"
-                         << connection.componentId << "` area=`"
-                         << connection.thermalComponent.areaId << "` clusterId=`"
-                         << connection.thermalComponent.clusterId << "`)";
-        }
-
-        // Build system from components and connections
-        SystemBuilder builder;
-        return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
+        components.push_back(createComponent(c, libraries));
+        logs.debug() << "Loaded component `" << c.id << "`";
     }
-    catch (const std::invalid_argument& e)
+
+    // Create connections from system
+    for (const auto& connection: ymlSystem.connections)
     {
-        throw InputError(e.what());
+        connectComponents(connection, components);
+        logs.debug() << "Loaded connection (component1=`" << connection.firstEntry.componentId
+                     << "` component2=`" << connection.secondEntry.componentId << "`)";
     }
+
+    checkForNonLinearityBehindConnections(components);
+
+    // Create area connections from system
+    for (const auto& connection: ymlSystem.areaConnections)
+    {
+        connectAreas(connection, components);
+        logs.debug() << "Loaded area connection (component=`" << connection.componentId
+                     << "` area=`" << connection.areaId << "`)";
+    }
+    // Create thermal capacity connections from system
+    for (const auto& connection: ymlSystem.thermalCapacityConnections)
+    {
+        connectThermalCapacity(connection, components);
+        logs.debug() << "Loaded thermal-capacity connection (component=`" << connection.componentId
+                     << "` area=`" << connection.thermalComponent.areaId << "` clusterId=`"
+                     << connection.thermalComponent.clusterId << "`)";
+    }
+
+    // Build system from components and connections
+    SystemBuilder builder;
+    return builder.withId(ymlSystem.id).withComponents(std::move(components)).build();
 }
 
 } // namespace Antares::IO::Inputs::SystemConverter
