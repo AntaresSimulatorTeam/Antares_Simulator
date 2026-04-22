@@ -129,7 +129,7 @@ protected:
 private:
     template<uint Size, class VCardT>
     static void InternalExportIndices(SurveyResults& report,
-                                      const uint32_t* indices,
+                                      const uint16_t* indices,
                                       int fileLevel);
 
     template<uint Size, class VCardT>

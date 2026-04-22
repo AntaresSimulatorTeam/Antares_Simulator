@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/variable/storage/minmax-data.h"
+#include "antares/solver/variable/storage/intermediate.h"
 
 #include <algorithm>
 #include <cfloat>
-
-#include "antares/solver/variable/storage/intermediate.h"
-
 namespace Antares::Solver::Variable::R::AllYears
 {
 static void initArray(bool opInferior, MinMaxData::Data& data)

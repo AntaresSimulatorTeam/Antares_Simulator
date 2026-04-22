@@ -47,7 +47,7 @@ inline void MinMaxBase<OpInferior, NextT>::merge(uint year, const IntermediateVa
 template<bool OpInferior, class NextT>
 template<uint Size, class VCardT>
 void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
-                                                          const uint32_t* indices,
+                                                          const uint16_t* indices,
                                                           int fileLevel)
 {
     assert(indices);
