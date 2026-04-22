@@ -198,7 +198,8 @@ void Modeler::writeSubProblemSimulationTable(const IMipSolution* solution,
                                          *solution,
                                          data_,
                                          *subproblemOptimEntityContainer_,
-                                         timeScenarioCtx);
+                                         timeScenarioCtx,
+                                         "1-1");
         }
     }
     break;

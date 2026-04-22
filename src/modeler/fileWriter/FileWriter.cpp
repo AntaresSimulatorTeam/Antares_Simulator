@@ -17,10 +17,22 @@
 
 namespace Antares::Solver
 {
-void FileWriter::init(const std::string& simulationId)
+void FileWriter::init(const std::string& time)
 {
-    outputPath_ = studyPath_ / "output";
-    simulationId_ = simulationId;
+    outputPath_ = studyPath_ / "output" / time;
+
+    if (std::filesystem::exists(outputPath_))
+    {
+        std::string candidate;
+        uint index = 1;
+        do
+        {
+            ++index;
+            candidate = outputPath_.string() + '-' + std::to_string(index);
+        } while (std::filesystem::exists(candidate) && index < 2000);
+
+        outputPath_ += '-' + std::to_string(index);
+    }
     logs.info() << "Output folder : " << outputPath_;
     if (!std::filesystem::is_directory(outputPath_)
         && !std::filesystem::create_directory(outputPath_))
@@ -40,9 +52,10 @@ void FileWriter::writeSimulationTable(
   const Optimisation::LinearProblemApi::IMipSolution& solution,
   const ModelerData& modelerData,
   const Optimisation::OptimEntityContainer& variableContainer,
-  const Optimisation::LinearProblemApi::FillContext& fillContext) const
+  const Optimisation::LinearProblemApi::FillContext& fillContext,
+  const std::string& simulationTableName) const
 {
-    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, simulationTableName);
     IO::Outputs::FillSimulationTable(simulationTable,
                                      linearProblem,
                                      solution.getObjectiveValue(),

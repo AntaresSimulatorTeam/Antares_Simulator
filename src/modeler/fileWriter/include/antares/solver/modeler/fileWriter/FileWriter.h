@@ -30,12 +30,13 @@ class FileWriter: public IWriter
 public:
     void init(const std::string& simulationId) override;
 
-    void writeSimulationTable(
-      const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-      const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const ModelerData& modelerData,
-      const Optimisation::OptimEntityContainer& variableContainer,
-      const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
+    void writeSimulationTable(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+                              const Optimisation::LinearProblemApi::IMipSolution& solution,
+                              const ModelerData& modelerData,
+                              const Optimisation::OptimEntityContainer& variableContainer,
+                              const Optimisation::LinearProblemApi::FillContext& fillContext,
+                              const std::string& simulationTableName) const override;
+
     explicit FileWriter(std::filesystem::path path);
 
     const std::filesystem::path& outputPath() const override;
@@ -43,6 +44,5 @@ public:
 private:
     const std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
-    std::string simulationId_;
 };
 } // namespace Antares::Solver

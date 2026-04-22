@@ -205,7 +205,8 @@ public:
                               const LinearProblemApi::IMipSolution& solution,
                               const ModelerData& /*modelerData*/,
                               const OptimEntityContainer& /*variableContainer*/,
-                              const LinearProblemApi::FillContext& /*fillContext*/) const override
+                              const LinearProblemApi::FillContext& /*fillContext*/,
+                              const std::string& /*simulationTableName*/) const override
     {
         solution_.objectiveValue = solution.getObjectiveValue();
     }
@@ -333,13 +334,15 @@ public:
                               const LinearProblemApi::IMipSolution& solution,
                               const ModelerData& modelerData,
                               const OptimEntityContainer& variableContainer,
-                              const LinearProblemApi::FillContext& fillContext) const override
+                              const LinearProblemApi::FillContext& fillContext,
+                              const std::string& simulationTableName) const override
     {
         (void)linearProblem;
         (void)solution;
         (void)modelerData;
         (void)variableContainer;
         (void)fillContext;
+        (void)simulationTableName;
     }
 };
 

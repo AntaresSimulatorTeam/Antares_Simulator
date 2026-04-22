@@ -49,7 +49,8 @@ public:
       const Optimisation::LinearProblemApi::IMipSolution& solution,
       const ModelerData& modelerData,
       const Optimisation::OptimEntityContainer& variableContainer,
-      const Optimisation::LinearProblemApi::FillContext& fillContext) const
+      const Optimisation::LinearProblemApi::FillContext& fillContext,
+      const std::string& simulationTableName) const
       = 0;
     virtual const std::filesystem::path& outputPath() const = 0;
 };
