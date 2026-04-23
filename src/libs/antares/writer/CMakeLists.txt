@@ -53,6 +53,7 @@ add_library(result_writer
         # Table writers (public API + implementations)
         csv_table_writer.cpp
         csv_table_writer.h
+        i_table_writer.cpp
         ensure_queue_started.cpp
         immediate_file_writer.cpp
         in_memory_writer.cpp
