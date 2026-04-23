@@ -50,7 +50,7 @@ jobs:
     - name: Install libraries
       run: |
         dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
-        dnf install -y unzip libuuid-devel gcc-toolset-11 zlib-devel
+        dnf install -y unzip libuuid-devel gcc-toolset-11 zlib-devel perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece flex bison
 
     - name: Checkout
       run: |
