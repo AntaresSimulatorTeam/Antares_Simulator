@@ -18,6 +18,19 @@ macro(copy_dependency deps target)
 
 endmacro()
 
+# Copy a project-built shared library (e.g. parquet_writer) next to a consuming
+# executable so it can be found at runtime on Windows. Unlike copy_dependency(),
+# this works with non-IMPORTED targets using $<TARGET_FILE:...> generator expressions.
+macro(copy_project_shared_lib shared_lib target)
+    if (MSVC)
+        add_custom_command(TARGET ${target} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_FILE:${shared_lib}>
+                $<TARGET_FILE_DIR:${target}>
+        )
+    endif ()
+endmacro()
+
 function(get_linux_lsb_release_information)
     find_program(LSB_RELEASE_EXEC lsb_release)
     if (NOT LSB_RELEASE_EXEC)
