@@ -373,3 +373,6 @@ include(CPack)
 
 #Last. We need all target defined
 add_subdirectory(packaging)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_link_options("LINKER:--end-group")
+endif()
