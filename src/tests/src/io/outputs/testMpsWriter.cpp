@@ -19,6 +19,7 @@
 ** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 */
 
+#include <filesystem>
 #define WIN32_LEAN_AND_MEAN
 
 #include <fstream>
@@ -230,6 +231,8 @@ BOOST_AUTO_TEST_CASE(test_file_writer_init)
     writer2.init("abc");
     BOOST_CHECK(fs::exists(writer2.outputPath()));
     BOOST_CHECK(writer2.outputPath() == tempDir / "output" / "abc-3");
+
+    fs::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
