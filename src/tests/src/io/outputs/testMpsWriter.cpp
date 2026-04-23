@@ -214,6 +214,24 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
     }
 }
 
+BOOST_AUTO_TEST_CASE(test_file_writer_init)
+{
+    fs::path tempDir = fs::temp_directory_path() / "antares_test_file_writer";
+    FileWriter writer(tempDir);
+    FileWriter writer2(tempDir);
+    writer.init("abc");
+    BOOST_CHECK(fs::exists(writer.outputPath()));
+    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc");
+
+    writer.init("abc");
+    BOOST_CHECK(fs::exists(writer.outputPath()));
+    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc-2");
+
+    writer2.init("abc");
+    BOOST_CHECK(fs::exists(writer2.outputPath()));
+    BOOST_CHECK(writer2.outputPath() == tempDir / "output" / "abc-3");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 // ==================== ExportableName Tests ====================
