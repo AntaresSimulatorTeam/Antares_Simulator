@@ -491,17 +491,17 @@ _**This section is under construction**_
 ---
 #### include-unfeasible-problem-behavior
 - **Expected value:** one of the following (case-sensitive):
-    - `WARNING_DRY`
-    - `WARNING_MPS`
-    - `ERROR_DRY`
-    - `ERROR_MPS`
+    - `warning-dry`
+    - `warning-verbose`
+    - `error-dry`
+    - `error-verbose`
 - **Required:** no
-- **Default value:** `ERROR_MPS`
+- **Default value:** `error-verbose`
 - **Usage:** defines the behavior of the simulator in case of an unfeasible problem.
-    - `WARNING_DRY`: continue simulation
-    - `WARNING_MPS`: continue simulation, but export the MPS of the unfeasible problem
-    - `ERROR_DRY`: stop simulation
-    - `ERROR_MPS`: stop simulation, and export the MPS of the unfeasible problem  
+    - `warning-dry`: continue simulation
+    - `warning-verbose`: continue simulation, but export the MPS of the unfeasible problem
+    - `error-dry`: stop simulation
+    - `error-verbose`: stop simulation, and export the MPS of the unfeasible problem
   
 > _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 

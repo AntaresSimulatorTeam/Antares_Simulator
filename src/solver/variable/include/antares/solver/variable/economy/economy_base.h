@@ -18,6 +18,34 @@
 namespace Antares::Solver::Variable::Economy
 {
 
+// The `detail` namespace contains implementation details and helper
+// utilities for the Economy variable system. Symbols placed in this
+// namespace are internal implementation artifacts (traits, fallbacks,
+// SFINAE helpers) and are not part of the public API. Using a dedicated
+// `detail` namespace makes the intent explicit: these types help detect
+// optional nested types or member functions in `Traits` (for example
+// `AuxiliaryDataType`) and provide safe defaults when those optional
+// members are absent. This enables generic code to compile whether or
+// not a particular `Traits` class provides extra auxiliary data.
+namespace detail
+{
+struct EmptyAuxiliaryData
+{
+};
+
+template<class TraitsT, class = void>
+struct AuxiliaryDataType
+{
+    using type = EmptyAuxiliaryData;
+};
+
+template<class TraitsT>
+struct AuxiliaryDataType<TraitsT, std::void_t<typename TraitsT::AuxiliaryDataType>>
+{
+    using type = typename TraitsT::AuxiliaryDataType;
+};
+} // namespace detail
+
 template<class Traits>
 struct VCard_Base
 {
