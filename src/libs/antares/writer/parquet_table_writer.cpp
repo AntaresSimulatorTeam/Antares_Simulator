@@ -21,7 +21,6 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-
 std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::SimulationTable& simuTable)
 {
     const auto& columns = simuTable.columns();
