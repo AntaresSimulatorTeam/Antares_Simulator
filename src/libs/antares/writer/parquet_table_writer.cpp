@@ -25,6 +25,7 @@ std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::Simulat
 {
     const auto& columns = simuTable.columns();
 
+    // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
     std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
     for (const auto& column: columns)
