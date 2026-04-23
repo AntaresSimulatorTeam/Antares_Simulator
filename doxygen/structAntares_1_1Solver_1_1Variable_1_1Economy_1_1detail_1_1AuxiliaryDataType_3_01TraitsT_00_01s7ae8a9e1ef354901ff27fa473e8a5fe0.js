@@ -1,0 +1,4 @@
+var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0 =
+[
+    [ "type", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html#ace5d9be9f19e33ff87071acc14b67e31", null ]
+];

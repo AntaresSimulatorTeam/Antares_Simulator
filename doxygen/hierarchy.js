@@ -69,6 +69,9 @@ var hierarchy =
     [ "Antares::Expressions::Nodes::ASTconst", "classAntares_1_1Expressions_1_1Nodes_1_1ASTconst.html", null ],
     [ "Antares::Expressions::Nodes::ASTPreOrderIterator", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIterator.html", null ],
     [ "Antares::Expressions::Nodes::ASTPreOrderIteratorConst", "classAntares_1_1Expressions_1_1Nodes_1_1ASTPreOrderIteratorConst.html", null ],
+    [ "Antares::Solver::Variable::Economy::detail::AuxiliaryDataType< TraitsT, class >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html", null ],
+    [ "Antares::Solver::Variable::Economy::detail::AuxiliaryDataType< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html", null ],
+    [ "Antares::Solver::Variable::Economy::detail::AuxiliaryDataType< TraitsT, std::void_t< typename TraitsT::AuxiliaryDataType > >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html", null ],
     [ "Antares::TSGenerator::AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
@@ -339,14 +342,12 @@ var hierarchy =
       [ "Antares::Solver::Variable::R::AllYears::MinMaxBase< OpInferior, NextT >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html", null ],
       [ "Antares::Solver::Variable::R::AllYears::StdDeviation< NextT, FileFilter >", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html", null ]
     ] ],
+    [ "Antares::Solver::Variable::Economy::detail::EmptyAuxiliaryData", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1EmptyAuxiliaryData.html", null ],
     [ "Antares::Solver::Variable::Container::EndOfList", "classAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList.html", [
       [ "Antares::Solver::Variable::IVariable< TimeSeriesValuesHydro< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesHydro >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::TimeSeriesValuesBase< TimeSeriesValuesHydro< Container::EndOfList >, Container::EndOfList, VCardTimeSeriesValuesHydro >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html", [
           [ "Antares::Solver::Variable::Economy::TimeSeriesValuesHydro< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html", null ]
         ] ]
-      ] ],
-      [ "Antares::Solver::Variable::IVariable< NonProportionalCostByDispatchablePlant< Container::EndOfList >, Container::EndOfList, VCardNonProportionalCostByDispatchablePlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::NonProportionalCostByDispatchablePlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnits< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnits >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnits< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html", null ]
@@ -370,9 +371,6 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Variable::IVariable< Overflows< Container::EndOfList >, Container::EndOfList, VCardOverflow >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::Overflows< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html", null ]
-      ] ],
-      [ "Antares::Solver::Variable::IVariable< MinDispatchableGenByPlant< Container::EndOfList >, Container::EndOfList, VCardMinDispatchableGenByPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::MinDispatchableGenByPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< MarginalCost< Container::EndOfList >, Container::EndOfList, VCardMarginalCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::MarginalCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html", null ]
@@ -409,9 +407,6 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< Pumping< Container::EndOfList >, Container::EndOfList, VCardPumping >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::Pumping< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html", null ]
       ] ],
-      [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnitsByPlant< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnitsByPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsByPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant.html", null ]
-      ] ],
       [ "Antares::Solver::Variable::IVariable< LoopFlow< Container::EndOfList >, Container::EndOfList, VCardLoopFlow >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::LoopFlow< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow.html", null ]
       ] ],
@@ -429,6 +424,9 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Variable::IVariable< FlowQuad< Container::EndOfList >, Container::EndOfList, VCardFlowQuad >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::FlowQuad< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1FlowQuad.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< DispatchablePlantByClusterBase< Traits, Container::EndOfList >, Container::EndOfList, VCardDispatchablePlantByClusterBase< Traits > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::DispatchablePlantByClusterBase< Traits, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< DispatchableGeneration< Container::EndOfList >, Container::EndOfList, VCardDispatchableGeneration >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::DispatchableGeneration< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration.html", null ]
@@ -896,6 +894,7 @@ var hierarchy =
     [ "metaclass", null, [
       [ "check_on_results.check_general.check_interface", "classcheck__on__results_1_1check__general_1_1check__interface.html", null ]
     ] ],
+    [ "Antares::Solver::Variable::Economy::MinDispatchableGenByPlantTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlantTraits.html", null ],
     [ "MinDownTimeData", "structMinDownTimeData.html", null ],
     [ "Antares::MinGenerationScaling", "classAntares_1_1MinGenerationScaling.html", null ],
     [ "MinHydroPowerData", "structMinHydroPowerData.html", null ],
@@ -938,6 +937,7 @@ var hierarchy =
       [ "VariableNamer", "classVariableNamer.html", null ]
     ] ],
     [ "NbDispUnitsMinBoundSinceMinUpTimeData", "structNbDispUnitsMinBoundSinceMinUpTimeData.html", null ],
+    [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsByPlantTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlantTraits.html", null ],
     [ "NbUnitsOutageLessThanNbUnitsStopData", "structNbUnitsOutageLessThanNbUnitsStopData.html", null ],
     [ "Antares::Solver::Variable::Category::NextLevel< Index, Limit >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html", null ],
     [ "NextT", null, [
@@ -977,6 +977,7 @@ var hierarchy =
       [ "modified_inode::UserData", "classmodified__inode_1_1UserData.html", null ]
     ] ],
     [ "NonCopyableFunctionObject", "structNonCopyableFunctionObject.html", null ],
+    [ "Antares::Solver::Variable::Economy::NonProportionalCostByDispatchablePlantTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlantTraits.html", null ],
     [ "NoObjectiveCreator", "structNoObjectiveCreator.html", null ],
     [ "Antares::Solver::Simulation::NumSpaceManager", "classAntares_1_1Solver_1_1Simulation_1_1NumSpaceManager.html", null ],
     [ "object", null, [
@@ -1295,6 +1296,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::CongestionProbability< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionProbability_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::DispatchableGeneration< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGeneration_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::DispatchableGenMargin< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchableGenMargin_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::DispatchablePlantByClusterBase< Traits, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::DomesticUnsuppliedEnergy< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::DtgMarginCsr< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::Economy_Base< Traits, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base_1_1Statistics.html", null ],
@@ -1310,13 +1312,10 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::Marge< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::MarginalCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::MaxMrgCsr< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCsr_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::MinDispatchableGenByPlant< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlant_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::MiscGenMinusRowPSP< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MiscGenMinusRowPSP_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnits< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnitsByPlant< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnitsByPlant_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::NearPriceCap< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NearPriceCap_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::NonProportionalCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::NonProportionalCostByDispatchablePlant< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCostByDispatchablePlant_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::OperatingCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::OverallCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::OverallCostCsr< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsr_1_1Statistics.html", null ],
@@ -1354,6 +1353,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardCongestionProbability >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardDispatchableGeneration >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardDispatchableGenMargin >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardDispatchablePlantByClusterBase< Traits > >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardDomesticUnsuppliedEnergy >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardDtgMarginCsr >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardDummyVariable >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1370,13 +1370,10 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardMARGE >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardMarginalCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardMAX_MRG_CSR >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardMinDispatchableGenByPlant >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardMiscGenMinusRowPSP >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardNbOfDispatchedUnits >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardNbOfDispatchedUnitsByPlant >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardNearPriceCap >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardNonProportionalCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardNonProportionalCostByDispatchablePlant >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardOperatingCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardOverallCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardOverallCostCsr >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1577,6 +1574,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardCongestionProbability", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardDispatchableGeneration", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGeneration.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardDispatchableGenMargin", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html", null ],
+    [ "Antares::Solver::Variable::Economy::VCardDispatchablePlantByClusterBase< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardDomesticUnsuppliedEnergy", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardDtgMarginCsr", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html", null ],
     [ "Antares::Solver::Variable::VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", null ],
@@ -1594,13 +1592,10 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardMARGE", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardMarginalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardMAX_MRG_CSR", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardMinDispatchableGenByPlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardMiscGenMinusRowPSP", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardNbOfDispatchedUnits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardNbOfDispatchedUnitsByPlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardNearPriceCap", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardNonProportionalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardNonProportionalCostByDispatchablePlant", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardOperatingCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html", null ],
     [ "Antares::Solver::Variable::Adequacy::VCardOverallCost", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardOverallCost.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardOverallCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html", null ],

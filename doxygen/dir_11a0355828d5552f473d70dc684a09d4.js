@@ -7,6 +7,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "balance.h", "balance_8h_source.html", null ],
     [ "dispatchable-generation-margin.h", "dispatchable-generation-margin_8h_source.html", null ],
     [ "dispatchableGeneration.h", "dispatchableGeneration_8h_source.html", null ],
+    [ "DispatchablePlantByCluster_base.h", "DispatchablePlantByCluster__base_8h_source.html", null ],
     [ "domesticUnsuppliedEnergy.h", "domesticUnsuppliedEnergy_8h_source.html", null ],
     [ "dtgMarginAfterCsr.h", "dtgMarginAfterCsr_8h_source.html", null ],
     [ "economy_base.h", "economy__base_8h_source.html", null ],

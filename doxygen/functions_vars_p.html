@@ -188,6 +188,7 @@ $(document).ready(function(){initNavTree('functions_vars_p.html',''); initResiza
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#afb8a57d6da23fd00925300f394e19892">Antares::Solver::Variable::Economy::VCardCongestionProbability</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGeneration.html#a97a6a75d00dcb6b7861e99dc2aedbb58">Antares::Solver::Variable::Economy::VCardDispatchableGeneration</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchableGenMargin.html#ae72d6210d29354bb567ebda85a331407">Antares::Solver::Variable::Economy::VCardDispatchableGenMargin</a>
+, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase.html#a4dd08f48dd4cbd3168a66b7fbcd6f13f">Antares::Solver::Variable::Economy::VCardDispatchablePlantByClusterBase&lt; Traits &gt;</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDomesticUnsuppliedEnergy.html#a2a17ff568f57c4463f3ccc090a08fc0b">Antares::Solver::Variable::Economy::VCardDomesticUnsuppliedEnergy</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDtgMarginCsr.html#aa232a709d79775c10394d61a422cc2e3">Antares::Solver::Variable::Economy::VCardDtgMarginCsr</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardFlowLinear.html#a9dd78f8423676de46504b1f93f924841">Antares::Solver::Variable::Economy::VCardFlowLinear</a>
@@ -202,13 +203,10 @@ $(document).ready(function(){initNavTree('functions_vars_p.html',''); initResiza
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMARGE.html#a2f85fa357c3d104a0bc3cd689984b54c">Antares::Solver::Variable::Economy::VCardMARGE</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMarginalCost.html#a395bc4268c9f49e205dc3c48451847c3">Antares::Solver::Variable::Economy::VCardMarginalCost</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMAX__MRG__CSR.html#a6dbb58e73a0a284a83631d7e89068b9e">Antares::Solver::Variable::Economy::VCardMAX_MRG_CSR</a>
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMinDispatchableGenByPlant.html#a6233832f7b36ac8c20b0ed1669fc6638">Antares::Solver::Variable::Economy::VCardMinDispatchableGenByPlant</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMiscGenMinusRowPSP.html#a3237e7d6ab9c6ebf2de693f6dbd89a0f">Antares::Solver::Variable::Economy::VCardMiscGenMinusRowPSP</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnits.html#ad21febbe6b4b0fdbbaf4f4a7053f2ba6">Antares::Solver::Variable::Economy::VCardNbOfDispatchedUnits</a>
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNbOfDispatchedUnitsByPlant.html#abe749aeafd8129c50aef2e16792e0216">Antares::Solver::Variable::Economy::VCardNbOfDispatchedUnitsByPlant</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNearPriceCap.html#af197b76dcf20d50cd0bbbabb1f657feb">Antares::Solver::Variable::Economy::VCardNearPriceCap</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCost.html#a0d89d5c329067f44f09b76c8577f51be">Antares::Solver::Variable::Economy::VCardNonProportionalCost</a>
-, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardNonProportionalCostByDispatchablePlant.html#ae4dac1da162b038b405796fe3523cda2">Antares::Solver::Variable::Economy::VCardNonProportionalCostByDispatchablePlant</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOperatingCost.html#a93e752cb86593a6faa0459c7e67ec177">Antares::Solver::Variable::Economy::VCardOperatingCost</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCost.html#a016878015845ac69aefb25d7a4b5d92e">Antares::Solver::Variable::Economy::VCardOverallCost</a>
 , <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardOverallCostCsr.html#a94e3efdb2bfb25ef2e887fdbb711e596">Antares::Solver::Variable::Economy::VCardOverallCostCsr</a>
@@ -295,6 +293,9 @@ $(document).ready(function(){initNavTree('functions_vars_p.html',''); initResiza
 </li>
 <li>pumpingEfficiency
 : <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#af823acf557789b06efc959a3e3679458">Antares::Data::PartHydro</a>
+</li>
+<li>pValuesForTheCurrentYear
+: <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html#a2f1be1f2c00661f4b6d6f1d989f7af9f">Antares::Solver::Variable::Economy::DispatchablePlantByClusterBase&lt; Traits, NextT &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->
