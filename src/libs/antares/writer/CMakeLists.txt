@@ -30,12 +30,12 @@ set_target_properties(parquet_writer PROPERTIES
     WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 
-target_include_directories(simulation-table-writers
+target_include_directories(parquet_writer
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
 )
 
-target_link_libraries(simulation-table-writers
+target_link_libraries(parquet_writer
   PUBLIC
   Antares::simulation-table
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"

@@ -19,7 +19,7 @@ target_link_libraries(write-modeler-files
         Antares::antares-study-system-model
         Antares::linear-problem-api
         Antares::linear-problem-data-impl
-        simulation-table-writers
+        parquet_writer
         PRIVATE
         Antares::io
         Antares::modeler-lib

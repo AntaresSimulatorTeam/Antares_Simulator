@@ -114,7 +114,6 @@ set(TARGET_LIBS #No alias
         expressions-iterators
         additional-constraint-rhs-antlr-interface
 		simulation-table
-		simulation-table-writers
         simu-table-generator
         scenario-builder-antlr
         scenario-group-parser

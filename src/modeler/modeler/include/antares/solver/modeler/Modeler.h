@@ -49,6 +49,8 @@ public:
     Modeler(ILoader& loader, IWriter& writer);
 
     void buildProblems();
+    void buildMasterProblem();
+    void buildSubProblem();
     void run();
 
     void exportMps() const;
@@ -87,14 +89,14 @@ private:
 
     IO::Outputs::SimulationTable makeSimulationTable(
       const Optimisation::LinearProblemApi::IMipSolution* solution,
+      const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
 
     void writeSimulationTable(IO::Outputs::SimulationTable&); // gp : const ?
-    void exportMps() const;
-    void exportStructureFile() const;
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
-
+    std::unique_ptr<Optimisation::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
+    std::unique_ptr<Optimisation::LinearProblemApi::FillContext> timeScenarioCtx_ = nullptr;
     Optimisation::LinearProblemApi::IMipSolution* subProbSolution_;
     ModelerParameters parameters_;
     ModelerData data_;

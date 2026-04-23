@@ -333,8 +333,8 @@ void Modeler::run()
         if (!parameters_.noOutput)
         {
             auto simulationTable = makeSimulationTable(subProbSolution_,
-                                                       *subproblemOptimEntityContainer,
-                                                       timeScenarioCtx);
+                                                       *subproblemOptimEntityContainer_,
+                                                       *timeScenarioCtx_);
             writeSimulationTable(simulationTable);
         }
     }
