@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(load_basic_attributes)
     constraints << "[1]\n"
                 << "name = dummy_name\n"
                 << "id = dummy_id\n"
-                << "enabled = false\n"
+                << "enabled = true\n"
                 << "type = hourly\n"
                 << "operator = equal\n"
                 << "filter-year-by-year = annual\n"
@@ -70,9 +70,14 @@ BOOST_AUTO_TEST_CASE(load_basic_attributes)
 BOOST_AUTO_TEST_CASE(BC_load_RHS)
 {
     auto study = std::make_shared<Study>();
-    addAreaToListOfAreas(study->areas, "area1");
-    addAreaToListOfAreas(study->areas, "area2");
-    addAreaToListOfAreas(study->areas, "area3");
+
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+
+    AreaAddLinkBetweenAreas(area1, area2);
+    AreaAddLinkBetweenAreas(area2, area3);
+    AreaAddLinkBetweenAreas(area3, area1);
 
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
@@ -83,7 +88,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS)
     constraints << "[1]\n"
                 << "name = dummy_name\n"
                 << "id = dummy_id\n"
-                << "enabled = false\n"
+                << "enabled = true\n"
                 << "type = hourly\n"
                 << "operator = equal\n"
                 << "filter-year-by-year = annual\n"
@@ -117,9 +122,13 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS)
 BOOST_AUTO_TEST_CASE(BC_load_range_type)
 {
     auto study = std::make_shared<Study>();
-    addAreaToListOfAreas(study->areas, "area1");
-    addAreaToListOfAreas(study->areas, "area2");
-    addAreaToListOfAreas(study->areas, "area3");
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+
+    AreaAddLinkBetweenAreas(area1, area2);
+    AreaAddLinkBetweenAreas(area2, area3);
+    AreaAddLinkBetweenAreas(area3, area1);
 
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
@@ -130,7 +139,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type)
     constraints << "[1]\n"
                 << "name = dummy_name\n"
                 << "id = dummy_id\n"
-                << "enabled = false\n"
+                << "enabled = true\n"
                 << "type = hourly\n"
                 << "operator = both\n"
                 << "filter-year-by-year = annual\n"
@@ -184,10 +193,13 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type)
 BOOST_AUTO_TEST_CASE(BC_load_legacy)
 {
     auto study = std::make_shared<Study>();
-    addAreaToListOfAreas(study->areas, "area1");
-    addAreaToListOfAreas(study->areas, "area2");
-    addAreaToListOfAreas(study->areas, "area3");
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
 
+    AreaAddLinkBetweenAreas(area1, area2);
+    AreaAddLinkBetweenAreas(area2, area3);
+    AreaAddLinkBetweenAreas(area3, area1);
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
 
@@ -197,7 +209,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy)
     constraints << "[1]\n"
                 << "name = dummy_name\n"
                 << "id = dummy_id\n"
-                << "enabled = false\n"
+                << "enabled = true\n"
                 << "type = hourly\n"
                 << "operator = less\n"
                 << "filter-year-by-year = annual\n"
@@ -207,6 +219,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy)
                 << "area2%area3 = -1.000000\n"
                 << "area3%area1 = 2.000000\n";
     constraints.close();
+
     std::ofstream lt(working_tmp_dir / "dummy_id.txt");
     for (int i = 0; i < 8784; ++i)
     {
@@ -231,9 +244,13 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy)
 BOOST_AUTO_TEST_CASE(BC_load_legacy_range)
 {
     auto study = std::make_shared<Study>();
-    addAreaToListOfAreas(study->areas, "area1");
-    addAreaToListOfAreas(study->areas, "area2");
-    addAreaToListOfAreas(study->areas, "area3");
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    auto area3 = addAreaToListOfAreas(study->areas, "area3");
+
+    AreaAddLinkBetweenAreas(area1, area2);
+    AreaAddLinkBetweenAreas(area2, area3);
+    AreaAddLinkBetweenAreas(area3, area1);
 
     StudyLoadOptions options;
     BindingConstraintsRepository bindingConstraints;
@@ -244,7 +261,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range)
     constraints << "[1]\n"
                 << "name = dummy_name\n"
                 << "id = dummy_id\n"
-                << "enabled = false\n"
+                << "enabled = true\n"
                 << "type = hourly\n"
                 << "operator = both\n"
                 << "filter-year-by-year = annual\n"

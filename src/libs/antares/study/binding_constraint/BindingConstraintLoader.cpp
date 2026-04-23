@@ -43,9 +43,11 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
 
     if (!bc->pEnabled)
     {
-        return {};
+        /// This BC won't be used, return it without loading time series
+        logs.info() << "DEBUG: BC " << bc->name() << " is disabled, skipping time series";
+        return {bc};
     }
-
+    logs.info() << "DEBUG: BC " << bc->name() << " is enabled, loading time series";
     return loadByOperator(env, bc);
 }
 
@@ -190,7 +192,7 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
     return false;
 }
 
-void BindingConstraintLoader::populateConstraint(EnvForLoading& env,
+void BindingConstraintLoader::populateConstraint(const EnvForLoading& env,
                                                  std::shared_ptr<BindingConstraint>& bc)
 {
     // Foreach property in the section...
@@ -251,7 +253,7 @@ void BindingConstraintLoader::populateConstraint(EnvForLoading& env,
     }
 }
 
-void BindingConstraintLoader::parseWeightAndOffset(EnvForLoading& env,
+void BindingConstraintLoader::parseWeightAndOffset(const EnvForLoading& env,
                                                    const IniFile::Property* p,
                                                    std::shared_ptr<BindingConstraint>& bc)
 {
@@ -323,7 +325,7 @@ void BindingConstraintLoader::parseWeightAndOffset(EnvForLoading& env,
     }
 }
 
-bool BindingConstraintLoader::validate(EnvForLoading& env,
+bool BindingConstraintLoader::validate(const EnvForLoading& env,
                                        const std::shared_ptr<BindingConstraint>& bc)
 {
     if (bc->pName.empty())
@@ -371,17 +373,18 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::loadByO
     }
     case BindingConstraint::opBoth:
     {
-        auto greater_bc = std::make_shared<BindingConstraint>();
-        greater_bc->copyFrom(bc.get());
-        greater_bc->name(bc->name() + "_sup");
-        greater_bc->pID = bc->pID;
-        greater_bc->operatorType(BindingConstraint::opGreater);
-        bc->name(bc->name() + "_inf");
+        auto greaterBc = std::make_shared<BindingConstraint>();
+        const auto originalName = bc->name();
+        greaterBc->copyFrom(bc.get());
+        greaterBc->name(originalName + "_sup");
+        greaterBc->pID = bc->pID;
+        greaterBc->operatorType(BindingConstraint::opGreater);
+        bc->name(originalName + "_inf");
         bc->operatorType(BindingConstraint::opLess);
 
-        if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get()))
+        if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greaterBc.get()))
         {
-            return {bc, greater_bc};
+            return {bc, greaterBc};
         }
         break;
     }

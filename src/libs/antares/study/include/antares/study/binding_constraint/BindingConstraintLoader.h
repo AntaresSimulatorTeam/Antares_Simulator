@@ -37,13 +37,13 @@ private:
                         BindingConstraint::Operator operatorType,
                         BindingConstraint* bindingConstraint) const;
 
-    void populateConstraint(EnvForLoading& env, std::shared_ptr<BindingConstraint>& bc);
+    void populateConstraint(const EnvForLoading& env, std::shared_ptr<BindingConstraint>& bc);
 
-    void parseWeightAndOffset(EnvForLoading& env,
+    void parseWeightAndOffset(const EnvForLoading& env,
                               const IniFile::Property* p,
                               std::shared_ptr<BindingConstraint>& bc);
 
-    bool validate(EnvForLoading& env, const std::shared_ptr<BindingConstraint>& bc);
+    bool validate(const EnvForLoading& env, const std::shared_ptr<BindingConstraint>& bc);
 
     std::vector<std::shared_ptr<BindingConstraint>> loadByOperator(
       EnvForLoading& env,
