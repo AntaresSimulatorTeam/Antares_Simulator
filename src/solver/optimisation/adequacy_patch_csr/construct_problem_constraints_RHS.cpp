@@ -142,10 +142,10 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                 if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
                 {
                     const auto& shortTermStorageResults
-                      = problemeHebdo_->ResultatsHoraires[Area].ShortTermStorage;
-                    for (const auto& storageResults : shortTermStorageResults)
+                      = problemeHebdo_->ResultatsHoraires[Area].ShortTermStorage[triggeredHour];
+                    for (const auto& storageResults : shortTermStorageResults.withdrawal)
                     {
-                        stsNetProduction += storageResults.withdrawal[triggeredHour];
+                        stsNetProduction += storageResults;
                     }
                 }
 
