@@ -4,7 +4,7 @@
 #include "antares/solver/variable/storage/minmax-data.h"
 
 #include <algorithm>
-#include <cfloat>
+#include <limits>
 
 #include "antares/solver/variable/storage/intermediate.h"
 
@@ -12,7 +12,8 @@ namespace Antares::Solver::Variable::R::AllYears
 {
 static void initArray(bool opInferior, MinMaxData::Data& data)
 {
-    const double init = opInferior ? DBL_MAX : -DBL_MAX;
+    const double init = opInferior ? std::numeric_limits<double>::max()
+                                   : -std::numeric_limits<double>::max();
     std::fill(data.values.begin(), data.values.end(), init);
     std::fill(data.indices.begin(), data.indices.end(), std::numeric_limits<uint16_t>::max());
 }
