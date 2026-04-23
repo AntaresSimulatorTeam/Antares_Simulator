@@ -19,7 +19,10 @@ add_library(parquet_writer SHARED
         csv_table_writer.h
 )
 
-generate_export_header(parquet_writer)
+generate_export_header(parquet_writer
+    BASE_NAME SIMULATION_TABLE_WRITERS
+    EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
+)
 
 set_target_properties(parquet_writer PROPERTIES
     CXX_VISIBILITY_PRESET hidden
@@ -33,6 +36,7 @@ set_target_properties(parquet_writer PROPERTIES
 target_include_directories(parquet_writer
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 target_link_libraries(parquet_writer
@@ -76,6 +80,7 @@ add_library(Antares::result_writer ALIAS result_writer)
 target_include_directories(result_writer
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
@@ -107,3 +112,8 @@ install(TARGETS parquet_writer
 install(DIRECTORY include/antares
         DESTINATION "include"
 )
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
+        DESTINATION "include/antares/writer"
+)
+
