@@ -7,9 +7,9 @@ var classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData =
     [ "mergeSup", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a88d568ea99d268d78e9048b6bdbb90c0", null ],
     [ "resetInf", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#ab19a782333ec92485a5bf393232e425b", null ],
     [ "resetSup", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a4ff60f6349193eeb5bb01e84f6b98d71", null ],
-    [ "annual", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a134b960925398055aae2a2176f89ad90", null ],
-    [ "daily", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a0ce001e7d374eb668df4ec1ef3e3675d", null ],
-    [ "hourly", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a8752e8d016b67f90ecb52e0dc1170743", null ],
-    [ "monthly", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#af29ebb7e4b1e13cd7d3512f700c2b240", null ],
-    [ "weekly", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a967a698802a948a13a5e71b6f80eb408", null ]
+    [ "annual", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#ad5c5b49864b6bef82edf3a558907976c", null ],
+    [ "daily", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#accfe0a8eb45cc649d24df3d24b423343", null ],
+    [ "hourly", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a951fa205f81b23aa56db6ccc5085a74a", null ],
+    [ "monthly", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a4c03d2f266f1d8dc9bef14f1889b09b2", null ],
+    [ "weekly", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData.html#a1b6414993ce76c54bdfdbb028b7153a7", null ]
 ];

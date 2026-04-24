@@ -1,5 +1,6 @@
 var structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data =
 [
-    [ "index", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#a3f24802b8e3c56c5a9e4f5e5e1fe75d8", null ],
-    [ "value", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#aebfd326dd1bd085ff9019049125fdbdf", null ]
+    [ "Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#a147ec1c0337ea4a702c148c29d4cd4f1", null ],
+    [ "indices", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#a1a1b328238995dddbb71135b3b999fb8", null ],
+    [ "values", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html#aa9957794ef52af508a7510ed2ceb3b2f", null ]
 ];
