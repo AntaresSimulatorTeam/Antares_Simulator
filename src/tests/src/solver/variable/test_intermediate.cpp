@@ -11,6 +11,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/antares/constants.h"
+#include "antares/solver/variable/economy/STStorageLevelsByCluster.h"
+#include "antares/solver/variable/economy/STStorageWithdrawalByCluster.h"
 #include "antares/solver/variable/storage/intermediate.h"
 #include "antares/solver/variable/surveyresults.h"
 #include "antares/writer/in_memory_writer.h"
@@ -239,6 +241,37 @@ BOOST_FIXTURE_TEST_CASE(hourToWeekAggregationWithStatistics, FullYearStudyFixtur
     BOOST_CHECK_CLOSE(intermediate.week[firstWeekIndex], expectedWeekSum, TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.month[firstMonthIndex], expectedWeekSum, TOLERANCE);
     BOOST_CHECK_CLOSE(intermediate.year, expectedWeekSum, TOLERANCE);
+}
+
+BOOST_FIXTURE_TEST_CASE(stsWithdrawalTraitsUseStatisticsForCurrentYear, FullYearStudyFixture)
+{
+    using Antares::Solver::Variable::Economy::STStorageWithdrawalByClusterTraits;
+
+    Antares::Solver::Variable::IntermediateValues intermediate;
+    intermediate.initializeFromStudy(*study);
+    intermediate[0] = 10.;
+    intermediate[1] = 20.;
+
+    STStorageWithdrawalByClusterTraits::computeStats(intermediate);
+
+    BOOST_CHECK_CLOSE(intermediate.day[0], 30., TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.year, 30., TOLERANCE);
+}
+
+BOOST_FIXTURE_TEST_CASE(stsLevelsTraitsUseAveragesFromHourlyResults, FullYearStudyFixture)
+{
+    using Antares::Solver::Variable::Economy::STStorageLevelsByClusterTraits;
+
+    Antares::Solver::Variable::IntermediateValues intermediate;
+    intermediate.initializeFromStudy(*study);
+    intermediate[0] = 10.;
+    intermediate[1] = 20.;
+
+    STStorageLevelsByClusterTraits::computeStats(intermediate);
+
+    constexpr int kNbHoursInYear = 8736;
+    BOOST_CHECK_CLOSE(intermediate.day[0], (10. + 20.) / 24., TOLERANCE);
+    BOOST_CHECK_CLOSE(intermediate.year, (10. + 20.) / kNbHoursInYear, TOLERANCE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
