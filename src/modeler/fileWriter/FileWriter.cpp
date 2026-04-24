@@ -15,6 +15,8 @@
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
 
+constexpr unsigned maxFolderSameTime = 2000;
+
 namespace Antares::Solver
 {
 void FileWriter::init(const std::string& time)
@@ -30,7 +32,7 @@ void FileWriter::init(const std::string& time)
         {
             ++index;
             candidate = outputPath_.string() + '-' + std::to_string(index);
-        } while (std::filesystem::exists(candidate) && index < 2000);
+        } while (std::filesystem::exists(candidate) && index < maxFolderSameTime);
 
         outputPath_ += '-' + std::to_string(index);
     }
