@@ -5,6 +5,7 @@
 
 #include <cmath>
 
+#include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
@@ -12,6 +13,34 @@
 #include "solve_problem.h"
 
 using namespace Yuni;
+
+namespace
+{
+// Thin CsrProblemBuilder implementation that assigns consecutive column indices
+// starting at startIdx_, storing bounds directly in PROBLEME_ANTARES_A_RESOUDRE.
+class CsrColumnAllocator final : public Antares::AdequacyPatch::CsrProblemBuilder
+{
+public:
+    CsrColumnAllocator(PROBLEME_ANTARES_A_RESOUDRE& pa, int startIdx):
+        pa_(pa),
+        nextIdx_(startIdx)
+    {
+    }
+
+    int allocateColumn(const std::string& /*name*/, double lb, double ub) override
+    {
+        int col = nextIdx_++;
+        pa_.Xmin[col] = lb;
+        pa_.Xmax[col] = ub;
+        pa_.TypeDeVariable[col] = VARIABLE_NON_BORNEE;
+        return col;
+    }
+
+private:
+    PROBLEME_ANTARES_A_RESOUDRE& pa_;
+    int nextIdx_;
+};
+} // anonymous namespace
 
 namespace Antares::Data::AdequacyPatch
 {
@@ -136,6 +165,18 @@ void HourlyCSRProblem::buildProblemVariables()
     constructVariableENS();
     constructVariableSpilledEnergy();
     constructVariableFlows();
+
+    const auto* rtd = problemeHebdo_->adequacyPatchRuntimeData.get();
+    if (rtd && rtd->useGemsFbConstraints && rtd->gemsCsrAdapter)
+    {
+        // NombreDeVariables now equals the legacy count — use it as the start index
+        // for extra GEMS columns.
+        CsrColumnAllocator allocator(problemeAResoudre_,
+                                     problemeAResoudre_.NombreDeVariables);
+        rtd->gemsCsrAdapter->registerExtraVariables(allocator);
+        // NombreDeVariables is NOT updated here; it was set to the total count
+        // (legacy + extra) by countVariables() in allocateProblem().
+    }
 }
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
@@ -157,6 +198,7 @@ void HourlyCSRProblem::setVariableBounds()
     setBoundsOnENS();
     setBoundsOnSpilledEnergy();
     setBoundsOnFlows();
+    setBoundsOnGemsFbExtraVars();
 }
 
 void HourlyCSRProblem::buildProblemConstraintsRHS()
@@ -167,6 +209,7 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
     setRHSfictitiousLoadValue();
     setRHSMaxEnsLoadValue();
     setRHSbindingConstraintsValue();
+    setRHSgemsFbConstraintsValue();
 }
 
 void HourlyCSRProblem::setProblemCost()
@@ -194,6 +237,7 @@ void HourlyCSRProblem::solveProblem(uint week, int year, const OptimizationOptio
 
 void HourlyCSRProblem::run(uint week, uint year)
 {
+    mcYear_ = static_cast<int>(year);
     calculateCsrParameters();
     buildProblemVariables();
     buildProblemConstraintsLHS();
@@ -201,4 +245,47 @@ void HourlyCSRProblem::run(uint week, uint year)
     buildProblemConstraintsRHS();
     setProblemCost();
     solveProblem(week, year, solverOptions_);
+}
+
+void HourlyCSRProblem::setBoundsOnGemsFbExtraVars()
+{
+    const auto* rtd = problemeHebdo_->adequacyPatchRuntimeData.get();
+    if (!rtd || !rtd->useGemsFbConstraints || !rtd->gemsCsrAdapter)
+    {
+        return;
+    }
+    // Extra GEMS columns sit above the legacy variable range.
+    // Their bounds were written by CsrColumnAllocator during buildProblemVariables();
+    // re-apply them here so they survive the AdresseOuPlacerLaValeurDesVariablesOptimisees
+    // reset loop at the top of setVariableBounds().
+    constexpr double kInf = 1e20;
+    const int legacyEnd = problemeAResoudre_.NombreDeVariables
+                          - rtd->gemsCsrAdapter->countExtraVariables();
+    for (int col = legacyEnd; col < problemeAResoudre_.NombreDeVariables; ++col)
+    {
+        problemeAResoudre_.Xmin[col] = -kInf;
+        problemeAResoudre_.Xmax[col] = kInf;
+        problemeAResoudre_.TypeDeVariable[col] = VARIABLE_NON_BORNEE;
+    }
+}
+
+void HourlyCSRProblem::setRHSgemsFbConstraintsValue()
+{
+    const auto* rtd = problemeHebdo_->adequacyPatchRuntimeData.get();
+    if (!rtd || !rtd->useGemsFbConstraints || !rtd->gemsCsrAdapter)
+    {
+        return;
+    }
+
+    const auto rows = rtd->gemsCsrAdapter->rowsForHour(triggeredHour, mcYear_);
+    for (size_t i = 0; i < rows.size() && i < gemsFbConstraintRows_.size(); ++i)
+    {
+        const int csrRow = gemsFbConstraintRows_[i];
+        if (csrRow >= 0)
+        {
+            problemeAResoudre_.SecondMembre[csrRow] = rows[i].rhs;
+            logs.debug() << csrRow << ": GEMS FB: RHS[" << csrRow
+                         << "] = " << rows[i].rhs;
+        }
+    }
 }

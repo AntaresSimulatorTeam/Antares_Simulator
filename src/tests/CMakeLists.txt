@@ -32,6 +32,7 @@ endif()
 if (${RECENT_BOOST})
     add_subdirectory(end-to-end)
     add_subdirectory(src)
+    add_subdirectory(cpp)
     add_subdirectory(inmemory-study)
     add_subdirectory(inmemory-modeler)
     add_subdirectory(libs)
@@ -85,7 +86,14 @@ if(Python3_Interpreter_FOUND)
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
+      add_test(
+        NAME gems-fb
+        COMMAND Python3::Interpreter -m pytest -m gems_fb --antares-simu-path=$<TARGET_FILE:antares-solver>
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
+        )
+
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
+      set_property(TEST gems-fb PROPERTY LABELS study gems_fb)
   else()
       message(FATAL_ERROR "Module pytest or numpy not installed : can't run python scripts for end to end tests")
   endif()

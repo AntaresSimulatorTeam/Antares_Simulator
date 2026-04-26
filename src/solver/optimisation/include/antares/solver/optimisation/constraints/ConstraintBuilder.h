@@ -141,6 +141,14 @@ public:
 
     ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
 
+    // Adds a term using a raw LP column index (no VariableManager lookup).
+    // Used to inject GEMS-adapter rows whose column indices are pre-resolved.
+    ConstraintBuilder& rawTerm(int column, double coeff)
+    {
+        AddVariable(column, coeff);
+        return *this;
+    }
+
     //@}
 
     class ConstraintBuilderInvalidOperator final: public std::runtime_error

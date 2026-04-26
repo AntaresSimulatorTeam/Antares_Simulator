@@ -7,6 +7,7 @@ if (MSVC)
 endif (MSVC)
 
 
+add_subdirectory(adequacy-patch)
 add_subdirectory(application)
 add_subdirectory(constraints-builder)
 add_subdirectory(hydro)

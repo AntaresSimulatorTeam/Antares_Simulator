@@ -3,6 +3,30 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to
 lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v9.3.11
+
+### Input
+
+#### GEMS flow-based constraints in adequacy-patch CSR
+
+In file **settings/generaldata.ini**, in section `[adequacy patch]`, two new optional properties:
+
+* `enable-gems-fb-constraints` [bool, default `false`]: when `true`, flow-based constraints
+  defined in the study's GEMS system (`input/system.yml` and `input/model-libraries/*.yml`)
+  are also injected into the adequacy-patch CSR sub-problem.
+  Requires the study to be GEMS-enabled. When `false` (default) the adequacy-patch behaves
+  exactly as in earlier versions.
+* `gems-fb-constraint-filter` [string, default empty]: ECMAScript regex that selects which
+  GEMS constraint ids are injected. When empty, defaults to `^flow_based_constraint_`.
+  Constraints whose ids do not match the filter are not injected.
+  **Before overriding this default**, read the
+  [User Guide — Default constraint filter](solver/optional-features/adq-patch-gems-fb.md#default-constraint-filter-and-why-zone-balance-constraints-are-excluded)
+  section: widening the filter to include zone-balance constraints can introduce
+  rank-deficient rows, perimeter-mismatch infeasibilities, or defeat the CSR redistribution.
+
+Both properties are ignored when `include-adq-patch = false` or when the study has no
+GEMS system. No output format changes.
+
 ## v9.3.0
 
 ### Input

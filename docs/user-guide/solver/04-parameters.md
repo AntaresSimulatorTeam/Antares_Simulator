@@ -608,6 +608,31 @@ _**This section is under construction**_
 - **Usage:**
 
 ---
+#### enable-gems-fb-constraints
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** When `true`, flow-based constraints defined in the study's GEMS system
+  (`input/system.yml` and `input/model-libraries/*.yml`) are also injected into the
+  adequacy-patch CSR sub-problem each hour.
+  The study must be GEMS-enabled (contain a `system.yml`).
+  When `false` (the default) the adequacy-patch CSR behaves exactly as in previous versions.
+  See [GEMS flow-based constraints in the adequacy-patch CSR](optional-features/adq-patch-gems-fb.md).
+
+---
+#### gems-fb-constraint-filter
+- **Expected value:** ECMAScript regular-expression string
+- **Required:** no
+- **Default value:** empty (resolved internally to `^flow_based_constraint_`)
+- **Usage:** Selects which GEMS constraint ids are injected into the CSR sub-problem.
+  Only constraints whose id matches this regex (searched, not fully matched) are included.
+  When empty the default pattern `^flow_based_constraint_` is used, which targets
+  constraints whose id begins with `flow_based_constraint_`.
+  Typical use: exclude zone-balance or other structural constraints that the CSR already
+  enforces implicitly to avoid double-counting.
+  Has no effect when `enable-gems-fb-constraints = false`.
+
+---
 ## Other parameters
 These parameters are listed under the `[other preferences]` section in the `.ini` file.
 

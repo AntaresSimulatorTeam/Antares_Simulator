@@ -3,6 +3,7 @@
 
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
 
+#include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch
@@ -70,6 +71,14 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
             numberOfConstraints++;
         }
     }
+
+    // GEMS flow-based constraints (safe over-allocation: counts all matching constraints)
+    const auto* rtd = problemeHebdo->adequacyPatchRuntimeData.get();
+    if (rtd && rtd->useGemsFbConstraints && rtd->gemsCsrAdapter)
+    {
+        numberOfConstraints += rtd->gemsCsrAdapter->countMatchingConstraints();
+    }
+
     return numberOfConstraints;
 }
 
@@ -98,6 +107,14 @@ int countVariables(const PROBLEME_HEBDO* problemeHebdo)
             numberOfVariables += 3; // algebraic flow, direct flow, indirect flow
         }
     }
+
+    // GEMS extra variables (those not already mapped to a CSR area column)
+    const auto* rtd = problemeHebdo->adequacyPatchRuntimeData.get();
+    if (rtd && rtd->useGemsFbConstraints && rtd->gemsCsrAdapter)
+    {
+        numberOfVariables += rtd->gemsCsrAdapter->countExtraVariables();
+    }
+
     return numberOfVariables;
 }
 } // namespace Antares::Data::AdequacyPatch

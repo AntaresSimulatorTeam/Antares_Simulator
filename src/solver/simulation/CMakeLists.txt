@@ -86,6 +86,8 @@ target_link_libraries(antares-solver-simulation
         antares-solver-ts-generator
 		shave-peaks-by-remix-storage-gen
 		Antares::modeler-simulation-table
+        PRIVATE
+        Antares::gems-csr-adapter
 )
 
 install(DIRECTORY include/antares

@@ -5,6 +5,7 @@
 
 #include <vector>
 
+#include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h"
@@ -122,6 +123,55 @@ void CsrQuadraticProblem::setMaxEnsLoadConstraints(ConstraintBuilder& builder)
     csrMaxEnsLoad.add();
 }
 
+void CsrQuadraticProblem::setFlowBasedConstraints(ConstraintBuilder& builder)
+{
+    const auto* rtd = problemeHebdo_->adequacyPatchRuntimeData.get();
+    if (!rtd || !rtd->useGemsFbConstraints || !rtd->gemsCsrAdapter)
+    {
+        return;
+    }
+
+    const int hour = hourlyCsrProblem_.triggeredHour;
+    const int mcYear = hourlyCsrProblem_.mcYear_;
+
+    auto& rowIndices = hourlyCsrProblem_.gemsFbConstraintRows_;
+    rowIndices.clear();
+
+    const auto rows = rtd->gemsCsrAdapter->rowsForHour(hour, mcYear);
+    for (const auto& row : rows)
+    {
+        builder.updateHourWithinWeek(static_cast<unsigned>(hour));
+        for (const auto& term : row.terms)
+        {
+            builder.rawTerm(term.column, term.coefficient);
+        }
+
+        if (builder.NumberOfVariables() > 0)
+        {
+            const int csrRow = builder.data.nombreDeContraintes;
+            rowIndices.push_back(csrRow);
+            builder.data.NomDesContraintes[csrRow] = "gems_" + row.constraintId;
+            switch (row.sense)
+            {
+            case Antares::AdequacyPatch::CsrRowSense::LE:
+                builder.lessThan();
+                break;
+            case Antares::AdequacyPatch::CsrRowSense::GE:
+                builder.greaterThan();
+                break;
+            case Antares::AdequacyPatch::CsrRowSense::EQ:
+                builder.equalTo();
+                break;
+            }
+            builder.build();
+        }
+        else
+        {
+            rowIndices.push_back(-1);
+        }
+    }
+}
+
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
@@ -141,6 +191,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setFictitiousLoadConstraints(builder);
     setMaxEnsLoadConstraints(builder);
     setBindingConstraints(builder);
+    setFlowBasedConstraints(builder);
 }
 
 } // namespace Antares::Solver::Optimization

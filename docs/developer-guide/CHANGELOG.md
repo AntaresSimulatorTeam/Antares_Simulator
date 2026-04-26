@@ -4,6 +4,19 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.3.11
+
+#### Features
+
+* Adequacy-patch CSR: inject GEMS flow-based constraints per hour [ANT-GEMS-FB]
+  - New INI keys `enable-gems-fb-constraints` (bool, default false) and
+    `gems-fb-constraint-filter` (regex string, default `^flow_based_constraint_`)
+    in section `[adequacy patch]` of `settings/generaldata.ini`.
+  - When enabled, matching GEMS constraints are injected as extra rows (and columns
+    for non-area-mapped variables) into the CSR quadratic sub-problem each triggered hour.
+  - Scenario-dependent parameters are supported: `tsNumber = mcYear + 1`.
+  - Default `false` preserves byte-identical results for all existing studies.
+
 ### 9.3.9
 
 #### Features

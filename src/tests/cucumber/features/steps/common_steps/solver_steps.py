@@ -1,5 +1,6 @@
 # Test steps definitions specific to antares-solver
 
+import configparser
 import os
 import re
 import shutil
@@ -39,6 +40,29 @@ def solver_study_path_is(context, string):
     context.study_path = create_temporary_copy(path)
     context.tmp_workdir = context.study_path
     init_simulation(context)
+
+
+@given('the GEMS overlay "{overlay}" is applied to the study')
+def apply_gems_overlay(context, overlay):
+    overlay_input = (
+        Path(context.config.userdata["resources-path"])
+        / Path(overlay.replace("/", os.sep))
+        / "input"
+    )
+    shutil.copytree(str(overlay_input), str(context.study_path / "input"), dirs_exist_ok=True)
+
+
+@given('the generaldata setting "{key}" in "{section}" is "{value}"')
+def set_generaldata_setting(context, key, section, value):
+    ini_path = context.study_path / "settings" / "generaldata.ini"
+    cfg = configparser.ConfigParser()
+    cfg.optionxform = str
+    cfg.read(str(ini_path))
+    if section not in cfg:
+        cfg[section] = {}
+    cfg.set(section, key, value)
+    with open(str(ini_path), "w") as f:
+        cfg.write(f)
 
 
 @given('the transmission-capacities of link "{link}" are set to "{value}"')

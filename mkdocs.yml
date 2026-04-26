@@ -50,6 +50,7 @@ nav:
           - 'Optional features':
               - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
               - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
+              - 'GEMS flow-based constraints in adequacy-patch CSR': 'user-guide/solver/optional-features/adq-patch-gems-fb.md'
               - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
       - 'Modeler':
           - 'Overview': 'user-guide/modeler/01-overview-modeler.md'
