@@ -48,7 +48,7 @@ std::map<std::string, unsigned> giveNumbersToStrings(const std::set<std::string>
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
 
-bool generatePathWithSuffix(std::filesystem::path& outputPath);
+bool generatePathWithSuffix(std::filesystem::path& outputPath, const std::string& suffix = "");
 
 class TimeMeasurement final
 {

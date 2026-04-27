@@ -208,16 +208,17 @@ void TimeMeasurement::reset()
 
 constexpr unsigned maxFolderSameTime = 2000;
 
-bool generatePathWithSuffix(std::filesystem::path& outputPath)
+bool generatePathWithSuffix(fs::path& outputPath, const std::string& suffix)
 {
-    if (fs::exists(outputPath))
+    // suffix can be ".zip" or empty
+    std::string candidate= outputPath.string() + suffix;
+    if (fs::exists(candidate))
     {
-        std::string candidate;
         unsigned int index = 1;
         do
         {
             ++index;
-            candidate = outputPath.string() + '-' + std::to_string(index);
+            candidate = outputPath.string() + '-' + std::to_string(index) + suffix;
         } while (fs::exists(candidate) && index < maxFolderSameTime);
 
         if (index >= maxFolderSameTime)
@@ -226,7 +227,7 @@ bool generatePathWithSuffix(std::filesystem::path& outputPath)
             return false;
         }
 
-        outputPath += '-' + std::to_string(index);
+        outputPath += '-' + std::to_string(index) + suffix;
     }
     return true;
 }

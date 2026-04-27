@@ -13,8 +13,6 @@
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/utils/utils.h"
 
-constexpr unsigned maxFolderSameTime = 2000;
-
 namespace Antares::Solver
 {
 void FileWriter::init(const std::string& time)
