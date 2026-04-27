@@ -8,6 +8,8 @@
 
 #include <antares/logs/logs.h>
 #include <antares/writer/table_writer_factory.h>
+#include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/exception/RuntimeError.hpp"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/modeler/Modeler.h"
 
@@ -30,7 +32,7 @@ void FileWriter::init(const std::string& simulationId)
     output_file_ = outputPath_ / ("simulation_table" + simulation_id);
 
     writer_ = makeTableWriter(parquetFormatRequired_, output_file_);
-    Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
+    logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
 const std::filesystem::path& FileWriter::outputPath() const
@@ -48,7 +50,7 @@ FileWriter::FileWriter(const std::filesystem::path& studyPath, bool parquetForma
 {
     if (!fs::exists(studyPath))
     {
-        throw std::runtime_error("Could not find output Folder: " + studyPath.string());
+        throw Error::RuntimeError("Could not find output Folder: " + studyPath.string());
     }
     outputPath_ = std::move(studyPath) / "output";
     logs.info() << "Output folder : " << outputPath_;
