@@ -11,11 +11,6 @@ inline void State::startANewYear()
 {
     hourInTheSimulation = 0u;
 
-    if (study.parameters.reservesEnabled)
-    {
-        reserveData.emplace(study.areas.size());
-    }
-
     memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
     memset(thermalClusterPMinOfTheClusterForYear, 0, sizeof(thermalClusterPMinOfTheClusterForYear));
@@ -36,6 +31,10 @@ inline void State::yearEndResetThermal()
 {
     memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
+    if (study.parameters.reservesEnabled)
+    {
+        reserveData.emplace(study.areas.size());
+    }
     memset(thermalClusterNonProportionalCostForYear,
            0,
            sizeof(thermalClusterNonProportionalCostForYear));
