@@ -18,6 +18,7 @@ namespace Antares::Writer
 class IColumnAdapter
 {
 public:
+    virtual ~IColumnAdapter() = default;
     virtual std::shared_ptr<arrow::Field> makeField() const = 0;
     virtual std::shared_ptr<arrow::Array> makeArray() const = 0;
 };
