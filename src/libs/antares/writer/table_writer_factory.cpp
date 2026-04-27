@@ -21,8 +21,8 @@
 
 #include "include/antares/writer/table_writer_factory.h"
 
-#include "csv_table_writer.h"
-#include "parquet_table_writer.h"
+#include "private/csv_table_writer.h"
+#include "private/parquet_table_writer.h"
 
 namespace fs = std::filesystem;
 

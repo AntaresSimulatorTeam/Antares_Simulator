@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "parquet_table_writer.h"
+#include "private/parquet_table_writer.h"
 
 #include <filesystem>
 #include <sstream>
@@ -12,8 +12,8 @@
 #include <arrow/io/api.h>
 #include <parquet/arrow/writer.h>
 
-#include "columnToArrowAdapter.h"
-#include "parquet_arrow_utils.h"
+#include "private/columnToArrowAdapter.h"
+#include "private/parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
 namespace fs = std::filesystem;

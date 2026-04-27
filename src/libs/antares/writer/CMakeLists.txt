@@ -9,14 +9,14 @@ add_library(parquet_writer SHARED
         include/antares/writer/i_table_writer.h
         i_table_writer.cpp
         include/antares/writer/table_writer_factory.h
-        parquet_arrow_utils.h
-        columnToArrowAdapter.h
+        private/parquet_arrow_utils.h
+        private/columnToArrowAdapter.h
         columnToArrowAdapter.cpp
         table_writer_factory.cpp
         parquet_table_writer.cpp
-        parquet_table_writer.h
+        private/parquet_table_writer.h
         csv_table_writer.cpp
-        csv_table_writer.h
+        private/csv_table_writer.h
 )
 
 generate_export_header(parquet_writer
@@ -37,6 +37,8 @@ target_include_directories(parquet_writer
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
 
 target_link_libraries(parquet_writer
@@ -57,7 +59,7 @@ add_library(result_writer
         # Immediate file writer (private)
         # Table writers (public API + implementations)
         csv_table_writer.cpp
-        csv_table_writer.h
+        private/csv_table_writer.h
         i_table_writer.cpp
         ensure_queue_started.cpp
         immediate_file_writer.cpp

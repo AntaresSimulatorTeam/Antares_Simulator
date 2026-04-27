@@ -16,7 +16,7 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
-#include "parquet_table_writer.h"
+#include "private/parquet_table_writer.h"
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;

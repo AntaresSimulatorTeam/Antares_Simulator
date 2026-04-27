@@ -1,11 +1,11 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "columnToArrowAdapter.h"
+#include "private/columnToArrowAdapter.h"
 
 #include <stdexcept>
 
-#include "parquet_arrow_utils.h"
+#include "private/parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
 using namespace Antares::Optimisation::LinearProblemApi;
