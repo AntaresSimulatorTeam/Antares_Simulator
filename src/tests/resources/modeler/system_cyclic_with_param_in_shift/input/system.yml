@@ -1,0 +1,157 @@
+# Copyright (c) 2026, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+# Study: system_cyclic_with_param_in_shift
+#
+# 3 time steps, 1 bus, 1 load [10, 10, 100], 2 generators:
+#   - gen_1: expensive (marginal_cost=100, startup_cost=500), p_max=90, p_min=10,
+#            d_min_up=2, d_min_down=1
+#   - gen_2: cheap (marginal_cost=10, no startup cost), p_max=10, p_min=0,
+#            d_min_up=1, d_min_down=1
+#
+# The optim-config enables "cyclic" out-of-bounds processing for
+# is_on_dynamics, min_up_duration, and min_down_duration on the generator
+# model. Out-of-bounds references wrap around to the other end of the block
+# instead of being dropped. With d_min_up=2:
+#   - is_on_dynamics at t=0: is_on[0] = is_on[2] + start[0] - stop[0]
+#   - min_up_duration at t=0 (d_min_up=2): start[2] + start[0] <= is_on[0]
+#   - min_down_duration never wraps (d_min_down=1 → sum(0..0))
+#
+# Optimal solution:
+#   gen_1 on at t=1 and t=2. With cyclic wrapping and d_min_up=2,
+#   starting gen_1 only at t=2 would require start[2]+start[0] <= is_on[0],
+#   i.e. 1+0<=0, which is infeasible. gen_1 on at t=1..2 (startup at t=1):
+#   - is_on=[0,1,1], start=[0,1,0], stop=[0,0,1] (stop cyclically at t=0)
+#   - All commitment constraints satisfied with cyclic wrap.
+#
+#   t=0: gen_2=10, cost = 10*10 = 100
+#   t=1: gen_1=10 (startup), cost = 100*10 + 500 = 1500
+#   t=2: gen_1=90, gen_2=10, cost = 100*90 + 10*10 = 9100
+#   Total optimal cost = 10700
+
+system:
+  id: system_cyclic_with_param_in_shift
+  model_libraries: simple_models
+  components:
+    - id: bus
+      model: simple_models.bus
+      parameters:
+        - id: v_nom
+          time-dependent: false
+          scenario-dependent: false
+          value: 1.0
+        - id: x
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: y
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: v_mag_pu_set
+          time-dependent: false
+          scenario-dependent: false
+          value: 1.0
+        - id: v_mag_pu_min
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: v_mag_pu_max
+          time-dependent: false
+          scenario-dependent: false
+          value: 1.0e+20
+
+    - id: load
+      model: simple_models.load
+      parameters:
+        - id: p_set
+          time-dependent: true
+          scenario-dependent: true
+          value: load
+        - id: q_set
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: sign
+          time-dependent: false
+          scenario-dependent: false
+          value: -1.0
+
+    - id: gen_1
+      model: simple_models.generator
+      parameters:
+        - id: p_min
+          time-dependent: false
+          scenario-dependent: false
+          value: 10.0
+        - id: p_max
+          time-dependent: false
+          scenario-dependent: false
+          value: 90.0
+        - id: marginal_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 100.0
+        - id: startup_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 500.0
+        - id: d_min_up
+          time-dependent: false
+          scenario-dependent: false
+          value: 2
+        - id: d_min_down
+          time-dependent: false
+          scenario-dependent: false
+          value: 1
+
+    - id: gen_2
+      model: simple_models.generator
+      parameters:
+        - id: p_min
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: p_max
+          time-dependent: false
+          scenario-dependent: false
+          value: 10.0
+        - id: marginal_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 10.0
+        - id: startup_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 0.0
+        - id: d_min_up
+          time-dependent: false
+          scenario-dependent: false
+          value: 1
+        - id: d_min_down
+          time-dependent: false
+          scenario-dependent: false
+          value: 1
+
+  connections:
+    - component1: bus
+      port1: p_balance_port
+      component2: load
+      port2: p_balance_port
+    - component1: bus
+      port1: p_balance_port
+      component2: gen_1
+      port2: p_balance_port
+    - component1: bus
+      port1: p_balance_port
+      component2: gen_2
+      port2: p_balance_port

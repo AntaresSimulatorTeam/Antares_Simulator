@@ -1,0 +1,238 @@
+# Copyright (c) 2026, RTE (https://www.rte-france.com)
+#
+# See AUTHORS.txt
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+#
+# This file is part of the Antares project.
+
+library:
+  id: simple_models
+  description: Simple model library
+
+  port-types:
+    - id: flow
+      description: A port which transfers power flow
+      fields:
+        - id: flow
+    - id: emission
+      description: A port which accounts for CO2 emissions
+      fields:
+        - id: emission
+
+  models:
+    - id: bus
+
+      parameters:
+        - id: v_nom
+          time-dependent: false
+          scenario-dependent: false
+        - id: x
+          time-dependent: false
+          scenario-dependent: false
+        - id: y
+          time-dependent: false
+          scenario-dependent: false
+        - id: v_mag_pu_set
+          time-dependent: true
+          scenario-dependent: false
+        - id: v_mag_pu_min
+          time-dependent: false
+          scenario-dependent: false
+        - id: v_mag_pu_max
+          time-dependent: false
+          scenario-dependent: false
+      ports:
+        - id: p_balance_port
+          type: flow
+        - id: q_balance_port
+          type: flow
+      binding-constraints:
+        - id: p_balance
+          expression: sum_connections(p_balance_port.flow) = 0
+        - id: q_balance
+          expression: sum_connections(q_balance_port.flow) = 0
+
+    - id: load
+
+      parameters:
+        - id: p_set
+          time-dependent: true
+          scenario-dependent: true
+        - id: q_set
+          time-dependent: true
+          scenario-dependent: true
+        - id: sign
+          time-dependent: false
+          scenario-dependent: false
+      ports:
+        - id: p_balance_port
+          type: flow
+        - id: q_balance_port
+          type: flow
+      port-field-definitions:
+        - port: p_balance_port
+          field: flow
+          definition: sign * p_set
+        - port: q_balance_port
+          field: flow
+          definition: sign * q_set
+
+    - id: generator
+      parameters:
+        - id: p_min
+          time-dependent: true
+          scenario-dependent: true
+        - id: p_max
+          time-dependent: true
+          scenario-dependent: true
+        - id: marginal_cost
+          time-dependent: true
+          scenario-dependent: true
+        - id: startup_cost
+          time-dependent: false
+          scenario-dependent: false
+        - id: d_min_up
+          time-dependent: false
+          scenario-dependent: false
+        - id: d_min_down
+          time-dependent: false
+          scenario-dependent: false
+
+      variables:
+        - id: p
+        - id: start
+          lower-bound: 0
+          upper-bound: 1
+          variable-type: integer
+        - id: stop
+          lower-bound: 0
+          upper-bound: 1
+          variable-type: integer
+        - id: is_on
+          lower-bound: 0
+          upper-bound: 1
+          variable-type: integer
+        #- id: q
+      ports:
+        - id: p_balance_port
+          type: flow
+        - id: emission_port
+          type: emission
+      port-field-definitions:
+        - port: p_balance_port
+          field: flow
+          definition: p
+      constraints:
+        - id: min_dispatch
+          expression: p >=p_min * is_on
+        - id: max_dispatch
+          expression: p <=p_max * is_on
+        - id: is_on_dynamics
+          expression: is_on = is_on[t-1] + start - stop
+        - id: min_up_duration
+          expression: sum(t-d_min_up + 1 .. t, start) <= is_on
+        - id: min_down_duration
+          expression: sum(t-d_min_down + 1 .. t, stop) <= 1 - is_on
+      objective-contributions:
+        - id: operational_objective
+          expression: expec(sum(marginal_cost * p + startup_cost * start))
+
+    - id: storage_unit
+      parameters:
+        - id: p_nom_min
+          time-dependent: false
+          scenario-dependent: false
+        - id: p_nom_max
+          time-dependent: false
+          scenario-dependent: false
+        - id: p_min_pu
+          time-dependent: true
+          scenario-dependent: true
+        - id: p_max_pu
+          time-dependent: true
+          scenario-dependent: true
+        - id: sign #default value = 1
+          time-dependent: false
+          scenario-dependent: false
+        #- id: carrier # This parameter is not used in the Gems model
+        - id: spill_cost #Parameter not instantiated for now
+          time-dependent: true
+          scenario-dependent: true
+        - id: marginal_cost
+          time-dependent: true
+          scenario-dependent: true
+        - id: marginal_cost_storage
+          time-dependent: true
+          scenario-dependent: true
+        - id: capital_cost
+          time-dependent: false
+          scenario-dependent: false
+        - id: max_hours
+          time-dependent: false
+          scenario-dependent: false
+        - id: efficiency_store
+          time-dependent: true
+          scenario-dependent: true
+        - id: efficiency_dispatch
+          time-dependent: true
+          scenario-dependent: true
+        - id: standing_loss
+          time-dependent: true
+          scenario-dependent: true
+        - id: inflow
+          time-dependent: true
+          scenario-dependent: true
+        - id: emission_factor
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: p_nom
+          time-dependent: false
+          scenario-dependent: false
+          lower-bound: p_nom_min
+          upper-bound: p_nom_max
+        - id: p_store
+          lower-bound: 0
+          upper-bound: p_max_pu * p_nom_max
+        - id: p_dispatch
+          lower-bound: 0
+          upper-bound: p_max_pu * p_nom_max
+        - id: state_of_charge
+          lower-bound: 0
+          upper-bound: max_hours * p_nom_max
+        - id: spill
+          lower-bound: 0
+      ports:
+        - id: p_balance_port
+          type: flow
+        - id: emission_port
+          type: emission
+      port-field-definitions:
+        - port: p_balance_port
+          field: flow
+          definition: p_dispatch - p_store
+        - port: emission_port
+          field: emission
+          definition: emission_factor * 0 #Since we assume here cyclity of StorageUnits. In the future, for non-cyclic Store: (e[-1] - e[T-1])*emission_factor
+      constraints:
+        - id: p_store_upper
+          expression: p_store <= p_max_pu * p_nom
+        - id: p_dispatch_upper
+          expression: p_dispatch <= p_max_pu * p_nom
+        - id: state_of_charge_upper
+          expression: state_of_charge <= max_hours * p_nom
+        - id: state_of_charge_balance
+          expression: state_of_charge = (1- standing_loss) * state_of_charge[t-1] +
+            efficiency_store * p_store - p_dispatch / efficiency_dispatch  +
+            inflow - spill
+      objective-contributions:
+        - id: capital_objective
+          expression: capital_cost * p_nom
+        - id: operational_objective
+          expression: expec(sum(marginal_cost * p_dispatch + spill_cost*spill +
+            marginal_cost_storage * state_of_charge))

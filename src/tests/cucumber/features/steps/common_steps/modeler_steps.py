@@ -175,6 +175,23 @@ def parse_structure(content):
     return entries
 
 
+@then(u'the subproblem contains the following number of active constraint rows')
+def check_active_constraint_rows(context):
+    assert context.moh.problems is not None and context.moh.problems.subproblem is not None
+    model = context.moh.problems.subproblem
+    for row in context.table:
+        constraint_name = row['constraint_name']
+        expected_count = int(row['count'])
+        actual_count = sum(
+            1 for c in model.get_linear_constraints()
+            if f'.{constraint_name}_' in c.name
+        )
+        assert actual_count == expected_count, (
+            f"Expected {expected_count} active rows for constraint '{constraint_name}', "
+            f"got {actual_count}"
+        )
+
+
 @then(u'the structure file contains the following entries')
 def check_structure(context):
     structure = context.moh.problems.structure

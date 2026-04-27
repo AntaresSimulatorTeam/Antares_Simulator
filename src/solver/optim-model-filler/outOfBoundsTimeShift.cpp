@@ -7,10 +7,10 @@
 
 namespace Antares::Optimisation
 {
-bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
-                             unsigned timeStep,
-                             const LinearProblemApi::FillContext& ctx,
-                             Expressions::Visitors::EvalVisitor& evalVisitor)
+bool hasOutOfBoundsTerms(const Expressions::Nodes::Node* node,
+                         unsigned timeStep,
+                         const LinearProblemApi::FillContext& ctx,
+                         Expressions::Visitors::EvalVisitor& evalVisitor)
 {
     if (!node)
     {
@@ -29,11 +29,25 @@ bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
         }
     }
 
+    if (const auto* timeSumNode = dynamic_cast<const Expressions::Nodes::TimeSumNode*>(node))
+    {
+        const auto from = static_cast<int>(
+          evalVisitor.dispatch(timeSumNode->from()).valueAsDouble());
+        const auto to = static_cast<int>(evalVisitor.dispatch(timeSumNode->to()).valueAsDouble());
+        const int absoluteFrom = static_cast<int>(timeStep) + from;
+        const int absoluteTo = static_cast<int>(timeStep) + to;
+        if (absoluteFrom < static_cast<int>(ctx.getLocalFirstTimeStep())
+            || absoluteTo > static_cast<int>(ctx.getLocalLastTimeStep()))
+        {
+            return true;
+        }
+    }
+
     if (const auto* parentNode = dynamic_cast<const Expressions::Nodes::ParentNode*>(node))
     {
         for (const auto* operand: parentNode->getConstOperands())
         {
-            if (hasOutOfBoundsTimeShift(operand, timeStep, ctx, evalVisitor))
+            if (hasOutOfBoundsTerms(operand, timeStep, ctx, evalVisitor))
             {
                 return true;
             }

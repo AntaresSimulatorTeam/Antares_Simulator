@@ -214,10 +214,10 @@ void addConstraintEntries(ISimulationTable& simulationTable,
                 // Check if we need to drop the constraint
                 if (modelConstr.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
-                    && Optimisation::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
-                                                             *ts,
-                                                             fillContext,
-                                                             evalVisitor))
+                    && Optimisation::hasOutOfBoundsTerms(modelConstr.expression().RootNode(),
+                                                         *ts,
+                                                         fillContext,
+                                                         evalVisitor))
                 {
                     activeConstraint = nullptr;
                 }
@@ -303,10 +303,10 @@ void addEntriesForNode(ISimulationTable& simulationTable,
 
                 if (constraint.outOfBoundsProcessingMode()
                       == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
-                    && Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
-                                                             *ts,
-                                                             fillContext,
-                                                             evalVisitor))
+                    && Optimisation::hasOutOfBoundsTerms(constraint.expression().RootNode(),
+                                                         *ts,
+                                                         fillContext,
+                                                         evalVisitor))
                 {
                     return;
                 }

@@ -23,8 +23,8 @@ class FillContext;
 
 namespace Antares::Optimisation
 {
-bool hasOutOfBoundsTimeShift(const Expressions::Nodes::Node* node,
-                             unsigned timeStep,
-                             const LinearProblemApi::FillContext& ctx,
-                             Expressions::Visitors::EvalVisitor& evalVisitor);
+bool hasOutOfBoundsTerms(const Expressions::Nodes::Node* node,
+                         unsigned timeStep,
+                         const LinearProblemApi::FillContext& ctx,
+                         Expressions::Visitors::EvalVisitor& evalVisitor);
 } // namespace Antares::Optimisation
