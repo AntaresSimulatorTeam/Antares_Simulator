@@ -97,7 +97,7 @@ private:
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     std::unique_ptr<Optimisation::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
     std::unique_ptr<Optimisation::LinearProblemApi::FillContext> timeScenarioCtx_ = nullptr;
-    Optimisation::LinearProblemApi::IMipSolution* subProbSolution_;
+    Optimisation::LinearProblemApi::IMipSolution* subProbSolution_ = nullptr;
     ModelerParameters parameters_;
     ModelerData data_;
 };
