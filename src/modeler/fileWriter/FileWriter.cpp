@@ -1,10 +1,7 @@
-
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/modeler/fileWriter/FileWriter.h"
-
-#include <fstream>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
@@ -14,6 +11,7 @@
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
+#include "antares/utils/utils.h"
 
 constexpr unsigned maxFolderSameTime = 2000;
 
@@ -23,18 +21,10 @@ void FileWriter::init(const std::string& time)
 {
     outputPath_ = studyPath_ / "output" / time;
 
-    // avoid overwriting existing output by adding a suffix
-    if (std::filesystem::exists(outputPath_))
+    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
+    if (!Utils::generatePathWithSuffix(outputPath_))
     {
-        std::string candidate;
-        uint index = 1;
-        do
-        {
-            ++index;
-            candidate = outputPath_.string() + '-' + std::to_string(index);
-        } while (std::filesystem::exists(candidate) && index < maxFolderSameTime);
-
-        outputPath_ += '-' + std::to_string(index);
+        throw Modeler::ModelerError("Output folder already exists: " + outputPath_.string());
     }
 
     logs.info() << "Output folder : " << outputPath_;

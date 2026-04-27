@@ -11,6 +11,8 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 namespace Antares
 {
 
@@ -202,6 +204,31 @@ void TimeMeasurement::reset()
 {
     start_ = clock::now();
     end_ = start_;
+}
+
+constexpr unsigned maxFolderSameTime = 2000;
+
+bool generatePathWithSuffix(std::filesystem::path& outputPath)
+{
+    if (fs::exists(outputPath))
+    {
+        std::string candidate;
+        unsigned int index = 1;
+        do
+        {
+            ++index;
+            candidate = outputPath.string() + '-' + std::to_string(index);
+        } while (fs::exists(candidate) && index < maxFolderSameTime);
+
+        if (index >= maxFolderSameTime)
+        {
+            logs.error() << "Output folder already exists: " << candidate;
+            return false;
+        }
+
+        outputPath += '-' + std::to_string(index);
+    }
+    return true;
 }
 
 } // namespace Utils

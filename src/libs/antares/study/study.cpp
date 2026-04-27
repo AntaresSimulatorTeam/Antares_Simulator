@@ -251,19 +251,13 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
     }
 
     std::string outpath = folderOutput.string() + suffix;
-    // avoid creating the same output twice
-    if (fs::exists(outpath))
-    {
-        std::string newpath;
-        uint index = 1; // will start from 2
-        do
-        {
-            ++index;
-            newpath = folderOutput.string() + '-' + std::to_string(index) + suffix;
-        } while (fs::exists(newpath) and index < maxFolderSameTime);
 
-        folderOutput += '-' + std::to_string(index);
+    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
+    if (!Utils::generatePathWithSuffix(folderOutput))
+    {
+        throw Error::LoadingError("Output folder already exists: " + outpath);
     }
+
     return folderOutput;
 }
 
