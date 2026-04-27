@@ -90,6 +90,7 @@ target_include_directories(result_writer
 
 target_link_libraries(result_writer
         PUBLIC
+        Antares::exception
         Antares::benchmarking
         yuni-static-core
         # parquet_writer is a SHARED library (DLL on Windows). Since result_writer
