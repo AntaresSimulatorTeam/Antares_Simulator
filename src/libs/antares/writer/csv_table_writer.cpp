@@ -5,6 +5,7 @@
 
 #include <filesystem>
 #include <fstream>
+
 #include "antares/exception/RuntimeError.hpp"
 
 using namespace Antares::IO::Outputs;
@@ -76,7 +77,7 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
     if (!out)
     {
         throw Antares::Error::RuntimeError("CsvTableWriter: cannot open output file: "
-                                 + output_file_.string());
+                                           + output_file_.string());
     }
 
     std::vector<std::string> names;

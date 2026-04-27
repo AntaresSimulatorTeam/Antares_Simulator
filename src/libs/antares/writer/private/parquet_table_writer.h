@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "antares/writer/i_table_writer.h"
+
 #include "simulation-table-writers_export.h"
 
 namespace Antares::Writer
@@ -18,4 +19,3 @@ public:
 };
 
 } // namespace Antares::Writer
-

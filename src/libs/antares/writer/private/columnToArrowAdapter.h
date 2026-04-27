@@ -129,4 +129,3 @@ std::shared_ptr<IColumnAdapter> makeColumnAdapter(
   const std::unique_ptr<IO::Outputs::IColumn>& column);
 
 } // namespace Antares::Writer
-

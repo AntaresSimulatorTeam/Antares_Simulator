@@ -21,4 +21,3 @@ public:
 };
 
 } // namespace Antares::Writer
-

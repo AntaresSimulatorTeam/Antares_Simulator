@@ -6,6 +6,7 @@
 #include <arrow/result.h>
 #include <arrow/status.h>
 #include <stdexcept>
+
 #include <antares/exception/RuntimeError.hpp>
 
 inline void throwOnStatusKO(const arrow::Status& status)
@@ -25,4 +26,3 @@ T throwOnResultKO(arrow::Result<T> result)
     }
     return std::move(result).ValueOrDie();
 }
-
