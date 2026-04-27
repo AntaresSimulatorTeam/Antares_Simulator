@@ -30,6 +30,8 @@ using namespace Yuni;
 
 namespace fs = std::filesystem;
 
+constexpr unsigned maxFolderSameTime = 2000;
+
 namespace Antares::Data
 {
 //! Clear then shrink a string
@@ -258,7 +260,7 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
         {
             ++index;
             newpath = folderOutput.string() + '-' + std::to_string(index) + suffix;
-        } while (fs::exists(newpath) and index < 2000);
+        } while (fs::exists(newpath) and index < maxFolderSameTime);
 
         folderOutput += '-' + std::to_string(index);
     }
