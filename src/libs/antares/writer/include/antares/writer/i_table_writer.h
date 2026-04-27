@@ -18,7 +18,7 @@ class ITableWriter
 public:
     using Ptr = std::shared_ptr<ITableWriter>;
 
-    ITableWriter(std::filesystem::path& filePath);
+    explicit ITableWriter(std::filesystem::path& filePath);
     virtual ~ITableWriter() = default;
     virtual void writeTable(const IO::Outputs::SimulationTable& simuTable) const = 0;
 
