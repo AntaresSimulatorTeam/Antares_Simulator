@@ -211,7 +211,7 @@ constexpr unsigned maxFolderSameTime = 2000;
 bool generatePathWithSuffix(fs::path& outputPath, const std::string& suffix)
 {
     // suffix can be ".zip" or empty
-    std::string candidate= outputPath.string() + suffix;
+    std::string candidate = outputPath.string() + suffix;
     if (fs::exists(candidate))
     {
         unsigned int index = 1;
