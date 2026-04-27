@@ -307,6 +307,88 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_range)
     BOOST_CHECK_CLOSE((*bc_gt)->RHSTimeSeries()[0][8783], 0.4, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(BC_disabled_returns_constraint_without_timeseries)
+{
+    auto study = std::make_shared<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    AreaAddLinkBetweenAreas(area1, area2);
+
+    StudyLoadOptions options;
+    BindingConstraintsRepository bindingConstraints;
+
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+
+    std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
+    constraints << "[1]\n"
+                << "name = dummy_name\n"
+                << "id = dummy_id\n"
+                << "enabled = false\n"
+                << "type = hourly\n"
+                << "operator = equal\n"
+                << "group = dummy_group\n"
+                << "area1%area2 = 1.000000\n";
+    constraints.close();
+    std::ofstream rhs(working_tmp_dir / "dummy_id_eq.txt");
+    for (int i = 0; i < 8784; ++i)
+    {
+        rhs << "0.2\t0.4\t0.6\n";
+    }
+    rhs.close();
+
+    study->header.version = StudyVersion(8, 7);
+    const bool loading_ok = bindingConstraints.loadFromFolder(*study,
+                                                              options,
+                                                              working_tmp_dir.string());
+
+    BOOST_CHECK_EQUAL(loading_ok, true);
+
+    auto constraint = *bindingConstraints.begin();
+    BOOST_CHECK_EQUAL(constraint->enabled(), false);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().width, 0);
+    BOOST_CHECK_EQUAL(constraint->RHSTimeSeries().height, 0);
+}
+
+BOOST_AUTO_TEST_CASE(BC_disabled_both_operator_returns_single_constraint)
+{
+    auto study = std::make_shared<Study>();
+    auto area1 = addAreaToListOfAreas(study->areas, "area1");
+    auto area2 = addAreaToListOfAreas(study->areas, "area2");
+    AreaAddLinkBetweenAreas(area1, area2);
+
+    StudyLoadOptions options;
+    BindingConstraintsRepository bindingConstraints;
+
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+
+    std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
+    constraints << "[1]\n"
+                << "name = dummy_name\n"
+                << "id = dummy_id\n"
+                << "enabled = false\n"
+                << "type = hourly\n"
+                << "operator = both\n"
+                << "group = dummy_group\n"
+                << "area1%area2 = 1.000000\n";
+    constraints.close();
+    std::ofstream lt(working_tmp_dir / "dummy_id_lt.txt");
+    lt.close();
+    std::ofstream gt(working_tmp_dir / "dummy_id_gt.txt");
+    gt.close();
+
+    study->header.version = StudyVersion(8, 7);
+    const bool loading_ok = bindingConstraints.loadFromFolder(*study,
+                                                              options,
+                                                              working_tmp_dir.string());
+
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    // With enabled=false, the constraint is returned without splitting into lt/gt
+    BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
+
+    auto constraint = *bindingConstraints.begin();
+    BOOST_CHECK_EQUAL(constraint->enabled(), false);
+}
+
 BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
 {
     auto study = std::make_unique<Study>();

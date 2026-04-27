@@ -184,6 +184,31 @@ BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries_upper_bound, Fixture
                expected_upper_bound_series);
 }
 
+BOOST_FIXTURE_TEST_CASE(BC_disabled_skips_timeseries_loading, Fixture)
+{
+    {
+        std::ofstream constraints(working_tmp_dir / "bindingconstraints"
+                                  / "bindingconstraints.ini");
+        constraints << "[1]\n"
+                    << "name = dummy_name\n"
+                    << "id = dummy_name\n"
+                    << "enabled = false\n"
+                    << "type = hourly\n"
+                    << "operator = equal\n"
+                    << "group = dummy_group\n"
+                    << "area1%area2 = 1.000000\n";
+        constraints.close();
+    }
+    bool loading_ok = study->internalLoadBindingConstraints(options);
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    BOOST_CHECK_EQUAL(study->bindingConstraints.size(), 1);
+
+    auto bc = study->bindingConstraints.find("dummy_name");
+    BOOST_CHECK_EQUAL(bc->enabled(), false);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().width, 0);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().height, 0);
+}
+
 BOOST_FIXTURE_TEST_CASE(
   verify_all_constraints_in_a_group_have_the_same_number_of_time_series_error_case,
   Fixture)
