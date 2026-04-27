@@ -151,54 +151,53 @@ $(document).ready(function(){initNavTree('utils_8h_source.html',''); initResizab
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;std::tm getCurrentTime();</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;std::string formatTime(<span class="keyword">const</span> std::tm&amp; localTime, <span class="keyword">const</span> std::string&amp; format);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> BeautifyName(YString&amp; out, AnyString oldname);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">void</span> BeautifyName(std::string&amp; out, <span class="keyword">const</span> std::string&amp; oldname);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt; splitStringIntoPairs(<span class="keyword">const</span> std::string&amp; s,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                                                      <span class="keywordtype">char</span> delimiter1,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                                                      <span class="keywordtype">char</span> delimiter2);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">namespace </span>Utils</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">bool</span> compareCaseInsensitive(<span class="keyword">const</span> std::string&amp; str1, <span class="keyword">const</span> std::string&amp; str2);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keywordtype">bool</span> isZero(<span class="keywordtype">double</span> d);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">double</span> round(<span class="keywordtype">double</span> d, <span class="keywordtype">unsigned</span> precision);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">double</span> ceil(<span class="keywordtype">double</span> d);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">double</span> floor(<span class="keywordtype">double</span> d);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">bool</span> isPathValid(<span class="keyword">const</span> std::string&amp; path);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;std::map&lt;std::string, unsigned&gt; giveNumbersToStrings(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; strs);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;std::map&lt;std::string, unsigned&gt; giveNumbersToStrings(<span class="keyword">const</span> std::set&lt;std::string&gt;&amp; strs);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">bool</span> checkAllElementsIdenticalOrOne(std::vector&lt;unsigned&gt; w);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">bool</span> checkAllElementsIdenticalOrOne(std::vector&lt;std::pair&lt;unsigned, std::string&gt;&gt;&amp; p);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;std::vector&lt;std::pair&lt;std::string, std::string&gt;&gt; splitStringIntoPairs(<span class="keyword">const</span> std::string&amp; s,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                                                                      <span class="keywordtype">char</span> delimiter1,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                                                      <span class="keywordtype">char</span> delimiter2);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">namespace </span>Utils</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">bool</span> compareCaseInsensitive(<span class="keyword">const</span> std::string&amp; str1, <span class="keyword">const</span> std::string&amp; str2);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">bool</span> isZero(<span class="keywordtype">double</span> d);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">double</span> round(<span class="keywordtype">double</span> d, <span class="keywordtype">unsigned</span> precision);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">double</span> ceil(<span class="keywordtype">double</span> d);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">double</span> floor(<span class="keywordtype">double</span> d);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">bool</span> isPathValid(<span class="keyword">const</span> std::string&amp; path);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;std::map&lt;std::string, unsigned&gt; giveNumbersToStrings(<span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; strs);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;std::map&lt;std::string, unsigned&gt; giveNumbersToStrings(<span class="keyword">const</span> std::set&lt;std::string&gt;&amp; strs);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">bool</span> checkAllElementsIdenticalOrOne(std::vector&lt;unsigned&gt; w);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">bool</span> checkAllElementsIdenticalOrOne(std::vector&lt;std::pair&lt;unsigned, std::string&gt;&gt;&amp; p);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">bool</span> generatePathWithSuffix(std::filesystem::path&amp; outputPath, <span class="keyword">const</span> std::string&amp; suffix = <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="classAntares_1_1Utils_1_1TimeMeasurement.html">   53</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Utils_1_1TimeMeasurement.html">TimeMeasurement</a> final</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">using</span> clock = std::chrono::steady_clock;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classAntares_1_1Utils_1_1TimeMeasurement.html">   57</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Utils_1_1TimeMeasurement.html">TimeMeasurement</a> final</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">using</span> clock = std::chrono::steady_clock;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="classAntares_1_1Utils_1_1TimeMeasurement.html">TimeMeasurement</a>();</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> tick();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">long</span> duration_ms() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::string toString() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::string toStringInSeconds() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> reset();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    clock::time_point start_;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    clock::time_point end_;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;};</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;} <span class="comment">// namespace Utils</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#include &quot;utils.hxx&quot;</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_UTILS_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Utils_1_1TimeMeasurement_html"><div class="ttname"><a href="classAntares_1_1Utils_1_1TimeMeasurement.html">Antares::Utils::TimeMeasurement</a></div><div class="ttdef"><b>Definition:</b> utils.h:58</div></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="classAntares_1_1Utils_1_1TimeMeasurement.html">TimeMeasurement</a>();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> tick();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">long</span> duration_ms() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    std::string toString() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    std::string toStringInSeconds() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> reset();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    clock::time_point start_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    clock::time_point end_;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;};</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;} <span class="comment">// namespace Utils</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#include &quot;utils.hxx&quot;</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_UTILS_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Utils_1_1TimeMeasurement_html"><div class="ttname"><a href="classAntares_1_1Utils_1_1TimeMeasurement.html">Antares::Utils::TimeMeasurement</a></div><div class="ttdef"><b>Definition:</b> utils.h:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

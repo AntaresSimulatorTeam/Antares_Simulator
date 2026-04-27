@@ -1581,6 +1581,8 @@ var namespaces_dup =
         [ "checkAllElementsIdenticalOrOne", "utils_8h.html#a5c195397128b4459eacc09d2d83e24f3", null ],
         [ "compareCaseInsensitive", "utils_8h.html#a6018cc51f58245da1ba8cb0eee9d3662", null ],
         [ "floor", "utils_8h.html#a28e4efa05d04724ebaabf457c1d64271", null ],
+        [ "generatePathWithSuffix", "utils_8cpp.html#a705c0fea43ca1ee27fa2f9d0d861c061", null ],
+        [ "generatePathWithSuffix", "utils_8h.html#a83e62236343a3b0798ff41230b150828", null ],
         [ "giveNumbersToStrings", "utils_8h.html#a6211fc221fca79ebe1b7f17cfa9ff4b5", null ],
         [ "giveNumbersToStrings", "utils_8h.html#a02f264835becd9b85fc7ecfed3f5e91a", null ],
         [ "isPathValid", "utils_8cpp.html#a147039a439a7c615a6823509701165b8", null ],
@@ -1596,7 +1598,8 @@ var namespaces_dup =
         [ "operator<=", "vector-utils_8h.html#a73e812819e95268322fbf20b29dc539e", null ],
         [ "operator>=", "vector-utils_8h.html#a80f0fdf8794245da0ec1ff24c7b6012c", null ],
         [ "round", "utils_8h.html#a55cc90c1c1261f10fd4ebd6c24086b2f", null ],
-        [ "sum", "vector-utils_8h.html#a769b4101d8ecb47b5072ba6dbbe98734", null ]
+        [ "sum", "vector-utils_8h.html#a769b4101d8ecb47b5072ba6dbbe98734", null ],
+        [ "maxFolderSameTime", "utils_8cpp.html#a3e69fe3927d336b9ed56cebbe28bb837", null ]
       ] ],
       [ "Writer", null, [
         [ "CsvTableWriter", "classAntares_1_1Writer_1_1CsvTableWriter.html", "classAntares_1_1Writer_1_1CsvTableWriter" ],
@@ -1661,8 +1664,6 @@ var namespaces_dup =
         [ "november", "date_8h.html#ad709cfab2a90448c74c6afecd3e67d71af5e48af24d042c18cf112055e2777111", null ],
         [ "december", "date_8h.html#ad709cfab2a90448c74c6afecd3e67d71a9d76945d26eb8f0ebc8ece4170efe33b", null ]
       ] ],
-      [ "BeautifyName", "utils_8h.html#ad6e27f3845b75d0997844acd13084c3f", null ],
-      [ "BeautifyName", "utils_8h.html#aee0b62cf3a3ad8485f605e93b37e73e3", null ],
       [ "computeYearInflows", "solver_2hydro_2management_2monthly_8cpp.html#aca5e481dc01d20ffb6fd9baf8eb61458", null ],
       [ "formatTime", "utils_8h.html#a00ea3aff8a6e482eab9f37519f917c5c", null ],
       [ "get_format", "matrix-to-buffer_8h.html#af3366095ac651f09f5dd4a4f3f80b67c", null ],
