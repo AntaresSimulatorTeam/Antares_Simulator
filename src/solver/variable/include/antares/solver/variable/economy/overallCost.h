@@ -255,7 +255,7 @@ public:
     double getReserveParticipationCost(const State& state)
     {
         return state.reserveData ? state.reserveData.value()
-                                     .at(state.area->id)
+                                     .at(state.area->index)
                                      .reserveParticipationCostForYear[state.hourInTheYear]
                                  : 0.0;
     }

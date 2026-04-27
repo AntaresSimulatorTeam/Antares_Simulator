@@ -216,7 +216,7 @@ public:
                     {
                         pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
                           += state.reserveData.value()
-                               .at(area->id)
+                               .at(area->index)
                                .reserveParticipationPerGroupForYear[state.hourInTheYear]
                                .shortTermStorageGroupsReserveParticipation[group][reserveName];
                         column++;

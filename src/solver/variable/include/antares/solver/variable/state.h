@@ -273,7 +273,7 @@ public:
         }
     };
 
-    ReserveOpt<std::map<AreaName, ReserveData>> reserveData;
+    ReserveOpt<std::vector<ReserveData>> reserveData;
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)

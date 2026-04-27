@@ -234,14 +234,14 @@ public:
 
         double storageReserveCost = state.reserveData
                                       ? state.reserveData.value()
-                                          .at(state.area->id)
+                                          .at(state.area->index)
                                           .STStorageClusterReserveParticipationCostForYear
                                             [state.hourInTheYear]
                                       : 0.0;
 
         double hydroReserveCost = state.reserveData
                                     ? state.reserveData.value()
-                                        .at(state.area->id)
+                                        .at(state.area->index)
                                         .HydroReserveParticipationCostForYear[state.hourInTheYear]
                                     : 0.0;
 

@@ -228,7 +228,7 @@ public:
     {
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
           = state.reserveData ? state.reserveData.value()
-                                  .at(state.area->id)
+                                  .at(state.area->index)
                                   .reserveParticipationCostForYear[state.hourInTheYear]
                               : 0;
         // Next variable

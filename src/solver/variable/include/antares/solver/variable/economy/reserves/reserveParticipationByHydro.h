@@ -117,7 +117,7 @@ void ReserveParticipationByHydro<NextT>::populateHourlyValues(State& state, unsi
     {
         for (const auto& [reserveName, reserveParticipation]:
              state.reserveData.value()
-               .at(state.area->id)
+               .at(state.area->index)
                .reserveParticipationPerHydroForYear[state.hourInTheYear]["Hydro"])
         {
             pValuesForTheCurrentYear[numSpace]
