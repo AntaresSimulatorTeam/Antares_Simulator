@@ -18,3 +18,5 @@ add_boost_test(testOutputs
 target_compile_definitions(testOutputs PRIVATE
         CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
+
+copy_project_shared_lib(parquet_writer testOutputs)

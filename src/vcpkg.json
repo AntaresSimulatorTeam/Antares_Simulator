@@ -38,6 +38,10 @@
     },
     {
       "name": "fmt"
+    },
+    {
+      "name": "arrow",
+      "features": ["parquet"]
     }
   ]
 }

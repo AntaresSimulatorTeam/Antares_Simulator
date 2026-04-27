@@ -1,5 +1,6 @@
 set(SOURCES
         parser.cpp
+        decoders.cpp
         include/antares/io/inputs/yml-optim-config/decoders.h
         include/antares/io/inputs/yml-optim-config/parser.h
 )
@@ -18,8 +19,8 @@ target_include_directories(yml-optim-config
 target_link_libraries(yml-optim-config
         PRIVATE
         yaml-cpp::yaml-cpp
-        Antares::exception
         PUBLIC
+        Antares::input-error
         Antares::antares-study-system-model
 )
 

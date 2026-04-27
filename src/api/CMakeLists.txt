@@ -54,7 +54,10 @@ target_sources(single_problem_api
 	PRIVATE
 	singleProblemGetter.cpp
 	singleProblemGetterImpl.cpp
-	include/antares/api/singleProblemGetter.h)
+	include/antares/api/singleProblemGetter.h
+	modelerProblems.cpp
+	modelerProblemsImpl.cpp
+	include/antares/api/modelerProblems.h)
 
 target_include_directories(single_problem_api
         PUBLIC
@@ -66,6 +69,9 @@ target_link_libraries(single_problem_api
         PRIVATE
         antares-solver-simulation
         model_antares
+        modeler-lib
+        load-modeler-files
+        write-modeler-files
         Antares::hydro
         Antares::file-tree-study-loader
         PUBLIC
@@ -76,6 +82,7 @@ target_link_libraries(single_problem_api
 add_executable(antares-problem-generator main.cpp)
 target_link_libraries(antares-problem-generator
 	single_problem_api)
+copy_project_shared_lib(parquet_writer antares-problem-generator)
 
 install(DIRECTORY include/antares
         DESTINATION "include")

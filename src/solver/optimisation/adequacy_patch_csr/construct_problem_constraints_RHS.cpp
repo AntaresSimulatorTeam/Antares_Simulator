@@ -59,13 +59,13 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 void HourlyCSRProblem::setRHSfictitiousLoadValue()
 {
     // constraint: FictitiousLoad for all areas inside adequacy patch
-    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt) + STS_net_production
+    // Formula: spillage <= STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
     // where:
     //   STt = sum of thermal dispatchable generation (from first optimization step)
     //   STmint = sum of Pmin of thermal units
     //   Ht = hydro generation (from first optimization step)
-    //   Ft = must-run generation
-    //   Lt = load
+    //   Ft = max(0,must-run generation)
+    //   Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
     //   BT = DefaillanceNegativeUtiliserPMinThermique
     //   BH = DefaillanceNegativeUtiliserHydro
     //   BF = DefaillanceNegativeUtiliserConsoAbattue
@@ -111,7 +111,7 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                     ht = problemeHebdo_->ResultatsHoraires[Area].TurbinageHoraire[triggeredHour];
                 }
 
-                // Add BF*Max(0, Ft - Lt) term
+                // Add BF*(Ft - Lt) term
                 double bfTerm = 0.0;
                 if (problemeHebdo_->DefaillanceNegativeUtiliserConsoAbattue[Area])
                 {
@@ -121,22 +121,25 @@ void HourlyCSRProblem::setRHSfictitiousLoadValue()
                                                    ->ConsommationsAbattues[triggeredHour]
                                                    .ConsommationAbattueDuPays[Area];
 
-                    // Ft = allMustRunGen (must-run generation)
-                    // Lt = -consommationAbattue (load is negative in this context)
-                    double ftMinusLt = allMustRunGen + consommationAbattue;
-                    bfTerm = std::max(0.0, ftMinusLt);
+                    // Ft = max(0,must-run generation)
+                    // Lt = min(0,load) (load = ConsommationAbattueDuPays + must-run generation)
+                    bfTerm = std::max(0., allMustRunGen)
+                             - std::min(0., consommationAbattue + allMustRunGen);
                 }
 
                 // Add short term storage withdrawal
                 double stsNetProduction = 0.0;
-                const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
-                                                        .ShortTermStorage;
-                for (const auto& storageResults: shortTermStorageResults)
+                if (problemeHebdo_->DefaillanceNegativeUtiliserHydro[Area])
                 {
-                    stsNetProduction += storageResults.withdrawal[triggeredHour];
+                    const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
+                                                            .ShortTermStorage;
+                    for (const auto& storageResults: shortTermStorageResults)
+                    {
+                        stsNetProduction += storageResults.withdrawal[triggeredHour];
+                    }
                 }
 
-                // RHS = STt - (1-BT)*STmint + BH*Ht + BF*Max(0, Ft - Lt) + STS_net_production
+                // RHS = STt - (1-BT)*STmint + BH*Ht + BF*(Ft - Lt) + BH*STS_net_production
                 double rhs = stt - stmint + ht + bfTerm + stsNetProduction;
 
                 problemeAResoudre_.SecondMembre[Cnt] = rhs;
@@ -164,15 +167,17 @@ void HourlyCSRProblem::setRHSMaxEnsLoadValue()
 
                 double load = problemeHebdo_->ConsommationsAbattues[triggeredHour]
                                 .ConsommationAbattueDuPays[Area];
+                double MaxMustRunGenOfArea = std::max(0.,
+                                                      problemeHebdo_
+                                                        ->AllMustRunGeneration[triggeredHour]
+                                                        .AllMustRunGenerationOfArea[Area]);
+                load += MaxMustRunGenOfArea;
 
-                const auto& shortTermStorageResults = problemeHebdo_->ResultatsHoraires[Area]
-                                                        .ShortTermStorage;
-                for (const auto& storageResults: shortTermStorageResults)
+                if (load >= 0.)
                 {
-                    load += storageResults.injection[triggeredHour];
+                    SecondMembre[Cnt] = load + 1e-5;
                 }
 
-                SecondMembre[Cnt] = load;
                 logs.debug() << Cnt << ": MaxEnsLoad: RHS[" << Cnt << "] = " << SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
             }
