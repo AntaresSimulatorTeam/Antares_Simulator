@@ -13,6 +13,6 @@ namespace Antares::Writer
 SIMULATION_TABLE_WRITERS_EXPORT ITableWriter::Ptr makeTableWriter(TableFormat fmt,
                                                                   std::filesystem::path& filePath);
 
-ITableWriter::Ptr makeTableWriter(TableFormat fmt);
+ITableWriter::Ptr makeTableWriter(TableFormat fmt) = delete;
 
 } // namespace Antares::Writer
