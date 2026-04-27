@@ -3,6 +3,8 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
+#include <utility>
+
 #include "antares/io/outputs/SimulationTableEntry.h"
 
 namespace Antares::IO::Outputs
@@ -19,6 +21,12 @@ SimulationTable::SimulationTable()
     storage_.addOptionalColumn<double>("value");
     storage_.addOptionalColumn<Antares::Optimisation::LinearProblemApi::MipBasisStatus>(
       "basis_status");
+}
+
+SimulationTable::SimulationTable(SimulationTable&& other) noexcept:
+    buffer_(std::move(other.buffer_)),
+    storage_(std::move(other.storage_))
+{
 }
 
 void SimulationTable::addEntry(const SimulationTableEntry& entry)

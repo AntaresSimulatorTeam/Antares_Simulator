@@ -15,6 +15,7 @@ class SimulationTable
 {
 public:
     SimulationTable();
+    SimulationTable(SimulationTable&& other) noexcept;
     void addEntry(const SimulationTableEntry& entry);
     [[nodiscard]] std::string headerCsvFormat() const;
     const std::vector<std::unique_ptr<IColumn>>& columns() const;
