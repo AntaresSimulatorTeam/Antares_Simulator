@@ -6,12 +6,13 @@
 #include <arrow/result.h>
 #include <arrow/status.h>
 #include <stdexcept>
+#include <antares/exception/RuntimeError.hpp>
 
 inline void throwOnStatusKO(const arrow::Status& status)
 {
     if (!status.ok())
     {
-        throw std::runtime_error(status.ToString());
+        throw Antares::Error::RuntimeError(status.ToString());
     }
 }
 
@@ -20,7 +21,7 @@ T throwOnResultKO(arrow::Result<T> result)
 {
     if (!result.ok())
     {
-        throw std::runtime_error(result.status().ToString());
+        throw Antares::Error::RuntimeError(result.status().ToString());
     }
     return std::move(result).ValueOrDie();
 }
