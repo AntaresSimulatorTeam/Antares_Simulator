@@ -16,6 +16,8 @@ class IResultWriter
 public:
     using Ptr = std::shared_ptr<IResultWriter>;
 
+    virtual ~IResultWriter() = default;
+
     virtual void addEntryFromBuffer(const std::filesystem::path& entryPath,
                                     std::string& entryContent)
       = 0;
