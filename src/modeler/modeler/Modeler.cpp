@@ -217,7 +217,7 @@ SimulationTable Modeler::makeSimulationTable(
     // gp : subproblem_1_1 is defined the same way in multiple places
     auto& subproblem_1_1 = subproblems_[0];
 
-    SimulationTable simulationTable;
+    SimulationTable simulationTable("1-1");
 
     FillSimulationTable(simulationTable,
                         *subproblem_1_1,
