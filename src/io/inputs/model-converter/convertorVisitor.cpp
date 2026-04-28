@@ -549,11 +549,11 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
 
 std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
-    auto* from = NodeFromShiftContext(context->from->shift_expr());
+    auto* from = std::any_cast<Node*>(context->from->accept(this));
 
-    auto* to = NodeFromShiftContext(context->to->shift_expr());
+    auto* to = std::any_cast<Node*>(context->to->accept(this));
 
-    auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
+    auto* expr = std::any_cast<Node*>(context->expr(2)->accept(this));
 
     return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
