@@ -83,12 +83,12 @@ void exprParserInitialize() {
   	82,3,4,2,14,28,29,5,3,0,0,29,30,3,4,2,0,30,31,5,4,0,0,31,82,1,0,0,0,32,
   	33,5,9,0,0,33,34,5,3,0,0,34,35,3,4,2,0,35,36,5,4,0,0,36,82,1,0,0,0,37,
   	38,5,10,0,0,38,39,5,3,0,0,39,40,3,0,0,0,40,41,5,4,0,0,41,82,1,0,0,0,42,
-  	43,5,9,0,0,43,44,5,3,0,0,44,45,3,10,5,0,45,46,5,11,0,0,46,47,3,10,5,0,
-  	47,48,5,12,0,0,48,49,3,4,2,0,49,50,5,4,0,0,50,82,1,0,0,0,51,52,5,17,0,
-  	0,52,54,5,3,0,0,53,55,3,6,3,0,54,53,1,0,0,0,54,55,1,0,0,0,55,56,1,0,0,
-  	0,56,82,5,4,0,0,57,58,5,17,0,0,58,59,5,13,0,0,59,60,3,10,5,0,60,61,5,
-  	14,0,0,61,82,1,0,0,0,62,63,5,17,0,0,63,64,5,13,0,0,64,65,3,4,2,0,65,66,
-  	5,14,0,0,66,82,1,0,0,0,67,68,5,3,0,0,68,69,3,4,2,0,69,70,5,4,0,0,70,71,
+  	43,5,9,0,0,43,44,5,3,0,0,44,45,3,4,2,0,45,46,5,11,0,0,46,47,3,4,2,0,47,
+  	48,5,12,0,0,48,49,3,4,2,0,49,50,5,4,0,0,50,82,1,0,0,0,51,52,5,17,0,0,
+  	52,54,5,3,0,0,53,55,3,6,3,0,54,53,1,0,0,0,54,55,1,0,0,0,55,56,1,0,0,0,
+  	56,82,5,4,0,0,57,58,5,17,0,0,58,59,5,13,0,0,59,60,3,10,5,0,60,61,5,14,
+  	0,0,61,82,1,0,0,0,62,63,5,17,0,0,63,64,5,13,0,0,64,65,3,4,2,0,65,66,5,
+  	14,0,0,66,82,1,0,0,0,67,68,5,3,0,0,68,69,3,4,2,0,69,70,5,4,0,0,70,71,
   	5,13,0,0,71,72,3,10,5,0,72,73,5,14,0,0,73,82,1,0,0,0,74,75,5,3,0,0,75,
   	76,3,4,2,0,76,77,5,4,0,0,77,78,5,13,0,0,78,79,3,4,2,0,79,80,5,14,0,0,
   	80,82,1,0,0,0,81,23,1,0,0,0,81,25,1,0,0,0,81,26,1,0,0,0,81,28,1,0,0,0,
@@ -481,16 +481,12 @@ std::any ExprParser::MuldivContext::accept(tree::ParseTreeVisitor *visitor) {
 }
 //----------------- TimeSumContext ------------------------------------------------------------------
 
-ExprParser::ExprContext* ExprParser::TimeSumContext::expr() {
-  return getRuleContext<ExprParser::ExprContext>(0);
+std::vector<ExprParser::ExprContext *> ExprParser::TimeSumContext::expr() {
+  return getRuleContexts<ExprParser::ExprContext>();
 }
 
-std::vector<ExprParser::ShiftContext *> ExprParser::TimeSumContext::shift() {
-  return getRuleContexts<ExprParser::ShiftContext>();
-}
-
-ExprParser::ShiftContext* ExprParser::TimeSumContext::shift(size_t i) {
-  return getRuleContext<ExprParser::ShiftContext>(i);
+ExprParser::ExprContext* ExprParser::TimeSumContext::expr(size_t i) {
+  return getRuleContext<ExprParser::ExprContext>(i);
 }
 
 ExprParser::TimeSumContext::TimeSumContext(ExprContext *ctx) { copyFrom(ctx); }
@@ -689,11 +685,11 @@ ExprParser::ExprContext* ExprParser::expr(int precedence) {
       setState(43);
       match(ExprParser::T__2);
       setState(44);
-      antlrcpp::downCast<TimeSumContext *>(_localctx)->from = shift();
+      antlrcpp::downCast<TimeSumContext *>(_localctx)->from = expr(0);
       setState(45);
       match(ExprParser::T__10);
       setState(46);
-      antlrcpp::downCast<TimeSumContext *>(_localctx)->to = shift();
+      antlrcpp::downCast<TimeSumContext *>(_localctx)->to = expr(0);
       setState(47);
       match(ExprParser::T__11);
       setState(48);

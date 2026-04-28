@@ -200,11 +200,10 @@ public:
   public:
     TimeSumContext(ExprContext *ctx);
 
-    ExprParser::ShiftContext *from = nullptr;
-    ExprParser::ShiftContext *to = nullptr;
-    ExprContext *expr();
-    std::vector<ShiftContext *> shift();
-    ShiftContext* shift(size_t i);
+    ExprParser::ExprContext *from = nullptr;
+    ExprParser::ExprContext *to = nullptr;
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

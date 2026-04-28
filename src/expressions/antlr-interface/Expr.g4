@@ -28,7 +28,7 @@ expr
     | expr COMPARISON expr                     # comparison
     | 'sum' '(' expr ')'                       # allTimeSum
     | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
-    | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
+    | 'sum' '(' from=expr '..' to=expr ',' expr ')'  # timeSum
     | IDENTIFIER '(' argList? ')'              # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex
