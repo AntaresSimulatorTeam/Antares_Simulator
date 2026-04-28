@@ -8,7 +8,7 @@
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
-#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTerms.h>
 #include "antares/expressions/ShiftVector.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/utils/vector-utils.h"

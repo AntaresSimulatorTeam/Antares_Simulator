@@ -8,7 +8,7 @@
 #include <boost/test/tools/assertion.hpp>
 
 #include <antares/solver/optim-model-filler/Dimensions.h>
-#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTerms.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/logs/logs.h"
