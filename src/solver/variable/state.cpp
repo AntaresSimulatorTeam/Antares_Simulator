@@ -187,11 +187,11 @@ void State::initFromHydro()
     assert(area);
 
     auto& Hydro = area->hydro;
-    auto& resData = reserveData.value().at(area->index);
 
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
         && study.parameters.reservesEnabled && Hydro.reserveParticipationContainer)
     {
+        auto& resData = reserveData.value().at(area->index);
         for (const auto& [resName, resParticipation]:
              Hydro.reserveParticipationContainer.value().getReservesParticipations())
         {
