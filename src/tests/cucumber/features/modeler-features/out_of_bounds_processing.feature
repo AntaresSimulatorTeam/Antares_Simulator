@@ -9,7 +9,7 @@ Feature: Out-of-bounds processing
   
 	@fast
 	Scenario: drop mode with literal timeshift
-		Given the modeler study path is "modeler/simple_system_crop"
+		Given the modeler study path is "modeler/simple_system_drop"
 		When I run antares modeler
 		Then the simulation succeeds
 		And the objective value is 300
