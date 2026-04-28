@@ -140,7 +140,7 @@ library:
           expression: sum(t-d_min_down + 1 .. t, stop) <= 1 - is_on
       objective-contributions:
         - id: operational_objective
-          expression: expec(sum(marginal_cost * p + startup_cost * start))
+          expression: sum(marginal_cost * p + startup_cost * start)
 
     - id: storage_unit
       parameters:
@@ -234,5 +234,5 @@ library:
         - id: capital_objective
           expression: capital_cost * p_nom
         - id: operational_objective
-          expression: expec(sum(marginal_cost * p_dispatch + spill_cost*spill +
-            marginal_cost_storage * state_of_charge))
+          expression: sum(marginal_cost * p_dispatch + spill_cost*spill +
+            marginal_cost_storage * state_of_charge)

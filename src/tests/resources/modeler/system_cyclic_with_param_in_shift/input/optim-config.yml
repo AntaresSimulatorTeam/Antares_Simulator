@@ -12,6 +12,7 @@
 models:
     
   - id: simple_models.generator
+    model-decomposition:
     out-of-bounds-processing:
       constraints:
         - id: is_on_dynamics
