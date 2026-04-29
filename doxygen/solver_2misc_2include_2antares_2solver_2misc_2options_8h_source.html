@@ -159,18 +159,21 @@ $(document).ready(function(){initNavTree('solver_2misc_2include_2antares_2solver
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classSettings.html#a7cf7176a50ff929e8954f32c4767e470">   42</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSettings.html#a7cf7176a50ff929e8954f32c4767e470">noOutput</a> = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    Yuni::String PID;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">bool</span> forceZipOutput = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html">Antares::Solver::Optimization::CmdLineOptimOptions</a> solverOptions;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}; <span class="comment">// class Settings</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;std::unique_ptr&lt;Yuni::GetOpt::Parser&gt; CreateParser(<a class="code" href="classSettings.html">Settings</a>&amp; settings,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                                   <a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Antares::Data::StudyLoadOptions</a>&amp; options);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> checkStudyFolder(<span class="keyword">const</span> std::string&amp; studyFolder);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;std::string fixStudyFolder(<span class="keyword">const</span> std::string&amp; studyFolder);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> printPIDtoDisk(<span class="keyword">const</span> <a class="code" href="classSettings.html">Settings</a>&amp; settings);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> checkAndCorrectSettingsAndOptions(<a class="code" href="classSettings.html">Settings</a>&amp; settings, <a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Data::StudyLoadOptions</a>&amp; options);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="comment">// In case we print simulation tables, do we print it in csv or parquet ?</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">bool</span> parquetFmtForSimuTables = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    Yuni::String PID;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">bool</span> forceZipOutput = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Optimization_1_1CmdLineOptimOptions.html">Antares::Solver::Optimization::CmdLineOptimOptions</a> solverOptions;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}; <span class="comment">// class Settings</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;std::unique_ptr&lt;Yuni::GetOpt::Parser&gt; CreateParser(<a class="code" href="classSettings.html">Settings</a>&amp; settings,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                                                   <a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Antares::Data::StudyLoadOptions</a>&amp; options);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> checkStudyFolder(<span class="keyword">const</span> std::string&amp; studyFolder);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;std::string fixStudyFolder(<span class="keyword">const</span> std::string&amp; studyFolder);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> printPIDtoDisk(<span class="keyword">const</span> <a class="code" href="classSettings.html">Settings</a>&amp; settings);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> checkAndCorrectSettingsAndOptions(<a class="code" href="classSettings.html">Settings</a>&amp; settings, <a class="code" href="classAntares_1_1Data_1_1StudyLoadOptions.html">Data::StudyLoadOptions</a>&amp; options);</div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1StudyLoadOptions_html"><div class="ttname"><a href="classAntares_1_1Data_1_1StudyLoadOptions.html">Antares::Data::StudyLoadOptions</a></div><div class="ttdef"><b>Definition:</b> load-options.h:17</div></div>
 <div class="ttc" id="aclassSettings_html"><div class="ttname"><a href="classSettings.html">Settings</a></div><div class="ttdoc">Command line settings for launching the simulation.</div><div class="ttdef"><b>Definition:</b> options.h:19</div></div>
 <div class="ttc" id="aclassSettings_html_a0861603bba644d21d26807e06aa75450"><div class="ttname"><a href="classSettings.html#a0861603bba644d21d26807e06aa75450">Settings::ignoreLoadingErrors</a></div><div class="ttdeci">bool ignoreLoadingErrors</div><div class="ttdoc">Ignore loading errors.</div><div class="ttdef"><b>Definition:</b> options.h:34</div></div>

@@ -137,7 +137,7 @@ $(document).ready(function(){initNavTree('opt__fonctions_8h_source.html',''); in
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;antares/solver/utils/opt_period_string_generator.h&gt;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;antares/writer/i_writer.h&gt;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;antares/config/config.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/SimulationTableCsv.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/SimulationTable.h&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optim-model-filler/BendersDecomposition.h&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optimisation/opt_structure_probleme_a_resoudre.h&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/ISimulationObserver.h&quot;</span></div>
@@ -156,7 +156,7 @@ $(document).ready(function(){initNavTree('opt__fonctions_8h_source.html',''); in
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">namespace </span>Antares::IO::Outputs</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">class </span>ISimulationTable;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">class </span>SimulationTable;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">class </span><a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a>;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> OPT_OptimisationHebdomadaireLineaire(</div>
@@ -191,7 +191,7 @@ $(document).ready(function(){initNavTree('opt__fonctions_8h_source.html',''); in
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                         <span class="keyword">const</span> <span class="keywordtype">int</span>,</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                         <span class="keyword">const</span> <a class="code" href="classOptPeriodStringGenerator.html">OptPeriodStringGenerator</a>&amp;,</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                         <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a>&amp; writer,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                         <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html">Antares::IO::Outputs::ISimulationTable</a>* simulationTable);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                         <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a>* simulationTable);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">bool</span> OPT_OptimisationLineaire(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html">OptimizationOptions</a>&amp; options,</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                              <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a>* problemeHebdo,</div>
@@ -231,7 +231,7 @@ $(document).ready(function(){initNavTree('opt__fonctions_8h_source.html',''); in
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                       <span class="keywordtype">bool</span> namedProblems,</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                       <a class="code" href="classAntares_1_1Optimisation_1_1BendersDecomposition.html">Optimisation::BendersDecomposition</a>* bendersDecomposition = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1ISimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html">Antares::IO::Outputs::ISimulationTable</a></div><div class="ttdef"><b>Definition:</b> ISimulationTable.h:11</div></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1BendersDecomposition_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1BendersDecomposition.html">Antares::Optimisation::BendersDecomposition</a></div><div class="ttdef"><b>Definition:</b> BendersDecomposition.h:21</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Antares::Optimisation::LinearProblemApi::FillContext</a></div><div class="ttdoc">Context for filling linear problem data. Contains temporal information.</div><div class="ttdef"><b>Definition:</b> ILinearProblemData.h:17</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1OptimEntityContainer_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Antares::Optimisation::OptimEntityContainer</a></div><div class="ttdef"><b>Definition:</b> OptimEntityContainer.h:29</div></div>

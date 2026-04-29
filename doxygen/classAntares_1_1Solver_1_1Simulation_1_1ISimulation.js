@@ -4,7 +4,6 @@ var classAntares_1_1Solver_1_1Simulation_1_1ISimulation =
     [ "~ISimulation", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#aadfaa7b7a4158b05d21ed8f0fd86ad48", null ],
     [ "aggregateAndWriteSimulationTables", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a43dc72f7a5775fe6a840bc7f2d95e410", null ],
     [ "checkWriter", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2301384ac369902f597116d38aefafae", null ],
-    [ "getSimulationTable", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#adf8701fa3206e98c9c7da2d6a8dccb08", null ],
     [ "run", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a35182dfc037931e0a3e72ac76a76d7ce", null ],
     [ "storeYearBuffers", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#aa0e44f3af28a53cd29fd2f0150814cde", null ],
     [ "writeResults", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html#a2be5eb8d41a753544ee76677a61fe8d7", null ],

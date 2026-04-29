@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::IO::Outputs::ISimulationTable Class Reference</title>
+<title>Antares Simulator: LocalFixture Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structLocalFixture.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,49 +124,49 @@ $(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Outputs_1_1ISimu
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable-members.html">List of all members</a>  </div>
+<a href="structLocalFixture-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::IO::Outputs::ISimulationTable Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">LocalFixture Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for Antares::IO::Outputs::ISimulationTable:</div>
+Inheritance diagram for LocalFixture:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.png" usemap="#Antares::IO::Outputs::ISimulationTable_map" alt=""/>
-  <map id="Antares::IO::Outputs::ISimulationTable_map" name="Antares::IO::Outputs::ISimulationTable_map">
-<area href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html" alt="Antares::IO::Outputs::SimulationTableCsv" shape="rect" coords="0,56,261,80"/>
-<area href="classEmptySimulationTable.html" alt="EmptySimulationTable" shape="rect" coords="271,56,532,80"/>
-<area href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html" alt="Antares::IO::Outputs::SimulationTableCsvFile" shape="rect" coords="0,112,261,136"/>
+  <img src="structLocalFixture.png" usemap="#LocalFixture_map" alt=""/>
+  <map id="LocalFixture_map" name="LocalFixture_map">
+<area href="structOutputFileFixture.html" alt="OutputFileFixture" shape="rect" coords="0,0,109,24"/>
+<area href="structSimuTableFixture.html" alt="SimuTableFixture" shape="rect" coords="119,0,228,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a3ae1df609ba8f733f430d3a1077e1d63"><td class="memItemLeft" align="right" valign="top"><a id="a3ae1df609ba8f733f430d3a1077e1d63"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntry</b> (const <a class="el" href="structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html">SimulationTableEntry</a> &amp;entry)=0</td></tr>
-<tr class="separator:a3ae1df609ba8f733f430d3a1077e1d63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3f6aec2f537958b0a3959530359f135"><td class="memItemLeft" align="right" valign="top"><a id="ab3f6aec2f537958b0a3959530359f135"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()=0</td></tr>
-<tr class="separator:ab3f6aec2f537958b0a3959530359f135"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fa5cec2810ed9446ba7b8ee990cae31"><td class="memItemLeft" align="right" valign="top"><a id="a0fa5cec2810ed9446ba7b8ee990cae31"></a>
-virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buffer</b> () const =0</td></tr>
-<tr class="separator:a0fa5cec2810ed9446ba7b8ee990cae31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0021a40102da763fd5b7c910ff24251"><td class="memItemLeft" align="right" valign="top"><a id="aa0021a40102da763fd5b7c910ff24251"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html#aa0021a40102da763fd5b7c910ff24251">write</a> ()=0</td></tr>
-<tr class="memdesc:aa0021a40102da763fd5b7c910ff24251"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the table to the given file path, using the concrete export format. <br /></td></tr>
-<tr class="separator:aa0021a40102da763fd5b7c910ff24251"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_methods_structOutputFileFixture"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structOutputFileFixture')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structOutputFileFixture.html">OutputFileFixture</a></td></tr>
+<tr class="memitem:add38c75fbfe71df71a534004bd91abaf inherit pub_methods_structOutputFileFixture"><td class="memItemLeft" align="right" valign="top"><a id="add38c75fbfe71df71a534004bd91abaf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>remove_if_exists</b> ()</td></tr>
+<tr class="separator:add38c75fbfe71df71a534004bd91abaf inherit pub_methods_structOutputFileFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_structOutputFileFixture"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structOutputFileFixture')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structOutputFileFixture.html">OutputFileFixture</a></td></tr>
+<tr class="memitem:a79d807ba8e434b61dd641225572c0158 inherit pub_attribs_structOutputFileFixture"><td class="memItemLeft" align="right" valign="top"><a id="a79d807ba8e434b61dd641225572c0158"></a>
+fs::path&#160;</td><td class="memItemRight" valign="bottom"><b>file_path</b></td></tr>
+<tr class="separator:a79d807ba8e434b61dd641225572c0158 inherit pub_attribs_structOutputFileFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_structSimuTableFixture"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_structSimuTableFixture')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="structSimuTableFixture.html">SimuTableFixture</a></td></tr>
+<tr class="memitem:a915de4bc68517c718ef7e4f6e37d1b4d inherit pub_attribs_structSimuTableFixture"><td class="memItemLeft" align="right" valign="top"><a id="a915de4bc68517c718ef7e4f6e37d1b4d"></a>
+<a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>&#160;</td><td class="memItemRight" valign="bottom"><b>table</b></td></tr>
+<tr class="separator:a915de4bc68517c718ef7e4f6e37d1b4d inherit pub_attribs_structSimuTableFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a593e27f5b256d949640e9a380e5c6e4a inherit pub_attribs_structSimuTableFixture"><td class="memItemLeft" align="right" valign="top"><a id="a593e27f5b256d949640e9a380e5c6e4a"></a>
+const std::nullopt_t&#160;</td><td class="memItemRight" valign="bottom"><b>none</b> = std::nullopt</td></tr>
+<tr class="separator:a593e27f5b256d949640e9a380e5c6e4a inherit pub_attribs_structSimuTableFixture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/io/outputs/include/antares/io/outputs/<a class="el" href="ISimulationTable_8h_source.html">ISimulationTable.h</a></li>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/tests/src/io/outputs/test-parquet-simulation-table-writer.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>IO</b></li><li class="navelem"><b>Outputs</b></li><li class="navelem"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html">ISimulationTable</a></li>
+    <li class="navelem"><a class="el" href="structLocalFixture.html">LocalFixture</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

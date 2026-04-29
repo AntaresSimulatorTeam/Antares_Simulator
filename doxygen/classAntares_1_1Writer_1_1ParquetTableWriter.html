@@ -142,9 +142,16 @@ Inheritance diagram for Antares::Writer::ParquetTableWriter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a36e6bc78eed8e47b2b1172759740c436"><td class="memItemLeft" align="right" valign="top"><a id="a36e6bc78eed8e47b2b1172759740c436"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeTable</b> (const std::filesystem::path &amp;filePath, const std::vector&lt; std::string &gt; &amp;header, const std::vector&lt; std::vector&lt; std::string &gt;&gt; &amp;rows) override</td></tr>
-<tr class="separator:a36e6bc78eed8e47b2b1172759740c436"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a812d82ea8083b896519f9410008b72c5"><td class="memItemLeft" align="right" valign="top"><a id="a812d82ea8083b896519f9410008b72c5"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ParquetTableWriter</b> (std::filesystem::path &amp;filePath)</td></tr>
+<tr class="separator:a812d82ea8083b896519f9410008b72c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ec792af179bcf28abab883cb252b02d"><td class="memItemLeft" align="right" valign="top"><a id="a0ec792af179bcf28abab883cb252b02d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeTable</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a> &amp;simuTable) const override</td></tr>
+<tr class="separator:a0ec792af179bcf28abab883cb252b02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Writer_1_1ITableWriter"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Writer_1_1ITableWriter')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Writer_1_1ITableWriter.html">Antares::Writer::ITableWriter</a></td></tr>
+<tr class="memitem:a4518fa72fc24c77a0bf1b6a54ea09029 inherit pub_methods_classAntares_1_1Writer_1_1ITableWriter"><td class="memItemLeft" align="right" valign="top"><a id="a4518fa72fc24c77a0bf1b6a54ea09029"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ITableWriter</b> (std::filesystem::path &amp;filePath)</td></tr>
+<tr class="separator:a4518fa72fc24c77a0bf1b6a54ea09029 inherit pub_methods_classAntares_1_1Writer_1_1ITableWriter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -152,9 +159,13 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ab198f2e840d4dabdbea2c410f89a4973 inherit pub_types_classAntares_1_1Writer_1_1ITableWriter"><td class="memItemLeft" align="right" valign="top"><a id="ab198f2e840d4dabdbea2c410f89a4973"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1ITableWriter.html">ITableWriter</a> &gt;</td></tr>
 <tr class="separator:ab198f2e840d4dabdbea2c410f89a4973 inherit pub_types_classAntares_1_1Writer_1_1ITableWriter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classAntares_1_1Writer_1_1ITableWriter"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classAntares_1_1Writer_1_1ITableWriter')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classAntares_1_1Writer_1_1ITableWriter.html">Antares::Writer::ITableWriter</a></td></tr>
+<tr class="memitem:a4e0a70cfb447903f3937c8ef9cb82d7a inherit pro_attribs_classAntares_1_1Writer_1_1ITableWriter"><td class="memItemLeft" align="right" valign="top"><a id="a4e0a70cfb447903f3937c8ef9cb82d7a"></a>
+std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>output_file_</b></td></tr>
+<tr class="separator:a4e0a70cfb447903f3937c8ef9cb82d7a inherit pro_attribs_classAntares_1_1Writer_1_1ITableWriter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/libs/antares/writer/<a class="el" href="parquet__table__writer_8h_source.html">parquet_table_writer.h</a></li>
+<li>src/libs/antares/writer/private/<a class="el" href="parquet__table__writer_8h_source.html">parquet_table_writer.h</a></li>
 <li>src/libs/antares/writer/parquet_table_writer.cpp</li>
 </ul>
 </div><!-- contents -->

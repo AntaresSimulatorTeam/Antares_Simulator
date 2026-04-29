@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/io/outputs/include/antares/io/outputs/SimulationTableCsvFile.h Source File</title>
+<title>Antares Simulator: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('SimulationTableCsvFile_8h_source.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structLocalFixture.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,41 +124,23 @@ $(document).ready(function(){initNavTree('SimulationTableCsvFile_8h_source.html'
 
 <div class="header">
   <div class="headertitle">
-<div class="title">SimulationTableCsvFile.h</div>  </div>
+<div class="title">LocalFixture Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fstream&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;SimulationTableCsv.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span>Antares::IO::Outputs</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">SimulationTableCsvFile</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html">SimulationTableCsv</a></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">SimulationTableCsvFile</a>(<span class="keyword">const</span> std::filesystem::path&amp; outputFolder,</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                           <span class="keyword">const</span> std::string&amp; simulationId);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html#a460c7c1341b88c85c13c5633ce7fd8f4">write</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::filesystem::path output_file_;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
-<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">Antares::IO::Outputs::SimulationTableCsvFile</a></div><div class="ttdef"><b>Definition:</b> SimulationTableCsvFile.h:13</div></div>
-<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile_html_a460c7c1341b88c85c13c5633ce7fd8f4"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html#a460c7c1341b88c85c13c5633ce7fd8f4">Antares::IO::Outputs::SimulationTableCsvFile::write</a></div><div class="ttdeci">void write() override</div><div class="ttdoc">Write the table to the given file path, using the concrete export format.</div><div class="ttdef"><b>Definition:</b> SimulationTableCsvFile.cpp:26</div></div>
-<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html">Antares::IO::Outputs::SimulationTableCsv</a></div><div class="ttdef"><b>Definition:</b> SimulationTableCsv.h:14</div></div>
-</div><!-- fragment --></div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="structLocalFixture.html">LocalFixture</a>, including all inherited members.</p>
+<table class="directory">
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>file_path</b> (defined in <a class="el" href="structOutputFileFixture.html">OutputFileFixture</a>)</td><td class="entry"><a class="el" href="structOutputFileFixture.html">OutputFileFixture</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>none</b> (defined in <a class="el" href="structSimuTableFixture.html">SimuTableFixture</a>)</td><td class="entry"><a class="el" href="structSimuTableFixture.html">SimuTableFixture</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>OutputFileFixture</b>() (defined in <a class="el" href="structOutputFileFixture.html">OutputFileFixture</a>)</td><td class="entry"><a class="el" href="structOutputFileFixture.html">OutputFileFixture</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>remove_if_exists</b>() (defined in <a class="el" href="structOutputFileFixture.html">OutputFileFixture</a>)</td><td class="entry"><a class="el" href="structOutputFileFixture.html">OutputFileFixture</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>table</b> (defined in <a class="el" href="structSimuTableFixture.html">SimuTableFixture</a>)</td><td class="entry"><a class="el" href="structSimuTableFixture.html">SimuTableFixture</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~OutputFileFixture</b>() (defined in <a class="el" href="structOutputFileFixture.html">OutputFileFixture</a>)</td><td class="entry"><a class="el" href="structOutputFileFixture.html">OutputFileFixture</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+</table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c184e51c84f2c3f0345bbc8a0d75d3e1.html">io</a></li><li class="navelem"><a class="el" href="dir_228de5959e7a3d5a858a9340fbeb6bc8.html">outputs</a></li><li class="navelem"><a class="el" href="dir_5a112161cdd368098316fb1abaae287b.html">include</a></li><li class="navelem"><a class="el" href="dir_e91bc58f8df2debd35e226d1fdc40568.html">antares</a></li><li class="navelem"><a class="el" href="dir_544aba09cef1e99f1120d2f174154953.html">io</a></li><li class="navelem"><a class="el" href="dir_a04dcb55be73b9a6b591625c6fcd0a85.html">outputs</a></li><li class="navelem"><b>SimulationTableCsvFile.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

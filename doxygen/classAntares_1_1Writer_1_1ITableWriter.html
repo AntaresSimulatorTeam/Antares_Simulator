@@ -126,6 +126,7 @@ $(document).ready(function(){initNavTree('classAntares_1_1Writer_1_1ITableWriter
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classAntares_1_1Writer_1_1ITableWriter-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Writer::ITableWriter Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -150,12 +151,22 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::share
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a97f8e5ab3da97c29f59b6f1f0a65f256"><td class="memItemLeft" align="right" valign="top"><a id="a97f8e5ab3da97c29f59b6f1f0a65f256"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeTable</b> (const std::filesystem::path &amp;filePath, const std::vector&lt; std::string &gt; &amp;header, const std::vector&lt; std::vector&lt; std::string &gt;&gt; &amp;rows)=0</td></tr>
-<tr class="separator:a97f8e5ab3da97c29f59b6f1f0a65f256"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4518fa72fc24c77a0bf1b6a54ea09029"><td class="memItemLeft" align="right" valign="top"><a id="a4518fa72fc24c77a0bf1b6a54ea09029"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ITableWriter</b> (std::filesystem::path &amp;filePath)</td></tr>
+<tr class="separator:a4518fa72fc24c77a0bf1b6a54ea09029"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67d47ebad33a40110c880488ffd18e5f"><td class="memItemLeft" align="right" valign="top"><a id="a67d47ebad33a40110c880488ffd18e5f"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>writeTable</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a> &amp;simuTable) const =0</td></tr>
+<tr class="separator:a67d47ebad33a40110c880488ffd18e5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a4e0a70cfb447903f3937c8ef9cb82d7a"><td class="memItemLeft" align="right" valign="top"><a id="a4e0a70cfb447903f3937c8ef9cb82d7a"></a>
+std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>output_file_</b></td></tr>
+<tr class="separator:a4e0a70cfb447903f3937c8ef9cb82d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/libs/antares/writer/include/antares/writer/<a class="el" href="i__table__writer_8h_source.html">i_table_writer.h</a></li>
+<li>src/libs/antares/writer/i_table_writer.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

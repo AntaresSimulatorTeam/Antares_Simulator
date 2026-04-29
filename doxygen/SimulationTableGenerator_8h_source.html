@@ -138,7 +138,7 @@ $(document).ready(function(){initNavTree('SimulationTableGenerator_8h_source.htm
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;antares/study/system-model/component.h&gt;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;antares/optimisation/linear-problem-api/linearProblem.h&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;ISimulationTable.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;SimulationTable.h&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
@@ -195,7 +195,7 @@ $(document).ready(function(){initNavTree('SimulationTableGenerator_8h_source.htm
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                                       <span class="keyword">const</span> std::string&amp; cname,</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                                       <span class="keyword">const</span> std::optional&lt;unsigned&gt;&amp; ts);</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> addVariableEntries(ISimulationTable&amp; simulationTable,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> addVariableEntries(SimulationTable&amp; simulationTable,</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                        <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem,</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                        <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a>&amp; fillContext,</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                        <span class="keyword">const</span> <a class="code" href="classAntares_1_1ModelerStudy_1_1SystemModel_1_1Component.html">ModelerStudy::SystemModel::Component</a>&amp; component,</div>
@@ -204,7 +204,7 @@ $(document).ready(function(){initNavTree('SimulationTableGenerator_8h_source.htm
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                        <span class="keyword">const</span> TimeConversionMode&amp; timeConversionMode,</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                        <span class="keywordtype">unsigned</span> year);</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keywordtype">void</span> FillSimulationTable(ISimulationTable&amp; simulationTable,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keywordtype">void</span> FillSimulationTable(SimulationTable&amp; simulationTable,</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                         <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem,</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                         <span class="keywordtype">double</span> objectiveValue,</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                         <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1ModelerData.html">Solver::ModelerData</a>&amp; modelerData,</div>

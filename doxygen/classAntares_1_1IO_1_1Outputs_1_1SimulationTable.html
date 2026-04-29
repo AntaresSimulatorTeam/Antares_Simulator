@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: EmptySimulationTable Class Reference</title>
+<title>Antares Simulator: Antares::IO::Outputs::SimulationTable Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classEmptySimulationTable.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -125,46 +125,52 @@ $(document).ready(function(){initNavTree('classEmptySimulationTable.html',''); i
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classEmptySimulationTable-members.html">List of all members</a>  </div>
+<a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">EmptySimulationTable Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
+<div class="title">Antares::IO::Outputs::SimulationTable Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for EmptySimulationTable:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classEmptySimulationTable.png" usemap="#EmptySimulationTable_map" alt=""/>
-  <map id="EmptySimulationTable_map" name="EmptySimulationTable_map">
-<area href="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html" alt="Antares::IO::Outputs::ISimulationTable" shape="rect" coords="0,0,221,24"/>
-  </map>
-</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a11622f0d2884b2f91dac5c0f0b201a62"><td class="memItemLeft" align="right" valign="top"><a id="a11622f0d2884b2f91dac5c0f0b201a62"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntry</b> (const <a class="el" href="structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html">SimulationTableEntry</a> &amp;) override</td></tr>
-<tr class="separator:a11622f0d2884b2f91dac5c0f0b201a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2381969bf6fcd1932eedfa6cd6bd3d30"><td class="memItemLeft" align="right" valign="top"><a id="a2381969bf6fcd1932eedfa6cd6bd3d30"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () override</td></tr>
-<tr class="separator:a2381969bf6fcd1932eedfa6cd6bd3d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c0d9048af90d6e5570a8233e7f6ed45"><td class="memItemLeft" align="right" valign="top"><a id="a2c0d9048af90d6e5570a8233e7f6ed45"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buffer</b> () const override</td></tr>
-<tr class="separator:a2c0d9048af90d6e5570a8233e7f6ed45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93cf64e4b404cfe6c7aed4b422874a53"><td class="memItemLeft" align="right" valign="top"><a id="a93cf64e4b404cfe6c7aed4b422874a53"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEmptySimulationTable.html#a93cf64e4b404cfe6c7aed4b422874a53">write</a> () override</td></tr>
-<tr class="memdesc:a93cf64e4b404cfe6c7aed4b422874a53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the table to the given file path, using the concrete export format. <br /></td></tr>
-<tr class="separator:a93cf64e4b404cfe6c7aed4b422874a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0be4c4e55bd070ab074110652fe728ff"><td class="memItemLeft" align="right" valign="top"><a id="a0be4c4e55bd070ab074110652fe728ff"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>SimulationTable</b> (<a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a> &amp;&amp;other) noexcept</td></tr>
+<tr class="separator:a0be4c4e55bd070ab074110652fe728ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28544196729e148f98a32fdb86a835fe"><td class="memItemLeft" align="right" valign="top"><a id="a28544196729e148f98a32fdb86a835fe"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntry</b> (const <a class="el" href="structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html">SimulationTableEntry</a> &amp;entry)</td></tr>
+<tr class="separator:a28544196729e148f98a32fdb86a835fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab64d682ee9cb626fdd0f378be9ca694"><td class="memItemLeft" align="right" valign="top"><a id="aab64d682ee9cb626fdd0f378be9ca694"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>headerCsvFormat</b> () const</td></tr>
+<tr class="separator:aab64d682ee9cb626fdd0f378be9ca694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1afd5872a78c689493c53521888da1ee"><td class="memItemLeft" align="right" valign="top"><a id="a1afd5872a78c689493c53521888da1ee"></a>
+const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1IColumn.html">IColumn</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>columns</b> () const</td></tr>
+<tr class="separator:a1afd5872a78c689493c53521888da1ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a727ee39e0f13df0ee984e5979bba99ad"><td class="memItemLeft" align="right" valign="top"><a id="a727ee39e0f13df0ee984e5979bba99ad"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeToBuffer</b> ()</td></tr>
+<tr class="separator:a727ee39e0f13df0ee984e5979bba99ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7f8fa27c46472e4611690886ba5e431"><td class="memItemLeft" align="right" valign="top"><a id="aa7f8fa27c46472e4611690886ba5e431"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
+<tr class="separator:aa7f8fa27c46472e4611690886ba5e431"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a182dd9c8362f431ddd412684d8afd089"><td class="memItemLeft" align="right" valign="top"><a id="a182dd9c8362f431ddd412684d8afd089"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buffer</b> () const</td></tr>
+<tr class="separator:a182dd9c8362f431ddd412684d8afd089"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95ca3dbd2cd35ba05d9f42317e1a0b4f"><td class="memItemLeft" align="right" valign="top"><a id="a95ca3dbd2cd35ba05d9f42317e1a0b4f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeHeaderToBuffer</b> ()</td></tr>
+<tr class="separator:a95ca3dbd2cd35ba05d9f42317e1a0b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18b8989dd2e180611d5ec763b3dc865"><td class="memItemLeft" align="right" valign="top"><a id="aa18b8989dd2e180611d5ec763b3dc865"></a>
+std::vector&lt; std::vector&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>storageIntoRows</b> () const</td></tr>
+<tr class="separator:aa18b8989dd2e180611d5ec763b3dc865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/tests/src/solver/infeasible-problem-analysis/test-unfeasible-problem-analyzer.cpp</li>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/io/outputs/include/antares/io/outputs/<a class="el" href="SimulationTable_8h_source.html">SimulationTable.h</a></li>
+<li>src/io/outputs/SimulationTable.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="classEmptySimulationTable.html">EmptySimulationTable</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>IO</b></li><li class="navelem"><b>Outputs</b></li><li class="navelem"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

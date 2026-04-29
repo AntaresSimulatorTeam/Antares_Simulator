@@ -145,12 +145,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a444ff811f92b0a271f7fc73eef8fe1d3"><td class="memItemLeft" align="right" valign="top"><a id="a444ff811f92b0a271f7fc73eef8fe1d3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (const std::string &amp;simulationId) override</td></tr>
 <tr class="separator:a444ff811f92b0a271f7fc73eef8fe1d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba0660efd729efb1a6be7268f0d4fe67"><td class="memItemLeft" align="right" valign="top"><a id="aba0660efd729efb1a6be7268f0d4fe67"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSimulationTable</b> (const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a> &amp;linearProblem, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IMipSolution.html">Optimisation::LinearProblemApi::IMipSolution</a> &amp;solution, const <a class="el" href="structAntares_1_1Solver_1_1ModelerData.html">ModelerData</a> &amp;modelerData, const <a class="el" href="classAntares_1_1Optimisation_1_1OptimEntityContainer.html">Optimisation::OptimEntityContainer</a> &amp;variableContainer, const <a class="el" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1FillContext.html">Optimisation::LinearProblemApi::FillContext</a> &amp;fillContext, const std::string &amp;simulationTableName) const override</td></tr>
-<tr class="separator:aba0660efd729efb1a6be7268f0d4fe67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77218fc1eea318836d00ed0dd57b5434"><td class="memItemLeft" align="right" valign="top"><a id="a77218fc1eea318836d00ed0dd57b5434"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FileWriter</b> (std::filesystem::path path)</td></tr>
-<tr class="separator:a77218fc1eea318836d00ed0dd57b5434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a119efced3d84de30f1f019db31eb1c2c"><td class="memItemLeft" align="right" valign="top"><a id="a119efced3d84de30f1f019db31eb1c2c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>writeSimulationTable</b> (<a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">IO::Outputs::SimulationTable</a> &amp;<a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>) const override</td></tr>
+<tr class="separator:a119efced3d84de30f1f019db31eb1c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c6ead5329e2ac8cf954c11f9911182c"><td class="memItemLeft" align="right" valign="top"><a id="a4c6ead5329e2ac8cf954c11f9911182c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>FileWriter</b> (const std::filesystem::path &amp;studyPath, Writer::TableFormat fmt=Writer::TableFormat::CSV)</td></tr>
+<tr class="separator:a4c6ead5329e2ac8cf954c11f9911182c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e1313af67e072ebebb8b32708202ec7"><td class="memItemLeft" align="right" valign="top"><a id="a9e1313af67e072ebebb8b32708202ec7"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>outputPath</b> () const override</td></tr>
 <tr class="separator:a9e1313af67e072ebebb8b32708202ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>

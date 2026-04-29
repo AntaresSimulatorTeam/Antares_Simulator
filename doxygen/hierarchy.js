@@ -576,7 +576,20 @@ var hierarchy =
       [ "Antares::one_column__dumper< T, ReadWriteT, PredicateT >", "classAntares_1_1one__column____dumper.html", null ]
     ] ],
     [ "Antares::IO::Outputs::IColumn", "classAntares_1_1IO_1_1Outputs_1_1IColumn.html", [
+      [ "Antares::IO::Outputs::TypedColumn< double >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
+      [ "Antares::IO::Outputs::TypedColumn< std::string >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
+      [ "Antares::IO::Outputs::TypedColumn< unsigned >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
+      [ "Antares::IO::Outputs::TypedColumn< Optimisation::LinearProblemApi::MipBasisStatus >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ],
       [ "Antares::IO::Outputs::TypedColumn< T >", "classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html", null ]
+    ] ],
+    [ "Antares::Writer::IColumnAdapter", "classAntares_1_1Writer_1_1IColumnAdapter.html", [
+      [ "Antares::Writer::DoubleColumnAdapter", "classAntares_1_1Writer_1_1DoubleColumnAdapter.html", null ],
+      [ "Antares::Writer::IntColumnAdapter", "classAntares_1_1Writer_1_1IntColumnAdapter.html", null ],
+      [ "Antares::Writer::OptDoubleColumnAdapter", "classAntares_1_1Writer_1_1OptDoubleColumnAdapter.html", null ],
+      [ "Antares::Writer::OptIntColumnAdapter", "classAntares_1_1Writer_1_1OptIntColumnAdapter.html", null ],
+      [ "Antares::Writer::OptMipBasisStatusColumnAdapter", "classAntares_1_1Writer_1_1OptMipBasisStatusColumnAdapter.html", null ],
+      [ "Antares::Writer::OptStringColumnAdapter", "classAntares_1_1Writer_1_1OptStringColumnAdapter.html", null ],
+      [ "Antares::Writer::StringColumnAdapter", "classAntares_1_1Writer_1_1StringColumnAdapter.html", null ]
     ] ],
     [ "Antares::Optimisation::LinearProblemDataImpl::IDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html", [
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", null ]
@@ -773,12 +786,6 @@ var hierarchy =
       [ "Antares::API::SimulationObserver", "classAntares_1_1API_1_1SimulationObserver.html", null ],
       [ "Antares::Solver::Simulation::NullSimulationObserver", "classAntares_1_1Solver_1_1Simulation_1_1NullSimulationObserver.html", null ],
       [ "TestingSimulationObserver", "classTestingSimulationObserver.html", null ]
-    ] ],
-    [ "Antares::IO::Outputs::ISimulationTable", "classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html", [
-      [ "Antares::IO::Outputs::SimulationTableCsv", "classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html", [
-        [ "Antares::IO::Outputs::SimulationTableCsvFile", "classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html", null ]
-      ] ],
-      [ "EmptySimulationTable", "classEmptySimulationTable.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::IStorageForRemix", "classAntares_1_1Solver_1_1Simulation_1_1IStorageForRemix.html", [
       [ "Antares::Solver::Simulation::StorageForRemixNoLevels", "classAntares_1_1Solver_1_1Simulation_1_1StorageForRemixNoLevels.html", [
@@ -1010,6 +1017,9 @@ var hierarchy =
     ] ],
     [ "Output", "classOutput.html", null ],
     [ "find_output.output_folder_finder", "classfind__output_1_1output__folder__finder.html", null ],
+    [ "OutputFileFixture", "structOutputFileFixture.html", [
+      [ "LocalFixture", "structLocalFixture.html", null ]
+    ] ],
     [ "OutputRetriever", "classOutputRetriever.html", null ],
     [ "PALIERS_THERMIQUES", "structPALIERS__THERMIQUES.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Parameter", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Parameter.html", null ],
@@ -1243,7 +1253,11 @@ var hierarchy =
     [ "SimulationHandler", "classSimulationHandler.html", null ],
     [ "Benchmarking::SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", null ],
     [ "Antares::API::SimulationResults", "structAntares_1_1API_1_1SimulationResults.html", null ],
+    [ "Antares::IO::Outputs::SimulationTable", "classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html", null ],
     [ "Antares::IO::Outputs::SimulationTableEntry", "structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html", null ],
+    [ "SimuTableFixture", "structSimuTableFixture.html", [
+      [ "LocalFixture", "structLocalFixture.html", null ]
+    ] ],
     [ "Antares::Data::ShortTermStorage::SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", null ],
     [ "SingleMixedVariable", "structSingleMixedVariable.html", null ],
     [ "Antares::Solver::Optimization::SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", null ],

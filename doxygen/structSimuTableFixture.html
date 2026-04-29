@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::IO::Outputs::SimulationTableCsvFile Class Reference</title>
+<title>Antares Simulator: SimuTableFixture Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structSimuTableFixture.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,66 +124,40 @@ $(document).ready(function(){initNavTree('classAntares_1_1IO_1_1Outputs_1_1Simul
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structSimuTableFixture-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::IO::Outputs::SimulationTableCsvFile Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
+<div class="title">SimuTableFixture Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for Antares::IO::Outputs::SimulationTableCsvFile:</div>
+Inheritance diagram for SimuTableFixture:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.png" usemap="#Antares::IO::Outputs::SimulationTableCsvFile_map" alt=""/>
-  <map id="Antares::IO::Outputs::SimulationTableCsvFile_map" name="Antares::IO::Outputs::SimulationTableCsvFile_map">
-<area href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html" alt="Antares::IO::Outputs::SimulationTableCsv" shape="rect" coords="0,56,261,80"/>
-<area href="classAntares_1_1IO_1_1Outputs_1_1ISimulationTable.html" alt="Antares::IO::Outputs::ISimulationTable" shape="rect" coords="0,0,261,24"/>
+  <img src="structSimuTableFixture.png" usemap="#SimuTableFixture_map" alt=""/>
+  <map id="SimuTableFixture_map" name="SimuTableFixture_map">
+<area href="structLocalFixture.html" alt="LocalFixture" shape="rect" coords="0,56,109,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a20c6c1f1ddefe586e729bd22bc195846"><td class="memItemLeft" align="right" valign="top"><a id="a20c6c1f1ddefe586e729bd22bc195846"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>SimulationTableCsvFile</b> (const std::filesystem::path &amp;outputFolder, const std::string &amp;simulationId)</td></tr>
-<tr class="separator:a20c6c1f1ddefe586e729bd22bc195846"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a460c7c1341b88c85c13c5633ce7fd8f4"><td class="memItemLeft" align="right" valign="top"><a id="a460c7c1341b88c85c13c5633ce7fd8f4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html#a460c7c1341b88c85c13c5633ce7fd8f4">write</a> () override</td></tr>
-<tr class="memdesc:a460c7c1341b88c85c13c5633ce7fd8f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the table to the given file path, using the concrete export format. <br /></td></tr>
-<tr class="separator:a460c7c1341b88c85c13c5633ce7fd8f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html">Antares::IO::Outputs::SimulationTableCsv</a></td></tr>
-<tr class="memitem:a46623c7a702cce016ed8cbd270c75db2 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memItemLeft" align="right" valign="top"><a id="a46623c7a702cce016ed8cbd270c75db2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntry</b> (const <a class="el" href="structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html">SimulationTableEntry</a> &amp;entry) override</td></tr>
-<tr class="separator:a46623c7a702cce016ed8cbd270c75db2 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af32ab3902a0a2047453ccf05fc990b81 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memItemLeft" align="right" valign="top"><a id="af32ab3902a0a2047453ccf05fc990b81"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getHeader</b> () const</td></tr>
-<tr class="separator:af32ab3902a0a2047453ccf05fc990b81 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c8eae2abeab5ac0f130aa853c447c20 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memItemLeft" align="right" valign="top"><a id="a8c8eae2abeab5ac0f130aa853c447c20"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () override</td></tr>
-<tr class="separator:a8c8eae2abeab5ac0f130aa853c447c20 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a930652d94dbce5bc709042d01e96c035 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memItemLeft" align="right" valign="top"><a id="a930652d94dbce5bc709042d01e96c035"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>buffer</b> () const override</td></tr>
-<tr class="separator:a930652d94dbce5bc709042d01e96c035 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73d2610c4d76241ee14fb00444d07bc7 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memItemLeft" align="right" valign="top"><a id="a73d2610c4d76241ee14fb00444d07bc7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>writeHeader</b> ()</td></tr>
-<tr class="separator:a73d2610c4d76241ee14fb00444d07bc7 inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pro_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv.html">Antares::IO::Outputs::SimulationTableCsv</a></td></tr>
-<tr class="memitem:a25a99da861f36e4f02e7545cda2b4541 inherit pro_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memItemLeft" align="right" valign="top"><a id="a25a99da861f36e4f02e7545cda2b4541"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>exportTable</b> (std::vector&lt; std::string &gt; &amp;header, std::vector&lt; std::vector&lt; std::string &gt;&gt; &amp;rows) const</td></tr>
-<tr class="separator:a25a99da861f36e4f02e7545cda2b4541 inherit pro_methods_classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsv"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a915de4bc68517c718ef7e4f6e37d1b4d"><td class="memItemLeft" align="right" valign="top"><a id="a915de4bc68517c718ef7e4f6e37d1b4d"></a>
+<a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">SimulationTable</a>&#160;</td><td class="memItemRight" valign="bottom"><b>table</b></td></tr>
+<tr class="separator:a915de4bc68517c718ef7e4f6e37d1b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a593e27f5b256d949640e9a380e5c6e4a"><td class="memItemLeft" align="right" valign="top"><a id="a593e27f5b256d949640e9a380e5c6e4a"></a>
+const std::nullopt_t&#160;</td><td class="memItemRight" valign="bottom"><b>none</b> = std::nullopt</td></tr>
+<tr class="separator:a593e27f5b256d949640e9a380e5c6e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/io/outputs/include/antares/io/outputs/<a class="el" href="SimulationTableCsvFile_8h_source.html">SimulationTableCsvFile.h</a></li>
-<li>src/io/outputs/SimulationTableCsvFile.cpp</li>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>src/tests/src/io/outputs/test-parquet-simulation-table-writer.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>IO</b></li><li class="navelem"><b>Outputs</b></li><li class="navelem"><a class="el" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTableCsvFile.html">SimulationTableCsvFile</a></li>
+    <li class="navelem"><a class="el" href="structSimuTableFixture.html">SimuTableFixture</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
