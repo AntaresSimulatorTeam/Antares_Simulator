@@ -261,6 +261,16 @@ if (NOT DEFINED absl_DIR)
                 message(STATUS "Setting re2_DIR to OR-Tools co-installed version: ${re2_DIR}")
             endif ()
         endforeach ()
+
+        # Ensure OR-Tools' absl headers are found BEFORE vcpkg headers.
+        # This is necessary because vcpkg.cmake (line 425-426) reverses the
+        # CMAKE_PREFIX_PATH order for Debug builds, causing vcpkg's absl
+        # (different ABI version) to be found instead of OR-Tools' co-installed absl.
+        set(_absl_include "${_ortools_prefix}/include")
+        if (EXISTS "${_absl_include}/absl")
+            include_directories(BEFORE "${_absl_include}")
+            message(STATUS "Prepending include dir for OR-Tools absl: ${_absl_include}")
+        endif ()
     endif ()
     unset(_ortools_prefix)
     unset(_lib_dirs)

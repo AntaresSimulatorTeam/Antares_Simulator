@@ -16,6 +16,8 @@ class IResultWriter
 public:
     using Ptr = std::shared_ptr<IResultWriter>;
 
+    virtual ~IResultWriter() = default;
+
     virtual void addEntryFromBuffer(const std::filesystem::path& entryPath,
                                     std::string& entryContent)
       = 0;
@@ -31,14 +33,4 @@ public:
     virtual bool needsTheJobQueue() const = 0;
     virtual void finalize(bool verbose) = 0;
 };
-
-class NullResultWriter: public Solver::IResultWriter
-{
-    void addEntryFromBuffer(const std::filesystem::path&, std::string&) override;
-    void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override;
-    void flush() override;
-    bool needsTheJobQueue() const override;
-    void finalize(bool) override;
-};
-
 } // namespace Antares::Solver

@@ -13,13 +13,14 @@
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "antares/io/outputs/SimulationTable.h"
+#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/infeasible-problem-analysis/constraint-slack-analysis.h"
 #include "antares/solver/infeasible-problem-analysis/report.h"
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/writer/null_result_writer.h"
 
 namespace bdata = boost::unit_test::data;
 

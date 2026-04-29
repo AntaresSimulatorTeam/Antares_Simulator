@@ -85,25 +85,4 @@ void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 {
     // Do nothing
 }
-
-void NullResultWriter::addEntryFromBuffer(const fs::path&, std::string&)
-{
-}
-
-void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
-{
-}
-
-void NullResultWriter::flush()
-{
-}
-
-bool NullResultWriter::needsTheJobQueue() const
-{
-    return false;
-}
-
-void NullResultWriter::finalize(bool)
-{
-}
 } // namespace Antares::Solver
