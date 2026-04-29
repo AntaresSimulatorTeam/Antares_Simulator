@@ -171,6 +171,65 @@ jobs:
          cd _build
          ctest -C Release --output-on-failure
 
+    - name: Upload build tree for tests
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ubuntu-build-tree
+        path: |
+          _build
+          or-tools
+
+    - name: Cache vcpkg binary dir
+      if: always()
+      id: save-cache-vcpkg-binary
+      uses: actions/cache/save@v5
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+    - name: Display ccache statistics
+      run: ccache -s
+
+    # Delete the old cache on hit to emulate a cache update. See
+    # https://github.com/actions/cache/issues/342.
+    - name: Delete old cache
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_DEBUG: api gh cache delete
+      if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
+      # Using `--repo` makes it so that this step doesn't require checking out the
+      # repo first.
+      run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
+
+    - name: Save ccache cache
+      if: ${{ !cancelled() }}
+      uses: actions/cache/save@v5
+      with:
+        path: ${{ github.workspace }}/.ccache_ubuntu
+        key: ${{ steps.cache.outputs.cache-primary-key }}
+
+  tests:
+    name: Tests
+    needs: build
+    env:
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      os: ubuntu-22.04
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        ref: ${{ env.REF }}
+
+    - name: Download build tree
+      uses: actions/download-artifact@v7
+      with:
+        name: ubuntu-build-tree
+        path: ${{ github.workspace }}
+
     - name: Read simtest version
       run: |
         echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
@@ -179,7 +238,7 @@ jobs:
 
     - name: Export simtest version
       run: |
-        echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
+        echo "SIMTEST=$(python3 -c \"import json; print(json.load(open('simtest.json'))['version'])\")" >> $GITHUB_ENV
 
     - name: Init submodule Antares_Simulator_Tests_NR
       run: |
@@ -385,17 +444,34 @@ jobs:
       if: ${{ !success() }}
       run: exit 1
 
+  release_assets:
+    name: Release and Assets
+    needs:
+    - build
+    - tests
+    if: ${{ env.IS_RELEASE == 'true' || github.ref == 'refs/heads/develop' }}
+    env:
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Download build tree
+      uses: actions/download-artifact@v7
+      with:
+        name: ubuntu-build-tree
+        path: ${{ github.workspace }}
+
+    - name: Download archives
+      uses: actions/download-artifact@v7
+      with:
+        name: ubuntu-targz
+        path: ${{ github.workspace }}/_build
+
     - name: Installer .deb creation
       run: |
         cd _build
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
-
-    - name: Installer deb upload push
-      uses: actions/upload-artifact@v7
-      with:
-        name: deb
-        path: _build/*.deb
-
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
@@ -404,7 +480,6 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
       run: |
         gh release upload "$tag" _build/*.tar.gz _build/*.deb
-
 
     - name: Update continuous-delivery release
       if: github.ref == 'refs/heads/develop'
@@ -416,34 +491,5 @@ jobs:
         gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.deb
         gh release edit continuous-delivery --title "continuous delivery (generated $(date +'%Y-%m-%d %H:%M'))"
         #update continuous delivery tag to point to the latest develop commit
-        gh api repos/${{ github.repository }}/git/refs/tags/continuous-delivery -X PATCH -f sha=$(git rev-parse HEAD)
+        gh api repos/${{ github.repository }}/git/refs/tags/continuous-delivery -X PATCH -f sha=${{ github.sha }}
 
-    - name: Cache vcpkg binary dir
-      if: always()
-      id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v5
-      with:
-        path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
-
-    - name: Display ccache statistics
-      run: ccache -s
-
-    # Delete the old cache on hit to emulate a cache update. See
-    # https://github.com/actions/cache/issues/342.
-    - name: Delete old cache
-      continue-on-error: true
-      env:
-        GH_TOKEN: ${{ github.token }}
-        GH_DEBUG: api gh cache delete
-      if: ${{ !cancelled() && steps.cache.outputs.cache-hit }}
-      # Using `--repo` makes it so that this step doesn't require checking out the
-      # repo first.
-      run: gh cache delete --repo ${{ github.repository }} ${{ steps.cache.outputs.cache-primary-key }}
-
-    - name: Save ccache cache
-      if: ${{ !cancelled() }}
-      uses: actions/cache/save@v5
-      with:
-        path: ${{ github.workspace }}/.ccache_ubuntu
-        key: ${{ steps.cache.outputs.cache-primary-key }}
