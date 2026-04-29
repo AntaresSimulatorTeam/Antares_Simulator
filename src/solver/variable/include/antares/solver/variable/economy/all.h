@@ -19,7 +19,7 @@
 #include "../commons/solar.h"
 #include "../commons/wind.h"
 #include "../setofareas.h"
-#include "RampingCostByDispatchablePlant.h"
+#include "rampingCostByDispatchablePlant.h"
 #include "STSbyGroup.h"
 #include "STStorageCashFlowByCluster.h"
 #include "STStorageLevelsByCluster.h"
