@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <antares/study/study.h>
-
-#include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/simulation/sim_structure_donnees.h"
 
 using namespace Antares;
 using namespace Antares::Data;

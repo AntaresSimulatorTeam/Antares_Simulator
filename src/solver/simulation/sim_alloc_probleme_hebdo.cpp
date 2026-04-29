@@ -215,8 +215,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
           .assign(study.runtime.thermalPlantTotalCount, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
-          .ConstraintIndexRampingIncrease
-          .assign(study.runtime.thermalPlantTotalCount, 0);
+          .ConstraintIndexRampingIncrease.assign(study.runtime.thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);

@@ -128,14 +128,12 @@ void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string&
     SetThermalClusterElementName(varIndex, "DispatchableProduction", clusterName);
 }
 
-void VariableNamer::ProductionIncreaseAboveMin(unsigned varIndex,
-                                               const std::string& clusterName)
+void VariableNamer::ProductionIncreaseAboveMin(unsigned varIndex, const std::string& clusterName)
 {
     SetThermalClusterElementName(varIndex, "ProductionIncreaseAboveMin", clusterName);
 }
 
-void VariableNamer::ProductionDecreaseAboveMin(unsigned varIndex,
-                                               const std::string& clusterName)
+void VariableNamer::ProductionDecreaseAboveMin(unsigned varIndex, const std::string& clusterName)
 {
     SetThermalClusterElementName(varIndex, "ProductionDecreaseAboveMin", clusterName);
 }
@@ -433,7 +431,6 @@ void ConstraintNamer::ProductionOutputVariation(unsigned constrIndex,
 {
     SetThermalClusterElementName(constrIndex, "ProductionOutputVariation", clusterName);
 }
-
 
 void ConstraintNamer::ConsistenceNODU(unsigned constrIndex, const std::string& clusterName)
 {

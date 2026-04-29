@@ -19,6 +19,7 @@
 #include "../commons/solar.h"
 #include "../commons/wind.h"
 #include "../setofareas.h"
+#include "RampingCostByDispatchablePlant.h"
 #include "STSbyGroup.h"
 #include "STStorageCashFlowByCluster.h"
 #include "STStorageLevelsByCluster.h"
@@ -57,7 +58,6 @@
 #include "profitByPlant.h"
 #include "pumping.h"
 #include "rampingCosts.h"
-#include "RampingCostByDispatchablePlant.h"
 #include "renewableGeneration.h"
 #include "reservoirlevel.h"
 #include "residual.h"
@@ -65,7 +65,6 @@
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergy.h"
 #include "waterValue.h"
-
 
 namespace Antares::Solver::Variable::Economy
 {

@@ -1033,7 +1033,7 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     {
         return StringToCompatibilityRampes(d.compatibility.rampes, value);
     }
-    
+
     else if (key == "hydro-rule-curves")
     {
         return StringToCompatibilityHydroRuleCurves(d.compatibility.hydroRuleCurves, value);

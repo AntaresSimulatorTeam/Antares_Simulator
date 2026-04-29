@@ -3,10 +3,9 @@
 
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/simulation.h"
-
-#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 
 void OPT_InitialiserLesCoutsLineaireRampesThermiques(PROBLEME_HEBDO* problemeHebdo,
                                                      const int PremierPdtDeLIntervalle,

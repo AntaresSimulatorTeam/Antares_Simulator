@@ -109,7 +109,6 @@ public:
     };
 
 public:
-
     void initializeFromStudy(Data::Study& study)
     {
         // Next
