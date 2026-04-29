@@ -10,6 +10,7 @@ namespace Antares::Solver
 
 class NullResultWriter: public IResultWriter
 {
+public:
     ~NullResultWriter() override = default;
     void addEntryFromBuffer(const std::filesystem::path&, std::string&) override;
     void addEntryFromFile(const std::filesystem::path&, const std::filesystem::path&) override;
