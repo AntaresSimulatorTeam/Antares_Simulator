@@ -238,7 +238,7 @@ jobs:
 
     - name: Export simtest version
       run: |
-        echo "SIMTEST=$(python3 -c \"import json; print(json.load(open('simtest.json'))['version'])\")" >> $GITHUB_ENV
+        echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
     - name: Init submodule Antares_Simulator_Tests_NR
       run: |
