@@ -64,6 +64,11 @@ struct Fixture
         study->folderInput = working_tmp_dir.string();
         fs::create_directories(working_tmp_dir / "bindingconstraints");
 
+        // Setup areas and links
+        auto area1 = addAreaToListOfAreas(study->areas, "area1");
+        auto area2 = addAreaToListOfAreas(study->areas, "area2");
+        AreaAddLinkBetweenAreas(area1, area2);
+
         addConstraint("dummy_name", "dummy_group");
         initializeStudy(*study);
 
@@ -104,13 +109,14 @@ struct Fixture
         constraints << "[" << constraintNumber++ << "]\n"
                     << "name = " << name << "\n"
                     << "id = " << name << "\n"
-                    << "enabled = false\n"
+                    << "enabled = true\n"
                     << "type = hourly\n"
                     << "operator = equal\n"
                     << "filter-year-by-year = annual\n"
                     << "filter-synthesis = hourly\n"
                     << "comments = dummy_comment\n"
-                    << "group = " << group << "\n";
+                    << "group = " << group << "\n"
+                    << "area1%area2 = 1.000000\n";
         constraints.close();
         std::ofstream rhs(working_tmp_dir / "bindingconstraints" / (name + "_eq.txt"));
         rhs.close();
@@ -144,10 +150,11 @@ BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries_lower_bound, Fixture
         constraints << "[1]\n"
                     << "name = dummy_name\n"
                     << "id = dummy_name\n"
-                    << "enabled = false\n"
+                    << "enabled = true\n"
                     << "type = hourly\n"
                     << "operator = less\n"
-                    << "group = dummy_group\n";
+                    << "group = dummy_group\n"
+                    << "area1%area2 = 1.000000\n";
         constraints.close();
     }
     bool loading_ok = study->internalLoadBindingConstraints(options);
@@ -164,16 +171,42 @@ BOOST_FIXTURE_TEST_CASE(load_binding_constraints_timeseries_upper_bound, Fixture
         constraints << "[1]\n"
                     << "name = dummy_name\n"
                     << "id = dummy_name\n"
-                    << "enabled = false\n"
+                    << "enabled = true\n"
                     << "type = hourly\n"
                     << "operator = greater\n"
-                    << "group = dummy_group\n";
+                    << "group = dummy_group\n"
+                    << "area1%area2 = 1.000000\n";
         constraints.close();
     }
     bool loading_ok = study->internalLoadBindingConstraints(options);
     BOOST_CHECK_EQUAL(loading_ok, true);
     CheckEqual(study->bindingConstraints.find("dummy_name")->RHSTimeSeries(),
                expected_upper_bound_series);
+}
+
+BOOST_FIXTURE_TEST_CASE(BC_disabled_skips_timeseries_loading, Fixture)
+{
+    {
+        std::ofstream constraints(working_tmp_dir / "bindingconstraints"
+                                  / "bindingconstraints.ini");
+        constraints << "[1]\n"
+                    << "name = dummy_name\n"
+                    << "id = dummy_name\n"
+                    << "enabled = false\n"
+                    << "type = hourly\n"
+                    << "operator = equal\n"
+                    << "group = dummy_group\n"
+                    << "area1%area2 = 1.000000\n";
+        constraints.close();
+    }
+    bool loading_ok = study->internalLoadBindingConstraints(options);
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    BOOST_CHECK_EQUAL(study->bindingConstraints.size(), 1);
+
+    auto bc = study->bindingConstraints.find("dummy_name");
+    BOOST_CHECK_EQUAL(bc->enabled(), false);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().width, 0);
+    BOOST_CHECK_EQUAL(bc->RHSTimeSeries().height, 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(

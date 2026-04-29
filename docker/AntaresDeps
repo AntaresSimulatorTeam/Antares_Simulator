@@ -23,7 +23,10 @@ RUN  yum install -y epel-release
 RUN  yum install -y git redhat-lsb-core make wget centos-release-scl scl-utils rpm-build && \
                 yum install -y devtoolset-11 &&  \
                 yum install -y rh-git227-git ccache
-RUN  yum install -y unzip libuuid-devel wxGTK3-devel
+RUN  yum install -y unzip libuuid-devel \
+     perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece \
+     bison flex
+
 RUN  yum install -y python3-pip &&    python3 -m pip install --upgrade pip &&    pip3 install pytest numpy pandas
 
 # Install requirements

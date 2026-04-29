@@ -1,12 +1,14 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "csv_table_writer.h"
+#include "private/csv_table_writer.h"
 
 #include <filesystem>
 #include <fstream>
-#include <stdexcept>
 
+#include "antares/exception/RuntimeError.hpp"
+
+using namespace Antares::IO::Outputs;
 namespace fs = std::filesystem;
 
 namespace Antares::Writer
@@ -50,29 +52,41 @@ std::string make_line(const std::vector<std::string>& cols)
     return out;
 }
 
-void CsvTableWriter::writeTable(const fs::path& filePath,
-                                const std::vector<std::string>& header,
-                                const std::vector<std::vector<std::string>>& rows)
+CsvTableWriter::CsvTableWriter(std::filesystem::path& filePath):
+    ITableWriter(filePath)
 {
-    if (filePath.empty())
+    output_file_.replace_extension(".csv");
+}
+
+void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
+{
+    const auto& columns = simuTable.columns();
+    std::vector<std::vector<std::string>> rows = simuTable.storageIntoRows();
+
+    if (output_file_.empty())
     {
-        throw std::invalid_argument("CsvTableWriter: empty output path");
+        throw Antares::Error::RuntimeError("CsvTableWriter: empty output path");
     }
 
-    if (filePath.has_parent_path())
+    if (output_file_.has_parent_path())
     {
-        fs::create_directories(filePath.parent_path());
+        fs::create_directories(output_file_.parent_path());
     }
 
-    std::ofstream out(filePath, std::ios::binary);
+    std::ofstream out(output_file_, std::ios::binary);
     if (!out)
     {
-        throw std::runtime_error("CsvTableWriter: cannot open output file: " + filePath.string());
+        throw Antares::Error::RuntimeError("CsvTableWriter: cannot open output file: "
+                                           + output_file_.string());
     }
 
-    if (!header.empty())
+    std::vector<std::string> names;
+    std::ranges::transform(columns,
+                           std::back_inserter(names),
+                           [](const auto& col) { return col->name(); });
+    if (!names.empty())
     {
-        out << make_line(header);
+        out << make_line(names);
     }
 
     for (const auto& r: rows)

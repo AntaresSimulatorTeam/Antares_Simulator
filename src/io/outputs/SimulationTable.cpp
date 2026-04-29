@@ -1,13 +1,15 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
+
+#include <utility>
 
 #include "antares/io/outputs/SimulationTableEntry.h"
 
 namespace Antares::IO::Outputs
 {
-SimulationTableCsv::SimulationTableCsv()
+SimulationTable::SimulationTable()
 
 {
     storage_.addIntegralColumn<unsigned int>("block");
@@ -21,7 +23,13 @@ SimulationTableCsv::SimulationTableCsv()
       "basis_status");
 }
 
-void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
+SimulationTable::SimulationTable(SimulationTable&& other) noexcept:
+    buffer_(std::move(other.buffer_)),
+    storage_(std::move(other.storage_))
+{
+}
+
+void SimulationTable::addEntry(const SimulationTableEntry& entry)
 {
     storage_.addValue("block", entry.block);
     storage_.addValue("component", entry.component);
@@ -33,30 +41,33 @@ void SimulationTableCsv::addEntry(const SimulationTableEntry& entry)
     storage_.addValue("basis_status", entry.status);
 }
 
-std::string SimulationTableCsv::getHeader() const
+std::string SimulationTable::headerCsvFormat() const
 {
     std::ostringstream os;
     bool first = true;
-    for (const auto& col_name: storage_.columnNames())
+    for (const auto& column: storage_.columns())
     {
         if (!first)
         {
             os << ',';
         }
         first = false;
-        os << col_name;
+        os << column->name();
     }
     return os.str();
 }
 
-void SimulationTableCsv::writeHeader()
+void SimulationTable::writeHeaderToBuffer()
 {
-    buffer_ << getHeader() << '\n';
+    buffer_ << headerCsvFormat() << '\n';
 }
 
-const std::string NONE = "None";
+const std::vector<std::unique_ptr<IColumn>>& SimulationTable::columns() const
+{
+    return storage_.columns();
+}
 
-void SimulationTableCsv::write()
+void SimulationTable::writeToBuffer()
 {
     const size_t row_count = storage_.rowCount();
     const auto& columns = storage_.columns();
@@ -77,33 +88,33 @@ void SimulationTableCsv::write()
     }
 }
 
-void SimulationTableCsv::exportTable(std::vector<std::string>& header,
-                                     std::vector<std::vector<std::string>>& rows) const
+std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
 {
-    header = storage_.columnNames();
+    std::vector<std::vector<std::string>> rows; // to return
     const size_t row_count = storage_.rowCount();
     const auto& columns = storage_.columns();
 
     rows.clear();
     rows.resize(row_count);
-    for (size_t r = 0; r < row_count; ++r)
+    for (size_t row_index = 0; row_index < row_count; ++row_index)
     {
-        auto& outRow = rows[r];
-        outRow.reserve(columns.size());
-        for (const auto& col: columns)
+        auto& row = rows[row_index];
+        row.reserve(columns.size());
+        for (const auto& column: columns)
         {
-            outRow.push_back(col->toString(r));
+            row.push_back(column->toString(row_index));
         }
     }
+    return rows;
 }
 
-void SimulationTableCsv::clear()
+void SimulationTable::clear()
 {
     storage_.clear();
     buffer_.str("");
 }
 
-std::string SimulationTableCsv::buffer() const
+std::string SimulationTable::buffer() const
 {
     return buffer_.str();
 }

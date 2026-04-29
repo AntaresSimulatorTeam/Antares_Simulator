@@ -35,33 +35,28 @@ std::string getFieldFromNode(const Node& node, const std::string& fieldName)
     return node[fieldName].as<std::string>("");
 }
 
+std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
+                                 const std::unordered_set<std::string>& setB)
+{
+    std::vector<std::string> diff;
+    std::ranges::copy_if(setA,
+                         std::back_inserter(diff),
+                         [&setB](const auto& item) { return !setB.contains(item); });
+    return diff;
+}
+
 auto compare_sets(const std::unordered_set<std::string>& setA,
                   const std::unordered_set<std::string>& setB)
 {
-    // compute unexpected = actual - allowed
-    auto diffSet =
-      [](const std::unordered_set<std::string>& setA, const std::unordered_set<std::string>& setB)
-    {
-        std::vector<std::string> diff;
-        for (const auto& item: setA)
-        {
-            if (setB.find(item) == setB.end())
-            {
-                diff.push_back(item);
-            }
-        }
-        return diff;
-    };
     const auto unexpected = diffSet(setA, setB);
     const auto missing = diffSet(setB, setA);
     return std::make_tuple(unexpected, missing);
 }
 
-std::string build_error_message(const std::unordered_set<std::string>& allowedFields,
+std::string build_error_message(const size_t& nbFieldsAllowed,
                                 const YmlTreeDisplayer& displayer,
-                                std::span<const std::string> unexpected,
-                                std::span<const std::string> missing,
-                                const std::string& markedFieldsTree)
+                                const std::vector<std::string>& unexpected,
+                                const std::vector<std::string>& missing)
 {
     // Build a readable list of errors (one per line), then append the tree
     std::string errors_list;
@@ -77,10 +72,11 @@ std::string build_error_message(const std::unordered_set<std::string>& allowedFi
     // Final message: brief header, individual errors, then the tree
     const std::string message = fmt::format(
       "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
-      allowedFields.size(),
+      nbFieldsAllowed,
       errors_list,
       displayer.baseTree(),
-      markedFieldsTree);
+      displayer.buildMarkedTree(unexpected, missing));
+
     return message;
 }
 
@@ -108,13 +104,11 @@ void checkFields(const Node& node, const std::unordered_set<std::string>& allowe
     // Invalid map: now build the displayer for error reporting
     YmlTreeDisplayer displayer(node);
     const auto [unexpected, missing] = compare_sets(actualKeys, allowedFields);
-    const std::string markedFieldsTree = displayer.buildMarkedTree(unexpected, missing);
 
-    const std::string message = build_error_message(allowedFields,
+    const std::string message = build_error_message(allowedFields.size(),
                                                     displayer,
                                                     unexpected,
-                                                    missing,
-                                                    markedFieldsTree);
+                                                    missing);
 
     throw Exception(node.Mark(), message);
 }

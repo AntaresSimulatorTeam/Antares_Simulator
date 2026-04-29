@@ -115,3 +115,22 @@ Git version must be above 2.15 for external dependencies build because `--ignore
     ```
     sudo apt install git
     ```
+
+## Other system dependencies
+=== "CentOS"
+	```
+	sudo yum install -y libuuid-devel \
+     perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece \
+     bison flex
+	 ```
+
+=== "Oracle Linux 8"
+	```
+	sudo dnf install perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece \
+	bison flex
+	```
+
+=== "Ubuntu"
+	```
+	sudo apt install bison flex
+	```

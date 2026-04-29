@@ -1,8 +1,6 @@
 set(SOURCES
         FileWriter.cpp
-        include/antares/solver/modeler/fileWriter/FileWriter.h
-
-)
+        include/antares/solver/modeler/fileWriter/FileWriter.h)
 
 # Create the library
 add_library(write-modeler-files ${SOURCES})
@@ -21,6 +19,7 @@ target_link_libraries(write-modeler-files
         Antares::antares-study-system-model
         Antares::linear-problem-api
         Antares::linear-problem-data-impl
+        parquet_writer
         PRIVATE
         Antares::io
         Antares::modeler-lib

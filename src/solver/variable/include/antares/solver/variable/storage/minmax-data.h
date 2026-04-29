@@ -4,6 +4,7 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 #define __SOLVER_VARIABLE_STORAGE_MINMAX_DATA_H__
 
+#include <cstdint>
 #include <vector>
 
 #include "antares/solver/variable/storage/intermediate.h"
@@ -15,8 +16,14 @@ class MinMaxData
 public:
     struct Data
     {
-        double value;
-        uint32_t index;
+        explicit Data(std::size_t n):
+            values(n),
+            indices(n)
+        {
+        }
+
+        std::vector<double> values;
+        std::vector<uint16_t> indices;
     };
 
     MinMaxData() = default;
@@ -28,11 +35,11 @@ public:
     void mergeInf(uint year, const IntermediateValues& rhs);
     void mergeSup(uint year, const IntermediateValues& rhs);
 
-    std::vector<Data> annual{1};
-    std::vector<Data> monthly{MONTHS_PER_YEAR};
-    std::vector<Data> weekly{WEEKS_PER_YEAR};
-    std::vector<Data> daily{DAYS_PER_YEAR};
-    std::vector<Data> hourly{HOURS_PER_YEAR};
+    Data annual{1};
+    Data monthly{MONTHS_PER_YEAR};
+    Data weekly{WEEKS_PER_YEAR};
+    Data daily{DAYS_PER_YEAR};
+    Data hourly{HOURS_PER_YEAR};
 
 }; // class MinMaxData
 

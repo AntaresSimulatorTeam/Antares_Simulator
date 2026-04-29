@@ -370,12 +370,6 @@ void Calendar::reset()
                  << ", january 1rst : " << DayOfTheWeekToString(settings_.weekday1rstJanuary)
                  << ", first weekday : " << DayOfTheWeekToString(settings_.weekFirstDay);
 #endif
-    (void)::memset(hours, '\0', sizeof(hours));
-    (void)::memset(days, '\0', sizeof(days));
-    (void)::memset(weeks, '\0', sizeof(weeks));
-    (void)::memset(months, '\0', sizeof(months));
-    (void)::memset(&mapping, '\0', sizeof(mapping));
-
     for (auto& monthText: text.months)
     {
         monthText.name.clear();
