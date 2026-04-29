@@ -449,7 +449,7 @@ jobs:
     needs:
     - build
     - tests
-    if: ${{ env.IS_RELEASE == 'true' || github.ref == 'refs/heads/develop' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/develop' }}
     env:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
