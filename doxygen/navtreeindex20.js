@@ -1,5 +1,12 @@
 var NAVTREEINDEX20 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ae8217610b17199ee6726387fec5ede0f":[8,0,0,11,6,17,1],
+"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html":[8,0,0,11,6,18],
+"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a51ff8c7cc392be27188e90204bcd7c1f":[8,0,0,11,6,18,2],
+"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a71d35fcef40ef10f0154bd934371bc0c":[8,0,0,11,6,18,4],
+"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a827d0bd5ed118f367923df776b152116":[8,0,0,11,6,18,0],
+"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a8fdc5ff0f41277fe77e86180ddf27243":[8,0,0,11,6,18,3],
+"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#aac21aa5ad0f3717211d640d47ff67624":[8,0,0,11,6,18,5],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#ad5bac62539514d9fd89901eb252473ee":[8,0,0,11,6,18,1],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html":[8,0,0,11,6,45],
 "classAntares_1_1Solver_1_1Variable_1_1SetsOfAreas.html#a01fffc8172275ed391265371b7833db3":[8,0,0,11,6,45,7],
@@ -242,12 +249,5 @@ var NAVTREEINDEX20 =
 "classBenchmarking_1_1DurationCollector.html#a211ff36e93cb5a17192c8c4e3e4d764e":[8,0,3,0,2],
 "classBenchmarking_1_1DurationCollector.html#a46790528446652a2b634d4cdc6b69894":[8,0,3,0,4],
 "classBenchmarking_1_1DurationCollector.html#a4ea5bde080f8ed88eb84ecd6299b25da":[8,0,3,0,1],
-"classBenchmarking_1_1DurationCollector.html#aa1e365a24d8b5245c4b784472c40b4ae":[8,0,3,0,3],
-"classBenchmarking_1_1FileContent.html":[8,0,3,1],
-"classBenchmarking_1_1FileContent.html#a2803873c7d05f2f6f5a83650509d86ef":[8,0,3,1,2],
-"classBenchmarking_1_1FileContent.html#a390906b8f5b74b364f780bdd7ddf268a":[8,0,3,1,4],
-"classBenchmarking_1_1FileContent.html#a4b3e22e6106470b4838d25e86bb6b1e1":[8,0,3,1,1],
-"classBenchmarking_1_1FileContent.html#a5fc00020fe822b93c89b478ef09e72fa":[8,0,3,1,6],
-"classBenchmarking_1_1FileContent.html#a7920f68f53acac5582721cfbcd1b7abc":[8,0,3,1,3],
-"classBenchmarking_1_1FileContent.html#a8711c38818317c9774a41fdc0d62f729":[8,0,3,1,0]
+"classBenchmarking_1_1DurationCollector.html#aa1e365a24d8b5245c4b784472c40b4ae":[8,0,3,0,3]
 };

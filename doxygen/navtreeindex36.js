@@ -1,5 +1,13 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1Expressions_1_1Visitors_1_1BoxStyle.html#afd8922704b6cb33c6607f10a5775fcab":[8,0,0,6,1,0,0],
+"structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html":[8,0,0,6,1,15],
+"structAntares_1_1Expressions_1_1Visitors_1_1NodeVisitsProvider.html#ae4babfda37309f09bedfc434e9d77024":[8,0,0,6,1,15,0],
+"structAntares_1_1Expressions_1_1Visitors_1_1SafeDivides.html":[8,0,0,6,1,8],
+"structAntares_1_1Expressions_1_1Visitors_1_1SafeDivides.html#a4613499a02cc557e9dcb71f3478fec68":[8,0,0,6,1,8,0],
+"structAntares_1_1Expressions_1_1Visitors_1_1SafeDivides.html#a90819b18926bb75109e000f2d413e189":[8,0,0,6,1,8,1],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html":[8,0,0,7,0,3,8],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#a044c1a4878754738f921bdd73218c5c7":[8,0,0,7,0,3,8,2],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#a14b632d44ca7592b1c0e9669a21ca582":[8,0,0,7,0,3,8,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html#ae260e569932847e19963e2b886ef1242":[8,0,0,7,0,3,8,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Constraint.html":[8,0,0,7,0,3,4],
@@ -241,13 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Solver_1_1ProblemEntity.html#a7b2171478e3c20f154c18ebaef1713bf":[8,0,0,11,19,0],
 "structAntares_1_1Solver_1_1ProblemEntity.html#a9233b14060c3f9dd7e32463a6c307107":[8,0,0,11,19,1],
 "structAntares_1_1Solver_1_1Simulation_1_1Exchange.html":[8,0,0,11,5,23],
-"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#a87bd9e31c81509422defef872119c5c4":[8,0,0,11,5,23,1],
-"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#aa9bb5beb9372ffb183b0a79bf9777445":[8,0,0,11,5,23,0],
-"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#abf4816ef175154cf3f955665802daa13":[8,0,0,11,5,23,2],
-"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#afb964f5d0cdc74fc0b4ba44ba939bb4a":[8,0,0,11,5,23,3],
-"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html":[8,0,0,11,5,34],
-"structAntares_1_1Solver_1_1Simulation_1_1compareHydroCostsNoises.html#a876ea3f3d75c932d1e568cbfd0ccd141":[8,0,0,11,5,34,0],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html":[8,0,0,11,5,11],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a3cfaabf2ec52301ec164d66953252590":[8,0,0,11,5,11,0],
-"structAntares_1_1Solver_1_1Simulation_1_1optRuntimeData.html#a73f94d610c09a9c2e287fda28f12b137":[8,0,0,11,5,11,2]
+"structAntares_1_1Solver_1_1Simulation_1_1Exchange.html#a87bd9e31c81509422defef872119c5c4":[8,0,0,11,5,23,1]
 };

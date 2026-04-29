@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Member List</title>
+<title>Antares Simulator: src/libs/antares/writer/include/antares/writer/null_result_writer.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1NullResultWriter.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('null__result__writer_8h_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -124,25 +124,40 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1NullResultWr
 
 <div class="header">
   <div class="headertitle">
-<div class="title">Antares::Solver::NullResultWriter Member List</div>  </div>
+<div class="title">null_result_writer.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>This is the complete list of members for <a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a>, including all inherited members.</p>
-<table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>addEntryFromBuffer</b>(const std::filesystem::path &amp;, std::string &amp;) override (defined in <a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>addEntryFromFile</b>(const std::filesystem::path &amp;, const std::filesystem::path &amp;) override (defined in <a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>finalize</b>(bool) override (defined in <a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html#acb2db50c5a1ef25909fde46851f677d4">flush</a>() override</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>needsTheJobQueue</b>() const override (defined in <a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>Ptr</b> typedef (defined in <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~IResultWriter</b>()=default (defined in <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>~NullResultWriter</b>() override=default (defined in <a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></td><td class="entry"></td></tr>
-</table></div><!-- contents -->
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/writer/i_writer.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1NullResultWriter.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a>: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    ~<a class="code" href="classAntares_1_1Solver_1_1NullResultWriter.html">NullResultWriter</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp;, std::string&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> addEntryFromFile(<span class="keyword">const</span> std::filesystem::path&amp;, <span class="keyword">const</span> std::filesystem::path&amp;) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Solver_1_1NullResultWriter.html#acb2db50c5a1ef25909fde46851f677d4">flush</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">bool</span> needsTheJobQueue() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> finalize(<span class="keywordtype">bool</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;} <span class="comment">// namespace Antares::Solver</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1NullResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1NullResultWriter.html">Antares::Solver::NullResultWriter</a></div><div class="ttdef"><b>Definition:</b> null_result_writer.h:12</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1NullResultWriter_html_acb2db50c5a1ef25909fde46851f677d4"><div class="ttname"><a href="classAntares_1_1Solver_1_1NullResultWriter.html#acb2db50c5a1ef25909fde46851f677d4">Antares::Solver::NullResultWriter::flush</a></div><div class="ttdeci">void flush() override</div><div class="ttdef"><b>Definition:</b> null_result_writer.cpp:19</div></div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_87a455bccb09a92130c26a11a880c98a.html">libs</a></li><li class="navelem"><a class="el" href="dir_f35d736e29d8243b24d0b8688c8560d6.html">antares</a></li><li class="navelem"><a class="el" href="dir_fbf1ff225a84ae76ebe1da6e7150b0cc.html">writer</a></li><li class="navelem"><a class="el" href="dir_ae73bb7e32b3d1051c8a9b9ee6c4dc40.html">include</a></li><li class="navelem"><a class="el" href="dir_beff7427979cae89e6df9e0b39a4fa89.html">antares</a></li><li class="navelem"><a class="el" href="dir_bf91ce0d7d9ebce247f17207861aa803.html">writer</a></li><li class="navelem"><b>null_result_writer.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

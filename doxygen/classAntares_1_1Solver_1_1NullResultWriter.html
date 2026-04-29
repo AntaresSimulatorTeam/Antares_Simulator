@@ -124,6 +124,7 @@ $(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1NullResultWr
 
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAntares_1_1Solver_1_1NullResultWriter-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Solver::NullResultWriter Class Reference</div>  </div>
@@ -139,6 +140,23 @@ Inheritance diagram for Antares::Solver::NullResultWriter:</div>
   </map>
 </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a43cfcb7977a8d58435ff56f7cb71d8dd"><td class="memItemLeft" align="right" valign="top"><a id="a43cfcb7977a8d58435ff56f7cb71d8dd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromBuffer</b> (const std::filesystem::path &amp;, std::string &amp;) override</td></tr>
+<tr class="separator:a43cfcb7977a8d58435ff56f7cb71d8dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58507a28e45e788a70dc3fbd42afb5e7"><td class="memItemLeft" align="right" valign="top"><a id="a58507a28e45e788a70dc3fbd42afb5e7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addEntryFromFile</b> (const std::filesystem::path &amp;, const std::filesystem::path &amp;) override</td></tr>
+<tr class="separator:a58507a28e45e788a70dc3fbd42afb5e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb2db50c5a1ef25909fde46851f677d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1NullResultWriter.html#acb2db50c5a1ef25909fde46851f677d4">flush</a> () override</td></tr>
+<tr class="separator:acb2db50c5a1ef25909fde46851f677d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33bb9389672c35a0977d4fd8210060c4"><td class="memItemLeft" align="right" valign="top"><a id="a33bb9389672c35a0977d4fd8210060c4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>needsTheJobQueue</b> () const override</td></tr>
+<tr class="separator:a33bb9389672c35a0977d4fd8210060c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac00c25421a6ca93359afab631dff8d39"><td class="memItemLeft" align="right" valign="top"><a id="ac00c25421a6ca93359afab631dff8d39"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>finalize</b> (bool) override</td></tr>
+<tr class="separator:ac00c25421a6ca93359afab631dff8d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classAntares_1_1Solver_1_1IResultWriter"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classAntares_1_1Solver_1_1IResultWriter')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></td></tr>
@@ -146,9 +164,38 @@ Additional Inherited Members</h2></td></tr>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Ptr</b> = std::shared_ptr&lt; <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">IResultWriter</a> &gt;</td></tr>
 <tr class="separator:a2d3eea88ce7f0fc6ac0aa1c6a5813868 inherit pub_types_classAntares_1_1Solver_1_1IResultWriter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="acb2db50c5a1ef25909fde46851f677d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb2db50c5a1ef25909fde46851f677d4">&#9670;&nbsp;</a></span>flush()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Antares::Solver::NullResultWriter::flush </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Waits for completion of every write operation previously appended. A runtime error may be raised if any of those fails. </p>
+
+<p>Implements <a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c">Antares::Solver::IResultWriter</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/libs/antares/writer/include/antares/writer/<a class="el" href="i__writer_8h_source.html">i_writer.h</a></li>
-<li>src/libs/antares/writer/immediate_file_writer.cpp</li>
+<li>src/libs/antares/writer/include/antares/writer/<a class="el" href="null__result__writer_8h_source.html">null_result_writer.h</a></li>
+<li>src/libs/antares/writer/null_result_writer.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

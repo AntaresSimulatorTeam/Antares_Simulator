@@ -1,5 +1,12 @@
 var NAVTREEINDEX17 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ab1cff0e3b034f5fab44cf920da9ba243":[8,0,0,11,6,4,81,2],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ab9fa6b7dd49ccff1fb79de04b8489cb0":[8,0,0,11,6,4,81,19],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ad687aab136c2180d668716af1abe7fc0":[8,0,0,11,6,4,81,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ad795b4870dab4048cc3f444c0a997dbf":[8,0,0,11,6,4,81,18],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aeaed44635eb7669328412be881c6bf2d":[8,0,0,11,6,4,81,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aeed8d7e1c372f3f792214fea2984094f":[8,0,0,11,6,4,81,13],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#af3583a7b03a13c438a86249297c0c4d6":[8,0,0,11,6,4,81,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#afac3d0f12b6b6ffbb3ddbb0b60e2ad59":[8,0,0,11,6,4,81,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html":[8,0,0,11,6,4,65],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#a00b30b4937fb713eb661dc97ba57ce2f":[8,0,0,11,6,4,65,16],
@@ -242,12 +249,5 @@ var NAVTREEINDEX17 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#a8737671cf4d6da097881ef14f8814cac":[8,0,0,11,6,4,102,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#a8bf502fd16c4304ae28c42998a898d2f":[8,0,0,11,6,4,102,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ab133eb53a213e3a2bfae7b7d4b67f0a2":[8,0,0,11,6,4,102,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ab26e4dee7ba5a79460cfa09c4b67b50c":[8,0,0,11,6,4,102,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ab958c3da4db546afe6a9c74d9bb5f34a":[8,0,0,11,6,4,102,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ab97a09cc6830488a5e89a202a7efbf58":[8,0,0,11,6,4,102,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#aba98dcd160805ecbd9c5f2c9ace27e2f":[8,0,0,11,6,4,102,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#acf654917ca1d5e727121a5ef495e21e2":[8,0,0,11,6,4,102,12],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ade5f43e5f156f24ab8c7a8a0fa4b190e":[8,0,0,11,6,4,102,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ae0316c1641b6d9971a21b1cc36baafa9":[8,0,0,11,6,4,102,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#aee8895307cf06adb4e45df9cb070909e":[8,0,0,11,6,4,102,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html#ab26e4dee7ba5a79460cfa09c4b67b50c":[8,0,0,11,6,4,102,5]
 };

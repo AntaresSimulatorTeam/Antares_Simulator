@@ -1,5 +1,12 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a1caa0f74bcd1850320a427ba3c8ca0f3":[8,0,0,11,6,4,37,3],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a316cdcb9c6f84c3e4238e6e8cc2c5494":[8,0,0,11,6,4,37,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a32bb438870413184633f0e685949fce4":[8,0,0,11,6,4,37,6],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a3c14967c96212ce92f61abb654e72fda":[8,0,0,11,6,4,37,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a6383c8b2ab114be8189a52dca98e4a11":[8,0,0,11,6,4,37,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a6723cbb048ef2686352b505a471dc3af":[8,0,0,11,6,4,37,5],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a7eea58f62860e7ee0299e432ea5e2e94":[8,0,0,11,6,4,37,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a878a9e455b8d53f09b0085e0d8c0dac0":[8,0,0,11,6,4,37,16],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#a9e91374911974c487602d27534aca8f7":[8,0,0,11,6,4,37,14],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DomesticUnsuppliedEnergy.html#aae93101da679dfe1fc81a3622b843235":[8,0,0,11,6,4,37,11],
@@ -242,12 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a683fb7d6b458fc151ce0bbfdfe69485a":[8,0,0,11,6,4,81,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a79665b68bfa13480592be6cedcd8697a":[8,0,0,11,6,4,81,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#a888e1eeea70d983a479bf5a2758e5148":[8,0,0,11,6,4,81,9],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aa5e648b08fe85560bb372ffbf3dfdba7":[8,0,0,11,6,4,81,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ab1cff0e3b034f5fab44cf920da9ba243":[8,0,0,11,6,4,81,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ab9fa6b7dd49ccff1fb79de04b8489cb0":[8,0,0,11,6,4,81,19],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ad687aab136c2180d668716af1abe7fc0":[8,0,0,11,6,4,81,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#ad795b4870dab4048cc3f444c0a997dbf":[8,0,0,11,6,4,81,18],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aeaed44635eb7669328412be881c6bf2d":[8,0,0,11,6,4,81,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aeed8d7e1c372f3f792214fea2984094f":[8,0,0,11,6,4,81,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#af3583a7b03a13c438a86249297c0c4d6":[8,0,0,11,6,4,81,4]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge.html#aa5e648b08fe85560bb372ffbf3dfdba7":[8,0,0,11,6,4,81,7]
 };

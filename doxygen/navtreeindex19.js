@@ -1,5 +1,12 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a1dd7b968611c919fb89c0237aa4fa960":[8,0,0,11,6,52,13],
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a28924df29366a5a886b7877c940ed779":[8,0,0,11,6,52,37],
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c":[8,0,0,11,6,52,29],
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a29e765bef0d756036e5ec53ed8e1ede4":[8,0,0,11,6,52,42],
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a319afd53955da3412d816ce0b5b8e0d0":[8,0,0,11,6,52,7],
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a34c5cd9699b43b17a046712dc5ba1fd4":[8,0,0,11,6,52,31],
+"classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a38ef697bc0ba4937d9d4c212dafe32c1":[8,0,0,11,6,52,19],
 "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3ec177799e5b6ce31d13545889eb988a":[8,0,0,11,6,52,36],
 "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a408dbd793470d952afc8cb56780a8eec":[8,0,0,11,6,52,18],
 "classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a4613c3754643a56ff43ac431b1c709e6":[8,0,0,11,6,52,9],
@@ -242,12 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#a507bfc79ea45aff48a6588b31cd9b020":[8,0,0,11,6,17,4],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ac78ec87a985482460999e7e8098f94c2":[8,0,0,11,6,17,7],
 "classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ae1c03ef1be2096b616be7e22e2e8a3a2":[8,0,0,11,6,17,3],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ae22c63be966f3a6d5cea24c55551c758":[8,0,0,11,6,17,2],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ae8217610b17199ee6726387fec5ede0f":[8,0,0,11,6,17,1],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html":[8,0,0,11,6,18],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a51ff8c7cc392be27188e90204bcd7c1f":[8,0,0,11,6,18,2],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a71d35fcef40ef10f0154bd934371bc0c":[8,0,0,11,6,18,4],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a827d0bd5ed118f367923df776b152116":[8,0,0,11,6,18,0],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#a8fdc5ff0f41277fe77e86180ddf27243":[8,0,0,11,6,18,3],
-"classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html#aac21aa5ad0f3717211d640d47ff67624":[8,0,0,11,6,18,5]
+"classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html#ae22c63be966f3a6d5cea24c55551c758":[8,0,0,11,6,17,2]
 };
