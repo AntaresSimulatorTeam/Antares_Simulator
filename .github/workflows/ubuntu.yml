@@ -49,7 +49,11 @@ jobs:
 
     strategy:
       matrix:
-        testNRTarget: ["set", "top"]
+        include:
+        - testNRTarget: set
+          isUploadTarget: true
+        - testNRTarget: top
+          isUploadTarget: false
     steps:
     - uses: actions/checkout@v6
       with:
@@ -134,13 +138,13 @@ jobs:
         cmake --build _build -j$(nproc)
 
     - name: Creation of complete .tar.gz archive
-      if: ${{ success() }}
+      if: ${{ success() && matrix.isUploadTarget }}
       run: |
         cd _build
         cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Creation of solver only .tar.gz archive
-      if: ${{ success() }}
+      if: ${{ success() && matrix.isUploadTarget }}
       run: |
         cd _build
         cmake --install . --prefix install
@@ -152,7 +156,7 @@ jobs:
         rm -rf install
 
     - name: Both previous archives upload
-      if: ${{ success() && matrix.testNRTarget == 'set' }}
+      if: ${{ success() && matrix.isUploadTarget }}
       uses: actions/upload-artifact@v7
       with:
         name: ubuntu-targz
@@ -239,7 +243,7 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v7
       with:
-        name: test-log
+        name: test-log-${{ matrix.testNRTarget }}
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Run tests about infinity on BCs RHS
@@ -395,12 +399,13 @@ jobs:
       run: exit 1
 
     - name: Installer .deb creation
+      if: ${{ success() && matrix.isUploadTarget }}
       run: |
         cd _build
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Installer deb upload push
-      if: ${{ matrix.testNRTarget == 'set' }}
+      if: ${{ matrix.isUploadTarget }}
       uses: actions/upload-artifact@v7
       with:
         name: deb
@@ -408,7 +413,7 @@ jobs:
 
 
     - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' && matrix.testNRTarget == 'set' }}
+      if: ${{ env.IS_RELEASE == 'true' && matrix.isUploadTarget }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
@@ -417,7 +422,7 @@ jobs:
 
 
     - name: Update continuous-delivery release
-      if: ${{ github.ref == 'refs/heads/develop' && matrix.testNRTarget == 'set' }}
+      if: ${{ github.ref == 'refs/heads/develop' && matrix.isUploadTarget }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
