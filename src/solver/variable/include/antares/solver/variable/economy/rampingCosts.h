@@ -137,6 +137,7 @@ public:
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
+        pArea = area;
         // Next
         NextType::initializeFromArea(study, area);
     }
@@ -149,12 +150,17 @@ public:
 
     void simulationBegin()
     {
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        {
+            pValuesForTheCurrentYear[numSpace].reset();
+        }
         // Next
         NextType::simulationBegin();
     }
 
     void simulationEnd()
     {
+        // Next
         NextType::simulationEnd();
     }
 
@@ -162,6 +168,7 @@ public:
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
+
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
@@ -197,6 +204,9 @@ public:
 
     void computeSummary(unsigned int year, unsigned int numSpace)
     {
+        // Merge all those values with the global results
+        AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
+
         // Next variable
         NextType::computeSummary(year, numSpace);
     }
@@ -239,6 +249,8 @@ public:
     }
 
 private:
+    //! The attached area
+    Antares::Data::Area* pArea;
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
