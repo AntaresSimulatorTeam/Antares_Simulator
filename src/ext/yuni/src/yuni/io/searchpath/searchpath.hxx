@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "searchpath.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 inline bool SearchPath::cacheLookup() const
 {
@@ -30,5 +29,4 @@ inline void SearchPath::cacheClear()
     pCache.clear();
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

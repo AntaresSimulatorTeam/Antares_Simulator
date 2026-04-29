@@ -1,8 +1,3 @@
----
-hide:
- - toc
----
-
 # Command-line instructions
 
 **Executable**: antares-modeler

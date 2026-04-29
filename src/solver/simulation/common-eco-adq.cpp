@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/simulation/common-eco-adq.h"
 
@@ -28,7 +10,8 @@
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
-#include "antares/study/simulation.h"
+
+class ISimulationTable;
 
 namespace Antares::Solver::Simulation
 {
@@ -90,12 +73,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
     try
     {
-        NullResultWriter resultWriter;
-        NullSimulationObserver simulationObserver;
-        OPT_OptimisationHebdomadaire(study.parameters.optOptions,
-                                     &problem,
-                                     resultWriter,
-                                     simulationObserver);
+        OPT_OptimisationHebdomadaireQuadratique(study.parameters.optOptions, &problem);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -151,7 +129,6 @@ void ComputeFlowQuad(Data::Study& study,
     {
         logs.info() << "Post-processing... (quadratic optimisation)";
 
-        problem.TypeDOptimisation = OPTIMISATION_QUADRATIQUE;
         problem.LeProblemeADejaEteInstancie = false;
         for (uint w = 0; w != nbWeeks; ++w)
         {
@@ -349,9 +326,12 @@ void SetInitialHydroLevel(Data::Study& study,
     study.areas.each(
       [&problem, &firstDaySimu, &hydroVentilationResults](const Data::Area& area)
       {
-          if (area.hydro.reservoirManagement)
+          bool updatePreviousLevel = area.hydro.reservoirManagement
+                                     && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
+          if (updatePreviousLevel)
           {
               double capacity = area.hydro.reservoirCapacity;
+
               problem.previousSimulationFinalLevel[area.index] = hydroVentilationResults[area.index]
                                                                    .NiveauxReservoirsDebutJours
                                                                      [firstDaySimu]
@@ -363,7 +343,7 @@ void SetInitialHydroLevel(Data::Study& study,
 void BuildThermalPartOfWeeklyProblem(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      const int PasDeTempsDebut,
-                                     std::vector<std::vector<double>>& thermalNoises,
+                                     const std::vector<std::vector<double>>& thermalNoises,
                                      unsigned int year)
 {
     int hourInYear = PasDeTempsDebut;
@@ -471,6 +451,44 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
 
     firstOptStat.reset();
     secondOptStat.reset();
+}
+
+void prepareClustersInMustRunMode(Data::Study& study,
+                                  Data::Area::ScratchMap& scratchmap,
+                                  uint year,
+                                  Data::SimulationMode mode)
+{
+    for (uint i = 0; i < study.areas.size(); ++i)
+    {
+        auto& area = *study.areas[i];
+        auto& scratchpad = scratchmap.at(&area);
+
+        std::ranges::fill(scratchpad.mustrunSum, 0);
+        if (mode == Data::SimulationMode::Adequacy)
+        {
+            std::ranges::fill(scratchpad.originalMustrunSum, 0);
+        }
+
+        auto& mrs = scratchpad.mustrunSum;
+        auto& adq = scratchpad.originalMustrunSum;
+
+        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
+        {
+            const auto& availableProduction = cluster->series.getColumn(year);
+            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+            {
+                mrs[h] += availableProduction[h];
+            }
+            if (cluster->mustrunOrigin && mode == Data::SimulationMode::Adequacy)
+            {
+                for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
+                {
+                    adq[h] += 2 * availableProduction[h]; // Why do we add the available production
+                                                          // twice ?
+                }
+            }
+        }
+    }
 }
 
 } // namespace Antares::Solver::Simulation

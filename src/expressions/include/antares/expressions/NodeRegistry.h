@@ -5,7 +5,7 @@
 
 namespace Antares::Expressions
 {
-class NodeRegistry
+class NodeRegistry final
 {
 public:
     NodeRegistry() = default;

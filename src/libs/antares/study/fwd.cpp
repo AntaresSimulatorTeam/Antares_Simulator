@@ -1,27 +1,11 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/fwd.h"
 
 #include <algorithm>
+
+#include <antares/writer/result_format.h>
 
 using namespace Yuni;
 
@@ -514,5 +498,41 @@ std::string styleToString(const StyleType& style)
         return "plain";
     }
 }
+
+namespace Enum
+{
+template<>
+const std::initializer_list<std::string>& getNames<SheddingPolicy>()
+{
+    static const std::initializer_list<std::string> il = {"shave peaks",
+                                                          "accurate shave peaks",
+                                                          "minimize duration",
+                                                          "unknown"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<RenewableGenerationModelling>()
+{
+    static const std::initializer_list<std::string> il = {"aggregated", "clusters", "unknown"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<Antares::Data::ResultFormat>()
+{
+    static const std::initializer_list<std::string> il = {"legacyFilesDirectories",
+                                                          "zipArchive",
+                                                          "inMemory"};
+    return il;
+}
+
+template<>
+const std::initializer_list<std::string>& getNames<SimplexOptimization>()
+{
+    static const std::initializer_list<std::string> il = {"unknown", "day", "week"};
+    return il;
+}
+} // namespace Enum
 
 } // namespace Antares::Data

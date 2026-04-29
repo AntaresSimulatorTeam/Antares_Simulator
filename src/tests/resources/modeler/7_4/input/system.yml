@@ -10,32 +10,32 @@
 #
 # This file is part of the Antares project.
 
-   # Study 028b B-D-E - V8.6
-   # Small test case with two nodes
-   #### 1 one electric node :  3 thermal clusters, 1 load, 1 wind, 1 short term storage, 1 demand-side response
-   #### 1 H2 node :  1 electrolyser, 1 H2 load, 1 H2 back-up production
+# Study 028b B-D-E - V8.6
+# Small test case with two nodes
+#### 1 one electric node :  3 thermal clusters, 1 load, 1 wind, 1 short term storage, 1 demand-side response
+#### 1 H2 node :  1 electrolyser, 1 H2 load, 1 H2 back-up production
 
 system:
   id: system
   components:
     
-############################# H2 zone #############################
+    ############################# H2 zone #############################
 
     - id: hydrogen_zone
       model: antares-historic-weo.area
-      scenario-group: sg
+      
       parameters:
-      - id: spillage_cost
-        time-dependent: false
-        scenario-dependent: false
-        value: 0
-      - id: ens_cost
-        time-dependent: false
-        scenario-dependent: false
-        value: 1000
-    
+        - id: spillage_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 0
+        - id: ens_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 1000
+
     - id: hydrogen_backup
-      scenario-group: sg
+      
       model: antares-historic-weo.thermal
       parameters:
         - id: p_min_cluster
@@ -43,35 +43,35 @@ system:
           time-dependent: false
           value: 0
         - id: p_max_cluster # timeseries that takes outages into account
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 200
         - id: p_min_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: p_max_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 200
         - id: generation_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 61
         - id: startup_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: fixed_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: d_min_up
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: d_min_down
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
@@ -90,56 +90,56 @@ system:
           scenario-dependent: false
           time-dependent: false
           value: 1
-  
+
     - id: electrolyser
-      scenario-group: sg
+      
       model: andromede-v1-models-weo.electrolyser
       parameters:
-      - id: p_max
-        scenario-dependent: false
-        time-dependent: false
-        value: 300
-      - id: efficiency
-        scenario-dependent: false
-        time-dependent: false
-        value: 0.7
+        - id: p_max
+          scenario-dependent: false
+          time-dependent: false
+          value: 300
+        - id: efficiency
+          scenario-dependent: false
+          time-dependent: false
+          value: 0.7
 
     - id: hydrogen_load
       model: antares-historic-weo.load
-      scenario-group: sg 
+
       parameters:
         - id: load
           time-dependent: false
           scenario-dependent: false
-          value : 220
-############################# Electricity zone #############################
+          value: 220
+    ############################# Electricity zone #############################
     - id: base_zone
       model: antares-historic-weo.area
-      scenario-group: sg
+      
       parameters:
-      - id: spillage_cost
-        time-dependent: false
-        scenario-dependent: false
-        value: 0
-      - id: ens_cost
-        time-dependent: false
-        scenario-dependent: false
-        value: 20000
+        - id: spillage_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 0
+        - id: ens_cost
+          time-dependent: false
+          scenario-dependent: false
+          value: 20000
 
     - id: load_base_zone
       model: antares-historic-weo.load
-      scenario-group: sg 
+
       parameters:
         - id: load
           time-dependent: true
           scenario-dependent: true
-          value : load_ts_base028
-    
+          value: load_ts_base028
+
     - id: dsr_base_zone
-      scenario-group: sg
+      
       model: andromede-v1-models-weo.dsr
       parameters:
-      
+
         - id: max_load
           time-dependent: false
           scenario-dependent: false
@@ -151,23 +151,23 @@ system:
 
     - id: wind_base_zone
       model: antares-historic-weo.renewable
-      scenario-group: sg
+      
       parameters:
         - id: nominal_capacity
           time-dependent: false
           scenario-dependent: false
-          value : 9000 
+          value: 9000
         - id: unit_count
           time-dependent: false
           scenario-dependent: false
-          value : 1
+          value: 1
         - id: generation
           time-dependent: true
           scenario-dependent: true
           value: wind_ts_base028
-    
+
     - id: gas_base_zone
-      scenario-group: sg
+      
       model: antares-historic-weo.thermal
       parameters:
         - id: p_min_cluster
@@ -175,35 +175,35 @@ system:
           time-dependent: false
           value: 0
         - id: p_max_cluster # timeseries that takes outages into account
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 2500
         - id: p_min_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: p_max_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 500
         - id: generation_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 50
         - id: startup_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: fixed_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: d_min_up
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: d_min_down
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
@@ -224,7 +224,7 @@ system:
           value: 0
 
     - id: oil_base_zone
-      scenario-group: sg
+      
       model: antares-historic-weo.thermal
       parameters:
         - id: p_min_cluster
@@ -232,35 +232,35 @@ system:
           time-dependent: false
           value: 0
         - id: p_max_cluster # timeseries that takes outages into account
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1000
         - id: p_min_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: p_max_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 200
         - id: generation_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 80
         - id: startup_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: fixed_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: d_min_up
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: d_min_down
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
@@ -281,7 +281,7 @@ system:
           value: 0
 
     - id: storage_base_zone
-      scenario-group: sg
+      
       model: antares-historic-weo.short-term-storage
       parameters:
         - id: reservoir_capacity
@@ -299,11 +299,11 @@ system:
         - id: efficiency_injection
           time-dependent: false
           scenario-dependent: false
-          value: 0.9 
+          value: 0.9
         - id: efficiency_withdrawal
           time-dependent: false
           scenario-dependent: false
-          value: 1.0 
+          value: 1.0
         - id: lower_rule_curve
           time-dependent: false
           scenario-dependent: false
@@ -328,9 +328,9 @@ system:
           time-dependent: false
           scenario-dependent: false
           value: 0.5
-  
+
     - id: coal_base_zone
-      scenario-group: sg
+      
       model: antares-historic-weo.thermal
       parameters:
         - id: p_min_cluster
@@ -338,35 +338,35 @@ system:
           time-dependent: false
           value: 0
         - id: p_max_cluster # timeseries that takes outages into account
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 6000
         - id: p_min_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: p_max_unit
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1000
         - id: generation_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 30
         - id: startup_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: fixed_cost
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 0
         - id: d_min_up
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: d_min_down
-          scenario-dependent: false 
+          scenario-dependent: false
           time-dependent: false
           value: 1
         - id: nb_units_min # Equals to ceil(p_min_cluster/p_max_unit), to be done in preprocessing
@@ -389,7 +389,7 @@ system:
 
   connections:
 
-############################# H2 zone #############################
+    ############################# H2 zone #############################
 
     - component1: hydrogen_zone
       port1: balance_port
@@ -406,7 +406,7 @@ system:
       component2: electrolyser
       port2: hydrogen_port
 
-############################# Electricity zone #############################
+    ############################# Electricity zone #############################
     - component1: base_zone
       port1: balance_port
       component2: load_base_zone
@@ -442,10 +442,10 @@ system:
       component2: storage_base_zone
       port2: injection_port
 
-  
 
 
-############################# H2-Electricity connection #############################
+
+    ############################# H2-Electricity connection #############################
 
     - component1: base_zone
       port1: balance_port

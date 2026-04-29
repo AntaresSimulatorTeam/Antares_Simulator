@@ -1,50 +1,17 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_H2O_J_STRUCTURE_INTERNE__
 #define __SOLVER_H2O_J_STRUCTURE_INTERNE__
 
-#include <antares/solver/hydro/probleme_spx_wrapper.h>
+#include <string>
+#include <vector>
 
-#ifdef __CPLUSPLUS
-extern "C"
-{
-#endif
+#include <antares/solver/hydro/probleme_spx_wrapper.h>
 
 #include "spx_definition_arguments.h"
 
-#ifdef __CPLUSPLUS
-}
-#endif
-
 #define LINFINI 1.e+80
-
-#define JOURS_28 28
-#define JOURS_29 29
-#define JOURS_30 30
-#define JOURS_31 31
-#define NOMBRE_DE_TYPE_DE_MOIS 4
-
-#include <memory>
-#include <string>
-#include <vector>
 
 namespace DoneesOptimisationJournaliere
 {
@@ -113,17 +80,24 @@ struct PROBLEME_LINEAIRE_PARTIE_VARIABLE
 /* Les correspondances fixes des contraintes */
 struct CORRESPONDANCE_DES_CONTRAINTES
 {
-    int NumeroDeContrainteDEnergieMensuelle{0};
-    std::vector<int> NumeroDeContrainteSurXi;
+    int NumeroDeContrainteDEnergieMensuelle{0};    /* Somme des turbines = somme des cibles */
+    std::vector<int> NumeroDeContrainteSurXi;      /* turbine[t] + xi[t] >= cible[t] */
+    std::vector<int> NumeroDeContrainteSurXiSym;   /* cible[t] + xi[t] >= turbine[t] */
+    std::vector<int> NumeroDeContrainteSurXiPlus;  /* turbine[t] + xi_plus >= cible[t] */
+    std::vector<int> NumeroDeContrainteSurXiMoins; /* cible[t] + xi_moins >= turbine[t] */
 };
 
 /* Les correspondances des variables */
 struct CORRESPONDANCE_DES_VARIABLES
 {
     std::vector<int> NumeroDeVariableTurbine; /* Turbines */
-    int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode) */
-    int NumeroDeLaVariableXi{0}; /* Variable decrivant l'ecart max au turbine cible quand le turbine
-                             est inferieur au turbine cible */
+    // int NumeroDeLaVariableMu{0};              /* Variable de deversement (total sur la periode)
+    // */
+    std::vector<int> NumeroDeLaVariableXi; /* Variable decrivant l'ecart max au turbine cible quand
+                             le turbine est inferieur au turbine cible */
+
+    int NumeroDeLaVariableXiPlus{0};  /* Ecart global positif */
+    int NumeroDeLaVariableXiMoins{0}; /* Ecart global négatif */
 };
 
 /* Structure uniquement exploitee par l'optimisation (donc a ne pas acceder depuis l'exterieur) */

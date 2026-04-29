@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,12 +12,10 @@
 #ifndef __YUNI_CORE_UNIT_ANGLE_H__
 #define __YUNI_CORE_UNIT_ANGLE_H__
 
-#include "unit.h"
 #include "define.h"
+#include "unit.h"
 
-namespace Yuni
-{
-namespace Unit
+namespace Yuni::Unit
 {
 /*!
 ** \defgroup UnitAngle Angle
@@ -45,8 +44,7 @@ YUNI_UNIT_IMPL(Radian, "radian", "rad", int, 1);
 YUNI_UNIT_IMPL(Degree, "degree", "°", double, 17.453293e-3);
 
 } // namespace Angle
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit
 
 #include "undef.h"
 

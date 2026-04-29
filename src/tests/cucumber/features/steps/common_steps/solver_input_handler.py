@@ -11,6 +11,9 @@ class solver_input_handler:
         self.files_path["general"] = self.study_root_dir / "settings" / "generaldata.ini"
         self.files_path["study"] = self.study_root_dir / "study.antares"
         self.files_path["thermal"] = self.study_root_dir / "study.antares"
+        reference = self.study_root_dir / "output" / "reference"
+        self.files_path["simulation_table1"] = reference / "simulation_table--optim-nb-1.csv"
+        self.files_path["simulation_table2"] = reference / "simulation_table--optim-nb-2.csv"
 
     def get_value(self, variable, file_nick_name):
         # File path
@@ -57,3 +60,14 @@ class solver_input_handler:
         # Erasing file content with the tmp content (content out)
         with open(file_path, "w") as f:
             f.writelines(content_out)
+
+    def get_optim1_simulation_table(self):
+        assert self.files_path["simulation_table1"].exists(), f"Path %s does not exist." % self.files_path[
+            "simulation_table1"]
+        return open(self.files_path["simulation_table1"], 'r').readlines()
+
+    def get_optim2_simulation_table(self):
+        if self.files_path["simulation_table2"].exists():
+            return open(self.files_path["simulation_table2"], 'r').readlines()
+        else:
+            return None

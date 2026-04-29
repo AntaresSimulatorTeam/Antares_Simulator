@@ -9,8 +9,8 @@ using namespace Antares::Solver::Optimization;
 
 namespace Antares::Check
 {
-static void checkSolverExists(const std::string solverName,
-                              const std::list<std::string> availableSolversList)
+static void isQuadraticSolverAvailable(const std::string& solverName,
+                                       const std::list<std::string>& availableSolversList)
 {
     bool found = std::ranges::find(availableSolversList, solverName) != availableSolversList.end();
     if (!found)
@@ -21,8 +21,13 @@ static void checkSolverExists(const std::string solverName,
 
 static void checkForSolversExistence(const CmdLineOptimOptions& solverOptions)
 {
-    checkSolverExists(solverOptions.linearSolver, availableLinearSolversList());
-    checkSolverExists(solverOptions.quadraticSolver, availableQuadraticSolversList());
+    if (!isLinearSolverAvailable(solverOptions.linearSolver))
+    {
+        throw Error::InvalidSolver(solverOptions.linearSolver,
+                                   toString(availableLinearSolversList()));
+    }
+
+    isQuadraticSolverAvailable(solverOptions.quadraticSolver, availableQuadraticSolversList());
 }
 
 static void checkSolverMILPoptionsConsistency(const CmdLineOptimOptions& solverOptions)

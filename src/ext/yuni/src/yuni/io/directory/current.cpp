@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -8,25 +9,20 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../io.h"
 #include "../directory.h"
+#include "../io.h"
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #else
-#include "../../core/system/windows.hdr.h"
-#include "../../core/string/wstring.h"
 #include <direct.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#include "../../core/string/wstring.h"
+#include "../../core/system/windows.hdr.h"
 #endif
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
-{
-namespace Current
+namespace Yuni::IO::Directory::Current
 {
 namespace // anonymous
 {
@@ -52,7 +48,9 @@ static inline bool FetchAndAppendCurrentDirectory(StringT& string)
             char* buffer = string.data();
             // making sure that the buffer has been allocated
             if (YUNI_UNLIKELY(nullptr == buffer or string.capacity() <= string.size()))
+            {
                 return false;
+            }
 
             buffer += string.size();
             size_t length = string.capacity() - string.size() - 1;
@@ -85,21 +83,27 @@ String Get()
 bool Get(String& out, bool clearBefore)
 {
     if (clearBefore)
+    {
         out.clear();
+    }
     return FetchAndAppendCurrentDirectory(out);
 }
 
 bool Get(Clob& out, bool clearBefore)
 {
     if (clearBefore)
+    {
         out.clear();
+    }
     return FetchAndAppendCurrentDirectory(out);
 }
 
 bool Set(const AnyString& path)
 {
     if (path.empty())
+    {
         return false;
+    }
 
     String realpath;
     IO::Canonicalize(realpath, path);
@@ -116,7 +120,4 @@ bool Set(const AnyString& path)
 #endif
 }
 
-} // namespace Current
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory::Current

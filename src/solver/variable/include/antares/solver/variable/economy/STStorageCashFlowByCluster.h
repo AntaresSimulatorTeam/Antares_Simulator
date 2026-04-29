@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include "antares/solver/variable/variable.h"
@@ -186,22 +169,17 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
+        for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {
-            for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
-            {
-                // Merge all those values with the global results
-                AncestorType::pResults[clusterIndex].merge(
-                  numSpaceToYear[numSpace],
-                  pValuesForTheCurrentYear[numSpace][clusterIndex]);
-            }
+            // Merge all those values with the global results
+            AncestorType::pResults[clusterIndex]
+              .merge(year, pValuesForTheCurrentYear[numSpace][clusterIndex]);
         }
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourBegin(unsigned int hourInTheYear)
@@ -216,25 +194,18 @@ public:
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
              ++clusterIndex)
         {
-            const auto& stsHourlyResults = state.hourlyResults
-                                             ->ShortTermStorage[state.hourInTheWeek];
+            const auto& stsHourlyResults = state.hourlyResults->ShortTermStorage[clusterIndex];
             // ST storage injection for the current cluster and this hour
             // CashFlow[h] = (withdrawal - injection) * MRG. PRICE
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[hourInYear]
-              = (stsHourlyResults.withdrawal[clusterIndex]
-                 - stsHourlyResults.injection[clusterIndex])
+              = (stsHourlyResults.withdrawal[state.hourInTheWeek]
+                 - stsHourlyResults.injection[state.hourInTheWeek])
                 * (-state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek]);
             // Note: The marginal price provided by the solver is negative (naming convention).
         }
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        // Ask to build the digest to the next variable
-        NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

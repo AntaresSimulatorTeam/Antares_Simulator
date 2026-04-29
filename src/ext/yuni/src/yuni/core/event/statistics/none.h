@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,13 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Core
-{
-namespace EventLoop
-{
-namespace Statistics
+namespace Yuni::Core::EventLoop::Statistics
 {
 template<class EventLoopT>
 class YUNI_DECL None
@@ -34,6 +29,7 @@ public:
     None()
     {
     }
+
     //@}
 
 protected:
@@ -68,6 +64,7 @@ protected:
     {
         (void)request;
     }
+
     //@}
 
     //! \name Events triggered from the main thread of the event loop
@@ -104,11 +101,9 @@ protected:
     static void onEndOfCycle()
     {
     }
+
     //@}
 
 }; // class None<>
 
-} // namespace Statistics
-} // namespace EventLoop
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::EventLoop::Statistics

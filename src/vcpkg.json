@@ -1,14 +1,10 @@
 {
   "name": "antares-simulator",
-  "version-string": "9.2.0",
+  "version-string": "10.0.1",
   "dependencies": [
     {
       "name": "sirius-solver",
-      "version>=": "1.7"
-    },
-    {
-      "name": "wxwidgets",
-      "platform": "windows"
+      "version>=": "1.9"
     },
     {
       "name": "boost-test",
@@ -16,6 +12,10 @@
     },
     {
       "name": "boost-core",
+      "version>=": "1.86.0"
+    },
+    {
+      "name": "boost-iostreams",
       "version>=": "1.86.0"
     },
     {
@@ -31,6 +31,13 @@
     },
     {
       "name": "antlr4"
+    },
+    {
+      "name": "fmt"
+    },
+    {
+      "name": "arrow",
+      "features": ["parquet"]
     }
   ]
 }

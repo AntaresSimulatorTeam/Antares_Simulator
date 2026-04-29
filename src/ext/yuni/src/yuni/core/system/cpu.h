@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "../../yuni.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace CPU
+namespace Yuni::System::CPU
 {
 /*!
 ** \brief Get the number of system CPU
@@ -24,6 +21,4 @@ namespace CPU
 */
 YUNI_DECL uint Count();
 
-} // namespace CPU
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::CPU

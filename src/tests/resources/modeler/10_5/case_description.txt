@@ -1,0 +1,15 @@
+Test 10_5 : one time step
+
+One area (base_zone)
+
+One load : 90 MW
+
+Two generators, with max_power = 100 MW. One generator has got a marginal cost = 10, the other equals to 50.
+
+
+Expected results:
+
+objective = 900
+base_zone.price = 10
+gas_base_zone.generation_reduced_cost = 0
+oil_base_zone.generation_reduced_cost = 40

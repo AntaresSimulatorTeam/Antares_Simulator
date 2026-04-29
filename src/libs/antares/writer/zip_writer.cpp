@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "zip_writer.h"
 
 #include <fstream>
@@ -87,29 +70,26 @@ void ZipWriteJob<ContentT>::writeEntry()
     }
 
     auto file_info = createInfo(pEntryPath);
+    std::unique_lock lock(pZipMutex, std::defer_lock);
+    pDurationCollector("zip_wait") << [&lock] { lock.lock(); };
 
-    Benchmarking::Timer timer_wait;
-    std::lock_guard guard(pZipMutex); // Wait
-    timer_wait.stop();
-    pDurationCollector.addDuration("zip_wait", timer_wait.get_duration());
-
-    Benchmarking::Timer timer_write;
-
-    if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
+    pDurationCollector("zip_write") << [&]
     {
-        logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret) + ")");
-    }
-    int32_t bw = mz_zip_writer_entry_write(pZipHandle,
-                                           pContent.data(),
-                                           static_cast<int32_t>(pContent.size()));
-    if (static_cast<unsigned int>(bw) != pContent.size())
-    {
-        logErrorAndThrow("Error writing entry " + pEntryPath + "(written = " + std::to_string(bw)
-                         + ", size = " + std::to_string(pContent.size()) + ")");
-    }
-
-    timer_write.stop();
-    pDurationCollector.addDuration("zip_write", timer_write.get_duration());
+        if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
+        {
+            logErrorAndThrow("Error opening entry " + pEntryPath + " (" + std::to_string(ret)
+                             + ")");
+        }
+        int32_t bw = mz_zip_writer_entry_write(pZipHandle,
+                                               pContent.data(),
+                                               static_cast<int32_t>(pContent.size()));
+        if (static_cast<unsigned int>(bw) != pContent.size())
+        {
+            logErrorAndThrow("Error writing entry " + pEntryPath
+                             + "(written = " + std::to_string(bw)
+                             + ", size = " + std::to_string(pContent.size()) + ")");
+        }
+    };
 }
 
 // Class ZipWriter
@@ -150,11 +130,6 @@ ZipWriter::~ZipWriter()
     {
         // Catch all, do nothing
     }
-}
-
-void ZipWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
-{
-    addEntryFromBufferHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
 void ZipWriter::addEntryFromBuffer(const fs::path& entryPath, std::string& entryContent)

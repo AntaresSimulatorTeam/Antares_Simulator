@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,12 +12,10 @@
 #ifndef __YUNI_CORE_UNIT_LUMINANCE_H__
 #define __YUNI_CORE_UNIT_LUMINANCE_H__
 
-#include "unit.h"
 #include "define.h"
+#include "unit.h"
 
-namespace Yuni
-{
-namespace Unit
+namespace Yuni::Unit
 {
 /*!
 ** \defgroup UnitLuminance  Luminance
@@ -44,8 +43,7 @@ YUNI_UNIT_IMPL(Candela, "candela", "cd", int, 1);
 YUNI_UNIT_IMPL(Lambert, "lambert", "L", double, 3183.09886);
 
 } // namespace Luminance
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit
 
 #include "undef.h"
 

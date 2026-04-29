@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <array>
 #include <cassert>
@@ -149,11 +131,12 @@ struct DebugData
                              uint y,
                              const Data::AreaName& areaName) const
     {
-        std::ostringstream buffer;
-        auto path = fs::path("debug") / "solver" / std::to_string(1 + y) / "daily."
-                    / areaName.c_str() / ".txt";
+        auto path = fs::path("debug") / "solver" / std::to_string(1 + y)
+                    / ("daily." + areaName + ".txt").c_str();
 
-        buffer << "\tNiveau init : " << hydro_specific.monthly[initReservoirLvlMonth].MOL << "\n";
+        std::ostringstream fileContent;
+        fileContent << "\tNiveau init : " << hydro_specific.monthly[initReservoirLvlMonth].MOL
+                    << "\n";
         for (uint month = 0; month != MONTHS_PER_YEAR; ++month)
         {
             uint realmonth = (initReservoirLvlMonth + month) % MONTHS_PER_YEAR;
@@ -166,15 +149,15 @@ struct DebugData
             uint firstDay = calendar.months[simulationMonth].daysYear.first;
             uint endDay = firstDay + daysPerMonth;
 
-            buffer << "\n";
-            buffer << "-------------\n";
-            buffer << monthName.c_str() << "\n";
-            buffer << "-------------\n";
-            buffer << "\t\t\tNiveauMin\tApports\t\tTurbMax\t\tTurbCible\tTurbCible "
-                      "MAJ\tNiveaux D\tNiveaux F\tTurbines\t";
-            buffer << "Overflows\tDeviations\tViolations\tDeviation Max\tViolation "
-                      "Max\tWaste\t\tCout total\tTurb mois no previous W\t\tTurb mois + "
-                      "previous W \n";
+            fileContent << "\n";
+            fileContent << "-------------\n";
+            fileContent << monthName.c_str() << "\n";
+            fileContent << "-------------\n";
+            fileContent << "\t\t\tNiveauMin\tApports\t\tTurbMax\t\tTurbCible\tTurbCible "
+                           "MAJ\tNiveaux D\tNiveaux F\tTurbines\t";
+            fileContent << "Overflows\tDeviations\tViolations\tDeviation Max\tViolation "
+                           "Max\tWaste\t\tCout total\tTurb mois no previous W\t\tTurb mois + "
+                           "previous W \n";
 
             uint dayMonth = 1;
             for (uint day = firstDay; day != endDay; ++day)
@@ -188,29 +171,30 @@ struct DebugData
                 double turbCible = dailyTargetGen[day] / reservoirCapacity;
                 double turbCibleUpdated = dailyTargetGen[day] / reservoirCapacity
                                           + previousMonthWaste[realmonth] / daysPerMonth;
-                buffer << day << '\t' << '\t' << dayMonth << '\t' << lowLevel[day] * 100 << '\t'
-                       << apports * 100 << '\t' << turbMax * 100 << '\t' << turbCible * 100 << '\t'
-                       << turbCibleUpdated * 100 << '\t' << '\t' << niveauDeb * 100 << '\t'
-                       << niveauFin * 100 << '\t' << turbines * 100 << '\t' << OVF[day] * 100
-                       << '\t' << DEV[day] * 100 << '\t' << VIO[day] * 100;
+                fileContent << day << '\t' << '\t' << dayMonth << '\t' << lowLevel[day] * 100
+                            << '\t' << apports * 100 << '\t' << turbMax * 100 << '\t'
+                            << turbCible * 100 << '\t' << turbCibleUpdated * 100 << '\t' << '\t'
+                            << niveauDeb * 100 << '\t' << niveauFin * 100 << '\t' << turbines * 100
+                            << '\t' << OVF[day] * 100 << '\t' << DEV[day] * 100 << '\t'
+                            << VIO[day] * 100;
                 if (dayMonth == 1)
                 {
-                    buffer << '\t' << deviationMax[realmonth] * 100 << '\t' << '\t'
-                           << violationMax[realmonth] * 100 << '\t' << '\t'
-                           << WASTE[realmonth] * 100 << '\t' << CoutTotal[realmonth] << '\t'
-                           << (hydro_specific.monthly[realmonth].MOG / reservoirCapacity) * 100
-                           << '\t' << '\t' << '\t' << '\t' << '\t'
-                           << (hydro_specific.monthly[realmonth].MOG / reservoirCapacity
-                               + previousMonthWaste[realmonth])
-                                * 100;
+                    fileContent << '\t' << deviationMax[realmonth] * 100 << '\t' << '\t'
+                                << violationMax[realmonth] * 100 << '\t' << '\t'
+                                << WASTE[realmonth] * 100 << '\t' << CoutTotal[realmonth] << '\t'
+                                << (hydro_specific.monthly[realmonth].MOG / reservoirCapacity) * 100
+                                << '\t' << '\t' << '\t' << '\t' << '\t'
+                                << (hydro_specific.monthly[realmonth].MOG / reservoirCapacity
+                                    + previousMonthWaste[realmonth])
+                                     * 100;
                 }
-                buffer << '\n';
+                fileContent << '\n';
 
                 dayMonth++;
             }
         }
-        auto buffer_str = buffer.str();
-        pWriter.addEntryFromBuffer(path, buffer_str);
+        auto file_content_str = fileContent.str();
+        pWriter.addEntryFromBuffer(path, file_content_str);
     }
 };
 
@@ -234,7 +218,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
 
     double reservoirCapacity = area.hydro.reservoirCapacity;
 
-    auto& lowLevel = area.hydro.reservoirLevel[Data::PartHydro::minimum];
+    uint32_t seriesIndex = area.hydro.series->ruleCurves.min.getSeriesIndex(y);
+    const auto& lowLevel = area.hydro.series->ruleCurves.min.timeSeries[seriesIndex];
 
     double dailyTargetGen[12 * maxDailyTargetGen];
 
@@ -401,7 +386,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(
                 dayMonth++;
             }
 
-            H2O_J_OptimiserUnMois(&problem);
+            H2O_J_OptimiserUnMois(&problem, area.id);
             switch (problem.ResultatsValides)
             {
             case OUI:

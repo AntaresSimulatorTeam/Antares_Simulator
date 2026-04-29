@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Event
+namespace Yuni::Event
 {
 /*!
 ** \brief Item for a list of observer(Interface)
@@ -26,6 +25,7 @@ public:
     virtual ~IObserverItemA0()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent() const = 0;
@@ -45,6 +45,7 @@ public:
     virtual ~IObserverItemA1()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0) const = 0;
@@ -65,6 +66,7 @@ public:
     virtual ~IObserverItemA2()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1) const = 0;
@@ -86,6 +88,7 @@ public:
     virtual ~IObserverItemA3()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1, A2 a2) const = 0;
@@ -108,6 +111,7 @@ public:
     virtual ~IObserverItemA4()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3) const = 0;
@@ -137,6 +141,7 @@ public:
     virtual ~IObserverItemA5()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4) const = 0;
@@ -168,6 +173,7 @@ public:
     virtual ~IObserverItemA6()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const = 0;
@@ -201,6 +207,7 @@ public:
     virtual ~IObserverItemA7()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const = 0;
@@ -236,6 +243,7 @@ public:
     virtual ~IObserverItemA8()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const = 0;
@@ -273,6 +281,7 @@ public:
     virtual ~IObserverItemA9()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const = 0;
@@ -312,10 +321,11 @@ public:
     virtual ~IObserverItemA10()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
-    virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9)
-      const = 0;
+    virtual R fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const
+      = 0;
 
 }; // class IObserverItemA10
 
@@ -354,11 +364,12 @@ public:
     virtual ~IObserverItemA11()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R
-      fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10)
-        const = 0;
+    fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const
+      = 0;
 
 }; // class IObserverItemA11
 
@@ -399,6 +410,7 @@ public:
     virtual ~IObserverItemA12()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0,
@@ -412,7 +424,8 @@ public:
                         A8 a8,
                         A9 a9,
                         A10 a10,
-                        A11 a11) const = 0;
+                        A11 a11) const
+      = 0;
 
 }; // class IObserverItemA12
 
@@ -455,6 +468,7 @@ public:
     virtual ~IObserverItemA13()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0,
@@ -469,7 +483,8 @@ public:
                         A9 a9,
                         A10 a10,
                         A11 a11,
-                        A12 a12) const = 0;
+                        A12 a12) const
+      = 0;
 
 }; // class IObserverItemA13
 
@@ -514,6 +529,7 @@ public:
     virtual ~IObserverItemA14()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0,
@@ -529,7 +545,8 @@ public:
                         A10 a10,
                         A11 a11,
                         A12 a12,
-                        A13 a13) const = 0;
+                        A13 a13) const
+      = 0;
 
 }; // class IObserverItemA14
 
@@ -576,6 +593,7 @@ public:
     virtual ~IObserverItemA15()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0,
@@ -592,7 +610,8 @@ public:
                         A11 a11,
                         A12 a12,
                         A13 a13,
-                        A14 a14) const = 0;
+                        A14 a14) const
+      = 0;
 
 }; // class IObserverItemA15
 
@@ -641,6 +660,7 @@ public:
     virtual ~IObserverItemA16()
     {
     }
+
     virtual IObserver* observer() const = 0;
     virtual bool equalsTo(const IObserver* o) const = 0;
     virtual R fireEvent(A0 a0,
@@ -658,7 +678,8 @@ public:
                         A12 a12,
                         A13 a13,
                         A14 a14,
-                        A15 a15) const = 0;
+                        A15 a15) const
+      = 0;
 
 }; // class IObserverItemA16
 
@@ -668,7 +689,7 @@ public:
 ** \tparam R The type of the returned value
 */
 template<class C, class Mode, class R, class Dummy = void>
-class ObserverItemA0 : public IObserverItemA0<R, Dummy>
+class ObserverItemA0: public IObserverItemA0<R, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -680,10 +701,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA0(C* o, R (C::*method)());
+
     //! Destructor
     virtual ~ObserverItemA0()
     {
     }
+
     //@}
 
     /*!
@@ -711,7 +734,7 @@ private:
 ** \tparam A0 Type of the 1th argument
 */
 template<class C, class Mode, class R, typename A0, class Dummy = void>
-class ObserverItemA1 : public IObserverItemA1<R, A0, Dummy>
+class ObserverItemA1: public IObserverItemA1<R, A0, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -723,10 +746,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA1(C* o, R (C::*method)(A0));
+
     //! Destructor
     virtual ~ObserverItemA1()
     {
     }
+
     //@}
 
     /*!
@@ -755,7 +780,7 @@ private:
 ** \tparam A1 Type of the 2th argument
 */
 template<class C, class Mode, class R, typename A0, typename A1, class Dummy = void>
-class ObserverItemA2 : public IObserverItemA2<R, A0, A1, Dummy>
+class ObserverItemA2: public IObserverItemA2<R, A0, A1, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -767,10 +792,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA2(C* o, R (C::*method)(A0, A1));
+
     //! Destructor
     virtual ~ObserverItemA2()
     {
     }
+
     //@}
 
     /*!
@@ -800,7 +827,7 @@ private:
 ** \tparam A2 Type of the 3th argument
 */
 template<class C, class Mode, class R, typename A0, typename A1, typename A2, class Dummy = void>
-class ObserverItemA3 : public IObserverItemA3<R, A0, A1, A2, Dummy>
+class ObserverItemA3: public IObserverItemA3<R, A0, A1, A2, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -812,10 +839,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA3(C* o, R (C::*method)(A0, A1, A2));
+
     //! Destructor
     virtual ~ObserverItemA3()
     {
     }
+
     //@}
 
     /*!
@@ -853,7 +882,7 @@ template<class C,
          typename A2,
          typename A3,
          class Dummy = void>
-class ObserverItemA4 : public IObserverItemA4<R, A0, A1, A2, A3, Dummy>
+class ObserverItemA4: public IObserverItemA4<R, A0, A1, A2, A3, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -865,10 +894,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA4(C* o, R (C::*method)(A0, A1, A2, A3));
+
     //! Destructor
     virtual ~ObserverItemA4()
     {
     }
+
     //@}
 
     /*!
@@ -908,7 +939,7 @@ template<class C,
          typename A3,
          typename A4,
          class Dummy = void>
-class ObserverItemA5 : public IObserverItemA5<R, A0, A1, A2, A3, A4, Dummy>
+class ObserverItemA5: public IObserverItemA5<R, A0, A1, A2, A3, A4, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -920,10 +951,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA5(C* o, R (C::*method)(A0, A1, A2, A3, A4));
+
     //! Destructor
     virtual ~ObserverItemA5()
     {
     }
+
     //@}
 
     /*!
@@ -965,7 +998,7 @@ template<class C,
          typename A4,
          typename A5,
          class Dummy = void>
-class ObserverItemA6 : public IObserverItemA6<R, A0, A1, A2, A3, A4, A5, Dummy>
+class ObserverItemA6: public IObserverItemA6<R, A0, A1, A2, A3, A4, A5, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -977,10 +1010,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA6(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5));
+
     //! Destructor
     virtual ~ObserverItemA6()
     {
     }
+
     //@}
 
     /*!
@@ -1024,7 +1059,7 @@ template<class C,
          typename A5,
          typename A6,
          class Dummy = void>
-class ObserverItemA7 : public IObserverItemA7<R, A0, A1, A2, A3, A4, A5, A6, Dummy>
+class ObserverItemA7: public IObserverItemA7<R, A0, A1, A2, A3, A4, A5, A6, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1036,10 +1071,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA7(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5, A6));
+
     //! Destructor
     virtual ~ObserverItemA7()
     {
     }
+
     //@}
 
     /*!
@@ -1085,7 +1122,7 @@ template<class C,
          typename A6,
          typename A7,
          class Dummy = void>
-class ObserverItemA8 : public IObserverItemA8<R, A0, A1, A2, A3, A4, A5, A6, A7, Dummy>
+class ObserverItemA8: public IObserverItemA8<R, A0, A1, A2, A3, A4, A5, A6, A7, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1097,10 +1134,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA8(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7));
+
     //! Destructor
     virtual ~ObserverItemA8()
     {
     }
+
     //@}
 
     /*!
@@ -1148,7 +1187,7 @@ template<class C,
          typename A7,
          typename A8,
          class Dummy = void>
-class ObserverItemA9 : public IObserverItemA9<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, Dummy>
+class ObserverItemA9: public IObserverItemA9<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1160,10 +1199,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA9(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8));
+
     //! Destructor
     virtual ~ObserverItemA9()
     {
     }
+
     //@}
 
     /*!
@@ -1213,7 +1254,7 @@ template<class C,
          typename A8,
          typename A9,
          class Dummy = void>
-class ObserverItemA10 : public IObserverItemA10<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, Dummy>
+class ObserverItemA10: public IObserverItemA10<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1225,10 +1266,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA10(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9));
+
     //! Destructor
     virtual ~ObserverItemA10()
     {
     }
+
     //@}
 
     /*!
@@ -1281,7 +1324,7 @@ template<class C,
          typename A10,
          class Dummy = void>
 class ObserverItemA11
- : public IObserverItemA11<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, Dummy>
+    : public IObserverItemA11<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1293,18 +1336,19 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA11(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10));
+
     //! Destructor
     virtual ~ObserverItemA11()
     {
     }
+
     //@}
 
     /*!
     ** \brief Fire the event
     */
     virtual R
-      fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10)
-        const;
+    fireEvent(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const;
 
     //! Get a pointer to the observer object
     virtual IObserver* observer() const;
@@ -1353,7 +1397,7 @@ template<class C,
          typename A11,
          class Dummy = void>
 class ObserverItemA12
- : public IObserverItemA12<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, Dummy>
+    : public IObserverItemA12<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1365,10 +1409,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA12(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11));
+
     //! Destructor
     virtual ~ObserverItemA12()
     {
     }
+
     //@}
 
     /*!
@@ -1436,7 +1482,7 @@ template<class C,
          typename A12,
          class Dummy = void>
 class ObserverItemA13
- : public IObserverItemA13<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, Dummy>
+    : public IObserverItemA13<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1448,10 +1494,12 @@ public:
     ** \param method Pointer to member
     */
     ObserverItemA13(C* o, R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12));
+
     //! Destructor
     virtual ~ObserverItemA13()
     {
     }
+
     //@}
 
     /*!
@@ -1522,7 +1570,7 @@ template<class C,
          typename A13,
          class Dummy = void>
 class ObserverItemA14
- : public IObserverItemA14<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, Dummy>
+    : public IObserverItemA14<R, A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1535,10 +1583,12 @@ public:
     */
     ObserverItemA14(C* o,
                     R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13));
+
     //! Destructor
     virtual ~ObserverItemA14()
     {
     }
+
     //@}
 
     /*!
@@ -1611,23 +1661,23 @@ template<class C,
          typename A13,
          typename A14,
          class Dummy = void>
-class ObserverItemA15 : public IObserverItemA15<R,
-                                                A0,
-                                                A1,
-                                                A2,
-                                                A3,
-                                                A4,
-                                                A5,
-                                                A6,
-                                                A7,
-                                                A8,
-                                                A9,
-                                                A10,
-                                                A11,
-                                                A12,
-                                                A13,
-                                                A14,
-                                                Dummy>
+class ObserverItemA15: public IObserverItemA15<R,
+                                               A0,
+                                               A1,
+                                               A2,
+                                               A3,
+                                               A4,
+                                               A5,
+                                               A6,
+                                               A7,
+                                               A8,
+                                               A9,
+                                               A10,
+                                               A11,
+                                               A12,
+                                               A13,
+                                               A14,
+                                               Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1641,10 +1691,12 @@ public:
     ObserverItemA15(
       C* o,
       R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14));
+
     //! Destructor
     virtual ~ObserverItemA15()
     {
     }
+
     //@}
 
     /*!
@@ -1720,24 +1772,24 @@ template<class C,
          typename A14,
          typename A15,
          class Dummy = void>
-class ObserverItemA16 : public IObserverItemA16<R,
-                                                A0,
-                                                A1,
-                                                A2,
-                                                A3,
-                                                A4,
-                                                A5,
-                                                A6,
-                                                A7,
-                                                A8,
-                                                A9,
-                                                A10,
-                                                A11,
-                                                A12,
-                                                A13,
-                                                A14,
-                                                A15,
-                                                Dummy>
+class ObserverItemA16: public IObserverItemA16<R,
+                                               A0,
+                                               A1,
+                                               A2,
+                                               A3,
+                                               A4,
+                                               A5,
+                                               A6,
+                                               A7,
+                                               A8,
+                                               A9,
+                                               A10,
+                                               A11,
+                                               A12,
+                                               A13,
+                                               A14,
+                                               A15,
+                                               Dummy>
 {
 public:
     //! \name Constructor & Destructor
@@ -1751,10 +1803,12 @@ public:
     ObserverItemA16(
       C* o,
       R (C::*method)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15));
+
     //! Destructor
     virtual ~ObserverItemA16()
     {
     }
+
     //@}
 
     /*!
@@ -1790,7 +1844,6 @@ private:
 
 }; // class ObserverItem
 
-} // namespace Event
-} // namespace Yuni
+} // namespace Yuni::Event
 
 #include "item.hxx"

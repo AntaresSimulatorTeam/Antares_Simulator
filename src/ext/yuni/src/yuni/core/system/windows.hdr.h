@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -25,11 +26,11 @@
 #ifndef _WIN32_WINNT        /* currently mingw does not define, mingw64 does */
 #define _WIN32_WINNT 0x0500 /* At least windows 2000 */
 #endif
-#include <winsock2.h>
-#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
+#include <winsock2.h>
 #define __PRETTY_FUNCTION__ __FUNCDNAME__
 #ifdef YUNI_OS_MSVC
 #pragma warning(pop)
@@ -45,9 +46,7 @@
 #endif
 
 #ifdef YUNI_OS_WINDOWS
-namespace Yuni
-{
-namespace Windows
+namespace Yuni::Windows
 {
 inline int64_t FILETIMEToTimestamp(const FILETIME& filetime)
 {
@@ -65,6 +64,7 @@ inline int64_t FILETIMEToTimestamp(const FILETIME& filetime)
     return date.QuadPart / 10000000;
 }
 
-} // namespace Windows
-} // namespace Yuni
+} // namespace Yuni::Windows
+
+// namespace Yuni
 #endif

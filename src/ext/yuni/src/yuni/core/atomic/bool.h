@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "../../yuni.h"
 #include "int.h"
 
-namespace Yuni
-{
-namespace Atomic
+namespace Yuni::Atomic
 {
 /*!
 ** \brief An atomic boolean type
@@ -22,5 +21,4 @@ namespace Atomic
 */
 typedef Atomic::Int<1> Bool;
 
-} // namespace Atomic
-} // namespace Yuni
+} // namespace Yuni::Atomic

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -19,15 +20,18 @@
 #undef __STRICT_ANSI__
 #endif
 
-#include <string.h>
 #include "stream.h"
+
+#include <string.h>
+
 #include "../../core/string.h"
 #include "../../core/string/wstring.h"
 
 #ifdef YUNI_OS_WINDOWS
-#include "../../core/system/windows.hdr.h"
 #include <io.h>
 #include <stdio.h> // _fileno
+
+#include "../../core/system/windows.hdr.h"
 #else
 #include <sys/file.h> // lock
 #endif
@@ -46,11 +50,7 @@
 #define FILENO(X) fileno(X)
 #endif
 
-namespace Yuni
-{
-namespace IO
-{
-namespace File
+namespace Yuni::IO::File
 {
 #ifdef YUNI_OS_WINDOWS
 namespace // anonymous
@@ -59,13 +59,17 @@ static Stream::HandleType OpenFileOnWindows(const AnyString& filename, int mode)
 {
     WString wfilenm(filename);
     if (wfilenm.empty())
+    {
         return nullptr;
+    }
 
     FILE* f;
 #ifdef YUNI_OS_MSVC
     {
         if (0 != _wfopen_s(&f, wfilenm.c_str(), OpenMode::ToWCString(mode)))
+        {
             return nullptr;
+        }
     }
 #else
     {
@@ -78,7 +82,8 @@ static Stream::HandleType OpenFileOnWindows(const AnyString& filename, int mode)
 } // anonymous namespace
 #endif
 
-Stream::Stream(const AnyString& filename, int mode) : pFd(nullptr)
+Stream::Stream(const AnyString& filename, int mode):
+    pFd(nullptr)
 {
     open(filename, mode);
 }
@@ -87,7 +92,9 @@ bool Stream::open(const AnyString& filename, int mode)
 {
     // Close the file if already opened
     if (pFd)
+    {
         (void)::fclose(pFd);
+    }
 
 #ifdef YUNI_OS_WINDOWS
     pFd = OpenFileOnWindows(filename, mode);
@@ -178,7 +185,9 @@ void Stream::unlock()
 {
 #ifndef YUNI_OS_WINDOWS
     if (pFd)
+    {
         flock(FILENO(pFd), LOCK_UN);
+    }
 #else
     // warning The implementation is missing on Windows (#346)
     assert("Stream::lock: the implementation is missing on Windows, see ticket #346");
@@ -207,7 +216,9 @@ static bool TruncateFileDefault(Stream& file, uint64_t size)
 
     // Getting the current end of file
     if (not file.seekFromEndOfFile(0))
+    {
         return false;
+    }
     ssize_t end = (ssize_t)file.tell();
 
 #ifndef YUNI_OS_MSVC
@@ -219,15 +230,20 @@ static bool TruncateFileDefault(Stream& file, uint64_t size)
     {
         // if the file was already bigger than the new size, there is nothing to do
         if ((uint64_t)end >= size)
+        {
             return true;
+        }
 
         if (not file.seekFromBeginning(end))
+        {
             return false;
+        }
 
         enum
         {
             bufferSize = 1024 * 1024
         };
+
         size -= (uint64_t)end;
 
         if (size)
@@ -296,7 +312,9 @@ bool Stream::truncate(uint64_t size, bool ensureAllocation)
                 // OK, perhaps we are too fragmented, allocate non-continuous
                 store.fst_flags = F_ALLOCATEALL;
                 if (-1 == fcntl(fd, F_PREALLOCATE, &store))
+                {
                     return false;
+                }
             }
             return (0 == ::ftruncate(fd, (off_t)size));
 
@@ -311,6 +329,4 @@ bool Stream::truncate(uint64_t size, bool ensureAllocation)
     return false;
 }
 
-} // namespace File
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::File

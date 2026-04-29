@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \brief Conversion policies
@@ -29,6 +28,7 @@ struct Allow
     {
         allow = true
     };
+
     static void swapPointer(Allow&)
     {
     }
@@ -43,6 +43,7 @@ struct Disallow
     Disallow()
     {
     }
+
     /*!
     ** \brief Copy constructor
     **
@@ -63,5 +64,4 @@ struct Disallow
 };
 
 } // namespace Conversion
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

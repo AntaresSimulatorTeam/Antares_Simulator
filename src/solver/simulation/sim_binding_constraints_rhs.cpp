@@ -1,21 +1,5 @@
-// Copyright 2007-2025, RTE (https://www.rte-france.com)
-// See AUTHORS.txt
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
-// This file is part of Antares-Simulator,
-// Adequacy and Performance assessment for interconnected energy networks.
-//
-// Antares_Simulator is free software: you can redistribute it and/or modify
-// it under the terms of the Mozilla Public Licence 2.0 as published by
-// the Mozilla Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// Antares_Simulator is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// Mozilla Public Licence 2.0 for more details.
-//
-// You should have received a copy of the Mozilla Public Licence 2.0
-// along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 
@@ -25,11 +9,15 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/utils/vector-utils.h"
 
 using namespace Antares::Data;
+using namespace Antares::Utils;
 using clusterWeightMap = Antares::Data::BindingConstraint::clusterWeightMap;
 using TimeSerie = std::span<const double>;
 
+namespace Simulation
+{
 TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
                                     const BindingConstraintGroupRepository& bcGroups,
                                     int year)
@@ -52,22 +40,6 @@ auto filterByMustrunCluster(const clusterWeightMap& map)
     return map
            | std::ranges::views::filter(
              [](auto pair) { return pair.first->isEnabled() && pair.first->isMustRun(); });
-}
-
-std::vector<double> operator*(const std::span<const double>& left, const double& scalar)
-{
-    std::vector<double> to_return(left.size(), 0.);
-    for (unsigned i = 0; i < left.size(); i++)
-    {
-        to_return[i] = left[i] * scalar;
-    }
-    return to_return;
-}
-
-std::vector<double>& operator+=(std::vector<double>& left, const std::vector<double>& right)
-{
-    std::ranges::transform(left, right, left.begin(), std::plus<double>());
-    return left;
 }
 
 std::vector<double> accumulateByDay(const TimeSerie& ts)
@@ -183,8 +155,6 @@ static void setRHSforWeeklyBC(PROBLEME_HEBDO& problem,
     problem.MatriceDesContraintesCouplantes[bcIndex].SecondMembreDeLaContrainteCouplante[0] = sum;
 }
 
-namespace Simulation
-{
 void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
                               const BindingConstraintsRepository& bindingConstraints,
                               const BindingConstraintGroupRepository& bcGroups,

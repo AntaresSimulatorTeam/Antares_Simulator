@@ -29,8 +29,17 @@ struct Fixture
         study->parameters.firstMonthInYear = january;
         uint nbYears = study->parameters.nbYears = 2;
 
-        area_1 = study->areaAdd("Area1");
-        area_2 = study->areaAdd("Area2");
+        area_1 = addAreaToListOfAreas(study->areas, "Area1");
+        area_2 = addAreaToListOfAreas(study->areas, "Area2");
+
+        for (auto* area: {area_1, area_2})
+        {
+            if (area)
+            {
+                area->createMissingData();
+                area->resetToDefaultValues();
+            }
+        }
 
         area_1->hydro.reservoirManagement = true;
         area_2->hydro.reservoirManagement = true;
@@ -46,13 +55,12 @@ struct Fixture
         area_2->hydro.reservoirCapacity = 300.;
 
         // Set reservoir max and min daily levels, but just for the last day in year
-        area_1->hydro.reservoirLevel.resize(3, DAYS_PER_YEAR);
-        area_1->hydro.reservoirLevel[PartHydro::minimum][DAYS_PER_YEAR - 1] = 2.4;
-        area_1->hydro.reservoirLevel[PartHydro::maximum][DAYS_PER_YEAR - 1] = 6.5;
 
-        area_2->hydro.reservoirLevel.resize(3, DAYS_PER_YEAR);
-        area_2->hydro.reservoirLevel[PartHydro::minimum][DAYS_PER_YEAR - 1] = 2.7;
-        area_2->hydro.reservoirLevel[PartHydro::maximum][DAYS_PER_YEAR - 1] = 6.4;
+        area_1->hydro.series->ruleCurves.min[0][DAYS_PER_YEAR - 1] = 2.4;
+        area_1->hydro.series->ruleCurves.max[0][DAYS_PER_YEAR - 1] = 6.5;
+
+        area_2->hydro.series->ruleCurves.min[0][DAYS_PER_YEAR - 1] = 2.7;
+        area_2->hydro.series->ruleCurves.max[0][DAYS_PER_YEAR - 1] = 6.4;
 
         // Resize vector final levels delta with initial levels
         area_1->hydro.deltaBetweenFinalAndInitialLevels.resize(nbYears);
@@ -115,7 +123,6 @@ BOOST_AUTO_TEST_CASE(all_parameters_good___check_succeeds_and_final_level_is_usa
 {
     uint year = 0;
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],
@@ -133,7 +140,6 @@ BOOST_AUTO_TEST_CASE(no_reservoir_management___check_succeeds_but_final_level_no
     uint year = 0;
     area_1->hydro.reservoirManagement = false;
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],
@@ -152,7 +158,6 @@ BOOST_AUTO_TEST_CASE(use_water_value_is_true___check_succeeds_but_final_level_no
     uint year = 0;
 
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],
@@ -171,7 +176,6 @@ BOOST_AUTO_TEST_CASE(final_level_not_set_by_user____check_succeeds_but_final_lev
     study->scenarioFinalHydroLevels[area_1->index][year] = std::numeric_limits<double>::quiet_NaN();
 
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],
@@ -191,7 +195,6 @@ BOOST_AUTO_TEST_CASE(
     area_1->hydro.initializeReservoirLevelDate = 3; // initialize reservoir level != January
 
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],
@@ -210,7 +213,6 @@ BOOST_AUTO_TEST_CASE(simulation_does_last_a_whole_year___check_fails_and_final_l
     study->parameters.simulationDays.end = 300;
 
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],
@@ -230,7 +232,6 @@ BOOST_AUTO_TEST_CASE(final_level_out_of_rule_curves___check_fails_and_final_leve
     study->scenarioFinalHydroLevels[area_1->index][year] = 6.6;
 
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],
@@ -254,7 +255,6 @@ BOOST_AUTO_TEST_CASE(
     // Inflows = 200 MWh/day = 73 000 MWh/year
     // (50 - 10) x Reservoir capacity == 74 000 > 73 000.
     FinalLevelValidator validator(area_1->hydro,
-                                  area_1->index,
                                   area_1->name,
                                   study->scenarioInitialHydroLevels[area_1->index][year],
                                   study->scenarioFinalHydroLevels[area_1->index][year],

@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/area/store-timeseries-numbers.h"
 
@@ -43,38 +25,56 @@ static void storeTSnumbers(Solver::IResultWriter& writer,
     writer.addEntryFromBuffer(path, buffer);
 }
 
-void storeTimeseriesNumbersForLoad(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesLoad>(Solver::IResultWriter& writer,
+                                                                      const Area& area)
 {
     storeTSnumbers(writer, area.load.series.timeseriesNumbers, area.id, "load");
 }
 
-void storeTimeseriesNumbersForSolar(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesSolar>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     storeTSnumbers(writer, area.solar.series.timeseriesNumbers, area.id, "solar");
 }
 
-void storeTimeseriesNumbersForHydro(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesHydro>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     storeTSnumbers(writer, area.hydro.series->timeseriesNumbers, area.id, "hydro");
 }
 
-void storeTimeseriesNumbersForWind(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesWind>(Solver::IResultWriter& writer,
+                                                                      const Area& area)
 {
     storeTSnumbers(writer, area.wind.series.timeseriesNumbers, area.id, "wind");
 }
 
-void storeTimeseriesNumbersForThermal(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesThermal>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     area.thermal.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForRenewable(Solver::IResultWriter& writer, const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesRenewable>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     area.renewable.list.storeTimeseriesNumbers(writer);
 }
 
-void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writer,
-                                                     const Area& area)
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesTransmissionCapacities>(
+  Solver::IResultWriter& writer,
+  const Area& area)
 {
     // No links originating from this area
     // do not create an empty directory
@@ -96,4 +96,32 @@ void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter& writ
         }
     }
 }
+
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermInflows>(
+  Solver::IResultWriter& writer,
+  const Area& area)
+{
+    for (const auto& sts: area.shortTermStorage.storagesByIndex)
+    {
+        const auto area_sts = fs::path("st-storage") / area.id.c_str() / sts.id;
+        storeTSnumbers(writer, sts.series->inflowsTSNumbers, "inflows", area_sts.string());
+    }
+}
+
+template<>
+void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesShortTermAdditionalConstraints>(
+  Solver::IResultWriter& writer,
+  const Area& area)
+{
+    for (const auto& sts: area.shortTermStorage.storagesByIndex)
+    {
+        for (const auto& ct: sts.additionalConstraints)
+        {
+            const auto area_sts = fs::path("st-storage") / area.id.c_str() / sts.id;
+            storeTSnumbers(writer, ct->timeseriesNumbers, ct->name, area_sts.string());
+        }
+    }
+}
+
 } // namespace Antares::Data

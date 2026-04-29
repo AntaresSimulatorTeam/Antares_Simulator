@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -17,25 +18,27 @@
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace IO
-{
-namespace File
+namespace Yuni::IO::File
 {
 Error Copy(const AnyString& from, const AnyString& to, bool overwrite)
 {
     if (!overwrite and IO::Exists(to))
+    {
         return errOverwriteNotAllowed;
+    }
 
     // Open the source file
     Yuni::IO::File::Stream fromFile;
     if (not fromFile.open(from))
+    {
         return errNotFound;
+    }
 
     Yuni::IO::File::Stream toFile;
     if (not toFile.openRW(to))
+    {
         return errNotFound;
+    }
 
     enum
     {
@@ -52,7 +55,9 @@ Error Copy(const AnyString& from, const AnyString& to, bool overwrite)
     {
         off_t offset = 0;
         if (sendfile(fdOUT, fdIN, &offset, (size_t)st.st_size) >= 0)
+        {
             return Yuni::IO::errNone;
+        }
     }
 
     // fallback to the standard copy
@@ -88,6 +93,4 @@ Error Copy(const AnyString& from, const AnyString& to, bool overwrite)
     return Yuni::IO::errNone;
 }
 
-} // namespace File
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::File

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -14,9 +15,7 @@
 //! The constant value for `log(2)`
 #define YUNI_LOG_2 0.301029996
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 /*!
 ** \brief The natural logarithm function
@@ -48,7 +47,6 @@ YUNI_DECL T Log2(T x);
 template<class T>
 YUNI_DECL T LogOnePlusX(T x);
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math
 
 #include "log.hxx"

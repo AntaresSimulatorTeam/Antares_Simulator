@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -42,7 +43,7 @@
                 return RETURN_TYPE();                                                              \
             }                                                                                      \
         };                                                                                         \
-        struct Base : public Type, public BaseMixin                                                \
+        struct Base: public Type, public BaseMixin                                                 \
         {                                                                                          \
         };                                                                                         \
         template<class C, C>                                                                       \
@@ -102,11 +103,7 @@
 
 #endif
 
-namespace Yuni
-{
-namespace Static
-{
-namespace HasMethod
+namespace Yuni::Static::HasMethod
 {
 /*!
 ** \brief Determine whether a class has the method `addRef`
@@ -123,6 +120,4 @@ YUNI_IMPL_STATIC_HAS_METHOD(release, bool, ());
 */
 YUNI_IMPL_STATIC_HAS_METHOD(hasIntrusiveSmartPtr, bool, ());
 
-} // namespace HasMethod
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static::HasMethod

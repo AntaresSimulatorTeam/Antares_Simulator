@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,10 +13,11 @@
 #ifndef YUNI_NO_THREAD_SAFE
 #define YUNI_NO_THREAD_SAFE // disabling thread-safety
 #endif
+#include <map>
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/version/version.h>
-#include <map>
 
 #ifdef YUNI_OS_WINDOWS
 #if defined(YUNI_OS_MINGW)
@@ -31,11 +33,7 @@
 #endif
 #endif
 
-namespace Yuni
-{
-namespace LibConfig
-{
-namespace VersionInfo
+namespace Yuni::LibConfig::VersionInfo
 {
 enum CompilerCompliant
 {
@@ -103,6 +101,7 @@ public:
         //! Dependencies
         String::List dependencies;
     };
+
     std::map<String, SettingsPerModule> moduleSettings;
 };
 
@@ -122,6 +121,7 @@ public:
     {
         return pCompiler;
     }
+
     void compiler(const String& c);
 
     void checkRootFolder(const String& root);
@@ -148,8 +148,6 @@ private:
     bool pOptDebug;
 };
 
-} // namespace VersionInfo
-} // namespace LibConfig
-} // namespace Yuni
+} // namespace Yuni::LibConfig::VersionInfo
 
 #include "versions.hxx"

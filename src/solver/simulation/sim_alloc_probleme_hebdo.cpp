@@ -1,30 +1,12 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-#include "antares/study/simulation.h"
 
 using namespace Antares;
 
@@ -152,11 +134,9 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         auto& variablesMapping = problem.CorrespondanceVarNativesVarOptim[k];
 
-        variablesMapping.NumeroDeVariableDeLInterconnexion.assign(linkCount, 0);
-        variablesMapping.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion.assign(linkCount,
-                                                                                          0);
-        variablesMapping.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion.assign(linkCount,
-                                                                                          0);
+        variablesMapping.NumeroDeVariableDuFluxDirect.assign(linkCount, 0);
+        variablesMapping.NumeroDeVariableDuFluxDirectPositif.assign(linkCount, 0);
+        variablesMapping.NumeroDeVariableDuFluxIndirectPositif.assign(linkCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique
           .assign(study.runtime.thermalPlantTotalCount, 0);
@@ -191,12 +171,16 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,
                                                                              0);
 
+        variablesMapping.SIM_ShortTermStorage.OverflowVariable.assign(shortTermStorageCount, 0);
+
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesBilansPays.assign(nbPays,
                                                                                            0);
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeContraintePourEviterLesChargesFictives.assign(nbPays, 0);
         problem.CorrespondanceCntNativesCntOptim[k].NumeroDeContrainteDesNiveauxPays.assign(nbPays,
                                                                                             0);
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .NumeroDeContraintePourBornerLaDefaillance.assign(nbPays, 0);
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .ShortTermStorageLevelConstraint.assign(shortTermStorageCount, 0);
@@ -228,6 +212,10 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
 
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
+          .assign(study.runtime.thermalPlantTotalCount, 0);
+
+        problem.CorrespondanceCntNativesCntOptim[k]
+          .ConstraintIndexRampingIncrease
           .assign(study.runtime.thermalPlantTotalCount, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
@@ -473,13 +461,14 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         }
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
-        problem.ResultatsHoraires[k].ShortTermStorage.resize(NombreDePasDeTemps);
-        for (uint pdt = 0; pdt < NombreDePasDeTemps; pdt++)
+        problem.ResultatsHoraires[k].ShortTermStorage.resize(nbShortTermStorage);
+        for (uint sts = 0; sts < nbShortTermStorage; sts++)
         {
-            problem.ResultatsHoraires[k].ShortTermStorage[pdt].injection.resize(nbShortTermStorage);
-            problem.ResultatsHoraires[k].ShortTermStorage[pdt].withdrawal.resize(
-              nbShortTermStorage);
-            problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].injection.resize(NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].withdrawal.resize(
+              NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].level.resize(NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].overflow.resize(NombreDePasDeTemps);
         }
     }
 }

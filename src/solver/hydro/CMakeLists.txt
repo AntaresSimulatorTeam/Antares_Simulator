@@ -11,7 +11,6 @@ set(SRC_EXT_SOLVER_H2O_DAILY
         daily/h2o_j_instanciation.cpp
         daily/h2o_j_optimiser_un_mois.cpp
         daily/h2o_j_resoudre_le_probleme_lineaire.cpp
-        daily/h2o_j_lisser_les_sur_turbines.cpp
         daily/h2o_j_ajouter_bruit_au_cout.cpp
 )
 

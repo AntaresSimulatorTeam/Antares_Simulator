@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,23 +12,24 @@
 #pragma once
 #include "hexdump.h"
 
-namespace Yuni
+namespace Yuni::Core::Utils
 {
-namespace Core
-{
-namespace Utils
-{
-inline Hexdump::Hexdump(const char* buffer, uint size) : pBuffer(buffer), pSize(size)
+inline Hexdump::Hexdump(const char* buffer, uint size):
+    pBuffer(buffer),
+    pSize(size)
 {
 }
 
-inline Hexdump::Hexdump(const Hexdump& rhs) : pBuffer(rhs.pBuffer), pSize(rhs.pSize)
+inline Hexdump::Hexdump(const Hexdump& rhs):
+    pBuffer(rhs.pBuffer),
+    pSize(rhs.pSize)
 {
 }
 
 template<class U>
-inline Hexdump::Hexdump(const U& buffer) :
- pBuffer((const char*)buffer.data()), pSize(buffer.sizeInBytes())
+inline Hexdump::Hexdump(const U& buffer):
+    pBuffer((const char*)buffer.data()),
+    pSize(buffer.sizeInBytes())
 {
 }
 
@@ -67,9 +69,7 @@ inline String Hexdump::dump() const
     return s;
 }
 
-} // namespace Utils
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::Utils
 
 inline std::ostream& operator<<(std::ostream& outStream,
                                 const Yuni::Core::Utils::Hexdump& hexDumper)

@@ -1,9 +1,13 @@
+# Solver API
+# This API relies on a callback mechanism ("SimulationObserver")
+# Whenever a problem is constructed this callback is called
 add_library(solver_api)
 add_library(Antares::solver_api ALIAS solver_api)
 
 set(PUBLIC_HEADERS
         include/antares/api/SimulationResults.h
         include/antares/api/solver.h
+
 )
 
 set(PRIVATE_HEADERS
@@ -28,16 +32,57 @@ target_include_directories(solver_api
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
 )
 
+find_package(Boost REQUIRED COMPONENTS iostreams)
 target_link_libraries(solver_api
         PRIVATE
         Antares::file-tree-study-loader
         Antares::study
         Antares::study-loader
         antares-solver-simulation
+        Boost::iostreams
+        Antares::enums
         PUBLIC
         Antares::optimization-options
-        Antares::lps
-)
+        Antares::lps)
+
+# Single problem library
+# This API allows the developper to build problems on-demand
+add_library(single_problem_api)
+add_library(Antares::single_problem_api ALIAS single_problem_api)
+
+target_sources(single_problem_api
+	PRIVATE
+	singleProblemGetter.cpp
+	singleProblemGetterImpl.cpp
+	include/antares/api/singleProblemGetter.h
+	modelerProblems.cpp
+	modelerProblemsImpl.cpp
+	include/antares/api/modelerProblems.h)
+
+target_include_directories(single_problem_api
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>)
+
+target_link_libraries(single_problem_api
+        PRIVATE
+        antares-solver-simulation
+        model_antares
+        modeler-lib
+        load-modeler-files
+        write-modeler-files
+        Antares::hydro
+        Antares::file-tree-study-loader
+        PUBLIC
+        Antares::study
+        Antares::lps)
+
+# TODO move
+add_executable(antares-problem-generator main.cpp)
+target_link_libraries(antares-problem-generator
+	single_problem_api)
+copy_project_shared_lib(parquet_writer antares-problem-generator)
+
 install(DIRECTORY include/antares
-        DESTINATION "include"
-)
+        DESTINATION "include")

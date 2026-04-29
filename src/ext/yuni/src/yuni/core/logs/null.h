@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "../../yuni.h"
 #include "../string.h"
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 /*!
 ** \brief Log Handler: The Null device
@@ -46,5 +45,4 @@ public:
     }
 };
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

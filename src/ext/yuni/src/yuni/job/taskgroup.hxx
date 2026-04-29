@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "taskgroup.h"
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 inline void Taskgroup::add(const Bind<bool(IJob&)>& callback)
 {
@@ -26,5 +25,4 @@ inline Taskgroup& Taskgroup::operator+=(const Bind<bool(IJob&)>& callback)
     return *this;
 }
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job

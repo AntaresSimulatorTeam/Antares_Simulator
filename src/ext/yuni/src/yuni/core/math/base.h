@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,11 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Base
+namespace Yuni::Math::Base
 {
 template<int Nth = 10>
 struct N final
@@ -24,6 +21,7 @@ struct N final
     {
         return "0123456789abcdefghijklmnopqrstuvwxyz";
     }
+
     enum
     {
         //! the nth power of b
@@ -33,6 +31,4 @@ struct N final
 
 typedef N<10> Decimal;
 
-} // namespace Base
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Base

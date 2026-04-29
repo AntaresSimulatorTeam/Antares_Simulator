@@ -1,25 +1,8 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <cmath>
+#include <fmt/format.h>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/study/study.h>
@@ -57,11 +40,9 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
       });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResultWriter& writer)
+bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
-
-    Solver::Progression::Task progression(study, currentYear, Solver::Progression::sectTSGHydro);
 
     auto& studyRTI = study.runtime;
     auto& calendar = study.calendar;
@@ -262,31 +243,21 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
             assert(not std::isnan(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
         }
-
-        ++progression;
     }
 
     PreproRoundAllEntriesPlusDerated(study);
 
     if (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesHydro))
     {
-        if (study.parameters.noOutput)
-        {
-            for (uint i = 0; i != study.areas.size(); ++i)
-            {
-                ++progression;
-            }
-        }
-        else
+        if (!study.parameters.noOutput)
         {
             logs.info() << "Archiving the hydro time-series";
             study.areas.each(
-              [&currentYear, &writer, &progression](const Data::Area& area)
+              [&writer](const Data::Area& area)
               {
                   const int precision = 0;
-                  std::string mcYear = "mc-" + currentYear;
-                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear
-                                          / area.id.to<std::string>();
+                  const std::string mcYear = "mc-0";
+                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear / area.id;
 
                   std::string buffer;
                   area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
@@ -296,8 +267,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, Solver::IResu
                   area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
                   outputFile = outputFolder / "storage.txt";
                   writer.addEntryFromBuffer(outputFile, buffer);
-
-                  ++progression;
               });
         }
     }

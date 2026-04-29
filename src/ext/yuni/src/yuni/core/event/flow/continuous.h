@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,16 +10,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
 #include "../../../thread/thread.h"
+#include "../../../yuni.h"
 
-namespace Yuni
-{
-namespace Core
-{
-namespace EventLoop
-{
-namespace Flow
+namespace Yuni::Core::EventLoop::Flow
 {
 template<class EventLoopT>
 class YUNI_DECL Continuous
@@ -36,6 +31,7 @@ public:
     Continuous()
     {
     }
+
     //@}
 
 protected:
@@ -74,6 +70,7 @@ protected:
         (void)request;
         return true;
     }
+
     //@}
 
     //! \name Events triggered from the main thread of the event loop
@@ -89,6 +86,7 @@ protected:
         // Do not wait, directly execute the cycle
         return true;
     }
+
     //@}
 
     /*!
@@ -103,7 +101,4 @@ protected:
 
 }; // class Continuous<>
 
-} // namespace Flow
-} // namespace EventLoop
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::EventLoop::Flow

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "table.h"
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 template<class D, int TableSize, bool Cyclic, template<class> class TP>
 inline const char* Table<D, TableSize, Cyclic, TP>::Name()
@@ -24,7 +21,9 @@ inline const char* Table<D, TableSize, Cyclic, TP>::Name()
 }
 
 template<class D, int TableSize, bool Cyclic, template<class> class TP>
-inline Table<D, TableSize, Cyclic, TP>::Table() : D(), pOffset()
+inline Table<D, TableSize, Cyclic, TP>::Table():
+    D(),
+    pOffset()
 {
 }
 
@@ -53,7 +52,9 @@ void Table<D, TableSize, Cyclic, TP>::fillWL()
 {
     // Regenerate all items in the cache
     for (int i = 0; i != TableSize; ++i)
+    {
         pCache[i] = static_cast<D*>(this)->next();
+    }
     // The index must be reset to `-1`, in order to use the first random number
     // to the next call to `next()`.
     // See `next()` for more informations.
@@ -79,7 +80,9 @@ inline const typename Table<D, TableSize, Cyclic, TP>::Value Table<D, TableSize,
     if (++pOffset == TableSize)
     {
         if (!Cyclic) // The random numbers must be re-generated if not cyclic
+        {
             fillWL();
+        }
         // Restting the offset, which may be equal to `TableSize` or to `-1` (see `fillWL()`)
         pOffset = 0;
         return pCache[0];
@@ -97,11 +100,9 @@ inline Table<D, TableSize, Cyclic, TP>& Table<D, TableSize, Cyclic, TP>::operato
 
 template<class D, int TableSize, bool Cyclic, template<class> class TP>
 inline const typename Table<D, TableSize, Cyclic, TP>::Value
-  Table<D, TableSize, Cyclic, TP>::operator()()
+Table<D, TableSize, Cyclic, TP>::operator()()
 {
     return next();
 }
 
-} // namespace Random
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Random

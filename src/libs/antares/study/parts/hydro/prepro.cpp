@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/parts/hydro/prepro.h"
 
@@ -36,17 +18,8 @@ namespace fs = std::filesystem;
 
 #define SEP IO::Separator
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-static bool PreproHydroSaveSettings(PreproHydro* h, const char* filename)
-{
-    IniFile ini;
-    auto* s = ini.addSection("prepro");
-    s->add("intermonthly-correlation", h->intermonthlyCorrelation);
-    return ini.save(filename);
-}
 
 static bool PreproHydroLoadSettings(PreproHydro* h, const fs::path& filename)
 {
@@ -112,34 +85,6 @@ void PreproHydro::copyFrom(const PreproHydro& rhs)
     intermonthlyCorrelation = rhs.intermonthlyCorrelation;
     data = rhs.data;
     rhs.data.unloadFromMemory();
-}
-
-bool PreproHydro::saveToFolder(const AreaName& areaID, const char* folder)
-{
-    assert(folder);
-    assert('\0' != *folder);
-
-    Clob buffer;
-    // Make sure the folder is created
-    buffer.clear() << folder << SEP << areaID;
-    if (IO::Directory::Create(buffer))
-    {
-        // Writing the ini file
-        buffer.clear() << folder << SEP << areaID << SEP << "prepro.ini";
-        bool ret = (PreproHydroSaveSettings(this, buffer.c_str()) ? true : false);
-
-        buffer.clear() << folder << SEP << areaID << SEP << "energy.txt";
-        if (data.jit)
-        {
-            assert(0 != (data.jit->options & Matrix<>::optFixedSize));
-            assert(data.jit->minWidth == hydroPreproMax);
-        }
-
-        ret = data.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-
-        return ret;
-    }
-    return false;
 }
 
 bool PreproHydro::loadFromFolder(Study& s, const std::string& areaID, const fs::path& folder)
@@ -242,15 +187,4 @@ bool PreproHydro::validate(const std::string& areaID)
     return ret;
 }
 
-bool PreproHydro::forceReload(bool reload) const
-{
-    return data.forceReload(reload);
-}
-
-void PreproHydro::markAsModified() const
-{
-    return data.markAsModified();
-}
-
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

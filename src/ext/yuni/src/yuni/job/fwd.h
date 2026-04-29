@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,21 +12,14 @@
 #pragma once
 #include "enum.h"
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 // Forward declaration
 class IJob;
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job
 
-namespace Yuni
-{
-namespace Private
-{
-namespace QueueService
+namespace Yuni::Private::QueueService
 {
 // Forward declaration
 class WaitingRoom;
@@ -55,6 +49,4 @@ public:
 
 }; // class JobAccessor
 
-} // namespace QueueService
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::QueueService

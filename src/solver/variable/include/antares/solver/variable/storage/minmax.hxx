@@ -1,37 +1,10 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_STORAGE_MIN_HXX__
 #define __SOLVER_VARIABLE_STORAGE_MIN_HXX__
 
-#include <limits>
-
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 template<bool OpInferior, class NextT>
 inline void MinMaxBase<OpInferior, NextT>::initializeFromStudy(Data::Study& study)
@@ -74,10 +47,10 @@ inline void MinMaxBase<OpInferior, NextT>::merge(uint year, const IntermediateVa
 template<bool OpInferior, class NextT>
 template<uint Size, class VCardT>
 void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
-                                                          const MinMaxData::Data* array,
+                                                          const uint16_t* indices,
                                                           int fileLevel)
 {
-    assert(array);
+    assert(indices);
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
     // Caption
@@ -100,7 +73,7 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
-        v[i] = (double)array[i].indice;
+        v[i] = indices[i];
     }
 
     // Next column index
@@ -110,9 +83,9 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
 template<bool OpInferior, class NextT>
 template<uint Size, class VCardT>
 inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& report,
-                                                                const MinMaxData::Data* array)
+                                                                const double* values)
 {
-    assert(array);
+    assert(values);
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
     // Caption
@@ -130,17 +103,13 @@ inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& r
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
-        v[i] = array[i].value;
+        v[i] = values[i];
     }
 
     // Next column index
     ++report.data.columnIndex;
 }
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
 
 #endif // __SOLVER_VARIABLE_STORAGE_MIN_HXX__

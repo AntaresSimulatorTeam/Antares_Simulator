@@ -12,7 +12,7 @@ void DataSeriesRepository::addDataSeries(std::unique_ptr<IDataSeries> dataSeries
     dataSeries_[name] = std::move(dataSeries);
 }
 
-IDataSeries& DataSeriesRepository::getDataSeries(const std::string& setId)
+IDataSeries& DataSeriesRepository::getDataSeries(const std::string& setId) const
 {
     if (dataSeries_.empty())
     {
@@ -22,6 +22,6 @@ IDataSeries& DataSeriesRepository::getDataSeries(const std::string& setId)
     {
         throw DataSeriesNotExist(setId);
     }
-    return *(dataSeries_[setId]);
+    return *(dataSeries_.at(setId));
 }
 } // namespace Antares::Optimisation::LinearProblemDataImpl

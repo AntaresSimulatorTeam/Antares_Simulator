@@ -1,0 +1,10 @@
+Test 10_2 : expected extra-outputs
+- spill_cost_contribution = [0 0 0 0 0]
+- ens_cost_contribution = [0 0 0 0 0]
+- load_parameter = [120, 120, 120, 120, 20]
+- generation_cost = [200, 200, 200, 200, 200]
+- squared_generation_cost [40000, 40000, 40000, 40000, 40000]
+- total_generation_cost = 1000
+- soc_rate = [1, 0.8, 0.6, 0.4, 0.2] 
+- cumulative_withdrawal = 80
+- constant_expression = 1

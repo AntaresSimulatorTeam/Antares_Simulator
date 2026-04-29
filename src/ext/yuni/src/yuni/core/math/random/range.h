@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,11 +13,7 @@
 #include "../math.h"
 #include "distribution.h"
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 /*!
 ** \brief Wrapper for any random number generator to generate any numbers within a desired range
@@ -48,7 +45,7 @@ namespace Random
 */
 template<class D, int LoValue = 0, int HiValue = 1, typename T = float>
 class YUNI_DECL Range /*final*/
- : public ADistribution<T, Range<D, LoValue, HiValue, T>>
+    : public ADistribution<T, Range<D, LoValue, HiValue, T>>
 {
 public:
     //! Type for a single random number
@@ -91,8 +88,6 @@ private:
 
 }; // class Range
 
-} // namespace Random
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Random
 
 #include "range.hxx"

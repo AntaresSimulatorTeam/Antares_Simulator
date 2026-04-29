@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #ifndef __SOLVER_SIMULATION_ECO_STRUCTS_H__
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
@@ -40,9 +22,9 @@ struct CORRESPONDANCES_DES_VARIABLES
     CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
     CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
 
-    std::vector<int> NumeroDeVariableDeLInterconnexion;
-    std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
-    std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
+    std::vector<int> NumeroDeVariableDuFluxDirect;
+    std::vector<int> NumeroDeVariableDuFluxDirectPositif;
+    std::vector<int> NumeroDeVariableDuFluxIndirectPositif;
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
     //! index of the variables for the power output hourly increases (MW above P_min,between t and
@@ -61,11 +43,9 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> NumeroDeVariablesDeDebordement;
 
     std::vector<int> NumeroDeVariableDefaillancePositive;
-
     std::vector<int> NumeroDeVariableDefaillanceNegative;
 
     std::vector<int> NumeroDeVariablesVariationHydALaBaisse;
-
     std::vector<int> NumeroDeVariablesVariationHydALaHausse;
 
     std::vector<int> NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
@@ -80,6 +60,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         std::vector<int> LevelVariable;
         std::vector<int> CostVariationInjection;
         std::vector<int> CostVariationWithdrawal;
+        std::vector<int> OverflowVariable;
     } SIM_ShortTermStorage;
 };
 
@@ -92,6 +73,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES
 
     std::vector<int> NumeroDeContrainteDesBilansPays;
     std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
+    std::vector<int> NumeroDeContraintePourBornerLaDefaillance;
 
     std::vector<int> NumeroPremiereContrainteDeReserveParZone;
     std::vector<int> NumeroDeuxiemeContrainteDeReserveParZone;
@@ -110,6 +92,8 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> ShortTermStorageCostVariationInjectionBackward;
     std::vector<int> ShortTermStorageCostVariationWithdrawalForward;
     std::vector<int> ShortTermStorageCostVariationWithdrawalBackward;
+
+    std::vector<int> ConstraintIndexRampingIncrease;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -173,11 +157,9 @@ struct CONTRAINTES_COUPLANTES
 
     const char* NomDeLaContrainteCouplante;
 
-    std::shared_ptr<Data::BindingConstraint> bindingConstraint;
+    std::shared_ptr<Antares::Data::BindingConstraint> bindingConstraint;
 };
 
-namespace ShortTermStorage
-{
 struct PROPERTIES
 {
     double reservoirCapacity;
@@ -189,14 +171,17 @@ struct PROPERTIES
     bool initialLevelOptim;
     bool penalizeVariationWithdrawal;
     bool penalizeVariationInjection;
+    bool allowOverflow{false};
+    double overflowCost{0.0};
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
-    std::vector<Antares::Data::ShortTermStorage::AdditionalConstraints> additionalConstraints;
+    std::vector<std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints>>
+      additionalConstraints;
     int clusterGlobalIndex;
     std::string name;
 };
 
-using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
+using AREA_INPUT = std::vector<PROPERTIES>; // index is local
 
 struct RESULTS
 {
@@ -204,8 +189,8 @@ struct RESULTS
     std::vector<double> level;      // MWh
     std::vector<double> injection;  // MWh
     std::vector<double> withdrawal; // MWh
+    std::vector<double> overflow;   // MWh
 };
-} // namespace ShortTermStorage
 
 struct DEMAND_MARKET_POOL
 {
@@ -342,8 +327,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
     bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
-    double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
+    bool AccurateWaterValue; /*  determines the type of modelling used for water budget*/
     std::vector<double> WaterLayerValues;      /*  reference costs for the last time step (caution :
                                       dimension set to      100, should be made dynamic)*/
     std::vector<double> InflowForTimeInterval; /*  Energy input to the reservoir, used to in the
@@ -389,7 +373,7 @@ struct RESULTATS_HORAIRES
     std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
 
-    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
+    std::vector<::RESULTS> ShortTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -407,6 +391,7 @@ struct TIME_MEASURE
 {
     long solveTime = 0;
     long updateTime = 0;
+    long simulationTableFillTime = 0;
 };
 
 using TIME_MEASURES = std::array<TIME_MEASURE, 2>;
@@ -424,7 +409,6 @@ struct PROBLEME_HEBDO
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    bool WaterValueAccurate = false;
     bool OptimisationAvecCoutsDeDemarrage = false;
     bool OptimisationAvecVariablesEntieres = false;
     uint32_t NombreDePays = 0;
@@ -460,16 +444,13 @@ struct PROBLEME_HEBDO
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
 
     uint32_t NumberOfShortTermStorages = 0;
-    // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
-    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+    std::vector<::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
     std::vector<bool> DefaillanceNegativeUtiliserPMinThermique;
     std::vector<bool> DefaillanceNegativeUtiliserHydro;
     std::vector<bool> DefaillanceNegativeUtiliserConsoAbattue;
 
-    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or
-                                                    // OPTIMISATION_QUADRATIQUE
     std::vector<std::vector<double>> BruitSurCoutHydraulique;
 
     uint32_t NombreDeContraintesCouplantes = 0;
@@ -479,17 +460,14 @@ struct PROBLEME_HEBDO
 
     std::vector<SOLDE_MOYEN_DES_ECHANGES> SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
-    bool ReinitOptimisation = false;
 
     Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
     bool exportMPSOnError = false;
-    bool ExportStructure = false;
     bool NamedProblems = false;
     bool exportSolutions = false;
 
     uint32_t HeureDansLAnnee = 0;
     bool LeProblemeADejaEteInstancie = false;
-    bool firstWeekOfSimulation = false;
 
     std::vector<CORRESPONDANCES_DES_VARIABLES> CorrespondanceVarNativesVarOptim;
     std::vector<CORRESPONDANCES_DES_CONTRAINTES> CorrespondanceCntNativesCntOptim;
@@ -622,10 +600,10 @@ public:
     std::vector<int> NbGrpCourbeGuide; // ?
     std::vector<int> NbGrpOpt;         // ?
 
-    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre;
+    std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>
+      ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    const ModelerStudy::SystemModel::System* modelerSystem;                   // for hybrid studies
-    Optimisation::LinearProblemApi::ILinearProblemData* linear_problem_data_; // for hybrid studies
+    Solver::ModelerData* modelerData = nullptr;
 };
 #endif

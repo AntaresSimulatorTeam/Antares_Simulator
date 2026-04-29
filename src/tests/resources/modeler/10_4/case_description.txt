@@ -1,0 +1,8 @@
+Test 10_4 : expected extra-outputs
+- spill_cost_contribution = [0 0 0 0 0]
+- ens_cost_contribution = [0 0 0 0 200000]
+- loss_of_load = [0 0 0 0 1]
+- load_parameter = [20,40, 60, 80, 110]
+- generation_cost = [40, 80, 120, 160, 200]
+- squared_generation_cost [1600, 6400, 14400, 25600, 40000]
+- total_generation_cost = 600

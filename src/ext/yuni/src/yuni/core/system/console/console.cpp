@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -13,11 +14,7 @@
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace System
-{
-namespace Console
+namespace Yuni::System::Console
 {
 bool IsStdoutTTY()
 {
@@ -37,8 +34,6 @@ bool IsStderrTTY()
 #endif
 }
 
-} // namespace Console
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Console
 
 #

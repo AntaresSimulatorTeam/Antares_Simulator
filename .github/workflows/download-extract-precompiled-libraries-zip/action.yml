@@ -1,9 +1,6 @@
 name: "Download extract .zip precompiled libraries"
 description: "Download and extract .zip precompiled libraries from antares-deps and antares-simulator repository"
 inputs:
-  os:
-    description: 'operational system used for github action'
-    required: true
   buildtype:
     description: 'build type'
     required: false
@@ -23,6 +20,6 @@ runs:
     run: |
            mkdir "${{inputs.ortools-dir}}"
            cd "${{inputs.ortools-dir}}"
-           wget ${{inputs.ortools-url}} -O ortools.zip
+           curl -Ls -o ortools.zip ${{inputs.ortools-url}}
            unzip ortools.zip
            rm ortools.zip

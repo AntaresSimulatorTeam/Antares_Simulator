@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/study/binding_constraint/BindingConstraint.h"
 
 #include <algorithm>
@@ -28,7 +11,6 @@
 #include <yuni/yuni.h>
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
-#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
@@ -235,7 +217,6 @@ void BindingConstraint::resetToDefaultValues()
     pEnabled = true;
     pComments.clear();
     RHSTimeSeries_.reset();
-    markAsModified();
 }
 
 void BindingConstraint::copyWeights(
@@ -258,14 +239,8 @@ void BindingConstraint::copyWeights(
     AreaName fromID;
     AreaName withID;
 
-    auto end = rhs.pLinkWeights.end();
-    for (auto i = rhs.pLinkWeights.begin(); i != end; ++i)
+    for (const auto& [sourceLink, weight]: rhs.pLinkWeights)
     {
-        // Alias to the current link
-        const AreaLink* sourceLink = i->first;
-        // weight
-        const double weight = i->second;
-
         assert(sourceLink and "Invalid link in binding constraint");
         assert(sourceLink->from and "Invalid area pointer 'from' within link");
         assert(sourceLink->with and "Invalid area pointer 'with' within link");
@@ -283,14 +258,8 @@ void BindingConstraint::copyWeights(
 
     if (!rhs.pClusterWeights.empty())
     {
-        auto end = rhs.pClusterWeights.end();
-        for (auto i = rhs.pClusterWeights.begin(); i != end; ++i)
+        for (const auto& [thermalCluster, weight]: rhs.pClusterWeights)
         {
-            // Alias to the current thermalCluster
-            const ThermalCluster* thermalCluster = i->first;
-            // weight
-            const double weight = i->second;
-
             assert(thermalCluster and "Invalid thermal cluster in binding constraint");
 
             AreaName parentID;
@@ -328,14 +297,8 @@ void BindingConstraint::copyOffsets(
     AreaName fromID;
     AreaName withID;
 
-    auto end = rhs.pLinkOffsets.end();
-    for (auto i = rhs.pLinkOffsets.begin(); i != end; ++i)
+    for (const auto& [sourceLink, offset]: rhs.pLinkOffsets)
     {
-        // Alias to the current link
-        const AreaLink* sourceLink = i->first;
-        // offset
-        const int offset = i->second;
-
         assert(sourceLink and "Invalid link in binding constraint");
         assert(sourceLink->from and "Invalid area pointer 'from' within link");
         assert(sourceLink->with and "Invalid area pointer 'with' within link");
@@ -353,14 +316,8 @@ void BindingConstraint::copyOffsets(
 
     if (!rhs.pClusterOffsets.empty())
     {
-        auto end = rhs.pClusterOffsets.end();
-        for (auto i = rhs.pClusterOffsets.begin(); i != end; ++i)
+        for (const auto& [thermalCluster, offset]: rhs.pClusterOffsets)
         {
-            // Alias to the current thermalCluster
-            const ThermalCluster* thermalCluster = i->first;
-            // weight
-            const int offset = i->second;
-
             assert(thermalCluster and "Invalid thermal cluster in binding constraint");
 
             AreaName parentID;
@@ -397,31 +354,19 @@ void BindingConstraint::clear()
     this->pEnabled = true;
 }
 
-void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
-{
-    auto i = pLinkWeights.find(lnk);
-    if (i != pLinkWeights.end())
-    {
-        i->second *= -1.;
-        logs.info() << "Updated the binding constraint `" << pName << '`';
-    }
-}
-
 bool BindingConstraint::contains(const Area* area) const
 {
-    const auto end = pLinkWeights.end();
-    for (auto i = pLinkWeights.begin(); i != end; ++i)
+    for (const auto& [sourceLink, _]: pLinkWeights)
     {
-        if ((i->first)->from == area || (i->first)->with == area)
+        if (sourceLink->from == area || sourceLink->with == area)
         {
             return true;
         }
     }
 
-    const auto tEnd = pClusterWeights.end();
-    for (auto i = pClusterWeights.begin(); i != tEnd; ++i)
+    for (const auto& [thermalCluster, _]: pClusterWeights)
     {
-        if ((i->first)->parentArea == area)
+        if (thermalCluster->parentArea == area)
         {
             return true;
         }
@@ -433,66 +378,61 @@ bool BindingConstraint::contains(const Area* area) const
 void BindingConstraint::buildFormula(Yuni::String& s) const
 {
     char tmp[42];
-    bool first = true;
-    auto end = pLinkWeights.end();
-    for (auto i = pLinkWeights.begin(); i != end; ++i)
+    for (const auto& [sourceLink, weight]: pLinkWeights)
     {
-        if (!first)
+        if (!sourceLink)
         {
             s << " + ";
         }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
 
-        s << '(' << (const char*)tmp << " x " << (i->first)->getName();
+        s << '(' << (const char*)tmp << " x " << sourceLink->getName();
 
-        if (auto at = pLinkOffsets.find(i->first); at != pLinkOffsets.end())
+        if (auto at = pLinkOffsets.find(sourceLink); at != pLinkOffsets.end())
         {
             int o = at->second;
             if (o > 0)
             {
-                s << " x (t + " << pLinkOffsets.find(i->first)->second << ')';
+                s << " x (t + " << pLinkOffsets.find(sourceLink)->second << ')';
             }
             if (o < 0)
             {
-                s << " x (t - " << std::abs(pLinkOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pLinkOffsets.find(sourceLink)->second) << ')';
             }
         }
 
         s << ')';
-        first = false;
     }
 
-    auto tEnd = pClusterWeights.end();
-    for (auto i = pClusterWeights.begin(); i != tEnd; ++i)
+    for (const auto [thermalCluster, weight]: pClusterWeights)
     {
-        if (!first)
+        if (!thermalCluster)
         {
             s << " + ";
         }
-        SNPRINTF(tmp, sizeof(tmp), "%.2f", i->second);
+        SNPRINTF(tmp, sizeof(tmp), "%.2f", weight);
 
-        s << '(' << (const char*)tmp << " x " << (i->first)->getFullName();
+        s << '(' << (const char*)tmp << " x " << thermalCluster->getFullName();
 
-        if (auto at = pClusterOffsets.find(i->first); at != pClusterOffsets.end())
+        if (auto at = pClusterOffsets.find(thermalCluster); at != pClusterOffsets.end())
         {
             int o = at->second;
             if (o > 0)
             {
-                s << " x (t + " << pClusterOffsets.find(i->first)->second << ')';
+                s << " x (t + " << pClusterOffsets.find(thermalCluster)->second << ')';
             }
             if (o < 0)
             {
-                s << " x (t - " << std::abs(pClusterOffsets.find(i->first)->second) << ')';
+                s << " x (t - " << std::abs(pClusterOffsets.find(thermalCluster)->second) << ')';
             }
         }
 
-        if (!i->first->isActive())
+        if (!thermalCluster->isActive())
         {
             s << " x N/A";
         }
 
         s << ')';
-        first = false;
     }
 }
 
@@ -531,56 +471,6 @@ uint BindingConstraint::yearByYearFilter() const
 uint BindingConstraint::synthesisFilter() const
 {
     return pFilterSynthesis;
-}
-
-bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = this->end();
-
-    for (auto j = this->begin(); j != endWeights; ++j)
-    {
-        auto* areaLink = j->first;
-        if (!areaLink)
-        {
-            continue;
-        }
-
-        if (!areaLink->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = pClusterWeights.end();
-
-    for (auto j = pClusterWeights.begin(); j != endWeights; ++j)
-    {
-        auto* cluster = j->first;
-        if (!cluster)
-        {
-            continue;
-        }
-
-        if (!cluster->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
 }
 
 double BindingConstraint::weight(const AreaLink* lnk) const
@@ -683,16 +573,6 @@ const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights
     return pClusterWeights;
 }
 
-bool BindingConstraint::forceReload(bool reload) const
-{
-    return RHSTimeSeries().forceReload(reload);
-}
-
-void BindingConstraint::markAsModified() const
-{
-    RHSTimeSeries().markAsModified();
-}
-
 void BindingConstraint::clearAndReset(const AnyString& name,
                                       BindingConstraint::Type newType,
                                       BindingConstraint::Operator op)
@@ -745,7 +625,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
         break;
     }
     }
-    RHSTimeSeries_.markAsModified();
 }
 
 std::string BindingConstraint::group() const
@@ -756,7 +635,6 @@ std::string BindingConstraint::group() const
 void BindingConstraint::group(std::string group_name)
 {
     group_ = std::move(group_name);
-    markAsModified();
 }
 
 const Matrix<>& BindingConstraint::RHSTimeSeries() const

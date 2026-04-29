@@ -10,9 +10,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/sets.h
         include/antares/study/scenario-builder/sets.hxx
         scenario-builder/sets.cpp
-        include/antares/study/scenario-builder/updater.hxx
-        include/antares/study/scenario-builder/scBuilderUtils.h
-        scenario-builder/scBuilderUtils.cpp
         scenario-builder/BindingConstraintsTSNumbersData.cpp
         scenario-builder/NTCTSNumberData.cpp
         include/antares/study/scenario-builder/NTCTSNumberData.h
@@ -28,9 +25,11 @@ set(SRC_STUDY_SCENARIO_BUILDER
         include/antares/study/scenario-builder/WindTSNumberData.h
         scenario-builder/WindTSNumberData.cpp
         include/antares/study/scenario-builder/LoadTSNumberData.h
-		include/antares/study/scenario-builder/ShortTermTSNumberData.h
         scenario-builder/LoadTSNumberData.cpp
-		scenario-builder/ShortTermTSNumberData.cpp
+        include/antares/study/scenario-builder/ShortTermInflowsTSNumberData.h
+        scenario-builder/ShortTermInflowsTSNumberData.cpp
+        include/antares/study/scenario-builder/ShortTermAdditionalConstraintsTSNumberData.h
+        scenario-builder/ShortTermAdditionalConstraintsTSNumberData.cpp
         include/antares/study/scenario-builder/applyToMatrix.hxx
 )
 source_group("study\\scenario builder" FILES ${SRC_MATRIX})
@@ -46,18 +45,9 @@ set(SRC_AREAS
         include/antares/study/area/links.h
         area/store-timeseries-numbers.cpp
         include/antares/study/area/store-timeseries-numbers.h
-        include/antares/study/area/store-timeseries-numbers.hxx
         area/list.cpp
 )
 source_group("study\\area" FILES ${SRC_AREAS})
-
-
-set(SRC_STUDY_AREA_UI
-        include/antares/study/area/ui.h
-        area/ui.cpp
-)
-source_group("study\\area\\ui" FILES ${SRC_STUDY_AREA_UI})
-
 
 set(SRC_STUDY_PART_COMMON
         parts/common/cluster.cpp
@@ -96,6 +86,8 @@ set(SRC_STUDY_PART_RENEWABLE
 )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
+        include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
+        parts/short-term-storage/makeGroupsOfHoursFromString.cpp
         include/antares/study/parts/short-term-storage/container.h
         parts/short-term-storage/container.cpp
         include/antares/study/parts/short-term-storage/properties.h
@@ -106,9 +98,6 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/additionalConstraints.h
         parts/short-term-storage/cluster.cpp
         parts/short-term-storage/additionalConstraints.cpp
-	include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
-	parts/short-term-storage/makeGroupsOfHoursFromString.cpp
-	include/antares/study/parts/short-term-storage/HoursCollectorVisitor.h
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -133,14 +122,10 @@ set(SRC_STUDY_PART_HYDRO
         parts/hydro/allocation.cpp
         include/antares/study/parts/hydro/hydromaxtimeseriesreader.h
         parts/hydro/hydromaxtimeseriesreader.cpp
+        include/antares/study/parts/hydro/hydrorulecurves.h
+        parts/hydro/hydrorulecurves.cpp
 )
 source_group("study\\part\\hydro" FILES ${SRC_STUDY_PART_HYDRO})
-
-set(SRC_STUDY_UI
-        include/antares/study/ui-runtimeinfos.h
-        ui-runtimeinfos.cpp
-)
-source_group(study\\UI FILES ${SRC_STUDY_UI})
 
 set(SRC_STUDY_PARAMETERS
         include/antares/study/parameters.h
@@ -172,8 +157,6 @@ set(SRC_STUDY_BINDING_CONSTRAINT
         binding_constraint/BindingConstraintsRepository.cpp
         binding_constraint/BindingConstraintLoader.cpp
         include/antares/study/binding_constraint/BindingConstraintLoader.h
-        binding_constraint/BindingConstraintSaver.cpp
-        include/antares/study/binding_constraint/BindingConstraintSaver.h
         include/antares/study/binding_constraint/EnvForLoading.h
         include/antares/study/binding_constraint/BindingConstraintStructures.h
         binding_constraint/BindingConstraintGroup.cpp
@@ -219,18 +202,15 @@ set(SRC_STUDY
         runtime/runtime.cpp
         include/antares/study/runtime.h
         include/antares/study/study.h
-        include/antares/study/study.hxx
         include/antares/study/fwd.h
         fwd.cpp
         include/antares/study/study.h
         study.cpp
-	duplicates.cpp
+        duplicates.cpp
         include/antares/study/duplicates.h
-        include/antares/study/correlation-updater.hxx
         study.importprepro.cpp
         importlogs.cpp
         load.cpp
-        save.cpp
         study.extra.cpp
         include/antares/study/version.h
         version.cpp
@@ -238,20 +218,6 @@ set(SRC_STUDY
         cleaner/cleaner.cpp
         include/antares/study/cleaner/versions.h
         cleaner/cleaner-v20.cpp
-        output.cpp
-        include/antares/study/output.h
-        include/antares/study/output.hxx
-        layerdata.cpp
-        include/antares/study/layerdata.h
-
-        # progression
-        include/antares/study/progression/progression.h
-        include/antares/study/progression/progression.hxx
-        progression/progression.cpp
-
-        # Simulation
-        include/antares/study/simulation.h
-        simulation.cpp
 
         # Filter
         include/antares/study/filter.h
@@ -272,8 +238,6 @@ set(SRC_ALL
         ${SRC_STDCXX}
         ${SRC_AREAS}
         ${SRC_XCAST}
-        ${SRC_STUDY_AREA_UI}
-        ${SRC_STUDY_UI}
         ${SRC_STUDY_PARAMETERS}
         ${SRC_STUDY_FINDER}
         ${SRC_STUDY_BINDING_CONSTRAINT}
@@ -286,36 +250,52 @@ set(SRC_ALL
         ${SRC_STUDY_SCENARIO_BUILDER}
         ${SRC_STUDY}
 )
+add_library(scenario-builder-utils
+        include/antares/study/scenario-builder/scBuilderUtils.h
+        scenario-builder/scBuilderUtils.cpp)
+add_library(Antares::scenario-builder-utils ALIAS scenario-builder-utils)
+target_link_libraries(scenario-builder-utils
+        PUBLIC
+        yuni-static-core)
 
+
+target_include_directories(scenario-builder-utils
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+
+)
 add_library(study ${SRC_ALL})
 add_library(Antares::study ALIAS study)
 
 target_link_libraries(study
         PUBLIC
         yuni-static-core
-        Antares::date #parameters
-        Antares::inifile #parameters
-        Antares::stdcxx #enum.hxx
-        Antares::utils #area.hxx
-        Antares::solverUtils #sim_structure_probleme_economique.h -> optimization_statistics.h
+        Antares::date
+        Antares::inifile
+        Antares::study-utils
+        Antares::solverUtils
         Antares::correlation
         Antares::path
         Antares::mersenne
-        Antares::result_writer #study.h
+        Antares::result_writer
         Antares::series
         Antares::array
-        antares-core
-        antares-solver-simulation
         Antares::hydro
+        Antares::scenario-builder-utils
+        Antares::enums
+        antares-solver-simulation
+        antares-core
+        PRIVATE
         Antares::antares-study-system-model
         linear-problem-api
         Antares::load-modeler-files
         Antares::modeler-parameters
-        PRIVATE
+        Antares::modeler-lib
         Antares::exception
+        fmt::fmt
         Antares::benchmarking
         antares-solver-variable
-		Antares::additional-constraint-rhs-antlr-interface
+        Antares::additional-constraint-rhs-antlr-interface
 )
 
 target_include_directories(study

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,16 +12,12 @@
 #pragma once
 #include "versions.h"
 
-namespace Yuni
+namespace Yuni::LibConfig::VersionInfo
 {
-namespace LibConfig
-{
-namespace VersionInfo
-{
-inline Settings::Settings() : supportOpenGL(false), supportDirectX(false)
+inline Settings::Settings():
+    supportOpenGL(false),
+    supportDirectX(false)
 {
 }
 
-} // namespace VersionInfo
-} // namespace LibConfig
-} // namespace Yuni
+} // namespace Yuni::LibConfig::VersionInfo

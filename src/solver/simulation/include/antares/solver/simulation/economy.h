@@ -1,27 +1,11 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_SIMULATION_ECONOMY_H__
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
+#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/weekly_optimization.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
@@ -41,6 +25,8 @@ public:
     {
         return "economy";
     }
+
+    static constexpr Data::SimulationMode mode = Data::SimulationMode::Economy;
 
 public:
     //! \name Constructor & Destructor
@@ -72,26 +58,20 @@ protected:
 
     bool simulationBegin();
 
-    bool year(Progression::Task& progression,
-              Variable::State& state,
+    bool year(Variable::State& state,
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
-              bool isFirstPerformedYearOfSimulation,
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
+              Benchmarking::DurationCollector& durationCollector,
               const Antares::Data::Area::ScratchMap& scratchmap);
-
-    void incrementProgression(Progression::Task& progression);
 
     void simulationEnd();
 
-    /*!
-    ** \brief Prepare clusters in 'must-run' mode
-    */
-    void prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year);
-
     void initializeState(Variable::State& state, uint numSpace);
+    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
+    std::string getSimulationTableHeader() const;
 
 private:
     uint pNbWeeks;
@@ -100,8 +80,10 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
-    IResultWriter& resultWriter;
+    IResultWriter& resultWriter_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
+
+    std::vector<OptimisationsSimulationTable> simulationTables_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

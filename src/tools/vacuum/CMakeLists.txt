@@ -48,4 +48,5 @@ target_link_libraries(${execname}
 
 import_std_libs(${execname})
 executable_strip(${execname})
+copy_project_shared_lib(parquet_writer ${execname})
 

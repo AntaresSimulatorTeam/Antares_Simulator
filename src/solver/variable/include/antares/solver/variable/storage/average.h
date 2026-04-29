@@ -1,37 +1,20 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 #define __SOLVER_VARIABLE_STORAGE_AVERAGE_H__
 
+#include <vector>
+
+// Include order matters, we turn off clang format to make it compile
+// clang-format off
+#include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/storage/empty.h"
+// clang-format on
+
 #include "averagedata.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace R
-{
-namespace AllYears
+namespace Antares::Solver::Variable::R::AllYears
 {
 template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
 struct Average: public NextT
@@ -65,7 +48,6 @@ public:
     {
     }
 
-protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
         avgdata.initializeFromStudy(study);
@@ -101,8 +83,7 @@ protected:
             {
             case Category::hourly:
                 InternalExportValues<HOURS_PER_YEAR, VCardT, Category::hourly>(report,
-                                                                               Memory::RawPointer(
-                                                                                 avgdata.hourly));
+                                                                               avgdata.hourly);
                 break;
             case Category::daily:
                 InternalExportValues<DAYS_PER_YEAR, VCardT, Category::daily>(report, avgdata.daily);
@@ -116,7 +97,7 @@ protected:
                                                                                  avgdata.monthly);
                 break;
             case Category::annual:
-                InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year.data());
+                InternalExportValues<1, VCardT, Category::annual>(report, {avgdata.year});
                 break;
             }
         }
@@ -150,7 +131,7 @@ protected:
             report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
               VCardT::decimal>::Value();
             // Value
-            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.allYears;
+            report.values[report.data.columnIndex][report.data.rowIndex] = avgdata.year;
             // Non applicability
             report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
               = *report.isCurrentVarNA;
@@ -161,24 +142,13 @@ protected:
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    template<template<class, int> class DecoratorT>
-    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
-    {
-        if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Average<Empty, 0>>::Yes)
-        {
-            return avgdata.hourly;
-        }
-        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
-    }
-
 public:
     AverageData avgdata;
 
 private:
     template<uint Size, class VCardT, int PrecisionT>
-    void InternalExportValues(SurveyResults& report, const double* array) const
+    void InternalExportValues(SurveyResults& report, const std::vector<HighPrecision>& array) const
     {
-        assert(array);
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
         // Caption
@@ -195,19 +165,48 @@ private:
         // Values
         switch (PrecisionT)
         {
-        case Category::annual:
+        case Category::hourly:
         {
-            double& target = *(report.values[report.data.columnIndex]);
-            target = 0;
-            for (uint i = 0; i != avgdata.nbYearsCapacity; ++i)
+            for (uint h = 0; h < HOURS_PER_YEAR; ++h)
             {
-                target += array[i];
+                report.values[report.data.columnIndex][h] = array[h];
             }
-            avgdata.allYears = target;
             break;
         }
+        case Category::daily:
+        {
+            for (uint d = 0; d < DAYS_PER_YEAR; ++d)
+            {
+                report.values[report.data.columnIndex][d] = array[d];
+            }
+            break;
+        }
+
+        case Category::weekly:
+        {
+            for (uint w = 0; w < WEEKS_PER_YEAR; ++w)
+            {
+                report.values[report.data.columnIndex][w] = array[w];
+            }
+            break;
+        }
+
+        case Category::monthly:
+        {
+            for (uint m = 0; m < MONTHS_PER_YEAR; ++m)
+            {
+                report.values[report.data.columnIndex][m] = array[m];
+            }
+            break;
+        }
+        case Category::annual:
+        {
+            *(report.values[report.data.columnIndex]) = array[0];
+            break;
+        }
+
         default:
-            (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
+            logs.warning() << "Category not found for variable: " << report.variableCaption;
             break;
         }
 
@@ -217,10 +216,6 @@ private:
 
 }; // class Average
 
-} // namespace AllYears
-} // namespace R
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::R::AllYears
 
 #endif // __SOLVER_VARIABLE_STORAGE_AVERAGE_H__

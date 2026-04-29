@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,20 +10,21 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "taskgroup.h"
+
 #include "queue/service.h"
 
-namespace Yuni
+namespace Yuni::Job
 {
-namespace Job
-{
-class YUNI_DECL Taskgroup::ITaskgroupJob : public Job::IJob
+class YUNI_DECL Taskgroup::ITaskgroupJob: public Job::IJob
 {
 public:
     //! The threading policy
     typedef Job::IJob::ThreadingPolicy ThreadingPolicy;
 
 public:
-    ITaskgroupJob(QueueService& queueservice) : taskgroup(nullptr), queueservice(queueservice)
+    ITaskgroupJob(QueueService& queueservice):
+        taskgroup(nullptr),
+        queueservice(queueservice)
     {
     }
 
@@ -49,15 +51,16 @@ protected:
 
 }; // class TaskgroupJob
 
-class YUNI_DECL TaskgroupJobCallback final : public Taskgroup::ITaskgroupJob
+class YUNI_DECL TaskgroupJobCallback final: public Taskgroup::ITaskgroupJob
 {
 public:
     //! The threading policy
     typedef Job::IJob::ThreadingPolicy ThreadingPolicy;
 
 public:
-    TaskgroupJobCallback(QueueService& queueservice, const Bind<bool(IJob&)>& callback) :
-     Taskgroup::ITaskgroupJob(queueservice), callback(callback)
+    TaskgroupJobCallback(QueueService& queueservice, const Bind<bool(IJob&)>& callback):
+        Taskgroup::ITaskgroupJob(queueservice),
+        callback(callback)
     {
     }
 
@@ -85,14 +88,14 @@ protected:
 
 }; // class TaskgroupJob
 
-Taskgroup::Taskgroup(QueueService& queueservice, bool cancelOnError, bool autostart) :
- pTaskHasStarted(false),
- pTaskStatus(stSucceeded) // nothing to do by default, so success
- ,
- pJobsDoneCount(0),
- pCancelOnError(cancelOnError),
- pAutostart(autostart),
- pDefaultQueueservice(queueservice)
+Taskgroup::Taskgroup(QueueService& queueservice, bool cancelOnError, bool autostart):
+    pTaskHasStarted(false),
+    pTaskStatus(stSucceeded) // nothing to do by default, so success
+    ,
+    pJobsDoneCount(0),
+    pCancelOnError(cancelOnError),
+    pAutostart(autostart),
+    pDefaultQueueservice(queueservice)
 {
 }
 
@@ -109,7 +112,9 @@ inline void Taskgroup::deleteAllJobsWL()
         ITaskgroupJob* job = pJobs[i];
         job->taskgroup = nullptr; // should be useless and already done
         if (job->release())
+        {
             delete job;
+        }
     }
 
     JobList clearAndMinimize; // force complete cleanup
@@ -154,7 +159,9 @@ inline void Taskgroup::stopAllJobsWL()
         }
 
         if (atLeastOneJobWasAlive)
+        {
             onTaskStoppedWL();
+        }
 
         // resource cleanup
         deleteAllJobsWL();
@@ -165,13 +172,17 @@ inline void Taskgroup::onJobTerminated(Taskgroup::ITaskgroupJob&, bool success)
 {
     ThreadingPolicy::MutexLocker locker(*this);
     if (not pTaskHasStarted) // should never happen
+    {
         return;
+    }
 
     // we may need to stop at the first encoutered error
     bool forceCancel = (pCancelOnError and (not success and pTaskStatus == stSucceeded));
     // update the status of the task
     if (not success and (pTaskStatus == stSucceeded)) // no update if == stCanceled for example
+    {
         pTaskStatus = stFailed;
+    }
 
     if (++pJobsDoneCount == (uint)pJobs.size() or forceCancel)
     {
@@ -209,7 +220,9 @@ void Taskgroup::start()
 {
     ThreadingPolicy::MutexLocker locker(*this);
     if (not pTaskHasStarted)
+    {
         startWL();
+    }
 }
 
 void Taskgroup::cancel()
@@ -217,7 +230,9 @@ void Taskgroup::cancel()
     ThreadingPolicy::MutexLocker locker(*this);
     pTaskStatus = stCanceled;
     if (pTaskHasStarted)
+    {
         stopAllJobsWL();
+    }
 }
 
 void Taskgroup::markAsSucceeded()
@@ -225,7 +240,9 @@ void Taskgroup::markAsSucceeded()
     ThreadingPolicy::MutexLocker locker(*this);
     pTaskStatus = stSucceeded;
     if (pTaskHasStarted)
+    {
         stopAllJobsWL();
+    }
 }
 
 void Taskgroup::markAsFailed()
@@ -233,7 +250,9 @@ void Taskgroup::markAsFailed()
     ThreadingPolicy::MutexLocker locker(*this);
     pTaskStatus = stFailed;
     if (pTaskHasStarted)
+    {
         stopAllJobsWL();
+    }
 }
 
 void Taskgroup::add(QueueService& queueservice, const Bind<bool(IJob&)>& callback)
@@ -252,7 +271,9 @@ void Taskgroup::add(QueueService& queueservice, const Bind<bool(IJob&)>& callbac
         {
             // if the task is not running, starting it as if the user did it itself
             if (pAutostart)
+            {
                 startWL();
+            }
             return;
         }
 
@@ -268,7 +289,9 @@ Taskgroup::Status Taskgroup::wait()
     {
         ThreadingPolicy::MutexLocker locker(*this);
         if (not pTaskHasStarted)
+        {
             return pTaskStatus;
+        }
     }
 
     // wait
@@ -286,7 +309,9 @@ Taskgroup::Status Taskgroup::wait(uint timeout)
     {
         ThreadingPolicy::MutexLocker locker(*this);
         if (not pTaskHasStarted)
+        {
             return pTaskStatus;
+        }
     }
 
     if (pSignalTaskStopped.wait(timeout)) // received notification
@@ -305,12 +330,15 @@ Taskgroup::Status Taskgroup::status(uint* jobCount, uint* doneCount) const
 {
     ThreadingPolicy::MutexLocker locker(*this);
     if (jobCount != nullptr)
+    {
         *jobCount = (uint)pJobs.size();
+    }
     if (doneCount != nullptr)
+    {
         *doneCount = pJobsDoneCount;
+    }
 
     return (not pTaskHasStarted) ? pTaskStatus : stRunning;
 }
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job

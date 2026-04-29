@@ -127,8 +127,7 @@ met:
   [^19] may start with the ending levels of the years processed in the (k-1)-th batch.
 
 - The parallelization context (see [Multi-threading](optional-features/multi-threading.md)) must be set to ensure that
-  the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in
-  parallel (i.e. M = K\*B and all time-series refresh intervals are exact multiple of B).
+  the M Monte-Carlo years to simulate will be processed in a round number of K consecutive batches of B years in parallel 
 
 The first year of the simulation, and more generally years belonging to the first simulation batch in parallel mode, are
 initialized as they would be in the cold start option.

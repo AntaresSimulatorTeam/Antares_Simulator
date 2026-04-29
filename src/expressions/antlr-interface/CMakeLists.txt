@@ -15,12 +15,12 @@ Set(SRCS
 
 add_library(${PROJ} ${SRCS})
 add_library(Antares::${PROJ} ALIAS ${PROJ})
-
-if (MSVC)
-    target_link_libraries(${PROJ} PUBLIC antlr4_shared) # vcpkg triplet x64-windows provides shared lib
-else ()
-    target_link_libraries(${PROJ} PUBLIC antlr4_static) # vcpkg triplet x64-linux provides static lib
+if (NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    target_compile_options(${PROJ} PRIVATE
+            "-Wno-unused-parameter")
 endif ()
+
+link_antlr4(${PROJ})
 
 target_include_directories(${PROJ}
         PUBLIC

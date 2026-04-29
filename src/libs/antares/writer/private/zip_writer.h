@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <mutex>
@@ -45,7 +28,7 @@ class ZipWriter;
  * May be used as a function object.
  */
 template<class ContentT>
-class ZipWriteJob
+class ZipWriteJob final
 {
 public:
     ZipWriteJob(ZipWriter& writer,
@@ -74,14 +57,13 @@ private:
     Benchmarking::DurationCollector& pDurationCollector;
 };
 
-class ZipWriter: public IResultWriter
+class ZipWriter final: public IResultWriter
 {
 public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
               const std::filesystem::path& archivePath,
               Benchmarking::DurationCollector& duration_collector);
     virtual ~ZipWriter();
-    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,

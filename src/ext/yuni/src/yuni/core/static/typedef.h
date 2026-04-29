@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -39,11 +40,7 @@
         };                                                          \
     } /* class */
 
-namespace Yuni
-{
-namespace Static
-{
-namespace HasTypedef
+namespace Yuni::Static::HasTypedef
 {
 /*!
 ** \brief Determine whether a class has the typedef `Ptr` or not
@@ -68,6 +65,4 @@ YUNI_IMPL_STATIC_HAS_TYPEDEF(IntrusiveSmartPtrType);
 */
 YUNI_IMPL_STATIC_HAS_TYPEDEF(CStringType);
 
-} // namespace HasTypedef
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static::HasTypedef

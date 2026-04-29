@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,31 +12,25 @@
 #include "iterator.h"
 
 #ifdef YUNI_OS_WINDOWS
-#include "../../../core/system/windows.hdr.h"
-#include <wchar.h>
 #include <io.h>
+#include <wchar.h>
+
+#include "../../../core/system/windows.hdr.h"
 #else
-#include <errno.h>
 #include <dirent.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IO
-{
-namespace Directory
-{
-namespace Iterator
+namespace Yuni::Private::IO::Directory::Iterator
 {
 // begin added by Papa NDIAYE on 20/09/2016
 Yuni::IO::Directory::IIterator<true>* test;
+
 // end
 enum
 {
@@ -50,7 +45,9 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
     // Opening the folder
     DIR* pdir = opendir(filename.c_str());
     if (!pdir)
+    {
         return opts.self->onError(filename);
+    }
 
     struct dirent* pent;
     struct stat s;
@@ -67,7 +64,9 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
             // reset counter
             opts.counter = 0;
             if (thread->suspend())
+            {
                 return Yuni::IO::flowAbort;
+            }
         }
 #endif
 
@@ -75,7 +74,9 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
         if (*(pent->d_name) == '.')
         {
             if ((pent->d_name[1] == '.' and pent->d_name[2] == '\0') or (pent->d_name[1] == '\0'))
+            {
                 continue;
+            }
         }
 
         newName = (const char*)pent->d_name;
@@ -84,7 +85,9 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
         if (stat(newFilename.c_str(), &s) != 0)
         {
             if (opts.self->onAccessError(newFilename) == Yuni::IO::flowAbort)
+            {
                 return Yuni::IO::flowAbort;
+            }
             continue;
         }
 
@@ -117,8 +120,10 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
             if (files)
             {
                 // The node is a file
-                switch (
-                  opts.self->onFile(newFilename, filename, newName, static_cast<uint64_t>(s.st_size)))
+                switch (opts.self->onFile(newFilename,
+                                          filename,
+                                          newName,
+                                          static_cast<uint64_t>(s.st_size)))
                 {
                 case Yuni::IO::flowContinue:
                     break;
@@ -136,7 +141,9 @@ Flow TraverseUnixFolder(const String& filename, Options& opts, IDetachedThread* 
     closedir(pdir);
 
     if (files)
+    {
         return TraverseUnixFolder(filename, opts, thread, false);
+    }
     return Yuni::IO::flowContinue;
 }
 
@@ -153,10 +160,16 @@ Flow TraverseWindowsFolder(const String& filename,
     opts.wbuffer[1] = L'\\';
     opts.wbuffer[2] = L'?';
     opts.wbuffer[3] = L'\\';
-    int n = MultiByteToWideChar(
-      CP_UTF8, 0, filename.c_str(), filename.size(), opts.wbuffer + 4, (uint)wbufferSize - 16);
+    int n = MultiByteToWideChar(CP_UTF8,
+                                0,
+                                filename.c_str(),
+                                filename.size(),
+                                opts.wbuffer + 4,
+                                (uint)wbufferSize - 16);
     if (0 == n)
+    {
         return opts.self->onError(filename);
+    }
 
     // Making sure that our string is zero-terminated
     opts.wbuffer[n + 4] = L'\\';
@@ -170,7 +183,9 @@ Flow TraverseWindowsFolder(const String& filename,
     HANDLE hFind = INVALID_HANDLE_VALUE;
     hFind = FindFirstFileW(opts.wbuffer, &data);
     if (INVALID_HANDLE_VALUE == hFind)
+    {
         return Yuni::IO::flowContinue;
+    }
 
     String newName;
     String newFilename;
@@ -186,7 +201,9 @@ Flow TraverseWindowsFolder(const String& filename,
             // reset counter
             opts.counter = 0;
             if (thread->suspend())
+            {
                 return Yuni::IO::flowAbort;
+            }
         }
 #endif
 
@@ -195,16 +212,32 @@ Flow TraverseWindowsFolder(const String& filename,
         {
             if ((data.cFileName[1] == L'.' and data.cFileName[2] == L'\0')
                 or (data.cFileName[1] == L'\0'))
+            {
                 continue;
+            }
         }
 
-        const int sizeRequired
-          = WideCharToMultiByte(CP_UTF8, 0, data.cFileName, -1, nullptr, 0, nullptr, nullptr);
+        const int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                                     0,
+                                                     data.cFileName,
+                                                     -1,
+                                                     nullptr,
+                                                     0,
+                                                     nullptr,
+                                                     nullptr);
         if (sizeRequired <= 0)
+        {
             continue;
+        }
         newName.reserve((uint)sizeRequired);
-        WideCharToMultiByte(
-          CP_UTF8, 0, data.cFileName, -1, (char*)newName.data(), sizeRequired, nullptr, nullptr);
+        WideCharToMultiByte(CP_UTF8,
+                            0,
+                            data.cFileName,
+                            -1,
+                            (char*)newName.data(),
+                            sizeRequired,
+                            nullptr,
+                            nullptr);
         newName.resize(((uint)sizeRequired) - 1);
 
         newFilename.clear();
@@ -262,7 +295,9 @@ Flow TraverseWindowsFolder(const String& filename,
     FindClose(hFind);
 
     if (files)
+    {
         return TraverseWindowsFolder(filename, opts, thread, false);
+    }
     return Yuni::IO::flowContinue;
 }
 
@@ -271,7 +306,9 @@ Flow TraverseWindowsFolder(const String& filename,
 void Traverse(Options& options, IDetachedThread* thread)
 {
     if (options.rootFolder.empty())
+    {
         return;
+    }
 
 // some reset
 #ifdef YUNI_OS_WINDOWS
@@ -288,7 +325,9 @@ void Traverse(Options& options, IDetachedThread* thread)
 
             // This routine can only be called if the parameter is not empty
             if (path.empty() or !options.self->onStart(path))
+            {
                 continue;
+            }
 
             // Making sure that the counter is properly initialized
             options.counter = 0;
@@ -315,8 +354,4 @@ void Traverse(Options& options, IDetachedThread* thread)
     options.self->onTerminate();
 }
 
-} // namespace Iterator
-} // namespace Directory
-} // namespace IO
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::IO::Directory::Iterator

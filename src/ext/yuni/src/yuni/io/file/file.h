@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../io.h"
-#include "openmode.h"
 #include <string>
 
-namespace Yuni
-{
-namespace IO
+#include "../io.h"
+#include "openmode.h"
+
+namespace Yuni::IO
 {
 /*!
 ** \brief File manipulation functions
@@ -24,7 +24,7 @@ namespace File
 {
 // constants
 //! The maximum allowed size for a file in memory (Default: 80Go)
-constexpr unsigned long long sizeHardLimit = 85899345920u; // 80Go = 80 * 1024 * 1024 * 1024
+inline constexpr unsigned long long sizeHardLimit = 85899345920u; // 80Go = 80 * 1024 * 1024 * 1024
 
 /*!
 ** \brief Test if a node exists and is actually a file
@@ -192,8 +192,7 @@ template<class PredicateT>
 bool ReadLineByLine(const AnyString& filename, const PredicateT& predicate);
 
 } // namespace File
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO
 
-#include "stream.h"
 #include "file.hxx"
+#include "stream.h"

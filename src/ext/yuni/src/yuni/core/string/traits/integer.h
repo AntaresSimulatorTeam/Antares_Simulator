@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,14 +10,11 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../math/base.h"
 #include <cmath>
 
-namespace Yuni
-{
-namespace Private
-{
-namespace CStringImpl
+#include "../../math/base.h"
+
+namespace Yuni::Private::CStringImpl
 {
 enum
 {
@@ -33,6 +31,7 @@ struct TypeInfo final
         kind = kindIntegral,
     };
 };
+
 template<>
 struct TypeInfo<float> final
 {
@@ -41,6 +40,7 @@ struct TypeInfo<float> final
         kind = kindDecimal,
     };
 };
+
 template<>
 struct TypeInfo<double> final
 {
@@ -49,6 +49,7 @@ struct TypeInfo<double> final
         kind = kindDecimal,
     };
 };
+
 template<>
 struct TypeInfo<long double> final
 {
@@ -197,7 +198,9 @@ public:
                 AppendToFromSign<S>(str, fabs(value), precision);
             }
             else
+            {
                 AppendToFromSign<S>(str, value, precision);
+            }
         }
         }
     }
@@ -208,17 +211,25 @@ private:
     {
         const Type integral = ::floor(value);
         if (integral < 4294967295u)
+        {
             From<BaseT, uint32_t>::AppendTo(str, static_cast<uint32_t>(integral));
+        }
         else
+        {
             From<BaseT, uint64_t>::AppendTo(str, static_cast<uint64_t>(integral));
+        }
         if (precision > 0)
         {
             str += '.';
             const Type decimal = ::round((value - integral) * Power10(precision));
             if (decimal < 4294967295u)
+            {
                 From<BaseT, uint32_t>::AppendTo(str, static_cast<uint32_t>(decimal));
+            }
             else
+            {
                 From<BaseT, uint64_t>::AppendTo(str, static_cast<uint64_t>(decimal));
+            }
         }
     }
 
@@ -249,6 +260,4 @@ private:
 
 }; // class From<T>
 
-} // namespace CStringImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::CStringImpl

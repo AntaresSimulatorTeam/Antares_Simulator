@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,33 +12,30 @@
 #ifndef __YUNI_CORE_TREE_N_DEPTH_PREFIX_ITERATOR_HXX__
 #define __YUNI_CORE_TREE_N_DEPTH_PREFIX_ITERATOR_HXX__
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Core
-{
-namespace Tree
+namespace Yuni::Private::Core::Tree
 {
 template<class NodeT>
-inline DepthPrefixIterator<NodeT>::DepthPrefixIterator() : pNode(nullptr)
+inline DepthPrefixIterator<NodeT>::DepthPrefixIterator():
+    pNode(nullptr)
 {
 }
 
 template<class NodeT>
-inline DepthPrefixIterator<NodeT>::DepthPrefixIterator(const Type& it) : pNode(it.pNode)
+inline DepthPrefixIterator<NodeT>::DepthPrefixIterator(const Type& it):
+    pNode(it.pNode)
 {
 }
 
 template<class NodeT>
 template<class N>
-inline DepthPrefixIterator<NodeT>::DepthPrefixIterator(const DepthPrefixIterator<N>& p) :
- pNode(p.pNode)
+inline DepthPrefixIterator<NodeT>::DepthPrefixIterator(const DepthPrefixIterator<N>& p):
+    pNode(p.pNode)
 {
 }
 
 template<class NodeT>
-inline DepthPrefixIterator<NodeT>::DepthPrefixIterator(const NodePtr& p) : pNode(p)
+inline DepthPrefixIterator<NodeT>::DepthPrefixIterator(const NodePtr& p):
+    pNode(p)
 {
 }
 
@@ -99,7 +97,9 @@ void DepthPrefixIterator<NodeT>::forward()
     }
     // Climb back the parents until we find siblings
     while (pNode->parent() and not pNode->parent()->nextSibling())
+    {
         pNode = pNode->parent();
+    }
     // If there is still no sibling, it means we reached
     // the right-most sibling of the root, which means we have finished.
     if (!pNode->nextSibling())
@@ -140,7 +140,9 @@ void DepthPrefixIterator<NodeT>::backward()
     pNode = pNode->previousSibling();
     // If the sibling has no child, return it
     while (!pNode->empty())
+    {
         pNode = pNode->lastChild();
+    }
     // Once we reached a leaf, stop
 }
 
@@ -154,9 +156,6 @@ void DepthPrefixIterator<NodeT>::backward(difference_type n)
     }
 }
 
-} // namespace Tree
-} // namespace Core
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Core::Tree
 
 #endif // __YUNI_CORE_TREE_N_DEPTH_PREFIX_ITERATOR_HXX__

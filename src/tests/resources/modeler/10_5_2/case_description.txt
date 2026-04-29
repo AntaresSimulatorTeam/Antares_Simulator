@@ -1,0 +1,32 @@
+Test 10_5_2 : three time steps
+
+One area (base_zone). WIth unsp_cost = 20000
+
+One load : 
+- t= 1 : 80 MW
+- t= 2 : 150 MW
+- t= 3 : 201 MW
+
+One generator (gas_base_zone) has got max_power = 100 MW and following marginal cost
+- t = 1 : 10 €/MWh, 
+- t = 2 : 15 €/MWh, 
+- t = 3 : 40 €/MWh,
+
+One generator (oil_base_zone) has got max_power = 100 MW and following marginal cost
+- t = 1 : 30 €/MWh, 
+- t = 2 : 10 €/MWh, 
+- t = 3 : 10 €/MWh,
+
+
+Expected results:
+
+objective = 27550
+base_zone.price_1 = 10
+base_zone.price_2 = 15
+base_zone.price_3 = 20000
+gas_base_zone.generation_reduced_cost_1 = 0
+gas_base_zone.generation_reduced_cost_2 = 0
+gas_base_zone.generation_reduced_cost_3 = - 19960
+oil_base_zone.generation_reduced_cost_1 = 20
+oil_base_zone.generation_reduced_cost_2 = - 5
+oil_base_zone.generation_reduced_cost_3 = - 19990

@@ -1,25 +1,9 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
+#include <antares/utils/utils.h>
 #include "antares/solver/variable/variable.h"
 
 namespace
@@ -33,18 +17,6 @@ inline std::vector<std::string> sortedUniqueGroups(
         names.insert(cluster.properties.groupName);
     }
     return {names.begin(), names.end()};
-}
-
-inline std::map<std::string, unsigned int> giveNumbersToGroups(
-  const std::vector<std::string>& groupNames)
-{
-    unsigned int groupNumber{0};
-    std::map<std::string, unsigned int> groupToNumbers;
-    for (const auto& name: groupNames)
-    {
-        groupToNumbers[name] = groupNumber++;
-    }
-    return groupToNumbers;
 }
 } // namespace
 
@@ -165,7 +137,7 @@ public:
 
         // Building the vector of group names the clusters belong to.
         groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);
-        groupToNumbers_ = giveNumbersToGroups(groupNames_);
+        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
         nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 
@@ -247,24 +219,15 @@ public:
         NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        // Here we compute synthesis :
-        //  for each interval of any time period results (hourly, daily, weekly, ...),
-        //  we compute the average over all MC years :
-        //  For instance :
-        //      - we compute the average of the results of the first hour over all MC years
-        //      - or we compute the average of the results of the n-th day over all MC years
-        for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-        {
-            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                                 AncestorType::pResults,
-                                                 numSpaceToYear[numSpace]);
-        }
+        // Merge all those values with the global results
+        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                             AncestorType::pResults,
+                                             year);
 
         // Next variable
-        NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        NextType::computeSummary(year, numSpace);
     }
 
     void hourBegin(unsigned int hourInTheYear)
@@ -281,21 +244,21 @@ public:
         for (const auto& sts: shortTermStorage.storagesByIndex)
         {
             unsigned int groupNumber = groupToNumbers_[sts.properties.groupName];
-            const auto& result = state.hourlyResults->ShortTermStorage[state.hourInTheWeek];
+            const auto& result = state.hourlyResults->ShortTermStorage[clusterIndex];
             // Injection
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::injection][state.hourInTheYear]
-              += result.injection[clusterIndex];
+              += result.injection[state.hourInTheWeek];
 
             // Withdrawal
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::withdrawal][state.hourInTheYear]
-              += result.withdrawal[clusterIndex];
+              += result.withdrawal[state.hourInTheWeek];
 
             // Levels
             pValuesForTheCurrentYear[numSpace][NB_COLS_PER_GROUP * groupNumber
                                                + VariableType::level][state.hourInTheYear]
-              += result.level[clusterIndex];
+              += result.level[state.hourInTheWeek];
 
             clusterIndex++;
         }
@@ -306,7 +269,7 @@ public:
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
-        // Ask to build the digest to the next variable
+        // Dynamic-columns variables are intentionally excluded from digest generation.
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 

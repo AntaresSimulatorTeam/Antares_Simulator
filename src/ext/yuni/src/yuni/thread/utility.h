@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,25 +10,20 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include "../core/bind.h"
+#include "../job/job.h"
 #include "../yuni.h"
 #include "timer.h"
-#include "../job/job.h"
-#include "../core/bind.h"
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 class QueueService;
 }
-} // namespace Yuni
-namespace Yuni
-{
-namespace Job
+
+namespace Yuni::Job
 {
 class Taskgroup;
 }
-} // namespace Yuni
 
 namespace Yuni
 {

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,11 +11,7 @@
 */
 #include "loop.h"
 
-namespace Yuni
-{
-namespace Core
-{
-namespace EventLoop
+namespace Yuni::Core::EventLoop
 {
 bool RequestStop()
 {
@@ -22,6 +19,4 @@ bool RequestStop()
     return false;
 }
 
-} // namespace EventLoop
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::EventLoop

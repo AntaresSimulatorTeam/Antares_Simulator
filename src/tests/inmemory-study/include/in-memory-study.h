@@ -1,25 +1,12 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 #define WIN32_LEAN_AND_MEAN
+#include <limits>
+
+#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/scenario-builder/rules.h"
@@ -33,13 +20,18 @@ using namespace Antares::Data::ScenarioBuilder;
 void initializeStudy(Data::Study* study);
 void configureLinkCapacities(AreaLink* link);
 
-class TimeSeriesConfigurer
+class TimeSeriesConfigurer final
 {
 public:
     TimeSeriesConfigurer() = default;
 
     TimeSeriesConfigurer(Matrix<>& matrix):
         ts_(&matrix)
+    {
+    }
+
+    TimeSeriesConfigurer(TimeSeries& ts):
+        ts_(&ts.timeSeries)
     {
     }
 
@@ -51,11 +43,11 @@ private:
     Matrix<>* ts_ = nullptr;
 };
 
-class ThermalClusterConfig
+class ThermalClusterConfig final
 {
 public:
-    ThermalClusterConfig() = default;
-    ThermalClusterConfig(ThermalCluster* cluster);
+    ThermalClusterConfig() = delete;
+    explicit ThermalClusterConfig(std::shared_ptr<ThermalCluster> cluster);
     ThermalClusterConfig& setNominalCapacity(double nominalCapacity);
     ThermalClusterConfig& setUnitCount(unsigned unitCount);
     ThermalClusterConfig& setCosts(double cost);
@@ -63,17 +55,102 @@ public:
     ThermalClusterConfig& setAvailablePower(unsigned column, double value);
 
 private:
-    ThermalCluster* cluster_ = nullptr;
+    std::shared_ptr<ThermalCluster> cluster_ = nullptr;
     TimeSeriesConfigurer tsAvailablePowerConfig_;
 };
 
+class ShortTermStorageAddConstraintConfig final
+{
+public:
+    ShortTermStorageAddConstraintConfig() = delete;
+
+    ShortTermStorageAddConstraintConfig(Antares::Data::ShortTermStorage::STStorageCluster& storage):
+        storage(storage),
+        constraint(std::make_shared<Antares::Data::ShortTermStorage::AdditionalConstraints>())
+    {
+    }
+
+    ShortTermStorageAddConstraintConfig& setName(const std::string& name)
+    {
+        constraint->name = name;
+        return *this;
+    }
+
+    ShortTermStorageAddConstraintConfig& setVariable(const std::string& variable)
+    {
+        constraint->variable = variable;
+        return *this;
+    }
+
+    ShortTermStorageAddConstraintConfig& setOperatorType(const std::string& operatorType)
+    {
+        constraint->operatorType = operatorType;
+        return *this;
+    }
+
+    ShortTermStorageAddConstraintConfig& setHours(const std::vector<std::set<int>>& hourSets)
+    {
+        for (const auto& hourSet: hourSets)
+        {
+            constraint->constraints.push_back(
+              {.hours = hourSet, .globalIndex = 0, .localIndex = 0});
+        }
+        return *this;
+    }
+
+    std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints> build()
+    {
+        storage.additionalConstraints.push_back(std::move(constraint));
+        // The ShortTermStorageAddConstraintConfig instance may be re-used
+        constraint = std::make_shared<Antares::Data::ShortTermStorage::AdditionalConstraints>();
+        return storage.additionalConstraints.back();
+    }
+
+private:
+    Antares::Data::ShortTermStorage::STStorageCluster& storage;
+    std::shared_ptr<Antares::Data::ShortTermStorage::AdditionalConstraints> constraint;
+};
+
+class ShortTermStorageConfig final
+
+{
+public:
+    ShortTermStorageConfig() = delete;
+    explicit ShortTermStorageConfig(Antares::Data::ShortTermStorage::STStorageCluster& storage);
+    ShortTermStorageConfig& setInjectionNominalCapacity(double injectionNominalCapacity);
+    ShortTermStorageConfig& setWithdrawalNominalCapacity(double withdrawalNominalCapacity);
+    ShortTermStorageConfig& setReservoirCapacity(double reservoirCapacity);
+    ShortTermStorageConfig& setInitialLevel(double initialLevel);
+    ShortTermStorageConfig& setInitialLevelOptim(bool initialLevelOptim);
+    ShortTermStorageConfig& setInjectionEfficiency(double injectionEfficiency);
+    ShortTermStorageConfig& setWithdrawalEfficiency(double withdrawalEfficiency);
+    ShortTermStorageConfig& setGroupName(const std::string& groupName);
+    ShortTermStorageConfig& setName(const std::string& name);
+    ShortTermStorageConfig& setPenalizeVariationWithdrawal(bool penalizeVariationWithdrawal);
+    ShortTermStorageConfig& setAllowOverflow(bool allowOverflow);
+
+    ShortTermStorageConfig& setPenalizeVariationInjection(bool penalizeVariationInjection);
+    ShortTermStorageConfig& setEnabled(bool enabled);
+
+    ShortTermStorageAddConstraintConfig& addConstraint()
+    {
+        return constraintConfig;
+    }
+
+private:
+    Antares::Data::ShortTermStorage::STStorageCluster& storage;
+    ShortTermStorageAddConstraintConfig constraintConfig;
+};
+
 std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& clusterName);
-void addScratchpadToEachArea(Data::Study& study);
+
+Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
+                                                                const std::string& stsName);
 
 // -------------------------------
 // Simulation results retrieval
 // -------------------------------
-class averageResults
+class averageResults final
 {
 public:
     averageResults(Variable::R::AllYears::AverageData& averageResults):
@@ -81,9 +158,9 @@ public:
     {
     }
 
-    double* hours()
+    long double* hours()
     {
-        return averageResults_.hourly;
+        return averageResults_.hourly.data();
     }
 
     double hour(unsigned hour)
@@ -91,9 +168,9 @@ public:
         return averageResults_.hourly[hour];
     }
 
-    double* days()
+    long double* days()
     {
-        return averageResults_.daily;
+        return averageResults_.daily.data();
     }
 
     double day(unsigned day)
@@ -101,9 +178,9 @@ public:
         return averageResults_.daily[day];
     }
 
-    double* weeks()
+    long double* weeks()
     {
-        return averageResults_.weekly;
+        return averageResults_.weekly.data();
     }
 
     double week(unsigned week)
@@ -115,7 +192,7 @@ private:
     Variable::R::AllYears::AverageData& averageResults_;
 };
 
-class OutputRetriever
+class OutputRetriever final
 {
 public:
     OutputRetriever(ISimulation<Economy>& simulation):
@@ -125,6 +202,7 @@ public:
 
     averageResults overallCost(Area* area);
     averageResults levelForSTSgroup(Area* area, unsigned groupNb);
+    averageResults withdrawalForSTSgroup(Area* area, unsigned groupNb);
     averageResults load(Area* area);
     averageResults hydroStorage(Area* area);
     averageResults flow(AreaLink* link);
@@ -170,7 +248,7 @@ typename Variable::Storage<VCard>::ResultsType* OutputRetriever::retrieveResults
     return result;
 }
 
-class ScenarioBuilderRule
+class ScenarioBuilderRule final
 {
 public:
     ScenarioBuilderRule(Data::Study& study);
@@ -190,6 +268,12 @@ public:
         return rules_->hydro;
     }
 
+    // index = area index
+    std::vector<ShortTermAdditionalConstraintsTSNumberData>& stsAdditionalConstraints()
+    {
+        return rules_->shortTermStorageAdditionalConstraints;
+    }
+
 private:
     Rules::Ptr rules_;
 };
@@ -198,7 +282,42 @@ private:
 // Simulation handler
 // =====================
 
-class SimulationHandler
+class TestingSimulationObserver final: public Solver::Simulation::ISimulationObserver
+{
+public:
+    struct Variable
+    {
+        // All comparisons with NaN return false, except for !=
+        // For example (NaN == 4.) => false
+        // (NaN == NaN) => false
+        // Using any other arbitrary value (infinity, 0, etc.) may result in false positives
+        // or false negatives
+        double Xmin = std::numeric_limits<double>::quiet_NaN();
+        double Xmax = std::numeric_limits<double>::quiet_NaN();
+        double objectiveCoefficient = std::numeric_limits<double>::quiet_NaN();
+    };
+
+    struct Constraint
+    {
+        double rhs = std::numeric_limits<double>::quiet_NaN();
+        std::map<std::string, double> coefficients;
+    };
+
+    struct SingleProblem
+
+    {
+        std::map<std::string, Variable> variables;
+        std::map<std::string, Constraint> constraints;
+    };
+
+    std::map<std::pair<int, std::string>, SingleProblem> problems;
+
+    void notifyHebdoProblem(const PROBLEME_HEBDO& problemeHebdo,
+                            int optimizationNumber,
+                            std::string_view name) override;
+};
+
+class SimulationHandler final
 {
 public:
     SimulationHandler(Data::Study& study):
@@ -207,6 +326,10 @@ public:
     }
 
     ~SimulationHandler() = default;
+
+    SimulationHandler(const SimulationHandler&) = delete;
+    SimulationHandler& operator=(const SimulationHandler&) = delete;
+
     void create();
 
     void run()
@@ -219,13 +342,19 @@ public:
         return *simulation_;
     }
 
+public:
+    const TestingSimulationObserver& getObserver() const
+    {
+        return observer_;
+    }
+
 private:
     std::shared_ptr<ISimulation<Economy>> simulation_;
     Benchmarking::DurationCollector durationCollector_;
     Settings settings_;
     Data::Study& study_;
     NullResultWriter resultWriter_;
-    NullSimulationObserver observer_;
+    TestingSimulationObserver observer_;
 };
 
 // =========================
@@ -244,7 +373,7 @@ struct StudyBuilder
 
     // Data members
     std::unique_ptr<Data::Study> study;
-    std::shared_ptr<SimulationHandler> simulation;
+    SimulationHandler simulation;
 };
 
 std::shared_ptr<Antares::Data::BindingConstraint> addBindingConstraints(Antares::Data::Study& study,

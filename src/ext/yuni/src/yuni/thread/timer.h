@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,11 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../yuni.h"
 #include "../core/atomic/bool.h"
+#include "../yuni.h"
 #include "thread.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 /*!
 ** \brief A thread that executes a method every X milliseconds
@@ -57,11 +56,12 @@ namespace Thread
 ** }
 ** \endcode
 */
-class YUNI_DECL Timer : public IThread
+class YUNI_DECL Timer: public IThread
 {
 public:
     //! The Threading policy
     typedef IThread::ThreadingPolicy ThreadingPolicy;
+
     enum
     {
         //! Special value to use for an infinite loop
@@ -69,6 +69,7 @@ public:
         //! The default time interval (in milliseconds)
         defaultInterval = 1000,
     };
+
     //! The most suitable smart pointer for the class
     typedef IThread::Ptr::Promote<Timer>::Ptr Ptr;
 
@@ -240,7 +241,6 @@ private:
 
 }; // class Thread::Timer
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread
 
 #include "timer.hxx"

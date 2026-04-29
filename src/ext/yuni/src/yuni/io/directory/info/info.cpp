@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "info.h"
+
 #include "../../file.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 static void NormalizeTinyDirectoryPath(String& path)
 {
@@ -62,6 +60,4 @@ bool Info::clean() const
     return result;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

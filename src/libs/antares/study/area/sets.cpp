@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/study/sets.h"
 
 namespace Antares::Data
@@ -124,41 +107,6 @@ YString Sets::toString()
         ret << '\n';
     }
     return ret;
-}
-
-bool Sets::saveToFile(const Yuni::String& filename) const
-{
-    Yuni::IO::File::Stream file;
-    if (!file.open(filename, Yuni::IO::OpenMode::write | Yuni::IO::OpenMode::truncate))
-    {
-        logs.error() << "I/O Error: " << filename << ": impossible to write the file";
-        return false;
-    }
-
-    static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
-    const auto end = pOptions.cend();
-    for (auto i = pOptions.cbegin(); i != end; ++i)
-    {
-        const Options& opts = i->second;
-        file << '[' << i->first << "]\n";
-        file << "caption = " << opts.caption << '\n';
-        if (not opts.comments.empty())
-        {
-            file << "comments = " << opts.comments << '\n';
-        }
-        if (!opts.output)
-        {
-            file << "output = false\n";
-        }
-
-        for (uint r = 0; r != opts.rules.size(); ++r)
-        {
-            const Rule& rule = opts.rules[r];
-            file << cmds[rule.first] << " = " << rule.second << '\n';
-        }
-        file << '\n';
-    }
-    return true;
 }
 
 bool Sets::loadFromFile(const std::filesystem::path& filename)
@@ -448,7 +396,7 @@ bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string& va
     {
         for (const auto& [areaName, area]: areas_)
         {
-            set.insert(area);
+            set.insert(area.get());
         }
         return true;
     }

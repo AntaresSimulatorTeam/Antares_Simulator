@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,20 +10,20 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
 #include "../../thread/policy.h"
+#include "../../yuni.h"
 #include "null.h"
 #include "verbosity.h"
 
 // Default Handler
-#include "handler/stdcout.h"
 #include "handler/file.h"
+#include "handler/stdcout.h"
 // Default decorators
-#include "decorators/verbositylevel.h"
-#include "decorators/time.h"
-#include "decorators/message.h"
 #include "../noncopyable.h"
 #include "buffer.h"
+#include "decorators/message.h"
+#include "decorators/time.h"
+#include "decorators/verbositylevel.h"
 
 // The default verbosity level according the target mode (debug/release)
 #ifdef NDEBUG
@@ -40,9 +41,7 @@
 */
 #define YN_LOGENV __FILE__ << ':' << __LINE__ << ": "
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 /*!
 ** \brief A customizable log facility
@@ -79,10 +78,10 @@ template<class Handlers = StdCout<>,                         // List of all stat
          template<class> class TP = Policy::ObjectLevelLockableNotRecursive // The Threading Policy
          >
 class YUNI_DECL Logger final
- : public TP<Logger<Handlers, Decorators, TP>>,          // inherits from the Threading Policy
-   public Decorators,                                    // inherits from all decorators
-   public Handlers,                                      // inherits from all handlers
-   private NonCopyable<Logger<Handlers, Decorators, TP>> // noncopyable
+    : public TP<Logger<Handlers, Decorators, TP>>,          // inherits from the Threading Policy
+      public Decorators,                                    // inherits from all decorators
+      public Handlers,                                      // inherits from all handlers
+      private NonCopyable<Logger<Handlers, Decorators, TP>> // noncopyable
 {
 public:
     //! The full prototype of the logger
@@ -248,7 +247,6 @@ private:
 
 }; // class Logger
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs
 
 #include "logs.hxx"

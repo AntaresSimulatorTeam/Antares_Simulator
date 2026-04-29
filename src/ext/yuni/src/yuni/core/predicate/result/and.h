@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Result
+namespace Yuni::Result
 {
 template<typename T>
 struct And final
@@ -27,18 +26,24 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    And() : pValue(true)
+    And():
+        pValue(true)
     {
     }
-    And(bool defaultValue) : pValue(defaultValue)
+
+    And(bool defaultValue):
+        pValue(defaultValue)
     {
     }
+
     /*!
     ** \brief Copy constructor
     */
-    And(const And& rhs) : pValue(rhs.pValue)
+    And(const And& rhs):
+        pValue(rhs.pValue)
     {
     }
+
     //@}
 
     //! Take into account a new value
@@ -62,6 +67,7 @@ public:
     {
         pValue = true;
     }
+
     void reset(bool v)
     {
         pValue = v;
@@ -73,5 +79,4 @@ private:
 
 }; // class And
 
-} // namespace Result
-} // namespace Yuni
+} // namespace Yuni::Result

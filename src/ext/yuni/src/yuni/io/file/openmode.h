@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,11 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace IO
-{
-namespace OpenMode
+namespace Yuni::IO::OpenMode
 {
 enum Type
 {
@@ -39,6 +36,4 @@ const char* ToCString(int mode);
 */
 const wchar_t* ToWCString(int mode);
 
-} // namespace OpenMode
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::OpenMode

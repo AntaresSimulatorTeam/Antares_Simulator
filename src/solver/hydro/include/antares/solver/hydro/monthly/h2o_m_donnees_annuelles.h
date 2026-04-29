@@ -1,30 +1,13 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
-#ifndef __SOLVER_H2O_M_DONNEES_ANNEE__
-#define __SOLVER_H2O_M_DONNEES_ANNEE__
+#pragma once
 
 #define OUI 1
 #define NON 0
 #define EMERGENCY_SHUT_DOWN 2
+
+constexpr unsigned nbMonths = 12;
 
 #include "h2o_m_donnees_optimisation.h"
 
@@ -33,34 +16,40 @@
 
 struct DONNEES_ANNUELLES
 {
-    /* En entree: seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
-       avoir appele " H2O_M_Instanciation " */
-    /* Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre */
-    double CoutDepassementVolume{0.};  /* A renseigner par l'appelant : 1 valeur */
-    double CoutViolMaxDuVolumeMin{0.}; // A renseigner par l'appelant : 1 valeur
-    double VolumeInitial{0.};          /* A renseigner par l'appelant : 1 valeur */
-    std::vector<double> TurbineMax;    /* A renseigner par l'appelant : 1 valeur par mois */
+    // ==========================================
+    // En entree:
+    //      seules les donnees ci-dessous doivent etre renseignees par l'appelant apres
+    //      avoir appele " H2O_M_Instanciation "
+    // ==========================================
+    double CoutDepassementVolume{0.};
+    double CoutViolMaxDuVolumeMin{0.};
+    double overflowfCost{0.};
+
+    double VolumeInitial{0.};
+
+    // Commence a 0 pour le 1er janvier et se termine a 11 pour le 1er decembre
+    std::vector<double> TurbineMax;
     std::vector<double> TurbineMin;
-    std::vector<double> TurbineCible; /* A renseigner par l'appelant : 1 valeur par mois */
-    std::vector<double> Apport;       /* A renseigner par l'appelant : 1 valeur par mois */
-    /* Pour decrire la bande de volumes permise */
+    std::vector<double> TurbineCible;
+    std::vector<double> Apport;
+
+    // Pour decrire la bande de volumes permise
     std::vector<double> VolumeMin; /* A renseigner par l'appelant : 1 valeur par mois */
     std::vector<double> VolumeMax; /* A renseigner par l'appelant : 1 valeur par mois */
 
-    /* Les resultats */
-    char ResultatsValides{
-      NON};                      /* Vaut:
-                               OUI si la solution est exploitable pour le reservoir
-                               NON s'il y a eu un probleme dans la resolution
-                                                                                                                         EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
-                                                                                                          */
-    std::vector<double> Turbine; /* Resultat a recuperer par l'appelant */
-    std::vector<double> Volume;  /* Resultat a recuperer par l'appelant */
+    // =============================================
+    // Les resultats (a recuperer par l'appelant)
+    // =============================================
+    //  Resultats Valides ?
+    //      OUI si la solution est exploitable pour le reservoir
+    //      NON s'il y a eu un probleme dans la resolution
+    //      EMERGENCY_SHUT_DOWN si la resolution du probleme a donne lieu a une erreur interne
+    char ResultatsValides{NON};
 
-    /******************************************************************************************/
-    /* Problemes internes (utilise uniquement par l'optimisation) */
+    std::vector<double> Turbine;
+    std::vector<double> Volume;
+    std::vector<double> overflow;
+
+    // Problemes internes (utilise uniquement par l'optimisation)
     DonneesOptimisationMensuelle::PROBLEME_HYDRAULIQUE ProblemeHydraulique{};
-    int NombreDePasDeTemps{12}; /* 12 */
 };
-
-#endif

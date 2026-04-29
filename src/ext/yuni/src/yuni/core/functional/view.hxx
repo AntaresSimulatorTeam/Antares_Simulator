@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -17,9 +18,7 @@
 #include <utility>
 #endif
 
-namespace Yuni
-{
-namespace Functional
+namespace Yuni::Functional
 {
 #ifdef YUNI_HAS_CPP_LAMBDA
 //! Forward declaration
@@ -41,10 +40,13 @@ public:
     {
         hasMapping = LoopType::hasMapping
     };
+
     typedef typename Static::If<hasMapping, ElementType, const ElementType&>::Type ResultT;
 
 public:
-    Filter(const LoopType& loop, const CallbackT& callback) : pLoop(loop), pCallback(callback)
+    Filter(const LoopType& loop, const CallbackT& callback):
+        pLoop(loop),
+        pCallback(callback)
     {
     }
 
@@ -95,7 +97,9 @@ public:
     };
 
 public:
-    Mapping(const LoopType& loop, const CallbackT& callback) : pLoop(loop), pCallback(callback)
+    Mapping(const LoopType& loop, const CallbackT& callback):
+        pLoop(loop),
+        pCallback(callback)
     {
     }
 
@@ -157,12 +161,14 @@ public:
       typename Static::If<LoopType::hasMapping, ElementType, const ElementType&>::Type ResultT;
 
 public:
-    View(const T& loop) : pLoop(loop)
+    View(const T& loop):
+        pLoop(loop)
     {
     }
 
     template<class BeginT, class EndT>
-    View(BeginT begin, EndT end) : pLoop(begin, end)
+    View(BeginT begin, EndT end):
+        pLoop(begin, end)
     {
     }
 
@@ -170,14 +176,17 @@ public:
     {
         pLoop.reset();
     }
+
     bool empty() const
     {
         return pLoop.empty();
     }
+
     bool next()
     {
         return pLoop.next();
     }
+
     // ElementType& current() { return pLoop.current(); }
     ResultT current() const
     {
@@ -205,11 +214,15 @@ public:
     void each(const CallbackT& callback)
     {
         if (empty())
+        {
             return;
+        }
         do
         {
             if (not callback(current()))
+            {
                 break;
+            }
         } while (next());
     }
 
@@ -220,11 +233,15 @@ public:
         FoldedT result = initval;
 
         if (empty())
+        {
             return result;
+        }
         do
         {
             if (not accumulate(result, current()))
+            {
                 break;
+            }
         } while (next());
         return result;
     }
@@ -277,7 +294,8 @@ public:
     {
         uint size = 0u;
         return fold((FoldedT)0,
-                    [&size](FoldedT& result, const ElementType& elt) -> bool {
+                    [&size](FoldedT& result, const ElementType& elt) -> bool
+                    {
                         Add<FoldedT>()(result, elt);
                         ++size;
                         return true;
@@ -286,18 +304,17 @@ public:
     }
 
     //! Pre-defined folding : both the min and the max in a single pass
-    std::pair<ElementType, ElementType> minMax(const ElementType& lowBound
-                                               = std::numeric_limits<ElementType>::min(),
-                                               const ElementType& highBound
-                                               = std::numeric_limits<ElementType>::max())
+    std::pair<ElementType, ElementType> minMax(
+      const ElementType& lowBound = std::numeric_limits<ElementType>::min(),
+      const ElementType& highBound = std::numeric_limits<ElementType>::max())
     {
-        return fold(
-          std::pair<ElementType, ElementType>(highBound, lowBound),
-          [](std::pair<ElementType, ElementType>& minMax, const ElementType& elt) -> bool {
-              Min<ElementType>()(minMax.first, elt);
-              Max<ElementType>()(minMax.second, elt);
-              return true;
-          });
+        return fold(std::pair<ElementType, ElementType>(highBound, lowBound),
+                    [](std::pair<ElementType, ElementType>& minMax, const ElementType& elt) -> bool
+                    {
+                        Min<ElementType>()(minMax.first, elt);
+                        Max<ElementType>()(minMax.second, elt);
+                        return true;
+                    });
     }
 
     //! Pre-defined folding : value range (maximum - minimum)
@@ -311,5 +328,4 @@ public:
     LoopType pLoop;
 };
 
-} // namespace Functional
-} // namespace Yuni
+} // namespace Yuni::Functional

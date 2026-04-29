@@ -1,37 +1,77 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/io/inputs/yml-model/parser.h"
 
 #include "antares/io/inputs/yml-model/Library.h"
-
-#include "decoders.hxx"
+#include "antares/io/inputs/yml-model/decoders.h"
 
 namespace Antares::IO::Inputs::YmlModel
 {
+namespace
+{
+void tagNodes(YAML::Node& node);
+
+void visitMap(YAML::Node& node)
+{
+    for (auto it = node.begin(); it != node.end(); ++it)
+    {
+        YAML::Node child = it->second;
+        child.SetTag(node.Tag() + "/" + it->first.as<std::string>());
+        tagNodes(child);
+    }
+}
+
+void visitSequence(YAML::Node& node)
+{
+    for (std::size_t i = 0; i < node.size(); ++i)
+    {
+        YAML::Node child = node[i];
+
+        auto childIdNode = child["id"];
+        std::string childName = "__without__id__";
+        if (childIdNode.IsDefined() && !childIdNode.IsNull())
+        {
+            childName = childIdNode.as<std::string>();
+        }
+        child.SetTag(node.Tag() + "/" + childName);
+
+        tagNodes(child);
+    }
+}
+
+void tagNodes(YAML::Node& node)
+{
+    if (!node || node.IsNull())
+    {
+        return;
+    }
+
+    if (node.IsMap())
+    {
+        visitMap(node);
+    }
+    else if (node.IsSequence())
+    {
+        visitSequence(node);
+    }
+}
+} // anonymous namespace
+
 Library Parser::parse(const std::string& content)
 {
     YAML::Node root = YAML::Load(content);
+    auto libraryNode = root["library"];
+    if (libraryNode.IsDefined() && !libraryNode.IsNull())
+    {
+        libraryNode.SetTag("library");
+        checkMandatoryIdField(libraryNode, "library");
 
-    Library library = root["library"].as<Library>();
+        const auto libraryName = libraryNode["id"].as<std::string>();
+        libraryNode.SetTag(libraryName);
+        tagNodes(libraryNode);
+    }
+    auto library = root["library"].as<Library>();
 
     return library;
 }

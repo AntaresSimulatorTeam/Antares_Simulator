@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,11 +13,7 @@
 #include "../windows.hdr.h"
 #include "console.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace Console
+namespace Yuni::System::Console
 {
 #ifdef YUNI_OS_WINDOWS
 
@@ -52,9 +49,9 @@ struct TextColor<white> final
     template<class U>
     static void Set(U&)
     {
-        SetConsoleTextAttribute(
-          GetStdHandle(STD_OUTPUT_HANDLE),
-          FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+                                FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN
+                                  | FOREGROUND_BLUE);
     }
 };
 
@@ -303,6 +300,4 @@ inline void SetTextColor(U& out, const Color color)
     }
 }
 
-} // namespace Console
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Console

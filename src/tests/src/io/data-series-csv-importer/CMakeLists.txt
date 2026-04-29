@@ -6,5 +6,4 @@ add_boost_test(TestDataSeriesCsvImporter
   testDataSeriesCsvImporter.cpp
   LIBS
   Antares::data-series-csv-importer
-  Boost::unit_test_framework
   test_utils_unit)

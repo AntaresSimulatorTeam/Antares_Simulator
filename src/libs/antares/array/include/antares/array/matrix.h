@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_ARRAY_MATRIX_H__
 #define __ANTARES_LIBS_ARRAY_MATRIX_H__
 
@@ -55,8 +38,6 @@ public:
 
     //! Pointer
     using MatrixPtr = Matrix<T>*;
-    //! Vector
-    using Vector = std::set<MatrixPtr>;
 
     //! Column type
     using ColumnType = typename Antares::Memory::Stored<T>::Type;
@@ -77,8 +58,6 @@ public:
         optQuiet = 2,
         //! Do not postpone the loading
         optImmediate = 4,
-        //! mark the matrix as modified after loading
-        optMarkAsModified = 8,
         //! Do not warn if the file is empty
         optNoWarnIfEmpty = 16,
         //! The loading never fails
@@ -383,11 +362,7 @@ public:
     **
     ** This method is only useful if the load-on-demand is used.
     ** The matrix will be marked as modified to force the written.
-    **
-    ** \param reload True to load all JIT data
-    ** \return True if the data was really loaded (reload = true)
     */
-    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Try to remove from memory all data from the matrix
@@ -396,13 +371,6 @@ public:
     ** structure and when the matrix is not modified
     */
     void unloadFromMemory() const;
-
-    /*!
-    ** \brief Mark the matrix as modified
-    **
-    ** This routine has no effect when the UI is not present
-    */
-    void markAsModified() const;
 
     /*!
     ** \brief Get if the matrix is empty
@@ -540,48 +508,6 @@ public:
     using Type = MatrixType::ColumnType&;
     using ConstType = const MatrixType::ColumnType&;
 };
-
-/*!
-** \brief Test if all the values in the matrix are positive (>= 0)
-**
-** \param m The matrix
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestForPositiveValues(const char* msg, const Matrix<>* m);
-
-/*!
-** \brief Test if all the values in the matrix are higher than an arbitrary number
-**
-** \param m The matrix
-** \param value The minimum value
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestIfValuesAreHigherThan(const char* msg, const Matrix<>* m, const double value);
-
-/*!
-** \brief Test if all the values in the matrix are lower than an arbitrary number
-**
-** \param m The matrix
-** \param value The maximum value
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestIfValuesAreLowerThan(const char* msg, const Matrix<>* m, const double value);
-
-/*!
-** \brief Test if all the values in the matrix are negative (<= 0)
-**
-** \param m The matrix
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestForNegativeValues(const char* msg, const Matrix<>* m);
-
-/*!
-** \brief Test if all the values in the matrix are positive (>= 0)
-**
-** \param m The matrix
-** \return A non-zero value if the test succeeded, 0 otherwise
-*/
-int MatrixTestForPositiveValues_LimitWidth(const char* msg, const Matrix<>* m, uint maxWidth);
 
 /*!
 ** \brief Test if there is at least one positive value

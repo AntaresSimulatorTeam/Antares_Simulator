@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,15 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../null.h"
 #include "../../system/console.h"
+#include "../null.h"
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 template<class LeftType = NullDecorator>
-class YUNI_DECL Message : public LeftType
+class YUNI_DECL Message: public LeftType
 {
 public:
     template<class Handler, class VerbosityType, class O>
@@ -28,14 +27,18 @@ public:
 
         // Color
         if (VerbosityType::messageColor != System::Console::none && Handler::colorsAllowed)
+        {
             System::Console::TextColor<VerbosityType::messageColor>::Set(out);
+        }
 
         // The message
         out.write(s.c_str(), (uint)s.sizeInBytes());
 
         // Resetting the color
         if (VerbosityType::messageColor != System::Console::none && Handler::colorsAllowed)
+        {
             System::Console::ResetTextColor(out);
+        }
 
         // Transmit the message to the next handler
         LeftType::template internalDecoratorAddPrefix<Handler, VerbosityType, O>(out, s);
@@ -43,5 +46,4 @@ public:
 
 }; // class VerbosityLevel
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

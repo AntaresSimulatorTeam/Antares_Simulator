@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 //
 // Created by marechaljas on 15/03/23.
 //
@@ -52,7 +35,6 @@ void initializeStudy(Study& study)
 
     study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
-    study.parameters.timeSeriesToRefresh = 0;
 }
 
 BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file)
@@ -142,4 +124,113 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values)
     out.loadFromCSVFile(test1_path.string());
     BOOST_CHECK_EQUAL(tsNumbers[0] + 1, out[0][0]);
     BOOST_CHECK_EQUAL(tsNumbers[1] + 1, out[0][1]);
+}
+
+BOOST_AUTO_TEST_CASE(sts_area_cluster_inflows_timeseries_numbers_store_values)
+{
+    auto study = std::make_shared<Study>();
+    study->parameters.storeTimeseriesNumbers = true;
+
+    // Create an area
+    auto area = addAreaToListOfAreas(study->areas, "fr");
+    if (area)
+    {
+        area->createMissingData();
+        area->resetToDefaultValues();
+    }
+    auto& clusters = area->shortTermStorage.storagesByIndex;
+
+    // Add one STS cluster
+    clusters.resize(1);
+    auto& cluster = clusters[0];
+    cluster.id = "sts";
+
+    // Prepare inflow time series
+    cluster.series->inflows.resize(10, 10); // [10 timesteps, 10 MC years]
+
+    // Assign time series numbers
+    cluster.series->inflowsTSNumbers.reset(2);
+    cluster.series->inflowsTSNumbers[0] = 3;
+    cluster.series->inflowsTSNumbers[1] = 4;
+
+    // Temp directory and writer
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
+
+    // Init and generate
+    initializeStudy(*study);
+    // Antares::Solver::TimeSeriesNumbers::Generate(*study);
+    Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
+
+    // Verify the output file for inflows
+    fs::path inflow_ts_file = working_tmp_dir / "ts-numbers" / "st-storage" / "fr" / "sts"
+                              / "inflows.txt";
+    BOOST_CHECK_EQUAL(fs::exists(inflow_ts_file), true);
+
+    Matrix<uint32_t> out;
+    out.loadFromCSVFile(inflow_ts_file.string());
+
+    // TimeSeriesNumbers are stored as values + 1
+    BOOST_CHECK_EQUAL(out[0][0], 4); // 3 + 1
+    BOOST_CHECK_EQUAL(out[0][1], 5); // 4 + 1
+}
+
+BOOST_AUTO_TEST_CASE(sts_area_cluster_additional_constraints_timeseries_numbers_store_values)
+{
+    auto study = std::make_shared<Study>();
+    study->parameters.storeTimeseriesNumbers = true;
+
+    // Create an area
+    auto area = addAreaToListOfAreas(study->areas, "fr");
+    if (area)
+    {
+        area->createMissingData();
+        area->resetToDefaultValues();
+    }
+    auto& clusters = area->shortTermStorage.storagesByIndex;
+
+    // Add one STS cluster
+    clusters.resize(1);
+    auto& cluster = clusters[0];
+    cluster.id = "sts";
+
+    // Add one AdditionalConstraint
+    auto constraint = std::make_shared<ShortTermStorage::AdditionalConstraints>();
+    constraint->cluster_id = "sts";
+    constraint->name = "addc";
+    // Prepare time series for the constraint
+    constraint->timeSeries.resize(10, 10); // [10 timesteps, 10 MC years]
+
+    // Assign time series numbers
+    constraint->timeseriesNumbers.reset(2);
+    constraint->timeseriesNumbers[0] = 7;
+    constraint->timeseriesNumbers[1] = 8;
+    cluster.additionalConstraints.push_back(constraint);
+
+    // Temp directory and writer
+    auto working_tmp_dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
+    Benchmarking::DurationCollector durationCollector;
+    auto resultWriter = resultWriterFactory(ResultFormat::legacyFilesDirectories,
+                                            working_tmp_dir.string().c_str(),
+                                            nullptr,
+                                            durationCollector);
+
+    // Init and store
+    initializeStudy(*study);
+    Antares::Solver::TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(*study, *resultWriter);
+
+    // Check the output file
+    fs::path ac_ts_file = working_tmp_dir / "ts-numbers" / "st-storage" / "fr" / "sts" / "addc.txt";
+    BOOST_CHECK_EQUAL(fs::exists(ac_ts_file), true);
+
+    Matrix<uint32_t> out;
+    out.loadFromCSVFile(ac_ts_file.string());
+
+    // TimeSeriesNumbers are stored as values + 1
+    BOOST_CHECK_EQUAL(out[0][0], 8); // 7 + 1
+    BOOST_CHECK_EQUAL(out[0][1], 9); // 8 + 1
 }

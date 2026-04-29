@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,18 +10,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
-#include "../../../core/string.h"
-#include "../../io.h"
-#include "../../directory.h"
 #include "../../../core/iterator/iterator.h"
+#include "../../../core/string.h"
+#include "../../../yuni.h"
+#include "../../directory.h"
+#include "../../io.h"
 #include "platform.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 /*!
 ** \brief Convenient tool for creating, moving, and enumerating through directories and
@@ -97,6 +94,7 @@ public:
     Info()
     {
     }
+
     /*!
     ** \brief Constructor
     ** \param directory A directory
@@ -232,8 +230,6 @@ private:
 
 }; // class Info
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory
 
 #include "info.hxx"

@@ -51,7 +51,6 @@ nav:
               - 'Multi-threading': 'user-guide/solver/optional-features/multi-threading.md'
               - 'Adequacy patch': 'user-guide/solver/optional-features/adequacy-patch.md'
               - 'Usage with FICO® Xpress Optimizer': 'user-guide/solver/optional-features/xpress.md'
-          - 'Appendix': 'user-guide/solver/08-appendix.md'
       - 'Modeler':
           - 'Overview': 'user-guide/modeler/01-overview-modeler.md'
           - 'Input files': 'user-guide/modeler/02-inputs.md'
@@ -61,6 +60,7 @@ nav:
           - 'Heuristics': 'user-guide/modeler/06-heuristics.md'
           - 'Standard library': 'user-guide/modeler/07-standard-library.md'
           - 'Command-line interface': 'user-guide/modeler/08-command-line.md'
+          - 'Expressions': 'user-guide/modeler/09-expressions.md'
       - 'Time-series generation':
           - 'Overview': 'user-guide/ts-generator/01-overview-tsgenerator.md'
           - 'Input files': 'user-guide/ts-generator/02-inputs.md'
@@ -76,7 +76,6 @@ nav:
           - 'Study Cleaner': 'user-guide/other-features/study-cleaner.md'
           - 'Study Finder': 'user-guide/other-features/study-finder.md'
           - 'Study Updater': 'user-guide/other-features/study-updater.md'
-          - 'Time-Series Analyzer': 'user-guide/other-features/analyzer.md'
           - 'Vacuum': 'user-guide/other-features/vacuum.md'
           - 'Year-by-Year Aggregator': 'user-guide/other-features/ybyaggregator.md'
       - 'Migration guides': 'user-guide/04-migration-guides.md'
@@ -93,9 +92,10 @@ nav:
       - 'Contributing': 'developer-guide/6-Contributing.md'
       - 'Continuous Integration': 'developer-guide/continuous-integration.md'
       - 'OR-tools integration': 'developer-guide/ortools-integration.md'
+      - 'Study format conventions': 'developer-guide/8-study-format-conventions.md'
       - 'Changelog': 'developer-guide/CHANGELOG.md'
       - 'Software architecture':
-          - 'Dynamic modeler architecture' : 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
+          - 'Dynamic modeler architecture': 'developer-guide/Architecture/Dynamic-modeler-architecture.md'
   - 'External links':
       - 'Antares ecosystem': 'https://antares-doc.readthedocs.io'
       - 'Antares website': 'https://antares-simulator.org'
@@ -133,4 +133,4 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
-copyright: Copyright &copy; 2007 - 2024 RTE
+copyright: Copyright &copy; 2007 - 2025 RTE

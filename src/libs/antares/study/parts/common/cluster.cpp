@@ -1,31 +1,12 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/study/parts/common/cluster.h"
 
-#include <yuni/yuni.h>
-#include <yuni/io/directory.h>
-#include <yuni/io/file.h>
+#include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/study/study.h>
 #include <antares/utils/utils.h>
-#include "antares/study/study.h"
 
 namespace fs = std::filesystem;
 
@@ -37,17 +18,12 @@ Cluster::Cluster(Area* parent):
 {
 }
 
-const ClusterName& Cluster::group() const
-{
-    return pGroup;
-}
-
-const ClusterName& Cluster::name() const
+const std::string& Cluster::name() const
 {
     return pName;
 }
 
-const ClusterName& Cluster::id() const
+const std::string& Cluster::id() const
 {
     return pID;
 }
@@ -64,6 +40,17 @@ void Cluster::setName(const AnyString& newname)
     pName = newname;
     pID.clear();
     pID = transformNameIntoID(pName);
+}
+
+void Cluster::setGroup(const std::string& group)
+{
+    group_ = group;
+    boost::to_upper(group_);
+}
+
+std::string Cluster::getGroup() const
+{
+    return group_;
 }
 
 #define SEP Yuni::IO::Separator
@@ -96,12 +83,12 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
-    fs::path seriesPath = folder / parentArea->id.to<std::string>() / id() / "series.txt";
+    fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
     ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
           && ret;
 
-    if (s.usedByTheSolver && s.parameters.derated)
+    if (s.parameters.derated)
     {
         series.timeSeries.averageTimeseries();
     }
@@ -112,19 +99,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 }
 
 #undef SEP
-
-void Cluster::invalidateArea()
-{
-    if (parentArea)
-    {
-        parentArea->forceReload();
-    }
-}
-
-bool Cluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
-}
 
 void Cluster::reset()
 {

@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/hydro/monthly/h2o_m_donnees_annuelles.h"
 #include "antares/solver/hydro/monthly/h2o_m_fonctions.h"
@@ -41,6 +23,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
 
     auto& NumeroDeVariableVolume = CorrespondanceDesVariables.NumeroDeVariableVolume;
     auto& NumeroDeVariableTurbine = CorrespondanceDesVariables.NumeroDeVariableTurbine;
+    auto& NumeroDeVariableOverflow = CorrespondanceDesVariables.NumeroDeVariableOverflow;
     auto& NumeroDeVariableDepassementVolumeMax = CorrespondanceDesVariables
                                                    .NumeroDeVariableDepassementVolumeMax;
     auto& NumeroDeVariableDepassementVolumeMin = CorrespondanceDesVariables
@@ -52,11 +35,10 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
     int NumeroDeLaVariableXi = CorrespondanceDesVariables.NumeroDeLaVariableXi;
 
     double ChgmtSens = -1.0;
-    const int NbPdt = DonneesAnnuelles.NombreDePasDeTemps;
     int NombreDeContraintes = 0;
     int il = 0;
 
-    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -72,26 +54,34 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
         IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt - 1];
         il++;
 
+        CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
+        IndicesColonnes[il] = NumeroDeVariableOverflow[Pdt - 1];
+        il++;
+
         Sens[NombreDeContraintes] = '=';
-        NombreDeTermesDesLignes[NombreDeContraintes] = 3;
+        NombreDeTermesDesLignes[NombreDeContraintes] = 4;
         NombreDeContraintes++;
     }
 
     IndicesDebutDeLigne[NombreDeContraintes] = il;
 
     CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-    IndicesColonnes[il] = NumeroDeVariableVolume[NbPdt - 1];
+    IndicesColonnes[il] = NumeroDeVariableVolume[nbMonths - 1];
     il++;
 
     CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-    IndicesColonnes[il] = NumeroDeVariableTurbine[NbPdt - 1];
+    IndicesColonnes[il] = NumeroDeVariableTurbine[nbMonths - 1];
+    il++;
+
+    CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
+    IndicesColonnes[il] = NumeroDeVariableOverflow[nbMonths - 1];
     il++;
 
     Sens[NombreDeContraintes] = '=';
-    NombreDeTermesDesLignes[NombreDeContraintes] = 2;
+    NombreDeTermesDesLignes[NombreDeContraintes] = 3;
     NombreDeContraintes++;
 
-    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -122,7 +112,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
         NombreDeContraintes++;
     }
 
-    for (int Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (unsigned Pdt = 1; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -139,7 +129,7 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
         NombreDeContraintes++;
     }
 
-    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (unsigned Pdt = 0; Pdt < nbMonths; Pdt++)
     {
         IndicesDebutDeLigne[NombreDeContraintes] = il;
 
@@ -179,7 +169,5 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES& DonneesAnnuelles)
     }
 
     ProblemeLineairePartieFixe.NombreDeContraintes = NombreDeContraintes;
-
-    return;
 }
 } // namespace DonneesOptimisationMensuelle

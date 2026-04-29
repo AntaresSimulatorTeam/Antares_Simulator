@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 
@@ -30,7 +13,6 @@
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 
-#include <antares/array/matrix.h>
 #include <antares/solver/ts-generator/law.h>
 
 #include "../../fwd.h"
@@ -40,9 +22,7 @@
 #include "ecoInput.h"
 #include "pollutant.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 enum ThermalModulation
 {
@@ -75,50 +55,10 @@ double computeMarketBidCost(double fuelCost,
 /*!
 ** \brief A single thermal cluster
 */
-class ThermalCluster final: public Cluster, public std::enable_shared_from_this<ThermalCluster>
+class ThermalCluster final: public Cluster
 {
 public:
-    enum ThermalDispatchableGroup
-    {
-        //! Nuclear
-        thermalDispatchGrpNuclear = 0,
-        //! Lignite
-        thermalDispatchGrpLignite,
-        //! Hard Coal
-        thermalDispatchGrpHardCoal,
-        //! Gas
-        thermalDispatchGrpGas,
-        //! Oil
-        thermalDispatchGrpOil,
-        //! Mixed fuel
-        thermalDispatchGrpMixedFuel,
-        //! Other 1
-        thermalDispatchGrpOther1,
-        //! Other 2
-        thermalDispatchGrpOther2,
-        //! Other 3
-        thermalDispatchGrpOther3,
-        //! Other 4
-        thermalDispatchGrpOther4,
-
-        //! The highest value
-        groupMax
-    };
-
     Pollutant emissions;
-
-    //! Set of thermal clusters
-    using Set = std::set<ThermalCluster*, CompareClusterName>;
-    //! Set of thermal clusters (pointer)
-    using SetPointer = std::set<ThermalCluster*>;
-    //! Vector of thermal clusters
-    using Vector = std::vector<Data::ThermalCluster*>;
-
-    /*!
-    ** \brief Get the group name string
-    ** \return A valid CString
-    */
-    static const char* GroupName(enum ThermalDispatchableGroup grp);
 
     explicit ThermalCluster(Data::Area* parent);
 
@@ -126,25 +66,11 @@ public:
     ~ThermalCluster() = default;
 
     /*!
-    ** \brief Invalidate all data associated to the thermal cluster
-    */
-    bool forceReload(bool reload) const override;
-
-    /*!
-    ** \brief Mark the thermal cluster as modified
-    */
-    void markAsModified() const override;
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI
     */
     void reset() override;
-
-    //! Set the group
-    void setGroup(Data::ClusterName newgrp) override;
-    //@}
 
     //! \name Spinning
     //@{
@@ -181,11 +107,6 @@ public:
     */
     void copyFrom(const ThermalCluster& cluster);
 
-    /*!
-    ** \brief Group ID as an uint
-    */
-    uint groupId() const override;
-
     //! \name validity of Min Stable Power
     //@{
     // bool minStablePowerValidity() const;
@@ -206,6 +127,8 @@ public:
     bool checkMinStablePowerWithNewModulation(uint idx, double value);
     //@}
 
+    bool checkModulation();
+
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
     // Check & correct availability timeseries for thermal availability
@@ -217,13 +140,8 @@ public:
     //! The index of the cluster (within a list)
     uint index = 0;
 
-    /*!
-    ** \brief The group ID
-    **
-    ** This value is computed from the field 'group' in 'group()
-    ** \see group()
-    */
-    ThermalDispatchableGroup groupID = thermalDispatchGrpOther1;
+    //! The global index of the cluster across all areas (used by the solver)
+    int globalIndex = -1;
 
     //! Mustrun
     bool mustrun = false;
@@ -355,7 +273,7 @@ public:
         }
 
         void reset();
-        bool checkValidity(Area* area, Data::ClusterName clusterName);
+        bool checkValidity(Area* area, std::string clusterName);
         friend std::ostream& operator<<(std::ostream&, const Ramping& ramping);
     };
 
@@ -398,8 +316,7 @@ private:
     std::unique_ptr<CostProvider> costProvider;
 
 }; // class ThermalCluster
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "cluster.hxx"
 

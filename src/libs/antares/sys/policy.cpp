@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/sys/policy.h"
 
@@ -162,11 +144,9 @@ static inline void ExpansionWL()
 {
     PredicateEnv predicate;
     String out;
-    // The end of the container
-    auto end = entries->end();
-    for (auto i = entries->begin(); i != end; ++i)
+
+    for (auto& [_, value]: *entries)
     {
-        String& value = i->second;
         if (ExpandWL(out, value, predicate))
         {
             value = out;
@@ -324,14 +304,13 @@ void DumpToString(Clob& out)
     }
 
     // The end of the container
-    const PolicyMap::const_iterator end = entries->end();
 
     // Find the longest key length
     uint maxlen = 0;
     {
-        for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
+        for (const auto& [row, value]: *entries)
         {
-            uint len = i->first.size();
+            uint len = row.size();
             if (len > maxlen)
             {
                 maxlen = len;
@@ -340,14 +319,13 @@ void DumpToString(Clob& out)
     }
 
     maxlen += 3; // spaces after the key
-    PolicyKey row;
 
-    for (PolicyMap::const_iterator i = entries->begin(); i != end; ++i)
+    for (const auto& [row, value]: *entries)
     {
-        row = i->first;
-        row.resize(maxlen, " ");
+        std::string rowKey = row;
+        rowKey.resize(maxlen, ' ');
         out.append("  ", 2);
-        out << row << ": " << i->second << '\n';
+        out << rowKey << ": " << value << '\n';
     }
 }
 
@@ -362,12 +340,9 @@ void DumpToLogs()
         return;
     }
 
-    // The end of the container
-    auto end = entries->end();
-    for (auto i = entries->begin(); i != end; ++i)
+    for (const auto& [key, value]: *entries)
     {
-        // if (!i->first.startsWith("product_"))
-        logs.info() << "  policy: " << i->first << ":  " << i->second;
+        logs.info() << "  policy: " << key << ":  " << value;
     }
 }
 

@@ -1,46 +1,41 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/benchmarking/DurationCollector.h"
 
+#include <iomanip>
+#include <iostream>
 #include <numeric>
 #include <string>
 
 namespace Benchmarking
 {
 
-void DurationCollector::addDuration(const std::string& name, int64_t duration)
+static std::string formatDuration(int64_t duration_ms)
 {
-    const std::lock_guard lock(mutex_);
-    duration_items_[name].push_back(duration);
+    int hours = duration_ms / (1000 * 60 * 60);
+    duration_ms %= (1000 * 60 * 60);
+    int minutes = duration_ms / (1000 * 60);
+    duration_ms %= (1000 * 60);
+    int seconds = duration_ms / 1000;
+    std::ostringstream oss;
+    oss << std::setfill('0') << std::setw(2) << hours << "h" << std::setfill('0') << std::setw(2)
+        << minutes << "m" << std::setfill('0') << std::setw(2) << seconds << "s";
+    return oss.str();
 }
 
 void DurationCollector::toFileContent(FileContent& file_content)
 {
     for (const auto& [name, durations]: duration_items_)
     {
-        const int64_t duration_sum = accumulate(durations.begin(),
-                                                durations.end(),
-                                                static_cast<int64_t>(0));
+        int64_t duration_sum = accumulate(durations.begin(),
+                                          durations.end(),
+                                          static_cast<int64_t>(0));
 
-        file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
+        file_content.addDurationItem(name,
+                                     (unsigned int)duration_sum,
+                                     formatDuration(duration_sum),
+                                     (int)durations.size());
     }
 }
 

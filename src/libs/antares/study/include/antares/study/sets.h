@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <cassert>
@@ -34,6 +17,7 @@
 
 namespace Antares::Data
 {
+struct CompareAreaName;
 class SetHandlerAreas;
 
 class Sets final
@@ -152,17 +136,6 @@ public:
     */
     void clear();
 
-    bool forceReload(bool /*reload*/) const
-    {
-        pModified = true;
-        return true;
-    }
-
-    void markAsModified() const
-    {
-        pModified = true;
-    }
-
     uint size() const;
 
     /*!
@@ -192,7 +165,6 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename);
 
-    bool saveToFile(const Yuni::String& filename) const;
     /*!
     ** \brief format the string to match the options
     */
@@ -220,6 +192,15 @@ public:
     SetAreasType& operator[](uint i);
     const SetAreasType& operator[](uint i) const;
 
+    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
+    {
+        pMap[name] = data;
+        pOptions[name] = opts;
+        return data;
+    }
+
+    void rebuildIndexes();
+
 private:
     TypePtr add(const IDType& name)
     {
@@ -236,18 +217,10 @@ private:
         return data;
     }
 
-    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
-    {
-        pMap[name] = data;
-        pOptions[name] = opts;
-        return data;
-    }
-
     /*!
     ** \brief Rebuild the lists of a group from the rules
     */
     void rebuildFromRules(const IDType& id, SetHandlerAreas& handler);
-    void rebuildIndexes();
 
     //! All groups
     MapType pMap;
@@ -258,7 +231,7 @@ private:
     mutable bool pModified = false;
 }; // class Sets
 
-class SetHandlerAreas
+class SetHandlerAreas final
 {
 public:
     explicit SetHandlerAreas(AreaList& areas);

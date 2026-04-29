@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "file.h"
 
-namespace Yuni
-{
-namespace DynamicLibrary
+namespace Yuni::DynamicLibrary
 {
 inline bool File::loaded() const
 {
@@ -35,5 +34,4 @@ inline Symbol File::operator[](const AnyString& name) const
     return resolve(name);
 }
 
-} // namespace DynamicLibrary
-} // namespace Yuni
+} // namespace Yuni::DynamicLibrary

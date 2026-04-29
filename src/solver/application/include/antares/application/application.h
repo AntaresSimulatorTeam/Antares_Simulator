@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <yuni/core/string.h>
@@ -33,6 +16,7 @@
 
 namespace Antares::Solver
 {
+
 class Application final: public Yuni::IEventObserver<Application, Yuni::Policy::SingleThreaded>
 {
 public:
@@ -71,18 +55,29 @@ public:
     */
     void resetProcessPriority() const;
 
-    void writeExectutionInfo();
+    void writeExecutionInfo();
 
     /**
      * @brief /!\ Acquire the study. Leave Application object in an invalid state.
-     * @return The study
+     * @return pair  {study, IResultWriter}
      */
-    std::unique_ptr<Data::Study> acquireStudy()
+    std::pair<std::unique_ptr<Data::Study>, IResultWriter::Ptr> acquireStudy()
     {
-        return std::move(pStudy);
+        return {std::move(pStudy), std::move(resultWriter)};
+    }
+
+    Benchmarking::DurationCollector& getDurationCollector()
+    {
+        return pDurationCollector;
     }
 
 private:
+    enum class LogType
+    {
+        Warning,
+        Error
+    };
+
     /*!
     ** \brief Reset the log filename and open it
     */
@@ -110,12 +105,12 @@ private:
     const char** pArgv = nullptr;
 
     // Benchmarking
-    Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 
     std::shared_ptr<Yuni::Job::QueueService> ioQueueService;
     IResultWriter::Ptr resultWriter = nullptr;
+    std::vector<std::pair<LogType, std::string>> messagesStack;
 
     void prepareWriter(const Antares::Data::Study& study,
                        Benchmarking::DurationCollector& duration_collector);
@@ -124,9 +119,15 @@ private:
     void readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& options);
     // Return false if the user requested the version ,available solvers, etc, true otherwise
     bool handleOptions(const Data::StudyLoadOptions& options);
+    void LogMessageStack(std::vector<std::pair<LogType, std::string>>& stack);
     // Return false if the user requested help, true otherwise
     bool parseCommandLine(Data::StudyLoadOptions& options);
     void postParametersChecks() const;
 }; // class Application
+
+void writeSimulationInfos(const Data::Study& study,
+                          Benchmarking::DurationCollector& durationCollector,
+                          const Benchmarking::OptimizationInfo& optimizationInfo,
+                          IResultWriter* resultWriter);
 
 } // namespace Antares::Solver

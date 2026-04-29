@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <ortools/math_opt/cpp/math_opt.h>
 #include <pi_constantes_externes.h>
@@ -84,7 +66,7 @@ void SolveQuadraticProblemWithOrtools(const SingleOptimOptions& options,
 void BuildVariablesAndObjective(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& model)
 {
     QuadraticExpression objective(0);
-    for (size_t i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
+    for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; ++i)
     {
         double lb, ub;
         switch (ProblemeAResoudre->TypeDeVariable[i])
@@ -131,10 +113,10 @@ void BuildConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, Model& mod
         LinearExpression linear_expression(0);
         for (auto iCoef = 0; iCoef < ProblemeAResoudre->NombreDeTermesDesLignes[iCt]; ++iCoef)
         {
-            int iVar = ProblemeAResoudre->IndicesColonnes
-                         .data()[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
+            int iVar = ProblemeAResoudre
+                         ->IndicesColonnes[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
             auto coef = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes
-                          .data()[ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
+                          [ProblemeAResoudre->IndicesDebutDeLigne[iCt] + iCoef];
             linear_expression += model.variable(iVar) * coef;
         }
         double lb = -infinity;

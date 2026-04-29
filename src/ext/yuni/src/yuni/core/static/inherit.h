@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "../../yuni.h"
 
-namespace Yuni
-{
-namespace Static
+namespace Yuni::Static
 {
 /*!
 ** \brief Statically check if an arbitrary class C is a descendant of another one
@@ -63,5 +62,4 @@ public:
     };
 }; // class InheritsFrom
 
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static

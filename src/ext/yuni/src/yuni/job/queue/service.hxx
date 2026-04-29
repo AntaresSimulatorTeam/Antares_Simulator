@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,12 +10,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "service.h"
 #include "../../thread/timer.h"
+#include "service.h"
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 inline uint QueueService::waitingJobsCount() const
 {
@@ -57,5 +56,4 @@ inline bool QueueService::started() const
     return (pStatus != sStopped);
 }
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job

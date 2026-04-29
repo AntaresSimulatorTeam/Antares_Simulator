@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "../../yuni.h"
 #include "../math.h"
 
-namespace Yuni
-{
-namespace Functional
+namespace Yuni::Functional
 {
 template<class T>
 class Max
@@ -133,5 +132,4 @@ public:
         }                           \
     }
 
-} // namespace Functional
-} // namespace Yuni
+} // namespace Yuni::Functional

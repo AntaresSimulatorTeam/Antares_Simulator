@@ -1,31 +1,17 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_LIST_H__
 #define __SOLVER_VARIABLE_LIST_H__
+
+#include <vector>
 
 #include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 #include <yuni/core/string.h>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/variable/dynamicAggregation/dynamicAggregation.h>
 
 #include "categories.h"
 #include "endoflist.h"
@@ -111,8 +97,7 @@ public:
     */
     void yearEnd(unsigned int year, unsigned int numSpace);
 
-    void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-                        unsigned int nbYearsForCurrentSummary);
+    void computeSummary(unsigned int year, unsigned int numSpace);
 
     template<class V>
     void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
@@ -121,9 +106,7 @@ public:
     void yearEndSpatialAggregates(V& allVars, unsigned int year, const SetT& set);
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars,
-                                         std::map<unsigned int, unsigned int>& numSpaceToYear,
-                                         unsigned int);
+    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace);
 
     template<class V>
     void simulationEndSpatialAggregates(V& allVars);
@@ -211,6 +194,10 @@ public:
 private:
     //! Pointer to the current study
     Data::Study* pStudy;
+
+    // Allow delayed init
+    std::unique_ptr<Solver::Variable::DynamicAggregationAllYears> dynamicAggregationAllYears_;
+    std::vector<Solver::Variable::DynamicAggregationSingleYear> dynamicAggregationSingleYear_;
 
 }; // class List
 

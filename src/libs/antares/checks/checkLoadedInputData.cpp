@@ -1,42 +1,20 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <antares/checks/checkLoadedInputData.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/series/series.h>
 #include <antares/study/area/area.h>
-#include <antares/study/header.h>
-#include <antares/study/version.h>
 
 namespace Antares::Check
 {
 
-void checkStudyVersion(const AnyString& optStudyFolder)
+void checkStudyVersion(const Data::StudyVersion& version, const AnyString& StudyFolder)
 {
     using namespace Antares::Data;
-    auto version = StudyHeader::tryToFindTheVersion(optStudyFolder);
-
     if (version == StudyVersion::unknown())
     {
-        throw Error::InvalidStudy(optStudyFolder);
+        throw Error::InvalidStudy(StudyFolder);
     }
 
     if (version > StudyVersion::latest())
@@ -81,28 +59,26 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
             const auto& area = *(areas.byIndex[i]);
             if (!area.hydro.useHeuristicTarget)
             {
-                throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
+                throw IncompatibleDailyOptHeuristicForArea(area.name);
             }
         }
     }
 }
 
 bool areasThermalClustersMinStablePowerValidity(const Antares::Data::AreaList& areas,
-                                                std::map<int, YString>& areaClusterNames)
+                                                std::map<int, std::string>& areaClusterNames)
 {
     YString areaname = "";
     bool resultat = true;
-    auto endarea = areas.end();
     int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
+    for (const auto& [_, area]: areas)
     {
-        areaname = areait->second->name;
+        areaname = area->name;
         logs.debug() << "areaname : " << areaname;
 
         std::vector<YString> clusternames;
 
-        if (!areait->second->thermalClustersMinStablePowerValidity(clusternames))
+        if (!area->thermalClustersMinStablePowerValidity(clusternames))
         {
             for (auto it = clusternames.begin(); it != clusternames.end(); it++)
             {
@@ -120,10 +96,10 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
 {
     if (tsGenThermal)
     {
-        std::map<int, YString> areaClusterNames;
+        std::map<int, std::string> areaClusterNames;
         if (!(areasThermalClustersMinStablePowerValidity(areas, areaClusterNames)))
         {
-            throw Error::InvalidParametersForThermalClusters(areaClusterNames);
+            throw InvalidParametersForThermalClusters(areaClusterNames);
         }
     }
     else
@@ -180,4 +156,35 @@ void checkCO2CostColumnNumber(const Antares::Data::AreaList& areas)
       &Antares::Data::EconomicInputData::co2cost);
 }
 
+IncompatibleDailyOptHeuristicForArea::IncompatibleDailyOptHeuristicForArea(
+  const Antares::Data::AreaName& name):
+    LoadingError(
+      std::string("Area ") + name.c_str()
+      + " : simplex daily optimization and use heuristic target == no are not compatible")
+{
+}
+
+std::string InvalidParametersForThermalClusters::buildMessage(
+  const std::map<int, std::string>& clusterNames) const
+{
+    const std::string startMessage("Conflict between Min Stable Power, Pnom, spinning and capacity "
+                                   "modulation for the following clusters : ");
+    std::string clusters;
+    for (const auto& it: clusterNames)
+    {
+        clusters += it.second.c_str();
+        clusters += ";";
+    }
+    if (!clusters.empty())
+    {
+        clusters.pop_back(); // Remove final semicolon
+    }
+    return startMessage + clusters;
+}
+
+InvalidParametersForThermalClusters::InvalidParametersForThermalClusters(
+  const std::map<int, std::string>& clusterNames):
+    LoadingError(buildMessage(clusterNames))
+{
+}
 } // namespace Antares::Check

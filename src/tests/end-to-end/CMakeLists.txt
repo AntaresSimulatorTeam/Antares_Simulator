@@ -1,2 +1,3 @@
-add_subdirectory(simple_study)
 add_subdirectory(binding_constraints)
+add_subdirectory(modeler)
+add_subdirectory(simple_study)

@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/variable-print-info.h"
 
@@ -213,7 +195,38 @@ std::vector<std::string> AllVariablesPrintInfo::namesOfDisabledVariables()
     return namesOfVariablesWithPrintStatus(false);
 }
 
-void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
+// Helper function
+unsigned computeMaxColumnsForDynamicDistricts(const Sets& setsOfAreas)
+{
+    std::size_t ret = 0;
+    for (const auto& [_, set]: setsOfAreas)
+    {
+        std::set<std::string> thermalGroupNames, renewableGroupNames, stsGroupNames;
+        for (const auto* area: *set)
+        {
+            for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
+            {
+                thermalGroupNames.insert(cluster->getGroup());
+            }
+            for (const auto& cluster: area->renewable.list.each_enabled())
+            {
+                renewableGroupNames.insert(cluster->getGroup());
+            }
+            for (const auto& sts: area->shortTermStorage.storagesByIndex)
+            {
+                stsGroupNames.insert(sts.properties.groupName);
+            }
+        }
+        // 4 values EXP, STD, MIN, MAX
+        // For short-term storage, LEVEL, WITHDRAWAL, INJECTION
+        ret = std::max(
+          ret,
+          4 * (thermalGroupNames.size() + renewableGroupNames.size() + 3 * stsGroupNames.size()));
+    }
+    return ret;
+}
+
+void AllVariablesPrintInfo::computeMaxColumnsCountInReports(const Sets& setsOfAreas)
 {
     /*
         Among all reports a study can create, which is the one that contains the largest
@@ -251,6 +264,8 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
             totalMaxColumnsCount_ = std::max(totalMaxColumnsCount_, currentColumnsCount);
         }
     }
+    // Dynamic variables for sets of areas (districts)
+    totalMaxColumnsCount_ += computeMaxColumnsForDynamicDistricts(setsOfAreas);
 }
 
 void AllVariablesPrintInfo::countSelectedAreaVars()

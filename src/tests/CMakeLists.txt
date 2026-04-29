@@ -32,9 +32,10 @@ endif()
 if (${RECENT_BOOST})
     add_subdirectory(end-to-end)
     add_subdirectory(src)
-    add_subdirectory(kirchhoff-cbuilder)
     add_subdirectory(inmemory-study)
+    add_subdirectory(inmemory-modeler)
     add_subdirectory(libs)
+    add_subdirectory(solver)
 else()
     message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()
@@ -67,6 +68,12 @@ if(Python3_Interpreter_FOUND)
         )
 
       add_test(
+              NAME antares-problem-generator-named-mps
+              COMMAND Python3::Interpreter -m pytest -m json --antares-problem-generator-exe=$<TARGET_FILE:antares-problem-generator>
+              WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
+      )
+
+      add_test(
         NAME milp-cbc
         COMMAND Python3::Interpreter -m pytest -m json --antares-simu-path=$<TARGET_FILE:antares-solver> --solver coin
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
@@ -77,22 +84,6 @@ if(Python3_Interpreter_FOUND)
         COMMAND Python3::Interpreter -m pytest -m json --antares-simu-path=$<TARGET_FILE:antares-solver> --force-parallel
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
-
-# The Kirchhoff constraint builder is built only if BUILD_TOOLS=ON
-if (BUILD_TOOLS)
-      add_test(
-        NAME kirchhoff
-        COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-kirchhoff-constraints-builder> kirchhoff_pytest.py
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
-        )
-
-      add_test(
-        NAME tsgenerator
-        COMMAND Python3::Interpreter -m pytest -m tsgenerator --tsgenerator_path=$<TARGET_FILE:antares-ts-generator> antares_tools/ts-generator/ts-generator.py
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
-        )
-
-endif()
 
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
   else()

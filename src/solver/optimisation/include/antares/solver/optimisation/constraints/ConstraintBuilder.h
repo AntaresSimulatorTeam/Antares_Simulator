@@ -1,37 +1,16 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
-#include <utility>
-
-#include <antares/logs/logs.h>
-#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/variables/VariableManagement.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "../opt_fonctions.h"
 #include "../opt_rename_problem.h"
-#include "../variables/VariableManagement.h"
 
 // TODO God struct should be decomposed
-class ConstraintBuilderData
+class ConstraintBuilderData final
 {
 public:
     std::vector<double>& Pi;
@@ -39,8 +18,8 @@ public:
     int& nombreDeContraintes;
     int& nombreDeTermesDansLaMatriceDeContrainte;
     std::vector<int>& IndicesDebutDeLigne;
-    SparseVector<double>& CoefficientsDeLaMatriceDesContraintes;
-    SparseVector<int>& IndicesColonnes;
+    std::vector<double>& CoefficientsDeLaMatriceDesContraintes;
+    std::vector<int>& IndicesColonnes;
     std::vector<int>& NombreDeTermesDesLignes;
     std::string& Sens;
     int& IncrementDAllocationMatriceDesContraintes;
@@ -62,11 +41,11 @@ Math:
 |coeffn1 coeffn2 .. coeffnn||varn| |sign_n|   |rhsn|       |constraintn||sign_n||rhsn|
 
 it propose a set of methods  to attach 'Variables' to the Constraint
-ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constraint
+ex: calling DirectFlow() implies adding Direct Flux Variable to the current Constraint
 finally the build() method gather all variables and put them into the matrix
 \endverbatim
 */
-class ConstraintBuilder
+class ConstraintBuilder final
 {
 public:
     ConstraintBuilder() = delete;
@@ -117,11 +96,11 @@ public:
 
     ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& DirectFlow(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& IntercoDirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& PositiveDirectFlow(unsigned int index, double coeff);
 
-    ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& PositiveIndirectFlow(unsigned int index, double coeff);
 
     ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
                                                  double coeff,
@@ -137,6 +116,12 @@ public:
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
+
+    ConstraintBuilder& ShortTermStorageOverflow(unsigned int index,
+                                                double coeff,
+                                                int offset = 0,
+                                                int delta = 0);
+
     ConstraintBuilder& ShortTermCostVariationInjection(unsigned int index,
                                                        double coeff,
                                                        int offset = 0,
@@ -160,15 +145,15 @@ public:
 
     ConstraintBuilder& FinalStorage(unsigned int index, double coeff);
 
-    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index, double coeff);
+    ConstraintBuilder& UnsuppliedEnergy(unsigned int index, double coeff);
 
-    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index, double coeff);
+    ConstraintBuilder& Spillage(unsigned int index, double coeff);
 
     ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
 
     //@}
 
-    class ConstraintBuilderInvalidOperator: public std::runtime_error
+    class ConstraintBuilderInvalidOperator final: public std::runtime_error
     {
     public:
         using std::runtime_error::runtime_error;
@@ -284,7 +269,7 @@ inline void ExportPaliers(const PALIERS_THERMIQUES& PaliersThermiquesDuPays,
     }
 }
 
-class BindingConstraintData
+class BindingConstraintData final
 {
 public:
     const char& TypeDeContrainteCouplante;
@@ -312,7 +297,7 @@ struct ShortTermStorageData
 {
     std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
 
-    const std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorage;
+    const std::vector<::AREA_INPUT>& ShortTermStorage;
 };
 
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData

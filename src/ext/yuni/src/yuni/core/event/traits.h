@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -16,14 +17,10 @@
 ** this file, as they will otherwise be lost at the next generation.
 */
 
-#include "../slist/slist.h"
 #include "../atomic/bool.h"
+#include "../slist/slist.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace EventImpl
+namespace Yuni::Private::EventImpl
 {
 template<int N, class BindT>
 class WithNArguments;
@@ -38,6 +35,7 @@ public:
     inline void operator()(T)
     {
     }
+
     static void result()
     {
     }
@@ -47,7 +45,8 @@ template<class BindT>
 class PredicateRemoveObject final
 {
 public:
-    PredicateRemoveObject(const void* object) : pObject(object)
+    PredicateRemoveObject(const void* object):
+        pObject(object)
     {
     }
 
@@ -64,8 +63,9 @@ template<class BindT>
 class PredicateRemoveObserverBase final
 {
 public:
-    PredicateRemoveObserverBase(IEvent* event, const IEventObserverBase* object) :
-     pEvent(event), pObject(object)
+    PredicateRemoveObserverBase(IEvent* event, const IEventObserverBase* object):
+        pEvent(event),
+        pObject(object)
     {
     }
 
@@ -88,7 +88,8 @@ template<class BindT>
 class PredicateRemoveWithoutChecks final
 {
 public:
-    PredicateRemoveWithoutChecks(const IEventObserverBase* object) : pObject(object)
+    PredicateRemoveWithoutChecks(const IEventObserverBase* object):
+        pObject(object)
     {
     }
 
@@ -104,11 +105,13 @@ private:
 struct FoldTypeVoid
 {
 };
+
 template<class T>
 struct FoldType
 {
     typedef T value_type;
 };
+
 template<>
 struct FoldType<void>
 {
@@ -116,7 +119,7 @@ struct FoldType<void>
 };
 
 template<class BindT>
-class WithNArguments<0, BindT> : public Policy::ObjectLevelLockable<WithNArguments<0, BindT>>
+class WithNArguments<0, BindT>: public Policy::ObjectLevelLockable<WithNArguments<0, BindT>>
 {
 public:
     //! The Threading Policy
@@ -130,9 +133,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -140,6 +145,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -154,7 +160,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke();
+            }
         }
     }
 
@@ -167,7 +175,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke());
+            }
             return value;
         }
         return initval;
@@ -182,7 +192,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke());
+            }
         }
         return predicate.result();
     }
@@ -195,7 +207,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke());
+            }
         }
         return predicate.result();
     }
@@ -219,9 +233,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke();
+            }
         }
     }
+
     //@}
 
 protected:
@@ -239,7 +256,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<1, BindT> : public Policy::ObjectLevelLockable<WithNArguments<1, BindT>>
+class WithNArguments<1, BindT>: public Policy::ObjectLevelLockable<WithNArguments<1, BindT>>
 {
 public:
     //! The Threading Policy
@@ -255,9 +272,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -265,6 +284,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -279,7 +299,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0);
+            }
         }
     }
 
@@ -292,7 +314,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0));
+            }
             return value;
         }
         return initval;
@@ -307,7 +331,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0));
+            }
         }
         return predicate.result();
     }
@@ -320,7 +346,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0));
+            }
         }
         return predicate.result();
     }
@@ -344,9 +372,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -364,7 +395,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<2, BindT> : public Policy::ObjectLevelLockable<WithNArguments<2, BindT>>
+class WithNArguments<2, BindT>: public Policy::ObjectLevelLockable<WithNArguments<2, BindT>>
 {
 public:
     //! The Threading Policy
@@ -382,9 +413,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -392,6 +425,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -406,7 +440,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1);
+            }
         }
     }
 
@@ -422,7 +458,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1));
+            }
             return value;
         }
         return initval;
@@ -437,7 +475,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1));
+            }
         }
         return predicate.result();
     }
@@ -450,7 +490,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1));
+            }
         }
         return predicate.result();
     }
@@ -474,9 +516,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -494,7 +539,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<3, BindT> : public Policy::ObjectLevelLockable<WithNArguments<3, BindT>>
+class WithNArguments<3, BindT>: public Policy::ObjectLevelLockable<WithNArguments<3, BindT>>
 {
 public:
     //! The Threading Policy
@@ -514,9 +559,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -524,6 +571,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -538,7 +586,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2);
+            }
         }
     }
 
@@ -555,7 +605,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2));
+            }
             return value;
         }
         return initval;
@@ -570,7 +622,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2));
+            }
         }
         return predicate.result();
     }
@@ -583,7 +637,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2));
+            }
         }
         return predicate.result();
     }
@@ -607,9 +663,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -627,7 +686,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<4, BindT> : public Policy::ObjectLevelLockable<WithNArguments<4, BindT>>
+class WithNArguments<4, BindT>: public Policy::ObjectLevelLockable<WithNArguments<4, BindT>>
 {
 public:
     //! The Threading Policy
@@ -649,9 +708,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -659,6 +720,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -673,7 +735,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3);
+            }
         }
     }
 
@@ -691,7 +755,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3));
+            }
             return value;
         }
         return initval;
@@ -706,7 +772,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3));
+            }
         }
         return predicate.result();
     }
@@ -720,7 +788,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3));
+            }
         }
         return predicate.result();
     }
@@ -744,9 +814,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -764,7 +837,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<5, BindT> : public Policy::ObjectLevelLockable<WithNArguments<5, BindT>>
+class WithNArguments<5, BindT>: public Policy::ObjectLevelLockable<WithNArguments<5, BindT>>
 {
 public:
     //! The Threading Policy
@@ -788,9 +861,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -798,6 +873,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -812,7 +888,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4);
+            }
         }
     }
 
@@ -831,7 +909,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4));
+            }
             return value;
         }
         return initval;
@@ -846,7 +926,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4));
+            }
         }
         return predicate.result();
     }
@@ -864,7 +946,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4));
+            }
         }
         return predicate.result();
     }
@@ -888,9 +972,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -908,7 +995,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<6, BindT> : public Policy::ObjectLevelLockable<WithNArguments<6, BindT>>
+class WithNArguments<6, BindT>: public Policy::ObjectLevelLockable<WithNArguments<6, BindT>>
 {
 public:
     //! The Threading Policy
@@ -934,9 +1021,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -944,6 +1033,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -958,7 +1048,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5);
+            }
         }
     }
 
@@ -978,7 +1070,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4, a5));
+            }
             return value;
         }
         return initval;
@@ -993,21 +1087,25 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5));
+            }
         }
         return predicate.result();
     }
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(PredicateT<R>& predicate, A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const
+    invoke(PredicateT<R>& predicate, A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) const
     {
         if (not pEmpty)
         {
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5));
+            }
         }
         return predicate.result();
     }
@@ -1031,9 +1129,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -1051,7 +1152,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<7, BindT> : public Policy::ObjectLevelLockable<WithNArguments<7, BindT>>
+class WithNArguments<7, BindT>: public Policy::ObjectLevelLockable<WithNArguments<7, BindT>>
 {
 public:
     //! The Threading Policy
@@ -1079,9 +1180,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -1089,6 +1192,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -1103,7 +1207,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6);
+            }
         }
     }
 
@@ -1124,7 +1230,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4, a5, a6));
+            }
             return value;
         }
         return initval;
@@ -1139,21 +1247,25 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6));
+            }
         }
         return predicate.result();
     }
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(PredicateT<R>& predicate, A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const
+    invoke(PredicateT<R>& predicate, A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) const
     {
         if (not pEmpty)
         {
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6));
+            }
         }
         return predicate.result();
     }
@@ -1177,9 +1289,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -1197,7 +1312,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<8, BindT> : public Policy::ObjectLevelLockable<WithNArguments<8, BindT>>
+class WithNArguments<8, BindT>: public Policy::ObjectLevelLockable<WithNArguments<8, BindT>>
 {
 public:
     //! The Threading Policy
@@ -1227,9 +1342,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -1237,6 +1354,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -1251,7 +1369,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7);
+            }
         }
     }
 
@@ -1273,7 +1393,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7));
+            }
             return value;
         }
         return initval;
@@ -1281,7 +1403,7 @@ public:
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
     {
         PredicateT<R> predicate;
         if (not pEmpty)
@@ -1289,21 +1411,25 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7));
+            }
         }
         return predicate.result();
     }
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(PredicateT<R>& predicate, A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
+    invoke(PredicateT<R>& predicate, A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) const
     {
         if (not pEmpty)
         {
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7));
+            }
         }
         return predicate.result();
     }
@@ -1327,9 +1453,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -1347,7 +1476,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<9, BindT> : public Policy::ObjectLevelLockable<WithNArguments<9, BindT>>
+class WithNArguments<9, BindT>: public Policy::ObjectLevelLockable<WithNArguments<9, BindT>>
 {
 public:
     //! The Threading Policy
@@ -1379,9 +1508,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -1389,6 +1520,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -1403,7 +1535,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+            }
         }
     }
 
@@ -1426,7 +1560,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8));
+            }
             return value;
         }
         return initval;
@@ -1434,7 +1570,7 @@ public:
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) const
     {
         PredicateT<R> predicate;
         if (not pEmpty)
@@ -1442,7 +1578,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8));
+            }
         }
         return predicate.result();
     }
@@ -1464,7 +1602,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8));
+            }
         }
         return predicate.result();
     }
@@ -1488,9 +1628,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -1508,7 +1651,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<10, BindT> : public Policy::ObjectLevelLockable<WithNArguments<10, BindT>>
+class WithNArguments<10, BindT>: public Policy::ObjectLevelLockable<WithNArguments<10, BindT>>
 {
 public:
     //! The Threading Policy
@@ -1542,9 +1685,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -1552,6 +1697,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -1566,7 +1712,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+            }
         }
     }
 
@@ -1590,7 +1738,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9));
+            }
             return value;
         }
         return initval;
@@ -1598,7 +1748,7 @@ public:
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) const
     {
         PredicateT<R> predicate;
         if (not pEmpty)
@@ -1606,7 +1756,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9));
+            }
         }
         return predicate.result();
     }
@@ -1629,7 +1781,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9));
+            }
         }
         return predicate.result();
     }
@@ -1653,9 +1807,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -1673,7 +1830,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<11, BindT> : public Policy::ObjectLevelLockable<WithNArguments<11, BindT>>
+class WithNArguments<11, BindT>: public Policy::ObjectLevelLockable<WithNArguments<11, BindT>>
 {
 public:
     //! The Threading Policy
@@ -1709,9 +1866,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -1719,6 +1878,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -1733,7 +1893,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+            }
         }
     }
 
@@ -1758,7 +1920,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10));
+            }
             return value;
         }
         return initval;
@@ -1766,7 +1930,7 @@ public:
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) const
     {
         PredicateT<R> predicate;
         if (not pEmpty)
@@ -1774,7 +1938,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10));
+            }
         }
         return predicate.result();
     }
@@ -1798,7 +1964,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10));
+            }
         }
         return predicate.result();
     }
@@ -1823,9 +1991,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -1843,7 +2014,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<12, BindT> : public Policy::ObjectLevelLockable<WithNArguments<12, BindT>>
+class WithNArguments<12, BindT>: public Policy::ObjectLevelLockable<WithNArguments<12, BindT>>
 {
 public:
     //! The Threading Policy
@@ -1881,9 +2052,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -1891,6 +2064,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -1899,15 +2073,17 @@ public:
     ** \brief Invoke the delegate
     */
     void
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const
     {
         if (not pEmpty)
         {
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
+            }
         }
     }
 
@@ -1933,7 +2109,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value, (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11));
+            }
             return value;
         }
         return initval;
@@ -1941,8 +2119,8 @@ public:
 
     template<template<class> class PredicateT>
     typename PredicateT<R>::ResultType
-      invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
-        const
+    invoke(A0 a0, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10, A11 a11)
+      const
     {
         PredicateT<R> predicate;
         if (not pEmpty)
@@ -1950,7 +2128,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11));
+            }
         }
         return predicate.result();
     }
@@ -1975,7 +2155,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11));
+            }
         }
         return predicate.result();
     }
@@ -2010,9 +2192,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -2030,7 +2215,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<13, BindT> : public Policy::ObjectLevelLockable<WithNArguments<13, BindT>>
+class WithNArguments<13, BindT>: public Policy::ObjectLevelLockable<WithNArguments<13, BindT>>
 {
 public:
     //! The Threading Policy
@@ -2070,9 +2255,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -2080,6 +2267,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -2106,7 +2294,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
+            }
         }
     }
 
@@ -2133,8 +2323,10 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(value,
                             (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12));
+            }
             return value;
         }
         return initval;
@@ -2161,7 +2353,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12));
+            }
         }
         return predicate.result();
     }
@@ -2187,7 +2381,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12));
+            }
         }
         return predicate.result();
     }
@@ -2223,9 +2419,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -2243,7 +2442,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<14, BindT> : public Policy::ObjectLevelLockable<WithNArguments<14, BindT>>
+class WithNArguments<14, BindT>: public Policy::ObjectLevelLockable<WithNArguments<14, BindT>>
 {
 public:
     //! The Threading Policy
@@ -2285,9 +2484,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -2295,6 +2496,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -2322,7 +2524,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+            }
         }
     }
 
@@ -2350,8 +2554,11 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(
-                  value, (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13));
+                  value,
+                  (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13));
+            }
             return value;
         }
         return initval;
@@ -2379,7 +2586,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13));
+            }
         }
         return predicate.result();
     }
@@ -2406,7 +2615,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate((*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13));
+            }
         }
         return predicate.result();
     }
@@ -2443,9 +2654,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -2463,7 +2677,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<15, BindT> : public Policy::ObjectLevelLockable<WithNArguments<15, BindT>>
+class WithNArguments<15, BindT>: public Policy::ObjectLevelLockable<WithNArguments<15, BindT>>
 {
 public:
     //! The Threading Policy
@@ -2507,9 +2721,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -2517,6 +2733,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -2545,7 +2762,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14);
+            }
         }
     }
 
@@ -2574,9 +2793,11 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(
                   value,
                   (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14));
+            }
             return value;
         }
         return initval;
@@ -2605,8 +2826,10 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate(
                   (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14));
+            }
         }
         return predicate.result();
     }
@@ -2634,8 +2857,10 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 predicate(
                   (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14));
+            }
         }
         return predicate.result();
     }
@@ -2673,9 +2898,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -2693,7 +2921,7 @@ protected:
 }; // class WithNArguments
 
 template<class BindT>
-class WithNArguments<16, BindT> : public Policy::ObjectLevelLockable<WithNArguments<16, BindT>>
+class WithNArguments<16, BindT>: public Policy::ObjectLevelLockable<WithNArguments<16, BindT>>
 {
 public:
     //! The Threading Policy
@@ -2739,9 +2967,11 @@ public:
     //! \name Constructors
     //@{
     //! Default constructor
-    WithNArguments() : pEmpty(true)
+    WithNArguments():
+        pEmpty(true)
     {
     }
+
     //! Copy constructor
     WithNArguments(const WithNArguments& rhs)
     {
@@ -2749,6 +2979,7 @@ public:
         pEmpty = rhs.pEmpty;
         pBindList = rhs.pBindList;
     }
+
     //@}
 
     //! \name Invoke
@@ -2778,7 +3009,9 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+            }
         }
     }
 
@@ -2808,10 +3041,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 accumulator(
                   value,
-                  (*i).invoke(
-                    a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15));
+                  (*i)
+                    .invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15));
+            }
             return value;
         }
         return initval;
@@ -2841,8 +3076,11 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
-                predicate((*i).invoke(
-                  a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15));
+            {
+                predicate(
+                  (*i)
+                    .invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15));
+            }
         }
         return predicate.result();
     }
@@ -2871,8 +3109,11 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
-                predicate((*i).invoke(
-                  a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15));
+            {
+                predicate(
+                  (*i)
+                    .invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15));
+            }
         }
         return predicate.result();
     }
@@ -2911,9 +3152,12 @@ public:
             typename ThreadingPolicy::MutexLocker locker(*this);
             const typename BindList::const_iterator end = pBindList.end();
             for (typename BindList::const_iterator i = pBindList.begin(); i != end; ++i)
+            {
                 (*i).invoke(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+            }
         }
     }
+
     //@}
 
 protected:
@@ -2930,6 +3174,4 @@ protected:
 
 }; // class WithNArguments
 
-} // namespace EventImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::EventImpl

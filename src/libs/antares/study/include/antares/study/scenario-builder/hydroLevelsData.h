@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__
 
@@ -25,11 +8,7 @@
 
 #include "scBuilderDataInterface.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 /*!
 ** \brief Rules for hydro levels, for all years and areas
@@ -43,8 +22,7 @@ public:
 public:
     // Constructor
 
-    hydroLevelsData(const std::string& iniFilePrefix,
-                    std::function<void(Study&, MatrixType&)> applyToTarget);
+    explicit hydroLevelsData(std::function<void(Study&, MatrixType&)> applyToTarget);
 
     //! \name Data manupulation
     //@{
@@ -52,11 +30,6 @@ public:
     ** \brief Reset data from the study
     */
     bool reset(const Study& study) override;
-
-    /*!
-    ** \brief Export the data into a mere INI file
-    */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
 
     /*!
     ** \brief Assign a single value
@@ -81,8 +54,6 @@ public:
 private:
     //! Hydro levels overlay (0 if auto)
     MatrixType pHydroLevelsRules;
-    // prefix to be added when calling saveToINIFileHydroLevel
-    const std::string addToPrefix_;
 
     std::function<void(Study&, MatrixType&)> applyToTarget_;
 
@@ -124,8 +95,6 @@ inline void finalLevelApply(Study& study, Matrix<double>& matrix)
     study.scenarioFinalHydroLevels.copyFrom(matrix);
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_LEVELS_H__

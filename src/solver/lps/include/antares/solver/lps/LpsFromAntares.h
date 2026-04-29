@@ -1,31 +1,15 @@
 
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <array>
+#include <fmt/format.h>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "antares/optimisation/linear-problem-api/linearProblem.h"
 
 namespace Antares::Solver
 {
@@ -62,15 +46,12 @@ struct ConstantDataFromAntares
     // IndicesColonnes.size()=
     // CoefficientsDeLaMatriceDesContraintes.size()
 
-    std::vector<unsigned> VariablesType; // Variables entières ou biniaires
     std::vector<unsigned> Mdeb; // Indique dans les indices dans le vecteur IndicesColonnes qui
     // correspondent au début de chaque ligne. Ex : Mdeb[3] = 8 et
     // Mdeb[4] = 13 -> Les termes IndicesColonnes[8] à
     // IndicesColonnes[12] correspondent à des Id de colonnes de la
     // ligne 3 de la matrice (en supposant que les lignes sont indexées
     // à partir de 0)
-    std::vector<unsigned> NotNullTermCount; // Nombre de termes non nuls sur chaque ligne.
-    // Inutile car NbTerm[i] = Mdeb[i+1] - Mdeb[i]
     std::vector<unsigned> ColumnIndexes; // Id des colonnes des termes de
     // CoefficientsDeLaMatriceDesContraintes : Ex
     // IndicesColonnes[3] = 8 ->
@@ -102,9 +83,7 @@ struct WeeklyDataFromAntares
     std::vector<double> RHS; // Vecteur des second membre des contraintes, taille =
     // NombreDeContraintes
     std::string name;
-
-    std::vector<std::string> variables;
-    std::vector<std::string> constraints;
+    std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> linearProblem;
 
     auto operator<=>(const WeeklyDataFromAntares& other) const = default;
 };
@@ -116,14 +95,14 @@ using WeeklyDataByYearWeek = std::map<WeeklyProblemId, WeeklyDataFromAntares>;
  * @brief The LpsFromAntares class is used to manage the constant and weekly data for Antares
  * problems.
  */
-class LpsFromAntares
+class LpsFromAntares final
 {
 public:
     /*
      * @brief Checks if the LpsFromAntares object is empty.
      * Emptiness is defined by either the constant data or the weekly data being empty.
      */
-    bool empty() const;
+    [[nodiscard]] bool empty() const;
     /*
      * @brief Replaces the constant data in the LpsFromAntares object.
      * Copy happens
@@ -132,11 +111,11 @@ public:
     /*
      * @brief Adds weekly data to the LpsFromAntares object.
      */
-    void addWeeklyData(WeeklyProblemId id, const WeeklyDataFromAntares& data);
+    void addWeeklyData(WeeklyProblemId id, WeeklyDataFromAntares&& data);
     /*
      * @brief Retrieves weekly data from the LpsFromAntares object.
      */
-    const WeeklyDataFromAntares& weeklyData(WeeklyProblemId id) const;
+    [[nodiscard]] const WeeklyDataFromAntares& weeklyData(WeeklyProblemId id) const;
     /*
      * @brief Retrieves the number of weeks in the LpsFromAntares object.
      */
@@ -146,4 +125,8 @@ public:
     WeeklyDataByYearWeek weeklyProblems;
 };
 
+inline std::string problemName(const WeeklyProblemId& id)
+{
+    return fmt::format("problem-{}-{}--optim-nb-1", id.year + 1, id.week);
+}
 } // namespace Antares::Solver

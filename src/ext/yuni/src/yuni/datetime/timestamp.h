@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,12 +10,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../yuni.h"
 #include "../core/string.h"
+#include "../yuni.h"
 
-namespace Yuni
-{
-namespace DateTime
+namespace Yuni::DateTime
 {
 /*!
 ** \brief Unix Timestamp
@@ -55,7 +54,6 @@ bool TimestampToString(StringT& out,
                        Timestamp timestamp = 0,
                        bool emptyBefore = true);
 
-} // namespace DateTime
-} // namespace Yuni
+} // namespace Yuni::DateTime
 
 #include "timestamp.hxx"

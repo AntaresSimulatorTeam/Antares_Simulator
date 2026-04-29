@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,23 +12,15 @@
 #pragma once
 #include "directory.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 // Forward declaration
 template<typename C>
 struct Constant;
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 inline bool IsRelative(const AnyString& filename)
 {
@@ -35,46 +28,12 @@ inline bool IsRelative(const AnyString& filename)
 }
 
 template<class StringT>
-void ExtractFileNameWithoutExtension(StringT& out, const AnyString& path, bool systemDependant)
-{
-    AnyString::size_type pos = (systemDependant)
-                                 ? path.find_last_of(IO::Constant<char>::Separator)
-                                 : path.find_last_of(IO::Constant<char>::AllSeparators);
-    AnyString::size_type n = path.find_last_of('.');
-
-    if (AnyString::npos == n and AnyString::npos == pos)
-    {
-        out = path;
-        return;
-    }
-    if (n == pos)
-    {
-        out.clear();
-        return;
-    }
-    if (n == AnyString::npos and n > pos + 1)
-    {
-        if (AnyString::npos == pos)
-        {
-            out = path;
-            return;
-        }
-        out.assign(path.c_str() + pos + 1);
-        return;
-    }
-    if (pos == AnyString::npos)
-    {
-        out.assign(path, n);
-        return;
-    }
-    out.assign(path.c_str() + pos + 1, n - pos - 1);
-}
-
-template<class StringT>
 bool ExtractExtension(StringT& out, const AnyString& filename, bool dot, bool clear)
 {
     if (clear)
+    {
         out.clear();
+    }
     // If the string is empty, the buffer may be invalid (NULL)
     if (filename.size())
     {
@@ -89,7 +48,9 @@ bool ExtractExtension(StringT& out, const AnyString& filename, bool dot, bool cl
                 if (not dot)
                 {
                     if (++i >= static_cast<uint>(filename.size()))
+                    {
                         return true;
+                    }
                 }
                 out.append(filename.c_str() + i, filename.size() - i);
                 return true;
@@ -107,7 +68,9 @@ template<class StringT>
 void MakeAbsolute(StringT& out, const AnyString& filename, bool clearBefore)
 {
     if (clearBefore)
+    {
         out.clear();
+    }
     if (IsAbsolute(filename))
     {
         out += filename;
@@ -126,7 +89,9 @@ void MakeAbsolute(StringT& out,
                   bool clearBefore)
 {
     if (clearBefore)
+    {
         out.clear();
+    }
     if (IsAbsolute(filename))
     {
         out += filename;
@@ -166,5 +131,4 @@ bool ReplaceExtension(StringT1& filename, const StringT2& newExtension)
     return false;
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

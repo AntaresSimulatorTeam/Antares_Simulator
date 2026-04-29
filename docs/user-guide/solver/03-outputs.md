@@ -89,28 +89,13 @@ The area files that belong to the "values" class display fields corresponding to
 | PSP                                    | User-defined settings for pumping and subsequent generating                                                                                                                               |
 | MISC. NDG                              | Miscellaneous non dispatchable generation                                                                                                                                                 |
 | LOAD                                   | Demand (including DSM potential if relevant)                                                                                                                                              |
+| RES LOAD                               | Residual load, formula:  **load - allMustRunGeneration** with *allMustRunGeneration = wind + solar + miscGen + ROR + mustRunSum* and *mustRunSum = total production of thermal clusters must-run and enabled*    |
 | H.ROR                                  | Hydro generation, Run-of-river share                                                                                                                                                      |
 | WIND                                   | Wind generation (only when using aggregated _Renewable generation modeling_)                                                                                                              |
 | SOLAR                                  | Solar generation (thermal and PV) (only when using aggregated _Renewable generation modeling_)                                                                                            |
-| NUCLEAR                                | Overall generation of nuclear clusters                                                                                                                                                    |
-| LIGNITE                                | Overall generation of dispatchable thermal clusters burning brown coal                                                                                                                    |
-| COAL                                   | Overall generation of dispatchable thermal clusters burning hard coal                                                                                                                     |
-| GAS                                    | Overall generation of dispatchable thermal clusters burning gas                                                                                                                           |
-| OIL                                    | Overall generation of dispatchable thermal clusters using petroleum products                                                                                                              |
-| MIX.FUEL                               | Overall gen. of disp. thermal clusters using a mix of the previous fuels                                                                                                                  |
-| MISC.DTG                               | Overall gen. of disp. thermal clusters using other fuels                                                                                                                                  |
-| MISC.DTG 2                             | Overall gen. of disp. thermal clusters using other fuels                                                                                                                                  |
-| MISC.DTG 3                             | Overall gen. of disp. thermal clusters using other fuels                                                                                                                                  |
-| MISC.DTG 4                             | Overall gen. of disp. thermal clusters using other fuels                                                                                                                                  |
 | WIND OFFSHORE                          | Wind Offshore generation (only when using clustered _Renewable generation modeling_)                                                                                                      |
-| WIND ONSHORE                           | Wind Onshore generation (only when using clustered _Renewable generation modeling_)                                                                                                       |
-| SOLAR CONCRT.                          | Concentrated Solar Thermal generation (only when using clustered _Renewable generation modeling_)                                                                                         |
-| SOLAR PV                               | Solar Photovoltaic generation (only when using clustered _Renewable generation modeling_)                                                                                                 |
-| SOLAR ROOFT                            | Rooftop Solar generation (only when using clustered _Renewable generation modeling_)                                                                                                      |
-| RENW. 1                                | Overall generation of other Renewable clusters (only when using clustered _Renewable generation modeling_)                                                                                |
-| RENW. 2                                | Overall generation of other Renewable clusters (only when using clustered _Renewable generation modeling_)                                                                                |
-| RENW. 3                                | Overall generation of other Renewable clusters (only when using clustered _Renewable generation modeling_)                                                                                |
-| RENW. 4                                | Overall generation of other Renewable clusters (only when using clustered _Renewable generation modeling_)                                                                                |
+| DISPATCH. GEN.                         | Dispatchable generation for thermal clusters                                                                                                                                              | 
+| RENEWABLE GEN.                         | Renewable generation (only when using clustered _Renewable generation modeling_)                                                                                                          | 
 | H.STOR                                 | Power generated from energy storage units (typically: Hydro reservoir)                                                                                                                    |
 | H.PUMP                                 | Power absorbed by energy storage units (typically: PSP pumps consumption)                                                                                                                 |
 | H.LEV                                  | Energy level remaining in storage units (percentage of reservoir size)                                                                                                                    |
@@ -198,7 +183,7 @@ These files contain, for each kind of time-series, the number drawn (randomly or
 |                              | /Solar[^agg] | /batch number/area names/... |
 
 
-These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
+These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated.
 
 ## Miscellaneous
 
@@ -206,6 +191,59 @@ Alike Input data, output results can be filtered so as to include only items tha
 
 - **Districts** displays only results obtained for spatial aggregates
 - **Unknown** displays only results attached to Areas or Links that no longer exist in the Input dataset (i.e. study has changed since the last simulation)
+
+### Dynamic Aggregation for Sets of Areas (Districts)
+#### Overview
+
+- **Thermal groups**: dispatchable production of the group
+- **Renewable groups**: production of the group
+- **Short-term storage groups**: level, injection and withdrawal of the group
+
+#### Where these columns appear
+
+These dynamic aggregation columns appear in:
+- `areas/name/values-*.txt` (hourly, daily, etc.) files in mc-all synthesis reports (Data Level: `setOfAreas`)
+- `areas/name/values-*.txt` (hourly, daily, etc.) files in mc-ind/year_number year-by-year reports (Data Level: `setOfAreas`)
+
+#### Column Naming Convention
+
+For each thermal group, renewable group, or short-term storage group, the columns follow this pattern:
+- **Single-year reports** (`mc-ind`): `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+- **Synthesis reports** (`mc-all`): `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL`
+
+The suffixes indicate:
+- `_TH_PROD`: Thermal production (total)
+- `_RES_PROD`: Renewable production (total)
+- `_INJECTION`: Short-term storage injection (total)
+- `_WITHDRAWAL`: Short-term storage withdrawal (total)
+- `_LEVEL`: Short-term storage level (average)
+
+#### Available Variables
+
+The following group types can be used for dynamic aggregation:
+
+| Variable type | Description | Column pattern (per group) |
+|--------------|-------------|------------------------|
+| Thermal clusters | Production | `<group>_TH_PROD`, `<group>_RES_PROD`, `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+| Renewable clusters | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+| Short-term storage | Injection | `<group>_INJECTION`, `<group>_WITHDRAWAL`, `<group>_LEVEL` |
+
+#### Dynamic vs Static Groups
+
+| Aspect | Static Groups | Dynamic Groups |
+|--------|-----------------------------|-----------------------|
+| Definition | Defined once in study input | Defined dynamically based on plant `group` attribute |
+| Column count | Limited to available groups | Can scale with number of districts |
+
+#### Notes
+
+- Dynamic district variables are handled differently from other variables for technical reasons
+  - They cannot be enabled/disabled with thematic trimming
+  - They cannot be enabled/disabled with geographic trimming
+
+- For short-term storage `LEVEL` columns, values represent **averages** (not hourly values) computed over the period of time (day, week, month or year)
+- The number of columns generated scales with the number of districts and groups defined in your study
+- To enable dynamic aggregation, define [sets of areas](02-inputs.md) in your study input
 
 [^11]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
@@ -271,6 +309,38 @@ The following table contains a list of new output variables in recent versions.
 | 8.8 | MAX MRG CSR[^16] | values-*.txt | yes |
 | 8.8 | OV. COST CSR[^16] | values-*.txt | yes |
 | 9.1 | **Short-term storage** - dynamic groups instead of static groups. For any group :<br>\<STS group\>_injection <br> \<STS group\>_withdrawal <br> \<STS group\>_level| values-*.txt | yes |
-| 9.2 | MIN DTG by plant | details-\*.txt | yes |
+| 9.2.0 | MIN DTG by plant | details-\*.txt | yes |
+| 9.2.1, 9.3.0 | NPCAP HOURS | values-\*.txt | yes |
+| 9.3 | Use dynamic groups for thermal dispatchable generation and renewable generation, instead of static groups. 
+
+
+
+### execution\_info.ini
+
+Each simulation produces a file "execution\_info.ini" at the root of the output folder. This file contains information about the execution of the simulation, such as version of Antares used, options selected in generaldata.ini, information about the study (nb of areas...) and different steps duration.
+
+The section [duration] contains the same fields as [duration\_ms] with values in hours, minutes and seconds for longer studies.
+
+The section [duration\_ms] contains the following fields:
+
+- **full_exec**: total duration
+  - **loading**: loading of all files
+    - **study_loading**: loading of legacy solver files
+    - **modeler_loading**: loading and parsing of files related to modeler: models, system, optim-config
+  - **simulation**:
+    - **tsgen_thermal, tsgen_wind, tsgen_solar, tsgen_load, tsgen_hydro**: if we need to generate time series for a type
+    - **mc_years**: all monte-carlo years
+      - **hydro_ventilation**: running hydro heuristics
+      - **problem_build_time**: building of the optimization problem (legacy + modeler)
+      - **solve_time**: solver resolution
+      - **export_simulation_tables**: modeler related, creation and writing of simulation tables
+      - **post_processing**: balance and flow quad
+      - **yby_export**: export and writing of results for a year (year-by-year parameter)
+      - **synthesis_compute**: results aggregation for mc-all
+    - **synthesis_export**: export and writing of mc-all results
+
+
+**problem_build_time** and **solve_time** are totals for each week of each year, more detailed values can be found in output folder: optimization/week-by-week/year\_**n**.txt
+
 
 [^16] : this output variable was introduced both in **8.8** and **9.2**, meaning that **9.0** and **9.1** don't have it.

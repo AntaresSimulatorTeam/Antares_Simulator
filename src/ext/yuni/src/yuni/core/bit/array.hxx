@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,14 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include <string.h> // memset
 #include <cassert>
+#include <string.h> // memset
 
-namespace Yuni
+namespace Yuni::Bit
 {
-namespace Bit
-{
-inline Array::Array() : pCount(0)
+inline Array::Array():
+    pCount(0)
 {
 }
 
@@ -71,9 +71,13 @@ inline void Array::set(uint i, bool value)
 {
     assert(i < pCount and "index out of range");
     if (value)
+    {
         YUNI_BIT_SET(pBuffer.data(), i);
+    }
     else
+    {
         YUNI_BIT_UNSET(pBuffer.data(), i);
+    }
 }
 
 inline void Array::unset(uint i)
@@ -137,9 +141,13 @@ template<class AnyBufferT>
 inline void Array::saveToBuffer(AnyBufferT& u)
 {
     if (pCount)
+    {
         u.assign(pBuffer.c_str(), pBuffer.sizeInBytes());
+    }
     else
+    {
         u.clear();
+    }
 }
 
 inline Array& Array::operator=(const Array& rhs)
@@ -159,7 +167,9 @@ template<class U>
 inline void Array::print(U& out) const
 {
     for (uint i = 0; i != pCount; ++i)
+    {
         out.put((YUNI_BIT_GET(pBuffer.data(), i)) ? '1' : '0');
+    }
 }
 
 template<bool ValueT>
@@ -168,7 +178,9 @@ uint Array::findN(uint count, uint offset) const
     while (npos != (offset = find<ValueT>(offset)))
     {
         if (offset + count > pCount)
+        {
             return npos;
+        }
 
         bool ok = true;
 
@@ -183,14 +195,15 @@ uint Array::findN(uint count, uint offset) const
             }
         }
         if (ok)
+        {
             return offset;
+        }
         ++offset;
     }
     return npos;
 }
 
-} // namespace Bit
-} // namespace Yuni
+} // namespace Yuni::Bit
 
 //! \name Operator overload for stream printing
 //@{
@@ -199,4 +212,5 @@ inline std::ostream& operator<<(std::ostream& out, const Yuni::Bit::Array& rhs)
     rhs.print(out);
     return out;
 }
+
 //@}

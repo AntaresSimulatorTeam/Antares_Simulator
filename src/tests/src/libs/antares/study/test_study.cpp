@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define BOOST_TEST_MODULE study
 #define WIN32_LEAN_AND_MEAN
@@ -35,7 +17,12 @@ struct OneAreaStudy
     OneAreaStudy()
     {
         study = std::make_unique<Study>();
-        areaA = study->areaAdd("A");
+        areaA = addAreaToListOfAreas(study->areas, "A");
+        if (areaA)
+        {
+            areaA->createMissingData();
+            areaA->resetToDefaultValues();
+        }
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
     }
@@ -49,24 +36,10 @@ BOOST_AUTO_TEST_SUITE(areas_operations)
 BOOST_AUTO_TEST_CASE(area_add)
 {
     auto study = std::make_unique<Study>();
-    const auto areaA = study->areaAdd("A");
+    const auto areaA = addAreaToListOfAreas(study->areas, "A");
     BOOST_CHECK(areaA != nullptr);
     BOOST_CHECK_EQUAL(areaA->name, "A");
     BOOST_CHECK_EQUAL(areaA->id, "a");
-}
-
-BOOST_FIXTURE_TEST_CASE(area_rename, OneAreaStudy)
-{
-    BOOST_CHECK(study->areaRename(areaA, "B"));
-    BOOST_CHECK(areaA->name == "B");
-    BOOST_CHECK(areaA->id == "b");
-}
-
-BOOST_FIXTURE_TEST_CASE(area_delete, OneAreaStudy)
-{
-    BOOST_CHECK_EQUAL(study->areas.size(), 1);
-    BOOST_CHECK(study->areaDelete(areaA));
-    BOOST_CHECK(study->areas.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END() // areas
@@ -183,13 +156,6 @@ struct ThermalClusterStudy: public OneAreaStudy
     ThermalCluster* cluster;
 };
 
-BOOST_FIXTURE_TEST_CASE(thermal_cluster_rename, ThermalClusterStudy)
-{
-    BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
-    BOOST_CHECK_EQUAL(cluster->name(), "Renamed");
-    BOOST_CHECK_EQUAL(cluster->id(), "renamed");
-}
-
 BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
 {
     // gp : remove() only used in GUI (will go away when removing the GUI)
@@ -229,6 +195,56 @@ BOOST_FIXTURE_TEST_CASE(WithForceNoGenOptionTimeSeriesNotGeneratedForReverseSpin
     }
 }
 
+BOOST_FIXTURE_TEST_CASE(thermal_integrity, ThermalClusterStudy)
+{
+    cluster->parentArea = nullptr;
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->parentArea = areaA;
+
+    cluster->marketBidCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->marketBidCost = 0.0;
+
+    cluster->marginalCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->marginalCost = 0.0;
+
+    cluster->spreadCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->spreadCost = 0.0;
+
+    cluster->marketBidCost = std::nan("1");
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->marketBidCost = 0.0;
+
+    cluster->nominalCapacity = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+    cluster->nominalCapacity = 1;
+
+    cluster->spinning = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->spinning = 200;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->fuelEfficiency = 200;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->spreadCost = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+
+    cluster->variableomcost = -1;
+    BOOST_CHECK(!cluster->integrityCheck());
+}
+
+BOOST_FIXTURE_TEST_CASE(check_modulation, ThermalClusterStudy)
+{
+    cluster->modulation.resize(3, 1);
+    cluster->modulation.fill(1.);
+    cluster->modulation[0][0] = -1;
+    BOOST_CHECK(!cluster->checkModulation());
+}
+
 #undef BOOST_CHECK_EQUAL_MESSAGE
 
 BOOST_AUTO_TEST_SUITE_END() // thermal clusters
@@ -256,7 +272,6 @@ struct RenewableClusterStudy: public OneAreaStudy
 {
     RenewableClusterStudy()
     {
-        areaA = study->areaAdd("A");
         auto newCluster = std::make_shared<RenewableCluster>(areaA);
         newCluster->setName("WindCluster");
         areaA->renewable.list.addToCompleteList(newCluster);
@@ -265,13 +280,6 @@ struct RenewableClusterStudy: public OneAreaStudy
 
     RenewableCluster* cluster;
 };
-
-BOOST_FIXTURE_TEST_CASE(renewable_cluster_rename, RenewableClusterStudy)
-{
-    BOOST_CHECK(study->clusterRename(cluster, "Renamed"));
-    BOOST_CHECK(cluster->name() == "Renamed");
-    BOOST_CHECK(cluster->id() == "renamed");
-}
 
 BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
 {
@@ -327,19 +335,15 @@ BOOST_AUTO_TEST_CASE(version_parsing)
 BOOST_FIXTURE_TEST_CASE(check_filename_limit, OneAreaStudy)
 {
     auto s = std::make_unique<Study>();
-    BOOST_CHECK(s->checkForFilenameLimits(true)); // empty areas should return true
-
-    BOOST_CHECK(study->checkForFilenameLimits(true));
-    BOOST_CHECK(study->checkForFilenameLimits(false));
-    BOOST_CHECK(study->checkForFilenameLimits(true, "abc"));
+    BOOST_CHECK(s->checkForFilenameLimits()); // empty areas should return true
 
 #ifdef YUNI_OS_WINDOWS
     std::string area1name(128, 'a');
     std::string area2name(128, 'b');
-    auto areaB = study->areaAdd(area1name);
-    auto areaC = study->areaAdd(area2name);
+    auto areaB = addAreaToListOfAreas(study->areas, area1name);
+    auto areaC = addAreaToListOfAreas(study->areas, area2name);
     AreaAddLinkBetweenAreas(areaB, areaC);
-    BOOST_CHECK(!study->checkForFilenameLimits(true));
+    BOOST_CHECK(!study->checkForFilenameLimits());
 #endif
 }
 
@@ -352,8 +356,23 @@ BOOST_FIXTURE_TEST_CASE(cpu_count, OneAreaStudy)
     BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(128, ncMax), 128);
 
     // error cases
-    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(0, ncMax), 0);
-    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, 120), 0);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(0, ncMax), 1);
+    BOOST_CHECK_EQUAL(study->getNumberOfCoresPerMode(10, 120), 1);
+}
+
+BOOST_AUTO_TEST_CASE(add_area_with_empty_name_returns_nullptr)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = addAreaToListOfAreas(study->areas, "");
+    BOOST_CHECK(area == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(add_area_with_forbidden_character_returns_nullptr)
+{
+    auto study = std::make_unique<Study>();
+    const auto area = addAreaToListOfAreas(study->areas, "area*name");
+    BOOST_CHECK(area == nullptr);
+    BOOST_CHECK_EQUAL(study->areas.size(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version

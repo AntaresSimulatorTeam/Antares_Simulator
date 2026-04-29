@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,21 +10,29 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "timer.h"
+
 #include <cassert>
 
-namespace Yuni
+namespace Yuni::Thread
 {
-namespace Thread
-{
-Timer::Timer() : IThread(), pTimeInterval(defaultInterval), pCycleCount(infinite)
-{
-}
-
-Timer::Timer(uint interval) : IThread(), pTimeInterval(interval), pCycleCount(infinite)
+Timer::Timer():
+    IThread(),
+    pTimeInterval(defaultInterval),
+    pCycleCount(infinite)
 {
 }
 
-Timer::Timer(uint interval, uint cycles) : IThread(), pTimeInterval(interval), pCycleCount(cycles)
+Timer::Timer(uint interval):
+    IThread(),
+    pTimeInterval(interval),
+    pCycleCount(infinite)
+{
+}
+
+Timer::Timer(uint interval, uint cycles):
+    IThread(),
+    pTimeInterval(interval),
+    pCycleCount(cycles)
 {
 }
 
@@ -32,7 +41,8 @@ Timer::~Timer()
     assert(started() == false);
 }
 
-Timer::Timer(const Timer& rhs) : IThread()
+Timer::Timer(const Timer& rhs):
+    IThread()
 {
     rhs.pTimerMutex.lock();
     pTimeInterval = rhs.pTimeInterval;
@@ -59,11 +69,17 @@ bool Timer::internalRunInfiniteLoop()
     do
     {
         if (IThread::suspend(nnTimeInterval))
+        {
             break;
+        }
         if (not onInterval(infinite /* no cycle */))
+        {
             break;
+        }
         if (pShouldReload)
+        {
             return false;
+        }
     } while (true);
 
     return true;
@@ -79,11 +95,17 @@ bool Timer::internalRunFixedNumberOfCycles()
     {
         // Wait then execute the timer
         if (suspend(nnTimeInterval) or not onInterval(cycleIndex))
+        {
             return true;
+        }
         if (++cycleIndex >= pCycleCount) // the maximum number of cycle is reached
+        {
             return true;
+        }
         if (pShouldReload)
+        {
             return false;
+        }
     } while (true);
 
     return true;
@@ -160,5 +182,4 @@ void Timer::reload(uint milliseconds, uint cycles)
     pShouldReload = true;
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

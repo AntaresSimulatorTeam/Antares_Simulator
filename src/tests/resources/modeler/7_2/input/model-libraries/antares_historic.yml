@@ -28,11 +28,9 @@ library:
       variables:
         - id: spillage
           lower-bound: 0
-          upper-bound: 1000000
           variable-type: continuous
         - id: unsupplied_energy
           lower-bound: 0
-          upper-bound: 1000000
           variable-type: continuous
       ports:
         - id: balance_port
@@ -40,7 +38,9 @@ library:
       binding-constraints:
         - id: balance
           expression: sum_connections(balance_port.flow) = spillage - unsupplied_energy
-      objective: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
+      objective-contributions:
+        - id: objective
+          expression: sum(spillage_cost * spillage + ens_cost * unsupplied_energy)
 
     - id: load
       parameters:
@@ -177,7 +177,9 @@ library:
           expression: sum(t-d_min_up + 1 .. t, nb_starting - nb_failing) <= nb_units_on
         - id: min_down_duration
           expression: sum(t-d_min_down + 1 .. t, nb_stopping) <= nb_units_max[t-d_min_down] - nb_units_on + sum(t-d_min_down + 1 .. t, nb_units_max_variation_backward)
-      objective: sum(generation_cost * generation + startup_cost * nb_starting + fixed_cost * nb_units_on)
+      objective-contributions:
+        - id: objective
+          expression: sum(generation_cost * generation + startup_cost * nb_starting + fixed_cost * nb_units_on)
 
     - id: short-term-storage
       parameters:
@@ -235,7 +237,7 @@ library:
           field: flow
           definition: p_withdrawal - p_injection
       constraints:
-        - id: initial_level
+        - id: initial_level_constraint
           expression: level[0] = initial_level * reservoir_capacity
         - id: Level equation
           expression: level[t+1] = level + efficiency_injection * p_injection - efficiency_withdrawal * p_withdrawal + inflows

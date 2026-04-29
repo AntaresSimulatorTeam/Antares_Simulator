@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_SOLVER_timeSeries_GENERATOR_H__
 #define __ANTARES_SOLVER_timeSeries_GENERATOR_H__
 
@@ -69,7 +52,7 @@ struct LinkTSgenerationParams
     bool hasValidData = true;
 };
 
-class AvailabilityTSGeneratorData
+class AvailabilityTSGeneratorData final
 {
 public:
     explicit AvailabilityTSGeneratorData(Data::ThermalCluster*);
@@ -102,7 +85,7 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params);
 ** \brief Regenerate the time-series
 */
 template<enum Data::TimeSeriesType T>
-bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter& writer);
+bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer);
 
 bool generateThermalTimeSeries(Data::Study& study,
                                const std::vector<Data::ThermalCluster*>& clusters,
@@ -127,7 +110,7 @@ void DestroyAll(Data::Study& study);
 ** \brief Destroy a TS generator if it exists and no longer needed
 */
 template<enum Data::TimeSeriesType T>
-void Destroy(Data::Study& study, uint year);
+void Destroy(Data::Study& study);
 
 } // namespace Antares::TSGenerator
 

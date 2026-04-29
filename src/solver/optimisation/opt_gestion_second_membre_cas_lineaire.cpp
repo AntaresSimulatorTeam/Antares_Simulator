@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <numeric>
 
@@ -27,7 +9,7 @@ double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, int, int);
 
 static void shortTermStorageLevelsRHS(
-  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  const std::vector<::AREA_INPUT>& shortTermStorageInput,
   int numberOfAreas,
   std::vector<double>& SecondMembre,
   const CORRESPONDANCES_DES_CONTRAINTES& CorrespondanceCntNativesCntOptim,
@@ -47,7 +29,7 @@ static void shortTermStorageLevelsRHS(
 }
 
 static void shortTermStorageCumulationRHS(
-  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  const std::vector<::AREA_INPUT>& shortTermStorageInput,
   int numberOfAreas,
   std::vector<double>& SecondMembre,
   const CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondancesDesContraintesHebdomadaires,
@@ -60,8 +42,8 @@ static void shortTermStorageCumulationRHS(
         {
             for (const auto& additionalConstraints: storage.additionalConstraints)
             {
-                const auto& rhs = additionalConstraints.rhs().getColumn(year);
-                for (const auto& constraint: additionalConstraints.constraints)
+                const auto& rhs = additionalConstraints->rhs().getColumn(year);
+                for (const auto& constraint: additionalConstraints->constraints)
                 {
                     const int cnt = CorrespondancesDesContraintesHebdomadaires
                                       .ShortTermStorageCumulation[constraint.globalIndex];
@@ -110,6 +92,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
     const std::vector<bool>& DefaillanceNegativeUtiliserPMinThermique
       = problemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
 
+    bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
+    bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
+
     for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)
     {
         AdresseOuPlacerLaValeurDesCoutsMarginaux[i] = nullptr;
@@ -128,43 +113,39 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                                                 ->AllMustRunGeneration[pdtHebdo];
         for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            int cnt = CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays];
-            SecondMembre[cnt] = -ConsommationsAbattues.ConsommationAbattueDuPays[pays];
-
-            bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1);
-            bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
+            // Useful variables for the current scope
+            // --------------------------------------
+            double reserveHoraireJmoins1 = 0;
             if (reserveJm1 && opt1)
             {
-                SecondMembre[cnt] -= problemeHebdo->ReserveJMoins1[pays]
-                                       .ReserveHoraireJMoins1[pdtHebdo];
+                reserveHoraireJmoins1 = problemeHebdo->ReserveJMoins1[pays]
+                                          .ReserveHoraireJMoins1[pdtHebdo];
             }
+            double ResidualLoadInArea = ConsommationsAbattues.ConsommationAbattueDuPays[pays];
+            double mustRunGenOfArea = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
+            double MaxMustRunGenOfArea = std::max(0., mustRunGenOfArea);
+            double MaxMoinsConsoBrute = -std::min(0., ResidualLoadInArea + mustRunGenOfArea);
+
+            // ---------------------------------------
+            // RHS for area balance constraint set
+            // ---------------------------------------
+            int cnt = CorrespondanceCntNativesCntOptim.NumeroDeContrainteDesBilansPays[pays];
+
+            SecondMembre[cnt] -= ResidualLoadInArea + reserveHoraireJmoins1;
 
             double* adresseDuResultat = &(
               problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
 
+            // ---------------------------------------
+            // RHS for avoiding fictitious loads
+            // ---------------------------------------
             cnt = CorrespondanceCntNativesCntOptim
                     .NumeroDeContraintePourEviterLesChargesFictives[pays];
-            SecondMembre[cnt] = 0.0;
-
-            double MaxAllMustRunGeneration = 0.0;
-            if (AllMustRunGeneration.AllMustRunGenerationOfArea[pays] > 0.0)
-            {
-                MaxAllMustRunGeneration = AllMustRunGeneration.AllMustRunGenerationOfArea[pays];
-            }
-
-            double MaxMoinsConsommationBrute = 0.0;
-            if (-(ConsommationsAbattues.ConsommationAbattueDuPays[pays]
-                  + AllMustRunGeneration.AllMustRunGenerationOfArea[pays])
-                > 0.0)
-            {
-                MaxMoinsConsommationBrute = -(
-                  ConsommationsAbattues.ConsommationAbattueDuPays[pays]
-                  + AllMustRunGeneration.AllMustRunGenerationOfArea[pays]);
-            }
 
             SecondMembre[cnt] = DefaillanceNegativeUtiliserConsoAbattue[pays]
-                                * (MaxAllMustRunGeneration + MaxMoinsConsommationBrute);
+                                  ? MaxMustRunGenOfArea + MaxMoinsConsoBrute
+                                  : 0.;
 
             if (DefaillanceNegativeUtiliserPMinThermique[pays] == 0)
             {
@@ -172,6 +153,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             }
 
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
+
+            // ---------------------------------------
+            // RHS for maximizing unsupplied energy
+            // ---------------------------------------
+            ResidualLoadInArea += MaxMustRunGenOfArea + reserveHoraireJmoins1;
+
+            cnt = CorrespondanceCntNativesCntOptim.NumeroDeContraintePourBornerLaDefaillance[pays];
+            if (ResidualLoadInArea >= 0.)
+            {
+                SecondMembre[cnt] = ResidualLoadInArea + 1e-5;
+            }
         }
 
         int hourInTheYear = weekFirstHour + pdtHebdo;

@@ -1,31 +1,15 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <stdexcept>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
 
 #include <antares/io/inputs/yml-system/converter.h>
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/parser.h"
 #include "antares/study/system-model/library.h"
@@ -42,9 +26,10 @@ struct LibraryObjects
                            .variables = {},
                            .ports = {},
                            .port_field_definitions = {},
-                           .constraints = {{"constraint1", "cost"}},
+                           .constraints = {{"constraint1", "cost", "subproblems"}},
                            .binding_constraints = {},
-                           .objective = ""};
+                           .objectives = {},
+                           .extra_outputs = {}};
 
     YmlSystem::Parser parser;
     YmlModel::Library library;
@@ -59,6 +44,12 @@ struct LibraryObjects
 
     ~LibraryObjects() = default;
 };
+
+auto getComponent(const std::vector<SystemModel::Component>& components, const std::string& id)
+{
+    return std::ranges::find_if(components,
+                                [&id](const auto& component) { return component.Id() == id; });
+}
 
 BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
 {
@@ -82,10 +73,12 @@ BOOST_FIXTURE_TEST_CASE(full_model_system, LibraryObjects)
 
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
-    BOOST_CHECK_EQUAL(systemModel.Components().size(), 1);
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("N").getParameterValue("cost")), 30);
+    const auto& components = systemModel.Components();
+    BOOST_CHECK_EQUAL(components.size(), 1);
+    const auto compoN = getComponent(components, "N");
+    BOOST_CHECK(compoN != components.cend());
+    BOOST_CHECK_EQUAL(compoN->getModel()->Id(), "node");
+    BOOST_CHECK_EQUAL(std::stod(getComponent(components, "N")->getParameterValue("cost")), 30);
 }
 
 BOOST_FIXTURE_TEST_CASE(bad_param_name_in_component, LibraryObjects)
@@ -125,7 +118,7 @@ BOOST_FIXTURE_TEST_CASE(library_not_existing, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(model_not_existing, LibraryObjects)
@@ -142,7 +135,7 @@ BOOST_FIXTURE_TEST_CASE(model_not_existing, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
@@ -164,7 +157,7 @@ BOOST_FIXTURE_TEST_CASE(bad_library_model_format, LibraryObjects)
 
     YmlSystem::System systemObj = parser.parse(system);
 
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::runtime_error);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 static const auto libraryYaml_1 = R"(
@@ -198,7 +191,9 @@ static const auto libraryYaml_1 = R"(
                 - port: injection_port
                   field: port_name
                   definition: generation
-              objective: cost * generation
+              objective:
+                - id: objective
+                - expression: cost * generation
 
             - id: node
               description: A basic balancing node model
@@ -233,7 +228,7 @@ static const auto libraryYaml_2 = R"(
                   definition: -demand
     )"s;
 
-static const auto systemYaml = R"(
+static const auto systemYml = R"(
         system:
           id: system1
           description: basic description
@@ -276,20 +271,24 @@ BOOST_AUTO_TEST_CASE(Full_system_test)
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_1)));
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml_2)));
 
-    YmlSystem::System systemObj = parserSystem.parse(systemYaml);
+    YmlSystem::System systemObj = parserSystem.parse(systemYml);
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
-    BOOST_CHECK_EQUAL(systemModel.Components().size(), 3);
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").Id(), "N");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getModel()->Id(), "node");
-    BOOST_CHECK_EQUAL(systemModel.Components().at("N").getScenarioGroupId(), "group-234");
+    const auto& components = systemModel.Components();
+    BOOST_CHECK_EQUAL(components.size(), 3);
+    const auto compoN = getComponent(components, "N");
+    BOOST_CHECK_EQUAL(compoN->Id(), "N");
+    BOOST_CHECK_EQUAL(compoN->getModel()->Id(), "node");
+    BOOST_CHECK_EQUAL(compoN->getScenarioGroupId(), "group-234");
 
-    BOOST_CHECK_EQUAL(systemModel.Components().at("G").getModel()->Id(), "generator");
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("G").getParameterValue("cost")), 30);
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("G").getParameterValue("p_max")), 100);
+    const auto compoG = getComponent(components, "G");
+    BOOST_CHECK_EQUAL(compoG->getModel()->Id(), "generator");
+    BOOST_CHECK_EQUAL(std::stod(compoG->getParameterValue("cost")), 30);
+    BOOST_CHECK_EQUAL(std::stod(compoG->getParameterValue("p_max")), 100);
 
-    BOOST_CHECK_EQUAL(systemModel.Components().at("D").getModel()->Id(), "demand");
-    BOOST_CHECK_EQUAL(std::stod(systemModel.Components().at("D").getParameterValue("demand")), 100);
+    const auto compoD = getComponent(components, "D");
+    BOOST_CHECK_EQUAL(compoD->getModel()->Id(), "demand");
+    BOOST_CHECK_EQUAL(std::stod(compoD->getParameterValue("demand")), 100);
 }
 
 constexpr size_t componentsPos = 10;
@@ -326,7 +325,7 @@ struct PrepareYaml
     YmlSystem::Parser parserSystem;
     std::vector<SystemModel::Library> libraries;
 
-    std::string system = systemYaml;
+    std::string system = systemYml;
 
     PrepareYaml()
     {
@@ -346,8 +345,7 @@ BOOST_FIXTURE_TEST_CASE(SystemWithAConnectionOfTwoSendingPorts, PrepareYaml)
                              .secondPort = "injection_port"}});
 
     YmlSystem::System systemObj = parserSystem.parse(system);
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries),
-                      SystemConverter::TwoFieldsOfSameRole);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
@@ -359,8 +357,7 @@ BOOST_FIXTURE_TEST_CASE(TryPortSelfConnection, PrepareYaml)
                              .secondPort = "injection_port"}});
 
     YmlSystem::System systemObj = parserSystem.parse(system);
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries),
-                      SystemConverter::ConnectingPortToItSelf);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
@@ -374,14 +371,13 @@ BOOST_FIXTURE_TEST_CASE(SystemWithSenderAndReceiverPort, PrepareYaml)
     auto systemModel = SystemConverter::convert(systemObj, libraries);
 
     auto& components = systemModel.Components();
+    const auto component_N = getComponent(components, "N");
+    const auto component_G = getComponent(components, "G");
+    const auto component_D = getComponent(components, "D");
 
-    auto& component_N = components.at("N");
-    auto& component_G = components.at("G");
-    auto& component_D = components.at("D");
-
-    auto connections_to_N = component_N.componentConnectionsViaPort(port_id);
-    auto connections_to_G = component_G.componentConnectionsViaPort(port_id);
-    auto connections_to_D = component_D.componentConnectionsViaPort(port_id);
+    auto connections_to_N = component_N->componentConnectionsViaPort(port_id);
+    auto connections_to_G = component_G->componentConnectionsViaPort(port_id);
+    auto connections_to_D = component_D->componentConnectionsViaPort(port_id);
 
     BOOST_CHECK(connections_to_N.size() == 1);
     BOOST_CHECK(connections_to_G.size() == 0);
@@ -399,7 +395,7 @@ BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownCompo, PrepareYaml)
                              .secondCompo = "DD",
                              .secondPort = "injection_port"}});
     YmlSystem::System systemObj = parserSystem.parse(system);
-    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), std::invalid_argument);
+    BOOST_CHECK_THROW(SystemConverter::convert(systemObj, libraries), InputError);
 }
 
 BOOST_FIXTURE_TEST_CASE(TryToConnectWithUnknownPort, PrepareYaml)
@@ -433,7 +429,7 @@ BOOST_FIXTURE_TEST_CASE(DuplicatedCompo, PrepareYaml)
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(systemObj,
                                                    {ModelConverter::convert(
                                                      YmlModel::Parser().parse(libraryYaml_1))}),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage("System has at least two components with the same id "
                                        "('N'), this is not supported"));
 }

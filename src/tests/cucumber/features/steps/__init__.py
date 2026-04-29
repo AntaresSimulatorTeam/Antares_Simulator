@@ -1,5 +1,7 @@
-from import_helper import import_steps
+from import_helper import import_shared_utils, import_steps
 from pathlib import Path
+
+import_shared_utils()
 
 STEPS_DIR_NAME = "steps"
 STEPS_DIR = Path(__file__).parent

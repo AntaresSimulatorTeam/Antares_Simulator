@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -8,18 +9,15 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../../system/windows.hdr.h"
 #include <time.h>
+
+#include "../../system/windows.hdr.h"
 #ifdef YUNI_OS_WINDOWS
 #include <wchar.h>
 #endif
 #include "time.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace LogsDecorator
+namespace Yuni::Private::LogsDecorator
 {
 
 void WriteCurrentTimestampToBuffer(char buffer[32])
@@ -30,7 +28,6 @@ void WriteCurrentTimestampToBuffer(char buffer[32])
     time_t rawtime = ::time(nullptr);
 #endif
 
-
 #if defined(YUNI_OS_MSVC)
     struct tm timeinfo;
     // Microsoft Visual Studio
@@ -40,10 +37,8 @@ void WriteCurrentTimestampToBuffer(char buffer[32])
 
 #else
     // Unixes
-    ::strftime(buffer, 32, "%F %T",  ::localtime(&rawtime));
+    ::strftime(buffer, 32, "%F %T", ::localtime(&rawtime));
 #endif
 }
 
-} // namespace LogsDecorator
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::LogsDecorator

@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "modified-inode.h"
 
@@ -35,7 +17,7 @@
 using namespace Yuni;
 using namespace Antares;
 
-namespace // anonymous
+namespace modified_inode
 {
 enum
 {
@@ -153,15 +135,13 @@ void UserData::syncBeforeRelease()
     }
 }
 
-} // anonymous namespace
-
 static void OnFileEvent(const String& filename,
                         const String& parent,
                         int64_t modified,
                         uint64_t size,
                         void* user)
 {
-    if (not(modified < ((UserData*)user)->dateLimit))
+    if (not(modified < ((modified_inode::UserData*)user)->dateLimit))
     {
         return;
     }
@@ -176,7 +156,7 @@ static void OnFileEvent(const String& filename,
     DateTime::TimestampToString(text, "%a, %d %b %Y", modified, false);
     text += ") ";
 
-    auto* userdata = (UserData*)user;
+    auto* userdata = (modified_inode::UserData*)user;
 
     // mutex
     MutexLocker locker(userdata->mutex);
@@ -210,12 +190,13 @@ static FSWalker::Flow OnDirectoryEvent(const String& path, bool empty, void* use
 {
     if (empty)
     {
-        auto* userdata = (UserData*)user;
+        auto* userdata = (modified_inode::UserData*)user;
         MutexLocker locker(userdata->mutex);
         userdata->pathsToDeleteIfEmpty.insert(path);
     }
     return FSWalker::flContinue;
 }
+} // namespace modified_inode
 
 const char* ModifiedINode::caption() const
 {
@@ -224,17 +205,17 @@ const char* ModifiedINode::caption() const
 
 FSWalker::OnFileEvent ModifiedINode::fileEvent()
 {
-    return &OnFileEvent;
+    return &modified_inode::OnFileEvent;
 }
 
 FSWalker::OnDirectoryEvent ModifiedINode::directoryEvent()
 {
-    return &OnDirectoryEvent;
+    return &modified_inode::OnDirectoryEvent;
 }
 
 void* ModifiedINode::userdataCreate(FSWalker::DispatchJobEvent&)
 {
-    auto* user = new UserData();
+    auto* user = new modified_inode::UserData();
     user->dateLimit = pDateLimit;
     return user;
 }
@@ -247,14 +228,14 @@ void ModifiedINode::userdataDestroy(void* userdata)
     {
         {
             std::lock_guard lock(pMutex);
-            bytesDeleted += ((UserData*)userdata)->bytesDeleted;
-            filesDeleted += ((UserData*)userdata)->filesDeleted;
-            foldersDeleted += ((UserData*)userdata)->foldersDeleted;
+            bytesDeleted += ((modified_inode::UserData*)userdata)->bytesDeleted;
+            filesDeleted += ((modified_inode::UserData*)userdata)->filesDeleted;
+            foldersDeleted += ((modified_inode::UserData*)userdata)->foldersDeleted;
         }
 
         // destroying the user data
-        ((UserData*)userdata)->syncBeforeRelease();
-        delete (UserData*)userdata;
+        ((modified_inode::UserData*)userdata)->syncBeforeRelease();
+        delete (modified_inode::UserData*)userdata;
     }
 }
 

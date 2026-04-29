@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -31,22 +32,15 @@
 #define YUNI_ATOMIC_INHERITS
 #endif
 
-namespace Yuni
-{
-namespace Atomic
+namespace Yuni::Atomic
 {
 // Forward declaration
 template<int Size, template<class> class TP>
 class Int;
 
-} // namespace Atomic
-} // namespace Yuni
+} // namespace Yuni::Atomic
 
-namespace Yuni
-{
-namespace Private
-{
-namespace AtomicImpl
+namespace Yuni::Private::AtomicImpl
 {
 template<int ThreadSafe, class C>
 struct ThreadingPolicy final
@@ -95,6 +89,7 @@ struct TypeFromSize<1> final
     {
         size = 32
     };
+
     typedef int32_t Type;
 };
 
@@ -109,6 +104,7 @@ struct TypeFromSize<16> final
     {
         size = 32
     };
+
     typedef int32_t Type;
 };
 
@@ -120,6 +116,7 @@ struct TypeFromSize<32> final
     {
         size = 32
     };
+
     typedef int32_t Type;
 };
 
@@ -131,6 +128,7 @@ struct TypeFromSize<64> final
     {
         size = 64
     };
+
     typedef int64_t Type;
 };
 
@@ -362,6 +360,4 @@ struct Operator<64, TP> final
 
 }; // class Operator<64, TP>
 
-} // namespace AtomicImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::AtomicImpl

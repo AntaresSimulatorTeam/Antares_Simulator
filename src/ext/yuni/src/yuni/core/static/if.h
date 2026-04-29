@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "remove.h"
 
-namespace Yuni
-{
-namespace Static
+namespace Yuni::Static
 {
 /*!
 ** \brief Choose statically between two types
@@ -70,5 +69,4 @@ struct If<false, IfTrue, IfFalse> final
     }
 };
 
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static

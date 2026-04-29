@@ -2,13 +2,15 @@ name: Oracle 8 CI (push and/or release)
 
 on:
   release:
-    types: [created]
+    types: [ created ]
   push:
     branches:
-      - develop
-      - dependabot/*
+    - develop
+    - dependabot/*
+    - release/*
+    - copilot/*
   schedule:
-    - cron: '21 2 * * *'
+  - cron: '21 2 * * *'
   workflow_call:
     inputs:
       run-tests:
@@ -38,13 +40,17 @@ jobs:
 
     - name: Set up Python
       run: |
-           dnf update -y
-           dnf install -y python3 python3-pip
+        dnf update -y
+        dnf config-manager --set-enabled ol8_appstream
+        dnf makecache
+        dnf install -y python3.12
+        python3 --version
+        dnf install -y python3.12-pip
 
     - name: Install libraries
       run: |
-           dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
-           dnf install -y unzip libuuid-devel boost-test boost-devel gcc-toolset-11 zlib-devel
+        dnf install -y epel-release git cmake wget rpm-build redhat-lsb-core
+        dnf install -y unzip libuuid-devel gcc-toolset-11 zlib-devel perl-IPC-Cmd perl-Text-Template perl-Data-Dumper perl-Time-Piece flex bison
 
     - name: Checkout
       run: |
@@ -63,7 +69,7 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -72,26 +78,26 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
+        echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_oraclelinux-8_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download & extract OR-Tools
       run: |
-           mkdir -p  ${{env.ORTOOLS_DIR}}
-           cd ${{env.ORTOOLS_DIR}}
-           wget ${{env.ORTOOLS_URL}} -O ortools.zip
-           unzip ortools.zip
-           rm ortools.zip
+        mkdir -p  ${{env.ORTOOLS_DIR}}
+        cd ${{env.ORTOOLS_DIR}}
+        wget ${{env.ORTOOLS_URL}} -O ortools.zip
+        unzip ortools.zip
+        rm ortools.zip
 
     - name: Install dependencies
       run: |
-          pip3 install -r src/tests/examples/requirements.txt
+        pip3 install -r src/tests/examples/requirements.txt
 
     - name: Install gh if needed
       if: ${{ env.IS_RELEASE == 'true' || github.ref == 'refs/heads/develop'}}
       run: |
-           dnf -y install 'dnf-command(config-manager)'
-           dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-           dnf -y install gh
+        dnf -y install 'dnf-command(config-manager)'
+        dnf -y config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+        dnf -y install gh
 
     - name: Configure
       run: |
@@ -107,8 +113,8 @@ jobs:
 
     - name: Build
       run: |
-           source /opt/rh/gcc-toolset-11/enable
-           cmake --build _build --config Release -j$(nproc)
+        source /opt/rh/gcc-toolset-11/enable
+        cmake --build _build --config Release -j$(nproc)
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -118,32 +124,33 @@ jobs:
 
     - name: Installer .rpm creation
       run: |
-           cd _build
-           cpack -G RPM
-
-    - name: Solver archive creation
-      run: |
-           cd _build
-           cmake --install . --prefix install
-           pushd .
-           cd install/bin
-           tar czf ../../antares-solver_oracle8.tar.gz antares-solver libsirius_solver.so
-           popd
-           rm -rf install
+        cd _build
+        cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib64;bin"
 
     - name: .tar.gz creation
       run: |
-           cd _build
-           cpack -G TGZ
+        cd _build
+        cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib64;bin"
+
+    - name: Solver archive creation
+      run: |
+        cd _build
+        cmake --install . --prefix install
+        pushd .
+        cd install/bin
+        cp ${{ env.ORTOOLS_DIR }}/install/lib64/*.so* .
+        tar czf ../../antares-solver_oracle8.tar.gz antares-solver libsirius_solver.so *.so*
+        popd
+        rm -rf install
 
     - name: Installer TGZ push
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: oracle-targz
         path: _build/*.tar.gz
 
     - name: Installer RPM push
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: oracle-rpm
         path: _build/*.rpm
@@ -166,9 +173,9 @@ jobs:
         gh release upload --clobber continuous-delivery _build/*.tar.gz _build/*.rpm
 
     - name: Cache vcpkg binary dir
-      if: always()
+      if: ${{ !cancelled() }}
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
         key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}

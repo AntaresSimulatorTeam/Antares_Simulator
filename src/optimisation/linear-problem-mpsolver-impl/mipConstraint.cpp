@@ -1,29 +1,12 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <ortools/linear_solver/linear_solver.h>
 
 #include <antares/logs/logs.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipConstraint.h>
 #include <antares/optimisation/linear-problem-mpsolver-impl/mipVariable.h>
+#include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 
 namespace Antares::Optimisation::LinearProblemMpsolverImpl
 {
@@ -71,9 +54,9 @@ void OrtoolsMipConstraint::setCoefficient(LinearProblemApi::IMipVariable* var, d
     mpConstraint_->SetCoefficient(mpvar->getMpVar(), coefficient);
 }
 
-double OrtoolsMipConstraint::getCoefficient(LinearProblemApi::IMipVariable* var)
+double OrtoolsMipConstraint::getCoefficient(const LinearProblemApi::IMipVariable* var) const
 {
-    auto* mpvar = dynamic_cast<OrtoolsMipVariable*>(var);
+    const auto* mpvar = dynamic_cast<const OrtoolsMipVariable*>(var);
     if (!mpvar)
     {
         logs.error()
@@ -84,9 +67,32 @@ double OrtoolsMipConstraint::getCoefficient(LinearProblemApi::IMipVariable* var)
     return mpConstraint_->GetCoefficient(mpvar->getMpVar());
 }
 
+std::vector<std::pair<int, double>> OrtoolsMipConstraint::getCoefficients() const
+{
+    const auto& terms = mpConstraint_->terms();
+    std::vector<std::pair<int, double>> coeffs;
+    coeffs.reserve(terms.size());
+    std::ranges::transform(terms,
+                           std::back_inserter(coeffs),
+                           [](const auto& term)
+                           { return std::make_pair(term.first->index(), term.second); });
+
+    return coeffs;
+}
+
+double OrtoolsMipConstraint::dual() const
+{
+    return mpConstraint_->dual_value();
+}
+
 const std::string& OrtoolsMipConstraint::getName() const
 {
     return mpConstraint_->name();
+}
+
+LinearProblemApi::MipBasisStatus OrtoolsMipConstraint::getMipBasisStatus() const
+{
+    return convertOrtoolsBasisStatus(mpConstraint_->basis_status());
 }
 
 } // namespace Antares::Optimisation::LinearProblemMpsolverImpl

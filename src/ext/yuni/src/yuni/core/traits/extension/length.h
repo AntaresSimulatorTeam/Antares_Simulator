@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,15 +10,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
-#include <string>
 #include <cstring>
+#include <string>
+
+#include "../../../yuni.h"
 #include "../../smartptr.h"
 #include "../length.h"
 
-namespace Yuni
-{
-namespace Extension
+namespace Yuni::Extension
 {
 // C{N}
 template<int N, class SizeT>
@@ -25,6 +25,7 @@ class Length<char[N], SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -49,6 +50,7 @@ class Length<char*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -69,6 +71,7 @@ class Length<wchar_t*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -90,6 +93,7 @@ class Length<char, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -110,6 +114,7 @@ class Length<wchar_t, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -130,6 +135,7 @@ class Length<Yuni::CString<ChunkSizeT, ExpandableT>, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -161,11 +167,11 @@ template<uint ChunkSizeT,
          class SizeT>
 class Length<
   Yuni::SmartPtr<Yuni::CString<ChunkSizeT, ExpandableT>, OwspP, ChckP, ConvP, StorP, ConsP>,
-  SizeT>
-  final
+  SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -191,6 +197,7 @@ class Length<Yuni::CString<ChunkSizeT, ExpandableT>*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -211,6 +218,7 @@ class Length<std::basic_string<C, T, Alloc>, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -242,11 +250,11 @@ template<class C,
          template<class>
          class ConsP>
 class Length<Yuni::SmartPtr<std::basic_string<C, T, Alloc>, OwspP, ChckP, ConvP, StorP, ConsP>,
-             SizeT>
-  final
+             SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -271,6 +279,7 @@ class Length<std::basic_string<C, T, Alloc>*, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -295,6 +304,7 @@ class Length<YuniNullPtr, SizeT> final
 {
 public:
     typedef SizeT SizeType;
+
     enum
     {
         valid = 1,
@@ -309,5 +319,4 @@ public:
     }
 };
 
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension

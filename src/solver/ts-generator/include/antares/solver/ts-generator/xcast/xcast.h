@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_H__
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_H__
 
@@ -26,17 +9,12 @@
 
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/fwd.h>
-#include <antares/study/progression/progression.h>
 #include <antares/writer/i_writer.h>
 #include "antares/solver/ts-generator/xcast/studydata.h"
 
 using namespace Antares::Solver;
 
-namespace Antares
-{
-namespace TSGenerator
-{
-namespace XCast
+namespace Antares::TSGenerator::XCast
 {
 /*!
 ** \brief XCast Generator for Load, Wind and solar timeseries
@@ -109,13 +87,13 @@ private:
     template<class PredicateT>
     void updateMissingCoefficients(PredicateT& predicate);
     template<class PredicateT>
-    bool runWithPredicate(PredicateT& predicate, Progression::Task& progression);
+    bool runWithPredicate(PredicateT& predicate);
 
     /*!
     ** \brief Export all time-series for each process into the output folder
     */
     template<class PredicateT>
-    void exportTimeSeriesToTheOutput(Progression::Task& progression, PredicateT& predicate);
+    void exportTimeSeriesToTheOutput(PredicateT& predicate);
 
     /*!
     ** \brief Perform the generation of the time-series on a single day for all processes
@@ -250,9 +228,7 @@ private:
     IResultWriter& pWriter;
 }; // class XCast
 
-} // namespace XCast
-} // namespace TSGenerator
-} // namespace Antares
+} // namespace Antares::TSGenerator::XCast
 
 #include "xcast.hxx"
 

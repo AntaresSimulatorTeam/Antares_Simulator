@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -13,12 +14,12 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* ou _BSD_SOURCE or _SVID_SOURCE */
 #endif
-#include <unistd.h>
-#include <sys/types.h>
 #include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
 #endif
-#include "id.h"
 #include "../core/system/windows.hdr.h"
+#include "id.h"
 #ifndef YUNI_NO_THREAD_SAFE
 #include "pthread.h"
 #ifdef YUNI_OS_WINDOWS
@@ -29,9 +30,7 @@
 #include <pthread.h>
 #endif
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 #ifndef YUNI_NO_THREAD_SAFE
 uint64_t ID()
@@ -68,5 +67,4 @@ uint64_t ID()
 
 #endif
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

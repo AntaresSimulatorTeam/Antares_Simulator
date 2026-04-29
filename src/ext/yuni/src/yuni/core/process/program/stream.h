@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "../../../yuni.h"
 #include "../../smartptr.h"
 
-namespace Yuni
-{
-namespace Process
+namespace Yuni::Process
 {
 /*!
 ** \brief Process Stream
@@ -31,6 +30,7 @@ public:
     Stream()
     {
     }
+
     virtual ~Stream()
     {
     }
@@ -51,7 +51,7 @@ public:
     }
 };
 
-class CaptureOutput : public Process::Stream
+class CaptureOutput: public Process::Stream
 {
 public:
     typedef SmartPtr<CaptureOutput> Ptr;
@@ -60,6 +60,7 @@ public:
     CaptureOutput()
     {
     }
+
     virtual ~CaptureOutput()
     {
     }
@@ -82,5 +83,4 @@ public:
 
 }; // class CaptureOutput
 
-} // namespace Process
-} // namespace Yuni
+} // namespace Yuni::Process

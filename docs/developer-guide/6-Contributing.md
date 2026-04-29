@@ -255,7 +255,6 @@ v = w * (x + z);
 
 // Space after double dash. And full sentences in comments.
 ```
-
 ## Tips and Hints
 
 - If you see outdated code which can be improved, DO IT NOW (but in a separate pull request or commit)!
@@ -276,3 +275,13 @@ v = w * (x + z);
   - `logs.warning() << msg`: indicates undesired behavior that is not an error, and that does not interrupt processing or the application. Use if for issues that do not interrupt simulation (obsolete parameter ignored, input data ignored, etc.).
   - `logs.info() << msg`: information message explaining how the simulator works, intended for the person or application using it
   - `logs.debug() << msg`: information message to facilitate debugging, intended for developers
+
+## A final word about `final`
+Please use the `final` keyword for classes that won't be derived. It can avoid unintended overrides (fewer bugs) and save vtable lookups/improve compiler inlining (fewer CPU cycles).
+
+```cpp
+class WillNotBeDerived final
+{
+
+};
+```

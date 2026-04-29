@@ -1,3 +1,8 @@
+
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +15,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Logs
+namespace Yuni::Logs
 {
 template<class NextHandler>
 bool File<NextHandler>::logfile(const AnyString& filename)
@@ -61,7 +64,9 @@ void File<NextHandler>::internalDecoratorWriteWL(LoggerT& logger, const AnyStrin
 {
     if (pFile.opened())
     {
+#if defined(__GNUC__) && !defined(__clang__)
         using DecoratorsType = typename LoggerT::DecoratorsType;
+#endif
         // Append the message to the file
         logger.DecoratorsType::template internalDecoratorAddPrefix<File, VerbosityType>(pFile, s);
 
@@ -78,5 +83,4 @@ void File<NextHandler>::internalDecoratorWriteWL(LoggerT& logger, const AnyStrin
     NextHandler::template internalDecoratorWriteWL<LoggerT, VerbosityType>(logger, s);
 }
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs

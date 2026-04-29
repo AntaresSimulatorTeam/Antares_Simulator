@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -8,16 +9,18 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../system/windows.hdr.h"
 #include "file.h"
+
+#include "../system/windows.hdr.h"
 #ifndef YUNI_OS_WINDOWS
 #include <dlfcn.h>
 #else
 #include "../../core/string/wstring.h"
 #endif
 #include <stdio.h>
-#include "../../io/file.h"
+
 #include "../../io/directory.h"
+#include "../../io/file.h"
 
 #ifdef YUNI_OS_WINDOWS
 #define YUNI_DYNLIB_DLOPEN(X) ::LoadLibraryW(X)
@@ -37,9 +40,7 @@
 #define YUNI_DYNLIB_DLSYM(X, Y) ::dlsym(X, Y)
 #endif
 
-namespace Yuni
-{
-namespace DynamicLibrary
+namespace Yuni::DynamicLibrary
 {
 // Implementation of the static variable
 const File::Handle File::NullHandle = nullptr;
@@ -100,25 +101,29 @@ static inline bool FindLibrary(String& out, const AnyString& filename)
 
 } // anonymous namespace
 
-File::File(const AnyString& filename, Relocation relocation, Visibility visibility) :
- pHandle(NullHandle)
+File::File(const AnyString& filename, Relocation relocation, Visibility visibility):
+    pHandle(NullHandle)
 {
     (void)loadFromFile(filename, relocation, visibility);
 }
 
-File::File(const AnyString& filename) : pHandle(NullHandle)
+File::File(const AnyString& filename):
+    pHandle(NullHandle)
 {
     (void)loadFromFile(filename, relocationLazy, visibilityDefault);
 }
 
-File::File() : pHandle(NullHandle)
+File::File():
+    pHandle(NullHandle)
 {
 }
 
 File::~File()
 {
     if (NullHandle != pHandle)
+    {
         YUNI_DYNLIB_DLCLOSE(pHandle);
+    }
 }
 
 bool File::loadFromFile(const AnyString& filename, File::Relocation r, File::Visibility v)
@@ -128,7 +133,9 @@ bool File::loadFromFile(const AnyString& filename, File::Relocation r, File::Vis
     {
         // If the file name is absolute, there is no need for research
         if (IO::IsAbsolute(filename))
+        {
             return loadFromRawFilename(filename, r, v);
+        }
 
         // A temporary string, where to write the absolute filename
         String s;
@@ -137,7 +144,9 @@ bool File::loadFromFile(const AnyString& filename, File::Relocation r, File::Vis
         // Search paths
         // TODO : find a far more efficient way for doing this
         if (FindLibrary(s, filename))
+        {
             return loadFromRawFilename(s, r, v);
+        }
     }
 
     // Make sure the library has been unloaded
@@ -172,7 +181,9 @@ bool File::loadFromRawFilename(const AnyString& filename, File::Relocation, File
         // Loading
         WString buffer(filename, true);
         if (buffer.empty())
+        {
             return false;
+        }
 
         pHandle = YUNI_DYNLIB_DLOPEN(buffer.c_str());
         if (NullHandle != pHandle)
@@ -197,7 +208,9 @@ bool File::loadFromRawFilename(const AnyString& filename, File::Relocation r, Fi
         // The mode
         int mode = ((relocationLazy == r) ? RTLD_LAZY : RTLD_NOW);
         if (visibilityDefault != v)
+        {
             mode |= ((visibilityGlobal == v) ? RTLD_GLOBAL : RTLD_LOCAL);
+        }
 
         // Loading
         pHandle = YUNI_DYNLIB_DLOPEN(filename.c_str(), mode);
@@ -225,5 +238,4 @@ Symbol File::resolve(const AnyString& name) const
              : nullptr;
 }
 
-} // namespace DynamicLibrary
-} // namespace Yuni
+} // namespace Yuni::DynamicLibrary

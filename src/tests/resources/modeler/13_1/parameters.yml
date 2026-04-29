@@ -1,0 +1,7 @@
+solver: highs
+solver-logs: true
+solver-parameters: THREADS 1
+no-output: false
+export-mps: true
+first-time-step: 0
+last-time-step: 0

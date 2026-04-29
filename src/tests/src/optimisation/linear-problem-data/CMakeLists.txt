@@ -9,4 +9,7 @@ add_boost_test(unit-tests-for-modeler-data-series
         testLinearProblemData.cpp
         LIBS
         linear-problem-data-impl
-        test_utils_unit)
+        test_utils_unit
+        Antares::optim-model-filler
+        Antares::modeler-optimisation-container
+)

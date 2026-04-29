@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,53 +10,50 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "platform.h"
-#include "../../../core/slist.h"
+
 #include <cassert>
-#include "../../io.h"
-#include "../../directory.h"
-#include "../info.h"
+
 #include "../../../core/noncopyable.h"
+#include "../../../core/slist.h"
+#include "../../directory.h"
+#include "../../io.h"
+#include "../info.h"
 
 #ifdef YUNI_OS_WINDOWS
-#include "../../../core/system/windows.hdr.h"
-#include <wchar.h>
 #include <io.h>
+#include <wchar.h>
+
+#include "../../../core/system/windows.hdr.h"
 #else
-#include <errno.h>
 #include <dirent.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #endif
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::Private::IO::Directory
 {
 enum
 {
     wbufferMax = 6192,
 };
 
-class DirInfo final : private Yuni::NonCopyable<DirInfo>
+class DirInfo final: private Yuni::NonCopyable<DirInfo>
 {
 public:
-    DirInfo() :
-     size(),
-     modified(),
-     isFolder(false),
+    DirInfo():
+        size(),
+        modified(),
+        isFolder(false),
 #ifndef YUNI_OS_WINDOWS
-     pdir(nullptr),
-     pent(nullptr)
+        pdir(nullptr),
+        pent(nullptr)
 #else
-     h(-1),
-     callNext(false)
+        h(-1),
+        callNext(false)
 #endif
     {
     }
@@ -64,10 +62,14 @@ public:
     {
 #ifdef YUNI_OS_WINDOWS
         if (h >= 0)
+        {
             _findclose(h);
+        }
 #else
         if (pdir) // check required to avoid segv
+        {
             closedir(pdir);
+        }
 #endif
     }
 
@@ -85,8 +87,12 @@ public:
         wbuffer[1] = L'\\';
         wbuffer[2] = L'?';
         wbuffer[3] = L'\\';
-        int n = ::MultiByteToWideChar(
-          CP_UTF8, 0, canonPath.c_str(), canonPath.size(), wbuffer + 4, wbufferMax - 10);
+        int n = ::MultiByteToWideChar(CP_UTF8,
+                                      0,
+                                      canonPath.c_str(),
+                                      canonPath.size(),
+                                      wbuffer + 4,
+                                      wbufferMax - 10);
         if (!n)
         {
             h = -1;
@@ -131,14 +137,18 @@ public:
             {
                 if ((pent->d_name[1] == '.' and pent->d_name[2] == '\0')
                     or (pent->d_name[1] == '\0'))
+                {
                     continue;
+                }
             }
 
             name = (const char*)pent->d_name;
             filename.clear();
             filename << parent << Yuni::IO::Separator << name;
             if (stat(filename.c_str(), &s) != 0)
+            {
                 continue;
+            }
 
             if (S_ISDIR(s.st_mode))
             {
@@ -170,7 +180,9 @@ public:
 #else // WINDOWS
 
         if (h < 0)
+        {
             return false;
+        }
         do
         {
             if (callNext and 0 != _wfindnexti64(h, &data))
@@ -185,16 +197,32 @@ public:
             if (*(data.name) == L'.')
             {
                 if ((data.name[1] == L'.' and data.name[2] == L'\0') or (data.name[1] == L'\0'))
+                {
                     continue;
+                }
             }
 
-            const int sizeRequired
-              = WideCharToMultiByte(CP_UTF8, 0, data.name, -1, nullptr, 0, nullptr, nullptr);
+            const int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                                         0,
+                                                         data.name,
+                                                         -1,
+                                                         nullptr,
+                                                         0,
+                                                         nullptr,
+                                                         nullptr);
             if (sizeRequired <= 0)
+            {
                 continue;
+            }
             name.reserve((uint)sizeRequired);
-            WideCharToMultiByte(
-              CP_UTF8, 0, data.name, -1, (char*)name.data(), sizeRequired, nullptr, nullptr);
+            WideCharToMultiByte(CP_UTF8,
+                                0,
+                                data.name,
+                                -1,
+                                (char*)name.data(),
+                                sizeRequired,
+                                nullptr,
+                                nullptr);
             name.resize(((uint)sizeRequired) - 1);
 
             filename.clear();
@@ -256,11 +284,13 @@ private:
 class IteratorData final
 {
 public:
-    IteratorData() : flags()
+    IteratorData():
+        flags()
     {
     }
 
-    IteratorData(const IteratorData& rhs) : flags(rhs.flags)
+    IteratorData(const IteratorData& rhs):
+        flags(rhs.flags)
     {
         if (not rhs.dirinfo.empty())
         {
@@ -304,7 +334,9 @@ public:
                 // Parent folder
                 pop();
                 if (dirinfo.empty())
+                {
                     return false;
+                }
             }
             else
             {
@@ -358,7 +390,9 @@ IteratorData* IteratorDataNext(IteratorData* data)
 {
     assert(data);
     if (data->next())
+    {
         return data;
+    }
     delete data;
     return nullptr;
 }
@@ -405,7 +439,4 @@ bool IteratorDataIsFile(const IteratorData* data)
     return !data->dirinfo.front().isFolder;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::IO::Directory

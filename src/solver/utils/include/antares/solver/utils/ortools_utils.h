@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <map>
@@ -40,9 +23,9 @@ enum class SolverType;
 
 using namespace operations_research;
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter& writer,
-                                                   const std::string& filename);
+// TODO use Objective().Value() instead
+// This is a temporary workaround for Windows
+double getObjectiveValue(const MPSolver* solver);
 
 /*!
  *  \brief Returns a comma-seperated-list of available ortools linear solver names on our side
@@ -66,6 +49,11 @@ std::list<std::string> availableLinearSolversList();
 std::list<std::string> availableQuadraticSolversList();
 
 /*!
+ *  \brief Check if a linear solver is available
+ */
+bool isLinearSolverAvailable(const std::string& solverName);
+
+/*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
  *  \return MPSolver
@@ -75,7 +63,7 @@ MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName);
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
 
-class OrtoolsUtils
+class OrtoolsUtils final
 {
 public:
     struct SolverNames

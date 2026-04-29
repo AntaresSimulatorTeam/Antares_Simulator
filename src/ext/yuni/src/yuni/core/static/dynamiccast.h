@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "inherit.h"
 
-namespace Yuni
-{
-namespace Static
+namespace Yuni::Static
 {
 // Forward declaration
 template<class C, class BaseT, int CInheritsFromBaseT = InheritsFrom<C, BaseT>::Yes>
@@ -89,5 +88,4 @@ struct DynamicCastWhenInherits<C, BaseT, 0>
     }
 };
 
-} // namespace Static
-} // namespace Yuni
+} // namespace Yuni::Static

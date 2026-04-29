@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,15 +10,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "observer.h"
 #include <cassert>
 
-namespace Yuni
-{
-namespace Event
+#include "observer.h"
+
+namespace Yuni::Event
 {
 template<class D, template<class> class TP>
-inline Observer<D, TP>::Observer() : pCanObserve(true)
+inline Observer<D, TP>::Observer():
+    pCanObserve(true)
 {
 }
 
@@ -43,7 +44,9 @@ void Observer<D, TP>::destroyingObserver()
     {
         IEvent::List::iterator end = pEvents.end();
         for (IEvent::List::iterator i = pEvents.begin(); i != end; ++i)
+        {
             (*i)->internalDetachObserver(this);
+        }
         pEvents.clear();
     }
 }
@@ -57,7 +60,9 @@ void Observer<D, TP>::disconnectAllEventEmitters()
     {
         IEvent::List::iterator end = pEvents.end();
         for (IEvent::List::iterator i = pEvents.begin(); i != end; ++i)
+        {
             (*i)->internalDetachObserver(this);
+        }
         pEvents.clear();
     }
 }
@@ -71,7 +76,9 @@ void Observer<D, TP>::disconnectEvent(const IEvent* event)
         typename ThreadingPolicy::MutexLocker locker(*this);
         // Disconnecting from the event
         if (not pEvents.empty() and IEvent::RemoveFromList(pEvents, event))
+        {
             event->internalDetachObserver(this);
+        }
     }
 }
 
@@ -80,7 +87,9 @@ void Observer<D, TP>::internalAttachEvent(IEvent* evt)
 {
     typename ThreadingPolicy::MutexLocker locker(*this);
     if (pCanObserve and !IEvent::Exists(pEvents, evt))
+    {
         pEvents.push_back(evt);
+    }
 }
 
 template<class D, template<class> class TP>
@@ -90,5 +99,4 @@ inline void Observer<D, TP>::internalDetachEvent(const IEvent* evt)
     IEvent::RemoveFromList(pEvents, evt);
 }
 
-} // namespace Event
-} // namespace Yuni
+} // namespace Yuni::Event

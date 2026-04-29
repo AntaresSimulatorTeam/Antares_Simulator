@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -21,9 +22,7 @@
 #endif
 #include "mutex.h"
 
-namespace Yuni
-{
-namespace Policy
+namespace Yuni::Policy
 {
 /*!
 ** \name Threading policies
@@ -85,10 +84,12 @@ public:
         MutexLocker()
         {
         }
+
         template<class C>
         MutexLocker(const C&)
         {
         }
+
         ~MutexLocker()
         {
         }
@@ -116,14 +117,17 @@ public:
     SingleThreaded()
     {
     }
+
     //! Copy constructor
     SingleThreaded(const SingleThreaded&)
     {
     }
+
     //! Destructor
     ~SingleThreaded()
     {
     }
+
     //@}
 
 }; // class SingleThreaded
@@ -154,7 +158,8 @@ public:
     {
     public:
         template<class C>
-        MutexLocker(const C& h) : pHostToLock(MutexExtractor<C>::Reference(h))
+        MutexLocker(const C& h):
+            pHostToLock(MutexExtractor<C>::Reference(h))
         {
             pHostToLock.lock();
         }
@@ -187,17 +192,22 @@ public:
     //! \name Constructor & Destructor
     //@{
     //! Default constructor
-    ObjectLevelLockable() : pMutex(true /*recursive*/)
+    ObjectLevelLockable():
+        pMutex(true /*recursive*/)
     {
     }
+
     //! Copy constructor
-    ObjectLevelLockable(const ObjectLevelLockable&) : pMutex(true /*recursive*/)
+    ObjectLevelLockable(const ObjectLevelLockable&):
+        pMutex(true /*recursive*/)
     {
     }
+
     //! Destructor
     ~ObjectLevelLockable()
     {
     }
+
     //@}
 
 protected:
@@ -232,7 +242,8 @@ public:
     {
     public:
         template<class C>
-        MutexLocker(const C& h) : pHostToLock(MutexExtractor<C>::Reference(h))
+        MutexLocker(const C& h):
+            pHostToLock(MutexExtractor<C>::Reference(h))
         {
             pHostToLock.lock();
         }
@@ -265,17 +276,22 @@ public:
     //! \name Constructor & Destructor
     //@{
     //! Default constructor
-    ObjectLevelLockableNotRecursive() : pMutex(false)
+    ObjectLevelLockableNotRecursive():
+        pMutex(false)
     {
     }
+
     //! Copy constructor
-    ObjectLevelLockableNotRecursive(const ObjectLevelLockableNotRecursive&) : pMutex(false)
+    ObjectLevelLockableNotRecursive(const ObjectLevelLockableNotRecursive&):
+        pMutex(false)
     {
     }
+
     //! Destructor
     ~ObjectLevelLockableNotRecursive()
     {
     }
+
     //@}
 
 protected:
@@ -313,14 +329,17 @@ public:
         {
             Mutex::ClassLevelLockable<Host>::mutex.lock();
         }
+
         MutexLocker(const MutexLocker&)
         {
         }
+
         template<class C>
         MutexLocker(const C&)
         {
             Mutex::ClassLevelLockable<Host>::mutex.lock();
         }
+
         ~MutexLocker()
         {
             Mutex::ClassLevelLockable<Host>::mutex.unlock();
@@ -346,17 +365,22 @@ public:
     //! \name Constructor & Destructor
     //@{
     //! Default constructor
-    ClassLevelLockable() : pMutex(Mutex::ClassLevelLockable<Host>::mutex)
+    ClassLevelLockable():
+        pMutex(Mutex::ClassLevelLockable<Host>::mutex)
     {
     }
+
     //! Copy constructor
-    ClassLevelLockable(const ClassLevelLockable&) : pMutex(Mutex::ClassLevelLockable<Host>::mutex)
+    ClassLevelLockable(const ClassLevelLockable&):
+        pMutex(Mutex::ClassLevelLockable<Host>::mutex)
     {
     }
+
     //! Destructor
     ~ClassLevelLockable()
     {
     }
+
     //@}
 
 private:
@@ -367,5 +391,4 @@ private:
 
 //@} // Threading Policies
 
-} // namespace Policy
-} // namespace Yuni
+} // namespace Yuni::Policy

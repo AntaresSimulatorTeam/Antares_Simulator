@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "../../yuni.h"
 
-namespace Yuni
-{
-namespace UTF8
+namespace Yuni::UTF8
 {
 enum Error
 {
@@ -139,8 +138,7 @@ private:
     friend class Yuni::CString;
 };
 
-} // namespace UTF8
-} // namespace Yuni
+} // namespace Yuni::UTF8
 
 bool operator==(const AnyString& multiByteStr, Yuni::UTF8::Char c);
 

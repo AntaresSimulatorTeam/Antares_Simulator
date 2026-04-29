@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Math
+namespace Yuni::Math
 {
 template<class T>
 inline T Exp(T x)
@@ -38,5 +37,4 @@ inline long double Exp<long double>(long double x)
     return ::expl(x);
 }
 
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math

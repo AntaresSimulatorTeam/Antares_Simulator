@@ -1,31 +1,10 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 #define __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 template<class NextT>
 void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
@@ -39,6 +18,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     // Reserving the memory
     pSetsOfAreas.reserve(sets.size());
     pOriginalSets.reserve(sets.size());
+    pIds.reserve(sets.size());
 
     // For each set...
     for (uint setIndex = 0; setIndex != sets.size(); ++setIndex)
@@ -80,6 +60,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         assert(!originalSet->empty());
         pOriginalSets.push_back(originalSet);
 
+        pIds.push_back(sets.nameByIndex(setIndex));
         pNames.push_back(setname);
     }
 }
@@ -135,9 +116,7 @@ inline void SetsOfAreas<NextT>::yearEnd(uint /*year*/, uint /*numSpace*/)
 }
 
 template<class NextT>
-inline void SetsOfAreas<NextT>::computeSummary(
-  std::map<unsigned int, unsigned int>& /*numSpaceToYear*/,
-  unsigned int /* nbYearsForCurrentSummary */)
+inline void SetsOfAreas<NextT>::computeSummary(unsigned int /* year */, unsigned int /* numSpace */)
 {
     // Nothing to do here
 }
@@ -195,10 +174,10 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(results,
-                                                                      dataLevel,
-                                                                      fileLevel,
-                                                                      precision);
+        if (const auto* set = findSetById(results.data.setOfAreasName))
+        {
+            set->buildSurveyReport(results, dataLevel, fileLevel, precision);
+        }
     }
 }
 
@@ -213,12 +192,25 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(results,
-                                                                            dataLevel,
-                                                                            fileLevel,
-                                                                            precision,
-                                                                            numSpace);
+        if (const auto* set = findSetById(results.data.setOfAreasName))
+        {
+            set->buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+        }
     }
+}
+
+template<class NextT>
+const typename SetsOfAreas<NextT>::NextType* SetsOfAreas<NextT>::findSetById(
+  const Data::Study::SetsOfAreas::IDType& setId) const
+{
+    for (uint i = 0; i != pNames.size(); ++i)
+    {
+        if (pIds[i] == setId)
+        {
+            return pSetsOfAreas[i].get();
+        }
+    }
+    return nullptr;
 }
 
 template<class NextT>
@@ -283,17 +275,14 @@ void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint nu
 
 template<class NextT>
 template<class V>
-void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(
-  V& allVars,
-  std::map<unsigned int, unsigned int>& numSpaceToYear,
-  unsigned int nbYearsForCurrentSummary)
+void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(V& allVars,
+                                                         unsigned int year,
+                                                         unsigned int numSpace)
 {
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
         assert(setindex < pOriginalSets.size());
-        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(allVars,
-                                                                numSpaceToYear,
-                                                                nbYearsForCurrentSummary);
+        pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(allVars, year, numSpace);
     }
 }
 
@@ -378,8 +367,6 @@ inline void SetsOfAreas<NextT>::RetrieveVariableList(PredicateT& /*predicate*/)
 {
 }
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #endif // __SOLVER_VARIABLE_SET_OF_AREAS_HXX__

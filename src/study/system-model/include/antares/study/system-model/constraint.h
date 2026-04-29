@@ -1,47 +1,38 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <string>
-#include <unordered_map>
 
 #include <antares/expressions/expression.h>
 
-#include "parameter.h"
-
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
+#include "optimConfig.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
 
+enum class OutOfBoundsProcessingMode
+{
+    CYCLIC,
+    DROP
+};
+
 /// A constraint linking variables and parameters of a model together
-class Constraint
+class Constraint final
 {
 public:
-    Constraint(std::string name, Expression expression):
-        id_(std::move(name)),
-        expression_(std::move(expression))
+    Constraint(
+      std::string id,
+      Expression expression,
+      Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS,
+      OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC,
+      bool isBindingConstraint = false):
+        id_(std::move(id)),
+        expression_(std::move(expression)),
+        isBindingConstraint_(isBindingConstraint),
+        location_(location),
+        outOfBoundsProcessingMode_(outOfBoundsProcessingMode)
     {
     }
 
@@ -55,9 +46,27 @@ public:
         return expression_;
     }
 
+    [[nodiscard]] Solver::Config::Location location() const
+    {
+        return location_;
+    }
+
+    [[nodiscard]] OutOfBoundsProcessingMode outOfBoundsProcessingMode() const
+    {
+        return outOfBoundsProcessingMode_;
+    }
+
+    [[nodiscard]] bool isBindingConstraint() const
+    {
+        return isBindingConstraint_;
+    }
+
 private:
     std::string id_;
     Expression expression_;
+    bool isBindingConstraint_ = false;
+    Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;
+    OutOfBoundsProcessingMode outOfBoundsProcessingMode_ = OutOfBoundsProcessingMode::CYCLIC;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

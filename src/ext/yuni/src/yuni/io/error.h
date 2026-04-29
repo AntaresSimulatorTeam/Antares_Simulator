@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 /*!
 ** \brief Error list
@@ -37,5 +36,4 @@ enum Error
     errReadFailed,
 };
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

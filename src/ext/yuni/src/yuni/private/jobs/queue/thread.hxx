@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,13 +12,10 @@
 #pragma once
 #include "thread.h"
 
-namespace Yuni
+namespace Yuni::Private::QueueService
 {
-namespace Private
-{
-namespace QueueService
-{
-inline QueueThread::QueueThread(Yuni::Job::QueueService& queueservice) : pQueueService(queueservice)
+inline QueueThread::QueueThread(Yuni::Job::QueueService& queueservice):
+    pQueueService(queueservice)
 {
 }
 
@@ -37,6 +35,4 @@ inline void WaitingRoom::add(const Yuni::Job::IJob::Ptr& job)
     add(job, Yuni::Job::priorityDefault);
 }
 
-} // namespace QueueService
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::QueueService

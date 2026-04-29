@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -48,7 +30,7 @@ StudyWithTwoClusters::StudyWithTwoClusters()
 
     // Adding a dispatchable cluster to the previous area
     cluster_dispatch = addClusterToArea(area, "dispatch-cluster");
-    ThermalClusterConfig(cluster_dispatch.get())
+    ThermalClusterConfig(cluster_dispatch)
       .setNominalCapacity(1000.)
       .setAvailablePower(0, 1000.)
       .setCosts(50.)
@@ -57,7 +39,7 @@ StudyWithTwoClusters::StudyWithTwoClusters()
     // Adding a mustrun cluster to the previous area
     cluster_mustrun = addClusterToArea(area, "mustrun-cluster");
     cluster_mustrun->mustrun = true;
-    ThermalClusterConfig(cluster_mustrun.get())
+    ThermalClusterConfig(cluster_mustrun)
       .setNominalCapacity(100.)
       .setAvailablePower(0, 100.)
       .setCosts(10.)
@@ -82,13 +64,14 @@ BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_1__it_restricts_dispatchable_p
     BC->weight(cluster_mustrun.get(), 1);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
-    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).hours(),
-                                           Constants::nbHoursInAWeek};
-    std::vector<double> expected_values(Constants::nbHoursInAWeek, 900.);
+    OutputRetriever output(simulation.rawSimu());
+    auto dispatch_prod = std::span<long double>{
+      output.thermalGeneration(cluster_dispatch.get()).hours(),
+      Constants::nbHoursInAWeek};
+    std::vector<long double> expected_values(Constants::nbHoursInAWeek, 900.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
@@ -106,13 +89,14 @@ BOOST_FIXTURE_TEST_CASE(in_hourly_BC__weights_are_2_and_3__it_restricts_dispatch
     BC->weight(cluster_mustrun.get(), 3);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
-    auto dispatch_prod = std::span<double>{output.thermalGeneration(cluster_dispatch.get()).hours(),
-                                           Constants::nbHoursInAWeek};
-    std::vector<double> expected_values(Constants::nbHoursInAWeek, 450.);
+    OutputRetriever output(simulation.rawSimu());
+    auto dispatch_prod = std::span<long double>{
+      output.thermalGeneration(cluster_dispatch.get()).hours(),
+      Constants::nbHoursInAWeek};
+    std::vector<long double> expected_values(Constants::nbHoursInAWeek, 450.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
@@ -132,12 +116,14 @@ BOOST_FIXTURE_TEST_CASE(in_daily_BC__weights_are_2_and_3__it_restricts_dispatcha
     BC->weight(cluster_mustrun.get(), 3);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever out(simulation->rawSimu());
-    auto dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days(), 7};
-    std::vector<double> expected_values(7, 11400.);
+    OutputRetriever out(simulation.rawSimu());
+    auto dispatch_prod = std::span<long double>{
+      out.thermalGeneration(cluster_dispatch.get()).days(),
+      7};
+    std::vector<long double> expected_values(7, 11400.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values));
 }
 
@@ -162,18 +148,21 @@ BOOST_FIXTURE_TEST_CASE(simulation_2_weeks_long__daily_BC_RHS_changes_on_2nd_wee
     BC->weight(cluster_mustrun.get(), 1);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever out(simulation->rawSimu());
+    OutputRetriever out(simulation.rawSimu());
     // Week 1
-    auto dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days(), 7};
-    std::vector<double> expected_values_week_1(7, 17600.);
+    auto dispatch_prod = std::span<long double>{
+      out.thermalGeneration(cluster_dispatch.get()).days(),
+      7};
+    std::vector<long double> expected_values_week_1(7, 17600.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values_week_1));
 
     // Week 2
-    dispatch_prod = std::span<double>{out.thermalGeneration(cluster_dispatch.get()).days() + 7, 7};
-    std::vector<double> expected_values_week_2(7, 14600.);
+    dispatch_prod = std::span<long double>{out.thermalGeneration(cluster_dispatch.get()).days() + 7,
+                                           7};
+    std::vector<long double> expected_values_week_2(7, 14600.);
     BOOST_TEST(std::ranges::equal(dispatch_prod, expected_values_week_2));
 }
 
@@ -197,12 +186,12 @@ BOOST_FIXTURE_TEST_CASE(in_weekly_BC__weights_are_3_and_4__it_restricts_dispatch
     BC->weight(cluster_mustrun.get(), 4);
     BC->enabled(true);
 
-    simulation->create();
-    simulation->run();
+    simulation.create();
+    simulation.run();
 
-    OutputRetriever output(simulation->rawSimu());
-    double* dispatch_prod = output.thermalGeneration(cluster_dispatch.get()).weeks();
-    BOOST_TEST(dispatch_prod[0] == 17600., boost::test_tools::tolerance(0.001));
+    OutputRetriever output(simulation.rawSimu());
+    double dispatch_prod = output.thermalGeneration(cluster_dispatch.get()).week(0);
+    BOOST_TEST(dispatch_prod == 17600., boost::test_tools::tolerance(0.001));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

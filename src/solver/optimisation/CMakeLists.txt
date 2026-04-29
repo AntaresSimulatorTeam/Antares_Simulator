@@ -6,7 +6,6 @@ set(RTESOLVER_OPT
         opt_chainage_intercos.cpp
         include/antares/solver/optimisation/opt_fonctions.h
         include/antares/solver/optimisation/opt_appel_solveur_quadratique.h
-        include/antares/solver/optimisation/SparseVector.hxx
         opt_pilotage_optimisation_lineaire.cpp
         opt_pilotage_optimisation_quadratique.cpp
         include/antares/solver/optimisation/opt_structure_probleme_a_resoudre.h
@@ -26,7 +25,6 @@ set(RTESOLVER_OPT
         opt_verification_presence_reserve_jmoins1.cpp
         opt_init_contraintes_hydrauliques.cpp
         opt_appel_solveur_lineaire.cpp
-        opt_liberation_problemes_simplexe.cpp
         opt_restaurer_les_donnees.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
         opt_gestion_des_couts_cas_quadratique.cpp
@@ -70,9 +68,16 @@ set(RTESOLVER_OPT
         opt_construction_variables_rampes_thermiques.cpp
         opt_gestion_des_bornes_rampes_thermiques.cpp
         opt_gestion_des_couts_rampes_thermiques.cpp
+        include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h
+        adequacy_patch_csr/constraints/CsrFictitiousLoad.cpp
+        include/antares/solver/optimisation/adequacy_patch_csr/constraints/CsrMaxEnsLoad.h
+        adequacy_patch_csr/constraints/CsrMaxEnsLoad.cpp
 
         include/antares/solver/optimisation/opt_rename_problem.h
         opt_rename_problem.cpp
+
+        include/antares/solver/optimisation/MipDetection.h
+        MipDetection.cpp
 
         constraints/ConstraintBuilder.cpp
         include/antares/solver/optimisation/constraints/ConstraintBuilder.h
@@ -82,6 +87,8 @@ set(RTESOLVER_OPT
         constraints/AreaBalance.cpp
         include/antares/solver/optimisation/constraints/FictitiousLoad.h
         constraints/FictitiousLoad.cpp
+        include/antares/solver/optimisation/constraints/MaxUnsuppliedEnergy.h
+        constraints/MaxUnsuppliedEnergy.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageLevel.h
         constraints/ShortTermStorageLevel.cpp
         include/antares/solver/optimisation/constraints/ShortTermStorageCostVariation.h
@@ -191,9 +198,9 @@ set(RTESOLVER_OPT
         constraints/ExchangeBalance.cpp
         include/antares/solver/optimisation/constraints/ExchangeBalanceGroup.h
         constraints/ExchangeBalanceGroup.cpp
-        variables/VariableManagement.h
+        include/antares/solver/optimisation/variables/VariableManagement.h
         variables/VariableManagement.cpp
-        variables/VariableManagerUtils.h
+        include/antares/solver/optimisation/variables/VariableManagerUtils.h
         variables/VariableManagerUtils.cpp
         include/antares/solver/optimisation/HebdoProblemToLpsTranslator.h
         HebdoProblemToLpsTranslator.cpp
@@ -202,6 +209,10 @@ set(RTESOLVER_OPT
         LegacyFiller.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h
         ComponentToAreaConnectionFiller.cpp
+        include/antares/solver/optimisation/ThermalCapacityFiller.h
+        ThermalCapacityFiller.cpp
+        include/antares/solver/optimisation/OptimisationsSimulationTable.h
+        OptimisationsSimulationTable.cpp
 )
 
 
@@ -235,6 +246,7 @@ target_link_libraries(model_antares
         # modeler
         Antares::optim-model-filler
         Antares::antares-study-system-model
+        Antares::modeler-simulation-table
         Boost::headers
 )
 

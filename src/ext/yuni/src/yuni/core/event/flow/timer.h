@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,17 +10,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
-#include "../../../thread/thread.h"
 #include <cassert>
 
-namespace Yuni
-{
-namespace Core
-{
-namespace EventLoop
-{
-namespace Flow
+#include "../../../thread/thread.h"
+#include "../../../yuni.h"
+
+namespace Yuni::Core::EventLoop::Flow
 {
 template<class EventLoopT>
 class YUNI_DECL Timer
@@ -34,9 +30,12 @@ public:
     /*!
     ** \brief Default constructor
     */
-    Timer() : pTimeout(200), pEventLoop(NULL)
+    Timer():
+        pTimeout(200),
+        pEventLoop(NULL)
     {
     }
+
     //@}
 
     /*!
@@ -54,7 +53,9 @@ public:
             // When not in detached mode, there is no cancellation point
             // so it is impossible to properly stop the loop if the timeout is too high
             if (t > 10000)
+            {
                 t = 10000;
+            }
         }
         // The timeout will be set from the loop to avoid continuous locking
         Bind<bool()> b;
@@ -98,6 +99,7 @@ protected:
         (void)request;
         return true;
     }
+
     //@}
 
     //! \name Events triggered from the main thread of the event loop
@@ -114,6 +116,7 @@ protected:
         pEventLoop->suspend(pTimeout);
         return true;
     }
+
     //@}
 
     /*!
@@ -141,7 +144,4 @@ private:
 
 }; // class Timer<>
 
-} // namespace Flow
-} // namespace EventLoop
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::EventLoop::Flow

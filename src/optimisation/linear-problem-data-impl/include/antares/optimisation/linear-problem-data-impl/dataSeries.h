@@ -1,8 +1,13 @@
 
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
+#include <span>
 #include <string>
-#include <vector>
+
+#include <antares/optimisation/linear-problem-api/IScenario.h>
 
 namespace Antares::Optimisation::LinearProblemDataImpl
 {
@@ -10,14 +15,25 @@ namespace Antares::Optimisation::LinearProblemDataImpl
 class IDataSeries
 {
 public:
-    IDataSeries(std::string name):
+    virtual ~IDataSeries() = default;
+
+    explicit IDataSeries(std::string name):
         name_(std::move(name))
     {
     }
 
-    virtual double getData(unsigned int rank, unsigned int hour) = 0;
+    [[nodiscard]] virtual double getData(
+      LinearProblemApi::IScenario::TimeSeriesNumber time_series_number,
+      unsigned int hour) const
+      = 0;
 
-    std::string name() const
+    [[nodiscard]] virtual std::span<const double> getData(
+      LinearProblemApi::IScenario::TimeSeriesNumber time_series_number,
+      unsigned firstHour,
+      unsigned lastHour) const
+      = 0;
+
+    [[nodiscard]] std::string name() const
     {
         return name_;
     }

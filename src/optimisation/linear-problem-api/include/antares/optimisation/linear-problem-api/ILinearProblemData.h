@@ -1,33 +1,55 @@
 
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
 
 namespace Antares::Optimisation::LinearProblemApi
 {
-class FillContext
+/** \brief Context for filling linear problem data.
+ * Contains temporal information
+ */
+class FillContext final
 {
 public:
-    FillContext(unsigned first, unsigned last):
-        firstTimeStep(first),
-        lastTimeStep(last)
+    FillContext(unsigned localFirstTimeStep,
+                unsigned localLastTimeStep,
+                unsigned globalFirstTimeStep,
+                unsigned globalLastTimeStep,
+                unsigned year):
+        local{localFirstTimeStep, localLastTimeStep},
+        global{globalFirstTimeStep, globalLastTimeStep},
+        year_(year)
     {
     }
 
-    unsigned getFirstTimeStep() const
+    [[nodiscard]] unsigned getLocalFirstTimeStep() const
     {
-        return firstTimeStep;
+        return local.first;
     }
 
-    unsigned getLastTimeStep() const
+    [[nodiscard]] unsigned getLocalLastTimeStep() const
     {
-        return lastTimeStep;
+        return local.last;
     }
 
-    unsigned int getNumberOfTimestep() const
+    [[nodiscard]] unsigned getGlobalFirstTimeStep() const
     {
-        return lastTimeStep - firstTimeStep + 1;
+        return global.first;
+    }
+
+    [[nodiscard]] unsigned getGlobalLastTimeStep() const
+    {
+        return global.last;
+    }
+
+    [[nodiscard]] std::size_t getLocalNumberOfTimeSteps() const
+    {
+        return local.last - local.first + 1;
     }
 
     [[nodiscard]] std::vector<unsigned> getSelectedScenarios() const
@@ -40,20 +62,49 @@ public:
         selectedScenario.push_back(scenario);
     }
 
+    [[nodiscard]] unsigned getYear() const
+    {
+        return year_;
+    }
+
 private:
     std::vector<unsigned> selectedScenario;
 
-    unsigned firstTimeStep = 0;
-    unsigned lastTimeStep = 0;
+    struct LocalTimeInterval
+    {
+        unsigned first = 0; // included
+        unsigned last = 0;  // included
+    };
+
+    struct GlobalTimeInterval
+    {
+        unsigned first = 0; // included
+        unsigned last = 0;  // included
+    };
+
+    LocalTimeInterval local;
+    GlobalTimeInterval global;
+
+    unsigned year_ = 0;
 };
 
+/**
+ * \brief Interface for linear problem data.
+ * Provides a method to retrieve data for a specific dataset, time series number, and hour.
+ */
 class ILinearProblemData
 {
 public:
-    virtual double getData(const std::string& dataSetId,
-                           const std::string& scenarioGroup,
-                           const unsigned scenario,
-                           const unsigned hour)
+    virtual ~ILinearProblemData() = default;
+
+    [[nodiscard]] virtual double getData(const std::string& dataSetId,
+                                         unsigned timeSeriesNumber,
+                                         unsigned hour) const
+      = 0;
+    [[nodiscard]] virtual std::span<const double> getData(const std::string& dataSetId,
+                                                          unsigned timeSeriesNumber,
+                                                          unsigned firstHour,
+                                                          unsigned lastHour) const
       = 0;
 };
 

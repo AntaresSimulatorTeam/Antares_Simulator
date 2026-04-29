@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #include "io.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 #ifdef YUNI_OS_WINDOWS
 const char Separator = '\\';
@@ -58,5 +57,4 @@ const char* Constant<char>::AllSeparators = "\\/";
 const wchar_t Constant<wchar_t>::Dot = L'.';
 const char Constant<char>::Dot = '.';
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

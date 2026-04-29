@@ -31,8 +31,7 @@ namespace Antares::Solver
 {
 
 FinalLevelValidator::FinalLevelValidator(
-  Antares::Data::PartHydro& hydro,
-  unsigned int areaIndex,
+  const Antares::Data::PartHydro& hydro,
   const Antares::Data::AreaName areaName, // gp : to std::string
   double initialLevel,
   double finalLevel,
@@ -44,7 +43,6 @@ FinalLevelValidator::FinalLevelValidator(
     lastSimulationDay_(lastSimulationDay),
     firstMonthOfSimulation_(firstMonthOfSimulation),
     hydro_(hydro),
-    areaIndex_(areaIndex),
     areaName_(areaName),
     initialLevel_(initialLevel),
     finalLevel_(finalLevel),
@@ -68,15 +66,7 @@ bool FinalLevelValidator::check()
 
 bool FinalLevelValidator::skippingFinalLevelUse()
 {
-    if (!wasSetInScenarioBuilder())
-    {
-        return true;
-    }
-    if (!compatibleWithReservoirProperties())
-    {
-        return true;
-    }
-    return false;
+    return !wasSetInScenarioBuilder() || !compatibleWithReservoirProperties();
 }
 
 bool FinalLevelValidator::wasSetInScenarioBuilder()
@@ -153,8 +143,8 @@ double FinalLevelValidator::calculateTotalInflows() const
 
 bool FinalLevelValidator::isBetweenRuleCurves() const
 {
-    double lowLevelLastDay = hydro_.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
-    double highLevelLastDay = hydro_.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
+    double lowLevelLastDay = hydro_.series->ruleCurves.min.getColumn(year_)[DAYS_PER_YEAR - 1];
+    double highLevelLastDay = hydro_.series->ruleCurves.max.getColumn(year_)[DAYS_PER_YEAR - 1];
 
     if (finalLevel_ < lowLevelLastDay || finalLevel_ > highLevelLastDay)
     {
@@ -167,7 +157,7 @@ bool FinalLevelValidator::isBetweenRuleCurves() const
     return true;
 }
 
-bool FinalLevelValidator::finalLevelFineForUse()
+bool FinalLevelValidator::finalLevelFineForUse() const
 {
     return finalLevelFineForUse_;
 }

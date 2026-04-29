@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,23 +11,25 @@
 */
 #include "hexdump.h"
 
-namespace Yuni
-{
-namespace Core
-{
-namespace Utils
+namespace Yuni::Core::Utils
 {
 void Hexdump::dumpHexadecimal(String& line, const char* buffer, uint size) const
 {
     for (uint printed = 0; printed < 0x10; ++printed)
     {
         if (printed < size)
+        {
             line.appendFormat("%02x", (uint)(*(unsigned char*)(buffer + printed)));
+        }
         else
+        {
             line.append("  ");
+        }
 
         if (0 != printed % 2)
+        {
             line.append(' ');
+        }
     }
 }
 
@@ -39,12 +42,16 @@ void Hexdump::dumpPrintable(String& line, const char* buffer, uint size) const
     {
         char c = *(buffer + printed);
         if (c < 0x20 or c > 0x7E) // c is not printable ASCII, replace it by a dot '.'
+        {
             c = '.';
+        }
         line.append(c);
     }
     line.append('|');
     while (printed++ < 0x10)
+    {
         line.append(' ');
+    }
 }
 
 Hexdump& Hexdump::operator=(const Hexdump& rhs)
@@ -57,6 +64,4 @@ Hexdump& Hexdump::operator=(const Hexdump& rhs)
     return *this;
 }
 
-} // namespace Utils
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core::Utils

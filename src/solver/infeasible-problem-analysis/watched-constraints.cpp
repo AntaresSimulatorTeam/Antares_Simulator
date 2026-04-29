@@ -34,22 +34,27 @@ std::string StringBetweenAngleBrackets(const std::string& constraintName)
     return split_name[1];
 }
 
-std::string timeStep(std::vector<std::string> splitName)
+std::string timeStep(const std::vector<std::string>& splitName)
 {
     return StringBetweenAngleBrackets(splitName.rbegin()[1]);
 }
 
-std::string shortName(std::vector<std::string> splitName)
+std::string STSAdditionalConstraintName(const std::vector<std::string>& splitName)
+{
+    return StringBetweenAngleBrackets(splitName.rbegin()[1]);
+}
+
+std::string shortName(const std::vector<std::string>& splitName)
 {
     return splitName.at(0);
 }
 
-std::string areaName(std::vector<std::string> splitName)
+std::string areaName(const std::vector<std::string>& splitName)
 {
     return StringBetweenAngleBrackets(splitName.at(1));
 }
 
-std::string STSname(std::vector<std::string> splitName)
+std::string STSname(const std::vector<std::string>& splitName)
 {
     return StringBetweenAngleBrackets(splitName.at(2));
 }
@@ -58,7 +63,7 @@ namespace Antares::Optimization
 {
 
 // --- Generic constraint ---
-WatchedConstraint::WatchedConstraint(const std::string& name, const double slackValue):
+WatchedConstraint::WatchedConstraint(const std::string& name, double slackValue):
     slack_value_(slackValue)
 {
     boost::algorithm::split_regex(splitName_, name, boost::regex("::"));
@@ -156,27 +161,40 @@ std::string HydroProduction::infeasibilityCause()
 }
 
 // --- Constraints factory ---
-ConstraintsFactory::ConstraintsFactory()
+
+template<class T>
+constexpr std::pair<
+  std::string,
+  std::pair<std::regex, std::function<std::unique_ptr<T>(const std::string&, double)>>>
+Helper(const std::string& pattern)
 {
-    regex_to_ctypes_ = {
-      {"::hourly::", std::make_unique<HourlyBC, const std::string&, const double>},
-      {"::daily::", std::make_unique<DailyBC, const std::string&, const double>},
-      {"::weekly::", std::make_unique<WeeklyBC, const std::string&, const double>},
-      {"^FictiveLoads::", std::make_unique<FictitiousLoad, const std::string&, const double>},
-      {"^AreaHydroLevel::", std::make_unique<HydroLevel, const std::string&, const double>},
-      {"^Level::", std::make_unique<STS, const std::string&, const double>},
-      {"^HydroPower::", std::make_unique<HydroProduction, const std::string&, const double>}};
+    return {pattern, {std::regex(pattern), std::make_unique<T, const std::string&, double>}};
 }
 
+const std::map<
+  std::string,
+  std::pair<std::regex,
+            std::function<std::unique_ptr<WatchedConstraint>(const std::string&, double)>>>
+  ConstraintsFactory::regex_to_ctypes_ = {Helper<HourlyBC>("::hourly::"),
+                                          Helper<DailyBC>("::daily::"),
+                                          Helper<WeeklyBC>("::weekly::"),
+                                          Helper<FictitiousLoad>("^FictiveLoads::"),
+                                          Helper<HydroLevel>("^AreaHydroLevel::"),
+                                          Helper<STS>("^Level::"),
+                                          Helper<HydroProduction>("^HydroPower::"),
+                                          Helper<STSWithdrawalSum>("^WithdrawalSum::"),
+                                          Helper<STSInjectionSum>("^InjectionSum::"),
+                                          Helper<STSNettingSum>("^NettingSum::")};
+
 std::unique_ptr<WatchedConstraint> ConstraintsFactory::create(const std::string& name,
-                                                              const double value) const
+                                                              double value) const
 {
     auto it = std::ranges::find_if(regex_to_ctypes_,
                                    [&name](auto& pair)
-                                   { return std::regex_search(name, std::regex(pair.first)); });
+                                   { return std::regex_search(name, pair.second.first); });
     if (it != regex_to_ctypes_.end())
     {
-        return it->second(name, value);
+        return it->second.second(name, value);
     }
     return nullptr;
 }

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -8,9 +9,11 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../../../yuni.h"
 #include "traits.h"
+
 #include <ctype.h>
+
+#include "../../../yuni.h"
 #ifndef YUNI_OS_WINDOWS
 #include <wchar.h>
 #else
@@ -18,18 +21,16 @@
 #endif
 #include <limits.h>
 
-namespace Yuni
-{
-namespace Private
-{
-namespace CStringImpl
+namespace Yuni::Private::CStringImpl
 {
 bool Equals(const char* const s1, const char* const s2, uint len)
 {
     for (uint i = 0; i != len; ++i)
     {
         if (s1[i] != s2[i])
+        {
             return false;
+        }
     }
     return true;
 }
@@ -39,7 +40,9 @@ bool EqualsInsensitive(const char* const s1, const char* const s2, uint len)
     for (uint i = 0; i != len; ++i)
     {
         if (tolower(s1[i]) != tolower(s2[i]))
+        {
             return false;
+        }
     }
     return true;
 }
@@ -51,7 +54,9 @@ int Compare(const char* const s1, uint l1, const char* const s2, uint l2)
     for (uint i = 0; i != l; ++i)
     {
         if (s1[i] != s2[i])
+        {
             return (((unsigned char)s1[i] < (unsigned char)s2[i]) ? -1 : +1);
+        }
     }
     return (l1 == l2) ? 0 : ((l1 < l2) ? -1 : +1);
 }
@@ -63,7 +68,9 @@ int CompareInsensitive(const char* const s1, uint l1, const char* const s2, uint
     for (uint i = 0; i != l; ++i)
     {
         if (tolower(s1[i]) != tolower(s2[i]))
+        {
             return ((tolower((unsigned char)s1[i]) < tolower((unsigned char)s2[i])) ? -1 : +1);
+        }
     }
     return (l1 == l2) ? 0 : ((l1 < l2) ? -1 : +1);
 }
@@ -81,26 +88,40 @@ bool Glob(const char* const s, uint l1, const char* const pattern, uint patternl
                 if ('*' == pattern[e])
                 {
                     if (e + 1 == patternlen)
+                    {
                         return true;
+                    }
                     while (pattern[e + 1] == '*')
+                    {
                         ++e;
+                    }
                     if (e + 1 == patternlen)
+                    {
                         return true;
+                    }
 
                     prev = e;
                     if (pattern[e + 1] == s[i])
+                    {
                         e += 2;
+                    }
                 }
                 else
                 {
                     if (pattern[e] == s[i])
+                    {
                         ++e;
+                    }
                     else
                     {
                         if (prev != ((uint)-1))
+                        {
                             e = prev;
+                        }
                         else
+                        {
                             return false;
+                        }
                     }
                 }
             }
@@ -114,7 +135,9 @@ bool Glob(const char* const s, uint l1, const char* const pattern, uint patternl
 size_t WCharToUTF8SizeNeeded(const wchar_t* wbuffer, size_t length)
 {
     if (length > INT_MAX) // consistency between platforms (windows)
+    {
         return 0;
+    }
 
 #ifndef YUNI_OS_WINDOWS
     {
@@ -125,8 +148,14 @@ size_t WCharToUTF8SizeNeeded(const wchar_t* wbuffer, size_t length)
     }
 #else
     {
-        int sizeRequired = WideCharToMultiByte(
-          CP_UTF8, 0, wbuffer, static_cast<int>(length), nullptr, 0, nullptr, nullptr);
+        int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                               0,
+                                               wbuffer,
+                                               static_cast<int>(length),
+                                               nullptr,
+                                               0,
+                                               nullptr,
+                                               nullptr);
         return sizeRequired > 0 ? (size_t)sizeRequired : 0;
     }
 #endif
@@ -143,13 +172,17 @@ size_t WCharToUTF8(char*& out, size_t maxlength, const wchar_t* wbuffer, size_t 
     }
 #else
     {
-        int written = WideCharToMultiByte(
-          CP_UTF8, 0, wbuffer, static_cast<int>(length), out, maxlength, nullptr, nullptr);
+        int written = WideCharToMultiByte(CP_UTF8,
+                                          0,
+                                          wbuffer,
+                                          static_cast<int>(length),
+                                          out,
+                                          maxlength,
+                                          nullptr,
+                                          nullptr);
         return (written > 0) ? (size_t)written : 0;
     }
 #endif
 }
 
-} // namespace CStringImpl
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::CStringImpl

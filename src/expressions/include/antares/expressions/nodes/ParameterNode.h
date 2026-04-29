@@ -3,12 +3,7 @@
 #include <string>
 
 #include <antares/expressions/nodes/Leaf.h>
-#include "antares/expressions/visitors/TimeIndex.h"
-
-namespace Antares::Expressions::Visitors
-{
-enum class TimeIndex : unsigned int;
-}
+#include <antares/study/system-model-base/variabilityType.h>
 
 namespace Antares::Expressions::Nodes
 {
@@ -18,11 +13,11 @@ namespace Antares::Expressions::Nodes
 class ParameterNode final: public Leaf<std::string>
 {
 public:
-    explicit ParameterNode(
-      const std::string& value,
-      Visitors::TimeIndex time_index = Visitors::TimeIndex::VARYING_IN_TIME_AND_SCENARIO):
+    explicit ParameterNode(const std::string& value,
+                           Optimisation::VariabilityType time_index = Optimisation::
+                             VariabilityType::VARYING_IN_TIME_AND_SCENARIO):
         Leaf<std::string>(value),
-        time_index_(time_index)
+        variability_(time_index)
     {
     }
 
@@ -31,12 +26,12 @@ public:
         return "ParameterNode";
     }
 
-    Visitors::TimeIndex timeIndex() const
+    Optimisation::VariabilityType variability() const
     {
-        return time_index_;
+        return variability_;
     }
 
 private:
-    Visitors::TimeIndex time_index_;
+    Optimisation::VariabilityType variability_;
 };
 } // namespace Antares::Expressions::Nodes

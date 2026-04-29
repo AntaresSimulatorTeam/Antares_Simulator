@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,21 +10,20 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
-#include <list>
-#include <vector>
-#include <stack>
-#include "../../static/if.h"
-#include "../../smartptr/smartptr.h"
-#include "../../smartptr/intrusive.h"
-#include "../../iterator/iterator.h"
-#include "iterator/iterator.h"
-#include <ostream>
 #include <cassert>
+#include <list>
+#include <ostream>
+#include <stack>
+#include <vector>
 
-namespace Yuni
-{
-namespace Core
+#include "../../../yuni.h"
+#include "../../iterator/iterator.h"
+#include "../../smartptr/intrusive.h"
+#include "../../smartptr/smartptr.h"
+#include "../../static/if.h"
+#include "iterator/iterator.h"
+
+namespace Yuni::Core
 {
 /*!
 ** \brief A generic N-ary tree class.
@@ -156,7 +156,7 @@ template<class T,                                                // The original
          template<class> class ChckP = Policy::Checking::None,   // Checking policy
          class ConvP = Policy::Conversion::Allow                 // Conversion policy
          >
-class YUNI_DECL TreeN : public TP<TreeN<T, TP, ChckP, ConvP>>
+class YUNI_DECL TreeN: public TP<TreeN<T, TP, ChckP, ConvP>>
 {
 public:
     //! The real type
@@ -235,6 +235,7 @@ public:
     TreeN();
     //! Destructor
     virtual ~TreeN();
+
     //@}
 
     //! \name Parent of the node
@@ -244,6 +245,7 @@ public:
     {
         return pParent;
     }
+
     //! Get the parent of the node
     Ptr parent() const
     {
@@ -310,6 +312,7 @@ public:
     */
     bool remove(const SizeType index);
     bool remove(const SignedSizeType index);
+
     //@}
 
     //! \name Searching
@@ -319,31 +322,38 @@ public:
     {
         return iterator(pFirstChild);
     }
+
     const const_iterator begin() const
     {
         return iterator(pFirstChild);
     }
+
     depth_prefix_iterator depth_prefix_begin()
     {
         return depth_prefix_iterator(pFirstChild);
     }
+
     const const_depth_prefix_iterator depth_prefix_begin() const
     {
         return const_depth_prefix_iterator(pFirstChild);
     }
+
     //! Return iterator to the last child of the node
     iterator end()
     {
         return iterator();
     }
+
     const const_iterator end() const
     {
         return iterator();
     }
+
     depth_prefix_iterator depth_prefix_end()
     {
         return depth_prefix_iterator();
     }
+
     const const_depth_prefix_iterator depth_prefix_end() const
     {
         return const_depth_prefix_iterator();
@@ -381,6 +391,7 @@ public:
     {
         return pFirstChild;
     }
+
     const Ptr firstChild() const
     {
         return pFirstChild;
@@ -393,6 +404,7 @@ public:
     {
         return pLastChild;
     }
+
     const Ptr lastChild() const
     {
         return pLastChild;
@@ -405,6 +417,7 @@ public:
     {
         return pPreviousSibling;
     }
+
     const Ptr previousSibling() const
     {
         return pPreviousSibling;
@@ -417,10 +430,12 @@ public:
     {
         return pNextSibling;
     }
+
     const Ptr nextSibling() const
     {
         return pNextSibling;
     }
+
     //@}
 
     //! \name Extra
@@ -499,6 +514,7 @@ public:
     ** \internal The method isInvalidatedWL() should be overloaded
     */
     bool isInvalidated();
+
     //@}
 
     //! \name Operators
@@ -511,6 +527,7 @@ public:
         push_back(node);
         return *static_cast<Node*>(this);
     }
+
     //! Append a child at the end
     Node& operator+=(T* node)
     {
@@ -531,6 +548,7 @@ public:
         push_back(node);
         return *static_cast<Node*>(this);
     }
+
     //! Append a child at the end
     Node& operator<<(T* node)
     {
@@ -552,6 +570,7 @@ public:
     {
         return find(index);
     }
+
     /*!
     ** \brief Get the n-th child of the node
     ** \see find()
@@ -560,6 +579,7 @@ public:
     {
         return find(index);
     }
+
     //@}
 
     /*!
@@ -584,6 +604,7 @@ protected:
     virtual void invalidateWL()
     {
     }
+
     //! Get if the item is invalidated
     virtual bool isInvalidatedWL()
     {
@@ -655,7 +676,6 @@ private:
 
 }; // class TreeN
 
-} // namespace Core
-} // namespace Yuni
+} // namespace Yuni::Core
 
 #include "treeN.hxx"

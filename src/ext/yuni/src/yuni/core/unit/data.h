@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,12 +12,10 @@
 #ifndef __YUNI_CORE_UNIT_DATA_DATA_H__
 #define __YUNI_CORE_UNIT_DATA_DATA_H__
 
-#include "unit.h"
 #include "define.h"
+#include "unit.h"
 
-namespace Yuni
-{
-namespace Unit
+namespace Yuni::Unit
 {
 /*!
 ** \defgroup UnitData Digital information storage
@@ -172,8 +171,7 @@ struct QuantityConversion<Data::Bit::Quantity, FromType, Data::Octet::Quantity, 
     }
 };
 
-} // namespace Unit
-} // namespace Yuni
+} // namespace Yuni::Unit
 
 #include "undef.h"
 

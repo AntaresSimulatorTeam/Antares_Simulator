@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <memory>
@@ -32,10 +15,9 @@
 /*!
 ** \brief Command line settings for launching the simulation
 */
-class Settings
+class Settings final
 {
 public:
-    void checkAndSetStudyFolder(const std::string& folder);
     void reset();
 
     //! Where is my study
@@ -48,8 +30,8 @@ public:
     //! Simplex optimizatio range
     Yuni::CString<32, false> simplexOptimRange;
 
-    //! Ignore error/warnings
-    int ignoreWarningsErrors = 0;
+    //! Ignore loading errors
+    bool ignoreLoadingErrors = false;
     //! Ignore constraints
     bool ignoreConstraints = false;
 
@@ -58,8 +40,6 @@ public:
 
     //! True to disable the writing in the output folder
     bool noOutput = false;
-    //! Progression
-    bool displayProgression = false;
 
     Yuni::String PID;
     bool forceZipOutput = false;
@@ -72,4 +52,7 @@ public:
 std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings,
                                                    Antares::Data::StudyLoadOptions& options);
 
+void checkStudyFolder(const std::string& studyFolder);
+std::string fixStudyFolder(const std::string& studyFolder);
+void printPIDtoDisk(const Settings& settings);
 void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOptions& options);

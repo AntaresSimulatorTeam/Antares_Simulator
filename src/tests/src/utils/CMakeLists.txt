@@ -6,6 +6,8 @@ add_library(test_utils_unit
         )
 
 target_link_libraries(test_utils_unit
+       PUBLIC
+       Antares::logs
        PRIVATE
        Boost::unit_test_framework)
 

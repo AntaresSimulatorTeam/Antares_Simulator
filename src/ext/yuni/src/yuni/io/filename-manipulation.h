@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "io.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 /*!
 ** \brief Extract the path part of a filename
@@ -48,38 +47,6 @@ void parent_path(String& out, const AnyString& path, bool systemDependant = fals
 void parent_path_impl(Clob& out, const AnyString& path, bool systemDependant = false);
 
 /*!
-** \brief Extract the path part of a filename and make it absolute
-**
-** The path part will be extracted according the system-(un)dependant path-separator
-** \code
-**    String outputString;
-**	  IO::ExtractAbsoluteFilePath(outputString, "../foo.txt");
-**    std::cout << outputString << std::endl;
-** \endcode
-**
-** \param[out] out The output string
-** \param[in] path The filename
-** \param[in] systemDependant Consider only the system-dependant path-separator
-*/
-void ExtractAbsoluteFilePath(String& out, const AnyString& path, bool systemDependant = false);
-
-/*!
-** \brief Extract the path part of a filename and make it absolute
-**
-** The path part will be extracted according the system-(un)dependant path-separator
-** \code
-**    String outputString;
-**	  IO::ExtractAbsoluteFilePath(outputString, "../foo.txt");
-**    std::cout << outputString << std::endl;
-** \endcode
-**
-** \param[out] out The output string
-** \param[in] path The filename
-** \param[in] systemDependant Consider only the system-dependant path-separator
-*/
-void ExtractAbsoluteFilePath(Clob& out, const AnyString& path, bool systemDependant = false);
-
-/*!
 ** \brief Extract the bare file name
 **
 ** The file name will be extracted according the last occurence
@@ -102,47 +69,6 @@ void ExtractFileName(String& out, const AnyString& path, bool systemDependant = 
 ** \param systemDependant Consider only the system-dependant path-separator
 */
 void ExtractFileName(Clob& out, const AnyString& path, bool systemDependant = true);
-
-/*!
-** \brief Extract the path part and the bare file name
-**
-** \param[out] path       The path from the original one
-** \param[out] name       The bare filename from the original one
-** \param filename        The original filename
-** \param systemDependant Consider only the system-dependant path-separator
-*/
-void ExtractFilePathAndName(String& path,
-                            String& name,
-                            const AnyString& filename,
-                            bool systemDependant = true);
-
-/*!
-** \brief Extract the path part and the bare file name
-**
-** \param[out] path       The path from the original one
-** \param[out] name       The bare filename from the original one
-** \param filename        The original filename
-** \param systemDependant Consider only the system-dependant path-separator
-*/
-void ExtractFilePathAndName(Clob& path,
-                            Clob& name,
-                            const AnyString& filename,
-                            bool systemDependant = true);
-
-/*!
-** \brief Extract the bare file name without its extension
-**
-** The file name will be extracted according the last occurence
-** of the system-dependant path-separator (if systemDependant = true).
-**
-** \param[out] out        The bare file name without its extension
-** \param path            The original file name
-** \param systemDependant Consider only the system-dependant path-separator
-*/
-template<class StringT>
-void ExtractFileNameWithoutExtension(StringT& out,
-                                     const AnyString& path,
-                                     bool systemDependant = true);
 
 /*!
 ** \brief Extract the extention of a file name
@@ -276,7 +202,6 @@ void Canonicalize(String& out, const AnyString& in, const AnyString& rootpath = 
 */
 void Canonicalize(Clob& out, const AnyString& in, const AnyString& rootpath = nullptr);
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO
 
 #include "filename-manipulation.hxx"

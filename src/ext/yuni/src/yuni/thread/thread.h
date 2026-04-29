@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,18 +10,17 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../yuni.h"
-#include "mutex.h"
-#include "signal.h"
-#include "../core/string.h"
 #include <vector>
-#include "fwd.h"
+
 #include "../core/noncopyable.h"
 #include "../core/smartptr/intrusive.h"
+#include "../core/string.h"
+#include "../yuni.h"
+#include "fwd.h"
+#include "mutex.h"
+#include "signal.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 /*!
 ** \brief Base class interface for Threads (abstract)
@@ -63,7 +63,7 @@ namespace Thread
 ** \warning : Windows Server 2003 and Windows XP:  The target thread's initial
 **   stack is not freed when stopping the native thread, causing a resource leak
 */
-class YUNI_DECL IThread : public IIntrusiveSmartPtr<IThread, false>, private NonCopyable<IThread>
+class YUNI_DECL IThread: public IIntrusiveSmartPtr<IThread, false>, private NonCopyable<IThread>
 {
 public:
     //! Ancestor
@@ -314,7 +314,6 @@ private:
 
 }; // class IThread
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread
 
 #include "thread.hxx"

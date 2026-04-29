@@ -1,27 +1,8 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/series/series.h"
 
-#include <algorithm>
 #include <sstream>
 #include <vector>
 
@@ -30,19 +11,13 @@
 #include <yuni/io/file.h>
 
 #include <antares/antares/constants.h>
+#include <antares/utils/utils.h>
 
 namespace Antares::Data
 {
 void TimeSeriesNumbers::registerSeries(const TimeSeries* s, std::string label)
 {
     series[std::move(label)] = s;
-}
-
-// TODO[FOM] Code duplication
-static bool checkAllElementsIdenticalOrOne(std::vector<uint> w)
-{
-    auto first_one = std::remove(w.begin(), w.end(), 1); // Reject all 1 to the end
-    return std::adjacent_find(w.begin(), first_one, std::not_equal_to<uint>()) == first_one;
 }
 
 static std::string errorMessage(const std::map<std::string, const TimeSeries*>& series)
@@ -99,7 +74,7 @@ std::optional<std::string> TimeSeriesNumbers::checkSeriesNumberOfColumnsConsiste
         width.push_back(s->numberOfColumns());
     }
 
-    if (!checkAllElementsIdenticalOrOne(width))
+    if (!Utils::checkAllElementsIdenticalOrOne(width))
     {
         return errorMessage(series);
     }
@@ -111,11 +86,13 @@ TimeSeries::TimeSeries(TimeSeriesNumbers& tsNumbers):
 {
 }
 
-bool TimeSeries::loadFromFile(const std::filesystem::path& path, const bool average)
+bool TimeSeries::loadFromFile(const std::filesystem::path& path,
+                              const bool average,
+                              unsigned options)
 {
     bool ret = true;
     Matrix<>::BufferType dataBuffer;
-    ret = timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &dataBuffer) && ret;
+    ret = timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, options, &dataBuffer) && ret;
 
     if (average)
     {
@@ -132,11 +109,6 @@ int TimeSeries::saveToFolder(const std::string& areaID,
     Yuni::Clob buffer;
     buffer.clear() << folder << Yuni::IO::Separator << prefix << areaID << ".txt";
     return timeSeries.saveToCSVFile(buffer, 0);
-}
-
-int TimeSeries::saveToFile(const std::string& filename, bool saveEvenIfAllZero) const
-{
-    return timeSeries.saveToCSVFile(filename, 6, false, saveEvenIfAllZero);
 }
 
 double TimeSeries::getCoefficient(uint32_t year, uint32_t timestep) const
@@ -207,16 +179,6 @@ void TimeSeries::averageTimeseries()
 void TimeSeries::unloadFromMemory() const
 {
     timeSeries.unloadFromMemory();
-}
-
-bool TimeSeries::forceReload(bool reload) const
-{
-    return timeSeries.forceReload(reload);
-}
-
-void TimeSeries::markAsModified() const
-{
-    timeSeries.markAsModified();
 }
 
 } // namespace Antares::Data

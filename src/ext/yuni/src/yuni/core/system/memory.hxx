@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,21 +12,17 @@
 #pragma once
 #include "memory.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace Memory
+namespace Yuni::System::Memory
 {
 inline Usage::Usage()
 {
     update();
 }
 
-inline Usage::Usage(const Usage& copy) : available(copy.available), total(copy.total)
+inline Usage::Usage(const Usage& copy):
+    available(copy.available),
+    total(copy.total)
 {
 }
 
-} // namespace Memory
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::Memory

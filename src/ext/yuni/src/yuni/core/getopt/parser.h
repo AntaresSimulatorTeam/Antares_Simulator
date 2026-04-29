@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -16,9 +17,7 @@
 #include "../validator/text/default.h"
 #include "option.h"
 
-namespace Yuni
-{
-namespace GetOpt
+namespace Yuni::GetOpt
 {
 /*!
 ** \brief A command line options parser
@@ -247,7 +246,6 @@ private:
 
 }; // class Parser
 
-} // namespace GetOpt
-} // namespace Yuni
+} // namespace Yuni::GetOpt
 
 #include "parser.hxx"

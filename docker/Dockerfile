@@ -48,6 +48,8 @@ ENV CCACHE_BASEDIR=/workspace
 ENV CCACHE_COMPRESS=1
 ENV PATH="/usr/lib/ccache:$PATH"
 
+ARG RUN_TESTS=OFF
+
 RUN  source /opt/rh/devtoolset-11/enable && \
      source /opt/rh/rh-git227/enable && \
      export VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite" && \
@@ -57,7 +59,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
     -DCMAKE_TOOLCHAIN_FILE=/workspace/Antares_Simulator/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DVCPKG_TARGET_TRIPLET=x64-linux-release \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
+    -DBUILD_TESTING=$RUN_TESTS \
     -DBUILD_TOOLS=ON \
     -DBUILD_UI=OFF \
     -DCMAKE_PREFIX_PATH=/ortools/install
@@ -69,27 +71,31 @@ RUN  source /opt/rh/devtoolset-11/enable && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
 
+RUN if [ "$RUN_TESTS" = "ON" ]; then \
+        source /opt/rh/devtoolset-11/enable && \
+        cd _build && \
+        ctest -C Release --output-on-failure -L "unit|end-to-end"; \
+    fi
+
 #Installer .rpm creation
 RUN cd _build && \
-    cpack -G RPM
+    cpack -G RPM -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
 #Solver archive creation
 RUN cd _build && \
-     cpack -G RPM
+     cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="/ortools/install/lib64;bin"
 
-RUN cd _build && \
-    cmake --install . --prefix install && \
-    pushd . && \
-    cd install/bin && \
-    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so && \
-    popd && \
-    rm -rf install
-
-#.tar.gz creation
-RUN cd _build && \
-    cpack -G TGZ
 #mv .rpm and .tar.gz
 RUN cd _build && \
     mkdir archive && \
     mv *.tar.gz archive && \
     mv *.rpm archive
+
+RUN cd _build && \
+    cmake --install . --prefix install && \
+    pushd . && \
+    cd install/bin && \
+    cp /ortools/install/lib64/*.so* . && \
+    tar czf ../../antares-solver_centos7.tar.gz antares-solver libsirius_solver.so *.so* && \
+    popd && \
+    rm -rf install

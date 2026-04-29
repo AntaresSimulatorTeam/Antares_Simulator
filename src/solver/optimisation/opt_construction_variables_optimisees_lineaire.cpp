@@ -1,30 +1,12 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <spx_constantes_externes.h>
 
 #include <antares/solver/optimisation/opt_fonctions.h>
 #include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include "variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);
@@ -45,27 +27,28 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            variableManager.NTCDirect(interco, pdt) = NombreDeVariables;
+            variableManager.DirectFlow(interco, pdt) = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
 
             const auto origin = problemeHebdo->NomsDesPays
                                   [problemeHebdo->PaysOrigineDeLInterconnexion[interco]];
             const auto destination = problemeHebdo->NomsDesPays
                                        [problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
-            variableNamer.NTCDirect(NombreDeVariables, origin, destination);
+            variableNamer.updateExtremities(origin, destination);
+            variableNamer.DirectFlow(NombreDeVariables);
             NombreDeVariables++;
 
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
-                variableManager.IntercoDirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.PositiveDirectFlow(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoDirectCost(NombreDeVariables, origin, destination);
+                variableNamer.PositiveDirectFlow(NombreDeVariables);
                 NombreDeVariables++;
-                variableManager.IntercoIndirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.PositiveIndirectFlow(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoIndirectCost(NombreDeVariables, origin, destination);
+                variableNamer.PositiveIndirectFlow(NombreDeVariables);
                 NombreDeVariables++;
             }
         }
@@ -135,18 +118,28 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                                                                           storage.name);
                     ++NombreDeVariables;
                 }
+                // 6. Overflow
+                if (storage.allowOverflow)
+                {
+                    variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdt)
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_INFERIEUREMENT;
+                    variableNamer.ShortTermStorageOverflow(NombreDeVariables, storage.name);
+                    NombreDeVariables++;
+                }
             }
 
-            variableManager.PositiveUnsuppliedEnergy(pays, pdt) = NombreDeVariables;
+            variableManager.UnsuppliedEnergy(pays, pdt) = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            variableNamer.PositiveUnsuppliedEnergy(NombreDeVariables);
+            variableNamer.UnsuppliedEnergy(NombreDeVariables);
             NombreDeVariables++;
 
-            variableManager.NegativeUnsuppliedEnergy(pays, pdt) = NombreDeVariables;
+            variableManager.Spillage(pays, pdt) = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-            variableNamer.NegativeUnsuppliedEnergy(NombreDeVariables);
+            variableNamer.Spillage(NombreDeVariables);
             NombreDeVariables++;
         }
 

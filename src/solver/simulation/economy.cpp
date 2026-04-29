@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/simulation/economy.h"
 
@@ -27,6 +9,7 @@
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/simulation/solver_utils.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
@@ -38,8 +21,9 @@ Economy::Economy(Data::Study& study,
                  Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
-    resultWriter(resultWriter),
-    simulationObserver_(simulationObserver)
+    resultWriter_(resultWriter),
+    simulationObserver_(simulationObserver),
+    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
 {
 }
 
@@ -65,6 +49,25 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
+{
+    if (numSpace >= simulationTables_.size())
+    {
+        throw std::out_of_range("Error: there is no simulation table for numSpace: "
+                                + std::to_string(numSpace));
+    }
+    return simulationTables_[numSpace];
+}
+
+std::string Economy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).getHeader();
+    }
+    return "";
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -79,27 +82,23 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-
+            auto* simulationsTables = simulationTables_.empty() ? nullptr
+                                                                : &simulationTables_[numSpace];
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
-                                            resultWriter,
-                                            simulationObserver_.get());
+                                            resultWriter_,
+                                            simulationObserver_.get(),
+                                            simulationsTables);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
               &pProblemesHebdo[numSpace],
               numSpace,
               study.areas,
-              study.parameters.shedding.policy,
-              study.parameters.simplexOptimizationRange,
+              study.parameters,
               study.calendar,
-              study.parameters.optOptions);
+              resultWriter_);
         }
-    }
-
-    for (auto& pb: pProblemesHebdo)
-    {
-        pb.TypeDOptimisation = OPTIMISATION_LINEAIRE;
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -107,14 +106,13 @@ bool Economy::simulationBegin()
     return true;
 }
 
-bool Economy::year(Progression::Task& progression,
-                   Variable::State& state,
+bool Economy::year(Variable::State& state,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
-                   bool isFirstPerformedYearOfSimulation,
                    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
                    OptimizationStatisticsWriter& optWriter,
+                   Benchmarking::DurationCollector& durationCollector,
                    const Antares::Data::Area::ScratchMap& scratchmap)
 {
     // No failed week at year start
@@ -128,11 +126,10 @@ bool Economy::year(Progression::Task& progression,
     state.startANewYear();
 
     int hourInTheYear = pStartTime;
-    if (isFirstPerformedYearOfSimulation)
-    {
-        currentProblem.firstWeekOfSimulation = true;
-    }
-    bool reinitOptim = true;
+
+    // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
+    // of each year
+    currentProblem.ProblemeAResoudre->clearBasis();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -152,15 +149,14 @@ bool Economy::year(Progression::Task& progression,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-
-        // Reinit optimisation if needed
-        currentProblem.ReinitOptimisation = reinitOptim;
-        reinitOptim = false;
-
+        auto* currentSimTable = simulationTables_.empty() ? nullptr : &simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
-
+            if (currentSimTable)
+            {
+                currentSimTable->write();
+            }
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -192,6 +188,7 @@ bool Economy::year(Progression::Task& progression,
                 state.optimalSolutionCost2 += currentProblem.coutOptimalSolution2[opt];
             }
             optWriter.addTime(w, currentProblem.timeMeasure);
+            addTimeMeasure(durationCollector, currentProblem.timeMeasure);
         }
         catch (Data::AssertionError& ex)
         {
@@ -207,7 +204,6 @@ bool Economy::year(Progression::Task& progression,
         catch (Data::UnfeasibleProblemError&)
         {
             // need to clean next problemeHebdo
-            reinitOptim = true;
 
             // Indicate failed week list (first week of the year is "week number one" for the user
             // but w=0 for the loop)
@@ -221,24 +217,12 @@ bool Economy::year(Progression::Task& progression,
         }
 
         hourInTheYear += nbHoursInAWeek;
-
-        currentProblem.firstWeekOfSimulation = false;
-
-        ++progression;
     }
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
     return true;
-}
-
-void Economy::incrementProgression(Progression::Task& progression)
-{
-    for (uint w = 0; w < pNbWeeks; ++w)
-    {
-        ++progression;
-    }
 }
 
 // Retrieve weighted average balance for each area
@@ -263,27 +247,6 @@ void Economy::simulationEnd()
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, pProblemesHebdo[0], balance, pNbWeeks);
-    }
-}
-
-void Economy::prepareClustersInMustRunMode(Data::Area::ScratchMap& scratchmap, uint year)
-{
-    for (uint i = 0; i < study.areas.size(); ++i)
-    {
-        auto& area = *study.areas[i];
-        auto& scratchpad = scratchmap.at(&area);
-
-        std::ranges::fill(scratchpad.mustrunSum, 0);
-
-        auto& mrs = scratchpad.mustrunSum;
-        for (const auto& cluster: area.thermal.list.each_mustrun_and_enabled())
-        {
-            const auto& availableProduction = cluster->series.getColumn(year);
-            for (uint h = 0; h != cluster->series.timeSeries.height; ++h)
-            {
-                mrs[h] += availableProduction[h];
-            }
-        }
     }
 }
 

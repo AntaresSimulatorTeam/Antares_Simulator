@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "bit.h"
 
-namespace Yuni
-{
-namespace Bit
+namespace Yuni::Bit
 {
 inline uint32_t Count(uint32_t i)
 {
@@ -60,5 +59,4 @@ inline void Unset(char* data, uint index)
     YUNI_BIT_UNSET(data, index);
 }
 
-} // namespace Bit
-} // namespace Yuni
+} // namespace Yuni::Bit

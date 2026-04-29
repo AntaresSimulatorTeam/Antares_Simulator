@@ -1,36 +1,19 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
+// clang-format off
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
+// clang-format on
 #include "antares/study/parts/short-term-storage/container.h"
 
 #include <algorithm>
 #include <numeric>
-#include <regex>
 #include <string>
 
 #include <yuni/io/file.h>
 
 #include <antares/logs/logs.h>
 #include <antares/utils/utils.h>
-#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -100,7 +83,7 @@ static std::vector<SingleAdditionalConstraint> makeConstraints(std::string& hour
 
 static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
 {
-    const bool ret = loadFile(rhsPath, rhsSeries, /*.average =*/false);
+    const bool ret = loadFile(rhsPath, rhsSeries);
     if (ret)
     {
         fillIfEmpty(rhsSeries, 0.0);
@@ -108,100 +91,118 @@ static bool readRHS(const fs::path& rhsPath, TimeSeries& rhsSeries)
     return ret;
 }
 
-bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+static bool loadAdditionalConstraintsProperties(AdditionalConstraints* additionalConstraints,
+                                                const IniFile::Section* section)
 {
-    IniFile ini;
-    const auto pathIni = parentPath / "additional-constraints.ini";
-    if (!ini.open(pathIni, false))
+    for (auto* property = section->firstProperty; property; property = property->next)
     {
-        logs.info() << "There is no: " << pathIni;
-        return true;
-    }
+        const std::string key = property->key;
+        const auto value = property->value;
 
-    for (auto* section = ini.firstSection; section; section = section->next)
-    {
-        AdditionalConstraints additionalConstraints;
-        additionalConstraints.name = section->name.c_str();
-        for (auto* property = section->firstProperty; property; property = property->next)
+        if (key == "enabled")
         {
-            const std::string key = property->key;
-            const auto value = property->value;
-
-            if (key == "cluster")
-            {
-                std::string clusterName;
-                value.to<std::string>(clusterName);
-                additionalConstraints.cluster_id = transformNameIntoID(clusterName);
-            }
-            else if (key == "enabled")
-            {
-                value.to<bool>(additionalConstraints.enabled);
-            }
-            else if (key == "variable")
-            {
-                value.to<std::string>(additionalConstraints.variable);
-            }
-            else if (key == "operator")
-            {
-                value.to<std::string>(additionalConstraints.operatorType);
-            }
-            else if (key == "hours")
-            {
-                try
-                {
-                    std::string hoursField = value.c_str();
-                    additionalConstraints.constraints = makeConstraints(hoursField);
-                }
-                catch (const std::exception& e)
-                {
-                    logs.error() << "Constraint " << additionalConstraints.name << " : " << e.what()
-                                 << '\n';
-                    return false;
-                }
-            }
+            value.to<bool>(additionalConstraints->enabled);
         }
-
-        // We don't want load RHS and link the STS time if the constraint is disabled
-        if (!additionalConstraints.enabled)
+        else if (key == "variable")
         {
-            logs.info() << "Additional constraints disabled for ST "
-                        << additionalConstraints.cluster_id;
-            return true;
+            value.to<std::string>(additionalConstraints->variable);
         }
-
-        if (const auto rhsPath = parentPath / ("rhs_" + additionalConstraints.name + ".txt");
-            !readRHS(rhsPath, additionalConstraints.rhs()))
+        else if (key == "operator")
         {
-            logs.error() << "Error while reading rhs file: " << rhsPath;
-            return false;
+            value.to<std::string>(additionalConstraints->operatorType);
         }
-
-        if (auto [ok, error_msg] = additionalConstraints.validate(); !ok)
+        else if (key == "hours")
         {
-            logs.error() << "Invalid constraint in section: " << section->name;
-            logs.error() << error_msg;
-            return false;
-        }
-
-        auto it = std::ranges::find_if(storagesByIndex,
-                                       [&additionalConstraints](const STStorageCluster& cluster)
-                                       { return cluster.id == additionalConstraints.cluster_id; });
-        if (it == storagesByIndex.end())
-        {
-            logs.warning() << " from file " << pathIni;
-            logs.warning() << "Constraint " << section->name
-                           << " does not reference an existing cluster";
-            return false;
+            try
+            {
+                std::string hoursField = value.c_str();
+                additionalConstraints->constraints = makeConstraints(hoursField);
+            }
+            catch (const std::exception& e)
+            {
+                logs.error() << "Constraint " << additionalConstraints->name << " : " << e.what()
+                             << '\n';
+                return false;
+            }
         }
         else
         {
-            logs.info() << "Loaded ST additional constraint " << additionalConstraints.cluster_id
-                        << "/" << additionalConstraints.name;
-            it->additionalConstraints.push_back(std::move(additionalConstraints));
+            logs.error() << "Constraint " << additionalConstraints->name << " : "
+                         << "has a wrong key : " << key;
+            return false;
         }
     }
-
     return true;
+}
+
+bool STStorageInput::loadAdditionalConstraintsFromIni(const fs::path& parentPath)
+{
+    for (auto& sts: storagesByIndex)
+    {
+        auto data_path = parentPath / sts.id;
+        IniFile ini;
+        const auto pathIni = data_path / "additional-constraints.ini";
+        if (!ini.open(pathIni, false))
+        {
+            logs.info() << "There is no: " << pathIni;
+            continue;
+        }
+
+        for (auto* section = ini.firstSection; section; section = section->next)
+        {
+            auto additionalConstraints = std::make_shared<AdditionalConstraints>();
+            additionalConstraints->name = section->name.c_str();
+            additionalConstraints->id = transformNameIntoID(section->name.c_str());
+            additionalConstraints->cluster_id = sts.id;
+
+            if (!loadAdditionalConstraintsProperties(additionalConstraints.get(), section))
+            {
+                return false;
+            }
+
+            if (!additionalConstraints->enabled)
+            {
+                logs.info() << "Additional constraints disabled for ST "
+                            << additionalConstraints->cluster_id;
+                continue;
+            }
+
+            if (auto [ok, error_msg] = ShortTermStorage::validate(*additionalConstraints); !ok)
+            {
+                logs.error() << "Invalid constraint in section: " << section->name;
+                logs.error() << error_msg;
+                return false;
+            }
+
+            logs.info() << "Loaded ST additional constraint " << additionalConstraints->cluster_id
+                        << "/" << additionalConstraints->name;
+            sts.additionalConstraints.push_back(additionalConstraints);
+        }
+    }
+    return true;
+}
+
+bool STStorageInput::loadAdditionalConstraintsRHS(const fs::path& parentPath)
+{
+    for (auto& sts: storagesByIndex)
+    {
+        auto data_path = parentPath / sts.id;
+        for (auto& additionalConstraints: sts.additionalConstraints)
+        {
+            const auto rhsPath = data_path / ("rhs_" + additionalConstraints->id + ".txt");
+            if (!readRHS(rhsPath, additionalConstraints->rhs()))
+            {
+                logs.error() << "Error while reading rhs file: " << rhsPath;
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool STStorageInput::loadAdditionalConstraints(const fs::path& parentPath)
+{
+    return loadAdditionalConstraintsFromIni(parentPath) && loadAdditionalConstraintsRHS(parentPath);
 }
 
 bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion studyVersion) const
@@ -222,33 +223,15 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion s
     return ret;
 }
 
-bool STStorageInput::saveToFolder(const std::string& folder) const
-{
-    // create empty list.ini if there's no sts in this area
-    Yuni::IO::Directory::Create(folder);
-    const std::string pathIni(folder + SEP + "list.ini");
-    IniFile ini;
-
-    logs.debug() << "saving file " << pathIni;
-    std::ranges::for_each(storagesByIndex,
-                          [&ini](auto& storage) { return storage.saveProperties(ini); });
-
-    return ini.save(pathIni);
-}
-
-bool STStorageInput::saveDataSeriesToFolder(const std::string& folder) const
-{
-    Yuni::IO::Directory::Create(folder);
-    return std::ranges::all_of(storagesByIndex,
-                               [&folder](auto& storage)
-                               { return storage.saveSeries(folder + SEP + storage.id); });
-}
-
 void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 {
     for (auto& sts: storagesByIndex)
     {
         sts.series->inflowsTSNumbers.reset(nbYears);
+        for (auto& ct: sts.additionalConstraints)
+        {
+            ct->timeseriesNumbers.reset(nbYears);
+        }
     }
 }
 
@@ -261,12 +244,14 @@ std::size_t STStorageInput::cumulativeConstraintCount() const
       [](size_t outer_constraint_count, const auto& sts)
       {
           return outer_constraint_count
-                 + std::accumulate(
-                   sts.additionalConstraints.begin(),
-                   sts.additionalConstraints.end(),
-                   0,
-                   [](size_t inner_constraint_count, const auto& additionalConstraints)
-                   { return inner_constraint_count + additionalConstraints.enabledConstraints(); });
+                 + std::accumulate(sts.additionalConstraints.begin(),
+                                   sts.additionalConstraints.end(),
+                                   0,
+                                   [](size_t inner_constraint_count,
+                                      const auto& additionalConstraints) {
+                                       return inner_constraint_count
+                                              + additionalConstraints->enabledConstraintsCount();
+                                   });
       });
 }
 

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,33 +11,30 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Private
-{
-namespace Core
-{
-namespace Tree
+namespace Yuni::Private::Core::Tree
 {
 template<class NodeT>
-inline DepthInfixIterator<NodeT>::DepthInfixIterator() : pNode(nullptr)
+inline DepthInfixIterator<NodeT>::DepthInfixIterator():
+    pNode(nullptr)
 {
 }
 
 template<class NodeT>
-inline DepthInfixIterator<NodeT>::DepthInfixIterator(const Type& it) : pNode(it.pNode)
+inline DepthInfixIterator<NodeT>::DepthInfixIterator(const Type& it):
+    pNode(it.pNode)
 {
 }
 
 template<class NodeT>
 template<class N>
-inline DepthInfixIterator<NodeT>::DepthInfixIterator(const DepthInfixIterator<N>& p) :
- pNode(p.pNode)
+inline DepthInfixIterator<NodeT>::DepthInfixIterator(const DepthInfixIterator<N>& p):
+    pNode(p.pNode)
 {
 }
 
 template<class NodeT>
-inline DepthInfixIterator<NodeT>::DepthInfixIterator(const NodePtr& p) : pNode(p)
+inline DepthInfixIterator<NodeT>::DepthInfixIterator(const NodePtr& p):
+    pNode(p)
 {
 }
 
@@ -112,7 +110,4 @@ void DepthInfixIterator<NodeT>::backward(difference_type n)
     }
 }
 
-} // namespace Tree
-} // namespace Core
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::Core::Tree

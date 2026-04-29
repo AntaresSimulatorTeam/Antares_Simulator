@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #ifndef __YUNI_CORE_VALIDATOR_DEFAULT_HXX__
 #define __YUNI_CORE_VALIDATOR_DEFAULT_HXX__
 
-namespace Yuni
-{
-namespace Validator
-{
-namespace Text
+namespace Yuni::Validator::Text
 {
 template<Yuni::Validator::DefaultPolicy DefaultPolicy>
 inline ExceptionList<DefaultPolicy>::ExceptionList()
@@ -23,20 +20,21 @@ inline ExceptionList<DefaultPolicy>::ExceptionList()
 }
 
 template<Yuni::Validator::DefaultPolicy DefaultPolicy>
-inline ExceptionList<DefaultPolicy>::ExceptionList(const ExceptionList<DefaultPolicy>& rhs) :
- pExceptionList(rhs.pExceptionList)
+inline ExceptionList<DefaultPolicy>::ExceptionList(const ExceptionList<DefaultPolicy>& rhs):
+    pExceptionList(rhs.pExceptionList)
 {
 }
 
 template<Yuni::Validator::DefaultPolicy DefaultPolicy>
 template<Yuni::Validator::DefaultPolicy OtherDefaultPolicy>
-inline ExceptionList<DefaultPolicy>::ExceptionList(const ExceptionList<OtherDefaultPolicy>& rhs) :
- pExceptionList(rhs.pExceptionList)
+inline ExceptionList<DefaultPolicy>::ExceptionList(const ExceptionList<OtherDefaultPolicy>& rhs):
+    pExceptionList(rhs.pExceptionList)
 {
 }
 
 template<Yuni::Validator::DefaultPolicy DefaultPolicy>
-inline ExceptionList<DefaultPolicy>::ExceptionList(const String::Vector& rhs) : pExceptionList(rhs)
+inline ExceptionList<DefaultPolicy>::ExceptionList(const String::Vector& rhs):
+    pExceptionList(rhs)
 {
 }
 
@@ -47,7 +45,9 @@ inline ExceptionList<DefaultPolicy>::ExceptionList(const String::List& rhs)
     {
         const String::List::const_iterator end = rhs.end();
         for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+        {
             pExceptionList.push_back(*i);
+        }
     }
 }
 
@@ -61,7 +61,9 @@ bool ExceptionList<DefaultPolicy>::validate(const U& s) const
         for (String::Vector::const_iterator i = pExceptionList.begin(); i != end; ++i)
         {
             if (*i == s)
+            {
                 return !DefaultPolicy;
+            }
         }
     }
     return DefaultPolicy;
@@ -99,7 +101,9 @@ ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator=(const Stri
     {
         const String::List::const_iterator end = rhs.end();
         for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+        {
             pExceptionList.push_back(*i);
+        }
     }
     return *this;
 }
@@ -119,7 +123,9 @@ inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator+=(
     // pExceptionList += rhs.pExceptionList;
     const String::List::const_iterator end = rhs.end();
     for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         pExceptionList.push_back(*i);
+    }
     return *this;
 }
 
@@ -130,7 +136,9 @@ inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator+=(
     // pExceptionList += rhs;
     const String::Vector::const_iterator end = rhs.end();
     for (String::Vector::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         pExceptionList.push_back(*i);
+    }
     return *this;
 }
 
@@ -142,7 +150,9 @@ inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator+=(
     {
         const String::List::const_iterator end = rhs.end();
         for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+        {
             pExceptionList.push_back(*i);
+        }
     }
     return *this;
 }
@@ -162,7 +172,9 @@ inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator<<(
     // pExceptionList += rhs.pExceptionList;
     const String::List::const_iterator end = rhs.end();
     for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         pExceptionList.push_back(*i);
+    }
     return *this;
 }
 
@@ -173,7 +185,9 @@ inline ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator<<(
     // pExceptionList += rhs;
     const String::Vector::const_iterator end = rhs.end();
     for (String::Vector::const_iterator i = rhs.begin(); i != end; ++i)
+    {
         pExceptionList.push_back(*i);
+    }
     return *this;
 }
 
@@ -184,13 +198,13 @@ ExceptionList<DefaultPolicy>& ExceptionList<DefaultPolicy>::operator<<(const Str
     {
         const String::List::const_iterator end = rhs.end();
         for (String::List::const_iterator i = rhs.begin(); i != end; ++i)
+        {
             pExceptionList.push_back(*i);
+        }
     }
     return *this;
 }
 
-} // namespace Text
-} // namespace Validator
-} // namespace Yuni
+} // namespace Yuni::Validator::Text
 
 #endif // __YUNI_CORE_VALIDATOR_DEFAULT_H__

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
@@ -32,7 +15,7 @@ namespace Antares::Data
 {
 
 //! The maximum number of days in a year
-constexpr size_t dayYearCount = 366;
+constexpr size_t nbDaysInYear = 366;
 
 struct DailyDemand
 {
@@ -50,15 +33,13 @@ struct MonthlyGenerationTargetData
     double MOG = 0.;
     //! Monthly optimal level
     double MOL = 0.;
-    //! Monthly target generations
-    double MTG = 0.;
 };
 
 //!  Hydro Management Data for a given area
 struct TimeDependantHydroManagementData
 {
-    std::array<DailyDemand, dayYearCount> daily{0};
-    std::array<MonthlyGenerationTargetData, 12> monthly{0};
+    std::array<DailyDemand, nbDaysInYear> daily{};
+    std::array<MonthlyGenerationTargetData, 12> monthly{};
 };
 
 //! Area Hydro Management Data for a given year
@@ -68,10 +49,8 @@ struct AreaDependantHydroManagementData
     std::array<double, 12> inflows{};
     //! monthly minimal generation
     std::array<double, 12> mingens{};
-
     //! daily minimal generation
-    std::array<double, dayYearCount> dailyMinGen{};
-
+    std::array<double, nbDaysInYear> dailyMinGen{};
     // Data for minGen<->inflows preChecks
     //! monthly total mingen
     std::array<double, 12> totalMonthMingen{};
@@ -81,13 +60,12 @@ struct AreaDependantHydroManagementData
     double totalYearMingen = 0;
     //! yearly total inflows
     double totalYearInflows = 0;
-
 }; // struct AreaDependantHydroManagementData
 
 /*!
 ** \brief Hydro for a single area
 */
-class PartHydro
+class PartHydro final
 {
 public:
     enum
@@ -151,13 +129,6 @@ public:
 
     void copyFrom(const PartHydro& rhs);
 
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
-
     /*!
     ** \brief Load daily max energy
     */
@@ -208,9 +179,6 @@ public:
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
 
-    //! Daily reservoir level ({min,avg,max}x365)
-    Matrix<double> reservoirLevel;
-
     //! Daily water value ({0,1,2%...100%}x365)
     Matrix<double> waterValues;
 
@@ -234,7 +202,7 @@ public:
     double overflowSpilledCostDifference = 1.;
 
 private:
-    static bool checkReservoirLevels(const Study& study);
+    static bool checkInflowPatternAndCredModul(const Study& study);
     static bool checkProperties(Study& study);
 
 }; // class PartHydro

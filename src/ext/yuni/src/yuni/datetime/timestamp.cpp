@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "timestamp.h"
-#include <time.h>
+
 #include <cassert>
+#include <time.h>
+
 #include "../core/system/gettimeofday.h"
 
-namespace Yuni
-{
-namespace DateTime
+namespace Yuni::DateTime
 {
 Timestamp Now()
 {
@@ -33,14 +34,9 @@ Timestamp NowMilliSeconds()
     return now.tv_sec * 1000 + now.tv_usec / 1000;
 }
 
-} // namespace DateTime
-} // namespace Yuni
+} // namespace Yuni::DateTime
 
-namespace Yuni
-{
-namespace Private
-{
-namespace DateTime
+namespace Yuni::Private::DateTime
 {
 namespace // anonymous
 {
@@ -115,7 +111,9 @@ char* FormatTimestampToString(const AnyString& format, int64_t timestamp)
     {
         buffer = (char*)::realloc(buffer, size * sizeof(char));
         if (FormatString(buffer, size, format.c_str(), timestamp))
+        {
             return buffer;
+        }
 
         // there was not enough room for storing the formatted string
         // trying again with more rooms
@@ -126,6 +124,4 @@ char* FormatTimestampToString(const AnyString& format, int64_t timestamp)
     return nullptr;
 }
 
-} // namespace DateTime
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::DateTime

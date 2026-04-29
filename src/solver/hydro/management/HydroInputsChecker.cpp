@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 
 #include <yuni/core/logs.h>
@@ -30,7 +13,6 @@
 
 namespace Antares
 {
-
 HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
     areas_(study.areas),
     parameters_(study.parameters),
@@ -44,8 +26,12 @@ HydroInputsChecker::HydroInputsChecker(Antares::Data::Study& study):
 
 void HydroInputsChecker::Execute(uint year)
 {
-    prepareInflows_.Run(year);
+    prepareInflows_.loadInflows(year);
     minGenerationScaling_.Run(year);
+    if (!checkRuleCurves(year))
+    {
+        logs.error() << "hydro inputs checks: invalid reservoir levels in year " << year;
+    }
     if (!checksOnGenerationPowerBounds(year))
     {
         logs.error() << "hydro inputs checks: invalid minimum generation in year " << year;
@@ -54,6 +40,7 @@ void HydroInputsChecker::Execute(uint year)
     {
         CheckFinalReservoirLevelsConfiguration(year);
     }
+    prepareInflows_.changeInflowsToAccommodateFinalLevels(year);
 }
 
 bool HydroInputsChecker::checksOnGenerationPowerBounds(uint year)
@@ -89,6 +76,35 @@ bool HydroInputsChecker::checkMinGeneration(uint year)
           else
           {
               ret = checkMonthlyMinGeneration(year, area) && ret;
+          }
+      });
+    return ret;
+}
+
+bool HydroInputsChecker::checkRuleCurves(uint year)
+{
+    bool ret = true;
+    areas_.each(
+      [this, &ret, &year](const Data::Area& area)
+      {
+          const auto* minRuleCurves = area.hydro.series->ruleCurves.min.getColumn(year);
+          const auto* avgRuleCurves = area.hydro.series->ruleCurves.avg.getColumn(year);
+          const auto* maxRuleCurves = area.hydro.series->ruleCurves.max.getColumn(year);
+
+          const auto& tsIndex = area.hydro.series->ruleCurves.timeseriesNumbers[year];
+
+          for (unsigned int day = 0; day < DAYS_PER_YEAR; ++day)
+          {
+              if (minRuleCurves[day] < 0 || avgRuleCurves[day] < 0
+                  || minRuleCurves[day] > maxRuleCurves[day] || avgRuleCurves[day] > 1.
+                  || maxRuleCurves[day] > 1.)
+              {
+                  errorCollector_(area.name)
+                    << "Reservoir levels in area " << area.id
+                    << " for Time-Serie index:" << tsIndex + 1 << " are invalid on day " << day + 1;
+                  ret = false;
+                  break;
+              }
           }
       });
     return ret;
@@ -215,7 +231,6 @@ void HydroInputsChecker::CheckFinalReservoirLevelsConfiguration(uint year)
           double finalLevel = scenarioFinalHydroLevels_.entry[area.index][year];
 
           Antares::Solver::FinalLevelValidator validator(area.hydro,
-                                                         area.index,
                                                          area.name,
                                                          initialLevel,
                                                          finalLevel,
@@ -240,5 +255,4 @@ void HydroInputsChecker::CheckForErrors() const
 {
     errorCollector_.CheckForErrors();
 }
-
 } // namespace Antares

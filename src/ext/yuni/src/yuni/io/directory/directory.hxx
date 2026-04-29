@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,22 +10,16 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "directory.h"
+#include "../../core/static/remove.h"
 #include "../../core/traits/cstring.h"
 #include "../../core/traits/length.h"
-#include "../../core/static/remove.h"
 #include "../constants.h"
+#include "directory.h"
 #ifdef YUNI_HAS_STDLIB_H
 #include <stdlib.h>
 #endif
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::Private::IO::Directory
 {
 inline bool DummyCopyUpdateEvent(Yuni::IO::Directory::CopyState,
                                  const String&,
@@ -35,16 +30,9 @@ inline bool DummyCopyUpdateEvent(Yuni::IO::Directory::CopyState,
     return true;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::IO::Directory
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 inline bool Exists(const AnyString& path)
 {
@@ -68,6 +56,4 @@ inline bool Copy(const AnyString& source,
     return Copy(source, destination, true, true, onUpdate);
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

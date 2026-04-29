@@ -1,6 +1,8 @@
-solver: highs
+solver: coin
 solver-logs: false
 solver-parameters: 
 no-output: false
 first-time-step: 0
 last-time-step: 2
+
+export-mps: true

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__
 
@@ -25,15 +8,13 @@
 
 #include "../../fwd.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Data for the hydro preprocessor
 ** \ingroup hydroprepro
 */
-class PreproHydro
+class PreproHydro final
 {
 public:
     enum
@@ -98,17 +79,6 @@ public:
     bool loadFromFolder(Study& s, const std::string& areaID, const std::filesystem::path& folder);
 
     bool validate(const std::string& areaID);
-    /*!
-    ** \brief Save hydro settings for the prepro into a folder
-    **
-    ** \param folder The target folder (ex: `input/hydro/prepro`)
-    ** \return A non-zero value if the operation succeeded, 0 otherwise
-    */
-    bool saveToFolder(const AreaName& areaID, const char* folder);
-
-    bool forceReload(bool reload = false) const;
-
-    void markAsModified() const;
 
 public:
     //! The intermonthly correlation value
@@ -123,7 +93,6 @@ int PreproHydroLoadFromFolder(Study& s,
                               const AreaName& areaID,
                               const char folder[]);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif /* __ANTARES_LIBS_STUDY_PARTS_HYDRO_PREPRO_H__ */

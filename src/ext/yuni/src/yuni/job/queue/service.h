@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,24 +10,22 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
-#include "../job.h"
-#include "waitingroom.h"
 #include "../../core/atomic/bool.h"
-#include "../../thread/signal.h"
-#include "q-event.h"
 #include "../../core/dictionary.h"
 #include "../../core/smartptr/intrusive.h"
+#include "../../thread/signal.h"
+#include "../../yuni.h"
+#include "../job.h"
+#include "q-event.h"
+#include "waitingroom.h"
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 /*!
 ** \brief Multithreaded Job QueueService
 */
-class YUNI_DECL QueueService final : public IIntrusiveSmartPtr<QueueService, false>,
-                                     public NonCopyable<QueueService>
+class YUNI_DECL QueueService final: public IIntrusiveSmartPtr<QueueService, false>,
+                                    public NonCopyable<QueueService>
 {
 public:
     //! Ancestor
@@ -292,7 +291,6 @@ private:
 
 }; // class QueueService
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job
 
 #include "service.hxx"

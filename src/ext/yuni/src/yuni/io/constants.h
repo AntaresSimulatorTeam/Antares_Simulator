@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "io.h"
 
-namespace Yuni
-{
-namespace IO
+namespace Yuni::IO
 {
 /*!
 ** \brief Flow control used in the IO module
@@ -68,6 +67,7 @@ extern const char* SeparatorAsString; // "/"
 */
 template<typename C /* = char*/>
 struct Constant;
+
 template<>
 struct Constant<char>
 {
@@ -99,7 +99,7 @@ struct Constant<wchar_t>
     //! Dot
     static const wchar_t Dot; // L'.';
 };
+
 //@}
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

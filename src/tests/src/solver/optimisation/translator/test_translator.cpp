@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define BOOST_TEST_MODULE test_translator
 #define WIN32_LEAN_AND_MEAN
@@ -31,7 +13,7 @@
 
 using namespace Antares::Solver;
 
-class StubOptPeriodStringGenerator: public OptPeriodStringGenerator
+class StubOptPeriodStringGenerator final: public OptPeriodStringGenerator
 {
 public:
     std::string to_string() const override
@@ -72,9 +54,6 @@ BOOST_AUTO_TEST_CASE(Data_properly_copied)
     BOOST_CHECK(ret.Xmax == problemHebdo.Xmax);
     BOOST_CHECK(ret.Xmin == problemHebdo.Xmin);
     BOOST_CHECK(ret.RHS == problemHebdo.SecondMembre);
-
-    BOOST_CHECK(ret.variables == problemHebdo.NomDesVariables);
-    BOOST_CHECK(ret.constraints == problemHebdo.NomDesContraintes);
 }
 
 BOOST_AUTO_TEST_CASE(translate_sens)
@@ -82,6 +61,7 @@ BOOST_AUTO_TEST_CASE(translate_sens)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.Sens = "<=>";
+    problemHebdo.NombreDeContraintes = 3;
 
     auto ret = translator.translate(&problemHebdo, std::string());
     BOOST_CHECK(ret.Direction == std::vector({'<', '=', '>'}));
@@ -113,8 +93,9 @@ BOOST_AUTO_TEST_CASE(empty_problem_empty_const_data)
 }
 
 template<class T>
-static void fillSparseVector(SparseVector<T>& v, int idxMax)
+static void fillVector(T& v, int idxMax)
 {
+    v.resize(idxMax);
     for (int idx = 0; idx < idxMax; idx++)
     {
         v[idx] = idx;
@@ -125,25 +106,27 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
 {
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
-    problemHebdo.NombreDeVariables = 1;
+    problemHebdo.NombreDeVariables = 3;
     problemHebdo.NombreDeContraintes = 2;
-    problemHebdo.TypeDeVariable = {0, 1, 2};
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {3, 3};
-    fillSparseVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 6);
-    fillSparseVector(problemHebdo.IndicesColonnes, 6);
+    problemHebdo.NomDesVariables = {"a", "b", "c"};
+    problemHebdo.NomDesContraintes = {"d", "e"};
+    fillVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 6);
+    fillVector(problemHebdo.IndicesColonnes, 6);
 
     auto ret = translator.commonProblemData(&problemHebdo);
 
     BOOST_CHECK_EQUAL(ret.VariablesCount, problemHebdo.NombreDeVariables);
     BOOST_CHECK_EQUAL(ret.ConstraintesCount, problemHebdo.NombreDeContraintes);
-    BOOST_CHECK(std::ranges::equal(ret.VariablesType, problemHebdo.TypeDeVariable));
-    BOOST_CHECK(ret.ConstraintsMatrixCoeff
-                == problemHebdo.CoefficientsDeLaMatriceDesContraintes.extract());
-    BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes.extract()));
+    BOOST_CHECK(ret.ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
+    BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes));
     auto expectedMdeb = problemHebdo.IndicesDebutDeLigne;
     expectedMdeb.push_back(problemHebdo.CoefficientsDeLaMatriceDesContraintes.size());
     BOOST_CHECK(std::ranges::equal(ret.Mdeb, expectedMdeb));
+
+    BOOST_CHECK(ret.VariablesMeaning == problemHebdo.NomDesVariables);
+    BOOST_CHECK(ret.ConstraintsMeaning == problemHebdo.NomDesContraintes);
 }
 
 // throw exception if NombreDeVariables is 0
@@ -152,7 +135,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeVariables_is_0)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.NombreDeVariables = 0;
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeContraintes_is_0)
@@ -160,7 +143,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeContraintes_is_0)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.NombreDeContraintes = 0;
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_IndicesDebutDeLigne_out_of_bound)
@@ -171,7 +154,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_IndicesDebutDeLigne_out_of_bound)
     problemHebdo.NombreDeContraintes = 3;
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {0, 3, 6, 7, 8};
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeTermesDesLignes_out_of_bound)
@@ -182,7 +165,7 @@ BOOST_AUTO_TEST_CASE(throw_exception_if_NombreDeTermesDesLignes_out_of_bound)
     problemHebdo.NombreDeContraintes = 3;
     problemHebdo.NombreDeTermesDesLignes = {0, 3};
     problemHebdo.IndicesDebutDeLigne = {0, 3, 6, 7, 8};
-    BOOST_CHECK_THROW(translator.commonProblemData(&problemHebdo), std::runtime_error);
+    BOOST_CHECK_THROW((void)translator.commonProblemData(&problemHebdo), std::runtime_error);
 }
 
 // NombreDeCoefficients
@@ -195,8 +178,8 @@ BOOST_AUTO_TEST_CASE(NombreDeCoefficients_is_properly_computed)
     problemHebdo.IndicesDebutDeLigne = {0, 3, 6};
     problemHebdo.NombreDeTermesDesLignes = {3, 3, 3};
 
-    fillSparseVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 9);
-    fillSparseVector(problemHebdo.IndicesColonnes, 9);
+    fillVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 9);
+    fillVector(problemHebdo.IndicesColonnes, 9);
 
     auto ret = translator.commonProblemData(&problemHebdo);
     BOOST_CHECK_EQUAL(ret.CoeffCount, 9);

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "distribution.h"
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 template<typename T, class Derived>
 inline const char* ADistribution<T, Derived>::Name()
@@ -77,6 +74,4 @@ inline const typename ADistribution<T, Derived>::Value ADistribution<T, Derived>
     return static_cast<Derived*>(this)->max();
 }
 
-} // namespace Random
-} // namespace Math
-} // namespace Yuni
+} // namespace Yuni::Math::Random

@@ -1,117 +1,73 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/io/inputs/model-converter/modelConverter.h"
 
 #include <antares/expressions/iterators/pre-order.h>
-#include <antares/expressions/nodes/PortFieldNode.h>
+#include <antares/expressions/nodes/ExpressionsNodes.h> // gp : why do we need this inclusion ?
 #include "antares/expressions/expression.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodes.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/study/system-model/constraint.h"
 #include "antares/study/system-model/library.h"
-#include "antares/study/system-model/model.h"
 #include "antares/study/system-model/parameter.h"
 #include "antares/study/system-model/port.h"
 #include "antares/study/system-model/portType.h"
 #include "antares/study/system-model/variable.h"
 
+using namespace Antares::Expressions::Nodes;
+using namespace Antares::ModelerStudy::SystemModel;
+using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::ForbidNodes;
+
 namespace Antares::IO::Inputs::ModelConverter
 {
-UnknownTypeException::UnknownTypeException(const std::string& type):
-    std::runtime_error("Unknown variable type: " + type)
+static OutOfBoundsProcessingMode convertOutOfBoundsProcessingMode(const std::string& mode)
 {
-}
-
-PortTypeDoesntContainsFields::PortTypeDoesntContainsFields(const std::string& id):
-    std::runtime_error("This port type doesn't contains fields: " + id)
-{
-}
-
-PortWithThisIdAlreadyExists::PortWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Port with this id already exists: " + id)
-{
-}
-
-PortTypeWithThisIdAlreadyExists::PortTypeWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Port type with this id already exists: " + id)
-{
-}
-
-ConstraintWithThisIdAlreadyExists::ConstraintWithThisIdAlreadyExists(const std::string& id):
-    std::runtime_error("Constraint with this id already exists: " + id)
-{
-}
-
-PortTypeNotFound::PortTypeNotFound(const std::string& portId, const std::string& portTypeId):
-    std::runtime_error("For the port: " + portId + " , port type not found: " + portTypeId)
-{
-}
-
-PortNotFoundForDefinition::PortNotFoundForDefinition(const std::string& portId):
-    std::runtime_error("In port-field-definitions, port not found: " + portId)
-{
-}
-
-FieldNotFoundForDefinition::FieldNotFoundForDefinition(const std::string& portId,
-                                                       const std::string& fieldId):
-    std::runtime_error("In port-field-definitions, for port: " + portId
-                       + " , field not found: " + fieldId)
-{
-}
-
-PortInDefinition::PortInDefinition(const std::string& portId, const std::string& portInDefId):
-    std::runtime_error("In port-field-definitions, for port: " + portId
-                       + " , found another port in the definition: " + portInDefId)
-{
-}
-
-/// Convert portTypes to Antares::ModelerStudy::SystemModel::PortType
-std::vector<ModelerStudy::SystemModel::PortType> convertTypes(
-  const IO::Inputs::YmlModel::Library& library)
-{
-    std::vector<ModelerStudy::SystemModel::PortType> out;
-    out.reserve(library.port_types.size());
-    for (const auto& portType: library.port_types)
+    if (mode.empty() || mode == "cyclic")
     {
-        if (portType.fields.empty()) // Can't have a port type without fields
+        return OutOfBoundsProcessingMode::CYCLIC;
+    }
+    if (mode == "drop")
+    {
+        return OutOfBoundsProcessingMode::DROP;
+    }
+    throw InputError("Invalid out-of-bounds processing mode: " + mode);
+}
+
+AreaConnection convert_to_system(const YmlModel::AreaConnection& ac)
+{
+    return {ac.inject_to_balance, ac.spillage_bound, ac.unsupplied_energy_bound};
+}
+
+std::vector<PortType> convertPortTypes(const YmlModel::Library& library)
+{
+    std::vector<PortType> out;
+    out.reserve(library.port_types.size());
+    for (const auto& ymlPortType: library.port_types)
+    {
+        if (ymlPortType.fields.empty()) // Can't have a port type without fields
         {
-            throw PortTypeDoesntContainsFields(portType.id);
+            throw InputError("This port type doesn't contains fields: " + ymlPortType.id);
         }
-        std::vector<ModelerStudy::SystemModel::PortField> fields;
-        for (const auto& field: portType.fields)
+        std::vector<PortField> fields;
+        for (const auto& field: ymlPortType.fields)
         {
             fields.emplace_back(field);
         }
 
         // Can't have port types with the same ID
-        if (std::ranges::find_if(out, [&portType](const auto& p) { return p.Id() == portType.id; })
-            != out.end())
+        auto predicate = [&ymlPortType](const auto& p) { return p.Id() == ymlPortType.id; };
+        if (std::ranges::find_if(out, predicate) != out.end())
         {
-            throw PortTypeWithThisIdAlreadyExists(portType.id);
+            throw InputError("Port type with this id already exists: " + ymlPortType.id);
         }
 
-        ModelerStudy::SystemModel::PortType portTypeModel(portType.id,
-                                                          std::move(fields),
-                                                          portType.area_connection_injection_field);
-        out.emplace_back(std::move(portTypeModel));
+        out.emplace_back(ymlPortType.id,
+                         std::move(fields),
+                         convert_to_system(ymlPortType.area_connection),
+                         ymlPortType.thermal_capacity_connection_field);
     }
     return out;
 }
@@ -122,19 +78,38 @@ std::vector<ModelerStudy::SystemModel::PortType> convertTypes(
  * \param model The YmlModel::Model object containing parameters.
  * \return A vector of SystemModel::Parameter objects.
  */
-std::vector<ModelerStudy::SystemModel::Parameter> convertParameters(
-  const IO::Inputs::YmlModel::Model& model)
+std::vector<Parameter> convertParameters(const YmlModel::Model& model)
 {
     namespace SM = ModelerStudy::SystemModel;
-    std::vector<SM::Parameter> parameters;
+    std::vector<Parameter> parameters;
     parameters.reserve(model.parameters.size());
     for (const auto& parameter: model.parameters)
     {
         parameters.emplace_back(parameter.id,
-                                SM::fromBool<SM::TimeDependent>(parameter.time_dependent),
-                                SM::fromBool<SM::ScenarioDependent>(parameter.scenario_dependent));
+                                SM::fromBool<TimeDependent>(parameter.time_dependent),
+                                SM::fromBool<ScenarioDependent>(parameter.scenario_dependent));
     }
     return parameters;
+}
+
+Solver::Config::Location convertLocation(const std::string& locationStr)
+{
+    std::string locLower = locationStr;
+    std::ranges::transform(locLower, locLower.begin(), tolower);
+    if (locLower == "master")
+    {
+        return Solver::Config::Location::MASTER;
+    }
+    if (locLower == "master-and-subproblems")
+    {
+        return Solver::Config::Location::MASTER_AND_SUBPROBLEMS;
+    }
+    if (locLower == "subproblems")
+    {
+        return Solver::Config::Location::SUBPROBLEMS;
+    }
+
+    throw InputError("Unknown location: " + locationStr);
 }
 
 /**
@@ -144,19 +119,19 @@ std::vector<ModelerStudy::SystemModel::Parameter> convertParameters(
  * \return The corresponding SystemModel::ValueType.
  * \throws UnknownType if the type is unknown.
  */
-ModelerStudy::SystemModel::ValueType convertType(IO::Inputs::YmlModel::ValueType type)
+ValueType convertType(YmlModel::ValueType type)
 {
     using namespace std::string_literals;
     switch (type)
     {
-    case IO::Inputs::YmlModel::ValueType::CONTINUOUS:
-        return ModelerStudy::SystemModel::ValueType::FLOAT;
-    case IO::Inputs::YmlModel::ValueType::INTEGER:
-        return ModelerStudy::SystemModel::ValueType::INTEGER;
-    case IO::Inputs::YmlModel::ValueType::BOOL:
-        return ModelerStudy::SystemModel::ValueType::BOOL;
+    case YmlModel::ValueType::CONTINUOUS:
+        return ValueType::FLOAT;
+    case YmlModel::ValueType::INTEGER:
+        return ValueType::INTEGER;
+    case YmlModel::ValueType::BOOL:
+        return ValueType::BOOL;
     default:
-        throw UnknownTypeException(IO::Inputs::YmlModel::toString(type));
+        throw InputError("Unknown variable type: " + YmlModel::toString(type));
     }
 }
 
@@ -166,24 +141,32 @@ ModelerStudy::SystemModel::ValueType convertType(IO::Inputs::YmlModel::ValueType
  * \param model The YmlModel::Model object containing variables.
  * \return A vector of SystemModel::Variable objects.
  */
-std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel::Model& model)
+std::vector<Variable> convertVariables(const YmlModel::Model& model)
 {
-    namespace SM = Antares::ModelerStudy::SystemModel;
-
-    std::vector<SM::Variable> variables;
+    std::vector<Variable> variables;
     variables.reserve(model.variables.size());
+
     for (const auto& variable: model.variables)
     {
-        SM::Expression lb(variable.lower_bound,
-                          convertExpressionToNode(variable.lower_bound, model));
-        SM::Expression ub(variable.upper_bound,
-                          convertExpressionToNode(variable.upper_bound, model));
+        Expression lb(variable.lower_bound, convertExpressionToNode(variable.lower_bound, model));
+        if (lb.RootNode())
+        {
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.lower_bound)
+              .dispatch(lb.RootNode());
+        }
+        Expression ub(variable.upper_bound, convertExpressionToNode(variable.upper_bound, model));
+        if (ub.RootNode())
+        {
+            ForbiddenNodesVisitor(forbiddenInVariableBounds, variable.upper_bound)
+              .dispatch(ub.RootNode());
+        }
         variables.emplace_back(variable.id,
                                std::move(lb),
                                std::move(ub),
                                convertType(variable.variable_type),
-                               SM::fromBool<SM::TimeDependent>(variable.time_dependent),
-                               SM::fromBool<SM::ScenarioDependent>(variable.scenario_dependent));
+                               fromBool<TimeDependent>(variable.time_dependent),
+                               fromBool<ScenarioDependent>(variable.scenario_dependent),
+                               convertLocation(variable.location));
     }
 
     return variables;
@@ -195,29 +178,20 @@ std::vector<ModelerStudy::SystemModel::Variable> convertVariables(const YmlModel
  * \param model The YmlModel::Model object containing ports.
  * \return A vector of SystemModel::Port objects.
  */
-std::vector<ModelerStudy::SystemModel::Port> convertPorts(
-  const IO::Inputs::YmlModel::Model& model,
-  const std::vector<ModelerStudy::SystemModel::PortType>& portTypes)
+std::vector<Port> convertPorts(const YmlModel::Model& model, const std::vector<PortType>& portTypes)
 {
-    std::vector<ModelerStudy::SystemModel::Port> ports;
+    std::vector<Port> ports;
     ports.reserve(model.ports.size());
     for (const auto& port: model.ports)
     {
-        // Can't have port with the same ID
-        if (std::ranges::find_if(ports, [&port](const auto& p) { return p.Id() == port.id; })
-            != ports.end())
+        const auto port_type = std::ranges::find_if(portTypes,
+                                                    [&port](const auto& pt)
+                                                    { return pt.Id() == port.type; });
+        if (port_type == portTypes.end())
         {
-            throw PortWithThisIdAlreadyExists(port.id);
+            throw InputError("For the port: " + port.id + " , port type not found: " + port.type);
         }
-
-        const auto it = std::ranges::find_if(portTypes,
-                                             [&port](const auto& pt)
-                                             { return pt.Id() == port.type; });
-        if (it == portTypes.end())
-        {
-            throw PortTypeNotFound(port.id, port.type);
-        }
-        ports.emplace_back(port.id, *it);
+        ports.emplace_back(port.id, *port_type);
     }
     return ports;
 }
@@ -228,12 +202,10 @@ std::vector<ModelerStudy::SystemModel::Port> convertPorts(
  * \param model The YmlModel::Model object containing port field definitions.
  * \return A vector of SystemModel::PortFieldDefinition objects.
  */
-std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefinitions(
-  const IO::Inputs::YmlModel::Model& model,
-  const std::vector<ModelerStudy::SystemModel::Port>& ports,
-  const std::vector<ModelerStudy::SystemModel::PortType>& portTypes)
+std::vector<PortFieldDefinition> convertPortFieldDefinitions(const YmlModel::Model& model,
+                                                             std::vector<Port>& ports)
 {
-    std::vector<ModelerStudy::SystemModel::PortFieldDefinition> portFieldDefinitions;
+    std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.reserve(model.port_field_definitions.size());
     for (const auto& pfdefinition: model.port_field_definitions)
     {
@@ -243,19 +215,18 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
                                            { return p.Id() == pfdefinition.port; });
         if (itPort == ports.end())
         {
-            throw PortNotFoundForDefinition(pfdefinition.port);
+            throw InputError("In port-field-definitions, port not found: " + pfdefinition.port);
         }
 
         // second check if the field exists in type
-        auto itType = std::ranges::find_if(portTypes,
-                                           [&itPort](const auto& pt)
-                                           { return pt.Id() == itPort->Type().Id(); });
-        auto itField = std::ranges::find_if(itType->Fields(),
+        const auto& portFields = itPort->Type().Fields();
+        auto itField = std::ranges::find_if(portFields,
                                             [&pfdefinition](const auto& field)
                                             { return field.Id() == pfdefinition.field; });
-        if (itField == itType->Fields().end())
+        if (itField == portFields.end())
         {
-            throw FieldNotFoundForDefinition(pfdefinition.port, pfdefinition.field);
+            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
+                             + " , field not found: " + pfdefinition.field);
         }
 
         auto nodeRegistry = convertExpressionToNode(pfdefinition.definition, model);
@@ -264,37 +235,41 @@ std::vector<ModelerStudy::SystemModel::PortFieldDefinition> convertPortFieldDefi
         AST preorder(nodeRegistry.node);
         auto it = std::find_if(preorder.begin(),
                                preorder.end(),
-                               [](const Node& node) { return node.name() == "PortFieldNode"; });
+                               [](const Node& node)
+                               { return dynamic_cast<const PortFieldNode*>(&node) != nullptr; });
         if (it != preorder.end())
         {
-            throw PortInDefinition(pfdefinition.port,
-                                   dynamic_cast<PortFieldNode*>(&*it)->getPortName());
+            throw InputError("In port-field-definitions, for port: " + pfdefinition.port
+                             + " , found another port in the definition: "
+                             + dynamic_cast<const PortFieldNode&>(*it).getPortName());
         }
 
-        portFieldDefinitions.emplace_back(
-          *itPort,
-          *itField,
-          ModelerStudy::SystemModel::Expression(pfdefinition.definition, std::move(nodeRegistry)));
+        ForbiddenNodesVisitor(forbiddenInPortFieldDef, pfdefinition.definition)
+          .dispatch(nodeRegistry.node);
+
+        portFieldDefinitions.emplace_back(*itPort,
+                                          *itField,
+                                          Expression(pfdefinition.definition,
+                                                     std::move(nodeRegistry)));
+
+        // A definition for a port field means this field is a sender
+        itPort->setFieldRole(itField->Id(), FieldRole::Sender);
     }
     return portFieldDefinitions;
 }
 
-static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constraint>& constraints,
-                                const IO::Inputs::YmlModel::Constraint& constraint,
-                                const IO::Inputs::YmlModel::Model& model)
+static Constraint createConstraint(const YmlModel::Constraint& constraint,
+                                   const YmlModel::Model& model,
+                                   const ForbiddenNodes& forbiddenNodes,
+                                   bool isBindingConstraint = false)
 {
-    // Can't have constraints with the same ID
-    if (std::ranges::find_if(constraints,
-                             [&constraint](const auto& c) { return c.Id() == constraint.id; })
-        != constraints.end())
-    {
-        throw ConstraintWithThisIdAlreadyExists(constraint.id);
-    }
-
     auto nodeRegistry = convertExpressionToNode(constraint.expression, model);
-    constraints.emplace_back(constraint.id,
-                             ModelerStudy::SystemModel::Expression{constraint.expression,
-                                                                   std::move(nodeRegistry)});
+    ForbiddenNodesVisitor(forbiddenNodes, constraint.expression).dispatch(nodeRegistry.node);
+    return {constraint.id,
+            Expression{constraint.expression, std::move(nodeRegistry)},
+            convertLocation(constraint.location),
+            convertOutOfBoundsProcessingMode(constraint.out_of_bounds_processing_mode),
+            isBindingConstraint};
 }
 
 /**
@@ -303,22 +278,66 @@ static void addSingleConstraint(std::vector<ModelerStudy::SystemModel::Constrain
  * \param model The YmlModel::Model object containing constraints.
  * \return A vector of SystemModel::Constraint objects.
  */
-std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
-  const IO::Inputs::YmlModel::Model& model)
+std::vector<Constraint> convertConstraints(const YmlModel::Model& model)
 {
-    std::vector<ModelerStudy::SystemModel::Constraint> constraints;
+    std::vector<Constraint> constraints;
     constraints.reserve(model.constraints.size());
 
     for (const auto& constraint: model.constraints)
     {
-        addSingleConstraint(constraints, constraint, model);
+        constraints.push_back(createConstraint(constraint, model, forbiddenInConstraint));
     }
 
     for (const auto& constraint: model.binding_constraints)
     {
-        addSingleConstraint(constraints, constraint, model);
+        constraints.push_back(
+          createConstraint(constraint, model, forbiddenInBindingConstraint, true));
     }
     return constraints;
+}
+
+/**
+ * \brief Converts extra outputs from YmlModel::Model to SystemModel::ExtraOutput.
+ *
+ * \param model The YmlModel::Model object containing extra outputs.
+ * \return A vector of SystemModel::ExtraOutput objects.
+ */
+std::vector<ExtraOutput> convertExtraOutputs(const YmlModel::Model& model)
+{
+    std::vector<ExtraOutput> extraOutputs;
+    extraOutputs.reserve(model.extra_outputs.size());
+
+    for (const auto& extraOutput: model.extra_outputs)
+    {
+        auto nodeRegistry = convertExpressionToNode(extraOutput.expression, model);
+        ForbiddenNodesVisitor(forbiddenInExtraOutput, extraOutput.expression)
+          .dispatch(nodeRegistry.node);
+        extraOutputs.emplace_back(extraOutput.id,
+                                  Expression{extraOutput.expression, std::move(nodeRegistry)});
+    }
+    return extraOutputs;
+}
+
+/**
+ * \brief Converts objectives from YmlModel::Model to SystemModel::Expression.
+ *
+ * \param model The YmlModel::Model object containing objectives.
+ * \return A vector of SystemModel::Expression objects.
+ */
+std::vector<Objective> convertObjectives(const YmlModel::Model& model)
+{
+    std::vector<Objective> objectives;
+    objectives.reserve(model.objectives.size());
+    for (const auto& objective: model.objectives)
+    {
+        auto nodeRegistry = convertExpressionToNode(objective.expression, model);
+        ForbiddenNodesVisitor(forbiddenInObjective, objective.expression)
+          .dispatch(nodeRegistry.node);
+        objectives.emplace_back(objective.id,
+                                Expression{objective.expression, std::move(nodeRegistry)},
+                                convertLocation(objective.location));
+    }
+    return objectives;
 }
 
 /**
@@ -327,33 +346,31 @@ std::vector<ModelerStudy::SystemModel::Constraint> convertConstraints(
  * \param library The YmlModel::Library object containing models.
  * \return A vector of SystemModel::Model objects.
  */
-std::vector<ModelerStudy::SystemModel::Model> convertModels(
-  const IO::Inputs::YmlModel::Library& library,
-  const std::vector<ModelerStudy::SystemModel::PortType>& portTypes)
+std::vector<Model> convertModels(const YmlModel::Library& library,
+                                 const std::vector<PortType>& portTypes)
 {
-    std::vector<ModelerStudy::SystemModel::Model> models;
+    std::vector<Model> models;
     models.reserve(library.models.size());
     for (const auto& model: library.models)
     {
-        ModelerStudy::SystemModel::ModelBuilder modelBuilder;
-        std::vector<ModelerStudy::SystemModel::Parameter> parameters = convertParameters(model);
-        std::vector<ModelerStudy::SystemModel::Variable> variables = convertVariables(model);
-        std::vector<ModelerStudy::SystemModel::Port> ports = convertPorts(model, portTypes);
-        std::vector<ModelerStudy::SystemModel::PortFieldDefinition>
-          portFieldDefinitions = convertPortFieldDefinitions(model, ports, portTypes);
-        std::vector<ModelerStudy::SystemModel::Constraint> constraints = convertConstraints(model);
-
-        auto nodeObjective = convertExpressionToNode(model.objective, model);
+        ModelBuilder modelBuilder;
+        std::vector<Parameter> parameters = convertParameters(model);
+        std::vector<Variable> variables = convertVariables(model);
+        std::vector<Port> ports = convertPorts(model, portTypes);
+        std::vector<PortFieldDefinition> portFieldDefinitions = convertPortFieldDefinitions(model,
+                                                                                            ports);
+        std::vector<Constraint> constraints = convertConstraints(model);
+        std::vector<ExtraOutput> extraOutputs = convertExtraOutputs(model);
+        std::vector<Objective> objectives = convertObjectives(model);
 
         auto modelObj = modelBuilder.withId(model.id)
-                          .withObjective(
-                            ModelerStudy::SystemModel::Expression{model.objective,
-                                                                  std::move(nodeObjective)})
+                          .withObjectives(std::move(objectives))
                           .withParameters(std::move(parameters))
                           .withVariables(std::move(variables))
                           .withPorts(std::move(ports))
                           .withConstraints(std::move(constraints))
                           .withPortFieldDefinitions(std::move(portFieldDefinitions))
+                          .withExtraOutputs(std::move(extraOutputs))
                           .build();
         models.emplace_back(std::move(modelObj));
     }
@@ -366,16 +383,17 @@ std::vector<ModelerStudy::SystemModel::Model> convertModels(
  * \param library The YmlModel::Library object to convert.
  * \return The corresponding SystemModel::Library object.
  */
-ModelerStudy::SystemModel::Library convert(const IO::Inputs::YmlModel::Library& library)
+Library convert(const YmlModel::Library& library)
 {
-    ModelerStudy::SystemModel::LibraryBuilder builder;
-    std::vector<ModelerStudy::SystemModel::PortType> portTypes = convertTypes(library);
-    std::vector<ModelerStudy::SystemModel::Model> models = convertModels(library, portTypes);
-    ModelerStudy::SystemModel::Library lib = builder.withId(library.id)
-                                               .withDescription(library.description)
-                                               .withPortTypes(std::move(portTypes))
-                                               .withModels(std::move(models))
-                                               .build();
+    std::vector<PortType> portTypes = convertPortTypes(library);
+    std::vector<Model> models = convertModels(library, portTypes);
+
+    LibraryBuilder builder;
+    Library lib = builder.withId(library.id)
+                    .withDescription(library.description)
+                    .withPortTypes(std::move(portTypes))
+                    .withModels(std::move(models))
+                    .build();
     return lib;
 }
 } // namespace Antares::IO::Inputs::ModelConverter

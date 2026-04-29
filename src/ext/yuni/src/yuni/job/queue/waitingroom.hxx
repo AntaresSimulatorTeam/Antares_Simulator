@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,11 +12,7 @@
 #pragma once
 #include "waitingroom.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace QueueService
+namespace Yuni::Private::QueueService
 {
 inline bool WaitingRoom::empty() const
 {
@@ -27,6 +24,4 @@ inline uint WaitingRoom::size() const
     return (uint)pJobCount;
 }
 
-} // namespace QueueService
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::QueueService

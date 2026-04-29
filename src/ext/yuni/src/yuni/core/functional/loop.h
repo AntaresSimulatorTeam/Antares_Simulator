@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include "../math.h"
 #include "view.h"
 
-namespace Yuni
-{
-namespace Functional
+namespace Yuni::Functional
 {
 template<class CollectionT>
 class Loop final
@@ -33,14 +32,17 @@ class Loop<CollectionT<T, Other>> final
 public:
     typedef CollectionT<T, Other> CollType;
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const CollType& collection) :
-     begin(collection.begin()), it(collection.begin()), end(collection.end())
+    Loop(const CollType& collection):
+        begin(collection.begin()),
+        it(collection.begin()),
+        end(collection.end())
     {
     }
 
@@ -79,13 +81,16 @@ class Loop<T*> final
 {
 public:
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const T* const& collection) : start(collection), ptr(collection)
+    Loop(const T* const& collection):
+        start(collection),
+        ptr(collection)
     {
     }
 
@@ -123,13 +128,16 @@ class Loop<const T*> final
 {
 public:
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const T* const& collection) : start(collection), ptr(collection)
+    Loop(const T* const& collection):
+        start(collection),
+        ptr(collection)
     {
     }
 
@@ -167,18 +175,26 @@ class Loop<T[N]> final
 {
 public:
     typedef T ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    Loop(const T collection[N]) : start(0u), i(0u), end((uint)-1), data(collection)
+    Loop(const T collection[N]):
+        start(0u),
+        i(0u),
+        end((uint)-1),
+        data(collection)
     {
     }
 
-    Loop(uint startIdx, uint endIdx, const T collection[N]) :
-     start(startIdx), i(startIdx), end(endIdx), data(collection)
+    Loop(uint startIdx, uint endIdx, const T collection[N]):
+        start(startIdx),
+        i(startIdx),
+        end(endIdx),
+        data(collection)
     {
     }
 
@@ -217,13 +233,17 @@ class LoopIterator final
 {
 public:
     typedef typename BeginT::value_type ElementType;
+
     enum
     {
         hasMapping = false
     };
 
 public:
-    LoopIterator(const BeginT& itBegin, const EndT& itEnd) : begin(itBegin), it(itBegin), end(itEnd)
+    LoopIterator(const BeginT& itBegin, const EndT& itEnd):
+        begin(itBegin),
+        it(itBegin),
+        end(itEnd)
     {
     }
 
@@ -255,5 +275,4 @@ private:
     EndT end;
 };
 
-} // namespace Functional
-} // namespace Yuni
+} // namespace Yuni::Functional

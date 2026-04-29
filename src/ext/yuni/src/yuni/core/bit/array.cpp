@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,11 +10,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "array.h"
+
 #include <iostream>
 
-namespace Yuni
-{
-namespace Bit
+namespace Yuni::Bit
 {
 namespace // anonymous
 {
@@ -22,6 +22,7 @@ static inline uint Find(const Bit::Array::BufferType& pBuffer, uint pCount, uint
 {
     // bitmask
     static const uchar mask[] = {128, 64, 32, 16, 8, 4, 2, 1};
+
     // alias to npos
     enum
     {
@@ -61,7 +62,9 @@ static inline uint Find(const Bit::Array::BufferType& pBuffer, uint pCount, uint
                     {
                         p += absOffset;
                         if (p >= offset)
+                        {
                             return (p < pCount) ? p : npos;
+                        }
                         // restoring previous value
                         p -= absOffset;
                     }
@@ -104,7 +107,9 @@ bool Array::any() const
     for (uint i = 0; i != pBuffer.size(); ++i)
     {
         if (pBuffer[i] != 0)
+        {
             return true;
+        }
     }
     return false;
 }
@@ -114,7 +119,9 @@ bool Array::none() const
     for (uint i = 0; i != pBuffer.size(); ++i)
     {
         if (pBuffer[i] != 0)
+        {
             return false;
+        }
     }
     return true;
 }
@@ -124,10 +131,11 @@ bool Array::all() const
     for (uint i = 0; i != pBuffer.size(); ++i)
     {
         if (static_cast<uchar>(pBuffer[i]) != 0xFF)
+        {
             return false;
+        }
     }
     return true;
 }
 
-} // namespace Bit
-} // namespace Yuni
+} // namespace Yuni::Bit

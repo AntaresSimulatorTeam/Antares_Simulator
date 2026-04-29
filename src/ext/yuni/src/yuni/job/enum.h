@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,9 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Job
+namespace Yuni::Job
 {
 /*!
 ** \brief Set of possible states for a single job
@@ -41,5 +40,4 @@ enum Priority
     priorityCount = 3,
 };
 
-} // namespace Job
-} // namespace Yuni
+} // namespace Yuni::Job

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__
 
@@ -30,9 +13,7 @@
 #include "../common/cluster.h"
 #include "defines.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 /*
@@ -41,31 +22,6 @@ namespace Data
 class RenewableCluster final: public Cluster
 {
 public:
-    enum RenewableGroup
-    {
-        //! Wind offshore
-        windOffShore = 0,
-        //! Wind onshore
-        windOnShore,
-        //! Concentration solar
-        thermalSolar,
-        //! PV solar
-        PVSolar,
-        //! Rooftop solar
-        rooftopSolar,
-        //! Other 1
-        renewableOther1,
-        //! Other 2
-        renewableOther2,
-        //! Other 3
-        renewableOther3,
-        //! Other 4
-        renewableOther4,
-
-        //! The highest value
-        groupMax
-    };
-
     enum TimeSeriesMode
     {
         //! TS contain power generation for each unit
@@ -76,10 +32,6 @@ public:
         productionFactor
     };
 
-    //! Set of renewable clusters
-    using Set = std::set<RenewableCluster*, CompareClusterName>;
-
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -89,25 +41,11 @@ public:
     //@}
 
     /*!
-    ** \brief Invalidate all data associated to the renewable cluster
-    */
-    bool forceReload(bool reload) const override;
-
-    /*!
-    ** \brief Mark the renewable cluster as modified
-    */
-    void markAsModified() const override;
-
-    /*!
     ** \brief Reset to default values
     **
     ** This method should only be called from the GUI
     */
     void reset() override;
-
-    //! Set the group
-    void setGroup(Data::ClusterName newgrp) override;
-    //@}
 
     /*!
     ** \brief Check and fix all values of a renewable cluster
@@ -123,11 +61,6 @@ public:
     */
     void copyFrom(const RenewableCluster& cluster);
 
-    /*!
-    ** \brief Group ID as an uint
-    */
-    uint groupId() const override;
-
     bool setTimeSeriesModeFromString(const YString& value);
 
     YString getTimeSeriesModeAsString() const;
@@ -137,15 +70,6 @@ public:
     */
     double valueAtTimeStep(uint year, uint hourInYear) const;
 
-public:
-    /*!
-    ** \brief The group ID
-    **
-    ** This value is computed from the field 'group' in 'group()
-    ** \see group()
-    */
-    enum RenewableGroup groupID = renewableOther1;
-
     enum TimeSeriesMode tsMode = powerGeneration;
 
     friend class RenewableClusterList;
@@ -154,7 +78,6 @@ private:
     unsigned int precision() const override;
 }; // class RenewableCluster
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif //__ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__

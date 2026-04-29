@@ -1,33 +1,18 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
-
-#include <unit_test_utils.h>
-
-#include <boost/test/unit_test.hpp>
 
 #include "antares/io/inputs/model-converter/convertorVisitor.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/system.h"
+
+// If we don't turn clang-format off here, some antlr4 header does not compile :
+// it collides with a #include <windows.h> somewhere in Yuni
+// clang-format off
+#include <unit_test_utils.h>
+// clang-format on
+#include <boost/test/unit_test.hpp>
 
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::IO::Inputs::ModelConverter;
@@ -36,10 +21,10 @@ using namespace Antares::IO::Inputs;
 struct SystemBuilderCreationFixture
 {
     SystemBuilder system_builder;
-    std::unordered_map<std::string, Component> components;
+    std::vector<Component> components;
 };
 
-static std::pair<std::string, Component> createComponent(std::string id)
+static Component createComponent(std::string id)
 {
     ModelBuilder model_builder;
     auto model = model_builder.withId("model").build();
@@ -48,7 +33,7 @@ static std::pair<std::string, Component> createComponent(std::string id)
                        .withModel(&model)
                        .withScenarioGroupId("scenario_group")
                        .build();
-    return {id, component};
+    return component;
 }
 
 static Antares::IO::Inputs::YmlModel::Variable GiveMeOneVar()
@@ -58,7 +43,8 @@ static Antares::IO::Inputs::YmlModel::Variable GiveMeOneVar()
             .upper_bound = "4",
             .variable_type = Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS,
             .time_dependent = true,
-            .scenario_dependent = true};
+            .scenario_dependent = true,
+            .location = "dummy-location"};
 }
 
 // port1 sends and port2 receives
@@ -70,9 +56,16 @@ static Model createModelWith2PortsOneWayExchange()
     Port port1("port1", PortType("type", {port_field}));
     Port port2("port2", PortType("type", {port_field}));
     const auto var = GiveMeOneVar();
-    YmlModel::Model ymlmodel = {.variables = {var},
-                                .port_field_definitions = {{"port1", "field", var.id}}};
-
+    YmlModel::Model ymlmodel{.id = "model1",
+                             .description = "description",
+                             .parameters = {},
+                             .variables = {var},
+                             .ports = {},
+                             .port_field_definitions = {{"port1", "field", var.id}},
+                             .constraints = {},
+                             .binding_constraints = {},
+                             .objectives = {},
+                             .extra_outputs = {}};
     auto nodeRegistry = convertExpressionToNode(var.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
     portFieldDefinitions.emplace_back(port1,
@@ -92,9 +85,16 @@ BOOST_FIXTURE_TEST_CASE(nominal_build, SystemBuilderCreationFixture)
     components = {createComponent("component1"), createComponent("component2")};
     auto system = system_builder.withId("system").withComponents(std::move(components)).build();
     BOOST_CHECK_EQUAL(system.Id(), "system");
-    BOOST_CHECK_EQUAL(system.Components().size(), 2);
-    BOOST_CHECK_EQUAL(system.Components().at("component1").Id(), "component1");
-    BOOST_CHECK_EQUAL(system.Components().at("component2").Id(), "component2");
+    const auto& compos = system.Components();
+    BOOST_CHECK_EQUAL(compos.size(), 2);
+    const auto compo1 = std::ranges::find_if(compos,
+                                             [](const Component& compo)
+                                             { return compo.Id() == "component1"; });
+    BOOST_CHECK(compo1 != compos.cend());
+    const auto compo2 = std::ranges::find_if(compos,
+                                             [](const Component& compo)
+                                             { return compo.Id() == "component2"; });
+    BOOST_CHECK(compo2 != compos.cend());
 }
 
 Component buildComponent(const std::string& id, const Model& model)
@@ -113,8 +113,8 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_one_way_exchang
     auto model = createModelWith2PortsOneWayExchange();
     auto comp1 = buildComponent("component1", model);
     auto comp2 = buildComponent("component2", model);
-    components.emplace(comp1.Id(), comp1);
-    components.emplace(comp2.Id(), comp2);
+    components.push_back(comp1);
+    components.push_back(comp2);
 
     auto system = system_builder.withId("system").withComponents(std::move(components)).build();
 
@@ -135,11 +135,18 @@ static Model createModelWith2Ports2WayExchange()
     const Antares::IO::Inputs::YmlModel::Parameter p{.id = "corn_price",
                                                      .time_dependent = false,
                                                      .scenario_dependent = false};
-    Antares::IO::Inputs::YmlModel::Model ymlmodel = {
-      .parameters = {p},
-      .variables = {var},
-      .port_field_definitions = {{"port1", "rice", var.id}, {"port2", "corn", p.id}}};
 
+    YmlModel::Model ymlmodel{.id = "model1",
+                             .description = "description",
+                             .parameters = {p},
+                             .variables = {var},
+                             .ports = {},
+                             .port_field_definitions = {{"port1", "rice", var.id},
+                                                        {"port2", "corn", p.id}},
+                             .constraints = {},
+                             .binding_constraints = {},
+                             .objectives = {},
+                             .extra_outputs = {}};
     auto nodeRegistryForVar = convertExpressionToNode(var.id, ymlmodel);
     auto nodeRegistryForP = convertExpressionToNode(p.id, ymlmodel);
     std::vector<PortFieldDefinition> portFieldDefinitions;
@@ -161,8 +168,8 @@ BOOST_FIXTURE_TEST_CASE(nominal_build_with_connections_two_ports_two_way_exchang
     auto model = createModelWith2Ports2WayExchange();
     auto comp1 = buildComponent("component1", model);
     auto comp2 = buildComponent("component2", model);
-    components.emplace(comp1.Id(), comp1);
-    components.emplace(comp2.Id(), comp2);
+    components.push_back(comp1);
+    components.push_back(comp2);
 
     auto system = system_builder.withId("system").withComponents(std::move(components)).build();
 

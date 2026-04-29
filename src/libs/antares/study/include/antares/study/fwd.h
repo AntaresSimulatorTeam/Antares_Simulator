@@ -1,36 +1,18 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_FWD_H__
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
 #include <bit>
-#include <cmath>
-#include <concepts>
 #include <map>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 
-#include "antares/antares/antares.h"
 #include "antares/antares/constants.h"
+#include "antares/enums/Enum.hpp"
 
 namespace Antares
 {
@@ -44,7 +26,6 @@ class StudyLoadOptions;
 class Area;
 class AreaLink;
 class AreaList;
-class AreaUI;
 class ThermalCluster;
 class RenewableCluster;
 
@@ -57,20 +38,10 @@ class BindingConstraintsRepository;
 
 class StudyRuntimeInfos;
 
-class UIRuntimeInfo;
-
 class Correlation;
 
 //! Name of a single area
-using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
-//! Name of a single link
-using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
-//! Name of a single thermal
-using ClusterName = std::string;
-
-using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
-
-using RulesScenarioName = Yuni::CString<64, false>;
+using AreaName = std::string;
 
 //! Name mapping
 using AreaNameMapping = std::map<AreaName, AreaName>;
@@ -214,6 +185,10 @@ enum TimeSeriesType : unsigned int
     timeSeriesRenewable = 1u << 5,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 1u << 6,
+    //! TimeSeries : Renewable
+    timeSeriesShortTermInflows = 1u << 7,
+    //! TimeSeries : Renewable
+    timeSeriesShortTermAdditionalConstraints = 1u << 8,
     // ***********************************************************************
     // Please update the constant allTimeSeriesMask if you add / remove an item
     // ***********************************************************************
@@ -227,7 +202,10 @@ constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesL
                                            | static_cast<unsigned int>(timeSeriesSolar)
                                            | static_cast<unsigned int>(timeSeriesRenewable)
                                            | static_cast<unsigned int>(
-                                             timeSeriesTransmissionCapacities);
+                                             timeSeriesTransmissionCapacities)
+                                           | static_cast<unsigned int>(timeSeriesShortTermInflows)
+                                           | static_cast<unsigned int>(
+                                             timeSeriesShortTermAdditionalConstraints);
 /*!
 ** \brief Types of timeSeries
 **
@@ -490,7 +468,6 @@ enum class mpsExportStatus : int
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
 mpsExportStatus stringToMPSexportStatus(const AnyString& value);
-
 } // namespace Data
 } // namespace Antares
 

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 //
 // Created by marechaljas on 22/08/23.
 //
@@ -79,11 +62,9 @@ void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& f
     // Computing the number of enabled thermal clusters
     unsigned int nbEnabledThermalClusters = 0;
 
-    auto end = study_.areas.end();
-    for (auto i = study_.areas.begin(); i != end; ++i)
+    for (const auto& [_, area]: study_.areas)
     {
-        const Area& area = *(i->second);
-        nbEnabledThermalClusters += area.thermal.list.enabledAndNotMustRunCount();
+        nbEnabledThermalClusters += area->thermal.list.enabledAndNotMustRunCount();
     }
 
     // Adding an item related to number of enabled thermal clusters to the file content

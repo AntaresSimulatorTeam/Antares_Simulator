@@ -4,23 +4,871 @@ toc_depth: 2
 
 # Antares Changelog
 
+## Branch 10.1.x
+
+#### Features
+
+* Allow problem-generator to load GEMS studies [ANT-4847] (#3563)
+
+#### Bugfixes
+
+* Fix bounds on fictious load and max unsupplied in adequacy patch [ANT-4906] (#3572)
+
+#### For developers
+
+* Add parquet as a dependency. Ground work for future support of parquet files. (#3499)
+* Add missing system deps for CentOS7 & OL8 (#3589)
+* Refactoring of yml configuration error handling (#3523, #3526, #3578, #3583)
+
+### 10.1.0
+
+#### Features
+
+* Multiple Hydro Rule Curves: New optional feature and compatibility flag for scenarized hydro reservoir levels (#2829)
+
+#### Bugfixes
+
+* Add behave tests for simple tests [ANT-4643] (#3545)
+* Fix remix hydro sts levels computation [ANT-4888] (#3557)
+
+#### Documentation
+
+* Fix(doc): modeler doc (#3529)
+
+#### For developers
+
+* Remove ortools dependency from antares-problem-generator [ANT-4846] (#3538)
+* replace raw Area* with unique_ptr in AreaList (#3550)
+* refacto: remove duplication in "sorties" (#3541)
+* refacto: Clean up scenario-builder (#3567)
+
+#### CI
+
+* chore(deps): bump SonarSource/sonarqube-scan-action from 7.0.0 to 7.1.0 (#3544)
+* Use fixed submodule for Antares_Simulator_Tests_NR instead of branch main (#3568)
+
+## Branch 10.0.x
+
+### 10.0.1
+
+#### Features
+
+* Add "drop constraint" for out of timebound constraints [ANT-4643] (#3485)
+* Rename "PositiveUnsuppliedEnergy" variable to "UnsuppliedEnergy" (#3477)
+* Rename "NegativeUnsuppliedEnergy" variable to "Spillage" (#3477)
+* Modeler > Port field definition : allow non linear expressions [ANT-4646] (#3483)
+* feat: Improve modeler input error messages [ANT-4550] (#3475)
+* Add documentation for thermal-capacity-connection [ANT-4342] (#3520)
+
+#### Bugfixes
+
+Districts: fix offest with disabled set | simplify [ANT-4830]
+Relax expressions in port definition : fixes after tests [ANT-4646]
+Fix: remove dynamique variables from digest, fix error in digests (#3535)
+Fix: several issues on CentOS7 (#3561)
+
+#### For developers
+
+* Remove unused code following GUI removal (#3500, #3494)
+* Extract utils for std::vector<double> (#3470)[margin of ANT-2453]
+* refactor: Remove component index (#3503)
+* Clean up find* functions
+* Update README.md (#3517)
+* Removed updaterMode parameter because it was always false (#3516)
+* chore(deps): update vcpkg baseline (#3502)
+* Use emplace_back instead of push_back where possible (#3519)
+* Add delete in AreaList desctuctor to free memory (#3524)
+* Remove unused typedefs (#3525)
+* Remove unused arguments (#3522)
+* refacto(yml-utils): add path utilities and YmlMapMarker class (#3504)
+* Add tools/antares-version.py (#3534)
+* Remove yuni strings for alias areaname, clustername...  (#3498)
+* Remove member function Study::areaAdd [ANT-4815] (#3527)
+
+#### CI/CD
+
+* Various fix for Sonar-cloud workflow (#3515, #3518)
+* Don't use package managers to install boost, use vcpkg (#3521)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+
+### 10.0.0
+
+#### Major changes
+
+* Remove GUI (legacy UI)
+
+#### New features
+
+* Hybrid studies with bounds from modeler [ANT-4033] (#3355)
+* Thermal capacity Investment with integer variables [ANT-4342] (#3369)
+* Improve handling for MIP variables in hybrid studies (#3422)
+* Add constraint fictitious load to adq patch [ANT-4365] (#3413)
+* Add sts prod to fictitious load [ANT-3739] (#3397)
+
+#### Improvements
+
+* Write longer durations in execution_info.ini (#3476)
+* Fix MILP problems in hybrid studies [ANT-4551] (#3407)
+* Refactor options.cpp, add tests (#3340)
+* Hybrid studies: turn YAML area connections into a dictionary (#3381)
+* Index thermal clusters only once [ANT-4522] (#3425)
+* Fix: digest [ANT-4630] (#3455)
+* Fix dynamic district aggregation (#3429)
+* Improve handling for modeler error (#3393)
+* Add warning in antares-api if weeks are dependent (#3398)
+* Performance scaling tests for expression sum (#3424)
+* Fix unit tests binding constraints (#3453)
+* Feature/tiny move (#3408)
+* Remove constraint builder (#3469)
+* Remove unnecessary code and cleanup:
+    - Remove GUI code (#3411, #3417, #3438, #3439, #3440, #3441, #3442, #3443, #3444)
+    - Remove JIT::usedFromGUI (#3419)
+    - Remove loadOnlyNeeded (#3440)
+    - Remove unused core/preprocessor/vaargs.h (#3420)
+    - Remove ts-generator binary (#3334)
+    - Remove code only used by GUI (#3417)
+    - Remove functions related to rename (#3444)
+    - Remove unused code from class Study (#3442)
+    - Optimize variable name building (avoid concat) (#3423)
+
+#### Bugfixes
+
+* Fix: install optim-model-filler (#3394)
+* Fix Benders decomposition (#3395)
+* Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
+* Fix: windows runtime libraries (#3435)
+
+#### Tests
+
+* Cucumber tests: new checks for area connection (#3443)
+* Fix Cucumber test_launcher_8.feature (#3426)
+
+#### Documentation
+
+* Fix: execution_info.ini doc format in readthedoc (#3405)
+* Update documentation for ticket ANT-4033 (#3445)
+* Fix itemization in port field (#3454)
+
+#### CI/Chore
+
+* chore(ci): update cache action to AntaresSimulatorTeam/cache to avoid deprecated action (#3390)
+* CI: Bump actions/upload-artifact from 6 to 7 (#3447)
+* chore: update sonar.projectVersion & simtest.json (#3412)
+* Allow generating results on release (#3427)
+
+#### For developers
+
+* Refactor AGENTS.md using progressive disclosure pattern (#3396)
+* Docker solution for clang-format (#3389)
+* MPS Generator ADR (#3410)
+* Update simtest (#3415)
+* Fix compilation warnings (#3401, #3491)
+* Fix failure of sonar scans due to disk space limitation (#3495, #3497)
+
+## Branch 9.3.x
+
+### 9.3.10
+
+#### Bugfixes
+
+* Fix bounds on fictitious load and max unsupplied in adequacy patch [ANT-4906] (#3575)
+
+### 9.3.9
+
+#### Features
+
+* feat: Write longer durations in execution_info.ini (#3476)
+
+#### Bugfixes
+
+* Fix: remove dynamique variables from digest, fix errors in digest (#3535)
+* Districts: fix offest with disabled set | simplify [ANT-4830] (#3533)
+* chore: update gitignore
+* Fix unit tests binding constraints (#3453)
+* Fix: windows runtime libraries (#3435)
+* Fix: several issues on CentOS7 (#3561)
+
+#### CI/CD
+
+* feat: Speed up SonarCloud job, increase cache hit rate to 100% (#3518)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+* chore(deps): bump docker/build-push-action from 6 to 7 (#3472)
+* chore(deps): bump docker/login-action from 3 to 4 (#3473)
+* ci: Bump actions/upload-artifact from 6 to 7 (#3447)
+
+#### For developers
+
+Add tools/antares-version.py (#3534)
+feat: allow generating results on release (#3427)
+
+### 9.3.8
+
+#### Bugfixes
+
+* Fix dynamic district aggregation (#3429)
+* Fix digest [ANT-4630] (#3455)
+* 9.3 Add constraint fictitious load to adq patch [ANT-4365] (#3487)
+* 9.3 Add short-term storage prod to fictitious load [ANT-3739] (#3486)
+
+### 9.3.7
+
+#### Feature
+
+* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
+
+#### Improvements
+
+* Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
+* Improve performance for sum operations in expressions
+
+#### Bugfixes
+
+* Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
+
+### 9.3.6
+
+#### New features
+
+* feat: resolution mode [ANT-4380] (#3339)
+* Dynamic aggregation [ANT-2739] (#3342)
+* Investment with integer variables for hybrid studies [ANT-4046] (#3372)
+* [100% optional] Use customized mps generator in the simulator (#3346)
+* [100%] print mps in api mode (#3314)
+* Modeler: operators ceil and floor [ANT-4295] (#3316)
+* feat(api): check week independency (#3387)
+
+#### Improvements
+
+* Remove usage of raw pointers around MPSolver, use std::shared_ptr (#3348)
+* Refactor AverageData year management (#3332)
+* Simplify, fix and slightly extend output variable classes (#3337)
+* Use a custom MPS writer in antares-modeler [ANT-4324] (#3302)
+* Change PMax computation for STS in remix hydro (#3363)
+* Remove ts-generator binary (#3334)
+* Shorten header/copyright notice (#3353)
+* Residual consumption [ANT-2444] (#3330)
+
+#### Bugfixes
+
+* fix: hourly PMax not clamped up to PMax Hydro Écrêtée (#3361)
+* fix: Offset overwritten instead of accumulated [ANT-4467] (#3385)
+* Fix naming for daily binding constraints (#3362)
+* Fix missing elements from digest.txt [ANT-4446] (#3388)
+* fix test "single_problem_thermal_first_week_nominal_case" (#3380)
+* fix: API save study meta data (#3356)
+* APIv2 - Fix wrong size for TS numbers (#3391)
+* Fix TODO & add tests in hydro allocation (#3343)
+* test: Handle new study directory "invalid-studies" (#3246)
+
+#### Tests
+
+* Add tests on `SurveyResults` (#3338)
+* constraints builder tests: adding tests + improvements (#3305)
+* Add unit tests for `IntermediateValues::computeStatisticsForTheCurrentYear` (#3344)
+* Add tests on time aggregation + formatting to a survey report (#3345)
+
+#### Documentation
+
+* Add documentation on missing parameters (#3347)
+* Add doc for execution_info.ini durations (#3359)
+* Add doc for resolution mode (#3371)
+* Add AGENTS.md for coding agents (#3368)
+
+#### CI/Chore
+
+* update simtest version (#3360)
+* chore(simtest): update version to v9.3.6b (#3386)
+* [oracle 8] update python version to get ortools (#3379)
+
+### 9.3.5
+
+#### Improvements
+
+* New option Adequacy patch debug files [ANT-4034] (#3297)
+* Add time infos to API [ANT-4261] (#3315)
+* Add more details for steps durations [ANT-4263] (#3319)
+* APIv2 - Fix initial hydro levels (#3326)
+
+#### CI
+
+* Bump actions/cache from 4 to 5 (#3293)
+* Bump actions/upload-artifact from 5 to 6 (#3294)
+
+### 9.3.4
+
+#### Improvements
+
+* Various fixes for the "single problem API" (#3313, #3311, #3312, #3309)
+* Bump SonarSource/sonarqube-scan-action from 6.0.0 to 7.0.0 (#3295)
+
+### 9.3.3
+
+#### New features
+
+* Add support for Gurobi-specific solver parameters (#3264)
+
+#### Improvements
+
+* Add error handling to antlr parsing [ANT-4032] (#3254)
+* Small improvements for slack analysis (#3255)
+* setObjectiveOffset API [ANT-4168] (#3251)
+
+#### Bugfixes
+
+* Additional constraints : bad unexpected input management [ANT-4297]
+* Add week number to additional constraint name (#3300)
+
+#### Modeler
+
+* Modeler 6.5: valid location [ANT-4045] (#3258)
+* Consistency in Node Composition for Modeler (#3242)
+* Modeler scenarized constant parameter [ANT-3800] (#3275)
+* Time dependent objective is not supported (#3257)
+
+#### CI
+
+* Fix: sonar hit ccache properly (#3196)
+
+#### Build
+
+* Add a few missing install directives (#3266)
+
+#### Doc
+
+* Fix on readthedoc rendering (#3245)
+* FunctionNode doc (#3270)
+
+#### Code quality
+
+* refactor: TimeIndex -> TimeScenarioVariability (#3261)
+* Expose studyPath instead of study (#3267)
+* Add SingleProblemGetter::getProblemIds() for problem IDs (#3268)
+* Single problem getter - Truncate variable & constraint vectors if needed (#3272)
+* fix: build std::type\_index is not constexpr (#3277)
+* Single problem getter - Week indexing starts at 1 (#3271)
+* Single problem API (#3280) (#3279) (#3286)
+* Fix Mdeb's trailing zeroes [ANT-2334] (#3303)
+
+#### Technical cleaning
+
+Modeler : restore models as const [ANT-4051] (#3273)
+Remove useless if/else for links loop-flow (#3262)
+Remove unused LpsFromAntares data members (#3289)
+
+#### Tests
+
+Storage remix tests : trial for improvement [ANT-4022] (#3244)
+Expressions : tests sum operator (#3260)
+collectRemixDebugInfo (#3278)
+
+### 9.3.2
+
+#### Important notice
+
+* Changing the way some warning or errors are handled during loading
+    - Warnings that were previouly deemed fatal are now proper errors
+    - It is still possible to bypass those specific errors with the command line option `--force`
+    - Some of those warnings are kept as warning and now non-blocking. Mainly those related deprecated options or values
+
+#### New features
+
+* Modeler 5.5: Add dual and reduced\_cost operators [ANT-3621] (#3177)
+* Modeler 5.6, 5.7: max, min and pow operators [ANT-3642] (#3212)
+* Modeler 6.2: Variables in investment problems [ANT-3885] [ANT-3913] (#3166)
+* Modeler 6.3: Constraints in investment problems [ANT-3892] (#3220)
+* Add debug files to hydro remix [ANT-4028] (#3206)
+
+#### Improvements
+
+* Ascending compatibility [ANT-3989](#3161)
+* Add a deprecated message to the GUI [ANT-4042] (#3238)(#3240)
+* Fix: Reduce log spam and improve information (#3232)
+* Interprétation des valeurs d'usage [ANT-3894] (#3132)
+* Add thread number in logs [ANT-2174] (#3138)
+
+#### Bugfixes
+
+* Infaisabilité avec l'hydro avec min gen et sans reservoir management [ANT-3748] (#3181)
+* Fix segfault caused by expression[t] [ANT-4049] (#3201)
+* Fix LolpCsr floor, LoldCsr spatial aggregate value (#3169)(#3168)(#3151)
+
+#### Modeler
+
+* Add ExportBehavior for structure files (#3210)
+* 6.1: Several objectives [ANT-3887] (#3090)
+* 6.2 Load E2E [ANT-3885] (#3185)
+* 6.2a parse optim config (#3159)
+* 6.2a : Data structures for optimization configuration [ANT-3885] (#3092)
+* No simulation table when no-output is given [ANT-3883] (#3137)
+* Improve study model (#3093)
+
+#### CI
+
+* Cache improvements (#3128)(#3154)(#3179)(#3219)(#3140)
+* Fix continuous delivery title (#3183)
+* Use boolean type instead of string type for "Run all tests" (#3175)
+* Update CD title and tag (#3163)
+
+#### Build
+
+* testing cmake unity build (#3191)
+* On Windows : avoiding a compilation collision between antlr4 and Yuni (#3178)
+* Remove compile option unsuported on Clang (#3068)
+* Remove study dependency in exception (#3164)
+
+#### Doc
+
+* Doc on expressions : move and complete expressions [ANT-4117] (#3217)
+* Update doc for objective contributions (#3158)
+* Update XPRESS doc regarding MILP problems (#3160)
+
+#### Code quality
+
+* Factorize lolp and lold traits (#3145)
+* Deduplicate code in lolp vcards (#3144)(#3143)
+* Simplify chained templates for variables (#3142)(#3131)(#3129)(#3127)
+* Getter for single problem [ANT-2334] (#3165)
+* Move regenerateTimeSeries to separate header/source (#3182)
+* Refactor enums project utilitaries (#3186)
+* Simplify condition in FinalLevelValidator::skippingFinalLevelUse (#3170)
+* Extract random number handling from templated class ISimulation (technical preriquisite) [ANT-2334] (#3156)
+* Move yearRandomNumbers to random.h/random.cpp (#3162)
+* Fix memory leak in class SpatialAggregate (#3139)
+* Fixes after review for #3093 (#3124)
+* Fix a few code smells following #3093 (#3123)
+
+#### Technical cleaning
+
+* Remove unused dummy\_data (#3221)
+* Remove unused OptimComponent::index (#3218)
+* Wrap getDisplayName and getIcon inside BUILD\_UI (#3216)
+* Clean stuff in and around optimEntityContainer (#3209)
+* Remove #ifdef \_\_cplusplus, \_\_CPLUSPLUS, unused #define (#3171)
+* Remove std::enable\_shared\_from\_this from ThermalCluster (#3167)
+* Remove most ORTOOLS_* functions, use std::unique\_ptr to handle MPSolver instance (#3155)
+* Remove unused local variable (#3141)
+* Remove unused "Hashable" class (#3115)
+
+#### Tests
+
+* Add 2 hydro remix tests [ANT-4022] (#3213)
+* handle invalid-studies (#3250)
+* update expectations 015 Hydro power (#3249)
+* Add behave tests for 6.2 [ANT-3885] (#3237)
+* Ignore basis\_status in simulation table comparison (#3233)(#3236)
+* Fix values for NPCAP after switching to HIGHS (#3234)
+* Add information when simulation time exceed expectations (#3228)
+* Improve log when simulation tables don't match (#3230)
+* Add unit testing on benders decomposition (structure.txt) (#3231)
+* Tests for modeler 5.5 (#3198)
+* NPCAP test cucumber [ANT-3760] (#3133)
+* Input data for modeler test with investment (#3113)
+* Publish log-capture util to test\_utils\_unit [ANT-3989] (#3173)
+* Make parameters test in-memory using loadFromINI [ANT-3989] (#3172)
+* Fix studiesToBenchmark.json (#3153)
+* Restore "linear expression" tests (#3149)
+* Restore "testScenarioGroupRepo" test (#3147)
+* Fix test\_readLinearExpressionVisitor unit test, fix missing DivisionNode, refactor fixture (#3120)
+* Add modeler test 10_4 for comparison operator (#3126)
+
+### 9.3.1
+
+#### New features
+
+* Modeler: Implement eval and time index visitors for portfield nodes (#3110)
+* Optional overflow for short-term storage objects [ANT-3695] (#3036)
+* ANT-3617 - modeler 5.1 (#2933)
+* Modeler 5.3: Add extra outputs to simulation table (#3053)
+* Modeler 5.4: Evaluate comparisons [ANT-3620] (#3086)
+* 5.2: Export ports in simulation table (#2982)
+* [5.3 part 1/2] Add extra-outputs to models & ID unicity checks (#2988)
+* Evaluation context provider from Component [ANT-3750] (#3043)
+
+#### Removed features
+
+* [ANT-3638] Remove H COST from OV COST (#3035)
+* Remove special value "default" for scenario-group field (#2977)
+
+#### Improvements
+
+* Use boost::iostreams::mapped_file_source to improve CSV loading performance [ANT-3915] (#3089)
+* Logs time used to build modeler problem [ANT-3759] (#3041)
+* Display correct problem size in logs [ANT-3716] (#3026)
+* Short term storage : simplify results data structure [ANT-3175] (#2991)
+* Load only needed solvers [ANT-3543] (#2976)
+* Improve behave's error message for simulation tables (#3061)
+* Remix by shaving peaks : adapt for multi storage [ANT-3175] (#2975)
+* Reduce number of copy for Xpansion interface (#3062)
+* Simplify ShortTermStorageCumulation.cpp (#3010)
+* Simplify logging handling in node visitor (#2996)
+* Hydro remix : more simplifications (#2959)
+* Various simplifications in modelConverter.cpp (#2981)
+* Linear expression : some cleaning (#3042)
+* Remove unused nodes and visitors (component substitutions) (#3037)
+* Update XPRESS documentation (#2990)
+* Warning if simplex-range = day [ANT-2695] (#3055)
+
+#### Bugfixes
+
+* Fix inconsistent LOLD for districts [ANT-3408] (#3117)
+* Save hydro gen and pump in legacy GUI [ANT-3140] (#3084)
+* ANT-3697 : fix contraint on weekly hydro generation amount [ANT-3697] (#3040)
+* Catch modeler loading error [ANT-3837] (#3063)
+* Modeler - fix various problems with time & scenarios [ANT-3712] (#2972)
+* Fix link error sonar (#3103)
+* Fix naming in hydro remix unit tests (#3098)
+* Fix clang Wunused-local-typedef (#3069)
+* Fix ignoring return value of function declared with 'nodiscard' (#3027)
+* Fix: moving a temporary prevent copy elision (#3029)
+* Fix unqualified call to 'std::move' (#3031)
+* Fix pragma diagnostic pop could not pop, no matching push (#3030)
+* Fix warnings (#3022)
+* Fix array default initialization (#3006)
+* Fix broken link for Sonar badges (#2994)
+* Fix logic for map parsing in yaml-cpp (#2992)
+* Fix behave tests for CentOS (#3039)
+* Fix boost.test log format (#2967)
+* Several warning fixes (#3017)
+
+#### Modeler
+
+* Add debug logs for modeler (#2971)
+* Add modeler doc precisions (#3000)
+* 4.3 : Clearer error message when out of bound ts number (#2979)
+* Flatten `SumNode` to avoid deep recursion (#3094)
+* Refactor unique ID check (#2997)
+* Replace binary minus with -= in ReadLinearConstraintVisitor (#2987)
+* [ANT-3606] Uppercase for group scenarios (#2970)
+
+#### CI
+
+* Bump SonarSource/sonarqube-scan-action from 5.3.1 to 6.0.0 (#3083)
+* Bump SonarSource/sonarqube-scan-action from 5.3.0 to 5.3.1 in /.github/workflows in the github_actions group across 1
+  directory (#3047)
+* Bump actions/checkout from 4 to 5 (#2973)
+* Bump actions/setup-python from 5 to 6 (#3051)
+* Bump install-build-wrapper@v5.3.1 to fix vulnerability in 5.3.0 (#3019)
+* windows-vcpkg workflow - skip CI if commit message contains [skip ci] (#3046)
+* Use gcc-11 for ubuntu & sonarcloud jobs (#3095)
+* pull-request-size bot comments XXL PRs (#3079)
+
+#### Build
+
+* Disable warning in antlr (#3070)
+* Ignore warning in tests (#3028)
+* Reintroduce cmake options (#3024)
+* Clean some warnings (#3009)
+* Use windows-2022 as runner.os (#3012)
+
+#### Doc
+
+* Document `allow-overflow` in migration guide (#3008)
+* Document guidelines for the study format (#2989)
+* [Doc] Fix starting index for year and time-series (#2978)
+
+#### Code quality
+
+* Code comments on districts [ANT-3408] (#3096)
+* Add `final` keyword for final classes (#3078)
+* Add missing virtual Public destructor (#3073)
+* Missing virtual destructor (#3034)
+* Missing override on method (#3072)
+* Avoid copies for `OptimisationsSimulationTable::buffers()` (#3077)
+* Factorise constrainte and variable name in constant data (#3066)
+* Field initialization order (#3071)
+* Declare nested namespace in one line (#3056)
+* Explicitly delete implicitly delete operator/constructor (#3033)
+* Throw exception properly (#3016)
+* Clean `Benchmarking::DurationCollector` (#3025)
+* "mc-" + int does not append to string (#3015)
+* [ANT-3680] Use vector instead of map in linear expressions (#2986)
+* Remove duplication in "variable de sorties" (#2980)
+* Remove duplication involving `std::transform` (#2993)
+* Remove \n in ortools_tag (#3080)
+* Remove dependency on chocolatey / fossies.org (#2984)
+* Remove useless dependency to `Boost::unit_test_framework` library (#2968)
+* private field 'pJobCount' is not used (#3032)
+
+#### Technical cleaning
+
+* Remove unused methods `getOptimalValue` and `getOptimalValues` (#3101)
+* Remove unused parameter (#3075)
+* Remove MD5 (#3007)
+* Remove hash (#3020)
+* Remove dead code in file name manipulation (#3023)
+* Remove dead code in yuni (#3018)
+* Remove yuni variant (#3005)
+* Split function, remove unused arguments for quadratic optimization (#3081)
+
+#### Tests
+
+* Multi storage remix : more tests [ANT-3175] (#3067)
+* Bump Antares_Simulator_Tests_NR / SimTest (#3059)
+* Add disabled test case for SumNode conversion with more than two operands (#3045)
+* Change None to NaN in cucumber step (#3091)
+
+#### For developers
+
+* Update copyright 2025 (#3054)
+
+### 9.3.0
+
+#### New features
+
+* Scenarize short-term storage additional constraints [ANT-3037] (#2813)
+* Scenarize inflows for short-term storage [ANT-3037] (#2772)
+* Dynamic groups for thermal and renewable clusters [ANT-1672] (#2579)
+* Near price cap hours variable [ANT-3038] (#2810)
+
+#### Removed features
+
+* Remove timeseries refresh [ANT-1335] (#2451)
+* Forbid study path with non ascii chars [ANT-3635] (#2934)
+
+#### Improvements
+
+* Remove year batches, launch jobs continually [ANT-2139] (#2718)
+* Random TS numbers for STS inflows & additional constraints [ANT-3415] (#2882)
+* or-tools : update to v9.13 [ANT-3348] (#2857)
+* Add STS additional constraints to infeasible problem analysis [ANT-3386] (#2869)
+* Add Gurobi to list of queried solvers [ANT-3381] (#2865)
+* Force the export for criterion files in Expansion mode [ANT-3137] (#2821)
+* [ANT-2140] MustRun clusters taken into account in BC (#2690)
+* Add fixed variables support to OR-Tools quadratic wrapper (#2789)
+* New cmd line options for solver (#2765)
+* Add checks for duplicates on study objects [ANT-2127] (#2733)
+* Allow empty series files for STS [ANT-3053] (#2731)
+* Fix final level computation in monthly hydro heuristic (#2943)
+* Move STS additional constraint data folder [ANT-3666] (#2944)
+
+#### Bugfixes
+
+* Infeasibility caused by hydro (attempt 2) [ANT-3122] (#2874)
+* Re-implement MPObjective::Value (#2892)
+* Bypass JIT only for STS [ANT-3425] (#2887)
+* Hydro monthly heuristic : add variable overflow to problem [ANT-3236] (#2837)
+* Fix missing ortools dll in windows zip asset (#2840)
+* [ANT-3264] Default author is username (#2817)
+* Ceiling error with xpress and accurate [ANT-3167] (#2785)
+* Fix fixed variable value in quadratic optimization (#2790)
+* Monthly turbine error [ANT-3095] (#2759)
+* [ANT-3122] Part 1/2 : Set primal tolerance to 1e-6 in ortools_utils (#2776)
+* Check constraints width if the sizes are only ones (#2771)
+* Change control for sts injection/withdrawal efficiency [ANT-3100] (#2749)
+* Fix unfeasible problems with <0 hydro infows [ANT-3043] (#2732)
+* Fix undefined behavior in BCs [ANT-2994] (#2708)
+* Fix segfault when exporting binding constraints (#2954)
+* Clear basis at start of each MC year to avoid sequential/parallel discrepancies (#2941)
+
+#### Modeler
+
+* 2.9: TimeIndex and TimeShift operators [ANT-2874] (#2678)
+* 2.9: TimeSum and AllTimeSum operators [ANT-2932][ANT-2933] (#2703)
+* 3.3: Hydrid studies without connections [ANT-2898] (#2699)
+* 3.5: Hybrid area connections from yaml [ANT-2901] (#2787)
+* 3.6: Connect components to areas in linear optimization problem [ANT-2902] (#2792)
+* 4.3 Scenario [ANT-2034][ANT-3603] (#2824)(#2863)
+* 4.7: Import connections and ports [ANT-2875] (#2662)
+* 4.8: Establishing Component Connections [ANT-2876] (#2724)
+* Connections : build expressions from connections and ports (#2739)
+* Checking modeler variable bounds (#2844)
+* [ANT-3359] Scenario-group is optional in component and default to "default" (#2855)
+* [ANT-3092] Valeur par defaut des bornes des variables (#2814)
+* Don't write modeler files if there's no solutions (#2760)
+* Work on port rules (#2746)
+* Use indices for getVariable & getConstraint, don't reconstruct name (#2729)
+* Improve modeler API & main class (#2669)
+* Performance optimizations in TimeDependentLinearExpression (#2962)
+
+#### CI
+
+* Use correct keys for ccache, update ccache for windows, always save ccache (#2884)(#2864)
+* Remove end to end tests on TS generator binary (#2843)
+* Package OR-Tools shared libs [ANT-3227] (#2803)
+* Fix windows CI (#2788)
+* [ANT-2997] use official actions (#2761)
+* Add continuous-delivery for windows & simplify it (#2755)
+* Fix Oracle continuous-delivery (#2758)
+* Fix Sonarcloud jobs failing silently (#2710)
+* Create a permanent release from develop (#2688)
+* Remove usage of surge.sh (#2960)
+* Update sonar scanner (#2951)
+* Activate tests for 9.3 studies in CI (#2950)
+* Generate & upload HTML report for unit tests (#2930)
+* Badges: use status from branch develop instead of latest from any branch (#2939)
+
+#### Build
+
+* [ANT-2034] Various warnings or linter fixes (#2861)
+* Fix compilation warning (implicit double -> float conversion) (#2862)
+* Remove some warnings (#2774)
+* Fix dependency issue for clients (#2757)
+* Bump vcpkg to 2025.02.14 (#2741)
+* Remove compilation warnings for GCC (#2740)
+* Add helper CMake targets to generate C++ headers & source from ANTLR grammar files [ANT-3429] (#2924)
+* CMake presets (#2928)
+* Remove warnings on gcc (#2927)
+* Factorise antlr4 lib linking resolution (#2929)
+
+#### Doc
+
+* Migration guide for dynamic cluster groups and sts inflows (#2913)(#2915)(#2916)(#2918)
+* Document STS additional constraints @ v9.2.0 (#2847)(#2867)
+* Add doc for scenariobuilder.dat, add short-term storage feature (#2808)
+* Add documentation for hybrid area connections (#2754)
+* FIx typos in doc (#2707)
+* Add doc for behave.ini (#2748)
+* Add doc for overflow spilled cost difference (#2713)
+* Add documentation on the ANTLR4 code generation process (#2745)
+* Fix broken link in mkdocs.yml (#2743)
+* updating output changelog (#2689)
+* correct python command to install dependencies (#2695)
+* Improve doc for STS additional constraints (#2940)
+* Add documentation for include-export-solutions for migration guide (#2937)
+
+#### Code quality
+
+* Use range-based for loops (#2897)
+* Save sts inflows in legacy GUI [ANT-3425] (#2886)
+* Use std::vector<double> instead of double\*, add const (#2878)
+* Simplify linear optimization code (#2809)
+* Fix prefix for short-term storage in scenariobuilder parser (#2811)
+* Rename lp-solver -> linear-solver, move some options in the "Optimization" section in the help page (#2781)
+* Fix double free and leak (#2767)
+* Fix memory leak in hydro (#2736)
+* Fix leak using matrix_to_buffer_dumper_factory::get_dumper (#2737)
+* Use std::identity from header <functional> (#2727)
+* Use std::call_once to avoid race conditions in ThermalCluster::getCostProvider (#2725)
+* Small refactor around PROBLEME_SIMPLEXE_NOMME -> MPSolver conversion (#2723)
+* Fix memory leak, double free (#2700)
+* Use MPSolver* instead of void\*, remove static_casts (#2704)
+* Pass strings by const reference when reading scenariobuilder.dat (#2683)
+* Remove dynamic allocations, use local variables instead (#2694)
+* Hydro remix algo : simplification (#2922)(#2956)
+* Remove a few unused headers (#2935)
+* Performance for problem building : avoid maps copy (#2926)
+
+#### Technical cleaning
+
+* Remove yuni limit on max threads (#2832)
+* [ANT-3409] Store short term time series number (#2881)
+* Remove unused members from spatial-aggregate.h (#2848)
+* Remove SparseVector, remove data()[position] (#2816)
+* Remove verbose log (#2756)
+* Remove macro ndebug (#2720)
+* Remove unused Parameters member data (#2712)
+
+#### Tests
+
+* [In-memory studies] Add & use helpers for short-term storage (#2910)
+* Remove useless std::shared_ptr around SimulationHandler (#2911)
+* Improve helper class ThermalClusterConfig (#2909)
+* [ANT-2034] InMemory modeler test (#2827)
+* New modeler : make test 7.1 pass (#2786)
+* Add modeler tests 7.2, 7.2, 7.4 (#2800)
+* Add modeler features 8.1, 8.2 and 8.3 [ANT-3535] (#2902)
+* Add cucumber tests for v9.3.0 STS scenarization features [ANT-3037] (#2873)
+* Unit test synthesis aggregation (EXP/MIN/MAX/STD) (#2828)
+* Add some unit tests for hydro (#2831)
+* Fix behave comparison tolerance (#2826)
+* Add behave short tests 9 to 20 (#2807)
+* Add a few unit tests for "math utils" functions (#2795)
+* [behave] Update solver steps (#2753)
+* Migrate some tests to cucumber (#2682)
+* Add unit tests for BindingConstraintGroup::numberOfTimeseries (#2711)
+* Fix ortools unit tests (#2702)
+* Fix non-passing tests (#2696)
+* Minimal system under test [ANT-2034] (#2830)
+
+#### For developers
+
+* Add 2 future parameters in generaldata.ini [ANT-3504] (#2907)
+* Use antlr to process st additional constraints [ANT-3091] (#2777)
+* Use OR-Tools/MathOpt for quadratic problem resolution [ANT-2546] (#2574)
+* Don't rebuild optimization problem at every simplex resolution (#2722)
+* Enable extra linear solvers: PDLP & HiGHS (#2693)
+* Rebuild MPSolver between solves & transmit basis when using sirius [ANT-1287] (#2868)
+* fix infeasible problem analyzer, remove "safe resolution mode" [ANT-3507](#2898)
+
 ## Branch 9.2.x
 
-### 9.2.0
+### 9.2.3
+
+#### Bugfixes
+
+* Fix segfault when exporting binding constraints results (#2954)
+
+### 9.2.2
+
 #### New features
+
+> [!CAUTION] Breaking change
+
+* [ANT-3666] Move STS additional constraint data folder (#2945)
+
+### 9.2.1
+
+#### New features
+
+* Add new near price cap hours variable (NPCAP HOURS) [ANT-3038] (#2815)
+
+#### Modeler features/improvements
+
+* 3.3: Hydrid studies without connections [ANT-2898] (#2699)
+* Do not create modeler solution files if study has no modeler components (#2849)
+
+#### Numerical issues fixes
+
+* Set primal tolerance to 1e-6 in ortools_utils [ANT-3122] (#2850)
+* Fix unfeasible problems with <0 hydro infows [ANT-3043] (#2732)
+* Ceiling error with xpress and accurate [ANT-3167] (#2785)
+* Hydro monthly heuristic : add a new overflow optimization variable for v9.2.x [ANT-3236] (#2845)
+
+#### Short-term storage fixes/improvements
+
+* Use ANTLR4 to handle STS additional constraints, allowing the parsing of larger "hours" field for additional
+  constraints [ANT-3091] (#2777)
+* Fix check for STS injection/withdrawal efficiency [ANT-3100] (#2749)
+* Allow empty series files for STS [ANT-3053] (#2731)
+
+#### Other bugfix
+
+* The use of OR-Tools v9.13-rte1.0 allows fixing multiple minor bugs with XPRESS [ANT-3348]
+    - non-reproducibility
+    - unsafe "locale" modification
+    - performance issues
+* Fix memory leak in hydro (#2736)
+* Don't rebuild optimization problem at every simplex resolution (performance issues with XPRESS) [ANT-3044] (#2722)
+* Fix missing DLL / .so by packaging OR-Tools shared libs [ANT-3227] (#2803)
+* Remove limit on max threads when requested threads == nproc (#2834)
+* Use `std::call_once` to avoid race conditions in `ThermalCluster::getCostProvider` (#2725)
+
+#### Other improvements
+
+* Use OR-Tools/MathOpt for quadratic problem resolution [ANT-2546] (#2574)
+* Force the export for criterion files in Expansion mode [ANT-3137] (#2823)
+* Check for duplicates on study objects (thermal, renewable clusters, short-term storages) [ANT-2127] (#2733)
+
+### 9.2.0
+
+#### New features
+
 * Short term storage: withdrawal efficiency [ANT-1862] (#2223)
 * Short term storage: penalty on level, injection, withdrawal [ANT-1854] (#2302)
 * Short term storage: additional constraints on injection, withdrawal, netting [ANT-1855] (#2550, #2546)
 * Short term storage: penalty for storage control, injection and withdrawal flow gradient [ANT-2300] (#2491)
 * Make it possible to specify the final hydro reservoir level [ANT-1084] (#1521)
-* Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
+* Major changes on the hydro behavior. Use overflow from the weekly optimization problem, don't recompute levels as a
+  post-processing. These changes improve the handling of min-gen constraints for hydro reservoirs. [ANT-1825]
 
 #### Removed features
+
 * Remove hydro hotstart (#2131)
 * Remove adequacy patch lmr [ANT-1933] (#2341)
 * Possibility to disable OR-Tools. All problems are now solved through OR-Tools (#2450)
 
 #### Improvements
+
 * Changed the formula for the number of cores [details](../user-guide/solver/optional-features/multi-threading.md)
 * Expose API [ANT-1158] (#1993)
 * Adequacy patch CSR - revamp output variables [ANT-1932] (#2306)
@@ -41,6 +889,7 @@ toc_depth: 2
 * Remove computation for number of non-zero terms in the constraint matrix [ANT-2258] (#2496)
 
 #### Bugfixes
+
 * Adequacy Patch regression [ANT-1845] (#2235)
 * BC marginal cost : remove "return"s that break the static chain (#2121)
 * Fix condition for disabling "store in input" (#2180)
@@ -66,8 +915,9 @@ toc_depth: 2
 * Fix variable bounds for 1st week in the year (#2517)
 * Fix timestamp = 0 in file info.antares-output (ANT-2494) (#2508)
 * Fix build after the removal of bool OptimizationOptions::ortoolsUsed (#2505)
- 
+
 #### Modeler
+
 * 1.1: Modeler API [ANT-1876] (#2286) (#2391)
 * 1.1c: Scenarize problem filler (#2445)
 * 2.1: Lib for modeling objects (#2383)
@@ -89,7 +939,7 @@ toc_depth: 2
 * Add iterators on ASTs, allowing for loops (#2387)
 * Use variable dict (#2670)(#2655)
 * Support time dependency [ANT-2749] (#2622)
-* Import modeler data-series [ANT-2033] (#2621)
+* Import modeler data-series [ANT-2033](#2621)
 * Simplify ComponentFiller::addVariables (#2615)
 * add of unit tests for time dependant expression [ANT-2608] (#2597)
 * Refactor modeler code (#2616)
@@ -98,6 +948,7 @@ toc_depth: 2
 * Tests (#2626)(#2617)
 
 #### CI
+
 * SonarCloud job, improvements, bugfixes (#2315) (#2281) (#2246)
 * Run all tests even if one of them fails (#2265)
 * install gh from rpm (#2216)
@@ -116,6 +967,7 @@ toc_depth: 2
 * centos build (#2509) (#2510)
 
 #### Build
+
 * vcpkg (linux, sirius) (#2078) (#2090) (#2145)
 * Remove src/antares-deps (#2182)
 * Fix or-tools integration (#2402)
@@ -129,6 +981,7 @@ toc_depth: 2
 * Use sirius-solver@antares-integration-v1.6 (#2533)
 
 #### Doc
+
 * CHANGELOG improvements (#2287) (#2229) (#2125)
 * Fix PDF generation for useguide (#2134)
 * Add contribution guidelines (#2380)
@@ -141,6 +994,7 @@ toc_depth: 2
 * Migration doc : move hydro level from v8.7.0 to v9.2.0 (#2482)
 
 #### Code quality
+
 * Using filesystem path instead of Yuni [ANT-1999] (#2435) (#2454) (#2123) (#2066)
 * Compilation warnings (#2237) (#2199) (#2183) (#2144) (#2119) (#2340)
 * Separation of loading and validation [ANT-1213] (#2173) (#2175) (#2177) (#2179)
@@ -180,6 +1034,7 @@ toc_depth: 2
 * Use thread-safe version of localtime (#2503)
 
 #### Technical cleaning
+
 * Remove last global variable (#2410)
 * Local matching removal : remove unused thread number / numSpace (#2404)
 * Remove Antares::Memory::Array (#2187)
@@ -196,6 +1051,7 @@ toc_depth: 2
 * Remove unused enum class (#2584)
 
 #### Tests
+
 * Unfeasible tests (#2611)
 * Add unit tests on class Antares::Solver::Variable::IntermediateValues (#2593)
 * Add tests for TSData getters & setters (#2677)
@@ -214,7 +1070,6 @@ toc_depth: 2
 * Various improvement to code quality
 * Sonarcloud coverage (#2652)(#2649)(#2647)(#2640)(#2641)(#2645)(#2639)
 * Write raw optimization results [ANT-2302] (#2565)
-
 
 ## Branch 9.1.x
 
@@ -310,32 +1165,87 @@ toc_depth: 2
 
 ## Branch 8.8.x (end of support 12/2025)
 
+### 8.8.20
+
+#### Bugfixes
+
+* Add 2 constraints in adq patch [ANT-4365] (#3409)
+* Add short-term storage prod to constraint fictitious load (#3446)
+
+### 8.8.19
+
+#### Bugfixes
+
+* Fix infeasability in hydro heuristic with mingen [ANT-3755] (#3152)
+* Don't throw an error for empty reservoir [ANT-4212] (#3291)
+
+### 8.8.18 (08/2025)
+
+#### Bugfixes
+
+* Fix segfault when exporting binding constraints results (#2955)
+
+### 8.8.17 (06/2025)
+
+#### Bugfixes
+
+* Bump OR-Tools v9.13-rte1.0 [ANT-3350]
+* Remove limit on CPU cores when requested threads == nproc (#2833)
+* Create criterion files in `Expansion` mode (#2822) [ANT-3137]
+* Fix monthly hydro heuristic infeasibilities [ANT-3236]
+
+### 8.8.16 (05/2025)
+
+#### Bugfixes
+
+* Ceiling error with xpress and accurate [ANT-3167] #2785
+* Output variable : near price cap [ANT-3038] (#2793)
+* Fix monthly generating capacity [ANT-3095] (#2806)
+
+### 8.8.15 (04/2025)
+
+#### Bugfixes
+
+* Change the formula for the hydro daily max generation [ANT-3095] (#2764)
+* Allow empty series files for STS [ANT-3053] (#2731)
+* Fix undefined behavior in BCs [ANT-2994] (#2708)
+
+#### For developers
+
+* Fix OR-Tools URL for FetchContent (used when no OR-Tools install is found in the prefix path)
+
 ### 8.8.14 (03/2025)
 
 #### Improvements
-- Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
+
+* Increase precision for `LOLD[CSR]` and `MRG PRICE[CSR]` [ANT-2443] (#2613)
 
 #### Bugfix
-- Segfault related to **scenariobuilder.dat** [ANT-2890] (#2675)
-- Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605) (backport) 
+
+* Segfault related to **scenariobuilder.dat** [ANT-2890] (#2675)
+* Fix function `ThermalCluster::getMarketBidCost` [ANT-2527] (#2605)
 
 #### Legacy GUI bugs
-- Binding constraints TS loading in 8.8 [ANT-2746] (#2635) 
-- Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659) 
+
+* Binding constraints TS loading in 8.8 [ANT-2746] (#2635)
+* Correct cluster count, load constraints even for disabled clusters [ANT-2754] (#2659)
 
 ### 8.8.13 (01/2025)
 
 #### Bugfix
-- Backport bug on annual aggregation [ANT-2630] (#2585)
+
+* Backport bug on annual aggregation [ANT-2630] (#2585)
 
 ### 8.8.12 (01/2025)
 
 #### New features
+
 * Add variable MRG PRICE CSR [ANT-2562] (#2531)
 * Use VCPKG for dependencies (#2549)
 * Activate long tests on branch release/8.8.x (#2538)
 
 #### Bugfix
+
 * Fix segfault related to district for 8.8 [ANT-2452] (#2519)
 * Fix uninitialized CSR variables [ANT-2496] (#2518)
 * Fix segfault caused by invalid index [ANT-2582] (#2544)
@@ -343,10 +1253,12 @@ toc_depth: 2
 ### 8.8.11 (11/2024)
 
 #### New features
+
 * Adding parameters for the used optimization solver [ANT-2280] (#2466)
 * Adequacy patch CSR : add out variables after DTG netting step [ANT-2295] (#2472)
 
 #### Bugfix
+
 * Legacy GUI : Restore and fix grid statistics [ANT-2381] (#2478)
 * Don't apply reverse spinning if the cluster is no force gen [ANT-2293] (#2468)
 * Use "trigerred" criterion for mrg price [ANT-2294] (#2453)
@@ -1182,7 +2094,7 @@ features to be used without hassle.
 - Remove dead code
 
 ### 8.0.2 (04/2021)
--------------------- 
+--------------------
 
 #### Bug fixes
 
@@ -1190,7 +2102,7 @@ features to be used without hassle.
 - Correction of MC year weight use for PSP and MISC NDG
 
 ### 8.0.1 (03/2021)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1210,7 +2122,7 @@ features to be used without hassle.
 - Add shared dll in windows .zip archive
 
 ### 8.0.0 (03/2021)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1293,7 +2205,7 @@ features to be used without hassle.
     - Add pytest scripts related to unfeasible problems
 
 ### 7.2.0 (06/2020)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1309,7 +2221,7 @@ features to be used without hassle.
   The first two options make the simulation stop right after
   encountering the first mathematically unfeasible problem, if any
   The last two options make the simulation skip all unfeasible
-  problems, if any  
+  problems, if any
   "Verbose" options print faulty problems in the “mps” format
   "Dry" options only report the time frame (MC year, week) for which
   an unfeasible problem was detected
@@ -1349,7 +2261,7 @@ features to be used without hassle.
   to launch a sequence of simulations to run in parallel
 
 ### 7.1.0 (12/2019)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1358,7 +2270,7 @@ features to be used without hassle.
   now makes it possible to define precisely the content of
   output files so as to include only variables of interest
 
-- Optimization: a new parameter "Hydro Pricing mode" is   
+- Optimization: a new parameter "Hydro Pricing mode" is
   available in the "advanced parameters" section, with two
   possible values (fast, accurate):
   In mode "fast", water value is, in the course of optimization,
@@ -1408,7 +2320,7 @@ features to be used without hassle.
   named after said Areas or Links
 
 ### 7.0.1 (04/2019)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1419,7 +2331,7 @@ features to be used without hassle.
   with generation in mode "use heuristic target without leeway"
 
 ### 7.0.0 (12/2018)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1436,7 +2348,7 @@ features to be used without hassle.
 - Documentation: updated examples library
 
 ### 7.0.0-rc (12/2018)
--------------------- 
+--------------------
 
 #### Features
 
@@ -1450,7 +2362,7 @@ features to be used without hassle.
   and constraints are generated for the whole year
 
 ### 6.5.1 (11/2018)
----------------- 
+----------------
 
 #### Bugs
 
@@ -1461,7 +2373,7 @@ features to be used without hassle.
 - Districts GUI: improved syntax control
 
 ### 6.5.0 (11/2018)
----------------- 
+----------------
 
 #### Features
 
@@ -1478,8 +2390,8 @@ features to be used without hassle.
   Impedances (moved from col.3 to col.5)(Ohms at ref. voltage U)
   Loop flow (passive) (MW)
   Min Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)
-  Max Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)		
-  New link parameters (one value)		
+  Max Tap of phase-shifter  (MW*Ohms/U2 along any AC cycle including L)
+  New link parameters (one value)
   Asset type (AC,DC,Gas,Virtual,Other) : KCG deals only with AC links
   "account for loop flow" toggle
   "tune PST"        toggle
@@ -1489,17 +2401,17 @@ features to be used without hassle.
   Status of passive loop flow in constraints RHS (included or not)
   Status or PST settings in constraints RHS      (included or not)
   Auto-check of nodal loop flow balance (activated or not)
-  Definition of the "infinite" to use for constraints relaxation  
+  Definition of the "infinite" to use for constraints relaxation
   KCG results:
   For AC Links involved in the generation process: The KCG sets the
   values of the two input data toggles related to loop flows and
   PST settings, in accordance with the current generation directives
 
-  		Identification of an optimal (minimum-weight) cycle basis for the
-  		formulation of constraints 
-  		
-  		Generation of all relevant constraints (equality, inequalities, with
-  		or without relaxation) 
+        Identification of an optimal (minimum-weight) cycle basis for the
+        formulation of constraints
+
+        Generation of all relevant constraints (equality, inequalities, with
+        or without relaxation)
 
 - Reservoir-type hydro and other energy storage facilities:
   interface, input and output data structure, functionalities,
@@ -1558,7 +2470,7 @@ features to be used without hassle.
   value (changed to 2 decimal accuracy)
 
 ### 6.1.3 (06/2018)
----------------- 
+----------------
 
 #### Features
 
@@ -1588,7 +2500,7 @@ features to be used without hassle.
 - Example library : upgraded to 6.1 and extended
 
 ### 6.1.2 (11/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1596,14 +2508,14 @@ features to be used without hassle.
   (Matrix, right hand side, costs)
 
 ### 6.1.1 (11/2017)
----------------- 
+----------------
 
 #### Features
 
 - Solver: Light changes in Presolve stage
 
 ### 6.1.0 (09/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1614,7 +2526,7 @@ features to be used without hassle.
   associated with arbitrary offsets (time-lags expressed in hours).
 
 ### 6.0.6 (07/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1625,7 +2537,7 @@ features to be used without hassle.
   commitment mode
 
 ### 6.0.5 (07/2017)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1639,7 +2551,7 @@ features to be used without hassle.
   cleaning datasets  (detected as of 6.0.0)
 
 ### 6.0.4 (06/2017)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1650,7 +2562,7 @@ features to be used without hassle.
   unsupplied energy allowances
 
 ### 6.0.3 (06/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1670,7 +2582,7 @@ features to be used without hassle.
   circumstances
 
 ### 6.0.2 (06/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1686,7 +2598,7 @@ features to be used without hassle.
   two years ore more.
 
 ### 6.0.1 (05/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1713,7 +2625,7 @@ features to be used without hassle.
   listed above
 
 ### 6.0.0 (04/2017)
----------------- 
+----------------
 
 #### Features
 
@@ -1749,7 +2661,7 @@ features to be used without hassle.
   copy to backup folders, registering of studies and archives in catalogues.
 
 ### 5.0.9-SE (04/2017)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1762,21 +2674,21 @@ features to be used without hassle.
   "accurate" mode only)
 
 ### 5.0.7-SE (04/2017)
----------------- 
+----------------
 
 #### Features
 
 - License control : management of SSL certificates encrypted through SHA-256 algorithm
 
 ### 5.0.7 (12/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
 - Fixing a packaging error
 
 ### 5.0.6 (12/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1804,7 +2716,7 @@ features to be used without hassle.
   versions of Antares, which will be fully multi-threaded
 
 ### 5.0.5 (08/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1827,7 +2739,7 @@ features to be used without hassle.
   is locally expressed as a constraint of the optimization problem  (LOLE=0)
 
 ### 5.0.4 (05/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1842,7 +2754,7 @@ features to be used without hassle.
   negative values can be used for all classes of constraints (hourly, daily, weekly)
 
 ### 5.0.3 (05/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1850,7 +2762,7 @@ features to be used without hassle.
   "true" for thermal clusters
 
 ### 5.0.2 (04/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1863,7 +2775,7 @@ features to be used without hassle.
   theoretical monthly targets (formerly, only the largest deviation was penalized).
 
 ### 5.0.1 (04/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -1874,7 +2786,7 @@ features to be used without hassle.
   performances in some cases. This problem is now solved.
 
 ### 5.0.0 (03/2016)
----------------- 
+----------------
 
 #### Bug fixes
 
@@ -2114,19 +3026,19 @@ features to be used without hassle.
 - Time-series screens: a new function is available for hourly and daily time-series
   (shift rows until #date#)
 
-- Linear solver: new version slightly more accurate than the previous one.  
+- Linear solver: new version slightly more accurate than the previous one.
   Note that when a daily or weekly optimization has multiple equally optimal solutions,
   the ultimate choice may differ from that of the previous version
 
 #### Bug fixes
 
-- Reference numbers of the time-series used in the course of a simulation:  
+- Reference numbers of the time-series used in the course of a simulation:
   When the simulation is based on a user-defined scenario (building mode: custom)
   and when a printout of the reference numbers of the time-series used in the simulation
   is asked for (MC scenarios: true), the numbers printed for thermal clusters running
   under the "must-run" status were wrong
 
-- Interconnection results, marginal costs:  
+- Interconnection results, marginal costs:
   For a congested interconnection whose transmission capacities are not symmetric,
   and in presence of hurdle costs, a zero could sometimes be delivered instead of
   the actually expected value

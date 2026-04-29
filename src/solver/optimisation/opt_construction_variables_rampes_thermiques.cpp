@@ -1,9 +1,12 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/optimisation/opt_rename_problem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "spx_constantes_externes.h"
-#include "variables/VariableManagerUtils.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireRampesThermiques(
   PROBLEME_HEBDO* problemeHebdo,

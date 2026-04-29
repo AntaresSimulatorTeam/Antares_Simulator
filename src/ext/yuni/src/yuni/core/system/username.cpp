@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -14,11 +15,7 @@
 #include "username.h"
 #include "windows.hdr.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace System
+namespace Yuni::Private::System
 {
 uint WindowsUsername(char* cstring, uint size)
 {
@@ -27,6 +24,7 @@ uint WindowsUsername(char* cstring, uint size)
         // The maximum length, (see UCLEN)
         defaultSize = 256,
     };
+
     DWORD unwsize = defaultSize;
 
     wchar_t unw[defaultSize];
@@ -37,12 +35,28 @@ uint WindowsUsername(char* cstring, uint size)
             // The variable `unwsize` contains the final zero
             --unwsize;
             // Getting the size of the buffer into UTF8
-            int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, unw, unwsize, nullptr, 0, nullptr, nullptr);
+            int sizeRequired = WideCharToMultiByte(CP_UTF8,
+                                                   0,
+                                                   unw,
+                                                   unwsize,
+                                                   nullptr,
+                                                   0,
+                                                   nullptr,
+                                                   nullptr);
             if (sizeRequired > 0)
             {
                 if (static_cast<uint>(sizeRequired) > size)
+                {
                     sizeRequired = size;
-                WideCharToMultiByte(CP_UTF8, 0, unw, unwsize, cstring, sizeRequired, nullptr, nullptr);
+                }
+                WideCharToMultiByte(CP_UTF8,
+                                    0,
+                                    unw,
+                                    unwsize,
+                                    cstring,
+                                    sizeRequired,
+                                    nullptr,
+                                    nullptr);
                 return static_cast<uint>(sizeRequired);
             }
         }
@@ -50,8 +64,8 @@ uint WindowsUsername(char* cstring, uint size)
     return 0;
 }
 
-} // namespace System
-} // namespace Private
-} // namespace Yuni
+} // namespace Yuni::Private::System
+
+// namespace Yuni
 
 #endif

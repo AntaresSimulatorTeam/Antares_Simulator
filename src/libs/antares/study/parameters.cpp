@@ -1,32 +1,11 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/study/parameters.h"
 
 #include <algorithm>
-#include <cctype>
-#include <climits>
-#include <cstdio>
-#include <list>    // std::list
 #include <sstream> // std::stringstream
-#include <tuple>   // std::tuple
+#include <string>
 
 #include <boost/algorithm/string/case_conv.hpp>
 
@@ -35,8 +14,6 @@
 #include <antares/exception/AssertionError.hpp>
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
-#include "antares/antares/Enum.hpp"
-#include "antares/antares/constants.h"
 #include "antares/solver/variable/economy/all.h"
 #include "antares/study/load-options.h"
 
@@ -108,7 +85,7 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
         return true;
     }
 
-    logs.warning() << "parameters: invalid renewable generation modelling. Got '" << text << "'";
+    logs.error() << "parameters: invalid renewable generation modelling. Got '" << text << "'";
     out = rgUnknown;
 
     return false;
@@ -135,26 +112,10 @@ static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
         return true;
     }
 
-    logs.warning() << "parameters:  invalid result format. Got '" << text << "'";
+    logs.error() << "parameters:  invalid result format. Got '" << text << "'";
     out = legacyFilesDirectories;
 
     return false;
-}
-
-static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat fmt)
-{
-    const String name = "result-format";
-    switch (fmt)
-    {
-    case zipArchive:
-        section->add(name, "zip");
-        break;
-    case inMemory:
-        section->add(name, "in-memory");
-        break;
-    default:
-        section->add(name, "txt-files");
-    }
 }
 
 bool StringToSimulationMode(SimulationMode& mode, CString<20, false> text)
@@ -224,10 +185,6 @@ const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::Hyd
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
                                     const std::string& text)
 {
-    if (text.empty())
-    {
-        return false;
-    }
     if (text == "daily")
     {
         mode = Parameters::Compatibility::HydroPmax::Daily;
@@ -236,6 +193,22 @@ bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
     if (text == "hourly")
     {
         mode = Parameters::Compatibility::HydroPmax::Hourly;
+        return true;
+    }
+    return false;
+}
+
+bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
+                                          const std::string& text)
+{
+    if (text == "single")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Single;
+        return true;
+    }
+    if (text == "scenarized")
+    {
+        mode = Parameters::Compatibility::HydroRuleCurves::Scenarized;
         return true;
     }
     return false;
@@ -346,13 +319,6 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
-    // Time-series refresh
-    timeSeriesToRefresh = 0; // None
-    refreshIntervalLoad = 100;
-    refreshIntervalSolar = 100;
-    refreshIntervalHydro = 100;
-    refreshIntervalWind = 100;
-    refreshIntervalThermal = 100;
     // Archive
     timeSeriesToArchive = 0; // None
     // Pre-Processor
@@ -422,65 +388,6 @@ void Parameters::reset()
 bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 {
     return (timeSeriesToGenerate & ts);
-}
-
-static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint value)
-{
-    CString<60, false> v;
-
-    if (value & timeSeriesLoad)
-    {
-        v += "load";
-    }
-    if (value & timeSeriesHydro)
-    {
-        if (not v.empty())
-        {
-            v += ", ";
-        }
-        v += "hydro";
-    }
-    if (value & timeSeriesWind)
-    {
-        if (not v.empty())
-        {
-            v += ", ";
-        }
-        v += "wind";
-    }
-    if (value & timeSeriesThermal)
-    {
-        if (not v.empty())
-        {
-            v += ", ";
-        }
-        v += "thermal";
-    }
-    if (value & timeSeriesSolar)
-    {
-        if (not v.empty())
-        {
-            v += ", ";
-        }
-        v += "solar";
-    }
-    if (value & timeSeriesRenewable)
-    {
-        if (not v.empty())
-        {
-            v += ", ";
-        }
-        v += "renewables";
-    }
-    if (value & timeSeriesTransmissionCapacities)
-    {
-        if (!v.empty())
-        {
-            v += ", ";
-        }
-        v += "ntc";
-    }
-    s->add(name, v);
 }
 
 static bool SGDIntLoadFamily_General(Parameters& d,
@@ -597,32 +504,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         // Only by TS generator. We skip it here (otherwise, we get a reading error).
         return true;
     }
-    // Interval values
-    if (key == "refreshintervalload")
-    {
-        return value.to<uint>(d.refreshIntervalLoad);
-    }
-    if (key == "refreshintervalhydro")
-    {
-        return value.to<uint>(d.refreshIntervalHydro);
-    }
-    if (key == "refreshintervalwind")
-    {
-        return value.to<uint>(d.refreshIntervalWind);
-    }
-    if (key == "refreshintervalthermal")
-    {
-        return value.to<uint>(d.refreshIntervalThermal);
-    }
-    if (key == "refreshintervalsolar")
-    {
-        return value.to<uint>(d.refreshIntervalSolar);
-    }
-    // What timeSeries to refresh ?
-    if (key == "refreshtimeseries")
-    {
-        return ConvertCStrToListTimeSeries(value, d.timeSeriesToRefresh);
-    }
     // readonly
     if (key == "readonly")
     {
@@ -652,7 +533,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     {
         return value.to<bool>(d.yearByYear);
     }
-
     return false;
 }
 
@@ -693,6 +573,14 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
     if (key == "result-format")
     {
         return ConvertCStrToResultFormat(value, d.resultFormat);
+    }
+    if (key == "remix-storage-debug")
+    {
+        return value.to<bool>(d.remixStorageDebug);
+    }
+    if (key == "adequacy-patch-debug")
+    {
+        return value.to<bool>(d.adqPatchDebug);
     }
     return false;
 }
@@ -744,8 +632,8 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         d.include.exportMPS = stringToMPSexportStatus(value);
         if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
         {
-            logs.warning() << "Reading parameters : invalid MPS export status : " << value
-                           << ". Reset to no MPS export.";
+            logs.error() << "Reading parameters : invalid MPS export status : " << value
+                         << ". Reset to no MPS export.";
             return false;
         }
         return true;
@@ -772,14 +660,14 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         }
         catch (AssertionError& ex)
         {
-            logs.warning()
+            logs.error()
               << "Assertion error for unfeasible problem behavior from string conversion : "
               << ex.what();
 
             result = false;
             d.include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
-            logs.warning() << "parameters: invalid unfeasible problem behavior. Got '" << value
-                           << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
+            logs.error() << "parameters: invalid unfeasible problem behavior. Got '" << value
+                         << "'. reset to " << Enum::toString(d.include.unfeasibleProblemBehavior);
         }
         return result;
     }
@@ -787,6 +675,11 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "simplex-range")
     {
         d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
+        if (d.simplexOptimizationRange == sorDay)
+        {
+            logs.error()
+              << "simplex-range = day is deprecated and will be removed from future versions";
+        }
         return true;
     }
 
@@ -823,8 +716,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.hydroHeuristicPolicy.hhPolicy = hhpolicy;
             return true;
         }
-        logs.warning() << "parameters: invalid hydro heuristic policy. Got '" << value
-                       << "'. Reset to default accommodate rule curves.";
+        logs.error() << "parameters: invalid hydro heuristic policy. Got '" << value
+                     << "'. Reset to default accommodate rule curves.";
         d.hydroHeuristicPolicy.hhPolicy = hhpAccommodateRuleCurves;
         return false;
     }
@@ -836,8 +729,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.hydroPricing.hpMode = hpricing;
             return true;
         }
-        logs.warning() << "parameters: invalid hydro pricing mode. Got '" << value
-                       << "'. reset to fast mode";
+        logs.error() << "parameters: invalid hydro pricing mode. Got '" << value
+                     << "'. reset to fast mode";
         d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
@@ -850,8 +743,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.nbCores.ncMode = ncores;
             return true;
         }
-        logs.warning() << "parameters: invalid number of cores mode. Got '" << value
-                       << "'. reset to fast mode";
+        logs.error() << "parameters: invalid number of cores mode. Got '" << value
+                     << "'. reset to fast mode";
         d.nbCores.ncMode = ncMin;
         return false;
     }
@@ -889,8 +782,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.unitCommitment.ucMode = ucommitment;
             return true;
         }
-        logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
-                       << "'. reset to fast mode";
+        logs.error() << "parameters: invalid unit commitment mode. Got '" << value
+                     << "'. reset to fast mode";
         d.unitCommitment.ucMode = ucHeuristicFast;
         return false;
     }
@@ -899,6 +792,11 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     {
         return ConvertStringToRenewableGenerationModelling(value,
                                                            d.renewableGeneration.rgModelling);
+    }
+
+    if (key == "accurate-shave-peaks-include-short-term-storage")
+    {
+        return value.to<bool>(d.accurateShavePeaksIncludeShortTermStorage);
     }
 
     return false;
@@ -985,7 +883,7 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
             if (y > d.nbYears)
             {
                 valid = false;
-                logs.warning()
+                logs.error()
                   << "parameters: invalid MC year index for MC year weight definition. Got '" << y
                   << "'. Value not used";
             }
@@ -993,8 +891,8 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
             if (weight < 0.f)
             {
                 valid = false;
-                logs.warning() << "parameters: invalid MC year weight.Got '" << weight
-                               << "'. Value not used";
+                logs.error() << "parameters: invalid MC year weight.Got '" << weight
+                             << "'. Value not used";
             }
 
             if (valid)
@@ -1006,9 +904,9 @@ static bool SGDIntLoadFamily_Playlist(Parameters& d,
         }
         else
         {
-            logs.warning() << "parameters: invalid MC year index and weight definition. Must be "
-                              "defined by [year],[weight] Got '"
-                           << value << "'. Value not used";
+            logs.error() << "parameters: invalid MC year index and weight definition. Must be "
+                            "defined by [year],[weight] Got '"
+                         << value << "'. Value not used";
             return false;
         }
     }
@@ -1135,14 +1033,26 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     {
         return StringToCompatibilityRampes(d.compatibility.rampes, value);
     }
+    
+    else if (key == "hydro-rule-curves")
+    {
+        return StringToCompatibilityHydroRuleCurves(d.compatibility.hydroRuleCurves, value);
+    }
 
     return false;
+}
+
+static void logNotSupported(const String& key, const StudyVersion& version)
+{
+    logs.warning() << "In generaldata.ini, parameter `" << key
+                   << "` is no longer supported since version " << version.toString()
+                   << ", consider removing it " << "from the study";
 }
 
 static bool SGDIntLoadFamily_Legacy(Parameters& d,
                                     const String& key,
                                     const String& value,
-                                    const String&,
+                                    const String& rawvalue,
                                     const StudyVersion& version)
 {
     // Comparisons kept for compatibility reasons
@@ -1199,8 +1109,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     {
         if (value == "hot start")
         {
-            logs.warning()
-              << "Option initial-reservoir-levels is deprecated, please remove it from the study";
+            logNotSupported(key, StudyVersion(9, 2));
         }
         return true;
     }
@@ -1209,8 +1118,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     {
         if (value == "false")
         {
-            logs.warning() << "Parameter set-to-null-ntc-between-physical-out-for-first-step "
-                              " is deprecated, please remove it from the study";
+            logNotSupported(key, StudyVersion(9, 2));
         }
         return true;
     }
@@ -1219,8 +1127,28 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     {
         if (value == "true")
         {
-            logs.warning() << "Parameter enable-first-step is deprecated, please remove it from"
-                              " the study";
+            logNotSupported(key, StudyVersion(9, 2));
+        }
+        return true;
+    }
+
+    // ignored since 9.3
+    if (key == "refreshintervalload" || key == "refreshintervalhydro"
+        || key == "refreshintervalwind" || key == "refreshintervalthermal"
+        || key == "refreshintervalsolar")
+    {
+        logNotSupported(key, StudyVersion(9, 3));
+        return true;
+    }
+
+    // ignored since 9.3
+    if (key == "refreshtimeseries")
+    {
+        String trimmed = rawvalue;
+        trimmed.trim();
+        if (!trimmed.empty())
+        {
+            logNotSupported(key, StudyVersion(9, 3));
         }
         return true;
     }
@@ -1272,7 +1200,7 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
         catch (const std::out_of_range&)
         {
             // Continue on error
-            logs.warning() << ini.filename() << ": '" << section->name << "': Unknown section name";
+            logs.error() << ini.filename() << ": '" << section->name << "': Unknown section name";
             continue;
         }
 
@@ -1299,42 +1227,17 @@ bool Parameters::loadFromINI(const IniFile& ini, const StudyVersion& version)
                 if (!SGDIntLoadFamily_Legacy(*this, p->key, value, p->value, version))
                 {
                     // Continue on error
-                    logs.warning() << ini.filename() << ": '" << p->key << "': Unknown property";
+                    logs.error() << ini.filename() << ": '" << p->key << "': Unknown property";
                 }
             }
         }
     }
-
-    fixRefreshIntervals();
 
     fixGenRefreshForNTC();
 
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
     return true;
-}
-
-void Parameters::fixRefreshIntervals()
-{
-    using T = std::tuple<uint& /* refreshInterval */,
-                         enum TimeSeriesType /* ts */,
-                         const std::string /* label */>;
-    const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
-                                            {refreshIntervalSolar, timeSeriesSolar, "solar"},
-                                            {refreshIntervalHydro, timeSeriesHydro, "hydro"},
-                                            {refreshIntervalWind, timeSeriesWind, "wind"},
-                                            {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
-
-    for (const auto& [refreshInterval, ts, label]: timeSeriesToCheck)
-    {
-        if (ts & timeSeriesToRefresh && 0 == refreshInterval)
-        {
-            refreshInterval = 1;
-            logs.error() << "The " << label
-                         << " time-series must be refreshed but the interval is equal to 0. "
-                            "Auto-Reset to a safe value (1).";
-        }
-    }
 }
 
 void Parameters::fixGenRefreshForNTC()
@@ -1344,12 +1247,6 @@ void Parameters::fixGenRefreshForNTC()
         timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Time-series generation is not available for transmission capacities. It "
                         "will be automatically disabled.";
-    }
-    if ((timeSeriesTransmissionCapacities & timeSeriesToRefresh) != 0)
-    {
-        timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
-        logs.error() << "Time-series refresh is not available for transmission capacities. It will "
-                        "be automatically disabled.";
     }
     if ((timeSeriesTransmissionCapacities & interModal) != 0)
     {
@@ -1437,10 +1334,7 @@ void Parameters::validateOptions(const StudyLoadOptions& options)
         logs.info() << "  simulation mode: " << SimulationModeToCString(mode);
     }
     // Specific action before launching a simulation
-    if (options.usedByTheSolver)
-    {
-        prepareForSimulation(options);
-    }
+    prepareForSimulation(options);
 
     if (options.mpsToExport || options.namedProblems)
     {
@@ -1529,17 +1423,17 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (derated && userPlaylist)
     {
         userPlaylist = false;
-        logs.warning() << "The user's playlist will be ignored";
+        logs.error() << "The user's playlist will be ignored";
     }
     if (derated && useCustomScenario)
     {
         useCustomScenario = false;
-        logs.warning() << "The custom build mode can not be used with the derated option";
+        logs.error() << "The custom build mode can not be used with the derated option";
     }
     if (useCustomScenario && activeRulesScenario.empty())
     {
         useCustomScenario = false;
-        logs.warning() << "The custom build mode will be ignored (no active ruleset)";
+        logs.error() << "The custom build mode will be ignored (no active ruleset)";
     }
 
     // If the user's playlist is disabled, the filter must be reset
@@ -1660,64 +1554,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         interModal = 0;
     }
 
-    // Preprocessors
-    if (!timeSeriesToGenerate)
-    {
-        // Nothing to refresh
-        timeSeriesToRefresh = 0;
-    }
-    else
-    {
-        // Removing `refresh`
-        if (!(timeSeriesToGenerate & timeSeriesLoad))
-        {
-            timeSeriesToRefresh &= ~timeSeriesLoad;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesSolar))
-        {
-            timeSeriesToRefresh &= ~timeSeriesSolar;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesWind))
-        {
-            timeSeriesToRefresh &= ~timeSeriesWind;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesHydro))
-        {
-            timeSeriesToRefresh &= ~timeSeriesHydro;
-        }
-        if (!(timeSeriesToGenerate & timeSeriesThermal))
-        {
-            timeSeriesToRefresh &= ~timeSeriesThermal;
-        }
-
-        // Force mode refresh if the timeseries must be regenerated
-        if (timeSeriesToGenerate & timeSeriesLoad && !(timeSeriesToRefresh & timeSeriesLoad))
-        {
-            timeSeriesToRefresh |= timeSeriesLoad;
-            refreshIntervalLoad = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesSolar && !(timeSeriesToRefresh & timeSeriesSolar))
-        {
-            timeSeriesToRefresh |= timeSeriesSolar;
-            refreshIntervalSolar = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesWind && !(timeSeriesToRefresh & timeSeriesWind))
-        {
-            timeSeriesToRefresh |= timeSeriesWind;
-            refreshIntervalWind = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesHydro && !(timeSeriesToRefresh & timeSeriesHydro))
-        {
-            timeSeriesToRefresh |= timeSeriesHydro;
-            refreshIntervalHydro = UINT_MAX;
-        }
-        if (timeSeriesToGenerate & timeSeriesThermal && !(timeSeriesToRefresh & timeSeriesThermal))
-        {
-            timeSeriesToRefresh |= timeSeriesThermal;
-            refreshIntervalThermal = UINT_MAX;
-        }
-    }
-
     if (options.noTimeseriesImportIntoInput && timeSeriesToArchive != 0)
     {
         logs.info() << "  :: ignoring timeseries importation to input";
@@ -1818,241 +1654,6 @@ void Parameters::resetPlaylist(uint nbOfYears)
     resetYearsWeigth();
 }
 
-void Parameters::saveToINI(IniFile& ini) const
-{
-    // -- General --
-    {
-        auto* section = ini.addSection("general");
-
-        // Mode
-        section->add("mode", SimulationModeToCString(mode));
-
-        // Calendar
-        section->add("horizon", horizon);
-        section->add("nbYears", nbYears);
-        section->add("simulation.start", simulationDays.first + 1); // starts from 1
-        section->add("simulation.end", simulationDays.end);         // starts from 1
-        section->add("january.1st", Date::DayOfTheWeekToString(dayOfThe1stJanuary));
-        section->add("first-month-in-year", Date::MonthToLowerString(firstMonthInYear));
-        section->add("first.weekday", Date::DayOfTheWeekToString(firstWeekday));
-        section->add("leapyear", leapYear);
-
-        // Simulation
-        section->add("year-by-year", yearByYear);
-        section->add("derated", derated);
-        section->add("custom-scenario", useCustomScenario);
-        section->add("user-playlist", userPlaylist);
-        section->add("thematic-trimming", thematicTrimming);
-        section->add("geographic-trimming", geographicTrimming);
-        if (not activeRulesScenario.empty())
-        {
-            section->add("active-rules-scenario", activeRulesScenario);
-        }
-
-        // Time series
-        ParametersSaveTimeSeries(section, "generate", timeSeriesToGenerate);
-        section->add("nbTimeSeriesLoad", nbTimeSeriesLoad);
-        section->add("nbTimeSeriesHydro", nbTimeSeriesHydro);
-        section->add("nbTimeSeriesWind", nbTimeSeriesWind);
-        section->add("nbTimeSeriesThermal", nbTimeSeriesThermal);
-        section->add("nbTimeSeriesSolar", nbTimeSeriesSolar);
-
-        // Refresh
-        ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
-        ParametersSaveTimeSeries(section, "intra-modal", intraModal);
-        ParametersSaveTimeSeries(section, "inter-modal", interModal);
-        section->add("refreshIntervalLoad", refreshIntervalLoad);
-        section->add("refreshIntervalHydro", refreshIntervalHydro);
-        section->add("refreshIntervalWind", refreshIntervalWind);
-        section->add("refreshIntervalThermal", refreshIntervalThermal);
-        section->add("refreshIntervalSolar", refreshIntervalSolar);
-
-        // Readonly
-        section->add("readonly", readonly);
-    }
-
-    // input
-    {
-        auto* section = ini.addSection("input");
-        ParametersSaveTimeSeries(section, "import", exportTimeSeriesInInput);
-    }
-
-    // Output
-    {
-        auto* section = ini.addSection("output");
-        section->add("synthesis", synthesis);
-        section->add("storeNewSet", storeTimeseriesNumbers);
-        if (hydroDebug)
-        {
-            section->add("hydro-debug", hydroDebug);
-        }
-        ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
-        ParametersSaveResultFormat(section, resultFormat);
-    }
-
-    // Optimization
-    {
-        auto* section = ini.addSection("optimization");
-        switch (simplexOptimizationRange)
-        {
-        case sorDay:
-            section->add("simplex-range", "day");
-            break;
-        case sorWeek:
-            section->add("simplex-range", "week");
-            break;
-        case sorUnknown:
-            break;
-        }
-        // Optimization preferences
-        section->add("transmission-capacities",
-                     GlobalTransmissionCapacitiesToString(transmissionCapacities));
-
-        section->add("include-constraints", include.constraints);
-        section->add("include-hurdlecosts", include.hurdleCosts);
-        section->add("include-tc-minstablepower", include.thermal.minStablePower);
-        section->add("include-tc-min-ud-time", include.thermal.minUPTime);
-        section->add("include-dayahead", include.reserve.dayAhead);
-        section->add("include-strategicreserve", include.reserve.strategic);
-        section->add("include-spinningreserve", include.reserve.spinning);
-        section->add("include-primaryreserve", include.reserve.primary);
-
-        section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
-
-        section->add("include-exportstructure", include.exportStructure);
-        section->add("include-export-solutions", include.exportSolutions);
-
-        // Unfeasible problem behavior
-        section->add("include-unfeasible-problem-behavior",
-                     Enum::toString(include.unfeasibleProblemBehavior));
-        section->add("solver-logs", optOptions.solverLogs);
-    }
-
-    // Adequacy patch
-    adqPatchParams.saveToINI(ini);
-
-    // Other preferences
-    {
-        auto* section = ini.addSection("other preferences");
-        section->add("hydro-heuristic-policy",
-                     HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
-        section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
-        section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
-        section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
-        section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
-        section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
-        section->add("renewable-generation-modelling",
-                     RenewableGenerationModellingToCString(renewableGeneration()));
-    }
-
-    // Advanced parameters
-    {
-        auto* section = ini.addSection("advanced parameters");
-        // Accuracy on correlation
-        ParametersSaveTimeSeries(section,
-                                 "accuracy-on-correlation",
-                                 timeSeriesAccuracyOnCorrelation);
-    }
-
-    // User's playlist
-    {
-        assert(!yearsFilter.empty());
-        uint effNbYears = 0;
-        bool weightEnabled = false;
-        for (uint i = 0; i != nbYears; ++i)
-        {
-            if (yearsFilter[i])
-            {
-                ++effNbYears;
-            }
-            weightEnabled |= yearsWeight[i] != 1.f;
-        }
-
-        // Playlist section must be added if at least one year is disable or one MC year weight is
-        // not 1.0
-        bool addPlayListSection = effNbYears != nbYears;
-        addPlayListSection |= weightEnabled;
-
-        if (addPlayListSection)
-        {
-            // We have something to write !
-            auto* section = ini.addSection("playlist");
-            if (effNbYears <= (nbYears / 2))
-            {
-                section->add("playlist_reset", "false");
-                for (uint i = 0; i != nbYears; ++i)
-                {
-                    if (yearsFilter[i])
-                    {
-                        section->add("playlist_year +", i);
-                    }
-                }
-            }
-            else
-            {
-                for (uint i = 0; i != nbYears; ++i)
-                {
-                    if (!yearsFilter[i])
-                    {
-                        section->add("playlist_year -", i);
-                    }
-                }
-            }
-
-            for (uint i = 0; i != nbYears; ++i)
-            {
-                // Only write weight different from 1.0 to limit .ini file size and readability
-                if (yearsWeight[i] != 1.f)
-                {
-                    std::string val = std::to_string(i) + "," + std::to_string(yearsWeight[i]);
-                    section->add("playlist_year_weight", val);
-                }
-            }
-        }
-    }
-
-    // Variable selection
-    {
-        uint nb_tot_vars = (uint)variablesPrintInfo.size();
-        uint nb_selected_vars = (uint)variablesPrintInfo.numberOfEnabledVariables();
-
-        if (nb_selected_vars != nb_tot_vars)
-        {
-            // We have something to write !
-            auto* section = ini.addSection("variables selection");
-            if (nb_selected_vars <= (nb_tot_vars / 2))
-            {
-                section->add("selected_vars_reset", "false");
-                for (auto& name: variablesPrintInfo.namesOfEnabledVariables())
-                {
-                    section->add("select_var +", name);
-                }
-            }
-            else
-            {
-                for (auto& name: variablesPrintInfo.namesOfDisabledVariables())
-                {
-                    section->add("select_var -", name);
-                }
-            }
-        }
-    }
-
-    // Seeds
-    {
-        auto* section = ini.addSection("seeds - Mersenne Twister");
-        for (uint sd = 0; sd != (uint)seedMax; ++sd)
-        {
-            section->add(SeedToID((SeedIndex)sd), seed[sd]);
-        }
-    }
-    {
-        auto* section = ini.addSection("compatibility");
-        section->add("hydro-pmax", CompatibilityHydroPmaxToCString(compatibility.hydroPmax));
-        section->add("rampes", CompatibilityRampesToCString(compatibility.rampes));
-    }
-}
-
 bool Parameters::loadFromFile(const std::filesystem::path& filename, const StudyVersion& version)
 {
     // Loading the INI file
@@ -2070,32 +1671,15 @@ bool Parameters::loadFromFile(const std::filesystem::path& filename, const Study
     return false;
 }
 
-bool Parameters::saveToFile(const AnyString& filename) const
-{
-    IniFile ini;
-    saveToINI(ini);
-    return ini.save(filename);
-}
-
 void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
-    const static std::vector<std::string> ren = {"WIND OFFSHORE",
-                                                 "WIND ONSHORE",
-                                                 "SOLAR CONCRT.",
-                                                 "SOLAR PV",
-                                                 "SOLAR ROOFT",
-                                                 "RENW. 1",
-                                                 "RENW. 2",
-                                                 "RENW. 3",
-                                                 "RENW. 4"};
-
     const static std::vector<std::string> agg = {"WIND", "SOLAR"};
 
     switch (rgModelling)
     {
     // Using `aggregated` renewable generation, exclude `renewable` variables
     case rgAggregated:
-        out.insert(out.end(), ren.begin(), ren.end());
+        out.push_back("RENEWABLE GEN.");
         break;
     // Using `renewable clusters` renewable generation, exclude `aggregated` variables
     case rgClusters:

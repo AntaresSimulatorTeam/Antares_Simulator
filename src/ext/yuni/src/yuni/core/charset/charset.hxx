@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "charset.h"
 
-namespace Yuni
-{
-namespace Charset
+namespace Yuni::Charset
 {
 template<typename SrcStringT, typename DtsStringT>
 bool Converter::convert(SrcStringT& source, DtsStringT& destination, bool isLastBuffer)
@@ -23,6 +22,7 @@ bool Converter::convert(SrcStringT& source, DtsStringT& destination, bool isLast
     // the conversion performed, and since we want to perform complete
     // conversions, we require an expandable string as destination.
     YUNI_STATIC_ASSERT(DtsStringT::expandable == 1, CharsetConverterRequiresExpandableBuffers);
+
     enum
     {
         DSTSZ = sizeof(typename DtsStringT::Type),
@@ -182,5 +182,4 @@ inline bool Converter::valid() const
     return ((void*)-1 != pContext);
 }
 
-} // namespace Charset
-} // namespace Yuni
+} // namespace Yuni::Charset

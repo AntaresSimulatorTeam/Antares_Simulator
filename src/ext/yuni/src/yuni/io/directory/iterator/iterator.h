@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,18 +10,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../yuni.h"
-#include "../../../core/string.h"
 #include "../../../core/smartptr/intrusive.h"
-#include "../../io.h"
+#include "../../../core/string.h"
+#include "../../../yuni.h"
 #include "../../directory.h"
+#include "../../io.h"
 #include "detachedthread.h"
 
-namespace Yuni
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::IO::Directory
 {
 /*!
 ** \brief Iterate through subfolders and files of a given directory
@@ -123,9 +120,10 @@ namespace Directory
 **    the detached mode is automatically disabled.
 */
 template<bool DetachedT = true>
-class IIterator
- : public Yuni::IIntrusiveSmartPtr<IIterator<DetachedT>, true, Yuni::Policy::ObjectLevelLockable>,
-   public Private::IO::Directory::Iterator::Interface
+class IIterator: public Yuni::IIntrusiveSmartPtr<IIterator<DetachedT>,
+                                                 true,
+                                                 Yuni::Policy::ObjectLevelLockable>,
+                 public Private::IO::Directory::Iterator::Interface
 {
 public:
     //! The class ancestor
@@ -344,7 +342,7 @@ private:
 #ifndef YUNI_NO_THREAD_SAFE
     typedef Yuni::Private::IO::Directory::Iterator::IDetachedThread ThreadType;
 
-    class DetachedThread final : public ThreadType
+    class DetachedThread final: public ThreadType
     {
     public:
         DetachedThread();
@@ -431,8 +429,6 @@ private:
 // IIterator<true>::Ptr CreateWalker(const AnyString& folder,
 //	const IIterator<true>::OnNodeEvent& onFile, const IIterator<true>::OnNodeEvent& onFolder);
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory
 
 #include "iterator.hxx"

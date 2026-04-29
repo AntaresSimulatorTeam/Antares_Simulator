@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,9 +12,7 @@
 #pragma once
 #include "thread.h"
 
-namespace Yuni
-{
-namespace Thread
+namespace Yuni::Thread
 {
 inline bool IThread::started() const
 {
@@ -35,5 +34,4 @@ inline bool IThread::operator!() const
     return not started();
 }
 
-} // namespace Thread
-} // namespace Yuni
+} // namespace Yuni::Thread

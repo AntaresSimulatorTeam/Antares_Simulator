@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -11,13 +12,10 @@
 #pragma once
 #include "info.h"
 
-namespace Yuni
+namespace Yuni::IO::Directory
 {
-namespace IO
-{
-namespace Directory
-{
-inline Info::Info(const AnyString& directory) : pDirectory(directory)
+inline Info::Info(const AnyString& directory):
+    pDirectory(directory)
 {
 }
 
@@ -160,6 +158,4 @@ inline Info& Info::operator<<(const U& rhs)
     return *this;
 }
 
-} // namespace Directory
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO::Directory

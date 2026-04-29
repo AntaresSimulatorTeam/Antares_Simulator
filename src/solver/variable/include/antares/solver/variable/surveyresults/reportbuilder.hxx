@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__
 #define __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__
 
@@ -36,13 +19,7 @@
 #include "../info.h"
 #include "../surveyresults.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Container
+namespace Antares::Solver::Variable::Container
 {
 namespace // anonymous
 {
@@ -322,7 +299,7 @@ private:
                 // The new output
                 std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
                 path /= "areas";
-                path /= area.id.to<std::string>();
+                path /= area.id;
 
                 results.data.output = path.string();
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
@@ -357,8 +334,7 @@ private:
                 logs.info() << "Exporting results : " << area.name << " :: " << cluster->name();
                 // The new output
                 std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
-                path /= std::filesystem::path("areas") / area.id.to<std::string>() / "thermal"
-                        / cluster->id();
+                path /= std::filesystem::path("areas") / area.id / "thermal" / cluster->id();
 
                 results.data.output = path.string();
 
@@ -448,7 +424,6 @@ private:
         // alias to the set of sets of areas
         const Data::Study::SetsOfAreas& sets = results.data.study.setsOfAreas;
 
-        unsigned int indx = 0;
         for (unsigned int i = 0; i != sets.size(); ++i)
         {
             if (!sets.hasOutput(i) || !sets.resultSize(i))
@@ -459,11 +434,12 @@ private:
             logs.info() << "Exporting results : " << sets.caption(i);
             // The new output
             std::filesystem::path path = static_cast<std::string>(results.data.originalOutput);
-            std::string setId = "@ " + sets.nameByIndex(i);
+            const auto& setName = sets.nameByIndex(i);
+            std::string setId = "@ " + setName;
             path /= std::filesystem::path("areas") / setId;
 
             results.data.output = path.string();
-            results.data.setOfAreasIndex = indx++;
+            results.data.setOfAreasName = setName;
 
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
@@ -504,9 +480,6 @@ public:
 
 } // Anonymous namespace
 
-} // namespace Container
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Container
 
 #endif // __SOLVER_VARIABLE_SURVEYRESULTS_REPORT_BUILDER_HXX__

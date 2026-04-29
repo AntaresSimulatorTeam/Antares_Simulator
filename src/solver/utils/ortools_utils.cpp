@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <filesystem>
 #include <optional>
 #include <ortools/math_opt/cpp/parameters.h>
@@ -25,7 +8,7 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <antares/antares/Enum.hpp>
+#include <antares/enums/Enum.hpp>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/logs/logs.h>
 #include <antares/solver/simulation/sim_structure_probleme_economique.h>
@@ -35,8 +18,26 @@ using namespace operations_research;
 
 const std::string XPRESS_PARAMS = "THREADS 1";
 const std::string SCIP_PARAMS = "parallel/maxnthreads 1";
+const std::string GUROBI_PARAMS
+  = "Threads 1"; // See
+                 // https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html#threads
+                 // for Gurobi threads (and other) parameter reference
 
 using Antares::Solver::Optimization::SingleOptimOptions;
+
+// TODO use Objective().Value() instead
+// This is a temporary workaround for Windows
+double getObjectiveValue(const MPSolver* solver)
+{
+    double ret = 0;
+    const auto& objective = solver->Objective();
+    for (const auto* variable: solver->variables())
+    {
+        ret += variable->solution_value() * objective.GetCoefficient(variable);
+    }
+    ret += objective.offset();
+    return ret;
+}
 
 // MPSolverParameters's copy constructor is private
 static void setGenericParameters(MPSolverParameters& params)
@@ -91,6 +92,14 @@ static void TuneSolverSpecificOptions(MPSolver* solver,
         checkSetSolverSpecificParameters(status, solverName, specificParams);
         break;
     }
+    case MPSolver::GUROBI_LINEAR_PROGRAMMING:
+    case MPSolver::GUROBI_MIXED_INTEGER_PROGRAMMING:
+    {
+        specificParams = GUROBI_PARAMS + "\n" + solverParameters;
+        status = solver->SetSolverSpecificParametersAsString(specificParams);
+        checkSetSolverSpecificParameters(status, solverName, specificParams);
+        break;
+    }
     default:
         break;
     }
@@ -100,6 +109,7 @@ static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solv
 {
     switch (solverType)
     {
+    case MPSolver::SIRIUS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
         return true;
     default:
@@ -146,7 +156,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
     assert(solver);
     assert(problemeAResoudre);
 
-    const bool isMIP = problemeAResoudre->isMIP();
+    const bool isMIP = solver->IsMIP();
 
     extractSolutionValues(solver->variables(), problemeAResoudre);
 
@@ -195,30 +205,9 @@ void removeTemporaryFile(const std::string& tmpPath)
     }
 }
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   Antares::Solver::IResultWriter& writer,
-                                                   const std::string& filename)
-{
-    // 0. Logging file name
-    logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
-
-    // 1. Determine filename
-    const auto tmpPath = generateTempPath(filename);
-
-    // 2. Write MPS to temporary file
-    solver->Write(tmpPath);
-
-    // 3. Copy to real output using generic writer
-    writer.addEntryFromFile(filename, tmpPath);
-
-    // 4. Remove tmp file
-    removeTemporaryFile(tmpPath);
-}
-
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
     auto status = solver->Solve(params);
-
     if (status == MPSolver::OPTIMAL || status == MPSolver::FEASIBLE)
     {
         resultStatus = OUI_SPX;
@@ -244,9 +233,9 @@ static bool doWeStoreSolverBasis(const SingleOptimOptions& options, const MPSolv
     return solverSupportsWarmStart(solver->ProblemType()) && options.solverExportsBasis;
 }
 
-MPSolver* ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
-                           MPSolver* solver,
-                           const SingleOptimOptions& options)
+void ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
+                      MPSolver* solver,
+                      const SingleOptimOptions& options)
 {
     MPSolverParameters params;
     // Keep generic params for default settings working for all solvers
@@ -270,68 +259,6 @@ MPSolver* ORTOOLS_Simplexe(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
             problemeAResoudre->basisStatus.extractBasis(solver);
         }
     }
-
-    return solver;
-}
-
-void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, const double* costs, int nbVar)
-{
-    auto& variables = solver->variables();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        auto& var = variables[idxVar];
-        solver->MutableObjective()->SetCoefficient(var, costs[idxVar]);
-    }
-}
-
-void ORTOOLS_ModifierLeVecteurSecondMembre(MPSolver* solver,
-                                           const double* rhs,
-                                           const char* sens,
-                                           int nbRow)
-{
-    auto& constraints = solver->constraints();
-    for (int idxRow = 0; idxRow < nbRow; ++idxRow)
-    {
-        if (sens[idxRow] == '=')
-        {
-            constraints[idxRow]->SetBounds(rhs[idxRow], rhs[idxRow]);
-        }
-        else if (sens[idxRow] == '<')
-        {
-            constraints[idxRow]->SetBounds(-MPSolver::infinity(), rhs[idxRow]);
-        }
-        else if (sens[idxRow] == '>')
-        {
-            constraints[idxRow]->SetBounds(rhs[idxRow], MPSolver::infinity());
-        }
-    }
-}
-
-void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
-                               const double* bMin,
-                               const double* bMax,
-                               const int* typeVar,
-                               int nbVar)
-{
-    auto& variables = solver->variables();
-    for (int idxVar = 0; idxVar < nbVar; ++idxVar)
-    {
-        double min_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
-                            || (typeVar[idxVar] == VARIABLE_BORNEE_SUPERIEUREMENT)
-                          ? -MPSolver::infinity()
-                          : bMin[idxVar]);
-        double max_l = ((typeVar[idxVar] == VARIABLE_NON_BORNEE)
-                            || (typeVar[idxVar] == VARIABLE_BORNEE_INFERIEUREMENT)
-                          ? MPSolver::infinity()
-                          : bMax[idxVar]);
-        auto& var = variables[idxVar];
-        var->SetBounds(min_l, max_l);
-    }
-}
-
-void ORTOOLS_LibererProbleme(MPSolver* solver)
-{
-    delete solver;
 }
 
 const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSolverMap = {
@@ -341,12 +268,14 @@ const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::mpSo
   {"glpk", {"glpk_lp", "glpk"}},
   {"scip", {std::nullopt, "scip"}}, // SCIP only supports MIPs
   {"highs", {"highs_lp", "highs"}},
-  {"pdlp", {"pdlp", std::nullopt}}}; // PDLP only supports LPs
+  {"pdlp", {"pdlp", std::nullopt}}, // PDLP only supports LPs
+  {"gurobi", {"gurobi_lp", "gurobi"}}};
 
 const std::map<std::string, math_opt::SolverType> OrtoolsUtils::mathoptSolverMap = {
   {"pdlp", math_opt::SolverType::kPdlp},
   {"scip", math_opt::SolverType::kGscip},
-  {"xpress", math_opt::SolverType::kXpress}};
+  {"xpress", math_opt::SolverType::kXpress},
+  {"gurobi", math_opt::SolverType::kGurobi}};
 
 std::list<std::string> availableLinearSolversList()
 {
@@ -370,6 +299,27 @@ std::list<std::string> availableLinearSolversList()
         }
     }
     return result;
+}
+
+bool isLinearSolverAvailable(const std::string& solverName)
+{
+    auto it = OrtoolsUtils::mpSolverMap.find(solverName);
+    if (it == OrtoolsUtils::mpSolverMap.end())
+    {
+        return false;
+    }
+
+    MPSolver::OptimizationProblemType solverType;
+    if (it->second.LPSolverName.has_value())
+    {
+        MPSolver::ParseSolverType(it->second.LPSolverName.value(), &solverType);
+    }
+    else
+    {
+        MPSolver::ParseSolverType(it->second.MIPSolverName.value(), &solverType);
+    }
+
+    return MPSolver::SupportsProblemType(solverType);
 }
 
 std::list<std::string> availableQuadraticSolversList()
@@ -426,6 +376,5 @@ MPSolver* MPSolverFactory(const bool isMip, const std::string& solverName)
         throw std::invalid_argument("Solver " + solverName + " (" + *internalSolverName
                                     + ") could not be loaded by OR-Tools MPSolver.");
     }
-
     return solver;
 }

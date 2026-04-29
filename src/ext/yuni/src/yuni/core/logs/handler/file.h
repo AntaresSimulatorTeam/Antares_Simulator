@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,19 +10,18 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../null.h"
-#include "../../../io/file.h"
 #include <cassert>
 
-namespace Yuni
-{
-namespace Logs
+#include "../../../io/file.h"
+#include "../null.h"
+
+namespace Yuni::Logs
 {
 /*!
 ** \brief Log Handler: Single Log file
 */
 template<class NextHandler = NullHandler>
-class YUNI_DECL File : public NextHandler
+class YUNI_DECL File: public NextHandler
 {
 public:
     enum Settings
@@ -81,7 +81,6 @@ private:
 
 }; // class File
 
-} // namespace Logs
-} // namespace Yuni
+} // namespace Yuni::Logs
 
 #include "file.hxx"

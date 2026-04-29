@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -15,14 +16,11 @@
 #endif
 #include "windows.hdr.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace CPU
+namespace Yuni::System::CPU
 {
 #if defined(YUNI_OS_WINDOWS) || defined(YUNI_OS_CYGWIN)
 #define YUNI_CPU_COUNT_HAS_IMPLEMENTATION
+
 uint Count()
 {
     SYSTEM_INFO si;
@@ -34,6 +32,7 @@ uint Count()
 #if defined(YUNI_OS_LINUX) || defined(YUNI_OS_DARWIN) || defined(YUNI_OS_FREEBSD) \
   || defined(YUNI_OS_NETBSD) || defined(YUNI_OS_OPENBSD)
 #define YUNI_CPU_COUNT_HAS_IMPLEMENTATION
+
 uint Count()
 {
     // The number of processors online (capable of running processes)
@@ -44,12 +43,11 @@ uint Count()
 
 #ifndef YUNI_CPU_COUNT_HAS_IMPLEMENTATION
 #warning "The method Yuni::System::CPU::Count() has not been implemented for the current platform"
+
 uint Count()
 {
     return 1; // Default value
 }
 #endif
 
-} // namespace CPU
-} // namespace System
-} // namespace Yuni
+} // namespace Yuni::System::CPU

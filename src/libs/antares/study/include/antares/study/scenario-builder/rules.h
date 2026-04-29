@@ -1,28 +1,12 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__
 #define __LIBS_STUDY_SCENARIO_BUILDER_RULES_H__
 
 #include <map>
 #include <memory>
+#include <vector>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -33,18 +17,15 @@
 #include "LoadTSNumberData.h"
 #include "NTCTSNumberData.h"
 #include "RenewableTSNumberData.h"
-#include "ShortTermTSNumberData.h"
+#include "ShortTermAdditionalConstraintsTSNumberData.h"
+#include "ShortTermInflowsTSNumberData.h"
 #include "TSnumberData.h"
 #include "ThermalTSNumberData.h"
 #include "WindTSNumberData.h"
 #include "hydroLevelsData.h"
 #include "solarTSNumberData.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
@@ -55,9 +36,7 @@ public:
     //! Smart pointer
     using Ptr = std::shared_ptr<Rules>;
     //! Map
-    using Map = std::map<RulesScenarioName, Ptr>;
-    //! Map ID
-    using MappingID = std::map<int, Ptr>;
+    using Map = std::map<std::string, Ptr>;
 
     //! \name Constructor & Destructor
     //@{
@@ -81,20 +60,14 @@ public:
     /*!
     ** \brief Load information from a single line (extracted from an INI file)
     */
-    bool readLine(const AreaName::Vector& splitKey, const String& value, bool updaterMode = false);
-
-    /*!
-    ** \brief Export the data into a mere INI file
-    */
-    void saveToINIFile(Yuni::IO::File::Stream& file) const;
-    //@}
+    bool readLine(const std::vector<std::string>& splitKey, const String& value);
 
     //! Get the number of areas
     uint areaCount() const;
 
     //! Name of the rules set
-    const RulesScenarioName& name() const;
-    void setName(RulesScenarioName name);
+    const std::string& name() const;
+    void setName(std::string name);
 
     /*!
     ** \brief Apply the changes to the timeseries number matrices
@@ -121,45 +94,38 @@ public:
     std::vector<renewableTSNumberData> renewable;
 
     //! hydro initial levels
-    hydroLevelsData hydroInitialLevels = {"hl,", initLevelApply};
+    hydroLevelsData hydroInitialLevels{initLevelApply};
     //! hydro final levels
-    hydroLevelsData hydroFinalLevels = {"hfl,", finalLevelApply};
+    hydroLevelsData hydroFinalLevels{finalLevelApply};
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;
 
     BindingConstraintsTSNumberData binding_constraints;
 
-    std::vector<ShortTermTSNumberData> shortTermStorage;
+    std::vector<ShortTermInflowsTSNumberData> shortTermStorageInflows;
+    std::vector<ShortTermAdditionalConstraintsTSNumberData> shortTermStorageAdditionalConstraints;
 
 private:
     // Member methods
-    bool readThermalCluster(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readRenewableCluster(const AreaName::Vector& instrs,
-                              const String& value,
-                              bool updaterMode);
-    bool readLoad(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readWind(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readHydro(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readSolar(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readInitialHydroLevels(const AreaName::Vector& instrs,
-                                const String& value,
-                                bool updaterMode);
-    bool readFinalHydroLevels(const AreaName::Vector& instrs,
-                              const String& value,
-                              bool updaterMode);
-    bool readLink(const AreaName::Vector& instrs, const String& value, bool updaterMode);
-    bool readBindingConstraints(const AreaName::Vector& splitKey, const String& value);
-    static bool DoesSTStorageClusterExist(Area* area, const std::string& string);
+    bool readThermalCluster(const std::vector<std::string>& instrs, const String& value);
+    bool readRenewableCluster(const std::vector<std::string>& instrs, const String& value);
+    bool readLoad(const std::vector<std::string>& instrs, const String& value);
+    bool readWind(const std::vector<std::string>& instrs, const String& value);
+    bool readHydro(const std::vector<std::string>& instrs, const String& value);
+    bool readSolar(const std::vector<std::string>& instrs, const String& value);
+    bool readInitialHydroLevels(const std::vector<std::string>& instrs, const String& value);
+    bool readFinalHydroLevels(const std::vector<std::string>& instrs, const String& value);
+    bool readLink(const std::vector<std::string>& instrs, const String& value);
+    bool readBindingConstraints(const std::vector<std::string>& splitKey, const String& value);
 
-    bool readShortTermStorage(const AreaName::Vector& splitKey,
-                              const String& value,
-                              bool updaterMode);
+    bool readShortTermStorageInflows(const std::vector<std::string>& splitKey, const String& value);
 
-    Data::Area* getArea(const AreaName& areaname, bool updaterMode);
-    Data::AreaLink* getLink(const AreaName& fromAreaName,
-                            const AreaName& toAreaName,
-                            bool updaterMode);
+    bool readShortTermStorageAdditionalConstraints(const std::vector<std::string>& splitKey,
+                                                   const String& value);
+
+    Data::Area* getArea(const AreaName& areaname);
+    const Data::AreaLink* getLink(const AreaName& fromAreaName, const AreaName& toAreaName) const;
     bool checkGroupExists(const std::string& groupName) const;
 
     // Member data
@@ -167,15 +133,13 @@ private:
     //! Total number of areas
     uint pAreaCount;
     //! Name of the rules
-    RulesScenarioName pName;
+    std::string pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
     std::map<std::string, std::vector<uint>> disabledClustersOnRuleActive;
 
 }; // class Rules
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
 
 #include "rules.hxx"
 

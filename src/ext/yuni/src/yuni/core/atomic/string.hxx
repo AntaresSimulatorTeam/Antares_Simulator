@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -10,11 +11,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Extension
-{
-namespace CString
+namespace Yuni::Extension::CString
 {
 template<class CStringT, class C>
 class Append;
@@ -28,6 +25,7 @@ class Append<CStringT, Yuni::Atomic::Int<SizeT, TP>>
 public:
     typedef typename CStringT::Type TypeC;
     typedef typename Static::Remove::Const<TypeC>::Type C;
+
     static void Perform(CStringT& s, const Yuni::Atomic::Int<SizeT, TP>& rhs)
     {
         s.append(static_cast<typename Yuni::Atomic::Int<SizeT, TP>::ScalarType>(rhs));
@@ -63,6 +61,4 @@ public:
     }
 };
 
-} // namespace CString
-} // namespace Extension
-} // namespace Yuni
+} // namespace Yuni::Extension::CString

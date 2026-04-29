@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -15,9 +16,7 @@ namespace Yuni
 template<typename T, class Alloc>
 class YUNI_DECL Nullable;
 
-namespace Private
-{
-namespace NullableImpl
+namespace Private::NullableImpl
 {
 template<class T>
 struct IsNullable final
@@ -44,14 +43,21 @@ template<class T, int S>
 class YUNI_DECL Holder final
 {
 public:
-    Holder() : pHasData(false)
+    Holder():
+        pHasData(false)
     {
     }
-    Holder(const Holder& rhs) : pData(rhs.pData), pHasData(rhs.pHasData)
+
+    Holder(const Holder& rhs):
+        pData(rhs.pData),
+        pHasData(rhs.pHasData)
     {
     }
+
     template<typename U>
-    Holder(const U& rhs) : pData(rhs), pHasData(true)
+    Holder(const U& rhs):
+        pData(rhs),
+        pHasData(true)
     {
     }
 
@@ -79,6 +85,7 @@ public:
     {
         return pData;
     }
+
     T& data()
     {
         return pData;
@@ -116,11 +123,15 @@ public:
     Holder()
     {
     }
-    Holder(const Holder& rhs) : pData(rhs.pData)
+
+    Holder(const Holder& rhs):
+        pData(rhs.pData)
     {
     }
+
     template<typename U>
-    Holder(const U& rhs) : pData(new T(rhs))
+    Holder(const U& rhs):
+        pData(new T(rhs))
     {
     }
 
@@ -137,7 +148,9 @@ public:
     T& reference()
     {
         if (!pData)
+        {
             pData = new T();
+        }
         return *pData;
     }
 
@@ -145,6 +158,7 @@ public:
     {
         return *pData;
     }
+
     T& data()
     {
         return *pData;
@@ -154,9 +168,13 @@ public:
     void assign(const U& v)
     {
         if (!pData)
+        {
             pData = new T(v);
+        }
         else
+        {
             *pData = v;
+        }
     }
 
     void assign(const NullPtr&)
@@ -185,6 +203,5 @@ private:
 
 }; // class Holder
 
-} // namespace NullableImpl
-} // namespace Private
+} // namespace Private::NullableImpl
 } // namespace Yuni

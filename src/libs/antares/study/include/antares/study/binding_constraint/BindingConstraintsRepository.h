@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 //
 // Created by marechaljas on 11/05/23.
 //
@@ -28,7 +11,6 @@
 #include <memory>
 
 #include "BindingConstraint.h"
-#include "BindingConstraintSaver.h"
 
 namespace Antares::Data
 {
@@ -52,11 +34,6 @@ public:
     */
     ~BindingConstraintsRepository() = default;
     //@}
-
-    /*!
-    ** \brief Delete all constraints
-    */
-    void clear();
 
     //! \name Iterating through all constraints
     //@{
@@ -112,58 +89,13 @@ public:
                                       const Data::StudyLoadOptions& options,
                                       const std::filesystem::path& folder);
 
-    /*!
-    ** \brief Save all binding constraints into a folder
-    */
-    [[nodiscard]] bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
-    **
-    ** This method is used when reverting an interconnection or thermal cluster
-    */
-    void reverseWeightSign(const Data::AreaLink* lnk);
-
     //! Get the number of binding constraints
     [[nodiscard]] uint size() const;
-
-    /*!
-    ** \brief Remove a binding constraint
-    */
-    void remove(const Data::BindingConstraint* bc);
-    /*!
-    ** \brief Remove any binding constraint linked with a given area
-    */
-    void remove(const Data::Area* area);
-    /*!
-    ** \brief Remove any binding constraint linked with a given interconnection
-    */
-    void remove(const Data::AreaLink* area);
-
-    /*!
-    ** \brief Remove any binding constraint whose name contains the string in argument
-    */
-    void removeConstraintsWhoseNameConstains(const AnyString& filter);
-
-    /*!
-    ** \brief Rename a binding constraint
-    */
-    bool rename(Data::BindingConstraint* bc, const AnyString& newname);
 
     /*!
     ** \brief Convert all weekly constraints into daily ones
     */
     void changeConstraintsWeeklyToDaily();
-
-    /*!
-    ** \brief Invalidate all matrices of all binding constraints
-    */
-    void forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the constraint as modified
-    */
-    void markAsModified() const;
 
     static Vector LoadBindingConstraint(EnvForLoading env);
 
@@ -172,8 +104,6 @@ public:
     [[nodiscard]] Vector getPtrForInequalityBindingConstraints() const;
 
 private:
-    bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
-
     //! All constraints
     Vector constraints_;
 
@@ -188,9 +118,14 @@ public:
     {
     }
 
+    WhoseNameContains(const WhoseNameContains&) = default;
+    WhoseNameContains& operator=(const WhoseNameContains&) = default;
+    WhoseNameContains(WhoseNameContains&&) noexcept = default;
+    WhoseNameContains& operator=(WhoseNameContains&&) noexcept = default;
+
     bool operator()(const std::shared_ptr<BindingConstraint>& s) const
     {
-        return (s->name()).contains(pFilter);
+        return (s->name()).find(pFilter) != std::string::npos;
     }
 
 private:

@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -9,13 +10,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "searchpath.h"
-#include "../../core/static/types.h"
-#include "../io.h"
-#include "../directory/info/info.h"
 
-namespace Yuni
-{
-namespace IO
+#include "../../core/static/types.h"
+#include "../directory/info/info.h"
+#include "../io.h"
+
+namespace Yuni::IO
 {
 namespace // anonymous
 {
@@ -25,7 +25,9 @@ static inline bool ValidateExtension(const String::Vector& extensions, const Str
     for (String::Vector::const_iterator i = extensions.begin(); i != end; ++i)
     {
         if (*i == extension)
+        {
             return true;
+        }
     }
     return false;
 }
@@ -36,7 +38,9 @@ static inline bool ValidatePrefix(const String::Vector& prefixes, const String& 
     for (String::Vector::const_iterator i = prefixes.begin(); i != end; ++i)
     {
         if (not(*i) or (text).startsWith(*i))
+        {
             return true;
+        }
     }
     return false;
 }
@@ -47,7 +51,8 @@ class LookupHelper final
 public:
     enum
     {
-        outIsRawString = Static::Type::StrictlyEqual<String, OutT>::Yes
+        outIsRawString = Static::Type::StrictlyEqual < String,
+        OutT > ::Yes
     };
 
 public:
@@ -55,13 +60,13 @@ public:
                  const AnyString& filename,
                  const String::Vector& directories,
                  const String::Vector& extensions,
-                 const String::Vector& prefixes) :
-     out(out),
-     filename(filename),
-     directories(directories),
-     extensions(extensions),
-     prefixes(prefixes),
-     pResultCount(0)
+                 const String::Vector& prefixes):
+        out(out),
+        filename(filename),
+        directories(directories),
+        extensions(extensions),
+        prefixes(prefixes),
+        pResultCount(0)
     {
     }
 
@@ -77,7 +82,9 @@ public:
             for (String::Vector::const_iterator i = directories.begin(); i != end; ++i)
             {
                 if (iterateThroughPrefixes<true>(*i))
+                {
                     return true;
+                }
             }
             return outIsRawString ? false : (0 != pResultCount);
         }
@@ -96,7 +103,9 @@ public:
             for (String::Vector::const_iterator i = prefixes.begin(); i != end; ++i)
             {
                 if (iterateThroughExtensions<HasDirectoryT>(directory, *i))
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -115,7 +124,9 @@ public:
             for (String::Vector::const_iterator i = extensions.begin(); i != end; ++i)
             {
                 if (checkForFile<HasDirectoryT>(directory, prefix, *i))
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -126,16 +137,22 @@ public:
     {
         pQuery.clear();
         if (HasDirectoryT)
+        {
             pQuery << directory << IO::Separator;
+        }
 
         pQuery << prefix << filename << extension;
         if (IO::Exists(pQuery))
         {
             out.push_back(pQuery);
             if (outIsRawString)
+            {
                 return true; // found something - stop the loop
+            }
             else
+            {
                 ++pResultCount;
+            }
         }
         return false; // continue the loop
     }
@@ -163,7 +180,8 @@ private:
 
 } // anonymous namespace
 
-SearchPath::SearchPath() : pCacheLookup(false) // cache disabled by default
+SearchPath::SearchPath():
+    pCacheLookup(false) // cache disabled by default
 {
 }
 
@@ -176,7 +194,9 @@ bool SearchPath::find(String& out, const AnyString& filename) const
 {
     out.clear();
     if (filename.empty())
+    {
         return false;
+    }
 
     if (pCacheLookup)
     {
@@ -195,7 +215,9 @@ bool SearchPath::find(String::Vector& out, const AnyString& filename) const
 {
     out.clear();
     if (filename.empty())
+    {
         return false;
+    }
 
     if (pCacheLookup)
     {
@@ -214,7 +236,9 @@ bool SearchPath::find(String::List& out, const AnyString& filename) const
 {
     out.clear();
     if (filename.empty())
+    {
         return false;
+    }
 
     if (pCacheLookup)
     {
@@ -234,7 +258,9 @@ void SearchPath::each(const Bind<void(const String&, const String&)>& callback,
                       bool catchfolder) const
 {
     if (directories.empty())
+    {
         return;
+    }
 
     String extension;
     IO::Directory::Info info;
@@ -255,13 +281,17 @@ void SearchPath::each(const Bind<void(const String&, const String&)>& callback,
                 {
                     // Checking for the prefix
                     if (not prefixes.empty() and not ValidatePrefix(prefixes, *it))
+                    {
                         continue;
+                    }
                     // Checking for the extension
                     if (not extensions.empty())
                     {
                         ExtractExtension(extension, *it);
                         if (not ValidateExtension(extensions, extension))
+                        {
                             continue;
+                        }
                     }
                     callback(*it, it.filename());
                 }
@@ -279,13 +309,17 @@ void SearchPath::each(const Bind<void(const String&, const String&)>& callback,
                 {
                     // Checking for the prefix
                     if (not prefixes.empty() and not ValidatePrefix(prefixes, *it))
+                    {
                         continue;
+                    }
                     // Checking for the extension
                     if (not extensions.empty())
                     {
                         ExtractExtension(extension, *it);
                         if (not ValidateExtension(extensions, extension))
+                        {
                             continue;
+                        }
                     }
                     callback(*it, it.filename());
                 }
@@ -308,13 +342,17 @@ void SearchPath::each(const Bind<void(const String&, const String&)>& callback,
                 {
                     // Checking for the prefix
                     if (not prefixes.empty() and not ValidatePrefix(prefixes, *it))
+                    {
                         continue;
+                    }
                     // Checking for the extension
                     if (not extensions.empty())
                     {
                         ExtractExtension(extension, *it);
                         if (not ValidateExtension(extensions, extension))
+                        {
                             continue;
+                        }
                     }
                     callback(*it, it.filename());
                 }
@@ -332,13 +370,17 @@ void SearchPath::each(const Bind<void(const String&, const String&)>& callback,
                 {
                     // Checking for the prefix
                     if (not prefixes.empty() and not ValidatePrefix(prefixes, *it))
+                    {
                         continue;
+                    }
                     // Checking for the extension
                     if (not extensions.empty())
                     {
                         ExtractExtension(extension, *it);
                         if (not ValidateExtension(extensions, extension))
+                        {
                             continue;
+                        }
                     }
                     callback(*it, it.filename());
                 }
@@ -347,5 +389,4 @@ void SearchPath::each(const Bind<void(const String&, const String&)>& callback,
     }
 }
 
-} // namespace IO
-} // namespace Yuni
+} // namespace Yuni::IO

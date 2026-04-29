@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/xcast/xcast.h"
 
@@ -283,22 +265,20 @@ bool XCast::loadFromFolder(const fs::path& folder)
     p = folder / "translation.txt";
 
     ret = translation.loadFromCSVFile(p.string(), 1, HOURS_PER_YEAR, opts, &readBuffer) && ret;
-    if (!JIT::usedFromGUI)
+
+    if (translation.empty())
     {
-        if (translation.empty())
+        // This is not really an error
+        useTranslation = tsTranslationNone;
+        translation.reset(1, HOURS_PER_YEAR);
+    }
+    else
+    {
+        if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
         {
-            // This is not really an error
+            logs.warning() << folder << ": invalid size for the time-series translation.";
+            translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
             useTranslation = tsTranslationNone;
-            translation.reset(1, HOURS_PER_YEAR);
-        }
-        else
-        {
-            if (translation.width != 1 || translation.height != HOURS_PER_YEAR)
-            {
-                logs.warning() << folder << ": invalid size for the time-series translation.";
-                translation.resizeWithoutDataLost(1, HOURS_PER_YEAR);
-                useTranslation = tsTranslationNone;
-            }
         }
     }
 
@@ -408,24 +388,6 @@ bool XCast::saveToFolder(const AnyString& folder) const
         return IO::File::CreateEmptyFile(buffer) && ret;
     }
     return ini.save(buffer) && ret;
-}
-
-bool XCast::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = data.forceReload(reload) && ret;
-    ret = K.forceReload(reload) && ret;
-    ret = translation.forceReload(reload) && ret;
-    ret = conversion.forceReload(reload) && ret;
-    return ret;
-}
-
-void XCast::markAsModified() const
-{
-    data.markAsModified();
-    K.markAsModified();
-    translation.markAsModified();
-    conversion.markAsModified();
 }
 
 void XCast::copyFrom(const XCast& rhs)

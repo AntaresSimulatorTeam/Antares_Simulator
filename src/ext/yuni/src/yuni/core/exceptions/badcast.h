@@ -1,3 +1,4 @@
+
 /*
 ** This file is part of libyuni, a cross-platform C++ framework (http://libyuni.org).
 **
@@ -12,9 +13,7 @@
 #include <stdexcept>
 #include <typeinfo>
 
-namespace Yuni
-{
-namespace Exceptions
+namespace Yuni::Exceptions
 {
 /*!
 ** \brief Is thrown in case of impossible cast from one type to another.
@@ -22,13 +21,14 @@ namespace Exceptions
 **
 ** \see Any
 */
-struct BadCast : public std::bad_cast
+struct BadCast: public std::bad_cast
 {
     /*!
     ** \brief Constructor
     */
-    BadCast(const std::type_info& src, const std::type_info& dest) :
-     from(src.name()), to(dest.name())
+    BadCast(const std::type_info& src, const std::type_info& dest):
+        from(src.name()),
+        to(dest.name())
     {
     }
 
@@ -51,5 +51,4 @@ struct BadCast : public std::bad_cast
     const char* to;
 };
 
-} // namespace Exceptions
-} // namespace Yuni
+} // namespace Yuni::Exceptions
