@@ -50,9 +50,9 @@ jobs:
     strategy:
       matrix:
         include:
-        - testNRTarget: set
+        - testNRTarget: versionTestNR
           isUploadTarget: true
-        - testNRTarget: top
+        - testNRTarget: latestTestNR
           isUploadTarget: false
     steps:
     - uses: actions/checkout@v6
@@ -188,13 +188,13 @@ jobs:
       run: |
         echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-    - name: Init submodule Antares_Simulator_Tests_NR (set)
-      if: ${{ matrix.testNRTarget == 'set' }}
+    - name: Init submodule Antares_Simulator_Tests_NR (commited submodule)
+      if: ${{ matrix.testNRTarget == 'versionTestNR' }}
       run: |
         git submodule update --init --depth 1 --recursive src/tests/resources/Antares_Simulator_Tests_NR
 
-    - name: Init submodule Antares_Simulator_Tests_NR (top)
-      if: ${{ matrix.testNRTarget == 'top' }}
+    - name: Init submodule Antares_Simulator_Tests_NR (latest)
+      if: ${{ matrix.testNRTarget == 'latestTestNR' }}
       run: |
         git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
 
