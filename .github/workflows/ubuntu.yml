@@ -47,6 +47,9 @@ jobs:
     runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
+    strategy:
+      matrix:
+        testNRTarget: ["set", "top"]
     steps:
     - uses: actions/checkout@v6
       with:
@@ -149,7 +152,7 @@ jobs:
         rm -rf install
 
     - name: Both previous archives upload
-      if: ${{ success() }}
+      if: ${{ success() && matrix.testNRTarget == 'set' }}
       uses: actions/upload-artifact@v7
       with:
         name: ubuntu-targz
@@ -181,9 +184,15 @@ jobs:
       run: |
         echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-    - name: Init submodule Antares_Simulator_Tests_NR
+    - name: Init submodule Antares_Simulator_Tests_NR (set)
+      if: ${{ matrix.testNRTarget == 'set' }}
       run: |
         git submodule update --init --depth 1 --recursive src/tests/resources/Antares_Simulator_Tests_NR
+
+    - name: Init submodule Antares_Simulator_Tests_NR (top)
+      if: ${{ matrix.testNRTarget == 'top' }}
+      run: |
+        git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
@@ -391,6 +400,7 @@ jobs:
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Installer deb upload push
+      if: ${{ matrix.testNRTarget == 'set' }}
       uses: actions/upload-artifact@v7
       with:
         name: deb
@@ -398,7 +408,7 @@ jobs:
 
 
     - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_RELEASE == 'true' && matrix.testNRTarget == 'set' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
@@ -407,7 +417,7 @@ jobs:
 
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
+      if: ${{ github.ref == 'refs/heads/develop' && matrix.testNRTarget == 'set' }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
