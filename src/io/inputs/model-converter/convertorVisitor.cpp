@@ -58,6 +58,7 @@ public:
     std::any visitPower(ExprParser::PowerContext* context) override;
     std::any visitRightPower(ExprParser::RightPowerContext* context) override;
     std::any visitShiftPower(ExprParser::ShiftPowerContext* context) override;
+    std::any visitSum_bound(ExprParser::Sum_boundContext* context) override;
 
 private:
     // Methods
@@ -215,6 +216,28 @@ std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* contex
 {
     return context->expr()->accept(this);
 }
+
+std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
+{
+    // TODO 2 pointeurs non-nuls ?
+    if (auto* expr = context->expr())
+    {
+        return expr->accept(this);
+    }
+    if (auto* shift = context->shift())
+    {
+        return static_cast<Node*>(registry_.create<SumBoundNode>(shift));
+    }
+    throw std::runtime_error("BOOM");
+}
+
+// sum(t+1, t+2, expr) => ShiftNode(nullptr, +1)
+
+// SumBound(expr) <=> expr
+
+// Sum(expr, expr, expr)
+
+// expr[t+1] => ShiftNode(expr, +1)
 
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
 {
@@ -553,7 +576,7 @@ std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 
     auto* to = std::any_cast<Node*>(context->to->accept(this));
 
-    auto* expr = std::any_cast<Node*>(context->expr(2)->accept(this));
+    auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 
     return static_cast<Node*>(registry_.create<TimeSumNode>(from, to, expr));
 }
