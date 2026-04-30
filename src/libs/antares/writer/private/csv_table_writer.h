@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "include/antares/writer/i_table_writer.h"
+#include "antares/writer/i_table_writer.h"
 
 namespace Antares::Writer
 {
@@ -16,9 +16,8 @@ namespace Antares::Writer
 class CsvTableWriter final: public ITableWriter
 {
 public:
-    void writeTable(const std::filesystem::path& filePath,
-                    const std::vector<std::string>& header,
-                    const std::vector<std::vector<std::string>>& rows) override;
+    explicit CsvTableWriter(std::filesystem::path& filePath);
+    void writeTable(const IO::Outputs::SimulationTable& simuTable) const override;
 };
 
 } // namespace Antares::Writer

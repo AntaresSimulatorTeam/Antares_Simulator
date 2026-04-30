@@ -8,6 +8,7 @@
 #include <string>
 
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
+#include <antares/writer/null_result_writer.h>
 #include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"

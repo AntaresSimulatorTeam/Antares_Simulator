@@ -113,14 +113,15 @@ set(TARGET_LIBS #No alias
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
-        reserves-parsing-antlr-interface
-        modeler-simulation-table
+		simulation-table
+        simu-table-generator
         scenario-builder-antlr
         scenario-group-parser
         yml-optim-config
         enums
         modeler-checks
 		structured-linear-problem
+        reserves-parsing-antlr-interface
 )
 
 install(TARGETS ${TARGET_LIBS}

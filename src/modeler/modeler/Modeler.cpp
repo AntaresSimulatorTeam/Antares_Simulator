@@ -14,6 +14,7 @@
 #include <antares/solver/modeler/parameters/parseModelerParameters.h>
 #include <antares/solver/optim-model-filler/ComponentFiller.h>
 #include "antares/io/outputs/MPSGenerator.h"
+#include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
@@ -23,9 +24,29 @@ using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver
 {
+
+bool checkSolution(const IMipSolution* solution)
+{
+    if (!solution)
+    {
+        logs.error() << "Solution to linear optimization is empty";
+        return false;
+    }
+
+    auto status = solution->getStatus();
+    if (status == MipStatus::OPTIMAL || status == MipStatus::FEASIBLE)
+    {
+        return true;
+    }
+
+    logs.error() << "Problem during linear optimization";
+    return false;
+}
+
 Modeler::Modeler(ILoader& loader, IWriter& writer):
     loader_{loader},
     writer_{writer}
@@ -183,28 +204,35 @@ IMipSolution* Modeler::solveSubproblem()
     return solution;
 }
 
-void Modeler::writeSubProblemSimulationTable(const IMipSolution* solution,
-                                             const FillContext& timeScenarioCtx) const
+IMipSolution* Modeler::subProbSolution()
 {
-    switch (solution->getStatus())
-    {
-    case MipStatus::OPTIMAL:
-    case MipStatus::FEASIBLE:
-    {
-        if (!parameters_.noOutput)
-        {
-            auto& subproblem_1_1 = subproblems_[0];
-            writer_.writeSimulationTable(*subproblem_1_1,
-                                         *solution,
-                                         data_,
-                                         *subproblemOptimEntityContainer_,
-                                         timeScenarioCtx);
-        }
-    }
-    break;
-    default:
-        logs.error() << "Problem during linear optimization";
-    }
+    return subProbSolution_;
+}
+
+SimulationTable Modeler::makeSimulationTable(
+  const IMipSolution* solution,
+  const OptimEntityContainer& subproblemOptimEntityContainer,
+  const FillContext& timeScenarioCtx) const
+{
+    // gp : subproblem_1_1 is defined the same way in multiple places
+    auto& subproblem_1_1 = subproblems_[0];
+
+    SimulationTable simulationTable;
+
+    FillSimulationTable(simulationTable,
+                        *subproblem_1_1,
+                        solution->getObjectiveValue(),
+                        data_,
+                        subproblemOptimEntityContainer,
+                        timeScenarioCtx,
+                        0,
+                        IO::Outputs::TimeConversionMode::SingleBlock);
+    return simulationTable;
+}
+
+void Modeler::writeSimulationTable(SimulationTable& simulationTable)
+{
+    writer_.writeSimulationTable(simulationTable);
 }
 
 void Modeler::exportMps() const
@@ -286,8 +314,8 @@ void Modeler::run()
     // if simulation table or mps are requested
     if (!parameters_.noOutput || parameters_.exportMps)
     {
-        const auto simulationTableSuffix = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
-        writer_.init(simulationTableSuffix);
+        const auto simulationId = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
+        writer_.init(simulationId);
     }
     if (parameters_.exportMps)
     {
@@ -296,8 +324,19 @@ void Modeler::run()
     }
     if (data_.resolutionMode == ResolutionMode::SEQUENTIAL_SUBPROBLEMS)
     {
-        auto* solution = solveSubproblem();
-        writeSubProblemSimulationTable(solution, *timeScenarioCtx_);
+        subProbSolution_ = solveSubproblem();
+        if (!checkSolution(subProbSolution_))
+        {
+            return;
+        }
+
+        if (!parameters_.noOutput)
+        {
+            auto simulationTable = makeSimulationTable(subProbSolution_,
+                                                       *subproblemOptimEntityContainer_,
+                                                       *timeScenarioCtx_);
+            writeSimulationTable(simulationTable);
+        }
     }
 }
 
