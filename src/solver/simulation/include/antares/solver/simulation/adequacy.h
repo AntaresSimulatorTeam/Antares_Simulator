@@ -5,7 +5,7 @@
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/opt_time_writer.h"
@@ -14,8 +14,6 @@
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/state.h"
 #include "antares/solver/variable/variable.h"
-
-class ISimulationTable;
 
 namespace Antares::Solver::Simulation
 {

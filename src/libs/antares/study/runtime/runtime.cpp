@@ -323,7 +323,7 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         reserveParticipationIndexMaps.value().emplace(area->id, ReserveIndexMap{});
         for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
         {
-            loadReserveParticipations(area, reserve);
+            loadReserveParticipations(area.get(), reserve);
         }
     }
 }
@@ -334,6 +334,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     nbYears = gd.nbYears;
     mode = gd.mode;
+
+    counts = {};
+
     // Calendar
     logs.info() << "Generating calendar informations";
     study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});

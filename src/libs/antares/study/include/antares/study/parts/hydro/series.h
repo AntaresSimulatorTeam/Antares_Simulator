@@ -6,11 +6,11 @@
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
-#include <antares/study/area/capacityReservation.h>
 #include <antares/study/parameters.h>
 #include <antares/study/version.h>
 
 #include "../../fwd.h"
+#include "hydrorulecurves.h"
 
 namespace Antares::Data
 {
@@ -111,6 +111,8 @@ public:
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
     TimeSeries maxHourlyPumpPower;
+
+    RuleCurves ruleCurves;
 
     // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS

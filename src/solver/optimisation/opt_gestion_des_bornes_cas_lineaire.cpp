@@ -168,6 +168,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                     int var = variableManager.ShortTermStorageOverflow(clusterGlobalIndex, pdtJour);
                     Xmin[var] = 0;
                     Xmax[var] = LINFINI_ANTARES;
+                    AddressForVars[var] = &STSResult.overflow[pdtHebdo];
                 }
             }
         }
@@ -385,8 +386,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             }
 
             var = variableManager.Overflow(pays, pdtJour);
-
-            problemeHebdo->ResultatsHoraires[pays].debordementsHoraires[pdtHebdo] = 0.;
             if (var >= 0)
             {
                 Xmin[var] = 0.0;

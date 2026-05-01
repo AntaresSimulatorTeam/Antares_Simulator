@@ -5,7 +5,6 @@
 #include <mutex>
 
 #include <antares/logs/logs.h>
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
@@ -130,7 +129,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                            Solver::IResultWriter& writer,
                            int optimizationNumber,
                            Solver::Simulation::ISimulationObserver& simulationObserver,
-                           Antares::IO::Outputs::ISimulationTable* simulationTable)
+                           Antares::IO::Outputs::SimulationTable* simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;

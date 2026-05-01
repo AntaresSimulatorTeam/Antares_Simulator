@@ -11,8 +11,9 @@
 
 #include <antares/solver/modeler/ILoader.h>
 #include <antares/solver/modeler/Modeler.h>
-#include <antares/study/system-model/variabilityType.h>
+#include <antares/study/system-model-base/variabilityType.h>
 #include "antares/expressions/nodes/GreaterThanOrEqualNode.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
@@ -23,6 +24,7 @@
 using namespace Antares::Expressions;
 using namespace Antares::Solver;
 using namespace Antares::Optimisation;
+using namespace Antares::IO::Outputs;
 using PTV = ParameterTypeAndValue;
 using VV = VariabilityType;
 
@@ -201,13 +203,8 @@ public:
         return dummy;
     }
 
-    void writeSimulationTable(const LinearProblemApi::ILinearProblem& /*linearProblem*/,
-                              const LinearProblemApi::IMipSolution& solution,
-                              const ModelerData& /*modelerData*/,
-                              const OptimEntityContainer& /*variableContainer*/,
-                              const LinearProblemApi::FillContext& /*fillContext*/) const override
+    void writeSimulationTable(SimulationTable& simuTable) const override
     {
-        solution_.objectiveValue = solution.getObjectiveValue();
     }
 };
 
@@ -218,7 +215,8 @@ BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
 
     Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
-    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 0);
+    auto* solution = modeler.subProbSolution();
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
@@ -234,7 +232,8 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
 
     Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
-    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 5);
+    auto* solution = modeler.subProbSolution();
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 5);
 }
 
 struct TSDimensions
@@ -287,7 +286,8 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
 
     Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
-    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 2);
+    auto* solution = modeler.subProbSolution();
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
@@ -311,7 +311,8 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
 
     Modeler modeler(inMemoryLoader, inMemoryWriter);
     modeler.run();
-    BOOST_CHECK_EQUAL(inMemoryWriter.solution_.objectiveValue, 3);
+    auto* solution = modeler.subProbSolution();
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 3);
 }
 
 class ScalingWriter final: public IWriter
@@ -329,17 +330,8 @@ public:
         return dummy;
     }
 
-    void writeSimulationTable(const LinearProblemApi::ILinearProblem& linearProblem,
-                              const LinearProblemApi::IMipSolution& solution,
-                              const ModelerData& modelerData,
-                              const OptimEntityContainer& variableContainer,
-                              const LinearProblemApi::FillContext& fillContext) const override
+    void writeSimulationTable(SimulationTable& simuTable) const override
     {
-        (void)linearProblem;
-        (void)solution;
-        (void)modelerData;
-        (void)variableContainer;
-        (void)fillContext;
     }
 };
 

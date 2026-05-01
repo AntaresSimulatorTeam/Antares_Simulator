@@ -316,7 +316,7 @@ public:
      *     * @param study Study configuration (unused but kept for interface compatibility)
      * @param area The area this variable is associated with
      */
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Data::Study* study, Data::Area* area) noexcept
     {
         areaPtr = area;
         NextType::initializeFromArea(study, area);
@@ -433,7 +433,7 @@ public:
      */
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int,
-      unsigned int space) const
+      unsigned int space) const noexcept
     {
         return yearlyValues[space].hour;
     }

@@ -37,7 +37,7 @@ using ReserveName = std::string;
 namespace Antares::Data
 {
 
-void static errorIfNegativeValue(const std::string& propertyName,
+void inline errorIfNegativeValue(const std::string& propertyName,
                                  double value,
                                  const std::string& areaName,
                                  const std::optional<std::string>& clusterName = std::nullopt,
@@ -134,7 +134,7 @@ struct AllCapacityReservations
     std::pair<UnsuppliedSpilled, ReserveName> reserveParticipationUnsuppliedSpilledAt(
       unsigned int index) const
     {
-        int column = 0;
+        unsigned int column = 0;
         for (const auto& reserveName: areaCapacityReservations | std::views::keys)
         {
             for (int indexUnsuppliedSpilled = 0;

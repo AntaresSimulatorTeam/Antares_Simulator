@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI 10)
 set(ANTARES_VERSION_LO 0)
-set(ANTARES_VERSION_REVISION 0)
+set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
 set(ANTARES_BETA 0)
@@ -130,6 +130,13 @@ if (WIN32)
     endif (MSVC)
 endif (WIN32)
 
+# GNU ld is single-pass for static libraries: circular dependencies between
+# libraries (e.g. antares-solver-simulation <-> model_antares) cause unresolved
+# symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_link_options("LINKER:--start-group")
+endif()
+
 #
 # Beta
 #
@@ -205,6 +212,69 @@ if (POLICY CMP0074)
 endif ()
 
 find_package(sirius_solver REQUIRED)
+
+# When using a pre-compiled OR-Tools package, its transitive dependencies
+# (absl, re2) must come from the same installation prefix. The vcpkg toolchain
+# prepends vcpkg paths to CMAKE_PREFIX_PATH, so without intervention,
+# find_dependency(absl) inside ortoolsConfig.cmake resolves to vcpkg's absl
+# (a different version than what OR-Tools was compiled against), causing
+# linker errors due to ABI incompatibility (different inline namespaces:
+# e.g. absl::lts_20250512 vs absl::lts_20240722).
+#
+# Fix: locate the OR-Tools install prefix (from ortools_DIR or CMAKE_PREFIX_PATH)
+# and set absl_DIR/re2_DIR to the co-installed versions before find_package(ortools)
+# triggers find_dependency(absl).
+# Note: GNUInstallDirs uses "lib" on Windows/Ubuntu but may use "lib64" on
+# some 64-bit Linux distributions (e.g. Oracle Linux 8).
+if (NOT DEFINED absl_DIR)
+    # Candidate lib directory names (GNUInstallDirs may use lib or lib64)
+    set(_lib_dirs lib lib64)
+
+    # Determine OR-Tools prefix: either from explicit ortools_DIR or CMAKE_PREFIX_PATH
+    set(_ortools_prefix "")
+    if (DEFINED ortools_DIR)
+        get_filename_component(_ortools_prefix "${ortools_DIR}/../../.." ABSOLUTE)
+    else ()
+        foreach(_prefix IN LISTS CMAKE_PREFIX_PATH)
+            foreach(_libdir IN LISTS _lib_dirs)
+                if (EXISTS "${_prefix}/${_libdir}/cmake/ortools/ortoolsConfig.cmake")
+                    set(_ortools_prefix "${_prefix}")
+                    break()
+                endif ()
+            endforeach ()
+            if (_ortools_prefix)
+                break()
+            endif ()
+        endforeach ()
+    endif ()
+
+    if (_ortools_prefix)
+        foreach(_libdir IN LISTS _lib_dirs)
+            if (NOT DEFINED absl_DIR AND EXISTS "${_ortools_prefix}/${_libdir}/cmake/absl/abslConfig.cmake")
+                set(absl_DIR "${_ortools_prefix}/${_libdir}/cmake/absl" CACHE PATH
+                    "Path to absl CMake config (co-installed with OR-Tools)" FORCE)
+                message(STATUS "Setting absl_DIR to OR-Tools co-installed version: ${absl_DIR}")
+            endif ()
+            if (NOT DEFINED re2_DIR AND EXISTS "${_ortools_prefix}/${_libdir}/cmake/re2/re2Config.cmake")
+                set(re2_DIR "${_ortools_prefix}/${_libdir}/cmake/re2" CACHE PATH
+                    "Path to re2 CMake config (co-installed with OR-Tools)" FORCE)
+                message(STATUS "Setting re2_DIR to OR-Tools co-installed version: ${re2_DIR}")
+            endif ()
+        endforeach ()
+
+        # Ensure OR-Tools' absl headers are found BEFORE vcpkg headers.
+        # This is necessary because vcpkg.cmake (line 425-426) reverses the
+        # CMAKE_PREFIX_PATH order for Debug builds, causing vcpkg's absl
+        # (different ABI version) to be found instead of OR-Tools' co-installed absl.
+        set(_absl_include "${_ortools_prefix}/include")
+        if (EXISTS "${_absl_include}/absl")
+            include_directories(BEFORE "${_absl_include}")
+            message(STATUS "Prepending include dir for OR-Tools absl: ${_absl_include}")
+        endif ()
+    endif ()
+    unset(_ortools_prefix)
+    unset(_lib_dirs)
+endif ()
 
 find_package(ortools)
 if (NOT ortools_FOUND OR BUILD_ORTOOLS)
@@ -313,3 +383,6 @@ include(CPack)
 
 #Last. We need all target defined
 add_subdirectory(packaging)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_link_options("LINKER:--end-group")
+endif()

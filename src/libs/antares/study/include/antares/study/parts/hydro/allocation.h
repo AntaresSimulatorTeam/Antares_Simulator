@@ -114,7 +114,6 @@ public:
     ** \brief Prepare coefficients ordered by the area ids
     */
     void prepareForSolver(const AreaList& list);
-
     //@}
 
     //! \name Operators

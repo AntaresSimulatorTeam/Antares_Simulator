@@ -147,9 +147,9 @@ struct HourInterval
 struct DayInterval
 {
     //! The very first day
-    uint first;
+    uint first{0};
     //! The last day (not included)
-    uint end;
+    uint end{0};
 
     uint numberOfWeeks() const;
 
@@ -193,7 +193,7 @@ public:
         bool firstHourInDay;
         //! First hour in the current month
         bool firstHourInMonth;
-    } hours[maxHoursInYear];
+    } hours[maxHoursInYear] = {};
 
     //! Informations about days in the year according the current
     // calendar settings
@@ -209,7 +209,7 @@ public:
         uint dayMonth;
         //! Week
         uint week;
-    } days[maxDaysInYear];
+    } days[maxDaysInYear] = {};
 
     /*!
     ** \brief Informations about weeks according the current calendar settings
@@ -229,7 +229,7 @@ public:
         // of simulation is. If the 1st january is the same than the first weekday,
         // the week number for this day will be 1, 53 otherwise.
         uint userweek;
-    } weeks[maxWeeksInYear];
+    } weeks[maxWeeksInYear] = {};
 
     /*!
     ** \brief Informations about months according the current calendar settings
@@ -251,7 +251,7 @@ public:
         DayOfTheWeek firstWeekday;
         //! Real month index
         MonthName realmonth;
-    } months[12 + 1]; // september..august for example
+    } months[12 + 1] = {}; // september..august for example
 
     /*!
     ** \brief Mappings between any expected calendar and our own calendar
@@ -259,7 +259,7 @@ public:
     struct
     {
         //! Mapping for months index
-        uint months[12 /*january..december*/];
+        uint months[12 /*january..december*/] = {};
     } mapping;
 
     //! The calendar settings

@@ -256,6 +256,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
                 newUnitCount = previousUnitCount;
             }
         }
+
         // calculating the operating cost for the current hour
         // O(h) = MA * P(h) * Modulation
         thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]

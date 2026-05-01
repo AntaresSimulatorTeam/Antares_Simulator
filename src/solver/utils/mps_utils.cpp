@@ -4,7 +4,6 @@
 #include "antares/solver/utils/mps_utils.h"
 
 #include <antares/study/study.h>
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/utils/ortools_utils.h"
 

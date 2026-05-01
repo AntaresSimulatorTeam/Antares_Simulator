@@ -307,7 +307,7 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
         for (auto i = arealist->areas.begin(); i != end; ++i)
         {
             // Ref to the area
-            auto* area = i->second;
+            auto* area = i->second.get();
 
             {
                 // Do not display useless messages

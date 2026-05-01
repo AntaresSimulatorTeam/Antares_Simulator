@@ -74,7 +74,7 @@ class modeler_output_handler:
         return df["value"].iloc[0]
 
     def get_objective_value(self):
-        df = self.simulation_table[(self.simulation_table["output"] == "OBJECTIVE_VALUE")]
+        df = self.simulation_table[(self.simulation_table["output"] == "OBJECTIVE_VALUE")][self.simulation_table["scenario_index"] == 0]
         if len(df) != 1:
             raise LookupError(f"Simulation table contains no or multiple objective values")
         return df["value"].iloc[0]

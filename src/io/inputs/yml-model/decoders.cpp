@@ -3,51 +3,16 @@
 
 #include "antares/io/inputs/yml-model/decoders.h"
 
+#include <span>
 #include <unordered_set>
 
-std::string printPathTree(const std::filesystem::path& p)
-{
-    std::string treeStr;
-    std::size_t depth = 0;
-    for (const auto& part: p)
-    {
-        if (depth == 0)
-        {
-            treeStr += part.string();
-            treeStr += '\n';
-        }
-        else
-        {
-            treeStr += std::string((depth - 1) * 4, ' ');
-            // "└── " is a u8 and it does not display correctly
-            treeStr += "|__ ";
-            treeStr += part.string();
-            treeStr += '\n';
-        }
-        ++depth;
-    }
-    return treeStr;
-}
+#include <antares/io/inputs/InputError.h>
+#include <antares/io/inputs/yml-utils/YmlTreeDisplayer.h>
+
+using namespace Antares::IO::Inputs;
 
 namespace YAML
 {
-
-namespace
-{
-template<typename T>
-bool requireMapNodeWithId(const Node& node, const std::string& nodeName, T& rhs)
-{
-    if (!node.IsMap())
-    {
-        return false;
-    }
-
-    checkMandatoryIdField(node, nodeName);
-    rhs.id = node["id"].as<std::string>();
-    return true;
-}
-
-} // namespace
 
 void checkMandatoryIdField(const Node& node, const std::string& nodeName)
 {
@@ -57,7 +22,7 @@ void checkMandatoryIdField(const Node& node, const std::string& nodeName)
         throw KeyNotFound(node.Mark(),
                           fmt::format("{} id is mandatory in library\n{}",
                                       nodeName,
-                                      printPathTree(nodePath)));
+                                      YmlUtils::printPathTree(nodePath)));
     }
 }
 
@@ -70,102 +35,101 @@ std::string getFieldFromNode(const Node& node, const std::string& fieldName)
     return node[fieldName].as<std::string>("");
 }
 
-std::optional<YmlMapMarker> checkKeysIfMap(const Node& node,
-                                           const std::unordered_set<std::string>& allowedFields)
+std::vector<std::string> diffSet(const std::unordered_set<std::string>& setA,
+                                 const std::unordered_set<std::string>& setB)
 {
-    // Only validate maps here; callers must ensure node is a map before calling when necessary.
-    if (!node.IsMap())
+    std::vector<std::string> diff;
+    std::ranges::copy_if(setA,
+                         std::back_inserter(diff),
+                         [&setB](const auto& item) { return !setB.contains(item); });
+    return diff;
+}
+
+auto compare_sets(const std::unordered_set<std::string>& setA,
+                  const std::unordered_set<std::string>& setB)
+{
+    const auto unexpected = diffSet(setA, setB);
+    const auto missing = diffSet(setB, setA);
+    return std::make_tuple(unexpected, missing);
+}
+
+std::string build_error_message(const size_t& nbFieldsAllowed,
+                                const YmlTreeDisplayer& displayer,
+                                const std::vector<std::string>& unexpected,
+                                const std::vector<std::string>& missing)
+{
+    // Build a readable list of errors (one per line), then append the tree
+    std::string errors_list;
+    for (const auto& f: unexpected)
     {
-        return std::nullopt;
+        errors_list += fmt::format("- Unexpected field: {}\n", f);
+    }
+    for (const auto& f: missing)
+    {
+        errors_list += fmt::format("- Missing field: {}\n", f);
     }
 
-    YmlMapMarker marker(node);
+    // Final message: brief header, individual errors, then the tree
+    const std::string message = fmt::format(
+      "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
+      nbFieldsAllowed,
+      errors_list,
+      displayer.baseTree(),
+      displayer.buildMarkedTree(unexpected, missing));
 
-    // If allowedFields provided, check equality of key sets
-    if (!allowedFields.empty())
-    {
-        if (marker.actualSet() == allowedFields)
-        {
-            return std::nullopt; // valid
-        }
-
-        // invalid map: return marker so caller can build an error message
-        return std::make_optional<YmlMapMarker>(marker);
-    }
-
-    // invalid size: return marker so caller can build an error message
-    return std::make_optional<YmlMapMarker>(marker);
+    return message;
 }
 
 void checkFields(const Node& node, const std::unordered_set<std::string>& allowedFields)
 {
-    // Validate map: if invalid, get marker and build an error message to throw
-    if (auto maybeMarker = checkKeysIfMap(node, allowedFields))
+    if (!node.IsMap())
     {
-        const auto& marker = *maybeMarker;
-        // compute unexpected = actual - allowed
-        auto diffSet = [](const std::unordered_set<std::string>& setA,
-                          const std::unordered_set<std::string>& setB)
-        {
-            std::vector<std::string> diff;
-            for (const auto& item: setA)
-            {
-                if (setB.find(item) == setB.end())
-                {
-                    diff.push_back(item);
-                }
-            }
-            return diff;
-        };
-        const auto unexpected = diffSet(marker.actualSet(), allowedFields);
-        const auto missing = diffSet(allowedFields, marker.actualSet());
-
-        const std::string markedFieldsTree = marker.buildMarkedTreeForUnexpectedAndMissing(
-          unexpected,
-          missing);
-
-        // Build a readable list of errors (one per line), then append the tree
-        std::string errors_list;
-        for (const auto& f: unexpected)
-        {
-            errors_list += fmt::format("- Unexpected field: {}\n", f);
-        }
-        for (const auto& f: missing)
-        {
-            errors_list += fmt::format("- Missing field: {}\n", f);
-        }
-
-        // Final message: brief header, individual errors, then the tree
-        const std::string message = fmt::format(
-          "Unexpected or missing field(s) (expected {} field(s)).\n{}\n{}{}",
-          allowedFields.size(),
-          errors_list,
-          marker.baseTree(),
-          markedFieldsTree);
-
-        throw Exception(node.Mark(), message);
+        return;
     }
+
+    // Extract actual key names (cheap, no line-number tracking yet)
+    std::unordered_set<std::string> actualKeys;
+    for (const auto& entry: node)
+    {
+        const Node keyNode = entry.first;
+        actualKeys.insert(keyNode.IsDefined() ? keyNode.as<std::string>()
+                                              : std::string("<unknown>"));
+    }
+
+    if (actualKeys == allowedFields)
+    {
+        return; // valid
+    }
+
+    // Invalid map: now build the displayer for error reporting
+    YmlTreeDisplayer displayer(node);
+    const auto [unexpected, missing] = compare_sets(actualKeys, allowedFields);
+
+    const std::string message = build_error_message(allowedFields.size(),
+                                                    displayer,
+                                                    unexpected,
+                                                    missing);
+
+    throw Exception(node.Mark(), message);
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFields(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::PortType& rhs)
+bool convert<YmlModel::PortType>::convertAreaConnectionFields(const Node& node,
+                                                              YmlModel::PortType& rhs)
 {
-    auto areaConnNode = node["area-connection"];
+    const auto areaConnNode = node["area-connection"];
+
     if (!areaConnNode.IsDefined())
     {
         return true;
     }
 
-    if (!areaConnNode.IsMap())
+    if (!YmlUtils::requireMap(areaConnNode, "area-connection"))
     {
         return false;
     }
 
     checkFields(areaConnNode,
-                std::unordered_set<std::string>{"injection-to-balance",
-                                                "spillage-bound",
-                                                "unsupplied-energy-bound"});
+                {"injection-to-balance", "spillage-bound", "unsupplied-energy-bound"});
 
     rhs.area_connection.inject_to_balance = getFieldFromNode(areaConnNode, "injection-to-balance");
     rhs.area_connection.spillage_bound = getFieldFromNode(areaConnNode, "spillage-bound");
@@ -174,9 +138,8 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertAreaConnectionFiel
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertThermalCapacityField(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::PortType& rhs)
+bool convert<YmlModel::PortType>::convertThermalCapacityField(const Node& node,
+                                                              YmlModel::PortType& rhs)
 {
     auto childNode = node["thermal-capacity-connection"];
     if (!childNode.IsDefined())
@@ -186,113 +149,119 @@ bool convert<Antares::IO::Inputs::YmlModel::PortType>::convertThermalCapacityFie
 
     if (!childNode.IsMap())
     {
-        return false;
+        throw InputError("Expected a YAML mapping for 'thermal-capacity-connection' in port-type");
     }
 
-    checkFields(childNode, std::unordered_set<std::string>{"capacity-field"});
+    checkFields(childNode, {"capacity-field"});
 
     rhs.thermal_capacity_connection_field = getFieldFromNode(childNode, "capacity-field");
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortType>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::PortType& rhs)
+bool convert<YmlModel::PortType>::decode(const Node& node, YmlModel::PortType& rhs)
 {
-    if (!requireMapNodeWithId(node, "port-type", rhs))
+    if (!YmlUtils::requireMap(node, "port-type"))
     {
         return false;
     }
 
+    checkMandatoryIdField(node, "port-type");
+    rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
     for (const auto& field: node["fields"])
     {
         rhs.fields.push_back(field["id"].as<std::string>());
     }
 
-    return convertThermalCapacityField(node, rhs) && convertAreaConnectionFields(node, rhs);
+    if (!convertAreaConnectionFields(node, rhs))
+    {
+        return false;
+    }
+    return convertThermalCapacityField(node, rhs);
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Parameter>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Parameter& rhs)
+bool convert<YmlModel::Parameter>::decode(const Node& node, YmlModel::Parameter& rhs)
 {
-    if (!requireMapNodeWithId(node, "parameter", rhs))
+    if (!YmlUtils::requireMap(node, "parameter"))
     {
         return false;
     }
 
+    checkMandatoryIdField(node, "parameter");
+    rhs.id = node["id"].as<std::string>();
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::ValueType>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::ValueType& rhs)
+bool convert<YmlModel::ValueType>::decode(const Node& node, YmlModel::ValueType& rhs)
 {
     if (!node.IsScalar())
     {
+        if (node.IsDefined() && !node.IsNull())
+        {
+            throw InputError("Expected a scalar value for 'variable-type'");
+        }
         return false;
     }
     const auto value = node.as<std::string>();
     if (value == "continuous")
     {
-        rhs = Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS;
+        rhs = YmlModel::ValueType::CONTINUOUS;
     }
     else if (value == "integer")
     {
-        rhs = Antares::IO::Inputs::YmlModel::ValueType::INTEGER;
+        rhs = YmlModel::ValueType::INTEGER;
     }
     else if (value == "boolean")
     {
-        rhs = Antares::IO::Inputs::YmlModel::ValueType::BOOL;
+        rhs = YmlModel::ValueType::BOOL;
     }
     else
     {
-        return false;
+        throw InputError("Unknown variable-type: '" + value
+                         + "'. Expected one of: 'continuous', 'integer', 'boolean'");
     }
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Variable>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Variable& rhs)
+bool convert<YmlModel::Variable>::decode(const Node& node, YmlModel::Variable& rhs)
 {
-    if (!requireMapNodeWithId(node, "variable", rhs))
+    if (!YmlUtils::requireMap(node, "variable"))
     {
         return false;
     }
 
+    checkMandatoryIdField(node, "variable");
+    rhs.id = node["id"].as<std::string>();
     rhs.lower_bound = node["lower-bound"].as<std::string>("");
     rhs.upper_bound = node["upper-bound"].as<std::string>("");
-    rhs.variable_type = node["variable-type"].as<Antares::IO::Inputs::YmlModel::ValueType>(
-      Antares::IO::Inputs::YmlModel::ValueType::CONTINUOUS);
+    rhs.variable_type = node["variable-type"].as<YmlModel::ValueType>(
+      YmlModel::ValueType::CONTINUOUS);
     rhs.time_dependent = node["time-dependent"].as<bool>(true);
     rhs.scenario_dependent = node["scenario-dependent"].as<bool>(true);
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Port>::decode(const Node& node,
-                                                          Antares::IO::Inputs::YmlModel::Port& rhs)
+bool convert<YmlModel::Port>::decode(const Node& node, YmlModel::Port& rhs)
 {
-    if (!requireMapNodeWithId(node, "Port", rhs))
+    if (!YmlUtils::requireMap(node, "port"))
     {
         return false;
     }
 
+    checkMandatoryIdField(node, "port");
+    rhs.id = node["id"].as<std::string>();
     rhs.type = node["type"].as<std::string>();
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::PortFieldDefinition& rhs)
+bool convert<YmlModel::PortFieldDefinition>::decode(const Node& node,
+                                                    YmlModel::PortFieldDefinition& rhs)
 {
-    if (!node.IsMap())
+    if (!YmlUtils::requireMap(node, "port-field-definition"))
     {
-        // port field definition not mandatory
         return false;
     }
     rhs.port = node["port"].as<std::string>();
@@ -301,86 +270,76 @@ bool convert<Antares::IO::Inputs::YmlModel::PortFieldDefinition>::decode(
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Constraint>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Constraint& rhs)
+bool convert<YmlModel::Constraint>::decode(const Node& node, YmlModel::Constraint& rhs)
 {
-    if (!requireMapNodeWithId(node, "constraint", rhs))
+    if (!YmlUtils::requireMap(node, "constraint"))
     {
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::ExtraOutput>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::ExtraOutput& rhs)
+bool convert<YmlModel::ExtraOutput>::decode(const Node& node, YmlModel::ExtraOutput& rhs)
 {
-    if (!requireMapNodeWithId(node, "extra-output", rhs))
+    if (!YmlUtils::requireMap(node, "extra-output"))
     {
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Objective>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Objective& rhs)
+bool convert<YmlModel::Objective>::decode(const Node& node, YmlModel::Objective& rhs)
 {
-    if (!requireMapNodeWithId(node, "objective", rhs))
+    if (!YmlUtils::requireMap(node, "objective"))
     {
         return false;
     }
 
+    rhs.id = node["id"].as<std::string>("");
     rhs.expression = node["expression"].as<std::string>();
     rhs.location = node["location"].as<std::string>("subproblems");
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Model>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Model& rhs)
+bool convert<YmlModel::Model>::decode(const Node& node, YmlModel::Model& rhs)
 {
-    if (!requireMapNodeWithId(node, "model", rhs))
+    if (!YmlUtils::requireMap(node, "model"))
     {
-        return false;
+        throw InputError("Expected a YAML mapping for 'model'");
     }
 
+    checkMandatoryIdField(node, "model");
+    rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
-    rhs.parameters = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Parameter>>(
-      node["parameters"]);
-    rhs.variables = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Variable>>(
-      node["variables"]);
-    rhs.ports = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Port>>(
-      node["ports"]);
-    rhs.port_field_definitions = as_fallback_default<
-      std::vector<Antares::IO::Inputs::YmlModel::PortFieldDefinition>>(
+    rhs.parameters = as_fallback_default<std::vector<YmlModel::Parameter>>(node["parameters"]);
+    rhs.variables = as_fallback_default<std::vector<YmlModel::Variable>>(node["variables"]);
+    rhs.ports = as_fallback_default<std::vector<YmlModel::Port>>(node["ports"]);
+    rhs.port_field_definitions = as_fallback_default<std::vector<YmlModel::PortFieldDefinition>>(
       node["port-field-definitions"]);
-    rhs.constraints = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(
-      node["constraints"]);
-    rhs.binding_constraints = as_fallback_default<
-      std::vector<Antares::IO::Inputs::YmlModel::Constraint>>(node["binding-constraints"]);
-    rhs.objectives = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::Objective>>(
+    rhs.constraints = as_fallback_default<std::vector<YmlModel::Constraint>>(node["constraints"]);
+    rhs.binding_constraints = as_fallback_default<std::vector<YmlModel::Constraint>>(
+      node["binding-constraints"]);
+    rhs.objectives = as_fallback_default<std::vector<YmlModel::Objective>>(
       node["objective-contributions"]);
-    rhs.extra_outputs = as_fallback_default<
-      std::vector<Antares::IO::Inputs::YmlModel::ExtraOutput>>(node["extra-outputs"]);
+    rhs.extra_outputs = as_fallback_default<std::vector<YmlModel::ExtraOutput>>(
+      node["extra-outputs"]);
     return true;
 }
 
-bool convert<Antares::IO::Inputs::YmlModel::Library>::decode(
-  const Node& node,
-  Antares::IO::Inputs::YmlModel::Library& rhs)
+bool convert<YmlModel::Library>::decode(const Node& node, YmlModel::Library& rhs)
 {
     rhs.id = node["id"].as<std::string>();
     rhs.description = node["description"].as<std::string>("");
-    rhs.port_types = as_fallback_default<std::vector<Antares::IO::Inputs::YmlModel::PortType>>(
-      node["port-types"]);
-    rhs.models = node["models"].as<std::vector<Antares::IO::Inputs::YmlModel::Model>>();
+    rhs.port_types = as_fallback_default<std::vector<YmlModel::PortType>>(node["port-types"]);
+    rhs.models = node["models"].as<std::vector<YmlModel::Model>>();
     return true;
 }
+
 } // namespace YAML

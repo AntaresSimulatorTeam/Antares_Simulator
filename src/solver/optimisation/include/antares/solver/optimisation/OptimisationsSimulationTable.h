@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 
 namespace Antares::Solver
 {
@@ -20,13 +20,13 @@ public:
     void write();
 
     void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
-    Antares::IO::Outputs::ISimulationTable* firstOptimSimulationTable();
-    Antares::IO::Outputs::ISimulationTable* secondOptimSimulationTable();
-    [[nodiscard]] std::string getHeader() const;
+    Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
+    Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
+    [[nodiscard]] std::string headerCsvFormat() const;
 
 private:
-    Antares::IO::Outputs::SimulationTableCsv firstOptimSimulationTable_;
-    Antares::IO::Outputs::SimulationTableCsv secondOptimSimulationTable_;
+    Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;
+    Antares::IO::Outputs::SimulationTable secondOptimSimulationTable_;
     std::string firstOptimBuffer_;
     std::string secondOptimBuffer_;
 };

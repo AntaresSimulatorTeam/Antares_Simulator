@@ -47,10 +47,10 @@ inline void MinMaxBase<OpInferior, NextT>::merge(uint year, const IntermediateVa
 template<bool OpInferior, class NextT>
 template<uint Size, class VCardT>
 void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
-                                                          const MinMaxData::Data* array,
+                                                          const uint16_t* indices,
                                                           int fileLevel)
 {
-    assert(array);
+    assert(indices);
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
     // Caption
@@ -73,7 +73,7 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
-        v[i] = array[i].index;
+        v[i] = indices[i];
     }
 
     // Next column index
@@ -83,9 +83,9 @@ void MinMaxBase<OpInferior, NextT>::InternalExportIndices(SurveyResults& report,
 template<bool OpInferior, class NextT>
 template<uint Size, class VCardT>
 inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& report,
-                                                                const MinMaxData::Data* array)
+                                                                const double* values)
 {
-    assert(array);
+    assert(values);
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
     // Caption
@@ -103,7 +103,7 @@ inline void MinMaxBase<OpInferior, NextT>::InternalExportValues(SurveyResults& r
     double* v = report.values[report.data.columnIndex];
     for (uint i = 0; i != Size; ++i)
     {
-        v[i] = array[i].value;
+        v[i] = values[i];
     }
 
     // Next column index

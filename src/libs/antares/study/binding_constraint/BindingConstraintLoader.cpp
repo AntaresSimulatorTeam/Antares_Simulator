@@ -27,152 +27,11 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     auto bc = std::make_shared<BindingConstraint>();
     bc->clear();
 
-    // Foreach property in the section...
-    for (const IniFile::Property* p = env.section->firstProperty; p; p = p->next)
-    {
-        if (p->key.empty())
-        {
-            continue;
-        }
-
-        if (p->key == "name")
-        {
-            bc->pName = p->value;
-            continue;
-        }
-        if (p->key == "id")
-        {
-            bc->pID = p->value;
-            boost::to_lower(bc->pID);
-            continue;
-        }
-        if (p->key == "enabled")
-        {
-            bc->pEnabled = p->value.to<bool>();
-            continue;
-        }
-        if (p->key == "type")
-        {
-            bc->pType = BindingConstraint::StringToType(p->value);
-            continue;
-        }
-        if (p->key == "operator")
-        {
-            bc->pOperator = BindingConstraint::StringToOperator(p->value);
-            continue;
-        }
-        if (p->key == "filter-year-by-year")
-        {
-            bc->pFilterYearByYear = stringIntoDatePrecision(p->value);
-            continue;
-        }
-        if (p->key == "filter-synthesis")
-        {
-            bc->pFilterSynthesis = stringIntoDatePrecision(p->value);
-            continue;
-        }
-        if (p->key == "comments")
-        {
-            bc->pComments = p->value;
-            continue;
-        }
-        if (p->key == "group")
-        {
-            bc->group_ = p->value.c_str();
-            continue;
-        }
-
-        // initialize the values
-        double w = .0;
-        int o = 0;
-
-        // Separate the value
-        if (auto setKey = p->key.find('%'); setKey != 0 && setKey != String::npos) // It is a link
-        {
-            if (bool ret = SeparateValue(env, p, w, o); !ret)
-            {
-                continue;
-            }
-
-            const AreaLink* lnk = env.areaList.findLinkFromINIKey(p->key);
-            if (!lnk)
-            {
-                logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                             << "`: link not found";
-                continue;
-            }
-            if (!Utils::isZero(w))
-            {
-                bc->weight(lnk, w);
-            }
-
-            if (!Utils::isZero(o))
-            {
-                bc->offset(lnk, o);
-            }
-
-            continue;
-        }
-        else // It must be a cluster
-        {
-            // Separate the key
-            setKey = p->key.find('.');
-            if (0 == setKey || setKey == String::npos)
-            {
-                logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                             << "`: invalid key";
-                continue;
-            }
-
-            if (bool ret = SeparateValue(env, p, w, o); !ret)
-            {
-                continue;
-            }
-
-            const ThermalCluster* clstr = env.areaList.findClusterFromINIKey(p->key);
-            if (!clstr)
-            {
-                logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                             << "`: cluster not found";
-                continue;
-            }
-            if (!Utils::isZero(w))
-            {
-                bc->weight(clstr, w);
-            }
-
-            if (!Utils::isZero(o))
-            {
-                bc->offset(clstr, o);
-            }
-
-            continue;
-        }
-    }
+    populateConstraint(env, bc);
 
     // Checking for validity
-    if (bc->pName.empty())
+    if (!validate(env, bc))
     {
-        logs.error() << env.iniFilename << ": in [" << env.section->name
-                     << "]: Invalid binding constraint name";
-        return {};
-    }
-    if (bc->pID.empty())
-    {
-        logs.error() << env.iniFilename << ": in [" << env.section->name
-                     << "]: Invalid binding constraint id";
-        return {};
-    }
-    if (bc->pType == bc->typeUnknown)
-    {
-        logs.error() << env.iniFilename << ": in [" << env.section->name
-                     << "]: Invalid type [hourly,daily,weekly]";
-        return {};
-    }
-    if (bc->pOperator == BindingConstraint::opUnknown)
-    {
-        logs.error() << env.iniFilename << ": in [" << env.section->name
-                     << "]: Invalid operator [less,greater,equal,both]";
         return {};
     }
 
@@ -182,41 +41,14 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
         bc->pEnabled = false;
     }
 
-    switch (bc->operatorType())
+    if (!bc->pEnabled)
     {
-    case BindingConstraint::opLess:
-    case BindingConstraint::opEquality:
-    case BindingConstraint::opGreater:
-    {
-        if (loadTimeSeries(env, bc.get()))
-        {
-            return {bc};
-        }
-        break;
+        /// This BC won't be used, return it without loading time series
+        logs.info() << "DEBUG: BC " << bc->name() << " is disabled, skipping time series";
+        return {bc};
     }
-    case BindingConstraint::opBoth:
-    {
-        auto greater_bc = std::make_shared<BindingConstraint>();
-        greater_bc->copyFrom(bc.get());
-        greater_bc->name(bc->name() + "_sup");
-        greater_bc->pID = bc->pID;
-        greater_bc->operatorType(BindingConstraint::opGreater);
-        bc->name(bc->name() + "_inf");
-        bc->operatorType(BindingConstraint::opLess);
-
-        if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get()))
-        {
-            return {bc, greater_bc};
-        }
-        break;
-    }
-    default:
-    {
-        logs.error() << "Wrong binding constraint operator type for constraint " << bc->name();
-        return {};
-    }
-    }
-    return {};
+    logs.info() << "DEBUG: BC " << bc->name() << " is enabled, loading time series";
+    return loadByOperator(env, bc);
 }
 
 bool BindingConstraintLoader::SeparateValue(const EnvForLoading& env,
@@ -359,4 +191,210 @@ bool BindingConstraintLoader::loadTimeSeriesLegacyStudies(
 
     return false;
 }
+
+void BindingConstraintLoader::populateConstraint(const EnvForLoading& env,
+                                                 std::shared_ptr<BindingConstraint>& bc)
+{
+    // Foreach property in the section...
+    for (const IniFile::Property* p = env.section->firstProperty; p; p = p->next)
+    {
+        if (p->key.empty())
+        {
+            continue;
+        }
+
+        if (p->key == "name")
+        {
+            bc->pName = p->value;
+            continue;
+        }
+        if (p->key == "id")
+        {
+            bc->pID = p->value;
+            boost::to_lower(bc->pID);
+            continue;
+        }
+        if (p->key == "enabled")
+        {
+            bc->pEnabled = p->value.to<bool>();
+            continue;
+        }
+        if (p->key == "type")
+        {
+            bc->pType = BindingConstraint::StringToType(p->value);
+            continue;
+        }
+        if (p->key == "operator")
+        {
+            bc->pOperator = BindingConstraint::StringToOperator(p->value);
+            continue;
+        }
+        if (p->key == "filter-year-by-year")
+        {
+            bc->pFilterYearByYear = stringIntoDatePrecision(p->value);
+            continue;
+        }
+        if (p->key == "filter-synthesis")
+        {
+            bc->pFilterSynthesis = stringIntoDatePrecision(p->value);
+            continue;
+        }
+        if (p->key == "comments")
+        {
+            bc->pComments = p->value;
+            continue;
+        }
+        if (p->key == "group")
+        {
+            bc->group_ = p->value.c_str();
+            continue;
+        }
+        parseWeightAndOffset(env, p, bc);
+    }
+}
+
+void BindingConstraintLoader::parseWeightAndOffset(const EnvForLoading& env,
+                                                   const IniFile::Property* p,
+                                                   std::shared_ptr<BindingConstraint>& bc)
+{
+    // initialize the values
+    double w = .0;
+    int o = 0;
+
+    // Separate the value
+    if (auto setKey = p->key.find('%'); setKey != 0 && setKey != String::npos) // It is a link
+    {
+        if (bool ret = SeparateValue(env, p, w, o); !ret)
+        {
+            return;
+        }
+
+        const AreaLink* lnk = env.areaList.findLinkFromINIKey(p->key);
+        if (!lnk)
+        {
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+                         << "`: link not found";
+            return;
+        }
+        if (!Utils::isZero(w))
+        {
+            bc->weight(lnk, w);
+        }
+
+        if (!Utils::isZero(o))
+        {
+            bc->offset(lnk, o);
+        }
+
+        return;
+    }
+    else // It must be a cluster
+    {
+        // Separate the key
+        setKey = p->key.find('.');
+        if (0 == setKey || setKey == String::npos)
+        {
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+                         << "`: invalid key";
+            return;
+        }
+
+        if (bool ret = SeparateValue(env, p, w, o); !ret)
+        {
+            return;
+        }
+
+        const ThermalCluster* clstr = env.areaList.findClusterFromINIKey(p->key);
+        if (!clstr)
+        {
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
+                         << "`: cluster not found";
+            return;
+        }
+        if (!Utils::isZero(w))
+        {
+            bc->weight(clstr, w);
+        }
+
+        if (!Utils::isZero(o))
+        {
+            bc->offset(clstr, o);
+        }
+
+        return;
+    }
+}
+
+bool BindingConstraintLoader::validate(const EnvForLoading& env,
+                                       const std::shared_ptr<BindingConstraint>& bc)
+{
+    if (bc->pName.empty())
+    {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid binding constraint name";
+        return false;
+    }
+    if (bc->pID.empty())
+    {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid binding constraint id";
+        return false;
+    }
+    if (bc->pType == bc->typeUnknown)
+    {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid type [hourly,daily,weekly]";
+        return false;
+    }
+    if (bc->pOperator == BindingConstraint::opUnknown)
+    {
+        logs.error() << env.iniFilename << ": in [" << env.section->name
+                     << "]: Invalid operator [less,greater,equal,both]";
+        return false;
+    }
+    return true;
+}
+
+std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::loadByOperator(
+  EnvForLoading& env,
+  std::shared_ptr<BindingConstraint>& bc)
+{
+    switch (bc->operatorType())
+    {
+    case BindingConstraint::opLess:
+    case BindingConstraint::opEquality:
+    case BindingConstraint::opGreater:
+    {
+        if (loadTimeSeries(env, bc.get()))
+        {
+            return {bc};
+        }
+        break;
+    }
+    case BindingConstraint::opBoth:
+    {
+        auto greaterBc = std::make_shared<BindingConstraint>();
+        const auto originalName = bc->name();
+        greaterBc->copyFrom(bc.get());
+        greaterBc->name(originalName + "_sup");
+        greaterBc->pID = bc->pID;
+        greaterBc->operatorType(BindingConstraint::opGreater);
+        bc->name(originalName + "_inf");
+        bc->operatorType(BindingConstraint::opLess);
+
+        if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greaterBc.get()))
+        {
+            return {bc, greaterBc};
+        }
+        break;
+    }
+    default:
+    {
+        logs.error() << "Wrong binding constraint operator type for constraint " << bc->name();
+        return {};
+    }
+    }
+    return {};
+}
+
 } // namespace Antares::Data

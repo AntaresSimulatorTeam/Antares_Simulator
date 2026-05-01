@@ -6,13 +6,15 @@
 
 namespace Antares::Solver::Variable
 {
-
 inline void State::startANewYear()
 {
     hourInTheSimulation = 0u;
 
     memset(thermalClusterProductionForYear, 0, sizeof(thermalClusterProductionForYear));
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
+    memset(thermalClusterNonProportionalCostForYear,
+           0,
+           sizeof(thermalClusterNonProportionalCostForYear));
     memset(thermalClusterPMinOfTheClusterForYear, 0, sizeof(thermalClusterPMinOfTheClusterForYear));
     memset(thermalClusterDispatchedUnitsCountForYear,
            0,

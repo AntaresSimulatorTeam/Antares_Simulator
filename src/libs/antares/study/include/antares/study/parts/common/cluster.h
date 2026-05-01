@@ -105,7 +105,6 @@ private:
     std::string group_ = "OTHER";
 
     virtual unsigned int precision() const = 0;
-    //! @brief Stores the reserves Participations for each reserve, the key is the name of the
 };
 } // namespace Antares::Data
 #endif /* __LIBS_ANTARES_STUDY_PARTS_COMMON_H__ */

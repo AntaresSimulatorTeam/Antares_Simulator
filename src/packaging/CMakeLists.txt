@@ -30,6 +30,7 @@ set(TARGET_LIBS #No alias
         path
         mersenne
         result_writer
+	parquet_writer
         series
         antares-core
         antares-solver-hydro
@@ -95,6 +96,7 @@ set(TARGET_LIBS #No alias
 
         # modeler libs
         antlr-interface
+        system-model-base
         antares-study-system-model
         load-modeler-files
 		write-modeler-files
@@ -102,6 +104,7 @@ set(TARGET_LIBS #No alias
         expressions
         optim-model-filler
 		forbidden-nodes
+        input-error
         yml-system
         yml-model
 		yml-utils
@@ -110,14 +113,15 @@ set(TARGET_LIBS #No alias
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
-        reserves-parsing-antlr-interface
-        modeler-simulation-table
+		simulation-table
+        simu-table-generator
         scenario-builder-antlr
         scenario-group-parser
         yml-optim-config
         enums
         modeler-checks
 		structured-linear-problem
+        reserves-parsing-antlr-interface
 )
 
 install(TARGETS ${TARGET_LIBS}

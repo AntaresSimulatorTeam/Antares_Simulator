@@ -8,7 +8,7 @@
 #include <antares/solver/utils/opt_period_string_generator.h>
 #include <antares/writer/i_writer.h>
 #include "antares/config/config.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
@@ -27,7 +27,7 @@ using SingleOptimOptions = Antares::Solver::Optimization::SingleOptimOptions;
 
 namespace Antares::IO::Outputs
 {
-class ISimulationTable;
+class SimulationTable;
 }
 class OptimisationsSimulationTable;
 void OPT_OptimisationHebdomadaireLineaire(
@@ -67,7 +67,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Antares::Solver::IResultWriter& writer,
-                         Antares::IO::Outputs::ISimulationTable* simulationTable);
+                         Antares::IO::Outputs::SimulationTable* simulationTable);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
