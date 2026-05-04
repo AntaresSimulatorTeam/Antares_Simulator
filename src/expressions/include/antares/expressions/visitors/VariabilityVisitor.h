@@ -41,6 +41,7 @@ private:
     Optimisation::VariabilityType visit(const Nodes::TimeShiftNode* timeShiftNode) override;
     Optimisation::VariabilityType visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     Optimisation::VariabilityType visit(const Nodes::TimeSumNode* timeSumNode) override;
+    Optimisation::VariabilityType visit(const Nodes::TPlusNode* node) override;
     Optimisation::VariabilityType visit(const Nodes::AllTimeSumNode* timeSumNode) override;
     Optimisation::VariabilityType visit(const Nodes::FunctionNode* node) override;
 

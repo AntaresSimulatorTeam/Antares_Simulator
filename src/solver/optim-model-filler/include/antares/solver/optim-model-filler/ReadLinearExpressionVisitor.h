@@ -91,6 +91,9 @@ public:
       const Nodes::TimeSumNode* node) override;
 
     Antares::Optimization::TimeDependentLinearExpression visit(
+      const Nodes::TPlusNode* node) override;
+
+    Antares::Optimization::TimeDependentLinearExpression visit(
       const Nodes::AllTimeSumNode* node) override;
 
     Antares::Optimization::TimeDependentLinearExpression visit(

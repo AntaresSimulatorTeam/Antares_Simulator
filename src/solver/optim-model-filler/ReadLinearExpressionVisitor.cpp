@@ -28,6 +28,35 @@ using namespace Antares::Optimization;
 namespace Antares::Optimisation
 {
 
+namespace
+{
+int normalizeTimeIndex(int timeIndex, int size)
+{
+    return (timeIndex % size + size) % size;
+}
+
+template<class Callback>
+void forEachTimeSumIndex(int from, int to, int size, Callback callback)
+{
+    for (int timeIndex = from; timeIndex <= to; ++timeIndex)
+    {
+        callback(normalizeTimeIndex(timeIndex, size));
+    }
+}
+
+int resolveTimeSumBound(const Nodes::Node* bound,
+                        Expressions::Visitors::EvalVisitor& visitor,
+                        unsigned localTimeStep)
+{
+    if (const auto* tPlusNode = dynamic_cast<const Nodes::TPlusNode*>(bound))
+    {
+        const auto offset = static_cast<int>(visitor.dispatch(tPlusNode->child()).valueAsDouble());
+        return static_cast<int>(localTimeStep) + offset;
+    }
+    return static_cast<int>(visitor.dispatch(bound).valueAsDouble());
+}
+} // namespace
+
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const OptimEntityContainer& optimEntityContainer,
   const LinearProblemApi::FillContext& fillContext,
@@ -233,27 +262,39 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
 {
     auto expression = dispatch(node->expression());
 
-    const auto from = static_cast<int>(evalVisitor_.dispatch(node->from()).valueAsDouble());
-    const auto to = static_cast<int>(evalVisitor_.dispatch(node->to()).valueAsDouble());
-
     if (expression.isConstant())
     {
-        // example from=0, to=2 => length({0, 1, 2}) = 3
-        expression *= static_cast<double>(to - from + 1);
-        return expression;
+        TimeDependentLinearExpression ret(nbtimeSteps_);
+        for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
+        {
+            const auto from = resolveTimeSumBound(node->from(),
+                                                  evalVisitor_,
+                                                  localTimeStep);
+            const auto to = resolveTimeSumBound(node->to(), evalVisitor_, localTimeStep);
+            forEachTimeSumIndex(from,
+                                to,
+                                static_cast<int>(nbtimeSteps_),
+                                [&](int) { ret[localTimeStep] += expression[0]; });
+        }
+        return ret;
     }
 
     TimeDependentLinearExpression ret(nbtimeSteps_);
-    expression.rotate(from);
-    for (int t = from; t <= to; ++t)
+    for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
     {
-        ret += expression;
-        if (t < to)
-        {
-            expression.rotate(1);
-        }
+        const auto from = resolveTimeSumBound(node->from(), evalVisitor_, localTimeStep);
+        const auto to = resolveTimeSumBound(node->to(), evalVisitor_, localTimeStep);
+        forEachTimeSumIndex(from,
+                            to,
+                            static_cast<int>(nbtimeSteps_),
+                            [&](int timeIndex) { ret[localTimeStep] += expression[timeIndex]; });
     }
     return ret;
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::TPlusNode* node)
+{
+    return TimeDependentLinearExpression(evalVisitor_.dispatch(node).valueAsDouble());
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::AllTimeSumNode* node)

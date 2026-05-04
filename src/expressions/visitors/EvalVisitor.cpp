@@ -18,6 +18,33 @@ using namespace Antares::Utils;
 
 namespace Antares::Expressions::Visitors
 {
+namespace
+{
+int normalizeTimeIndex(int timeIndex, int size)
+{
+    return (timeIndex % size + size) % size;
+}
+
+template<class Callback>
+void forEachTimeSumIndex(int from, int to, int size, Callback callback)
+{
+    for (int timeIndex = from; timeIndex <= to; ++timeIndex)
+    {
+        callback(normalizeTimeIndex(timeIndex, size));
+    }
+}
+
+int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep)
+{
+    if (const auto* tPlusNode = dynamic_cast<const Nodes::TPlusNode*>(bound))
+    {
+        const auto offset = static_cast<int>(visitor.dispatch(tPlusNode->child()).valueAsDouble());
+        return static_cast<int>(localTimeStep) + offset;
+    }
+    return static_cast<int>(visitor.dispatch(bound).valueAsDouble());
+}
+} // namespace
+
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
@@ -184,11 +211,27 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
     auto result = dispatch(node->expression());
-    const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
-    const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
-    return result.timeSumOnVector(from, to);
+
+    std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
+    for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
+    {
+        const auto from = resolveTimeSumBound(node->from(), *this, localTimeStep);
+        const auto to = resolveTimeSumBound(node->to(), *this, localTimeStep);
+        forEachTimeSumIndex(from,
+                            to,
+                            static_cast<int>(values.size()),
+                            [&](int timeIndex)
+                            { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
+    }
+
+    return EvaluationResult(values);
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::TPlusNode* node)
+{
+    const auto offset = static_cast<int>(dispatch(node->child()).valueAsDouble());
+    return EvaluationResult(static_cast<double>(fillContext_.getGlobalFirstTimeStep() + offset));
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)

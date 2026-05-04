@@ -38,6 +38,7 @@ public:
     Nodes::Node* visit(const Nodes::TimeShiftNode* node) override;
     Nodes::Node* visit(const Nodes::TimeIndexNode* node) override;
     Nodes::Node* visit(const Nodes::TimeSumNode* node) override;
+    Nodes::Node* visit(const Nodes::TPlusNode* node) override;
     Nodes::Node* visit(const Nodes::AllTimeSumNode* node) override;
     Nodes::Node* visit(const Nodes::FunctionNode* node) override;
 

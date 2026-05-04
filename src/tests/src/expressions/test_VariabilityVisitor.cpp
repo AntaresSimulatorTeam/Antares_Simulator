@@ -166,6 +166,14 @@ BOOST_AUTO_TEST_CASE(timeSumNode_expression)
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t3), VariabilityType::VARYING_IN_TIME_ONLY);
 }
 
+BOOST_AUTO_TEST_CASE(tPlusNode_expression)
+{
+    TPlusNode t1(&parameterNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
 BOOST_AUTO_TEST_CASE(alltimeSumNode_expression)
 {
     AllTimeSumNode t1(&literalNode);

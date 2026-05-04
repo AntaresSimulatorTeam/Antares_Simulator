@@ -34,6 +34,7 @@ public:
     void visit(const Expressions::Nodes::TimeShiftNode*) override;
     void visit(const Expressions::Nodes::TimeIndexNode*) override;
     void visit(const Expressions::Nodes::TimeSumNode*) override;
+    void visit(const Expressions::Nodes::TPlusNode*) override;
     void visit(const Expressions::Nodes::AllTimeSumNode*) override;
     void visit(const Expressions::Nodes::FunctionNode*) override;
 

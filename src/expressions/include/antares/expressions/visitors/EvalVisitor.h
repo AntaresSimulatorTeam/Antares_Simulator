@@ -342,6 +342,7 @@ private:
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
+    EvaluationResult visit(const Nodes::TPlusNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult visit(const Nodes::FunctionNode* node) override;
 

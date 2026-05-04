@@ -122,6 +122,11 @@ VariabilityType VariabilityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
     return dispatch(timeSumNode->expression());
 }
 
+VariabilityType VariabilityVisitor::visit([[maybe_unused]] const Nodes::TPlusNode* node)
+{
+    return VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;
+}
+
 VariabilityType VariabilityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
 {
     return VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO;

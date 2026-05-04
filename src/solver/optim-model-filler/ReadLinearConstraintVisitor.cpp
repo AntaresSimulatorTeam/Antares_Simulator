@@ -144,6 +144,11 @@ LinearConstraint ReadLinearConstraintVisitor::visit(const TimeSumNode*)
     throw IllegalNodeException();
 }
 
+LinearConstraint ReadLinearConstraintVisitor::visit(const TPlusNode*)
+{
+    throw IllegalNodeException();
+}
+
 LinearConstraint ReadLinearConstraintVisitor::visit(const AllTimeSumNode*)
 {
     throw IllegalNodeException();

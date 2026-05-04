@@ -226,17 +226,16 @@ std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* contex
 //   from="1" => Literal(1)
 std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
 {
-    // TODO 2 pointeurs non-nuls ?
+    if (auto* shift = context->shift())
+    {
+        auto* offset = std::any_cast<Node*>(shift->accept(this));
+        return static_cast<Node*>(registry_.create<TPlusNode>(offset));
+    }
     if (auto* expr = context->expr())
     {
         return expr->accept(this);
     }
-    if (auto* shift = context->shift())
-    {
-        return registry_.create<TPlusNode>(
-          shift->accept(this)); // static_cast<Node*>(registry_.create<SumBoundNode>(shift));
-    }
-    throw std::runtime_error("BOOM");
+    throw std::runtime_error("Invalid sum bound");
 }
 
 // sum(t+1, t+2, expr) => ShiftNode(nullptr, +1)
@@ -618,7 +617,7 @@ std::any ConvertorVisitor::visitRightAtom(ExprParser::RightAtomContext* context)
 
 std::any ConvertorVisitor::visitShift(ExprParser::ShiftContext* context)
 {
-    return std::any_cast<Node*>(visit(context->shift_expr()));
+    return NodeFromShiftContext(context->shift_expr());
 }
 
 std::any ConvertorVisitor::visitShiftAddsub(ExprParser::ShiftAddsubContext* context)
