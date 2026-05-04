@@ -238,10 +238,6 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs):
 
 template<class T, class ReadWriteT>
 Matrix<T, ReadWriteT>::Matrix(Matrix<T, ReadWriteT>&& rhs) noexcept
-    : width(0)
-    , height(0)
-    , entry(nullptr)
-    , jit(nullptr)
 {
     // use Matrix::operator=(Matrix&& rhs)
     *this = std::move(rhs);
@@ -1516,11 +1512,6 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, R
 template<class T, class ReadWriteT>
 inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWriteT>&& rhs) noexcept
 {
-    if (this == &rhs)
-    {
-        return *this;
-    }
-
     // Free existing resources before taking new ones
     if (entry && entry != rhs.entry)
     {
