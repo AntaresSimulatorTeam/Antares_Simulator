@@ -105,11 +105,6 @@ public:
         return FormatValue(data_.at(index));
     }
 
-    const T& get(size_t index) const
-    {
-        return data_.at(index);
-    }
-
     [[nodiscard]] size_t size() const override
     {
         return data_.size();
