@@ -65,6 +65,7 @@ std::string Adequacy::getSimulationTableHeader() const
     }
     return "";
 }
+
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
 bool Adequacy::simulationBegin()
 {
@@ -87,8 +88,8 @@ bool Adequacy::simulationBegin()
 }
 
 bool Adequacy::simplexIsRequired(uint hourInTheYear,
-                                  uint numSpace,
-                                  const HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
+                                 uint numSpace,
+                                 const HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;

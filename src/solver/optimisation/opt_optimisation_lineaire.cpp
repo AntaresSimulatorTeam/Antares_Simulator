@@ -5,8 +5,8 @@
 #include <mutex>
 
 #include <antares/logs/logs.h>
-#include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
+#include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"

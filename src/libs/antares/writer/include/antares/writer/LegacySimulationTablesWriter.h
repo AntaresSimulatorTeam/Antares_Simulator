@@ -5,10 +5,11 @@
 
 #include <filesystem>
 
-#include "simulation-table-writers_export.h"
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
+
 #include "i_table_writer.h"
+#include "simulation-table-writers_export.h"
 
 namespace Antares::Writer
 {

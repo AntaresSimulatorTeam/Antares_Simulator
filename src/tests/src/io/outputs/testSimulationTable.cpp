@@ -256,8 +256,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     // Read and verify content of first file
     {
         std::ifstream f(file1);
-        std::string content((std::istreambuf_iterator<char>(f)),
-                            std::istreambuf_iterator<char>());
+        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
         BOOST_CHECK(content.find("block,component,output") != std::string::npos);
         BOOST_CHECK(content.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
     }
@@ -265,8 +264,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     // Read and verify content of second file
     {
         std::ifstream f(file2);
-        std::string content((std::istreambuf_iterator<char>(f)),
-                            std::istreambuf_iterator<char>());
+        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
         BOOST_CHECK(content.find("block,component,output") != std::string::npos);
         BOOST_CHECK(content.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
     }

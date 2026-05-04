@@ -85,7 +85,7 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-            
+
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
