@@ -217,6 +217,13 @@ std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* contex
     return context->expr()->accept(this);
 }
 
+// TPlus(expr) <= borne mobile
+// expr <= borne fixe
+
+// UnaryNode
+
+// from="t+1" => TPlus(Literal(1))
+//   from="1" => Literal(1)
 std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
 {
     // TODO 2 pointeurs non-nuls ?
@@ -226,7 +233,8 @@ std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
     }
     if (auto* shift = context->shift())
     {
-        return static_cast<Node*>(registry_.create<SumBoundNode>(shift));
+        return registry_.create<TPlusNode>(
+          shift->accept(this)); // static_cast<Node*>(registry_.create<SumBoundNode>(shift));
     }
     throw std::runtime_error("BOOM");
 }
