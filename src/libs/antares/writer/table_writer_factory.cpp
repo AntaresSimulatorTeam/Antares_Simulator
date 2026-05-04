@@ -21,6 +21,8 @@
 
 #include "include/antares/writer/table_writer_factory.h"
 
+#include <memory>
+
 #include "csv_table_writer.h"
 #include "parquet_table_writer.h"
 
@@ -29,7 +31,7 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired, fs::path& filePath)
+ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired, fs::path filePath)
 {
     if (parquetFormatRequired)
     {

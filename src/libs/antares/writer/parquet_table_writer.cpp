@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 // Arrow / Parquet
 #include <arrow/api.h>
@@ -59,8 +60,8 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
                                                arrow_props));
 }
 
-ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
-    ITableWriter(filePath)
+ParquetTableWriter::ParquetTableWriter(std::filesystem::path filePath):
+    ITableWriter(std::move(filePath))
 {
     output_file_.replace_extension(".parquet");
 }

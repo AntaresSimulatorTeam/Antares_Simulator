@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
+#include <utility>
 
 using namespace Antares::IO::Outputs;
 namespace fs = std::filesystem;
@@ -51,8 +52,8 @@ std::string make_line(const std::vector<std::string>& cols)
     return out;
 }
 
-CsvTableWriter::CsvTableWriter(std::filesystem::path& filePath):
-    ITableWriter(filePath)
+CsvTableWriter::CsvTableWriter(std::filesystem::path filePath):
+    ITableWriter(std::move(filePath))
 {
     output_file_.replace_extension(".csv");
 }

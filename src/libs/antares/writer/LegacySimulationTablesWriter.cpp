@@ -11,7 +11,7 @@ static void check_is_existing_folder(const fs::path& folder)
 {
     if (!fs::is_directory(folder))
     {
-        std::string msg = "Output folder " + folder.string() + "is does not exist.";
+        std::string msg = "Output folder " + folder.string() + " does not exist.";
         throw std::invalid_argument(msg);
     }
 }
