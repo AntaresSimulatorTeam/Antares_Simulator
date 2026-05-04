@@ -1641,186 +1641,199 @@ $(document).ready(function(){initNavTree('matrix_8hxx_source.html',''); initResi
 <div class="line"><a name="l01512"></a><span class="lineno"> 1512</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
 <div class="line"><a name="l01513"></a><span class="lineno"> 1513</span>&#160;<span class="keyword">inline</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::operator=</a>(<a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;</a>&amp;&amp; rhs) noexcept</div>
 <div class="line"><a name="l01514"></a><span class="lineno"> 1514</span>&#160;{</div>
-<div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;    width = rhs.<a class="code" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a>;</div>
-<div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160;    height = rhs.<a class="code" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>;</div>
-<div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;    jit = rhs.<a class="code" href="classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24">jit</a>;</div>
-<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;    <span class="keywordflow">if</span> (0 == width || 0 == height)</div>
-<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;    {</div>
-<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;        entry = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;        width = 0;</div>
-<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;        height = 0;</div>
+<div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;    <span class="comment">// Free existing resources before taking new ones</span></div>
+<div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160;    <span class="keywordflow">if</span> (entry &amp;&amp; entry != rhs.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>)</div>
+<div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;    {</div>
+<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;        <span class="keywordflow">for</span> (uint i = 0; i != width; ++i)</div>
+<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;        {</div>
+<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;            <a class="code" href="classAntares_1_1Memory.html#ace91a50732407f5a133b7e47f5f1c8ac">Antares::Memory::Release</a>(entry[i]);</div>
+<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;        }</div>
+<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;        <span class="keyword">delete</span>[] entry;</div>
 <div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160;    }</div>
-<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;    {</div>
-<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;        entry = rhs.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>;</div>
-<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;    }</div>
-<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;    <span class="comment">// Prevent spurious de-allocation from rhs&#39;s destructor</span></div>
-<div class="line"><a name="l01529"></a><span class="lineno"> 1529</span>&#160;    rhs.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a> = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;}</div>
-<div class="line"><a name="l01532"></a><span class="lineno"> 1532</span>&#160; </div>
-<div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
-<div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;<span class="keyword">inline</span> Matrix&lt;T, ReadWriteT&gt;&amp; <a class="code" href="classAntares_1_1Matrix.html#a49c3488ebf0abd976eb311f1f46c66b1">Matrix&lt;T, ReadWriteT&gt;::operator=</a>(<span class="keyword">const</span> Matrix&lt;U&gt;&amp; rhs)</div>
-<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;{</div>
-<div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;    copyFrom(rhs);</div>
-<div class="line"><a name="l01538"></a><span class="lineno"> 1538</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l01539"></a><span class="lineno"> 1539</span>&#160;}</div>
-<div class="line"><a name="l01540"></a><span class="lineno"> 1540</span>&#160; </div>
-<div class="line"><a name="l01541"></a><span class="lineno"> 1541</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01542"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#abad4f764e17de0076ecdd89ffd1dbf50"> 1542</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::print</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l01543"></a><span class="lineno"> 1543</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01544"></a><span class="lineno"> 1544</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;DUMP:\n&quot;</span>;</div>
-<div class="line"><a name="l01545"></a><span class="lineno"> 1545</span>&#160;    <span class="keywordflow">if</span> (empty())</div>
-<div class="line"><a name="l01546"></a><span class="lineno"> 1546</span>&#160;    {</div>
-<div class="line"><a name="l01547"></a><span class="lineno"> 1547</span>&#160;        std::cout &lt;&lt; <span class="stringliteral">&quot;\tempty\n&quot;</span>;</div>
-<div class="line"><a name="l01548"></a><span class="lineno"> 1548</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l01549"></a><span class="lineno"> 1549</span>&#160;    }</div>
-<div class="line"><a name="l01550"></a><span class="lineno"> 1550</span>&#160;    <span class="keywordflow">for</span> (uint y = 0; y != height; ++y)</div>
-<div class="line"><a name="l01551"></a><span class="lineno"> 1551</span>&#160;    {</div>
-<div class="line"><a name="l01552"></a><span class="lineno"> 1552</span>&#160;        std::cout &lt;&lt; <span class="stringliteral">&quot;\t[&quot;</span>;</div>
-<div class="line"><a name="l01553"></a><span class="lineno"> 1553</span>&#160;        <span class="keywordflow">for</span> (uint x = 0; x != width; ++x)</div>
-<div class="line"><a name="l01554"></a><span class="lineno"> 1554</span>&#160;        {</div>
-<div class="line"><a name="l01555"></a><span class="lineno"> 1555</span>&#160;            <span class="keywordflow">if</span> (x)</div>
-<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;            {</div>
-<div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;                std::cout &lt;&lt; <span class="stringliteral">&quot;,\t&quot;</span>;</div>
-<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;            }</div>
-<div class="line"><a name="l01559"></a><span class="lineno"> 1559</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01560"></a><span class="lineno"> 1560</span>&#160;            {</div>
-<div class="line"><a name="l01561"></a><span class="lineno"> 1561</span>&#160;                std::cout &lt;&lt; <span class="charliteral">&#39;\t&#39;</span>;</div>
-<div class="line"><a name="l01562"></a><span class="lineno"> 1562</span>&#160;            }</div>
-<div class="line"><a name="l01563"></a><span class="lineno"> 1563</span>&#160;            std::cout &lt;&lt; entry[x][y];</div>
-<div class="line"><a name="l01564"></a><span class="lineno"> 1564</span>&#160;        }</div>
-<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;        std::cout &lt;&lt; <span class="stringliteral">&quot;]\n&quot;</span>;</div>
-<div class="line"><a name="l01566"></a><span class="lineno"> 1566</span>&#160;    }</div>
-<div class="line"><a name="l01567"></a><span class="lineno"> 1567</span>&#160;}</div>
-<div class="line"><a name="l01568"></a><span class="lineno"> 1568</span>&#160; </div>
-<div class="line"><a name="l01569"></a><span class="lineno"> 1569</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01570"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760"> 1570</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::unloadFromMemory</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l01571"></a><span class="lineno"> 1571</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;    <span class="keywordflow">if</span> (jit)</div>
-<div class="line"><a name="l01573"></a><span class="lineno"> 1573</span>&#160;    {</div>
-<div class="line"><a name="l01574"></a><span class="lineno"> 1574</span>&#160;        <span class="keywordflow">if</span> (jit-&gt;alreadyLoaded and not jit-&gt;modified and not jit-&gt;sourceFilename.empty())</div>
-<div class="line"><a name="l01575"></a><span class="lineno"> 1575</span>&#160;        {</div>
-<div class="line"><a name="l01576"></a><span class="lineno"> 1576</span>&#160;            <span class="comment">// ugly, but to not break the whole code design</span></div>
-<div class="line"><a name="l01577"></a><span class="lineno"> 1577</span>&#160;            <span class="keyword">auto</span>&amp; thisNotConst = <span class="keyword">const_cast&lt;</span><a class="code" href="classAntares_1_1Matrix.html">Matrix</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
-<div class="line"><a name="l01578"></a><span class="lineno"> 1578</span>&#160; </div>
-<div class="line"><a name="l01579"></a><span class="lineno"> 1579</span>&#160;            thisNotConst.<a class="code" href="classAntares_1_1Matrix.html#ac0e2adb05e204d5a40cd129d9fb0593f">clear</a>();</div>
-<div class="line"><a name="l01580"></a><span class="lineno"> 1580</span>&#160;            <a class="code" href="classJIT.html#abaf3744eb4643a1e861b921de308751c">JIT::MarkAsNotLoaded</a>(thisNotConst.jit);</div>
-<div class="line"><a name="l01581"></a><span class="lineno"> 1581</span>&#160;        }</div>
-<div class="line"><a name="l01582"></a><span class="lineno"> 1582</span>&#160;    }</div>
-<div class="line"><a name="l01583"></a><span class="lineno"> 1583</span>&#160;}</div>
-<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160; </div>
-<div class="line"><a name="l01585"></a><span class="lineno"> 1585</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T1, <span class="keyword">class</span> T2&gt;</div>
-<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160;<span class="keywordtype">bool</span> MatrixTestForAtLeastOnePositiveValue(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T1, T2&gt;</a>&amp; m)</div>
-<div class="line"><a name="l01587"></a><span class="lineno"> 1587</span>&#160;{</div>
-<div class="line"><a name="l01588"></a><span class="lineno"> 1588</span>&#160;    <span class="keywordflow">if</span> (m.<a class="code" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a> and m.<a class="code" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>)</div>
-<div class="line"><a name="l01589"></a><span class="lineno"> 1589</span>&#160;    {</div>
-<div class="line"><a name="l01590"></a><span class="lineno"> 1590</span>&#160;        uint y;</div>
-<div class="line"><a name="l01591"></a><span class="lineno"> 1591</span>&#160;        <span class="keywordflow">for</span> (uint x = 0; x &lt; m.<a class="code" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a>; ++x)</div>
-<div class="line"><a name="l01592"></a><span class="lineno"> 1592</span>&#160;        {</div>
-<div class="line"><a name="l01593"></a><span class="lineno"> 1593</span>&#160;            <span class="keyword">auto</span>&amp; col = m.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[x];</div>
-<div class="line"><a name="l01594"></a><span class="lineno"> 1594</span>&#160;            <span class="keywordflow">for</span> (y = 0; y &lt; m.<a class="code" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>; ++y)</div>
-<div class="line"><a name="l01595"></a><span class="lineno"> 1595</span>&#160;            {</div>
-<div class="line"><a name="l01596"></a><span class="lineno"> 1596</span>&#160;                <span class="keywordflow">if</span> (col[y] &gt; T1(0))</div>
-<div class="line"><a name="l01597"></a><span class="lineno"> 1597</span>&#160;                {</div>
-<div class="line"><a name="l01598"></a><span class="lineno"> 1598</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01599"></a><span class="lineno"> 1599</span>&#160;                }</div>
-<div class="line"><a name="l01600"></a><span class="lineno"> 1600</span>&#160;            }</div>
-<div class="line"><a name="l01601"></a><span class="lineno"> 1601</span>&#160;        }</div>
-<div class="line"><a name="l01602"></a><span class="lineno"> 1602</span>&#160;    }</div>
-<div class="line"><a name="l01603"></a><span class="lineno"> 1603</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01604"></a><span class="lineno"> 1604</span>&#160;}</div>
-<div class="line"><a name="l01605"></a><span class="lineno"> 1605</span>&#160; </div>
-<div class="line"><a name="l01606"></a><span class="lineno"> 1606</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01607"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a4983bb855ba7cbada04b8c873d4e2bc5"> 1607</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::circularShiftRows</a>(uint count)</div>
-<div class="line"><a name="l01608"></a><span class="lineno"> 1608</span>&#160;{</div>
-<div class="line"><a name="l01609"></a><span class="lineno"> 1609</span>&#160;    <span class="keywordflow">if</span> (count != 0)</div>
-<div class="line"><a name="l01610"></a><span class="lineno"> 1610</span>&#160;    {</div>
-<div class="line"><a name="l01611"></a><span class="lineno"> 1611</span>&#160;        <span class="keywordflow">for</span> (uint column = 0; column != width; ++column)</div>
-<div class="line"><a name="l01612"></a><span class="lineno"> 1612</span>&#160;        {</div>
-<div class="line"><a name="l01613"></a><span class="lineno"> 1613</span>&#160;            circularShiftRows(column, count);</div>
+<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160; </div>
+<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;    width = rhs.<a class="code" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a>;</div>
+<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;    height = rhs.<a class="code" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>;</div>
+<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;    jit = rhs.<a class="code" href="classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24">jit</a>;</div>
+<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;    <span class="keywordflow">if</span> (0 == width || 0 == height)</div>
+<div class="line"><a name="l01529"></a><span class="lineno"> 1529</span>&#160;    {</div>
+<div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;        entry = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;        width = 0;</div>
+<div class="line"><a name="l01532"></a><span class="lineno"> 1532</span>&#160;        height = 0;</div>
+<div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;    }</div>
+<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;    {</div>
+<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;        entry = rhs.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>;</div>
+<div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;    }</div>
+<div class="line"><a name="l01538"></a><span class="lineno"> 1538</span>&#160;    <span class="comment">// Prevent spurious de-allocation from rhs&#39;s destructor</span></div>
+<div class="line"><a name="l01539"></a><span class="lineno"> 1539</span>&#160;    rhs.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a> = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l01540"></a><span class="lineno"> 1540</span>&#160;    rhs.<a class="code" href="classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24">jit</a> = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l01541"></a><span class="lineno"> 1541</span>&#160;    rhs.<a class="code" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a> = 0;</div>
+<div class="line"><a name="l01542"></a><span class="lineno"> 1542</span>&#160;    rhs.<a class="code" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a> = 0;</div>
+<div class="line"><a name="l01543"></a><span class="lineno"> 1543</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l01544"></a><span class="lineno"> 1544</span>&#160;}</div>
+<div class="line"><a name="l01545"></a><span class="lineno"> 1545</span>&#160; </div>
+<div class="line"><a name="l01546"></a><span class="lineno"> 1546</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01547"></a><span class="lineno"> 1547</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a name="l01548"></a><span class="lineno"> 1548</span>&#160;<span class="keyword">inline</span> Matrix&lt;T, ReadWriteT&gt;&amp; <a class="code" href="classAntares_1_1Matrix.html#a49c3488ebf0abd976eb311f1f46c66b1">Matrix&lt;T, ReadWriteT&gt;::operator=</a>(<span class="keyword">const</span> Matrix&lt;U&gt;&amp; rhs)</div>
+<div class="line"><a name="l01549"></a><span class="lineno"> 1549</span>&#160;{</div>
+<div class="line"><a name="l01550"></a><span class="lineno"> 1550</span>&#160;    copyFrom(rhs);</div>
+<div class="line"><a name="l01551"></a><span class="lineno"> 1551</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l01552"></a><span class="lineno"> 1552</span>&#160;}</div>
+<div class="line"><a name="l01553"></a><span class="lineno"> 1553</span>&#160; </div>
+<div class="line"><a name="l01554"></a><span class="lineno"> 1554</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01555"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#abad4f764e17de0076ecdd89ffd1dbf50"> 1555</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::print</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;DUMP:\n&quot;</span>;</div>
+<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;    <span class="keywordflow">if</span> (empty())</div>
+<div class="line"><a name="l01559"></a><span class="lineno"> 1559</span>&#160;    {</div>
+<div class="line"><a name="l01560"></a><span class="lineno"> 1560</span>&#160;        std::cout &lt;&lt; <span class="stringliteral">&quot;\tempty\n&quot;</span>;</div>
+<div class="line"><a name="l01561"></a><span class="lineno"> 1561</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l01562"></a><span class="lineno"> 1562</span>&#160;    }</div>
+<div class="line"><a name="l01563"></a><span class="lineno"> 1563</span>&#160;    <span class="keywordflow">for</span> (uint y = 0; y != height; ++y)</div>
+<div class="line"><a name="l01564"></a><span class="lineno"> 1564</span>&#160;    {</div>
+<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;        std::cout &lt;&lt; <span class="stringliteral">&quot;\t[&quot;</span>;</div>
+<div class="line"><a name="l01566"></a><span class="lineno"> 1566</span>&#160;        <span class="keywordflow">for</span> (uint x = 0; x != width; ++x)</div>
+<div class="line"><a name="l01567"></a><span class="lineno"> 1567</span>&#160;        {</div>
+<div class="line"><a name="l01568"></a><span class="lineno"> 1568</span>&#160;            <span class="keywordflow">if</span> (x)</div>
+<div class="line"><a name="l01569"></a><span class="lineno"> 1569</span>&#160;            {</div>
+<div class="line"><a name="l01570"></a><span class="lineno"> 1570</span>&#160;                std::cout &lt;&lt; <span class="stringliteral">&quot;,\t&quot;</span>;</div>
+<div class="line"><a name="l01571"></a><span class="lineno"> 1571</span>&#160;            }</div>
+<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01573"></a><span class="lineno"> 1573</span>&#160;            {</div>
+<div class="line"><a name="l01574"></a><span class="lineno"> 1574</span>&#160;                std::cout &lt;&lt; <span class="charliteral">&#39;\t&#39;</span>;</div>
+<div class="line"><a name="l01575"></a><span class="lineno"> 1575</span>&#160;            }</div>
+<div class="line"><a name="l01576"></a><span class="lineno"> 1576</span>&#160;            std::cout &lt;&lt; entry[x][y];</div>
+<div class="line"><a name="l01577"></a><span class="lineno"> 1577</span>&#160;        }</div>
+<div class="line"><a name="l01578"></a><span class="lineno"> 1578</span>&#160;        std::cout &lt;&lt; <span class="stringliteral">&quot;]\n&quot;</span>;</div>
+<div class="line"><a name="l01579"></a><span class="lineno"> 1579</span>&#160;    }</div>
+<div class="line"><a name="l01580"></a><span class="lineno"> 1580</span>&#160;}</div>
+<div class="line"><a name="l01581"></a><span class="lineno"> 1581</span>&#160; </div>
+<div class="line"><a name="l01582"></a><span class="lineno"> 1582</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01583"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aeadbf3080154bb8f6a00f2f626f80760"> 1583</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::unloadFromMemory</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01585"></a><span class="lineno"> 1585</span>&#160;    <span class="keywordflow">if</span> (jit)</div>
+<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160;    {</div>
+<div class="line"><a name="l01587"></a><span class="lineno"> 1587</span>&#160;        <span class="keywordflow">if</span> (jit-&gt;alreadyLoaded and not jit-&gt;modified and not jit-&gt;sourceFilename.empty())</div>
+<div class="line"><a name="l01588"></a><span class="lineno"> 1588</span>&#160;        {</div>
+<div class="line"><a name="l01589"></a><span class="lineno"> 1589</span>&#160;            <span class="comment">// ugly, but to not break the whole code design</span></div>
+<div class="line"><a name="l01590"></a><span class="lineno"> 1590</span>&#160;            <span class="keyword">auto</span>&amp; thisNotConst = <span class="keyword">const_cast&lt;</span><a class="code" href="classAntares_1_1Matrix.html">Matrix</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
+<div class="line"><a name="l01591"></a><span class="lineno"> 1591</span>&#160; </div>
+<div class="line"><a name="l01592"></a><span class="lineno"> 1592</span>&#160;            thisNotConst.<a class="code" href="classAntares_1_1Matrix.html#ac0e2adb05e204d5a40cd129d9fb0593f">clear</a>();</div>
+<div class="line"><a name="l01593"></a><span class="lineno"> 1593</span>&#160;            <a class="code" href="classJIT.html#abaf3744eb4643a1e861b921de308751c">JIT::MarkAsNotLoaded</a>(thisNotConst.jit);</div>
+<div class="line"><a name="l01594"></a><span class="lineno"> 1594</span>&#160;        }</div>
+<div class="line"><a name="l01595"></a><span class="lineno"> 1595</span>&#160;    }</div>
+<div class="line"><a name="l01596"></a><span class="lineno"> 1596</span>&#160;}</div>
+<div class="line"><a name="l01597"></a><span class="lineno"> 1597</span>&#160; </div>
+<div class="line"><a name="l01598"></a><span class="lineno"> 1598</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T1, <span class="keyword">class</span> T2&gt;</div>
+<div class="line"><a name="l01599"></a><span class="lineno"> 1599</span>&#160;<span class="keywordtype">bool</span> MatrixTestForAtLeastOnePositiveValue(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T1, T2&gt;</a>&amp; m)</div>
+<div class="line"><a name="l01600"></a><span class="lineno"> 1600</span>&#160;{</div>
+<div class="line"><a name="l01601"></a><span class="lineno"> 1601</span>&#160;    <span class="keywordflow">if</span> (m.<a class="code" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a> and m.<a class="code" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>)</div>
+<div class="line"><a name="l01602"></a><span class="lineno"> 1602</span>&#160;    {</div>
+<div class="line"><a name="l01603"></a><span class="lineno"> 1603</span>&#160;        uint y;</div>
+<div class="line"><a name="l01604"></a><span class="lineno"> 1604</span>&#160;        <span class="keywordflow">for</span> (uint x = 0; x &lt; m.<a class="code" href="classAntares_1_1Matrix.html#a94b3558d8413485d98daadada6e1aba6">width</a>; ++x)</div>
+<div class="line"><a name="l01605"></a><span class="lineno"> 1605</span>&#160;        {</div>
+<div class="line"><a name="l01606"></a><span class="lineno"> 1606</span>&#160;            <span class="keyword">auto</span>&amp; col = m.<a class="code" href="classAntares_1_1Matrix.html#a74c6c7ead4e77284edea439f5eedc230">entry</a>[x];</div>
+<div class="line"><a name="l01607"></a><span class="lineno"> 1607</span>&#160;            <span class="keywordflow">for</span> (y = 0; y &lt; m.<a class="code" href="classAntares_1_1Matrix.html#aa0436d000cfb7438a083eeb9df48e01e">height</a>; ++y)</div>
+<div class="line"><a name="l01608"></a><span class="lineno"> 1608</span>&#160;            {</div>
+<div class="line"><a name="l01609"></a><span class="lineno"> 1609</span>&#160;                <span class="keywordflow">if</span> (col[y] &gt; T1(0))</div>
+<div class="line"><a name="l01610"></a><span class="lineno"> 1610</span>&#160;                {</div>
+<div class="line"><a name="l01611"></a><span class="lineno"> 1611</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01612"></a><span class="lineno"> 1612</span>&#160;                }</div>
+<div class="line"><a name="l01613"></a><span class="lineno"> 1613</span>&#160;            }</div>
 <div class="line"><a name="l01614"></a><span class="lineno"> 1614</span>&#160;        }</div>
 <div class="line"><a name="l01615"></a><span class="lineno"> 1615</span>&#160;    }</div>
-<div class="line"><a name="l01616"></a><span class="lineno"> 1616</span>&#160;}</div>
-<div class="line"><a name="l01617"></a><span class="lineno"> 1617</span>&#160; </div>
-<div class="line"><a name="l01618"></a><span class="lineno"> 1618</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01619"></a><span class="lineno"> 1619</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::reverseRows</a>(uint column, uint start, uint end)</div>
-<div class="line"><a name="l01620"></a><span class="lineno"> 1620</span>&#160;{</div>
-<div class="line"><a name="l01621"></a><span class="lineno"> 1621</span>&#160;    <span class="keywordflow">if</span> (height &lt;= 1 or !(column &lt; width) or !(start &lt; end))</div>
-<div class="line"><a name="l01622"></a><span class="lineno"> 1622</span>&#160;    {</div>
-<div class="line"><a name="l01623"></a><span class="lineno"> 1623</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l01624"></a><span class="lineno"> 1624</span>&#160;    }</div>
-<div class="line"><a name="l01625"></a><span class="lineno"> 1625</span>&#160; </div>
-<div class="line"><a name="l01626"></a><span class="lineno"> 1626</span>&#160;    <span class="comment">// The values of the selected column</span></div>
-<div class="line"><a name="l01627"></a><span class="lineno"> 1627</span>&#160;    <span class="keyword">auto</span>&amp; values = entry[column];</div>
-<div class="line"><a name="l01628"></a><span class="lineno"> 1628</span>&#160;    <span class="comment">// temporary value</span></div>
-<div class="line"><a name="l01629"></a><span class="lineno"> 1629</span>&#160;    T swap;</div>
-<div class="line"><a name="l01630"></a><span class="lineno"> 1630</span>&#160;    <span class="keywordflow">for</span> (uint y = start; y &lt; --end; ++y)</div>
-<div class="line"><a name="l01631"></a><span class="lineno"> 1631</span>&#160;    {</div>
-<div class="line"><a name="l01632"></a><span class="lineno"> 1632</span>&#160;        swap = values[y];</div>
-<div class="line"><a name="l01633"></a><span class="lineno"> 1633</span>&#160;        values[y] = values[end];</div>
-<div class="line"><a name="l01634"></a><span class="lineno"> 1634</span>&#160;        values[end] = swap;</div>
-<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;    }</div>
-<div class="line"><a name="l01636"></a><span class="lineno"> 1636</span>&#160;}</div>
-<div class="line"><a name="l01637"></a><span class="lineno"> 1637</span>&#160; </div>
-<div class="line"><a name="l01638"></a><span class="lineno"> 1638</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01639"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aba3cdd8d647239701bd0a07c976dd63a"> 1639</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::circularShiftRows</a>(uint column, uint count)</div>
-<div class="line"><a name="l01640"></a><span class="lineno"> 1640</span>&#160;{</div>
-<div class="line"><a name="l01641"></a><span class="lineno"> 1641</span>&#160;    assert(column &lt; width and <span class="stringliteral">&quot;Column out of bounds&quot;</span>);</div>
-<div class="line"><a name="l01642"></a><span class="lineno"> 1642</span>&#160;    <span class="keywordflow">if</span> (height &lt;= 1 or !(column &lt; width) or !count)</div>
-<div class="line"><a name="l01643"></a><span class="lineno"> 1643</span>&#160;    {</div>
-<div class="line"><a name="l01644"></a><span class="lineno"> 1644</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l01645"></a><span class="lineno"> 1645</span>&#160;    }</div>
-<div class="line"><a name="l01646"></a><span class="lineno"> 1646</span>&#160; </div>
-<div class="line"><a name="l01647"></a><span class="lineno"> 1647</span>&#160;    <span class="comment">// fits \p count into [0..height[</span></div>
-<div class="line"><a name="l01648"></a><span class="lineno"> 1648</span>&#160;    count = (count % height + height) % height;</div>
-<div class="line"><a name="l01649"></a><span class="lineno"> 1649</span>&#160;    <span class="keywordflow">if</span> (count == 0 or (uint) count == height)</div>
-<div class="line"><a name="l01650"></a><span class="lineno"> 1650</span>&#160;    {</div>
-<div class="line"><a name="l01651"></a><span class="lineno"> 1651</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l01652"></a><span class="lineno"> 1652</span>&#160;    }</div>
-<div class="line"><a name="l01653"></a><span class="lineno"> 1653</span>&#160; </div>
-<div class="line"><a name="l01654"></a><span class="lineno"> 1654</span>&#160;    <span class="comment">// Algorithm in O(N)</span></div>
-<div class="line"><a name="l01655"></a><span class="lineno"> 1655</span>&#160;    reverseRows(column, 0, count);</div>
-<div class="line"><a name="l01656"></a><span class="lineno"> 1656</span>&#160;    reverseRows(column, count, height);</div>
-<div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;    reverseRows(column, 0, height);</div>
-<div class="line"><a name="l01658"></a><span class="lineno"> 1658</span>&#160;}</div>
+<div class="line"><a name="l01616"></a><span class="lineno"> 1616</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01617"></a><span class="lineno"> 1617</span>&#160;}</div>
+<div class="line"><a name="l01618"></a><span class="lineno"> 1618</span>&#160; </div>
+<div class="line"><a name="l01619"></a><span class="lineno"> 1619</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01620"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a4983bb855ba7cbada04b8c873d4e2bc5"> 1620</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::circularShiftRows</a>(uint count)</div>
+<div class="line"><a name="l01621"></a><span class="lineno"> 1621</span>&#160;{</div>
+<div class="line"><a name="l01622"></a><span class="lineno"> 1622</span>&#160;    <span class="keywordflow">if</span> (count != 0)</div>
+<div class="line"><a name="l01623"></a><span class="lineno"> 1623</span>&#160;    {</div>
+<div class="line"><a name="l01624"></a><span class="lineno"> 1624</span>&#160;        <span class="keywordflow">for</span> (uint column = 0; column != width; ++column)</div>
+<div class="line"><a name="l01625"></a><span class="lineno"> 1625</span>&#160;        {</div>
+<div class="line"><a name="l01626"></a><span class="lineno"> 1626</span>&#160;            circularShiftRows(column, count);</div>
+<div class="line"><a name="l01627"></a><span class="lineno"> 1627</span>&#160;        }</div>
+<div class="line"><a name="l01628"></a><span class="lineno"> 1628</span>&#160;    }</div>
+<div class="line"><a name="l01629"></a><span class="lineno"> 1629</span>&#160;}</div>
+<div class="line"><a name="l01630"></a><span class="lineno"> 1630</span>&#160; </div>
+<div class="line"><a name="l01631"></a><span class="lineno"> 1631</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01632"></a><span class="lineno"> 1632</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::reverseRows</a>(uint column, uint start, uint end)</div>
+<div class="line"><a name="l01633"></a><span class="lineno"> 1633</span>&#160;{</div>
+<div class="line"><a name="l01634"></a><span class="lineno"> 1634</span>&#160;    <span class="keywordflow">if</span> (height &lt;= 1 or !(column &lt; width) or !(start &lt; end))</div>
+<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;    {</div>
+<div class="line"><a name="l01636"></a><span class="lineno"> 1636</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l01637"></a><span class="lineno"> 1637</span>&#160;    }</div>
+<div class="line"><a name="l01638"></a><span class="lineno"> 1638</span>&#160; </div>
+<div class="line"><a name="l01639"></a><span class="lineno"> 1639</span>&#160;    <span class="comment">// The values of the selected column</span></div>
+<div class="line"><a name="l01640"></a><span class="lineno"> 1640</span>&#160;    <span class="keyword">auto</span>&amp; values = entry[column];</div>
+<div class="line"><a name="l01641"></a><span class="lineno"> 1641</span>&#160;    <span class="comment">// temporary value</span></div>
+<div class="line"><a name="l01642"></a><span class="lineno"> 1642</span>&#160;    T swap;</div>
+<div class="line"><a name="l01643"></a><span class="lineno"> 1643</span>&#160;    <span class="keywordflow">for</span> (uint y = start; y &lt; --end; ++y)</div>
+<div class="line"><a name="l01644"></a><span class="lineno"> 1644</span>&#160;    {</div>
+<div class="line"><a name="l01645"></a><span class="lineno"> 1645</span>&#160;        swap = values[y];</div>
+<div class="line"><a name="l01646"></a><span class="lineno"> 1646</span>&#160;        values[y] = values[end];</div>
+<div class="line"><a name="l01647"></a><span class="lineno"> 1647</span>&#160;        values[end] = swap;</div>
+<div class="line"><a name="l01648"></a><span class="lineno"> 1648</span>&#160;    }</div>
+<div class="line"><a name="l01649"></a><span class="lineno"> 1649</span>&#160;}</div>
+<div class="line"><a name="l01650"></a><span class="lineno"> 1650</span>&#160; </div>
+<div class="line"><a name="l01651"></a><span class="lineno"> 1651</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01652"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#aba3cdd8d647239701bd0a07c976dd63a"> 1652</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::circularShiftRows</a>(uint column, uint count)</div>
+<div class="line"><a name="l01653"></a><span class="lineno"> 1653</span>&#160;{</div>
+<div class="line"><a name="l01654"></a><span class="lineno"> 1654</span>&#160;    assert(column &lt; width and <span class="stringliteral">&quot;Column out of bounds&quot;</span>);</div>
+<div class="line"><a name="l01655"></a><span class="lineno"> 1655</span>&#160;    <span class="keywordflow">if</span> (height &lt;= 1 or !(column &lt; width) or !count)</div>
+<div class="line"><a name="l01656"></a><span class="lineno"> 1656</span>&#160;    {</div>
+<div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l01658"></a><span class="lineno"> 1658</span>&#160;    }</div>
 <div class="line"><a name="l01659"></a><span class="lineno"> 1659</span>&#160; </div>
-<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01661"></a><span class="lineno"> 1661</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::operator[]</a>(</div>
-<div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160;  uint column)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01663"></a><span class="lineno"> 1663</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160;    assert(column &lt; width);</div>
-<div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;    assert(Memory::RawPointer(entry[column]));</div>
-<div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160;    <span class="keywordflow">return</span> entry[column];</div>
-<div class="line"><a name="l01667"></a><span class="lineno"> 1667</span>&#160;}</div>
-<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160; </div>
-<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01670"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a20e8002266738b19b8a70a4b7f5c4b13"> 1670</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::operator[]</a>(uint column)</div>
-<div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;{</div>
-<div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160;    assert(column &lt; width);</div>
-<div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;    assert(Memory::RawPointer(entry[column]));</div>
-<div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160;    <span class="keywordflow">return</span> entry[column];</div>
-<div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;}</div>
-<div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160; </div>
-<div class="line"><a name="l01677"></a><span class="lineno"> 1677</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01678"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a9f733577ab5a895fe57bce1b2ed8245d"> 1678</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::column</a>(uint n)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01680"></a><span class="lineno"> 1680</span>&#160;    assert(n &lt; width);</div>
-<div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;    assert(Memory::RawPointer(entry[n]));</div>
-<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;    <span class="keywordflow">return</span> entry[n];</div>
-<div class="line"><a name="l01683"></a><span class="lineno"> 1683</span>&#160;}</div>
-<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160; </div>
-<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
-<div class="line"><a name="l01686"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a6111eb87847669e96b97fcdf0a2403c5"> 1686</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::column</a>(uint n)</div>
-<div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;{</div>
-<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;    assert(n &lt; width);</div>
-<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160;    assert(Memory::RawPointer(entry[n]));</div>
-<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;    <span class="keywordflow">return</span> entry[n];</div>
-<div class="line"><a name="l01691"></a><span class="lineno"> 1691</span>&#160;}</div>
-<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;} <span class="comment">// namespace Antares</span></div>
-<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160; </div>
-<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_ARRAY_MATRIX_HXX__</span></div>
+<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;    <span class="comment">// fits \p count into [0..height[</span></div>
+<div class="line"><a name="l01661"></a><span class="lineno"> 1661</span>&#160;    count = (count % height + height) % height;</div>
+<div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160;    <span class="keywordflow">if</span> (count == 0 or (uint) count == height)</div>
+<div class="line"><a name="l01663"></a><span class="lineno"> 1663</span>&#160;    {</div>
+<div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;    }</div>
+<div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160; </div>
+<div class="line"><a name="l01667"></a><span class="lineno"> 1667</span>&#160;    <span class="comment">// Algorithm in O(N)</span></div>
+<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;    reverseRows(column, 0, count);</div>
+<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;    reverseRows(column, count, height);</div>
+<div class="line"><a name="l01670"></a><span class="lineno"> 1670</span>&#160;    reverseRows(column, 0, height);</div>
+<div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;}</div>
+<div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160; </div>
+<div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::operator[]</a>(</div>
+<div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;  uint column)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01677"></a><span class="lineno"> 1677</span>&#160;    assert(column &lt; width);</div>
+<div class="line"><a name="l01678"></a><span class="lineno"> 1678</span>&#160;    assert(Memory::RawPointer(entry[column]));</div>
+<div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;    <span class="keywordflow">return</span> entry[column];</div>
+<div class="line"><a name="l01680"></a><span class="lineno"> 1680</span>&#160;}</div>
+<div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160; </div>
+<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01683"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a20e8002266738b19b8a70a4b7f5c4b13"> 1683</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::operator[]</a>(uint column)</div>
+<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;{</div>
+<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160;    assert(column &lt; width);</div>
+<div class="line"><a name="l01686"></a><span class="lineno"> 1686</span>&#160;    assert(Memory::RawPointer(entry[column]));</div>
+<div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;    <span class="keywordflow">return</span> entry[column];</div>
+<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;}</div>
+<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160; </div>
+<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01691"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a9f733577ab5a895fe57bce1b2ed8245d"> 1691</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">const</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::column</a>(uint n)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160;    assert(n &lt; width);</div>
+<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;    assert(Memory::RawPointer(entry[n]));</div>
+<div class="line"><a name="l01695"></a><span class="lineno"> 1695</span>&#160;    <span class="keywordflow">return</span> entry[n];</div>
+<div class="line"><a name="l01696"></a><span class="lineno"> 1696</span>&#160;}</div>
+<div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160; </div>
+<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> ReadWriteT&gt;</div>
+<div class="line"><a name="l01699"></a><span class="lineno"><a class="line" href="classAntares_1_1Matrix.html#a6111eb87847669e96b97fcdf0a2403c5"> 1699</a></span>&#160;<span class="keyword">inline</span> <span class="keyword">typename</span> <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::ColumnType</a>&amp; <a class="code" href="classAntares_1_1Matrix.html">Matrix&lt;T, ReadWriteT&gt;::column</a>(uint n)</div>
+<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;{</div>
+<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;    assert(n &lt; width);</div>
+<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;    assert(Memory::RawPointer(entry[n]));</div>
+<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;    <span class="keywordflow">return</span> entry[n];</div>
+<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;}</div>
+<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;} <span class="comment">// namespace Antares</span></div>
+<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160; </div>
+<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// __ANTARES_LIBS_ARRAY_MATRIX_HXX__</span></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html"><div class="ttname"><a href="classAntares_1_1Matrix.html">Antares::Matrix&lt; T, ReadWriteT &gt;</a></div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a0299a9df246248542586fb3319c6ad24"><div class="ttname"><a href="classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24">Antares::Matrix::jit</a></div><div class="ttdeci">JIT::Informations * jit</div><div class="ttdoc">Just-in-time informations.</div><div class="ttdef"><b>Definition:</b> matrix.h:415</div></div>
 <div class="ttc" id="aclassAntares_1_1Matrix_html_a2dba13c45127354c9f75ef576f49269b"><div class="ttname"><a href="classAntares_1_1Matrix.html#a2dba13c45127354c9f75ef576f49269b">Antares::Matrix::Matrix</a></div><div class="ttdeci">Matrix()</div><div class="ttdoc">Default Constructor.</div><div class="ttdef"><b>Definition:</b> matrix.hxx:184</div></div>
