@@ -70,11 +70,15 @@ protected:
     void simulationEnd();
     void initializeState(Variable::State& state, uint numSpace);
 
+    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
+    [[nodiscard]] std::string getSimulationTableHeader() const;
+
 private:
     uint pNbWeeks;
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
+    std::vector<OptimisationsSimulationTable> simulationTables_;
     std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
     IResultWriter& resultWriter_;

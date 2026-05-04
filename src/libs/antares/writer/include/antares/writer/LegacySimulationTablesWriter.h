@@ -5,13 +5,14 @@
 
 #include <filesystem>
 
+#include "simulation-table-writers_export.h"
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "i_table_writer.h"
 
 namespace Antares::Writer
 {
-class LegacySimulationTablesWriter
+class SIMULATION_TABLE_WRITERS_EXPORT LegacySimulationTablesWriter
 {
 public:
     LegacySimulationTablesWriter(const std::filesystem::path folder,

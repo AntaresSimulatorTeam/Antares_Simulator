@@ -47,12 +47,31 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
+{
+    if (numSpace >= simulationTables_.size())
+    {
+        throw std::out_of_range("Error: there is no simulation table for numSpace: "
+                                + std::to_string(numSpace));
+    }
+    return simulationTables_[numSpace];
+}
+
+std::string Adequacy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).headerCsvFormat();
+    }
+    return "";
+}
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
 bool Adequacy::simulationBegin()
 {
     if (!preproOnly)
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
+        simulationTables_.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             SIM_InitialisationProblemeHebdo(study,
@@ -68,8 +87,8 @@ bool Adequacy::simulationBegin()
 }
 
 bool Adequacy::simplexIsRequired(uint hourInTheYear,
-                                 uint numSpace,
-                                 const HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
+                                  uint numSpace,
+                                  const HYDRO_VENTILATION_RESULTS& hydroVentilationResults) const
 {
     uint areaCount = study.areas.size();
     uint indx = hourInTheYear;

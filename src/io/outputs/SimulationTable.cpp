@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/io/outputs/SimulationTable.h"
+#include <utility>
 
 #include "antares/io/outputs/SimulationTableEntry.h"
 
@@ -21,6 +22,11 @@ SimulationTable::SimulationTable()
       "basis_status");
 }
 
+SimulationTable::SimulationTable(SimulationTable&& other) noexcept:
+    buffer_(std::move(other.buffer_)),
+    storage_(std::move(other.storage_))
+{
+}
 void SimulationTable::addEntry(const SimulationTableEntry& entry)
 {
     storage_.addValue("block", entry.block);

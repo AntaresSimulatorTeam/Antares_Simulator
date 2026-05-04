@@ -5,20 +5,21 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
-namespace Antares::Solver
-{
-class IResultWriter;
-}
-
-// gp : no namespace here. We should ass one (Antares::IO::Outputs).
-
 class OptimisationsSimulationTable
 {
 public:
+    void clear();
+
+    std::pair<std::string, std::string> moveBuffers();
+
+    void write();
     Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
     Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
+    [[nodiscard]] std::string headerCsvFormat() const;
 
 private:
     Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;
     Antares::IO::Outputs::SimulationTable secondOptimSimulationTable_;
+    std::string firstOptimBuffer_;
+    std::string secondOptimBuffer_;
 };

@@ -26,3 +26,9 @@ add_boost_test(test-setofareas-reports
     LIBS
     antares-solver-variable
     result_writer)
+
+add_boost_test(test-nodu-by-plant
+    SRC test_NbOfDispatchedUnitsByPlant.cpp
+    LIBS
+    antares-solver-variable
+    in-memory-study)

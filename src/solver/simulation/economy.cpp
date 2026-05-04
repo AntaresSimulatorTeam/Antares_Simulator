@@ -51,11 +51,31 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
+{
+    if (numSpace >= simulationTables_.size())
+    {
+        throw std::out_of_range("Error: there is no simulation table for numSpace: "
+                                + std::to_string(numSpace));
+    }
+    return simulationTables_[numSpace];
+}
+
+std::string Economy::getSimulationTableHeader() const
+{
+    if (!simulationTables_.empty())
+    {
+        return simulationTables_.at(0).headerCsvFormat();
+    }
+    return "";
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
     {
         pProblemesHebdo.resize(pNbMaxPerformedYearsInParallel);
+        simulationTables_.resize(pNbMaxPerformedYearsInParallel);
         weeklyOptProblems_.clear();
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 

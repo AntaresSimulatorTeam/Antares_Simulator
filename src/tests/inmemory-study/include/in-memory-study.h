@@ -12,6 +12,7 @@
 #include "antares/study/scenario-builder/rules.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
+#include "antares/writer/null_result_writer.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;

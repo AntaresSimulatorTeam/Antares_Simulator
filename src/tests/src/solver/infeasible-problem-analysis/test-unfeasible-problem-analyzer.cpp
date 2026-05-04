@@ -20,6 +20,7 @@
 #include "antares/solver/infeasible-problem-analysis/variables-bounds-consistency.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
+#include "antares/writer/null_result_writer.h"
 
 namespace bdata = boost::unit_test::data;
 

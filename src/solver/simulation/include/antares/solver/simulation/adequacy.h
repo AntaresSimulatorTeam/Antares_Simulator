@@ -68,6 +68,9 @@ protected:
 
     void initializeState(Variable::State& state, uint numSpace);
 
+    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
+    [[nodiscard]] std::string getSimulationTableHeader() const;
+
 private:
     bool simplexIsRequired(uint hourInTheYear,
                            uint numSpace,
@@ -77,6 +80,7 @@ private:
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
+    std::vector<OptimisationsSimulationTable> simulationTables_;
     Matrix<> pRES;
     IResultWriter& resultWriter;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;

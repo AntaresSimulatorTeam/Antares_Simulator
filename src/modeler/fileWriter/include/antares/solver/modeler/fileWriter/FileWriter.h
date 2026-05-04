@@ -6,6 +6,7 @@
 
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/writer/i_table_writer.h"
+#include "antares/writer/table_format.h"
 
 namespace Antares::Solver
 {
