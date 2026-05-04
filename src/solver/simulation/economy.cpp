@@ -218,7 +218,7 @@ bool Economy::year(Variable::State& state,
         hourInTheYear += nbHoursInAWeek;
     }
 
-    if (simulationTables)
+    if (simulationTables && !study.folderOutput.empty())
     {
         LegacySimulationTablesWriter legacyWriter(study.folderOutput, state.year);
         legacyWriter.write(*simulationTables);

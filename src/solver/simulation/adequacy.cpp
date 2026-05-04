@@ -354,7 +354,7 @@ bool Adequacy::year(Variable::State& state,
         addTimeMeasure(durationCollector, currentProblem.timeMeasure);
     }
 
-    if (simulationTables)
+    if (simulationTables && !study.folderOutput.empty())
     {
         LegacySimulationTablesWriter legacyWriter(study.folderOutput, state.year);
         legacyWriter.write(*simulationTables);
