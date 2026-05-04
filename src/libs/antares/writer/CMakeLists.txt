@@ -45,6 +45,9 @@ target_link_libraries(parquet_writer
   PUBLIC
   Antares::simulation-table
   Antares::exception
+  PRIVATE
+  # Keep Arrow/Parquet inside libparquet_writer to avoid re-linking their static
+  # objects into consumers, which can double-register/destroy generated globals.
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 
