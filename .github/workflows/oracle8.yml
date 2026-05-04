@@ -9,6 +9,8 @@ on:
     - dependabot/*
     - release/*
     - copilot/*
+    # TODO remove
+    - fix/segfault-ol8
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
