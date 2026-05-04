@@ -1,5 +1,8 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
+find_package(Parquet REQUIRED)
+find_package(Arrow REQUIRED)
+
 # -----------------
 # testOutputs
 # -----------------
