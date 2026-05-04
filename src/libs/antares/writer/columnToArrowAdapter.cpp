@@ -4,6 +4,7 @@
 #include "columnToArrowAdapter.h"
 
 #include <stdexcept>
+#include <typeinfo>
 
 #include "parquet_arrow_utils.h"
 
@@ -202,6 +203,11 @@ std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
 // ==========================
 std::shared_ptr<IColumnAdapter> makeColumnAdapter(const std::unique_ptr<IColumn>& column)
 {
+    if (!column)
+    {
+        throw std::invalid_argument("makeColumnAdapter: null column");
+    }
+
     if (auto* c = dynamic_cast<StringColumn*>(column.get()))
     {
         return std::make_shared<StringColumnAdapter>(c);
@@ -231,7 +237,8 @@ std::shared_ptr<IColumnAdapter> makeColumnAdapter(const std::unique_ptr<IColumn>
         return std::make_shared<OptMipBasisStatusColumnAdapter>(c);
     }
 
-    throw std::invalid_argument("makeColumnAdapter: column type unknown: " + column->name());
+    throw std::invalid_argument("makeColumnAdapter: column type unknown: " + column->name()
+                                + " (dynamic type: " + typeid(*column).name() + ")");
 }
 
 } // namespace Antares::Writer
