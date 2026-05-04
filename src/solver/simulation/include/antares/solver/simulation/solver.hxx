@@ -9,7 +9,6 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/concurrency/concurrency.h"
-#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
@@ -155,15 +154,6 @@ public:
                                              optWriter,
                                              pDurationCollector,
                                              scratchmap);
-
-        if (!study.parameters.noOutput)
-        {
-            auto& simTable = simulation_->getSimulationTable(numSpace);
-
-            auto buffers = simTable.moveBuffers();
-
-            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
-        }
 
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
@@ -509,11 +499,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
 
-    if (!study.parameters.noOutput)
-    {
-        aggregateAndWriteSimulationTables();
-    }
-
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution
@@ -534,47 +519,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Writing annual costs statistics
     pAnnualStatistics.endStandardDeviations();
     pAnnualStatistics.writeToOutput(pResultWriter);
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::storeYearBuffers(uint year,
-                                                       std::string&& firstBuffer,
-                                                       std::string&& secondBuffer)
-{
-    std::lock_guard lock(buffersMutex_);
-    yearSimulationBuffers_.emplace(year,
-                                   std::pair{std::move(firstBuffer), std::move(secondBuffer)});
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
-{
-    if (study.parameters.parquetFmtForSimuTables)
-    {
-        // TODO
-    }
-    else
-    {
-        std::string globalFirstBuffer;
-        std::string globalSecondBuffer;
-
-        for (auto& pair_of_buffers: yearSimulationBuffers_ | std::views::values)
-        {
-            globalFirstBuffer += pair_of_buffers.first;
-            globalSecondBuffer += pair_of_buffers.second;
-        }
-
-        const auto header = this->getSimulationTableHeader() + "\n";
-
-        std::string writerEntry = header + std::move(globalFirstBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
-
-        writerEntry.clear();
-
-        writerEntry = header + std::move(globalSecondBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
-    }
-    yearSimulationBuffers_.clear();
 }
 } // namespace Antares::Solver::Simulation
 

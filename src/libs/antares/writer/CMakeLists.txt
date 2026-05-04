@@ -68,7 +68,6 @@ add_library(result_writer
         include/antares/writer/in_memory_writer.h # Public (for tests)
         include/antares/writer/null_result_writer.h
         include/antares/writer/result_format.h
-        include/antares/writer/table_format.h
         include/antares/writer/table_writer_factory.h
         include/antares/writer/writer_factory.h
         private/ensure_queue_started.h

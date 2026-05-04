@@ -21,7 +21,6 @@ public:
     void writeToBuffer();
     void clear();
 
-    // const std::string& buffer() const;
     [[nodiscard]] std::string buffer() const;
 
     std::vector<std::vector<std::string>> storageIntoRows() const;

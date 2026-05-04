@@ -9,7 +9,6 @@
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/simulation/solver.h"
-#include "antares/writer/table_format.h"
 
 using namespace Antares;
 
