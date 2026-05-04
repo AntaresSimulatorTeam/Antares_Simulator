@@ -30,6 +30,7 @@ set(TARGET_LIBS #No alias
         path
         mersenne
         result_writer
+	parquet_writer
         series
         antares-core
         antares-solver-hydro
@@ -125,14 +126,6 @@ set(TARGET_LIBS #No alias
 install(TARGETS ${TARGET_LIBS}
         EXPORT AntaresTargets
         LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include
-)
-
-install(TARGETS parquet_writer
-        EXPORT AntaresTargets
-        LIBRARY DESTINATION bin
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION include
