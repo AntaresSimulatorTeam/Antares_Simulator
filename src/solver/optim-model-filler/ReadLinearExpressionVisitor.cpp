@@ -271,10 +271,9 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
                                                   evalVisitor_,
                                                   localTimeStep);
             const auto to = resolveTimeSumBound(node->to(), evalVisitor_, localTimeStep);
-            forEachTimeSumIndex(from,
-                                to,
-                                static_cast<int>(nbtimeSteps_),
-                                [&](int) { ret[localTimeStep] += expression[0]; });
+            auto term = expression[0];
+            term *= static_cast<double>(to - from + 1);
+            ret[localTimeStep] += term;
         }
         return ret;
     }
