@@ -19,7 +19,7 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
 {
     if (writeSimuTable)
     {
-        simulationTables_ = std::make_shared<OptimisationsSimulationTable>();
+        simulationTables_ = std::make_unique<OptimisationsSimulationTable>();
     }
 }
 

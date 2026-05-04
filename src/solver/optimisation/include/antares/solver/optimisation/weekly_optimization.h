@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -19,6 +21,10 @@ public:
                        Simulation::ISimulationObserver& simulationObserver,
                        bool writeSimuTable);
     ~WeeklyOptimization() = default;
+    WeeklyOptimization(const WeeklyOptimization&) = delete;
+    WeeklyOptimization& operator=(const WeeklyOptimization&) = delete;
+    WeeklyOptimization(WeeklyOptimization&&) = default;
+    WeeklyOptimization& operator=(WeeklyOptimization&&) = default;
     void solve();
     OptimisationsSimulationTable* simulationTables();
 
@@ -27,6 +33,6 @@ private:
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     IResultWriter& writer_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    std::shared_ptr<OptimisationsSimulationTable> simulationTables_;
+    std::unique_ptr<OptimisationsSimulationTable> simulationTables_;
 };
 } // namespace Antares::Solver::Optimization
