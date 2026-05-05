@@ -92,11 +92,7 @@ struct TestVariabilityVisitorFixture
         scenarios.push_back(std::move(scenario0));
 
         fixture.buildLinearProblem(ctx, data_, scenarios);
-        variabilityVisitor.emplace(*fixture.optimEntityContainer,
-                                   fixture.components[0],
-                                   &data_,
-                                   &fixture.scenarioGroupRepo.scenario(
-                                     fixture.components[0].getScenarioGroupId()));
+        variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[0]);
     }
 };
 
@@ -368,11 +364,7 @@ BOOST_AUTO_TEST_CASE(overwrite_variability_in_model_by_variablility_in_component
     scenarios.push_back(std::move(scenario0));
 
     fixture.buildLinearProblem(ctx, data2_, scenarios);
-    variabilityVisitor.emplace(*fixture.optimEntityContainer,
-                               fixture.components[1],
-                               &data2_,
-                               &fixture.scenarioGroupRepo.scenario(
-                                 fixture.components[1].getScenarioGroupId()));
+    variabilityVisitor.emplace(*fixture.optimEntityContainer, fixture.components[1]);
 
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&parameterNode),
                       VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
