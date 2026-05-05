@@ -44,12 +44,12 @@ class solver_output_handler:
         return float(execution_info['durations_ms']['simulation']) / 1000
 
     def get_optim1_simulation_table(self):
-        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-1.csv"))
+        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table-1-optim-nb-1.csv"))
         assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
         return open(absolute_path, 'r').readlines()
 
     def get_optim2_simulation_table(self):
-        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-2.csv"))
+        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table-1-optim-nb-2.csv"))
         if absolute_path.exists():
             return open(absolute_path, 'r').readlines()
         else:

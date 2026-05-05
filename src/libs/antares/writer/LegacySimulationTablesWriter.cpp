@@ -26,14 +26,14 @@ static fs::path makeSimuTableFilePath(const fs::path& parentFolder,
     return parentFolder / filename;
 }
 
-LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path folder,
+LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folder,
                                                            const unsigned year,
                                                            bool parquetFormat):
     year_(year),
     parquetFormat_(parquetFormat),
-    folder_(std::move(folder))
+    folder_(folder)
 {
-    check_is_existing_folder(folder);
+    check_is_existing_folder(folder_);
 }
 
 void LegacySimulationTablesWriter::write(OptimisationsSimulationTable& tables)

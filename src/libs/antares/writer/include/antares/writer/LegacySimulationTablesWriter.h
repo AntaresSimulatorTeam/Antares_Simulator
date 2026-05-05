@@ -16,7 +16,7 @@ namespace Antares::Writer
 class SIMULATION_TABLE_WRITERS_EXPORT LegacySimulationTablesWriter
 {
 public:
-    LegacySimulationTablesWriter(const std::filesystem::path folder,
+    LegacySimulationTablesWriter(const std::filesystem::path& folder,
                                  const unsigned year,
                                  bool parquetFormat = false);
     void write(OptimisationsSimulationTable& tables);

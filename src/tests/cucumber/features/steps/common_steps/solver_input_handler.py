@@ -12,8 +12,8 @@ class solver_input_handler:
         self.files_path["study"] = self.study_root_dir / "study.antares"
         self.files_path["thermal"] = self.study_root_dir / "study.antares"
         reference = self.study_root_dir / "output" / "reference"
-        self.files_path["simulation_table1"] = reference / "simulation_table--optim-nb-1.csv"
-        self.files_path["simulation_table2"] = reference / "simulation_table--optim-nb-2.csv"
+        self.files_path["simulation_table1"] = reference / "simulation_table-1-optim-nb-1.csv"
+        self.files_path["simulation_table2"] = reference / "simulation_table-1-optim-nb-2.csv"
 
     def get_value(self, variable, file_nick_name):
         # File path
