@@ -184,7 +184,7 @@ VariabilityVisitor::VariabilityVisitor(const OptimEntityContainer& optimEntityCo
 
 std::string VariabilityVisitor::name() const
 {
-    return "TimeIndexVisitor";
+    return "VariabilityVisitor";
 }
 
 } // namespace Antares::Expressions::Visitors
