@@ -1,0 +1,95 @@
+===================================================
+Suggestions / questions au sujet du format Parquet
+===================================================
+Ceci est une discussion sur l'état du code de la PR 3499 (qui concerne ticket ANT-4633).
+Le oontenu de ce fichier va évoluer au fil des évolutions sur cette PR.
+A terme, ce fichier disparaitra.
+ 
+
+Suggestions archi :
+-----------------
+- Modeler.cpp (haut niveau du modeler) : 
+  On appelle l'instruction :
+     writer_.writeSimulationTable(...);
+  Avec writer_ du type FileWriter
+  Cette instruction fait 2 choses :
+  - elle construit la simulation table
+  - elle imprime la simulation table
+  Ce sont 2 choses différentes, à découpler : 
+     FillSimulationTable(simulationTable, ...);
+	 writer_.writeSimulationTable(...);
+  ------------
+  ==> DONE
+  ------------
+	 
+- There are many writers : FileWriter, SimulationTableCsvFile (yes, it's a writer), CsvTableWriter, ParquetTableWriter.
+  So one of these writers is useless : SimulationTableCsvFile is my favorite for removal.
+  ------------
+  ==> DONE
+  ------------
+
+- classe ISimulationTable semble inutile, car elle n'a qu'une seule fille.
+  Devrions nous la supprimer ?
+  En effet, on peut imaginer que seule la facon d'imprimer cette table peut changer : csv ou parquet.
+  Mais pas la table elle-meme n'a pas de raison de changer, donc l'interface semble inutile.
+  ------------
+  ==> DONE
+  ------------
+  
+- La classe SimulationTableCsv contient les données, et n'a rien à voir avec le format d'impression.
+  Cette classe devrait : 
+  - s'appeler SimulationTable
+  - ne pas hériter (de ISimulationTable)
+  ------------
+  ==> DONE
+  ------------
+  
+- La classe SimulationTableCsvFile imprime (aussi) en parquet (voir methode write)
+  alors qu'elle comporte "Csv" dans son nom.
+  -----------------------------
+  ==> DONE (classe suppimée)
+  -----------------------------
+
+- La classe SimulationTableCsvFile est en fait un writer.
+  Elle devrait être construite (via son constructeur) à partir d'une simulation table et d'un chemin de fichier,
+  et ne pas hériter de SimulationTableCsv (qui est la table elle-même).
+  De plus, elle devrait être splittée en 2 : un writer csv et un writer parquet.
+  -----------------------------
+  ==> DONE (classe suppimée)
+  -----------------------------
+
+- Maintenant, la classe FileWriter (classe existante) remplace SimulationTableCsvFile, supprimée.
+  Mais, comme SimulationTableCsvFile, elle pourrait sans doute etre : 
+  - soit splittée en 2 entre : 
+    + CsvTableWriter
+    + ParquetTableWriter
+  - soit supprimée car ces 2 writer existent déjà.
+   
+- La classe SimulationTableCsv contient des methodes d'impression dans un buffer (std::string).
+  Si cela ne sert que pour l'impression cvs, alors cela doit etre integré au writer cvs.
+
+- Représentation de la simulation table :
+  On stocke la simulation table en colonne : voir la donnée SimulationTableCsv :: storage_
+  + lorsqu'on imprime en csv, on convertit cette donnée en lignes avant d'imprimer
+  + lorsqu'on imprime parquet, on devrait se servir de la représentation en colonnes.
+    Au lieu de ça, on convertit en lignes, puis on convertit en colonnes avant d'imprimer.
+  Cela peut donc être simplifié.
+  ------------
+  ==> DONE
+  ------------
+
+  
+
+Questions :
+---------
+- Solver : par défaut, --no-output=false, ce qui veut dire qu'on imprime les simulation tables !
+  Mais elles sont très encombrantes, et elles sont imprimées par défaut !
+  Pour le solver, il faudrait une option à part pour imprimer ces simulation tables.
+  
+- 
+
+A améliorer :
+-----------
+- Pour l'instant les tables arrow que l'on remplit avant impression ne contiennent que des 
+  string. Or, on peut typer les colonnes dans arrow. A faire.
+  

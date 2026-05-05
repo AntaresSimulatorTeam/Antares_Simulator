@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "antares/io/outputs/SimulationTable.h"
+
 namespace Antares::Writer
 {
 
@@ -15,13 +17,13 @@ class ITableWriter
 {
 public:
     using Ptr = std::shared_ptr<ITableWriter>;
-    virtual ~ITableWriter() = default;
 
-    // Header + rows of string cells
-    virtual void writeTable(const std::filesystem::path& filePath,
-                            const std::vector<std::string>& header,
-                            const std::vector<std::vector<std::string>>& rows)
-      = 0;
+    explicit ITableWriter(std::filesystem::path& filePath);
+    virtual ~ITableWriter() = default;
+    virtual void writeTable(const IO::Outputs::SimulationTable& simuTable) const = 0;
+
+protected:
+    std::filesystem::path& output_file_;
 };
 
 } // namespace Antares::Writer

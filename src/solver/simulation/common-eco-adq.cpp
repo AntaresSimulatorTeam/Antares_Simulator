@@ -11,8 +11,6 @@
 #include <antares/logs/logs.h>
 #include <antares/study/study.h>
 
-class ISimulationTable;
-
 namespace Antares::Solver::Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,

@@ -4,7 +4,6 @@
 #include <antares/antares/fatal-error.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/logs/logs.h>
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"

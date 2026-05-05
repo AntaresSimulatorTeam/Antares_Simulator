@@ -15,8 +15,7 @@
 #include <inmemory-modeler.h>
 
 #include "antares/expressions/visitors/VariabilityVisitor.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
-#include "antares/io/outputs/SimulationTableCsvFile.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -25,10 +24,10 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
-#include "antares/writer/i_writer.h"
 #include "antares/writer/in_memory_writer.h"
 
 #include "UtilMocks.h"
@@ -115,8 +114,8 @@ BOOST_AUTO_TEST_SUITE(SimulationTableCsvTests)
 
 BOOST_AUTO_TEST_CASE(Constructor_WritesHeader)
 {
-    SimulationTableCsv table;
-    table.writeHeader();
+    SimulationTable table;
+    table.writeHeaderToBuffer();
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("block,component,output,absolute_time_index,block_time_index,scenario_"
                             "index,value,basis_status")
@@ -125,7 +124,7 @@ BOOST_AUTO_TEST_CASE(Constructor_WritesHeader)
 
 BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
                                .component = "comp1",
                                .output = "var1",
@@ -136,7 +135,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.5,Basic") != std::string::npos);
@@ -144,7 +143,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
 
 BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 2,
                                .component = "comp2",
                                .output = "var2",
@@ -155,7 +154,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
                                .status = std::nullopt};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("2,comp2,var2,None,None,0,None,None") != std::string::npos);
@@ -163,7 +162,7 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
 
 BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
                                .component = "comp1",
                                .output = "var1",
@@ -174,7 +173,7 @@ BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
     BOOST_CHECK(!table.buffer().empty());
 
     table.clear();
@@ -185,7 +184,7 @@ BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
 
 BOOST_AUTO_TEST_CASE(MultipleEntries)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     const size_t numEntries = 3;
     for (size_t i = 0; i < numEntries; ++i)
     {
@@ -200,7 +199,7 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
         table.addEntry(entry);
     }
 
-    table.write();
+    table.writeToBuffer();
 
     // Verify we can handle large amounts of data
     std::string buffer = table.buffer();
@@ -330,7 +329,7 @@ BOOST_AUTO_TEST_SUITE(ThreadSafetyTests)
 
 BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     const int numThreads = 4;
     const int entriesPerThread = 100;
 
@@ -365,7 +364,7 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
         thread.join();
     }
 
-    table.write();
+    table.writeToBuffer();
     std::string buffer = table.buffer();
 
     // Should have all entries
@@ -379,7 +378,7 @@ BOOST_AUTO_TEST_SUITE(PerformanceTests)
 
 BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     const int numEntries = 50000;
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -396,8 +395,8 @@ BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
                                    .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
     }
-    table.writeHeader();
-    table.write();
+    table.writeHeaderToBuffer();
+    table.writeToBuffer();
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -417,7 +416,7 @@ BOOST_AUTO_TEST_SUITE(BoundaryValueTests)
 
 BOOST_AUTO_TEST_CASE(DoubleValues_PrecisionBoundaries)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
 
     // Test various double precision scenarios
     std::vector<double> testValues = {0.0,
@@ -445,7 +444,7 @@ BOOST_AUTO_TEST_CASE(DoubleValues_PrecisionBoundaries)
         BOOST_CHECK_NO_THROW(table.addEntry(entry));
     }
 
-    BOOST_CHECK_NO_THROW(table.write());
+    BOOST_CHECK_NO_THROW(table.writeToBuffer());
 
     std::string buffer = table.buffer();
     BOOST_CHECK(!buffer.empty());
@@ -624,7 +623,7 @@ BOOST_FIXTURE_TEST_SUITE(ComponentModelIntegrationTests, BasicProblemFixture)
 
 BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     MockLinearProblem linearProblem(true);
     const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
     build(fillContext, &linearProblem);
@@ -639,8 +638,8 @@ BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
                        1,
                        TimeConversionMode::SingleBlock,
                        0);
-    table.writeHeader();
-    table.write();
+    table.writeHeaderToBuffer();
+    table.writeToBuffer();
     std::string buffer = table.buffer();
 
     // Should have entries for all 4 variable types with different time/scenario combinations
@@ -660,7 +659,7 @@ BOOST_AUTO_TEST_SUITE(DataIntegrityTests)
 BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
 {
     // Test that data written matches data read
-    SimulationTableCsv table;
+    SimulationTable table;
 
     std::vector<SimulationTableEntry> originalEntries = {
       {1, "comp1", "var1", 10, 5, 1, 123.456, MipBasisStatus::BASIC},
@@ -672,7 +671,7 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
         table.addEntry(entry);
     }
 
-    table.write();
+    table.writeToBuffer();
     std::string csvOutput = table.buffer();
 
     // Parse the CSV output manually to verify data integrity
@@ -733,7 +732,7 @@ BOOST_AUTO_TEST_SUITE(SpecialCharacterTests)
 
 BOOST_AUTO_TEST_CASE(UnicodeCharacters_InNames)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
                                .component = "cömpönént_测试",
                                .output = "vär_αβγ",
@@ -744,7 +743,7 @@ BOOST_AUTO_TEST_CASE(UnicodeCharacters_InNames)
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(table.write());
+    BOOST_CHECK_NO_THROW(table.writeToBuffer());
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("cömpönént_测试") != std::string::npos);
@@ -753,7 +752,7 @@ BOOST_AUTO_TEST_CASE(UnicodeCharacters_InNames)
 
 BOOST_AUTO_TEST_CASE(CSVEscaping_SpecialCharacters)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
                                .component = "comp,with,commas",
                                .output = "var\"with\"quotes",
@@ -764,7 +763,7 @@ BOOST_AUTO_TEST_CASE(CSVEscaping_SpecialCharacters)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
 
     std::string buffer = table.buffer();
     // Note: This implementation doesn't escape CSV properly, but we test what it actually does
@@ -778,7 +777,7 @@ BOOST_FIXTURE_TEST_SUITE(SimulationTableGeneratorTemplateTests, BasicProblemFixt
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 4, 0, 4, 0); // 5 time steps
     MockLinearProblem linearProblem(true);
     LinearProblemData data;
@@ -797,7 +796,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
     MockLinearProblem linearProblem(true);
 
@@ -810,7 +809,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
                         fillContext,
                         1,
                         TimeConversionMode::WeeklyBlocks);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("2,comp1,var4,169,1") != std::string::npos);
@@ -819,7 +818,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, day 2 globally
     MockLinearProblem linearProblem(true);
 
@@ -832,7 +831,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
                         fillContext,
                         1,
                         TimeConversionMode::DailyBlocks);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("2,comp1,var4,25,1") != std::string::npos);
@@ -841,7 +840,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, single block
     MockLinearProblem linearProblem(true);
 
@@ -854,7 +853,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("1,comp1,var4,1,1") != std::string::npos);
@@ -863,7 +862,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocalStep)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
     MockLinearProblem linearProblem(true);
 
@@ -876,7 +875,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocal
                         fillContext,
                         1,
                         TimeConversionMode::WeeklyBlocks);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("2,comp1,constraint2,169,1,0") != std::string::npos);
@@ -885,7 +884,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocal
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
     MockLinearProblem linearProblem(true);
 
@@ -899,7 +898,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
                         0,
                         TimeConversionMode::SingleBlock,
                         true);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("1,comp1,constraint1,None,None,0") != std::string::npos);
@@ -907,7 +906,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutputs)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
     MockLinearProblem linearProblem(true);
 
@@ -920,7 +919,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
@@ -928,7 +927,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     FillContext fillContext(0, 1, 0, 1, 0); // 2 local time steps
     MockLinearProblem linearProblem(true);
 
@@ -941,7 +940,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("1,comp1,var1,None,None,0,") != std::string::npos);
@@ -986,7 +985,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
     BOOST_REQUIRE(pb->solve(false));
 
     auto& modelerData = getModelerData();
-    SimulationTableCsv table;
+    SimulationTable table;
     FillSimulationTable(table,
                         *pb,
                         45.0,
@@ -995,7 +994,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.write();
+    table.writeToBuffer();
 
     const std::string buffer = table.buffer();
     BOOST_TEST_INFO(buffer);
@@ -1013,7 +1012,7 @@ BOOST_AUTO_TEST_SUITE(EdgeCaseStressTests)
 
 BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 0,
                                .component = "",
                                .output = "",
@@ -1024,7 +1023,7 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
                                .status = std::nullopt};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("0,,,None,None,0,None,None") != std::string::npos);
@@ -1032,7 +1031,7 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
 
 BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     std::string longComponent(10000, 'a'); // 10k character string
     std::string longOutput(5000, 'b');     // 5k character string
 
@@ -1046,7 +1045,7 @@ BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(table.write());
+    BOOST_CHECK_NO_THROW(table.writeToBuffer());
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find(longComponent) != std::string::npos);
@@ -1055,7 +1054,7 @@ BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
 
 BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
 
     for (int cycle = 0; cycle < 5; ++cycle)
     {
@@ -1073,7 +1072,7 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
             table.addEntry(entry);
         }
 
-        table.write();
+        table.writeToBuffer();
 
         // Verify content before clearing
         std::string buffer = table.buffer();
@@ -1095,24 +1094,33 @@ BOOST_AUTO_TEST_SUITE(SimulationTableCsvFileTests)
 
 BOOST_FIXTURE_TEST_CASE(Constructor_ValidPath, TempDirFixture)
 {
-    BOOST_CHECK_NO_THROW(SimulationTableCsvFile(tempDir, "test_sim"));
+    BOOST_CHECK_NO_THROW({
+        FileWriter fileWriter(tempDir);
+        fileWriter.init("test_sim");
+    });
 }
 
 BOOST_FIXTURE_TEST_CASE(Constructor_InvalidPath, TempDirFixture)
 {
     std::filesystem::path invalidPath = tempDir / "nonexistent";
-    BOOST_CHECK_THROW(SimulationTableCsvFile(invalidPath, "test_sim"), std::runtime_error);
+    BOOST_CHECK_THROW(FileWriter fileWriter(invalidPath), std::runtime_error);
 }
 
 BOOST_FIXTURE_TEST_CASE(Constructor_EmptySimulationId, TempDirFixture)
 {
-    BOOST_CHECK_NO_THROW(SimulationTableCsvFile(tempDir, ""));
+    BOOST_CHECK_NO_THROW({
+        FileWriter fileWriter(tempDir);
+        fileWriter.init("");
+    });
 }
 
 BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
 {
     {
-        SimulationTableCsvFile table(tempDir, "test_sim");
+        SimulationTable table;
+        FileWriter writer(tempDir);
+        writer.init("test_sim");
+
         SimulationTableEntry entry{.block = 1,
                                    .component = "test_comp",
                                    .output = "test_var",
@@ -1122,12 +1130,11 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
                                    .value = 123.45,
                                    .status = MipBasisStatus::BASIC};
         table.addEntry(entry);
-        table.writeHeader();
-        table.write();
-    } // File should be closed here
+        writer.writeSimulationTable(table);
+    }
 
     // Check file was created and contains expected content
-    auto expectedFile = tempDir / "simulation_table--test_sim.csv";
+    auto expectedFile = tempDir / "output" / "simulation_table--test_sim.csv";
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     std::ifstream file(expectedFile);
@@ -1330,7 +1337,9 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
     // Create simulation table file
     std::string simulationId = "integration_test";
     {
-        SimulationTableCsvFile table(tempDir, simulationId);
+        SimulationTable table;
+        FileWriter writer(tempDir);
+        writer.init(simulationId);
 
         // Add multiple entries
         for (int i = 0; i < 5; ++i)
@@ -1346,11 +1355,11 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
             table.addEntry(entry);
         }
 
-        table.write();
+        writer.writeSimulationTable(table);
     }
 
     // Verify file exists and has correct name
-    auto expectedFile = tempDir / ("simulation_table--" + simulationId + ".csv");
+    auto expectedFile = tempDir / "output" / ("simulation_table--" + simulationId + ".csv");
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     // Read and verify content
@@ -1372,7 +1381,7 @@ BOOST_AUTO_TEST_SUITE(EdgeCasesAndErrorHandling)
 
 BOOST_AUTO_TEST_CASE(LargeValues_HandledCorrectly)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = UINT_MAX,
                                .component = "large_comp",
                                .output = "large_var",
@@ -1383,12 +1392,12 @@ BOOST_AUTO_TEST_CASE(LargeValues_HandledCorrectly)
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(table.write());
+    BOOST_CHECK_NO_THROW(table.writeToBuffer());
 }
 
 BOOST_AUTO_TEST_CASE(SpecialCharacters_InComponentNames)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
                                .component = "comp,with,commas",
                                .output = "var\"with\"quotes",
@@ -1399,7 +1408,7 @@ BOOST_AUTO_TEST_CASE(SpecialCharacters_InComponentNames)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("comp,with,commas") != std::string::npos);
@@ -1408,7 +1417,7 @@ BOOST_AUTO_TEST_CASE(SpecialCharacters_InComponentNames)
 
 BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 0,
                                .component = "",
                                .output = "",
@@ -1419,7 +1428,7 @@ BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
                                .status = MipBasisStatus::FREE};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("0,,") != std::string::npos);
@@ -1428,7 +1437,7 @@ BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
 
 BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
 {
-    SimulationTableCsv table;
+    SimulationTable table;
     SimulationTableEntry entry{.block = 1,
                                .component = "comp1",
                                .output = "var1",
@@ -1439,7 +1448,7 @@ BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.write();
+    table.writeToBuffer();
 
     std::string buffer = table.buffer();
     BOOST_CHECK(buffer.find("-123.456") != std::string::npos);

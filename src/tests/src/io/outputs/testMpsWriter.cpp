@@ -218,21 +218,30 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
 BOOST_AUTO_TEST_CASE(test_file_writer_init)
 {
     fs::path tempDir = fs::temp_directory_path() / "antares_test_file_writer";
+    fs::create_directories(tempDir);
     FileWriter writer(tempDir);
     FileWriter writer2(tempDir);
     writer.init("abc");
-    BOOST_CHECK(fs::exists(writer.outputPath()));
-    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc");
+
+    SimulationTable s;
+    writer.writeSimulationTable(s);
+    BOOST_CHECK(fs::exists(writer.outputPath() / "simulation_table--abc.csv"));
+    BOOST_CHECK_EQUAL(writer.outputPath() / "simulation_table--abc.csv",
+                      tempDir / "output" / "simulation_table--abc.csv");
 
     writer.init("abc");
-    BOOST_CHECK(fs::exists(writer.outputPath()));
-    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc-2");
+    writer.writeSimulationTable(s);
+    BOOST_CHECK(fs::exists(writer.outputPath() / "simulation_table--abc.csv"));
+    BOOST_CHECK_EQUAL(writer.outputPath() / "simulation_table--abc.csv",
+                      tempDir / "output-2" / "simulation_table--abc.csv");
 
     writer2.init("abc");
-    BOOST_CHECK(fs::exists(writer2.outputPath()));
-    BOOST_CHECK(writer2.outputPath() == tempDir / "output" / "abc-3");
+    writer2.writeSimulationTable(s);
+    BOOST_CHECK(fs::exists(writer2.outputPath() / "simulation_table--abc.csv"));
+    BOOST_CHECK_EQUAL(writer2.outputPath() / "simulation_table--abc.csv",
+                      tempDir / "output-3" / "simulation_table--abc.csv");
 
-    fs::remove_all(tempDir);
+    // fs::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
