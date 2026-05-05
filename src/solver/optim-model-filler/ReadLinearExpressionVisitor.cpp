@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include <antares/expressions/visitors/NodeVisitor.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/expressions/visitors/VariabilityVisitor.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
@@ -16,7 +17,6 @@
 #include "antares/expressions/visitors/PrintVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
-#include <antares/expressions/visitors/TimeSumUtils.h>
 
 /**
  * Read Linear Expression Visitor
@@ -241,11 +241,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
         TimeDependentLinearExpression ret(nbtimeSteps_);
         for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
         {
-        const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(
-          node->from(), evalVisitor_, variabilityVisitor, localTimeStep);
-        const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(
-          node->to(), evalVisitor_, variabilityVisitor, localTimeStep);
-        auto term = expression[0];
+            const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(
+              node->from(),
+              evalVisitor_,
+              variabilityVisitor,
+              localTimeStep);
+            const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
+                                                                                evalVisitor_,
+                                                                                variabilityVisitor,
+                                                                                localTimeStep);
+            auto term = expression[0];
             term *= static_cast<double>(to - from + 1);
             ret[localTimeStep] += term;
         }
@@ -255,12 +260,19 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     TimeDependentLinearExpression ret(nbtimeSteps_);
     for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
     {
-        const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(
-          node->from(), evalVisitor_, variabilityVisitor, localTimeStep);
-        const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(
-          node->to(), evalVisitor_, variabilityVisitor, localTimeStep);
+        const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
+                                                                              evalVisitor_,
+                                                                              variabilityVisitor,
+                                                                              localTimeStep);
+        const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
+                                                                            evalVisitor_,
+                                                                            variabilityVisitor,
+                                                                            localTimeStep);
         Antares::Expressions::Visitors::forEachTimeSumIndex(
-          from, to, static_cast<int>(nbtimeSteps_), [&](int timeIndex) { ret[localTimeStep] += expression[timeIndex]; });
+          from,
+          to,
+          static_cast<int>(nbtimeSteps_),
+          [&](int timeIndex) { ret[localTimeStep] += expression[timeIndex]; });
     }
     return ret;
 }

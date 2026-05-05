@@ -5,10 +5,10 @@
 
 #include <fmt/format.h>
 
-#include "antares/expressions/visitors/EvalVisitor.h"
-#include "antares/expressions/visitors/VariabilityVisitor.h"
-#include "antares/expressions/visitors/PrintVisitor.h"
 #include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/PrintVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
 
 namespace Antares::Expressions::Visitors
 {
