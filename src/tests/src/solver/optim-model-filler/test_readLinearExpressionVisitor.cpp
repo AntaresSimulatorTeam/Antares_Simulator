@@ -298,6 +298,30 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_mixed_bounds, VisitorFixture<ReadLine
     BOOST_CHECK_EQUAL(linear_expression[2].size(), 0);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_fixed_bound_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* from = create<VariableNode>("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* to = create<LiteralNode>(2.);
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(1.));
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage("A sum bound must be fixed in time in 'var1'."));
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_moving_bound_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<TPlusNode>(create<VariableNode>("var1", 0));
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(1.));
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage("A sum bound must be fixed in time in 't+var1'."));
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // param = {0, 1, 2}
