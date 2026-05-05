@@ -3,6 +3,8 @@
 
 #include "antares/solver/simulation/sim_alloc_probleme_hebdo.h"
 
+#include <cassert>
+
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
@@ -10,6 +12,290 @@
 #include "antares/study/simulation.h"
 
 using namespace Antares;
+
+// ---------------------------------------------------------------------------
+// cloneProblemHebdoForWeek
+// ---------------------------------------------------------------------------
+// Deep-copy rationale for PROBLEME_HEBDO:
+//
+//  All std::vector<T> members are value-copyable and need no special handling.
+//  The unique_ptr<PROBLEME_ANTARES_A_RESOUDRE> ProblemeAResoudre is the only
+//  non-trivially-copyable member that requires explicit treatment.
+//  Its internal pointer-of-pointers vectors (AdresseOuPlacerLaValeurDes*)
+//  point into the PROBLEME_HEBDO data structures; however, these pointers are
+//  unconditionally rebuilt at the start of every weekly LP solve inside
+//  OPT_InitialiserLesBornesDesVariables*(). Therefore it is safe to start with
+//  a fresh PROBLEME_ANTARES_A_RESOUDRE that has all scalar / vector members
+//  copied but empty pointer-of-pointer vectors -- the solve will repopulate
+//  them against the clone's own data.
+//
+//  The shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData is shared
+//  across weeks for read-only access (areaMode, linkMode vectors are read-only
+//  during the solve).  The mutable csrTriggeredHoursPerArea_ per-area set is
+//  reset at the start of each week's post-process; it is only written from the
+//  aggregation thread (sequential), so sharing is safe.
+//
+//  The const char* NomDeLaContrainteCouplante in CONTRAINTES_COUPLANTES points
+//  to string data owned by the study's binding-constraint objects, which live
+//  for the duration of the simulation. It is read-only during the solve.
+//
+//  Solver::ModelerData* modelerData is nullptr in all normal simulations.
+// ---------------------------------------------------------------------------
+
+PROBLEME_HEBDO cloneProblemHebdoForWeek(
+    const PROBLEME_HEBDO& src,
+    uint weekIndex,
+    const std::vector<double>& precomputedInitialLevels)
+{
+    // Step 1: memberwise copy of all value-type / std::vector / shared_ptr members.
+    // Because PROBLEME_HEBDO has a deleted copy-constructor (via deleted sub-structs
+    // CORRESPONDANCES_DES_VARIABLES / CORRESPONDANCES_DES_CONTRAINTES), we build
+    // the copy member-by-member for those fields.
+
+    PROBLEME_HEBDO dst;
+
+    // Scalar / flag fields
+    dst.weekInTheYear                   = weekIndex;
+    dst.year                            = src.year;
+    dst.OptimisationAuPasHebdomadaire   = src.OptimisationAuPasHebdomadaire;
+    dst.TypeDeLissageHydraulique        = src.TypeDeLissageHydraulique;
+    dst.OptimisationAvecCoutsDeDemarrage= src.OptimisationAvecCoutsDeDemarrage;
+    dst.OptimisationAvecVariablesEntieres = src.OptimisationAvecVariablesEntieres;
+    dst.NombreDePays                    = src.NombreDePays;
+    dst.NombreDePaliersThermiques       = src.NombreDePaliersThermiques;
+    dst.NombreDInterconnexions          = src.NombreDInterconnexions;
+    dst.NombreDePasDeTemps              = src.NombreDePasDeTemps;
+    dst.NombreDePasDeTempsPourUneOptimisation = src.NombreDePasDeTempsPourUneOptimisation;
+    dst.NombreDeJours                   = src.NombreDeJours;
+    dst.NombreDePasDeTempsDUneJournee   = src.NombreDePasDeTempsDUneJournee;
+    dst.NombreDeContraintesCouplantes   = src.NombreDeContraintesCouplantes;
+    dst.NumberOfShortTermStorages       = src.NumberOfShortTermStorages;
+    dst.YaDeLaReserveJmoins1            = src.YaDeLaReserveJmoins1;
+    dst.Expansion                       = src.Expansion;
+    dst.HeureDansLAnnee                 = src.HeureDansLAnnee;
+    dst.LeProblemeADejaEteInstancie     = src.LeProblemeADejaEteInstancie;
+    dst.ExportMPS                       = src.ExportMPS;
+    dst.exportMPSOnError                = src.exportMPSOnError;
+    dst.NamedProblems                   = src.NamedProblems;
+    dst.exportSolutions                 = src.exportSolutions;
+
+    // std::vector members (all copyable by value)
+    dst.NomsDesPays                     = src.NomsDesPays;
+    dst.PaysOrigineDeLInterconnexion    = src.PaysOrigineDeLInterconnexion;
+    dst.PaysExtremiteDeLInterconnexion  = src.PaysExtremiteDeLInterconnexion;
+    dst.CoutDeTransport                 = src.CoutDeTransport;
+    dst.ValeursDeNTC                    = src.ValeursDeNTC;
+    dst.NumeroDeJourDuPasDeTemps        = src.NumeroDeJourDuPasDeTemps;
+    dst.NumeroDIntervalleOptimiseDuPasDeTemps = src.NumeroDIntervalleOptimiseDuPasDeTemps;
+    dst.ConsommationsAbattues           = src.ConsommationsAbattues;
+    dst.CoutDeDefaillancePositive       = src.CoutDeDefaillancePositive;
+    dst.CoutDeDefaillanceNegative       = src.CoutDeDefaillanceNegative;
+    dst.CoutDeDebordement               = src.CoutDeDebordement;
+    dst.PaliersThermiquesDuPays         = src.PaliersThermiquesDuPays;
+    dst.CaracteristiquesHydrauliques    = src.CaracteristiquesHydrauliques;
+    dst.ShortTermStorage                = src.ShortTermStorage;
+    dst.DefaillanceNegativeUtiliserPMinThermique = src.DefaillanceNegativeUtiliserPMinThermique;
+    dst.DefaillanceNegativeUtiliserHydro = src.DefaillanceNegativeUtiliserHydro;
+    dst.DefaillanceNegativeUtiliserConsoAbattue = src.DefaillanceNegativeUtiliserConsoAbattue;
+    dst.BruitSurCoutHydraulique         = src.BruitSurCoutHydraulique;
+    dst.MatriceDesContraintesCouplantes = src.MatriceDesContraintesCouplantes;
+    dst.ResultatsContraintesCouplantes  = src.ResultatsContraintesCouplantes;
+    dst.SoldeMoyenHoraire               = src.SoldeMoyenHoraire;
+    dst.IndexDebutIntercoOrigine        = src.IndexDebutIntercoOrigine;
+    dst.IndexSuivantIntercoOrigine      = src.IndexSuivantIntercoOrigine;
+    dst.IndexDebutIntercoExtremite      = src.IndexDebutIntercoExtremite;
+    dst.IndexSuivantIntercoExtremite    = src.IndexSuivantIntercoExtremite;
+    dst.NumeroDeContrainteEnergieHydraulique  = src.NumeroDeContrainteEnergieHydraulique;
+    dst.NumeroDeContrainteMinEnergieHydraulique = src.NumeroDeContrainteMinEnergieHydraulique;
+    dst.NumeroDeContrainteMaxEnergieHydraulique = src.NumeroDeContrainteMaxEnergieHydraulique;
+    dst.NumeroDeContrainteMaxPompage    = src.NumeroDeContrainteMaxPompage;
+    dst.NumeroDeContrainteDeSoldeDEchange = src.NumeroDeContrainteDeSoldeDEchange;
+    dst.NumeroDeContrainteEquivalenceStockFinal = src.NumeroDeContrainteEquivalenceStockFinal;
+    dst.NumeroDeContrainteExpressionStockFinal  = src.NumeroDeContrainteExpressionStockFinal;
+    dst.NumeroDeVariableStockFinal      = src.NumeroDeVariableStockFinal;
+    dst.NumeroDeVariableDeTrancheDeStock = src.NumeroDeVariableDeTrancheDeStock;
+    dst.AllMustRunGeneration            = src.AllMustRunGeneration;
+    dst.CoefficientEcretementPMaxHydraulique = src.CoefficientEcretementPMaxHydraulique;
+    dst.previousSimulationFinalLevel    = src.previousSimulationFinalLevel;
+    dst.ResultatsHoraires               = src.ResultatsHoraires;
+    dst.VariablesDualesDesContraintesDeNTC = src.VariablesDualesDesContraintesDeNTC;
+    dst.coutOptimalSolution1            = src.coutOptimalSolution1;
+    dst.coutOptimalSolution2            = src.coutOptimalSolution2;
+    dst.NbGrpCourbeGuide                = src.NbGrpCourbeGuide;
+    dst.NbGrpOpt                        = src.NbGrpOpt;
+    dst.timeMeasure                     = src.timeMeasure;
+
+    // CORRESPONDANCES_DES_VARIABLES (deleted copy ctor) - copy member-by-member
+    {
+        const std::size_t n = src.CorrespondanceVarNativesVarOptim.size();
+        dst.CorrespondanceVarNativesVarOptim.resize(n);
+        for (std::size_t i = 0; i < n; ++i)
+        {
+            const auto& s = src.CorrespondanceVarNativesVarOptim[i];
+            auto& d = dst.CorrespondanceVarNativesVarOptim[i];
+            d.NumeroDeVariableDuFluxDirect                = s.NumeroDeVariableDuFluxDirect;
+            d.NumeroDeVariableDuFluxDirectPositif         = s.NumeroDeVariableDuFluxDirectPositif;
+            d.NumeroDeVariableDuFluxIndirectPositif       = s.NumeroDeVariableDuFluxIndirectPositif;
+            d.NumeroDeVariableDuPalierThermique           = s.NumeroDeVariableDuPalierThermique;
+            d.NumeroDeVariablesDeLaProdHyd                = s.NumeroDeVariablesDeLaProdHyd;
+            d.NumeroDeVariablesDePompage                  = s.NumeroDeVariablesDePompage;
+            d.NumeroDeVariablesDeNiveau                   = s.NumeroDeVariablesDeNiveau;
+            d.NumeroDeVariablesDeDebordement              = s.NumeroDeVariablesDeDebordement;
+            d.NumeroDeVariableDefaillancePositive         = s.NumeroDeVariableDefaillancePositive;
+            d.NumeroDeVariableDefaillanceNegative         = s.NumeroDeVariableDefaillanceNegative;
+            d.NumeroDeVariablesVariationHydALaBaisse      = s.NumeroDeVariablesVariationHydALaBaisse;
+            d.NumeroDeVariablesVariationHydALaHausse      = s.NumeroDeVariablesVariationHydALaHausse;
+            d.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique
+              = s.NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
+            d.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
+              = s.NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
+            d.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
+              = s.NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
+            d.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
+              = s.NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+            d.SIM_ShortTermStorage.InjectionVariable
+              = s.SIM_ShortTermStorage.InjectionVariable;
+            d.SIM_ShortTermStorage.WithdrawalVariable
+              = s.SIM_ShortTermStorage.WithdrawalVariable;
+            d.SIM_ShortTermStorage.LevelVariable
+              = s.SIM_ShortTermStorage.LevelVariable;
+            d.SIM_ShortTermStorage.CostVariationInjection
+              = s.SIM_ShortTermStorage.CostVariationInjection;
+            d.SIM_ShortTermStorage.CostVariationWithdrawal
+              = s.SIM_ShortTermStorage.CostVariationWithdrawal;
+            d.SIM_ShortTermStorage.OverflowVariable
+              = s.SIM_ShortTermStorage.OverflowVariable;
+        }
+    }
+
+    // CORRESPONDANCES_DES_CONTRAINTES (deleted copy ctor) - copy member-by-member
+    {
+        const std::size_t n = src.CorrespondanceCntNativesCntOptim.size();
+        dst.CorrespondanceCntNativesCntOptim.resize(n);
+        for (std::size_t i = 0; i < n; ++i)
+        {
+            const auto& s = src.CorrespondanceCntNativesCntOptim[i];
+            auto& d = dst.CorrespondanceCntNativesCntOptim[i];
+            d.NumeroDeContrainteDesBilansPays              = s.NumeroDeContrainteDesBilansPays;
+            d.NumeroDeContraintePourEviterLesChargesFictives
+              = s.NumeroDeContraintePourEviterLesChargesFictives;
+            d.NumeroDeContraintePourBornerLaDefaillance    = s.NumeroDeContraintePourBornerLaDefaillance;
+            d.NumeroPremiereContrainteDeReserveParZone     = s.NumeroPremiereContrainteDeReserveParZone;
+            d.NumeroDeuxiemeContrainteDeReserveParZone     = s.NumeroDeuxiemeContrainteDeReserveParZone;
+            d.NumeroDeContrainteDeDissociationDeFlux       = s.NumeroDeContrainteDeDissociationDeFlux;
+            d.NumeroDeContrainteDesContraintesCouplantes   = s.NumeroDeContrainteDesContraintesCouplantes;
+            d.NumeroDeContrainteDesContraintesDeDureeMinDeMarche
+              = s.NumeroDeContrainteDesContraintesDeDureeMinDeMarche;
+            d.NumeroDeContrainteDesContraintesDeDureeMinDArret
+              = s.NumeroDeContrainteDesContraintesDeDureeMinDArret;
+            d.NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
+              = s.NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
+            d.NumeroDeContrainteDesNiveauxPays             = s.NumeroDeContrainteDesNiveauxPays;
+            d.ShortTermStorageLevelConstraint              = s.ShortTermStorageLevelConstraint;
+            d.ShortTermStorageCostVariationInjectionForward
+              = s.ShortTermStorageCostVariationInjectionForward;
+            d.ShortTermStorageCostVariationInjectionBackward
+              = s.ShortTermStorageCostVariationInjectionBackward;
+            d.ShortTermStorageCostVariationWithdrawalForward
+              = s.ShortTermStorageCostVariationWithdrawalForward;
+            d.ShortTermStorageCostVariationWithdrawalBackward
+              = s.ShortTermStorageCostVariationWithdrawalBackward;
+        }
+    }
+
+    // CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
+    {
+        const std::size_t n = src.CorrespondanceCntNativesCntOptimJournalieres.size();
+        dst.CorrespondanceCntNativesCntOptimJournalieres.resize(n);
+        for (std::size_t i = 0; i < n; ++i)
+        {
+            dst.CorrespondanceCntNativesCntOptimJournalieres[i]
+              .NumeroDeContrainteDesContraintesCouplantes
+              = src.CorrespondanceCntNativesCntOptimJournalieres[i]
+                  .NumeroDeContrainteDesContraintesCouplantes;
+        }
+    }
+
+    // CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
+    dst.CorrespondanceCntNativesCntOptimHebdomadaires
+      .NumeroDeContrainteDesContraintesCouplantes
+      = src.CorrespondanceCntNativesCntOptimHebdomadaires
+          .NumeroDeContrainteDesContraintesCouplantes;
+    dst.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation
+      = src.CorrespondanceCntNativesCntOptimHebdomadaires.ShortTermStorageCumulation;
+
+    // ReserveJMoins1 (no deleted ctor, but copy it explicitly for clarity)
+    dst.ReserveJMoins1 = src.ReserveJMoins1;
+
+    // shared_ptr fields - shared read-only access is safe
+    dst.adequacyPatchRuntimeData = src.adequacyPatchRuntimeData;
+
+    // modelerData is a raw pointer (nullptr in normal simulations)
+    dst.modelerData = src.modelerData;
+
+    // optimizationStatistics: std::atomic-based, non-copyable.
+    // Start fresh for the clone (reset to zero); the solve will accumulate into them.
+    dst.optimizationStatistics[0].reset();
+    dst.optimizationStatistics[1].reset();
+
+    // Step 2: Create a fresh PROBLEME_ANTARES_A_RESOUDRE for the clone.
+    // The pointer-of-pointers vectors (AdresseOuPlacerLaValeurDes*) are
+    // rebuilt unconditionally at the start of each LP solve, so we only
+    // need to copy the structural (non-pointer) members.
+    dst.ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
+    {
+        const auto& sPAR = *src.ProblemeAResoudre;
+        auto& dPAR = *dst.ProblemeAResoudre;
+
+        dPAR.NombreDeVariables   = sPAR.NombreDeVariables;
+        dPAR.NombreDeContraintes = sPAR.NombreDeContraintes;
+        dPAR.Sens                = sPAR.Sens;
+        dPAR.IndicesDebutDeLigne = sPAR.IndicesDebutDeLigne;
+        dPAR.NombreDeTermesDesLignes = sPAR.NombreDeTermesDesLignes;
+        dPAR.CoefficientsDeLaMatriceDesContraintes = sPAR.CoefficientsDeLaMatriceDesContraintes;
+        dPAR.IndicesColonnes     = sPAR.IndicesColonnes;
+        dPAR.IncrementDAllocationMatriceDesContraintes
+          = sPAR.IncrementDAllocationMatriceDesContraintes;
+        dPAR.NombreDeTermesDansLaMatriceDesContraintes
+          = sPAR.NombreDeTermesDansLaMatriceDesContraintes;
+        dPAR.CoutQuadratique     = sPAR.CoutQuadratique;
+        dPAR.CoutLineaire        = sPAR.CoutLineaire;
+        dPAR.TypeDeVariable      = sPAR.TypeDeVariable;
+        dPAR.Xmin                = sPAR.Xmin;
+        dPAR.Xmax                = sPAR.Xmax;
+        dPAR.SecondMembre        = sPAR.SecondMembre;
+        // Pointer-of-pointers vectors: leave empty; rebuilt by the LP solve
+        dPAR.AdresseOuPlacerLaValeurDesVariablesOptimisees.assign(sPAR.NombreDeVariables, nullptr);
+        dPAR.X                   = sPAR.X;
+        dPAR.AdresseOuPlacerLaValeurDesCoutsMarginaux.assign(sPAR.NombreDeContraintes, nullptr);
+        dPAR.CoutsMarginauxDesContraintes = sPAR.CoutsMarginauxDesContraintes;
+        dPAR.AdresseOuPlacerLaValeurDesCoutsReduits.assign(sPAR.NombreDeVariables, nullptr);
+        dPAR.CoutsReduits        = sPAR.CoutsReduits;
+        dPAR.ExistenceDUneSolution = sPAR.ExistenceDUneSolution;
+        // ProblemesSpx: each clone needs its own LP solver instances (not shared)
+        // They are created lazily during the solve, so start with an empty vector.
+        // dPAR.ProblemesSpx stays default-constructed (empty).
+        dPAR.PositionDeLaVariable = sPAR.PositionDeLaVariable;
+        dPAR.ComplementDeLaBase   = sPAR.ComplementDeLaBase;
+        dPAR.Pi                   = sPAR.Pi;
+        dPAR.Colonne              = sPAR.Colonne;
+        dPAR.NomDesVariables      = sPAR.NomDesVariables;
+        dPAR.NomDesContraintes    = sPAR.NomDesContraintes;
+        dPAR.VariablesEntieres    = sPAR.VariablesEntieres;
+        // basisStatus: start fresh so each week's LP can converge independently
+        dPAR.clearBasis();
+    }
+
+    // Step 3: Override previousSimulationFinalLevel with precomputed values.
+    assert(precomputedInitialLevels.size() == dst.previousSimulationFinalLevel.size());
+    for (std::size_t areaIdx = 0; areaIdx < precomputedInitialLevels.size(); ++areaIdx)
+    {
+        dst.previousSimulationFinalLevel[areaIdx] = precomputedInitialLevels[areaIdx];
+    }
+
+    return dst;
+}
+
 
 void SIM_AllocationProblemeHebdo(const Data::Study& study,
                                  PROBLEME_HEBDO& problem,

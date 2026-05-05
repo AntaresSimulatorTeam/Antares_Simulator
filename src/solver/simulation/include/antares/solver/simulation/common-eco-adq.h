@@ -99,6 +99,43 @@ void interpolateWaterValue(const Data::AreaList& areas,
 */
 void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
+/*!
+ * \brief Compute the expected reservoir level at the START of each week.
+ *
+ * Entry [w] is the initial reservoir level to use for week \c w.
+ * Entry [0] is taken from \c problem.previousSimulationFinalLevel (the year's
+ * initial level, already set by SetInitialHydroLevel()).  Entry [w+1] is
+ * derived from the final level of week w.
+ *
+ * For areas where \c !TurbinageEntreBornes, the initial level for each week
+ * comes directly from \p hydroVentilationResults (same source as
+ * SIM_RenseignementProblemeHebdo), so the sequential carry-forward is not
+ * needed for those areas.
+ *
+ * For areas where \c TurbinageEntreBornes is true, the level depends on the
+ * LP solution for the previous week.  This function approximates those levels
+ * using the ventilation-provided target levels, introducing a bounded error
+ * that is acceptable in Fast Mode UC.
+ *
+ * \param areas                 Study area list.
+ * \param problem               Fully initialised PROBLEME_HEBDO for the year.
+ * \param hydroVentilationResults Ventilation results produced by
+ *                              HydroManagement::makeVentilation() for this year.
+ * \param calendar              Study calendar (for day-of-year look-up).
+ * \param nbWeeks               Number of weeks in the simulation horizon (usually 52).
+ * \param startHourInYear       Hour in year of the first hour of the first week.
+ * \return Matrix of shape [nbWeeks][nAreas]: result[w][a] is the initial
+ *         reservoir level (in MWh) to inject as
+ *         \c previousSimulationFinalLevel[a] before solving week \c w.
+ */
+std::vector<std::vector<double>> precomputeWeeklyInitialHydroLevels(
+    const Data::AreaList& areas,
+    const PROBLEME_HEBDO& problem,
+    const HYDRO_VENTILATION_RESULTS& hydroVentilationResults,
+    const Date::Calendar& calendar,
+    uint nbWeeks,
+    int startHourInYear);
+
 /*
 ** \brief Compute the weighted average NTC for a link
 **

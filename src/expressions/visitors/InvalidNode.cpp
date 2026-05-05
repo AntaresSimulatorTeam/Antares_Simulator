@@ -8,12 +8,12 @@ namespace Antares::Expressions::Visitors
 {
 
 InvalidNode::InvalidNode(const std::string& node_name):
-    std::invalid_argument("Node visitor encountered an invalid node type: " + node_name)
+    std::invalid_argument(std::string("Node visitor encountered an invalid node type: ") + node_name)
 {
 }
 
 NodeTypeShouldBeInExtraOutput::NodeTypeShouldBeInExtraOutput(const std::string& node_name):
-    std::invalid_argument("This type of node: '" + node_name
+    std::invalid_argument(std::string("This type of node: '") + node_name
                           + "' should only be used in extra outputs expressions")
 {
 }

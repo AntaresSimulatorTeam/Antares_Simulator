@@ -62,6 +62,9 @@ public:
     //! A non-zero value if the data will be used for a simulation
     bool usedByTheSolver;
 
+    //! Number of weeks to solve in parallel within each MC year (Fast Mode UC only)
+    uint maxNbWeeksInParallel = 1;
+
     //! All options related to linear & quadratic optimization
     Antares::Solver::Optimization::CmdLineOptimOptions solverOptions;
 
