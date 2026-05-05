@@ -54,9 +54,8 @@ int resolveTimeSumBound(const Nodes::Node* bound,
     if (isTimeDependent(variability))
     {
         Expressions::Visitors::PrintVisitor printVisitor;
-        throw Error::InvalidArgumentError(fmt::format(
-          "A sum bound must be fixed in time in '{}'.",
-          printVisitor.dispatch(bound)));
+        throw Error::InvalidArgumentError(
+          fmt::format("A sum bound must be fixed in time in '{}'.", printVisitor.dispatch(bound)));
     }
 
     if (const auto* tPlusNode = dynamic_cast<const Nodes::TPlusNode*>(bound))

@@ -364,8 +364,8 @@ BOOST_FIXTURE_TEST_CASE(TimeSumExpression, RegistryHolder)
     auto* neg = registry.create<Nodes::NegationNode>(lit);
 
     auto* param = registry.create<Nodes::ParameterNode>("param1");
-    auto* from = registry.create<Nodes::TPlusNode>(registry.create<Nodes::MultiplicationNode>(neg,
-                                                                                                param));
+    auto* from = registry.create<Nodes::TPlusNode>(
+      registry.create<Nodes::MultiplicationNode>(neg, param));
     auto* to = registry.create<Nodes::TPlusNode>(registry.create<Nodes::DivisionNode>(param, lit));
     const auto* timeSumNode = registry.create<Nodes::TimeSumNode>(from, to, div);
 

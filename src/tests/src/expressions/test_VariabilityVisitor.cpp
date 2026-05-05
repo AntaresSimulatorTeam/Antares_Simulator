@@ -166,8 +166,7 @@ BOOST_AUTO_TEST_CASE(tPlusNode_expression)
 {
     TPlusNode t1(&parameterNode);
 
-    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1),
-                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t1), VariabilityType::VARYING_IN_SCENARIO_ONLY);
 
     TPlusNode t2(&variableNode);
     BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&t2), VariabilityType::VARYING_IN_TIME_ONLY);

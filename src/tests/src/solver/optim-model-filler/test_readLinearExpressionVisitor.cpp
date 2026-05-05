@@ -275,7 +275,8 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     BOOST_CHECK_EQUAL(linear_expression[1].size(), 0);
 }
 
-BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_mixed_bounds, VisitorFixture<ReadLinearExpressionVisitor>)
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_mixed_bounds,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // param = {0, 1, 2}
     // 5 + sum( 1 .. t+1, param)
