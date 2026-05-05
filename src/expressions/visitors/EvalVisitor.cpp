@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/ShiftVector.h"
@@ -18,32 +19,7 @@ using namespace Antares::Utils;
 
 namespace Antares::Expressions::Visitors
 {
-namespace
-{
-int normalizeTimeIndex(int timeIndex, int size)
-{
-    return (timeIndex % size + size) % size;
-}
-
-template<class Callback>
-void forEachTimeSumIndex(int from, int to, int size, Callback callback)
-{
-    for (int timeIndex = from; timeIndex <= to; ++timeIndex)
-    {
-        callback(normalizeTimeIndex(timeIndex, size));
-    }
-}
-
-int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep)
-{
-    if (const auto* tPlusNode = dynamic_cast<const Nodes::TPlusNode*>(bound))
-    {
-        const auto offset = static_cast<int>(visitor.dispatch(tPlusNode->child()).valueAsDouble());
-        return static_cast<int>(localTimeStep) + offset;
-    }
-    return static_cast<int>(visitor.dispatch(bound).valueAsDouble());
-}
-} // namespace
+// Time sum utilities are provided by TimeSumUtils.h
 
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,

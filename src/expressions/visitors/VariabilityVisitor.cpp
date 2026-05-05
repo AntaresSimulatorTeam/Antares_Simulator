@@ -1,7 +1,9 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <fmt/format.h>
 #include <numeric>
+#include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/VariabilityVisitor.h>
@@ -65,7 +67,14 @@ VariabilityType VariabilityVisitor::visit(const Nodes::VariableNode* var)
 VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
 {
     const auto& parameters = component_.getParameterValues();
-    return parameters.at(param->value()).type;
+    if (parameters.contains(param->value()))
+    {
+        return parameters.at(param->value()).type;
+    }
+    else
+    {
+        throw std::invalid_argument(fmt::format("Parameter {} does not exist", param->value()));
+    }
 }
 
 VariabilityType VariabilityVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)

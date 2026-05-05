@@ -1,0 +1,46 @@
+// Copyright 2007-2026, RTE
+// SPDX-License-Identifier: MPL-2.0
+
+#include "antares/expressions/visitors/TimeSumUtils.h"
+
+#include <fmt/format.h>
+
+#include "antares/expressions/visitors/EvalVisitor.h"
+#include "antares/expressions/visitors/VariabilityVisitor.h"
+#include "antares/expressions/visitors/PrintVisitor.h"
+#include "antares/exception/InvalidArgumentError.hpp"
+
+namespace Antares::Expressions::Visitors
+{
+int normalizeTimeIndex(int timeIndex, int size)
+{
+    return (timeIndex % size + size) % size;
+}
+
+int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep)
+{
+    if (const auto* tPlusNode = dynamic_cast<const Nodes::TPlusNode*>(bound))
+    {
+        const auto offset = static_cast<int>(visitor.dispatch(tPlusNode->child()).valueAsDouble());
+        return static_cast<int>(localTimeStep) + offset;
+    }
+    return static_cast<int>(visitor.dispatch(bound).valueAsDouble());
+}
+
+int resolveTimeSumBound(const Nodes::Node* bound,
+                        EvalVisitor& visitor,
+                        VariabilityVisitor& variabilityVisitor,
+                        unsigned localTimeStep)
+{
+    const auto variability = variabilityVisitor.dispatch(bound);
+    if (isTimeDependent(variability))
+    {
+        PrintVisitor printVisitor;
+        throw Error::InvalidArgumentError(
+          fmt::format("A sum bound must be fixed in time in '{}'.", printVisitor.dispatch(bound)));
+    }
+
+    return resolveTimeSumBound(bound, visitor, localTimeStep);
+}
+
+} // namespace Antares::Expressions::Visitors
