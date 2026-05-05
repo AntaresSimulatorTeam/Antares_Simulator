@@ -19,8 +19,8 @@ static void ensureParentDir(const std::filesystem::path& file)
     }
 }
 
-ITableWriter::ITableWriter(std::filesystem::path filePath):
-    output_file_(std::move(filePath))
+ITableWriter::ITableWriter(std::filesystem::path& filePath):
+    output_file_(filePath)
 {
     ensureParentDir(output_file_);
 }

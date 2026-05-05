@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "csv_table_writer.h"
+#include "private/csv_table_writer.h"
 
 #include <filesystem>
 #include <fstream>
@@ -52,8 +52,8 @@ std::string make_line(const std::vector<std::string>& cols)
     return out;
 }
 
-CsvTableWriter::CsvTableWriter(std::filesystem::path filePath):
-    ITableWriter(std::move(filePath))
+CsvTableWriter::CsvTableWriter(std::filesystem::path& filePath):
+    ITableWriter(filePath)
 {
     output_file_.replace_extension(".csv");
 }

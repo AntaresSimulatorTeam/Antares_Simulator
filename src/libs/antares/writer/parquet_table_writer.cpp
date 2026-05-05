@@ -1,7 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "parquet_table_writer.h"
+#include "private/parquet_table_writer.h"
 
 #include <filesystem>
 #include <sstream>
@@ -14,7 +14,7 @@
 #include <parquet/arrow/writer.h>
 
 #include "columnToArrowAdapter.h"
-#include "parquet_arrow_utils.h"
+#include "private/parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
 namespace fs = std::filesystem;
@@ -60,8 +60,8 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
                                                arrow_props));
 }
 
-ParquetTableWriter::ParquetTableWriter(std::filesystem::path filePath):
-    ITableWriter(std::move(filePath))
+ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
+    ITableWriter(filePath)
 {
     output_file_.replace_extension(".parquet");
 }

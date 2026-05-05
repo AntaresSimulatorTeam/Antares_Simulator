@@ -29,6 +29,13 @@ void FileWriter::init(const std::string& simulationId)
     const auto simulation_id = std::string(simulationId.empty() ? "" : "--" + simulationId);
     output_file_ = outputPath_ / ("simulation_table" + simulation_id);
 
+    // TODO : Here we pass the simulation table output path to a more specific writer (csv /
+    // TODO : parquet), which appends the right extension. So one part of absolute path
+    // TODO : is done here, and the other one in another writer.
+    // TODO : Thinking about this, class FileWriter is useless.
+    // TODO : Removing it, making the specific writer have resonsibility to create this path
+    // TODO : and directly using the specific writer in Modeler would solve the problem
+    // TODO : and simplify the code.
     writer_ = makeTableWriter(parquetFormatRequired_, output_file_);
     Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }

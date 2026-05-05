@@ -10,5 +10,5 @@ namespace Antares::Writer
 {
 // gp : here we return a shared ptr. Why not rather a unique ptr ?
 SIMULATION_TABLE_WRITERS_EXPORT ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired,
-                                                                  std::filesystem::path filePath);
+                                                                  std::filesystem::path& filePath);
 } // namespace Antares::Writer

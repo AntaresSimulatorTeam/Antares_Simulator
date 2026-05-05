@@ -13,7 +13,7 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired, fs::path filePath)
+ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired, fs::path& filePath)
 {
     if (parquetFormatRequired)
     {

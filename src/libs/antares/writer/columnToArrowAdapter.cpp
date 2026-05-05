@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <typeinfo>
 
-#include "parquet_arrow_utils.h"
+#include "private/parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
 using namespace Antares::Optimisation::LinearProblemApi;
