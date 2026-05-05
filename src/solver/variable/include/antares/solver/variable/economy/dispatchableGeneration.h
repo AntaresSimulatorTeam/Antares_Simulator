@@ -199,6 +199,27 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Study& study,
+                                                                Data::Area* /*area*/)
+    {
+        std::set<std::string> uniqueGroups;
+        study.areas.each(
+          [&uniqueGroups](Data::Area& currentArea)
+          {
+              for (auto& cluster: currentArea.thermal.list.each_enabled())
+              {
+                  uniqueGroups.insert(cluster->getGroup());
+              }
+          });
+
+        std::vector<ColumnDescriptor> descriptors;
+        for (const auto& group: uniqueGroups)
+        {
+            descriptors.push_back({group, "MWh"});
+        }
+        return descriptors;
+    }
+
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto area = state.area;

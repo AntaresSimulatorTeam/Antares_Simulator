@@ -235,6 +235,29 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Study& study,
+                                                                Data::Area* /*area*/)
+    {
+        std::set<std::string> uniqueGroups;
+        study.areas.each(
+          [&uniqueGroups](Data::Area& currentArea)
+          {
+              for (const auto& sts: currentArea.shortTermStorage.storagesByIndex)
+              {
+                  uniqueGroups.insert(sts.properties.groupName);
+              }
+          });
+
+        std::vector<ColumnDescriptor> descriptors;
+        for (const auto& groupName: uniqueGroups)
+        {
+            descriptors.push_back({groupName + "_INJECTION", "MW"});
+            descriptors.push_back({groupName + "_WITHDRAWAL", "MW"});
+            descriptors.push_back({groupName + "_LEVEL", "MWh"});
+        }
+        return descriptors;
+    }
+
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         using namespace Antares::Data::ShortTermStorage;
