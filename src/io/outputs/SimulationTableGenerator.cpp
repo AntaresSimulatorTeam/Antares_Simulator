@@ -431,7 +431,7 @@ void FillSimulationTable(ISimulationTable& simulationTable,
           component.getScenarioGroupId());
 
         Visitors::EvalVisitor evalVisitor(optimContainer, fillContext, component, data, &scenario);
-        Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component, data, &scenario);
+        Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component);
 
         addVariableEntries(simulationTable,
                            linearProblem,
