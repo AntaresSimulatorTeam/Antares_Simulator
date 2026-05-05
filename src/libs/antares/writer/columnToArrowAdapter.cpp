@@ -15,7 +15,7 @@ namespace Antares::Writer
 {
 
 template<typename T, typename B>
-void addOptionalsToBuider(const std::vector<std::optional<T>>& in, B& builder)
+void addOptionalsToBuilder(const std::vector<std::optional<T>>& in, B& builder)
 {
     std::vector<T> values(in.size());
     std::vector<bool> valid(in.size());
@@ -153,7 +153,7 @@ std::shared_ptr<arrow::Field> OptDoubleColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptDoubleColumnAdapter::makeArray() const
 {
     arrow::DoubleBuilder builder;
-    addOptionalsToBuider(column_->data(), builder);
+    addOptionalsToBuilder(column_->data(), builder);
     return throwOnResultKO(builder.Finish());
 }
 
@@ -173,7 +173,7 @@ std::shared_ptr<arrow::Field> OptIntColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptIntColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
-    addOptionalsToBuider(column_->data(), builder);
+    addOptionalsToBuilder(column_->data(), builder);
     return throwOnResultKO(builder.Finish());
 }
 
@@ -194,7 +194,7 @@ std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
-    addOptionalsToBuider(to_optional_int(column_->data()), builder);
+    addOptionalsToBuilder(to_optional_int(column_->data()), builder);
     return throwOnResultKO(builder.Finish());
 }
 
