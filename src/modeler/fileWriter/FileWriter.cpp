@@ -26,8 +26,7 @@ void FileWriter::init(const std::string& time)
     }
 
     logs.info() << "Output folder : " << outputPath_;
-    if (!fs::is_directory(outputPath_)
-        && !fs::create_directories(outputPath_))
+    if (!fs::is_directory(outputPath_) && !fs::create_directories(outputPath_))
     {
         throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
     }
