@@ -27,7 +27,7 @@ void FileWriter::init(const std::string& simulationId)
     }
 
     const auto simulation_id = std::string(simulationId.empty() ? "" : "--" + simulationId);
-    output_file_ = outputPath_ / ("simulation_table" + simulation_id);
+    output_file_ = outputPath_ / ("simulation-table" + simulation_id);
 
     // TODO : Here we pass the simulation table output path to a more specific writer (csv /
     // TODO : parquet), which appends the right extension. So one part of absolute path

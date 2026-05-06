@@ -14,3 +14,9 @@ SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 {
     return &secondOptimSimulationTable_;
 }
+
+void OptimisationsSimulationTable::clear()
+{
+    firstOptimSimulationTable_.clear();
+    secondOptimSimulationTable_.clear();
+}

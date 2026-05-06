@@ -202,6 +202,7 @@ bool Economy::year(Variable::State& state,
     {
         LegacySimulationTablesWriter legacyWriter(study.folderOutput, state.year);
         legacyWriter.write(*simulationTables);
+        simulationTables->clear();
     }
 
     optWriter.finalize();

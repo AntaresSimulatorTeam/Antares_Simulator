@@ -13,6 +13,7 @@ class OptimisationsSimulationTable
 public:
     Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
     Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
+    void clear();
 
 private:
     Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;

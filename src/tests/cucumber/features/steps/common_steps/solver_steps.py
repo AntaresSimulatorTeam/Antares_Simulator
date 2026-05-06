@@ -297,10 +297,10 @@ def run_simulation(context):
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path, context.mode)
-    # for hybrid studies:
-    simulation_table = Path(context.output_path) / "simulation_table--optim-nb-1.csv"
-    if simulation_table.exists():
-        context.moh = modeler_output_handler(simulation_table)
+    # For hybrid studies:
+    outputPath = Path(context.output_path)
+    if any(outputPath.glob("simulation-table*.csv")):
+        context.moh = modeler_output_handler(outputPath, "simulation-table*-optim-nb-1.csv")
 
 
 def init_simulation(context):

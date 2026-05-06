@@ -18,10 +18,10 @@ public:
     SimulationTable(SimulationTable&& other) noexcept;
     void addEntry(const SimulationTableEntry& entry);
     const std::vector<std::unique_ptr<IColumn>>& columns() const;
-    void writeToBuffer();
+    void writeToBuffer(); // gp : do we need this (only used in tests) ?
     void clear();
 
-    [[nodiscard]] std::string buffer() const;
+    [[nodiscard]] std::string buffer() const; // gp : do we need this (only used in tests) ?
 
     std::vector<std::vector<std::string>> storageIntoRows() const;
 
