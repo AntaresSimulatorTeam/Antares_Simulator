@@ -14,7 +14,12 @@ namespace Antares::Expressions::Visitors
 {
 int normalizeTimeIndex(int timeIndex, int size)
 {
-    return (timeIndex % size + size) % size;
+    int r = timeIndex % size;
+    if (r < 0)
+    {
+        r += size;
+    }
+    return r;
 }
 
 int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep)

@@ -3,8 +3,8 @@
 
 #include <fmt/format.h>
 #include <numeric>
-#include <stdexcept>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/VariabilityVisitor.h>
 #include "antares/expressions/visitors/PrintVisitor.h"
@@ -73,7 +73,8 @@ VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
     }
     else
     {
-        throw std::invalid_argument(fmt::format("Parameter {} does not exist", param->value()));
+        throw Error::InvalidArgumentError(
+          fmt::format("Parameter '{}' does not exist", param->value()));
     }
 }
 
@@ -159,7 +160,8 @@ VariabilityType VariabilityVisitor::visitPow(const Nodes::FunctionNode* node)
     if (!isConstant(dispatch(exponent)))
     {
         PrintVisitor visitor;
-        throw std::runtime_error("This exponent must be constant in :" + visitor.dispatch(node));
+        throw Error::InvalidArgumentError("This exponent must be constant in :"
+                                          + visitor.dispatch(node));
     }
     return dispatch(node->getOperands().at(0));
 }
