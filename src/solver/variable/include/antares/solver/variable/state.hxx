@@ -35,7 +35,7 @@ inline void State::yearEndResetThermal()
     memset(thermalClusterOperatingCostForYear, 0, sizeof(thermalClusterOperatingCostForYear));
     if (study.parameters.reservesEnabled)
     {
-        reserveData.emplace();
+        reserveData.emplace(study.areas.size());
     }
     memset(thermalClusterNonProportionalCostForYear,
            0,

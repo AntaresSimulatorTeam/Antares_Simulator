@@ -45,6 +45,7 @@ public:
     };
 
     StateForAnArea& operator[](size_t areaIndex);
+    const StateForAnArea& operator[](size_t areaIndex) const;
 
 private:
     std::vector<StateForAnArea> thermal;
@@ -272,7 +273,7 @@ public:
         }
     };
 
-    ReserveOpt<ReserveData> reserveData;
+    ReserveOpt<std::vector<ReserveData>> reserveData;
 
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
     //! ucMILP (accurate)

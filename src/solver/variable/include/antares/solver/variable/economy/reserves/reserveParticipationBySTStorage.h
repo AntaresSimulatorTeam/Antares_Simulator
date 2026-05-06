@@ -93,15 +93,14 @@ void ReserveParticipationBySTStorage<NextT>::populateHourlyValues(State& state,
 {
     if (hasIndexMapping(state.study, state.area))
     {
+        const auto& resData = state.reserveData.value().at(state.area->index);
         for (const auto& clusterName:
-             state.reserveData.value()
-                 .reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear]
+             resData.reserveParticipationPerSTStorageClusterForYear.at(state.hourInTheYear)
                | std::views::keys)
         {
             for (const auto& [reserveName, reserveParticipation]:
-                 state.reserveData.value()
-                   .reserveParticipationPerSTStorageClusterForYear[state.hourInTheYear]
-                                                                  [clusterName])
+                 resData.reserveParticipationPerSTStorageClusterForYear.at(state.hourInTheYear)
+                   .at(clusterName))
             {
                 pValuesForTheCurrentYear[numSpace]
                                         [state.study.runtime.reserveParticipationIndexMaps.value()
