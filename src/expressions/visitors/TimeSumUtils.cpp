@@ -32,10 +32,7 @@ int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned
     return static_cast<int>(visitor.dispatch(bound).valueAsDouble());
 }
 
-int resolveTimeSumBound(const Nodes::Node* bound,
-                        EvalVisitor& visitor,
-                        VariabilityVisitor& variabilityVisitor,
-                        unsigned localTimeStep)
+void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& variabilityVisitor)
 {
     const auto variability = variabilityVisitor.dispatch(bound);
     if (isTimeDependent(variability))
@@ -44,8 +41,6 @@ int resolveTimeSumBound(const Nodes::Node* bound,
         throw Error::InvalidArgumentError(
           fmt::format("A sum bound must be fixed in time in '{}'.", printVisitor.dispatch(bound)));
     }
-
-    return resolveTimeSumBound(bound, visitor, localTimeStep);
 }
 
 } // namespace Antares::Expressions::Visitors

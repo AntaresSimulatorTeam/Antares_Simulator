@@ -13,6 +13,7 @@ class VariabilityVisitor;
 // Normalize a possibly negative or out-of-range time index into [0, size).
 int normalizeTimeIndex(int timeIndex, int size);
 
+// no-op if from > to
 template<class Callback>
 inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
 {
@@ -25,10 +26,7 @@ inline void forEachTimeSumIndex(int from, int to, int size, Callback callback)
 // Resolve a bound used in a time-sum when no variability check is required.
 int resolveTimeSumBound(const Nodes::Node* bound, EvalVisitor& visitor, unsigned localTimeStep);
 
-// Resolve a bound used in a time-sum while verifying the bound is time-constant.
-int resolveTimeSumBound(const Nodes::Node* bound,
-                        EvalVisitor& visitor,
-                        VariabilityVisitor& variabilityVisitor,
-                        unsigned localTimeStep);
+// Check that a time-sum bound is constant in time.
+void checkTimeSumBoundVariability(const Nodes::Node* bound, VariabilityVisitor& variabilityVisitor);
 
 } // namespace Antares::Expressions::Visitors
