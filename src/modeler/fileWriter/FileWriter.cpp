@@ -17,6 +17,11 @@ namespace Antares::Solver
 {
 void FileWriter::init(const std::string& time)
 {
+    if (time.empty())
+    {
+        throw Modeler::ModelerError("Time identifier cannot be empty. Exiting simulation.");
+    }
+
     outputPath_ = studyPath_ / "output" / time;
 
     // avoid overwriting existing output by adding a suffix (-2, -3, etc.)

@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
@@ -13,6 +14,7 @@
 
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
+#include <unit_test_utils.h>
 
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/SimulationTable.h"
@@ -1106,10 +1108,13 @@ BOOST_FIXTURE_TEST_CASE(Constructor_ValidPath, TempDirFixture)
 
 BOOST_FIXTURE_TEST_CASE(Constructor_EmptySimulationId, TempDirFixture)
 {
-    BOOST_CHECK_NO_THROW({
-        FileWriter fileWriter(tempDir);
-        fileWriter.init("");
-    });
+    BOOST_CHECK_EXCEPTION(
+      {
+          FileWriter fileWriter(tempDir);
+          fileWriter.init("");
+      },
+      std::runtime_error,
+      checkMessage("Time identifier cannot be empty. Exiting simulation."));
 }
 
 BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
