@@ -20,9 +20,9 @@ public:
     const std::filesystem::path& outputPath() const override;
 
 private:
+    std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
     std::filesystem::path output_file_;
-    std::string simulationId_;
     Writer::ITableWriter::Ptr writer_;
     Writer::TableFormat fmt_ = Writer::TableFormat::CSV;
 };
