@@ -7,8 +7,8 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
-        int cluster = data.PaliersThermiquesDuPays[pays]
-                        .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        uint cluster = data.PaliersThermiquesDuPays[pays]
+                         .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         double maxDownwardPowerRampingRate = data.PaliersThermiquesDuPays[pays]
                                                .maxDownwardPowerRampingRate[index];
         double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]

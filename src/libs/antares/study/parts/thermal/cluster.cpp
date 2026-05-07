@@ -585,34 +585,34 @@ void ThermalCluster::Ramping::reset()
     maxDownwardPowerRampingRate = 0;
 }
 
-bool ThermalCluster::Ramping::checkValidity(Area* parentArea, std::string clusterName)
+bool ThermalCluster::Ramping::checkValidity(Area* area, std::string clusterName)
 {
     bool ret = true;
 
     if (maxUpwardPowerRampingRate <= 0)
     {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
                      << ": The maximum upward power ramping rate must greater than zero."
                      << "Ramping is disabled for this thermal cluster";
         ret = false;
     }
     if (maxDownwardPowerRampingRate <= 0)
     {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
                      << ": The maximum downward power ramping rate must greater than zero."
                      << "Ramping is disabled for this thermal cluster";
         ret = false;
     }
     if (powerIncreaseCost < 0)
     {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
                      << ": The ramping power increase cost must be positive or null."
                      << "Ramping is disabled for this thermal cluster";
         ret = false;
     }
     if (powerDecreaseCost < 0)
     {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << clusterName
+        logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
                      << ": The ramping power decrease cost must be positive or null."
                      << "Ramping is disabled for this thermal cluster";
         ret = false;
