@@ -5,8 +5,6 @@
 
 #include <antares/logs/logs.h>
 #include <antares/writer/table_writer_factory.h>
-#include "antares/exception/InvalidArgumentError.hpp"
-#include "antares/exception/RuntimeError.hpp"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/utils/utils.h"
@@ -17,17 +15,28 @@ namespace fs = std::filesystem;
 
 namespace Antares::Solver
 {
-void FileWriter::init(const std::string& simulationId)
+void FileWriter::init(const std::string& time)
 {
-    simulationId_ = simulationId;
+    if (time.empty())
+    {
+        throw Modeler::ModelerError("Time identifier cannot be empty. Exiting simulation.");
+    }
 
-    if (!fs::is_directory(outputPath_) && !fs::create_directory(outputPath_))
+    outputPath_ = studyPath_ / "output" / time;
+
+    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
+    if (!Utils::generatePathWithSuffix(outputPath_))
+    {
+        throw Modeler::ModelerError("Output folder already exists: " + outputPath_.string());
+    }
+
+    logs.info() << "Output folder : " << outputPath_;
+    if (!fs::is_directory(outputPath_) && !fs::create_directories(outputPath_))
     {
         throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
     }
 
-    const auto simulation_id = std::string(simulationId.empty() ? "" : "--" + simulationId);
-    output_file_ = outputPath_ / ("simulation-table" + simulation_id);
+    output_file_ = outputPath_ / "simulation_table";
 
     // TODO : Here we pass the simulation table output path to a more specific writer (csv /
     // TODO : parquet), which appends the right extension. So one part of absolute path
@@ -51,14 +60,9 @@ void FileWriter::writeSimulationTable(SimulationTable& simulationTable) const
 }
 
 FileWriter::FileWriter(const std::filesystem::path& studyPath, bool parquetFormatRequired):
+    studyPath_(studyPath),
     parquetFormatRequired_(parquetFormatRequired)
 {
-    if (!fs::exists(studyPath))
-    {
-        throw std::runtime_error("Could not find output Folder: " + studyPath.string());
-    }
-    outputPath_ = std::move(studyPath) / "output";
-    logs.info() << "Output folder : " << outputPath_;
 }
 
 } // namespace Antares::Solver
