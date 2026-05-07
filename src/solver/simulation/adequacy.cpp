@@ -142,7 +142,7 @@ bool Adequacy::year(Variable::State& state,
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        currentProblem.weekInTheYear = state.weekInTheYear = w;
+        currentProblem.weekInTheYear = state.weekInTheYear = w + pStartTime / 168;
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study,
