@@ -11,8 +11,6 @@
 #include "constraints/PowerOutputVariationGroup.h"
 #include "constraints/RampingIncreaseDecreaseRateGroup.h"
 
-using namespace Antares::Data;
-
 class LinearProblemMatrixRamping: public ProblemMatrixEssential
 {
 public:
