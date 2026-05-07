@@ -3,7 +3,6 @@
 
 #include <mutex>
 #include <optional>
-#include <string_view>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
@@ -19,6 +18,7 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
+#include "antares/solver/optimisation/LegacyVariableNameParser.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -59,61 +59,6 @@ static void logProblemSize(const MPSolver* mpSolver)
 
 namespace
 {
-constexpr std::string_view kLegacyNameSeparator = "::";
-constexpr std::string_view kLegacyHourTag = "hour";
-
-struct LegacyVariableInfo
-{
-    std::string output;
-    std::string component;
-    unsigned timeIndex;
-};
-
-std::optional<LegacyVariableInfo> ParseLegacyVariableName(const std::string& name)
-{
-    const auto firstSep = name.find(kLegacyNameSeparator);
-    const auto lastSep = name.rfind(kLegacyNameSeparator);
-    if (firstSep == std::string::npos || lastSep == std::string::npos || firstSep == lastSep)
-    {
-        return std::nullopt;
-    }
-
-    const std::string output = name.substr(0, firstSep);
-    const std::string timePart = name.substr(lastSep + kLegacyNameSeparator.size());
-    const std::string location = name.substr(firstSep + kLegacyNameSeparator.size(),
-                                             lastSep - firstSep - kLegacyNameSeparator.size());
-    if (output.empty() || timePart.empty())
-    {
-        return std::nullopt;
-    }
-
-    const auto lt = timePart.find('<');
-    const auto gt = timePart.rfind('>');
-    if (lt == std::string::npos || gt == std::string::npos || gt <= lt + 1)
-    {
-        return std::nullopt;
-    }
-
-    const std::string unit = timePart.substr(0, lt);
-    if (unit != kLegacyHourTag)
-    {
-        return std::nullopt;
-    }
-
-    const std::string value = timePart.substr(lt + 1, gt - lt - 1);
-    unsigned timeIndex = 0;
-    try
-    {
-        timeIndex = static_cast<unsigned>(std::stoul(value));
-    }
-    catch (const std::exception&)
-    {
-        return std::nullopt;
-    }
-
-    return LegacyVariableInfo{output, location, timeIndex};
-}
-
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const PROBLEME_ANTARES_A_RESOUDRE& problem,
                                const FillContext& fillContext,
@@ -138,7 +83,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
             continue;
         }
 
-        const auto parsed = ParseLegacyVariableName(name);
+        const auto parsed = Antares::Optimization::ParseLegacyVariableName(name);
         if (!parsed)
         {
             continue;

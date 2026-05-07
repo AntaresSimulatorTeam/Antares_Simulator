@@ -9,6 +9,7 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_ThermalCapacityFiller.cpp
         test_area_connections--spillage--unsupE.cpp
         test_mip_detection.cpp
+        test_legacy_variable_name_parser.cpp
         LIBS
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl

@@ -75,6 +75,9 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/MipDetection.h
         MipDetection.cpp
 
+        include/antares/solver/optimisation/LegacyVariableNameParser.h
+        LegacyVariableNameParser.cpp
+
         constraints/ConstraintBuilder.cpp
         include/antares/solver/optimisation/constraints/ConstraintBuilder.h
         constraints/constraint_builder_utils.cpp
