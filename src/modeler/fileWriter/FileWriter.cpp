@@ -36,7 +36,7 @@ void FileWriter::init(const std::string& time)
         throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
     }
 
-    output_file_ = outputPath_ / "simulation_table";
+    output_file_ = outputPath_ / "simulation-table";
 
     // TODO : Here we pass the simulation table output path to a more specific writer (csv /
     // TODO : parquet), which appends the right extension. So one part of absolute path
