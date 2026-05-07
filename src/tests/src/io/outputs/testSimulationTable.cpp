@@ -350,7 +350,6 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-
 BOOST_AUTO_TEST_SUITE(BoundaryValueTests)
 
 BOOST_AUTO_TEST_CASE(DoubleValues_PrecisionBoundaries)
