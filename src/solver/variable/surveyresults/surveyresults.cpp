@@ -7,8 +7,8 @@
 
 #include <yuni/yuni.h>
 
+#include <antares/io/outputs/SimulationTable.h>
 #include <antares/logs/logs.h>
-#include "antares/io/outputs/SimulationTable.h"
 #include <antares/solver/variable/print.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>

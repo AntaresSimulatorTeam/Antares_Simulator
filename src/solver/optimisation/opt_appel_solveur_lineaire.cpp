@@ -69,7 +69,7 @@ struct LegacyVariableInfo
     unsigned timeIndex;
 };
 
-std::optional<LegacyVariableInfo> parseLegacyVariableName(const std::string& name)
+std::optional<LegacyVariableInfo> ParseLegacyVariableName(const std::string& name)
 {
     const auto firstSep = name.find(kLegacyNameSeparator);
     const auto lastSep = name.rfind(kLegacyNameSeparator);
@@ -138,7 +138,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
             continue;
         }
 
-        const auto parsed = parseLegacyVariableName(name);
+        const auto parsed = ParseLegacyVariableName(name);
         if (!parsed)
         {
             continue;
