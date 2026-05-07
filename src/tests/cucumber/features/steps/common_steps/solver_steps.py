@@ -258,24 +258,12 @@ def check_annual_results(context):
 
 @then("simulation tables match the references")
 def check_simulation_tables(context):
-    # Optimization 1
-    msg1 = diff_message(
-        name="Simulation table (optimization 1)",
-        ref_lines=context.sih.get_optim1_simulation_table(),
-        out_lines=context.soh.get_optim1_simulation_table(),
-    )
-    assert msg1 is None, msg1
+    referenceDir = context.sih.reference_dir()
+    outputDir = context.soh.output_dir()
 
-    # Optimization 2 (if any)
-    ref_simulation_table2 = context.sih.get_optim2_simulation_table()
-    if ref_simulation_table2:
-        msg2 = diff_message(
-            name="Simulation table (optimization 2)",
-            ref_lines=ref_simulation_table2,
-            out_lines=context.soh.get_optim2_simulation_table(),
-        )
-        assert msg2 is None, msg2
+    dir_identical, err_messages = compare_folders(referenceDir, outputDir)
 
+    assert dir_identical, f"Folders do not match:\n" + "\n".join(f"  - {d}" for d in err_messages)
 
 def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
