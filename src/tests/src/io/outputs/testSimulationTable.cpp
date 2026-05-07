@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
@@ -13,6 +14,7 @@
 
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
+#include <unit_test_utils.h>
 
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/SimulationTableCsv.h"
@@ -25,6 +27,7 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
+#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/solver/optimisation/OptimisationsSimulationTable.h"
@@ -1106,7 +1109,13 @@ BOOST_FIXTURE_TEST_CASE(Constructor_InvalidPath, TempDirFixture)
 
 BOOST_FIXTURE_TEST_CASE(Constructor_EmptySimulationId, TempDirFixture)
 {
-    BOOST_CHECK_NO_THROW(SimulationTableCsvFile(tempDir, ""));
+    BOOST_CHECK_EXCEPTION(
+      {
+          Antares::Solver::FileWriter fileWriter(tempDir);
+          fileWriter.init("");
+      },
+      std::runtime_error,
+      checkMessage("Time identifier cannot be empty. Exiting simulation."));
 }
 
 BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)

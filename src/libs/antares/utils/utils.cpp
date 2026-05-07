@@ -11,6 +11,8 @@
 
 using namespace Yuni;
 
+namespace fs = std::filesystem;
+
 namespace Antares
 {
 
@@ -202,6 +204,32 @@ void TimeMeasurement::reset()
 {
     start_ = clock::now();
     end_ = start_;
+}
+
+constexpr unsigned maxFolderSameTime = 2000;
+
+bool generatePathWithSuffix(fs::path& outputPath, const std::string& suffix)
+{
+    // suffix can be ".zip" or empty
+    std::string candidate = outputPath.string() + suffix;
+    if (fs::exists(candidate))
+    {
+        unsigned int index = 1;
+        do
+        {
+            ++index;
+            candidate = outputPath.string() + '-' + std::to_string(index) + suffix;
+        } while (fs::exists(candidate) && index < maxFolderSameTime);
+
+        if (index >= maxFolderSameTime)
+        {
+            logs.error() << "Output folder already exists: " << candidate;
+            return false;
+        }
+
+        outputPath += '-' + std::to_string(index) + suffix;
+    }
+    return true;
 }
 
 } // namespace Utils
