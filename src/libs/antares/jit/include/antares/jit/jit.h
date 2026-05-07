@@ -161,11 +161,6 @@ public:
     */
     static bool enabled;
 
-    /*!
-    ** \brief Flag to know if the library is called from the User interface
-    */
-    static bool usedFromGUI;
-
 }; // class JIT
 
 #include "jit.hxx"

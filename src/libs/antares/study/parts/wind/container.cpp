@@ -16,26 +16,6 @@ Container::Container():
 {
 }
 
-bool Container::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = series.forceReload(reload) && ret;
-    if (prepro)
-    {
-        ret = prepro->forceReload(reload) && ret;
-    }
-    return ret;
-}
-
-void Container::markAsModified() const
-{
-    series.markAsModified();
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
-}
-
 void Container::resetToDefault()
 {
     series.reset();

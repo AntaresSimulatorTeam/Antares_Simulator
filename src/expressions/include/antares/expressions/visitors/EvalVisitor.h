@@ -11,6 +11,7 @@
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
 
@@ -72,7 +73,6 @@ class EvaluationResult
 {
 public:
     explicit EvaluationResult(double value);
-
     explicit EvaluationResult(const std::vector<double>& values);
 
     EvaluationResult operator+(const EvaluationResult& right) const
@@ -147,6 +147,8 @@ public:
         throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
+    void toConstantVector(const size_t size);
+
     [[nodiscard]] double getValueInVector(unsigned index) const
     {
         if (const auto* v = std::get_if<std::vector<double>>(&value_))
@@ -161,7 +163,7 @@ public:
     // gp : They could be free function instead.
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult timeShift(int time_shift) const;
-    EvaluationResult timeSum(int from, int to) const;
+    EvaluationResult timeSumOnVector(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
 
     template<typename Op>
@@ -310,15 +312,19 @@ public:
 
     explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component& component);
+                         const ModelerStudy::SystemModel::Component& component,
+                         const Optimisation::LinearProblemApi::ILinearProblemData* data,
+                         const Optimisation::LinearProblemApi::IScenario* scenario);
 
     std::string name() const override;
 
 private:
     const Optimisation::OptimEntityContainer& optimContainer_;
-    const Optimisation::EvaluationContext& evalContext_;
-    const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::LinearProblemApi::IScenario* scenario_;
+    const Optimisation::EvaluationContext evalContext_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;

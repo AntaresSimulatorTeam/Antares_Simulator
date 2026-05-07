@@ -46,9 +46,9 @@ public:
     void NumberStoppingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberStartingDispatchableUnits(unsigned varIndex, const std::string& clusterName);
     void NumberBreakingDownDispatchableUnits(unsigned varIndex, const std::string& clusterName);
-    void NTCDirect(unsigned varIndex);
-    void IntercoDirectCost(unsigned varIndex);
-    void IntercoIndirectCost(unsigned varIndex);
+    void DirectFlow(unsigned varIndex);
+    void PositiveDirectFlow(unsigned varIndex);
+    void PositiveIndirectFlow(unsigned varIndex);
     void ShortTermStorageInjection(unsigned varIndex, const std::string& sts_name);
     void ShortTermStorageWithdrawal(unsigned varIndex, const std::string& sts_name);
     void ShortTermStorageLevel(unsigned varIndex, const std::string& sts_name);
@@ -63,8 +63,8 @@ public:
     void Overflow(unsigned varIndex);
     void FinalStorage(unsigned varIndex);
     void LayerStorage(unsigned varIndex, int layerIndex);
-    void PositiveUnsuppliedEnergy(unsigned varIndex);
-    void NegativeUnsuppliedEnergy(unsigned varIndex);
+    void UnsuppliedEnergy(unsigned varIndex);
+    void Spillage(unsigned varIndex);
     void AreaBalance(unsigned varIndex);
 
 private:
@@ -82,6 +82,7 @@ public:
     void FlowDissociation(unsigned constrIndex);
     void AreaBalance(unsigned constrIndex);
     void FictiveLoads(unsigned constrIndex);
+    void MaxUnsuppliedEnergy(unsigned constrIndex);
     void HydroPower(unsigned constrIndex);
     void HydroPowerSmoothingUsingVariationSum(unsigned constrIndex);
     void HydroPowerSmoothingUsingVariationMaxDown(unsigned constrIndex);
@@ -103,6 +104,8 @@ public:
     void BindingConstraintDay(unsigned constrIndex, const std::string& name);
     void BindingConstraintWeek(unsigned constrIndex, const std::string& name);
     void CsrFlowDissociation(unsigned constrIndex);
+    void CsrFictitiousLoad(unsigned int constraint);
+    void CsrMaxEnsLoad(unsigned int constraint);
     void CsrAreaBalance(unsigned constrIndex);
     void ShortTermStorageCostVariation(const std::string& constrIndex_name,
                                        unsigned constrIndex,

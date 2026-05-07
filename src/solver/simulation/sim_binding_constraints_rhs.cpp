@@ -9,11 +9,15 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
+#include "antares/utils/vector-utils.h"
 
 using namespace Antares::Data;
+using namespace Antares::Utils;
 using clusterWeightMap = Antares::Data::BindingConstraint::clusterWeightMap;
 using TimeSerie = std::span<const double>;
 
+namespace Simulation
+{
 TimeSerie fetchBindingConstraintRHS(const BindingConstraint* bc,
                                     const BindingConstraintGroupRepository& bcGroups,
                                     int year)
@@ -36,22 +40,6 @@ auto filterByMustrunCluster(const clusterWeightMap& map)
     return map
            | std::ranges::views::filter(
              [](auto pair) { return pair.first->isEnabled() && pair.first->isMustRun(); });
-}
-
-std::vector<double> operator*(const std::span<const double>& left, const double& scalar)
-{
-    std::vector<double> to_return(left.size(), 0.);
-    for (unsigned i = 0; i < left.size(); i++)
-    {
-        to_return[i] = left[i] * scalar;
-    }
-    return to_return;
-}
-
-std::vector<double>& operator+=(std::vector<double>& left, const std::vector<double>& right)
-{
-    std::ranges::transform(left, right, left.begin(), std::plus<double>());
-    return left;
 }
 
 std::vector<double> accumulateByDay(const TimeSerie& ts)
@@ -167,8 +155,6 @@ static void setRHSforWeeklyBC(PROBLEME_HEBDO& problem,
     problem.MatriceDesContraintesCouplantes[bcIndex].SecondMembreDeLaContrainteCouplante[0] = sum;
 }
 
-namespace Simulation
-{
 void setBindingConstraintsRHS(PROBLEME_HEBDO& problem,
                               const BindingConstraintsRepository& bindingConstraints,
                               const BindingConstraintGroupRepository& bcGroups,

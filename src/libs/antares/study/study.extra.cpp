@@ -3,16 +3,12 @@
 
 #include "antares/study/study.h"
 
-#include <yuni/yuni.h>
+#include <boost/algorithm/string/case_conv.hpp>
 
 #include "antares/study/scenario-builder/sets.h"
 
-using namespace Yuni;
-
 namespace Antares::Data
 {
-// The path to the Icon file to use when writing a study
-String StudyIconFile;
 
 void Study::scenarioRulesCreate()
 {
@@ -22,11 +18,6 @@ void Study::scenarioRulesCreate()
     // When ran from the solver, the scenario builder must be present
     scenarioRules = std::make_unique<ScenarioBuilder::Sets>();
     scenarioRules->loadFromStudy(*this);
-}
-
-void Study::scenarioRulesDestroy()
-{
-    scenarioRules.reset();
 }
 
 void Study::scenarioRulesLoadIfNotAvailable()
@@ -43,7 +34,7 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
 {
     out = basename;
     AreaName id = out;
-    id.toLower();
+    boost::to_lower(id);
 
     if (areas.find(id))
     {
@@ -56,29 +47,15 @@ bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename
                 return false;
             }
             out = basename;
-            out << "-" << i;
+            out += "-" + std::to_string(i);
             id = out;
-            id.toLower();
+            boost::to_lower(id);
         } while (areas.find(id));
     }
     return true;
 }
 
-// TODO VP: remove with GUI
-bool Study::TitleFromStudyFolder(const AnyString& folder, String& out, bool warnings)
-{
-    String b;
-    b << folder << IO::Separator << "study.antares";
-    StudyHeader header;
-    if (header.loadFromFile(b.c_str(), warnings))
-    {
-        out = header.caption;
-        return true;
-    }
-    out.clear();
-    return false;
-}
-
+// TODO remove after vacuum
 bool Study::IsRootStudy(const AnyString& folder)
 {
     String buffer;
@@ -91,40 +68,6 @@ bool Study::IsRootStudy(const AnyString& folder, String& buffer)
     buffer.clear() << folder << IO::Separator << "study.antares";
     StudyHeader header;
     return (header.loadFromFile(buffer.c_str(), false));
-}
-
-bool Study::IsInsideStudyFolder(const AnyString& path, String& location, String& title)
-{
-    if (TitleFromStudyFolder(path, title, false))
-    {
-        location = path;
-        return true;
-    }
-
-    String::Size p;
-    String::Size offset = 0;
-    do
-    {
-        // Looking for the next folder separator
-        p = path.find(IO::Separator, offset);
-        if (p >= path.size())
-        {
-            return false;
-        }
-
-        AnyString tmp(path, 0, p);
-        if (!tmp.empty())
-        {
-            if (TitleFromStudyFolder(tmp, title, false))
-            {
-                location = tmp;
-                return true;
-            }
-        }
-        offset = p + 1;
-    } while (true);
-
-    return false;
 }
 
 } // namespace Antares::Data

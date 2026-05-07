@@ -63,12 +63,12 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
     }
     catch (const fs::filesystem_error& exc)
     {
-        logs.error() << exc.what();
+        logs.error() << "Error writing " << filePath << " (exception message " << exc.what() << ")";
     }
 
     if (ec)
     {
-        logs.error() << "Error: " << ec.message();
+        logs.error() << "Error writing " << filePath << " (message " << ec.message() << ")";
     }
 }
 
@@ -84,26 +84,5 @@ bool ImmediateFileResultWriter::needsTheJobQueue() const
 void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 {
     // Do nothing
-}
-
-void NullResultWriter::addEntryFromBuffer(const fs::path&, std::string&)
-{
-}
-
-void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
-{
-}
-
-void NullResultWriter::flush()
-{
-}
-
-bool NullResultWriter::needsTheJobQueue() const
-{
-    return false;
-}
-
-void NullResultWriter::finalize(bool)
-{
 }
 } // namespace Antares::Solver

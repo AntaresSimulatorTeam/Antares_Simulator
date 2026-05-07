@@ -11,12 +11,12 @@ inline uint Rules::areaCount() const
     return pAreaCount;
 }
 
-inline const RulesScenarioName& Rules::name() const
+inline const std::string& Rules::name() const
 {
     return pName;
 }
 
-inline void Rules::setName(RulesScenarioName name)
+inline void Rules::setName(std::string name)
 {
     pName = name;
 }

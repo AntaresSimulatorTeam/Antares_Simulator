@@ -26,10 +26,10 @@ void BindingConstraintHour::add(int pdt, int cntCouplante)
         const int interco = MatriceDesContraintesCouplantes.NumeroDeLInterconnexion[index];
         const double poids = MatriceDesContraintesCouplantes.PoidsDeLInterconnexion[index];
         const int offset = MatriceDesContraintesCouplantes.OffsetTemporelSurLInterco[index];
-        builder.updateHourWithinWeek(pdt).NTCDirect(interco,
-                                                    poids,
-                                                    offset,
-                                                    builder.data.NombreDePasDeTemps);
+        builder.updateHourWithinWeek(pdt).DirectFlow(interco,
+                                                     poids,
+                                                     offset,
+                                                     builder.data.NombreDePasDeTemps);
     }
 
     // Thermal clusters

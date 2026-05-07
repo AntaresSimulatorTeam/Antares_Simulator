@@ -211,7 +211,6 @@ add_library(yuni-static-core STATIC
 		core/preprocessor/math.h
 		core/preprocessor/std.h
 		core/preprocessor/unixes.h
-		core/preprocessor/vaargs.h
 		core/preprocessor/windows.h
 		core/process/program/program.cpp
 		core/process/program/program.h

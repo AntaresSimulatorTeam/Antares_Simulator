@@ -6,6 +6,7 @@
 
 #include <bit>
 #include <map>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -25,7 +26,6 @@ class StudyLoadOptions;
 class Area;
 class AreaLink;
 class AreaList;
-class AreaUI;
 class ThermalCluster;
 class RenewableCluster;
 
@@ -38,18 +38,10 @@ class BindingConstraintsRepository;
 
 class StudyRuntimeInfos;
 
-class UIRuntimeInfo;
-
 class Correlation;
 
 //! Name of a single area
-using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
-//! Name of a single link
-using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
-
-using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
-
-using RulesScenarioName = Yuni::CString<64, false>;
+using AreaName = std::string;
 
 //! Name mapping
 using AreaNameMapping = std::map<AreaName, AreaName>;

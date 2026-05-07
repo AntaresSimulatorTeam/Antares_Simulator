@@ -5,13 +5,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <limits>
 
-#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/study/scenario-builder/rules.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/study/study.h"
+#include "antares/writer/null_result_writer.h"
 
 using namespace Antares::Solver;
 using namespace Antares::Solver::Simulation;
@@ -146,8 +146,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
 
 Antares::Data::ShortTermStorage::STStorageCluster* addSTSToArea(Area* area,
                                                                 const std::string& stsName);
-
-void addScratchpadToEachArea(Data::Study& study);
 
 // -------------------------------
 // Simulation results retrieval

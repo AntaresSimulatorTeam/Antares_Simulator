@@ -33,10 +33,10 @@ void BindingConstraintDay::add(int cntCouplante)
 
             for (int pdt = pdtDebut; pdt < pdtDebut + NombreDePasDeTempsDUneJournee; pdt++)
             {
-                builder.updateHourWithinWeek(pdt).NTCDirect(interco,
-                                                            poids,
-                                                            offset,
-                                                            builder.data.NombreDePasDeTemps);
+                builder.updateHourWithinWeek(pdt).DirectFlow(interco,
+                                                             poids,
+                                                             offset,
+                                                             builder.data.NombreDePasDeTemps);
             }
         }
 
@@ -63,8 +63,9 @@ void BindingConstraintDay::add(int cntCouplante)
 
         builder.SetOperator(MatriceDesContraintesCouplantes.SensDeLaContrainteCouplante);
         {
+            const auto dayInTheYear = builder.data.weekInTheYear * 7 + jour;
             ConstraintNamer namer(builder.data.NomDesContraintes);
-            namer.UpdateTimeStep(jour);
+            namer.UpdateTimeStep(dayInTheYear);
             namer.BindingConstraintDay(builder.data.nombreDeContraintes,
                                        MatriceDesContraintesCouplantes.NomDeLaContrainteCouplante);
         }

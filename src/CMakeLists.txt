@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
-set(ANTARES_VERSION_HI 9)
-set(ANTARES_VERSION_LO 3)
-set(ANTARES_VERSION_REVISION 5)
+set(ANTARES_VERSION_HI 10)
+set(ANTARES_VERSION_LO 0)
+set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
 set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
 
-set(ANTARES_VERSION_YEAR 2025)
+set(ANTARES_VERSION_YEAR 2026)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -130,6 +130,13 @@ if (WIN32)
     endif (MSVC)
 endif (WIN32)
 
+# GNU ld is single-pass for static libraries: circular dependencies between
+# libraries (e.g. antares-solver-simulation <-> model_antares) cause unresolved
+# symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_link_options("LINKER:--start-group")
+endif()
+
 #
 # Beta
 #
@@ -181,9 +188,6 @@ endif ()
 # TODO : removed to be confirmed : old fashion CMake All libraries will be stored in /bin directory
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin/${YUNI_TARGET_MODE})
 
-option(BUILD_UI "Build antares ui simulator" ON)
-message(STATUS "Build antares ui simulator: ${BUILD_UI}")
-
 option(BUILD_TOOLS "Build antares tools" OFF)
 message(STATUS "Build antares tools: ${BUILD_TOOLS}")
 
@@ -208,6 +212,69 @@ if (POLICY CMP0074)
 endif ()
 
 find_package(sirius_solver REQUIRED)
+
+# When using a pre-compiled OR-Tools package, its transitive dependencies
+# (absl, re2) must come from the same installation prefix. The vcpkg toolchain
+# prepends vcpkg paths to CMAKE_PREFIX_PATH, so without intervention,
+# find_dependency(absl) inside ortoolsConfig.cmake resolves to vcpkg's absl
+# (a different version than what OR-Tools was compiled against), causing
+# linker errors due to ABI incompatibility (different inline namespaces:
+# e.g. absl::lts_20250512 vs absl::lts_20240722).
+#
+# Fix: locate the OR-Tools install prefix (from ortools_DIR or CMAKE_PREFIX_PATH)
+# and set absl_DIR/re2_DIR to the co-installed versions before find_package(ortools)
+# triggers find_dependency(absl).
+# Note: GNUInstallDirs uses "lib" on Windows/Ubuntu but may use "lib64" on
+# some 64-bit Linux distributions (e.g. Oracle Linux 8).
+if (NOT DEFINED absl_DIR)
+    # Candidate lib directory names (GNUInstallDirs may use lib or lib64)
+    set(_lib_dirs lib lib64)
+
+    # Determine OR-Tools prefix: either from explicit ortools_DIR or CMAKE_PREFIX_PATH
+    set(_ortools_prefix "")
+    if (DEFINED ortools_DIR)
+        get_filename_component(_ortools_prefix "${ortools_DIR}/../../.." ABSOLUTE)
+    else ()
+        foreach(_prefix IN LISTS CMAKE_PREFIX_PATH)
+            foreach(_libdir IN LISTS _lib_dirs)
+                if (EXISTS "${_prefix}/${_libdir}/cmake/ortools/ortoolsConfig.cmake")
+                    set(_ortools_prefix "${_prefix}")
+                    break()
+                endif ()
+            endforeach ()
+            if (_ortools_prefix)
+                break()
+            endif ()
+        endforeach ()
+    endif ()
+
+    if (_ortools_prefix)
+        foreach(_libdir IN LISTS _lib_dirs)
+            if (NOT DEFINED absl_DIR AND EXISTS "${_ortools_prefix}/${_libdir}/cmake/absl/abslConfig.cmake")
+                set(absl_DIR "${_ortools_prefix}/${_libdir}/cmake/absl" CACHE PATH
+                    "Path to absl CMake config (co-installed with OR-Tools)" FORCE)
+                message(STATUS "Setting absl_DIR to OR-Tools co-installed version: ${absl_DIR}")
+            endif ()
+            if (NOT DEFINED re2_DIR AND EXISTS "${_ortools_prefix}/${_libdir}/cmake/re2/re2Config.cmake")
+                set(re2_DIR "${_ortools_prefix}/${_libdir}/cmake/re2" CACHE PATH
+                    "Path to re2 CMake config (co-installed with OR-Tools)" FORCE)
+                message(STATUS "Setting re2_DIR to OR-Tools co-installed version: ${re2_DIR}")
+            endif ()
+        endforeach ()
+
+        # Ensure OR-Tools' absl headers are found BEFORE vcpkg headers.
+        # This is necessary because vcpkg.cmake (line 425-426) reverses the
+        # CMAKE_PREFIX_PATH order for Debug builds, causing vcpkg's absl
+        # (different ABI version) to be found instead of OR-Tools' co-installed absl.
+        set(_absl_include "${_ortools_prefix}/include")
+        if (EXISTS "${_absl_include}/absl")
+            include_directories(BEFORE "${_absl_include}")
+            message(STATUS "Prepending include dir for OR-Tools absl: ${_absl_include}")
+        endif ()
+    endif ()
+    unset(_ortools_prefix)
+    unset(_lib_dirs)
+endif ()
 
 find_package(ortools)
 if (NOT ortools_FOUND OR BUILD_ORTOOLS)
@@ -250,12 +317,6 @@ else ()
     endif ()
 endif ()
 
-#wxWidget not needed for all library find is done in ui CMakeLists.txt
-if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
-    #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
-    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/wxWidgets")
-endif ()
-
 # TODO : review Standard Settings
 include(cmake/common-settings.cmake)
 
@@ -270,13 +331,6 @@ configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cm
 add_subdirectory("ext/yuni/src")
 
 OMESSAGE("") # empty line
-
-# Sub Directories
-if (BUILD_UI)
-    add_compile_definitions(BUILD_UI)
-    add_subdirectory(ui)  #all antares ui libs + antares simulator
-endif ()
-
 
 add_subdirectory(api)
 add_subdirectory(io)
@@ -308,101 +362,27 @@ endif ()
 OMESSAGE("")
 
 
-# Informations for NSIS
-if (WIN32 OR WIN64)
-    if (MSVC)
-        if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-            set(NSIS_TARGET "Release")
-        else ()
-            set(NSIS_TARGET "Debug")
-        endif ()
-        set(COMPILER_MARK "v")
-        #set(COMPILER_INCLUDE "vs9")
-    else (MSVC)
-        set(NSIS_TARGET "")
-        set(COMPILER_MARK "m")
-        set(COMPILER_INCLUDE "mingw")
-    endif (MSVC)
-
-    set(CPACK_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32 ${CPACK_MODULE_PATH})
-
-    # Configure file with custom definitions for NSIS.
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/version.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/version.nsh
-    )
-
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/build.template.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/build.nsh
-    )
-
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/make-zip-from-installer.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/make-zip-from-installer.bat
-    )
-
-    SET(ANTARES_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
-
-    # Define system libraries so NSIS can package these files
-    include(InstallRequiredSystemLibraries)
-
-    #Convert to native and add double quote to be used in NSIS package
-    foreach (SYSTEM_RUNTIME_LIB ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
-        file(TO_NATIVE_PATH ${SYSTEM_RUNTIME_LIB} SYSTEM_RUNTIME_LIB_NATIVE)
-
-        list(APPEND SYSTEM_RUNTIME_LIBS_NATIVE \"${SYSTEM_RUNTIME_LIB_NATIVE}\")
-    endforeach ()
-
-    #Replace ; by space so SYSTEM_RUNTIME_LIBS_STR can be used in File function in NSIS file
-    string(REPLACE ";" " " SYSTEM_RUNTIME_LIBS_STR "${SYSTEM_RUNTIME_LIBS_NATIVE}")
-
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/win32/NSIS.template.in
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/win32/NSIS.template.in
-            @ONLY
-    )
-
-    #Define cpack install script to checkout examples
-    configure_file(
-            ${PROJECT_SOURCE_DIR}/distrib/CMakeLists.txt.in
-            ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt
-            @ONLY
-    )
-
-    set(CPACK_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distrib/CMakeLists.txt)
-
-    #Set package name from CMake and antares variables
-    set(CPACK_PACKAGE_FILE_NAME "rte-antares-${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-installer-${ANTARES_INSTALLER_ARCH}")
-
-
-else ()
-
-    if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-        get_linux_lsb_release_information()
-        message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
-        set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
-    endif ()
-
-    #For now only test deb, need to define several CPACK variable
-    set(CPACK_PROJECT_NAME "antares-deb-test")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
-    set(CPACK_DEBIAN_PACKAGE_NAME "antares")
-    set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
-    set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
-    set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
-
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5 | libwxgtk3.2-dev")
-    set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
-    set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
-
-    configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
-
-
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    get_linux_lsb_release_information()
+    message(STATUS "Linux ${LSB_RELEASE_ID_SHORT} ${LSB_RELEASE_VERSION_SHORT} ${LSB_RELEASE_CODENAME_SHORT}")
+    set(CPACK_SYSTEM_NAME "${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
 endif ()
+
+#For now only test deb, need to define several CPACK variable
+set(CPACK_PROJECT_NAME "antares-deb-test")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "RTE")
+set(CPACK_DEBIAN_PACKAGE_NAME "antares")
+set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
+set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
+set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
+
+configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
 # Load packaging facilities.
 include(CPack)
 
 #Last. We need all target defined
 add_subdirectory(packaging)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_link_options("LINKER:--end-group")
+endif()

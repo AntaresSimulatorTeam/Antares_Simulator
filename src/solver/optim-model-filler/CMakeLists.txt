@@ -1,12 +1,15 @@
 set(PROJ optim-model-filler)
 
 set(SRC_optim_model_filler
+        BendersDecomposition.cpp
         ComponentFiller.cpp
         ReadLinearConstraintVisitor.cpp
         ReadLinearExpressionVisitor.cpp
         LinearExpression.cpp
         TimeDependentLinearExpression.cpp
         Dimensions.cpp
+        outOfBoundsTimeShift.cpp
+        include/antares/solver/optim-model-filler/BendersDecomposition.h
         include/antares/solver/optim-model-filler/ComponentFiller.h
         include/antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h
         include/antares/solver/optim-model-filler/ReadLinearExpressionVisitor.h
@@ -14,6 +17,7 @@ set(SRC_optim_model_filler
         include/antares/solver/optim-model-filler/Dimensions.h
         include/antares/solver/optim-model-filler/LinearExpression.h
         include/antares/solver/optim-model-filler/TimeDependentLinearExpression.h
+        include/antares/solver/optim-model-filler/outOfBoundsTimeShift.h
 )
 
 add_library(${PROJ} ${SRC_optim_model_filler})
@@ -34,4 +38,8 @@ target_link_libraries(${PROJ}
 target_include_directories(${PROJ}
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+install(DIRECTORY include/antares
+        DESTINATION "include"
 )

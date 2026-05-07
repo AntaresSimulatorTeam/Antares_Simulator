@@ -36,6 +36,18 @@ private:
     bool loadTimeSeries(EnvForLoading& env,
                         BindingConstraint::Operator operatorType,
                         BindingConstraint* bindingConstraint) const;
+
+    void populateConstraint(const EnvForLoading& env, std::shared_ptr<BindingConstraint>& bc);
+
+    void parseWeightAndOffset(const EnvForLoading& env,
+                              const IniFile::Property* p,
+                              std::shared_ptr<BindingConstraint>& bc);
+
+    bool validate(const EnvForLoading& env, const std::shared_ptr<BindingConstraint>& bc);
+
+    std::vector<std::shared_ptr<BindingConstraint>> loadByOperator(
+      EnvForLoading& env,
+      std::shared_ptr<BindingConstraint>& bc);
 };
 
 } // namespace Antares::Data

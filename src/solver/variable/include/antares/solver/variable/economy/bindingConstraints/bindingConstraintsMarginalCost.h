@@ -105,6 +105,10 @@ public:
 
 public:
     BindingConstMarginCost() = default;
+    BindingConstMarginCost(const BindingConstMarginCost&) = delete;
+    BindingConstMarginCost(BindingConstMarginCost&&) noexcept = default;
+    BindingConstMarginCost& operator=(const BindingConstMarginCost&) = delete;
+    BindingConstMarginCost& operator=(BindingConstMarginCost&&) = delete;
 
     void simulationBegin()
     {

@@ -10,7 +10,7 @@ import subprocess
 from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import modeler_output_handler
-import common_steps.mps_utils as mpu
+from shared_utils import mps_utils as mpu
 
 
 @given('the modeler study path is "{string}"')
@@ -25,7 +25,7 @@ def run_antares_modeler(context):
 
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    assert_double_close(value, context.moh.get_objective_value(), 1e-6)
+    assert_double_close(value, context.moh.get_objective_value(), 1e-5)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')

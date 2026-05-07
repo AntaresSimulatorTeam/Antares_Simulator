@@ -195,7 +195,38 @@ std::vector<std::string> AllVariablesPrintInfo::namesOfDisabledVariables()
     return namesOfVariablesWithPrintStatus(false);
 }
 
-void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
+// Helper function
+unsigned computeMaxColumnsForDynamicDistricts(const Sets& setsOfAreas)
+{
+    std::size_t ret = 0;
+    for (const auto& [_, set]: setsOfAreas)
+    {
+        std::set<std::string> thermalGroupNames, renewableGroupNames, stsGroupNames;
+        for (const auto* area: *set)
+        {
+            for (const auto& cluster: area->thermal.list.each_enabled_and_not_mustrun())
+            {
+                thermalGroupNames.insert(cluster->getGroup());
+            }
+            for (const auto& cluster: area->renewable.list.each_enabled())
+            {
+                renewableGroupNames.insert(cluster->getGroup());
+            }
+            for (const auto& sts: area->shortTermStorage.storagesByIndex)
+            {
+                stsGroupNames.insert(sts.properties.groupName);
+            }
+        }
+        // 4 values EXP, STD, MIN, MAX
+        // For short-term storage, LEVEL, WITHDRAWAL, INJECTION
+        ret = std::max(
+          ret,
+          4 * (thermalGroupNames.size() + renewableGroupNames.size() + 3 * stsGroupNames.size()));
+    }
+    return ret;
+}
+
+void AllVariablesPrintInfo::computeMaxColumnsCountInReports(const Sets& setsOfAreas)
 {
     /*
         Among all reports a study can create, which is the one that contains the largest
@@ -233,6 +264,8 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
             totalMaxColumnsCount_ = std::max(totalMaxColumnsCount_, currentColumnsCount);
         }
     }
+    // Dynamic variables for sets of areas (districts)
+    totalMaxColumnsCount_ += computeMaxColumnsForDynamicDistricts(setsOfAreas);
 }
 
 void AllVariablesPrintInfo::countSelectedAreaVars()

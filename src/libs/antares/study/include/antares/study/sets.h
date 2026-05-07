@@ -17,6 +17,7 @@
 
 namespace Antares::Data
 {
+struct CompareAreaName;
 class SetHandlerAreas;
 
 class Sets final
@@ -135,17 +136,6 @@ public:
     */
     void clear();
 
-    bool forceReload(bool /*reload*/) const
-    {
-        pModified = true;
-        return true;
-    }
-
-    void markAsModified() const
-    {
-        pModified = true;
-    }
-
     uint size() const;
 
     /*!
@@ -175,7 +165,6 @@ public:
     */
     bool loadFromFile(const std::filesystem::path& filename);
 
-    bool saveToFile(const Yuni::String& filename) const;
     /*!
     ** \brief format the string to match the options
     */
@@ -203,6 +192,15 @@ public:
     SetAreasType& operator[](uint i);
     const SetAreasType& operator[](uint i) const;
 
+    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
+    {
+        pMap[name] = data;
+        pOptions[name] = opts;
+        return data;
+    }
+
+    void rebuildIndexes();
+
 private:
     TypePtr add(const IDType& name)
     {
@@ -219,18 +217,10 @@ private:
         return data;
     }
 
-    TypePtr add(const IDType& name, const TypePtr& data, Options& opts)
-    {
-        pMap[name] = data;
-        pOptions[name] = opts;
-        return data;
-    }
-
     /*!
     ** \brief Rebuild the lists of a group from the rules
     */
     void rebuildFromRules(const IDType& id, SetHandlerAreas& handler);
-    void rebuildIndexes();
 
     //! All groups
     MapType pMap;

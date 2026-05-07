@@ -14,6 +14,9 @@
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
 #include "antares/solver/simulation/remix-storage/shave-peaks-by-remix-storage-gen.h"
+#include "antares/utils/vector-utils.h"
+
+using namespace Antares::Utils;
 
 #define EPSILON 1e-6
 
@@ -322,20 +325,33 @@ std::shared_ptr<IStorageForRemix> extractSTSforRemix(const Data::Area& area,
     auto& unsupE = weeklyResults.ValeursHorairesDeDefaillancePositive;
     auto& levels = stsResults[stsIndex].level;
 
+    std::vector<double> overflows;
+    if (stsProperties.allowOverflow)
+    {
+        overflows = stsResults[stsIndex].overflow;
+    }
+    else
+    {
+        size_t size = withdrawal.size();
+        overflows.assign(size, 0.0);
+    }
+
     const auto& pmax = extractSTSpmax(stsProperties, firstHourOfWeek);
     const auto& inflows = extractSTSinflows(stsProperties, firstHourOfWeek, problem.year);
     const auto lowRuleCurve = extractSTSlowRuleCurve(stsProperties, firstHourOfWeek);
     const auto upRuleCurve = extractSTSupRuleCurve(stsProperties, firstHourOfWeek);
-    const double initLevel = levels[0];
     const double withdrawalcapacity = stsProperties.withdrawalNominalCapacity;
     const double withdrawalEff = stsProperties.withdrawalEfficiency;
     const double injectionEff = stsProperties.injectionEfficiency;
+    const double initLevel = levels[0] - inflows[0] + overflows[0] - injectionEff * injection[0]
+                             + withdrawalEff * withdrawal[0];
 
     return makeSTSforRemix(withdrawal,
                            unsupE,
                            levels,
                            pmax,
                            inflows,
+                           overflows,
                            injection,
                            lowRuleCurve,
                            upRuleCurve,
@@ -405,7 +421,7 @@ static void RunAccurateShavePeaks(const Data::AreaList& areas,
           catch (std::exception& e)
           {
               std::string msg = "(year, area, week) = (" + std::to_string(problem.year) + ", "
-                                + area.id.to<std::string>() + ", "
+                                + area.id + ", "
                                 + std::to_string((firstHourOfWeek + 1) / HOURS_IN_WEEK)
                                 + ") : " + e.what();
               logs.warning(msg);

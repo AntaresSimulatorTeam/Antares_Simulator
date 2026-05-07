@@ -3,6 +3,8 @@
 
 #include "antares/api/singleProblemGetter.h"
 
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
+
 #include "singleProblemGetterImpl.h"
 
 namespace Antares::Solver
@@ -26,6 +28,12 @@ WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
     return impl_->getWeeklyData(id);
 }
 
+std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+{
+    return impl_->getWeeklyProblem(id);
+}
+
 std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
 {
     return impl_->getProblemIds();
@@ -39,6 +47,21 @@ void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& output
 void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path& outputDir)
 {
     impl_->writeStudyDescriptionFiles(outputDir);
+}
+
+bool SingleProblemGetter::areWeeksIndependent() const
+{
+    return impl_->areWeeksIndependent();
+}
+
+void SingleProblemGetter::printProblems() const
+{
+    impl_->printProblems();
+}
+
+Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+{
+    return impl_->getMasterProblem();
 }
 
 } // namespace Antares::Solver

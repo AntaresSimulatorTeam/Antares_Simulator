@@ -3,6 +3,8 @@
 
 #include "antares/study/parts/hydro/allocation.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/utils/utils.h>
 #include "antares/study/study.h"
 
@@ -36,17 +38,6 @@ void HydroAllocation::remove(const AreaName& areaid)
     if (i != pValues.end())
     {
         pValues.erase(i);
-    }
-}
-
-void HydroAllocation::rename(const AreaName& oldid, const AreaName& newid)
-{
-    auto i = pValues.find(oldid);
-    if (i != pValues.end())
-    {
-        double coeff = i->second;
-        pValues.erase(i);
-        pValues[newid] = coeff;
     }
 }
 
@@ -154,7 +145,7 @@ bool HydroAllocation::loadFromFile(const AreaName& referencearea, const fs::path
               if (!Utils::isZero(coeff))
               {
                   AreaName areaname = p->key;
-                  areaname.toLower();
+                  boost::to_lower(areaname);
                   pValues[areaname] = coeff;
               }
           }

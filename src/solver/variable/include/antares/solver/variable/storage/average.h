@@ -6,6 +6,12 @@
 
 #include <vector>
 
+// Include order matters, we turn off clang format to make it compile
+// clang-format off
+#include "antares/solver/variable/storage/intermediate.h"
+#include "antares/solver/variable/storage/empty.h"
+// clang-format on
+
 #include "averagedata.h"
 
 namespace Antares::Solver::Variable::R::AllYears
@@ -42,7 +48,6 @@ public:
     {
     }
 
-protected:
     void initializeFromStudy(Antares::Data::Study& study)
     {
         avgdata.initializeFromStudy(study);

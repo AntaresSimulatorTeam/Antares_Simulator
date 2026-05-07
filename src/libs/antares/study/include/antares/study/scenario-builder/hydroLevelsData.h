@@ -22,8 +22,7 @@ public:
 public:
     // Constructor
 
-    hydroLevelsData(const std::string& iniFilePrefix,
-                    std::function<void(Study&, MatrixType&)> applyToTarget);
+    explicit hydroLevelsData(std::function<void(Study&, MatrixType&)> applyToTarget);
 
     //! \name Data manupulation
     //@{
@@ -31,13 +30,6 @@ public:
     ** \brief Reset data from the study
     */
     bool reset(const Study& study) override;
-
-#ifdef BUILD_UI
-    /*!
-    ** \brief Export the data into a mere INI file
-    */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-#endif
 
     /*!
     ** \brief Assign a single value
@@ -62,8 +54,6 @@ public:
 private:
     //! Hydro levels overlay (0 if auto)
     MatrixType pHydroLevelsRules;
-    // prefix to be added when calling saveToINIFileHydroLevel
-    const std::string addToPrefix_;
 
     std::function<void(Study&, MatrixType&)> applyToTarget_;
 

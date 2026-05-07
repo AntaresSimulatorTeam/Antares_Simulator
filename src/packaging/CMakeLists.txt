@@ -11,8 +11,8 @@ set(TARGET_LIBS #No alias
         # it is available for everything
 
         solver_api # What we want to export
-	single_problem_api
-
+		single_problem_api
+		antares-problem-generator
         study
         scenario-builder-utils
         study-loader
@@ -23,12 +23,14 @@ set(TARGET_LIBS #No alias
         array
         date
         inifile
-        StudyUtils
+        study-utils
+		vector-utils
         utils
         correlation
         path
         mersenne
         result_writer
+	parquet_writer
         series
         antares-core
         antares-solver-hydro
@@ -94,25 +96,31 @@ set(TARGET_LIBS #No alias
 
         # modeler libs
         antlr-interface
+        system-model-base
         antares-study-system-model
         load-modeler-files
 		write-modeler-files
         modeler-optimisation-container
         expressions
         optim-model-filler
+		forbidden-nodes
+        input-error
         yml-system
         yml-model
+		yml-utils
         model-converter
         modeler-parameters
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
-        modeler-simulation-table
+		simulation-table
+        simu-table-generator
         scenario-builder-antlr
         scenario-group-parser
         yml-optim-config
         enums
         modeler-checks
+		structured-linear-problem
 )
 
 install(TARGETS ${TARGET_LIBS}

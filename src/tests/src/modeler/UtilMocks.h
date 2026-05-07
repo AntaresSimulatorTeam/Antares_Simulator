@@ -467,7 +467,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     Antares::Optimisation::OptimEntityContainer optimEntityContainer = Antares::Optimisation::
-      OptimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+      OptimEntityContainer(linearProblem);
 
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> defaultComponentEvalVisitor;
 
@@ -477,7 +477,12 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
         for (const auto& compo: components)
         {
             defaultComponentEvalVisitor = std::make_unique<
-              Antares::Expressions::Visitors::EvalVisitor>(optimEntityContainer, ctx, compo);
+              Antares::Expressions::Visitors::EvalVisitor>(optimEntityContainer,
+                                                           ctx,
+                                                           compo,
+                                                           &data,
+                                                           &scenarioGroupRepository.scenario(
+                                                             compo.getScenarioGroupId()));
         }
     }
 
@@ -487,7 +492,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
       std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
         paramsAndValues)
     {
-        components.emplace_back(createComponent(model, id, paramsAndValues, components.size()));
+        components.emplace_back(createComponent(model, id, paramsAndValues));
         optimEntityContainer.addFromSystemComponents(components);
         return &components.back();
     }

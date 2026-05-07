@@ -1,6 +1,7 @@
 #pragma once
 
 #include <antares/expressions/Registry.hxx>
+#include <antares/expressions/expression.h>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include "antares/exception/InvalidArgumentError.hpp"
@@ -30,15 +31,15 @@ inline ScenarioGroupRepository createScenario()
 
 struct MockLinearProblemData: LinearProblemApi::ILinearProblemData
 {
-    [[nodiscard]] double getData([[maybe_unused]] const std::string& dataSetId,
-                                 [[maybe_unused]] unsigned scenario,
+    [[nodiscard]] double getData(const std::string& /*dataSetId*/,
+                                 unsigned /*scenario*/,
                                  unsigned hour) const override
     {
         return hour; // for test
     }
 
-    [[nodiscard]] std::span<const double> getData(const std::string& dataSetId,
-                                                  unsigned timeSeriesNumber,
+    [[nodiscard]] std::span<const double> getData(const std::string& /*dataSetId*/,
+                                                  unsigned /*timeSeriesNumber*/,
                                                   unsigned firstHour,
                                                   unsigned lastHour) const override
     {
@@ -64,12 +65,10 @@ struct VisitorFixture: Registry<Node>
     VisitorFixture():
         linearProblem(false),
         scenarioGroupRepository(createScenario()),
-        optimContainer(linearProblem, &data, &scenarioGroupRepository),
+        optimContainer(linearProblem),
         components(1, setupComponent())
     {
         optimContainer.addFromSystemComponents(components);
-        auto& optimComponent = optimContainer.getOptimComponent(0);
-        optimComponent.modelVariableGlobalIndices = {0, 1, 2};
         {
             optimContainer.addStartColumn();
             linearProblem.addNumVariable(0, 1, "var1");
@@ -82,7 +81,7 @@ struct VisitorFixture: Registry<Node>
 
     Visitor visitor()
     {
-        return Visitor(optimContainer, ctx, components[0]);
+        return Visitor(optimContainer, ctx, components[0], &data, scenarioGroupRepository);
     }
 
 private:
@@ -115,8 +114,32 @@ private:
             parameters.push_back(parameter);
         }
 
+        auto dummyExpression = []() { return SystemModel::Expression("", {}); };
+        std::vector<SystemModel::Variable> variables;
+        variables.emplace_back("var1",
+                               dummyExpression(),
+                               dummyExpression(),
+                               SystemModel::ValueType::FLOAT,
+                               SystemModel::TimeDependent::NO,
+                               SystemModel::ScenarioDependent::NO);
+        variables.emplace_back("var2",
+                               dummyExpression(),
+                               dummyExpression(),
+                               SystemModel::ValueType::FLOAT,
+                               SystemModel::TimeDependent::NO,
+                               SystemModel::ScenarioDependent::NO);
+        variables.emplace_back("var3",
+                               dummyExpression(),
+                               dummyExpression(),
+                               SystemModel::ValueType::FLOAT,
+                               SystemModel::TimeDependent::NO,
+                               SystemModel::ScenarioDependent::NO);
+
         SystemModel::ModelBuilder modelBuilder;
-        m = modelBuilder.withId("model").withParameters(std::move(parameters)).build();
+        m = modelBuilder.withId("model")
+              .withParameters(std::move(parameters))
+              .withVariables(std::move(variables))
+              .build();
 
         SystemModel::ComponentBuilder componentBuilder;
         return componentBuilder.withId("compo")

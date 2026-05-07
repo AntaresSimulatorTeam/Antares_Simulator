@@ -3,6 +3,8 @@
 
 #include "antares/study/parts/hydro/container.h"
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <antares/inifile/inifile.h>
 #include "antares/study/parts/hydro/hydromaxtimeseriesreader.h"
 #include "antares/study/study.h"
@@ -55,9 +57,6 @@ void PartHydro::reset()
 
     inflowPattern.reset(1, DAYS_PER_YEAR, true);
     inflowPattern.fillColumn(0, 1.0);
-    reservoirLevel.reset(3, DAYS_PER_YEAR, true);
-    reservoirLevel.fillColumn(average, 0.5);
-    reservoirLevel.fillColumn(maximum, 1.);
     waterValues.reset(101, DAYS_PER_YEAR, true);
     dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR, true);
     dailyNbHoursAtGenPmax.fillColumn(0, 24.);
@@ -98,7 +97,7 @@ static bool loadProperties(Study& study,
     for (; property; property = property->next)
     {
         AreaName id = property->key;
-        id.toLower();
+        boost::to_lower(id);
 
         Area* area = study.areas.find(id);
         if (area)
@@ -250,36 +249,12 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
           if (study.parameters.compatibility.hydroPmax
               == Parameters::Compatibility::HydroPmax::Hourly)
           {
-              // GUI part patch :
-              // We need to know, when estimating the RAM required by the solver, if the current
-              // area is hydro modulable. Therefore, reading the area's daily max power at this
-              // stage is necessary.
+              ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
 
-              if (!study.usedByTheSolver)
-              {
-                  bool enabledModeIsChanged = false;
-                  if (JIT::enabled)
-                  {
-                      JIT::enabled = false; // Allowing to read the area's daily max power
-                      enabledModeIsChanged = true;
-                  }
+              // Check is moved here, because in case of old study
+              // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.
 
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
-
-                  if (enabledModeIsChanged)
-                  {
-                      JIT::enabled = true; // Back to the previous loading mode.
-                  }
-              }
-              else
-              {
-                  ret = area.hydro.LoadDailyMaxEnergy(folder.string(), area.id) && ret;
-
-                  // Check is moved here, because in case of old study
-                  // dailyNbHoursAtGenPmax and dailyNbHoursAtPumpPmax are not yet initialized.
-
-                  ret = area.hydro.CheckDailyMaxEnergy(area.name) && ret;
-              }
+              ret = area.hydro.CheckDailyMaxEnergy(area.name) && ret;
           }
 
           fs::path capacityPath = folder / "common" / "capacity";
@@ -291,15 +266,6 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
                                                             2,
                                                             Matrix<>::optFixedSize,
                                                             &study.dataBuffer)
-                && ret;
-
-          std::string reservoirId = "reservoir_" + area.id + ".txt";
-          fs::path reservoirPath = capacityPath / reservoirId;
-          ret = area.hydro.reservoirLevel.loadFromCSVFile(reservoirPath.string(),
-                                                          3,
-                                                          DAYS_PER_YEAR,
-                                                          Matrix<>::optFixedSize,
-                                                          &study.dataBuffer)
                 && ret;
 
           std::string waterValueId = "waterValues_" + area.id + ".txt";
@@ -324,17 +290,12 @@ bool PartHydro::LoadFromFolder(Study& study, const fs::path& folder)
     return ret;
 }
 
-bool PartHydro::checkReservoirLevels(const Study& study)
+bool PartHydro::checkInflowPatternAndCredModul(const Study& study)
 {
     bool ret = true;
 
     for (const auto& [areaName, area]: study.areas)
     {
-        if (!study.usedByTheSolver)
-        {
-            return true;
-        }
-
         auto& col = area->hydro.inflowPattern[0];
         bool errorInflow = false;
         for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
@@ -343,21 +304,6 @@ bool PartHydro::checkReservoirLevels(const Study& study)
             {
                 logs.error() << areaName << ": invalid inflow value";
                 errorInflow = true;
-                ret = false;
-            }
-        }
-        bool errorLevels = false;
-        auto& colMin = area->hydro.reservoirLevel[minimum];
-        auto& colAvg = area->hydro.reservoirLevel[average];
-        auto& colMax = area->hydro.reservoirLevel[maximum];
-        for (unsigned int day = 0; day < DAYS_PER_YEAR; day++)
-        {
-            if (!errorLevels
-                && (colMin[day] < 0 || colAvg[day] < 0 || colMin[day] > colMax[day]
-                    || colAvg[day] > 100 || colMax[day] > 100))
-            {
-                logs.error() << areaName << ": invalid reservoir level value";
-                errorLevels = true;
                 ret = false;
             }
         }
@@ -458,7 +404,7 @@ bool PartHydro::checkProperties(Study& study)
 
 bool PartHydro::validate(Study& study)
 {
-    bool ret = checkReservoirLevels(study);
+    bool ret = checkInflowPatternAndCredModul(study);
     return checkProperties(study) && ret;
 }
 
@@ -611,10 +557,7 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
                          << "inflowPattern_" << area.id << ".txt";
           ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-          // reservoir
-          buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                         << area.id << ".txt";
-          ret = area.hydro.reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+          // water values
           buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
                          << area.id << ".txt";
           ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
@@ -623,47 +566,6 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
     // Write the ini file
     buffer.clear() << folder << SEP << "hydro.ini";
     return ini.save(buffer) && ret;
-}
-
-bool PartHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = creditModulation.forceReload(reload) && ret;
-    ret = inflowPattern.forceReload(reload) && ret;
-    ret = reservoirLevel.forceReload(reload) && ret;
-    ret = waterValues.forceReload(reload) && ret;
-    ret = dailyNbHoursAtGenPmax.forceReload(reload) && ret;
-    ret = dailyNbHoursAtPumpPmax.forceReload(reload) && ret;
-
-    if (series)
-    {
-        ret = series->forceReload(reload) && ret;
-    }
-    if (prepro)
-    {
-        ret = prepro->forceReload(reload) && ret;
-    }
-
-    return ret;
-}
-
-void PartHydro::markAsModified() const
-{
-    inflowPattern.markAsModified();
-    reservoirLevel.markAsModified();
-    waterValues.markAsModified();
-    creditModulation.markAsModified();
-    dailyNbHoursAtGenPmax.markAsModified();
-    dailyNbHoursAtPumpPmax.markAsModified();
-
-    if (series)
-    {
-        series->markAsModified();
-    }
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
 }
 
 void PartHydro::copyFrom(const PartHydro& rhs)
@@ -679,12 +581,6 @@ void PartHydro::copyFrom(const PartHydro& rhs)
         inflowPattern = rhs.inflowPattern;
         inflowPattern.unloadFromMemory();
         rhs.inflowPattern.unloadFromMemory();
-    }
-    // reservoir levels
-    {
-        reservoirLevel = rhs.reservoirLevel;
-        reservoirLevel.unloadFromMemory();
-        rhs.reservoirLevel.unloadFromMemory();
     }
     // water values
     {

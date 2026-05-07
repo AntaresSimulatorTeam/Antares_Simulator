@@ -19,9 +19,10 @@ public:
     /*!
     ** \brief Default constructor
     */
-    AverageData();
+    AverageData() = default;
+
     //! Destructor
-    ~AverageData();
+    ~AverageData() = default;
 
     void initializeFromStudy(Data::Study& study);
 

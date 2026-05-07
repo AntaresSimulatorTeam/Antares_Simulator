@@ -109,41 +109,6 @@ YString Sets::toString()
     return ret;
 }
 
-bool Sets::saveToFile(const Yuni::String& filename) const
-{
-    Yuni::IO::File::Stream file;
-    if (!file.open(filename, Yuni::IO::OpenMode::write | Yuni::IO::OpenMode::truncate))
-    {
-        logs.error() << "I/O Error: " << filename << ": impossible to write the file";
-        return false;
-    }
-
-    static const char* cmds[ruleMax] = {"none", "+", "-", "apply-filter"};
-    const auto end = pOptions.cend();
-    for (auto i = pOptions.cbegin(); i != end; ++i)
-    {
-        const Options& opts = i->second;
-        file << '[' << i->first << "]\n";
-        file << "caption = " << opts.caption << '\n';
-        if (not opts.comments.empty())
-        {
-            file << "comments = " << opts.comments << '\n';
-        }
-        if (!opts.output)
-        {
-            file << "output = false\n";
-        }
-
-        for (uint r = 0; r != opts.rules.size(); ++r)
-        {
-            const Rule& rule = opts.rules[r];
-            file << cmds[rule.first] << " = " << rule.second << '\n';
-        }
-        file << '\n';
-    }
-    return true;
-}
-
 bool Sets::loadFromFile(const std::filesystem::path& filename)
 {
     using namespace Yuni;
@@ -431,7 +396,7 @@ bool SetHandlerAreas::applyFilter(Sets::SetAreasType& set, const std::string& va
     {
         for (const auto& [areaName, area]: areas_)
         {
-            set.insert(area);
+            set.insert(area.get());
         }
         return true;
     }

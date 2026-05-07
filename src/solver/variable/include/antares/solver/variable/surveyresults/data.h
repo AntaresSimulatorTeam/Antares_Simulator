@@ -46,8 +46,8 @@ public:
     const Data::Area* area;
     //! Current link
     const Data::AreaLink* link;
-    //! The index for the current set of areas
-    unsigned int setOfAreasIndex;
+    //! The identifier for the current set of areas
+    Data::Study::SetsOfAreas::IDType setOfAreasName;
 
     //! The current study
     const Data::Study& study;

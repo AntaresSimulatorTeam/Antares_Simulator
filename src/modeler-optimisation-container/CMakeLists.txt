@@ -21,6 +21,7 @@ target_link_libraries(${PROJ}
         PRIVATE
         Antares::antares-study-system-model
         Antares::linear-problem-api
+        Antares::exception
 )
 
 install(DIRECTORY include/antares

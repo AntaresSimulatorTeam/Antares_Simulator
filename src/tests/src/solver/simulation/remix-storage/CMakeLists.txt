@@ -12,9 +12,11 @@ add_boost_test(tests-on-remix-utils
         ${include_dir}
         LIBS
         storage-for-remix-list-sort
+        Antares::vector-utils
         test_utils_unit)
 
 set_target_properties(tests-on-remix-utils PROPERTIES FOLDER Unit-tests/storage-remix)
+
 
 #---------------------------------------
 # Unit tests on remix algo components
@@ -36,6 +38,7 @@ add_boost_test(tests-on-hydro-remix
         test-hydro-remix.cpp
         LIBS
         shave-peaks-by-remix-storage-gen
+        Antares::vector-utils
         test_utils_unit)
 
 set_target_properties(tests-on-hydro-remix PROPERTIES FOLDER Unit-tests/storage-remix)
@@ -50,6 +53,7 @@ add_boost_test(tests-on-multi-storage-remix
         tests-collect_remix_debug_info.cpp
         LIBS
         shave-peaks-by-remix-storage-gen
+        Antares::vector-utils
         test_utils_unit)
 
 set_target_properties(tests-on-multi-storage-remix PROPERTIES FOLDER Unit-tests/storage-remix)

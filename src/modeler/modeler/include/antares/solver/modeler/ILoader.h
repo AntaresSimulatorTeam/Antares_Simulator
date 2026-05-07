@@ -14,6 +14,6 @@ public:
 
     virtual ModelerParameters loadParameters() = 0;
 
-    virtual ModelerData loadAll() = 0;
+    virtual std::optional<ModelerData> loadAll() = 0;
 };
 } // namespace Antares::Solver

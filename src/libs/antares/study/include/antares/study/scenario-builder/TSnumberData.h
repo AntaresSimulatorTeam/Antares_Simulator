@@ -27,13 +27,6 @@ public:
     */
     bool reset(const Study& study) override;
 
-#ifdef BUILD_UI
-    /*!
-    ** \brief Export the data into a mere INI file
-    */
-    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
-#endif
-
     /*!
     ** \brief Assign a single value
     **

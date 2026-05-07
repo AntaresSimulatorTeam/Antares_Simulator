@@ -42,6 +42,7 @@ struct ConstraintData
 {
     std::string id;
     Antares::Expressions::Nodes::Node* expression;
+    OutOfBoundsProcessingMode outOfBoundsProcessingMode = OutOfBoundsProcessingMode::CYCLIC;
 };
 
 struct LinearProblemBuildingFixture
@@ -127,10 +128,10 @@ struct LinearProblemBuildingFixture
         modelerData.system = std::make_unique<System>(std::move(system));
         modelerData.dataSeries = std::make_unique<
           Antares::Optimisation::LinearProblemDataImpl::LinearProblemData>(std::move(dummy_data_));
+        modelerData.scenarioGroupRepository = std::move(scenarioGroupRepo);
         return modelerData;
     }
 
 private:
-    int componentIndex_ = 0;
 };
 } // namespace Test::Modeler

@@ -41,16 +41,9 @@ std::string mcyear(uint year)
 }
 
 template<class PredicateT>
-void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, PredicateT& predicate)
+void XCast::exportTimeSeriesToTheOutput(PredicateT& predicate)
 {
-    if (study.parameters.noOutput)
-    {
-        for (uint i = 0; i != study.areas.size(); ++i)
-        {
-            ++progression;
-        }
-    }
-    else
+    if (!study.parameters.noOutput)
     {
         logs.info() << "Exporting " << predicate.timeSeriesName()
                     << " time-series into the output (year:" << year << ')';
@@ -59,7 +52,7 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
         output /= fs::path(predicate.timeSeriesName()) / mcyear(year);
 
         study.areas.each(
-          [this, &progression, &predicate, &output](Data::Area& area)
+          [this, &predicate, &output](Data::Area& area)
           {
               std::string areaId = area.id + "txt";
               fs::path filename = output / areaId;
@@ -67,8 +60,6 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
               predicate.matrix(area).saveToBuffer(buffer);
 
               pWriter.addEntryFromBuffer(filename, buffer);
-
-              ++progression;
           });
     }
 }
@@ -234,7 +225,7 @@ void XCast::allocateTemporaryData()
 }
 
 template<class PredicateT>
-bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progression)
+bool XCast::runWithPredicate(PredicateT& predicate)
 {
     pTSName = predicate.timeSeriesName();
 
@@ -275,17 +266,11 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     const uint processCount = (uint)pData.localareas.size();
 
-    if (study.areas.size() > pData.localareas.size())
-    {
-        progression += (nbTimeseries_ * DAYS_PER_YEAR)
-                       * ((uint)study.areas.size() - (uint)pData.localareas.size());
-    }
-
     if (processCount == 0)
     {
         if (study.parameters.timeSeriesToArchive & timeSeriesType)
         {
-            exportTimeSeriesToTheOutput(progression, predicate);
+            exportTimeSeriesToTheOutput(predicate);
         }
         return true;
     }
@@ -446,8 +431,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     {
                         column[hourInTheYear + h] = std::round(dailyResults[h]);
                     }
-
-                    ++progression;
                 }
 
                 hourInTheYear += HOURS_PER_DAY;
@@ -473,7 +456,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (study.parameters.timeSeriesToArchive & timeSeriesType)
     {
-        exportTimeSeriesToTheOutput(progression, predicate);
+        exportTimeSeriesToTheOutput(predicate);
     }
 
     if (timeSeriesType == Data::timeSeriesLoad)
@@ -511,30 +494,24 @@ bool XCast::run()
     {
     case Data::timeSeriesLoad:
     {
-        Solver::Progression::Task p(study, year, Progression::sectTSGLoad);
-
         nbTimeseries_ = study.parameters.nbTimeSeriesLoad;
 
         Predicate::Load predicate;
-        return runWithPredicate(predicate, p);
+        return runWithPredicate(predicate);
     }
     case Data::timeSeriesSolar:
     {
-        Solver::Progression::Task p(study, year, Progression::sectTSGSolar);
-
         nbTimeseries_ = study.parameters.nbTimeSeriesSolar;
 
         Predicate::Solar predicate;
-        return runWithPredicate(predicate, p);
+        return runWithPredicate(predicate);
     }
     case Data::timeSeriesWind:
     {
-        Solver::Progression::Task p(study, year, Progression::sectTSGWind);
-
         nbTimeseries_ = study.parameters.nbTimeSeriesWind;
 
         Predicate::Wind predicate;
-        return runWithPredicate(predicate, p);
+        return runWithPredicate(predicate);
     }
 
     default:

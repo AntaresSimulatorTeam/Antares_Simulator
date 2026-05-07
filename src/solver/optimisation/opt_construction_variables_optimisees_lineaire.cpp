@@ -4,9 +4,8 @@
 #include <spx_constantes_externes.h>
 
 #include "antares/solver/optimisation/opt_rename_problem.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include "variables/VariableManagerUtils.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                                    bool);
@@ -27,7 +26,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
         for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            variableManager.NTCDirect(interco, pdt) = NombreDeVariables;
+            variableManager.DirectFlow(interco, pdt) = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
 
             const auto origin = problemeHebdo->NomsDesPays
@@ -35,20 +34,20 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             const auto destination = problemeHebdo->NomsDesPays
                                        [problemeHebdo->PaysExtremiteDeLInterconnexion[interco]];
             variableNamer.updateExtremities(origin, destination);
-            variableNamer.NTCDirect(NombreDeVariables);
+            variableNamer.DirectFlow(NombreDeVariables);
             NombreDeVariables++;
 
             if (problemeHebdo->CoutDeTransport[interco].IntercoGereeAvecDesCouts)
             {
-                variableManager.IntercoDirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.PositiveDirectFlow(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoDirectCost(NombreDeVariables);
+                variableNamer.PositiveDirectFlow(NombreDeVariables);
                 NombreDeVariables++;
-                variableManager.IntercoIndirectCost(interco, pdt) = NombreDeVariables;
+                variableManager.PositiveIndirectFlow(interco, pdt) = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                variableNamer.IntercoIndirectCost(NombreDeVariables);
+                variableNamer.PositiveIndirectFlow(NombreDeVariables);
                 NombreDeVariables++;
             }
         }
@@ -128,16 +127,16 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 }
             }
 
-            variableManager.PositiveUnsuppliedEnergy(pays, pdt) = NombreDeVariables;
+            variableManager.UnsuppliedEnergy(pays, pdt) = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            variableNamer.PositiveUnsuppliedEnergy(NombreDeVariables);
+            variableNamer.UnsuppliedEnergy(NombreDeVariables);
             NombreDeVariables++;
 
-            variableManager.NegativeUnsuppliedEnergy(pays, pdt) = NombreDeVariables;
+            variableManager.Spillage(pays, pdt) = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-            variableNamer.NegativeUnsuppliedEnergy(NombreDeVariables);
+            variableNamer.Spillage(NombreDeVariables);
             NombreDeVariables++;
         }
 

@@ -8,9 +8,7 @@
 #include <set>
 #include <stdlib.h>
 #include <vector>
-//
-#include "antares/study/parts/parts.h"
-//
+
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
@@ -18,10 +16,10 @@
 #include <antares/array/matrix.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/study/filter.h"
+#include "antares/study/parts/parts.h"
 
 #include "constants.h"
 #include "links.h"
-#include "ui.h"
 
 namespace Antares::Data
 {
@@ -34,17 +32,10 @@ class Area final: private Yuni::NonCopyable<Area>
 {
 public:
     using NameSet = std::set<AreaName>;
-    using Set = std::set<Area*, CompareAreaName>;
-    using LinkMap = std::map<Area*, AreaLink::Set, CompareAreaName>;
     using Map = std::map<AreaName, Area*>;
     using Vector = std::vector<Area*>;
-    using VectorConst = std::vector<const Area*>;
-    using List = std::list<Area*>;
     using ScratchMap = std::map<const Area*, AreaScratchpad&>;
-    //! Name mapping -> must be replaced by AreaNameMapping
-    using NameMapping = std::map<AreaName, AreaName>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -68,27 +59,7 @@ public:
     ** \brief Destructor
     */
     ~Area();
-
     //@}
-
-    // !\name isVisibleOnLayer
-    //@{
-    /*!
-    ** \brief check visibility on layer
-    */
-    bool isVisibleOnLayer(const size_t& layerID) const
-    {
-        if (ui == nullptr)
-        {
-            return false;
-        }
-
-        std::vector<size_t>& layerList = ui->mapLayersVisibilityList;
-        std::vector<size_t>::iterator layerPosition = std::find(layerList.begin(),
-                                                                layerList.end(),
-                                                                layerID);
-        return layerPosition != layerList.end();
-    }
 
     //! \name Links
     //@{
@@ -97,33 +68,9 @@ public:
     */
     void clearAllLinks();
 
-    /*!
-    ** \brief Properly detach all links attached to an area
-    **
-    ** It is the safe way to add an area and it is mainly used by the GUI
-    */
-    void detachAllLinks();
-
-    /*!
-    ** \brief Try to find the attached link from another area id
-    */
-    AreaLink* findLinkByID(const AreaName& id);
-    const AreaLink* findLinkByID(const AreaName& id) const;
-
-    /*!
-    ** \brief Detach any link connected from this area to the given area
-    */
-    void detachLinkFromID(const AreaName& id);
-
-    static void detachLink(const AreaLink* lnk);
-
-    /*!
-    ** \brief Remove a link from its raw pointer
-    */
-    void detachLinkFromItsPointer(const AreaLink* lnk);
+    void buildLinksIndexes();
     //@}
 
-    void buildLinksIndexes();
     /*!
     ** \brief Ensure all data are created
     */
@@ -147,7 +94,6 @@ public:
     ** \param with Any area
     ** \return A pointer to an existing link if found, NULL otherwise
     */
-    AreaLink* findExistingLinkWith(Area& with);
     const AreaLink* findExistingLinkWith(const Area& with) const;
 
     //! \name Memory management
@@ -159,16 +105,7 @@ public:
     ** However, we would like to be able to force the load of all data, especially
     ** when saving a study.
     ** The flag `invalidateJIT` will be reset to false.
-    **
-    ** \param reload True to force the reload of data
-    ** \return True if the operation succeeded
     */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all areas as modified
-    */
-    void markAsModified() const;
 
     //! \name Thermal clusters min stable power validity checking
     //@{
@@ -188,7 +125,6 @@ public:
     template<enum TimeSeriesType T>
     const XCast* xcastData() const;
 
-public:
     //! \name General
     //@{
     //! Name of the area
@@ -280,12 +216,6 @@ public:
     uint filterYearByYear = filterAll;
     //@}
 
-    //! \name UI
-    //@{
-    //! Information for the UI
-    std::unique_ptr<AreaUI> ui;
-    //@}
-
     //! \name Dynamic
     //@{
     /*!
@@ -306,15 +236,10 @@ public:
     //@}
 
 private:
-    void internalInitialize();
     void createMissingTimeSeries();
     void createMissingPrepros();
 
 }; // class Area
-
-bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
-
-bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 
 /*!
 ** \brief A list of areas
@@ -347,27 +272,25 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 class AreaList final: public Yuni::NonCopyable<AreaList>
 {
 public:
-    //! An iterator
-    using iterator = Area::Map::iterator;
-    //! A const iterator
-    using const_iterator = Area::Map::const_iterator;
-    //! An iterator
-    using reverse_iterator = Area::Map::reverse_iterator;
-    //! A const iterator
-    using const_reverse_iterator = Area::Map::const_reverse_iterator;
-    //! Key-value type
-    using value_type = Area::Map::value_type;
+    using OwningAreaMap = std::map<AreaName, std::unique_ptr<Area>>;
 
-public:
+    //! An iterator
+    using iterator = OwningAreaMap::iterator;
+    //! A const iterator
+    using const_iterator = OwningAreaMap::const_iterator;
+    //! An iterator
+    using reverse_iterator = OwningAreaMap::reverse_iterator;
+    //! A const iterator
+    using const_reverse_iterator = OwningAreaMap::const_reverse_iterator;
+    //! Key-value type
+    using value_type = OwningAreaMap::value_type;
+
     //! \name Constructor & Destructor
     //@{
     /*!
     ** \brief Default constructor
     */
     explicit AreaList(Study& study);
-    //! Destructor
-    ~AreaList();
-    //@}
 
     //! \name Iterating through all areas
     //@{
@@ -405,7 +328,7 @@ public:
     ** routine when areas are already loaded.
     */
 
-    void ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded);
+    void ensureDataIsInitialized(Parameters& params);
     //@}
 
     //! \name Import / Export
@@ -429,26 +352,6 @@ public:
     */
     bool loadListFromFile(const std::filesystem::path& filename);
 
-#ifdef BUILD_UI
-    /*!
-    ** \brief Save all informations about areas into a folder (-> input/generalData)
-    **
-    ** \param l The list of areas
-    ** \param folder The target folder
-    */
-    bool saveToFolder(const AnyString& folder) const;
-
-    /*!
-    ** \brief Write the list of areas into a file
-    **
-    ** The file structure is merely composed by all names of areas, one line one area
-    **
-    ** \param filename The file to read
-    ** \return A non-zero value if the operation was successful, 0 otherwise
-    */
-    bool saveListToFile(const AnyString& filename) const;
-#endif
-
     /*!
     ** \brief Write the list of all links into a file
     **
@@ -465,14 +368,6 @@ public:
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
     void saveLinkListToBuffer(Yuni::Clob& buffer) const;
-
-    /*!
-    ** \brief Preload all areas which have been invalidated
-    **
-    ** \param [out] The number of areas which have been invalidated
-    */
-    bool preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount = nullptr) const;
-    //@}
 
     //! \name Areas
     //@{
@@ -495,8 +390,6 @@ public:
     */
     Area* findFromName(const AreaName& name);
 
-    Area* findFromPosition(const int x, const int y) const;
-
     /*!
     ** \brief Find an area from its name (const)
     */
@@ -509,26 +402,8 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    /*!
-    ** \brief Remove all elements in the container
-    */
-    void clear();
-
     //! Get if the container is empty
     bool empty() const;
-
-    /*!
-    ** \brief Invalidate all areas
-    **
-    ** \param reload True to reload data in the same time
-    ** \return True if the operation succeeded
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
 
     /*!
     ** \brief Rebuild the indexes for accessing areas
@@ -537,42 +412,6 @@ public:
     ** a given area. This is mandatory when used from the solver.
     */
     void rebuildIndexes();
-
-    /*!
-    ** \brief Remove an area from its ID
-    **
-    ** \warning When used by a study, do not forget to remove all binding
-    **   constraints which depends upon this area before any call to this
-    **   routine.
-    */
-    bool remove(const AnyString& id);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newName);
-
-    /*!
-    ** \brief Rename an area
-    **
-    ** \param oldid ID of the area to rename
-    ** \param newID The new area ID
-    ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renamed)
-    **   false otherwise (if another area has the same name)
-    **
-    ** \warning This function invalidates the index of all areas. If you need
-    **   the indexes after a call to this routine, please use AreaListRebuildIndex()
-    */
-    bool renameArea(const AreaName& oldid, const AreaName& newid, const AreaName& newName);
 
     /*!
     ** \brief Get the total number of areas
@@ -588,13 +427,12 @@ public:
     ** \param area The name of the first area (in lowercase)
     ** \param with The name of the second area (in lowercase)
     */
-    AreaLink* findLink(const AreaName& area, const AreaName& with);
     const AreaLink* findLink(const AreaName& area, const AreaName& with) const;
 
     /*!
     ** \brief Try to find the link from a given INI key (<area1>%<area2>)
     */
-    AreaLink* findLinkFromINIKey(const AnyString& key);
+    const AreaLink* findLinkFromINIKey(const AnyString& key) const;
 
     /*!
     ** \brief Try to find the cluster from a given INI key (<area>.<cluster>)
@@ -609,22 +447,6 @@ public:
 
     //! \name Tools
     //@{
-    /*!
-    ** \brief Fix all invalid orientations
-    */
-    void fixOrientationForAllInterconnections(BindingConstraintsRepository& bindingconstraints);
-
-    //! Remove all load timeseries
-    void removeLoadTimeseries();
-    //! Remove all hydro timeseries
-    void removeHydroTimeseries();
-    //! Remove all solar timeseries
-    void removeSolarTimeseries();
-    //! Remove all wind timeseries
-    void removeWindTimeseries();
-    //! Remove all thermal timeseries
-    void removeThermalTimeseries();
-    //@}
 
     /// create a map with the corresponding scratchpad for each area link to this numspace
     Area::ScratchMap buildScratchMap(uint numspace);
@@ -644,11 +466,10 @@ public:
     const Area* operator[](uint i) const;
     //@}
 
-public:
     //! All areas by their index
     std::vector<Area*> byIndex;
     //! All areas in the list
-    Area::Map areas;
+    OwningAreaMap areas;
 
     //! Name set (must be updated by updateNameSet)
     // used by the copy/paste
@@ -659,8 +480,6 @@ private:
     Study& pStudy;
 
 }; // class AreaList
-
-void AreaListDeleteLinkFromAreaPtr(AreaList* l, const Area* a);
 
 /*!
 ** \brief Establish a link between two areas
@@ -685,30 +504,6 @@ bool AreaLinksLoadFromFolder(Study& s,
                              AreaList* l,
                              Area* area,
                              const std::filesystem::path& folder);
-
-#ifdef BUILD_UI
-/*!
-** \brief Save interconnections of a given area into a folder (`input/areas/[area]/ntc`)
-**
-** \param area The area
-** \param folder The target folder
-** \return True if the operation succeeded, 0 otherwise
-*/
-bool AreaLinksSaveToFolder(const Area* area, const char* const folder);
-
-// Save a given area's interconnexions configuration file into a folder
-bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder);
-#endif
-
-/*!
-** \brief Clear all interconnection from an area
-*/
-int AreaLinkClear(AreaList* l, Area* area);
-
-/*!
-** \brief Remove a connection
-*/
-void AreaLinkRemove(AreaLink* lnk);
 
 /*!
 ** \brief Try to find an area by its name (in lowercase)
@@ -746,15 +541,6 @@ Area* addAreaToListOfAreas(AreaList& list, const AnyString& name);
 ** \return A valid pointer to the area if successful, NULL otherwise
 */
 Area* AreaListAddFromNames(AreaList& list, const AnyString& name, const AnyString& lname);
-
-/*!
-** \brief Try to establish a link between two areas
-**
-** \param l The list of areas
-** \param area The area to make a link
-** \param with The area to link with
-*/
-AreaLink* AreaListAddLink(AreaList* l, const char area[], const char with[], bool warning = true);
 
 void AreaListClearAllLinks(AreaList* l);
 

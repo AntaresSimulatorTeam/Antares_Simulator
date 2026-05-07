@@ -68,7 +68,8 @@ DataSeriesHydro::DataSeriesHydro():
     storage(timeseriesNumbers),
     mingen(timeseriesNumbers),
     maxHourlyGenPower(timeseriesNumbers),
-    maxHourlyPumpPower(timeseriesNumbers)
+    maxHourlyPumpPower(timeseriesNumbers),
+    ruleCurves(timeseriesNumbers)
 {
     timeseriesNumbers.registerSeries(&ror, "ror");
     timeseriesNumbers.registerSeries(&storage, "storage");
@@ -105,26 +106,6 @@ void DataSeriesHydro::resizeTS(uint nbSeries)
 {
     storage.reset(nbSeries, DAYS_PER_YEAR);
     ror.reset(nbSeries, HOURS_PER_YEAR);
-}
-
-bool DataSeriesHydro::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = ror.forceReload(reload) && ret;
-    ret = storage.forceReload(reload) && ret;
-    ret = mingen.forceReload(reload) && ret;
-    ret = maxHourlyGenPower.forceReload(reload) && ret;
-    ret = maxHourlyPumpPower.forceReload(reload) && ret;
-    return ret;
-}
-
-void DataSeriesHydro::markAsModified() const
-{
-    ror.markAsModified();
-    storage.markAsModified();
-    mingen.markAsModified();
-    maxHourlyGenPower.markAsModified();
-    maxHourlyPumpPower.markAsModified();
 }
 
 bool DataSeriesHydro::loadGenerationTS(const AreaName& areaID,
@@ -230,17 +211,19 @@ uint DataSeriesHydro::TScount() const
                                            ror.numberOfColumns(),
                                            mingen.numberOfColumns(),
                                            maxHourlyGenPower.numberOfColumns(),
-                                           maxHourlyPumpPower.numberOfColumns()});
+                                           maxHourlyPumpPower.numberOfColumns(),
+                                           ruleCurves.max.numberOfColumns(),
+                                           ruleCurves.min.numberOfColumns(),
+                                           ruleCurves.avg.numberOfColumns()});
 
     return *std::max_element(nbColumns.begin(), nbColumns.end());
 }
 
 void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
                                             StudyVersion studyVersion,
-                                            Parameters::Compatibility::HydroPmax hydroPmax,
-                                            bool usedBySolver)
+                                            Parameters::Compatibility::HydroPmax hydroPmax)
 {
-    if (!(derated && usedBySolver))
+    if (!derated)
     {
         return;
     }
@@ -257,5 +240,7 @@ void DataSeriesHydro::resizeTSinDeratedMode(bool derated,
             maxHourlyPumpPower.averageTimeseries();
         }
     }
+
+    ruleCurves.averageTimeSeries();
 }
 } // namespace Antares::Data

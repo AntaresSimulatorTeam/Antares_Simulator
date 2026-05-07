@@ -15,7 +15,7 @@ public:
 
     ModelerParameters loadParameters() override;
 
-    ModelerData loadAll() override;
+    std::optional<ModelerData> loadAll() override;
 
     std::filesystem::path studyPath_;
 };

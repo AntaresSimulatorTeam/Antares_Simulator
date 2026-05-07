@@ -217,7 +217,7 @@ public:
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
-        // Ask to build the digest to the next variable
+        // Dynamic-columns variables are intentionally excluded from digest generation.
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 

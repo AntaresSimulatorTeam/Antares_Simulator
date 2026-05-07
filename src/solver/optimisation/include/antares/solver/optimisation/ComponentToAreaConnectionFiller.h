@@ -20,6 +20,10 @@ class OptimEntityContainer;
 
 namespace Antares::Optimization
 {
+using ConstraintIndicesHelper = std::function<
+  std::vector<unsigned>(const PROBLEME_HEBDO* problemeHebdo,
+                        const Optimisation::LinearProblemApi::FillContext& ctx,
+                        const unsigned& areaIndex)>;
 
 /**
  * \brief Fills the linear problem with constraints and variables related to component-to-area
@@ -34,34 +38,49 @@ class ComponentToAreaConnectionFiller final
 public:
     explicit ComponentToAreaConnectionFiller(
       const PROBLEME_HEBDO* problemeHebdo,
-      Optimisation::OptimEntityContainer& variableContainer,
-      const Optimisation::LinearProblemApi::ILinearProblemData& linearProblemData,
+      Optimisation::OptimEntityContainer& optimContainer,
+      const Optimisation::LinearProblemApi::ILinearProblemData* data,
       const Optimisation::ScenarioGroupRepository& scenarioGroupRepository);
+
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
+    // Data members
     const PROBLEME_HEBDO* problemeHebdo_;
     const ModelerStudy::SystemModel::System* modelerSystem_;
     Optimisation::OptimEntityContainer& optimEntityContainer_;
+    Optimisation::LinearProblemApi::ILinearProblem& pb_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::ScenarioGroupRepository& scenarioGroupRepo_;
 
     std::map<std::string, unsigned> areaIndices_;
 
-    Optimisation::LinearProblemApi::IMipConstraint* getBalanceConstraint(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
-      const std::string& areaId,
-      unsigned ts) const;
+    // Function members
+    void checkAreasFromConnexionsExist();
+
+    std::vector<Optimisation::LinearProblemApi::IMipConstraint*> fetchConstraints(
+      const Optimisation::LinearProblemApi::FillContext& ctx,
+      const std::vector<unsigned>& constraintsIndices);
+
     void addExpressionToConstraint(
-      Optimisation::LinearProblemApi::ILinearProblem& pb,
       const Antares::Optimization::TimeDependentLinearExpression& linearExpression,
       const Optimisation::LinearProblemApi::FillContext& ctx,
-      const std::string& areaId) const;
-    void addComponentPortContributionToArea(Optimisation::LinearProblemApi::ILinearProblem& pb,
-                                            const Optimisation::LinearProblemApi::FillContext& ctx,
-                                            const ModelerStudy::SystemModel::Component& component,
-                                            const std::string& portId,
-                                            const std::string& areaId);
+      const std::vector<Optimisation::LinearProblemApi::IMipConstraint*>& constraintIndices) const;
+
+    TimeDependentLinearExpression linearExpressionAtPortField(
+      const std::string& portId,
+      const std::string& fieldId,
+      const ModelerStudy::SystemModel::Component& component,
+      const Optimisation::LinearProblemApi::FillContext& ctx);
+
+    void addPortContributionToLinearPb(const Optimisation::LinearProblemApi::FillContext& ctx,
+                                       const ModelerStudy::SystemModel::Component& component,
+                                       const std::string& portId,
+                                       const std::string& portField,
+                                       const unsigned& areaIndex,
+                                       const ConstraintIndicesHelper& helper);
 };
 
 } // namespace Antares::Optimization

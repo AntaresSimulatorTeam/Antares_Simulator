@@ -7,10 +7,10 @@
 #include <optional>
 
 #include <antares/expressions/nodes/PortFieldNode.h>
+#include <antares/study/system-model-base/variabilityType.h>
 #include "antares/study/system-model/connection.h"
 
 #include "model.h"
-#include "variabilityType.h"
 
 namespace Antares::ModelerStudy::SystemModel
 {
@@ -34,7 +34,6 @@ public:
     const Model* model = nullptr;
     std::map<std::string, ParameterTypeAndValue> parameter_values;
     std::string scenario_group_id;
-    unsigned index = 0;
 
     void reset()
     {
@@ -43,6 +42,12 @@ public:
         parameter_values.clear();
         scenario_group_id.clear();
     }
+};
+
+struct ThermalComponent
+{
+    std::string areaId;
+    std::string clusterId;
 };
 
 /**
@@ -85,6 +90,8 @@ public:
     }
 
     void addComponentConnection(const std::string localPortId, ConnectionEnd&& connection);
+    const std::optional<AreaConnection>& areaConnectionAtPort(const std::string& portId) const;
+
     std::vector<ConnectionEnd> componentConnectionsViaPort(const std::string& portId) const;
 
     Expressions::Nodes::Node* nodeAtPortField(const std::string& portId,
@@ -95,21 +102,30 @@ public:
 
     void addAreaConnection(const std::string& localPortId, const std::string& areaId);
 
+    void addThermalCapacityConnection(const std::string& portId,
+                                      const std::string& areaId,
+                                      const std::string& clusterId);
     std::optional<std::string> areaConnectedToPort(const std::string& portId) const;
 
     const std::map<std::string, std::string>& portToAreaConnections() const;
 
-    unsigned int Index() const
-    {
-        return data_.index;
-    }
+    const std::map<std::string, ThermalComponent>& portToThermalCapacityConnections() const;
+
+    std::optional<ThermalComponent> thermalCapacityConnectedToPort(const std::string& portId) const;
+
+    const Port& findPort(const std::string& portId, const std::string& prefixMessage) const;
 
 private:
+    void checkPortFieldDefinitionExists(const std::string& portName,
+                                        const std::string& fieldName,
+                                        const std::string& errMsgPrefix) const;
+
     // Only ComponentBuilder is allowed to build Component instances
     friend class ComponentBuilder;
     explicit Component(const ComponentData& component_data);
     std::map<std::string, std::vector<ConnectionEnd>> componentConnectionEnds_;
     std::map<std::string, std::string> portToAreaConnections_;
+    std::map<std::string, ThermalComponent> portToThermalConnections_;
     ComponentData data_;
 };
 
@@ -118,7 +134,6 @@ class ComponentBuilder final
 public:
     ComponentBuilder& withId(std::string_view id);
     ComponentBuilder& withModel(const Model* model);
-    ComponentBuilder& withIndex(unsigned int index);
     ComponentBuilder& withParameterValues(
       std::map<std::string, ParameterTypeAndValue> parameter_values);
     ComponentBuilder& withScenarioGroupId(const std::string& scenario_group_id);

@@ -9,9 +9,10 @@
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/TimeDependentLinearExpression.h>
 #include "antares/exception/InvalidArgumentError.hpp"
+#include "antares/exception/LoadingError.hpp"
 #include "antares/expressions/nodes/ExpressionsNodes.h"
-#include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/HelpVisitNode.h"
+#include "antares/expressions/visitors/PrintVisitor.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
@@ -30,12 +31,17 @@ namespace Antares::Optimisation
 ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
   const OptimEntityContainer& optimEntityContainer,
   const LinearProblemApi::FillContext& fillContext,
-  const ModelerStudy::SystemModel::Component& component):
+  const ModelerStudy::SystemModel::Component& component,
+  const LinearProblemApi::ILinearProblemData* data,
+  const ScenarioGroupRepository& scenarioGroupRepo):
     optimEntityContainer_(optimEntityContainer),
     component_(component),
-    evalContext_(optimEntityContainer.getEvaluationContext(component)),
+    scenarioGroupRepo_(scenarioGroupRepo),
+    scenario_(&scenarioGroupRepo.scenario(component.getScenarioGroupId())),
+    evalContext_(&component, data, scenario_),
     fillContext_(fillContext),
-    evalVisitor_(optimEntityContainer, fillContext, component),
+    evalVisitor_(optimEntityContainer, fillContext, component, data, scenario_),
+    data_(data),
     nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps())
 {
 }
@@ -116,14 +122,14 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Va
     }
 
     // At this point, VariableNode is time dependent (scenario not handled)
-    TimeDependentLinearExpression out(nbtimeSteps_);
+    TimeDependentLinearExpression linearExpr(nbtimeSteps_);
     auto variableIndex = variableStart;
     for (unsigned ts = 0; ts < nbtimeSteps_; ts++)
     {
-        out[ts].addVariable(variableIndex, 1);
+        linearExpr[ts].addVariable(variableIndex, 1);
         ++variableIndex;
     }
-    return out;
+    return linearExpr;
 }
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::ParameterNode* node)
@@ -174,7 +180,11 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        ReadLinearExpressionVisitor visitor(optimEntityContainer_, fillContext_, *component);
+        ReadLinearExpressionVisitor visitor(optimEntityContainer_,
+                                            fillContext_,
+                                            *component,
+                                            data_,
+                                            scenarioGroupRepo_);
 
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return += visitor.dispatch(node);
@@ -206,6 +216,16 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     }
     // it must be single value:  expression[IHaveTobeEvaluatedAsSingleValue]
     const auto timeIndex = static_cast<int>(evalVisitor_.dispatch(node->right()).valueAsDouble());
+
+    if (timeIndex < 0 || static_cast<std::size_t>(timeIndex) >= expression.size())
+    {
+        Expressions::Visitors::PrintVisitor visitor;
+        throw Error::LoadingError(fmt::format(
+          "TimeIndexNode: index {} is out of range in expression '{}' (expression size: {})",
+          timeIndex,
+          visitor.dispatch(node),
+          expression.size()));
+    }
     return TimeDependentLinearExpression(std::move(expression[timeIndex]));
 }
 

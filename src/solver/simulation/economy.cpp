@@ -63,7 +63,7 @@ std::string Economy::getSimulationTableHeader() const
 {
     if (!simulationTables_.empty())
     {
-        return simulationTables_.at(0).getHeader();
+        return simulationTables_.at(0).headerCsvFormat();
     }
     return "";
 }
@@ -114,8 +114,7 @@ bool Economy::simulationBegin()
     return true;
 }
 
-bool Economy::year(Progression::Task& progression,
-                   Variable::State& state,
+bool Economy::year(Variable::State& state,
                    uint numSpace,
                    yearRandomNumbers& randomForYear,
                    std::list<uint>& failedWeekList,
@@ -143,7 +142,7 @@ bool Economy::year(Progression::Task& progression,
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        currentProblem.weekInTheYear = state.weekInTheYear = w;
+        currentProblem.weekInTheYear = state.weekInTheYear = w + pStartTime / 168;
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study,
@@ -221,22 +220,12 @@ bool Economy::year(Progression::Task& progression,
         }
 
         hourInTheYear += nbHoursInAWeek;
-
-        ++progression;
     }
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
     return true;
-}
-
-void Economy::incrementProgression(Progression::Task& progression)
-{
-    for (uint w = 0; w < pNbWeeks; ++w)
-    {
-        ++progression;
-    }
 }
 
 // Retrieve weighted average balance for each area

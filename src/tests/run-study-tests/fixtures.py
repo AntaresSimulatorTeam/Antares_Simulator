@@ -1,6 +1,7 @@
 import pytest
 
 from actions_on_study.study_run import *
+from actions_on_study.antares_problem_generator import *
 from actions_on_study.results_remover import *
 from check_on_results.check_general import check_list
 
@@ -43,10 +44,21 @@ def resultsRemover(study_path):
 def simulation(study_path, antares_simu_path, solver_name, named_mps_problems, parallel):
     return study_run(study_path, antares_simu_path, solver_name, named_mps_problems, parallel)
 
+@pytest.fixture
+def antares_problem_generator(study_path, antares_problem_generator_exe):
+    return AntaresProblemGeneratorRun(study_path, antares_problem_generator_exe)
+
+@pytest.fixture
+def is_problem_generation(antares_problem_generator_exe):
+    return antares_problem_generator_exe != ""
+
 @pytest.fixture(autouse=True)
-def check_runner(simulation, resultsRemover):
+def check_runner(request, is_problem_generation, resultsRemover):
     # Actions done before the current test
-    my_check_handler = check_handler(simulation, resultsRemover)
+    mode = request.getfixturevalue('antares_problem_generator') if is_problem_generation else request.getfixturevalue(
+        'simulation')
+    
+    my_check_handler = check_handler(mode, resultsRemover)
 
     # A check handler is supplied to the current test now
     yield my_check_handler

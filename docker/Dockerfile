@@ -48,6 +48,8 @@ ENV CCACHE_BASEDIR=/workspace
 ENV CCACHE_COMPRESS=1
 ENV PATH="/usr/lib/ccache:$PATH"
 
+ARG RUN_TESTS=OFF
+
 RUN  source /opt/rh/devtoolset-11/enable && \
      source /opt/rh/rh-git227/enable && \
      export VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite" && \
@@ -57,7 +59,7 @@ RUN  source /opt/rh/devtoolset-11/enable && \
     -DCMAKE_TOOLCHAIN_FILE=/workspace/Antares_Simulator/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DVCPKG_TARGET_TRIPLET=x64-linux-release \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
+    -DBUILD_TESTING=$RUN_TESTS \
     -DBUILD_TOOLS=ON \
     -DBUILD_UI=OFF \
     -DCMAKE_PREFIX_PATH=/ortools/install
@@ -68,6 +70,12 @@ RUN  source /opt/rh/devtoolset-11/enable && \
      export VCPKG_BINARY_SOURCES="clear;files,/workspace/vcpkg_cache,readwrite" && \
      cmake --build _build --config Release -j${NPROC} &&\
      ccache -s
+
+RUN if [ "$RUN_TESTS" = "ON" ]; then \
+        source /opt/rh/devtoolset-11/enable && \
+        cd _build && \
+        ctest -C Release --output-on-failure -L "unit|end-to-end"; \
+    fi
 
 #Installer .rpm creation
 RUN cd _build && \

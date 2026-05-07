@@ -156,7 +156,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
     assert(solver);
     assert(problemeAResoudre);
 
-    const bool isMIP = problemeAResoudre->isMIP();
+    const bool isMIP = solver->IsMIP();
 
     extractSolutionValues(solver->variables(), problemeAResoudre);
 

@@ -28,9 +28,6 @@ public:
         defaultTimeout = 10000, // 10s
     };
 
-    //! List of folders
-    using FolderVector = std::vector<Yuni::String::Ptr>;
-
 public:
     //! \name Constructor
     //@{

@@ -16,11 +16,11 @@ namespace Antares::Solver::LoadFiles
 {
 
 /// Load the libraries, system and dataseries
-ModelerData loadAll(const std::filesystem::path& studyPath);
+std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath);
 
 ModelerParameters loadParameters(const std::filesystem::path& studyPath);
 
-std::pair<std::vector<ModelerStudy::SystemModel::Library>, Antares::Solver::ResolutionMode>
+std::optional<std::pair<std::vector<ModelerStudy::SystemModel::Library>, ResolutionMode>>
 loadLibraries(const std::filesystem::path& studyPath);
 
 ModelerStudy::SystemModel::System loadSystem(
@@ -34,6 +34,7 @@ Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
   const std::filesystem::path& studyPath);
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);
+std::string markYamlError(const YAML::Exception& e, const std::string& filename);
 
 /// Generic error class for all loading errors to catch in the main
 class ErrorLoadingYaml final: public std::runtime_error

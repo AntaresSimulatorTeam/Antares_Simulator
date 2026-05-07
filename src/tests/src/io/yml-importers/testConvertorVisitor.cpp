@@ -1,7 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/unit_test.hpp>
@@ -17,12 +16,13 @@
 // clang-format off
 #include <unit_test_utils.h>
 
-#include "antares/io/inputs/model-converter/ForbiddenNodes.h"
-#include "antares/io/inputs/model-converter/ForbiddenNodesVisitor.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodes.h"
+#include "antares/io/inputs/forbidden-nodes/ForbiddenNodesVisitor.h"
 // clang-format on
 
 using namespace Antares::Expressions;
 using namespace Antares::IO::Inputs;
+using namespace Antares::IO::Inputs::ForbidNodes;
 using namespace Antares::IO::Inputs::ModelConverter;
 
 static Nodes::LiteralNode* toLiteral(Nodes::Node* n)
@@ -51,17 +51,22 @@ BOOST_AUTO_TEST_CASE(negation)
 
 BOOST_AUTO_TEST_CASE(identifier)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"param1", true, false}, {"param2", false, false}},
+                          .variables = {{"varP",
+                                         "7",
+                                         "pmin",
+                                         YmlModel::ValueType::CONTINUOUS,
+                                         false,
+                                         false,
+                                         "test.yaml"}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .extra_outputs = {}};
 
     std::string expression = "param1";
     auto expr = convertExpressionToNode(expression, model);
@@ -75,21 +80,26 @@ BOOST_AUTO_TEST_CASE(identifier)
 
 BOOST_AUTO_TEST_CASE(identifierNotFound)
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}},
-      .variables = {{"varP", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"param1", true, false}},
+                          .variables = {{"varP",
+                                         "7",
+                                         "pmin",
+                                         YmlModel::ValueType::CONTINUOUS,
+                                         false,
+                                         false,
+                                         "test.yaml"}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .extra_outputs = {}};
 
     std::string expression = "abc"; // not a param or var
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::runtime_error,
+                          InputError,
                           checkMessage("No parameter or variable found for this identifier: abc"));
 }
 
@@ -196,7 +206,7 @@ BOOST_AUTO_TEST_CASE(portfield)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", ""}},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
                           .extra_outputs = {}};
     std::string expression = "port1.field1";
     auto expr = convertExpressionToNode(expression, model);
@@ -204,7 +214,7 @@ BOOST_AUTO_TEST_CASE(portfield)
     BOOST_CHECK_EQUAL(expr.node->name(), "PortFieldNode");
 
     expression = "port2.field1";
-    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), std::runtime_error);
+    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(portfieldSum)
@@ -217,7 +227,7 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
                           .port_field_definitions = {{"port1", "field1", ""}},
                           .constraints = {},
                           .binding_constraints = {},
-                          .objectives = {{"objective-id", ""}},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
                           .extra_outputs = {}};
 
     std::string expression = "sum_connections(port1.field1)";
@@ -230,22 +240,27 @@ BOOST_AUTO_TEST_CASE(portfieldSum)
     BOOST_CHECK_EQUAL(portFieldSumNode->getFieldName(), "field1");
 
     expression = "port2.field1";
-    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), std::runtime_error);
+    BOOST_CHECK_THROW(convertExpressionToNode(expression, model), InputError);
 }
 
 YmlModel::Model createYmlModel()
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"param1", true, false}, {"param2", false, false}},
-      .variables = {{"varP", "7", "param1", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"param1", true, false}, {"param2", false, false}},
+                          .variables = {{"varP",
+                                         "7",
+                                         "pmin",
+                                         YmlModel::ValueType::CONTINUOUS,
+                                         false,
+                                         false,
+                                         "test.yaml"}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .extra_outputs = {}};
 
     return model;
 }
@@ -377,9 +392,9 @@ struct SupplyModelForDualOperator
                           .variables = {},
                           .ports = {},
                           .port_field_definitions = {},
-                          .constraints = {{"constraintA", ""}},
-                          .binding_constraints = {{"constraintB", ""}},
-                          .objectives = {{"objective-id", ""}},
+                          .constraints = {{"constraintA", "", "test.yaml"}},
+                          .binding_constraints = {{"constraintB", "", "test.yaml"}},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
                           .extra_outputs = {}};
 };
 
@@ -406,7 +421,7 @@ BOOST_FIXTURE_TEST_CASE(dualExpression, SupplyModelForDualOperator)
     std::string badExpression = "dual(abc)";
     std::string expected_msg = "dual called with unknown constraint 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
-                          std::runtime_error,
+                          InputError,
                           checkMessage(expected_msg));
 }
 
@@ -415,7 +430,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyDualExpression, SupplyModelForDualOperator)
     std::string expression = "dual()";
     std::string expected_msg = "dual operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(expected_msg));
 }
 
@@ -424,24 +439,35 @@ BOOST_FIXTURE_TEST_CASE(WrongDualExpression, SupplyModelForDualOperator)
     std::string expression = "dual(constraintA, e^(iPi) + 1 = 0)";
     auto err_msg = "dual operator expects exactly one constraint id got: constraintA, e^(iPi)+1=0";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
 struct SupplyModelForFunctionalOperator
 {
-    YmlModel::Model model{
-      .id = "model0",
-      .description = "description",
-      .parameters = {{"pmin", true, false}},
-      .variables = {{"varA", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false},
-                    {"varB", "7", "pmin", YmlModel::ValueType::CONTINUOUS, false, false}},
-      .ports = {},
-      .port_field_definitions = {},
-      .constraints = {},
-      .binding_constraints = {},
-      .objectives = {{"objective-id", ""}},
-      .extra_outputs = {}};
+    YmlModel::Model model{.id = "model0",
+                          .description = "description",
+                          .parameters = {{"pmin", true, false}},
+                          .variables = {{"varA",
+                                         "7",
+                                         "pmin",
+                                         YmlModel::ValueType::CONTINUOUS,
+                                         false,
+                                         false,
+                                         "test.yaml"},
+                                        {"varB",
+                                         "7",
+                                         "pmin",
+                                         YmlModel::ValueType::CONTINUOUS,
+                                         false,
+                                         false,
+                                         "test.yaml"}},
+                          .ports = {},
+                          .port_field_definitions = {},
+                          .constraints = {},
+                          .binding_constraints = {},
+                          .objectives = {{"objective-id", "", "test.yaml"}},
+                          .extra_outputs = {}};
 
     ForbiddenNodes forbiddenNodes;
 };
@@ -463,7 +489,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpression, SupplyModelForFunctionalOperator)
     std::string badExpression = "reduced_cost(abc)";
     std::string err_msg = "reduced_cost called with unknown variable 'abc' in model 'model0'";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(badExpression, model),
-                          std::runtime_error,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -472,7 +498,7 @@ BOOST_FIXTURE_TEST_CASE(reducedCostExpressionTwoVariables, SupplyModelForFunctio
     std::string expression = "reduced_cost(varB, 2)";
     std::string err_msg = "reduced_cost operator expects exactly one variable id got: varB, 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -481,7 +507,7 @@ BOOST_FIXTURE_TEST_CASE(EmptyReducedCostExpression, SupplyModelForFunctionalOper
     std::string expression = "reduced_cost()";
     std::string err_msg = "reduced_cost operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -508,7 +534,7 @@ BOOST_FIXTURE_TEST_CASE(WrongPowerExpression, SupplyModelForFunctionalOperator)
 {
     std::string expression = "varA^_";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          NoParameterOrVariableWithThisName,
+                          InputError,
                           checkMessage("No parameter or variable found for this identifier: _"));
 }
 
@@ -551,7 +577,7 @@ BOOST_FIXTURE_TEST_CASE(MaxOperatorWrongNumberOfParameter, SupplyModelForFunctio
 {
     std::string expression = "max(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage("max operator expects at least 2 operands got 1"));
 }
 
@@ -559,7 +585,7 @@ BOOST_FIXTURE_TEST_CASE(MinOperatorWrongNumberOfParameter, SupplyModelForFunctio
 {
     std::string expression = "min(varB)";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage("min operator expects at least 2 operands got 1"));
 }
 
@@ -575,7 +601,7 @@ BOOST_FIXTURE_TEST_CASE(MinWithForbiddenNode, SupplyModelForFunctionalOperator)
     auto err_msg = "'FunctionNode::min' is not allowed to contain 'VariableNode' in expression '"
                    + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -591,7 +617,7 @@ BOOST_FIXTURE_TEST_CASE(MaxWithForbiddenNode, SupplyModelForFunctionalOperator)
     std::string err_msg = "'FunctionNode::max' is not allowed to contain 'VariableNode' in ";
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -605,7 +631,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignLT, SupplyModelFor
 
     std::string err_msg = "'LessThanOrEqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -620,7 +646,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainComparisonSignGT, SupplyModelFor
     std::string err_msg = "'GreaterThanOrEqualNode' is not allowed in expression '" + expression
                           + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -634,7 +660,7 @@ BOOST_FIXTURE_TEST_CASE(ExpressionThatNotContainEqualSign, SupplyModelForFunctio
 
     std::string err_msg = "'EqualNode' is not allowed in expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -648,7 +674,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_a_variable_as_arg,
     std::string err_msg = "'FunctionNode::floor' is not allowed to contain 'VariableNode' in ";
     err_msg += "expression '" + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -708,7 +734,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_no_arg, SupplyModelForFun
 
     std::string err_msg = "floor operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -719,7 +745,7 @@ BOOST_FIXTURE_TEST_CASE(floor_operator_should_not_take_more_than_one_arg,
 
     std::string err_msg = "floor() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -769,7 +795,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_no_arg, SupplyModelForFunc
 
     std::string err_msg = "ceil operator expects an argument, got nothing";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -780,7 +806,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_should_not_take_more_than_one_arg,
 
     std::string err_msg = "ceil() expects 1 argument, but has 2";
     BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(err_msg));
 }
 
@@ -798,7 +824,7 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes
                           "expression '"
                           + expression + "'";
     BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
-                          ForbiddenNodeFound,
+                          InputError,
                           checkMessage(err_msg));
 }
 

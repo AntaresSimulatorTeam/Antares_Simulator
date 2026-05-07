@@ -34,7 +34,7 @@ set(SRC_SIMULATION
         simulation-run.cpp
         include/antares/solver/simulation/common-eco-adq.h
         common-eco-adq.cpp
-	include/antares/solver/simulation/common-hydro-remix.h
+	    include/antares/solver/simulation/common-hydro-remix.h
         common-hydro-remix.cpp
         common-hydro-levels.cpp
         include/antares/solver/simulation/adequacy.h
@@ -80,12 +80,13 @@ target_link_libraries(antares-solver-simulation
         Antares::concurrency
         Antares::solverUtils
         Antares::misc
+        Antares::vector-utils
         model_antares
         antares-solver-hydro
         antares-solver-variable
         antares-solver-ts-generator
 		shave-peaks-by-remix-storage-gen
-		Antares::modeler-simulation-table
+		Antares::simu-table-generator
 )
 
 install(DIRECTORY include/antares

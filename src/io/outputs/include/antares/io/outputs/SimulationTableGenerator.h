@@ -9,7 +9,7 @@
 #include <antares/study/system-model/component.h>
 #include "antares/optimisation/linear-problem-api/linearProblem.h"
 
-#include "ISimulationTable.h"
+#include "SimulationTable.h"
 
 namespace Antares::Solver
 {
@@ -66,54 +66,15 @@ std::string BuildModelerConstraintName(const std::string& componentId,
                                        const std::string& cname,
                                        const std::optional<unsigned>& ts);
 
-void addVariableEntries(ISimulationTable& simulationTable,
+void addVariableEntries(SimulationTable& simulationTable,
                         const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
                         const Optimisation::LinearProblemApi::FillContext& fillContext,
                         const ModelerStudy::SystemModel::Component& component,
                         const Optimisation::OptimEntityContainer& optimEntityContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
-                        std::optional<unsigned> scenario);
+                        unsigned year);
 
-void addConstraintEntries(ISimulationTable& simulationTable,
-                          const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                          const ModelerStudy::SystemModel::Component& component,
-                          const Optimisation::OptimEntityContainer& optimEntityContainer,
-                          unsigned currentBlock,
-                          const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
-                          bool forceExportForScenarioIndex);
-
-void addPortEntries(ISimulationTable& simulationTable,
-                    const Optimisation::LinearProblemApi::FillContext& fillContext,
-                    const ModelerStudy::SystemModel::Component& component,
-                    const Optimisation::OptimEntityContainer& optimEntityContainer,
-                    unsigned currentBlock,
-                    const TimeConversionMode& timeConversionMode,
-                    std::optional<unsigned> scenario,
-                    bool forceExportForScenarioIndex);
-
-void addExtraOutputEntries(ISimulationTable& simulationTable,
-                           const Optimisation::LinearProblemApi::FillContext& fillContext,
-                           const ModelerStudy::SystemModel::Component& component,
-                           const Optimisation::OptimEntityContainer& optimEntityContainer,
-                           unsigned currentBlock,
-                           const TimeConversionMode& timeConversionMode,
-                           std::optional<unsigned> scenario,
-                           bool forceExportForScenarioIndex);
-
-void addEntriesForNode(ISimulationTable& simulationTable,
-                       const Optimisation::LinearProblemApi::FillContext& fillContext,
-                       const ModelerStudy::SystemModel::Component& component,
-                       const Optimisation::OptimEntityContainer& optimEntityContainer,
-                       unsigned currentBlock,
-                       const TimeConversionMode& timeConversionMode,
-                       std::optional<unsigned> scenario,
-                       bool forceExportForScenarioIndex,
-                       const std::string& componentId,
-                       const std::string& outputName,
-                       const Expressions::Nodes::Node* rootNode);
 /**
  * Fill modeler outputs in the simulation table
  * @param simulationTable the simulation table to fill
@@ -129,7 +90,7 @@ void addEntriesForNode(ISimulationTable& simulationTable,
  * @param forceExportForScenarioIndex set to true if you want to force the scenario index to be
  * exported for scenario-independent outputs (useful for hybrid mode)
  */
-void FillSimulationTable(ISimulationTable& simulationTable,
+void FillSimulationTable(SimulationTable& simulationTable,
                          const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
                          double objectiveValue,
                          const Solver::ModelerData& modelerData,

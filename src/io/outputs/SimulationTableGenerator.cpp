@@ -8,6 +8,7 @@
 #include <boost/test/tools/assertion.hpp>
 
 #include <antares/solver/optim-model-filler/Dimensions.h>
+#include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/visitors/EvalVisitor.h"
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/logs/logs.h"
@@ -18,6 +19,7 @@
 
 using namespace Antares::Optimisation;
 using namespace Antares::Optimisation::LinearProblemApi;
+using namespace Antares::Expressions;
 
 namespace Antares::IO::Outputs
 {
@@ -63,14 +65,14 @@ std::string BuildModelerConstraintName(const std::string& componentId,
     return key;
 }
 
-void addVariableEntries(ISimulationTable& simulationTable,
+void addVariableEntries(SimulationTable& simulationTable,
                         const ILinearProblem& linearProblem,
                         const FillContext& fillContext,
                         const ModelerStudy::SystemModel::Component& component,
                         const OptimEntityContainer& optimEntityContainer,
                         unsigned currentBlock,
                         const TimeConversionMode& timeConversionMode,
-                        std::optional<unsigned> scenario)
+                        unsigned year)
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
@@ -89,12 +91,11 @@ void addVariableEntries(ISimulationTable& simulationTable,
           varIndex,
           fillContext.getLocalNumberOfTimeSteps());
 
-        auto handle = [&](std::optional<unsigned> timeStep, std::optional<unsigned> scenIdx)
+        auto handle = [&](std::optional<unsigned> timeStep, unsigned scenIdx)
         {
-            TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(
-                                        *timeStep + fillContext.getGlobalFirstTimeStep(),
-                                        timeConversionMode,
-                                        currentBlock)
+            TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(*timeStep,
+                                                                             timeConversionMode,
+                                                                             currentBlock)
                                     : TimeBlock{.block = currentBlock + 1,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
@@ -116,12 +117,12 @@ void addVariableEntries(ISimulationTable& simulationTable,
                  ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
-                handle(ts, scenario);
+                handle(ts, year);
             }
         }
         else if (scenDep)
         {
-            handle(std::nullopt, scenario);
+            handle(std::nullopt, year);
         }
         else if (timeDep)
         {
@@ -129,64 +130,59 @@ void addVariableEntries(ISimulationTable& simulationTable,
                  ts <= fillContext.getLocalLastTimeStep();
                  ++ts)
             {
-                handle(ts, std::nullopt);
+                handle(ts, year);
             }
         }
         else
         {
-            handle(std::nullopt, std::nullopt);
+            handle(std::nullopt, year);
         }
     }
 }
 
 void handleDependingOnVariability(
   const FillContext& fillContext,
-  std::optional<unsigned> scenario,
-  VariabilityType idxType,
-  const std::function<void(std::optional<unsigned> ts, std::optional<unsigned> scenIdx)>& handle)
+  unsigned year,
+  VariabilityType variability,
+  const std::function<void(std::optional<unsigned> ts, unsigned scenIdx)>& handle)
 {
-    switch (idxType)
+    if (isTimeDependent(variability))
     {
-    case VariabilityType::VARYING_IN_TIME_AND_SCENARIO:
         for (unsigned ts = fillContext.getLocalFirstTimeStep();
              ts <= fillContext.getLocalLastTimeStep();
              ++ts)
         {
-            handle(ts, scenario);
+            handle(ts, year);
         }
-        break;
-    case VariabilityType::VARYING_IN_SCENARIO_ONLY:
-        handle(std::nullopt, scenario);
-        break;
-    case VariabilityType::VARYING_IN_TIME_ONLY:
-        for (unsigned ts = fillContext.getLocalFirstTimeStep();
-             ts <= fillContext.getLocalLastTimeStep();
-             ++ts)
-        {
-            handle(ts, std::nullopt);
-        }
-        break;
-    case VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO:
-    default:
-        handle(std::nullopt, std::nullopt);
-        break;
+    }
+    else
+    {
+        handle(std::nullopt, year);
     }
 }
 
-void addConstraintEntries(ISimulationTable& simulationTable,
+void addConstraintEntries(SimulationTable& simulationTable,
                           const ILinearProblem& linearProblem,
                           const FillContext& fillContext,
                           const ModelerStudy::SystemModel::Component& component,
                           const OptimEntityContainer& optimEntityContainer,
+                          const LinearProblemApi::ILinearProblemData* data,
+                          const LinearProblemApi::IScenario* scenario,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
-                          std::optional<unsigned> scenario,
+                          unsigned year,
                           bool forceExportForScenarioIndex)
 {
     const auto& componentId = component.Id();
     const bool isLp = linearProblem.isLP();
 
-    unsigned constraintLocalIndex = 0;
+    Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
+                                                   fillContext,
+                                                   component,
+                                                   data,
+                                                   scenario);
+
+    unsigned constraintIndex = 0;
     for (const auto& modelConstr: component.getModel()->Constraints())
     {
         if (modelConstr.location() != Solver::Config::Location::SUBPROBLEMS)
@@ -194,45 +190,76 @@ void addConstraintEntries(ISimulationTable& simulationTable,
             continue;
         }
         const auto& constraintId = modelConstr.Id();
+        auto variability = optimEntityContainer.getConstraintVariability(component,
+                                                                         constraintIndex);
+        variability = updateVariabilityIfShouldForceScenario(variability,
+                                                             forceExportForScenarioIndex);
 
-        const auto [componentConstraints, timeIndex] = optimEntityContainer.getComponentConstraint(
+        const auto componentConstraints = optimEntityContainer.componentConstraints(
           component,
-          constraintLocalIndex,
-          fillContext.getLocalNumberOfTimeSteps());
-        ++constraintLocalIndex;
+          constraintIndex,
+          optimEntityContainer.getConstraintCount(component, constraintIndex));
 
-        auto idxType = updateVariabilityIfShouldForceScenario(timeIndex,
-                                                              forceExportForScenarioIndex);
-
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+        std::size_t activeConstraintIndex = 0;
+        auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
         {
-            const auto& c = componentConstraints[ts.value_or(0)];
-            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(
-                                  *ts + fillContext.getGlobalFirstTimeStep(),
-                                  timeConversionMode,
-                                  currentBlock)
+            const IMipConstraint* activeConstraint = nullptr;
+
+            if (!ts.has_value())
+            {
+                activeConstraint = componentConstraints[0].get();
+            }
+            else
+            {
+                // Check if we need to drop the constraint
+                if (modelConstr.outOfBoundsProcessingMode()
+                      == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
+                    && Optimisation::hasOutOfBoundsTimeShift(modelConstr.expression().RootNode(),
+                                                             *ts,
+                                                             fillContext,
+                                                             evalVisitor))
+                {
+                    activeConstraint = nullptr;
+                }
+                else
+                {
+                    // Increment index and get the constraint
+                    activeConstraint = componentConstraints[activeConstraintIndex++].get();
+                }
+            }
+
+            if (!activeConstraint)
+            {
+                return;
+            }
+
+            TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
+                                                                       timeConversionMode,
+                                                                       currentBlock)
                               : TimeBlock{.block = currentBlock + 1,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry(
-              {.block = tb.block,
-               .component = componentId,
-               .output = constraintId,
-               .absolute_time_index = tb.absoluteTimeIndex,
-               .block_time_index = tb.blockTimeIndex,
-               .scenario_index = scenIdx,
-               .value = std::nullopt,
-               .status = isLp ? c->getMipBasisStatus() : MipBasisStatus::NOT_AVAILABLE});
+              SimulationTableEntry{.block = tb.block,
+                                   .component = componentId,
+                                   .output = constraintId,
+                                   .absolute_time_index = tb.absoluteTimeIndex,
+                                   .block_time_index = tb.blockTimeIndex,
+                                   .scenario_index = scenIdx,
+                                   .value = std::nullopt,
+                                   .status = isLp ? activeConstraint->getMipBasisStatus()
+                                                  : MipBasisStatus::NOT_AVAILABLE});
         };
 
-        handleDependingOnVariability(fillContext, scenario, idxType, handle);
+        handleDependingOnVariability(fillContext, year, variability, handle);
+        ++constraintIndex;
     }
 }
 
-void addObjectiveValue(ISimulationTable& simulation,
+void addObjectiveValue(SimulationTable& simulation,
                        double objectiveValue,
-                       unsigned int currentBlock,
-                       unsigned int scenario)
+                       unsigned currentBlock,
+                       unsigned year)
 {
     // TODO : handle scenario-independent objectives in full-modeler mode
     simulation.addEntry({.block = currentBlock + 1,
@@ -240,35 +267,52 @@ void addObjectiveValue(ISimulationTable& simulation,
                          .output = "OBJECTIVE_VALUE",
                          .absolute_time_index = std::nullopt,
                          .block_time_index = std::nullopt,
-                         .scenario_index = scenario,
+                         .scenario_index = year,
                          .value = objectiveValue,
                          .status = MipBasisStatus::NOT_AVAILABLE});
 }
 
-void addEntriesForNode(ISimulationTable& simulationTable,
+void addEntriesForNode(SimulationTable& simulationTable,
                        const FillContext& fillContext,
+                       Visitors::EvalVisitor& evalVisitor,
+                       Visitors::VariabilityVisitor& variabilityVisitor,
                        const ModelerStudy::SystemModel::Component& component,
-                       const OptimEntityContainer& optimEntityContainer,
                        unsigned currentBlock,
                        const TimeConversionMode& timeConversionMode,
-                       std::optional<unsigned> scenario,
+                       unsigned year,
                        bool forceExportForScenarioIndex,
                        const std::string& componentId,
                        const std::string& outputName,
-                       const Expressions::Nodes::Node* rootNode)
+                       const Nodes::Node* rootNode)
 {
-    auto evalVisitor = Expressions::Visitors::EvalVisitor(optimEntityContainer,
-                                                          fillContext,
-                                                          component);
     auto value = evalVisitor.dispatch(rootNode);
+    auto variability = variabilityVisitor.dispatch(rootNode);
+    variability = updateVariabilityIfShouldForceScenario(variability, forceExportForScenarioIndex);
 
-    VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer,
-                                                                        component)
-                                .dispatch(rootNode);
-    idxType = updateVariabilityIfShouldForceScenario(idxType, forceExportForScenarioIndex);
-
-    auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+    auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
     {
+        if (ts.has_value())
+        {
+            if (const auto* functionNode = dynamic_cast<const Nodes::FunctionNode*>(rootNode);
+                functionNode && functionNode->type() == Nodes::FunctionNodeType::dual)
+            {
+                const auto* indexNode = dynamic_cast<const Nodes::LiteralNode*>(
+                  functionNode->getOperands().at(1));
+                const auto constraintIndex = static_cast<std::size_t>(indexNode->value());
+                const auto& constraint = component.getModel()->Constraints().at(constraintIndex);
+
+                if (constraint.outOfBoundsProcessingMode()
+                      == ModelerStudy::SystemModel::OutOfBoundsProcessingMode::DROP
+                    && Optimisation::hasOutOfBoundsTimeShift(constraint.expression().RootNode(),
+                                                             *ts,
+                                                             fillContext,
+                                                             evalVisitor))
+                {
+                    return;
+                }
+            }
+        }
+
         TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                    timeConversionMode,
                                                                    currentBlock)
@@ -285,38 +329,34 @@ void addEntriesForNode(ISimulationTable& simulationTable,
                                   .value = val,
                                   .status = MipBasisStatus::NOT_AVAILABLE});
     };
-    handleDependingOnVariability(fillContext, scenario, idxType, handle);
+    handleDependingOnVariability(fillContext, year, variability, handle);
 }
 
-void addPortEntries(ISimulationTable& simulationTable,
+void addPortEntries(SimulationTable& simulationTable,
                     const FillContext& fillContext,
                     const ModelerStudy::SystemModel::Component& component,
-                    const OptimEntityContainer& optimEntityContainer,
+                    Visitors::EvalVisitor& evalVisitor,
+                    Visitors::VariabilityVisitor& variabilityVisitor,
                     unsigned currentBlock,
                     const TimeConversionMode& timeConversionMode,
-                    std::optional<unsigned> scenario,
+                    unsigned year,
                     bool forceExportForScenarioIndex)
 {
     const auto& componentId = component.Id();
 
     for (const auto& [portFieldKey, portFieldDef]: component.getModel()->PortFieldDefinitions())
     {
-        Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer,
-                                                       fillContext,
-                                                       component);
-
         auto portValue = evalVisitor.dispatch(portFieldDef.Definition().RootNode());
+        auto variability = variabilityVisitor.dispatch(portFieldDef.Definition().RootNode());
 
-        VariabilityType idxType = Expressions::Visitors::VariabilityVisitor(optimEntityContainer,
-                                                                            component)
-                                    .dispatch(portFieldDef.Definition().RootNode());
-        idxType = updateVariabilityIfShouldForceScenario(idxType, forceExportForScenarioIndex);
+        variability = updateVariabilityIfShouldForceScenario(variability,
+                                                             forceExportForScenarioIndex);
         // TODO: EvalVistior already uses a TimeIndexVisitor under the hood to know if the port
         // is time and/or scenario dependent. It may be more efficient to enrich
         // EvaluationResult
         // by adding a TimeIndex to it? It would require some careful work inside EvalVisitor
 
-        auto handle = [&](std::optional<unsigned> ts, std::optional<unsigned> scenIdx)
+        auto handle = [&](std::optional<unsigned> ts, unsigned scenIdx)
         {
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
@@ -337,17 +377,18 @@ void addPortEntries(ISimulationTable& simulationTable,
                                       .status = MipBasisStatus::NOT_AVAILABLE});
         };
 
-        handleDependingOnVariability(fillContext, scenario, idxType, handle);
+        handleDependingOnVariability(fillContext, year, variability, handle);
     }
 }
 
-void addExtraOutputEntries(ISimulationTable& simulationTable,
+void addExtraOutputEntries(SimulationTable& simulationTable,
                            const FillContext& fillContext,
                            const ModelerStudy::SystemModel::Component& component,
-                           const OptimEntityContainer& optimEntityContainer,
+                           Visitors::EvalVisitor& evalVisitor,
+                           Visitors::VariabilityVisitor& variabilityVisitor,
                            unsigned currentBlock,
                            const TimeConversionMode& timeConversionMode,
-                           std::optional<unsigned> scenario,
+                           unsigned year,
                            bool forceExportForScenarioIndex)
 {
     const auto& componentId = component.Id();
@@ -357,11 +398,12 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
         std::string outputName = extraOutputId;
         addEntriesForNode(simulationTable,
                           fillContext,
+                          evalVisitor,
+                          variabilityVisitor,
                           component,
-                          optimEntityContainer,
                           currentBlock,
                           timeConversionMode,
-                          scenario,
+                          year,
                           forceExportForScenarioIndex,
                           componentId,
                           outputName,
@@ -369,59 +411,70 @@ void addExtraOutputEntries(ISimulationTable& simulationTable,
     }
 }
 
-void FillSimulationTable(ISimulationTable& simulationTable,
+void FillSimulationTable(SimulationTable& simulationTable,
                          const ILinearProblem& linearProblem,
                          double objectiveValue,
                          const Solver::ModelerData& modelerData,
-                         const OptimEntityContainer& optimEntityContainer,
+                         const OptimEntityContainer& optimContainer,
                          const FillContext& fillContext,
                          unsigned currentBlock,
                          const TimeConversionMode& timeConversionMode,
                          bool forceExportForScenarioIndex)
 {
     Utils::TimeMeasurement measure;
-    unsigned scenario = fillContext.getYear();
+    unsigned year = fillContext.getYear();
 
     for (const auto& component: modelerData.system->Components())
     {
+        const auto* data = modelerData.dataSeries.get();
+        const auto& scenario = modelerData.scenarioGroupRepository.scenario(
+          component.getScenarioGroupId());
+
+        Visitors::EvalVisitor evalVisitor(optimContainer, fillContext, component, data, &scenario);
+        Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component, data, &scenario);
+
         addVariableEntries(simulationTable,
                            linearProblem,
                            fillContext,
                            component,
-                           optimEntityContainer,
+                           optimContainer,
                            currentBlock,
                            timeConversionMode,
-                           scenario);
+                           year);
 
         addConstraintEntries(simulationTable,
                              linearProblem,
                              fillContext,
                              component,
-                             optimEntityContainer,
+                             optimContainer,
+                             data,
+                             &scenario,
                              currentBlock,
                              timeConversionMode,
-                             scenario,
+                             year,
                              forceExportForScenarioIndex);
 
         addPortEntries(simulationTable,
                        fillContext,
                        component,
-                       optimEntityContainer,
+                       evalVisitor,
+                       variabilityVisitor,
                        currentBlock,
                        timeConversionMode,
-                       scenario,
+                       year,
                        forceExportForScenarioIndex);
 
         addExtraOutputEntries(simulationTable,
                               fillContext,
                               component,
-                              optimEntityContainer,
+                              evalVisitor,
+                              variabilityVisitor,
                               currentBlock,
                               timeConversionMode,
-                              scenario,
+                              year,
                               forceExportForScenarioIndex);
     }
-    addObjectiveValue(simulationTable, objectiveValue, currentBlock, scenario);
+    addObjectiveValue(simulationTable, objectiveValue, currentBlock, year);
 
     measure.tick();
     logs.info() << "Simulation Table is generated in " << measure.toString();

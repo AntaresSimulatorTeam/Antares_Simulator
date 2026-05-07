@@ -6,7 +6,6 @@
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/solver/optim-model-filler/ReadLinearConstraintVisitor.h>
 #include "antares/exception/InvalidArgumentError.hpp"
-#include "antares/expressions/ShiftVector.h"
 
 using namespace Antares::Expressions::Nodes;
 using namespace Antares::ModelerStudy::SystemModel;
@@ -17,8 +16,14 @@ namespace Antares::Optimisation
 ReadLinearConstraintVisitor::ReadLinearConstraintVisitor(
   const Optimisation::OptimEntityContainer& optimEntityContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const Component& component):
-    linear_expression_visitor_(optimEntityContainer, fillContext, component)
+  const Component& component,
+  const LinearProblemApi::ILinearProblemData* data,
+  const ScenarioGroupRepository& scenarioGroupRepo):
+    linear_expression_visitor_(optimEntityContainer,
+                               fillContext,
+                               component,
+                               data,
+                               scenarioGroupRepo)
 {
 }
 

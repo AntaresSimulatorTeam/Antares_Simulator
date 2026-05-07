@@ -16,6 +16,7 @@ find_package(Boost REQUIRED COMPONENTS iostreams)
 # Link dependencies
 target_link_libraries(data-series-csv-importer
         PUBLIC
+        Antares::input-error
         Antares::linear-problem-data-impl
         PRIVATE
         Boost::headers

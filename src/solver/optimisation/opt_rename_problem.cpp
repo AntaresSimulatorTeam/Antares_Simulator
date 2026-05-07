@@ -151,19 +151,19 @@ void VariableNamer::NumberBreakingDownDispatchableUnits(unsigned varIndex,
     SetThermalClusterElementName(varIndex, "NumberBreakingDownDispatchableUnits", clusterName);
 }
 
-void VariableNamer::NTCDirect(unsigned varIndex)
+void VariableNamer::DirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "NTCDirect");
+    SetLinkElementName(varIndex, "DirectFlow");
 }
 
-void VariableNamer::IntercoDirectCost(unsigned varIndex)
+void VariableNamer::PositiveDirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "IntercoDirectCost");
+    SetLinkElementName(varIndex, "PositiveDirectFlow");
 }
 
-void VariableNamer::IntercoIndirectCost(unsigned varIndex)
+void VariableNamer::PositiveIndirectFlow(unsigned varIndex)
 {
-    SetLinkElementName(varIndex, "IntercoIndirectCost");
+    SetLinkElementName(varIndex, "PositiveIndirectFlow");
 }
 
 void VariableNamer::SetShortTermStorageVariableName(unsigned varIndex,
@@ -248,14 +248,14 @@ void VariableNamer::FinalStorage(unsigned varIndex)
     SetAreaElementNameHour(varIndex, "FinalStorage");
 }
 
-void VariableNamer::PositiveUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::UnsuppliedEnergy(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "PositiveUnsuppliedEnergy");
+    SetAreaElementNameHour(varIndex, "UnsuppliedEnergy");
 }
 
-void VariableNamer::NegativeUnsuppliedEnergy(unsigned varIndex)
+void VariableNamer::Spillage(unsigned varIndex)
 {
-    SetAreaElementNameHour(varIndex, "NegativeUnsuppliedEnergy");
+    SetAreaElementNameHour(varIndex, "Spillage");
 }
 
 void VariableNamer::AreaBalance(unsigned varIndex)
@@ -286,6 +286,21 @@ void ConstraintNamer::AreaBalance(unsigned constrIndex)
 void ConstraintNamer::FictiveLoads(unsigned constrIndex)
 {
     SetAreaElementNameHour(constrIndex, "FictiveLoads");
+}
+
+void ConstraintNamer::CsrFictitiousLoad(unsigned int constraint)
+{
+    SetAreaElementNameHour(constraint, "CsrFictitiousLoad");
+}
+
+void ConstraintNamer::CsrMaxEnsLoad(unsigned int constraint)
+{
+    SetAreaElementNameHour(constraint, "CsrMaxEnsLoad");
+}
+
+void ConstraintNamer::MaxUnsuppliedEnergy(unsigned constrIndex)
+{
+    SetAreaElementNameHour(constrIndex, "MaxUnsupEnergy");
 }
 
 void ConstraintNamer::HydroPower(unsigned constrIndex)

@@ -60,27 +60,10 @@ class ThermalCluster final: public Cluster
 public:
     Pollutant emissions;
 
-    //! Set of thermal clusters
-    using Set = std::set<ThermalCluster*, CompareClusterName>;
-    //! Set of thermal clusters (pointer)
-    using SetPointer = std::set<ThermalCluster*>;
-    //! Vector of thermal clusters
-    using Vector = std::vector<Data::ThermalCluster*>;
-
     explicit ThermalCluster(Data::Area* parent);
 
     ThermalCluster() = delete;
     ~ThermalCluster() = default;
-
-    /*!
-    ** \brief Invalidate all data associated to the thermal cluster
-    */
-    bool forceReload(bool reload) const override;
-
-    /*!
-    ** \brief Mark the thermal cluster as modified
-    */
-    void markAsModified() const override;
 
     /*!
     ** \brief Reset to default values
@@ -156,6 +139,9 @@ public:
 
     //! The index of the cluster (within a list)
     uint index = 0;
+
+    //! The global index of the cluster across all areas (used by the solver)
+    int globalIndex = -1;
 
     //! Mustrun
     bool mustrun = false;

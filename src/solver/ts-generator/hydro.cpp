@@ -44,8 +44,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
 {
     logs.info() << "Generating the hydro time-series";
 
-    Solver::Progression::Task progression(study, 0, Solver::Progression::sectTSGHydro);
-
     auto& studyRTI = study.runtime;
     auto& calendar = study.calendar;
 
@@ -245,31 +243,21 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
             assert(not std::isnan(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
         }
-
-        ++progression;
     }
 
     PreproRoundAllEntriesPlusDerated(study);
 
     if (0 != (study.parameters.timeSeriesToArchive & Data::timeSeriesHydro))
     {
-        if (study.parameters.noOutput)
-        {
-            for (uint i = 0; i != study.areas.size(); ++i)
-            {
-                ++progression;
-            }
-        }
-        else
+        if (!study.parameters.noOutput)
         {
             logs.info() << "Archiving the hydro time-series";
             study.areas.each(
-              [&writer, &progression](const Data::Area& area)
+              [&writer](const Data::Area& area)
               {
                   const int precision = 0;
                   const std::string mcYear = "mc-0";
-                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear
-                                          / area.id.to<std::string>();
+                  fs::path outputFolder = fs::path("ts-generator") / "hydro" / mcYear / area.id;
 
                   std::string buffer;
                   area.hydro.series->ror.timeSeries.saveToBuffer(buffer, precision);
@@ -279,8 +267,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, Solver::IResultWriter& writer)
                   area.hydro.series->storage.timeSeries.saveToBuffer(buffer, precision);
                   outputFile = outputFolder / "storage.txt";
                   writer.addEntryFromBuffer(outputFile, buffer);
-
-                  ++progression;
               });
         }
     }

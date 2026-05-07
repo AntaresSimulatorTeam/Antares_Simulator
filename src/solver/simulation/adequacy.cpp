@@ -5,7 +5,6 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
-#include "antares/io/outputs/ISimulationTable.h"
 #include "antares/solver/simulation/solver_utils.h"
 
 using namespace Yuni;
@@ -60,7 +59,7 @@ std::string Adequacy::getSimulationTableHeader() const
 {
     if (!simulationTables_.empty())
     {
-        return simulationTables_.at(0).getHeader();
+        return simulationTables_.at(0).headerCsvFormat();
     }
     return "";
 }
@@ -123,8 +122,7 @@ bool Adequacy::simplexIsRequired(uint hourInTheYear,
     return false; // No need to call the solver to exhibit an optimal solution
 }
 
-bool Adequacy::year(Progression::Task& progression,
-                    Variable::State& state,
+bool Adequacy::year(Variable::State& state,
                     uint numSpace,
                     yearRandomNumbers& randomForYear,
                     std::list<uint>& failedWeekList,
@@ -152,7 +150,7 @@ bool Adequacy::year(Progression::Task& progression,
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        currentProblem.weekInTheYear = state.weekInTheYear = w;
+        currentProblem.weekInTheYear = state.weekInTheYear = w + pStartTime / 168;
         currentProblem.HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(study,
@@ -356,22 +354,12 @@ bool Adequacy::year(Progression::Task& progression,
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
         addTimeMeasure(durationCollector, currentProblem.timeMeasure);
-
-        ++progression;
     }
 
     optWriter.finalize();
     finalizeOptimizationStatistics(currentProblem, state);
 
     return true;
-}
-
-void Adequacy::incrementProgression(Progression::Task& progression) const
-{
-    for (uint w = 0; w < pNbWeeks; ++w)
-    {
-        ++progression;
-    }
 }
 
 // Retrieve weighted average balance for each area

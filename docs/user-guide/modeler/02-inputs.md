@@ -230,8 +230,8 @@ system:
 
 - **id**: an ID for your system. Has no effect on the simulation.
 - **description** _(optional)_: a free description of your system. Has no effect on the simulation.
-- **model-libraries**: a collection of model libraries needed for your system. Must contain at least one element, and
-  refer to IDs of model libraries found in the **input/model-libraries" directory. Beware that the ID of the library is
+- **model-libraries** _(optional)_: a collection of model libraries needed for your system. If provided, must contain at least one element, and
+  refer to IDs of model libraries found in the **input/model-libraries** directory. Beware that the ID of the library is
   one defined in its header, not the name of the file.
 
 ### Components
@@ -330,14 +330,124 @@ by [antares-modeler](08-command-line.md).
 For more information on hybrid
 studies, [see the relevant documentation](../solver/08-hybrid-studies.md#connecting-modeler-components-to-legacy-areas).
 
+## Optim-config file
+
+The `optim-config.yml` file is an optional configuration file used in hybrid studies to specify the optimization
+resolution mode. When present, it should be placed in the `input/` directory alongside other modeler files.
+
+### Resolution mode
+
+The **resolution-mode** field specifies the optimization resolution mode to use. This field is optional and defaults to
+`sequential-subproblems` if not specified.
+
+**Available values:**
+
+- `sequential-subproblems` (default): Each Monte-Carlo year is optimized separately. This mode does not support
+  scenario-independent variables.
+- `benders-decomposition`: Uses Benders decomposition method to solve the optimization problem. This mode is designed
+  for investment studies and allows the use of scenario-independent variables in the master problem.
+
+Example:
+
+~~~yaml
+resolution-mode: benders-decomposition
+~~~
+
+### Model decomposition configuration
+
+The **models** section allows you to explicitly configure where model elements (variables, constraints, objective
+contributions)
+appear in the optimization hierarchy (`master`, `subproblems`, or `master-and-subproblems`). This overrides the default
+behavior determined by variable and parameter properties (such as `scenario-dependent` flags).
+
+Example:
+
+~~~yaml
+models:
+  - id: lib_thermal_invest.thermal_candidate
+    model-decomposition:
+      variables:
+        - id: nb_units
+          location: master
+        - id: pmax_cluster
+          location: master-and-subproblems
+      constraints:
+        - id: constr1
+          location: master
+      objective-contributions:
+        - id: invest_objective
+          location: master
+        - id: operational_objective
+          location: subproblems
+~~~
+
+**Configuration keys:**
+
+- **id**: Model identifier in the format `library_id.model_id` (referencing a model from
+  your [model libraries](#model-libraries))
+- **model-decomposition**:
+    - **variables** (optional): Override default variable locations
+    - **constraints** (optional): Override default constraint locations
+    - **objective-contributions** (optional): Override default objective contribution locations
+    - Each entry requires:
+        - **id**: Element ID as defined in the [model library](#models)
+        - **location**: One of `master`, `subproblems`, or `master-and-subproblems`
+
+**Location semantics:**
+
+- `master`: Element appears only in the master problem (investment decisions)
+- `subproblems`: Element appears only in subproblems (operational decisions, per scenario)
+- `master-and-subproblems`: Element appears in both master and subproblems
+
+For investment studies with `benders-decomposition`, it's common to place investment decisions in `master` and
+operational
+decisions in `subproblems`.
+
+### Out-of-bounds processing for shifted constraints
+
+The **out-of-bounds-processing** section lets you control how time-shifted constraints are handled when a shifted term
+falls outside the current optimization block, for example `x[t+1]` on the last timestep of a block.
+
+This configuration currently applies to constraints only.
+
+Example:
+
+~~~yaml
+models:
+  - id: andromede.my_storage
+    model-decomposition:
+      constraints:
+        - id: level_dynamics
+          location: subproblems
+    out-of-bounds-processing:
+      constraints:
+        - id: level_dynamics
+          mode: drop
+~~~
+
+**Configuration keys:**
+
+- **out-of-bounds-processing**:
+    - **constraints** (optional): override out-of-bounds handling for specific constraints
+    - Each entry requires:
+        - **id**: Constraint ID as defined in the [model library](#models)
+        - **mode**: One of `cyclic` or `drop`
+
+**Modes:**
+
+- `cyclic` (default): shifted terms wrap around within the local block
+- `drop`: the constraint is not instantiated for timesteps where at least one shifted term falls outside the local
+  block
+
+Each configured constraint `id` must reference an existing constraint of the model.
+
 ## Data series
 
 The **input/data-series** directory contains all data-series needed by the [system description](#system-file) to define
 component parameter values.
 
-Currently, Antares modeler supports defining data-series using either tab or space seperated values files. Values must
-be separated
-using tabs, and the character `.` represents the floating point.
+Currently, Antares modeler supports defining data-series using `.csv` or `.tsv` files. Values can be separated using
+either tabs or spaces, and the character `.` represents the floating point.
 
 ### Naming
 
@@ -358,17 +468,16 @@ Example file for a simulation with 6 timestamps:
 65
 ~~~
 
-Note that Antares modeler currently does not conduct quality checks on data-series, and that it is up to you to ensure
-that the rows cover the [time horizon](04-parameters.md#horizon) of the simulation.
+Note that Antares modeler performs basic structural checks on data-series (consistent number of columns per row, valid
+numeric values), but does not validate that the data covers the full [time horizon](04-parameters.md#horizon) of the
+simulation. It is up to you to ensure the rows cover the required time steps.
 
 ### Scenario-dependent series
 
 To define a parameter value that changes depending on the scenario, define a row vector, where every data set is
 represented by a column.  
-Currently, Antares modeler does not support scenario building. Thus, please ensure that every scenario you want to
-simulate has an associated column in the scenario-dependent series file.  
-In the future, you will be able to use the [scenario builder](#scenario-builder) to map different scenarios to the data
-sets, in order to avoid duplicating data.  
+You can use the [scenario builder](#scenario-builder) to map different scenarios to the data sets, in order to avoid
+duplicating data.  
 Example file for a simulation with 4 scenarios:
 
 ~~~
@@ -396,7 +505,7 @@ All IDs in the model library and system file must respect the following:
 ### Scenario builder
 
 The **modeler-scenariobuilder.dat** file, located in the **data-series** directory, is used to map scenarios to data
-series.
+series. This feature is optional; if the file is not present, scenario groups will not be used.
 Each line consists of the association of a groupe name and Monte-carlo year -referred to as _year_- to a data series ID
 -referred to as _time serie number_-.
 
@@ -417,7 +526,6 @@ hydro_group, 2 = 7
 * A _time serie number_ is a integer, starting at 1, and refers to the column number in the corresponding
   data series file.
 * Group IDs refer to groups defined in the [components](#components) description.
-* All years of the simulation require an association to a time serie number
 
 ## Full examples
 

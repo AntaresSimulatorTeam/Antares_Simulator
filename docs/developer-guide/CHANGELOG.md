@@ -4,53 +4,342 @@ toc_depth: 2
 
 # Antares Changelog
 
-### 9.3.5
+## Branch 10.1.x
+
+#### Features
+
+* Allow problem-generator to load GEMS studies [ANT-4847] (#3563)
+
+#### Bugfixes
+
+* Fix bounds on fictious load and max unsupplied in adequacy patch [ANT-4906] (#3572)
+
+#### For developers
+
+* Add parquet as a dependency. Ground work for future support of parquet files. (#3499)
+* Add missing system deps for CentOS7 & OL8 (#3589)
+* Refactoring of yml configuration error handling (#3523, #3526, #3578, #3583)
+
+### 10.1.0
+
+#### Features
+
+* Multiple Hydro Rule Curves: New optional feature and compatibility flag for scenarized hydro reservoir levels (#2829)
+
+#### Bugfixes
+
+* Add behave tests for simple tests [ANT-4643] (#3545)
+* Fix remix hydro sts levels computation [ANT-4888] (#3557)
+
+#### Documentation
+
+* Fix(doc): modeler doc (#3529)
+
+#### For developers
+
+* Remove ortools dependency from antares-problem-generator [ANT-4846] (#3538)
+* replace raw Area* with unique_ptr in AreaList (#3550)
+* refacto: remove duplication in "sorties" (#3541)
+* refacto: Clean up scenario-builder (#3567)
+
+#### CI
+
+* chore(deps): bump SonarSource/sonarqube-scan-action from 7.0.0 to 7.1.0 (#3544)
+* Use fixed submodule for Antares_Simulator_Tests_NR instead of branch main (#3568)
+
+## Branch 10.0.x
+
+### 10.0.1
+
+#### Features
+
+* Add "drop constraint" for out of timebound constraints [ANT-4643] (#3485)
+* Rename "PositiveUnsuppliedEnergy" variable to "UnsuppliedEnergy" (#3477)
+* Rename "NegativeUnsuppliedEnergy" variable to "Spillage" (#3477)
+* Modeler > Port field definition : allow non linear expressions [ANT-4646] (#3483)
+* feat: Improve modeler input error messages [ANT-4550] (#3475)
+* Add documentation for thermal-capacity-connection [ANT-4342] (#3520)
+
+#### Bugfixes
+
+Districts: fix offest with disabled set | simplify [ANT-4830]
+Relax expressions in port definition : fixes after tests [ANT-4646]
+Fix: remove dynamique variables from digest, fix error in digests (#3535)
+Fix: several issues on CentOS7 (#3561)
+
+#### For developers
+
+* Remove unused code following GUI removal (#3500, #3494)
+* Extract utils for std::vector<double> (#3470)[margin of ANT-2453]
+* refactor: Remove component index (#3503)
+* Clean up find* functions
+* Update README.md (#3517)
+* Removed updaterMode parameter because it was always false (#3516)
+* chore(deps): update vcpkg baseline (#3502)
+* Use emplace_back instead of push_back where possible (#3519)
+* Add delete in AreaList desctuctor to free memory (#3524)
+* Remove unused typedefs (#3525)
+* Remove unused arguments (#3522)
+* refacto(yml-utils): add path utilities and YmlMapMarker class (#3504)
+* Add tools/antares-version.py (#3534)
+* Remove yuni strings for alias areaname, clustername...  (#3498)
+* Remove member function Study::areaAdd [ANT-4815] (#3527)
+
+#### CI/CD
+
+* Various fix for Sonar-cloud workflow (#3515, #3518)
+* Don't use package managers to install boost, use vcpkg (#3521)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+
+### 10.0.0
+
+#### Major changes
+
+* Remove GUI (legacy UI)
+
+#### New features
+
+* Hybrid studies with bounds from modeler [ANT-4033] (#3355)
+* Thermal capacity Investment with integer variables [ANT-4342] (#3369)
+* Improve handling for MIP variables in hybrid studies (#3422)
+* Add constraint fictitious load to adq patch [ANT-4365] (#3413)
+* Add sts prod to fictitious load [ANT-3739] (#3397)
+
 #### Improvements
+
+* Write longer durations in execution_info.ini (#3476)
+* Fix MILP problems in hybrid studies [ANT-4551] (#3407)
+* Refactor options.cpp, add tests (#3340)
+* Hybrid studies: turn YAML area connections into a dictionary (#3381)
+* Index thermal clusters only once [ANT-4522] (#3425)
+* Fix: digest [ANT-4630] (#3455)
+* Fix dynamic district aggregation (#3429)
+* Improve handling for modeler error (#3393)
+* Add warning in antares-api if weeks are dependent (#3398)
+* Performance scaling tests for expression sum (#3424)
+* Fix unit tests binding constraints (#3453)
+* Feature/tiny move (#3408)
+* Remove constraint builder (#3469)
+* Remove unnecessary code and cleanup:
+    - Remove GUI code (#3411, #3417, #3438, #3439, #3440, #3441, #3442, #3443, #3444)
+    - Remove JIT::usedFromGUI (#3419)
+    - Remove loadOnlyNeeded (#3440)
+    - Remove unused core/preprocessor/vaargs.h (#3420)
+    - Remove ts-generator binary (#3334)
+    - Remove code only used by GUI (#3417)
+    - Remove functions related to rename (#3444)
+    - Remove unused code from class Study (#3442)
+    - Optimize variable name building (avoid concat) (#3423)
+
+#### Bugfixes
+
+* Fix: install optim-model-filler (#3394)
+* Fix Benders decomposition (#3395)
+* Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
+* Fix: windows runtime libraries (#3435)
+
+#### Tests
+
+* Cucumber tests: new checks for area connection (#3443)
+* Fix Cucumber test_launcher_8.feature (#3426)
+
+#### Documentation
+
+* Fix: execution_info.ini doc format in readthedoc (#3405)
+* Update documentation for ticket ANT-4033 (#3445)
+* Fix itemization in port field (#3454)
+
+#### CI/Chore
+
+* chore(ci): update cache action to AntaresSimulatorTeam/cache to avoid deprecated action (#3390)
+* CI: Bump actions/upload-artifact from 6 to 7 (#3447)
+* chore: update sonar.projectVersion & simtest.json (#3412)
+* Allow generating results on release (#3427)
+
+#### For developers
+
+* Refactor AGENTS.md using progressive disclosure pattern (#3396)
+* Docker solution for clang-format (#3389)
+* MPS Generator ADR (#3410)
+* Update simtest (#3415)
+* Fix compilation warnings (#3401, #3491)
+* Fix failure of sonar scans due to disk space limitation (#3495, #3497)
+
+## Branch 9.3.x
+
+### 9.3.10
+
+#### Bugfixes
+
+* Fix bounds on fictitious load and max unsupplied in adequacy patch [ANT-4906] (#3575)
+
+### 9.3.9
+
+#### Features
+
+* feat: Write longer durations in execution_info.ini (#3476)
+
+#### Bugfixes
+
+* Fix: remove dynamique variables from digest, fix errors in digest (#3535)
+* Districts: fix offest with disabled set | simplify [ANT-4830] (#3533)
+* chore: update gitignore
+* Fix unit tests binding constraints (#3453)
+* Fix: windows runtime libraries (#3435)
+* Fix: several issues on CentOS7 (#3561)
+
+#### CI/CD
+
+* feat: Speed up SonarCloud job, increase cache hit rate to 100% (#3518)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+* chore(deps): bump docker/build-push-action from 6 to 7 (#3472)
+* chore(deps): bump docker/login-action from 3 to 4 (#3473)
+* ci: Bump actions/upload-artifact from 6 to 7 (#3447)
+
+#### For developers
+
+Add tools/antares-version.py (#3534)
+feat: allow generating results on release (#3427)
+
+### 9.3.8
+
+#### Bugfixes
+
+* Fix dynamic district aggregation (#3429)
+* Fix digest [ANT-4630] (#3455)
+* 9.3 Add constraint fictitious load to adq patch [ANT-4365] (#3487)
+* 9.3 Add short-term storage prod to fictitious load [ANT-3739] (#3486)
+
+### 9.3.7
+
+#### Feature
+
+* Problem Generator: new tool to write problems without running the simulation (#3314,#3399,#3165)
+
+#### Improvements
+
+* Add a warning in the problem-generator when weeks are dependent, and cleanup (#3398)
+* Improve performance for sum operations in expressions
+
+#### Bugfixes
+
+* Fix: remove unnecessary global time step adjustment to avoid wrong time labels (#3377)
+
+### 9.3.6
+
+#### New features
+
+* feat: resolution mode [ANT-4380] (#3339)
+* Dynamic aggregation [ANT-2739] (#3342)
+* Investment with integer variables for hybrid studies [ANT-4046] (#3372)
+* [100% optional] Use customized mps generator in the simulator (#3346)
+* [100%] print mps in api mode (#3314)
+* Modeler: operators ceil and floor [ANT-4295] (#3316)
+* feat(api): check week independency (#3387)
+
+#### Improvements
+
+* Remove usage of raw pointers around MPSolver, use std::shared_ptr (#3348)
+* Refactor AverageData year management (#3332)
+* Simplify, fix and slightly extend output variable classes (#3337)
+* Use a custom MPS writer in antares-modeler [ANT-4324] (#3302)
+* Change PMax computation for STS in remix hydro (#3363)
+* Remove ts-generator binary (#3334)
+* Shorten header/copyright notice (#3353)
+* Residual consumption [ANT-2444] (#3330)
+
+#### Bugfixes
+
+* fix: hourly PMax not clamped up to PMax Hydro Écrêtée (#3361)
+* fix: Offset overwritten instead of accumulated [ANT-4467] (#3385)
+* Fix naming for daily binding constraints (#3362)
+* Fix missing elements from digest.txt [ANT-4446] (#3388)
+* fix test "single_problem_thermal_first_week_nominal_case" (#3380)
+* fix: API save study meta data (#3356)
+* APIv2 - Fix wrong size for TS numbers (#3391)
+* Fix TODO & add tests in hydro allocation (#3343)
+* test: Handle new study directory "invalid-studies" (#3246)
+
+#### Tests
+
+* Add tests on `SurveyResults` (#3338)
+* constraints builder tests: adding tests + improvements (#3305)
+* Add unit tests for `IntermediateValues::computeStatisticsForTheCurrentYear` (#3344)
+* Add tests on time aggregation + formatting to a survey report (#3345)
+
+#### Documentation
+
+* Add documentation on missing parameters (#3347)
+* Add doc for execution_info.ini durations (#3359)
+* Add doc for resolution mode (#3371)
+* Add AGENTS.md for coding agents (#3368)
+
+#### CI/Chore
+
+* update simtest version (#3360)
+* chore(simtest): update version to v9.3.6b (#3386)
+* [oracle 8] update python version to get ortools (#3379)
+
+### 9.3.5
+
+#### Improvements
+
 * New option Adequacy patch debug files [ANT-4034] (#3297)
 * Add time infos to API [ANT-4261] (#3315)
 * Add more details for steps durations [ANT-4263] (#3319)
 * APIv2 - Fix initial hydro levels (#3326)
+
 #### CI
 
 * Bump actions/cache from 4 to 5 (#3293)
 * Bump actions/upload-artifact from 5 to 6 (#3294)
 
 ### 9.3.4
+
 #### Improvements
+
 * Various fixes for the "single problem API" (#3313, #3311, #3312, #3309)
 * Bump SonarSource/sonarqube-scan-action from 6.0.0 to 7.0.0 (#3295)
 
 ### 9.3.3
 
 #### New features
+
 * Add support for Gurobi-specific solver parameters (#3264)
 
 #### Improvements
+
 * Add error handling to antlr parsing [ANT-4032] (#3254)
 * Small improvements for slack analysis (#3255)
 * setObjectiveOffset API [ANT-4168] (#3251)
 
 #### Bugfixes
+
 * Additional constraints : bad unexpected input management [ANT-4297]
 * Add week number to additional constraint name (#3300)
 
 #### Modeler
+
 * Modeler 6.5: valid location [ANT-4045] (#3258)
 * Consistency in Node Composition for Modeler (#3242)
 * Modeler scenarized constant parameter [ANT-3800] (#3275)
 * Time dependent objective is not supported (#3257)
 
 #### CI
+
 * Fix: sonar hit ccache properly (#3196)
 
 #### Build
+
 * Add a few missing install directives (#3266)
 
 #### Doc
+
 * Fix on readthedoc rendering (#3245)
 * FunctionNode doc (#3270)
 
 #### Code quality
+
 * refactor: TimeIndex -> TimeScenarioVariability (#3261)
 * Expose studyPath instead of study (#3267)
 * Add SingleProblemGetter::getProblemIds() for problem IDs (#3268)
@@ -61,15 +350,16 @@ toc_depth: 2
 * Fix Mdeb's trailing zeroes [ANT-2334] (#3303)
 
 #### Technical cleaning
+
 Modeler : restore models as const [ANT-4051] (#3273)
 Remove useless if/else for links loop-flow (#3262)
 Remove unused LpsFromAntares data members (#3289)
 
 #### Tests
+
 Storage remix tests : trial for improvement [ANT-4022] (#3244)
 Expressions : tests sum operator (#3260)
 collectRemixDebugInfo (#3278)
-
 
 ### 9.3.2
 
@@ -81,6 +371,7 @@ collectRemixDebugInfo (#3278)
     - Some of those warnings are kept as warning and now non-blocking. Mainly those related deprecated options or values
 
 #### New features
+
 * Modeler 5.5: Add dual and reduced\_cost operators [ANT-3621] (#3177)
 * Modeler 5.6, 5.7: max, min and pow operators [ANT-3642] (#3212)
 * Modeler 6.2: Variables in investment problems [ANT-3885] [ANT-3913] (#3166)
@@ -88,6 +379,7 @@ collectRemixDebugInfo (#3278)
 * Add debug files to hydro remix [ANT-4028] (#3206)
 
 #### Improvements
+
 * Ascending compatibility [ANT-3989](#3161)
 * Add a deprecated message to the GUI [ANT-4042] (#3238)(#3240)
 * Fix: Reduce log spam and improve information (#3232)
@@ -95,11 +387,13 @@ collectRemixDebugInfo (#3278)
 * Add thread number in logs [ANT-2174] (#3138)
 
 #### Bugfixes
+
 * Infaisabilité avec l'hydro avec min gen et sans reservoir management [ANT-3748] (#3181)
 * Fix segfault caused by expression[t] [ANT-4049] (#3201)
 * Fix LolpCsr floor, LoldCsr spatial aggregate value (#3169)(#3168)(#3151)
 
 #### Modeler
+
 * Add ExportBehavior for structure files (#3210)
 * 6.1: Several objectives [ANT-3887] (#3090)
 * 6.2 Load E2E [ANT-3885] (#3185)
@@ -109,23 +403,27 @@ collectRemixDebugInfo (#3278)
 * Improve study model (#3093)
 
 #### CI
+
 * Cache improvements (#3128)(#3154)(#3179)(#3219)(#3140)
 * Fix continuous delivery title (#3183)
 * Use boolean type instead of string type for "Run all tests" (#3175)
 * Update CD title and tag (#3163)
 
 #### Build
+
 * testing cmake unity build (#3191)
 * On Windows : avoiding a compilation collision between antlr4 and Yuni (#3178)
 * Remove compile option unsuported on Clang (#3068)
 * Remove study dependency in exception (#3164)
 
 #### Doc
+
 * Doc on expressions : move and complete expressions [ANT-4117] (#3217)
 * Update doc for objective contributions (#3158)
 * Update XPRESS doc regarding MILP problems (#3160)
 
 #### Code quality
+
 * Factorize lolp and lold traits (#3145)
 * Deduplicate code in lolp vcards (#3144)(#3143)
 * Simplify chained templates for variables (#3142)(#3131)(#3129)(#3127)
@@ -140,6 +438,7 @@ collectRemixDebugInfo (#3278)
 * Fix a few code smells following #3093 (#3123)
 
 #### Technical cleaning
+
 * Remove unused dummy\_data (#3221)
 * Remove unused OptimComponent::index (#3218)
 * Wrap getDisplayName and getIcon inside BUILD\_UI (#3216)
@@ -151,6 +450,7 @@ collectRemixDebugInfo (#3278)
 * Remove unused "Hashable" class (#3115)
 
 #### Tests
+
 * Add 2 hydro remix tests [ANT-4022] (#3213)
 * handle invalid-studies (#3250)
 * update expectations 015 Hydro power (#3249)
@@ -864,6 +1164,20 @@ collectRemixDebugInfo (#3278)
 * Fix invalid index causing segfault in `test-study` test (#1902)
 
 ## Branch 8.8.x (end of support 12/2025)
+
+### 8.8.20
+
+#### Bugfixes
+
+* Add 2 constraints in adq patch [ANT-4365] (#3409)
+* Add short-term storage prod to constraint fictitious load (#3446)
+
+### 8.8.19
+
+#### Bugfixes
+
+* Fix infeasability in hydro heuristic with mingen [ANT-3755] (#3152)
+* Don't throw an error for empty reservoir [ANT-4212] (#3291)
 
 ### 8.8.18 (08/2025)
 

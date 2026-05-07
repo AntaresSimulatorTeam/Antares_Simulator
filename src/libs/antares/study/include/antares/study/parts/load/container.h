@@ -31,16 +31,6 @@ public:
     */
     void resetToDefault();
 
-    /*!
-    ** \brief Make sure that all data are loaded
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the load data as modified
-    */
-    void markAsModified() const;
-
     //! Data for the pre-processor
     std::unique_ptr<Data::Load::Prepro> prepro;
 

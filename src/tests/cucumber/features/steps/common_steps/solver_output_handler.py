@@ -160,3 +160,12 @@ class solver_output_handler:
         # Return NPCAP HOURS indicator at a specific hour (0-based index)
         df = self.__get_values_hourly(area, year)
         return int(df["NPCAP HOURS"]["Hours"].iloc[hour])
+
+    def get_mps_files(self):
+        return list(Path(self.study_output_path).glob("*.mps"))
+
+    def get_output_file_with_name(self, filename: str):
+        path = Path(self.study_output_path) / filename
+        if path.is_file():
+            return str(path)
+        return None

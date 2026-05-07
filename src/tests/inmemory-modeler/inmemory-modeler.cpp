@@ -41,13 +41,12 @@ void LinearProblemBuildingFixture::buildLinearProblem(
         scenarioGroupRepo.addScenario(name, std::move(scenario));
     }
     pb = std::make_unique<LinearProblemMpsolverImpl::OrtoolsLinearProblem>(false, "sirius");
-    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb,
-                                                                  &dummy_data,
-                                                                  &scenarioGroupRepo);
+    optimEntityContainer = std::make_unique<OptimEntityContainer>(*pb);
     optimEntityContainer->addFromSystemComponents(components);
     for (auto& component: components)
     {
         auto cf = std::make_unique<ComponentFiller>(component,
+                                                    &dummy_data,
                                                     *optimEntityContainer,
                                                     scenarioGroupRepo,
                                                     Config::Location::SUBPROBLEMS);
@@ -82,10 +81,8 @@ void LinearProblemBuildingFixture::createComponent(
                        .withModel(&models.at(modelId))
                        .withScenarioGroupId(scenarioGroupId)
                        .withParameterValues(std::move(parameterValues))
-                       .withIndex(componentIndex_)
                        .build();
     components.emplace_back(component);
-    componentIndex_++;
 }
 
 Nodes::Node* LinearProblemBuildingFixture::literal(double value)
@@ -169,9 +166,12 @@ void LinearProblemBuildingFixture::createModelWithSystemModelParameter(
                                fromBool<ScenarioDependent>(scenarioDependent));
     }
     std::vector<Constraint> constraints;
-    for (const auto& [id, expression]: constraintsData)
+    for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
     {
-        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+        constraints.emplace_back(id,
+                                 createExpression(expression, nodeRegistry),
+                                 Antares::Solver::Config::Location::SUBPROBLEMS,
+                                 outOfBoundsProcessingMode);
     }
     ModelBuilder model_builder;
     model_builder.withId(modelId)
@@ -206,9 +206,12 @@ void LinearProblemBuildingFixture::createModelWithMultipleObjectives(
                                fromBool<ScenarioDependent>(scenarioDependent));
     }
     std::vector<Constraint> constraints;
-    for (const auto& [id, expression]: constraintsData)
+    for (const auto& [id, expression, outOfBoundsProcessingMode]: constraintsData)
     {
-        constraints.emplace_back(id, createExpression(expression, nodeRegistry));
+        constraints.emplace_back(id,
+                                 createExpression(expression, nodeRegistry),
+                                 Antares::Solver::Config::Location::SUBPROBLEMS,
+                                 outOfBoundsProcessingMode);
     }
 
     std::vector<Objective> objectives;

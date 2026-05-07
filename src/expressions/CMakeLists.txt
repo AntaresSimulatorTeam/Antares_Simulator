@@ -1,6 +1,7 @@
 project(Expressions)
 
 add_subdirectory(antlr-interface)
+
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/PortFieldSumNode.cpp
@@ -9,7 +10,6 @@ set(SRC_Expressions
         nodes/ParentNode.cpp
         nodes/TimeSumNode.cpp
         nodes/FunctionNode.cpp
-
 
         visitors/AstDOTStyleVisitor.cpp
         visitors/CloneVisitor.cpp
@@ -70,19 +70,22 @@ set(SRC_Expressions
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
-add_library(expressions
-        ${SRC_Expressions})
-add_library(Antares::expressions ALIAS expressions)
+
+add_library(expressions ${SRC_Expressions})
 
 target_include_directories(expressions
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+add_library(Antares::expressions ALIAS expressions)
+
 target_link_libraries(expressions
         PUBLIC
         Boost::headers
+        Antares::system-model-base
         Antares::antares-study-system-model
         Antares::logs
+        Antares::vector-utils
         fmt::fmt
         #TODO i need LinearProblemData
         linear-problem-api
@@ -99,8 +102,8 @@ endif ()
 
 
 add_library(expressions-iterators
-        iterators/pre-order.cpp
-        include/antares/expressions/iterators/pre-order.h
+            iterators/pre-order.cpp
+            include/antares/expressions/iterators/pre-order.h
 )
 add_library(Antares::expressions-iterators ALIAS expressions-iterators)
 

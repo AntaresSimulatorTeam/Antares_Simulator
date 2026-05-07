@@ -8,7 +8,6 @@ endif (MSVC)
 
 
 add_subdirectory(application)
-add_subdirectory(constraints-builder)
 add_subdirectory(hydro)
 add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(lps)
@@ -104,6 +103,7 @@ import_std_libs(antares-solver)
 executable_strip(antares-solver)
 
 copy_dependency(sirius_solver antares-solver)
+copy_project_shared_lib(parquet_writer antares-solver)
 
 #TODO : not working inside macro
 install(TARGETS antares-solver EXPORT antares-solver DESTINATION bin)

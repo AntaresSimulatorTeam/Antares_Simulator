@@ -23,48 +23,6 @@ bool ntcTSNumberData::reset(const Study& study)
     return true;
 }
 
-#ifdef BUILD_UI
-void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
-{
-    if (!pArea)
-    {
-        return;
-    }
-
-    // Prefix
-    CString<512, false> prefix;
-    prefix += get_prefix();
-
-#ifndef NDEBUG
-    if (pTSNumberRules.width)
-    {
-        assert(pTSNumberRules.width == pArea->links.size());
-    }
-#endif
-
-    for (const auto& i: pArea->links)
-    {
-        const Data::AreaLink* link = i.second;
-        /*
-          When renaming an area, it may happen that i.first is not the name
-          of the supporting area. We only trust from->id and to->id.
-        */
-        const Data::AreaName& fromID = link->from->id;
-        const Data::AreaName& withID = link->with->id;
-        for (uint y = 0; y != pTSNumberRules.height; ++y)
-        {
-            const uint val = pTSNumberRules[link->indexForArea][y];
-            // Equals to zero means 'auto', which is the default mode
-            if (!val)
-            {
-                continue;
-            }
-            file << prefix << fromID << "," << withID << "," << y << " = " << val << "\n";
-        }
-    }
-}
-#endif
-
 void ntcTSNumberData::setTSnumber(const Antares::Data::AreaLink* link, const uint year, uint value)
 {
     assert(link != nullptr);

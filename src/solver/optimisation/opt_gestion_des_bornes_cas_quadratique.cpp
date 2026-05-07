@@ -3,9 +3,8 @@
 
 #include <pi_constantes_externes.h>
 
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include "variables/VariableManagerUtils.h"
 
 #define ZERO_POUR_LES_VARIABLES_FIXES 1.e-6
 
@@ -24,7 +23,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
 
     for (uint32_t interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        int var = variableManager.NTCDirect(interco, 0);
+        int var = variableManager.DirectFlow(interco, 0);
         ProblemeAResoudre->Xmax[var] = ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[interco];
         ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[interco]);
 

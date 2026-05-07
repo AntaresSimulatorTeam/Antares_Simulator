@@ -10,6 +10,7 @@
 #include <antares/study/version.h>
 
 #include "../../fwd.h"
+#include "hydrorulecurves.h"
 
 namespace Antares::Data
 {
@@ -42,16 +43,8 @@ public:
 
     /*!
     ** \brief Load all data not already loaded
-    **
-    ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)
-    */
-    bool forceReload(bool reload = false) const;
-
-    void markAsModified() const;
-    //@}
-
-    // Loading hydro time series collection
     // Returned boolean : reading from file failed
+    */
     bool loadGenerationTS(const AreaName& areaID,
                           const std::filesystem::path& folder,
                           StudyVersion version);
@@ -119,6 +112,8 @@ public:
     */
     TimeSeries maxHourlyPumpPower;
 
+    RuleCurves ruleCurves;
+
     // Getters for generation (ror, storage and mingen) and
     // max power (generation and pumping) number of TS
     uint TScount() const;
@@ -126,8 +121,7 @@ public:
     // Setting TS's when derated mode is on
     void resizeTSinDeratedMode(bool derated,
                                StudyVersion version,
-                               Parameters::Compatibility::HydroPmax hydroPmax,
-                               bool useBySolver);
+                               Parameters::Compatibility::HydroPmax hydroPmax);
 }; // class DataSeriesHydro
 } // namespace Antares::Data
 

@@ -17,11 +17,6 @@ namespace Antares::Data
 class XCast final: private Yuni::NonCopyable<XCast>
 {
 public:
-    //! Vector
-    using Vector = std::vector<XCast*>;
-    //! Vector with the const qualifier
-    using VectorConst = std::vector<const XCast*>;
-
     /*!
     ** \brief All coefficients
     */
@@ -132,15 +127,6 @@ public:
 
     //! \name Memory management
     //@{
-    /*!
-    ** \brief Make sure that all data are loaded in memory
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the load data as modified
-    */
-    void markAsModified() const;
 
 public:
     /*!

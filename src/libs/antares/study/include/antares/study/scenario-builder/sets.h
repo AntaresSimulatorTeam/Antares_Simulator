@@ -22,11 +22,6 @@ public:
     using const_iterator = Rules::Map::const_iterator;
 
 public:
-    //! Update mode, indicates wether we are called from with a ScenarioBuilderUpdater instance or
-    //! not
-    bool inUpdaterMode;
-
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -59,15 +54,6 @@ public:
     template<class StringT>
     bool loadFromINIFile(const StringT& filename);
 
-#ifdef BUILD_UI
-    /*!
-    ** \brief Save all rulesets into a mere INI file
-    */
-    template<class StringT>
-    bool saveToINIFile(const StringT& filename);
-//@}
-#endif
-
     //! \name Set manipulation
     //@{
     /*!
@@ -75,33 +61,26 @@ public:
     **
     ** \return A non-null pointer if the operation succeeded, null otherwise
     */
-    Rules::Ptr createNew(const RulesScenarioName& name);
+    Rules::Ptr createNew(const std::string& name);
 
     /*!
     ** \brief Test if a rules set exist
     **
     ** \param lname Name of the rule set (in lower case)
     */
-    bool exists(const RulesScenarioName& lname) const;
+    bool exists(const std::string& lname) const;
 
     /*!
     ** \brief Find a rule set
     */
-    Rules::Ptr find(const RulesScenarioName& lname) const;
-
-    /*!
-    ** \brief Rename a given ruleset
-    **
-    ** \return The object to the ruleset, null if the operation failed
-    */
-    Rules::Ptr rename(const RulesScenarioName& lname, const RulesScenarioName& newname);
+    Rules::Ptr find(const std::string& lname) const;
 
     /*!
     ** \brief Delete a ruleset
     **
     ** \return True if the operation suceeded, false otherwise
     */
-    bool remove(const RulesScenarioName& lname);
+    bool remove(const std::string& lname);
 
     iterator begin();
     const_iterator begin() const;
@@ -123,10 +102,6 @@ public:
 private:
     //! Load all rulesets into a mere INI file
     bool internalLoadFromINIFile(const AnyString& filename);
-#ifdef BUILD_UI
-    //! Save all rulesets into a mere INI file
-    bool internalSaveToIniFile(const AnyString& filename) const;
-#endif
 
 private:
     //! All available sets, ordered by their lower name

@@ -32,9 +32,6 @@ public:
         productionFactor
     };
 
-    //! Set of renewable clusters
-    using Set = std::set<RenewableCluster*, CompareClusterName>;
-
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -42,16 +39,6 @@ public:
     */
     explicit RenewableCluster(Data::Area* parent);
     //@}
-
-    /*!
-    ** \brief Invalidate all data associated to the renewable cluster
-    */
-    bool forceReload(bool reload) const override;
-
-    /*!
-    ** \brief Mark the renewable cluster as modified
-    */
-    void markAsModified() const override;
 
     /*!
     ** \brief Reset to default values

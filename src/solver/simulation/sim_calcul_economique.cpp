@@ -8,6 +8,7 @@
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
+#include "antares/solver/optimisation/MipDetection.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -122,7 +123,9 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                                                   ucHeuristicFast);
 
     problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
-                                                 == Antares::Data::UnitCommitmentMode::ucMILP);
+                                                 == Antares::Data::UnitCommitmentMode::ucMILP)
+                                                || Antares::Optimization::
+                                                  hasModelerIntegerVariables(problem.modelerData);
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
@@ -288,9 +291,9 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
         for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
         {
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index] = NombrePaliers
-                                                                                       + cluster
-                                                                                           ->index;
+            cluster->globalIndex = static_cast<int>(NombrePaliers + cluster->index);
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
+              = cluster->globalIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[cluster->index]
               = cluster->nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[cluster->index] = cluster->minStablePower;
@@ -440,8 +443,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 if (area.hydro.hardBoundsOnRuleCurves
                     && problem.CaracteristiquesHydrauliques[k].SuiviNiveauHoraire)
                 {
-                    auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
-                    auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
+                    const auto* minLvl = area.hydro.series->ruleCurves.min.getColumn(problem.year);
+                    const auto* maxLvl = area.hydro.series->ruleCurves.max.getColumn(problem.year);
 
                     for (int day = 0; day < 7; day++)
                     {
@@ -708,7 +711,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 const uint nextWeekFirstDay = study.calendar
                                                                 .hours[PasDeTempsDebut + 7 * 24]
                                                                 .dayYear;
-                                auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
+
+                                const auto& minLvl = area.hydro.series->ruleCurves.min.getColumn(
+                                  problem.year);
                                 double V = std::max(0., WSL - minLvl[nextWeekFirstDay] * rc + WNI);
 
                                 if (Utils::isZero(WGU))
@@ -853,8 +858,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     const uint nextWeekFirstDay = study.calendar
                                                                     .hours[PasDeTempsDebut + 7 * 24]
                                                                     .dayYear;
-                                    auto& maxLvl = area.hydro
-                                                     .reservoirLevel[Data::PartHydro::maximum];
+
+                                    const auto* maxLvl = area.hydro.series->ruleCurves.max
+                                                           .getColumn(problem.year);
 
                                     double V = std::max(0.,
                                                         maxLvl[nextWeekFirstDay] * rc

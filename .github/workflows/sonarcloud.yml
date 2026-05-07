@@ -11,12 +11,10 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    strategy:
-      matrix:
-        os: [ ubuntu-22.04 ]
 
     env:
       SONAR_SERVER_URL: "https://sonarcloud.io"
+      os: ubuntu-22.04
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       # Caching strategy of VCPKG dependencies
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
@@ -24,22 +22,10 @@ jobs:
       #config in env to be accessible at each step
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_COMPILERCHECK: content
-      CCACHE_SLOPPINESS: time_macros,include_file_mtime
+      CCACHE_SLOPPINESS: time_macros,include_file_mtime,include_file_ctime
       PYTHON_VERSION: "3.12"
 
     steps:
-    # Disk space on / is insufficient, leading to errors
-    # We use this 'hack' to remove unused stuff (android, dotnet, etc.) and change partition layout
-    - name: Maximize build space
-      uses: easimon/maximize-build-space@v10
-      with:
-        root-reserve-mb: 5120
-        swap-size-mb: 1024
-        remove-dotnet: true
-        remove-android: true
-        remove-haskell: true
-        remove-codeql: true
-
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -60,8 +46,8 @@ jobs:
       run: |
         echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
 
-    - name: Install ccache
-      run: sudo apt-get install -y ccache
+    - name: Install APT deps
+      run: sudo apt-get install -y ccache uuid-dev ninja-build lld
 
       # Can't use ubuntu cache. Cache hit is only single digit %
     - name: Restore ccache cache
@@ -69,34 +55,28 @@ jobs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/.ccache
-        key: sonar-${{ matrix.os }}-v1-${{ github.event.pull_request.head.ref || github.ref_name }}
+        key: sonar-${{ env.os }}-${{ github.event.pull_request.head.ref || github.ref_name }}
         restore-keys: |
-          ${{ matrix.os }}-v1
+          sonar-${{ env.os }}-
 
     - name: Configure ccache
       run: |
         # Ensure directory exists and point ccache at it
         mkdir -p ${{ env.CCACHE_DIR }}
         # Increase size to reduce evictions; adjust to suit your CI quota
-        ccache --set-config=max_size=5G
+        ccache --set-config=max_size=1G
         ccache --set-config=compression=true
-        ccache --show-config || true
         ccache -p
+        ccache -z
       shell: bash
 
     - name: Install Build Wrapper
-      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v7.0.0
-
-    - name: Install libraries
-      run: |
-        sudo apt-get update
-        sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-        sudo apt-get install libboost-test-dev
+      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8.0.0
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
-        os: ${{matrix.os}}
+        os: ${{ env.os }}
         buildtype: Debug
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
@@ -114,6 +94,20 @@ jobs:
         python -m pip install --upgrade pip
         pip3 install -r src/tests/examples/requirements.txt
 
+    # Disk space on / is insufficient; remove unused SDKs and caches after
+    # all apt/pip installs are done so we don't break their cache lookups.
+    - name: Free root space (remove unused SDKs and caches)
+      run: |
+        sudo rm -rf /usr/share/dotnet || true
+        sudo rm -rf /usr/local/lib/android || true
+        sudo rm -rf /opt/ghc || true
+        sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+        sudo apt-get clean -y || true
+        sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* || true
+        python -m pip cache purge || true
+        rm -rf /home/runner/.cache/pip || true
+        sudo rm -rf /tmp/* /var/tmp/* || true
+
     - name: Read simtest version
       run: |
         echo 'SIMTEST_JSON<<EOF' >> $GITHUB_ENV
@@ -126,18 +120,21 @@ jobs:
 
     - name: Init submodule
       run: |
-        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 src/tests/resources/Antares_Simulator_Tests_NR
 
     - name: Configure
       run: |
-        cmake -B _build -S src \
+        cmake -G Ninja -B _build -S src \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS="-fuse-ld=lld" \
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DVCPKG_TARGET_TRIPLET=x64-linux-release \
         -DCODE_COVERAGE=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
+        -DCMAKE_PREFIX_PATH="${{env.ORTOOLS_DIR}}/install" \
         -DBUILD_TESTING=ON \
         -DMZ_CODE_COVERAGE=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
@@ -165,7 +162,7 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: short-tests
-        os: ${{ matrix.os }}
+        os: ${{ env.os }}
 
     - name: Run tests on adequacy patch (CSR)
       if: ${{ !cancelled() }}
@@ -173,7 +170,7 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: adequacy-patch-CSR
-        os: ${{ matrix.os }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in 8.6.0
       if: ${{ !cancelled() }}
@@ -181,7 +178,7 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-v860
-        os: ${{ matrix.os }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in 8.7.0
       if: ${{ !cancelled() }}
@@ -189,7 +186,7 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-v870
-        os: ${{ matrix.os }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in 9.1.0
       if: ${{ !cancelled() }}
@@ -197,7 +194,7 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-v910
-        os: ${{ matrix.os }}
+        os: ${{ env.os }}
 
     - name: Run tests introduced in 9.2.0
       if: ${{ !cancelled() }}
@@ -205,7 +202,7 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-v920
-        os: ${{ matrix.os }}
+        os: ${{ env.os }}
 
     - name: Run named mps tests
       if: ${{ !cancelled() }}
@@ -213,7 +210,7 @@ jobs:
       with:
         simtest-tag: ${{ env.SIMTEST }}
         batch-name: valid-named-mps
-        os: ${{ matrix.os }}
+        os: ${{ env.os }}
         variant: "named-mps"
 
     - name: Run fast cucumber
@@ -233,13 +230,18 @@ jobs:
       run: |
         gcovr --sonarqube --output coverage.xml
 
+    - name: Remove Antares_Simulator_Tests_NR
+      run: |
+        rm -rf src/tests/resources/Antares_Simulator_Tests_NR
+
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
-      uses: SonarSource/sonarqube-scan-action@v7.0.0
+      uses: SonarSource/sonarqube-scan-action@v8.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
+        scannerVersion: 7.3.0.5189 #8.0.1.6346 hangs
         args: >
           --define sonar.host.url=${{ env.SONAR_SERVER_URL }} --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
 
@@ -273,8 +275,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v5
+      uses: AntaresSimulatorTeam/cache@main
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{ steps.cache.outputs.cache-primary-key }}
-

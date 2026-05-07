@@ -38,8 +38,6 @@ public:
 
     //! Pointer
     using MatrixPtr = Matrix<T>*;
-    //! Vector
-    using Vector = std::set<MatrixPtr>;
 
     //! Column type
     using ColumnType = typename Antares::Memory::Stored<T>::Type;
@@ -60,8 +58,6 @@ public:
         optQuiet = 2,
         //! Do not postpone the loading
         optImmediate = 4,
-        //! mark the matrix as modified after loading
-        optMarkAsModified = 8,
         //! Do not warn if the file is empty
         optNoWarnIfEmpty = 16,
         //! The loading never fails
@@ -366,11 +362,7 @@ public:
     **
     ** This method is only useful if the load-on-demand is used.
     ** The matrix will be marked as modified to force the written.
-    **
-    ** \param reload True to load all JIT data
-    ** \return True if the data was really loaded (reload = true)
     */
-    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Try to remove from memory all data from the matrix
@@ -379,13 +371,6 @@ public:
     ** structure and when the matrix is not modified
     */
     void unloadFromMemory() const;
-
-    /*!
-    ** \brief Mark the matrix as modified
-    **
-    ** This routine has no effect when the UI is not present
-    */
-    void markAsModified() const;
 
     /*!
     ** \brief Get if the matrix is empty
