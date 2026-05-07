@@ -258,7 +258,7 @@ private:
     {
         using namespace Yuni;
 
-        results.setOfAreasName.clear();
+        results.data.setOfAreasName.clear();
 
         // No need to do anything for any area here if no zonal variables were selected.
         uint selectedZonalVarsCount = results.data.study.parameters.variablesPrintInfo
@@ -349,7 +349,7 @@ private:
     {
         using namespace Yuni;
 
-        results.setOfAreasName.clear();
+        results.data.setOfAreasName.clear();
 
         // No need to do anything for any link here if no link variables were selected.
         uint selectedLinkVarsCount = results.data.study.parameters.variablesPrintInfo
@@ -455,7 +455,7 @@ private:
     {
         using namespace Yuni;
 
-        results.setOfAreasName.clear();
+        results.data.setOfAreasName.clear();
 
         // Generating the report for each binding constraint
         if (CDataLevel & Category::DataLevel::bindingConstraint)

@@ -17,7 +17,7 @@
 #include "../categories.h"
 #include "data.h"
 
-namespace Antares::IO::Outputs { class ISimulationTable; }
+namespace Antares::IO::Outputs { class SimulationTable; }
 
 namespace Antares::Solver::Variable
 {
@@ -99,7 +99,7 @@ public:
 
     struct LegacySimulationTableOptions
     {
-        Antares::IO::Outputs::ISimulationTable* simulationTable = nullptr;
+        Antares::IO::Outputs::SimulationTable* simulationTable = nullptr;
         std::optional<unsigned int> scenarioIndex;
         LegacyTimeConversionMode timeConversionMode = LegacyTimeConversionMode::SingleBlock;
     };
@@ -118,7 +118,6 @@ public:
     //! Caption for the current variable
     CaptionType variableCaption;
     std::string variableUnit;
-    std::string setOfAreasName;
 
     //! Matrix where to store all results
     double** values;

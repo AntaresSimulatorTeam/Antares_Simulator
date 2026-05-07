@@ -8,7 +8,7 @@
 #include <yuni/yuni.h>
 
 #include <antares/logs/logs.h>
-#include "antares/io/outputs/ISimulationTable.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include <antares/solver/variable/print.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
@@ -590,9 +590,9 @@ void SurveyResults::clearLegacySimulationTable()
 
 std::optional<std::string> SurveyResults::legacyComponentId() const
 {
-    if (!setOfAreasName.empty())
+    if (!data.setOfAreasName.empty())
     {
-        return setOfAreasName;
+        return data.setOfAreasName.c_str();
     }
     if (data.link)
     {
@@ -600,11 +600,11 @@ std::optional<std::string> SurveyResults::legacyComponentId() const
     }
     if (data.thermalCluster && data.area)
     {
-        return data.area->id.to<std::string>() + "." + data.thermalCluster->id();
+        return data.area->id + "." + data.thermalCluster->id();
     }
     if (data.area)
     {
-        return data.area->id.to<std::string>();
+        return data.area->id;
     }
     return std::nullopt;
 }
@@ -664,7 +664,7 @@ void SurveyResults::exportLegacySimulationTableValues(const double* values,
                          .output = output,
                          .absolute_time_index = index + 1,
                          .block_time_index = blockTimeIndex,
-                         .scenario_index = legacySimulationTableOptions_->scenarioIndex,
+                         .scenario_index = legacySimulationTableOptions_->scenarioIndex.value_or(0),
                          .value = values[index],
                          .status = std::nullopt});
     }

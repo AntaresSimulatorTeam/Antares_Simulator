@@ -114,7 +114,7 @@ std::optional<LegacyVariableInfo> parseLegacyVariableName(const std::string& nam
     return LegacyVariableInfo{output, location, timeIndex};
 }
 
-void FillLegacySimulationTable(ISimulationTable& simulationTable,
+void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const PROBLEME_ANTARES_A_RESOUDRE& problem,
                                const FillContext& fillContext,
                                unsigned currentBlock,
