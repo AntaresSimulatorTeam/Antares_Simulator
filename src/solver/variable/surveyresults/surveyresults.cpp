@@ -609,20 +609,9 @@ std::optional<std::string> SurveyResults::legacyComponentId() const
     return std::nullopt;
 }
 
-void SurveyResults::exportLegacySimulationTableValues(const double* values,
-                                                      unsigned int count,
-                                                      int precision,
-                                                      bool annual)
+void SurveyResults::exportLegacySimulationTableHourlyValues(const double* values,
+                                                             unsigned int count)
 {
-    if (!legacySimulationTableOptions_
-        || !legacySimulationTableOptions_->simulationTable)
-    {
-        return;
-    }
-    if (annual || precision != Category::hourly)
-    {
-        return;
-    }
     if (isCurrentVarNA && *isCurrentVarNA)
     {
         return;

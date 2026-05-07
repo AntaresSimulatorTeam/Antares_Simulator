@@ -42,19 +42,23 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
         switch (precision)
         {
         case Category::hourly:
-            internalExportAnnualValues<HOURS_PER_YEAR, VCardT>(report, hour, false, precision);
+            internalExportAnnualValues<HOURS_PER_YEAR, VCardT>(report, hour, false);
+            if (report.hasLegacySimulationTable())
+            {
+                report.exportLegacySimulationTableHourlyValues(hour, HOURS_PER_YEAR);
+            }
             break;
         case Category::daily:
-            internalExportAnnualValues<DAYS_PER_YEAR, VCardT>(report, day, false, precision);
+            internalExportAnnualValues<DAYS_PER_YEAR, VCardT>(report, day, false);
             break;
         case Category::weekly:
-            internalExportAnnualValues<WEEKS_PER_YEAR, VCardT>(report, week, false, precision);
+            internalExportAnnualValues<WEEKS_PER_YEAR, VCardT>(report, week, false);
             break;
         case Category::monthly:
-            internalExportAnnualValues<MONTHS_PER_YEAR, VCardT>(report, month, false, precision);
+            internalExportAnnualValues<MONTHS_PER_YEAR, VCardT>(report, month, false);
             break;
         case Category::annual:
-            internalExportAnnualValues<1, VCardT>(report, &year, true, precision);
+            internalExportAnnualValues<1, VCardT>(report, &year, true);
             break;
         }
     }
@@ -63,8 +67,7 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
 template<unsigned int Size, class VCardT, class A>
 void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
                                                     const A& array,
-                                                    bool annual,
-                                                    int precision) const
+                                                    bool annual) const
 {
     using namespace Yuni;
     assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
@@ -88,9 +91,6 @@ void IntermediateValues::internalExportAnnualValues(SurveyResults& report,
         double& target = *(report.values[report.data.columnIndex]);
         target = year;
     }
-
-    const double* valuesToExport = annual ? &year : &array[0];
-    report.exportLegacySimulationTableValues(valuesToExport, Size, precision, annual);
 
     // Next column index
     ++report.data.columnIndex;

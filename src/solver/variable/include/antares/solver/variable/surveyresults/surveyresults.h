@@ -106,10 +106,12 @@ public:
 
     void configureLegacySimulationTable(const LegacySimulationTableOptions& options);
     void clearLegacySimulationTable();
-    void exportLegacySimulationTableValues(const double* values,
-                                           unsigned int count,
-                                           int precision,
-                                           bool annual);
+    bool hasLegacySimulationTable() const noexcept
+    {
+        return legacySimulationTableOptions_
+               && legacySimulationTableOptions_->simulationTable;
+    }
+    void exportLegacySimulationTableHourlyValues(const double* values, unsigned int count);
 
 public:
     //! Data (not related to the template parameter)
