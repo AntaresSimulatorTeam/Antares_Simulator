@@ -127,3 +127,16 @@ Feature: hybrid (simulator+modeler) studies
     And the simulation takes less than 10 seconds
 	And the objective value is 186360
 	Then for first week, area balance RHS (for area unique) is first -12, -13, -14, -15, -16, then equals constant -11
+
+  @fast @short
+  Scenario: Use simulation week properly for GEMS components
+
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/hybrid_week_2/"
+    When I run antares simulator with --named-mps-problems
+    Then the simulation succeeds
+    And the simulation takes less than 10 seconds
+    And the modeler outputs contain the following entries
+      | block | component | output                 | timestep  | scenario | value |
+      |       | gen1      | generation.flow_field  | 169-336   | 0        | 100   |
+      |       | load1     | consumption.flow_field | 169-336 | 0        | -100  |
+    And the objective value is 5040
