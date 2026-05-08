@@ -211,6 +211,15 @@ public:
                         ->IndexSuivantIntercoExtremite[static_cast<std::size_t>(Interco)];
         }
 
+        if (state.problemeHebdo->modelerData)
+        {
+            // ValeursHorairesNetechangeModeler uses "net import" convention (positive = area
+            // receives power from GEMS component), while bilanPays uses "net export" convention.
+            bilanPays -= state.problemeHebdo
+                           ->ResultatsHoraires[state.area->index]
+                           .ValeursHorairesNetechangeModeler[state.hourInTheWeek];
+        }
+
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = bilanPays;
         // Next variable
         NextType::hourForEachArea(state, numSpace);

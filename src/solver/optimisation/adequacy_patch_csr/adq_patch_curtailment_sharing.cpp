@@ -77,6 +77,12 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
         Interco = problemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }
 
+    if (problemeHebdo->modelerData)
+    {
+        netPositionInit += problemeHebdo->ResultatsHoraires[Area]
+                             .ValeursHorairesNetechangeModeler[hour];
+    }
+
     double ensInit = problemeHebdo->ResultatsHoraires[Area]
                        .ValeursHorairesDeDefaillancePositive[hour];
     if (!setNTCOutsideToInsideToZero)
