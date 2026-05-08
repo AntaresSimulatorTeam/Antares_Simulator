@@ -69,3 +69,6 @@ _codeql_detected_source_root
 #doxygen
 doxygen-awesome-css/
 html/
+
+# Mac OS
+.DS_Store

@@ -5,6 +5,8 @@
 
 #include <cmath>
 
+#include <pi_constantes_externes.h>
+
 #include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.h"

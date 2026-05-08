@@ -115,6 +115,7 @@ set(TARGET_LIBS #No alias
         enums
         modeler-checks
 	structured-linear-problem
+        gems-csr-adapter
 )
 
 install(TARGETS ${TARGET_LIBS}

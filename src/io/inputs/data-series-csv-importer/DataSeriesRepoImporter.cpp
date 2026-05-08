@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <charconv>
 #include <ranges>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include <boost/iostreams/device/mapped_file.hpp>
