@@ -75,7 +75,7 @@ jobs:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ env.os }}-${{ github.ref_name }}
         restore-keys: |
-          ${{ env.os }}-  
+          ${{ env.os }}-
 
     - name: Configure ccache
       run: |
