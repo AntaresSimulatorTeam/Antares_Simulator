@@ -97,7 +97,7 @@ jobs:
   generate_results:
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           submodules: recursive  # Important: fetch submodules
 
