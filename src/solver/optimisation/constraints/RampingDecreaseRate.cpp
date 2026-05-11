@@ -13,7 +13,15 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
                                                .maxDownwardPowerRampingRate[index];
         double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .PmaxDUnGroupeDuPalierThermique[index];
-        // constraint : P(t) - P(t-1) + R^- * M(t) + u * M^-(t) + u * M^--(t) > 0
+        // 18 (ter)
+        // Equation : P(t) >= P(t-1) - (R^- * M(t)) - (u * M^-(t))
+        // P(t) : Power output of the cluster at timestep t
+        // R^- : Max ramping down for cluster
+        // M(t) : number of running units
+        // u : maximum unit power output when running
+        // M^-(t) : number of stopping units this timestep
+        // constraint : P(t) - P(t-1) + R^- * M(t) + u * M^-(t) > 0
+
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
           .DispatchableProduction(cluster,

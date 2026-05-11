@@ -13,7 +13,20 @@ void RampingIncreaseRate::add(int pays, int index, int pdt)
                                              .maxUpwardPowerRampingRate[index];
         double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .PmaxDUnGroupeDuPalierThermique[index];
-        // constraint : P(t) - P(t-1) - R^+ * M(t) - u * M^+(t) < 0
+        double multiplicateurStartingDispatchableUnits = -pmaxDUnGroupeDuPalierThermique
+                                                         + maxUpwardPowerRampingRate;
+        // 18 (bis)
+        // Equation : P(t) <= P(t-1) - ((R^+) * M(t)) + (u * M^+(t))
+        // P(t) : Power output of the cluster at timestep t
+        // R^+ : Max ramping up for cluster
+        // M(t) : number of running units
+        // u : maximum unit power output when running
+        // M^+(t) : number of starting units this timestep
+        // constraint : P(t) - P(t-1) - ((R^+) * M(t)) - u * M^+(t) < 0
+
+        // Modif : commentaire à merger au dessus
+        // Equation : P(t) <= P(t-1) - ((R^+) * M(t-1)) + (u * M^+(t))
+        // constraint : P(t) - P(t-1) - ((R^+) * M(t)) - ((u-R^+) * M^+(t)) < 0
 
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
@@ -22,7 +35,7 @@ void RampingIncreaseRate::add(int pays, int index, int pdt)
                                   -1,
                                   builder.data.NombreDePasDeTempsPourUneOptimisation)
           .NumberOfDispatchableUnits(cluster, -maxUpwardPowerRampingRate)
-          .NumberStartingDispatchableUnits(cluster, -pmaxDUnGroupeDuPalierThermique)
+          .NumberStartingDispatchableUnits(cluster, multiplicateurStartingDispatchableUnits)
           .lessThan();
 
         if (builder.NumberOfVariables() > 0)
