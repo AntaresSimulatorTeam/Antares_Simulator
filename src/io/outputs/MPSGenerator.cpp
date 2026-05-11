@@ -295,7 +295,7 @@ void MPSGenerator::writeBounds(std::string& mps) const
 
         if (lbIsZero && ubIsPlusInfinity) // this case is the default
         {
-            // explicit bounds to avoid upper bound interpreted as 1 by some solver (binary variable)
+            // explicit bounds to avoid upper bound interpreted as 1 by some solver (binary vars)
             if (isInt)
             {
                 fmt::format_to(std::back_inserter(mps), "{}LI {} {} {}\n", pad, bnd, varName, lb);
