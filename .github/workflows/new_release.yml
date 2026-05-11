@@ -95,6 +95,19 @@ jobs:
       target_branch: ${{ inputs.target_branch }}
 
   generate_results:
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive  # Important: fetch submodules
+
+      - name: Get Antares_Simulator_Tests_NR commit hash
+        id: get_test_commit
+        run: |
+          # Get the commit hash for the specific submodule path
+          COMMIT_HASH=$(git ls-tree HEAD src/tests/resources/Antares_Simulator_Tests_NR | awk '{print $3}')
+          echo "commit_hash=${COMMIT_HASH}" >> "$GITHUB_OUTPUT"
+
     name: Generate Results
     needs:
       - ubuntu
@@ -112,7 +125,7 @@ jobs:
       # Map inputs expected by the external reusable workflow
       release_tag: ${{ github.event.inputs.release_tag }}
       antares_tag: ${{ github.event.inputs.release_tag }}
-      antares_tests_tag: ''
+      antares_tests_tag: ${{ steps.get_test_commit.outputs.commit_hash }}
       target_branch: ''
     # Note: the external reusable workflow currently does not declare secrets in its 'workflow_call',
     # so we cannot pass SIMTEST_PAT here. If the remote workflow needs a PAT, update its 'on: workflow_call: secrets:'
