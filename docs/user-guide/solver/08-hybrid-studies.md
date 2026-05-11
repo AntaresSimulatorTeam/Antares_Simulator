@@ -108,8 +108,8 @@ These fields are independent : you don't have to define the 3 of them at the sam
 
 These fields must be present in the **area-connection** section of a port type, even if they are not defined (= corresponding value is empty). 
 
-#### Migrating existing YAML files
-If you already have hybrid-study model libraries written with the previous syntax, update the `area-connection` and `thermal-capacity-connection` sections as follows.
+#### Migrating existing YAML files (version 9.3.x -> 10.x)
+If you already have hybrid-study model libraries written with the previous syntax, update the `area-connection` and `thermal-capacity-connection` sections as follows. The format was changed in version 10.0.0 of Antares_Simulator.
 
 For `area-connection`:
 
