@@ -98,8 +98,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-        with:
-          submodules: recursive  # Important: fetch submodules
 
       - name: Get Antares_Simulator_Tests_NR commit hash
         id: get_test_commit
