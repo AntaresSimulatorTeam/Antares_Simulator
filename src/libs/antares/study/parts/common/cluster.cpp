@@ -80,6 +80,12 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
         return true;
     }
 
+    // Skip time series loading for disabled clusters
+    if (!enabled)
+    {
+        return true;
+    }
+
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
