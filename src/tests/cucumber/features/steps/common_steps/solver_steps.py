@@ -53,6 +53,7 @@ def change_transmission_capacities(context, link, value):
 def set_linear_solver(context, solver_name):
     context.config.userdata["linear-solver"] = solver_name
 
+
 @given('the quadratic solver is {solver_name}')
 def set_quadratic_solver(context, solver_name):
     context.config.userdata["quadratic-solver"] = solver_name
@@ -67,6 +68,7 @@ def parse_options(context, options):
 
         if options.count("--parallel") > 0:
             context.parallel = True
+
 
 @when('I run antares simulator')
 @when('I run antares simulator with {options}')
@@ -297,10 +299,25 @@ def run_simulation(context):
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path, context.mode)
-    # for hybrid studies:
-    simulation_table = Path(context.output_path) / "simulation_table--optim-nb-1.csv"
-    if simulation_table.exists():
-        context.moh = modeler_output_handler(simulation_table)
+    # for hybrid studies: support both legacy and newer naming conventions for simulation table files
+    # legacy name used historically
+    legacy = Path(context.output_path) / "simulation_table--optim-nb-1.csv"
+    # newer studies may produce files like "simulation-table-<week>-optim-nb-<n>.csv"
+    candidates = list(Path(context.output_path).glob("simulation-table*-optim-nb-*.csv")) + \
+                 list(Path(context.output_path).glob("simulation_table*-optim-nb-*.csv"))
+    if candidates:
+        # prefer week 0 or week 1 optim-nb-1 files when available, else pick the first candidate
+        chosen = None
+        for pref in ("-0-optim-nb-1", "-1-optim-nb-1"):
+            for p in candidates:
+                if pref in p.name:
+                    chosen = p
+                    break
+            if chosen:
+                break
+        if not chosen:
+            chosen = candidates[0]
+        context.moh = modeler_output_handler(chosen)
 
 
 def init_simulation(context):
@@ -332,9 +349,11 @@ def parse_output_folder_from_logs(logs: bytes) -> str:
             return line.split(b'Output folder : ')[1].decode('ascii')
     raise LookupError("Could not parse output folder in output logs")
 
+
 def make_values_from_string(values: str):
     list_values = [float(number.strip()) for number in values.split(",")]
     return list_values
+
 
 def check_week_ts_has_daily_values(week_ts, list_daily_values):
     split_ts = np.array_split(week_ts, NB_DAYS_IN_WEEK)
@@ -615,6 +634,7 @@ def check_max_generation_from_capacity_exists(context, area, cluster):
         assert week_hours == list(
             hours_mapped_to_constraints.keys()), f"MaxGenerationFromCapacity::area<{area}>::ThermalCluster<{cluster}>:: constraint does not match time steps [{week_hours[0]}, {week_hours[-1]}] in {mps_file}"
 
+
 @then('for first week, area balance RHS (for area {area}) is first {values_str}, then equals constant {constant_str}')
 def check_area_balance_rhs(context, area, values_str, constant_str):
     list_values = make_values_from_string(values_str)
@@ -624,7 +644,8 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
     assert mps_file_path, f"No output file named problem-1-1--optim-nb-1.mps"
 
     mps_problem = mpu.load_problem(mps_file_path)
-    balanced_constraints = [c for c in mps_problem.get_linear_constraints() if c.name.startswith(f"AreaBalance::area<{area}>")]
+    balanced_constraints = [c for c in mps_problem.get_linear_constraints() if
+                            c.name.startswith(f"AreaBalance::area<{area}>")]
 
     failures = []
 
@@ -646,6 +667,7 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
 
     if failures:
         raise AssertionError("Area balance RHS check failed with the following errors:\n" + "\n".join(failures))
+
 
 @then(
     'enforces: DispatchableProduction {expression} < {rhs} for the thermal capacity connection between GEMS and the {cluster} thermal cluster in area {area}.')
