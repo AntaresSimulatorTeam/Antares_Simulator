@@ -34,6 +34,7 @@ private:
     void setMaxEnsLoadConstraints(ConstraintBuilder& builder);
     void setBindingConstraints(ConstraintBuilder& builder);
     void setFlowBasedConstraints(ConstraintBuilder& builder);
+    void setGemsConservationConstraint(ConstraintBuilder& builder);
 };
 
 } // namespace Antares::Solver::Optimization

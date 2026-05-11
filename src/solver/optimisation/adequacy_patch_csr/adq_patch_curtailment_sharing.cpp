@@ -4,8 +4,7 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <cmath>
-
-#include <pi_constantes_externes.h>
+#include <spx_constantes_externes.h>
 
 #include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/count_constraints_variables.h"
@@ -15,7 +14,6 @@
 #include "solve_problem.h"
 
 using namespace Yuni;
-
 namespace
 {
 // Thin CsrProblemBuilder implementation that assigns consecutive column indices
@@ -108,6 +106,12 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
         Interco = problemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }
 
+    if (problemeHebdo->modelerData)
+    {
+        netPositionInit += problemeHebdo->ResultatsHoraires[Area]
+                             .ValeursHorairesNetechangeModeler[hour];
+    }
+
     double ensInit = problemeHebdo->ResultatsHoraires[Area]
                        .ValeursHorairesDeDefaillancePositive[hour];
     if (!setNTCOutsideToInsideToZero)
@@ -142,6 +146,7 @@ void HourlyCSRProblem::calculateCsrParameters()
               adqPatchParams_.setToZeroOutsideInsideLinks,
               Area,
               hour);
+
             double ensInit = problemeHebdo_->ResultatsHoraires[Area]
                                .ValeursHorairesDeDefaillancePositive[hour];
             double spillageInit = problemeHebdo_->ResultatsHoraires[Area]
@@ -176,8 +181,9 @@ void HourlyCSRProblem::buildProblemVariables()
         CsrColumnAllocator allocator(problemeAResoudre_,
                                      problemeAResoudre_.NombreDeVariables);
         rtd->gemsCsrAdapter->registerExtraVariables(allocator);
-        // NombreDeVariables is NOT updated here; it was set to the total count
-        // (legacy + extra) by countVariables() in allocateProblem().
+        // constructVariableENS() reset NombreDeVariables to 0 and rebuilt it to
+        // the legacy count; advance it past the GEMS extra columns now.
+        problemeAResoudre_.NombreDeVariables += rtd->gemsCsrAdapter->countExtraVariables();
     }
 }
 
@@ -238,7 +244,7 @@ void HourlyCSRProblem::solveProblem(uint week, int year, const OptimizationOptio
 }
 
 void HourlyCSRProblem::run(uint week, uint year)
-{
+{   
     mcYear_ = static_cast<int>(year);
     calculateCsrParameters();
     buildProblemVariables();

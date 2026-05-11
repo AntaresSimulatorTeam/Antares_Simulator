@@ -92,6 +92,9 @@ set(TARGET_LIBS #No alias
         # executable
         antares-solver
 
+        # gems adapter
+        gems-csr-adapter
+
         # modeler libs
         antlr-interface
         system-model-base
@@ -115,7 +118,6 @@ set(TARGET_LIBS #No alias
         enums
         modeler-checks
 	structured-linear-problem
-        gems-csr-adapter
 )
 
 install(TARGETS ${TARGET_LIBS}

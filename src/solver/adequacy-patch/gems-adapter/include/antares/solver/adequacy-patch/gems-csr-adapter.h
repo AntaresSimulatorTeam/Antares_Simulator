@@ -35,6 +35,16 @@ struct CsrRow
     CsrRowSense sense;
 };
 
+// Per-area GEMS exchange contribution used to build CSR area balance constraints.
+// coefficient is the sign of the GEMS variable in the area balance:
+//   ENS_A - Spilled_A + coefficient * csrColumn_variable = RHS_A
+struct AreaFlowContribution
+{
+    std::string areaName;
+    int csrColumn;
+    double coefficient; // +1.0 or -1.0 from port field definition sign
+};
+
 class CsrProblemBuilder
 {
 public:
@@ -59,9 +69,17 @@ public:
     void registerExtraVariables(CsrProblemBuilder& builder);
     std::vector<CsrRow> rowsForHour(int hour, int mcYear) const;
     int countMatchingConstraints() const;
-    // Returns the number of extra LP columns registerExtraVariables() will allocate
-    // (variables not already mapped to a CSR area column via portToAreaConnections).
+    // Returns the number of extra LP columns registerExtraVariables() will allocate.
     int countExtraVariables() const;
+    // Returns true if any area-connected port field definitions were found.
+    // Usable before registerExtraVariables() (based on constructor-time scan).
+    bool hasAreaFlowContributions() const { return !pendingAreaFlows_.empty(); }
+    // Returns per-area GEMS exchange contributions for the CSR area balance.
+    // Only valid after registerExtraVariables() has been called.
+    const std::vector<AreaFlowContribution>& areaFlowContributions() const
+    {
+        return areaFlowContribs_;
+    }
 
 private:
     using VarKey = std::pair<std::string, unsigned int>; // (componentId, varIndex)
@@ -72,7 +90,15 @@ private:
         double constant = 0.0;
     };
 
+    struct PendingAreaFlow
+    {
+        std::string areaName;
+        VarKey varKey;
+        double sign; // +1.0 (direct VariableNode) or -1.0 (NegationNode)
+    };
+
     void buildAreaVarMap();
+    void buildAreaFlowMap();
 
     double resolveParameter(const ModelerStudy::SystemModel::Component& component,
                             const std::string& paramName,
@@ -94,7 +120,10 @@ private:
     CsrProblemContext csrCtx_;
     std::regex constraintFilter_;
     std::map<VarKey, int> varIdToColIdx_;
+    std::vector<PendingAreaFlow> pendingAreaFlows_;
+    std::vector<AreaFlowContribution> areaFlowContribs_;
     bool extraVarsRegistered_ = false;
+    int extraVarCount_ = 0;
 };
 
 } // namespace Antares::AdequacyPatch

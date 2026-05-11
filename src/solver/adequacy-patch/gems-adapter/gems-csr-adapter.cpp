@@ -60,14 +60,12 @@ void GemsCsrAdapter::buildAreaVarMap()
 
         for (const auto& [portId, areaName] : portToArea)
         {
-            auto areaIt = csrCtx_.areaToColumnIndex->find(areaName);
-            if (areaIt == csrCtx_.areaToColumnIndex->end())
+            if (csrCtx_.areaToColumnIndex->find(areaName) == csrCtx_.areaToColumnIndex->end())
             {
                 logs.warning() << "[gems-csr-adapter] Area '" << areaName << "' (component '"
                                << component.Id() << "') not in CSR context, skipping";
                 continue;
             }
-            int csrCol = areaIt->second;
 
             for (const auto& [key, pfd] : pfDefs)
             {
@@ -76,24 +74,49 @@ void GemsCsrAdapter::buildAreaVarMap()
                     continue;
                 }
                 const auto* root = pfd.Definition().RootNode();
-                const auto* varNode
-                  = dynamic_cast<const Expressions::Nodes::VariableNode*>(root);
-                if (!varNode)
+
+                // Direct VariableNode: sign = +1
+                if (const auto* varNode
+                    = dynamic_cast<const Expressions::Nodes::VariableNode*>(root))
                 {
-                    continue;
+                    VarKey vk{component.Id(), varNode->Index()};
+                    pendingAreaFlows_.push_back({areaName, vk, +1.0});
                 }
-                VarKey vk{component.Id(), varNode->Index()};
-                varIdToColIdx_.emplace(vk, csrCol);
+                // NegationNode(VariableNode): sign = -1
+                else if (const auto* neg
+                         = dynamic_cast<const Expressions::Nodes::NegationNode*>(root))
+                {
+                    if (const auto* varNode
+                        = dynamic_cast<const Expressions::Nodes::VariableNode*>(neg->child()))
+                    {
+                        VarKey vk{component.Id(), varNode->Index()};
+                        pendingAreaFlows_.push_back({areaName, vk, -1.0});
+                    }
+                }
             }
         }
     }
-    // areaToColumnIndex is only needed to seed varIdToColIdx_; null it out so the
-    // stored pointer does not dangle after the caller's local variable goes out of scope.
     csrCtx_.areaToColumnIndex = nullptr;
+}
+
+void GemsCsrAdapter::buildAreaFlowMap()
+{
+    for (const auto& pending : pendingAreaFlows_)
+    {
+        auto it = varIdToColIdx_.find(pending.varKey);
+        if (it != varIdToColIdx_.end())
+        {
+            areaFlowContribs_.push_back({pending.areaName, it->second, pending.sign});
+            logs.debug() << "[gems-csr-adapter] Area '" << pending.areaName
+                         << "' GEMS exchange → CSR col " << it->second
+                         << " (coeff " << pending.sign << ")";
+        }
+    }
 }
 
 void GemsCsrAdapter::registerExtraVariables(CsrProblemBuilder& builder)
 {
+    int count = 0;
     for (const auto& component : system_.Components())
     {
         const auto* model = component.getModel();
@@ -128,9 +151,17 @@ void GemsCsrAdapter::registerExtraVariables(CsrProblemBuilder& builder)
             static constexpr double kInf = 1e20;
             int col = builder.allocateColumn(colName, -kInf, kInf);
             varIdToColIdx_[vk] = col;
+            ++count;
             logs.debug() << "[gems-csr-adapter] Allocated CSR column " << col
                          << " for variable '" << colName << "'";
         }
+    }
+    // Only record the count on the first registration; re-entries allocate 0 new
+    // columns (all are already in varIdToColIdx_) and must not clobber the count.
+    if (!extraVarsRegistered_)
+    {
+        extraVarCount_ = count;
+        buildAreaFlowMap();
     }
     extraVarsRegistered_ = true;
 }
@@ -357,6 +388,12 @@ bool GemsCsrAdapter::buildRow(const Expressions::Nodes::Node* root,
 
 int GemsCsrAdapter::countExtraVariables() const
 {
+    // After registration the map is fully populated, so the loop below would
+    // find nothing.  Return the count captured during registerExtraVariables().
+    if (extraVarsRegistered_)
+    {
+        return extraVarCount_;
+    }
     int count = 0;
     for (const auto& component : system_.Components())
     {
