@@ -407,7 +407,7 @@ jobs:
 
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
+      if: github.ref == 'refs/heads/develop' && env.IS_RELEASE != 'true'
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
