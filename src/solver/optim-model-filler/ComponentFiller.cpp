@@ -272,11 +272,7 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
     }
 
     const auto& scenario = scenarioGroupRepo_.scenario(component_.getScenarioGroupId());
-    Visitors::EvalVisitor evaluator(optimEntityContainer_,
-                                    ctx,
-                                    component_,
-                                    data_,
-                                    scenario);
+    Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_, data_, scenario);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())
