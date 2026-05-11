@@ -167,7 +167,7 @@ void addConstraintEntries(SimulationTable& simulationTable,
                           const ModelerStudy::SystemModel::Component& component,
                           const OptimEntityContainer& optimEntityContainer,
                           const LinearProblemApi::ILinearProblemData* data,
-                          const LinearProblemApi::IScenario* scenario,
+                          const LinearProblemApi::IScenario& scenario,
                           unsigned currentBlock,
                           const TimeConversionMode& timeConversionMode,
                           unsigned year,
@@ -430,7 +430,7 @@ void FillSimulationTable(SimulationTable& simulationTable,
         const auto& scenario = modelerData.scenarioGroupRepository.scenario(
           component.getScenarioGroupId());
 
-        Visitors::EvalVisitor evalVisitor(optimContainer, fillContext, component, data, &scenario);
+        Visitors::EvalVisitor evalVisitor(optimContainer, fillContext, component, data, scenario);
         Visitors::VariabilityVisitor variabilityVisitor(optimContainer, component, data, &scenario);
 
         addVariableEntries(simulationTable,
@@ -448,7 +448,7 @@ void FillSimulationTable(SimulationTable& simulationTable,
                              component,
                              optimContainer,
                              data,
-                             &scenario,
+                             scenario,
                              currentBlock,
                              timeConversionMode,
                              year,

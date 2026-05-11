@@ -37,10 +37,10 @@ ReadLinearExpressionVisitor::ReadLinearExpressionVisitor(
     optimEntityContainer_(optimEntityContainer),
     component_(component),
     scenarioGroupRepo_(scenarioGroupRepo),
-    scenario_(&scenarioGroupRepo.scenario(component.getScenarioGroupId())),
-    evalContext_(&component, data, scenario_),
-    fillContext_(fillContext),
+    scenario_(scenarioGroupRepo.scenario(component.getScenarioGroupId())),
     evalVisitor_(optimEntityContainer, fillContext, component, data, scenario_),
+    evalContext_(&component, data, &scenario_),
+    fillContext_(fillContext),
     data_(data),
     nbtimeSteps_(fillContext.getLocalNumberOfTimeSteps())
 {
