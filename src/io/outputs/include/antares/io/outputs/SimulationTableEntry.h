@@ -11,11 +11,11 @@ namespace Antares::IO::Outputs
 {
 struct SimulationTableEntry
 {
-    unsigned int block;
+    unsigned block;
     std::optional<std::string> component;
     std::string output;
-    std::optional<unsigned int> absolute_time_index;
-    std::optional<unsigned int> block_time_index;
+    std::optional<unsigned> absolute_time_index;
+    std::optional<unsigned> block_time_index;
     unsigned scenario_index;
     std::optional<double> value;
     std::optional<Antares::Optimisation::LinearProblemApi::MipBasisStatus> status;

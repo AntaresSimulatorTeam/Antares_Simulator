@@ -13,17 +13,17 @@ std::pair<std::string, std::string> OptimisationsSimulationTable::moveBuffers()
 {
     std::pair<std::string, std::string> result{std::move(firstOptimBuffer_),
                                                std::move(secondOptimBuffer_)};
-    clear();
+    clear(); // gp : if we move, buffers get cleared, so no need to clear again.
     return result;
 }
 
 void OptimisationsSimulationTable::write()
 {
-    firstOptimSimulationTable_.write();
+    firstOptimSimulationTable_.writeToBuffer();
     firstOptimBuffer_ += firstOptimSimulationTable_.buffer();
     firstOptimSimulationTable_.clear();
 
-    secondOptimSimulationTable_.write();
+    secondOptimSimulationTable_.writeToBuffer();
     secondOptimBuffer_ += secondOptimSimulationTable_.buffer();
     secondOptimSimulationTable_.clear();
 }
@@ -35,17 +35,17 @@ void OptimisationsSimulationTable::writeTo(const std::string& filePrefix,
     writer.addEntryFromBuffer(filePrefix + "--optim-nb-2.csv", secondOptimBuffer_);
 }
 
-ISimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
+SimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
 {
     return &firstOptimSimulationTable_;
 }
 
-ISimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
+SimulationTable* OptimisationsSimulationTable::secondOptimSimulationTable()
 {
     return &secondOptimSimulationTable_;
 }
 
-std::string OptimisationsSimulationTable::getHeader() const
+std::string OptimisationsSimulationTable::headerCsvFormat() const
 {
-    return firstOptimSimulationTable_.getHeader();
+    return firstOptimSimulationTable_.headerCsvFormat();
 }

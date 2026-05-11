@@ -6,25 +6,52 @@ find_package(Parquet REQUIRED)
 find_package(Arrow REQUIRED)
 
 add_library(parquet_writer SHARED
+        include/antares/writer/i_table_writer.h
+        i_table_writer.cpp
+        include/antares/writer/table_writer_factory.h
+        private/parquet_arrow_utils.h
+        private/columnToArrowAdapter.h
+        columnToArrowAdapter.cpp
+        table_writer_factory.cpp
         parquet_table_writer.cpp
-        parquet_table_writer.h)
+        private/parquet_table_writer.h
+        csv_table_writer.cpp
+        private/csv_table_writer.h
+)
 
-generate_export_header(parquet_writer)
+generate_export_header(parquet_writer
+    BASE_NAME SIMULATION_TABLE_WRITERS
+    EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
+)
 
 set_target_properties(parquet_writer PROPERTIES
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN YES
 )
 
+set_target_properties(parquet_writer PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+
 target_include_directories(parquet_writer
     PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated parquet_writer_export.h
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
 
 target_link_libraries(parquet_writer
+  PUBLIC
+  Antares::simulation-table
+  Antares::exception
   PRIVATE
+  # Keep Arrow/Parquet inside libparquet_writer to avoid re-linking their static
+  # objects into consumers, which can double-register/destroy generated globals.
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
+
+add_library(Antares::parquet_writer ALIAS parquet_writer)
 
 add_library(result_writer
         # Helper class
@@ -35,12 +62,15 @@ add_library(result_writer
         # Immediate file writer (private)
         # Table writers (public API + implementations)
         csv_table_writer.cpp
-        csv_table_writer.h
+        private/csv_table_writer.h
+        i_table_writer.cpp
         ensure_queue_started.cpp
         immediate_file_writer.cpp
         in_memory_writer.cpp
+        null_result_writer.cpp
         include/antares/writer/i_table_writer.h
         include/antares/writer/in_memory_writer.h # Public (for tests)
+        include/antares/writer/null_result_writer.h
         include/antares/writer/result_format.h
         include/antares/writer/table_format.h
         include/antares/writer/table_writer_factory.h
@@ -58,12 +88,14 @@ add_library(Antares::result_writer ALIAS result_writer)
 target_include_directories(result_writer
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>  # For the generated simulation-table-writers_export.h
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/private
 )
 
 target_link_libraries(result_writer
         PUBLIC
+        Antares::exception
         Antares::benchmarking
         yuni-static-core
         # parquet_writer is a SHARED library (DLL on Windows). Since result_writer
@@ -82,10 +114,14 @@ target_link_libraries(result_writer
 
 install(TARGETS parquet_writer
         RUNTIME DESTINATION bin    # .dll on Windows
-        LIBRARY DESTINATION lib    # .so on Linux
+        LIBRARY DESTINATION bin    # .so on Linux, kept next to executables for runtime loading
         ARCHIVE DESTINATION lib    # .lib import library on Windows
 )
 
 install(DIRECTORY include/antares
         DESTINATION "include"
+)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
+        DESTINATION "include/antares/writer"
 )

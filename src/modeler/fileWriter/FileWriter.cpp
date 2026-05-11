@@ -4,19 +4,24 @@
 #include "antares/solver/modeler/fileWriter/FileWriter.h"
 
 #include <antares/logs/logs.h>
-#include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
-#include <antares/optimisation/linear-problem-mpsolver-impl/mipSolution.h>
-#include <antares/solver/optim-model-filler/Dimensions.h>
-#include <antares/study/system-model/component.h>
-#include "antares/io/outputs/SimulationTableCsvFile.h"
-#include "antares/io/outputs/SimulationTableGenerator.h"
+#include <antares/writer/table_writer_factory.h>
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/utils/utils.h"
+
+using namespace Antares::IO::Outputs;
+using namespace Antares::Writer;
+namespace fs = std::filesystem;
 
 namespace Antares::Solver
 {
 void FileWriter::init(const std::string& time)
 {
+    if (time.empty())
+    {
+        throw Modeler::ModelerError("Time identifier cannot be empty. Exiting simulation.");
+    }
+
     outputPath_ = studyPath_ / "output" / time;
 
     // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
@@ -26,12 +31,15 @@ void FileWriter::init(const std::string& time)
     }
 
     logs.info() << "Output folder : " << outputPath_;
-    if (!std::filesystem::is_directory(outputPath_)
-        && !std::filesystem::create_directories(outputPath_))
+    if (!fs::is_directory(outputPath_) && !fs::create_directories(outputPath_))
     {
-        throw Solver::Modeler::ModelerError(
-          "Failed to create output directory. Exiting simulation.");
+        throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
     }
+
+    output_file_ = outputPath_ / "simulation_table";
+
+    writer_ = makeTableWriter(fmt_, output_file_);
+    logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
 const std::filesystem::path& FileWriter::outputPath() const
@@ -39,29 +47,14 @@ const std::filesystem::path& FileWriter::outputPath() const
     return outputPath_;
 }
 
-void FileWriter::writeSimulationTable(
-  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-  const Optimisation::LinearProblemApi::IMipSolution& solution,
-  const ModelerData& modelerData,
-  const Optimisation::OptimEntityContainer& variableContainer,
-  const Optimisation::LinearProblemApi::FillContext& fillContext,
-  const std::string& simulationTableName) const
+void FileWriter::writeSimulationTable(SimulationTable& SimulationTable) const
 {
-    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, simulationTableName);
-    IO::Outputs::FillSimulationTable(simulationTable,
-                                     linearProblem,
-                                     solution.getObjectiveValue(),
-                                     modelerData,
-                                     variableContainer,
-                                     fillContext,
-                                     0,
-                                     IO::Outputs::TimeConversionMode::SingleBlock);
-    simulationTable.writeHeader();
-    simulationTable.write();
+    writer_->writeTable(SimulationTable);
 }
 
-FileWriter::FileWriter(std::filesystem::path path):
-    studyPath_(std::move(path))
+FileWriter::FileWriter(const std::filesystem::path& studyPath, Writer::TableFormat fmt):
+    studyPath_(studyPath),
+    fmt_(fmt)
 {
 }
 

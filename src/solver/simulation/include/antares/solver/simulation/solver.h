@@ -113,8 +113,6 @@ public:
     std::reference_wrapper<ISimulationObserver> simulationObserver_;
     void storeYearBuffers(uint year, std::string&& firstBuffer, std::string&& secondBuffer);
     void aggregateAndWriteSimulationTables();
-
-    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
 }; // class ISimulation
 } // namespace Antares::Solver::Simulation
 

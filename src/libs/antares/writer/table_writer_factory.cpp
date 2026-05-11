@@ -21,23 +21,21 @@
 
 #include "include/antares/writer/table_writer_factory.h"
 
-#include "csv_table_writer.h"
-#include "parquet_table_writer.h"
+#include "private/csv_table_writer.h"
+#include "private/parquet_table_writer.h"
+
+namespace fs = std::filesystem;
 
 namespace Antares::Writer
 {
 
-ITableWriter::Ptr makeTableWriter(TableFormat fmt)
+ITableWriter::Ptr makeTableWriter(TableFormat fmt, fs::path& filePath)
 {
-    switch (fmt)
+    if (fmt == TableFormat::Parquet)
     {
-    case TableFormat::CSV:
-        return std::make_shared<CsvTableWriter>();
-    case TableFormat::Parquet:
-        return std::make_shared<ParquetTableWriter>();
+        return std::make_shared<ParquetTableWriter>(filePath);
     }
-    // Fallback to CSV
-    return std::make_shared<CsvTableWriter>();
+    return std::make_shared<CsvTableWriter>(filePath);
 }
 
 } // namespace Antares::Writer

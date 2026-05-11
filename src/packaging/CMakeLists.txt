@@ -113,7 +113,8 @@ set(TARGET_LIBS #No alias
         data-series-csv-importer
         expressions-iterators
         additional-constraint-rhs-antlr-interface
-        modeler-simulation-table
+		simulation-table
+        simu-table-generator
         scenario-builder-antlr
         scenario-group-parser
         yml-optim-config

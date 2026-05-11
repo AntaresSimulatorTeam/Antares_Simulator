@@ -227,7 +227,7 @@ target_link_libraries(model_antares
         # modeler
         Antares::optim-model-filler
         Antares::antares-study-system-model
-        Antares::modeler-simulation-table
+        Antares::simu-table-generator
         Boost::headers
 )
 

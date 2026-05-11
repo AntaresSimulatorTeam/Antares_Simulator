@@ -18,7 +18,6 @@
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
 #include "antares/config/config.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
@@ -152,6 +151,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
+
+        study.parameters.parquetFmtForSimuTables = pSettings.parquetFmtForSimuTables;
 
         if (pSettings.forceZipOutput)
         {

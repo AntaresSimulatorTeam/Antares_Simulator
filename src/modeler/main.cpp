@@ -9,13 +9,30 @@
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/simulation/solver.h"
+#include "antares/writer/table_format.h"
 
 using namespace Antares;
 
 static void usage()
 {
     std::cout << "Usage:\n"
-              << "antares-modeler <path/to/study>\n";
+              << "antares-modeler <path/to/study> [--parquet]\n";
+}
+
+Writer::TableFormat getTableFormat(int argc, const char** argv)
+{
+    if (argc <= 2)
+    {
+        return Writer::TableFormat::CSV;
+    }
+
+    std::string parquetOption = argv[2];
+    if (parquetOption == "--parquet")
+    {
+        return Writer::TableFormat::Parquet;
+    }
+
+    return Writer::TableFormat::CSV;
 }
 
 int main(int argc, const char** argv)
@@ -28,7 +45,10 @@ int main(int argc, const char** argv)
         return EXIT_FAILURE;
     }
 
+    // Options parsing
     std::filesystem::path studyPath(argv[1]);
+    Writer::TableFormat tableFormat = getTableFormat(argc, argv);
+
     logs.info() << "Study path: " << studyPath;
 
     if (!std::filesystem::is_directory(studyPath))
@@ -40,7 +60,7 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        FileWriter writer(studyPath);
+        FileWriter writer(studyPath, tableFormat);
         Modeler modeler(loader, writer);
         modeler.run();
     }

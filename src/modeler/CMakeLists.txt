@@ -18,7 +18,7 @@ target_link_libraries(antares-modeler
         Antares::modeler-optimisation-container
         Antares::modeler-lib
         Antares::load-modeler-files
-        Antares::modeler-simulation-table
+        Antares::simu-table-generator
         Antares::write-modeler-files
         Antares::logs)
 
