@@ -114,7 +114,7 @@ target_link_libraries(result_writer
 
 install(TARGETS parquet_writer
         RUNTIME DESTINATION bin    # .dll on Windows
-        LIBRARY DESTINATION lib    # .so on Linux
+        LIBRARY DESTINATION bin    # .so on Linux, kept next to executables for runtime loading
         ARCHIVE DESTINATION lib    # .lib import library on Windows
 )
 
@@ -125,4 +125,3 @@ install(DIRECTORY include/antares
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
         DESTINATION "include/antares/writer"
 )
-

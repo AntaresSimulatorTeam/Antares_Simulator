@@ -44,10 +44,9 @@ std::vector<std::shared_ptr<BindingConstraint>> BindingConstraintLoader::load(En
     if (!bc->pEnabled)
     {
         /// This BC won't be used, return it without loading time series
-        logs.info() << "DEBUG: BC " << bc->name() << " is disabled, skipping time series";
+        logs.debug() << "BC " << bc->name() << " is disabled, skipping time series loading";
         return {bc};
     }
-    logs.info() << "DEBUG: BC " << bc->name() << " is enabled, loading time series";
     return loadByOperator(env, bc);
 }
 
