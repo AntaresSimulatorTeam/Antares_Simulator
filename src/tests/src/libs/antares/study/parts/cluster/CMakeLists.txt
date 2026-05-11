@@ -3,3 +3,4 @@ add_boost_test(test-cluster-series
   LIBS
   Antares::study
   test_utils_unit)
+  

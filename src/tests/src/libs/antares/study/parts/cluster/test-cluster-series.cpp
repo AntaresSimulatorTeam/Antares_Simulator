@@ -15,8 +15,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <antares/antares/constants.h>
-#include <antares/study/study.h>
 #include <antares/study/parts/thermal/cluster.h>
+#include <antares/study/study.h>
 
 using namespace Antares::Data;
 namespace fs = std::filesystem;
