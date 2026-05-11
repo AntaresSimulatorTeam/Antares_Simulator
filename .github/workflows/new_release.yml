@@ -94,16 +94,35 @@ jobs:
       run-tests: ${{ inputs.run-tests }}
       target_branch: ${{ inputs.target_branch }}
 
+  test_nr_commit_id:
+    name: Get Antares_Simulator_Tests_NR commit id
+    runs-on: ubuntu-22.04
+    needs: release
+    outputs:
+      tests_commit_hash: ${{ steps.get_test_commit.outputs.commit_hash }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Get Antares_Simulator_Tests_NR commit hash
+        id: get_test_commit
+        run: |
+          # Ensure the submodule is checked out
+          git submodule update --init src/tests/resources/Antares_Simulator_Tests_NR
+          # Get the commit hash for the specific submodule path
+          COMMIT_HASH=$(git ls-tree HEAD src/tests/resources/Antares_Simulator_Tests_NR | awk '{print $3}')
+          echo "commit_hash=${COMMIT_HASH}" >> "$GITHUB_OUTPUT"
+
   generate_results:
     name: Generate Results
     needs:
       - ubuntu
       - windows
+      - test_nr_commit_id
     # Only run this job if the `generate_results` input is true AND all the required build jobs succeeded.
     # If you'd like to generate results even when some builds fail, replace this condition with a less strict one
     # (for example, exclude some jobs) or add a new input like `allow_partial_results` to control that behavior.
     if: ${{ github.event.inputs.generate_results == 'true' && needs.ubuntu.result == 'success' && needs.windows.result == 'success' }}
-    # ASSUMPTION: we call the `main` ref of that repository. Change the ref if you prefer a tag or SHA.
     uses: AntaresSimulatorTeam/SimTest/.github/workflows/generate-reference.yml@main
     permissions:
       contents: write
@@ -112,7 +131,7 @@ jobs:
       # Map inputs expected by the external reusable workflow
       release_tag: ${{ github.event.inputs.release_tag }}
       antares_tag: ${{ github.event.inputs.release_tag }}
-      antares_tests_tag: ''
+      antares_tests_tag: ${{ needs.test_nr_commit_id.outputs.tests_commit_hash }}
       target_branch: ''
     # Note: the external reusable workflow currently does not declare secrets in its 'workflow_call',
     # so we cannot pass SIMTEST_PAT here. If the remote workflow needs a PAT, update its 'on: workflow_call: secrets:'
