@@ -88,6 +88,14 @@ Feature: hybrid (simulator+modeler) studies
     And the message "Scenario-independent variables are not supported in hybrid studies" is reported in the logs
 
   @fast @short
+  Scenario: Invalid study - balance-output-sign out of range
+    Given the solver study path is "Antares_Simulator_Tests_NR/invalid-studies/hybrid/Invalid balance-output-sign"
+    When I run antares simulator
+    Then the simulation fails
+    And the message "balance-output-sign" is reported in the logs
+    And the message "must be -1, 0, or 1" is reported in the logs
+
+  @fast @short
   Scenario: Two studies with same structure should have the same objective value at each time step
     Given the study path 1 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_fixed_load"
     And the study path 2 is "Antares_Simulator_Tests_NR/hybrid/14_1/five_steps_hybrid_flexible_load"

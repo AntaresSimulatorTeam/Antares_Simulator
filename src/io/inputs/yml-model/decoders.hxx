@@ -6,6 +6,9 @@
 
 #include "antares/io/inputs/yml-model/Library.h"
 
+#include <stdexcept>
+#include <string>
+
 #include "yaml-cpp/yaml.h"
 
 // Implement convert specializations
@@ -223,14 +226,24 @@ struct convert<Antares::IO::Inputs::YmlModel::PortType>
         }
         if (node["area-connection"].IsDefined())
         {
-            if (node["area-connection"].size() != 1)
+            for (const auto& entry: node["area-connection"])
             {
-                // Must have exactly one area connection field definition
-                return false;
-            }
-            for (const auto& field: node["area-connection"])
-            {
-                rhs.area_connection_injection_field = field["injection-field"].as<std::string>("");
+                if (entry["injection-field"].IsDefined())
+                {
+                    rhs.area_connection_injection_field = entry["injection-field"].as<std::string>(
+                      "");
+                }
+                if (entry["balance-output-sign"].IsDefined())
+                {
+                    int sign = entry["balance-output-sign"].as<int>();
+                    if (sign != -1 && sign != 0 && sign != 1)
+                    {
+                        throw std::invalid_argument(
+                          "balance-output-sign for port type \"" + rhs.id
+                          + "\" must be -1, 0, or 1, got " + std::to_string(sign));
+                    }
+                    rhs.balance_output_sign = sign;
+                }
             }
         }
         return true;

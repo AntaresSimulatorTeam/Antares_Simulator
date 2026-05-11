@@ -43,11 +43,26 @@ double ComponentToAreaResultFiller::evaluateExpressionAtTimestep(
 
 void ComponentToAreaResultFiller::fillAreaContributions(const FillContext& ctx)
 {
+    for (auto areaIndex = 0u; areaIndex < problemeHebdo_->ResultatsHoraires.size(); ++areaIndex)
+    {
+        for (auto ts = ctx.getLocalFirstTimeStep(); ts <= ctx.getLocalLastTimeStep(); ++ts)
+        {
+            problemeHebdo_->ResultatsHoraires[areaIndex].ValeursHorairesNetechangeModeler[ts] = 0.;
+        }
+    }
+
     for (const auto& component: modelerSystem_->Components())
     {
         for (const auto& [portId, areaId]: component.portToAreaConnections())
         {
-            auto field = component.getModel()->Ports().at(portId).Type().AreaConnectionFieldId();
+            const auto& portType = component.getModel()->Ports().at(portId).Type();
+            auto sign = portType.balanceOutputSign();
+            if (!sign.has_value() || sign.value() == 0)
+            {
+                continue;
+            }
+
+            auto field = portType.AreaConnectionFieldId();
             if (!field.has_value())
             {
                 continue;
@@ -71,9 +86,8 @@ void ComponentToAreaResultFiller::fillAreaContributions(const FillContext& ctx)
             for (auto ts = ctx.getLocalFirstTimeStep(); ts <= ctx.getLocalLastTimeStep(); ++ts)
             {
                 problemeHebdo_->ResultatsHoraires[areaIndex]
-                  .ValeursHorairesNetechangeModeler[ts] = evaluateExpressionAtTimestep(
-                  linearExpression,
-                  ts);
+                  .ValeursHorairesNetechangeModeler[ts] +=
+                  sign.value() * evaluateExpressionAtTimestep(linearExpression, ts);
             }
         }
     }

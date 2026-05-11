@@ -38,6 +38,7 @@ library:
         - id: connected_field
       area-connection:
         - injection-field: connected_field
+          balance-output-sign: 1
 
   models:
     - id: connected_model_through_vars

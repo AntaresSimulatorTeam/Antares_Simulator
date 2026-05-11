@@ -25,6 +25,7 @@ library:
         - id: flow
       area-connection:
         - injection-field: flow
+          balance-output-sign: 1
 
   models:
     - id: balance_node
