@@ -18,15 +18,16 @@ class EnvForLoading final
 {
 public:
     explicit EnvForLoading(AreaList& l, const StudyVersion& v):
+        section(nullptr),
         areaList(l),
         version(v)
     {
     }
 
     EnvForLoading(const EnvForLoading&) = default;
-    EnvForLoading& operator=(const EnvForLoading&) = default;
-    EnvForLoading(EnvForLoading&&) noexcept = default;
-    EnvForLoading& operator=(EnvForLoading&&) noexcept = default;
+    EnvForLoading& operator=(const EnvForLoading&) = delete;
+    EnvForLoading(EnvForLoading&&) noexcept = delete;
+    EnvForLoading& operator=(EnvForLoading&&) noexcept = delete;
 
     //! INI file
     std::filesystem::path iniFilename;
