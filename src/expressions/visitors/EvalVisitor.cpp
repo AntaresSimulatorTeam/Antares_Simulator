@@ -22,7 +22,7 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
                          const LinearProblemApi::ILinearProblemData* data,
-                         const LinearProblemApi::IScenario* scenario):
+                         const LinearProblemApi::IScenario& scenario):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
@@ -30,7 +30,7 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     component_(component),
     data_(data),
     scenario_(scenario),
-    evalContext_(&component, data, scenario),
+    evalContext_(&component, data, &scenario),
     fillContext_(fillContext)
 {
 }

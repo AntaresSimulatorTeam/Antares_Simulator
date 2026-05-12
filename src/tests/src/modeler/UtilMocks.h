@@ -476,13 +476,13 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
         optimEntityContainer.addFromSystemComponents(components);
         for (const auto& compo: components)
         {
+            const auto& scenario = scenarioGroupRepository.scenario(compo.getScenarioGroupId());
             defaultComponentEvalVisitor = std::make_unique<
               Antares::Expressions::Visitors::EvalVisitor>(optimEntityContainer,
                                                            ctx,
                                                            compo,
                                                            &data,
-                                                           &scenarioGroupRepository.scenario(
-                                                             compo.getScenarioGroupId()));
+                                                           scenario);
         }
     }
 
