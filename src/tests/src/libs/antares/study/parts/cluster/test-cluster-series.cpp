@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(disabled_thermal_cluster_skips_series_loading)
     fs::create_directories(working_tmp_dir / area->id / cluster->id());
 
     std::ofstream seriesFile(working_tmp_dir / area->id / cluster->id() / "series.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         seriesFile << "100\n";
     }
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(enabled_thermal_cluster_loads_series)
     fs::create_directories(working_tmp_dir / area->id / cluster->id());
 
     std::ofstream seriesFile(working_tmp_dir / area->id / cluster->id() / "series.txt");
-    for (int i = 0; i < HOURS_PER_YEAR; ++i)
+    for (unsigned int i = 0; i < HOURS_PER_YEAR; ++i)
     {
         seriesFile << "100\n";
     }
