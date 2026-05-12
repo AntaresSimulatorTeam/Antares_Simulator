@@ -2,7 +2,6 @@
 
 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
 [![Status][windows_ci_svg]][windows_ci_link]
-[![Status][centos_ci_svg]][centos_ci_link]
 [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AntaresSimulatorTeam_Antares_Simulator&metric=alert_status)](https://sonarcloud.io/dashboard?id=AntaresSimulatorTeam_Antares_Simulator)
 [![License: MPL v2](https://img.shields.io/badge/License-MPLv2-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
@@ -43,7 +42,6 @@ This software suite has been tested under:
 
 * Ubuntu 22.04 [![Status][ubuntu_ci_svg]][ubuntu_ci_link]
 * Microsoft Windows with Visual Studio 2022 (64-bit) [![Status][windows_ci_svg]][windows_ci_link]
-* Centos7 (deprecated) [![Status][centos_ci_svg]][centos_ci_link]
 * Oracle Linux 8 [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link]
 
 Build instructions [here](docs/developer-guide/3-Build.md)
@@ -71,14 +69,10 @@ For installation instructions, please visit the [documentation website](https://
 
 [windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml/badge.svg?branch=develop
 
-[centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml/badge.svg?branch=develop
-
 [ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml
 
 [oraclelinux_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml/badge.svg?branch=develop
 
 [windows_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml
-
-[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml
 
 [oraclelinux_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/oracle8.yml
