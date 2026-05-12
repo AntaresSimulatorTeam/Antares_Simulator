@@ -235,7 +235,7 @@ std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
     {
         return expr->accept(this);
     }
-    throw std::runtime_error("Invalid sum bound");
+    throw InputError("Invalid sum bound");
 }
 
 // sum(t+1, t+2, expr) => ShiftNode(nullptr, +1)
