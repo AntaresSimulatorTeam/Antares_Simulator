@@ -82,7 +82,7 @@ bool Economy::simulationBegin()
                                             pProblemesHebdo[numSpace],
                                             nbHoursInAWeek,
                                             numSpace);
-            if (study.parameters.reservesEnabled)
+            if (study.parameters.include.reserves)
             {
                 study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
             }

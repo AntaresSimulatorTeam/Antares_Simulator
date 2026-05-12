@@ -170,7 +170,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.SIM_ShortTermStorage.CostVariationWithdrawal.assign(shortTermStorageCount,
                                                                              0);
 
-        if (study.parameters.reservesEnabled)
+        if (study.parameters.include.reserves)
         {
             variablesMapping.reservesIndices.emplace();
             variablesMapping.reservesIndices.value().runningThermalClusterParticipation.assign(
@@ -260,7 +260,7 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);
 
-        if (study.parameters.reservesEnabled)
+        if (study.parameters.include.reserves)
         {
             problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.emplace();
             problem.CorrespondanceCntNativesCntOptim[k].reservesIndices.value().need.assign(
@@ -456,7 +456,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
     for (unsigned k = 0; k < nbPays; k++)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.enabledAndNotMustRunCount();
-        bool resEnabled = study.parameters.reservesEnabled;
+        bool resEnabled = study.parameters.include.reserves;
         const uint nbThermalReserveParticipations = resEnabled ? study.areas.byIndex[k]
                                                                    ->thermal.list
                                                                    .reserveParticipationsCount()

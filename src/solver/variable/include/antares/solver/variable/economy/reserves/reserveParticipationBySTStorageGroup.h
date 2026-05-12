@@ -80,7 +80,7 @@ public:
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
         // Get the number of potential group reserve participation
-        if (study->parameters.reservesEnabled)
+        if (study->parameters.include.reserves)
         {
             for (auto& [resName, setGroups]: area->allCapacityReservations->reserveGroupPartSTS)
             {
@@ -202,7 +202,7 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        if (state.study.parameters.reservesEnabled)
+        if (state.study.parameters.include.reserves)
         {
             auto& area = state.area;
             int column = 0;

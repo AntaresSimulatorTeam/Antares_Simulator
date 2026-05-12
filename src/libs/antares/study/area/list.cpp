@@ -613,7 +613,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Reserves
-    if (study.parameters.reservesEnabled)
+    if (study.parameters.include.reserves)
     {
         ret = accessForTests::loadReservesParameters(study.folderInput, area) && ret;
     }
@@ -685,7 +685,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                                                  study.parameters.compatibility.hydroPmax);
 
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
-            && study.parameters.reservesEnabled)
+            && study.parameters.include.reserves)
         {
             fs::path reservesHydroIniPath = study.folderInput / "hydro" / "common" / area.id
                                             / "reserves.ini";
@@ -723,7 +723,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.thermal.list.enableMustrunForEveryone();
         }
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
-            && study.parameters.reservesEnabled)
+            && study.parameters.include.reserves)
         {
             fs::path reservesThermal = study.folderInput / "thermal" / "clusters" / area.id
                                        / "reserves.ini";
@@ -740,7 +740,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.shortTermStorage.validate(studyVersion) && ret;
 
         if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
-            && study.parameters.reservesEnabled)
+            && study.parameters.include.reserves)
         {
             fs::path reservesIniFilePath = study.folderInput / "st-storage" / "clusters" / area.id
                                            / "reserves.ini";

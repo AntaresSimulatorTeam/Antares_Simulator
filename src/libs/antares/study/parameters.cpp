@@ -198,21 +198,6 @@ bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax& mode,
     return false;
 }
 
-bool StringToReservesEnabled(bool& reservesEnabled, const std::string& text)
-{
-    if (text.empty() || text == "disabled")
-    {
-        reservesEnabled = false;
-        return true;
-    }
-    else if (text == "enabled")
-    {
-        reservesEnabled = true;
-        return true;
-    }
-    return false;
-}
-
 bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCurves& mode,
                                           const std::string& text)
 {
@@ -343,6 +328,8 @@ void Parameters::reset()
     include.reserve.spinning = true;
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
+
+    include.reserves = false;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
@@ -517,10 +504,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to<bool>(d.yearByYear);
     }
 
-    if (key == "reserves")
-    {
-        return StringToReservesEnabled(d.reservesEnabled, value);
-    }
     return false;
 }
 
@@ -613,6 +596,10 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-primaryreserve")
     {
         return value.to<bool>(d.include.reserve.primary);
+    }
+    if (key == "include-reserves")
+    {
+        return value.to<bool>(d.include.reserves);
     }
 
     if (key == "include-exportmps")
@@ -1583,6 +1570,11 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (!include.reserve.primary)
     {
         logs.info() << "  :: ignoring primary reserves";
+    }
+    if (!include.reserves)
+    {
+        logs.info() << "  :: ignoring reserves (new implementation / not related to "
+                       "primary/strategic/spinning reserves)";
     }
     if (!include.reserve.strategic)
     {

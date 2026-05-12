@@ -65,7 +65,7 @@ public:
 
     bool hasIndexMapping(const Study& study, const Area* area) const
     {
-        return study.parameters.reservesEnabled
+        return study.parameters.include.reserves
                && !study.runtime.reserveParticipationIndexMaps.value()
                      .at(area->id)
                      .thermalClusters.empty();

@@ -226,7 +226,7 @@ public:
 
     double calculateReservesCost(const State& state)
     {
-        if (!state.study.parameters.reservesEnabled)
+        if (!state.study.parameters.include.reserves)
         {
             return 0.0;
         }

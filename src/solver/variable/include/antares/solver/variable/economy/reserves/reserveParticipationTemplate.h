@@ -83,7 +83,7 @@ public:
 
         // Get the count from derived class
         auto* derived = static_cast<DerivedType*>(this);
-        pSize = study->parameters.reservesEnabled ? derived->getSizeFromArea(study, area) : 0;
+        pSize = study->parameters.include.reserves ? derived->getSizeFromArea(study, area) : 0;
 
         if (pSize)
         {

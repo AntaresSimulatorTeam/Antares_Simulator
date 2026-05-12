@@ -80,7 +80,7 @@ public:
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the number of reserve participations
-        pSize = study->parameters.reservesEnabled ? getSizeFromArea(study, area) : 0;
+        pSize = study->parameters.include.reserves ? getSizeFromArea(study, area) : 0;
 
         if (pSize)
         {

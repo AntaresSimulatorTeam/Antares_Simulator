@@ -157,7 +157,7 @@ struct OneProblemWithReservesTwoAreas
         CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
-        study->parameters.reservesEnabled = true;
+        study->parameters.include.reserves = true;
 
         tmpCapacityReservationUp.type = ReserveType::UP;
         tmpCapacityReservationUp.unsuppliedCost = 1;

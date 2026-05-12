@@ -76,7 +76,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         r.counts.thermalPlants += area.thermal.list.enabledAndNotMustRunCount();
         r.counts.thermalPlantsMustRun += area.thermal.list.enabledAndMustRunCount();
 
-        if (study.parameters.reservesEnabled)
+        if (study.parameters.include.reserves)
         {
             r.counts.reserveParticipations += area.thermal.list.reserveParticipationsCount();
             r.counts.reserveParticipations += area.shortTermStorage.reserveParticipationsCount();

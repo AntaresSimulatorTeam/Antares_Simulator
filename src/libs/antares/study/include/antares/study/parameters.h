@@ -313,6 +313,9 @@ public:
 
         } reserve;
 
+        //! New implemention of reserves, not related to the primary/spinning/strategic reserves
+        bool reserves;
+
         struct Thermal
         {
             // Thermal cluster min stable power
@@ -481,8 +484,6 @@ bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text)
 
 const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
-
-bool StringToReservesEnabled(const std::string& text);
 
 } // namespace Antares::Data
 

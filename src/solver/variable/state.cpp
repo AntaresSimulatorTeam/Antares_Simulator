@@ -51,7 +51,7 @@ State::State(Data::Study& s):
     thermal(s.areas),
     simplexRunNeeded(true)
 {
-    if (study.parameters.reservesEnabled)
+    if (study.parameters.include.reserves)
     {
         reserveData.emplace(study.areas.size());
         for (const auto& area: study.areas | std::views::values)
@@ -154,7 +154,7 @@ void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex
 
     // Reserves
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
-        && study.parameters.reservesEnabled && STStorageCluster->reserveParticipationContainer)
+        && study.parameters.include.reserves && STStorageCluster->reserveParticipationContainer)
     {
         auto& resData = reserveData.value().at(area->index);
         for (const auto& [resID, resParticipation]:
@@ -189,7 +189,7 @@ void State::initFromHydro()
     auto& Hydro = area->hydro;
 
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
-        && study.parameters.reservesEnabled && Hydro.reserveParticipationContainer)
+        && study.parameters.include.reserves && Hydro.reserveParticipationContainer)
     {
         auto& resData = reserveData.value().at(area->index);
         for (const auto& [resID, resParticipation]:
@@ -287,7 +287,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
 
     // Reserves
     if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
-        && study.parameters.reservesEnabled && thermalCluster->reserveParticipationContainer)
+        && study.parameters.include.reserves && thermalCluster->reserveParticipationContainer)
     {
         auto& resData = reserveData.value().at(area->index);
         for (const auto& [reserveID, reserveParticipation]:

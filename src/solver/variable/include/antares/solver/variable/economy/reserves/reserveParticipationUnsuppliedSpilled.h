@@ -81,7 +81,7 @@ public:
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
         // Get the area
-        pSize = study->parameters.reservesEnabled
+        pSize = study->parameters.include.reserves
                   ? area->allCapacityReservations.value().areaCapacityReservations.size() * 2
                   : 0;
 
@@ -186,7 +186,7 @@ public:
         auto& area = state.area;
         int column = 0;
 
-        if (state.study.parameters.reservesEnabled)
+        if (state.study.parameters.include.reserves)
         {
             auto reserves = state.problemeHebdo->allReserves.value()[area->index];
             for (const auto& reserve: reserves.areaCapacityReservations)

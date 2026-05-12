@@ -439,6 +439,14 @@ _**This section is under construction**_
 - **Usage:** set this parameter to `true` if you want to activate primary reserve constraints
 
 ---
+#### include-reserves
+[//]: # (TODO: add details + link to contraints doc)
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** set this parameter to `true` if you want to activate the reserves constraints, this is not related to the basic implementation of primary/spinning/strategic reserves
+
+---
 #### include-exportmps
 [//]: # (TODO: in usage paragraph, add links to relevant doc of "first step" and "second step" of optimization)
 - **Expected value:** one of the following (case-insensitive):
