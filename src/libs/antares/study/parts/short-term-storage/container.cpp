@@ -274,24 +274,24 @@ uint STStorageInput::removeDisabledClusters()
     return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
 }
 
-std::pair<std::string, ReserveName> STStorageInput::reserveParticipationClusterAt(
+std::pair<std::string, ReserveID> STStorageInput::reserveParticipationClusterAt(
   const Area* area,
   unsigned int index) const
 {
     int globalReserveParticipationIdx = 0;
 
-    for (const auto& reserveName:
+    for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {
         for (auto& cluster: storagesByIndex)
         {
             if (cluster.reserveParticipationContainer
                 && cluster.reserveParticipationContainer.value().isParticipatingInReserve(
-                  reserveName))
+                  reserveID))
             {
                 if (globalReserveParticipationIdx == index)
                 {
-                    return {cluster.id, reserveName};
+                    return {cluster.id, reserveID};
                 }
                 globalReserveParticipationIdx++;
             }
@@ -302,21 +302,21 @@ std::pair<std::string, ReserveName> STStorageInput::reserveParticipationClusterA
                             "the reserve participations");
 }
 
-std::pair<std::string, ReserveName> STStorageInput::reserveParticipationGroupAt(
+std::pair<std::string, ReserveID> STStorageInput::reserveParticipationGroupAt(
   const Area* area,
   unsigned int index) const
 {
     int column = 0;
-    for (const auto& reserveName:
+    for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {
-        if (area->allCapacityReservations->reserveGroupPartSTS.contains(reserveName))
+        if (area->allCapacityReservations->reserveGroupPartSTS.contains(reserveID))
         {
-            for (auto group: area->allCapacityReservations->reserveGroupPartSTS.at(reserveName))
+            for (auto group: area->allCapacityReservations->reserveGroupPartSTS.at(reserveID))
             {
                 if (column == index)
                 {
-                    return {group, reserveName};
+                    return {group, reserveID};
                 }
                 column++;
             }

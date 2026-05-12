@@ -46,11 +46,9 @@ public:
               {
                   auto [participation, clusterName] = Derived::readCapacityReservationSection(
                     section);
-                  Derived::validateCapacityInputs(area.name,
-                                                  participation,
-                                                  clusterName,
-                                                  section.name);
-                  Derived::addCapacityReservation(area, participation, clusterName, section.name);
+                  std::string reserveId = transformNameIntoID(section.name);
+                  Derived::validateCapacityInputs(area.name, participation, clusterName, reserveId);
+                  Derived::addCapacityReservation(area, participation, clusterName, reserveId);
               }
           });
 
@@ -71,13 +69,13 @@ void static errorIfNegativeValue(const std::string& propertyName,
                                  double value,
                                  const std::string& areaName,
                                  const std::optional<std::string>& clusterName,
-                                 const std::string& reserveName)
+                                 const std::string& resserveID)
 {
     if (value < 0)
     {
         logs.error() << "in area " << areaName
                      << (clusterName.has_value() ? ", cluster: " + clusterName.value() : "")
-                     << ", reservation capacity in reserve: " << reserveName << ", " << propertyName
+                     << ", reservation capacity in reserve: " << resserveID << ", " << propertyName
                      << " can not be negative";
     }
 }
@@ -103,7 +101,7 @@ public:
     static void validateCapacityInputs(const std::string& areaName,
                                        const participation_type& rp,
                                        const std::optional<std::string>& clusterName,
-                                       const std::string& reserveName)
+                                       const std::string& reserveID)
     {
         if ((!clusterName || clusterName.value().empty())
             && !std::is_same<Derived, HydroReserveLoader>::value)
@@ -116,38 +114,38 @@ public:
                              rp.participationCost,
                              areaName,
                              clusterName,
-                             reserveName);
-        Derived::validateSpecificInputs(areaName, rp, clusterName.value_or(""), reserveName);
+                             reserveID);
+        Derived::validateSpecificInputs(areaName, rp, clusterName.value_or(""), reserveID);
     }
 
     static void addCapacityReservation(Area& area,
                                        participation_type& rp,
                                        const std::optional<std::string>& clusterName,
-                                       const std::string& reserveName)
+                                       const std::string& reserveID)
     {
-        const auto* reserve = area.allCapacityReservations.value().getReserveByName(reserveName);
+        const auto* reserve = area.allCapacityReservations.value().getReserveByID(reserveID);
         auto* cluster = Derived::findCluster(area, clusterName.value_or(""));
 
         if (!reserve || !cluster)
         {
-            Derived::reportMissing(area, reserveName, clusterName.value_or(""), reserve, cluster);
+            Derived::reportMissing(area, reserveID, clusterName.value_or(""), reserve, cluster);
             return;
         }
 
         rp.capacityReservation = reserve;
 
         auto& container = Derived::getContainer(cluster);
-        if (container && container->isParticipatingInReserve(reserveName))
+        if (container && container->isParticipatingInReserve(reserveID))
         {
-            Derived::duplicateParticipation(area.name, clusterName.value_or(""), reserveName);
+            Derived::duplicateParticipation(area.name, clusterName.value_or(""), reserveID);
         }
         else if (!container)
         {
             container.emplace();
         }
 
-        container->addReserveParticipation(reserveName, rp);
-        addGroupToResIndex(area, reserveName, cluster);
+        container->addReserveParticipation(reserveID, rp);
+        addGroupToResIndex(area, reserveID, cluster);
     }
 
     static void readSymmetrySection(Area& area, const IniFile::Section& section)
@@ -156,8 +154,16 @@ public:
         {
             std::string clusterName;
             TransformNameIntoID(p->key, clusterName);
-
             auto symGroups = Symmetries::makeGroupsOfSymmetries(p->value);
+            for (auto& symElems: symGroups)
+            {
+                std::set<std::string> transformed;
+                for (const auto& sym: symElems)
+                {
+                    transformed.insert(transformNameIntoID(sym));
+                }
+                symElems = std::move(transformed);
+            }
 
             auto* cluster = Derived::findCluster(area, clusterName);
             if (!cluster)
@@ -182,16 +188,16 @@ public:
 
 private:
     template<class ClusterT>
-    static void addGroupToResIndex(Area& area, const std::string& reserveName, ClusterT* cluster)
+    static void addGroupToResIndex(Area& area, const std::string& reserveID, ClusterT* cluster)
     {
         if constexpr (std::is_same_v<ClusterT, ShortTermStorage::STStorageCluster>)
         {
-            area.allCapacityReservations.value().reserveGroupPartSTS[reserveName].insert(
+            area.allCapacityReservations.value().reserveGroupPartSTS[reserveID].insert(
               cluster->getGroup());
         }
         else if constexpr (std::is_same_v<ClusterT, ThermalCluster>)
         {
-            area.allCapacityReservations.value().reserveGroupPartThermal[reserveName].insert(
+            area.allCapacityReservations.value().reserveGroupPartThermal[reserveID].insert(
               cluster->getGroup());
         }
     }
@@ -240,15 +246,15 @@ public:
     static void validateSpecificInputs(const std::string& areaName,
                                        const ThermalClusterReserveParticipation& rp,
                                        const std::string& clusterName,
-                                       const std::string& reserveName)
+                                       const std::string& reserveID)
     {
-        errorIfNegativeValue("max-power", rp.maxPower, areaName, clusterName, reserveName);
-        errorIfNegativeValue("max-power-off", rp.maxPowerOff, areaName, clusterName, reserveName);
+        errorIfNegativeValue("max-power", rp.maxPower, areaName, clusterName, reserveID);
+        errorIfNegativeValue("max-power-off", rp.maxPowerOff, areaName, clusterName, reserveID);
         errorIfNegativeValue("participation-cost-off",
                              rp.participationCostOff,
                              areaName,
                              clusterName,
-                             reserveName);
+                             reserveID);
     }
 
     static auto* findCluster(const Area& area, const std::string& name)
@@ -262,14 +268,14 @@ public:
     }
 
     static void reportMissing(const Area& area,
-                              const std::string& reserveName,
+                              const std::string& resserveID,
                               const std::string& clusterName,
                               bool reserveOK,
                               bool clusterOK)
     {
         if (!reserveOK)
         {
-            logs.error() << area.name << " : missing reserve " << reserveName
+            logs.error() << area.name << " : missing reserve " << resserveID
                          << " when loading thermal reserve participations";
         }
         if (!clusterOK)
@@ -281,10 +287,10 @@ public:
 
     static void duplicateParticipation(const std::string& areaName,
                                        const std::string& clusterName,
-                                       const std::string& reserveName)
+                                       const std::string& resserveID)
     {
         logs.error() << areaName << ", cluster " << clusterName
-                     << " : duplicate participation to reserve " << reserveName;
+                     << " : duplicate participation to reserve " << resserveID;
     }
 
     static void reportInvalidSymmetry(const Area& area, const std::string& clusterName)
@@ -338,18 +344,18 @@ public:
     static void validateSpecificInputs(const std::string& areaName,
                                        const StorageClusterReserveParticipation& rp,
                                        const std::string& clusterName,
-                                       const std::string& reserveName)
+                                       const std::string& reserveID)
     {
-        errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveName);
-        errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveName);
+        errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveID);
+        errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveID);
     }
 
     static void duplicateParticipation(const std::string& areaName,
                                        const std::string& clusterName,
-                                       const std::string& reserveName)
+                                       const std::string& reserveID)
     {
         logs.error() << areaName << ", cluster " << clusterName
-                     << " : duplicate participation to reserve " << reserveName;
+                     << " : duplicate participation to reserve " << reserveID;
     }
 
     static auto* findCluster(Area& area, const std::string& name)
@@ -363,14 +369,14 @@ public:
     }
 
     static void reportMissing(const Area& area,
-                              const std::string& reserveName,
+                              const std::string& reserveID,
                               const std::string& clusterName,
                               bool reserveOK,
                               bool clusterOK)
     {
         if (!reserveOK)
         {
-            logs.error() << area.name << ": missing reserve " << reserveName
+            logs.error() << area.name << ": missing reserve " << reserveID
                          << " when loading STS reserve participation";
         }
         if (!clusterOK)
@@ -426,17 +432,17 @@ public:
     static void validateSpecificInputs(const std::string& areaName,
                                        const StorageClusterReserveParticipation& rp,
                                        const std::string& clusterName,
-                                       const std::string& reserveName)
+                                       const std::string& reserveID)
     {
-        errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveName);
-        errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveName);
+        errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveID);
+        errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveID);
     }
 
     static void duplicateParticipation(const std::string& areaName,
                                        const std::string&,
-                                       const std::string& reserveName)
+                                       const std::string& reserveID)
     {
-        logs.error() << areaName << ", hydro: duplicate participation to reserve " << reserveName;
+        logs.error() << areaName << ", hydro: duplicate participation to reserve " << reserveID;
     }
 
     static auto* findCluster(Area& area, const std::string& clusterName)
@@ -455,14 +461,14 @@ public:
     }
 
     static void reportMissing(const Area& area,
-                              const std::string& reserveName,
+                              const std::string& resserveID,
                               const std::string&,
                               bool reserveOK,
                               bool)
     {
         if (!reserveOK)
         {
-            logs.error() << area.name << " : missing reserve " << reserveName
+            logs.error() << area.name << " : missing reserve " << resserveID
                          << " when loading hydro reserve participations";
         }
     }

@@ -107,17 +107,21 @@ public:
         uint hydros = 0;
     } counts;
 
+    //! Name of the reserve
     using ReserveName = std::string;
+    //! ID of a reserve, obtained by transforming its name
+    using ReserveID = std::string;
 
     struct ReserveIndexMap
     {
-        boost::bimap<std::pair<ReserveName, std::string>, int> thermalClusters;
-        boost::bimap<std::pair<ReserveName, std::string>, int> STStorageClusters;
-        boost::bimap<ReserveName, int> Hydro;
+        boost::bimap<std::pair<ReserveID, std::string>, int> thermalClusters;
+        boost::bimap<std::pair<ReserveID, std::string>, int> STStorageClusters;
+        boost::bimap<ReserveID, int> Hydro;
     };
 
     //! Map used to access reserves participation indices
     ReserveOpt<std::map<AreaName, ReserveIndexMap>> reserveParticipationIndexMaps;
+    ReserveOpt<std::map<ReserveID, ReserveName>> reserveIDToName;
 
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;

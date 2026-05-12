@@ -93,7 +93,7 @@ public:
     struct HydroReserveParticipationWithName
     {
         std::reference_wrapper<StorageClusterReserveParticipation> reserveParticipation;
-        std::string reserveName;
+        std::string reserveID;
     };
 
     static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
@@ -148,7 +148,7 @@ public:
 
     uint reserveParticipationsCount() const;
 
-    std::optional<ReserveName> reserveParticipationAt(const Area* area, unsigned int index) const;
+    std::optional<ReserveID> reserveParticipationAt(const Area* area, unsigned int index) const;
 
     uint count() const;
 

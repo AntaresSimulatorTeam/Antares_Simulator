@@ -77,10 +77,11 @@ public:
                              int precision,
                              unsigned int numSpace) const
     {
-        auto [reserveName, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
-                                            .value()
-                                            .at(results.data.area->id)
-                                            .thermalClusters.right.at(i);
+        auto [reserveID, clusterName] = results.data.study.runtime.reserveParticipationIndexMaps
+                                          .value()
+                                          .at(results.data.area->id)
+                                          .thermalClusters.right.at(i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
         results.variableCaption = reserveName + "_" + clusterName;
         results.variableUnit = VCardType::Unit();
         pValuesForTheCurrentYear[numSpace][i]

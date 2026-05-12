@@ -99,9 +99,10 @@ public:
                              int precision,
                              unsigned int numSpace) const
     {
-        const auto reserveName = results.data.study.runtime.reserveParticipationIndexMaps.value()
-                                   .at(results.data.area->id)
-                                   .Hydro.right.at(i);
+        const auto reserveID = results.data.study.runtime.reserveParticipationIndexMaps.value()
+                                 .at(results.data.area->id)
+                                 .Hydro.right.at(i);
+        auto reserveName = results.data.study.runtime.reserveIDToName.value().at(reserveID);
         results.variableCaption = reserveName + "_Hydro";
         results.variableUnit = VCardType::Unit();
         pValuesForTheCurrentYear[numSpace][i]

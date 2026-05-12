@@ -344,6 +344,7 @@ struct CAPACITY_RESERVATION
     double energyActivationRatio = 1;
     int referenceActivationDuration = 0;
     std::string reserveName;
+    std::string reserveID;
     int globalReserveIndex;
     int areaReserveIndex;
 };

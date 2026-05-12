@@ -103,13 +103,14 @@ bool readReservesAreaParameters(Area& area, const IniFile::Section& section)
 bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFile::Section& section)
 {
     bool ret = true;
-    if (area.allCapacityReservations.value().contains(section.name))
+    if (area.allCapacityReservations.value().contains(transformNameIntoID(section.name)))
     {
         logs.error() << area.name << " : reserve name already exists for reserve " << section.name;
         return false;
     }
 
     CapacityReservation capacityReservation;
+    capacityReservation.setName(section.name);
 
     for (auto* p = section.firstProperty; p; p = p->next)
     {
@@ -185,10 +186,9 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFil
             ret = false;
         }
     }
-    fs::path filePath = folderInput / "reserves" / area.id
-                        / (section.name.to<std::string>() + ".txt");
+    fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
-    area.allCapacityReservations.value().areaCapacityReservations.emplace(section.name,
+    area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
                                                                           capacityReservation);
     return ret;
 }
@@ -1194,24 +1194,24 @@ void validateCapacityReservations(const Area& area)
           "referenceGlobalActivationDuration down",
           area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
           area.name);
-        for (const auto& [resName, capacityRes]:
+        for (const auto& [resID, capacityRes]:
              area.allCapacityReservations.value().areaCapacityReservations)
         {
             errorIfNegativeValue("energyActivationRatio",
                                  capacityRes.energyActivationRatio,
                                  area.name,
                                  std::nullopt,
-                                 resName);
+                                 resID);
             errorIfNegativeValue("powerActivationRatio",
                                  capacityRes.powerActivationRatio,
                                  area.name,
                                  std::nullopt,
-                                 resName);
+                                 resID);
             errorIfNegativeValue("referenceActivationDuration",
                                  capacityRes.referenceActivationDuration,
                                  area.name,
                                  std::nullopt,
-                                 resName);
+                                 resID);
         }
     }
 }

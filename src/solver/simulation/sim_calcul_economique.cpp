@@ -39,7 +39,7 @@ void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
                                                                     [type];
         }
 
-        for (const auto& [reserveName, reserveCapacity]:
+        for (const auto& [reserveID, reserveCapacity]:
              area->allCapacityReservations.value().areaCapacityReservations)
         {
             CAPACITY_RESERVATION areaCapacityReservation;
@@ -50,7 +50,8 @@ void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
             areaCapacityReservation.energyActivationRatio = reserveCapacity.energyActivationRatio;
             areaCapacityReservation.referenceActivationDuration = reserveCapacity
                                                                     .referenceActivationDuration;
-            areaCapacityReservation.reserveName = reserveName;
+            areaCapacityReservation.reserveName = reserveCapacity.name();
+            areaCapacityReservation.reserveID = reserveCapacity.id();
             areaCapacityReservation.globalReserveIndex = globalReserveIndex;
             areaCapacityReservation.areaReserveIndex = areaReserveIndex;
             globalReserveIndex++;
@@ -129,26 +130,26 @@ static void importShortTermStorages(Data::Parameters parameters,
             auto& areaReserves = problem.allReserves.value()[areaIndex];
 
             int areaReserveIdx = 0;
-            for (const auto& [reserveName, _]:
+            for (const auto& [reserveID, _]:
                  area->allCapacityReservations.value().areaCapacityReservations)
             {
                 for (size_t idx = 0; auto& cluster: area->shortTermStorage.storagesByIndex)
                 {
                     if (cluster.reserveParticipationContainer
                         && cluster.reserveParticipationContainer.value().isParticipatingInReserve(
-                          reserveName))
+                          reserveID))
                     {
                         RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
                         reserveParticipation.maxRelease = cluster.reserveParticipationContainer
                                                             .value()
-                                                            .reserveMaxRelease(reserveName);
+                                                            .reserveMaxRelease(reserveID);
                         reserveParticipation.maxStore = cluster.reserveParticipationContainer
                                                           .value()
-                                                          .reserveMaxStore(reserveName);
+                                                          .reserveMaxStore(reserveID);
                         reserveParticipation.participationCost = cluster
                                                                    .reserveParticipationContainer
                                                                    .value()
-                                                                   .reserveCost(reserveName);
+                                                                   .reserveCost(reserveID);
                         reserveParticipation.clusterName = cluster.id;
                         reserveParticipation.clusterIdInArea = idx;
                         reserveParticipation.clusterId = cluster.properties.clusterGlobalIndex;
@@ -162,7 +163,7 @@ static void importShortTermStorages(Data::Parameters parameters,
 
                         for (const auto& symIdx:
                              cluster.reserveParticipationContainer.value().symmetricalIndices(
-                               reserveName))
+                               reserveID))
                         {
                             auto& symmetries = areaReserves
                                                  .STStorageReservesParticipationSymmetries[idx];
@@ -172,7 +173,7 @@ static void importShortTermStorages(Data::Parameters parameters,
                                   cluster.reserveParticipationContainer.value().getNbSymGroups());
                             }
                             symmetries[symIdx].emplace_back(
-                              reserveName,
+                              reserveID,
                               areaReserves.areaCapacityReservations[areaReserveIdx]
                                 .AllSTStorageReservesParticipation[idx]);
                         }
@@ -204,20 +205,19 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
             auto& areaReserves = problem.allReserves.value()[areaIndex];
 
             int areaReserveIdx = 0;
-            for (const auto& [reserveName, _]:
+            for (const auto& [reserveID, _]:
                  area->allCapacityReservations.value().areaCapacityReservations)
             {
-                if (hydro.reserveParticipationContainer.value().isParticipatingInReserve(
-                      reserveName))
+                if (hydro.reserveParticipationContainer.value().isParticipatingInReserve(reserveID))
                 {
                     RESERVE_PARTICIPATION_HYDRO reserveParticipation;
                     reserveParticipation.maxRelease = hydro.reserveParticipationContainer.value()
-                                                        .reserveMaxRelease(reserveName);
+                                                        .reserveMaxRelease(reserveID);
                     reserveParticipation.maxStore = hydro.reserveParticipationContainer.value()
-                                                      .reserveMaxStore(reserveName);
+                                                      .reserveMaxStore(reserveID);
                     reserveParticipation.participationCost = hydro.reserveParticipationContainer
                                                                .value()
-                                                               .reserveCost(reserveName);
+                                                               .reserveCost(reserveID);
                     reserveParticipation.clusterName = "Hydro";
                     reserveParticipation.clusterIdInArea = 0;
                     reserveParticipation.globalIndexClusterParticipation
@@ -229,8 +229,7 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
                       .AllHydroReservesParticipation.push_back(std::move(reserveParticipation));
 
                     for (const auto& symIdx:
-                         hydro.reserveParticipationContainer.value().symmetricalIndices(
-                           reserveName))
+                         hydro.reserveParticipationContainer.value().symmetricalIndices(reserveID))
                     {
                         if (areaReserves.HydroReservesParticipationSymmetries.size() <= symIdx)
                         {
@@ -238,7 +237,7 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
                               hydro.reserveParticipationContainer.value().getNbSymGroups());
                         }
                         areaReserves.HydroReservesParticipationSymmetries[symIdx].push_back(
-                          {reserveName,
+                          {reserveID,
                            areaReserves.areaCapacityReservations[areaReserveIdx]
                              .AllHydroReservesParticipation.back()});
                     }
@@ -510,30 +509,30 @@ void SIM_InitialisationProblemeHebdo(Study& study,
             auto& areaReserves = problem.allReserves.value()[i];
 
             int areaReserveIdx = 0;
-            for (const auto& [reserveName, _]:
+            for (const auto& [reserveID, _]:
                  area.allCapacityReservations.value().areaCapacityReservations)
             {
                 for (auto& cluster: area.thermal.list.all())
                 {
                     if (cluster->reserveParticipationContainer
                         && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
-                          reserveName)
+                          reserveID)
                         && cluster->isEnabled())
                     {
                         RESERVE_PARTICIPATION_THERMAL reserveParticipation;
                         reserveParticipation.maxPower = cluster->reserveParticipationContainer
                                                           .value()
-                                                          .reserveMaxPower(reserveName);
+                                                          .reserveMaxPower(reserveID);
                         reserveParticipation.participationCost = cluster
                                                                    ->reserveParticipationContainer
                                                                    .value()
-                                                                   .reserveCost(reserveName);
+                                                                   .reserveCost(reserveID);
                         reserveParticipation.maxPowerOff = cluster->reserveParticipationContainer
                                                              .value()
-                                                             .reserveMaxPowerOff(reserveName);
+                                                             .reserveMaxPowerOff(reserveID);
                         reserveParticipation.participationCostOff
                           = cluster->reserveParticipationContainer.value().reserveCostOff(
-                            reserveName);
+                            reserveID);
                         reserveParticipation.clusterName = cluster->name();
                         reserveParticipation.clusterIdInArea = cluster->index;
                         reserveParticipation.clusterId = NombrePaliers + cluster->index;
@@ -548,7 +547,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
                         for (const auto& symIdx:
                              cluster->reserveParticipationContainer.value().symmetricalIndices(
-                               reserveName))
+                               reserveID))
                         {
                             auto& symmetries = areaReserves.ThermalReservesParticipationSymmetries
                                                  [cluster->index];
@@ -558,7 +557,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                                   cluster->reserveParticipationContainer.value().getNbSymGroups());
                             }
                             symmetries[symIdx].emplace_back(
-                              reserveName,
+                              reserveID,
                               areaReserves.areaCapacityReservations[areaReserveIdx]
                                 .AllThermalReservesParticipation[cluster->index]);
                         }

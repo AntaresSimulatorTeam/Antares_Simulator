@@ -35,57 +35,57 @@ template<DerivedFromReserveParticipationBase T>
 class ReserveParticipationContainerBase
 {
 protected:
-    std::map<ReserveName, T> reservesParticipations;
-    std::vector<std::set<ReserveName>> reserveParticipationsSymmetries;
+    std::map<ReserveID, T> reservesParticipations;
+    std::vector<std::set<ReserveID>> reserveParticipationsSymmetries;
 
 public:
-    /// @brief Add a reserve participation to the container for a given reserve name
-    /// @param reserveName name of the reserve for which the participation is added
+    /// @brief Add a reserve participation to the container for a given reserve ID
+    /// @param reserveID ID of the reserve for which the participation is added
     /// @param reserveParticipation reserve participation to add
-    void addReserveParticipation(const ReserveName& reserveName, const T& reserveParticipation)
+    void addReserveParticipation(const ReserveID& reserveID, const T& reserveParticipation)
     {
-        reservesParticipations.emplace(reserveName, reserveParticipation);
+        reservesParticipations.emplace(reserveID, reserveParticipation);
     }
 
     /// @brief Add a reserve participation symmetry to the container
-    /// @param names names of the reserves for which the participation is symmetrical
-    void addReserveParticipationSymmetry(std::set<ReserveName> names)
+    /// @param IDs IDs of the reserves for which the participation is symmetrical
+    void addReserveParticipationSymmetry(std::set<ReserveID> reserveIDs)
     {
-        if (names.size() < 2)
+        if (reserveIDs.size() < 2)
         {
             logs.error() << "Must have at least two distinct reserves to participate to a symmetry";
         }
 
         // Check if entity is participating to reserves
-        for (const auto& name: names)
+        for (const auto& reserveID: reserveIDs)
         {
-            if (!reservesParticipations.contains(name))
+            if (!reservesParticipations.contains(reserveID))
             {
-                logs.error() << "This entity is not participating to reserve " << name;
+                logs.error() << "This entity is not participating to reserve " << reserveID;
             }
         }
 
         // Check if symmetry already existed
         if (std::find(reserveParticipationsSymmetries.begin(),
                       reserveParticipationsSymmetries.end(),
-                      names)
+                      reserveIDs)
             != reserveParticipationsSymmetries.end())
         {
             logs.error() << "Detected duplicate in reserves symmetries";
         }
-        reserveParticipationsSymmetries.push_back(names);
+        reserveParticipationsSymmetries.push_back(reserveIDs);
     }
 
-    /// @brief Get the indices of the lists that contains reserveParticipation to the reserve name
-    /// @param name name of the reserve for which the participation is searched
-    /// @return indices of the lists that contains reserveParticipation to the reserve name
-    std::vector<int> symmetricalIndices(const ReserveName& name) const
+    /// @brief Get the indices of the lists that contains reserveParticipation to the reserve ID
+    /// @param ID ID of the reserve for which the participation is searched
+    /// @return indices of the lists that contains reserveParticipation to the reserve ID
+    std::vector<int> symmetricalIndices(const ReserveID& ID) const
     {
         std::vector<int> indices;
 
         for (int i = 0; const auto& list: reserveParticipationsSymmetries)
         {
-            if (list.contains(name))
+            if (list.contains(ID))
             {
                 indices.push_back(i);
             }
@@ -109,11 +109,11 @@ public:
     }
 
     /// @brief Returns true if cluster participates in a reserve with this name
-    /// @param name name of the reserve
+    /// @param ID ID of the reserve
     /// @return true if cluster participates in a reserve with this name
-    bool isParticipatingInReserve(const ReserveName& name) const
+    bool isParticipatingInReserve(const ReserveID& ID) const
     {
-        return reservesParticipations.contains(name);
+        return reservesParticipations.contains(ID);
     }
 
     auto getReservesParticipations() const noexcept
@@ -121,9 +121,9 @@ public:
         return std::views::all(reservesParticipations);
     }
 
-    double reserveCost(const ReserveName& name) const
+    double reserveCost(const ReserveID& ID) const
     {
-        return reservesParticipations.at(name).participationCost;
+        return reservesParticipations.at(ID).participationCost;
     }
 };
 
@@ -140,27 +140,27 @@ class ReserveParticipationContainer<ThermalClusterReserveParticipation>
 {
 public:
     /// @brief Returns the cost of participation in a reserve when the cluster is off
-    /// @param name name of the reserve
+    /// @param ID ID of the reserve
     /// @return the cost of participation in the reserve when the cluster is off
-    double reserveCostOff(const ReserveName& name) const
+    double reserveCostOff(const ReserveID& ID) const
     {
-        return reservesParticipations.at(name).participationCostOff;
+        return reservesParticipations.at(ID).participationCostOff;
     }
 
     /// @brief Returns the maximum power that can be reserved when the cluster is off
-    /// @param name name of the reserve
+    /// @param ID ID of the reserve
     /// @return the maximum power that can be reserved when the cluster is off
-    double reserveMaxPowerOff(const ReserveName& name) const
+    double reserveMaxPowerOff(const ReserveID& ID) const
     {
-        return reservesParticipations.at(name).maxPowerOff;
+        return reservesParticipations.at(ID).maxPowerOff;
     }
 
     /// @brief Returns the maximum power that can be reserved
-    /// @param name name of the reserve
+    /// @param ID ID of the reserve
     /// @return the maximum power that can be reserved
-    double reserveMaxPower(const ReserveName& name) const
+    double reserveMaxPower(const ReserveID& ID) const
     {
-        return reservesParticipations.at(name).maxPower;
+        return reservesParticipations.at(ID).maxPower;
     }
 };
 
@@ -170,19 +170,19 @@ class ReserveParticipationContainer<StorageClusterReserveParticipation>
 {
 public:
     /// @brief Returns the maximum release power that can be reserved
-    /// @param name name of the reserve
+    /// @param ID ID of the reserve
     /// @return the maximum release power that can be reserved
-    double reserveMaxRelease(const ReserveName& name) const
+    double reserveMaxRelease(const ReserveID& ID) const
     {
-        return reservesParticipations.at(name).maxRelease;
+        return reservesParticipations.at(ID).maxRelease;
     }
 
     /// @brief Returns the maximum store power that can be reserved
-    /// @param name name of the reserve
+    /// @param ID ID of the reserve
     /// @return the maximum store power that can be reserved
-    double reserveMaxStore(const ReserveName& name) const
+    double reserveMaxStore(const ReserveID& ID) const
     {
-        return reservesParticipations.at(name).maxStore;
+        return reservesParticipations.at(ID).maxStore;
     }
 };
 

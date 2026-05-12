@@ -297,7 +297,7 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
         {
             reserveParticipationIndexMaps.value().at(area->id).thermalClusters.insert(
-              {{reserve.reserveName, reserveParticipation.clusterName},
+              {{reserve.reserveID, reserveParticipation.clusterName},
                reserveParticipation.areaIndexClusterParticipation});
         }
 
@@ -305,7 +305,7 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
         {
             reserveParticipationIndexMaps.value().at(area->id).STStorageClusters.insert(
-              {{reserve.reserveName, reserveParticipation.clusterName},
+              {{reserve.reserveID, reserveParticipation.clusterName},
                reserveParticipation.areaIndexClusterParticipation});
         }
 
@@ -313,16 +313,18 @@ void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
         for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
         {
             reserveParticipationIndexMaps.value().at(area->id).Hydro.insert(
-              {reserve.reserveName, reserveParticipation.areaIndexClusterParticipation});
+              {reserve.reserveID, reserveParticipation.areaIndexClusterParticipation});
         }
     };
 
     reserveParticipationIndexMaps.emplace();
+    reserveIDToName.emplace();
     for (const auto& area: study.areas | std::views::values)
     {
         reserveParticipationIndexMaps.value().emplace(area->id, ReserveIndexMap{});
         for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
         {
+            reserveIDToName.value().try_emplace(reserve.reserveID, reserve.reserveName);
             loadReserveParticipations(area.get(), reserve);
         }
     }

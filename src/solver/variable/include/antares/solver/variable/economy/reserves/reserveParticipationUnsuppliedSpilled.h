@@ -225,10 +225,12 @@ public:
             results.variableUnit = VCardType::Unit();
             // Write the data for the current year
             int column = 0;
-            for (const auto& reserveName:
+            for (const auto& reserveID:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)
             {
+                std::string reserveName = results.data.study.runtime.reserveIDToName.value().at(
+                  reserveID);
                 // Write the data for the current year
                 Yuni::String caption = reserveName;
                 caption << "_UNSP.";

@@ -209,19 +209,19 @@ public:
             auto& area = state.area;
             auto& thermal = state.thermal;
             int column = 0;
-            for (const auto& reserveName:
+            for (const auto& reserveID:
                  area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
             {
-                if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveName))
+                if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveID))
                 {
                     for (const auto& group:
-                         area->allCapacityReservations->reserveGroupPartThermal.at(reserveName))
+                         area->allCapacityReservations->reserveGroupPartThermal.at(reserveID))
                     {
                         pValuesForTheCurrentYear[numSpace][column].hour[state.hourInTheYear]
                           += state.reserveData.value()
                                .at(area->index)
                                .reserveParticipationPerGroupForYear[state.hourInTheYear]
-                               .thermalGroupsReserveParticipation[group][reserveName];
+                               .thermalGroupsReserveParticipation[group][reserveID];
                         column++;
                     }
                 }
@@ -251,24 +251,25 @@ public:
             assert(NULL != results.data.area);
             // Write the data for the current year
             int column = 0;
-            for (const auto& reserveName:
+            for (const auto& reserveID:
                  results.data.area->allCapacityReservations.value().areaCapacityReservations
                    | std::views::keys)
             {
                 if (results.data.area->allCapacityReservations->reserveGroupPartThermal.contains(
-                      reserveName))
+                      reserveID))
                 {
                     for (auto group = results.data.area->allCapacityReservations
-                                        ->reserveGroupPartThermal.at(reserveName)
+                                        ->reserveGroupPartThermal.at(reserveID)
                                         .begin();
                          group
                          != results.data.area->allCapacityReservations->reserveGroupPartThermal
-                              .at(reserveName)
+                              .at(reserveID)
                               .end();
                          group++)
                     {
                         // Write the data for the current year
-                        Yuni::String caption = reserveName;
+                        Yuni::String caption = results.data.study.runtime.reserveIDToName.value()
+                                                 .at(reserveID);
                         caption << "_" << *group;
                         results.variableCaption = caption; // VCardType::Caption();
                         results.variableUnit = VCardType::Unit();

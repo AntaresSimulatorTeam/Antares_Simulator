@@ -690,19 +690,19 @@ uint PartHydro::reserveParticipationsCount() const
              : 0;
 }
 
-std::optional<ReserveName> PartHydro::reserveParticipationAt(const Area* area,
-                                                             unsigned int index) const
+std::optional<ReserveID> PartHydro::reserveParticipationAt(const Area* area,
+                                                           unsigned int index) const
 {
     int globalReserveParticipationIdx = 0;
 
-    for (const auto& reserveName:
+    for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {
-        if (reserveParticipationContainer.value().isParticipatingInReserve(reserveName))
+        if (reserveParticipationContainer.value().isParticipatingInReserve(reserveID))
         {
             if (globalReserveParticipationIdx == index)
             {
-                return reserveName;
+                return reserveID;
             }
             globalReserveParticipationIdx++;
         }

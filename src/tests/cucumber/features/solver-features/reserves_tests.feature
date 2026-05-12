@@ -82,7 +82,7 @@ Feature: reserves tests
 @fast @short
 # Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
 # Un cluster qui participe avec à une réserve à la hausse avec des unités off
-  Scenario: ST_4_off_cluster_participation
+  Scenario: lot_2_off_cluster_participation
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_off_cluster_participation"
     When I run antares simulator
     Then the simulation succeeds
@@ -96,7 +96,7 @@ Feature: reserves tests
 @fast @short
 # Lot 2
 # Un cluster qui participe avec à deux réserves à la hausse avec des unités off, on vérifié qu'il priviligie la plus rentable
-  Scenario: ST_5_off_cluster_participation_multiple_res
+  Scenario: lot_2_off_cluster_participation_multiple_res
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_off_cluster_participation_multiple_res"
     When I run antares simulator
     Then the simulation succeeds

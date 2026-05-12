@@ -56,42 +56,46 @@ struct OneProblemWithReservesTwoAreas
         tmpCapacityReservationUp.referenceActivationDuration = 2;
         tmpCapacityReservationUp.powerActivationRatio = 3;
         tmpCapacityReservationUp.energyActivationRatio = 4;
+        tmpCapacityReservationUp.setName("ReserveUp");
 
         tmpCapacityReservationDown.type = ReserveType::DOWN;
         tmpCapacityReservationDown.unsuppliedCost = 5;
         tmpCapacityReservationDown.referenceActivationDuration = 6;
         tmpCapacityReservationDown.powerActivationRatio = 7;
         tmpCapacityReservationDown.energyActivationRatio = 8;
+        tmpCapacityReservationDown.setName("ReserveDown");
 
         tmpCapacityReservationUpB.type = ReserveType::UP;
         tmpCapacityReservationUpB.unsuppliedCost = 11;
         tmpCapacityReservationUpB.referenceActivationDuration = 12;
         tmpCapacityReservationUpB.powerActivationRatio = 13;
         tmpCapacityReservationUpB.energyActivationRatio = 14;
+        tmpCapacityReservationUpB.setName("ReserveUpB");
 
         tmpCapacityReservationDownB.type = ReserveType::DOWN;
         tmpCapacityReservationDownB.unsuppliedCost = 15;
         tmpCapacityReservationDownB.referenceActivationDuration = 16;
         tmpCapacityReservationDownB.powerActivationRatio = 17;
         tmpCapacityReservationDownB.energyActivationRatio = 18;
+        tmpCapacityReservationDownB.setName("ReserveDownB");
 
         areaA->allCapacityReservations = AllCapacityReservations();
         areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("ReserveUp", tmpCapacityReservationUp);
+          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
         areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("ReserveDown", tmpCapacityReservationDown);
+          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
 
         areaB->allCapacityReservations = AllCapacityReservations();
         areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("ReserveUp", tmpCapacityReservationUpB);
+          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
         areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("ReserveDown", tmpCapacityReservationDownB);
+          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
 
         areaA->allCapacityReservations.value()
-          .areaCapacityReservations.at("ReserveUp")
+          .areaCapacityReservations.at("reserveup")
           .need.resize(2);
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("ReserveUp").need[0] = 2;
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("ReserveUp").need[1] = 3;
+        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[0] = 2;
+        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[1] = 3;
     }
 
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
@@ -198,7 +202,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.ini");
 
     areaA->hydro.reserveParticipationContainer.value().addReserveParticipationSymmetry(
-      {"ReserveUp", "ReserveDown"});
+      {"reserveup", "reservedown"});
 
     importCapacityReservations(study->areas, *problemeHebdo);
     importHydroReserves(study->areas, *problemeHebdo);
@@ -264,7 +268,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
                 BOOST_CHECK_EQUAL(part.maxRelease, 7.7);
                 maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
                                                             part.globalIndexClusterParticipation);
-                BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUp");
+                BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUpB");
                 containsUp = true;
             }
             else if (reserve.type == Antares::Data::ReserveType::DOWN)

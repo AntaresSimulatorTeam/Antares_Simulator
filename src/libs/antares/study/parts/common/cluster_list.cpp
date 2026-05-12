@@ -35,24 +35,24 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
 }
 
 template<class ClusterT>
-std::pair<std::string, ReserveName> ClusterList<ClusterT>::reserveParticipationClusterAt(
+std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationClusterAt(
   const Area* area,
   unsigned int index) const
 {
     int globalReserveParticipationIdx = 0;
 
-    for (const auto& reserveName:
+    for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {
         for (auto& cluster: allClusters_)
         {
             if (cluster->reserveParticipationContainer
                 && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
-                  reserveName))
+                  reserveID))
             {
                 if (globalReserveParticipationIdx == index)
                 {
-                    return {cluster->name(), reserveName};
+                    return {cluster->name(), reserveID};
                 }
                 globalReserveParticipationIdx++;
             }
@@ -64,21 +64,21 @@ std::pair<std::string, ReserveName> ClusterList<ClusterT>::reserveParticipationC
 }
 
 template<class ClusterT>
-std::pair<std::string, ReserveName> ClusterList<ClusterT>::reserveParticipationGroupAt(
+std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationGroupAt(
   const Area* area,
   unsigned int index) const
 {
     int column = 0;
-    for (const auto& reserveName:
+    for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {
-        if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveName))
+        if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveID))
         {
-            for (auto group: area->allCapacityReservations->reserveGroupPartThermal.at(reserveName))
+            for (auto group: area->allCapacityReservations->reserveGroupPartThermal.at(reserveID))
             {
                 if (column == index)
                 {
-                    return {group, reserveName};
+                    return {group, reserveID};
                 }
                 column++;
             }

@@ -35,12 +35,12 @@ public:
     uint removeDisabledClusters();
 
     /// Get the names of the cluster and reserve of the participation
-    std::pair<std::string, ReserveName> reserveParticipationClusterAt(const Area* area,
-                                                                      unsigned int index) const;
+    std::pair<std::string, ReserveID> reserveParticipationClusterAt(const Area* area,
+                                                                    unsigned int index) const;
 
     /// Get the names of the group and reserve of the participation
-    std::pair<std::string, ReserveName> reserveParticipationGroupAt(const Area* area,
-                                                                    unsigned int index) const;
+    std::pair<std::string, ReserveID> reserveParticipationGroupAt(const Area* area,
+                                                                  unsigned int index) const;
 
     bool saveToFolder(const std::string& folder) const;
 

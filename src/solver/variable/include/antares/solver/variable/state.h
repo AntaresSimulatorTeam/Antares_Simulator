@@ -222,11 +222,11 @@ public:
         {
             //! Reserve Participation for all thermal group types (nuclear / coal / ...) for
             //! the whole year per reserve
-            std::map<std::string, std::map<ReserveName, double>> thermalGroupsReserveParticipation;
+            std::map<std::string, std::map<ReserveID, double>> thermalGroupsReserveParticipation;
 
             //! Reserve Participation for all thermal Short Term storages types (PSP /
             //! Battery / ...) for the whole year per reserve
-            std::map<std::string, std::map<ReserveName, double>>
+            std::map<std::string, std::map<ReserveID, double>>
               shortTermStorageGroupsReserveParticipation;
         };
 
@@ -235,15 +235,15 @@ public:
           HOURS_PER_YEAR};
 
         //! Reserve Participation for each thermal cluster per reserve
-        std::vector<std::map<std::string, std::map<ReserveName, DetailledParticipation>>>
+        std::vector<std::map<std::string, std::map<ReserveID, DetailledParticipation>>>
           reserveParticipationPerThermalClusterForYear{HOURS_PER_YEAR};
 
         //! Reserve Participation for each STStorage cluster per reserve
-        std::vector<std::map<std::string, std::map<ReserveName, double>>>
+        std::vector<std::map<std::string, std::map<ReserveID, double>>>
           reserveParticipationPerSTStorageClusterForYear{HOURS_PER_YEAR};
 
         //! Reserve Participation for each Hydro per reserve
-        std::vector<std::map<std::string, std::map<ReserveName, double>>>
+        std::vector<std::map<std::string, std::map<ReserveID, double>>>
           reserveParticipationPerHydroForYear{HOURS_PER_YEAR};
 
         //! Reserve Participation cost for the whole year
