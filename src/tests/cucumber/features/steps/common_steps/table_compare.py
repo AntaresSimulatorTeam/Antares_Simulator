@@ -232,7 +232,8 @@ def compare_folders(folder1: Path, folder2: Path):
             differences.append(f"Missing file in folder 2: {relative_path}")
             continue
 
-        if file1.read_bytes() != file2.read_bytes():
+        # Normalize line endings to tolerate CRLF/LF differences (e.g. git autocrlf on Windows)
+        if file1.read_bytes().replace(b"\r\n", b"\n") != file2.read_bytes().replace(b"\r\n", b"\n"):
             differences.append(f"Content mismatch: {relative_path}")
 
     return len(differences) == 0, differences
