@@ -3,6 +3,7 @@
 
 #pragma once
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/parameters/modelerParameters.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
@@ -48,6 +49,8 @@ public:
     Modeler(ILoader& loader, IWriter& writer);
 
     void buildProblems();
+    void buildMasterProblem();
+    void buildSubProblem();
     void run();
 
     void exportMps() const;
@@ -62,8 +65,8 @@ public:
         }
     };
 
-    ILoader& loader_;
-    IWriter& writer_;
+    ILoader& loader_; // gp : make it private
+    IWriter& writer_; // gp : make it private
 
     [[nodiscard]] const std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>&
     masterProblem() const
@@ -78,19 +81,23 @@ public:
         return subproblems_;
     }
 
+    // gp : defined only for unit test, which is not a good sign on design.
+    Optimisation::LinearProblemApi::IMipSolution* subProbSolution();
+
 private:
     Optimisation::LinearProblemApi::IMipSolution* solveSubproblem();
 
-    void buildMasterProblem();
-    void buildSubProblem();
-
-    void writeSubProblemSimulationTable(
+    IO::Outputs::SimulationTable makeSimulationTable(
       const Optimisation::LinearProblemApi::IMipSolution* solution,
+      const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
+
+    void writeSimulationTable(IO::Outputs::SimulationTable&); // gp : const ?
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     std::unique_ptr<Optimisation::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
     std::unique_ptr<Optimisation::LinearProblemApi::FillContext> timeScenarioCtx_ = nullptr;
+    Optimisation::LinearProblemApi::IMipSolution* subProbSolution_ = nullptr;
     ModelerParameters parameters_;
     ModelerData data_;
 };

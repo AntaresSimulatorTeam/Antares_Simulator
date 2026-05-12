@@ -27,12 +27,6 @@ std::string transformNameIntoID(const std::string& name);
 std::tm getCurrentTime();
 std::string formatTime(const std::tm& localTime, const std::string& format);
 
-/*!
-** \brief Beautify a name, for renaming an area for example
-*/
-void BeautifyName(YString& out, AnyString oldname);
-void BeautifyName(std::string& out, const std::string& oldname);
-
 std::vector<std::pair<std::string, std::string>> splitStringIntoPairs(const std::string& s,
                                                                       char delimiter1,
                                                                       char delimiter2);
@@ -53,6 +47,8 @@ std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::stri
 std::map<std::string, unsigned> giveNumbersToStrings(const std::set<std::string>& strs);
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
+
+bool generatePathWithSuffix(std::filesystem::path& outputPath, const std::string& suffix = "");
 
 class TimeMeasurement final
 {

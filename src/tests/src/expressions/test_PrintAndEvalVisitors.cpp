@@ -587,7 +587,7 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double num = 221.3;
     Node* equalLiteralParam = create<EqualNode>(create<LiteralNode>(num), &root);
@@ -661,7 +661,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -682,7 +682,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -801,7 +801,7 @@ struct TimeDependentParameterFixture
                                                     ctx,
                                                     components.front(),
                                                     &dummy_data,
-                                                    &scenarioGroupRepo.scenario(
+                                                    scenarioGroupRepo.scenario(
                                                       components.front().getScenarioGroupId()));
     }
 };
@@ -853,7 +853,7 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
                         {first, last /*three hours*/, first, last, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -906,7 +906,7 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
                         {first, last /*three hours*/, first, last, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -951,7 +951,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
                         {first, last /*three hours*/, first, last, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     return visitor.dispatch(&root);
 }
 
@@ -991,7 +991,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
                         {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -1057,7 +1057,7 @@ void evaluate_time_dependent_operation()
                         {hour_0, hour_1 /*three hours*/, hour_0, hour_1, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(literal.value(), hour_0));
@@ -1095,7 +1095,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(literal.value(),
@@ -1141,7 +1141,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     const auto eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -1668,7 +1668,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
                         fillContext,
                         components.back(),
                         &testData,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 

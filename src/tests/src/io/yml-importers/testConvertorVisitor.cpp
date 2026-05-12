@@ -392,8 +392,8 @@ struct SupplyModelForDualOperator
                           .variables = {},
                           .ports = {},
                           .port_field_definitions = {},
-                          .constraints = {{"constraintA", "", "test.yaml"}},
-                          .binding_constraints = {{"constraintB", "", "test.yaml"}},
+                          .constraints = {{"constraintA", "", "test.yaml", ""}},
+                          .binding_constraints = {{"constraintB", "", "test.yaml", ""}},
                           .objectives = {{"objective-id", "", "test.yaml"}},
                           .extra_outputs = {}};
 };

@@ -5,23 +5,8 @@
 #include <filesystem>
 
 #include "antares/solver/modeler/IWriter.h"
-
-namespace Antares::Optimisation::LinearProblemApi
-{
-class ILinearProblem;
-class ILinearProblemData;
-class FillContext;
-} // namespace Antares::Optimisation::LinearProblemApi
-
-namespace Antares::Optimization
-{
-class VariableDictionary;
-}
-
-namespace Antares::ModelerStudy::SystemModel
-{
-class Component;
-}
+#include "antares/writer/i_table_writer.h"
+#include "antares/writer/table_format.h"
 
 namespace Antares::Solver
 {
@@ -29,20 +14,16 @@ class FileWriter: public IWriter
 {
 public:
     void init(const std::string& simulationId) override;
-
-    void writeSimulationTable(
-      const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-      const Optimisation::LinearProblemApi::IMipSolution& solution,
-      const ModelerData& modelerData,
-      const Optimisation::OptimEntityContainer& variableContainer,
-      const Optimisation::LinearProblemApi::FillContext& fillContext) const override;
-    explicit FileWriter(std::filesystem::path path);
-
+    void writeSimulationTable(IO::Outputs::SimulationTable& SimulationTable) const override;
+    explicit FileWriter(const std::filesystem::path& studyPath,
+                        Writer::TableFormat fmt = Writer::TableFormat::CSV);
     const std::filesystem::path& outputPath() const override;
 
 private:
-    const std::filesystem::path studyPath_;
+    std::filesystem::path studyPath_;
     std::filesystem::path outputPath_;
-    std::string simulationId_;
+    std::filesystem::path output_file_;
+    Writer::ITableWriter::Ptr writer_;
+    Writer::TableFormat fmt_ = Writer::TableFormat::CSV;
 };
 } // namespace Antares::Solver
