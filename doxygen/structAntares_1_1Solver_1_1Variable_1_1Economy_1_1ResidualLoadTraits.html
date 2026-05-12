@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Solver::Variable::Economy::ResidualLoad&lt; NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</title>
+<title>Antares Simulator: Antares::Solver::Variable::Economy::ResidualLoadTraits Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -125,17 +125,55 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
-<a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics-members.html">List of all members</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Solver::Variable::Economy::ResidualLoad&lt; NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</div>  </div>
+<div class="title">Antares::Solver::Variable::Economy::ResidualLoadTraits Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a53806cf4ee01048a286f87624d6aa450"><td class="memItemLeft" align="right" valign="top"><a id="a53806cf4ee01048a286f87624d6aa450"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>count</b>
- }</td></tr>
-<tr class="separator:a53806cf4ee01048a286f87624d6aa450"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d98d1a5188b4dc580fa830111147d94"><td class="memItemLeft" align="right" valign="top"><a id="a1d98d1a5188b4dc580fa830111147d94"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ResultsType</b> = <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">R::AllYears::Min</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">R::AllYears::Max</a>&lt;&gt; &gt;&gt; &gt;&gt;</td></tr>
+<tr class="separator:a1d98d1a5188b4dc580fa830111147d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f767cdef3e8cb0efaca6491a1424654"><td class="memItemLeft" align="right" valign="top"><a id="a3f767cdef3e8cb0efaca6491a1424654"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>AuxiliaryDataType</b> = <a class="el" href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a> *</td></tr>
+<tr class="separator:a3f767cdef3e8cb0efaca6491a1424654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a3369bd5821de227df6e7e9d353855b5f"><td class="memItemLeft" align="right" valign="top"><a id="a3369bd5821de227df6e7e9d353855b5f"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Caption</b> ()</td></tr>
+<tr class="separator:a3369bd5821de227df6e7e9d353855b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1567d507899b45d01faa17bf16c713b0"><td class="memItemLeft" align="right" valign="top"><a id="a1567d507899b45d01faa17bf16c713b0"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Unit</b> ()</td></tr>
+<tr class="separator:a1567d507899b45d01faa17bf16c713b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ce620c518203e8c9d1f133c0c040ad3"><td class="memItemLeft" align="right" valign="top"><a id="a4ce620c518203e8c9d1f133c0c040ad3"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b> ()</td></tr>
+<tr class="separator:a4ce620c518203e8c9d1f133c0c040ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41329b3382de5b08e60ec010c09fb8b7"><td class="memItemLeft" align="right" valign="top"><a id="a41329b3382de5b08e60ec010c09fb8b7"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromArea</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> &amp;area, <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> *, <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *inputArea)</td></tr>
+<tr class="separator:a41329b3382de5b08e60ec010c09fb8b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa214095d2df2de5c6496194f34741cbd"><td class="memItemLeft" align="right" valign="top"><a id="aa214095d2df2de5c6496194f34741cbd"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkCondition</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;)</td></tr>
+<tr class="separator:aa214095d2df2de5c6496194f34741cbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1065de476ae16802a7c7892aae068028"><td class="memItemLeft" align="right" valign="top"><a id="a1065de476ae16802a7c7892aae068028"></a>
+static double&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state)</td></tr>
+<tr class="separator:a1065de476ae16802a7c7892aae068028"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a973fee335c8376b15ce1f24227c71e42"><td class="memItemLeft" align="right" valign="top"><a id="a973fee335c8376b15ce1f24227c71e42"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeStats</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;intermediateValues)</td></tr>
+<tr class="separator:a973fee335c8376b15ce1f24227c71e42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a62df11ee54c3b869926519c82610362f"><td class="memItemLeft" align="right" valign="top"><a id="a62df11ee54c3b869926519c82610362f"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>decimal</b> = 0</td></tr>
+<tr class="separator:a62df11ee54c3b869926519c82610362f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d1dc92afd4c53ad69efef9a24ba92d6"><td class="memItemLeft" align="right" valign="top"><a id="a7d1dc92afd4c53ad69efef9a24ba92d6"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>spatialAggregate</b> = Category::spatialAggregateSum</td></tr>
+<tr class="separator:a7d1dc92afd4c53ad69efef9a24ba92d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/solver/variable/include/antares/solver/variable/economy/<a class="el" href="residual_8h_source.html">residual.h</a></li>
@@ -145,7 +183,7 @@ Public Types</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad.html">ResidualLoad</a></li><li class="navelem"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoad_1_1Statistics.html">Statistics</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html">ResidualLoadTraits</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

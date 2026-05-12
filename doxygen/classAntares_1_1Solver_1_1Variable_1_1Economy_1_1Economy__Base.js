@@ -2,6 +2,7 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base =
 [
     [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base_1_1Statistics.html", null ],
     [ "AncestorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html#aedba031c67d71134c51e739d1c2c0fca", null ],
+    [ "AuxiliaryDataType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html#a64709c11bc69aa1254725e843e797b94", null ],
     [ "NextType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html#a40db6347d2594866b3656a993bf52231", null ],
     [ "ResultsType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html#a97f91b1716cdbd3281ee9fbfc163d1f7", null ],
     [ "VariableAccessorType", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html#a26f3cce7144f78c4a5318869b397c700", null ],
