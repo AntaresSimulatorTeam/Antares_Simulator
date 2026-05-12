@@ -233,11 +233,12 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimization_1_1LinearExpression.html#a21bddbc6ba6b61339e58c4b68cbbdc20":[8,0,0,10,16,15],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a33d263872cf8e7b4c1e556789b0a3dcd":[8,0,0,10,16,6],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a3c2dfb68371aa0872dc947d52ff6012f":[8,0,0,10,16,1],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a4ca0e53c482d7282e2f1cab05dd470a8":[8,0,0,10,16,18],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a4ca0e53c482d7282e2f1cab05dd470a8":[8,0,0,10,16,19],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a588604c52f984aca4bcc128db9044d83":[8,0,0,10,16,3],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a6690fab36052219d64b00479ed16e2f0":[8,0,0,10,16,9],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a87d6759f4a447a5a7843882030f26fe8":[8,0,0,10,16,19],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a8c21d5d2c3be0143604b1e67db38f7c2":[8,0,0,10,16,20],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a790c3a233e3734d18856339f34470a5e":[8,0,0,10,16,18],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a87d6759f4a447a5a7843882030f26fe8":[8,0,0,10,16,20],
+"classAntares_1_1Optimization_1_1LinearExpression.html#a8c21d5d2c3be0143604b1e67db38f7c2":[8,0,0,10,16,21],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a9e0c509e2159f6c9646ee30ad0b4a667":[8,0,0,10,16,11],
 "classAntares_1_1Optimization_1_1LinearExpression.html#aa5f76aa00928330575ae9c8b39920389":[8,0,0,10,16,8],
 "classAntares_1_1Optimization_1_1LinearExpression.html#aaaa16e91425bcf118587d40f7a71e02d":[8,0,0,10,16,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimization_1_1LinearExpression.html#adf639a5bc92e92f466c453e2aecb8a79":[8,0,0,10,16,14],
 "classAntares_1_1Optimization_1_1LinearExpression.html#af59b80c13d6d996e608a3c5bfe0e4232":[8,0,0,10,16,4],
 "classAntares_1_1Optimization_1_1LinearExpression.html#af72ff2d45f0b393c7a0730db8a6779d2":[8,0,0,10,16,16],
-"classAntares_1_1Optimization_1_1STS.html":[8,0,0,10,12],
-"classAntares_1_1Optimization_1_1STS.html#a1d70039b56e08af3948d24e2368bf77e":[8,0,0,10,12,1]
+"classAntares_1_1Optimization_1_1STS.html":[8,0,0,10,12]
 };

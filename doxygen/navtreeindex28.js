@@ -1,5 +1,6 @@
 var NAVTREEINDEX28 =
 {
+"class__name_8h_source.html":[9,0,0,4,0,8,0,0,0,0],
 "classantares__problem__generator_1_1AntaresProblemGeneratorRun.html":[8,0,1,0],
 "classantares__problem__generator_1_1AntaresProblemGeneratorRun.html#a0e9a9b424ad1d05d5680f39ad166e430":[8,0,1,0,1],
 "classantares__problem__generator_1_1AntaresProblemGeneratorRun.html#a1aca26481b46592899d110d6f9893a62":[8,0,1,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX28 =
 "classresults__remover_1_1results__remover.html#af66d866dd4d41fcf29a0b77a267ebb01":[8,0,15,0,1],
 "classsolver__input__handler_1_1solver__input__handler.html":[8,0,16,0],
 "classsolver__input__handler_1_1solver__input__handler.html#a13673d7f17020e1590f73ac35e2c36b7":[8,0,16,0,9],
-"classsolver__input__handler_1_1solver__input__handler.html#a439096baff57212cc0b522e0497877a7":[8,0,16,0,1],
-"classsolver__input__handler_1_1solver__input__handler.html#a45a5dea2c98387e46e525bda9dc86840":[8,0,16,0,6]
+"classsolver__input__handler_1_1solver__input__handler.html#a439096baff57212cc0b522e0497877a7":[8,0,16,0,1]
 };

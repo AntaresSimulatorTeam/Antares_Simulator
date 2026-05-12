@@ -1,5 +1,6 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Component.html#ae971a87a76cfa18feb2040ef7bd54f9a":[8,0,0,7,0,5,2,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html":[8,0,0,7,0,5,4],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html#a0a43111f5db7a3477d0becee1f7304bd":[8,0,0,7,0,5,4,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1Connection.html#a261816e26a02162e63ad57df2bfb3b98":[8,0,0,7,0,5,4,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLPTraits.html":[8,0,0,11,6,4,71],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits.html":[8,0,0,11,6,4,72],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__Base__Traits.html#ad457200af05829f7919821d542783282":[8,0,0,11,6,4,72,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSRTraits.html":[8,0,0,11,6,4,73],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html":[8,0,0,11,6,4,11]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSRTraits.html":[8,0,0,11,6,4,73]
 };

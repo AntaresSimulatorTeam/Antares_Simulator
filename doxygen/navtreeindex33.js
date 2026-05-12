@@ -1,5 +1,6 @@
 var NAVTREEINDEX33 =
 {
+"libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a08ebcd3d0f8306c6f971c7888563422dafeac92c904bca62c1a209b3ce73ae31b":[7,0,0,4,103,0],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a13b583cf6023a0047b946ca4283b0b2b":[7,0,0,4,98],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a13b583cf6023a0047b946ca4283b0b2ba379109b6d3dbce60c4628604dbbf2882":[7,0,0,4,98,4],
 "libs_2antares_2study_2include_2antares_2study_2fwd_8h.html#a13b583cf6023a0047b946ca4283b0b2ba3ef99f32a5037d03989e7804eeed8f05":[7,0,0,4,98,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX33 =
 "minDispatchableGenByPlant_8h.html#ae70621f33b32b4a882685722e724fe08":[7,0,0,14,8,4,160],
 "minDispatchableGenByPlant_8h_source.html":[9,0,0,8,11,0,0,0,0,3,26],
 "minmax-data_8h_source.html":[9,0,0,8,11,0,0,0,0,4,6],
-"minmax_8h_source.html":[9,0,0,8,11,0,0,0,0,4,7],
-"minmax_8hxx_source.html":[9,0,0,8,11,0,0,0,0,4,8]
+"minmax_8h_source.html":[9,0,0,8,11,0,0,0,0,4,7]
 };

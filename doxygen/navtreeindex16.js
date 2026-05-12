@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#aab185e0531984128377c415dc9ceb12c":[8,0,0,11,6,4,49,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#aaba4cddb7494537823df4d74df567f84":[8,0,0,11,6,4,49,17],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#ab1655c1ee28190544e72cfbbe7435bc3":[8,0,0,11,6,4,49,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1CongestionFee.html#ab88d4339812e55c05c55f4bef9fbc8c1":[8,0,0,11,6,4,49,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a39d268ad831edd9ce25efda2fe9066db":[8,0,0,11,6,4,61,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a3aab750527eee1c4ffad867e4b18d743":[8,0,0,11,6,4,61,16],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a4b303dd85a86f2e5ef6e049078322a90":[8,0,0,11,6,4,61,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a5e2959d964d19998aa4d9447c5df00ad":[8,0,0,11,6,4,61,15],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a6e72844b7740461653d80fefe3f2dc95":[8,0,0,11,6,4,61,2]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HurdleCosts.html#a5e2959d964d19998aa4d9447c5df00ad":[8,0,0,11,6,4,61,15]
 };

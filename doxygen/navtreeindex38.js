@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html":[8,0,0,11,6,4,11],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoopFlow_1_1Statistics.html":[8,0,0,11,6,4,63,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Marge_1_1Statistics.html":[8,0,0,11,6,4,81,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost_1_1Statistics.html":[8,0,0,11,6,4,65,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html":[8,0,0,11,6,4,106],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a05bc220458fb3c7403fdb12057a2d570":[8,0,0,11,6,4,106,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a2873f3dcadf41b22a48d666b1ad8f509":[8,0,0,11,6,4,106,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a3fbb3343d9334207cd4db86d4c836427":[8,0,0,11,6,4,106,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a88cac487a15cf0b4c793ab47588e9852":[8,0,0,11,6,4,106,4]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html#a3fbb3343d9334207cd4db86d4c836427":[8,0,0,11,6,4,106,3]
 };

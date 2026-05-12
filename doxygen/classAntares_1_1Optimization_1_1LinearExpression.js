@@ -18,6 +18,7 @@ var classAntares_1_1Optimization_1_1LinearExpression =
     [ "operator-", "classAntares_1_1Optimization_1_1LinearExpression.html#a21bddbc6ba6b61339e58c4b68cbbdc20", null ],
     [ "operator-=", "classAntares_1_1Optimization_1_1LinearExpression.html#af72ff2d45f0b393c7a0730db8a6779d2", null ],
     [ "operator/", "classAntares_1_1Optimization_1_1LinearExpression.html#a11a4d9233621b309b2c8fdb618970b04", null ],
+    [ "operator=", "classAntares_1_1Optimization_1_1LinearExpression.html#a790c3a233e3734d18856339f34470a5e", null ],
     [ "operator[]", "classAntares_1_1Optimization_1_1LinearExpression.html#a4ca0e53c482d7282e2f1cab05dd470a8", null ],
     [ "operator^=", "classAntares_1_1Optimization_1_1LinearExpression.html#a87d6759f4a447a5a7843882030f26fe8", null ],
     [ "size", "classAntares_1_1Optimization_1_1LinearExpression.html#a8c21d5d2c3be0143604b1e67db38f7c2", null ]

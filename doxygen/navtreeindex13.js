@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classAntares_1_1Optimization_1_1STS.html#a1d70039b56e08af3948d24e2368bf77e":[8,0,0,10,12,1],
 "classAntares_1_1Optimization_1_1STS.html#a8b15b7f1724998a6ab5b4d66bc51d736":[8,0,0,10,12,2],
 "classAntares_1_1Optimization_1_1STS.html#ab2175fea57eecec7b82b42600e915f93":[8,0,0,10,12,0],
 "classAntares_1_1Optimization_1_1STSAdditionalConstraint.html":[8,0,0,10,14],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a5021ef33553b8704c9a32f6364e65ff5":[8,0,0,11,5,10,11],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a9a0b9f64860444efa5f38063a1440430":[8,0,0,11,5,10,0],
 "classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#a9cd1b34a95fa35817100794ce25d48f8":[8,0,0,11,5,10,6],
-"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[8,0,0,11,5,10,10],
-"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#ab99b63d0c859922e5835a7c9562f7114":[8,0,0,11,5,10,7]
+"classAntares_1_1Solver_1_1Simulation_1_1Adequacy.html#aa2610ad198fe8b749e943d2ad1762513":[8,0,0,11,5,10,10]
 };

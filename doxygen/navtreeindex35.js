@@ -1,5 +1,6 @@
 var NAVTREEINDEX35 =
 {
+"report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3":[7,0,0,12,37],
 "report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[7,0,0,12,34],
 "report_8h_source.html":[9,0,0,8,2,0,0,0,0,1],
 "reportbuilder_8hxx_source.html":[9,0,0,8,11,0,0,0,0,5,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX35 =
 "structAntares_1_1API_1_1Error.html#ad5d0c6db0418afc065901a9827ab5d93":[8,0,0,0,0,0],
 "structAntares_1_1API_1_1SimulationResults.html":[8,0,0,0,1],
 "structAntares_1_1API_1_1SimulationResults.html#a54376dcd0475b0ca2b301d6dd5461726":[8,0,0,0,1,0],
-"structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89":[8,0,0,0,1,1],
-"structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html":[8,0,0,3,0,1]
+"structAntares_1_1API_1_1SimulationResults.html#aadded6e6147bd06bda57335ed88f9e89":[8,0,0,0,1,1]
 };

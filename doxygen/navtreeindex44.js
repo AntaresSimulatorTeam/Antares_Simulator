@@ -1,9 +1,10 @@
 var NAVTREEINDEX44 =
 {
+"structStudyFixture.html#a7bb40e5d558cca55d2e8635fb9b8741c":[8,0,304,5],
 "structStudyFixture.html#a7f9294e12e51c105bfe982bcc69ec640":[8,0,304,12],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,304,0],
-"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,304,1],
 "structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,304,2],
+"structStudyFixture.html#a9833119d966e476890849b374047fd57":[8,0,304,1],
 "structStudyFixture.html#ad030b15ed14595081f9c90fb6f7c2049":[8,0,304,8],
 "structStudyFixture.html#ae65400ddc7129fa01c5ae1ae44a6e00f":[8,0,304,10],
 "structStudyFixture.html#aebfb8a290fdbc5cc45b4fa56787601a9":[8,0,304,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX44 =
 "test__unfeasible__problem_8py.html#a449903b17096662927f4f96c04a69a15":[7,0,40,6],
 "test__unfeasible__problem_8py.html#a5c13d848592a02ab49447d147d8ff393":[7,0,40,3],
 "test__unfeasible__problem_8py.html#a603fbf7c03f02e4468228eb3319020e1":[7,0,40,17],
-"test__unfeasible__problem_8py.html#a6250b4ab1e1e64ffc4340dc44fe55d97":[7,0,40,1],
-"test__unfeasible__problem_8py.html#a62e542b3df57acdf62f2c88c17ea9dd1":[7,0,40,20]
+"test__unfeasible__problem_8py.html#a6250b4ab1e1e64ffc4340dc44fe55d97":[7,0,40,1]
 };

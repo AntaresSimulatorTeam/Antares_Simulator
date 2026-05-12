@@ -1,5 +1,6 @@
 var NAVTREEINDEX26 =
 {
+"classOptimizationStatistics.html#a7ea6bae1f556f066c1191a7bd038ddd6":[8,0,223,4],
 "classOptimizationStatistics.html#a8d3f814bef588dab3ca90a03ede0c356":[8,0,223,0],
 "classOptimizationStatistics.html#a905e634265172259c9efdced1cb4dfee":[8,0,223,3],
 "classOptimizationStatistics.html#a9524cb34cc79a217f7563b7669d1dbae":[8,0,223,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX26 =
 "classSettings.html#aecdde435957eb40e9ec07eea11eec1b4":[8,0,273,6],
 "classSettings.html#afecd6362eeeee77b655500ec3be9f168":[8,0,273,0],
 "classShortTermStorageAddConstraintConfig.html":[8,0,274],
-"classShortTermStorageAddConstraintConfig.html#a17b0d0de2bdd40876ee3554fda9525fa":[8,0,274,2],
-"classShortTermStorageAddConstraintConfig.html#a1f0361ef3ed648b0b3ca85d0fc1e36cd":[8,0,274,3]
+"classShortTermStorageAddConstraintConfig.html#a17b0d0de2bdd40876ee3554fda9525fa":[8,0,274,2]
 };
