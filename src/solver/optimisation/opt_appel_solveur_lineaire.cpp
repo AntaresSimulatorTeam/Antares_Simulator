@@ -239,10 +239,18 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     if (simulationTable && modelerData)
     {
-        unsigned currentBlock = problemeHebdo->OptimisationAuPasHebdomadaire
-                                  ? static_cast<unsigned>(problemeHebdo->HeureDansLAnnee) / 168
-                                  : static_cast<unsigned>(problemeHebdo->HeureDansLAnnee) / 24
-                                      + NumIntervalle;
+        // Compute the current block index (weekly blocks if optimization is weekly,
+        // daily blocks otherwise). Replace magic numbers with named constants.
+        unsigned currentBlock;
+        const unsigned heure = static_cast<unsigned>(problemeHebdo->HeureDansLAnnee);
+        if (problemeHebdo->OptimisationAuPasHebdomadaire)
+        {
+            currentBlock = heure / Antares::Constants::nbHoursInAWeek;
+        }
+        else
+        {
+            currentBlock = heure / HOURS_PER_DAY + static_cast<unsigned>(NumIntervalle);
+        }
         TimeConversionMode timeConversionMode = problemeHebdo->OptimisationAuPasHebdomadaire
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
