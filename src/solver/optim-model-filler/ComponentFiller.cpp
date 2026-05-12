@@ -30,7 +30,7 @@ unsigned countActiveConstraintTimesteps(
     }
 
     const auto& scenario = scenarioGroupRepo.scenario(component.getScenarioGroupId());
-    Visitors::EvalVisitor evalVisitor(optimEntityContainer, ctx, component, data, &scenario);
+    Visitors::EvalVisitor evalVisitor(optimEntityContainer, ctx, component, data, scenario);
     unsigned activeConstraintCount = 0;
     for (const auto timeStep: Antares::Optimisation::IntegerInterval{ctx.getLocalFirstTimeStep(),
                                                                      ctx.getLocalLastTimeStep()})
@@ -271,11 +271,8 @@ void ComponentFiller::addVariables(const LinearProblemApi::FillContext& ctx)
         return;
     }
 
-    Visitors::EvalVisitor evaluator(optimEntityContainer_,
-                                    ctx,
-                                    component_,
-                                    data_,
-                                    &scenarioGroupRepo_.scenario(component_.getScenarioGroupId()));
+    const auto& scenario = scenarioGroupRepo_.scenario(component_.getScenarioGroupId());
+    Visitors::EvalVisitor evaluator(optimEntityContainer_, ctx, component_, data_, scenario);
     auto valueOrDefault = [&evaluator](const auto& node, double defaultValue)
     {
         if (node.Empty())
@@ -352,12 +349,12 @@ void ComponentFiller::addTimeDependentConstraints(const LinearConstraint& linear
     // If DROP mode is enabled, construct a single EvalVisitor and iterate timesteps once.
     if (isDrop)
     {
+        const auto& scenario = scenarioGroupRepo_.scenario(component_.getScenarioGroupId());
         Expressions::Visitors::EvalVisitor evalVisitor(optimEntityContainer_,
                                                        ctx,
                                                        component_,
                                                        data_,
-                                                       &scenarioGroupRepo_.scenario(
-                                                         component_.getScenarioGroupId()));
+                                                       scenario);
 
         for (const auto t: dims.getTimesteps())
         {

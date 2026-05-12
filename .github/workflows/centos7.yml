@@ -108,7 +108,7 @@ jobs:
         path: ${{ github.workspace }}/.ccache
         key: centos7-on-${{ runner.os }}-${{ github.ref_name }}
         restore-keys: |
-          centos7-on-${{ runner.os }}-   
+          centos7-on-${{ runner.os }}-
 
     - name: Configure ccache
       run: |
@@ -135,7 +135,7 @@ jobs:
     - name: create a container without starting it && retrieve the .tgz
       run: |
         container_id=$(docker create antares:centos7)
-        docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive         
+        docker cp $container_id:/workspace/Antares_Simulator/_build/archive archive
         docker cp $container_id:/workspace/vcpkg_cache ${{ env.VCPKG_CACHE_DIR }}
         docker cp $container_id:/workspace/.ccache/. .ccache
         ls -la .ccache
@@ -156,7 +156,7 @@ jobs:
         gh release upload "$tag" archive/*.tar.gz archive/*.rpm
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
+      if: github.ref == 'refs/heads/develop' && env.IS_RELEASE != 'true'
       env:
         GH_TOKEN: ${{ github.token }}
       run: |

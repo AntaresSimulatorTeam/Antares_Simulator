@@ -265,9 +265,9 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
       .variables = {},
       .ports = {},
       .port_field_definitions = {},
-      .constraints = {{"constraint1", "expression1", "subproblems"},
-                      {"constraint2", "expression2", "master-and-subproblems"}},
-      .binding_constraints = {{"constraint3", "expression3", "master"}},
+      .constraints = {{"constraint1", "expression1", "subproblems", ""},
+                      {"constraint2", "expression2", "master-and-subproblems", ""}},
+      .binding_constraints = {{"constraint3", "expression3", "master", ""}},
       .objectives = {},
       .extra_outputs = {}};
     library.models = {model1};
