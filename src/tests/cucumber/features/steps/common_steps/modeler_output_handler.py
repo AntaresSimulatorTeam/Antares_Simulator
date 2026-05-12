@@ -44,8 +44,13 @@ class modeler_output_handler:
         return invest_problems(master, subproblem, structure)
 
     @staticmethod
-    def __read_simulation_table(absolute_path) -> pd.DataFrame:
-        df = pd.read_csv(absolute_path, header=0, sep=",", low_memory=False)
+    def __read_simulation_table(simulation_table_location) -> pd.DataFrame:
+        if isinstance(simulation_table_location, (list, tuple)):
+            paths = list(simulation_table_location)
+        else:
+            paths = [simulation_table_location]
+        frames = [pd.read_csv(p, header=0, sep=",", low_memory=False) for p in paths]
+        df = pd.concat(frames, ignore_index=True) if len(frames) > 1 else frames[0]
         # We need an int or a range for scenario the modeler step 
         df['scenario_index'] = df['scenario_index'].replace("None", 0)
         df['scenario_index'] = df['scenario_index'].replace(np.nan, 0)
