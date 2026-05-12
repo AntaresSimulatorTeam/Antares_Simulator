@@ -18,7 +18,6 @@ class EnvForLoading final
 {
 public:
     explicit EnvForLoading(AreaList& l, const StudyVersion& v):
-        section(nullptr),
         areaList(l),
         version(v)
     {
@@ -32,7 +31,7 @@ public:
     //! INI file
     std::filesystem::path iniFilename;
     //! Current section
-    IniFile::Section* section;
+    IniFile::Section* section{nullptr};
 
     Yuni::Clob buffer;
     Matrix<>::BufferType matrixBuffer;
