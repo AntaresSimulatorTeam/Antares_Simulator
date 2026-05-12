@@ -83,6 +83,7 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
     // Skip time series loading for disabled clusters
     if (!enabled)
     {
+        logs.info() << "Skipping time series loading for disabled cluster: " << id();
         return true;
     }
 

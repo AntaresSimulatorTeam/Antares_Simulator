@@ -63,6 +63,7 @@ bool STStorageCluster::loadSeries(const std::filesystem::path& folder,
 {
     if (!enabled())
     {
+        logs.info() << "Skipping time series loading for disabled cluster";
         return true;
     }
 
