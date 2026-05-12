@@ -10,6 +10,7 @@ target_link_libraries(workflow
         PRIVATE
         Antares::study
         modeler-lib
+        model_antares
 )
 
 target_include_directories(workflow
