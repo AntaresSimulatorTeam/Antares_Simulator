@@ -236,16 +236,18 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     auto expression = dispatch(node->expression());
     Visitors::VariabilityVisitor variabilityVisitor(optimEntityContainer_, component_);
 
+    // Variability checks are independent of the local timestep (AST is immutable,
+    // visitor doesn't use current timestep), so perform them once before the loop.
+    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(),
+                                                                 variabilityVisitor);
+    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(),
+                                                                 variabilityVisitor);
+
     if (expression.isConstant())
     {
         TimeDependentLinearExpression ret(nbtimeSteps_);
         for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
         {
-            Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(),
-                                                                         variabilityVisitor);
-            Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(),
-                                                                         variabilityVisitor);
-
             const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
                                                                                   evalVisitor_,
                                                                                   localTimeStep);
@@ -262,11 +264,6 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
     TimeDependentLinearExpression ret(nbtimeSteps_);
     for (unsigned localTimeStep = 0; localTimeStep < nbtimeSteps_; ++localTimeStep)
     {
-        Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(),
-                                                                     variabilityVisitor);
-        Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(),
-                                                                     variabilityVisitor);
-
         const auto from = Antares::Expressions::Visitors::resolveTimeSumBound(node->from(),
                                                                               evalVisitor_,
                                                                               localTimeStep);
@@ -277,7 +274,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
           from,
           to,
           static_cast<int>(nbtimeSteps_),
-          [&](int timeIndex) { ret[localTimeStep] += expression[timeIndex]; });
+          [&ret, &expression, localTimeStep](int timeIndex) { ret[localTimeStep] += expression[timeIndex]; });
     }
     return ret;
 }

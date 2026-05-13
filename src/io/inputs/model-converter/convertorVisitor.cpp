@@ -238,14 +238,6 @@ std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
     throw InputError("Invalid sum bound");
 }
 
-// sum(t+1, t+2, expr) => ShiftNode(nullptr, +1)
-
-// SumBound(expr) <=> expr
-
-// Sum(expr, expr, expr)
-
-// expr[t+1] => ShiftNode(expr, +1)
-
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
 {
     Node* left = std::any_cast<Node*>(visit(context->expr(0)));

@@ -197,7 +197,7 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
         forEachTimeSumIndex(from,
                             to,
                             static_cast<int>(values.size()),
-                            [&](int timeIndex)
+                            [&values, &result, localTimeStep](int timeIndex)
                             { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
     }
 
@@ -207,7 +207,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TPlusNode* node)
 {
     const auto offset = static_cast<int>(dispatch(node->child()).valueAsDouble());
-    return EvaluationResult(static_cast<double>(fillContext_.getGlobalFirstTimeStep() + offset));
+    return EvaluationResult(static_cast<double>(
+      static_cast<unsigned>(fillContext_.getGlobalFirstTimeStep()) + offset));
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
