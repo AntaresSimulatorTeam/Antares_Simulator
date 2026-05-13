@@ -1,6 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPrice.html#a79d8d7969547f25f2f6849503b4d40c7":[8,0,0,11,6,4,99,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html":[8,0,0,11,6,4,101],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a1198c447ddcd69e7ee7d8caefbee62df":[8,0,0,11,6,4,101,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPriceCSR.html#a5c22844a58886dba301f9526a7ae9c97":[8,0,0,11,6,4,101,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX39 =
 "structAreaConnectionFixture.html#a2d34aa50c451d8251972125142aa9b0b":[8,0,35,11],
 "structAreaConnectionFixture.html#a8a35d1ed4b586b89e85423126708139d":[8,0,35,5],
 "structAreaConnectionFixture.html#a8b00f3ed088d79f52fd663717397200e":[8,0,35,3],
-"structAreaConnectionFixture.html#a9da0f26d3f1f534a8c33a37b97664fd6":[8,0,35,4]
+"structAreaConnectionFixture.html#a9da0f26d3f1f534a8c33a37b97664fd6":[8,0,35,4],
+"structAreaConnectionFixture.html#aa07c3346e0e62454090efd9850366965":[8,0,35,8]
 };

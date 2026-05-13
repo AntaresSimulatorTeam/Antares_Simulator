@@ -1,6 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"structAllocationFixture.html#a597b72cbec03c604b1555a2a830f8e0c":[8,0,29,2],
 "structAllocationFixture.html#a9f4c6ae4c15c59abebe372f11b62c646":[8,0,29,1],
 "structAllocationFixture.html#ab10d80c51c6502941b43526aa05776e1":[8,0,29,3],
 "structAllocationFixture.html#aed18245f480c4f04f7218dc3143f8a9f":[8,0,29,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX36 =
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig.html#a61abc5f0bf618bf2fbb507abdcfda4c8":[8,0,0,7,0,4,5,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig.html#a81bf4901895ad70849aa34e373b5179d":[8,0,0,7,0,4,5,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html":[8,0,0,7,0,4,0],
-"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html#a6692843c85d94a7ea4fbf258ddc8164e":[8,0,0,7,0,4,0,0]
+"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html#a6692843c85d94a7ea4fbf258ddc8164e":[8,0,0,7,0,4,0,0],
+"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html#addc99d4855385fe49c33fd7dcfbda57b":[8,0,0,7,0,4,0,1]
 };

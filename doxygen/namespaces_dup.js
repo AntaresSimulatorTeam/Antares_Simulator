@@ -2085,6 +2085,7 @@ var namespaces_dup =
     ] ],
     [ "table_compare", null, [
       [ "as_number", "table__compare_8py.html#a7d45ba21a6c9294bffa2683298b1b54f", null ],
+      [ "compare_folders", "table__compare_8py.html#ae68631dd2377b32e0edca4567ba063a9", null ],
       [ "compare_rows", "table__compare_8py.html#ae42c5b0e4c4b4e9e0d29df937fcd5932", null ],
       [ "diff_message", "table__compare_8py.html#a60d99424c2a5898b59270e4331fc4e91", null ],
       [ "format_key", "table__compare_8py.html#af7691579aafcce3be6642b67f20dfffe", null ],

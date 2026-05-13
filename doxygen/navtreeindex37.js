@@ -1,6 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Variable.html#addc99d4855385fe49c33fd7dcfbda57b":[8,0,0,7,0,4,0,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html":[8,0,0,7,0,5,5],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html#a172733bc6215fec42d39866e8ff89f6e":[8,0,0,7,0,5,5,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html#acf546d253f72fb5fde0a85b92545ca1e":[8,0,0,7,0,5,5,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost_1_1Statistics.html":[8,0,0,11,6,4,43,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage_1_1Statistics.html":[8,0,0,11,6,4,45,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html":[8,0,0,11,6,4,9],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows_1_1Statistics.html":[8,0,0,11,6,4,47,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Inflows_1_1Statistics.html":[8,0,0,11,6,4,47,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LMRViolations_1_1Statistics.html":[8,0,0,11,6,4,67,0]
 };
