@@ -4,6 +4,7 @@
 #pragma once
 
 #include <antares/utils/utils.h>
+#include "antares/solver/variable/economy/dynamic_multi_column_base.h"
 #include "antares/solver/variable/variable.h"
 
 namespace
