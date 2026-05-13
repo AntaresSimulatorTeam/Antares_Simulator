@@ -113,17 +113,23 @@ public:
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
-        // Building the vector of group names the clusters belong to.
+        // Study-wide column set: every area produces identically-positioned columns,
+        // so the shared captions array stays consistent with each area's rows.
+        descriptors_ = buildColumnDescriptors(*study, area);
+
         std::set<std::string> names;
-        for (const auto& cluster: area->thermal.list.each_enabled())
-        {
-            names.insert(cluster->getGroup());
-        }
+        study->areas.each(
+          [&names](Data::Area& currentArea)
+          {
+              for (auto& cluster: currentArea.thermal.list.each_enabled())
+              {
+                  names.insert(cluster->getGroup());
+              }
+          });
         groupNames_ = {names.begin(), names.end()};
         groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
-        descriptors_ = buildColumnDescriptors(area);
-        nbColumns_ = groupNames_.size();
+        nbColumns_ = descriptors_.size();
 
         if (nbColumns_)
         {
@@ -256,7 +262,24 @@ public:
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
-        // Dynamic-columns variables are intentionally excluded from digest generation.
+        // Column layout is study-wide (see initializeFromArea), so every area writes the
+        // same captions in the same indices — safe to contribute to the digest now.
+        if (AncestorType::isPrinted[0]
+            && (VCardType::categoryDataLevel & Category::DataLevel::area
+                || VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
+        {
+            results.isPrinted = AncestorType::isPrinted;
+            results.isCurrentVarNA = AncestorType::isNonApplicable;
+
+            for (size_t c = 0; c < nbColumns_; ++c)
+            {
+                results.variableCaption = descriptors_[c].caption;
+                results.variableUnit = descriptors_[c].unit;
+                AncestorType::pResults[c].template buildDigest<VCardType>(results,
+                                                                          digestLevel,
+                                                                          dataLevel);
+            }
+        }
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
