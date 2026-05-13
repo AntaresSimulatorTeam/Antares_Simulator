@@ -392,7 +392,7 @@ struct PROBLEME_HEBDO
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
     bool OptimisationAvecCoutsDeDemarrage = false;
     bool OptimisationAvecVariablesEntieres = false;
-    bool heuristic = true;
+    bool useThermalHeuristic = true;
 
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;

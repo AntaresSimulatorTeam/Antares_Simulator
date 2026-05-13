@@ -19,8 +19,8 @@ GenerationAndResolutionConfig generate(const Data::Study& study)
 
     // legacy behavior is default
     const auto ucMode = study.parameters.unitCommitment.ucMode;
-    config.heuristic = (ucMode == Data::ucHeuristicFast || ucMode == Data::ucHeuristicAccurate);
-    config.subproblems = config.heuristic ? SolverType::LP : SolverType::MILP;
+    config.useThermalHeuristic = (ucMode == Data::ucHeuristicFast || ucMode == Data::ucHeuristicAccurate);
+    config.subproblems = config.useThermalHeuristic ? SolverType::LP : SolverType::MILP;
 
     // modeler allows more complex config
     if (auto* modelerData = study.getModelerData(); modelerData)

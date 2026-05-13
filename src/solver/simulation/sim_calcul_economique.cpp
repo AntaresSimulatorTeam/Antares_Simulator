@@ -127,7 +127,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
     problem.OptimisationAvecVariablesEntieres = workflow.subproblems
                                                 == Solver::Workflow::SolverType::MILP;
-    problem.heuristic = workflow.heuristic;
+    problem.useThermalHeuristic = workflow.useThermalHeuristic;
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 

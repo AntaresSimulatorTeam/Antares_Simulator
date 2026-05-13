@@ -287,7 +287,7 @@ bool OPT_OptimisationLineaire(const OptimizationOptions& options,
     // We only need the 2nd optimization when NOT solving with integer variables
     // We also skip the 2nd optimization in the hidden 'Expansion' mode
     // and if the 1st one failed.
-    if (ret && !problemeHebdo->Expansion && problemeHebdo->heuristic)
+    if (ret && !problemeHebdo->Expansion && problemeHebdo->useThermalHeuristic)
     {
         // We need to adjust some stuff before running the 2nd optimisation
         runThermalHeuristic(problemeHebdo);
