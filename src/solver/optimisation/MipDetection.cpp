@@ -10,7 +10,8 @@
 namespace Antares::Optimization
 {
 
-static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData, bool lookingAtSubproblems)
+static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData,
+                                       bool lookingAtSubproblems)
 {
     if (!modelerData || !modelerData->system)
     {

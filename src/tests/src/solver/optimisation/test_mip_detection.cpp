@@ -55,19 +55,22 @@ struct MipDetectionFixture: public LinearProblemBuildingFixture
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_float_variable_returns_false, MipDetectionFixture)
 {
     auto modelerData = createModelerDataWithVariableType(ValueType::FLOAT);
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()), false);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()),
+                      false);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_integer_variable_returns_true, MipDetectionFixture)
 {
     auto modelerData = createModelerDataWithVariableType(ValueType::INTEGER);
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()),
+                      true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_bool_variable_returns_true, MipDetectionFixture)
 {
     auto modelerData = createModelerDataWithVariableType(ValueType::BOOL);
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()),
+                      true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_integer_returns_true,
