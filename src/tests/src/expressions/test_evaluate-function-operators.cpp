@@ -98,12 +98,12 @@ CreateEvalVisitor::CreateEvalVisitor():
     optimEntityContainer_->addFromSystemComponents(components_);
 
     // And finally, creation of the evaluation visitor (purpose of this fixture)
+    const auto& scenario = scenarioGroupRepo_.scenario(component_.getScenarioGroupId());
     evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_,
                                                 fillCtx_,
                                                 component_,
                                                 &data_,
-                                                &scenarioGroupRepo_.scenario(
-                                                  component_.getScenarioGroupId()));
+                                                scenario);
 }
 
 // =================================================

@@ -16,6 +16,7 @@ public:
     explicit LinearExpression(double constant);
     explicit LinearExpression(const std::vector<std::pair<int, double>>& coefs, double constant);
     LinearExpression(const LinearExpression& other) = default;
+    LinearExpression& operator=(const LinearExpression& other) = default;
     void mergeDuplicateCoefficients();
 
     LinearExpression& operator*=(double factor);

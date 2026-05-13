@@ -75,7 +75,7 @@ jobs:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ env.os }}-${{ github.ref_name }}
         restore-keys: |
-          ${{ env.os }}-  
+          ${{ env.os }}-
 
     - name: Configure ccache
       run: |
@@ -407,7 +407,7 @@ jobs:
 
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
+      if: github.ref == 'refs/heads/develop' && env.IS_RELEASE != 'true'
       env:
         GH_TOKEN: ${{ github.token }}
       run: |

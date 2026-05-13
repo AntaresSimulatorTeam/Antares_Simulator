@@ -26,7 +26,7 @@ struct LibraryObjects
                            .variables = {},
                            .ports = {},
                            .port_field_definitions = {},
-                           .constraints = {{"constraint1", "cost", "subproblems"}},
+                           .constraints = {{"constraint1", "cost", "subproblems", ""}},
                            .binding_constraints = {},
                            .objectives = {},
                            .extra_outputs = {}};
