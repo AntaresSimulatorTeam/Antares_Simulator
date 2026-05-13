@@ -17,18 +17,24 @@ namespace
 bool hasMasterIntegerVariables(const Solver::ModelerData* modelerData)
 {
     if (!modelerData || !modelerData->system)
-        return false;
-
-    for (const auto& component : modelerData->system->Components())
     {
-        for (const auto& variable : component.getModel()->Variables())
+        return false;
+    }
+
+    for (const auto& component: modelerData->system->Components())
+    {
+        for (const auto& variable: component.getModel()->Variables())
         {
             auto loc = variable.location();
             if (loc != Solver::Config::Location::MASTER
                 && loc != Solver::Config::Location::MASTER_AND_SUBPROBLEMS)
+            {
                 continue;
+            }
             if (variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT)
+            {
                 return true;
+            }
         }
     }
     return false;
@@ -42,8 +48,7 @@ GenerationAndResolutionConfig generate(const Data::Study& study)
     const auto ucMode = study.parameters.unitCommitment.ucMode;
 
     auto resMode = modelerData->resolutionMode;
-    bool heuristic = (ucMode == Data::ucHeuristicFast
-                      || ucMode == Data::ucHeuristicAccurate);
+    bool heuristic = (ucMode == Data::ucHeuristicFast || ucMode == Data::ucHeuristicAccurate);
     bool subpMilp = (ucMode == Data::ucMILP
                      || Antares::Optimization::hasModelerIntegerVariables(modelerData));
 
@@ -52,8 +57,8 @@ GenerationAndResolutionConfig generate(const Data::Study& study)
     config.use_heuristic = heuristic;
     config.subproblems = subpMilp ? SolverType::MILP : SolverType::LP;
     config.master = (resMode == ResolutionMode::BENDERS_DECOMPOSITION)
-                        ? (hasMasterIntegerVariables(modelerData) ? SolverType::MILP : SolverType::LP)
-                        : SolverType::MILP;
+                      ? (hasMasterIntegerVariables(modelerData) ? SolverType::MILP : SolverType::LP)
+                      : SolverType::MILP;
     return config;
 }
 
