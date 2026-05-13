@@ -207,12 +207,12 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
-    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Study& study,
-                                                                Data::Area* /*area*/)
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(const Data::Study& study,
+                                                                const Data::Area* /*area*/)
     {
         std::set<std::string> uniqueGroups;
         study.areas.each(
-          [&uniqueGroups](Data::Area& currentArea)
+          [&uniqueGroups](const Data::Area& currentArea)
           {
               for (auto& cluster: currentArea.thermal.list.each_enabled())
               {

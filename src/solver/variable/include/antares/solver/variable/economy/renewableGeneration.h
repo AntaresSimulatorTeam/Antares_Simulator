@@ -95,12 +95,12 @@ public:
         count = 1 + NextT::count,
     };
 
-    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Study& study,
-                                                                Data::Area* /*area*/)
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(const Data::Study& study,
+                                                                const Data::Area* /*area*/)
     {
         std::set<std::string> uniqueGroups;
         study.areas.each(
-          [&uniqueGroups](Data::Area& currentArea)
+          [&uniqueGroups](const Data::Area& currentArea)
           {
               for (auto& cluster: currentArea.renewable.list.each_enabled())
               {
@@ -116,7 +116,7 @@ public:
         return descriptors;
     }
 
-    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Area* area)
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(const Data::Area* area)
     {
         std::set<std::string> uniqueGroups;
         for (auto& cluster: area->renewable.list.each_enabled())
