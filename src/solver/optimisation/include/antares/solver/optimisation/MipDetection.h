@@ -11,6 +11,7 @@ struct ModelerData;
 namespace Antares::Optimization
 {
 
-bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData);
+bool hasSubproblemIntegerVariables(const Solver::ModelerData* modelerData);
+bool hasMasterIntegerVariables(const Solver::ModelerData* modelerData);
 
 } // namespace Antares::Optimization

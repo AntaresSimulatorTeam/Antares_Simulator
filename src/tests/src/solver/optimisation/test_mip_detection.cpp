@@ -21,14 +21,14 @@ BOOST_AUTO_TEST_SUITE(test_mip_detection)
 
 BOOST_AUTO_TEST_CASE(null_modeler_data_returns_false)
 {
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(nullptr), false);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(nullptr), false);
 }
 
 BOOST_AUTO_TEST_CASE(modeler_data_with_null_system_returns_false)
 {
     ModelerData modelerData;
     modelerData.system = nullptr;
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(&modelerData), false);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(&modelerData), false);
 }
 
 struct MipDetectionFixture: public LinearProblemBuildingFixture
@@ -55,19 +55,19 @@ struct MipDetectionFixture: public LinearProblemBuildingFixture
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_float_variable_returns_false, MipDetectionFixture)
 {
     auto modelerData = createModelerDataWithVariableType(ValueType::FLOAT);
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(modelerData.get()), false);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()), false);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_integer_variable_returns_true, MipDetectionFixture)
 {
     auto modelerData = createModelerDataWithVariableType(ValueType::INTEGER);
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(modelerData.get()), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()), true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_bool_variable_returns_true, MipDetectionFixture)
 {
     auto modelerData = createModelerDataWithVariableType(ValueType::BOOL);
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(modelerData.get()), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(modelerData.get()), true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_integer_returns_true,
@@ -87,7 +87,7 @@ BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_integer_retu
     systemBuilder.withComponents(std::move(components));
     modelerData.system = std::make_unique<System>(systemBuilder.build());
 
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(&modelerData), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(&modelerData), true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_bool_returns_true,
@@ -107,7 +107,7 @@ BOOST_FIXTURE_TEST_CASE(modeler_data_with_mixed_variables_float_and_bool_returns
     systemBuilder.withComponents(std::move(components));
     modelerData.system = std::make_unique<System>(systemBuilder.build());
 
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(&modelerData), true);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(&modelerData), true);
 }
 
 BOOST_FIXTURE_TEST_CASE(modeler_data_with_only_float_variables_returns_false, MipDetectionFixture)
@@ -127,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(modeler_data_with_only_float_variables_returns_false, Mi
     systemBuilder.withComponents(std::move(components));
     modelerData.system = std::make_unique<System>(systemBuilder.build());
 
-    BOOST_CHECK_EQUAL(Antares::Optimization::hasModelerIntegerVariables(&modelerData), false);
+    BOOST_CHECK_EQUAL(Antares::Optimization::hasSubproblemIntegerVariables(&modelerData), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -10,7 +10,7 @@
 namespace Antares::Optimization
 {
 
-bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData)
+static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData, bool lookingAtSubproblems)
 {
     if (!modelerData || !modelerData->system)
     {
@@ -21,6 +21,14 @@ bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData)
     {
         for (const auto& variable: component.getModel()->Variables())
         {
+            if (lookingAtSubproblems && !isInSubProblem(variable.location()))
+            {
+                continue;
+            }
+            if (!lookingAtSubproblems && !isInMasterProblem(variable.location()))
+            {
+                continue;
+            }
             if (variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT)
             {
                 return true;
@@ -28,6 +36,16 @@ bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData)
         }
     }
     return false;
+}
+
+bool hasSubproblemIntegerVariables(const Solver::ModelerData* modelerData)
+{
+    return hasModelerIntegerVariables(modelerData, true);
+}
+
+bool hasMasterIntegerVariables(const Solver::ModelerData* modelerData)
+{
+    return hasModelerIntegerVariables(modelerData, false);
 }
 
 } // namespace Antares::Optimization

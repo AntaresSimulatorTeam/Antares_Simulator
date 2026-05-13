@@ -8,39 +8,10 @@
 #include <antares/study/system-model/model.h>
 #include <antares/study/system-model/optimConfig.h>
 
+using namespace Antares::Optimization;
+
 namespace Antares::Solver::Workflow
 {
-
-namespace
-{
-
-bool hasMasterIntegerVariables(const Solver::ModelerData* modelerData)
-{
-    if (!modelerData || !modelerData->system)
-    {
-        return false;
-    }
-
-    for (const auto& component: modelerData->system->Components())
-    {
-        for (const auto& variable: component.getModel()->Variables())
-        {
-            auto loc = variable.location();
-            if (loc != Solver::Config::Location::MASTER
-                && loc != Solver::Config::Location::MASTER_AND_SUBPROBLEMS)
-            {
-                continue;
-            }
-            if (variable.Type() != ModelerStudy::SystemModel::ValueType::FLOAT)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-} // anonymous namespace
 
 GenerationAndResolutionConfig generate(const Data::Study& study)
 {
@@ -55,13 +26,13 @@ GenerationAndResolutionConfig generate(const Data::Study& study)
     if (auto* modelerData = study.getModelerData(); modelerData)
     {
         auto resMode = modelerData->resolutionMode;
-        bool subpMilp = (ucMode == Data::ucMILP
-                || Antares::Optimization::hasModelerIntegerVariables(modelerData));
+        bool subpMilp = (ucMode == Data::ucMILP || hasSubproblemIntegerVariables(modelerData));
 
         config.resolutionMode = resMode;
         config.master = (resMode == ResolutionMode::BENDERS_DECOMPOSITION)
-            ? (hasMasterIntegerVariables(modelerData) ? SolverType::MILP : SolverType::LP)
-            : SolverType::MILP;
+                          ? (hasMasterIntegerVariables(modelerData) ? SolverType::MILP
+                                                                    : SolverType::LP)
+                          : SolverType::MILP;
         config.subproblems = subpMilp ? SolverType::MILP : SolverType::LP;
     }
     return config;
