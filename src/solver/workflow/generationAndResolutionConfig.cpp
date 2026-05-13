@@ -44,21 +44,26 @@ bool hasMasterIntegerVariables(const Solver::ModelerData* modelerData)
 
 GenerationAndResolutionConfig generate(const Data::Study& study)
 {
-    auto* modelerData = study.getModelerData();
-    const auto ucMode = study.parameters.unitCommitment.ucMode;
-
-    auto resMode = modelerData->resolutionMode;
-    bool heuristic = (ucMode == Data::ucHeuristicFast || ucMode == Data::ucHeuristicAccurate);
-    bool subpMilp = (ucMode == Data::ucMILP
-                     || Antares::Optimization::hasModelerIntegerVariables(modelerData));
-
     GenerationAndResolutionConfig config;
-    config.resolution_mode = resMode;
-    config.use_heuristic = heuristic;
-    config.subproblems = subpMilp ? SolverType::MILP : SolverType::LP;
-    config.master = (resMode == ResolutionMode::BENDERS_DECOMPOSITION)
-                      ? (hasMasterIntegerVariables(modelerData) ? SolverType::MILP : SolverType::LP)
-                      : SolverType::MILP;
+
+    // legacy behavior is default
+    const auto ucMode = study.parameters.unitCommitment.ucMode;
+    config.heuristic = (ucMode == Data::ucHeuristicFast || ucMode == Data::ucHeuristicAccurate);
+    config.subproblems = config.heuristic ? SolverType::LP : SolverType::MILP;
+
+    // modeler allows more complex config
+    if (auto* modelerData = study.getModelerData(); modelerData)
+    {
+        auto resMode = modelerData->resolutionMode;
+        bool subpMilp = (ucMode == Data::ucMILP
+                || Antares::Optimization::hasModelerIntegerVariables(modelerData));
+
+        config.resolutionMode = resMode;
+        config.master = (resMode == ResolutionMode::BENDERS_DECOMPOSITION)
+            ? (hasMasterIntegerVariables(modelerData) ? SolverType::MILP : SolverType::LP)
+            : SolverType::MILP;
+        config.subproblems = subpMilp ? SolverType::MILP : SolverType::LP;
+    }
     return config;
 }
 

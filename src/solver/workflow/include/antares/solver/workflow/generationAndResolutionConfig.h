@@ -17,10 +17,10 @@ enum class SolverType : unsigned
 
 struct GenerationAndResolutionConfig
 {
-    SolverType master = SolverType::MILP;
-    SolverType subproblems = SolverType::MILP;
-    bool use_heuristic = false;
-    ResolutionMode resolution_mode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
+    SolverType master = SolverType::LP;
+    SolverType subproblems = SolverType::LP;
+    bool heuristic = false;
+    ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 
 GenerationAndResolutionConfig generate(const Data::Study& study);
