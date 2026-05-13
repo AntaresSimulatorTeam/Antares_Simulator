@@ -19,7 +19,7 @@ struct GenerationAndResolutionConfig
 {
     SolverType master = SolverType::LP;
     SolverType subproblems = SolverType::LP;
-    bool useThermalHeuristic = false;
+    bool useThermalHeuristic = true;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 
