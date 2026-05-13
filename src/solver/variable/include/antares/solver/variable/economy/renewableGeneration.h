@@ -267,8 +267,8 @@ public:
         // Column layout is study-wide (see initializeFromArea), so every area writes the
         // same captions in the same indices — safe to contribute to the digest now.
         if (AncestorType::isPrinted[0]
-            && (VCardType::categoryDataLevel & Category::DataLevel::area
-                || VCardType::categoryDataLevel & Category::DataLevel::setOfAreas))
+            && (VCardType::categoryDataLevel
+                & (Category::DataLevel::area | Category::DataLevel::setOfAreas)))
         {
             results.isPrinted = AncestorType::isPrinted;
             results.isCurrentVarNA = AncestorType::isNonApplicable;
