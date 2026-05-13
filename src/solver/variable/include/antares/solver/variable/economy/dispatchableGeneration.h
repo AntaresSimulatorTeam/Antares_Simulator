@@ -122,6 +122,7 @@ public:
         groupNames_ = {names.begin(), names.end()};
         groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
+        descriptors_ = buildColumnDescriptors(area);
         nbColumns_ = groupNames_.size();
 
         if (nbColumns_)
@@ -221,6 +222,22 @@ public:
         return descriptors;
     }
 
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Area* area)
+    {
+        std::set<std::string> uniqueGroups;
+        for (auto& cluster: area->thermal.list.each_enabled())
+        {
+            uniqueGroups.insert(cluster->getGroup());
+        }
+
+        std::vector<ColumnDescriptor> descriptors;
+        for (const auto& group: uniqueGroups)
+        {
+            descriptors.push_back({group, "MWh"});
+        }
+        return descriptors;
+    }
+
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto area = state.area;
@@ -265,8 +282,8 @@ public:
 
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            results.variableCaption = groupNames_[column];
-            results.variableUnit = VCardType::Unit();
+            results.variableCaption = descriptors_[column].caption;
+            results.variableUnit = descriptors_[column].unit;
             pValuesForTheCurrentYear[numSpace][column]
               .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
@@ -290,8 +307,8 @@ public:
 
                 for (unsigned int column = 0; column < nbColumns_; column++)
                 {
-                    results.variableCaption = groupNames_[column];
-                    results.variableUnit = VCardType::Unit();
+                    results.variableCaption = descriptors_[column].caption;
+                    results.variableUnit = descriptors_[column].unit;
                     AncestorType::pResults[column]
                       .template buildSurveyReport<ResultsType, VCardType>(
                         results,
@@ -311,6 +328,7 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
     std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
+    std::vector<ColumnDescriptor> descriptors_;
     size_t nbColumns_ = 0;
     unsigned int pNbYearsParallel;
 

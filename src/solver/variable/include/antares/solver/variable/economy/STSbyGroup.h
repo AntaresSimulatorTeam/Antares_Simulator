@@ -140,6 +140,7 @@ public:
         groupNames_ = sortedUniqueGroups(area->shortTermStorage.storagesByIndex);
         groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
+        descriptors_ = buildColumnDescriptors(area);
         nbColumns_ = groupNames_.size() * NB_COLS_PER_GROUP;
 
         if (nbColumns_)
@@ -259,6 +260,24 @@ public:
         return descriptors;
     }
 
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Area* area)
+    {
+        std::set<std::string> uniqueGroups;
+        for (const auto& sts: area->shortTermStorage.storagesByIndex)
+        {
+            uniqueGroups.insert(sts.properties.groupName);
+        }
+
+        std::vector<ColumnDescriptor> descriptors;
+        for (const auto& groupName: uniqueGroups)
+        {
+            descriptors.push_back({groupName + "_INJECTION", "MW"});
+            descriptors.push_back({groupName + "_WITHDRAWAL", "MW"});
+            descriptors.push_back({groupName + "_LEVEL", "MWh"});
+        }
+        return descriptors;
+    }
+
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         using namespace Antares::Data::ShortTermStorage;
@@ -343,8 +362,8 @@ public:
 
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            results.variableCaption = caption(column);
-            results.variableUnit = unit(column);
+            results.variableCaption = descriptors_[column].caption;
+            results.variableUnit = descriptors_[column].unit;
             pValuesForTheCurrentYear[numSpace][column]
               .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
@@ -390,6 +409,7 @@ private:
     size_t nbColumns_ = 0;
     std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
     std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
+    std::vector<ColumnDescriptor> descriptors_;
     const int NB_COLS_PER_GROUP = 3; // Injection + withdrawal + levels = 3 variables
     unsigned int pNbYearsParallel;
 
