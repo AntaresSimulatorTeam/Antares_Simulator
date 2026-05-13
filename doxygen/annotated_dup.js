@@ -202,6 +202,7 @@ var annotated_dup =
           [ "TimeIndexNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1TimeIndexNode" ],
           [ "TimeShiftNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1TimeShiftNode" ],
           [ "TimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode" ],
+          [ "TPlusNode", "classAntares_1_1Expressions_1_1Nodes_1_1TPlusNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1TPlusNode" ],
           [ "UnaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode" ],
           [ "VariableNode", "classAntares_1_1Expressions_1_1Nodes_1_1VariableNode.html", "classAntares_1_1Expressions_1_1Nodes_1_1VariableNode" ]
         ] ],

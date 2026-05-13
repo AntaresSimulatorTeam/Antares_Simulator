@@ -24,6 +24,7 @@ var dir_75cb52c67590822925fc99be5c7920e3 =
     [ "TimeIndexNode.h", "TimeIndexNode_8h_source.html", null ],
     [ "TimeShiftNode.h", "TimeShiftNode_8h_source.html", null ],
     [ "TimeSumNode.h", "TimeSumNode_8h_source.html", null ],
+    [ "TPlusNode.h", "TPlusNode_8h_source.html", null ],
     [ "UnaryNode.h", "UnaryNode_8h_source.html", null ],
     [ "VariableNode.h", "VariableNode_8h_source.html", null ]
 ];

@@ -25,6 +25,7 @@ var classExprVisitor =
     [ "visitShiftPower", "classExprVisitor.html#a3a3fad108b7ee7bf56c333285bcc78af", null ],
     [ "visitSignedAtom", "classExprVisitor.html#af2fed60ca3bd69c4bc33bed973814ede", null ],
     [ "visitSignedExpression", "classExprVisitor.html#a4b84bfd64846d9e95c18a91d3b827149", null ],
+    [ "visitSum_bound", "classExprVisitor.html#a012cadf815edea8d9c1b16ec89655c3b", null ],
     [ "visitTimeIndex", "classExprVisitor.html#a3daddfb4685a1fd3d670b5e29edc99f5", null ],
     [ "visitTimeIndexExpr", "classExprVisitor.html#a8903308ce3fb8422950cf1b0300bba2e", null ],
     [ "visitTimeShift", "classExprVisitor.html#ad5865515876a3550a087b1f3fe58fd5b", null ],

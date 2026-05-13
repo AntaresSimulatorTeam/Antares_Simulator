@@ -19,5 +19,6 @@ var classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor =
     [ "visit", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#ae848541466cf97a8efe3183385549897", null ],
     [ "visit", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#a802c8ba05f2314e546f433c376af2da0", null ],
     [ "visit", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#afb677fdc3486399f705f92397d5be64d", null ],
+    [ "visit", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#abe1859bd5ac1591739c5dbbeb44cc632", null ],
     [ "visit", "classAntares_1_1Expressions_1_1Visitors_1_1CloneVisitor.html#a543b999e3f8e90fba339c1b229883b20", null ]
 ];

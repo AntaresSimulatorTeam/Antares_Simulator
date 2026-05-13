@@ -719,7 +719,8 @@ var hierarchy =
           [ "Antares::Expressions::Nodes::TimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1TimeSumNode.html", null ],
           [ "Antares::Expressions::Nodes::UnaryNode", "classAntares_1_1Expressions_1_1Nodes_1_1UnaryNode.html", [
             [ "Antares::Expressions::Nodes::AllTimeSumNode", "classAntares_1_1Expressions_1_1Nodes_1_1AllTimeSumNode.html", null ],
-            [ "Antares::Expressions::Nodes::NegationNode", "classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html", null ]
+            [ "Antares::Expressions::Nodes::NegationNode", "classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html", null ],
+            [ "Antares::Expressions::Nodes::TPlusNode", "classAntares_1_1Expressions_1_1Nodes_1_1TPlusNode.html", null ]
           ] ]
         ] ],
         [ "Antares::Expressions::Nodes::PortFieldNode", "classAntares_1_1Expressions_1_1Nodes_1_1PortFieldNode.html", null ],
@@ -1072,6 +1073,7 @@ var hierarchy =
         [ "ExprParser::SignedAtomContext", "classExprParser_1_1SignedAtomContext.html", null ],
         [ "ExprParser::SignedExpressionContext", "classExprParser_1_1SignedExpressionContext.html", null ]
       ] ],
+      [ "ExprParser::Sum_boundContext", "classExprParser_1_1Sum__boundContext.html", null ],
       [ "HoursFieldParser::GroupContext", "classHoursFieldParser_1_1GroupContext.html", null ],
       [ "HoursFieldParser::HourContext", "classHoursFieldParser_1_1HourContext.html", null ],
       [ "HoursFieldParser::HoursFieldContext", "classHoursFieldParser_1_1HoursFieldContext.html", null ],
