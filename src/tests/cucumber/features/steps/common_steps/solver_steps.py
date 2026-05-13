@@ -287,7 +287,7 @@ def run_simulation(context):
     context.soh = solver_output_handler(context.output_path, context.mode)
     # for hybrid studies:
     output_dir = Path(context.output_path)
-    simulation_tables = sorted(output_dir.glob("simulation-table-*-optim-nb-1.csv"))
+    simulation_tables = sorted(output_dir.glob("simulation_table-*--optim-nb-1.csv"))
     if simulation_tables:
         context.moh = modeler_output_handler(simulation_tables)
 

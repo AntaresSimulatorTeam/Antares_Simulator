@@ -559,13 +559,13 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
         for (const auto& [year, pair_of_buffers]: yearSimulationBuffers_)
         {
             std::string writerEntry = header + pair_of_buffers.first;
-            pResultWriter.addEntryFromBuffer("simulation-table-" + std::to_string(year)
-                                               + "-optim-nb-1.csv",
+            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
+                                               + "--optim-nb-1.csv",
                                              writerEntry);
 
             writerEntry = header + pair_of_buffers.second;
-            pResultWriter.addEntryFromBuffer("simulation-table-" + std::to_string(year)
-                                               + "-optim-nb-2.csv",
+            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
+                                               + "--optim-nb-2.csv",
                                              writerEntry);
         }
     }
