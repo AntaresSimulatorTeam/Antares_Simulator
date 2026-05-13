@@ -238,10 +238,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
 
     // Variability checks are independent of the local timestep (AST is immutable,
     // visitor doesn't use current timestep), so perform them once before the loop.
-    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(),
-                                                                 variabilityVisitor);
-    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(),
-                                                                 variabilityVisitor);
+    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->from(), variabilityVisitor);
+    Antares::Expressions::Visitors::checkTimeSumBoundVariability(node->to(), variabilityVisitor);
 
     if (expression.isConstant())
     {
@@ -274,7 +272,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
           from,
           to,
           static_cast<int>(nbtimeSteps_),
-          [&ret, &expression, localTimeStep](int timeIndex) { ret[localTimeStep] += expression[timeIndex]; });
+          [&ret, &expression, localTimeStep](int timeIndex)
+          { ret[localTimeStep] += expression[timeIndex]; });
     }
     return ret;
 }

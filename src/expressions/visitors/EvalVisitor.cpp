@@ -207,8 +207,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TPlusNode* node)
 {
     const auto offset = static_cast<int>(dispatch(node->child()).valueAsDouble());
-    return EvaluationResult(static_cast<double>(
-      static_cast<unsigned>(fillContext_.getGlobalFirstTimeStep()) + offset));
+    return EvaluationResult(
+      static_cast<double>(static_cast<unsigned>(fillContext_.getGlobalFirstTimeStep()) + offset));
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)
