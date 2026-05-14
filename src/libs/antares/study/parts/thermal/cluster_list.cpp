@@ -43,7 +43,7 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-static bool ThermalClusterLoadFromSection(const std::string& filename,
+static bool ThermalClusterLoadFromSection(const std::string& areaName,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
@@ -296,7 +296,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     return false;
 }
 
-bool ThermalClusterLoadFromSection(const std::string& filename,
+bool ThermalClusterLoadFromSection(const std::string& areaName,
                                    ThermalCluster& cluster,
                                    const IniFile::Section& section)
 {
@@ -314,14 +314,15 @@ bool ThermalClusterLoadFromSection(const std::string& filename,
         {
             if (property->key.empty())
             {
-                logs.warning() << '`' << filename << "`: `" << section.name
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
                                << "`: Invalid key/value";
                 continue;
             }
             if (!ThermalClusterLoadFromProperty(cluster, property))
             {
-                logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->key << "`: The property is unknown and ignored";
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
+                               << "`/`" << property->key
+                               << "`: The property is unknown and ignored";
             }
         }
     }

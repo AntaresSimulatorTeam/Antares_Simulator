@@ -3,9 +3,11 @@
 
 #include <cassert>
 #include <fstream>
+#include <string>
 
 #include <boost/algorithm/string/trim.hpp>
 
+#include <yuni/core/string.h>
 #include <yuni/io/file.h>
 
 #include <antares/inifile/inifile.h>
@@ -16,8 +18,6 @@
 #include "antares/study/area/area.h"
 #include "antares/study/parts/load/prepro.h"
 #include "antares/utils/utils.h"
-
-using namespace Yuni;
 
 namespace fs = std::filesystem;
 
@@ -322,7 +322,7 @@ static void readAdqPatchMode(Study& study, Area& area)
         auto* section = ini.find("adequacy-patch");
         for (auto* p = section->firstProperty; p; p = p->next)
         {
-            CString<30, false> tmp;
+            Yuni::CString<30, false> tmp;
             tmp = p->key;
             tmp.toLower();
             if (tmp == "adequacy-patch-mode")
@@ -418,7 +418,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Check misc gen
-    buffer.clear() << "Misc Gen: `" << area.id << '`';
+    buffer = "Misc Gen: `" + area.id + '`';
     ret = checkMatrixPositive(area.miscGen, buffer, fhhPSP) && ret;
 
     // Links
@@ -576,7 +576,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           for (auto* p = section.firstProperty; p; p = p->next)
           {
               bool value = p->value.to<bool>();
-              CString<30, false> tmp;
+              Yuni::CString<30, false> tmp;
               tmp = p->key;
               tmp.toLower();
               if (tmp == "non-dispatchable-power")
@@ -670,7 +670,7 @@ void AreaList::ensureDataIsInitialized(Parameters& params)
 bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 {
     bool ret = true;
-    Clob buffer;
+    std::string buffer;
     auto studyVersion = pStudy.header.version;
 
     // Load the list of all available areas

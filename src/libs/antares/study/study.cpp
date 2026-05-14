@@ -428,10 +428,7 @@ bool Study::checkForFilenameLimits() const
             // The maximum filename should be obtained with links :
             // Adequacy/mc-all/areas/languedocroussillon/without-network-hourly.txt
             filename /= (parameters.economy() ? "economy" : "adequacy");
-            filename /= "mc-all";
-            filename /= "areas";
-            filename /= areaname;
-            filename /= "values-hourly.txt";
+            filename /= fs::path("mc-all") / "areas" / areaname / "values-hourly.txt";
         }
     }
     else
@@ -439,10 +436,7 @@ bool Study::checkForFilenameLimits() const
         // The maximum filename should be obtained with links :
         // economy/mc-ind/00001/links/pyrennees\ -\ languedocroussillon/values-hourly.txt
         filename /= (parameters.adequacy() ? "adequacy" : "economy");
-        filename /= "mc-all";
-        filename /= "links";
-        filename /= linkname;
-        filename /= "values-hourly.txt";
+        filename /= fs::path("mc-all") / "links" / linkname / "values-hourly.txt";
     }
 
     auto filenameStr = filename.string();
