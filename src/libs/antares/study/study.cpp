@@ -8,9 +8,9 @@
 #include <cmath> // For use of floor(...) and ceil(...)
 #include <ctime>
 #include <sstream> // std::ostringstream
+#include <string>
 #include <thread>
 
-#include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <yuni/core/system/windows.hdr.h>
@@ -23,10 +23,6 @@
 #include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/utils/utils.h"
-
-using namespace Yuni;
-
-#define SEP IO::Separator
 
 namespace fs = std::filesystem;
 
@@ -259,7 +255,7 @@ fs::path StudyCreateOutputPath(SimulationMode mode,
 
 void Study::prepareOutput()
 {
-    pStartTime = DateTime::Now();
+    pStartTime = std::time(nullptr);
 
     if (parameters.noOutput)
     {
@@ -278,36 +274,33 @@ void Study::prepareOutput()
 
 void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
 {
-    String path;
-    path.reserve(1024);
-
-    path.clear() << "about-the-study" << SEP << "comments.txt";
-    resultWriter.addEntryFromBuffer(path.c_str(), simulationComments);
+    fs::path aboutPath = fs::path("about-the-study") / "comments.txt";
+    resultWriter.addEntryFromBuffer(aboutPath, simulationComments);
 
     // Write the header as a reminder
     {
-        path.clear() << "about-the-study" << SEP << "study.ini";
+        aboutPath = fs::path("about-the-study") / "study.ini";
         Antares::IniFile ini;
         header.CopySettingsToIni(ini, false);
 
         std::string writeBuffer = ini.toString();
-        resultWriter.addEntryFromBuffer(path.c_str(), writeBuffer);
+        resultWriter.addEntryFromBuffer(aboutPath, writeBuffer);
     }
 
     // Write parameters.ini
     {
-        String dest;
-        dest << "about-the-study" << SEP << "parameters.ini";
-
-        buffer.clear() << folderSettings << SEP << "generaldata.ini";
-        resultWriter.addEntryFromFile(dest.c_str(), buffer.c_str());
+        fs::path dest = fs::path("about-the-study") / "parameters.ini";
+        fs::path buffer = fs::path(folderSettings) / "generaldata.ini";
+        resultWriter.addEntryFromFile(dest, buffer);
     }
 
     // antares-output.info
-    path.clear() << "info.antares-output";
+    aboutPath = "info.antares-output";
     std::ostringstream f;
-    String startTimeStr;
-    DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
+    char timeBuffer[64];
+    time_t startTime = static_cast<time_t>(pStartTime);
+    std::strftime(timeBuffer, sizeof(timeBuffer), "%Y.%m.%d - %H:%M", std::localtime(&startTime));
+    std::string startTimeStr(timeBuffer);
     f << "[general]";
     f << "\nversion = " << StudyVersion::latest().toString();
     f << "\nname = " << simulationName;
@@ -316,34 +309,33 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     f << "\ntitle = " << startTimeStr;
     f << "\ntimestamp = " << pStartTime;
     f << "\n\n";
-    auto output = f.str();
-    resultWriter.addEntryFromBuffer(path.c_str(), output);
+    std::string output = f.str();
+    resultWriter.addEntryFromBuffer(aboutPath, output);
 
     if (!parameters.noOutput)
     {
         // Write all available areas as a reminder
         {
-            Yuni::Clob buffer;
-            path.clear() << "about-the-study" << SEP << "areas.txt";
+            std::string buffer;
+            aboutPath = fs::path("about-the-study") / "areas.txt";
             for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
             {
                 if (setsOfAreas.hasOutput(i->first))
                 {
-                    buffer << "@ " << i->first << "\r\n";
+                    buffer += "@ " + i->first + "\r\n";
                 }
             }
-            areas.each([&buffer](const Data::Area& area) { buffer << area.name << "\r\n"; });
-            std::string content = buffer.c_str();
-            resultWriter.addEntryFromBuffer(path.c_str(), content);
+            areas.each([&buffer](const Data::Area& area) { buffer += area.name + "\r\n"; });
+            resultWriter.addEntryFromBuffer(aboutPath, buffer);
         }
 
         // Write all available links as a reminder
         {
-            path.clear() << "about-the-study" << SEP << "links.txt";
-            Yuni::Clob buffer;
-            areas.saveLinkListToBuffer(buffer);
-            std::string content = buffer.c_str();
-            resultWriter.addEntryFromBuffer(path.c_str(), content);
+            aboutPath = fs::path("about-the-study") / "links.txt";
+            Yuni::Clob linkBuffer;
+            areas.saveLinkListToBuffer(linkBuffer);
+            std::string linkContent = linkBuffer.c_str();
+            resultWriter.addEntryFromBuffer(aboutPath, linkContent);
         }
     }
 }
@@ -404,8 +396,8 @@ bool Study::checkForFilenameLimits() const
         return true;
     }
 
-    String linkname;
-    String areaname;
+    std::string linkname;
+    std::string areaname;
 
     areas.each(
       [&linkname, &areaname](const Area& area)
@@ -424,15 +416,14 @@ bool Study::checkForFilenameLimits() const
               if (len > linkname.size())
               {
                   linkname.clear();
-                  linkname << i->second->from->id;
-                  linkname << " - "; // 3
-                  linkname << i->second->with->id;
+                  linkname += i->second->from->id;
+                  linkname += " - "; // 3
+                  linkname += i->second->with->id;
               }
           }
       });
 
-    String filename;
-    filename << folder << SEP << "output" << SEP;
+    fs::path filename = folder / "output";
 
     if (linkname.empty())
     {
@@ -445,26 +436,30 @@ bool Study::checkForFilenameLimits() const
             // no links : obtained from areas
             // The maximum filename should be obtained with links :
             // Adequacy/mc-all/areas/languedocroussillon/without-network-hourly.txt
-            filename << (parameters.economy() ? "economy" : "adequacy") << SEP;
-            filename << "mc-all" << SEP << "areas";
-            filename << SEP << areaname << SEP;
-            filename << "values-hourly.txt";
+            filename /= (parameters.economy() ? "economy" : "adequacy");
+            filename /= "mc-all";
+            filename /= "areas";
+            filename /= areaname;
+            filename /= "values-hourly.txt";
         }
     }
     else
     {
         // The maximum filename should be obtained with links :
         // economy/mc-ind/00001/links/pyrennees\ -\ languedocroussillon/values-hourly.txt
-        filename << (parameters.adequacy() ? "adequacy" : "economy") << SEP;
-        filename << "mc-all" << SEP << "links";
-        filename << SEP << linkname << SEP << "values-hourly.txt";
+        filename /= (parameters.adequacy() ? "adequacy" : "economy");
+        filename /= "mc-all";
+        filename /= "links";
+        filename /= linkname;
+        filename /= "values-hourly.txt";
     }
 
-    if (not filename.empty() and filename.size() >= limit)
+    auto filenameStr = filename.string();
+    if (not filenameStr.empty() and filenameStr.size() >= limit)
     {
         logs.error() << "OS Maximum path length limitation obtained with the link '" << linkname
-                     << "' (got " << filename.size() << " characters)";
-        logs.error() << "You may experience problems while accessing to this file: " << filename;
+                     << "' (got " << filenameStr.size() << " characters)";
+        logs.error() << "You may experience problems while accessing to this file: " << filenameStr;
         return false;
     }
     return true;

@@ -106,26 +106,7 @@ public:
     ** \brief Clear all ressources held by the study
     */
     void clear();
-
-    /*!
-    ** \brief Save the study into a folder
-    **
-    ** \param folder The folder where to write data
-    ** \return True if succeeded, false otherwise
-    */
-    bool saveToFolder(const AnyString& newfolder);
     //@}
-
-    //! \name Areas
-    //@{
-    /*!
-    ** \brief Try to find a name for a new area
-    **
-    ** \param out      The new name
-    ** \param basename The root base name
-    ** \return True if a new name has been found, false otherwise
-    */
-    bool modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename);
 
     //! \name Time-series
     //@{
