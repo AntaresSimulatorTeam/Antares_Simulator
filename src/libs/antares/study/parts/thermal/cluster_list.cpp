@@ -43,7 +43,7 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-static bool ThermalClusterLoadFromSection(const AnyString& filename,
+static bool ThermalClusterLoadFromSection(const std::string& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
@@ -99,7 +99,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
-        if (!ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
+        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section))
         {
             continue;
         }
@@ -296,7 +296,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     return false;
 }
 
-bool ThermalClusterLoadFromSection(const AnyString& filename,
+bool ThermalClusterLoadFromSection(const std::string& filename,
                                    ThermalCluster& cluster,
                                    const IniFile::Section& section)
 {

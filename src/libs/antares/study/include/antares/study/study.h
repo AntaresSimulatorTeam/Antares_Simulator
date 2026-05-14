@@ -350,12 +350,11 @@ public:
     ** \brief Mark the whole study as modified
     */
     //@{
-    //! A buffer for temporary operations on filename
-    mutable YString buffer;
     //! A buffer for temporary operations on large amount of data
     mutable Matrix<>::BufferType dataBuffer;
     //! A buffer used when loading time-series for dealing with filenames (prepro/series only)
     mutable YString bufferLoadingTS;
+
     //@}
 
     //! The queue service that runs every set of parallel years

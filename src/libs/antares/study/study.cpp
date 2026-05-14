@@ -82,7 +82,6 @@ void Study::clear()
 
 void Study::reduceMemoryUsage()
 {
-    ClearAndShrink(buffer);
     ClearAndShrink(dataBuffer);
     ClearAndShrink(bufferLoadingTS);
 }
@@ -282,8 +281,8 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     // Write parameters.ini
     {
         fs::path dest = fs::path("about-the-study") / "parameters.ini";
-        fs::path buffer = fs::path(folderSettings) / "generaldata.ini";
-        resultWriter.addEntryFromFile(dest, buffer);
+        fs::path src = fs::path(folderSettings) / "generaldata.ini";
+        resultWriter.addEntryFromFile(dest, src);
     }
 
     // antares-output.info
