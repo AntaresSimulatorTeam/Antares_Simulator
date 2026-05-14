@@ -11,16 +11,8 @@
 #include <string>
 #include <thread>
 
-#include <yuni/core/string.h>
-#include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
-#include <yuni/core/system/windows.hdr.h>
-#include <yuni/datetime/timestamp.h>
-#include <yuni/io/file.h>
-
 #include <antares/writer/writer_factory.h>
-#include "antares/antares/antares.h"
 #include "antares/study/area/constants.h"
-#include "antares/study/runtime.h"
 #include "antares/study/scenario-builder/sets.h"
 #include "antares/utils/utils.h"
 
@@ -384,7 +376,7 @@ bool Study::checkForFilenameLimits() const
 {
     enum
     {
-#ifdef YUNI_OS_WINDOWS
+#ifdef _WIN32
         limit = 255, // zero-terminated
 #else
         limit = 4090,

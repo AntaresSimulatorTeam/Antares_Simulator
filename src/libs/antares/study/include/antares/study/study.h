@@ -20,7 +20,6 @@
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 
 #include "area/store-timeseries-numbers.h"
-#include "binding_constraint/BindingConstraint.h"
 #include "fwd.h"
 #include "header.h"
 #include "parameters.h"
