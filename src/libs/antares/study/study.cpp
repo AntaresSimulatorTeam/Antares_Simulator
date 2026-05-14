@@ -323,9 +323,9 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
         // Write all available links as a reminder
         {
             aboutPath = fs::path("about-the-study") / "links.txt";
-            Yuni::Clob linkBuffer;
+            std::ostringstream linkBuffer;
             areas.saveLinkListToBuffer(linkBuffer);
-            std::string linkContent = linkBuffer.c_str();
+            std::string linkContent = linkBuffer.str();
             resultWriter.addEntryFromBuffer(aboutPath, linkContent);
         }
     }

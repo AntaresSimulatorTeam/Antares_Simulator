@@ -294,7 +294,7 @@ bool AreaList::loadListFromFile(const fs::path& filename)
     return true;
 }
 
-void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
+void AreaList::saveLinkListToBuffer(std::ostream& buffer) const
 {
     each(
       [&buffer](const Data::Area& area)
