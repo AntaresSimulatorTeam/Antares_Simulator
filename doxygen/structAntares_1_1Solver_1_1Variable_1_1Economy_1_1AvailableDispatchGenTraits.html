@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Solver::Variable::Economy::AvailableDispatchGen&lt; NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</title>
+<title>Antares Simulator: Antares::Solver::Variable::Economy::AvailableDispatchGenTraits Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen_1_1Statistics.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -125,17 +125,58 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
-<a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen_1_1Statistics-members.html">List of all members</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Solver::Variable::Economy::AvailableDispatchGen&lt; NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</div>  </div>
+<div class="title">Antares::Solver::Variable::Economy::AvailableDispatchGenTraits Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a70be5299b2fba5fa4de03de115e67e6e"><td class="memItemLeft" align="right" valign="top"><a id="a70be5299b2fba5fa4de03de115e67e6e"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>count</b>
- }</td></tr>
-<tr class="separator:a70be5299b2fba5fa4de03de115e67e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5deb9e7cab5feca66ccfbacfedb69b9"><td class="memItemLeft" align="right" valign="top"><a id="af5deb9e7cab5feca66ccfbacfedb69b9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ResultsType</b> = <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">R::AllYears::Min</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">R::AllYears::Max</a>&lt;&gt; &gt;&gt; &gt;&gt;</td></tr>
+<tr class="separator:af5deb9e7cab5feca66ccfbacfedb69b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af75c02a2e70bcba45ecf048967871dc0"><td class="memItemLeft" align="right" valign="top"><a id="af75c02a2e70bcba45ecf048967871dc0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>AuxiliaryDataType</b> = <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *</td></tr>
+<tr class="separator:af75c02a2e70bcba45ecf048967871dc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a4cf8a35e657e9d6ca93ee4055810e6f5"><td class="memItemLeft" align="right" valign="top"><a id="a4cf8a35e657e9d6ca93ee4055810e6f5"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Caption</b> ()</td></tr>
+<tr class="separator:a4cf8a35e657e9d6ca93ee4055810e6f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6df23675a831ebc01e2b59bd9de1a049"><td class="memItemLeft" align="right" valign="top"><a id="a6df23675a831ebc01e2b59bd9de1a049"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Unit</b> ()</td></tr>
+<tr class="separator:a6df23675a831ebc01e2b59bd9de1a049"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0adcdfddac4d5e4a1d5d7f571c64f10c"><td class="memItemLeft" align="right" valign="top"><a id="a0adcdfddac4d5e4a1d5d7f571c64f10c"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b> ()</td></tr>
+<tr class="separator:a0adcdfddac4d5e4a1d5d7f571c64f10c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2ea799d972965f273a61c82efd1447b"><td class="memItemLeft" align="right" valign="top"><a id="af2ea799d972965f273a61c82efd1447b"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromArea</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> &amp;area, <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> *, <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *inputArea)</td></tr>
+<tr class="separator:af2ea799d972965f273a61c82efd1447b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a340e1d9442606344d1521af70de66998"><td class="memItemLeft" align="right" valign="top"><a id="a340e1d9442606344d1521af70de66998"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearBegin</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;yearlyValues, <a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area, unsigned int year, unsigned int)</td></tr>
+<tr class="separator:a340e1d9442606344d1521af70de66998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fd89fca3a9d94c081b6fd7a750ee368"><td class="memItemLeft" align="right" valign="top"><a id="a5fd89fca3a9d94c081b6fd7a750ee368"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkCondition</b> (const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;)</td></tr>
+<tr class="separator:a5fd89fca3a9d94c081b6fd7a750ee368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a098e9c7e1f1450494131f1fd05a46a3e"><td class="memItemLeft" align="right" valign="top"><a id="a098e9c7e1f1450494131f1fd05a46a3e"></a>
+static double&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> (const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;)</td></tr>
+<tr class="separator:a098e9c7e1f1450494131f1fd05a46a3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78c943866ab39fe758ca39cf4d60a055"><td class="memItemLeft" align="right" valign="top"><a id="a78c943866ab39fe758ca39cf4d60a055"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeStats</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;intermediateValues)</td></tr>
+<tr class="separator:a78c943866ab39fe758ca39cf4d60a055"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:aeb4189c4994a56552ed802c0527fd64c"><td class="memItemLeft" align="right" valign="top"><a id="aeb4189c4994a56552ed802c0527fd64c"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>decimal</b> = 0</td></tr>
+<tr class="separator:aeb4189c4994a56552ed802c0527fd64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0347b9bed9e1af70029dcd9851f20987"><td class="memItemLeft" align="right" valign="top"><a id="a0347b9bed9e1af70029dcd9851f20987"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>spatialAggregate</b> = Category::spatialAggregateSum</td></tr>
+<tr class="separator:a0347b9bed9e1af70029dcd9851f20987"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/solver/variable/include/antares/solver/variable/economy/<a class="el" href="avail-dispatchable-generation_8h_source.html">avail-dispatchable-generation.h</a></li>
@@ -145,7 +186,7 @@ Public Types</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html">AvailableDispatchGen</a></li><li class="navelem"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen_1_1Statistics.html">Statistics</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html">AvailableDispatchGenTraits</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

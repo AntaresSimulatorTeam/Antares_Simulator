@@ -70,6 +70,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::detail::AuxiliaryDataType< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html", null ],
     [ "Antares::Solver::Variable::Economy::detail::AuxiliaryDataType< TraitsT, std::void_t< typename TraitsT::AuxiliaryDataType > >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html", null ],
     [ "Antares::TSGenerator::AvailabilityTSGeneratorData", "classAntares_1_1TSGenerator_1_1AvailabilityTSGeneratorData.html", null ],
+    [ "Antares::Solver::Variable::Economy::AvailableDispatchGenTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html", null ],
     [ "Antares::Solver::Variable::R::AllYears::AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
     [ "antlr4::BaseErrorListener", null, [
@@ -469,9 +470,6 @@ var hierarchy =
       ] ],
       [ "Antares::Solver::Variable::IVariable< HydroStorage< Container::EndOfList >, Container::EndOfList, VCardHydroStorage >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::HydroStorage< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html", null ]
-      ] ],
-      [ "Antares::Solver::Variable::IVariable< AvailableDispatchGen< Container::EndOfList >, Container::EndOfList, VCardAvailableDispatchGen >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
-        [ "Antares::Solver::Variable::Economy::AvailableDispatchGen< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< PriceCSR< Container::EndOfList >, Container::EndOfList, VCardPriceCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::PriceCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html", null ]
@@ -1299,7 +1297,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::Common::SpatialAggregate< VarT, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Container::EndOfList::Statistics< CategoryDataLevel, CategoryFile >", "structAntares_1_1Solver_1_1Variable_1_1Container_1_1EndOfList_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::DummyVariable::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1DummyVariable_1_1Statistics.html", null ],
-    [ "Antares::Solver::Variable::Economy::AvailableDispatchGen< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGen_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::Balance< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::BindingConstMarginCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1BindingConstMarginCost_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::ByPlantBase< Traits, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ByPlantBase_1_1Statistics.html", null ],
@@ -1353,7 +1350,6 @@ var hierarchy =
     [ "FSWalker::Statistics", "classFSWalker_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardT >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCard_Base< Traits > >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
-    [ "Antares::Solver::Variable::Storage< VCardAvailableDispatchGen >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardBalance >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardBindingConstMarginCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardByPlantBase< Traits > >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1572,7 +1568,6 @@ var hierarchy =
     [ "Antares::Solver::Variable::VCardAllBindingConstraints", "structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html", null ],
     [ "Antares::Solver::Variable::VCardAllLinks", "structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html", null ],
     [ "Antares::Solver::Variable::VCardAllSetsOfAreas", "structAntares_1_1Solver_1_1Variable_1_1VCardAllSetsOfAreas.html", null ],
-    [ "Antares::Solver::Variable::Economy::VCardAvailableDispatchGen", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardAvailableDispatchGen.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardBalance", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBalance.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardBindingConstMarginCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardBindingConstMarginCost.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardByPlantBase< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardByPlantBase.html", null ],
