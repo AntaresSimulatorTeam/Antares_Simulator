@@ -58,6 +58,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, OneAreaStudy)
 
     areaA->thermal.list.addToCompleteList(disabledCluster);
     areaA->thermal.list.addToCompleteList(enabledCluster);
+    areaA->thermal.list.buildIndexes();
 
     // Check that "Cluster1" isn't found
     for (const auto& c: areaA->thermal.list.each_enabled())
@@ -77,6 +78,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, OneAreaStudy)
 
     areaA->renewable.list.addToCompleteList(disabledCluster);
     areaA->renewable.list.addToCompleteList(enabledCluster);
+    areaA->thermal.list.buildIndexes();
 
     // Check that "Cluster1" isn't found
     for (const auto& c: areaA->renewable.list.each_enabled())
@@ -134,6 +136,7 @@ BOOST_FIXTURE_TEST_CASE(thermal_cluster_add, OneAreaStudy)
     BOOST_CHECK_EQUAL(newCluster->id(), "cluster");
 
     areaA->thermal.list.addToCompleteList(newCluster);
+    areaA->thermal.list.buildIndexes();
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster"), newCluster.get());
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("Cluster"), nullptr);
 }
@@ -150,6 +153,7 @@ struct ThermalClusterStudy: public OneAreaStudy
         auto newCluster = std::make_shared<ThermalCluster>(areaA);
         newCluster->setName("Cluster");
         areaA->thermal.list.addToCompleteList(newCluster);
+        areaA->thermal.list.buildIndexes();
         cluster = newCluster.get();
     }
 
@@ -250,6 +254,7 @@ BOOST_FIXTURE_TEST_CASE(renewable_cluster_add, OneAreaStudy)
     BOOST_CHECK(newCluster->id() == "windcluster");
 
     areaA->renewable.list.addToCompleteList(newCluster);
+    areaA->thermal.list.buildIndexes();
     BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == newCluster.get());
     BOOST_CHECK(areaA->renewable.list.findInAll("WindCluster") == nullptr);
 }
@@ -266,6 +271,7 @@ struct RenewableClusterStudy: public OneAreaStudy
         auto newCluster = std::make_shared<RenewableCluster>(areaA);
         newCluster->setName("WindCluster");
         areaA->renewable.list.addToCompleteList(newCluster);
+        areaA->thermal.list.buildIndexes();
         cluster = newCluster.get();
     }
 

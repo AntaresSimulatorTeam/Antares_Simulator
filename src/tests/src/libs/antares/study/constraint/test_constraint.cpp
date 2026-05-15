@@ -402,6 +402,7 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
         cluster->enabled = enabled;
         cluster->mustrun = mustrun;
         area->thermal.list.addToCompleteList(cluster);
+        area->thermal.list.buildIndexes();
         bc.weight(cluster.get(), 5);
         return bc.clusterCount();
     };

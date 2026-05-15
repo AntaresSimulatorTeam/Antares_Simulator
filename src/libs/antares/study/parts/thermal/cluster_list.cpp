@@ -139,7 +139,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         addToCompleteList(cluster);
     }
 
-    sortCompleteList();
     buildIndexes();
     rebuildIndex();
 

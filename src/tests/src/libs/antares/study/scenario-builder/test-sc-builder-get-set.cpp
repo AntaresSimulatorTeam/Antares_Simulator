@@ -93,6 +93,8 @@ public:
     {
         area1->thermal.list.addToCompleteList(thcluster);
         area1->renewable.list.addToCompleteList(rencluster);
+        area1->thermal.list.buildIndexes();
+        area1->renewable.list.buildIndexes();
         area1->shortTermStorage.storagesByIndex.push_back({});
         sts = &(area1->shortTermStorage.storagesByIndex.back());
         sts->additionalConstraints.push_back(

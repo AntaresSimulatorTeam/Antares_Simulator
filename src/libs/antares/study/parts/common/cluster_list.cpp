@@ -122,6 +122,8 @@ unsigned int ClusterList<ClusterT>::allClustersCount() const
 template<class ClusterT>
 void ClusterList<ClusterT>::buildIndexes()
 {
+    sortCompleteList();
+
     // First, we give an index to every cluster, enabled / must-run or not.
     // We do that to :
     //  - Stick to what was done before and not change the results
