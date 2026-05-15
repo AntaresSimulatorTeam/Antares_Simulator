@@ -56,11 +56,6 @@ public:
 
     std::vector<std::shared_ptr<ClusterT>> all() const;
 
-    /*!
-    ** \brief Remove properly a cluster
-    */
-    virtual bool remove(const std::string& id);
-
     //@}
 
     SharedPtr operator[](std::size_t idx)
@@ -115,7 +110,7 @@ protected:
     virtual std::string typeID() const = 0;
 
     // Give a special index to enabled clusters (thermal / renewable)
-    void rebuildIndexes();
+    void buildIndexes();
 
 private:
     bool alreadyInAllClusters(std::string clusterName);

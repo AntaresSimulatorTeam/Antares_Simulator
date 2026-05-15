@@ -156,15 +156,6 @@ struct ThermalClusterStudy: public OneAreaStudy
     ThermalCluster* cluster;
 };
 
-BOOST_FIXTURE_TEST_CASE(thermal_cluster_delete, ThermalClusterStudy)
-{
-    // gp : remove() only used in GUI (will go away when removing the GUI)
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster"), cluster);
-    areaA->thermal.list.remove("cluster");
-    BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster"), nullptr);
-    BOOST_CHECK(areaA->thermal.list.empty());
-}
-
 // Custom macro
 #define BOOST_CHECK_EQUAL_MESSAGE(L, R, M) \
     {                                      \
@@ -280,15 +271,6 @@ struct RenewableClusterStudy: public OneAreaStudy
 
     RenewableCluster* cluster;
 };
-
-BOOST_FIXTURE_TEST_CASE(renewable_cluster_delete, RenewableClusterStudy)
-{
-    // gp : remove() only used in GUI (will go away when removing the GUI)
-    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == cluster);
-    BOOST_CHECK(areaA->renewable.list.remove("windcluster"));
-    BOOST_CHECK(areaA->renewable.list.findInAll("windcluster") == nullptr);
-    BOOST_CHECK(areaA->renewable.list.empty());
-}
 
 BOOST_AUTO_TEST_SUITE_END() // renewable clusters
 

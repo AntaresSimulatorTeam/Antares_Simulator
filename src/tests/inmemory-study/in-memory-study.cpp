@@ -26,7 +26,6 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
 {
     auto cluster = std::make_shared<ThermalCluster>(area);
     cluster->setName(clusterName);
-    cluster->reset();
 
     area->thermal.list.addToCompleteList(cluster);
 
