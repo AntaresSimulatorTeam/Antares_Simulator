@@ -364,37 +364,6 @@ void ThermalClusterList::ensureDataPrepro()
     }
 }
 
-bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
-{
-    Clob buffer;
-    bool ret = true;
-
-    for (auto& c: allClusters_)
-    {
-        if (c->prepro)
-        {
-            assert(c->parentArea && "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-            ret = c->prepro->saveToFolder(buffer) && ret;
-        }
-    }
-    return ret;
-}
-
-bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
-{
-    Clob buffer;
-    bool ret = true;
-
-    for (auto& c: allClusters_)
-    {
-        assert(c->parentArea && "cluster: invalid parent area");
-        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-        ret = c->ecoInput.saveToFolder(buffer) && ret;
-    }
-    return ret;
-}
-
 bool ThermalClusterList::loadPreproFromFolder(Study& study, const fs::path& folder)
 {
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };

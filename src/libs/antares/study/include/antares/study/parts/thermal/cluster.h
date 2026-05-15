@@ -100,13 +100,6 @@ public:
     */
     bool integrityCheck() override;
 
-    /*!
-    ** \brief Copy data from another cluster
-    **
-    ** The name and the id will remain untouched.
-    */
-    void copyFrom(const ThermalCluster& cluster);
-
     //! \name validity of Min Stable Power
     //@{
     // bool minStablePowerValidity() const;
