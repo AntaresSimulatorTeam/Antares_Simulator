@@ -161,61 +161,6 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
     ts.roundAllEntries();
 }
 
-void Data::ThermalCluster::reset()
-{
-    Cluster::reset();
-
-    mustrun = false;
-    mustrunOrigin = false;
-    nominalCapacityWithSpinning = 0.;
-    minDivModulation.isCalculated = false;
-    minStablePower = 0.;
-    minUpDownTime = 1;
-    minUpTime = 1;
-    minDownTime = 1;
-
-    // spinning
-    spinning = 0.;
-
-    // efficiency
-    fuelEfficiency = 100.0;
-
-    // pollutant emissions array
-    emissions.factors.fill(0);
-    // volatility
-    forcedVolatility = 0.;
-    plannedVolatility = 0.;
-    // laws
-    plannedLaw = LawUniform;
-    forcedLaw = LawUniform;
-
-    // costs
-    costgeneration = setManually;
-    marginalCost = 0.;
-    spreadCost = 0.;
-    fixedCost = 0.;
-    startupCost = 0.;
-    marketBidCost = 0.;
-    variableomcost = 0.;
-
-    // modulation
-    modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
-    modulation.fill(1.);
-    modulation.fillColumn(thermalMinGenModulation, 0.);
-
-    // prepro
-    // warning: the variables `prepro` and `series` __must__ not be destroyed
-    //   since the interface may still have a pointer to them.
-    //   we must simply reset their content.
-    if (!prepro)
-    {
-        prepro = std::make_unique<PreproAvailability>(id(), unitCount);
-    }
-
-    prepro->reset();
-    ecoInput.reset();
-}
-
 bool Data::ThermalCluster::integrityCheck()
 {
     if (!parentArea)

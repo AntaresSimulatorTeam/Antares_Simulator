@@ -65,13 +65,6 @@ public:
     ThermalCluster() = delete;
     ~ThermalCluster() = default;
 
-    /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    void reset() override;
-
     //! \name Spinning
     //@{
     /*!

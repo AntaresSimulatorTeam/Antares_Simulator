@@ -27,11 +27,6 @@ public:
     //@}
 
     /*!
-    ** \brief Reset all values to their default ones
-    */
-    void reset();
-
-    /*!
     ** \brief Load settings for the thermal prepro from a folder
     **
     ** \param folder The source folder

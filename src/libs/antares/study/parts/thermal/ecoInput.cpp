@@ -65,10 +65,4 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
     return ret;
 }
 
-void EconomicInputData::reset()
-{
-    fuelcost.reset(1, HOURS_PER_YEAR, true);
-    co2cost.reset(1, HOURS_PER_YEAR, true);
-}
-
 } // namespace Antares::Data

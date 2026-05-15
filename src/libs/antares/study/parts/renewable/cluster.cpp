@@ -21,35 +21,6 @@ Data::RenewableCluster::RenewableCluster(Area* parent):
     assert(parent and "A parent for a renewable dispatchable cluster can not be null");
 }
 
-void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
-{
-    // Note: In this method, only the data can be copied (and not the name or
-    //   the ID for example)
-
-    // group
-    setGroup(cluster.getGroup());
-
-    // Enabled
-    enabled = cluster.enabled;
-    // unit count
-    unitCount = cluster.unitCount;
-    // nominal capacity
-    nominalCapacity = cluster.nominalCapacity;
-
-    // ts-mode
-    tsMode = cluster.tsMode;
-
-    // timseries
-    series.timeSeries = cluster.series.timeSeries;
-    cluster.series.timeSeries.unloadFromMemory();
-    series.timeseriesNumbers.clear();
-}
-
-void Data::RenewableCluster::reset()
-{
-    Cluster::reset();
-}
-
 bool Data::RenewableCluster::integrityCheck()
 {
     if (not parentArea)
@@ -83,18 +54,6 @@ bool Data::RenewableCluster::setTimeSeriesModeFromString(const YString& value)
         return true;
     }
     return false;
-}
-
-YString Data::RenewableCluster::getTimeSeriesModeAsString() const
-{
-    switch (tsMode)
-    {
-    case powerGeneration:
-        return "power-generation";
-    case productionFactor:
-        return "production-factor";
-    }
-    return "unknown";
 }
 
 double RenewableCluster::valueAtTimeStep(uint year, uint hourInYear) const
