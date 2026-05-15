@@ -149,7 +149,7 @@ public:
             AncestorType::pResults.clear();
         }
 
-        initializeAuxiliaryDataIfSupported(auxiliaryData_, study, pNbYearsParallel, pSize);
+        initializeDataIfSupported(auxiliaryData_, study, pNbYearsParallel, pSize);
 
         // Next
         NextType::initializeFromArea(study, area);
@@ -334,19 +334,19 @@ protected:
         }
     }
 
-    static void initializeAuxiliaryDataIfSupported(AuxiliaryDataType& auxiliaryData,
+    static void initializeDataIfSupported(AuxiliaryDataType& auxiliaryData,
                                                    Data::Study* study,
                                                    unsigned int nbYearsParallel,
                                                    size_t nbClusters)
     {
         if constexpr (requires {
-                          Traits::initializeAuxiliaryData(auxiliaryData,
+                          Traits::initializeData(auxiliaryData,
                                                           study,
                                                           nbYearsParallel,
                                                           nbClusters);
                       })
         {
-            Traits::initializeAuxiliaryData(auxiliaryData, study, nbYearsParallel, nbClusters);
+            Traits::initializeData(auxiliaryData, study, nbYearsParallel, nbClusters);
         }
     }
 

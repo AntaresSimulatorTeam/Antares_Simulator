@@ -30,15 +30,13 @@ struct AvailableDispatchGenTraits
     static constexpr uint8_t decimal = 0;
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
 
-    using AuxiliaryDataType = Data::Area*;
-
-    static void initializeFromArea(AuxiliaryDataType& area, Data::Study*, Data::Area* inputArea)
+    static void initializeFromArea(Data::Area*& area, Data::Study*, Data::Area* inputArea)
     {
         area = inputArea;
     }
 
     static void yearBegin(IntermediateValues& yearlyValues,
-                          AuxiliaryDataType area,
+                          Data::Area* area,
                           unsigned int year,
                           unsigned int)
     {
