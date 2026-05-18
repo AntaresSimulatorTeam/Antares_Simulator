@@ -59,7 +59,7 @@ void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
     area->renewable.list.addToCompleteList(cluster);
-    area->thermal.list.buildIndexes();
+    area->renewable.list.buildIndexes();
 }
 
 template<class ClusterType>
