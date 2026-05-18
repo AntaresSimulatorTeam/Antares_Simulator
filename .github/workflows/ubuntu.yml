@@ -400,7 +400,7 @@ jobs:
       run: exit 1
 
     - name: Installer .deb creation
-      if: ${{ success() && matrix.isUploadTarget }}
+      if: ${{ matrix.isUploadTarget }}
       run: |
         cd _build
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
