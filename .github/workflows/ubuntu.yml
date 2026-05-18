@@ -45,7 +45,7 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
 
     runs-on: ubuntu-22.04
-    if: "!contains(github.event.head_commit.message, '[skip ci]') && (matrix.testNRTarget != 'latestTestNR' || github.ref == 'refs/heads/develop')"
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     strategy:
       fail-fast: false
