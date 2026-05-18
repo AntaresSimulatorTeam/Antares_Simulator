@@ -3,6 +3,7 @@
 
 #include <mutex>
 
+#include <antares/antares/constants.h>
 #include <antares/antares/fatal-error.h>
 #include <antares/logs/logs.h>
 #include <antares/solver/utils/ortools_utils.h>
@@ -79,7 +80,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 {
     unsigned globalFirst, globalLast;
     unsigned localFirst = 0, localLast;
-    auto nTsInDay = static_cast<unsigned>(problemeHebdo->NombreDePasDeTempsDUneJournee);
+    auto nTsInDay = HOURS_PER_DAY;
     if (problemeHebdo->OptimisationAuPasHebdomadaire)
     {
         globalFirst = static_cast<unsigned>(problemeHebdo->HeureDansLAnnee);
@@ -100,8 +101,7 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
             problemeHebdo->year}; // TODO: handle scenarios/year
 }
 
-// Returns a shared_ptr to the solver
-void fillLinearProblem(FillContext& fillCtx,
+void fillLinearProblem(const FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
                        OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
