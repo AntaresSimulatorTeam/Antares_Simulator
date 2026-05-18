@@ -74,8 +74,27 @@ class modeler_output_handler:
         else:
             df = df[df["scenario_index"] == scenario]
         if len(df) != 1:
+            all_components = self.simulation_table["component"].dropna().unique().tolist()
+            all_outputs = self.simulation_table["output"].dropna().unique().tolist()
+            available_components = sorted([str(c) for c in all_components])
+            available_outputs = sorted([str(o) for o in all_outputs])
+            available_timesteps = sorted(df["absolute_time_index"].unique().tolist()) if not df.empty else "n/a (no component/output match)"
+            
+            df_for_comp = self.simulation_table[(self.simulation_table["component"] == component)]
+            available_for_comp = sorted(df_for_comp["absolute_time_index"].unique().tolist()) if not df_for_comp.empty else "none"
+            
             raise LookupError(
-                f"Simulation table contains {len(df)} row(s) (expected 1) for component '{component}', output '{output}', block '{block}', timestep '{timestep}', scenario '{scenario}'")
+                f"Simulation table lookup failed for:\n"
+                f"  component: '{component}'\n"
+                f"  output: '{output}'\n"
+                f"  block: '{block}'\n"
+                f"  timestep: '{timestep}'\n"
+                f"  scenario: '{scenario}'\n"
+                f"Found {len(df)} row(s) (expected 1).\n"
+                f"Available components: {available_components}\n"
+                f"Available outputs: {available_outputs}\n"
+                f"Available timesteps for component '{component}': {available_for_comp}\n"
+                f"Available absolute_time_index values: {available_timesteps}")
         return df["value"].iloc[0]
 
     def get_objective_value(self):
