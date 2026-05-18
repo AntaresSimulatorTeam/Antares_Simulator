@@ -23,6 +23,8 @@ public:
 
     virtual std::any visitFullexpr(ExprParser::FullexprContext *context) = 0;
 
+    virtual std::any visitSum_bound(ExprParser::Sum_boundContext *context) = 0;
+
     virtual std::any visitPortFieldSum(ExprParser::PortFieldSumContext *context) = 0;
 
     virtual std::any visitNegation(ExprParser::NegationContext *context) = 0;

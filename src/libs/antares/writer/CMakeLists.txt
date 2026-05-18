@@ -45,6 +45,9 @@ target_link_libraries(parquet_writer
   PUBLIC
   Antares::simulation-table
   Antares::exception
+  PRIVATE
+  # Keep Arrow/Parquet inside libparquet_writer to avoid re-linking their static
+  # objects into consumers, which can double-register/destroy generated globals.
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Arrow::arrow_static,Arrow::arrow_shared>"
   "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,Parquet::parquet_static,Parquet::parquet_shared>")
 
@@ -111,7 +114,7 @@ target_link_libraries(result_writer
 
 install(TARGETS parquet_writer
         RUNTIME DESTINATION bin    # .dll on Windows
-        LIBRARY DESTINATION lib    # .so on Linux
+        LIBRARY DESTINATION bin    # .so on Linux, kept next to executables for runtime loading
         ARCHIVE DESTINATION lib    # .lib import library on Windows
 )
 
@@ -122,4 +125,3 @@ install(DIRECTORY include/antares
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/simulation-table-writers_export.h"
         DESTINATION "include/antares/writer"
 )
-

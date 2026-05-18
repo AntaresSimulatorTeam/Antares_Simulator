@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
 
 #include <filesystem>
@@ -13,6 +14,7 @@
 
 // Mock includes for testing - replace with actual includes
 #include <inmemory-modeler.h>
+#include <unit_test_utils.h>
 
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/SimulationTable.h"
@@ -521,11 +523,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer,
-                                                                   compo,
-                                                                   &dummy_data_,
-                                                                   &scenarioGroupRepo.scenario(
-                                                                     compo.getScenarioGroupId()))
+            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
                                                   .dispatch(constraint.expression().RootNode());
             optimEntityContainer->registerConstraint(compo, constraint_variability);
             if (isTimeDependent(constraint_variability))
@@ -1104,18 +1102,15 @@ BOOST_FIXTURE_TEST_CASE(Constructor_ValidPath, TempDirFixture)
     });
 }
 
-BOOST_FIXTURE_TEST_CASE(Constructor_InvalidPath, TempDirFixture)
-{
-    std::filesystem::path invalidPath = tempDir / "nonexistent";
-    BOOST_CHECK_THROW(FileWriter fileWriter(invalidPath), std::runtime_error);
-}
-
 BOOST_FIXTURE_TEST_CASE(Constructor_EmptySimulationId, TempDirFixture)
 {
-    BOOST_CHECK_NO_THROW({
-        FileWriter fileWriter(tempDir);
-        fileWriter.init("");
-    });
+    BOOST_CHECK_EXCEPTION(
+      {
+          FileWriter fileWriter(tempDir);
+          fileWriter.init("");
+      },
+      std::runtime_error,
+      checkMessage("Time identifier cannot be empty. Exiting simulation."));
 }
 
 BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
@@ -1138,7 +1133,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
     }
 
     // Check file was created and contains expected content
-    auto expectedFile = tempDir / "output" / "simulation_table--test_sim.csv";
+    auto expectedFile = tempDir / "output" / "test_sim" / "simulation_table.csv";
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     std::ifstream file(expectedFile);
@@ -1363,7 +1358,7 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
     }
 
     // Verify file exists and has correct name
-    auto expectedFile = tempDir / "output" / ("simulation_table--" + simulationId + ".csv");
+    auto expectedFile = tempDir / "output" / simulationId / "simulation_table.csv";
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     // Read and verify content

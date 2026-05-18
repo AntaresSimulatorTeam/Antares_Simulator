@@ -12,12 +12,15 @@ class solver_input_handler:
         self.files_path["general"] = self.study_root_dir / "settings" / "generaldata.ini"
         self.files_path["study"] = self.study_root_dir / "study.antares"
         self.files_path["thermal"] = self.study_root_dir / "study.antares"
-        reference = self.study_root_dir / "output" / "reference"
-        self.files_path["simulation_table1"] = reference / "simulation_table--optim-nb-1.csv"
-        self.files_path["simulation_table2"] = reference / "simulation_table--optim-nb-2.csv"
+        self.reference = self.study_root_dir / "output" / "reference"
+        self.files_path["simulation_table1"] = self.reference / "simulation_table--optim-nb-1.csv"
+        self.files_path["simulation_table2"] = self.reference / "simulation_table--optim-nb-2.csv"
         self.files_path["input"] = self.study_root_dir / "input"
         self.files_path["reserves"] = self.study_root_dir / "input" / "reserves"
         self.files_path["reserve_ini_folder"] = self.study_root_dir / ".." / "reserves_ini_files"
+
+    def reference_dir(self):
+        return self.reference
 
     def get_value(self, variable, file_nick_name):
         # File path
@@ -108,4 +111,3 @@ class solver_input_handler:
 
     def set_parameter_from_file(self, area, sectionName, paramName, paramValue):
         self.set_reserve_value(area.lower(), sectionName, paramName, paramValue)
-

@@ -8,6 +8,7 @@ toc_depth: 2
 
 #### Features
 
+* Remove CentOS7 support (#3639)
 * Allow problem-generator to load GEMS studies [ANT-4847] (#3563)
 
 #### Bugfixes

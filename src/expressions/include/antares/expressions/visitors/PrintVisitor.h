@@ -35,6 +35,7 @@ private:
     std::string visit(const Nodes::TimeShiftNode* node) override;
     std::string visit(const Nodes::TimeIndexNode* node) override;
     std::string visit(const Nodes::TimeSumNode* node) override;
+    std::string visit(const Nodes::TPlusNode* node) override;
     std::string visit(const Nodes::AllTimeSumNode* node) override;
     std::string visit(const Nodes::FunctionNode* node) override;
 };

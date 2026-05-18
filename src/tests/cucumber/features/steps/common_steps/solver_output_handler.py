@@ -23,6 +23,9 @@ class solver_output_handler:
                                result_type.DETAILS: None,
                                result_type.DETAILS_STS: None}
 
+    def output_dir(self):
+        return Path(self.study_output_path)
+
     def get_annual_system_cost(self):
         if self.annual_system_cost is None:
             self.__parse_annual_system_cost()
@@ -42,18 +45,6 @@ class solver_output_handler:
         execution_info = configparser.ConfigParser()
         execution_info.read(os.path.join(self.study_output_path, "execution_info.ini"))
         return float(execution_info['durations_ms']['simulation']) / 1000
-
-    def get_optim1_simulation_table(self):
-        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-1.csv"))
-        assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
-        return open(absolute_path, 'r').readlines()
-
-    def get_optim2_simulation_table(self):
-        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-2.csv"))
-        if absolute_path.exists():
-            return open(absolute_path, 'r').readlines()
-        else:
-            return None
 
     def __read_csv(self, file_name) -> pd.DataFrame:
         ignore_rows = [0, 1, 2, 3, 6]

@@ -158,6 +158,11 @@ void AstDOTStyleVisitor::visit(const Nodes::TimeSumNode* node, std::ostream& os)
     processParentNode(node, "sum[t]", NodeStyle::TimeShiftStyle, os);
 }
 
+void AstDOTStyleVisitor::visit(const Nodes::TPlusNode* node, std::ostream& os)
+{
+    processParentNode(node, "t+", NodeStyle::TimeShiftStyle, os);
+}
+
 void AstDOTStyleVisitor::visit(const Nodes::AllTimeSumNode* node, std::ostream& os)
 {
     processParentNode(node, "sum[]", NodeStyle::TimeIndexStyle, os);

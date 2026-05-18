@@ -33,9 +33,12 @@ std::shared_ptr<arrow::Table> readParquet(const fs::path& file_path)
     std::unique_ptr<parquet::arrow::FileReader> reader;
     PARQUET_ASSIGN_OR_THROW(reader, parquet::arrow::OpenFile(infile, arrow::default_memory_pool()));
 
-    std::shared_ptr<arrow::Table> table;
-    PARQUET_THROW_NOT_OK(reader->ReadTable(&table));
-    return table;
+    auto table_or = reader->ReadTable();
+    if (!table_or.ok())
+    {
+        throw std::runtime_error(table_or.status().ToString());
+    }
+    return *table_or;
 }
 
 template<typename T>

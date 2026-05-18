@@ -118,6 +118,7 @@ private:
     void visit(const Nodes::TimeShiftNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeIndexNode* node, std::ostream& os) override;
     void visit(const Nodes::TimeSumNode* node, std::ostream& os) override;
+    void visit(const Nodes::TPlusNode* node, std::ostream& os) override;
     void visit(const Nodes::AllTimeSumNode* node, std::ostream& os) override;
     void visit(const Nodes::FunctionNode* node, std::ostream& os) override;
 

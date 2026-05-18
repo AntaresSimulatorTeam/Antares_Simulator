@@ -29,6 +29,7 @@ using namespace Antares::ModelerStudy::SystemModel;
 struct build_AST_fixture
 {
     Node* literal(double value);
+    Node* tPlus(double value);
     Node* parameter(const std::string& name, const VariabilityType variability);
     Node* allTimeSum(Node* node);
     Node* timeSum(Node* from, Node* to, Node* p);
@@ -41,6 +42,11 @@ private:
 Node* build_AST_fixture::literal(double value)
 {
     return registry_.create<LiteralNode>(value);
+}
+
+Node* build_AST_fixture::tPlus(double value)
+{
+    return registry_.create<TPlusNode>(literal(value));
 }
 
 Node* build_AST_fixture::allTimeSum(Node* node)
@@ -108,12 +114,12 @@ build_eval_visitor_fixture::build_eval_visitor_fixture():
     optimEntityContainer_->addFromSystemComponents(components_);
 
     // And finally, creation of the evaluation visitor (purpose of this fixture)
+    const auto& scenario = scenarioGroupRepo_.scenario(component_.getScenarioGroupId());
     evalVisitor = std::make_unique<EvalVisitor>(*optimEntityContainer_,
                                                 fillCtx_,
                                                 component_,
                                                 &data_,
-                                                &scenarioGroupRepo_.scenario(
-                                                  component_.getScenarioGroupId()));
+                                                scenario);
 }
 
 // =================================================
@@ -210,8 +216,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_time_series_on_interval_t__t_plus_1, 
     // Expression : sum(t .. t+1, p), where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
 
-    Node* from = literal(0); // For t + 0
-    Node* to = literal(1);   // For t + 1
+    Node* from = tPlus(0); // For t + 0
+    Node* to = tPlus(1);   // For t + 1
     Node* sum = timeSum(from, to, p);
 
     auto evalResult = evalVisitor->dispatch(sum);
@@ -227,8 +233,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_TS_on_interval_t__t_plus_1, tests
     // Expression : sum(t .. t+1, p^2), where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
 
-    Node* from = literal(0); // For t + 0
-    Node* to = literal(1);   // For t + 1
+    Node* from = tPlus(0); // For t + 0
+    Node* to = tPlus(1);   // For t + 1
     Node* sum_of_squares = timeSum(from, to, square(p));
 
     auto evalResult = evalVisitor->dispatch(sum_of_squares);
@@ -245,8 +251,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_TS_on_interval_t__t_plus_1__then_square, 
     // Expression : sum(t .. t+1, p)^2, where p = {p1, p2, p3} = {1., 2., 3.}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
 
-    Node* from = literal(0); // For t + 0
-    Node* to = literal(1);   // For t + 1
+    Node* from = tPlus(0); // For t + 0
+    Node* to = tPlus(1);   // For t + 1
     Node* squared_sum = square(timeSum(from, to, p));
 
     auto evalResult = evalVisitor->dispatch(squared_sum);
@@ -263,8 +269,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_parameter_as_literal_on_interval_t__t_plus_1, test
     // Expression : sum(t .. t+1, p), where p = 7
     Node* seven = literal(7);
 
-    Node* from = literal(0); // for t + 0
-    Node* to = literal(1);   // for t + 1
+    Node* from = tPlus(0); // for t + 0
+    Node* to = tPlus(1);   // for t + 1
     Node* sum = timeSum(from, to, seven);
 
     auto evalResult = evalVisitor->dispatch(sum);
@@ -280,8 +286,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_param_as_literal_on_interval_t__t_plus_1__then_squ
     // Expression : sum(t .. t+1, p)^2, where p = 7
     Node* seven = literal(7);
 
-    Node* from = literal(0); // for t + 0
-    Node* to = literal(1);   // for t + 1
+    Node* from = tPlus(0); // for t + 0
+    Node* to = tPlus(1);   // for t + 1
     Node* squared_sum = square(timeSum(from, to, seven));
 
     auto evalResult = evalVisitor->dispatch(squared_sum);
@@ -297,8 +303,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_param_as_literal_on_interval_t__t_plus_1, 
     // Expression : sum(t .. t+1, p^2), where p = 7
     Node* seven = literal(7);
 
-    Node* from = literal(0); // For t + 0
-    Node* to = literal(1);   // For t + 1
+    Node* from = tPlus(0); // For t + 0
+    Node* to = tPlus(1);   // For t + 1
     Node* sum_of_squares = timeSum(from, to, square(seven));
 
     auto evalResult = evalVisitor->dispatch(sum_of_squares);
@@ -314,8 +320,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_constant_parameter_on_interval_t__t_plus_1, tests_
     // Expression : sum(t .. t+1, p), where p = 5
     Node* five = parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
-    Node* from = literal(0); // For t + 0
-    Node* to = literal(1);   // For t + 1
+    Node* from = tPlus(0); // For t + 0
+    Node* to = tPlus(1);   // For t + 1
     Node* sum = timeSum(from, to, five);
 
     auto evalResult = evalVisitor->dispatch(sum);
@@ -331,8 +337,8 @@ BOOST_FIXTURE_TEST_CASE(sum_a_squared_constant_param_on_interval_t__t_plus_1, te
     // Expression : sum(t .. t+1, p^2), where p = 5
     Node* five = parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
-    Node* from = literal(0); // For t + 0
-    Node* to = literal(1);   // For t + 1
+    Node* from = tPlus(0); // For t + 0
+    Node* to = tPlus(1);   // For t + 1
     Node* sum_of_squares = timeSum(from, to, square(five));
 
     auto evalResult = evalVisitor->dispatch(sum_of_squares);
@@ -348,8 +354,8 @@ BOOST_FIXTURE_TEST_CASE(sum_const_param_on_interval_t__t_plus_1__then_square, te
     // Expression : sum(t .. t+1, p)^2, where p = 5
     Node* five = parameter("five", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
 
-    Node* from = literal(0); // For t + 0
-    Node* to = literal(1);   // For t + 1
+    Node* from = tPlus(0); // For t + 0
+    Node* to = tPlus(1);   // For t + 1
     Node* squared_sum = square(timeSum(from, to, five));
 
     auto evalResult = evalVisitor->dispatch(squared_sum);
