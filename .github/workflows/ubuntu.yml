@@ -189,7 +189,7 @@ jobs:
       run: |
         echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-    - name: Init submodule Antares_Simulator_Tests_NR (commited submodule)
+    - name: Init submodule Antares_Simulator_Tests_NR (committed submodule)
       if: ${{ matrix.testNRTarget == 'versionTestNR' }}
       run: |
         git submodule update --init --depth 1 --recursive src/tests/resources/Antares_Simulator_Tests_NR
