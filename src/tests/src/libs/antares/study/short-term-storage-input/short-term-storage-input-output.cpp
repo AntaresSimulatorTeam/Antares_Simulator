@@ -346,6 +346,13 @@ BOOST_FIXTURE_TEST_CASE(check_cluster_series_load_vector, Fixture)
     BOOST_CHECK(cluster.series->costVariationWithdrawal[756] == 0.5);
 }
 
+BOOST_FIXTURE_TEST_CASE(disabled_cluster_skips_series_loading, Fixture)
+{
+    createFileSeries(0.5, HOURS_PER_YEAR);
+    cluster.properties.enabled = false;
+    BOOST_CHECK(cluster.loadSeries(work_dir, StudyVersion::latest()));
+}
+
 BOOST_FIXTURE_TEST_CASE(check_container_properties_enabled_load, Fixture)
 {
     createIniFile(true);

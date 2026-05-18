@@ -17,6 +17,11 @@ portFieldExpr : IDENTIFIER '.' IDENTIFIER;
 /* To match the whole input */
 fullexpr: expr EOF;
 
+sum_bound
+: expr
+| shift
+;
+
 expr
     : atom                                     # unsignedAtom
     | portFieldExpr                            # portField
@@ -28,7 +33,7 @@ expr
     | expr COMPARISON expr                     # comparison
     | 'sum' '(' expr ')'                       # allTimeSum
     | 'sum_connections' '(' portFieldExpr ')'           # portFieldSum
-    | 'sum' '(' from=shift '..' to=shift ',' expr ')'  # timeSum
+    | 'sum' '(' from=sum_bound '..' to=sum_bound ',' expr ')'  # timeSum
     | IDENTIFIER '(' argList? ')'              # function
     | IDENTIFIER '[' shift ']'                 # timeShift
     | IDENTIFIER '[' expr  ']'                 # timeIndex

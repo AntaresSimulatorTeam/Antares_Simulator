@@ -676,6 +676,13 @@ These parameters are listed under the `[other preferences]` section in the `.ini
     - `minimize duration`:
 
 ---
+#### accurate-shave-peaks-include-short-term-storage
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** when the shedding policy is set to `accurate shave peaks`, this parameter controls whether short-term storage (STS) is included in the remix algorithm. If set to `true`, STS is considered alongside conventional hydro storage when solving the power-shaving problem. This can improve the accuracy of the simulation for studies that include short-term storage facilities.
+
+---
 #### unit-commitment-mode
 [//]: # (TODO: complete the usage paragraph by adding details & links to relevant UC doc)
 - **Expected value:** one of the following (case-insensitive):

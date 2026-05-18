@@ -102,6 +102,7 @@ public:
           Nodes::TimeShiftNode,
           Nodes::TimeIndexNode,
           Nodes::TimeSumNode,
+          Nodes::TPlusNode,
           Nodes::AllTimeSumNode,
           Nodes::FunctionNode>();
 
@@ -271,6 +272,7 @@ public:
      * @return The result of processing the TimeSumNode.
      */
     virtual R visit(const Nodes::TimeSumNode*, Args... args) = 0;
+    virtual R visit(const Nodes::TPlusNode*, Args... args) = 0;
     /**
      * @brief Visits a AllTimeSumNode.
      *

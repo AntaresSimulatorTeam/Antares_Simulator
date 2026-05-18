@@ -4,7 +4,6 @@
 #pragma once
 
 #include "antares/expressions/visitors/NodeVisitor.h"
-#include "antares/modeler-optimisation-container/EvaluationContext.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/study/system-model/component.h"
 
@@ -18,9 +17,7 @@ class VariabilityVisitor: public NodeVisitor<Optimisation::VariabilityType>
 {
 public:
     explicit VariabilityVisitor(const Optimisation::OptimEntityContainer& optimEntityContainer,
-                                const ModelerStudy::SystemModel::Component& component,
-                                const Optimisation::LinearProblemApi::ILinearProblemData* data,
-                                const Optimisation::LinearProblemApi::IScenario* scenario);
+                                const ModelerStudy::SystemModel::Component& component);
 
     std::string name() const override;
 
@@ -41,6 +38,7 @@ private:
     Optimisation::VariabilityType visit(const Nodes::TimeShiftNode* timeShiftNode) override;
     Optimisation::VariabilityType visit(const Nodes::TimeIndexNode* timeIndexNode) override;
     Optimisation::VariabilityType visit(const Nodes::TimeSumNode* timeSumNode) override;
+    Optimisation::VariabilityType visit(const Nodes::TPlusNode* node) override;
     Optimisation::VariabilityType visit(const Nodes::AllTimeSumNode* timeSumNode) override;
     Optimisation::VariabilityType visit(const Nodes::FunctionNode* node) override;
 
@@ -51,8 +49,5 @@ private:
 
     const Optimisation::OptimEntityContainer& optimEntityContainer_;
     const ModelerStudy::SystemModel::Component& component_;
-    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
-    const Optimisation::LinearProblemApi::IScenario* scenario_;
-    const Optimisation::EvaluationContext evalContext_;
 };
 } // namespace Antares::Expressions::Visitors

@@ -15,7 +15,6 @@ hide:
 
 [![Status][ubuntu_ci_svg]][ubuntu_ci_link] 
 [![Status][windows_ci_svg]][windows_ci_link] 
-[![Status][centos_ci_svg]][centos_ci_link] 
 [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link] 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AntaresSimulatorTeam_Antares_Simulator&metric=alert_status)](https://sonarcloud.io/dashboard?id=AntaresSimulatorTeam_Antares_Simulator)
 [![License: MPL v2](https://img.shields.io/badge/License-MPLv2-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
@@ -53,10 +52,6 @@ The GUI is deprecated in favor of [Antares Web](https://antares-web.readthedocs.
 [ubuntu_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/ubuntu.yml/badge.svg?branch=develop
 
 [ubuntu_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Ubuntu%20CI%20(push%20and/or%20release)"
-
-[centos_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/centos7.yml/badge.svg?branch=develop
-
-[centos_ci_link]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions?query=workflow%3A"Centos7%20CI%20(push%20and/or%20release)"
 
 [windows_ci_svg]: https://github.com/AntaresSimulatorTeam/Antares_Simulator/actions/workflows/windows-vcpkg.yml/badge.svg?branch=develop
 
