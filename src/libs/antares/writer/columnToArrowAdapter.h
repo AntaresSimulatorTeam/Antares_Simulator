@@ -3,11 +3,18 @@
 
 #pragma once
 
-// Arrow / Parquet
-#include <arrow/api.h>
-#include <arrow/io/api.h>
+#include <memory>
+#include <string>
+#include <vector>
+#include <optional>
 
 #include "antares/io/outputs/columns.h"
+
+namespace arrow
+{
+class Field;
+class Array;
+} // namespace arrow
 
 namespace Antares::Writer
 {
@@ -18,9 +25,9 @@ namespace Antares::Writer
 class IColumnAdapter
 {
 public:
+    virtual ~IColumnAdapter() = default;
     virtual std::shared_ptr<arrow::Field> makeField() const = 0;
     virtual std::shared_ptr<arrow::Array> makeArray() const = 0;
-    virtual ~IColumnAdapter() = default;
 };
 
 // ================================

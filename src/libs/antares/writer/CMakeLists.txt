@@ -11,7 +11,6 @@ add_library(parquet_writer SHARED
         i_table_writer.cpp
         include/antares/writer/table_writer_factory.h
         private/parquet_arrow_utils.h
-        private/columnToArrowAdapter.h
         columnToArrowAdapter.cpp
         table_writer_factory.cpp
         parquet_table_writer.cpp
