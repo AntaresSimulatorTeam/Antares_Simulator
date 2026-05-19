@@ -418,12 +418,12 @@ BOOST_AUTO_TEST_CASE(BC_invalid_name_is_rejected)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = \n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n");
+                    "[1]\n"
+                    "name = \n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 0);
 }
@@ -437,11 +437,11 @@ BOOST_AUTO_TEST_CASE(BC_missing_id_is_rejected)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 0);
 }
@@ -455,12 +455,12 @@ BOOST_AUTO_TEST_CASE(BC_invalid_type_is_rejected)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = not_a_type\n"
-                               "operator = equal\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = not_a_type\n"
+                    "operator = equal\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 0);
 }
@@ -474,12 +474,12 @@ BOOST_AUTO_TEST_CASE(BC_invalid_operator_is_rejected)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = not_an_operator\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = not_an_operator\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 0);
 }
@@ -493,13 +493,13 @@ BOOST_AUTO_TEST_CASE(BC_enabled_without_any_weight_becomes_disabled)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "group = dummy_group\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "group = dummy_group\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -519,13 +519,13 @@ BOOST_AUTO_TEST_CASE(BC_link_not_found_weight_is_ignored)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1%area2 = 1.000000\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1%area2 = 1.000000\n");
 
     // The weight references an unknown link, so it is dropped. With no weight
     // left the constraint is disabled and returned without time series.
@@ -552,13 +552,13 @@ BOOST_AUTO_TEST_CASE(BC_cluster_weight_is_loaded)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1.cluster1 = 2.500000\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1.cluster1 = 2.500000\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -576,13 +576,13 @@ BOOST_AUTO_TEST_CASE(BC_cluster_not_found_weight_is_ignored)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1.unknown_cluster = 2.000000\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1.unknown_cluster = 2.000000\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -600,13 +600,13 @@ BOOST_AUTO_TEST_CASE(BC_invalid_key_is_ignored)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "notakey = 1.000000\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "notakey = 1.000000\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -625,13 +625,13 @@ BOOST_AUTO_TEST_CASE(BC_invalid_weight_value_is_ignored)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1%area2 = not_a_number\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1%area2 = not_a_number\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -653,13 +653,13 @@ BOOST_AUTO_TEST_CASE(BC_weight_and_offset_are_parsed)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1%area2 = 2.000000%3\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1%area2 = 2.000000%3\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -708,13 +708,13 @@ BOOST_AUTO_TEST_CASE(BC_invalid_offset_value_is_ignored)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1%area2 = 2.000000%not_an_int\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1%area2 = 2.000000%not_an_int\n");
 
     // Invalid offset rejects the whole entry, leaving the constraint weightless.
     BOOST_CHECK_EQUAL(bcs.size(), 1);
@@ -742,14 +742,14 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_greater)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = greater\n"
-                               "area1%area2 = 1.000000\n",
-                               StudyVersion(8, 6));
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = greater\n"
+                    "area1%area2 = 1.000000\n",
+                    StudyVersion(8, 6));
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -777,14 +777,14 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_equality_without_comments)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1%area2 = 1.000000\n",
-                               StudyVersion(8, 6));
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1%area2 = 1.000000\n",
+                    StudyVersion(8, 6));
 
     BOOST_CHECK_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
@@ -805,13 +805,13 @@ BOOST_AUTO_TEST_CASE(BC_missing_rhs_file_fails_to_load)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = equal\n"
-                               "area1%area2 = 1.000000\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = equal\n"
+                    "area1%area2 = 1.000000\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 0);
 }
@@ -832,13 +832,13 @@ BOOST_AUTO_TEST_CASE(BC_both_operator_with_one_missing_rhs_fails_to_load)
     loadConstraints(bcs,
                     dir,
                     *study,
-                               "[1]\n"
-                               "name = dummy_name\n"
-                               "id = dummy_id\n"
-                               "enabled = true\n"
-                               "type = hourly\n"
-                               "operator = both\n"
-                               "area1%area2 = 1.000000\n");
+                    "[1]\n"
+                    "name = dummy_name\n"
+                    "id = dummy_id\n"
+                    "enabled = true\n"
+                    "type = hourly\n"
+                    "operator = both\n"
+                    "area1%area2 = 1.000000\n");
 
     BOOST_CHECK_EQUAL(bcs.size(), 0);
 }
