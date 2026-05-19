@@ -160,6 +160,7 @@ bool Economy::year(Variable::State& state,
         try
         {
             weeklyOptProblems_[numSpace].solve();
+            writeSimulationTable(numSpace);
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
