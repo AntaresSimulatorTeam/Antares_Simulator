@@ -6,7 +6,6 @@
 // Arrow / Parquet — full headers needed for implementation
 #include <arrow/api.h>
 #include <arrow/io/api.h>
-
 #include <stdexcept>
 #include <typeinfo>
 

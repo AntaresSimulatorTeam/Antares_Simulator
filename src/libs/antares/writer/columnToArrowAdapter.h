@@ -4,9 +4,9 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
 
 #include "antares/io/outputs/columns.h"
 
