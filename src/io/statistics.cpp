@@ -7,8 +7,6 @@
 
 #include <antares/logs/logs.h>
 
-using namespace Yuni;
-
 namespace Antares::Statistics
 {
 namespace // anonymous namespace
