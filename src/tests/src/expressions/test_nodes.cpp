@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(PortFieldSumNodeTest)
 BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
 {
     auto literalNode = create<LiteralNode>(2024.2);
-    std::map<Node*, std::string> nodes = {
+    const std::map<const Node*, const std::string> nodes = {
       {literalNode, "LiteralNode"},
       {create<SumNode>(literalNode, literalNode), "SumNode"},
       {create<SubtractionNode>(literalNode, literalNode), "SubtractionNode"},
@@ -73,9 +73,10 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
       {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"},
       {create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"},
       {create<TimeShiftNode>(literalNode, literalNode), "TimeShiftNode"},
-      {create<TimeIndexNode>(literalNode, literalNode), "TimeIndexNode"}};
+      {create<TimeIndexNode>(literalNode, literalNode), "TimeIndexNode"},
+      {create<TPlusNode>(literalNode), "TPlusNode"}};
 
-    for (auto [node, name]: nodes)
+    for (const auto& [node, name]: nodes)
     {
         BOOST_CHECK_EQUAL(node->name(), name);
     }

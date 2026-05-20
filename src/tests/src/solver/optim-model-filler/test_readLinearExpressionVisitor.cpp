@@ -256,8 +256,8 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     //
     // t = 1 :
     // 5 +param[-1] + param[0] + param[1] + param[2] --> 5 + (2 + 0 + 1 + 2) = 10
-    Node* from = create<LiteralNode>(-2.);
-    Node* to = create<LiteralNode>(1.);
+    Node* from = create<TPlusNode>(create<LiteralNode>(-2.));
+    Node* to = create<TPlusNode>(create<LiteralNode>(1.));
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
 
@@ -273,6 +273,54 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     // Coefs
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
     BOOST_CHECK_EQUAL(linear_expression[1].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_mixed_bounds,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // param = {0, 1, 2}
+    // 5 + sum( 1 .. t+1, param)
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<TPlusNode>(create<LiteralNode>(1.));
+    Node* sum = create<SumNode>(create<LiteralNode>(5.),
+                                create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
+
+    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+
+    auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 6.);
+    BOOST_CHECK_EQUAL(linear_expression[1].constant(), 8.);
+    BOOST_CHECK_EQUAL(linear_expression[2].constant(), 8.);
+
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[1].size(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[2].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_fixed_bound_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* from = create<VariableNode>("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* to = create<LiteralNode>(2.);
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(1.));
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage("A sum bound must be fixed in time in 'var1'."));
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_moving_bound_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<TPlusNode>(create<VariableNode>("var1", 0));
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(1.));
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage("A sum bound must be fixed in time in 't+var1'."));
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -292,6 +340,27 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVis
 
     // Coefs
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_variable_coefficients,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // var1 is time-dependent, so the number of coefficients in the sum reflects the window size.
+    // 0..3, 1..3, 2..3, 3..3 -> 4, 3, 2, 1 coefficients.
+    Node* var = create<VariableNode>("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+
+    ctx = LinearProblemApi::FillContext(0, 3, 0, 3, 0);
+
+    auto sum = create<TimeSumNode>(create<LiteralNode>(1.),
+                                   create<TPlusNode>(create<LiteralNode>(0)),
+                                   var);
+
+    auto expr = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(expr[0].size(), 0); // sum(1..0, var1) = 0
+    BOOST_REQUIRE_EQUAL(expr[1].size(), 1); // sum(1..1, var1) = var1[1]
+    BOOST_REQUIRE_EQUAL(expr[2].size(), 2); // sum(1..2, var1) = var1[1] + var1[2]
+    BOOST_REQUIRE_EQUAL(expr[3].size(), 3); // sum(1..3, var1) = var1[1] + var1[2] + var1[3]
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,

@@ -554,24 +554,20 @@ void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
     }
     else
     {
-        std::string globalFirstBuffer;
-        std::string globalSecondBuffer;
-
-        for (auto& pair_of_buffers: yearSimulationBuffers_ | std::views::values)
-        {
-            globalFirstBuffer += pair_of_buffers.first;
-            globalSecondBuffer += pair_of_buffers.second;
-        }
-
         const auto header = ImplementationType::getSimulationTableHeader() + "\n";
 
-        std::string writerEntry = header + std::move(globalFirstBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
+        for (const auto& [year, pair_of_buffers]: yearSimulationBuffers_)
+        {
+            std::string writerEntry = header + pair_of_buffers.first;
+            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
+                                               + "--optim-nb-1.csv",
+                                             writerEntry);
 
-        writerEntry.clear();
-
-        writerEntry = header + std::move(globalSecondBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
+            writerEntry = header + pair_of_buffers.second;
+            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
+                                               + "--optim-nb-2.csv",
+                                             writerEntry);
+        }
     }
     yearSimulationBuffers_.clear();
 }

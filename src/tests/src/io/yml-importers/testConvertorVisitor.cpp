@@ -364,8 +364,37 @@ BOOST_FIXTURE_TEST_CASE(TimeSumExpression, RegistryHolder)
     auto* neg = registry.create<Nodes::NegationNode>(lit);
 
     auto* param = registry.create<Nodes::ParameterNode>("param1");
-    auto* from = registry.create<Nodes::MultiplicationNode>(neg, param);
-    auto* to = registry.create<Nodes::DivisionNode>(param, lit);
+    auto* from = registry.create<Nodes::TPlusNode>(
+      registry.create<Nodes::MultiplicationNode>(neg, param));
+    auto* to = registry.create<Nodes::TPlusNode>(registry.create<Nodes::DivisionNode>(param, lit));
+    const auto* timeSumNode = registry.create<Nodes::TimeSumNode>(from, to, div);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(TimeSumExpressionWithFixedBounds, RegistryHolder)
+{
+    const auto [e, div] = expected_expression(registry);
+    const auto expressionWithTimeIndex = "sum(1 .. 2," + e + ")";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
+
+    auto* from = registry.create<Nodes::LiteralNode>(1);
+    auto* to = registry.create<Nodes::LiteralNode>(2);
+    const auto* timeSumNode = registry.create<Nodes::TimeSumNode>(from, to, div);
+
+    Visitors::CompareVisitor cmp;
+    BOOST_CHECK(cmp.dispatch(expr.node, timeSumNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(TimeSumExpressionWithMixedBounds, RegistryHolder)
+{
+    const auto [e, div] = expected_expression(registry);
+    const auto expressionWithTimeIndex = "sum(1 .. t+2," + e + ")";
+    auto expr = convertExpressionToNode(expressionWithTimeIndex, createYmlModel());
+
+    auto* from = registry.create<Nodes::LiteralNode>(1);
+    auto* to = registry.create<Nodes::TPlusNode>(registry.create<Nodes::LiteralNode>(2));
     const auto* timeSumNode = registry.create<Nodes::TimeSumNode>(from, to, div);
 
     Visitors::CompareVisitor cmp;
