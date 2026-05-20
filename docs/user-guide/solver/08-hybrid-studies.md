@@ -79,6 +79,7 @@ port-type:
       - id: angle
    area-connection:
       - injection-field: flow
+      - balance-output-sign: 1
 ~~~
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
@@ -86,6 +87,10 @@ connect modeler components to solver areas.
 
   - **injection-field**: the field to use when adding the contribution of this port bearer to a connected area, were the 
     component to be connected to an area
+  - **balance-output-sign** _(optional, integer, default: `0`)_: controls whether this port contributes to the **BALANCE**
+    output variable after each optimisation. Set to `1` if the field value represents a net import into the area
+    (positive = area receives energy), or `-1` if it represents a net export (positive = area sends energy).
+    `0` (or absent) disables contribution to BALANCE. Must be `-1`, `0`, or `1`.
 
 #### Optimization model
 The linear expression defined by the connected component's port field definition is simply added to the **left-hand side** 

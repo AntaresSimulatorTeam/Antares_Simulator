@@ -16,6 +16,7 @@
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/solver/optimisation/ComponentToAreaResultFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
@@ -230,6 +231,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                     .objectiveValue = 0};
         }
         throw FatalError("Internal error: insufficient memory");
+    }
+
+    if (modelerData)
+    {
+        ComponentToAreaResultFiller resultFiller(problemeHebdo, optimEntityContainer);
+        resultFiller.fillAreaContributions(fillCtx);
     }
 
     if (simulationTable && modelerData)

@@ -147,6 +147,18 @@ void HourlyCSRProblem::calculateCsrParameters()
               Area,
               hour);
 
+            // calculateAreaFlowBalance adds ValeursHorairesNetechangeModeler (GEMS net imports) to
+            // netPositionInit so that DENS/LMR calculations see the full area balance. For the CSR
+            // constraint RHS, only re-dispatchable NTC inside-inside flows should appear: GEMS
+            // flows are fixed by the initial LP solve and have no corresponding CSR variable.
+            // Including them would inflate the RHS and force ENS_csr_min = ensInit + gemsImport.
+            if (problemeHebdo_->modelerData)
+            {
+                netPositionInit -= problemeHebdo_->ResultatsHoraires[Area]
+                                     .ValeursHorairesNetechangeModeler[hour];
+            }
+
+
             double ensInit = problemeHebdo_->ResultatsHoraires[Area]
                                .ValeursHorairesDeDefaillancePositive[hour];
             double spillageInit = problemeHebdo_->ResultatsHoraires[Area]
