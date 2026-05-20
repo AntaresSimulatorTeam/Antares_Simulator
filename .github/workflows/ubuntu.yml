@@ -198,6 +198,8 @@ jobs:
       if: ${{ matrix.testNRTarget == 'latestTestNR' }}
       run: |
         git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
+        # gp : to be removed
+        git -C src/tests/resources/Antares_Simulator_Tests_NR checkout adapt-to-parquet
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
