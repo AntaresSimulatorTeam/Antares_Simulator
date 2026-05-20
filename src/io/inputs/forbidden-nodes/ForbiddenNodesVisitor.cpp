@@ -158,6 +158,11 @@ void ForbiddenNodesVisitor::visit(const TimeSumNode* timeSumNode)
     visitChildren(timeSumNode, nodeTypeId);
 }
 
+void ForbiddenNodesVisitor::visit(const TPlusNode* tPlusNode)
+{
+    dispatch(tPlusNode->child());
+}
+
 void ForbiddenNodesVisitor::visit(const AllTimeSumNode* allTimeSumNode)
 {
     std::type_index nodeTypeId = typeIndexOf<AllTimeSumNode>();

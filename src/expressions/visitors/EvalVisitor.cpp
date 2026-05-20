@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
+#include <antares/expressions/visitors/TimeSumUtils.h>
 #include <antares/optimisation/linear-problem-api/ILinearProblemData.h>
 #include <antares/solver/optim-model-filler/outOfBoundsTimeShift.h>
 #include "antares/expressions/ShiftVector.h"
@@ -18,11 +19,13 @@ using namespace Antares::Utils;
 
 namespace Antares::Expressions::Visitors
 {
+// Time sum utilities are provided by TimeSumUtils.h
+
 EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
                          const LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
                          const LinearProblemApi::ILinearProblemData* data,
-                         const LinearProblemApi::IScenario* scenario):
+                         const LinearProblemApi::IScenario& scenario):
     // TODO put component or its id inside context, it is already component-bound.
     // Plus it is mandatory to visit Variables & PortFieldSums
     // Else, create a PostOptimEvalVisitor that inherits from EvalVisitor & has a different ctor
@@ -30,7 +33,7 @@ EvalVisitor::EvalVisitor(const OptimEntityContainer& optimContainer,
     component_(component),
     data_(data),
     scenario_(scenario),
-    evalContext_(&component, data, scenario),
+    evalContext_(&component, data, &scenario),
     fillContext_(fillContext)
 {
 }
@@ -184,11 +187,28 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
     auto result = dispatch(node->expression());
-    const auto from = static_cast<int>(dispatch(node->from()).valueAsDouble());
-    const auto to = static_cast<int>(dispatch(node->to()).valueAsDouble());
-
     result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
-    return result.timeSumOnVector(from, to);
+
+    std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
+    for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
+    {
+        const auto from = resolveTimeSumBound(node->from(), *this, localTimeStep);
+        const auto to = resolveTimeSumBound(node->to(), *this, localTimeStep);
+        forEachTimeSumIndex(from,
+                            to,
+                            static_cast<int>(values.size()),
+                            [&values, &result, localTimeStep](int timeIndex)
+                            { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
+    }
+
+    return EvaluationResult(values);
+}
+
+EvaluationResult EvalVisitor::visit(const Nodes::TPlusNode* node)
+{
+    const auto offset = static_cast<int>(dispatch(node->child()).valueAsDouble());
+    return EvaluationResult(
+      static_cast<double>(static_cast<unsigned>(fillContext_.getGlobalFirstTimeStep()) + offset));
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::AllTimeSumNode* node)

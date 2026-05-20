@@ -58,6 +58,7 @@ public:
     std::any visitPower(ExprParser::PowerContext* context) override;
     std::any visitRightPower(ExprParser::RightPowerContext* context) override;
     std::any visitShiftPower(ExprParser::ShiftPowerContext* context) override;
+    std::any visitSum_bound(ExprParser::Sum_boundContext* context) override;
 
 private:
     // Methods
@@ -214,6 +215,27 @@ std::any ConvertorVisitor::visitNegation(ExprParser::NegationContext* context)
 std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* context)
 {
     return context->expr()->accept(this);
+}
+
+// TPlus(expr) <= borne mobile
+// expr <= borne fixe
+
+// UnaryNode
+
+// from="t+1" => TPlus(Literal(1))
+//   from="1" => Literal(1)
+std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
+{
+    if (auto* shift = context->shift())
+    {
+        auto* offset = std::any_cast<Node*>(shift->accept(this));
+        return static_cast<Node*>(registry_.create<TPlusNode>(offset));
+    }
+    if (auto* expr = context->expr())
+    {
+        return expr->accept(this);
+    }
+    throw InputError("Invalid sum bound");
 }
 
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
@@ -549,9 +571,9 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
 
 std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
-    auto* from = NodeFromShiftContext(context->from->shift_expr());
+    auto* from = std::any_cast<Node*>(context->from->accept(this));
 
-    auto* to = NodeFromShiftContext(context->to->shift_expr());
+    auto* to = std::any_cast<Node*>(context->to->accept(this));
 
     auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 
@@ -587,7 +609,7 @@ std::any ConvertorVisitor::visitRightAtom(ExprParser::RightAtomContext* context)
 
 std::any ConvertorVisitor::visitShift(ExprParser::ShiftContext* context)
 {
-    return std::any_cast<Node*>(visit(context->shift_expr()));
+    return NodeFromShiftContext(context->shift_expr());
 }
 
 std::any ConvertorVisitor::visitShiftAddsub(ExprParser::ShiftAddsubContext* context)

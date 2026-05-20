@@ -587,7 +587,7 @@ BOOST_FIXTURE_TEST_CASE(comparisonEqualNode_complex, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double num = 221.3;
     Node* equalLiteralParam = create<EqualNode>(create<LiteralNode>(num), &root);
@@ -661,7 +661,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -682,7 +682,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_param_scenario_only, MyDummyFixture)
                         ctx,
                         *compo,
                         &data,
-                        &scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
+                        scenarioGroupRepository.scenario(compo->getScenarioGroupId()));
 
     const double eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -801,7 +801,7 @@ struct TimeDependentParameterFixture
                                                     ctx,
                                                     components.front(),
                                                     &dummy_data,
-                                                    &scenarioGroupRepo.scenario(
+                                                    scenarioGroupRepo.scenario(
                                                       components.front().getScenarioGroupId()));
     }
 };
@@ -853,7 +853,7 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
                         {first, last /*three hours*/, first, last, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
@@ -906,21 +906,44 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
                         {first, last /*three hours*/, first, last, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     return visitor.dispatch(&root);
 }
 
 BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param, MyDummyFixture)
 {
-    LiteralNode from(0.0);
-    LiteralNode to(1.0);
+    LiteralNode fromOffset(0.0);
+    LiteralNode toOffset(1.0);
+    TPlusNode from(&fromOffset);
+    TPlusNode to(&toOffset);
     const auto eval = CreateAndEvaluateTimeSumNode(&from, &to).valuesAsVector();
     // from MockLinearProblemData  param TSdata is {0, 1, 2}
     // here we applied TimeSum from t+0 and to t+1
     BOOST_CHECK_EQUAL(eval.at(0), 0 + 1); // add param.at(0)+param.at(1)
     BOOST_CHECK_EQUAL(eval.at(1), 1 + 2); // add param.at(1)+param.at(2)
     BOOST_CHECK_EQUAL(eval.at(2), 2 + 0); // add param.at(2)+param.at(0)
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_param_with_mixed_bounds, MyDummyFixture)
+{
+    LiteralNode fromFixed(1.0);
+    LiteralNode toOffset(1.0);
+    TPlusNode to(&toOffset);
+
+    const auto eval = CreateAndEvaluateTimeSumNode(&fromFixed, &to).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval.at(0), 1);         // p[1]
+    BOOST_CHECK_EQUAL(eval.at(1), 1 + 2);     // p[1] + p[2]
+    BOOST_CHECK_EQUAL(eval.at(2), 1 + 2 + 0); // p[1] + p[2] + p[0]
+}
+
+BOOST_FIXTURE_TEST_CASE(evaluate_tPlusNode, MyDummyFixture)
+{
+    LiteralNode offset(2.0);
+    TPlusNode tPlus(&offset);
+
+    BOOST_CHECK_EQUAL(defaultComponentEvalVisitor->dispatch(&tPlus).valueAsDouble(), 2.0);
 }
 
 EvaluationResult CreateAndEvaluateAllTimeSumNode()
@@ -951,7 +974,7 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
                         {first, last /*three hours*/, first, last, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     return visitor.dispatch(&root);
 }
 
@@ -991,7 +1014,7 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
                         {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], hour_0 * literal.value());
@@ -1057,7 +1080,7 @@ void evaluate_time_dependent_operation()
                         {hour_0, hour_1 /*three hours*/, hour_0, hour_1, 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     BOOST_CHECK_EQUAL(eval[0], evalExpected<BinaryNode>(literal.value(), hour_0));
@@ -1095,7 +1118,7 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     const auto eval = visitor.dispatch(&root).valuesAsVector();
 
     std::vector<double> result_before_timeShift = {evalExpected<BinaryNode>(literal.value(),
@@ -1141,7 +1164,7 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
                         {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
                         components.back(),
                         &dummy_data,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
 
     const auto eval = visitor.dispatch(&root).valueAsDouble();
 
@@ -1435,8 +1458,8 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeShiftNode, MyDummyFixture)
 
 BOOST_FIXTURE_TEST_CASE(PrintTimeSumNode, MyDummyFixture)
 {
-    Node* from = create<LiteralNode>(1.);
-    Node* to = create<LiteralNode>(23);
+    Node* from = create<TPlusNode>(create<LiteralNode>(1.));
+    Node* to = create<TPlusNode>(create<LiteralNode>(23));
     Node* expression = create<ParameterNode>("p");
     PrintVisitor printVisitor;
     // --
@@ -1445,12 +1468,31 @@ BOOST_FIXTURE_TEST_CASE(PrintTimeSumNode, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(positive_shift) == "sum(t+1.000000 .. t+23.000000, p)");
     // --
 
-    Node* mfrom = create<LiteralNode>(-1.);
-    Node* mto = create<LiteralNode>(-23);
+    Node* mfrom = create<TPlusNode>(create<LiteralNode>(-1.));
+    Node* mto = create<TPlusNode>(create<LiteralNode>(-23));
     Node* negative_shift = create<TimeSumNode>(mfrom, mto, expression);
     auto m = printVisitor.dispatch(negative_shift);
 
     BOOST_CHECK(printVisitor.dispatch(negative_shift) == "sum(t-1.000000 .. t-23.000000, p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintTimeSumNodeWithFixedBounds, MyDummyFixture)
+{
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<LiteralNode>(23);
+    Node* expression = create<ParameterNode>("p");
+    PrintVisitor printVisitor;
+
+    Node* fixed_bounds = create<TimeSumNode>(from, to, expression);
+    BOOST_CHECK(printVisitor.dispatch(fixed_bounds) == "sum(1.000000 .. 23.000000, p)");
+}
+
+BOOST_FIXTURE_TEST_CASE(PrintTPlusNode, MyDummyFixture)
+{
+    PrintVisitor printVisitor;
+    Node* tPlus = create<TPlusNode>(create<LiteralNode>(2.));
+
+    BOOST_CHECK(printVisitor.dispatch(tPlus) == "t+2.000000");
 }
 
 BOOST_FIXTURE_TEST_CASE(PrintAllTimeSumNode, MyDummyFixture)
@@ -1668,7 +1710,7 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
                         fillContext,
                         components.back(),
                         &testData,
-                        &scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
+                        scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
     double eval = visitor.dispatch(root).valueAsDouble();
     BOOST_CHECK_EQUAL(eval, 12.5);
 

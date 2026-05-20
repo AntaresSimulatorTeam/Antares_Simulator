@@ -1,8 +1,10 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <fmt/format.h>
 #include <numeric>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/VariabilityVisitor.h>
 #include "antares/expressions/visitors/PrintVisitor.h"
@@ -64,8 +66,16 @@ VariabilityType VariabilityVisitor::visit(const Nodes::VariableNode* var)
 
 VariabilityType VariabilityVisitor::visit(const Nodes::ParameterNode* param)
 {
-    const auto systemParameter = evalContext_.getParameter(param->value());
-    return systemParameter.type;
+    const auto& parameters = component_.getParameterValues();
+    if (parameters.contains(param->value()))
+    {
+        return parameters.at(param->value()).type;
+    }
+    else
+    {
+        throw Error::InvalidArgumentError(
+          fmt::format("Parameter '{}' does not exist", param->value()));
+    }
 }
 
 VariabilityType VariabilityVisitor::visit([[maybe_unused]] const Nodes::LiteralNode* lit)
@@ -98,7 +108,7 @@ VariabilityType VariabilityVisitor::visit(const Nodes::PortFieldSumNode* node)
         auto* component = connexion_end.component();
         auto* port = connexion_end.port();
 
-        VariabilityVisitor visitor(optimEntityContainer_, *component, data_, scenario_);
+        VariabilityVisitor visitor(optimEntityContainer_, *component);
         const Nodes::Node* node = component->nodeAtPortField(port->Id(), fieldId);
         to_return = to_return | visitor.dispatch(node);
     }
@@ -120,6 +130,11 @@ VariabilityType VariabilityVisitor::visit(const Nodes::TimeSumNode* timeSumNode)
 {
     // TODO  case from = to
     return dispatch(timeSumNode->expression());
+}
+
+VariabilityType VariabilityVisitor::visit(const Nodes::TPlusNode* node)
+{
+    return dispatch(node->child());
 }
 
 VariabilityType VariabilityVisitor::visit([[maybe_unused]] const Nodes::AllTimeSumNode* timeSumNode)
@@ -145,7 +160,8 @@ VariabilityType VariabilityVisitor::visitPow(const Nodes::FunctionNode* node)
     if (!isConstant(dispatch(exponent)))
     {
         PrintVisitor visitor;
-        throw std::runtime_error("This exponent must be constant in :" + visitor.dispatch(node));
+        throw Error::InvalidArgumentError("This exponent must be constant in :"
+                                          + visitor.dispatch(node));
     }
     return dispatch(node->getOperands().at(0));
 }
@@ -171,20 +187,15 @@ VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNode* node)
 }
 
 VariabilityVisitor::VariabilityVisitor(const OptimEntityContainer& optimEntityContainer,
-                                       const ModelerStudy::SystemModel::Component& component,
-                                       const LinearProblemApi::ILinearProblemData* data,
-                                       const LinearProblemApi::IScenario* scenario):
+                                       const ModelerStudy::SystemModel::Component& component):
     optimEntityContainer_(optimEntityContainer),
-    component_(component),
-    data_(data),
-    scenario_(scenario),
-    evalContext_(&component, data, scenario)
+    component_(component)
 {
 }
 
 std::string VariabilityVisitor::name() const
 {
-    return "TimeIndexVisitor";
+    return "VariabilityVisitor";
 }
 
 } // namespace Antares::Expressions::Visitors

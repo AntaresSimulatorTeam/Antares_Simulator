@@ -105,8 +105,13 @@ std::string PrintVisitor::visit(const Nodes::TimeIndexNode* node)
 
 std::string PrintVisitor::visit(const Nodes::TimeSumNode* node)
 {
-    return "sum(t" + trimAndFormat(dispatch(node->from())) + " .. t"
-           + trimAndFormat(dispatch(node->to())) + ", " + dispatch(node->expression()) + ")";
+    return "sum(" + dispatch(node->from()) + " .. " + dispatch(node->to()) + ", "
+           + dispatch(node->expression()) + ")";
+}
+
+std::string PrintVisitor::visit(const Nodes::TPlusNode* node)
+{
+    return "t" + trimAndFormat(dispatch(node->child()));
 }
 
 std::string PrintVisitor::visit(const Nodes::AllTimeSumNode* node)

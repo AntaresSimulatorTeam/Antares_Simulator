@@ -223,58 +223,67 @@ find_package(sirius_solver REQUIRED)
 #
 # Fix: locate the OR-Tools install prefix (from ortools_DIR or CMAKE_PREFIX_PATH)
 # and set absl_DIR/re2_DIR to the co-installed versions before find_package(ortools)
-# triggers find_dependency(absl).
+# triggers find_dependency(absl). Recompute this even when absl_DIR/re2_DIR are
+# already cached: switching branches with a reused build directory can leave
+# stale paths behind, and CMake will otherwise keep mixing headers/libs from
+# different Abseil installations.
 # Note: GNUInstallDirs uses "lib" on Windows/Ubuntu but may use "lib64" on
 # some 64-bit Linux distributions (e.g. Oracle Linux 8).
-if (NOT DEFINED absl_DIR)
     # Candidate lib directory names (GNUInstallDirs may use lib or lib64)
-    set(_lib_dirs lib lib64)
+set(_lib_dirs lib lib64)
 
-    # Determine OR-Tools prefix: either from explicit ortools_DIR or CMAKE_PREFIX_PATH
-    set(_ortools_prefix "")
-    if (DEFINED ortools_DIR)
-        get_filename_component(_ortools_prefix "${ortools_DIR}/../../.." ABSOLUTE)
-    else ()
-        foreach(_prefix IN LISTS CMAKE_PREFIX_PATH)
-            foreach(_libdir IN LISTS _lib_dirs)
-                if (EXISTS "${_prefix}/${_libdir}/cmake/ortools/ortoolsConfig.cmake")
-                    set(_ortools_prefix "${_prefix}")
-                    break()
-                endif ()
-            endforeach ()
-            if (_ortools_prefix)
+# Determine OR-Tools prefix: either from explicit ortools_DIR or CMAKE_PREFIX_PATH
+set(_ortools_prefix "")
+if (DEFINED ortools_DIR)
+    get_filename_component(_ortools_prefix "${ortools_DIR}/../../.." ABSOLUTE)
+else ()
+    foreach(_prefix IN LISTS CMAKE_PREFIX_PATH)
+        foreach(_libdir IN LISTS _lib_dirs)
+            if (EXISTS "${_prefix}/${_libdir}/cmake/ortools/ortoolsConfig.cmake")
+                set(_ortools_prefix "${_prefix}")
                 break()
             endif ()
         endforeach ()
-    endif ()
+        if (_ortools_prefix)
+            break()
+        endif ()
+    endforeach ()
+endif ()
 
-    if (_ortools_prefix)
-        foreach(_libdir IN LISTS _lib_dirs)
-            if (NOT DEFINED absl_DIR AND EXISTS "${_ortools_prefix}/${_libdir}/cmake/absl/abslConfig.cmake")
-                set(absl_DIR "${_ortools_prefix}/${_libdir}/cmake/absl" CACHE PATH
+if (_ortools_prefix)
+    foreach(_libdir IN LISTS _lib_dirs)
+        if (EXISTS "${_ortools_prefix}/${_libdir}/cmake/absl/abslConfig.cmake")
+            set(_ortools_absl_dir "${_ortools_prefix}/${_libdir}/cmake/absl")
+            if (NOT DEFINED absl_DIR OR NOT absl_DIR STREQUAL "${_ortools_absl_dir}")
+                set(absl_DIR "${_ortools_absl_dir}" CACHE PATH
                     "Path to absl CMake config (co-installed with OR-Tools)" FORCE)
                 message(STATUS "Setting absl_DIR to OR-Tools co-installed version: ${absl_DIR}")
             endif ()
-            if (NOT DEFINED re2_DIR AND EXISTS "${_ortools_prefix}/${_libdir}/cmake/re2/re2Config.cmake")
-                set(re2_DIR "${_ortools_prefix}/${_libdir}/cmake/re2" CACHE PATH
+        endif ()
+        if (EXISTS "${_ortools_prefix}/${_libdir}/cmake/re2/re2Config.cmake")
+            set(_ortools_re2_dir "${_ortools_prefix}/${_libdir}/cmake/re2")
+            if (NOT DEFINED re2_DIR OR NOT re2_DIR STREQUAL "${_ortools_re2_dir}")
+                set(re2_DIR "${_ortools_re2_dir}" CACHE PATH
                     "Path to re2 CMake config (co-installed with OR-Tools)" FORCE)
                 message(STATUS "Setting re2_DIR to OR-Tools co-installed version: ${re2_DIR}")
             endif ()
-        endforeach ()
-
-        # Ensure OR-Tools' absl headers are found BEFORE vcpkg headers.
-        # This is necessary because vcpkg.cmake (line 425-426) reverses the
-        # CMAKE_PREFIX_PATH order for Debug builds, causing vcpkg's absl
-        # (different ABI version) to be found instead of OR-Tools' co-installed absl.
-        set(_absl_include "${_ortools_prefix}/include")
-        if (EXISTS "${_absl_include}/absl")
-            include_directories(BEFORE "${_absl_include}")
-            message(STATUS "Prepending include dir for OR-Tools absl: ${_absl_include}")
         endif ()
+    endforeach ()
+
+    # Ensure OR-Tools' absl headers are found BEFORE vcpkg headers.
+    # This is necessary because vcpkg.cmake (line 425-426) reverses the
+    # CMAKE_PREFIX_PATH order for Debug builds, causing vcpkg's absl
+    # (different ABI version) to be found instead of OR-Tools' co-installed absl.
+    set(_absl_include "${_ortools_prefix}/include")
+    if (EXISTS "${_absl_include}/absl")
+        include_directories(BEFORE "${_absl_include}")
+        message(STATUS "Prepending include dir for OR-Tools absl: ${_absl_include}")
     endif ()
-    unset(_ortools_prefix)
-    unset(_lib_dirs)
 endif ()
+unset(_ortools_absl_dir)
+unset(_ortools_re2_dir)
+unset(_ortools_prefix)
+unset(_lib_dirs)
 
 find_package(ortools)
 if (NOT ortools_FOUND OR BUILD_ORTOOLS)

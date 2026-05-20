@@ -65,6 +65,7 @@ private:
     LinearConstraint visit(const Expressions::Nodes::TimeShiftNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::TimeIndexNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::TimeSumNode* node) override;
+    LinearConstraint visit(const Expressions::Nodes::TPlusNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::AllTimeSumNode* node) override;
     LinearConstraint visit(const Expressions::Nodes::FunctionNode* node) override;
 

@@ -103,6 +103,11 @@ Nodes::Node* CloneVisitor::visit(const Nodes::TimeSumNode* node)
                                                 dispatch(node->expression()));
 }
 
+Nodes::Node* CloneVisitor::visit(const Nodes::TPlusNode* node)
+{
+    return registry_.create<Nodes::TPlusNode>(dispatch(node->child()));
+}
+
 Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
     return registry_.create<Nodes::AllTimeSumNode>(dispatch(node->child()));
