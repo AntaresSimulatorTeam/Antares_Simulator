@@ -53,7 +53,8 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
     parser->add(options.maxNbWeeksInParallel,
                 ' ',
                 "parallel-week-count",
-                "Number of weeks to solve in parallel within each MC year (default: 1, requires Fast Mode UC)");
+                "Number of weeks to solve in parallel within each MC year "
+                "(default: 1, requires Fast Mode UC)");
 
     parser->addParagraph("\nParameters");
     // --name

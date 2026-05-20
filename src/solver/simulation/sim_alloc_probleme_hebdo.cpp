@@ -133,9 +133,9 @@ PROBLEME_HEBDO cloneProblemHebdoForWeek(
         {
             const auto& s = src.CorrespondanceVarNativesVarOptim[i];
             auto& d = dst.CorrespondanceVarNativesVarOptim[i];
-            d.NumeroDeVariableDuFluxDirect                = s.NumeroDeVariableDuFluxDirect;
-            d.NumeroDeVariableDuFluxDirectPositif         = s.NumeroDeVariableDuFluxDirectPositif;
-            d.NumeroDeVariableDuFluxIndirectPositif       = s.NumeroDeVariableDuFluxIndirectPositif;
+            d.NumeroDeVariableDeLInterconnexion                            = s.NumeroDeVariableDeLInterconnexion;
+            d.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion   = s.NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
+            d.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion   = s.NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
             d.NumeroDeVariableDuPalierThermique           = s.NumeroDeVariableDuPalierThermique;
             d.NumeroDeVariablesDeLaProdHyd                = s.NumeroDeVariablesDeLaProdHyd;
             d.NumeroDeVariablesDePompage                  = s.NumeroDeVariablesDePompage;
@@ -179,7 +179,6 @@ PROBLEME_HEBDO cloneProblemHebdoForWeek(
             d.NumeroDeContrainteDesBilansPays              = s.NumeroDeContrainteDesBilansPays;
             d.NumeroDeContraintePourEviterLesChargesFictives
               = s.NumeroDeContraintePourEviterLesChargesFictives;
-            d.NumeroDeContraintePourBornerLaDefaillance    = s.NumeroDeContraintePourBornerLaDefaillance;
             d.NumeroPremiereContrainteDeReserveParZone     = s.NumeroPremiereContrainteDeReserveParZone;
             d.NumeroDeuxiemeContrainteDeReserveParZone     = s.NumeroDeuxiemeContrainteDeReserveParZone;
             d.NumeroDeContrainteDeDissociationDeFlux       = s.NumeroDeContrainteDeDissociationDeFlux;
