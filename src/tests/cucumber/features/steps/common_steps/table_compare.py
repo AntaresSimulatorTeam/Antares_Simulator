@@ -175,8 +175,8 @@ def compare_folders(folder1: Path, folder2: Path) -> Tuple[bool, List[str]]:
 
         # Compare file contents
         try:
-            content1 = file1.read_bytes()
-            content2 = file2.read_bytes()
+            content1 = file1.read_text(newline=None)
+            content2 = file2.read_text(newline=None)
 
             if content1 != content2:
                 differences.append(f"Content mismatch: {rel_path}")
