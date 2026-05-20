@@ -592,29 +592,29 @@ bool ThermalCluster::Ramping::checkValidity(Area* area, std::string clusterName)
     if (maxUpwardPowerRampingRate <= 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The maximum upward power ramping rate must greater than zero."
-                     << "Ramping is disabled for this thermal cluster";
+                     << ": The maximum upward power ramping rate must be greater than zero. "
+                     << "Ramping is disabled for this thermal cluster.";
         ret = false;
     }
     if (maxDownwardPowerRampingRate <= 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The maximum downward power ramping rate must greater than zero."
-                     << "Ramping is disabled for this thermal cluster";
+                     << ": The maximum downward power ramping rate must be greater than zero. "
+                     << "Ramping is disabled for this thermal cluster.";
         ret = false;
     }
     if (powerIncreaseCost < 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The ramping power increase cost must be positive or null."
-                     << "Ramping is disabled for this thermal cluster";
+                     << ": The ramping power increase cost must be positive or null. "
+                     << "Ramping is disabled for this thermal cluster.";
         ret = false;
     }
     if (powerDecreaseCost < 0)
     {
         logs.error() << "Thermal cluster: " << area->name << '/' << clusterName
-                     << ": The ramping power decrease cost must be positive or null."
-                     << "Ramping is disabled for this thermal cluster";
+                     << ": The ramping power decrease cost must be positive or null. "
+                     << "Ramping is disabled for this thermal cluster.";
         ret = false;
     }
     return ret;
@@ -622,8 +622,10 @@ bool ThermalCluster::Ramping::checkValidity(Area* area, std::string clusterName)
 
 std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
 {
-    return os << r.powerIncreaseCost << '\t' << r.powerDecreaseCost << '\t'
-              << r.maxUpwardPowerRampingRate << '\t' << r.maxDownwardPowerRampingRate;
+    return os << "powerIncreaseCost = " << r.powerIncreaseCost
+              << "\tpowerDecreaseCost = " << r.powerDecreaseCost
+              << "\tmaxDownwardPowerRampingRate = " << r.maxUpwardPowerRampingRate
+              << "\tmaxDownwardPowerRampingRate = " << r.maxDownwardPowerRampingRate;
 }
 
 } // namespace Antares::Data

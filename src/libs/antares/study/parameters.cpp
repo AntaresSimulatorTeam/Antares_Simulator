@@ -214,19 +214,6 @@ bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCu
     return false;
 }
 
-const char* CompatibilityRampesToCString(Parameters::Compatibility::Rampes mode)
-{
-    switch (mode)
-    {
-    case Parameters::Compatibility::Rampes::Disabled:
-        return "disabled";
-    case Parameters::Compatibility::Rampes::Enabled:
-        return "enabled";
-    default:
-        return "Unknown";
-    }
-}
-
 bool StringToCompatibilityRampes(Parameters::Compatibility::Rampes& mode, const std::string& text)
 {
     if (text.empty())
