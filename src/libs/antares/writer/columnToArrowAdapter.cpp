@@ -3,8 +3,13 @@
 
 #include "columnToArrowAdapter.h"
 
+// Arrow / Parquet — full headers needed for implementation
+#include <arrow/api.h>
+#include <arrow/io/api.h>
+#include <optional>
 #include <stdexcept>
 #include <typeinfo>
+#include <vector>
 
 #include "private/parquet_arrow_utils.h"
 
@@ -13,6 +18,10 @@ using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Writer
 {
+
+// ===========================
+// Helper: add optional values to Arrow builder
+// ===========================
 
 template<typename T, typename B>
 void addOptionalsToBuilder(const std::vector<std::optional<T>>& in, B& builder)
