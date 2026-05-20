@@ -5,6 +5,91 @@ hide:
 
 # Multi-threading
 
+## Week-level parallelism (intra-year)
+
+_Available since v9.3.11_
+
+### Overview
+
+In addition to the existing MC-year-level parallelism described below, Antares Solver
+can solve the 52 weekly subproblems **within a single Monte Carlo year** concurrently.
+This forms a 2D concurrency model: MC years run in parallel across year-threads, and
+within each year-thread the weekly LP solves can also run in parallel.
+
+### When to use it
+
+Week-level parallelism is most beneficial when:
+
+- The number of MC years is **low relative to available CPU cores** (e.g. 4 years on a
+  16-core machine leaves 12 cores idle with year-only parallelism).
+- Individual weekly LP solves are **computationally heavy** (large networks, many
+  constraints).
+- The simulation uses **Fast Mode UC** (`unit-commitment-mode = fast`). Weekly
+  parallelism is designed for Fast Mode because there are no cross-week
+  unit-commitment dependencies in that mode.
+
+The two parallelism levels compose freely: running 4 MC years in parallel and
+4 weeks in parallel gives 16 concurrent LP solves.
+
+### Configuration
+
+#### Command-line flag
+
+| Flag | Type | Default | Description |
+|------|------|---------|-------------|
+| `--parallel-week-count=N` | integer | `1` | Number of weeks to solve concurrently within each MC year. `1` disables week parallelism (sequential behaviour, identical to previous versions). Requires Fast Mode UC for guaranteed identical results. |
+
+Example:
+
+```bash
+antares-solver --parallel --force-parallel=4 --parallel-week-count=4 -i /path/to/study
+```
+
+#### Combining with year-level parallelism
+
+The total number of simultaneous LP threads equals:
+
+```
+nb_mc_years_in_parallel × nb_weeks_in_parallel
+```
+
+Size this product to match the available hardware cores to avoid over-subscription.
+The solver emits a warning at startup if the product exceeds the detected hardware
+concurrency.
+
+**Example — 16-core machine:**
+
+| `--force-parallel` | `--parallel-week-count` | Total threads |
+|:------------------:|:-----------------------:|:-------------:|
+| 16 | 1 | 16 (year-only) |
+| 4 | 4 | 16 (2D) |
+| 2 | 8 | 16 (2D) |
+| 1 | 16 | 16 (week-only) |
+
+### Resource usage
+
+Each concurrent week solve operates on a **deep copy** of the week's
+`PROBLEME_HEBDO` data structure, so memory usage scales linearly with the number
+of concurrent week solves. On a study with large networks, monitor RSS when
+increasing `--parallel-week-count`.
+
+### Known limitations
+
+- Designed for **Fast Mode UC** only. With Accurate or Full Integer UC there are
+  cross-week unit-commitment constraints (minimum up/down times spanning week
+  boundaries); using week parallelism in those modes may produce results that differ
+  from the sequential solve. The solver issues a warning but does not abort.
+- **Hydro approximation.** The initial reservoir level for each week is precomputed
+  from the ventilation-provided target levels before the parallel fan-out. For areas
+  where `TurbinageEntreBornes = true`, this introduces a bounded approximation error
+  (the exact level depends on the LP result of the previous week). The error is
+  acceptable in Fast Mode; it may accumulate in Accurate Mode.
+- Week-level parallelism is compiled in by default (`ENABLE_WEEK_PARALLELISM=ON`).
+  It can be disabled at CMake time with `-DENABLE_WEEK_PARALLELISM=OFF`, in which case
+  the `--parallel-week-count` flag is accepted but silently treated as `1`.
+
+---
+
 [//]: # (TODO: update this page if needed)
 _**This section is under construction**_
 

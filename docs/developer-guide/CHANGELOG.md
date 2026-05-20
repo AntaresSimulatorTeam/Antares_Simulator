@@ -4,6 +4,28 @@ toc_depth: 2
 
 # Antares Changelog
 
+### Unreleased
+
+#### Features
+
+* Week-level parallelism within Monte Carlo year simulations. Weekly subproblems can now
+  be solved concurrently within each MC year, in addition to the existing year-level
+  parallelism. New CLI flag `--parallel-week-count=N` (default 1, requires Fast Mode UC).
+  The two parallelism levels compose freely: `N_mcy × N_weeks` threads run simultaneously.
+  (feature/week-level-parallelism)
+* ADQ patch and GEMS/flow-based adequacy extensions — new INI keys
+  `enable-gems-fb-constraints` and `gems-fb-constraint-filter` in `[adequacy patch]`.
+  (feature/adq-patch-gems-fb)
+
+#### Bugfixes
+
+* Corrected energy balance computation for hybrid studies. Results for studies combining
+  thermal, renewable, and storage components with GEMS components and the adequacy patch
+  now satisfy the nodal balance constraint at all hours. Previously, GEMS net imports were
+  incorrectly included in the CSR area-balance right-hand side, producing a small residual
+  error in ENS for affected areas at scarcity hours.
+  (fix/balance-correction-for-hybrid-studies)
+
 ### 9.3.11
 
 #### Features
