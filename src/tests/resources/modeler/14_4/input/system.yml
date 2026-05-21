@@ -1,0 +1,30 @@
+system:
+  id: sys_example_14_4
+  description: >
+    Single component with constant parameters p=10 and c=20.
+    The constraint x = sum(t+2 .. t+0, p) + c always has an empty sum (from > to),
+    so x must equal c = 20 at every timestep.
+
+    This study is designed to detect the bug in the constant-expression branch of
+    ReadLinearExpressionVisitor::visit(TimeSumNode): when from > to + 1, the
+    multiplier (to - from + 1) becomes negative instead of being clamped to 0,
+    giving a wrong non-zero sum for an empty range.
+
+    Expected with correct code: x = 20 at all timesteps, objective = 100.
+    Expected with bug:          x = 10 at all timesteps, objective = 50.
+
+  model-libraries: lib_example_14_4
+
+  components:
+    - id: c1
+      model: lib_example_14_4.inverted_bounds_demo
+
+      parameters:
+        - id: p
+          time-dependent: false
+          scenario-dependent: false
+          value: 10
+        - id: c
+          time-dependent: false
+          scenario-dependent: false
+          value: 20
