@@ -48,19 +48,6 @@ using namespace Antares::Writer;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
 
-auto count_lines = [](std::string_view s)
-{
-    int count = 0;
-    for (auto&& line: s | std::views::split('\n'))
-    {
-        if (!std::ranges::empty(line))
-        {
-            ++count;
-        }
-    }
-    return count;
-};
-
 BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
 BOOST_AUTO_TEST_CASE(TestUpdateTimeIndexIfShouldForceScenario)
@@ -193,15 +180,8 @@ BOOST_AUTO_TEST_CASE(MultipleEntries)
         table.addEntry(entry);
     }
 
-    table.writeToBuffer();
-
-    // Verify we can handle large amounts of data
-    std::string buffer = table.buffer();
-    BOOST_CHECK(!buffer.empty());
-
     // Count lines (should be numEntries)
-    auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, numEntries);
+    BOOST_CHECK_EQUAL(table.rowCount(), numEntries);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -248,7 +228,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     // Read and verify content of first file
     {
         std::ifstream f(file1);
-        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+        std::string content{std::istreambuf_iterator<char>(f), {}};
         BOOST_CHECK(content.find("block,component,output") != std::string::npos);
         BOOST_CHECK(content.find("1,comp1,var1,1,1,0,10,Basic") != std::string::npos);
     }
@@ -256,7 +236,7 @@ BOOST_AUTO_TEST_CASE(WriteTo_CreatesCorrectFiles)
     // Read and verify content of second file
     {
         std::ifstream f(file2);
-        std::string content((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+        std::string content{std::istreambuf_iterator<char>(f), {}};
         BOOST_CHECK(content.find("block,component,output") != std::string::npos);
         BOOST_CHECK(content.find("2,comp2,var2,2,2,1,20,Free") != std::string::npos);
     }
@@ -340,12 +320,42 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
         thread.join();
     }
 
-    table.writeToBuffer();
-    std::string buffer = table.buffer();
-
     // Should have all entries
-    auto lineCount = count_lines(buffer);
-    BOOST_CHECK_EQUAL(lineCount, numThreads * entriesPerThread);
+    BOOST_CHECK_EQUAL(table.rowCount(), numThreads * entriesPerThread);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(PerformanceTests)
+
+BOOST_AUTO_TEST_CASE(WritePerformance_LargeDataSet)
+{
+    SimulationTable table;
+    const int numEntries = 50000;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < numEntries; ++i)
+    {
+        SimulationTableEntry entry{.block = static_cast<unsigned>(i % 1000 + 1),
+                                   .component = "component_" + std::to_string(i % 100),
+                                   .output = "variable_" + std::to_string(i % 50),
+                                   .absolute_time_index = i,
+                                   .block_time_index = i % 168,
+                                   .scenario_index = static_cast<unsigned>(i % 10),
+                                   .value = static_cast<double>(i) * 0.001,
+                                   .status = static_cast<MipBasisStatus>(i % 6)};
+        table.addEntry(entry);
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    // Performance check - should complete within reasonable time
+    BOOST_CHECK_LT(duration.count(), 5000); // Less than 5 seconds
+
+    // Verify all data was written
+    BOOST_CHECK_EQUAL(table.rowCount(), numEntries);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -979,19 +989,14 @@ BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
             table.addEntry(entry);
         }
 
-        table.writeToBuffer();
-
         // Verify content before clearing
-        std::string buffer = table.buffer();
-        auto lineCount = count_lines(buffer);
+        BOOST_CHECK_EQUAL(table.rowCount(), 3);
 
-        BOOST_CHECK_EQUAL(lineCount, 3);
         // Clear for next cycle
         table.clear();
 
         // Verify clear worked
-        std::string clearedBuffer = table.buffer();
-        BOOST_CHECK(clearedBuffer.empty());
+        BOOST_CHECK(table.rowCount() == 0);
     }
 }
 

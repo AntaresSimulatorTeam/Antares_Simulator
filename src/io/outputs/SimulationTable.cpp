@@ -46,6 +46,11 @@ const std::vector<std::unique_ptr<IColumn>>& SimulationTable::columns() const
     return storage_.columns();
 }
 
+size_t SimulationTable::rowCount() const
+{
+    return storage_.rowCount();
+}
+
 void SimulationTable::writeToBuffer()
 {
     const size_t row_count = storage_.rowCount();

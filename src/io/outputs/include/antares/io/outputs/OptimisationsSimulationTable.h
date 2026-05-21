@@ -5,9 +5,6 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
-// gp : No namespace here. We should add one (Antares::IO::Outputs).
-// gp : Besides, this class could be a struct now
-
 namespace Antares::IO::Outputs
 {
 class OptimisationsSimulationTable
