@@ -679,7 +679,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(SpecialCharacterTests)
 
-BOOST_AUTO_TEST_CASE(UnicodeCharacters_InNames)
+BOOST_FIXTURE_TEST_CASE(UnicodeCharacters_InNames, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 1,
@@ -692,11 +692,12 @@ BOOST_AUTO_TEST_CASE(UnicodeCharacters_InNames)
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(table.writeToBuffer());
+    BOOST_CHECK_NO_THROW(csv_writer.writeTable(table));
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("cömpönént_测试") != std::string::npos);
-    BOOST_CHECK(buffer.find("vär_αβγ") != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("cömpönént_测试") != std::string::npos);
+    BOOST_CHECK(content.find("vär_αβγ") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(CSVEscaping_SpecialCharacters)
