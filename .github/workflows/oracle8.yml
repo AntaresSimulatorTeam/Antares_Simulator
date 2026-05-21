@@ -5,9 +5,11 @@ on:
     types: [ created ]
   push:
     branches:
+      - fix/*
       - develop
       - dependabot/*
       - release/*
+      - copilot/*
   schedule:
     - cron: '21 2 * * *'
   workflow_call:
