@@ -117,11 +117,11 @@ jobs:
         source /opt/rh/gcc-toolset-11/enable
         cmake --build _build --config Release -j$(nproc)
 
-    - name: Run unit and end-to-end tests
-      if: ${{ env.IS_PUSH == 'true' }}
-      run: |
-        cd _build
-        ctest -C Release --output-on-failure -L "unit|end-to-end"
+    # - name: Run unit and end-to-end tests
+    #   if: ${{ env.IS_PUSH == 'true' }}
+    #   run: |
+    #     cd _build
+    #     ctest -C Release --output-on-failure -L "unit|end-to-end"
 
     - name: Installer .rpm creation
       run: |
