@@ -358,7 +358,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
         const std::string filename = createMPSfilename(optPeriodStringGenerator,
                                                        optimizationNumber);
-        mps_writer_on_error->runIfNeeded(writer, filename);
+        // mps_writer_on_error->runIfNeeded(writer, filename);
 
         return false;
     }
