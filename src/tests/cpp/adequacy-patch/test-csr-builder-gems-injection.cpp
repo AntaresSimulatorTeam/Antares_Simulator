@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <map>
+#include <optional>
 #include <regex>
 #include <string>
 #include <vector>
@@ -53,6 +54,17 @@ static Constraint makeLEConstraint(const std::string& id,
     return Constraint{id, makeExpr(le, reg)};
 }
 
+template<typename First, typename... Rest>
+static auto moveVec(First&& first, Rest&&... rest)
+{
+    using T = std::decay_t<First>;
+    std::vector<T> v;
+    v.reserve(1 + sizeof...(rest));
+    v.push_back(std::forward<First>(first));
+    (v.push_back(std::forward<Rest>(rest)), ...);
+    return v;
+}
+
 static PortFieldDefinition makePortVarDef(const std::string& portId,
                                           const std::string& fieldId,
                                           unsigned int varIdx,
@@ -98,7 +110,8 @@ private:
 struct Fixture
 {
     PortType portType{"area_port_t", {PortField{"ens"}}, "ens"};
-    System system;
+    Model model; // must outlive system (components hold a Model*)
+    std::optional<System> system;
     std::map<std::string, int> areaMap; // "north"→0, "south"→1
 
     Fixture()
@@ -119,12 +132,12 @@ struct Fixture
         auto pfd = makePortVarDef("p_north", "ens", 0u, portType, reg);
 
         ModelBuilder mb;
-        Model model = mb.withId("fb_model")
-                        .withVariables({std::move(v0), std::move(v1)})
-                        .withConstraints({std::move(constraint)})
-                        .withPorts({Port{"p_north", portType}})
-                        .withPortFieldDefinitions({std::move(pfd)})
-                        .build();
+        model = mb.withId("fb_model")
+                  .withVariables(moveVec(std::move(v0), std::move(v1)))
+                  .withConstraints(moveVec(std::move(constraint)))
+                  .withPorts({Port{"p_north", portType}})
+                  .withPortFieldDefinitions(moveVec(std::move(pfd)))
+                  .build();
 
         ComponentBuilder cb;
         Component comp = cb.withId("ccr")
@@ -152,7 +165,7 @@ BOOST_AUTO_TEST_SUITE(CsrBuilderGemsInjectionSuite)
 BOOST_FIXTURE_TEST_CASE(counts_one_matching_constraint, Fixture)
 {
     CsrProblemContext ctx{&areaMap, nullptr};
-    GemsCsrAdapter adapter{system, ctx};
+    GemsCsrAdapter adapter{*system, ctx};
 
     BOOST_CHECK_EQUAL(adapter.countMatchingConstraints(), 1);
 }
@@ -162,7 +175,7 @@ BOOST_FIXTURE_TEST_CASE(counts_one_extra_variable, Fixture)
     // var0 is area-connected (maps to column 0 in areaMap) → not extra.
     // var1 has no area connection → extra.
     CsrProblemContext ctx{&areaMap, nullptr};
-    GemsCsrAdapter adapter{system, ctx};
+    GemsCsrAdapter adapter{*system, ctx};
 
     BOOST_CHECK_EQUAL(adapter.countExtraVariables(), 1);
 }
@@ -172,7 +185,7 @@ BOOST_FIXTURE_TEST_CASE(register_allocates_one_column, Fixture)
     // Simulate "legacy columns are 0..1" by starting MockBuilder at 0.
     // The adapter already mapped var0 → area column 0; only var1 gets a new column.
     CsrProblemContext ctx{&areaMap, nullptr};
-    GemsCsrAdapter adapter{system, ctx};
+    GemsCsrAdapter adapter{*system, ctx};
 
     MockBuilder builder;
     adapter.registerExtraVariables(builder);
@@ -186,7 +199,7 @@ BOOST_FIXTURE_TEST_CASE(rows_for_hour_has_correct_coefficient_and_rhs, Fixture)
     // The constraint is: 2.0 * var1 <= 50.0
     // After registerExtraVariables, var1 gets column index 0 (first allocated).
     CsrProblemContext ctx{&areaMap, nullptr};
-    GemsCsrAdapter adapter{system, ctx};
+    GemsCsrAdapter adapter{*system, ctx};
 
     MockBuilder builder;
     adapter.registerExtraVariables(builder);
@@ -214,8 +227,8 @@ BOOST_AUTO_TEST_CASE(flag_false_no_extra_column_or_row)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    Model model = mb.withId("m").withVariables({std::move(v)})
-                    .withConstraints({std::move(constraint)}).build();
+    Model model = mb.withId("m").withVariables(moveVec(std::move(v)))
+                    .withConstraints(moveVec(std::move(constraint))).build();
 
     ComponentBuilder cb;
     Component comp = cb.withId("comp").withModel(&model).withIndex(0)

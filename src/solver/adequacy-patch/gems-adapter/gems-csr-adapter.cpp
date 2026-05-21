@@ -80,6 +80,7 @@ void GemsCsrAdapter::buildAreaVarMap()
                     = dynamic_cast<const Expressions::Nodes::VariableNode*>(root))
                 {
                     VarKey vk{component.Id(), varNode->Index()};
+                    varIdToColIdx_[vk] = csrCtx_.areaToColumnIndex->at(areaName);
                     pendingAreaFlows_.push_back({areaName, vk, +1.0});
                 }
                 // NegationNode(VariableNode): sign = -1
@@ -90,6 +91,7 @@ void GemsCsrAdapter::buildAreaVarMap()
                         = dynamic_cast<const Expressions::Nodes::VariableNode*>(neg->child()))
                     {
                         VarKey vk{component.Id(), varNode->Index()};
+                        varIdToColIdx_[vk] = csrCtx_.areaToColumnIndex->at(areaName);
                         pendingAreaFlows_.push_back({areaName, vk, -1.0});
                     }
                 }

@@ -20,6 +20,7 @@ public:
     System() = delete;
     System(System& other) = delete;
     System(System&& other) = default;
+    System& operator=(System&&) = default;
 
     const std::string& Id() const
     {

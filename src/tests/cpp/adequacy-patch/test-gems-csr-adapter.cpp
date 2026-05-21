@@ -61,6 +61,17 @@ static Constraint makeLEConstraint(const std::string& id,
     return Constraint{id, makeExpr(le, reg)};
 }
 
+template<typename First, typename... Rest>
+static auto moveVec(First&& first, Rest&&... rest)
+{
+    using T = std::decay_t<First>;
+    std::vector<T> v;
+    v.reserve(1 + sizeof...(rest));
+    v.push_back(std::forward<First>(first));
+    (v.push_back(std::forward<Rest>(rest)), ...);
+    return v;
+}
+
 // PortFieldDefinition with expression pointing to a single VariableNode
 static PortFieldDefinition makePortVarDef(const std::string& portId,
                                           const std::string& fieldId,
@@ -138,7 +149,7 @@ BOOST_AUTO_TEST_CASE(no_match_default_filter)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("model1").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("model1").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -175,7 +186,7 @@ BOOST_AUTO_TEST_CASE(simple_variable_le_literal_extra_column)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("m").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("m").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -235,10 +246,10 @@ BOOST_AUTO_TEST_CASE(area_connected_variable_maps_to_csr_column)
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
     mb.withId("m2")
-      .withVariables({std::move(v)})
-      .withConstraints({std::move(constraint)})
+      .withVariables(moveVec(std::move(v)))
+      .withConstraints(moveVec(std::move(constraint)))
       .withPorts({Port{"p1", portType}})
-      .withPortFieldDefinitions({std::move(pfd)});
+      .withPortFieldDefinitions(moveVec(std::move(pfd)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -288,8 +299,8 @@ BOOST_AUTO_TEST_CASE(constant_parameter_resolves_to_rhs)
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
     mb.withId("m3")
-      .withVariables({std::move(v)})
-      .withConstraints({std::move(constraint)})
+      .withVariables(moveVec(std::move(v)))
+      .withConstraints(moveVec(std::move(constraint)))
       .withParameters({Parameter{"cap", TimeDependent::NO, ScenarioDependent::NO}});
     Model model = mb.build();
 
@@ -340,7 +351,7 @@ BOOST_AUTO_TEST_CASE(multiplication_literal_variable)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("m4").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("m4").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -381,7 +392,7 @@ BOOST_AUTO_TEST_CASE(custom_filter_matches_differently_named_constraint)
     Variable v{"y", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("m5").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("m5").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -427,8 +438,8 @@ BOOST_AUTO_TEST_CASE(scenario_dependent_parameter_rhs_differs_per_mc_year)
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
     mb.withId("m_mc")
-      .withVariables({std::move(v)})
-      .withConstraints({std::move(constraint)})
+      .withVariables(moveVec(std::move(v)))
+      .withConstraints(moveVec(std::move(constraint)))
       .withParameters({Parameter{"ram_direct_fbc_0001", TimeDependent::NO, ScenarioDependent::YES}});
     Model model = mb.build();
 
@@ -484,7 +495,7 @@ BOOST_AUTO_TEST_CASE(ge_sense_constraint)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("m_ge").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("m_ge").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -520,7 +531,7 @@ BOOST_AUTO_TEST_CASE(eq_sense_constraint)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("m_eq").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("m_eq").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -576,10 +587,10 @@ BOOST_AUTO_TEST_CASE(sum_expression_ptdf_two_area_variables)
 
     ModelBuilder mb;
     Model model = mb.withId("ptdf_model")
-                    .withVariables({std::move(vNorth), std::move(vSouth)})
-                    .withConstraints({std::move(constraint)})
+                    .withVariables(moveVec(std::move(vNorth), std::move(vSouth)))
+                    .withConstraints(moveVec(std::move(constraint)))
                     .withPorts({Port{"p_north", portType}, Port{"p_south", portType}})
-                    .withPortFieldDefinitions({std::move(pfdNorth), std::move(pfdSouth)})
+                    .withPortFieldDefinitions(moveVec(std::move(pfdNorth), std::move(pfdSouth)))
                     .build();
 
     ComponentBuilder cb;
@@ -629,7 +640,7 @@ BOOST_AUTO_TEST_CASE(zero_coefficient_term_dropped)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("m_zero").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("m_zero").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -671,8 +682,8 @@ BOOST_AUTO_TEST_CASE(multiple_constraints_from_one_component)
                 TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
     mb.withId("m_multi")
-      .withVariables({std::move(vA), std::move(vB)})
-      .withConstraints({std::move(constraintA), std::move(constraintB)});
+      .withVariables(moveVec(std::move(vA), std::move(vB)))
+      .withConstraints(moveVec(std::move(constraintA), std::move(constraintB)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -707,7 +718,7 @@ BOOST_AUTO_TEST_CASE(two_components_produce_rows_from_both)
     Variable v1{"x1", Expression{}, Expression{}, ValueType::FLOAT,
                 TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb1;
-    mb1.withId("model1").withVariables({std::move(v1)}).withConstraints({std::move(c1)});
+    mb1.withId("model1").withVariables(moveVec(std::move(v1))).withConstraints(moveVec(std::move(c1)));
     Model model1 = mb1.build();
 
     auto* var2 = reg.create<VariableNode>("x2", 0u);
@@ -717,7 +728,7 @@ BOOST_AUTO_TEST_CASE(two_components_produce_rows_from_both)
     Variable v2{"x2", Expression{}, Expression{}, ValueType::FLOAT,
                 TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb2;
-    mb2.withId("model2").withVariables({std::move(v2)}).withConstraints({std::move(c2)});
+    mb2.withId("model2").withVariables(moveVec(std::move(v2))).withConstraints(moveVec(std::move(c2)));
     Model model2 = mb2.build();
 
     ComponentBuilder cb;
@@ -760,10 +771,10 @@ BOOST_AUTO_TEST_CASE(unknown_area_name_falls_back_to_extra_column)
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
     mb.withId("m_uk")
-      .withVariables({std::move(v)})
-      .withConstraints({std::move(constraint)})
+      .withVariables(moveVec(std::move(v)))
+      .withConstraints(moveVec(std::move(constraint)))
       .withPorts({Port{"p1", portType}})
-      .withPortFieldDefinitions({std::move(pfd)});
+      .withPortFieldDefinitions(moveVec(std::move(pfd)));
     Model model = mb.build();
 
     ComponentBuilder cb;
@@ -807,8 +818,8 @@ BOOST_AUTO_TEST_CASE(varying_in_time_only_reads_from_dataseries)
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
     mb.withId("m_time")
-      .withVariables({std::move(v)})
-      .withConstraints({std::move(constraint)})
+      .withVariables(moveVec(std::move(v)))
+      .withConstraints(moveVec(std::move(constraint)))
       .withParameters({Parameter{"hourly_cap", TimeDependent::YES, ScenarioDependent::NO}});
     Model model = mb.build();
 
@@ -860,8 +871,8 @@ BOOST_AUTO_TEST_CASE(varying_in_time_and_scenario_reads_from_dataseries)
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
     mb.withId("m_ts")
-      .withVariables({std::move(v)})
-      .withConstraints({std::move(constraint)})
+      .withVariables(moveVec(std::move(v)))
+      .withConstraints(moveVec(std::move(constraint)))
       .withParameters({Parameter{"ts_cap", TimeDependent::YES, ScenarioDependent::YES}});
     Model model = mb.build();
 
@@ -915,7 +926,7 @@ BOOST_AUTO_TEST_CASE(missing_parameter_returns_empty_rows)
     Variable v{"x", Expression{}, Expression{}, ValueType::FLOAT,
                TimeDependent::NO, ScenarioDependent::NO};
     ModelBuilder mb;
-    mb.withId("m_missing").withVariables({std::move(v)}).withConstraints({std::move(constraint)});
+    mb.withId("m_missing").withVariables(moveVec(std::move(v))).withConstraints(moveVec(std::move(constraint)));
     Model model = mb.build();
 
     // Model declares no parameters; paramValues is empty → sizes match and build() passes.
