@@ -192,6 +192,10 @@ bool Study::internalLoadFromFolder(const fs::path& path,
             maxNbYearsInParallel = 1;
         }
 
+        // Week-level parallelism
+        maxNbWeeksInParallel = (options.maxNbWeeksInParallel >= 1) ? options.maxNbWeeksInParallel
+                                                                    : 1;
+
         // End logical core --------
 
         // Areas - Raw Data

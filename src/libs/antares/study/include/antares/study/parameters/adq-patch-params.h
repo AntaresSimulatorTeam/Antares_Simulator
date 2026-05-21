@@ -83,6 +83,10 @@ public:
     bool includeHurdleCost;
     //! Check CSR cost function prior & after CSR optimization
     bool checkCsrCostFunction;
+    //! Inject GEMS-defined flow-based constraints into the CSR sub-problem
+    bool useGemsFbConstraints = false;
+    //! Regex filter for GEMS constraint names; empty string uses the adapter's built-in default
+    std::string gemsFbConstraintFilter;
 
     bool updateFromKeyValue(const Yuni::String& key, const Yuni::String& value);
     void addProperties(IniFile::Section* section) const;

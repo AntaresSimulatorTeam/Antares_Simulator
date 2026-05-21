@@ -5,6 +5,7 @@
 
 #include <vector>
 
+#include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrBindingConstraintHour.h"
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrFictitiousLoad.h"
@@ -50,6 +51,13 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(ConstraintBuilder& builder)
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
 
+    const auto* rtdBalance = problemeHebdo_->adequacyPatchRuntimeData.get();
+    const std::vector<Antares::AdequacyPatch::AreaFlowContribution>* gemsContribs = nullptr;
+    if (rtdBalance && rtdBalance->useGemsFbConstraints && rtdBalance->gemsCsrAdapter)
+    {
+        gemsContribs = &rtdBalance->gemsCsrAdapter->areaFlowContributions();
+    }
+
     CsrAreaBalanceData csrAreaBalanceData{
       .areaMode = problemeHebdo_->adequacyPatchRuntimeData->areaMode,
       .hour = hour,
@@ -62,7 +70,8 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(ConstraintBuilder& builder)
       .PaysOrigineDeLInterconnexion = problemeHebdo_->PaysOrigineDeLInterconnexion,
       .PaysExtremiteDeLInterconnexion = problemeHebdo_->PaysExtremiteDeLInterconnexion,
       .numberOfConstraintCsrAreaBalance = hourlyCsrProblem_.numberOfConstraintCsrAreaBalance,
-      .NombreDePays = problemeHebdo_->NombreDePays};
+      .NombreDePays = problemeHebdo_->NombreDePays,
+      .gemsAreaFlowContribs = gemsContribs};
 
     CsrAreaBalance csrAreaBalance(builder, csrAreaBalanceData);
     csrAreaBalance.add();
@@ -122,6 +131,83 @@ void CsrQuadraticProblem::setMaxEnsLoadConstraints(ConstraintBuilder& builder)
     csrMaxEnsLoad.add();
 }
 
+void CsrQuadraticProblem::setFlowBasedConstraints(ConstraintBuilder& builder)
+{
+    const auto* rtd = problemeHebdo_->adequacyPatchRuntimeData.get();
+    if (!rtd || !rtd->useGemsFbConstraints || !rtd->gemsCsrAdapter)
+    {
+        return;
+    }
+
+    const int hour = hourlyCsrProblem_.triggeredHour;
+    const int mcYear = hourlyCsrProblem_.mcYear_;
+
+    auto& rowIndices = hourlyCsrProblem_.gemsFbConstraintRows_;
+    rowIndices.clear();
+
+    const auto rows = rtd->gemsCsrAdapter->rowsForHour(hour, mcYear);
+    for (const auto& row : rows)
+    {
+        builder.updateHourWithinWeek(static_cast<unsigned>(hour));
+        for (const auto& term : row.terms)
+        {
+            builder.rawTerm(term.column, term.coefficient);
+        }
+
+        if (builder.NumberOfVariables() > 0)
+        {
+            const int csrRow = builder.data.nombreDeContraintes;
+            rowIndices.push_back(csrRow);
+            builder.data.NomDesContraintes[csrRow] = "gems_" + row.constraintId;
+            switch (row.sense)
+            {
+            case Antares::AdequacyPatch::CsrRowSense::LE:
+                builder.lessThan();
+                break;
+            case Antares::AdequacyPatch::CsrRowSense::GE:
+                builder.greaterThan();
+                break;
+            case Antares::AdequacyPatch::CsrRowSense::EQ:
+                builder.equalTo();
+                break;
+            }
+            builder.build();
+        }
+        else
+        {
+            rowIndices.push_back(-1);
+        }
+    }
+}
+
+void CsrQuadraticProblem::setGemsConservationConstraint(ConstraintBuilder& builder)
+{
+    const auto* rtd = problemeHebdo_->adequacyPatchRuntimeData.get();
+    if (!rtd || !rtd->useGemsFbConstraints || !rtd->gemsCsrAdapter)
+    {
+        return;
+    }
+
+    const auto& contribs = rtd->gemsCsrAdapter->areaFlowContributions();
+    if (contribs.empty())
+    {
+        return;
+    }
+
+    builder.updateHourWithinWeek(static_cast<unsigned>(hourlyCsrProblem_.triggeredHour));
+    for (const auto& contrib : contribs)
+    {
+        // Conservation: Σ ccr_exchange_A = 0 (each raw exchange variable with coeff +1)
+        builder.rawTerm(contrib.csrColumn, 1.0);
+    }
+
+    const int csrRow = builder.data.nombreDeContraintes;
+    builder.data.NomDesContraintes[csrRow] = "gems_conservation_ccr_exchange";
+    builder.equalTo();
+    builder.build();
+    logs.debug() << "[CSR] GEMS conservation constraint at row " << csrRow;
+}
+
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
@@ -141,6 +227,8 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setFictitiousLoadConstraints(builder);
     setMaxEnsLoadConstraints(builder);
     setBindingConstraints(builder);
+    setFlowBasedConstraints(builder);
+    setGemsConservationConstraint(builder);
 }
 
 } // namespace Antares::Solver::Optimization

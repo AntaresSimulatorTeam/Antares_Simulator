@@ -4,6 +4,7 @@
 #include "antares/solver/misc/options.h"
 
 #include <fstream>
+#include <thread>
 
 #include <antares/exception/LoadingError.hpp>
 #include "antares/config/config.h"
@@ -48,6 +49,12 @@ std::unique_ptr<Yuni::GetOpt::Parser> CreateParser(Settings& settings, StudyLoad
                 ' ',
                 "force-parallel",
                 "Override the max number of years computed simultaneously");
+    // --parallel-week-count
+    parser->add(options.maxNbWeeksInParallel,
+                ' ',
+                "parallel-week-count",
+                "Number of weeks to solve in parallel within each MC year "
+                "(default: 1, requires Fast Mode UC)");
 
     parser->addParagraph("\nParameters");
     // --name
@@ -248,6 +255,29 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
     if (options.enableParallel && options.forceParallel)
     {
         throw Error::IncompatibleParallelOptions();
+    }
+
+    // Validate week-level parallelism
+    if (options.maxNbWeeksInParallel < 1)
+    {
+        options.maxNbWeeksInParallel = 1;
+    }
+    if (options.maxNbWeeksInParallel > 1 && options.maxNbYearsInParallel > 0)
+    {
+        const uint hwConcurrency = std::thread::hardware_concurrency();
+        if (hwConcurrency > 0)
+        {
+            const uint product = options.maxNbYearsInParallel * options.maxNbWeeksInParallel;
+            if (product > hwConcurrency)
+            {
+                logs.warning()
+                  << "maxNbYearsInParallel (" << options.maxNbYearsInParallel
+                  << ") x maxNbWeeksInParallel (" << options.maxNbWeeksInParallel
+                  << ") = " << product
+                  << " exceeds hardware concurrency (" << hwConcurrency
+                  << "). Consider reducing one of these values.";
+            }
+        }
     }
 
     if (!settings.simplexOptimRange.empty())

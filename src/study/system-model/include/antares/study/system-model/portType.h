@@ -19,9 +19,11 @@ class PortType final
 public:
     PortType(const std::string& id,
              std::vector<PortField>&& fields,
-             const std::string& areaConnectionFieldId = ""):
+             const std::string& areaConnectionFieldId = "",
+             std::optional<int> balanceOutputSign = std::nullopt):
         id_(id),
-        fields_(std::move(fields))
+        fields_(std::move(fields)),
+        balanceOutputSign_(balanceOutputSign)
     {
         if (!areaConnectionFieldId.empty())
         {
@@ -35,6 +37,12 @@ public:
                   + "\".");
             }
             areaConnectionFieldId_ = areaConnectionFieldId;
+        }
+        if (balanceOutputSign_.has_value() && balanceOutputSign_.value() != 0
+            && !areaConnectionFieldId_.has_value())
+        {
+            throw std::invalid_argument("PortType \"" + id_
+                                        + "\": balance-output-sign requires injection-field.");
         }
     }
 
@@ -53,6 +61,11 @@ public:
         return areaConnectionFieldId_;
     }
 
+    std::optional<int> balanceOutputSign() const
+    {
+        return balanceOutputSign_;
+    }
+
     bool operator==(const PortType& other) const = default;
 
 private:
@@ -61,6 +74,8 @@ private:
     std::vector<PortField> fields_;
 
     std::optional<std::string> areaConnectionFieldId_;
+
+    std::optional<int> balanceOutputSign_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

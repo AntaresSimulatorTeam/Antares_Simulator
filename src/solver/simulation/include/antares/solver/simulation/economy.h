@@ -80,6 +80,8 @@ private:
     uint pNbWeeks;
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
+    //! Maximum number of weeks solved in parallel within each MC year (1 = sequential).
+    uint pNbMaxWeeksInParallel = 1;
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     std::vector<Optimization::WeeklyOptimization> weeklyOptProblems_;
     std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;

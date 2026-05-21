@@ -92,6 +92,9 @@ set(TARGET_LIBS #No alias
         # executable
         antares-solver
 
+        # gems adapter
+        gems-csr-adapter
+
         # modeler libs
         antlr-interface
         system-model-base

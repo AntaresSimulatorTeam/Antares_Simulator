@@ -37,6 +37,8 @@ void CurtailmentSharing::reset()
     priceTakingOrder = AdqPatchPTO::isDens;
     includeHurdleCost = false;
     checkCsrCostFunction = false;
+    useGemsFbConstraints = false;
+    gemsFbConstraintFilter.clear();
     resetThresholds();
 }
 
@@ -100,6 +102,15 @@ bool CurtailmentSharing::updateFromKeyValue(const Yuni::String& key, const Yuni:
     {
         return value.to<int>(thresholdVarBoundsRelaxation);
     }
+    if (key == "enable-gems-fb-constraints")
+    {
+        return value.to<bool>(useGemsFbConstraints);
+    }
+    if (key == "gems-fb-constraint-filter")
+    {
+        gemsFbConstraintFilter = value.c_str();
+        return true;
+    }
 
     return false;
 }
@@ -127,6 +138,9 @@ void CurtailmentSharing::addProperties(IniFile::Section* section) const
     section->add("threshold-initiate-curtailment-sharing-rule", thresholdRun);
     section->add("threshold-display-local-matching-rule-violations", thresholdDisplayViolations);
     section->add("threshold-csr-variable-bounds-relaxation", thresholdVarBoundsRelaxation);
+
+    section->add("enable-gems-fb-constraints", useGemsFbConstraints);
+    section->add("gems-fb-constraint-filter", gemsFbConstraintFilter);
 }
 
 // ------------------------

@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <vector>
+
+#include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
@@ -20,6 +23,8 @@ struct CsrAreaBalanceData
     const std::vector<int>& PaysExtremiteDeLInterconnexion;
     std::map<int, int>& numberOfConstraintCsrAreaBalance;
     const uint32_t NombreDePays;
+    // Optional GEMS exchange contributions; nullptr when no GEMS model is active.
+    const std::vector<Antares::AdequacyPatch::AreaFlowContribution>* gemsAreaFlowContribs = nullptr;
 };
 
 class CsrAreaBalance final: private ConstraintFactory

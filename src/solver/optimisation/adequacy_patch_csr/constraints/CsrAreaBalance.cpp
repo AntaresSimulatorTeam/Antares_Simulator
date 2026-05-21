@@ -59,6 +59,19 @@ void CsrAreaBalance::add()
         // - Spilled Energy
         builder.NegativeUnsuppliedEnergy(Area, -1.0);
 
+        // GEMS exchange terms: ENS_A - Spilled_A + coeff * ccr_exchange_A = RHS_A
+        if (data.gemsAreaFlowContribs)
+        {
+            const std::string areaName = builder.data.NomsDesPays[Area];
+            for (const auto& contrib : *data.gemsAreaFlowContribs)
+            {
+                if (contrib.areaName == areaName)
+                {
+                    builder.rawTerm(contrib.csrColumn, contrib.coefficient);
+                }
+            }
+        }
+
         data.numberOfConstraintCsrAreaBalance[Area] = builder.data.nombreDeContraintes;
 
         ConstraintNamer namer(builder.data.NomDesContraintes);

@@ -5,9 +5,11 @@
 #include <sstream>
 
 #include <antares/antares/fatal-error.h>
+#include <antares/logs/logs.h>
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
+#include "antares/solver/adequacy-patch/gems-csr-adapter.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -95,6 +97,45 @@ void SIM_InitialisationProblemeHebdo(Study& study,
         problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(
           study.areas,
           study.runtime.areaLink);
+
+        const auto& csr = parameters.adqPatchParams.curtailmentSharing;
+        if (csr.useGemsFbConstraints && problem.modelerData && problem.modelerData->system)
+        {
+            // Build area-name → CSR ENS column rank for all physicalAreaInsideAdqPatch areas
+            std::map<std::string, int> areaToColumnIndex;
+            int rank = 0;
+            for (uint i = 0; i < study.areas.size(); ++i)
+            {
+                if (study.areas[i]->adequacyPatchMode
+                    == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+                {
+                    areaToColumnIndex[study.areas[i]->id.c_str()] = rank++;
+                }
+            }
+
+            Antares::AdequacyPatch::CsrProblemContext ctx;
+            ctx.areaToColumnIndex = &areaToColumnIndex;
+            ctx.dataSeries = problem.modelerData->dataSeries.get();
+
+            const std::regex filterRegex = csr.gemsFbConstraintFilter.empty()
+                                             ? std::regex(R"(^flow_based_constraint_)")
+                                             : std::regex(csr.gemsFbConstraintFilter);
+
+            auto adapter = std::make_shared<Antares::AdequacyPatch::GemsCsrAdapter>(
+              *problem.modelerData->system,
+              ctx,
+              filterRegex);
+
+            const int nMatched = adapter->countMatchingConstraints();
+            logs.info() << "[adq-patch] GEMS FB constraints enabled — " << nMatched
+                        << " constraint(s) matched filter '"
+                        << (csr.gemsFbConstraintFilter.empty() ? "^flow_based_constraint_"
+                                                               : csr.gemsFbConstraintFilter)
+                        << "'";
+
+            problem.adequacyPatchRuntimeData->gemsCsrAdapter = std::move(adapter);
+            problem.adequacyPatchRuntimeData->useGemsFbConstraints = true;
+        }
     }
 
     SIM_AllocationProblemeHebdo(study, problem, NombreDePasDeTemps);

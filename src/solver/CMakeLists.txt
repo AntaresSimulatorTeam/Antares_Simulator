@@ -1,5 +1,18 @@
 OMESSAGE("Antares Solver")
 
+# -------------------------------------------------------------------------
+# Week-level parallelism feature flag.
+# When OFF, the parallel week branch in Economy::year() is compiled out and
+# the sequential code path is the only one built.  Default is ON.
+# -------------------------------------------------------------------------
+option(ENABLE_WEEK_PARALLELISM "Enable intra-year week-level parallel LP solves" ON)
+if(ENABLE_WEEK_PARALLELISM)
+    add_compile_definitions(ANTARES_WEEK_PARALLELISM)
+    message(STATUS "Week-level parallelism: ENABLED (ANTARES_WEEK_PARALLELISM defined)")
+else()
+    message(STATUS "Week-level parallelism: DISABLED")
+endif()
+
 #TODO : see to add bigobj support
 
 if (MSVC)
@@ -7,6 +20,7 @@ if (MSVC)
 endif (MSVC)
 
 
+add_subdirectory(adequacy-patch)
 add_subdirectory(application)
 add_subdirectory(constraints-builder)
 add_subdirectory(hydro)

@@ -108,6 +108,10 @@ private:
     void setRHSfictitiousLoadValue();
     void setRHSMaxEnsLoadValue();
     void setRHSbindingConstraintsValue();
+    void setRHSgemsFbConstraintsValue();
+
+    // Variable bounds
+    void setBoundsOnGemsFbExtraVars();
 
     // Costs
     void setQuadraticCost();
@@ -140,4 +144,9 @@ public:
 
     // links between two areas inside the adq-patch domain
     std::map<int, LinkVariable> linkInsideAdqPatch;
+
+    // MC year stored at the start of run() — used by GEMS FB row building/RHS.
+    int mcYear_ = 0;
+    // CSR constraint-row index for each row returned by rowsForHour(), -1 if skipped.
+    std::vector<int> gemsFbConstraintRows_;
 };

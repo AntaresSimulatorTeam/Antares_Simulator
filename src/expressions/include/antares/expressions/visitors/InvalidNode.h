@@ -4,6 +4,7 @@
 
 #pragma once
 #include <stdexcept>
+#include <string>
 
 namespace Antares::Expressions::Visitors
 {

@@ -79,6 +79,7 @@ port-type:
       - id: angle
    area-connection:
       - injection-field: flow
+      - balance-output-sign: 1
 ~~~
 
 **area-connection** is the name of the optional section to use. It is mandatory if you want to use such a port type to 
@@ -86,6 +87,10 @@ connect modeler components to solver areas.
 
   - **injection-field**: the field to use when adding the contribution of this port bearer to a connected area, were the 
     component to be connected to an area
+  - **balance-output-sign** _(optional, integer, default: `0`)_: controls whether this port contributes to the **BALANCE**
+    output variable after each optimisation. Set to `1` if the field value represents a net import into the area
+    (positive = area receives energy), or `-1` if it represents a net export (positive = area sends energy).
+    `0` (or absent) disables contribution to BALANCE. Must be `-1`, `0`, or `1`.
 
 #### Optimization model
 The linear expression defined by the connected component's port field definition is simply added to the **left-hand side** 
@@ -97,6 +102,32 @@ of the area's [balance constraint](05-model.md#balance-between-load-and-generati
       - Generation contributions to the balance should be **positive**  
       - Load contributions to the balance should be **negative**  
     Take this into account when defining the connection port value.
+
+## Energy balance and GEMS net imports
+
+### Correction for the CSR area-balance constraint (v9.3.11)
+
+In hybrid studies that use both the adequacy patch and GEMS components, a subtle
+error could previously appear in the right-hand side (RHS) of the **CSR area-balance
+constraint**.
+
+**What was wrong.** The `calculateAreaFlowBalance` helper adds GEMS net-import values
+(`ValeursHorairesNetechangeModeler`) to `netPositionInit` so that ENS / LMR calculations
+see the full area balance. However, the CSR area-balance RHS is supposed to represent
+only **re-dispatchable NTC inside-inside flows**. GEMS flows are fixed quantities
+determined by the initial LP solve and have no corresponding CSR decision variable.
+Including them inflated the RHS by the GEMS import, leading to a small residual error
+in ENS_csr_min for affected areas.
+
+**What changed.** The GEMS net import is now subtracted from `netPositionInit` before
+it is used as the CSR RHS. This correction applies only when `modelerData` is present
+(i.e. the study is actually a hybrid study). Legacy studies are completely unaffected.
+
+**Impact on existing results.** Users who re-run existing hybrid studies (with both
+adequacy patch and GEMS components) may see small differences in ENS outputs for
+inside-patch areas at scarcity hours. The corrected results are more accurate: the
+nodal balance constraint in the CSR now correctly excludes fixed GEMS flows from the
+adjustable NTC-only balance. No input-file changes are required.
 
 ## Limitations
 

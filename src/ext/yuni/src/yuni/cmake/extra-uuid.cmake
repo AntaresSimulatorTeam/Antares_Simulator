@@ -35,7 +35,9 @@ add_library(yuni-static-uuid STATIC
 	uuid/fwd.h
 	yuni.h
 )
-target_link_libraries(yuni-static-uuid PUBLIC uuid)
+if(NOT APPLE)
+    target_link_libraries(yuni-static-uuid PUBLIC uuid)
+endif()
 
 if (WIN32 OR WIN64)
 	# -lrpcrt4

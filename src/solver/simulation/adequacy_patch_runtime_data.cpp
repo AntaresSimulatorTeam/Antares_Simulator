@@ -3,6 +3,10 @@
 
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 
+#include "antares/solver/adequacy-patch/gems-csr-adapter.h"
+
+AdequacyPatchRuntimeData::~AdequacyPatchRuntimeData() = default;
+
 namespace
 {
 constexpr double thresholdForCostCoefficient = 1.e-12;

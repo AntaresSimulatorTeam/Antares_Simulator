@@ -75,6 +75,10 @@ port-types:
   by [antares-modeler](08-command-line.md).
   For more information on hybrid
   studies, [see the relevant documentation](../solver/08-hybrid-studies.md#selecting-the-area-connection-port-fields).
+    - **injection-field**: the port field whose linear expression is added to the area's balance constraint.
+    - **balance-output-sign** _(optional, integer)_: controls how this port contributes to the BALANCE
+      output variable post-solve. Absent or `0` means no contribution (default). `1` adds the field
+      value to the area's net balance; `-1` subtracts it. Must be `-1`, `0`, or `1`.
 
 ### Models
 
