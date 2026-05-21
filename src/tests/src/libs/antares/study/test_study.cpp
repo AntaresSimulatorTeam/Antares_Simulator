@@ -3,6 +3,10 @@
 
 #define BOOST_TEST_MODULE study
 #define WIN32_LEAN_AND_MEAN
+
+#include <filesystem>
+#include <fstream>
+
 #include <boost/test/unit_test.hpp>
 
 #include "antares/study/study.h"
@@ -364,3 +368,52 @@ BOOST_AUTO_TEST_CASE(add_area_with_forbidden_character_returns_nullptr)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // version
+
+BOOST_AUTO_TEST_SUITE(renewable_cluster_loading)
+
+struct RenewableLoadFixture: public OneAreaStudy
+{
+    RenewableLoadFixture()
+    {
+        testFolder = std::filesystem::temp_directory_path() / "renewable_test";
+        std::filesystem::create_directories(testFolder);
+    }
+
+    ~RenewableLoadFixture()
+    {
+        std::filesystem::remove_all(testFolder);
+    }
+
+    void writeListIni(const std::string& content)
+    {
+        std::ofstream out(testFolder / "list.ini", std::ofstream::trunc);
+        out << content;
+    }
+
+    std::filesystem::path testFolder;
+};
+
+BOOST_FIXTURE_TEST_CASE(load_renewable_with_empty_key_property, RenewableLoadFixture)
+{
+    writeListIni("[MyWindFarm]\n"
+                 "= some_value\n"
+                 "group = wind onshore\n");
+
+    bool ret = areaA->renewable.list.loadFromFolder(testFolder, areaA);
+    BOOST_CHECK(ret);
+    // The cluster is loaded despite the invalid key
+    BOOST_CHECK_EQUAL(areaA->renewable.list.allClustersCount(), 1);
+}
+
+BOOST_FIXTURE_TEST_CASE(load_renewable_with_unknown_property, RenewableLoadFixture)
+{
+    writeListIni("[MyWindFarm]\n"
+                 "group = wind onshore\n"
+                 "totally_fake_property = 42\n");
+
+    bool ret = areaA->renewable.list.loadFromFolder(testFolder, areaA);
+    BOOST_CHECK(ret);
+    BOOST_CHECK_EQUAL(areaA->renewable.list.allClustersCount(), 1);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
