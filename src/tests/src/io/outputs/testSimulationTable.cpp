@@ -18,7 +18,6 @@
 
 #include "antares/expressions/visitors/VariabilityVisitor.h"
 #include "antares/io/outputs/OptimisationsSimulationTable.h"
-#include "antares/io/outputs/SimulationTable.h"
 #include "antares/io/outputs/SimulationTableEntry.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
@@ -33,6 +32,7 @@
 #include "antares/writer/LegacySimulationTablesWriter.h"
 #include "antares/writer/in_memory_writer.h"
 
+#include "../private/csv_table_writer.h"
 #include "UtilMocks.h"
 
 using namespace Antares::Optimisation::LinearProblemApi;
@@ -47,6 +47,8 @@ using namespace Antares::IO::Outputs;
 using namespace Antares::Writer;
 using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
+
+namespace fs = std::filesystem;
 
 BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
@@ -101,9 +103,36 @@ BOOST_AUTO_TEST_CASE(StatusToString_ValidOptional)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+struct SimulationTableFileFixture
+{
+    SimulationTableFileFixture():
+        out_file_path(fs::temp_directory_path() / "simulation-table.csv"),
+        csv_writer(out_file_path)
+    {
+        remove_if_exists();
+    }
+
+    ~SimulationTableFileFixture()
+    {
+        remove_if_exists();
+    }
+
+    fs::path out_file_path;
+    CsvTableWriter csv_writer;
+
+private:
+    void remove_if_exists()
+    {
+        if (fs::exists(out_file_path))
+        {
+            fs::remove(out_file_path);
+        }
+    }
+};
+
 BOOST_AUTO_TEST_SUITE(SimulationTableCsvTests)
 
-BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
+BOOST_FIXTURE_TEST_CASE(AddEntry_SingleEntry, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 1,
@@ -116,13 +145,14 @@ BOOST_AUTO_TEST_CASE(AddEntry_SingleEntry)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.writeToBuffer();
+    csv_writer.writeTable(table);
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var1,100,50,2,42.5,Basic") != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("1,comp1,var1,100,50,2,42.5,Basic") != std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
+BOOST_FIXTURE_TEST_CASE(AddEntry_WithNullOptionals, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 2,
@@ -135,10 +165,11 @@ BOOST_AUTO_TEST_CASE(AddEntry_WithNullOptionals)
                                .status = std::nullopt};
 
     table.addEntry(entry);
-    table.writeToBuffer();
+    csv_writer.writeTable(table);
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp2,var2,None,None,0,None,None") != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("2,comp2,var2,None,None,0,None,None") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
@@ -154,13 +185,12 @@ BOOST_AUTO_TEST_CASE(Clear_RemovesAllEntries)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.writeToBuffer();
-    BOOST_CHECK(!table.buffer().empty());
+    BOOST_CHECK(!table.columns().empty());
 
     table.clear();
+
     // After clear
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.empty());
+    BOOST_CHECK(table.rowCount() == 0);
 }
 
 BOOST_AUTO_TEST_CASE(MultipleEntries)
@@ -392,10 +422,7 @@ BOOST_AUTO_TEST_CASE(DoubleValues_PrecisionBoundaries)
         BOOST_CHECK_NO_THROW(table.addEntry(entry));
     }
 
-    BOOST_CHECK_NO_THROW(table.writeToBuffer());
-
-    std::string buffer = table.buffer();
-    BOOST_CHECK(!buffer.empty());
+    BOOST_CHECK(!table.columns().empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -573,7 +600,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(DataIntegrityTests)
 
-BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
+BOOST_FIXTURE_TEST_CASE(RoundTrip_DataIntegrity, SimulationTableFileFixture)
 {
     // Test that data written matches data read
     SimulationTable table;
@@ -588,15 +615,20 @@ BOOST_AUTO_TEST_CASE(RoundTrip_DataIntegrity)
         table.addEntry(entry);
     }
 
-    table.writeToBuffer();
-    std::string csvOutput = table.buffer();
+    csv_writer.writeTable(table);
 
     // Parse the CSV output manually to verify data integrity
-    std::istringstream stream(csvOutput);
+    std::ifstream file_istream(out_file_path);
     std::string line;
 
+    // Check that the column names are there.
+    std::getline(file_istream, line);
+    std::string names = "block,component,output,absolute_time_index,block_time_index,"
+                        "scenario_index,value,basis_status";
+    BOOST_CHECK(line.find(names) != std::string::npos);
+
     size_t entryIndex = 0;
-    while (std::getline(stream, line) && entryIndex < originalEntries.size())
+    while (std::getline(file_istream, line) && entryIndex < originalEntries.size())
     {
         const auto& original = originalEntries[entryIndex];
 
@@ -1047,7 +1079,7 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
     BOOST_CHECK(std::filesystem::exists(expectedFile));
 
     std::ifstream file(expectedFile);
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std::string content{std::istreambuf_iterator<char>(file), {}};
 
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
     BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,Basic") != std::string::npos);
@@ -1203,7 +1235,7 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
 
     // Read and verify content
     std::ifstream file(expectedFile);
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    std::string content{std::istreambuf_iterator<char>(file), {}};
 
     // Check each entry
     for (int i = 0; i < 5; ++i)
