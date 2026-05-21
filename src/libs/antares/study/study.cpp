@@ -290,15 +290,13 @@ void Study::saveAboutTheStudy(Solver::IResultWriter& resultWriter)
     std::ostringstream f;
     char timeBuffer[64];
     time_t startTime = static_cast<time_t>(pStartTime);
-    std::tm* timeInfo = std::localtime(&startTime);
-    if (timeInfo)
-    {
-        std::strftime(timeBuffer, sizeof(timeBuffer), "%Y.%m.%d - %H:%M", timeInfo);
-    }
-    else
-    {
-        std::snprintf(timeBuffer, sizeof(timeBuffer), "unknown");
-    }
+    std::tm timeInfo{};
+#ifdef _WIN32
+    localtime_s(&timeInfo, &startTime);
+#else
+    localtime_r(&startTime, &timeInfo);
+#endif
+    std::strftime(timeBuffer, sizeof(timeBuffer), "%Y.%m.%d - %H:%M", &timeInfo);
     std::string startTimeStr(timeBuffer);
     f << "[general]";
     f << "\nversion = " << StudyVersion::latest().toString();

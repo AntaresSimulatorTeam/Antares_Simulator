@@ -78,8 +78,13 @@ bool fileSetContent(const std::string& filename, const std::string& content)
                 // Notification via the UI interface
                 char timeBuffer[16];
                 std::time_t now = std::time(nullptr);
-                std::tm* timeInfo = std::localtime(&now);
-                if (timeInfo && std::strftime(timeBuffer, sizeof(timeBuffer), "%H:%M", timeInfo))
+                std::tm timeInfo{};
+#ifdef _WIN32
+                localtime_s(&timeInfo, &now);
+#else
+                localtime_r(&now, &timeInfo);
+#endif
+                if (std::strftime(timeBuffer, sizeof(timeBuffer), "%H:%M", &timeInfo))
                 {
                     logs.info() << "Not enough disk space since " << timeBuffer << ". Waiting...";
                 }
@@ -115,6 +120,7 @@ bool fileSetContent(const std::string& filename, const std::string& content)
 
         if (content.empty()) // ok, good, it's over
         {
+            std::fclose(fh);
             return true;
         }
 

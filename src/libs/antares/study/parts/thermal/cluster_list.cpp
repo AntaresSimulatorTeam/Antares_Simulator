@@ -68,7 +68,9 @@ unsigned int ThermalClusterList::enabledAndMustRunCount() const
                                  [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
 
-bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Area* area)
+bool ThermalClusterList::loadFromFolder([[maybe_unused]] Study& study,
+                                        const fs::path& folder,
+                                        Area* area)
 {
     assert(area && "A parent area is required");
 
