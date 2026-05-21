@@ -8,8 +8,8 @@
 #include <string>
 #include <vector>
 
-#include "antares/optimisation/linear-problem-api/hasStatus.h"
 #include "antares/io/outputs/IColumnAdapterVisitor.h"
+#include "antares/optimisation/linear-problem-api/hasStatus.h"
 
 // Forward declarations
 namespace Antares::Writer
@@ -17,7 +17,7 @@ namespace Antares::Writer
 class IColumnAdapter;
 } // namespace Antares::Writer
 
-using namespace  Antares::Writer;
+using namespace Antares::Writer;
 
 namespace Antares::IO::Outputs
 {

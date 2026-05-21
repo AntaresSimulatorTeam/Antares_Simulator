@@ -5,7 +5,6 @@
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/optimisation/weekly_optimization.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers

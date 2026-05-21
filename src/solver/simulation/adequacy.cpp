@@ -5,12 +5,14 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/solver_utils.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
 using namespace Antares::Writer;
+using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver::Simulation
 {
@@ -122,10 +124,10 @@ bool Adequacy::year(Variable::State& state,
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
 
-    std::unique_ptr<OptimisationsSimulationTable> simulationTables;
+    std::unique_ptr<Antares::IO::Outputs::OptimisationsSimulationTable> simulationTables;
     if (!study.parameters.noOutput)
     {
-        simulationTables = std::make_unique<OptimisationsSimulationTable>();
+        simulationTables = std::make_unique<Antares::IO::Outputs::OptimisationsSimulationTable>();
     }
 
     for (uint w = 0; w != pNbWeeks; ++w)

@@ -5,6 +5,8 @@
 
 #include "antares/solver/optimisation/opt_fonctions.h"
 
+using namespace Antares::IO::Outputs;
+
 namespace Antares::Solver::Optimization
 {
 WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,

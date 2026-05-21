@@ -8,6 +8,8 @@
 // gp : No namespace here. We should add one (Antares::IO::Outputs).
 // gp : Besides, this class could be a struct now
 
+namespace Antares::IO::Outputs
+{
 class OptimisationsSimulationTable
 {
 public:
@@ -19,3 +21,4 @@ private:
     Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;
     Antares::IO::Outputs::SimulationTable secondOptimSimulationTable_;
 };
+} // namespace Antares::IO::Outputs

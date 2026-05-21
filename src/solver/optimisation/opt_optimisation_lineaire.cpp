@@ -15,6 +15,7 @@
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
+using namespace IO::Outputs;
 using Antares::Solver::Optimization::ExportBehavior;
 using Antares::Solver::Optimization::OptimizationOptions;
 
