@@ -523,11 +523,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer,
-                                                                   compo,
-                                                                   &dummy_data_,
-                                                                   &scenarioGroupRepo.scenario(
-                                                                     compo.getScenarioGroupId()))
+            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
                                                   .dispatch(constraint.expression().RootNode());
             optimEntityContainer->registerConstraint(compo, constraint_variability);
             if (isTimeDependent(constraint_variability))

@@ -476,12 +476,7 @@ void ComponentFiller::addObjectives(const LinearProblemApi::FillContext& ctx)
 
 VariabilityType ComponentFiller::getVariability(const Node* node, const Component& component) const
 {
-    auto& scenario = scenarioGroupRepo_.scenario(component.getScenarioGroupId());
-
-    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_,
-                                                     component,
-                                                     data_,
-                                                     &scenario);
+    Visitors::VariabilityVisitor variability_visitor(optimEntityContainer_, component);
     return variability_visitor.dispatch(node);
 }
 } // namespace Antares::Optimisation
