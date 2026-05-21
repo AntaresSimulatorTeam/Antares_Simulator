@@ -1,0 +1,41 @@
+library:
+  id: lib_example_14_7
+  description: Fixed inverted bounds (from > to) with a constant parameter
+
+  models:
+    - id: inverted_fixed_bounds_demo
+      description: >
+        Variable constrained by x = sum(5 .. 3, p) + c.
+        The bounds are fixed literals with from=5 > to=3, so the sum is always
+        empty and must equal zero at every timestep.
+
+        Correct behaviour: sum = 0, x = 0 + c = c = 20, objective = 5*20 = 100.
+
+        Bug (constant-expression branch in ReadLinearExpressionVisitor::visit(TimeSumNode)):
+          The constant branch computes term *= (to - from + 1).
+          Here to - from + 1 = 3 - 5 + 1 = -1  (negative!).
+          This gives sum = p * (-1) = 10 * (-1) = -10 instead of 0.
+          Then x = -10 + 20 = 10, objective = 50.
+
+        A test checking objective = 100 and x = 20 catches this bug.
+        This complements study 14_4 which tests the same bug via t+ relative bounds;
+        here the bounds are fixed integer literals, exercising a different code path
+        through resolveTimeSumBound.
+      parameters:
+        - id: p
+          time-dependent: false
+          scenario-dependent: false
+        - id: c
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: equality_from_inverted_fixed_sum
+          expression: x = sum(5 .. 3, p) + c
+      objective-contributions:
+        - id: objective
+          expression: sum(x)
