@@ -12,12 +12,12 @@ namespace Antares::IO::Outputs
 SimulationTable::SimulationTable()
 
 {
-    storage_.addIntegralColumn<unsigned int>("block");
+    storage_.addIntegralColumn("block");
     storage_.addOptionalColumn<std::string>("component");
     storage_.addStringColumn("output");
     storage_.addOptionalColumn<unsigned int>("absolute_time_index");
     storage_.addOptionalColumn<unsigned int>("block_time_index");
-    storage_.addIntegralColumn<unsigned int>("scenario_index");
+    storage_.addIntegralColumn("scenario_index");
     storage_.addOptionalColumn<double>("value");
     storage_.addOptionalColumn<Antares::Optimisation::LinearProblemApi::MipBasisStatus>(
       "basis_status");

@@ -8,6 +8,7 @@ set(SRC_SIMU_TABLE
         include/antares/io/outputs/SimulationTableEntry.h
         include/antares/io/outputs/SimulationTable.h
         include/antares/io/outputs/columns.h
+        include/antares/io/outputs/IColumnAdapterVisitor.h
         include/antares/io/outputs/storage.h)
 
 add_library(simulation-table STATIC ${SRC_SIMU_TABLE})

@@ -62,12 +62,12 @@ private:
 class IntColumnAdapter: public IColumnAdapter
 {
 public:
-    explicit IntColumnAdapter(const IO::Outputs::IntegralColumn<unsigned>* column);
+    explicit IntColumnAdapter(const IO::Outputs::IntegralColumn* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
 private:
-    const IO::Outputs::IntegralColumn<unsigned>* column_;
+    const IO::Outputs::IntegralColumn* column_;
 };
 
 // ================================
