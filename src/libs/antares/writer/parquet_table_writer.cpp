@@ -60,6 +60,11 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
                                                arrow_props));
 }
 
+ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath):
+    ITableWriter(filePath)
+{
+}
+
 void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const
 {
     // Basic validations

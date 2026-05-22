@@ -52,6 +52,11 @@ std::string make_line(const std::vector<std::string>& cols)
     return out;
 }
 
+CsvTableWriter::CsvTableWriter(const std::filesystem::path& filePath):
+    ITableWriter(filePath)
+{
+}
+
 void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
 {
     const auto& columns = simuTable.columns();
