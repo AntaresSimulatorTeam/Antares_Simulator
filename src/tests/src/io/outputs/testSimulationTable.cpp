@@ -464,7 +464,7 @@ struct MockMipSolution: IMipSolution
     }
 };
 
-struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture
+struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, SimulationTableFileFixture
 {
     void addRandomVariables(const FillContext& fillContext,
                             MockLinearProblem* linearProblem,
@@ -760,11 +760,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
                         fillContext,
                         1,
                         TimeConversionMode::WeeklyBlocks);
-    table.writeToBuffer();
+    
+    csv_writer.writeTable(table);
 
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp1,var4,169,1") != std::string::npos);
-    BOOST_CHECK(buffer.find("2,comp1,var4,170,2") != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("2,comp1,var4,169,1") != std::string::npos);
+    BOOST_CHECK(content.find("2,comp1,var4,170,2") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
@@ -782,11 +784,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
                         fillContext,
                         1,
                         TimeConversionMode::DailyBlocks);
-    table.writeToBuffer();
 
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp1,var4,25,1") != std::string::npos);
-    BOOST_CHECK(buffer.find("2,comp1,var4,26,2") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("2,comp1,var4,25,1") != std::string::npos);
+    BOOST_CHECK(content.find("2,comp1,var4,26,2") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
@@ -804,11 +808,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.writeToBuffer();
 
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var4,1,1") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var4,2,2") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("1,comp1,var4,1,1") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,2,2") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocalStep)
@@ -826,11 +832,13 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocal
                         fillContext,
                         1,
                         TimeConversionMode::WeeklyBlocks);
-    table.writeToBuffer();
 
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("2,comp1,constraint2,169,1,0") != std::string::npos);
-    BOOST_CHECK(buffer.find("2,comp1,constraint2,170,2,0") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("2,comp1,constraint2,169,1,0") != std::string::npos);
+    BOOST_CHECK(content.find("2,comp1,constraint2,170,2,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
@@ -849,10 +857,12 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
                         0,
                         TimeConversionMode::SingleBlock,
                         true);
-    table.writeToBuffer();
 
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,constraint1,None,None,0") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("1,comp1,constraint1,None,None,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutputs)
@@ -870,10 +880,12 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.writeToBuffer();
 
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("1,comp1,var3,None,None,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
@@ -891,15 +903,17 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.writeToBuffer();
 
-    const std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("1,comp1,var1,None,None,0,") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var2,1,1,0") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var2,2,2,0") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var3,None,None,0") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var4,1,1,0") != std::string::npos);
-    BOOST_CHECK(buffer.find("1,comp1,var4,2,2,0") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("1,comp1,var1,None,None,0,") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var2,1,1,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var2,2,2,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var3,None,None,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,1,1,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,2,2,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
@@ -945,23 +959,24 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
                         fillContext,
                         0,
                         TimeConversionMode::SingleBlock);
-    table.writeToBuffer();
 
-    const std::string buffer = table.buffer();
-    BOOST_TEST_INFO(buffer);
-    BOOST_CHECK(buffer.find(",componentToto,ct_drop,1,1,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct_drop,2,2,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct_drop,3,3,") == std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,1,1,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,2,2,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",componentToto,ct_cyclic,3,3,") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find(",componentToto,ct_drop,1,1,") != std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_drop,2,2,") != std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_drop,3,3,") != std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_cyclic,1,1,") != std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_cyclic,2,2,") != std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_cyclic,3,3,") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(EdgeCaseStressTests)
 
-BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
+BOOST_FIXTURE_TEST_CASE(EmptyStrings_AllFields, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 0,
@@ -974,13 +989,15 @@ BOOST_AUTO_TEST_CASE(EmptyStrings_AllFields)
                                .status = std::nullopt};
 
     table.addEntry(entry);
-    table.writeToBuffer();
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("0,,,None,None,0,None,None") != std::string::npos);
+    csv_writer.writeTable(table);
+
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("0,,,None,None,0,None,None") != std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
+BOOST_FIXTURE_TEST_CASE(VeryLongStrings_ComponentNames, SimulationTableFileFixture)
 {
     SimulationTable table;
     std::string longComponent(10000, 'a'); // 10k character string
@@ -996,11 +1013,14 @@ BOOST_AUTO_TEST_CASE(VeryLongStrings_ComponentNames)
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(table.writeToBuffer());
+    BOOST_CHECK_NO_THROW(csv_writer.writeTable(table));
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find(longComponent) != std::string::npos);
-    BOOST_CHECK(buffer.find(longOutput) != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find(longComponent) != std::string::npos);
+    BOOST_CHECK(content.find(longOutput) != std::string::npos);
+
+
 }
 
 BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)
@@ -1252,7 +1272,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(EdgeCasesAndErrorHandling)
 
-BOOST_AUTO_TEST_CASE(LargeValues_HandledCorrectly)
+BOOST_FIXTURE_TEST_CASE(LargeValues_HandledCorrectly, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = UINT_MAX,
@@ -1265,7 +1285,7 @@ BOOST_AUTO_TEST_CASE(LargeValues_HandledCorrectly)
                                .status = MipBasisStatus::BASIC};
 
     BOOST_CHECK_NO_THROW(table.addEntry(entry));
-    BOOST_CHECK_NO_THROW(table.writeToBuffer());
+    BOOST_CHECK_NO_THROW(csv_writer.writeTable(table));
 }
 
 BOOST_AUTO_TEST_CASE(SpecialCharacters_InComponentNames)
