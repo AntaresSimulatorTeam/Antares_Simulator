@@ -760,7 +760,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
                         fillContext,
                         1,
                         TimeConversionMode::WeeklyBlocks);
-    
+
     csv_writer.writeTable(table);
 
     std::ifstream file_istream(out_file_path);
@@ -1019,8 +1019,6 @@ BOOST_FIXTURE_TEST_CASE(VeryLongStrings_ComponentNames, SimulationTableFileFixtu
     std::string content{std::istreambuf_iterator<char>(file_istream), {}};
     BOOST_CHECK(content.find(longComponent) != std::string::npos);
     BOOST_CHECK(content.find(longOutput) != std::string::npos);
-
-
 }
 
 BOOST_AUTO_TEST_CASE(AlternatingClear_Write_Operations)

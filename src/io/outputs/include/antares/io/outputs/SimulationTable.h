@@ -19,7 +19,7 @@ public:
     void addEntry(const SimulationTableEntry& entry);
     const std::vector<std::unique_ptr<IColumn>>& columns() const;
     size_t rowCount() const;
-    
+
     void writeToBuffer(); // gp : do we need this (only used in tests) ?
     void clear();
 
