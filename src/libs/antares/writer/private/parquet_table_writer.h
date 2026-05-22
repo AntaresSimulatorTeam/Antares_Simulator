@@ -14,7 +14,7 @@ namespace Antares::Writer
 class SIMULATION_TABLE_WRITERS_EXPORT ParquetTableWriter final: public ITableWriter
 {
 public:
-    explicit ParquetTableWriter(const std::filesystem::path& filePath);
+    using ITableWriter::ITableWriter;
     void writeTable(const IO::Outputs::SimulationTable& simuTable) const override;
 };
 
