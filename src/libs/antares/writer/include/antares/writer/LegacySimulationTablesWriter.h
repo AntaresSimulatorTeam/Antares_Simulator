@@ -25,6 +25,6 @@ private:
     void writeForOptim(const IO::Outputs::SimulationTable* table, unsigned optim_number);
     unsigned year_ = 0;
     bool parquetFormat_ = false;
-    const std::filesystem::path folder_;
+    const std::filesystem::path& folder_;
 };
 } // namespace Antares::Writer
