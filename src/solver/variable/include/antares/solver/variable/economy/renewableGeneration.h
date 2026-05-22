@@ -4,6 +4,7 @@
 #pragma once
 
 #include <antares/utils/utils.h>
+#include "antares/solver/variable/economy/dynamic_multi_column_base.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable::Economy
@@ -94,6 +95,43 @@ public:
         count = 1 + NextT::count,
     };
 
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(const Data::Study& study,
+                                                                const Data::Area* /*area*/)
+    {
+        std::set<std::string> uniqueGroups;
+        study.areas.each(
+          [&uniqueGroups](const Data::Area& currentArea)
+          {
+              for (auto& cluster: currentArea.renewable.list.each_enabled())
+              {
+                  uniqueGroups.insert(cluster->getGroup());
+              }
+          });
+
+        std::vector<ColumnDescriptor> descriptors;
+        for (const auto& group: uniqueGroups)
+        {
+            descriptors.push_back({group, "MWh"});
+        }
+        return descriptors;
+    }
+
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(const Data::Area* area)
+    {
+        std::set<std::string> uniqueGroups;
+        for (auto& cluster: area->renewable.list.each_enabled())
+        {
+            uniqueGroups.insert(cluster->getGroup());
+        }
+
+        std::vector<ColumnDescriptor> descriptors;
+        for (const auto& group: uniqueGroups)
+        {
+            descriptors.push_back({group, "MWh"});
+        }
+        return descriptors;
+    }
+
     template<int CDataLevel, int CFile>
     struct Statistics
     {
@@ -112,16 +150,23 @@ public:
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
-        // Building the vector of group names the clusters belong to.
+        // Study-wide column set: every area produces identically-positioned columns,
+        // so the shared captions array stays consistent with each area's rows.
+        descriptors_ = buildColumnDescriptors(*study, area);
+
         std::set<std::string> names;
-        for (const auto& cluster: area->renewable.list.each_enabled())
-        {
-            names.insert(cluster->getGroup());
-        }
+        study->areas.each(
+          [&names](Data::Area& currentArea)
+          {
+              for (auto& cluster: currentArea.renewable.list.each_enabled())
+              {
+                  names.insert(cluster->getGroup());
+              }
+          });
         groupNames_ = {names.begin(), names.end()};
         groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
 
-        nbColumns_ = groupNames_.size();
+        nbColumns_ = descriptors_.size();
 
         if (nbColumns_)
         {
@@ -219,7 +264,24 @@ public:
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
-        // Dynamic-columns variables are intentionally excluded from digest generation.
+        // Column layout is study-wide (see initializeFromArea), so every area writes the
+        // same captions in the same indices — safe to contribute to the digest now.
+        if (AncestorType::isPrinted[0]
+            && (VCardType::categoryDataLevel
+                & (Category::DataLevel::area | Category::DataLevel::setOfAreas)))
+        {
+            results.isPrinted = AncestorType::isPrinted;
+            results.isCurrentVarNA = AncestorType::isNonApplicable;
+
+            for (size_t c = 0; c < nbColumns_; ++c)
+            {
+                results.variableCaption = descriptors_[c].caption;
+                results.variableUnit = descriptors_[c].unit;
+                AncestorType::pResults[c].template buildDigest<VCardType>(results,
+                                                                          digestLevel,
+                                                                          dataLevel);
+            }
+        }
         NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
@@ -245,8 +307,8 @@ public:
 
         for (unsigned int column = 0; column < nbColumns_; column++)
         {
-            results.variableCaption = groupNames_[column];
-            results.variableUnit = VCardType::Unit();
+            results.variableCaption = descriptors_[column].caption;
+            results.variableUnit = descriptors_[column].unit;
             pValuesForTheCurrentYear[numSpace][column]
               .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
@@ -270,8 +332,8 @@ public:
 
                 for (unsigned int column = 0; column < nbColumns_; column++)
                 {
-                    results.variableCaption = groupNames_[column];
-                    results.variableUnit = VCardType::Unit();
+                    results.variableCaption = descriptors_[column].caption;
+                    results.variableUnit = descriptors_[column].unit;
                     AncestorType::pResults[column]
                       .template buildSurveyReport<ResultsType, VCardType>(
                         results,
@@ -291,6 +353,7 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
     std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
+    std::vector<ColumnDescriptor> descriptors_;
     size_t nbColumns_ = 0;
     unsigned int pNbYearsParallel;
 

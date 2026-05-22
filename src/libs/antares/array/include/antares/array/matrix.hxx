@@ -1549,6 +1549,16 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(const Matrix<T, R
 template<class T, class ReadWriteT>
 inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWriteT>&& rhs) noexcept
 {
+    // Free existing resources before taking new ones
+    if (entry && entry != rhs.entry)
+    {
+        for (uint i = 0; i != width; ++i)
+        {
+            Antares::Memory::Release(entry[i]);
+        }
+        delete[] entry;
+    }
+
     width = rhs.width;
     height = rhs.height;
     jit = rhs.jit;
@@ -1564,6 +1574,9 @@ inline Matrix<T, ReadWriteT>& Matrix<T, ReadWriteT>::operator=(Matrix<T, ReadWri
     }
     // Prevent spurious de-allocation from rhs's destructor
     rhs.entry = nullptr;
+    rhs.jit = nullptr;
+    rhs.width = 0;
+    rhs.height = 0;
     return *this;
 }
 
