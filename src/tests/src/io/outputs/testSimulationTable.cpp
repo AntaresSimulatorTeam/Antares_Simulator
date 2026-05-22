@@ -966,7 +966,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
     std::string content{std::istreambuf_iterator<char>(file_istream), {}};
     BOOST_CHECK(content.find(",componentToto,ct_drop,1,1,") != std::string::npos);
     BOOST_CHECK(content.find(",componentToto,ct_drop,2,2,") != std::string::npos);
-    BOOST_CHECK(content.find(",componentToto,ct_drop,3,3,") != std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_drop,3,3,") == std::string::npos);
     BOOST_CHECK(content.find(",componentToto,ct_cyclic,1,1,") != std::string::npos);
     BOOST_CHECK(content.find(",componentToto,ct_cyclic,2,2,") != std::string::npos);
     BOOST_CHECK(content.find(",componentToto,ct_cyclic,3,3,") != std::string::npos);
@@ -1288,7 +1288,7 @@ BOOST_FIXTURE_TEST_CASE(LargeValues_HandledCorrectly, SimulationTableFileFixture
     BOOST_CHECK_NO_THROW(csv_writer.writeTable(table));
 }
 
-BOOST_AUTO_TEST_CASE(SpecialCharacters_InComponentNames)
+BOOST_FIXTURE_TEST_CASE(SpecialCharacters_InComponentNames, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 1,
@@ -1301,14 +1301,15 @@ BOOST_AUTO_TEST_CASE(SpecialCharacters_InComponentNames)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.writeToBuffer();
+    csv_writer.writeTable(table);
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("comp,with,commas") != std::string::npos);
-    BOOST_CHECK(buffer.find("var\"with\"quotes") != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("comp,with,commas") != std::string::npos);
+    BOOST_CHECK(content.find("var\"\"with\"\"quotes") != std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
+BOOST_FIXTURE_TEST_CASE(ZeroValues_HandledCorrectly, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 0,
@@ -1321,14 +1322,15 @@ BOOST_AUTO_TEST_CASE(ZeroValues_HandledCorrectly)
                                .status = MipBasisStatus::FREE};
 
     table.addEntry(entry);
-    table.writeToBuffer();
+    csv_writer.writeTable(table);
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("0,,") != std::string::npos);
-    BOOST_CHECK(buffer.find(",0,Free") != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("0,,") != std::string::npos);
+    BOOST_CHECK(content.find(",0,Free") != std::string::npos);
 }
 
-BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
+BOOST_FIXTURE_TEST_CASE(NegativeValues_HandledCorrectly, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 1,
@@ -1341,10 +1343,11 @@ BOOST_AUTO_TEST_CASE(NegativeValues_HandledCorrectly)
                                .status = MipBasisStatus::BASIC};
 
     table.addEntry(entry);
-    table.writeToBuffer();
+    csv_writer.writeTable(table);
 
-    std::string buffer = table.buffer();
-    BOOST_CHECK(buffer.find("-123.456") != std::string::npos);
+    std::ifstream file_istream(out_file_path);
+    std::string content{std::istreambuf_iterator<char>(file_istream), {}};
+    BOOST_CHECK(content.find("-123.456") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
