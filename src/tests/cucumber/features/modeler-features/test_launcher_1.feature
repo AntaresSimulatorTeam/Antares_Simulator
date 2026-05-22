@@ -61,3 +61,17 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | component | output | timestep | value |
       | node1     | gen1_p | 1-100    | 80    |
       | node1     | gen2_p | 1-100    | 20    |
+
+  @fast
+  Scenario: 1.7: One variable bounded below by a time sum with fixed lower bound and t+ upper bound
+    Given the modeler study path is "modeler/14_1"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 50
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | c1        | x      | 1        | 3     |
+      | c1        | x      | 2        | 6     |
+      | c1        | x      | 3        | 10    |
+      | c1        | x      | 4        | 15    |
+      | c1        | x      | 5        | 16    |

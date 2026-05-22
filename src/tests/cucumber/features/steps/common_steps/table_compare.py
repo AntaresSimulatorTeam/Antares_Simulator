@@ -1,5 +1,6 @@
 import csv
 import io
+from pathlib import Path
 from typing import Optional
 
 
@@ -206,3 +207,33 @@ def diff_message(name: str, ref_lines, out_lines) -> Optional[str]:
         header = f"{name} does not match reference"
         return header + "\n" + "\n".join(msg_lines)
     return None
+
+
+def compare_folders(folder1: Path, folder2: Path):
+    differences = []
+
+    if not folder1.exists():
+        differences.append(f"Folder 1 does not exist: {folder1}")
+        return False, differences
+
+    if not folder2.exists():
+        differences.append(f"Folder 2 does not exist: {folder2}")
+        return False, differences
+
+    folder1_files = [file for file in folder1.rglob("*") if file.is_file()]
+    if not folder1_files:
+        differences.append(f"No files found in folder 1: {folder1}")
+        return False, differences
+
+    for file1 in folder1_files:
+        relative_path = file1.relative_to(folder1)
+        file2 = folder2 / relative_path
+        if not file2.exists():
+            differences.append(f"Missing file in folder 2: {relative_path}")
+            continue
+
+        # Normalize line endings to tolerate CRLF/LF differences (e.g. git autocrlf on Windows)
+        if file1.read_bytes().replace(b"\r\n", b"\n") != file2.read_bytes().replace(b"\r\n", b"\n"):
+            differences.append(f"Content mismatch: {relative_path}")
+
+    return len(differences) == 0, differences

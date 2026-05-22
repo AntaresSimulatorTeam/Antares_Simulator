@@ -24,6 +24,7 @@ class PortFieldSumNode;
 class TimeShiftNode;
 class TimeIndexNode;
 class TimeSumNode;
+class TPlusNode;
 class ParentNode;
 class AllTimeSumNode;
 class FunctionNode;
