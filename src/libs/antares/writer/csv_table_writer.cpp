@@ -52,10 +52,9 @@ std::string make_line(const std::vector<std::string>& cols)
     return out;
 }
 
-CsvTableWriter::CsvTableWriter(std::filesystem::path& filePath):
+CsvTableWriter::CsvTableWriter(const std::filesystem::path& filePath):
     ITableWriter(filePath)
 {
-    output_file_.replace_extension(".csv");
 }
 
 void CsvTableWriter::writeTable(const SimulationTable& simuTable) const

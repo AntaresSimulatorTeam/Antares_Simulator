@@ -17,8 +17,11 @@ ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired, fs::path& filePath
 {
     if (parquetFormatRequired)
     {
+        filePath.replace_extension(".parquet");
         return std::make_shared<ParquetTableWriter>(filePath);
     }
+
+    filePath.replace_extension(".csv");
     return std::make_shared<CsvTableWriter>(filePath);
 }
 
