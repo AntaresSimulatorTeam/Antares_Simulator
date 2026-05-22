@@ -49,6 +49,7 @@ using namespace Antares::Expressions;
 using namespace Antares::Expressions::Visitors;
 
 namespace fs = std::filesystem;
+namespace rng = std::ranges;
 
 BOOST_AUTO_TEST_SUITE(SupportingMethodsTests)
 
@@ -599,6 +600,42 @@ struct TempDirFixture
 };
 
 BOOST_FIXTURE_TEST_SUITE(ComponentModelIntegrationTests, BasicProblemFixture)
+
+auto count_lines = [](std::string_view s)
+{
+    return rng::count_if(s | std::views::split('\n'),
+                         [](auto&& line) { return !rng::empty(line); });
+};
+
+BOOST_AUTO_TEST_CASE(TemplateFunction_VariableEntries_AllCombinations)
+{
+    SimulationTable table;
+    MockLinearProblem linearProblem(true);
+    const FillContext fillContext(0, 9, 0, 9, 0); // 10 time steps
+    build(fillContext, &linearProblem);
+
+    const auto& component = components.front();
+
+    addVariableEntries(table,
+                       linearProblem,
+                       fillContext,
+                       component,
+                       *optimEntityContainer,
+                       1,
+                       TimeConversionMode::SingleBlock,
+                       0);
+
+    csv_writer.writeTable(table);
+    std::string content = readFileContent(out_file_path);
+
+    // Should have entries for all 4 variable types with different time/scenario combinations
+    // var1: 1 entry (neither time nor scenario dependent)
+    // var2: 1 entry (scenario dependent only)
+    // var3: 10 entries (time dependent only, 10 time steps)
+    // var4: 10 entries (both dependent, 10 time steps)
+    // Total: 22 entries + 1 header = 23 lines
+    BOOST_CHECK_EQUAL(count_lines(content), 23);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

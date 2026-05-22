@@ -24,7 +24,6 @@ SimulationTable::SimulationTable()
 }
 
 SimulationTable::SimulationTable(SimulationTable&& other) noexcept:
-    buffer_(std::move(other.buffer_)),
     storage_(std::move(other.storage_))
 {
 }
@@ -51,27 +50,6 @@ size_t SimulationTable::rowCount() const
     return storage_.rowCount();
 }
 
-void SimulationTable::writeToBuffer()
-{
-    const size_t row_count = storage_.rowCount();
-    const auto& columns = storage_.columns();
-
-    for (size_t row = 0; row < row_count; ++row)
-    {
-        bool first = true;
-        for (const auto& col: columns)
-        {
-            if (!first)
-            {
-                buffer_ << ',';
-            }
-            first = false;
-            buffer_ << col->toString(row);
-        }
-        buffer_ << '\n';
-    }
-}
-
 std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
 {
     std::vector<std::vector<std::string>> rows; // to return
@@ -95,11 +73,5 @@ std::vector<std::vector<std::string>> SimulationTable::storageIntoRows() const
 void SimulationTable::clear()
 {
     storage_.clear();
-    buffer_.str("");
-}
-
-std::string SimulationTable::buffer() const
-{
-    return buffer_.str();
 }
 } // namespace Antares::IO::Outputs

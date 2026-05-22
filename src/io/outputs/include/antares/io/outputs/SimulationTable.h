@@ -19,16 +19,10 @@ public:
     void addEntry(const SimulationTableEntry& entry);
     const std::vector<std::unique_ptr<IColumn>>& columns() const;
     size_t rowCount() const;
-
-    void writeToBuffer(); // gp : do we need this (only used in tests) ?
     void clear();
-
-    [[nodiscard]] std::string buffer() const; // gp : do we need this (only used in tests) ?
-
     std::vector<std::vector<std::string>> storageIntoRows() const;
 
 private:
-    std::ostringstream buffer_;
     ColumnBasedStorage storage_;
 };
 } // namespace Antares::IO::Outputs
