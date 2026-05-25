@@ -180,6 +180,7 @@ struct RESULTS
     std::vector<double> level;      // MWh
     std::vector<double> injection;  // MWh
     std::vector<double> withdrawal; // MWh
+    std::vector<double> overflow;   // MWh
 };
 
 struct DEMAND_MARKET_POOL

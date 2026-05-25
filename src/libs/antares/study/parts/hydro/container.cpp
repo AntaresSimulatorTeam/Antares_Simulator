@@ -138,10 +138,7 @@ bool PartHydro::LoadIniFile(Study& study, const std::filesystem::path& folder)
 
     if (IniFile::Section* section = ini.find("inter-monthly-breakdown"))
     {
-        ret = loadProperties(study,
-                             section->firstProperty,
-                             path,
-                             &PartHydro::intermonthlyBreakdown)
+        ret = loadProperties(study, section->firstProperty, path, &PartHydro::intermonthlyBreakdown)
               && ret;
     }
 

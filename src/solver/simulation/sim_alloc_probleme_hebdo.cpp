@@ -446,6 +446,7 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
             problem.ResultatsHoraires[k].ShortTermStorage[sts].withdrawal.resize(
               NombreDePasDeTemps);
             problem.ResultatsHoraires[k].ShortTermStorage[sts].level.resize(NombreDePasDeTemps);
+            problem.ResultatsHoraires[k].ShortTermStorage[sts].overflow.resize(NombreDePasDeTemps);
         }
     }
 }
