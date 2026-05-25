@@ -4,33 +4,50 @@ toc_depth: 2
 
 # Antares Changelog
 
+### 9.3.11
+
+#### Bugfixes
+
+* Fix memory leak in thermal (#3619)
+* Reduce memory usage of minmax values (#3626)
+* Properly populate digest with dynamic group variables and districts (#3643)
+* Fix value of inter-monthly-breakdown not being read
+* Fix remix hydro sts levels computation [ANT-4888] (#3557)
+
+### 9.3.10
+
+#### Bugfixes
+
+* Fix bounds on fictitious loads and max unsupplied in adequacy patch [ANT-4906] (#3575)
+
+
 ### 9.3.9
 
 #### Features
 
-feat: Write longer durations in execution_info.ini (#3476)
+* feat: Write longer durations in execution_info.ini (#3476)
 
 #### Bugfixes
 
-Fix: remove dynamique variables from digest, fix errors in digest (#3535)
-Districts: fix offest with disabled set | simplify [ANT-4830] (#3533)
-chore: update gitignore
-Fix unit tests binding constraints (#3453)
-Fix: windows runtime libraries (#3435)
-Fix: several issues on CentOS7 (#3561)
+* Fix: remove dynamique variables from digest, fix errors in digest (#3535)
+* Districts: fix offest with disabled set | simplify [ANT-4830] (#3533)
+* chore: update gitignore
+* Fix unit tests binding constraints (#3453)
+* Fix: windows runtime libraries (#3435)
+* Fix: several issues on CentOS7 (#3561)
 
 #### CI/CD
 
-feat: Speed up SonarCloud job, increase cache hit rate to 100% (#3518)
-chore(deps): Up build.os@readthedocs.yml (#3531)
-chore(deps): bump docker/build-push-action from 6 to 7 (#3472)
-chore(deps): bump docker/login-action from 3 to 4 (#3473)
-ci: Bump actions/upload-artifact from 6 to 7 (#3447)
+* feat: Speed up SonarCloud job, increase cache hit rate to 100% (#3518)
+* chore(deps): Up build.os@readthedocs.yml (#3531)
+* chore(deps): bump docker/build-push-action from 6 to 7 (#3472)
+* chore(deps): bump docker/login-action from 3 to 4 (#3473)
+* ci: Bump actions/upload-artifact from 6 to 7 (#3447)
 
 #### For developers
 
-Add tools/antares-version.py (#3534)
-feat: allow generating results on release (#3427)
+* Add tools/antares-version.py (#3534)
+* feat: allow generating results on release (#3427)
 
 ### 9.3.8
 
