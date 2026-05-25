@@ -27,8 +27,7 @@ struct CommonFixture
     StudyVersion version = StudyVersion::latest();
 
     CommonFixture():
-        tmp(generateAndCreateDirName(
-              boost::unit_test::framework::current_test_case().p_name)),
+        tmp(generateAndCreateDirName(boost::unit_test::framework::current_test_case().p_name)),
         hydroIni(tmp / "hydro.ini"),
         study(std::make_unique<Study>())
     {
