@@ -65,8 +65,10 @@ class solver_input_handler:
     def set_input(self, input_file, section, variable, value):
         """Set `variable = value` inside `[section]` of an input/ ini file.
 
-        Appends the variable line if missing in the section, and appends both
-        the section and the variable line if the section is absent.
+        Matches the key by exact equality (the substring before `=`, stripped),
+        so a variable named `area` does not collide with `area2`, `area.name`,
+        etc. Appends the variable line if missing in the section, and appends
+        both the section and the variable line if the section is absent.
         """
         file = self.study_root_dir / "input" / input_file.replace("/", os.sep)
         content_out = []
@@ -84,7 +86,8 @@ class solver_input_handler:
                         section_seen = True
                     content_out.append(line)
                 else:
-                    if in_section and line.strip().startswith(variable):
+                    key = line.split('=', 1)[0].strip() if '=' in line else None
+                    if in_section and key == variable:
                         content_out.append(f"{variable} = {value}\n")
                         var_written = True
                     else:
