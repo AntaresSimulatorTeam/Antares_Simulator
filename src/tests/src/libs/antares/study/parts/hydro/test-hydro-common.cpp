@@ -27,7 +27,8 @@ struct CommonFixture
     StudyVersion version = StudyVersion::latest();
 
     CommonFixture():
-        tmp(fs::temp_directory_path()),
+        tmp(generateAndCreateDirName(
+              boost::unit_test::framework::current_test_case().p_name)),
         hydroIni(tmp / "hydro.ini"),
         study(std::make_unique<Study>())
     {
@@ -46,7 +47,8 @@ struct CommonFixture
 
     ~CommonFixture()
     {
-        fs::remove(hydroIni);
+        std::error_code ec;
+        fs::remove_all(tmp, ec);
     }
 
     void writeFile(const std::string& content);
