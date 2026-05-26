@@ -99,13 +99,14 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             }
 
             ResidualLoadInArea += MaxAllMustRunGenerationOfArea;
-            if (ResidualLoadInArea >= 0.)
+            if (ResidualLoadInArea >= 1.)
             {
                 Xmax[var] = ResidualLoadInArea + 1e-5;
             }
             else
             {
-                Xmax[var] = 0.;
+                // When ResidualLoadInArea is 0, we need to set the RHS to a real 0, not 1e-5 as this causes ill conditioning of th problem. As much as possible we should avoid small RHS, so the 1e-5 slack is used to prevent feasibility issues but only for areas with significant load (defined as >= 1)
+                Xmax[var] = std::max(ResidualLoadInArea, 0.);
             }
 
             problemeHebdo->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive[pdtHebdo]
