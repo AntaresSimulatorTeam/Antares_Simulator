@@ -11,11 +11,13 @@
 #include <typeinfo>
 #include <vector>
 
+#include <antares/exception/InvalidArgumentError.hpp>
 #include "antares/io/outputs/IColumnAdapterVisitor.h"
 
 #include "private/parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
+using namespace Antares::Error;
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Writer
@@ -255,7 +257,7 @@ std::shared_ptr<IColumnAdapter> makeColumnAdapter(const std::unique_ptr<IColumn>
 {
     if (!column)
     {
-        throw std::invalid_argument("makeColumnAdapter: null column");
+        throw InvalidArgumentError("makeColumnAdapter: null column");
     }
 
     ColumnAdapterFactory factory;
@@ -269,7 +271,7 @@ std::shared_ptr<IColumnAdapter> makeColumnAdapter(const std::unique_ptr<IColumn>
         // This shouldn't happen if all column types are properly registered
         std::string err_msg = "makeColumnAdapter: column type unknown: " + column->name()
                               + " (dynamic type: " + std::string(typeid(*column).name()) + ")";
-        throw std::invalid_argument(err_msg);
+        throw InvalidArgumentError(err_msg);
     }
 }
 
