@@ -4,6 +4,7 @@
 #define BOOST_TEST_MODULE study
 #define WIN32_LEAN_AND_MEAN
 
+#include <files-system.h>
 #include <filesystem>
 #include <fstream>
 
@@ -375,8 +376,7 @@ struct RenewableLoadFixture: public OneAreaStudy
 {
     RenewableLoadFixture()
     {
-        testFolder = std::filesystem::temp_directory_path() / "renewable_test";
-        std::filesystem::create_directories(testFolder);
+        testFolder = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     }
 
     ~RenewableLoadFixture()
