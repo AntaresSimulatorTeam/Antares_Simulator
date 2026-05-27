@@ -1741,4 +1741,17 @@ BOOST_FIXTURE_TEST_CASE(testVariableNodeEvaluation, MyDummyFixture)
     BOOST_CHECK_EQUAL(evalVector[2], 714.5);
 }
 
+BOOST_FIXTURE_TEST_CASE(evaluate_timeSum_inverted_bounds_returns_zero, MyDummyFixture)
+{
+    LiteralNode fromOffset(5.0);
+    LiteralNode toOffset(1.0);
+    TPlusNode from(&fromOffset);
+    TPlusNode to(&toOffset);
+    const auto eval = CreateAndEvaluateTimeSumNode(&from, &to).valuesAsVector();
+
+    BOOST_CHECK_EQUAL(eval.at(0), 0.0);
+    BOOST_CHECK_EQUAL(eval.at(1), 0.0);
+    BOOST_CHECK_EQUAL(eval.at(2), 0.0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

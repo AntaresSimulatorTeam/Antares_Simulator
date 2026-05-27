@@ -252,9 +252,12 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Ti
             const auto to = Antares::Expressions::Visitors::resolveTimeSumBound(node->to(),
                                                                                 evalVisitor_,
                                                                                 localTimeStep);
-            auto term = expression[0];
-            term *= static_cast<double>(to - from + 1);
-            ret[localTimeStep] += term;
+            if (from <= to)
+            {
+                auto term = expression[0];
+                term *= static_cast<double>(to - from + 1);
+                ret[localTimeStep] += term;
+            }
         }
         return ret;
     }

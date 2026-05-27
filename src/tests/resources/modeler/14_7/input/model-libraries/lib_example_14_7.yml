@@ -1,0 +1,32 @@
+library:
+  id: lib_example_14_7
+  description: Fixed inverted bounds (from > to) with a constant parameter
+
+  models:
+    - id: inverted_fixed_bounds_demo
+      description: >
+        Variable constrained by x = sum(5 .. 3, p) + c.
+        The bounds are fixed literals with from=5 > to=3, so the sum is always
+        empty and must equal zero at every timestep.
+        Expected: x = 0 + c = 20 at every timestep, objective = 5 * 20 = 100.
+        This complements study 14_4 which tests the same scenario via t+ relative bounds;
+        here the bounds are fixed integer literals.
+        
+      parameters:
+        - id: p
+          time-dependent: false
+          scenario-dependent: false
+        - id: c
+          time-dependent: false
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: equality_from_inverted_fixed_sum
+          expression: x = sum(5 .. 3, p) + c
+      objective-contributions:
+        - id: objective
+          expression: sum(x)
