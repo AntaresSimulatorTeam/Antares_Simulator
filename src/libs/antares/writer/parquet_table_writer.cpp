@@ -60,10 +60,9 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
                                                arrow_props));
 }
 
-ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
+ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath):
     ITableWriter(filePath)
 {
-    output_file_.replace_extension(".parquet");
 }
 
 void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const

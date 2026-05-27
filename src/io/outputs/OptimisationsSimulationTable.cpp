@@ -3,8 +3,8 @@
 
 #include "include/antares/io/outputs/OptimisationsSimulationTable.h"
 
-using namespace Antares::IO::Outputs;
-
+namespace Antares::IO::Outputs
+{
 SimulationTable* OptimisationsSimulationTable::firstOptimSimulationTable()
 {
     return &firstOptimSimulationTable_;
@@ -20,3 +20,4 @@ void OptimisationsSimulationTable::clear()
     firstOptimSimulationTable_.clear();
     secondOptimSimulationTable_.clear();
 }
+} // namespace Antares::IO::Outputs

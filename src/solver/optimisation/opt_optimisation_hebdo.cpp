@@ -9,6 +9,7 @@
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares::Data;
+using namespace IO::Outputs;
 
 using Solver::Optimization::OptimizationOptions;
 using Solver::Optimization::SingleOptimOptions;

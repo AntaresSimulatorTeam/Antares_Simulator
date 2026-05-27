@@ -26,13 +26,13 @@ public:
     WeeklyOptimization(WeeklyOptimization&&) = default;
     WeeklyOptimization& operator=(WeeklyOptimization&&) = default;
     void solve();
-    OptimisationsSimulationTable* simulationTables();
+    IO::Outputs::OptimisationsSimulationTable* simulationTables();
 
 private:
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     IResultWriter& writer_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    std::unique_ptr<OptimisationsSimulationTable> simulationTables_;
+    std::unique_ptr<IO::Outputs::OptimisationsSimulationTable> simulationTables_;
 };
 } // namespace Antares::Solver::Optimization
