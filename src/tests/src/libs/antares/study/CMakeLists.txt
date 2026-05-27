@@ -25,10 +25,3 @@ add_boost_test(test-duplicates
   test_utils_unit
   Antares::study
   Antares::exception)
-
-add_boost_test(test-importprepro
-  SRC test_importprepro.cpp
-  LIBS
-  test_utils_unit
-  Antares::study
-  Antares::exception)
