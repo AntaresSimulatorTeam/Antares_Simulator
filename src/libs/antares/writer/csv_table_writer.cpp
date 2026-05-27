@@ -5,8 +5,10 @@
 
 #include <filesystem>
 #include <fstream>
-#include <stdexcept>
 #include <utility>
+
+#include <antares/exception/InvalidArgumentError.hpp>
+#include <antares/exception/RuntimeError.hpp>
 
 using namespace Antares::IO::Outputs;
 namespace fs = std::filesystem;
@@ -65,7 +67,7 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
 
     if (output_file_.empty())
     {
-        throw std::invalid_argument("CsvTableWriter: empty output path");
+        throw Antares::Error::InvalidArgumentError("CsvTableWriter: empty output path");
     }
 
     if (output_file_.has_parent_path())
@@ -76,7 +78,7 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
     std::ofstream out(output_file_, std::ios::binary);
     if (!out)
     {
-        throw std::runtime_error("CsvTableWriter: cannot open output file: "
+        throw Antares::Error::RuntimeError("CsvTableWriter: cannot open output file: "
                                  + output_file_.string());
     }
 
