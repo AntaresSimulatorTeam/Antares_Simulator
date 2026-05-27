@@ -108,7 +108,7 @@ bool fileSetContent(const std::string& filename, const std::string& content)
                 // the file, we should abort immediately
                 // aborting only if it is the first attempt, otherwise it could be a
                 // side effect for some cleanup
-                if (0 == attempt)
+                if (1 == attempt)
                 {
                     logs.error() << "I/O error: permission denied: " << filename;
                     return false;
