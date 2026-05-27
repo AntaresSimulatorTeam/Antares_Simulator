@@ -198,9 +198,9 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     std::vector<int>& NombreMaxDeGroupesEnMarcheDuPalierThermique
       = PaliersThermiquesDuPays.PuissanceDisponibleEtCout[index]
           .NombreMaxDeGroupesEnMarcheDuPalierThermique;
-    const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+    const uint DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays.DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
-    const int DureeMinimaleDArretDUnGroupeDuPalierThermique
+    const uint DureeMinimaleDArretDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays.DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
 
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE>& ProductionThermique = problemeHebdo

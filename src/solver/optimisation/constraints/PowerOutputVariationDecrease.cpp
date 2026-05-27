@@ -8,7 +8,8 @@ void PowerOutputVariationDecrease::add(int pays, int index, int pdt)
                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .PmaxDUnGroupeDuPalierThermique[index];
-        // constraint : P(t) - P(t-1) + P^- + u * M^-(t) >= 0
+        // Constraint :
+        // P(t) - P(t-1) + P^- + u * M^-(t) >= 0
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)
           .DispatchableProduction(cluster,
