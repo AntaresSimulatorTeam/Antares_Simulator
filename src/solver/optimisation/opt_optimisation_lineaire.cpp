@@ -15,8 +15,8 @@
 #include "antares/solver/utils/filename.h"
 
 using namespace Antares::Solver;
-using Solver::Optimization::ExportBehavior;
-using Solver::Optimization::OptimizationOptions;
+using Antares::Solver::Optimization::ExportBehavior;
+using Antares::Solver::Optimization::OptimizationOptions;
 
 namespace
 {
@@ -59,7 +59,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
   double optimalSolutionCost,
   const OptPeriodStringGenerator& optPeriodStringGenerator,
   int optimizationNumber,
-  IResultWriter& writer)
+  Solver::IResultWriter& writer)
 {
     Yuni::Clob buffer;
     auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
@@ -74,7 +74,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
 void OPT_WriteSolution(const PROBLEME_ANTARES_A_RESOUDRE& pb,
                        const OptPeriodStringGenerator& optPeriodStringGenerator,
                        int optimizationNumber,
-                       IResultWriter& writer)
+                       Solver::IResultWriter& writer)
 {
     auto s = [](int x) { return static_cast<size_t>(x); };
 
@@ -114,7 +114,7 @@ namespace
 {
 void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
                         int optimizationNumber,
-                        Simulation::ISimulationObserver& simulationObserver,
+                        Solver::Simulation::ISimulationObserver& simulationObserver,
                         const OptPeriodStringGenerator* optPeriodStringGenerator)
 {
     simulationObserver.notifyHebdoProblem(*problemeHebdo,
@@ -126,10 +126,10 @@ void notifyProblemHebdo(const PROBLEME_HEBDO* problemeHebdo,
 
 bool runWeeklyOptimization(const SingleOptimOptions& options,
                            PROBLEME_HEBDO* problemeHebdo,
-                           IResultWriter& writer,
+                           Solver::IResultWriter& writer,
                            int optimizationNumber,
-                           Simulation::ISimulationObserver& simulationObserver,
-                           IO::Outputs::SimulationTable* simulationTable)
+                           Solver::Simulation::ISimulationObserver& simulationObserver,
+                           Antares::IO::Outputs::SimulationTable* simulationTable)
 {
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
@@ -180,7 +180,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
             return false;
         }
 
-        if (problemeHebdo->ExportMPS != mpsExportStatus::NO_EXPORT
+        if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
             || problemeHebdo->Expansion)
         {
             double optimalSolutionCost = OPT_ObjectiveFunctionResult(problemeHebdo,
@@ -243,9 +243,9 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
-                              IResultWriter& writer,
-                              Simulation::ISimulationObserver& simulationObserver,
-                              IO::Outputs::OptimisationsSimulationTable* simulationTables)
+                              Solver::IResultWriter& writer,
+                              Solver::Simulation::ISimulationObserver& simulationObserver,
+                              OptimisationsSimulationTable* simulationTables)
 {
     if (!problemeHebdo->OptimisationAuPasHebdomadaire)
     {

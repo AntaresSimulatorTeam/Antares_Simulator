@@ -122,10 +122,10 @@ bool Adequacy::year(Variable::State& state,
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
 
-    std::unique_ptr<IO::Outputs::OptimisationsSimulationTable> simulationTables;
+    std::unique_ptr<OptimisationsSimulationTable> simulationTables;
     if (!study.parameters.noOutput)
     {
-        simulationTables = std::make_unique<IO::Outputs::OptimisationsSimulationTable>();
+        simulationTables = std::make_unique<OptimisationsSimulationTable>();
     }
 
     for (uint w = 0; w != pNbWeeks; ++w)

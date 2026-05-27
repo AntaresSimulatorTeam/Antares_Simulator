@@ -19,7 +19,7 @@ public:
     LegacySimulationTablesWriter(const std::filesystem::path& folder,
                                  const unsigned year,
                                  bool parquetFormat = false);
-    void write(IO::Outputs::OptimisationsSimulationTable& tables);
+    void write(OptimisationsSimulationTable& tables);
 
 private:
     void writeForOptim(const IO::Outputs::SimulationTable* table, unsigned optim_number);

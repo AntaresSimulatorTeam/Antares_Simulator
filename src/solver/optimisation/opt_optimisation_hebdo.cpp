@@ -17,7 +17,7 @@ bool OPT_PilotageOptimisationLineaire(const OptimizationOptions&,
                                       PROBLEME_HEBDO*,
                                       Solver::IResultWriter&,
                                       Solver::Simulation::ISimulationObserver&,
-                                      IO::Outputs::OptimisationsSimulationTable* simulationTables);
+                                      OptimisationsSimulationTable* simulationTables);
 bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions&, PROBLEME_HEBDO*);
 
 void OPT_OptimisationHebdomadaireLineaire(
@@ -25,7 +25,7 @@ void OPT_OptimisationHebdomadaireLineaire(
   PROBLEME_HEBDO* pProblemeHebdo,
   Solver::IResultWriter& writer,
   Solver::Simulation::ISimulationObserver& simulationObserver,
-  IO::Outputs::OptimisationsSimulationTable* simulationTables)
+  OptimisationsSimulationTable* simulationTables)
 {
     if (!OPT_PilotageOptimisationLineaire(options,
                                           pProblemeHebdo,

@@ -5,17 +5,17 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
-namespace Antares::IO::Outputs
-{
+// gp : No namespace here. We should add one (Antares::IO::Outputs).
+// gp : Besides, this class could be a struct now
+
 class OptimisationsSimulationTable
 {
 public:
-    SimulationTable* firstOptimSimulationTable();
-    SimulationTable* secondOptimSimulationTable();
+    Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
+    Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
     void clear();
 
 private:
-    SimulationTable firstOptimSimulationTable_;
-    SimulationTable secondOptimSimulationTable_;
+    Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;
+    Antares::IO::Outputs::SimulationTable secondOptimSimulationTable_;
 };
-}
