@@ -97,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(wind_timeseries_written_to_correct_path, ImportPreproFix
     study->parameters.exportTimeSeriesInInput = timeSeriesWind;
     study->parameters.timeSeriesToGenerate = timeSeriesWind;
 
-    study->importTimeseriesIntoInput();
+    BOOST_CHECK(study->importTimeseriesIntoInput());
 
     BOOST_CHECK(fs::exists(testFolder / "wind" / "series" / "wind_a.txt"));
 }
