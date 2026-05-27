@@ -9,6 +9,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <files-system.h>
+
 #include "antares/study/study.h"
 
 using namespace Antares::Data;
@@ -375,8 +377,7 @@ struct RenewableLoadFixture: public OneAreaStudy
 {
     RenewableLoadFixture()
     {
-        testFolder = std::filesystem::temp_directory_path() / "renewable_test";
-        std::filesystem::create_directories(testFolder);
+        testFolder = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     }
 
     ~RenewableLoadFixture()

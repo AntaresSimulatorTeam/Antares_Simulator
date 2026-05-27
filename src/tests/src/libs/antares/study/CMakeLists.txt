@@ -14,6 +14,7 @@ add_subdirectory(parameters)
 add_boost_test(test-study
   SRC test_study.cpp
   LIBS
+  test_utils_unit
   Antares::study
   Antares::exception
   )
