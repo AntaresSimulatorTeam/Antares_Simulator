@@ -23,7 +23,7 @@ public:
     virtual void writeTable(const IO::Outputs::SimulationTable& simuTable) const = 0;
 
 protected:
-    const std::filesystem::path& output_file_;
+    const std::filesystem::path output_file_;
 };
 
 } // namespace Antares::Writer
