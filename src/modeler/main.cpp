@@ -9,8 +9,10 @@
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/simulation/solver.h"
+#include "antares/writer/table_format.h"
 
 using namespace Antares;
+using namespace Antares::Writer;
 
 static void usage()
 {
@@ -18,20 +20,20 @@ static void usage()
               << "antares-modeler <path/to/study> [--parquet]\n";
 }
 
-bool parquetFormatRequired(int argc, const char** argv)
+TableFormat getTableFormat(int argc, const char** argv)
 {
     if (argc <= 2)
     {
-        return false;
+        return TableFormat::CSV;
     }
 
     std::string parquetOption = argv[2];
     if (parquetOption == "--parquet")
     {
-        return true;
+        return TableFormat::Parquet;
     }
 
-    return false;
+    return TableFormat::CSV;
 }
 
 int main(int argc, const char** argv)
@@ -46,7 +48,7 @@ int main(int argc, const char** argv)
 
     // Options parsing
     std::filesystem::path studyPath(argv[1]);
-    bool parquetFormat = parquetFormatRequired(argc, argv);
+    TableFormat tableFormat = getTableFormat(argc, argv);
 
     logs.info() << "Study path: " << studyPath;
 
@@ -59,7 +61,7 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        FileWriter writer(studyPath, parquetFormat);
+        FileWriter writer(studyPath, tableFormat);
         Modeler modeler(loader, writer);
         modeler.run();
     }

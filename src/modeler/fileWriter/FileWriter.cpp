@@ -45,7 +45,7 @@ void FileWriter::init(const std::string& time)
     // TODO : Removing it, making the specific writer have resonsibility to create this path
     // TODO : and directly using the specific writer in Modeler would solve the problem
     // TODO : and simplify the code.
-    writer_ = makeTableWriter(parquetFormatRequired_, output_file_);
+    writer_ = makeTableWriter(tableFormat_, output_file_);
     Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
@@ -59,9 +59,9 @@ void FileWriter::writeSimulationTable(SimulationTable& simulationTable) const
     writer_->writeTable(simulationTable);
 }
 
-FileWriter::FileWriter(const std::filesystem::path& studyPath, bool parquetFormatRequired):
+FileWriter::FileWriter(const std::filesystem::path& studyPath, TableFormat tableFormat):
     studyPath_(studyPath),
-    parquetFormatRequired_(parquetFormatRequired)
+    tableFormat_(tableFormat)
 {
 }
 

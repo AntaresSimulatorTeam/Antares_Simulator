@@ -31,9 +31,9 @@ static fs::path makeSimuTableFilePath(const fs::path& parentFolder,
 
 LegacySimulationTablesWriter::LegacySimulationTablesWriter(const fs::path& folder,
                                                            const unsigned year,
-                                                           bool parquetFormat):
+                                                           TableFormat tableFormat):
     year_(year),
-    parquetFormat_(parquetFormat),
+    tableFormat_(tableFormat),
     folder_(folder)
 {
     check_is_existing_folder(folder_);
@@ -49,7 +49,7 @@ void LegacySimulationTablesWriter::writeForOptim(const SimulationTable* table,
                                                  unsigned optim_number)
 {
     auto filepath = makeSimuTableFilePath(folder_, year_, optim_number);
-    ITableWriter::Ptr writer = makeTableWriter(parquetFormat_, filepath);
+    ITableWriter::Ptr writer = makeTableWriter(tableFormat_, filepath);
     writer->writeTable(*table);
 }
 

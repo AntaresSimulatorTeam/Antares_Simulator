@@ -13,9 +13,9 @@ namespace fs = std::filesystem;
 namespace Antares::Writer
 {
 
-ITableWriter::Ptr makeTableWriter(bool parquetFormatRequired, fs::path& filePath)
+ITableWriter::Ptr makeTableWriter(TableFormat tableFormat, fs::path& filePath)
 {
-    if (parquetFormatRequired)
+    if (tableFormat == TableFormat::CSV)
     {
         filePath.replace_extension(".parquet");
         return std::make_shared<ParquetTableWriter>(filePath);
