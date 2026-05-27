@@ -1,8 +1,8 @@
 #include "include/antares/writer/LegacySimulationTablesWriter.h"
 
-#include <antares/exception/RuntimeError.hpp>
-
 #include "include/antares/writer/table_writer_factory.h"
+
+#include <antares/exception/RuntimeError.hpp>
 
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;
