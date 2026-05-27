@@ -2,6 +2,8 @@
 
 #include "include/antares/writer/table_writer_factory.h"
 
+#include <antares/exception/RuntimeError.hpp>
+
 namespace fs = std::filesystem;
 using namespace Antares::IO::Outputs;
 
@@ -12,7 +14,7 @@ static void check_is_existing_folder(const fs::path& folder)
     if (!fs::is_directory(folder))
     {
         std::string msg = "Output folder " + folder.string() + " does not exist.";
-        throw std::runtime_error(msg);
+        throw Antares::Error::RuntimeError(msg);
     }
 }
 
