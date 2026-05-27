@@ -280,11 +280,15 @@ Correlation::Mode Correlation::CStringToMode(const std::string& str)
 {
     std::string s = str;
     // trim
-    const char* ws = " \t\r\n";
-    s.erase(0, s.find_first_not_of(ws));
-    s.erase(s.find_last_not_of(ws) + 1);
+    const std::string ws = " \t\r\n";
+    auto start = s.find_first_not_of(ws);
+    if (start == std::string::npos)
+    {
+        return modeNone;
+    }
+    s = s.substr(start, s.find_last_not_of(ws) - start + 1);
     // toLower
-    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
 
     if (s == "annual")
     {
