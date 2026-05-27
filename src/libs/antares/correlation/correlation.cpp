@@ -286,7 +286,8 @@ Correlation::Mode Correlation::CStringToMode(const std::string& str)
     {
         return modeNone;
     }
-    s = s.substr(start, s.find_last_not_of(ws) - start + 1);
+    auto end = s.find_last_not_of(ws);
+    s = s.substr(start, end - start + 1);
     // toLower
     std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
 
