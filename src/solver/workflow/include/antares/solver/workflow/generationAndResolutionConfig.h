@@ -23,6 +23,6 @@ struct GenerationAndResolutionConfig
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
 };
 
-GenerationAndResolutionConfig generate(const Data::Study& study);
+GenerationAndResolutionConfig getWorkflow(const Data::Study& study);
 
 } // namespace Antares::Solver::Workflow

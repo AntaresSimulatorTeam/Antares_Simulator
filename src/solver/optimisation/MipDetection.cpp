@@ -6,12 +6,13 @@
 #include <antares/solver/modeler/ModelerData.h>
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/model.h>
+#include <antares/study/system-model/optimConfig.h>
 
 namespace Antares::Optimization
 {
 
-static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData,
-                                       bool lookingAtSubproblems)
+bool hasIntegerVariables(const Solver::ModelerData* modelerData,
+                         Antares::Solver::Config::Location location)
 {
     if (!modelerData || !modelerData->system)
     {
@@ -22,11 +23,13 @@ static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData,
     {
         for (const auto& variable: component.getModel()->Variables())
         {
-            if (lookingAtSubproblems && !isInSubProblem(variable.location()))
+            if (location == Antares::Solver::Config::Location::SUBPROBLEMS
+                && !isInSubProblem(variable.location()))
             {
                 continue;
             }
-            if (!lookingAtSubproblems && !isInMasterProblem(variable.location()))
+            if (location == Antares::Solver::Config::Location::MASTER
+                && !isInMasterProblem(variable.location()))
             {
                 continue;
             }
@@ -37,16 +40,6 @@ static bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData,
         }
     }
     return false;
-}
-
-bool hasSubproblemIntegerVariables(const Solver::ModelerData* modelerData)
-{
-    return hasModelerIntegerVariables(modelerData, true);
-}
-
-bool hasMasterIntegerVariables(const Solver::ModelerData* modelerData)
-{
-    return hasModelerIntegerVariables(modelerData, false);
 }
 
 } // namespace Antares::Optimization

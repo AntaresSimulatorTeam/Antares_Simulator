@@ -123,7 +123,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                                                 != Antares::Data::UnitCommitmentMode::
                                                   ucHeuristicFast);
 
-    auto workflow = Solver::Workflow::generate(study);
+    auto workflow = Solver::Workflow::getWorkflow(study);
 
     problem.OptimisationAvecVariablesEntieres = workflow.subproblems
                                                 == Solver::Workflow::SolverType::MILP;
