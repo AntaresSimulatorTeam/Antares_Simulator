@@ -18,4 +18,4 @@ private:
     SimulationTable firstOptimSimulationTable_;
     SimulationTable secondOptimSimulationTable_;
 };
-}
+} // namespace Antares::IO::Outputs

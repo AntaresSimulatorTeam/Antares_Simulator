@@ -29,7 +29,8 @@ namespace Antares::IO::Outputs
 {
 class SimulationTable;
 class OptimisationsSimulationTable;
-}
+} // namespace Antares::IO::Outputs
+
 void OPT_OptimisationHebdomadaireLineaire(
   const OptimizationOptions& options,
   PROBLEME_HEBDO* pProblemeHebdo,
