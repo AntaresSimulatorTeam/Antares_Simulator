@@ -19,7 +19,7 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
 {
     if (writeSimuTable)
     {
-        simulationTables_ = std::make_unique<OptimisationsSimulationTable>();
+        simulationTables_ = std::make_unique<IO::Outputs::OptimisationsSimulationTable>();
     }
 }
 
@@ -32,7 +32,7 @@ void WeeklyOptimization::solve()
                                          simulationTables_.get());
 }
 
-OptimisationsSimulationTable* WeeklyOptimization::simulationTables()
+IO::Outputs::OptimisationsSimulationTable* WeeklyOptimization::simulationTables()
 {
     return simulationTables_.get();
 }

@@ -6,13 +6,13 @@
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
-using Antares::Solver::Optimization::OptimizationOptions;
+using Solver::Optimization::OptimizationOptions;
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,
                                       PROBLEME_HEBDO* problemeHebdo,
                                       Solver::IResultWriter& writer,
                                       Solver::Simulation::ISimulationObserver& simulationObserver,
-                                      OptimisationsSimulationTable* simulationTables)
+                                      IO::Outputs::OptimisationsSimulationTable* simulationTables)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
