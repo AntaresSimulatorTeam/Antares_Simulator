@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <mutex>
+#include <optional>
 
 #include <antares/antares/constants.h>
 #include <antares/antares/fatal-error.h>
@@ -18,6 +19,7 @@
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
+#include "antares/solver/optimisation/LegacyVariableNameParser.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -55,6 +57,59 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
     logs.info();
 }
+
+namespace
+{
+void FillLegacySimulationTable(SimulationTable& simulationTable,
+                               const PROBLEME_ANTARES_A_RESOUDRE& problem,
+                               const FillContext& fillContext,
+                               unsigned currentBlock,
+                               unsigned scenario)
+{
+    const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
+    const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
+    const unsigned int block = currentBlock + 1;
+
+    const auto namesSize = problem.NomDesVariables.size();
+    const auto valuesSize = problem.X.size();
+    for (int index = 0; index < problem.NombreDeVariables; ++index)
+    {
+        if (static_cast<std::size_t>(index) >= namesSize
+            || static_cast<std::size_t>(index) >= valuesSize)
+        {
+            continue;
+        }
+
+        const auto& name = problem.NomDesVariables[index];
+        if (name.empty())
+        {
+            continue;
+        }
+
+        const auto parsed = Antares::Optimization::ParseLegacyVariableName(name);
+        if (!parsed)
+        {
+            continue;
+        }
+
+        std::optional<unsigned> blockTimeIndex;
+        if (parsed->timeIndex >= globalFirstTimeStep && parsed->timeIndex <= globalLastTimeStep)
+        {
+            blockTimeIndex = parsed->timeIndex - globalFirstTimeStep + 1;
+        }
+
+        simulationTable.addEntry(
+          {.block = block,
+           .component = parsed->component,
+           .output = parsed->output,
+           .absolute_time_index = parsed->timeIndex + 1,
+           .block_time_index = blockTimeIndex,
+           .scenario_index = scenario,
+           .value = problem.X[static_cast<std::size_t>(index)],
+           .status = std::nullopt});
+    }
+}
+} // namespace
 
 static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
@@ -237,7 +292,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         throw FatalError("Internal error: insufficient memory");
     }
 
-    if (simulationTable && modelerData)
+    if (simulationTable)
     {
         // Compute the current block index (weekly blocks if optimization is weekly,
         // daily blocks otherwise). Replace magic numbers with named constants.
@@ -255,15 +310,24 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                   ? TimeConversionMode::WeeklyBlocks
                                                   : TimeConversionMode::DailyBlocks;
         measure.reset();
-        FillSimulationTable(*simulationTable,
-                            ortoolsProblem,
-                            ::getObjectiveValue(solver.get()),
-                            *modelerData,
-                            optimEntityContainer,
-                            fillCtx,
-                            currentBlock,
-                            timeConversionMode,
-                            true);
+        if (modelerData)
+        {
+            FillSimulationTable(*simulationTable,
+                                ortoolsProblem,
+                                ::getObjectiveValue(solver.get()),
+                                *modelerData,
+                                optimEntityContainer,
+                                fillCtx,
+                                currentBlock,
+                                timeConversionMode,
+                                true);
+        }
+
+        FillLegacySimulationTable(*simulationTable,
+                                  *ProblemeAResoudre,
+                                  fillCtx,
+                                  currentBlock,
+                                  fillCtx.getYear());
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
