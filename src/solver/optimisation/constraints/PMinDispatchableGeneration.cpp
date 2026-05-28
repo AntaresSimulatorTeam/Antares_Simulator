@@ -10,7 +10,7 @@ void PMinDispatchableGeneration::add(int pays, int index, int pdt)
         double pminDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .pminDUnGroupeDuPalierThermique[index];
 
-        uint cluster = data.PaliersThermiquesDuPays[pays]
+        auto cluster = data.PaliersThermiquesDuPays[pays]
                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         builder.updateHourWithinWeek(pdt)
           .DispatchableProduction(cluster, 1.0)

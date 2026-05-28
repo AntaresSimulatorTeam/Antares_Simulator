@@ -5,7 +5,7 @@
 
 void MinDownTime::add(int pays, int index, int pdt)
 {
-    const uint DureeMinimaleDArretDUnGroupeDuPalierThermique
+    const auto DureeMinimaleDArretDUnGroupeDuPalierThermique
       = data.PaliersThermiquesDuPays[pays].DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
     auto cluster = data.PaliersThermiquesDuPays[pays]
                      .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];

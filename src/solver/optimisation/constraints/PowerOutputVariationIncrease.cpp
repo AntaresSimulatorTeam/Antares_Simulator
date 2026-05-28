@@ -4,7 +4,7 @@ void PowerOutputVariationIncrease::add(int pays, int index, int pdt)
 {
     if (!data.Simulation)
     {
-        uint cluster = data.PaliersThermiquesDuPays[pays]
+        auto cluster = data.PaliersThermiquesDuPays[pays]
                          .NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         double pmaxDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .PmaxDUnGroupeDuPalierThermique[index];

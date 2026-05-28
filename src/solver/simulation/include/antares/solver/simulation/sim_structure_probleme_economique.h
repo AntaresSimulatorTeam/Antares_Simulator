@@ -273,8 +273,8 @@ struct PALIERS_THERMIQUES
     std::vector<double> CoutFixeDeMarcheDUnGroupeDuPalierThermique;
     std::vector<double> pminDUnGroupeDuPalierThermique;
     std::vector<double> PmaxDUnGroupeDuPalierThermique;
-    std::vector<uint> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-    std::vector<uint> DureeMinimaleDArretDUnGroupeDuPalierThermique;
+    std::vector<int> DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
+    std::vector<int> DureeMinimaleDArretDUnGroupeDuPalierThermique;
     std::vector<std::string> NomsDesPaliersThermiques;
 
     //! maximum hourly upward power ramping rate for a thermal unit (MW/hour)
