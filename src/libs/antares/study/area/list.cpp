@@ -9,7 +9,6 @@
 #include <boost/algorithm/string/trim.hpp>
 
 #include <yuni/core/string.h>
-#include <yuni/io/file.h>
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
