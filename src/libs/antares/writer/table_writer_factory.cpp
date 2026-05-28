@@ -15,7 +15,7 @@ namespace Antares::Writer
 
 ITableWriter::Ptr makeTableWriter(TableFormat tableFormat, fs::path& filePath)
 {
-    if (tableFormat == TableFormat::CSV)
+    if (tableFormat == TableFormat::Parquet)
     {
         filePath.replace_extension(".parquet");
         return std::make_shared<ParquetTableWriter>(filePath);
