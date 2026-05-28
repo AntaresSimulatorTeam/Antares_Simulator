@@ -30,7 +30,6 @@ set(TARGET_LIBS #No alias
         path
         mersenne
         result_writer
-	parquet_writer
         series
         antares-core
         antares-solver-hydro
@@ -127,6 +126,18 @@ set(TARGET_LIBS #No alias
 install(TARGETS ${TARGET_LIBS}
         EXPORT AntaresTargets
         LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+)
+
+# parquet_writer: install to bin (not lib) for runtime loading by executables.
+# It is NOT in TARGET_LIBS to avoid installing its .so to lib/.
+# It IS added to the export set here so that result_writer (which depends on it)
+# can correctly resolve the dependency in the generated CMake config.
+install(TARGETS parquet_writer
+        EXPORT AntaresTargets
+        LIBRARY DESTINATION bin
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION include
