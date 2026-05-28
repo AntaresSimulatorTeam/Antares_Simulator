@@ -425,7 +425,6 @@ EvaluationResult EvaluationResult::timeSumOnVector(int from, int to) const
 {
     const std::vector<double> values = valuesAsVector(); // Exception throw if value_ not a vector
     std::vector<double> to_return(values.size(), 0.);
-
     for (int shift = from; shift <= to; ++shift)
     {
         std::vector<double> shifted_values = shiftVector(values, shift);

@@ -3,6 +3,7 @@
 
 #include "antares/study/runtime/runtime.h"
 
+#include <antares/solver/simulation/sim_structure_probleme_economique.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
 #include "antares/antares/fatal-error.h"
@@ -72,12 +73,22 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         // statistics
-        r.thermalPlantTotalCount += area.thermal.list.enabledAndNotMustRunCount();
-        r.thermalPlantTotalCountMustRun += area.thermal.list.enabledAndMustRunCount();
+        r.counts.thermalPlants += area.thermal.list.enabledAndNotMustRunCount();
+        r.counts.thermalPlantsMustRun += area.thermal.list.enabledAndMustRunCount();
 
-        r.shortTermStorageCount += area.shortTermStorage.count();
-        r.shortTermStorageCumulativeConstraintCount += area.shortTermStorage
-                                                         .cumulativeConstraintCount();
+        if (study.parameters.include.reserves)
+        {
+            r.counts.reserveParticipations += area.thermal.list.reserveParticipationsCount();
+            r.counts.reserveParticipations += area.shortTermStorage.reserveParticipationsCount();
+            r.counts.reserveParticipations += area.hydro.reserveParticipationsCount();
+            r.counts.capacityReservations += area.allCapacityReservations.value()
+                                               .areaCapacityReservations.size();
+        }
+
+        r.counts.shortTermStorages += area.shortTermStorage.count();
+        r.counts.shortTermStorageCumulativeConstraints += area.shortTermStorage
+                                                            .cumulativeConstraintCount();
+        r.counts.hydros += area.hydro.count();
     }
 }
 
@@ -244,8 +255,6 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
 
 StudyRuntimeInfos::StudyRuntimeInfos():
     nbYears(0),
-    thermalPlantTotalCount(0),
-    thermalPlantTotalCountMustRun(0),
     quadraticOptimizationHasFailed(false)
 {
 }
@@ -279,14 +288,57 @@ void StudyRuntimeInfos::initializeRandomNumberGenerators(const Parameters& param
     }
 }
 
+void StudyRuntimeInfos::initializeReservesIndexMaps(const Study& study,
+                                                    const PROBLEME_HEBDO& problem)
+{
+    auto loadReserveParticipations = [&](const Area* area, const CAPACITY_RESERVATION& reserve)
+    {
+        // Thermal clusters
+        for (auto& [clusterId, reserveParticipation]: reserve.AllThermalReservesParticipation)
+        {
+            reserveParticipationIndexMaps.value().at(area->id).thermalClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Short Term Storage
+        for (auto& [clusterId, reserveParticipation]: reserve.AllSTStorageReservesParticipation)
+        {
+            reserveParticipationIndexMaps.value().at(area->id).STStorageClusters.insert(
+              {{reserve.reserveID, reserveParticipation.clusterName},
+               reserveParticipation.areaIndexClusterParticipation});
+        }
+
+        // Hydro
+        for (auto& reserveParticipation: reserve.AllHydroReservesParticipation)
+        {
+            reserveParticipationIndexMaps.value().at(area->id).Hydro.insert(
+              {reserve.reserveID, reserveParticipation.areaIndexClusterParticipation});
+        }
+    };
+
+    reserveParticipationIndexMaps.emplace();
+    reserveIDToName.emplace();
+    for (const auto& area: study.areas | std::views::values)
+    {
+        reserveParticipationIndexMaps.value().emplace(area->id, ReserveIndexMap{});
+        for (const auto& reserve: problem.allReserves.value()[area->index].areaCapacityReservations)
+        {
+            reserveIDToName.value().try_emplace(reserve.reserveID, reserve.reserveName);
+            loadReserveParticipations(area.get(), reserve);
+        }
+    }
+}
+
 bool StudyRuntimeInfos::loadFromStudy(Study& study)
 {
     auto& gd = study.parameters;
 
     nbYears = gd.nbYears;
     mode = gd.mode;
-    thermalPlantTotalCount = 0;
-    thermalPlantTotalCountMustRun = 0;
+
+    counts = {};
+
     // Calendar
     logs.info() << "Generating calendar informations";
     study.calendar.reset({gd.dayOfThe1stJanuary, gd.firstWeekday, gd.firstMonthInYear, false});
@@ -338,11 +390,13 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "Summary";
     logs.info() << "     areas: " << study.areas.size();
     logs.info() << "     links: " << interconnectionsCount();
-    logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
-    logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
-    logs.info() << "     short-term storages: " << shortTermStorageCount;
+    logs.info() << "     thermal clusters: " << counts.thermalPlants;
+    logs.info() << "     thermal clusters (must-run): " << counts.thermalPlantsMustRun;
+    logs.info() << "     short-term storages: " << counts.shortTermStorages;
     logs.info() << "     short-term storage cumulative constraints count: "
-                << shortTermStorageCumulativeConstraintCount;
+                << counts.shortTermStorageCumulativeConstraints;
+    logs.info() << "     hydros: " << counts.hydros;
+    logs.info() << "     reserve participations: " << counts.reserveParticipations;
     logs.info() << "     binding constraints: "
                 << study.bindingConstraints.activeConstraints().size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");

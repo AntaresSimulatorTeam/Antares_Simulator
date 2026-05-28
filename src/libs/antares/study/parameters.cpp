@@ -348,6 +348,8 @@ void Parameters::reset()
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
 
+    include.reserves = false;
+
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
     include.exportSolutions = false;
@@ -520,6 +522,7 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     {
         return value.to<bool>(d.yearByYear);
     }
+
     return false;
 }
 
@@ -612,6 +615,10 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-primaryreserve")
     {
         return value.to<bool>(d.include.reserve.primary);
+    }
+    if (key == "include-reserves")
+    {
+        return value.to<bool>(d.include.reserves);
     }
 
     if (key == "include-exportmps")
@@ -1587,6 +1594,11 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     if (!include.reserve.primary)
     {
         logs.info() << "  :: ignoring primary reserves";
+    }
+    if (!include.reserves)
+    {
+        logs.info() << "  :: ignoring reserves (new implementation / not related to "
+                       "primary/strategic/spinning reserves)";
     }
     if (!include.reserve.strategic)
     {

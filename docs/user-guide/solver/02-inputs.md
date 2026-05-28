@@ -691,7 +691,103 @@ On picking any area in the primary list, the user gets direct access to all data
     - Change the number of columns (function name: resize)
     - Adjust the values associated with the current first day of the year (function name: shift rows)
 
-## Reserves / DSM
+## Reserves
+Reserves can be enabled in the "settings/generaldata.ini" file by setting the "reserves" parameter to "enabled" in the "[general]" section.
+
+If reserves are enabled, the following files are required:
+
+The folder "reserves" is used to define the reserves in each area. For each area, the folder "areaName" contains a _reserves.ini_ file.
+
+- _reserves.ini_: defines the reserves in the area. Each reserve is caracterized by a name, a failure cost, a spillage cost and a type (up, down).
+
+**EXAMPLE OF RESERVES.INI FILE**
+
+```ini
+[res_1_up]
+failure-cost = 3000
+spillage-cost = 1111
+type = up
+
+
+[res_1_down]
+failure-cost = 2000
+spillage-cost = 1111
+type = down
+```
+
+- The need for each of those defined reserves are defined in the same folder as _reserveName.txt_ files with 8760 values to define the need for each hour of the year.
+
+Then, each plant has to define their participation to the defined reserves in the _reserves.ini_ file in the plant folder. Thermal, short term storage and long term storage plants can participate to reserves. The files are located in:
+
+- _thermal/clusters/areaName/reserves.ini_ for thermal plants
+- _st-storage/clusters/areaName/reserves.ini_ for short term storage plants
+- _hydro/common/areaName/reserves.ini_ for long term storage plants
+
+with areaName, the name of the area where the plant is located
+
+Depending on the type of plant, the reserve participations are defined by different parameters.
+
+**EXAMPLE OF RESERVES.INI FILE FOR THERMAL PLANTS**
+```ini
+[res_1_up]
+cluster-name = nuclear_1
+max-power = 20
+participation-cost = 5
+max-power-off = 20
+participation-cost-off = 1
+```
+
+**EXAMPLE OF RESERVES.INI FILE FOR SHORT TERM STORAGE PLANTS**
+```ini
+[res_1_up]
+cluster-name = st1
+max-release = 20
+max-store = 30
+participation-cost = 3
+
+[res_1_down]
+cluster-name = st1
+max-release = 20
+max-store = 20
+participation-cost = 2
+```
+
+**EXAMPLE OF RESERVES.INI FILE FOR LONG TERM STORAGE PLANTS**
+```ini
+[res_1_up]
+cluster-name = lt
+max-release = 20
+max-store = 30
+participation-cost = 1
+
+[res_1_down]
+cluster-name = lt
+max-release = 20
+max-store = 20
+participation-cost = 1
+```
+
+Those _reserves.ini_ files can also define symmetries, they are defined as follows in the same file:
+
+**EXAMPLE OF full RESERVES.INI FILE FOR Long TERM STORAGE PLANTS**
+```ini
+[symmetries]
+lt = [res_1_up, res_1_down]
+
+[res_1_up]
+cluster-name = lt
+max-release = 20
+max-store = 30
+participation-cost = 1
+
+[res_1_down]
+cluster-name = lt
+max-release = 20
+max-store = 20
+participation-cost = 1
+```
+
+## Reserves / DSM (old)
 
 _[Documentation of the AntaresWeb interface for this section](https://antares-web.readthedocs.io/en/latest/user-guide/study/areas/09-reserves/)_
 

@@ -37,8 +37,13 @@ source_group("study\\scenario builder" FILES ${SRC_MATRIX})
 set(SRC_AREAS
         include/antares/study/area/constants.h
         include/antares/study/area/area.h
+        include/antares/study/area/capacityReservation.h
+        include/antares/study/area/reserveParticipation.h
+        include/antares/study/area/reserveParticipationContainer.h
+        include/antares/study/area/ReserveOpt.h
         include/antares/study/area/area.hxx
         include/antares/study/area/scratchpad.h
+		include/antares/study/area/forTestsOnlyList.h
         area/scratchpad.cpp
         area/area.cpp
         area/links.cpp
@@ -54,6 +59,7 @@ set(SRC_STUDY_PART_COMMON
         include/antares/study/parts/common/cluster.h
         include/antares/study/parts/common/cluster_list.h
         parts/common/cluster_list.cpp
+        include/antares/study/parts/common/CustomErrorListener.h
 )
 source_group("study\\part\\common" FILES ${SRC_STUDY_PART_COMMON})
 
@@ -85,6 +91,15 @@ set(SRC_STUDY_PART_RENEWABLE
         parts/renewable/cluster_list.cpp
 )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
+
+set(SRC_STUDY_PART_RESERVES
+        include/antares/study/parts/reserves/reservesParticipationsLoader.h
+        include/antares/study/parts/reserves/SymmetryCollectorVisitor.h
+        include/antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h
+        parts/reserves/makeGroupsofSymmetriesFromString.cpp
+)
+source_group("study\\part\\reserves" FILES ${SRC_STUDY_PART_RESERVES})
+
 set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h
         parts/short-term-storage/makeGroupsOfHoursFromString.cpp
@@ -98,6 +113,7 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
         include/antares/study/parts/short-term-storage/additionalConstraints.h
         parts/short-term-storage/cluster.cpp
         parts/short-term-storage/additionalConstraints.cpp
+        include/antares/study/parts/common/CustomErrorListener.h
 )
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 
@@ -246,6 +262,7 @@ set(SRC_ALL
         ${SRC_STUDY_PART_COMMON}
         ${SRC_STUDY_PART_THERMAL}
         ${SRC_STUDY_PART_RENEWABLE}
+        ${SRC_STUDY_PART_RESERVES}
         ${SRC_STUDY_PART_SHORT_TERM_STORAGE}
         ${SRC_STUDY_SCENARIO_BUILDER}
         ${SRC_STUDY}
@@ -296,6 +313,7 @@ target_link_libraries(study
         Antares::benchmarking
         antares-solver-variable
         Antares::additional-constraint-rhs-antlr-interface
+        Antares::reserves-parsing-antlr-interface
 )
 
 target_include_directories(study

@@ -4,6 +4,7 @@
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 
 #include "antares/solver/optimisation/LinearProblemMatrixRamping.h"
+#include "antares/solver/optimisation/LinearProblemMatrixReserves.h"
 #include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -41,10 +42,14 @@ void LinearProblemMatrix::Run()
 
     ProblemMatrixEssential::Run();
 
-    if (problemeHebdo_->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo_->OptimisationNotFastMode)
     {
         LinearProblemMatrixStartUpCosts(problemeHebdo_, false, builder_).Run();
         LinearProblemMatrixRamping(problemeHebdo_, false, builder_).Run();
+        if (problemeHebdo_->allReserves)
+        {
+            LinearProblemMatrixReserves(problemeHebdo_, false, builder_).Run();
+        }
     }
 
     return;
