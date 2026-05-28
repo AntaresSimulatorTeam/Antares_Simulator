@@ -78,9 +78,7 @@ bool Study::importTimeseriesIntoInput()
             {
                 logs.info() << "Importing wind timeseries : " << areaName;
                 fs::path seriesPath = fs::path(folderInput) / "wind" / "series";
-                ret = area->wind.series.saveToFolder(area->id,
-                                                     seriesPath.string().c_str(),
-                                                     "wind_")
+                ret = area->wind.series.saveToFolder(area->id, seriesPath.string().c_str(), "wind_")
                       && ret;
             }
         }
