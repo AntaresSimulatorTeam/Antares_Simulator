@@ -54,14 +54,6 @@ target_link_libraries(simulation-table-writers
 add_library(Antares::simulation-table-writers ALIAS simulation-table-writers)
 
 add_library(result_writer
-        # Helper class
-        # Add entry to zip, using a job queue (private)
-        # Generic factory (public API)
-        # Immediate file writer (private)
-        # Table writers (public API + implementations)
-        csv_table_writer.cpp
-        private/csv_table_writer.h
-        i_table_writer.cpp
         ensure_queue_started.cpp
         immediate_file_writer.cpp
         in_memory_writer.cpp
@@ -70,12 +62,10 @@ add_library(result_writer
         include/antares/writer/in_memory_writer.h # Public (for tests)
         include/antares/writer/null_result_writer.h
         include/antares/writer/result_format.h
-        include/antares/writer/table_writer_factory.h
         include/antares/writer/writer_factory.h
         private/ensure_queue_started.h
         private/immediate_file_writer.h
         private/zip_writer.h
-        table_writer_factory.cpp
         writer_factory.cpp
         zip_writer.cpp
 )
