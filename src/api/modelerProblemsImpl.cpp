@@ -6,6 +6,8 @@
 #include "antares/logs/logs.h"
 #include "antares/utils/utils.h"
 
+using namespace Antares::Writer;
+
 namespace Antares::Solver::Implementation
 {
 
@@ -15,7 +17,7 @@ ModelerProblems::ModelerProblems(const std::filesystem::path& studyPath)
     writer_ = std::make_unique<FileWriter>(studyPath);
     writer_->init(formatTime(getCurrentTime(), "%Y%m%d-%H%M"));
 
-    modeler_ = std::make_unique<Modeler>(*loader_, *writer_);
+    modeler_ = std::make_unique<Modeler>(*loader_, *writer_, studyPath, TableFormat::CSV);
     modeler_->buildProblems();
     modeler_->exportMps();
     modeler_->exportStructureFile();

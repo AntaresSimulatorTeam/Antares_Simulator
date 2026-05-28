@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
     InMemoryLoader inMemoryLoader;
     InMemoryWriter inMemoryWriter;
 
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, inMemoryWriter, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
 
     InMemoryWriter inMemoryWriter;
 
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, inMemoryWriter, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 5);
@@ -284,7 +284,7 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
 
     InMemoryWriter inMemoryWriter;
 
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, inMemoryWriter, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 2);
@@ -309,7 +309,7 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
 
     InMemoryWriter inMemoryWriter;
 
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, inMemoryWriter, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 3);
@@ -407,7 +407,7 @@ BOOST_DATA_TEST_CASE(modeler_scaling_by_time_steps,
     ScalingWriter writer;
 
     auto start_total = std::chrono::high_resolution_clock::now();
-    Modeler modeler(loader, writer);
+    Modeler modeler(loader, writer, {}, TableFormat::CSV);
     modeler.run();
     auto end_total = std::chrono::high_resolution_clock::now();
 

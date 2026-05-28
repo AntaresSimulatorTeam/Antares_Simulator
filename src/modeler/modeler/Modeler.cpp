@@ -18,8 +18,10 @@
 #include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
+#include "antares/writer/table_writer_factory.h"
 
 using namespace Antares;
+using namespace Antares::Writer;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
 using namespace Antares::Optimization;
 using namespace Antares::Optimisation;
@@ -47,9 +49,11 @@ bool checkSolution(const IMipSolution* solution)
     return false;
 }
 
-Modeler::Modeler(ILoader& loader, IWriter& writer):
+Modeler::Modeler(ILoader& loader, IWriter& writer, fs::path ouputPath, TableFormat tableFormat):
     loader_{loader},
-    writer_{writer}
+    writer_{writer},
+    outputPath_{std::move(ouputPath)},
+    tableFormat_(tableFormat)
 {
     parameters_ = loader_.loadParameters();
     logs.info() << "Parameters loaded";
@@ -232,29 +236,25 @@ SimulationTable Modeler::makeSimulationTable(
 
 void Modeler::exportMps() const
 {
-    const auto& output = writer_.outputPath();
-
     // 1-1.mps
     if (auto& subproblem_1_1 = subproblems_[0])
     {
         const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
-        Antares::IO::Outputs::MPSFileWriter::write(output / "1-1.mps", mps);
+        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "1-1.mps", mps);
     }
     // master.mps
     if (masterProblem_)
     {
         const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
-        Antares::IO::Outputs::MPSFileWriter::write(output / "master.mps", mps);
+        Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
     }
 }
 
 void Modeler::exportStructureFile() const
 {
-    const auto& output = writer_.outputPath();
-
     // structure.txt
     const BendersDecompositionWriter writer(data_.bendersDecomposition);
-    std::ofstream of(output / "structure.txt");
+    std::ofstream of(outputPath_ / "structure.txt");
     writer.write(of);
 }
 
@@ -306,12 +306,6 @@ void Modeler::buildSubProblem()
 void Modeler::run()
 {
     buildProblems();
-    // if simulation table or mps are requested
-    if (!parameters_.noOutput || parameters_.exportMps)
-    {
-        const auto simulationId = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
-        writer_.init(simulationId);
-    }
     if (parameters_.exportMps)
     {
         exportMps();
@@ -330,7 +324,10 @@ void Modeler::run()
             auto simulationTable = makeSimulationTable(subProbSolution_,
                                                        *subproblemOptimEntityContainer_,
                                                        *timeScenarioCtx_);
-            writer_.writeSimulationTable(simulationTable);
+
+            auto outputFile = outputPath_ / "simulation-table";
+            ITableWriter::Ptr writer = makeTableWriter(tableFormat_, outputFile);
+            writer->writeTable(simulationTable);
         }
     }
 }

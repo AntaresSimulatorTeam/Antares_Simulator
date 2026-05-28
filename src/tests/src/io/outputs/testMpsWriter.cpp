@@ -166,7 +166,7 @@ struct MpsWriterTestFixture
 
     Modeler build()
     {
-        return {loader, writer};
+        return {loader, writer, {}, TableFormat::CSV};
     }
 };
 
