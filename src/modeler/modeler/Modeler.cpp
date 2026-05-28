@@ -230,11 +230,6 @@ SimulationTable Modeler::makeSimulationTable(
     return simulationTable;
 }
 
-void Modeler::writeSimulationTable(SimulationTable& simulationTable)
-{
-    writer_.writeSimulationTable(simulationTable);
-}
-
 void Modeler::exportMps() const
 {
     const auto& output = writer_.outputPath();
@@ -335,7 +330,7 @@ void Modeler::run()
             auto simulationTable = makeSimulationTable(subProbSolution_,
                                                        *subproblemOptimEntityContainer_,
                                                        *timeScenarioCtx_);
-            writeSimulationTable(simulationTable);
+            writer_.writeSimulationTable(simulationTable);
         }
     }
 }
