@@ -27,6 +27,12 @@ var hierarchy =
         [ "ScenarioBuilderBaseVisitor", "classScenarioBuilderBaseVisitor.html", [
           [ "Antares::ScenarioBuilderImplVisitor", "classAntares_1_1ScenarioBuilderImplVisitor.html", null ]
         ] ]
+      ] ],
+      [ "SymmetryFieldVisitor", "classSymmetryFieldVisitor.html", [
+        [ "SymmetryFieldBaseVisitor", "classSymmetryFieldBaseVisitor.html", [
+          [ "SymmetryCollectorVisitor", "classSymmetryCollectorVisitor.html", null ],
+          [ "SymmetryCollectorVisitor", "classSymmetryCollectorVisitor.html", null ]
+        ] ]
       ] ]
     ] ],
     [ "Antares::Data::ShortTermStorage::AdditionalConstraints", "classAntares_1_1Data_1_1ShortTermStorage_1_1AdditionalConstraints.html", null ],
@@ -35,6 +41,7 @@ var hierarchy =
     [ "AdequacyPatchRuntimeData", "classAdequacyPatchRuntimeData.html", null ],
     [ "Antares::Data::AdequacyPatch::AdqPatchParams", "structAntares_1_1Data_1_1AdequacyPatch_1_1AdqPatchParams.html", null ],
     [ "ALL_MUST_RUN_GENERATION", "structALL__MUST__RUN__GENERATION.html", null ],
+    [ "Antares::Data::AllCapacityReservations", "structAntares_1_1Data_1_1AllCapacityReservations.html", null ],
     [ "AllocationFixture", "structAllocationFixture.html", null ],
     [ "Antares::Data::AllVariablesPrintInfo", "classAntares_1_1Data_1_1AllVariablesPrintInfo.html", null ],
     [ "Antares::Solver::Simulation::annualCostsStatistics", "classAntares_1_1Solver_1_1Simulation_1_1annualCostsStatistics.html", null ],
@@ -43,6 +50,7 @@ var hierarchy =
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::CostGeneration >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1CostGeneration_01_4.html", null ],
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::LocalTSGenerationBehavior >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1LocalTSGenerationBehavior_01_4.html", null ],
     [ "Yuni::Extension::CString::Append< CStringT, Antares::Data::StatisticalLaw >", "classYuni_1_1Extension_1_1CString_1_1Append_3_01CStringT_00_01Antares_1_1Data_1_1StatisticalLaw_01_4.html", null ],
+    [ "AREA_RESERVES_VECTOR", "structAREA__RESERVES__VECTOR.html", null ],
     [ "AreaBalanceData", "structAreaBalanceData.html", null ],
     [ "Antares::IO::Inputs::YmlModel::AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1AreaConnection.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::AreaConnection", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1AreaConnection.html", null ],
@@ -74,6 +82,8 @@ var hierarchy =
     [ "Antares::Solver::Variable::R::AllYears::AverageData", "classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1AverageData.html", null ],
     [ "averageResults", "classaverageResults.html", null ],
     [ "antlr4::BaseErrorListener", null, [
+      [ "Antares::Data::CustomErrorListener< Antares::Data::Symmetries::SymmetriesError >", "classAntares_1_1Data_1_1CustomErrorListener.html", null ],
+      [ "Antares::Data::CustomErrorListener< ErrorType >", "classAntares_1_1Data_1_1CustomErrorListener.html", null ],
       [ "Antares::Data::ShortTermStorage::CustomErrorListener", "classAntares_1_1Data_1_1ShortTermStorage_1_1CustomErrorListener.html", null ],
       [ "Antares::IO::Inputs::ModelConverter::AntaresErrorListener", "classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1AntaresErrorListener.html", null ],
       [ "CustomErrorListener", "classCustomErrorListener.html", null ]
@@ -115,6 +125,8 @@ var hierarchy =
       [ "tests_fixture", "structtests__fixture.html", null ]
     ] ],
     [ "Antares::Date::Calendar", "classAntares_1_1Date_1_1Calendar.html", null ],
+    [ "CAPACITY_RESERVATION", "structCAPACITY__RESERVATION.html", null ],
+    [ "Antares::Data::CapacityReservation", "structAntares_1_1Data_1_1CapacityReservation.html", null ],
     [ "CellColumnData", "classCellColumnData.html", null ],
     [ "fixtures.check_handler", "classfixtures_1_1check__handler.html", null ],
     [ "check_on_results.check_general.check_list", "classcheck__on__results_1_1check__general_1_1check__list.html", null ],
@@ -181,10 +193,18 @@ var hierarchy =
       [ "FinalStockEquivalent", "classFinalStockEquivalent.html", null ],
       [ "FinalStockExpression", "classFinalStockExpression.html", null ],
       [ "FlowDissociation", "classFlowDissociation.html", null ],
+      [ "HydroEnergyLevelReserveParticipation", "classHydroEnergyLevelReserveParticipation.html", null ],
+      [ "HydroGlobalEnergyLevelReserveParticipation", "classHydroGlobalEnergyLevelReserveParticipation.html", null ],
+      [ "HydroLevelReserveParticipation", "classHydroLevelReserveParticipation.html", null ],
       [ "HydroPower", "classHydroPower.html", null ],
       [ "HydroPowerSmoothingUsingVariationMaxDown", "classHydroPowerSmoothingUsingVariationMaxDown.html", null ],
       [ "HydroPowerSmoothingUsingVariationMaxUp", "classHydroPowerSmoothingUsingVariationMaxUp.html", null ],
       [ "HydroPowerSmoothingUsingVariationSum", "classHydroPowerSmoothingUsingVariationSum.html", null ],
+      [ "HydroReleaseCapacityThresholds", "classHydroReleaseCapacityThresholds.html", null ],
+      [ "HydroReleaseMaxReserve", "classHydroReleaseMaxReserve.html", null ],
+      [ "HydroReserveParticipation", "classHydroReserveParticipation.html", null ],
+      [ "HydroStoreCapacityThresholds", "classHydroStoreCapacityThresholds.html", null ],
+      [ "HydroStoreMaxReserve", "classHydroStoreMaxReserve.html", null ],
       [ "MaxHydroPower", "classMaxHydroPower.html", null ],
       [ "MaxPumping", "classMaxPumping.html", null ],
       [ "MaxUnsuppliedEnergy", "classMaxUnsuppliedEnergy.html", null ],
@@ -192,8 +212,23 @@ var hierarchy =
       [ "MinHydroPower", "classMinHydroPower.html", null ],
       [ "NbDispUnitsMinBoundSinceMinUpTime", "classNbDispUnitsMinBoundSinceMinUpTime.html", null ],
       [ "NbUnitsOutageLessThanNbUnitsStop", "classNbUnitsOutageLessThanNbUnitsStop.html", null ],
+      [ "OffUnitsThermalParticipatingToReserves", "classOffUnitsThermalParticipatingToReserves.html", null ],
       [ "PMaxDispatchableGeneration", "classPMaxDispatchableGeneration.html", null ],
+      [ "PMaxReserve", "classPMaxReserve.html", null ],
       [ "PMinDispatchableGeneration", "classPMinDispatchableGeneration.html", null ],
+      [ "POffUnits", "classPOffUnits.html", null ],
+      [ "POutBounds", "classPOutBounds.html", null ],
+      [ "POutCapacityThresholds", "classPOutCapacityThresholds.html", null ],
+      [ "ReserveSatisfaction", "classReserveSatisfaction.html", null ],
+      [ "STReleaseCapacityThresholds", "classSTReleaseCapacityThresholds.html", null ],
+      [ "STReleaseMaxReserve", "classSTReleaseMaxReserve.html", null ],
+      [ "STReserveDownParticipation", "classSTReserveDownParticipation.html", null ],
+      [ "STReserveParticipation", "classSTReserveParticipation.html", null ],
+      [ "STStorageEnergyLevelReserveParticipation", "classSTStorageEnergyLevelReserveParticipation.html", null ],
+      [ "STStorageGlobalEnergyLevelReserveParticipation", "classSTStorageGlobalEnergyLevelReserveParticipation.html", null ],
+      [ "STStorageLevelReserveParticipation", "classSTStorageLevelReserveParticipation.html", null ],
+      [ "STStoreCapacityThresholds", "classSTStoreCapacityThresholds.html", null ],
+      [ "STStoreMaxReserve", "classSTStoreMaxReserve.html", null ],
       [ "ShortTermStorageCostVariation", "classShortTermStorageCostVariation.html", [
         [ "ShortTermStorageCostVariationInjectionBackward", "classShortTermStorageCostVariationInjectionBackward.html", null ],
         [ "ShortTermStorageCostVariationInjectionForward", "classShortTermStorageCostVariationInjectionForward.html", null ],
@@ -201,7 +236,9 @@ var hierarchy =
         [ "ShortTermStorageCostVariationWithdrawalForward", "classShortTermStorageCostVariationWithdrawalForward.html", null ]
       ] ],
       [ "ShortTermStorageCumulation", "classShortTermStorageCumulation.html", null ],
-      [ "ShortTermStorageLevel", "classShortTermStorageLevel.html", null ]
+      [ "ShortTermStorageLevel", "classShortTermStorageLevel.html", null ],
+      [ "SymmetryReserveParticipation", "classSymmetryReserveParticipation.html", null ],
+      [ "ThermalReserveParticipation", "classThermalReserveParticipation.html", null ]
     ] ],
     [ "ConstraintGroup", "classConstraintGroup.html", [
       [ "AbstractStartUpCostsGroup", "classAbstractStartUpCostsGroup.html", [
@@ -220,7 +257,8 @@ var hierarchy =
       [ "HydraulicSmoothingGroup", "classHydraulicSmoothingGroup.html", null ],
       [ "HydroPowerGroup", "classHydroPowerGroup.html", null ],
       [ "MaxPumpingGroup", "classMaxPumpingGroup.html", null ],
-      [ "MinMaxHydroPowerGroup", "classMinMaxHydroPowerGroup.html", null ]
+      [ "MinMaxHydroPowerGroup", "classMinMaxHydroPowerGroup.html", null ],
+      [ "ReserveParticipationGroup", "classReserveParticipationGroup.html", null ]
     ] ],
     [ "Antares::IO::Inputs::YmlOptimConfig::ConstraintOutOfBoundsProcessing", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing.html", null ],
     [ "Antares::Optimization::ConstraintsFactory", "classAntares_1_1Optimization_1_1ConstraintsFactory.html", null ],
@@ -270,6 +308,7 @@ var hierarchy =
       [ "Antares::Data::ScenarizedCostProvider", "classAntares_1_1Data_1_1ScenarizedCostProvider.html", null ]
     ] ],
     [ "Antares::Solver::Simulation::costStatistics", "classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html", null ],
+    [ "Antares::Data::StudyRuntimeInfos::Counts", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1Counts.html", null ],
     [ "Antares::Optimisation::CouplingVariable", "structAntares_1_1Optimisation_1_1CouplingVariable.html", null ],
     [ "COUTS_DE_TRANSPORT", "structCOUTS__DE__TRANSPORT.html", null ],
     [ "CreateAST", "structCreateAST.html", [
@@ -323,7 +362,10 @@ var hierarchy =
     [ "DEMAND_FLEX_DOWN_POOL", "structDEMAND__FLEX__DOWN__POOL.html", null ],
     [ "DEMAND_FLEX_UP_POOL", "structDEMAND__FLEX__UP__POOL.html", null ],
     [ "DEMAND_MARKET_POOL", "structDEMAND__MARKET__POOL.html", null ],
+    [ "Antares::Solver::Variable::State::ReserveData::DetailledParticipation", "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1DetailledParticipation.html", null ],
     [ "Antares::Optimisation::Dimensions", "classAntares_1_1Optimisation_1_1Dimensions.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::DispatchableOff", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1DispatchableOff.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::DispatchableOn", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1DispatchableOn.html", null ],
     [ "Antares::Data::ThermalCluster::DivModulation", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html", null ],
     [ "DONNEES_ANNUELLES", "structDONNEES__ANNUELLES.html", null ],
     [ "DoneesOptimisationJournaliere::DONNEES_MENSUELLES", "structDoneesOptimisationJournaliere_1_1DONNEES__MENSUELLES.html", null ],
@@ -347,6 +389,11 @@ var hierarchy =
           [ "Antares::Solver::Variable::Economy::TimeSeriesValuesHydro< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html", null ]
         ] ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationByDispatchableOffUnitsPlant< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationByDispatchableOffUnitsPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate< ReserveParticipationByDispatchableOffUnitsPlant< Container::EndOfList >, VCardReserveParticipationByDispatchableOffUnitsPlant, Container::EndOfList >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html", [
+          [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationByDispatchableOffUnitsPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByDispatchableOffUnitsPlant.html", null ]
+        ] ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< NbOfDispatchedUnits< Container::EndOfList >, Container::EndOfList, VCardNbOfDispatchedUnits >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::NbOfDispatchedUnits< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NbOfDispatchedUnits.html", null ]
       ] ],
@@ -367,6 +414,9 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< STstorageCashFlowByCluster< Container::EndOfList >, Container::EndOfList, VCardSTstorageCashFlowByCluster >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::STstorageCashFlowByCluster< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STstorageCashFlowByCluster.html", null ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< DerivedType, Container::EndOfList, VCardType >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate< DerivedType, VCardType, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< Overflows< Container::EndOfList >, Container::EndOfList, VCardOverflow >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::Overflows< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Overflows.html", null ]
       ] ],
@@ -382,6 +432,9 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< SpatialAggregate< VarT, Container::EndOfList >, Container::EndOfList, VCardProxy< VarT > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Common::SpatialAggregate< VarT, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html", null ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationMarginalCost< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationMarginalCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationMarginalCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< NonProportionalCost< Container::EndOfList >, Container::EndOfList, VCardNonProportionalCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::NonProportionalCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1NonProportionalCost.html", null ]
       ] ],
@@ -394,6 +447,9 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< OverallCost< Container::EndOfList >, Container::EndOfList, VCardOverallCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Adequacy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1OverallCost.html", null ],
         [ "Antares::Solver::Variable::Economy::OverallCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationCost< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCost.html", null ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< HydroCost< Container::EndOfList >, Container::EndOfList, VCardHydroCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::HydroCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroCost.html", null ]
@@ -447,6 +503,9 @@ var hierarchy =
           [ "LargeValues", "classLargeValues.html", null ]
         ] ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationBySTStorageGroup< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationBySTStorageGroup >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorageGroup< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorageGroup.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< OperatingCost< Container::EndOfList >, Container::EndOfList, VCardOperatingCost >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::OperatingCost< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCost.html", null ]
       ] ],
@@ -471,6 +530,14 @@ var hierarchy =
       [ "Antares::Solver::Variable::IVariable< HydroStorage< Container::EndOfList >, Container::EndOfList, VCardHydroStorage >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::HydroStorage< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroStorage.html", null ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationUnsuppliedSpilled< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationUnsuppliedSpilled >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationUnsuppliedSpilled< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationUnsuppliedSpilled.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationBySTStorage< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationBySTStorage >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate< ReserveParticipationBySTStorage< Container::EndOfList >, VCardReserveParticipationBySTStorage, Container::EndOfList >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html", [
+          [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorage< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html", null ]
+        ] ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< PriceCSR< Container::EndOfList >, Container::EndOfList, VCardPriceCSR >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::PriceCSR< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSR.html", null ]
       ] ],
@@ -494,11 +561,24 @@ var hierarchy =
           [ "Antares::Solver::Variable::Economy::TimeSeriesValuesGenerationImpl< TraitsType, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesGenerationImpl.html", null ]
         ] ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationByThermalGroup< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationByThermalGroup >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationByThermalGroup< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< ByPlantBase< Traits, Container::EndOfList >, Container::EndOfList, VCardByPlantBase< Traits > >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::ByPlantBase< Traits, NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1ByPlantBase.html", null ]
       ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationByHydro< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationByHydro >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate< ReserveParticipationByHydro< Container::EndOfList >, VCardReserveParticipationByHydro, Container::EndOfList >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html", [
+          [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationByHydro< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByHydro.html", null ]
+        ] ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< Balance< Container::EndOfList >, Container::EndOfList, VCardBalance >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::Balance< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Balance.html", null ]
+      ] ],
+      [ "Antares::Solver::Variable::IVariable< ReserveParticipationByDispatchableOnUnitsPlant< Container::EndOfList >, Container::EndOfList, VCardReserveParticipationByDispatchableOnUnitsPlant >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate< ReserveParticipationByDispatchableOnUnitsPlant< Container::EndOfList >, VCardReserveParticipationByDispatchableOnUnitsPlant, Container::EndOfList >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html", [
+          [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationByDispatchableOnUnitsPlant< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByDispatchableOnUnitsPlant.html", null ]
+        ] ]
       ] ],
       [ "Antares::Solver::Variable::IVariable< RenewableGeneration< Container::EndOfList >, Container::EndOfList, VCardRenewableGeneration >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::RenewableGeneration< NextT >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration.html", null ]
@@ -549,9 +629,11 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::GenerationTraits< Tag >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html", null ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],
+    [ "Antares::Data::Symmetries::GroupsSymmetries", "classAntares_1_1Data_1_1Symmetries_1_1GroupsSymmetries.html", null ],
     [ "Antares::Solver::HebdoProblemToLpsTranslator", "classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html", null ],
     [ "Antares::Date::HourInterval", "structAntares_1_1Date_1_1HourInterval.html", null ],
     [ "HourlyCSRProblem", "classHourlyCSRProblem.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::Hydro", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1Hydro.html", null ],
     [ "Hydro_problem_costs", "classHydro__problem__costs.html", null ],
     [ "Antares::Data::HydroAllocation", "classAntares_1_1Data_1_1HydroAllocation.html", null ],
     [ "Antares::Solver::Simulation::hydroCostNoise", "classAntares_1_1Solver_1_1Simulation_1_1hydroCostNoise.html", null ],
@@ -561,6 +643,7 @@ var hierarchy =
     [ "Antares::HydroManagement", "classAntares_1_1HydroManagement.html", null ],
     [ "Antares::Data::HydroMaxTimeSeriesReader", "classAntares_1_1Data_1_1HydroMaxTimeSeriesReader.html", null ],
     [ "HydroPowerData", "structHydroPowerData.html", null ],
+    [ "Antares::Data::PartHydro::HydroReserveParticipationWithName", "structAntares_1_1Data_1_1PartHydro_1_1HydroReserveParticipationWithName.html", null ],
     [ "Antares::Solver::Variable::Economy::HydroTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html", null ],
     [ "I_MPS_writer", "classI__MPS__writer.html", [
       [ "MPSwriter", "classMPSwriter.html", null ],
@@ -595,7 +678,9 @@ var hierarchy =
     [ "Yuni::IEventObserver", null, [
       [ "Antares::Solver::Application", "classAntares_1_1Solver_1_1Application.html", null ],
       [ "Antares::UnitTests::CaptureAntaresLogs", "classAntares_1_1UnitTests_1_1CaptureAntaresLogs.html", [
-        [ "DuplicateFixture", "structDuplicateFixture.html", null ]
+        [ "DuplicateFixture", "structDuplicateFixture.html", null ],
+        [ "OneProblemWithReservesOneAreaWithLogger", "classOneProblemWithReservesOneAreaWithLogger.html", null ],
+        [ "OneProblemWithoutReservesOneAreaWithLogger", "classOneProblemWithoutReservesOneAreaWithLogger.html", null ]
       ] ]
     ] ],
     [ "FSWalker::IExtension", "classFSWalker_1_1IExtension.html", [
@@ -746,6 +831,8 @@ var hierarchy =
     [ "Antares::Solver::IntraModalConsistencyChecker", "classAntares_1_1Solver_1_1IntraModalConsistencyChecker.html", null ],
     [ "std::invalid_argument", null, [
       [ "Antares::Data::ShortTermStorage::ShortTermStorageAdditionalConstraintsError", "structAntares_1_1Data_1_1ShortTermStorage_1_1ShortTermStorageAdditionalConstraintsError.html", null ],
+      [ "Antares::Data::Symmetries::SymmetriesError", "structAntares_1_1Data_1_1Symmetries_1_1SymmetriesError.html", null ],
+      [ "Antares::Data::Symmetries::SymmetriesError", "structAntares_1_1Data_1_1Symmetries_1_1SymmetriesError.html", null ],
       [ "Antares::Error::InvalidArgumentError", "classAntares_1_1Error_1_1InvalidArgumentError.html", null ],
       [ "Antares::Expressions::Visitors::EvalVisitorNotImplemented", "classAntares_1_1Expressions_1_1Visitors_1_1EvalVisitorNotImplemented.html", null ],
       [ "Antares::Expressions::Visitors::InvalidNode", "classAntares_1_1Expressions_1_1Visitors_1_1InvalidNode.html", null ],
@@ -818,7 +905,8 @@ var hierarchy =
     [ "antlr4::Lexer", null, [
       [ "ExprLexer", "classExprLexer.html", null ],
       [ "HoursFieldLexer", "classHoursFieldLexer.html", null ],
-      [ "ScenarioBuilderLexer", "classScenarioBuilderLexer.html", null ]
+      [ "ScenarioBuilderLexer", "classScenarioBuilderLexer.html", null ],
+      [ "SymmetryFieldLexer", "classSymmetryFieldLexer.html", null ]
     ] ],
     [ "LibererProbleme", "structLibererProbleme.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Library", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Library.html", null ],
@@ -858,6 +946,7 @@ var hierarchy =
       [ "Antares::Solver::Variable::Economy::LOLP_CSRTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LOLP__CSRTraits.html", null ]
     ] ],
     [ "Antares::Solver::LpsFromAntares", "classAntares_1_1Solver_1_1LpsFromAntares.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::MarginalCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1MarginalCost.html", null ],
     [ "Antares::Matrix< T, ReadWriteT >", "classAntares_1_1Matrix.html", null ],
     [ "Matrix", null, [
       [ "Matrix_easy_to_fill< double, double >", "classMatrix__easy__to__fill.html", [
@@ -938,6 +1027,9 @@ var hierarchy =
     [ "NbUnitsOutageLessThanNbUnitsStopData", "structNbUnitsOutageLessThanNbUnitsStopData.html", null ],
     [ "Antares::Solver::Variable::Category::NextLevel< Index, Limit >", "structAntares_1_1Solver_1_1Variable_1_1Category_1_1NextLevel.html", null ],
     [ "NextT", null, [
+      [ "Antares::Solver::Variable::IVariable< DerivedType, NextT, VCardType >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
+        [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBase< VCardType, NextT, DerivedType >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBase.html", null ]
+      ] ],
       [ "Antares::Solver::Variable::IVariable< Derived, NextT, VCardType >", "classAntares_1_1Solver_1_1Variable_1_1IVariable.html", [
         [ "Antares::Solver::Variable::Economy::TimeSeriesValuesBase< Derived, NextT, VCardType >", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesBase.html", null ]
       ] ],
@@ -990,7 +1082,15 @@ var hierarchy =
       [ "RenewableClusterStudy", "structRenewableClusterStudy.html", null ],
       [ "ThermalClusterStudy", "structThermalClusterStudy.html", null ]
     ] ],
+    [ "OneProblemWithoutReservesOneArea", "classOneProblemWithoutReservesOneArea.html", [
+      [ "OneProblemWithoutReservesOneAreaWithLogger", "classOneProblemWithoutReservesOneAreaWithLogger.html", null ]
+    ] ],
+    [ "OneProblemWithReservesOneArea", "classOneProblemWithReservesOneArea.html", [
+      [ "OneProblemWithReservesOneAreaWithLogger", "classOneProblemWithReservesOneAreaWithLogger.html", null ]
+    ] ],
+    [ "OneProblemWithReservesTwoAreas", "structOneProblemWithReservesTwoAreas.html", null ],
     [ "Benchmarking::DurationCollector::OperationTimer", "structBenchmarking_1_1DurationCollector_1_1OperationTimer.html", null ],
+    [ "OPTIMAL_HYDRO_USAGE", "structOPTIMAL__HYDRO__USAGE.html", null ],
     [ "Antares::Optimisation::OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", null ],
     [ "Antares::IO::Inputs::YmlOptimConfig::OptimConfig", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig.html", null ],
     [ "Antares::Optimisation::OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html", null ],
@@ -1029,7 +1129,8 @@ var hierarchy =
     [ "antlr4::Parser", null, [
       [ "ExprParser", "classExprParser.html", null ],
       [ "HoursFieldParser", "classHoursFieldParser.html", null ],
-      [ "ScenarioBuilderParser", "classScenarioBuilderParser.html", null ]
+      [ "ScenarioBuilderParser", "classScenarioBuilderParser.html", null ],
+      [ "SymmetryFieldParser", "classSymmetryFieldParser.html", null ]
     ] ],
     [ "antlr4::ParserRuleContext", null, [
       [ "ExprParser::ArgListContext", "classExprParser_1_1ArgListContext.html", null ],
@@ -1079,7 +1180,15 @@ var hierarchy =
       [ "ScenarioBuilderParser::LineContext", "classScenarioBuilderParser_1_1LineContext.html", null ],
       [ "ScenarioBuilderParser::RulesContext", "classScenarioBuilderParser_1_1RulesContext.html", null ],
       [ "ScenarioBuilderParser::TimeSeriesNumberContext", "classScenarioBuilderParser_1_1TimeSeriesNumberContext.html", null ],
-      [ "ScenarioBuilderParser::YearContext", "classScenarioBuilderParser_1_1YearContext.html", null ]
+      [ "ScenarioBuilderParser::YearContext", "classScenarioBuilderParser_1_1YearContext.html", null ],
+      [ "SymmetryFieldParser::ElementContext", "classSymmetryFieldParser_1_1ElementContext.html", null ],
+      [ "SymmetryFieldParser::ElementListContext", "classSymmetryFieldParser_1_1ElementListContext.html", null ],
+      [ "SymmetryFieldParser::SymmetryFieldContext", "classSymmetryFieldParser_1_1SymmetryFieldContext.html", null ]
+    ] ],
+    [ "antlr4::tree::ParseTreeListener", null, [
+      [ "SymmetryFieldListener", "classSymmetryFieldListener.html", [
+        [ "SymmetryFieldBaseListener", "classSymmetryFieldBaseListener.html", null ]
+      ] ]
     ] ],
     [ "Antares::Data::PartHydro", "classAntares_1_1Data_1_1PartHydro.html", null ],
     [ "Antares::Data::PartRenewable", "classAntares_1_1Data_1_1PartRenewable.html", null ],
@@ -1130,6 +1239,7 @@ var hierarchy =
     [ "Antares::Solver::ProblemEntity", "structAntares_1_1Solver_1_1ProblemEntity.html", null ],
     [ "ProblemMatrixEssential", "classProblemMatrixEssential.html", [
       [ "LinearProblemMatrix", "classLinearProblemMatrix.html", null ],
+      [ "LinearProblemMatrixReserves", "classLinearProblemMatrixReserves.html", null ],
       [ "LinearProblemMatrixStartUpCosts", "classLinearProblemMatrixStartUpCosts.html", null ],
       [ "QuadraticProblemMatrix", "classQuadraticProblemMatrix.html", null ]
     ] ],
@@ -1159,11 +1269,56 @@ var hierarchy =
     [ "Antares::Data::Parameters::RenewableGeneration", "structAntares_1_1Data_1_1Parameters_1_1RenewableGeneration.html", null ],
     [ "Antares::Data::Parameters::IncludeOptions::Reserve", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions_1_1Reserve.html", null ],
     [ "RESERVE_JMOINS1", "structRESERVE__JMOINS1.html", null ],
+    [ "RESERVE_PARTICIPATION_BASE", "structRESERVE__PARTICIPATION__BASE.html", [
+      [ "RESERVE_PARTICIPATION_HYDRO", "structRESERVE__PARTICIPATION__HYDRO.html", null ],
+      [ "RESERVE_PARTICIPATION_STSTORAGE", "structRESERVE__PARTICIPATION__STSTORAGE.html", null ],
+      [ "RESERVE_PARTICIPATION_THERMAL", "structRESERVE__PARTICIPATION__THERMAL.html", null ]
+    ] ],
+    [ "RESERVE_PARTICIPATION_WITH_RESERVE_NAME< T >", "structRESERVE__PARTICIPATION__WITH__RESERVE__NAME.html", null ],
+    [ "Antares::Solver::Variable::State::ReserveData", "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData.html", null ],
+    [ "ReserveData", "structReserveData.html", null ],
+    [ "Antares::Data::StudyRuntimeInfos::ReserveIndexMap", "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1ReserveIndexMap.html", null ],
+    [ "Antares::Data::ReserveParticipationBase", "structAntares_1_1Data_1_1ReserveParticipationBase.html", [
+      [ "Antares::Data::StorageClusterReserveParticipation", "structAntares_1_1Data_1_1StorageClusterReserveParticipation.html", null ],
+      [ "Antares::Data::ThermalClusterReserveParticipation", "structAntares_1_1Data_1_1ThermalClusterReserveParticipation.html", null ]
+    ] ],
+    [ "Antares::Data::ReserveParticipationContainerBase< T >", "classAntares_1_1Data_1_1ReserveParticipationContainerBase.html", [
+      [ "Antares::Data::ReserveParticipationContainer< T >", "classAntares_1_1Data_1_1ReserveParticipationContainer.html", null ]
+    ] ],
+    [ "Antares::Data::ReserveParticipationContainerBase< StorageClusterReserveParticipation >", "classAntares_1_1Data_1_1ReserveParticipationContainerBase.html", [
+      [ "Antares::Data::ReserveParticipationContainer< StorageClusterReserveParticipation >", "classAntares_1_1Data_1_1ReserveParticipationContainer_3_01StorageClusterReserveParticipation_01_4.html", null ]
+    ] ],
+    [ "Antares::Data::ReserveParticipationContainerBase< ThermalClusterReserveParticipation >", "classAntares_1_1Data_1_1ReserveParticipationContainerBase.html", [
+      [ "Antares::Data::ReserveParticipationContainer< ThermalClusterReserveParticipation >", "classAntares_1_1Data_1_1ReserveParticipationContainer_3_01ThermalClusterReserveParticipation_01_4.html", null ]
+    ] ],
+    [ "Antares::Data::ReserveParticipationLoader< Derived >", "classAntares_1_1Data_1_1ReserveParticipationLoader.html", [
+      [ "Antares::Data::ReserveLoaderMixin< ThermalReserveLoader, ThermalClusterReserveParticipation >", "classAntares_1_1Data_1_1ReserveLoaderMixin.html", [
+        [ "Antares::Data::ThermalReserveLoader", "classAntares_1_1Data_1_1ThermalReserveLoader.html", null ]
+      ] ],
+      [ "Antares::Data::ReserveLoaderMixin< STStorageReserveLoader, StorageClusterReserveParticipation >", "classAntares_1_1Data_1_1ReserveLoaderMixin.html", [
+        [ "Antares::Data::STStorageReserveLoader", "classAntares_1_1Data_1_1STStorageReserveLoader.html", null ]
+      ] ],
+      [ "Antares::Data::ReserveLoaderMixin< HydroReserveLoader, StorageClusterReserveParticipation >", "classAntares_1_1Data_1_1ReserveLoaderMixin.html", [
+        [ "Antares::Data::HydroReserveLoader", "classAntares_1_1Data_1_1HydroReserveLoader.html", null ]
+      ] ],
+      [ "Antares::Data::ReserveLoaderMixin< Derived, ParticipationT >", "classAntares_1_1Data_1_1ReserveLoaderMixin.html", null ]
+    ] ],
+    [ "Antares::Solver::Variable::State::ReserveData::ReserveParticipationPerGroupForYear", "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1ReserveParticipationPerGroupForYear.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTraits< Details, CategoryFileLevel, Decimal, Results >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTraits.html", null ],
+    [ "RESERVES", "structRESERVES.html", null ],
+    [ "CORRESPONDANCES_DES_CONTRAINTES::ReservesIndices", "structCORRESPONDANCES__DES__CONTRAINTES_1_1ReservesIndices.html", null ],
+    [ "CORRESPONDANCES_DES_VARIABLES::ReservesIndices", "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html", null ],
+    [ "Antares::Data::ReserveTypeData< T >", "structAntares_1_1Data_1_1ReserveTypeData.html", null ],
+    [ "Antares::Data::ReserveTypeData< double >", "structAntares_1_1Data_1_1ReserveTypeData.html", null ],
+    [ "Antares::Data::ReserveTypeData< int >", "structAntares_1_1Data_1_1ReserveTypeData.html", null ],
+    [ "Antares::Data::ReserveTypeData< std::vector< int > >", "structAntares_1_1Data_1_1ReserveTypeData.html", null ],
+    [ "ReserveVariablesBoundsSetter", "structReserveVariablesBoundsSetter.html", null ],
     [ "Antares::Solver::Variable::Economy::ResidualLoadTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html", null ],
     [ "RESULTATS_HORAIRES", "structRESULTATS__HORAIRES.html", null ],
     [ "ResultMatrix", "classResultMatrix.html", null ],
     [ "RESULTS", "structRESULTS.html", null ],
     [ "results_remover.results_remover", "classresults__remover_1_1results__remover.html", null ],
+    [ "RESULTSRESERVES", "structRESULTSRESERVES.html", null ],
     [ "RightT", null, [
       [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
     ] ],
@@ -1334,6 +1489,13 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::PSP< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::Pumping< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::RenewableGeneration< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RenewableGeneration_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBase< VCardType, NextT, DerivedType >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBase_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorageGroup< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorageGroup_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationByThermalGroup< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCost_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationMarginalCost< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate< DerivedType, VCardType, NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate_1_1Statistics.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::ReserveParticipationUnsuppliedSpilled< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationUnsuppliedSpilled_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::ReservoirLevel< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ReservoirLevel_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::RowBalance< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance_1_1Statistics.html", null ],
     [ "Antares::Solver::Variable::Economy::SpilledEnergy< NextT >::Statistics< CDataLevel, CFile >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SpilledEnergy_1_1Statistics.html", null ],
@@ -1389,6 +1551,15 @@ var hierarchy =
     [ "Antares::Solver::Variable::Storage< VCardPSP >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardPumping >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardRenewableGeneration >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationByDispatchableOffUnitsPlant >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationByDispatchableOnUnitsPlant >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationByHydro >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationBySTStorage >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationBySTStorageGroup >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationByThermalGroup >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationMarginalCost >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
+    [ "Antares::Solver::Variable::Storage< VCardReserveParticipationUnsuppliedSpilled >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardReservoirLevel >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardRowBalance >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
     [ "Antares::Solver::Variable::Storage< VCardSpilledEnergy >", "structAntares_1_1Solver_1_1Variable_1_1Storage.html", null ],
@@ -1433,7 +1604,9 @@ var hierarchy =
     [ "STScumulativeConstaintFixture", "structSTScumulativeConstaintFixture.html", [
       [ "ConstraintBuilderFixture", "structConstraintBuilderFixture.html", null ]
     ] ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::STStorage", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1STStorage.html", null ],
     [ "Antares::Data::ShortTermStorage::STStorageCluster", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::STStorageGroup", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1STStorageGroup.html", null ],
     [ "Antares::Solver::Variable::Economy::STStorageInjectionByClusterTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageInjectionByClusterTraits.html", null ],
     [ "Antares::Data::ShortTermStorage::STStorageInput", "classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html", null ],
     [ "Antares::Solver::Variable::Economy::STStorageLevelsByClusterTraits", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageLevelsByClusterTraits.html", null ],
@@ -1487,6 +1660,7 @@ var hierarchy =
     [ "ThermalClusterConfig", "classThermalClusterConfig.html", null ],
     [ "Antares::IO::Inputs::YmlSystem::ThermalComponent", "structAntares_1_1IO_1_1Inputs_1_1YmlSystem_1_1ThermalComponent.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ThermalComponent", "structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::ThermalGroup", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1ThermalGroup.html", null ],
     [ "ThermalIniFile", "structThermalIniFile.html", [
       [ "FixtureFull", "structFixtureFull.html", null ]
     ] ],
@@ -1545,6 +1719,7 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::UnsuppliedEnergyTrait", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyTrait.html", [
       [ "Antares::Solver::Variable::Economy::UnsuppliedEnergyCSRTrait", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1UnsuppliedEnergyCSRTrait.html", null ]
     ] ],
+    [ "Antares::Solver::Variable::Economy::Reserves::Detail::UnsuppliedSpilled", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1Detail_1_1UnsuppliedSpilled.html", null ],
     [ "VALEURS_DE_NTC_ET_RESISTANCES", "structVALEURS__DE__NTC__ET__RESISTANCES.html", null ],
     [ "Antares::Data::ShortTermStorage::ValidateResult", "structAntares_1_1Data_1_1ShortTermStorage_1_1ValidateResult.html", null ],
     [ "Antares::IO::Inputs::YmlModel::Variable", "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html", null ],
@@ -1564,6 +1739,15 @@ var hierarchy =
     [ "Antares::Data::variablePrintInfoCollector", "classAntares_1_1Data_1_1variablePrintInfoCollector.html", null ],
     [ "VARIABLES_DUALES_INTERCONNEXIONS", "structVARIABLES__DUALES__INTERCONNEXIONS.html", null ],
     [ "Antares::Solver::Variable::Economy::VCard_Base< Traits >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< VCardT >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationByDispatchableOffUnitsPlant >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardRe8ca5252c0b5baca0eb2ea9007d15d7bf.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationByDispatchableOnUnitsPlant >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardRe30c16e4779b840feb64a58f747f5ad62.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationByHydro >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardReserveParticipationByHydro_01_4.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationBySTStorage >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardRe752bd73a11f9641e5c3c47cbf3c93bb3.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationBySTStorageGroup >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardRe08aacc203dfea0b7e1533acab24b4f07.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationByThermalGroup >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardReee21f36f851eb48f34578dbf73b6812c.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationMarginalCost >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardRe67c892e5a3089e92ba0f6674a17a1331.html", null ],
+    [ "Antares::Solver::Variable::vcard_caption_traits< Economy::Reserves::VCardReserveParticipationUnsuppliedSpilled >", "structAntares_1_1Solver_1_1Variable_1_1vcard__caption__traits_3_01Economy_1_1Reserves_1_1VCardRef6d2c06f44406d0631005b5715510f5c.html", null ],
     [ "Antares::Solver::Variable::VCardAllAreas", "structAntares_1_1Solver_1_1Variable_1_1VCardAllAreas.html", null ],
     [ "Antares::Solver::Variable::VCardAllBindingConstraints", "structAntares_1_1Solver_1_1Variable_1_1VCardAllBindingConstraints.html", null ],
     [ "Antares::Solver::Variable::VCardAllLinks", "structAntares_1_1Solver_1_1Variable_1_1VCardAllLinks.html", null ],
@@ -1609,6 +1793,8 @@ var hierarchy =
     [ "Antares::Solver::Variable::Economy::VCardPSP", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPSP.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardPumping", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardPumping.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardRenewableGeneration", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRenewableGeneration.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationBase< TraitsType >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html", null ],
+    [ "Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationCost", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationCost.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardReservoirLevel", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardReservoirLevel.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardRowBalance", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardRowBalance.html", null ],
     [ "Antares::Solver::Variable::Adequacy::VCardSpilledEnergy", "structAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1VCardSpilledEnergy.html", null ],

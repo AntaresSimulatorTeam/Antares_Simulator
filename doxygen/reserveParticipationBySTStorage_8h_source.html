@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: src/solver/variable/include/antares/solver/variable/economy/reserves/reserveParticipationBySTStorage.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('reserveParticipationBySTStorage_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">reserveParticipationBySTStorage.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">** Copyright 2007-2023 RTE</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">** Authors: Antares_Simulator Team</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">**</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">** This file is part of Antares_Simulator.</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">**</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">** Antares_Simulator is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">** it under the terms of the GNU General Public License as published by</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">** the Free Software Foundation, either version 3 of the License, or</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">** (at your option) any later version.</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">**</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">** There are special exceptions to the terms and conditions of the</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">** license as they are applied to this software. View the full text of</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">** the exceptions in file COPYING.txt in the directory of this software</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">** distribution</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">**</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">** Antares_Simulator is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">** but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">** GNU General Public License for more details.</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">**</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">** You should have received a copy of the GNU General Public License</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">** along with Antares_Simulator. If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">**</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;reserveParticipationTemplate.h&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Economy::Reserves</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html">ReserveParticipationBySTStorage</a></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    : <span class="keyword">public</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html">ReserveParticipationTemplate</a>&lt;ReserveParticipationBySTStorage&lt;NextT&gt;,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                          VCardReserveParticipationBySTStorage,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                                          NextT&gt;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#af037ca9c2b57aa01077bb88e9138bb80">   45</a></span>&#160;    <span class="keyword">typedef</span> NextT <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#af037ca9c2b57aa01077bb88e9138bb80">NextType</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#a3cdc25b49341e72bd82f295a7c3aa1b3">   47</a></span>&#160;    <span class="keyword">typedef</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html">VCardReserveParticipationBySTStorage</a> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#a3cdc25b49341e72bd82f295a7c3aa1b3">VCardType</a>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">typedef</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html">ReserveParticipationTemplate&lt;ReserveParticipationBySTStorage&lt;NextT&gt;</a>, <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#a3cdc25b49341e72bd82f295a7c3aa1b3">VCardType</a>, NextT&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#a0d10775f3cb769f1d909bf92b989c3f0">   50</a></span>&#160;      <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#a0d10775f3cb769f1d909bf92b989c3f0">AncestorType</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">using</span> AncestorType::pSize;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#afc50063a102546c774de2e6e214a7fc5">AncestorType::pValuesForTheCurrentYear</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html">ReserveParticipationBySTStorage</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">size_t</span> getSizeFromArea(Study*, Area* area)</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordflow">return</span> area-&gt;shortTermStorage.reserveParticipationsCount();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> populateHourlyValues(<span class="comment">/*non const*/</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">bool</span> hasIndexMapping(<span class="keyword">const</span> Study&amp; study, <span class="keyword">const</span> Area* area)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> study.parameters.include.reserves</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;               &amp;&amp; !study.runtime.reserveParticipationIndexMaps.value()</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                     .at(area-&gt;id)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                     .STStorageClusters.empty();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> buildReportForIndex(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>,</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                             uint i,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                             <span class="keywordtype">int</span> fileLevel,</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                             <span class="keywordtype">int</span> precision,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                             <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">auto</span> [reserveID, clusterName] = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.study.runtime.reserveParticipationIndexMaps</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                                          .value()</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                                          .at(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.area-&gt;id)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                                          .STStorageClusters.right.at(i);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">auto</span> reserveName = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.data.study.runtime.reserveIDToName.value().at(reserveID);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableCaption = reserveName + <span class="stringliteral">&quot;_&quot;</span> + clusterName;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>.variableUnit = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html#ab37bbb9884f73f9ce41f4ea239dcf936">VCardType::Unit</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#afc50063a102546c774de2e6e214a7fc5">pValuesForTheCurrentYear</a>[numSpace][i]</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;          .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">results</a>, fileLevel, precision);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}; <span class="comment">// class ReserveParticipationBySTStorage</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT&gt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">void</span> ReserveParticipationBySTStorage&lt;NextT&gt;::populateHourlyValues(State&amp; state,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                                                                  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;{</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">if</span> (hasIndexMapping(state.study, state.area))</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; resData = state.reserveData.value().at(state.area-&gt;index);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; clusterName:</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;             resData.reserveParticipationPerSTStorageClusterForYear.at(state.hourInTheYear)</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;               | std::views::keys)</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [reserveName, reserveParticipation]:</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                 resData.reserveParticipationPerSTStorageClusterForYear.at(state.hourInTheYear)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                   .at(clusterName))</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                pValuesForTheCurrentYear[numSpace]</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                        [state.study.runtime.reserveParticipationIndexMaps.value()</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                                           .at(state.area-&gt;id)</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                                           .STStorageClusters.left.at(</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                                             std::make_pair(reserveName, clusterName))]</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                                          .hour[state.hourInTheYear]</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                  = reserveParticipation;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;}</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy::Reserves</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorage</a></div><div class="ttdoc">Reserve Participation from short-term storage units.</div><div class="ttdef"><b>Definition:</b> reserveParticipationBySTStorage.h:42</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage_html_a0d10775f3cb769f1d909bf92b989c3f0"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#a0d10775f3cb769f1d909bf92b989c3f0">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorage::AncestorType</a></div><div class="ttdeci">ReserveParticipationTemplate&lt; ReserveParticipationBySTStorage&lt; NextT &gt;, VCardType, NextT &gt; AncestorType</div><div class="ttdoc">Ancestor.</div><div class="ttdef"><b>Definition:</b> reserveParticipationBySTStorage.h:50</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage_html_a3cdc25b49341e72bd82f295a7c3aa1b3"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#a3cdc25b49341e72bd82f295a7c3aa1b3">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorage::VCardType</a></div><div class="ttdeci">VCardReserveParticipationBySTStorage VCardType</div><div class="ttdoc">VCard.</div><div class="ttdef"><b>Definition:</b> reserveParticipationBySTStorage.h:47</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage_html_af037ca9c2b57aa01077bb88e9138bb80"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#af037ca9c2b57aa01077bb88e9138bb80">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorage::NextType</a></div><div class="ttdeci">NextT NextType</div><div class="ttdoc">Type of the next static variable.</div><div class="ttdef"><b>Definition:</b> reserveParticipationBySTStorage.h:45</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage_html_afc50063a102546c774de2e6e214a7fc5"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationBySTStorage.html#afc50063a102546c774de2e6e214a7fc5">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationBySTStorage::pValuesForTheCurrentYear</a></div><div class="ttdeci">VCardType::IntermediateValuesType pValuesForTheCurrentYear</div><div class="ttdoc">Intermediate values for each year.</div><div class="ttdef"><b>Definition:</b> reserveParticipationTemplate.h:238</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate</a></div><div class="ttdoc">Base template for all ReserveParticipation variable classes.</div><div class="ttdef"><b>Definition:</b> reserveParticipationTemplate.h:41</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate_html_afc50063a102546c774de2e6e214a7fc5"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html#afc50063a102546c774de2e6e214a7fc5">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate::pValuesForTheCurrentYear</a></div><div class="ttdeci">VCardType::IntermediateValuesType pValuesForTheCurrentYear</div><div class="ttdoc">Intermediate values for each year.</div><div class="ttdef"><b>Definition:</b> reserveParticipationTemplate.h:238</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IVariable_html_a297b1cefb9b8726c6beef8937aa8787c"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a297b1cefb9b8726c6beef8937aa8787c">Antares::Solver::Variable::IVariable&lt; ReserveParticipationBySTStorage&lt; Container::EndOfList &gt;, Container::EndOfList, VCardReserveParticipationBySTStorage &gt;::results</a></div><div class="ttdeci">const StoredResultType &amp; results() const</div><div class="ttdoc">The results.</div><div class="ttdef"><b>Definition:</b> variable.hxx:534</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:55</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">Antares::Solver::Variable::SurveyResults</a></div><div class="ttdoc">Class utility for building CSV results files.</div><div class="ttdef"><b>Definition:</b> surveyresults.h:24</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html">Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationBase</a></div><div class="ttdoc">Generic VCard template for reserve participation types.</div><div class="ttdef"><b>Definition:</b> reserveParticipationBase.h:171</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase_html_ab37bbb9884f73f9ce41f4ea239dcf936"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html#ab37bbb9884f73f9ce41f4ea239dcf936">Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationBase::Unit</a></div><div class="ttdeci">static std::string Unit()</div><div class="ttdoc">Unit.</div><div class="ttdef"><b>Definition:</b> reserveParticipationBase.h:179</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_3e822a6ee4d724687cb7bda3e29a5b91.html">variable</a></li><li class="navelem"><a class="el" href="dir_20840d7036cd3874771cb5f002fb682a.html">include</a></li><li class="navelem"><a class="el" href="dir_788e7f05e8620bbe44f03aee5eae2ddd.html">antares</a></li><li class="navelem"><a class="el" href="dir_8f58b5f8d3a1b7f0f618eab98f86bc8f.html">solver</a></li><li class="navelem"><a class="el" href="dir_6eccbe1c151b0c708db2d7dc07169755.html">variable</a></li><li class="navelem"><a class="el" href="dir_11a0355828d5552f473d70dc684a09d4.html">economy</a></li><li class="navelem"><a class="el" href="dir_a668e2192e744b83663d9a6110c7fcb7.html">reserves</a></li><li class="navelem"><b>reserveParticipationBySTStorage.h</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

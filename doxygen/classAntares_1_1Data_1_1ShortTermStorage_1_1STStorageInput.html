@@ -141,6 +141,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>validate</b> (<a clas
 <tr class="separator:aa55981341015887337fa940a2b21f27a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac1dd8a3674752fa6f30fde4c224fa63"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#aac1dd8a3674752fa6f30fde4c224fa63">loadSeriesFromFolder</a> (const std::filesystem::path &amp;folder, <a class="el" href="classAntares_1_1Data_1_1StudyVersion.html">StudyVersion</a> studyVersion) const</td></tr>
 <tr class="separator:aac1dd8a3674752fa6f30fde4c224fa63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a407344e979fddbf1d9b641313c8d04ea"><td class="memItemLeft" align="right" valign="top"><a id="a407344e979fddbf1d9b641313c8d04ea"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadReserveParticipations</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const std::filesystem::path &amp;file)</td></tr>
+<tr class="separator:a407344e979fddbf1d9b641313c8d04ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2339ee00e3c45b75a44233684dc2daf"><td class="memItemLeft" align="right" valign="top"><a id="af2339ee00e3c45b75a44233684dc2daf"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#af2339ee00e3c45b75a44233684dc2daf">count</a> () const</td></tr>
 <tr class="memdesc:af2339ee00e3c45b75a44233684dc2daf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of enabled ST storages, ignoring disabled ST storages. <br /></td></tr>
@@ -152,6 +155,29 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadAdditionalConstra
 uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#a14dd81b0071c724a97c42f0e56d30b61">removeDisabledClusters</a> ()</td></tr>
 <tr class="memdesc:a14dd81b0071c724a97c42f0e56d30b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">erase disabled cluster from the vector <br /></td></tr>
 <tr class="separator:a14dd81b0071c724a97c42f0e56d30b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aded097f4633514c7377b8408bafa1f7c"><td class="memItemLeft" align="right" valign="top"><a id="aded097f4633514c7377b8408bafa1f7c"></a>
+std::pair&lt; std::string, ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#aded097f4633514c7377b8408bafa1f7c">reserveParticipationClusterAt</a> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *area, unsigned int index) const</td></tr>
+<tr class="memdesc:aded097f4633514c7377b8408bafa1f7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the names of the cluster and reserve of the participation. <br /></td></tr>
+<tr class="separator:aded097f4633514c7377b8408bafa1f7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70706046bc2333fab76bbb12c6ba14ac"><td class="memItemLeft" align="right" valign="top"><a id="a70706046bc2333fab76bbb12c6ba14ac"></a>
+std::pair&lt; std::string, ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageInput.html#a70706046bc2333fab76bbb12c6ba14ac">reserveParticipationGroupAt</a> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *area, unsigned int index) const</td></tr>
+<tr class="memdesc:a70706046bc2333fab76bbb12c6ba14ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the names of the group and reserve of the participation. <br /></td></tr>
+<tr class="separator:a70706046bc2333fab76bbb12c6ba14ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1793616f047305f6d74cb173d806ea9f"><td class="memItemLeft" align="right" valign="top"><a id="a1793616f047305f6d74cb173d806ea9f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveToFolder</b> (const std::string &amp;folder) const</td></tr>
+<tr class="separator:a1793616f047305f6d74cb173d806ea9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3707aa93d6f154e15705dd11e8b8258"><td class="memItemLeft" align="right" valign="top"><a id="ae3707aa93d6f154e15705dd11e8b8258"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveDataSeriesToFolder</b> (const std::string &amp;folder) const</td></tr>
+<tr class="separator:ae3707aa93d6f154e15705dd11e8b8258"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbf2e70d2d2eec0e40d650d31da94045"><td class="memItemLeft" align="right" valign="top"><a id="abbf2e70d2d2eec0e40d650d31da94045"></a>
+<a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">STStorageCluster</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>findInAll</b> (const std::string &amp;name)</td></tr>
+<tr class="separator:abbf2e70d2d2eec0e40d650d31da94045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6711a4a3d9a5cb2277c3a2b62baa4f90"><td class="memItemLeft" align="right" valign="top"><a id="a6711a4a3d9a5cb2277c3a2b62baa4f90"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getClusterIdx</b> (<a class="el" href="classAntares_1_1Data_1_1ShortTermStorage_1_1STStorageCluster.html">STStorageCluster</a> &amp;cluster) const</td></tr>
+<tr class="separator:a6711a4a3d9a5cb2277c3a2b62baa4f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0d080db8911a2562125b02efc6b3a3f"><td class="memItemLeft" align="right" valign="top"><a id="ab0d080db8911a2562125b02efc6b3a3f"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>reserveParticipationsCount</b> () const</td></tr>
+<tr class="separator:ab0d080db8911a2562125b02efc6b3a3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa718c71d4e8b8a82a2b8177806564d80"><td class="memItemLeft" align="right" valign="top"><a id="aa718c71d4e8b8a82a2b8177806564d80"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resizeTimeseriesNumbers</b> (unsigned int nbYears)</td></tr>
 <tr class="separator:aa718c71d4e8b8a82a2b8177806564d80"><td class="memSeparator" colspan="2">&#160;</td></tr>

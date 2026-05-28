@@ -1,5 +1,6 @@
 var classAntares_1_1Data_1_1PartHydro =
 [
+    [ "HydroReserveParticipationWithName", "structAntares_1_1Data_1_1PartHydro_1_1HydroReserveParticipationWithName.html", "structAntares_1_1Data_1_1PartHydro_1_1HydroReserveParticipationWithName" ],
     [ "weeklyHydroMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1", [
       [ "genMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a144240360470d881195163d3ffb16507", null ],
       [ "pumpMod", "classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a46e953e6bdbeffa9e047d86c905a9d2e", null ]
@@ -8,7 +9,11 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "~PartHydro", "classAntares_1_1Data_1_1PartHydro.html#aea4cb3ee6e3b5739f47ed5637d43d55c", null ],
     [ "CheckDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#a750b7bb11e93e55240989f71f87e1a51", null ],
     [ "copyFrom", "classAntares_1_1Data_1_1PartHydro.html#aea1b2083ab288f378d99f0c355337286", null ],
+    [ "count", "classAntares_1_1Data_1_1PartHydro.html#a2e2b1c2fe0c27f7a755e8ef3693d85b7", null ],
     [ "LoadDailyMaxEnergy", "classAntares_1_1Data_1_1PartHydro.html#a936d638d0cfaeec15c878f97e367b965", null ],
+    [ "loadReserveParticipations", "classAntares_1_1Data_1_1PartHydro.html#a493df76dea6efb4fc8e3596c19741ca9", null ],
+    [ "reserveParticipationAt", "classAntares_1_1Data_1_1PartHydro.html#a9b8c00b6dc9b64efae8ea322766f3fbc", null ],
+    [ "reserveParticipationsCount", "classAntares_1_1Data_1_1PartHydro.html#a6432e751d7b5976db4b4aaa8f8863803", null ],
     [ "reset", "classAntares_1_1Data_1_1PartHydro.html#a62e9b91214feb6cded4b8340a77ec4de", null ],
     [ "allocation", "classAntares_1_1Data_1_1PartHydro.html#abef4d91c29b2032f5a1a00e8a05265c3", null ],
     [ "creditModulation", "classAntares_1_1Data_1_1PartHydro.html#a60e0880e27ad840a15123f0b07a7cd40", null ],
@@ -30,6 +35,7 @@ var classAntares_1_1Data_1_1PartHydro =
     [ "powerToLevel", "classAntares_1_1Data_1_1PartHydro.html#a7e223043e3ce64cd2ec889f97a78c447", null ],
     [ "prepro", "classAntares_1_1Data_1_1PartHydro.html#afc04e78012722d4e0a1fc7a5aa2a0378", null ],
     [ "pumpingEfficiency", "classAntares_1_1Data_1_1PartHydro.html#af823acf557789b06efc959a3e3679458", null ],
+    [ "reserveParticipationContainer", "classAntares_1_1Data_1_1PartHydro.html#a4c75d72a3c4a27b0f5ea571134393064", null ],
     [ "reservoirCapacity", "classAntares_1_1Data_1_1PartHydro.html#a0434867ec92f530701a690a1b729be77", null ],
     [ "reservoirManagement", "classAntares_1_1Data_1_1PartHydro.html#ae7e8bd32e00515c61d8b74bf66895c44", null ],
     [ "series", "classAntares_1_1Data_1_1PartHydro.html#a0ffcc118af62ecfc6449f232f5482695", null ],

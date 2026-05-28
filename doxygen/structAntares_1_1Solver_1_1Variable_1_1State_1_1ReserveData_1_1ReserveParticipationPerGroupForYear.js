@@ -1,0 +1,5 @@
+var structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1ReserveParticipationPerGroupForYear =
+[
+    [ "shortTermStorageGroupsReserveParticipation", "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1ReserveParticipationPerGroupForYear.html#ae766657670b643c119a4ca77d004e8ad", null ],
+    [ "thermalGroupsReserveParticipation", "structAntares_1_1Solver_1_1Variable_1_1State_1_1ReserveData_1_1ReserveParticipationPerGroupForYear.html#ae8c984cbd13b36881cce872fe4016bf5", null ]
+];

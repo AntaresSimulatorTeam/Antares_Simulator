@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['optfixedsize_4535',['optFixedSize',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a49efeee2664a8ac46263360755d54140',1,'Antares::Matrix']]],
-  ['optimmediate_4536',['optImmediate',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a0e4056ff6da75ffd399efee823cc8508',1,'Antares::Matrix']]],
-  ['optneverfails_4537',['optNeverFails',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a34cdfceff80957c5a70e8c89f022a7b5',1,'Antares::Matrix']]],
-  ['optnone_4538',['optNone',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2aeace5101cedad1888fbf3accbe4509ae',1,'Antares::Matrix']]],
-  ['optnowarnifempty_4539',['optNoWarnIfEmpty',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a921105aa2239c4f7cc8e1532a24f89ee',1,'Antares::Matrix']]],
-  ['optquiet_4540',['optQuiet',['../classAntares_1_1Matrix.html#a1e00393f6359fa63e2bb0b5c35d279d2a1d85b0d52cc96d30d04776011c3819e3',1,'Antares::Matrix']]]
+  ['nodedepthforgui_4902',['nodeDepthForGUI',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationBase.html#a6275052cc32e206b02f852b05698026ea7accebc3dbc4dbbf484f532b2a3fef02',1,'Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationBase::nodeDepthForGUI()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationCost.html#a139078a1087342ba963666f5125c7b29af042e863a81a5e9f5dc8218863eaa060',1,'Antares::Solver::Variable::Economy::Reserves::VCardReserveParticipationCost::nodeDepthForGUI()']]],
+  ['npomax_4903',['npoMax',['../classAntares_1_1Data_1_1PreproAvailability.html#a00985b2c8bd2321b743b3478cd5db806a493804296d0c2141a1e32cca466daff7',1,'Antares::Data::PreproAvailability']]],
+  ['npomin_4904',['npoMin',['../classAntares_1_1Data_1_1PreproAvailability.html#a00985b2c8bd2321b743b3478cd5db806ac7ef8204a9d29782fca2f44f794b1ab8',1,'Antares::Data::PreproAvailability']]]
 ];

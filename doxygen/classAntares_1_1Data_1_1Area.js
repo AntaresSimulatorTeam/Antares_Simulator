@@ -18,6 +18,7 @@ var classAntares_1_1Data_1_1Area =
     [ "xcastData", "classAntares_1_1Data_1_1Area.html#af108605e74425402ffa0c5cf30b77633", null ],
     [ "xcastData", "classAntares_1_1Data_1_1Area.html#ad7c6893cf3230f82c970cbc2631c8799", null ],
     [ "adequacyPatchMode", "classAntares_1_1Data_1_1Area.html#ae5c8f831b3496d4e1de0a541f81798eb", null ],
+    [ "allCapacityReservations", "classAntares_1_1Data_1_1Area.html#a49483268e3e8387ef2b7a3cab150b40d", null ],
     [ "filterSynthesis", "classAntares_1_1Data_1_1Area.html#a4b072cf9423c7e00301fe3d536f2ca20", null ],
     [ "filterYearByYear", "classAntares_1_1Data_1_1Area.html#a0d0be28ae244a6617e86872e78983980", null ],
     [ "hydro", "classAntares_1_1Data_1_1Area.html#a775400215ce72bf8376fb16c63e67251", null ],

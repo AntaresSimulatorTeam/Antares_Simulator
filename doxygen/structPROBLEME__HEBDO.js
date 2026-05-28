@@ -2,6 +2,7 @@ var structPROBLEME__HEBDO =
 [
     [ "adequacyPatchRuntimeData", "structPROBLEME__HEBDO.html#a1862a41c78d34acfc9610039167ba523", null ],
     [ "AllMustRunGeneration", "structPROBLEME__HEBDO.html#aec9c53d5a9c97e2ea31496246ff126e1", null ],
+    [ "allReserves", "structPROBLEME__HEBDO.html#a9614128358d659f120c737c98ea7360f", null ],
     [ "BruitSurCoutHydraulique", "structPROBLEME__HEBDO.html#ae1d159eeaba5de72494f4fdc7e1584b3", null ],
     [ "CaracteristiquesHydrauliques", "structPROBLEME__HEBDO.html#acb27e202eae9b83f92ef32e453667e56", null ],
     [ "CoefficientEcretementPMaxHydraulique", "structPROBLEME__HEBDO.html#af9122f04723248d1405e9749fc1a7216", null ],
@@ -56,8 +57,8 @@ var structPROBLEME__HEBDO =
     [ "NumeroDeVariableStockFinal", "structPROBLEME__HEBDO.html#a4bdf08bfe1e3951808913ee0a10a3f36", null ],
     [ "NumeroDIntervalleOptimiseDuPasDeTemps", "structPROBLEME__HEBDO.html#a1dd80769561ea37f8ae13121f7187d90", null ],
     [ "OptimisationAuPasHebdomadaire", "structPROBLEME__HEBDO.html#a9e9a14038b363216061cdeb9737d8327", null ],
-    [ "OptimisationAvecCoutsDeDemarrage", "structPROBLEME__HEBDO.html#a079050d172300392d7590241f6bb0b58", null ],
     [ "OptimisationAvecVariablesEntieres", "structPROBLEME__HEBDO.html#a6bc01e18c5cdf57b73064a861b8b98ac", null ],
+    [ "OptimisationNotFastMode", "structPROBLEME__HEBDO.html#a44e1cf5c89585f49aaa528754d5340da", null ],
     [ "optimizationStatistics", "structPROBLEME__HEBDO.html#a02de41f35ec2c2933e4d409c17a94c39", null ],
     [ "PaliersThermiquesDuPays", "structPROBLEME__HEBDO.html#a25efe694aabb780fda4e774728e30942", null ],
     [ "PaysExtremiteDeLInterconnexion", "structPROBLEME__HEBDO.html#ae784b6c023931c35dc2e96b01c2a759e", null ],
@@ -73,6 +74,7 @@ var structPROBLEME__HEBDO =
     [ "TypeDeLissageHydraulique", "structPROBLEME__HEBDO.html#ae8023267ef14d9f85f29abc6a8ef65cc", null ],
     [ "ValeursDeNTC", "structPROBLEME__HEBDO.html#a19a7297940be34f7abc2e07e15754e97", null ],
     [ "VariablesDualesDesContraintesDeNTC", "structPROBLEME__HEBDO.html#a4582a58e2e7ca2763e20453cb784fd13", null ],
+    [ "WaterValueAccurate", "structPROBLEME__HEBDO.html#a52859336a85291b541b8563460b85aa8", null ],
     [ "weekInTheYear", "structPROBLEME__HEBDO.html#a79876a6aba8d6117ddf02a51c321de06", null ],
     [ "YaDeLaReserveJmoins1", "structPROBLEME__HEBDO.html#a48ad4f5e3167ff6bad51145b1dfd51bb", null ],
     [ "year", "structPROBLEME__HEBDO.html#a52b08970106a04281ee4abc89740456f", null ]

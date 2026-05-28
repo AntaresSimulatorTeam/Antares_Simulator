@@ -8,6 +8,7 @@ var structENERGIES__ET__PUISSANCES__HYDRAULIQUES =
     [ "ContrainteDePmaxHydrauliqueHoraireRef", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#a362b5a0cc131e80f4ada421ad7a08cd9", null ],
     [ "ContrainteDePmaxPompageHoraire", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#ae5a6fdf7f2965561a5743915fc3b3ab5", null ],
     [ "DirectLevelAccess", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#a9822aaf87662097a5e5e52994610a15f", null ],
+    [ "GlobalHydroIndex", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#ade56b3351acf59f584f0ca71249d7a6f", null ],
     [ "InflowForTimeInterval", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#ad66729b1fbfca8b3a996b431002df8d8", null ],
     [ "MaxDesPmaxHydrauliques", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#a9be042fb7fd0e25c173ff85c9c086dda", null ],
     [ "MaxEnergieHydrauParIntervalleOptimise", "structENERGIES__ET__PUISSANCES__HYDRAULIQUES.html#a2efecd1476cfd70c541f27944c804f44", null ],

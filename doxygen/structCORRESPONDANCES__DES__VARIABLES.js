@@ -1,5 +1,6 @@
 var structCORRESPONDANCES__DES__VARIABLES =
 [
+    [ "ReservesIndices", "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html", "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices" ],
     [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html#a5ba80b194b3c3ce5a73669126d02f996", null ],
     [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html#acbf3f7e9e32cc234c343a5c000303db1", null ],
     [ "CORRESPONDANCES_DES_VARIABLES", "structCORRESPONDANCES__DES__VARIABLES.html#a3135d68a67057b48a35415ff63c84bb7", null ],
@@ -24,6 +25,7 @@ var structCORRESPONDANCES__DES__VARIABLES =
     [ "NumeroDeVariablesVariationHydALaBaisse", "structCORRESPONDANCES__DES__VARIABLES.html#abb5a9836d85a7ff725733d62112bede0", null ],
     [ "NumeroDeVariablesVariationHydALaHausse", "structCORRESPONDANCES__DES__VARIABLES.html#a1a960a8738ad46f55a7caf69078cc256", null ],
     [ "OverflowVariable", "structCORRESPONDANCES__DES__VARIABLES.html#a3bfb3f560cadc8699f8e82ead43c90e5", null ],
-    [ "SIM_ShortTermStorage", "structCORRESPONDANCES__DES__VARIABLES.html#a552fd5d7c474607916629814d6706f50", null ],
+    [ "reservesIndices", "structCORRESPONDANCES__DES__VARIABLES.html#a0b9848744b4e323df89243893d59599e", null ],
+    [ "SIM_ShortTermStorage", "structCORRESPONDANCES__DES__VARIABLES.html#a0c8129fd6a190f5729745d8abc6e2c16", null ],
     [ "WithdrawalVariable", "structCORRESPONDANCES__DES__VARIABLES.html#a67aea8d5c3d6be4abf25f005d0373aab", null ]
 ];

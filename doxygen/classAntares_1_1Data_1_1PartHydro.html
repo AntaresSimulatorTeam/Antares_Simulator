@@ -124,6 +124,7 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1PartHydro.html
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
@@ -139,13 +140,18 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1PartHydro.html
 
 <p><code>#include &lt;<a class="el" href="libs_2antares_2study_2include_2antares_2study_2parts_2hydro_2container_8h_source.html">container.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Data_1_1PartHydro_1_1HydroReserveParticipationWithName.html">HydroReserveParticipationWithName</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a56a6561fa6a133adbff418d206d6f8f3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a56a6561fa6a133adbff418d206d6f8f3a97a950d5f20f0e2dd7104bcb4a30b1ae">minimum</a> = 0
-, <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a56a6561fa6a133adbff418d206d6f8f3a59f74790bdeafe2587bcef043d1c3e8a">average</a>
-, <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a56a6561fa6a133adbff418d206d6f8f3a2891a6065599b69fbbf774a502ff32ae">maximum</a>
+<tr class="memitem:a27f500ef95885160359ccc9118f36c43"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a27f500ef95885160359ccc9118f36c43a97a950d5f20f0e2dd7104bcb4a30b1ae">minimum</a> = 0
+, <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a27f500ef95885160359ccc9118f36c43a59f74790bdeafe2587bcef043d1c3e8a">average</a>
+, <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a27f500ef95885160359ccc9118f36c43a2891a6065599b69fbbf774a502ff32ae">maximum</a>
  }</td></tr>
-<tr class="separator:a56a6561fa6a133adbff418d206d6f8f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a27f500ef95885160359ccc9118f36c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79728c73ad10d6c7b7a93880bee019e1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1">weeklyHydroMod</a> { <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a144240360470d881195163d3ffb16507">genMod</a> = 0
 , <a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a79728c73ad10d6c7b7a93880bee019e1a46e953e6bdbeffa9e047d86c905a9d2e">pumpMod</a>
  }</td></tr>
@@ -175,6 +181,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a750b7bb11e93e55240989f71f87e1a51"><td class="memItemLeft" align="right" valign="top"><a id="a750b7bb11e93e55240989f71f87e1a51"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckDailyMaxEnergy</b> (const AnyString &amp;areaName)</td></tr>
 <tr class="separator:a750b7bb11e93e55240989f71f87e1a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6432e751d7b5976db4b4aaa8f8863803"><td class="memItemLeft" align="right" valign="top"><a id="a6432e751d7b5976db4b4aaa8f8863803"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>reserveParticipationsCount</b> () const</td></tr>
+<tr class="separator:a6432e751d7b5976db4b4aaa8f8863803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b8c00b6dc9b64efae8ea322766f3fbc"><td class="memItemLeft" align="right" valign="top"><a id="a9b8c00b6dc9b64efae8ea322766f3fbc"></a>
+std::optional&lt; ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>reserveParticipationAt</b> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *area, unsigned int index) const</td></tr>
+<tr class="separator:a9b8c00b6dc9b64efae8ea322766f3fbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e2b1c2fe0c27f7a755e8ef3693d85b7"><td class="memItemLeft" align="right" valign="top"><a id="a2e2b1c2fe0c27f7a755e8ef3693d85b7"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> () const</td></tr>
+<tr class="separator:a2e2b1c2fe0c27f7a755e8ef3693d85b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a493df76dea6efb4fc8e3596c19741ca9"><td class="memItemLeft" align="right" valign="top"><a id="a493df76dea6efb4fc8e3596c19741ca9"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadReserveParticipations</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const std::filesystem::path &amp;file)</td></tr>
+<tr class="separator:a493df76dea6efb4fc8e3596c19741ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -291,6 +309,8 @@ std::unordered_map&lt; uint, <a class="el" href="structAntares_1_1Data_1_1AreaDe
 <tr class="memitem:a36f7dbaea392641b1b66a419df926a7e"><td class="memItemLeft" align="right" valign="top"><a id="a36f7dbaea392641b1b66a419df926a7e"></a>
 std::vector&lt; std::optional&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>deltaBetweenFinalAndInitialLevels</b></td></tr>
 <tr class="separator:a36f7dbaea392641b1b66a419df926a7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c75d72a3c4a27b0f5ea571134393064"><td class="memItemLeft" align="right" valign="top">ReserveOpt&lt; <a class="el" href="classAntares_1_1Data_1_1ReserveParticipationContainer.html">ReserveParticipationContainer</a>&lt; <a class="el" href="structAntares_1_1Data_1_1StorageClusterReserveParticipation.html">StorageClusterReserveParticipation</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1PartHydro.html#a4c75d72a3c4a27b0f5ea571134393064">reserveParticipationContainer</a></td></tr>
+<tr class="separator:a4c75d72a3c4a27b0f5ea571134393064"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad96b766d46dc1f81cd1585f1bfabac0e"><td class="memItemLeft" align="right" valign="top"><a id="ad96b766d46dc1f81cd1585f1bfabac0e"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>overflowSpilledCostDifference</b> = 1.</td></tr>
 <tr class="separator:ad96b766d46dc1f81cd1585f1bfabac0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -298,8 +318,8 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>overflowSpilledCost
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Hydro for a single area. </p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="a56a6561fa6a133adbff418d206d6f8f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56a6561fa6a133adbff418d206d6f8f3">&#9670;&nbsp;</a></span>anonymous enum</h2>
+<a id="a27f500ef95885160359ccc9118f36c43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27f500ef95885160359ccc9118f36c43">&#9670;&nbsp;</a></span>anonymous enum</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,11 +330,11 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>overflowSpilledCost
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a56a6561fa6a133adbff418d206d6f8f3a97a950d5f20f0e2dd7104bcb4a30b1ae"></a>minimum&#160;</td><td class="fielddoc"><p>The minimum value. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a27f500ef95885160359ccc9118f36c43a97a950d5f20f0e2dd7104bcb4a30b1ae"></a>minimum&#160;</td><td class="fielddoc"><p>The minimum value. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a56a6561fa6a133adbff418d206d6f8f3a59f74790bdeafe2587bcef043d1c3e8a"></a>average&#160;</td><td class="fielddoc"><p>The average value. </p>
+<tr><td class="fieldname"><a id="a27f500ef95885160359ccc9118f36c43a59f74790bdeafe2587bcef043d1c3e8a"></a>average&#160;</td><td class="fielddoc"><p>The average value. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a56a6561fa6a133adbff418d206d6f8f3a2891a6065599b69fbbf774a502ff32ae"></a>maximum&#160;</td><td class="fielddoc"><p>The maximum value. </p>
+<tr><td class="fieldname"><a id="a27f500ef95885160359ccc9118f36c43a2891a6065599b69fbbf774a502ff32ae"></a>maximum&#160;</td><td class="fielddoc"><p>The maximum value. </p>
 </td></tr>
 </table>
 
@@ -480,6 +500,21 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>overflowSpilledCost
       </table>
 </div><div class="memdoc">
 <p>Daily max power ({generating max <a class="el" href="structPower.html">Power</a>, generating max energy, pumping max power, pumping max energy}x365) </p>
+
+</div>
+</div>
+<a id="a4c75d72a3c4a27b0f5ea571134393064"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c75d72a3c4a27b0f5ea571134393064">&#9670;&nbsp;</a></span>reserveParticipationContainer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ReserveOpt&lt;<a class="el" href="classAntares_1_1Data_1_1ReserveParticipationContainer.html">ReserveParticipationContainer</a>&lt;<a class="el" href="structAntares_1_1Data_1_1StorageClusterReserveParticipation.html">StorageClusterReserveParticipation</a>&gt; &gt; Antares::Data::PartHydro::reserveParticipationContainer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Reserve participation container to store the participation of the cluster in the reserves and the symmetries </p>
 
 </div>
 </div>

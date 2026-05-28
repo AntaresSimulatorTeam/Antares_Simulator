@@ -8,6 +8,7 @@ var structAntares_1_1Data_1_1Parameters_1_1IncludeOptions =
     [ "exportStructure", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ad393903bec8bd807a8bd375b32b1d3ee", null ],
     [ "hurdleCosts", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a7d8a25ee0fb5862708223cac004f4acf", null ],
     [ "reserve", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ab5aa63814d65c5f62b928000cfff24b6", null ],
+    [ "reserves", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a51ad3fe03c8b7b660200d136154505e9", null ],
     [ "thermal", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#ad43f4298444777e29348787f870449e8", null ],
     [ "unfeasibleProblemBehavior", "structAntares_1_1Data_1_1Parameters_1_1IncludeOptions.html#a8ab817b5425154ce88b258042b37522f", null ]
 ];

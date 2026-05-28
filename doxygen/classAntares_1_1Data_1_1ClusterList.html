@@ -178,6 +178,12 @@ SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (
 <tr class="memitem:aa64e1edd769fb8509917a8845ab7033f"><td class="memItemLeft" align="right" valign="top"><a id="aa64e1edd769fb8509917a8845ab7033f"></a>
 SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><b>enabledClusterAt</b> (unsigned int index) const</td></tr>
 <tr class="separator:aa64e1edd769fb8509917a8845ab7033f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a653c45c22d5f6cc7d3bad2341e4246cb"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ClusterList.html#a653c45c22d5f6cc7d3bad2341e4246cb">reserveParticipationClusterAt</a> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *area, unsigned int index) const</td></tr>
+<tr class="memdesc:a653c45c22d5f6cc7d3bad2341e4246cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the cluster and reserve names for a given index of reserveParticipation.  <a href="classAntares_1_1Data_1_1ClusterList.html#a653c45c22d5f6cc7d3bad2341e4246cb">More...</a><br /></td></tr>
+<tr class="separator:a653c45c22d5f6cc7d3bad2341e4246cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e481db8938fd5f66a6c51729e55bb54"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string, ReserveID &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ClusterList.html#a0e481db8938fd5f66a6c51729e55bb54">reserveParticipationGroupAt</a> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *area, unsigned int index) const</td></tr>
+<tr class="memdesc:a0e481db8938fd5f66a6c51729e55bb54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the group and reserve names for a given index of reserveParticipation.  <a href="classAntares_1_1Data_1_1ClusterList.html#a0e481db8938fd5f66a6c51729e55bb54">More...</a><br /></td></tr>
+<tr class="separator:a0e481db8938fd5f66a6c51729e55bb54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2742ab55510a24092d9cb7105c73bd7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e">resizeAllTimeseriesNumbers</a> (uint n) const</td></tr>
 <tr class="memdesc:a2742ab55510a24092d9cb7105c73bd7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize all matrices dedicated to the sampled timeseries numbers.  <a href="classAntares_1_1Data_1_1ClusterList.html#a2742ab55510a24092d9cb7105c73bd7e">More...</a><br /></td></tr>
 <tr class="separator:a2742ab55510a24092d9cb7105c73bd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,6 +209,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sortCompleteList</b> 
 <tr class="memitem:a9b9d5385626a8d8a5ec3e3416bd62401"><td class="memItemLeft" align="right" valign="top"><a id="a9b9d5385626a8d8a5ec3e3416bd62401"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFolder</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const std::filesystem::path &amp;folder)</td></tr>
 <tr class="separator:a9b9d5385626a8d8a5ec3e3416bd62401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16be7f1ee1f604d17dc4add413489ee4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ClusterList.html#a16be7f1ee1f604d17dc4add413489ee4">loadReserveParticipations</a> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const std::filesystem::path &amp;file)</td></tr>
+<tr class="memdesc:a16be7f1ee1f604d17dc4add413489ee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the reserve participation. For each entry, it checks if the reserve has been added to area.allCapacityReservations, if not then log the name of the reserve that has not been found.  <a href="classAntares_1_1Data_1_1ClusterList.html#a16be7f1ee1f604d17dc4add413489ee4">More...</a><br /></td></tr>
+<tr class="separator:a16be7f1ee1f604d17dc4add413489ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f13a4fb77ccb1889cc18f26537ca1bf"><td class="memItemLeft" align="right" valign="top"><a id="a6f13a4fb77ccb1889cc18f26537ca1bf"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>saveDataSeriesToFolder</b> (const AnyString &amp;folder) const</td></tr>
 <tr class="separator:a6f13a4fb77ccb1889cc18f26537ca1bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -284,6 +293,132 @@ template&lt;class ClusterT &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to a cluster. nullptr if not found </dd></dl>
+
+</div>
+</div>
+<a id="a16be7f1ee1f604d17dc4add413489ee4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16be7f1ee1f604d17dc4add413489ee4">&#9670;&nbsp;</a></span>loadReserveParticipations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ClusterT &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classAntares_1_1Data_1_1ClusterList.html">Antares::Data::ClusterList</a>&lt; ClusterT &gt;::loadReserveParticipations </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;&#160;</td>
+          <td class="paramname"><em>area</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load the reserve participation. For each entry, it checks if the reserve has been added to area.allCapacityReservations, if not then log the name of the reserve that has not been found. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ClusterT</td><td>Type of the <a class="el" href="classAntares_1_1Data_1_1Cluster.html">Cluster</a> list </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">area</td><td>Reference to area </td></tr>
+    <tr><td class="paramname">file</td><td>File to read the reserve participations entries </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>false if the file opening failed, true otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a653c45c22d5f6cc7d3bad2341e4246cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a653c45c22d5f6cc7d3bad2341e4246cb">&#9670;&nbsp;</a></span>reserveParticipationClusterAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ClusterT &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; std::string, ReserveID &gt; <a class="el" href="classAntares_1_1Data_1_1ClusterList.html">Antares::Data::ClusterList</a>&lt; ClusterT &gt;::reserveParticipationClusterAt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</td>
+          <td class="paramname"><em>area</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the cluster and reserve names for a given index of reserveParticipation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">area</td><td>The area where to look for the reserveParticipation </td></tr>
+    <tr><td class="paramname">index</td><td>Global index of the reserveParicipation </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the cluster and reserve names </dd></dl>
+
+</div>
+</div>
+<a id="a0e481db8938fd5f66a6c51729e55bb54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e481db8938fd5f66a6c51729e55bb54">&#9670;&nbsp;</a></span>reserveParticipationGroupAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ClusterT &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; std::string, ReserveID &gt; <a class="el" href="classAntares_1_1Data_1_1ClusterList.html">Antares::Data::ClusterList</a>&lt; ClusterT &gt;::reserveParticipationGroupAt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> *&#160;</td>
+          <td class="paramname"><em>area</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the group and reserve names for a given index of reserveParticipation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">area</td><td>The area where to look for the reserveParticipation </td></tr>
+    <tr><td class="paramname">index</td><td>Global index of the reserveParicipation </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the group and reserve names </dd></dl>
 
 </div>
 </div>

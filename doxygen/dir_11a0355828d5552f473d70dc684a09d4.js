@@ -2,6 +2,7 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
 [
     [ "bindingConstraints", "dir_8dec28fb61697b4b1b15e7e6c35c6364.html", "dir_8dec28fb61697b4b1b15e7e6c35c6364" ],
     [ "links", "dir_b62c0098d8d77819e143d0f8e4c47469.html", "dir_b62c0098d8d77819e143d0f8e4c47469" ],
+    [ "reserves", "dir_a668e2192e744b83663d9a6110c7fcb7.html", "dir_a668e2192e744b83663d9a6110c7fcb7" ],
     [ "all.h", "economy_2all_8h_source.html", null ],
     [ "avail-dispatchable-generation.h", "avail-dispatchable-generation_8h_source.html", null ],
     [ "balance.h", "balance_8h_source.html", null ],

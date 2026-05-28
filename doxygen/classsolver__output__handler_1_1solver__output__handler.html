@@ -188,6 +188,15 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>get_balance_mwh</b> (s
 <tr class="memitem:a9a43e30ff7fe3b9cb55ae3df06e15778"><td class="memItemLeft" align="right" valign="top"><a id="a9a43e30ff7fe3b9cb55ae3df06e15778"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>get_unsupplied_energy_mwh</b> (self, str area, int year, str date=None)</td></tr>
 <tr class="separator:a9a43e30ff7fe3b9cb55ae3df06e15778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3a46760d4b7ce23726fb9fea9ee70e2"><td class="memItemLeft" align="right" valign="top"><a id="ae3a46760d4b7ce23726fb9fea9ee70e2"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_overall_cost_eur</b> (self, str area, int year, str date=None)</td></tr>
+<tr class="separator:ae3a46760d4b7ce23726fb9fea9ee70e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93d24d21680ff7ef3306dfdccefc9d5b"><td class="memItemLeft" align="right" valign="top"><a id="a93d24d21680ff7ef3306dfdccefc9d5b"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_battery_level_mwh</b> (self, str area, int year, str date)</td></tr>
+<tr class="separator:a93d24d21680ff7ef3306dfdccefc9d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ff6c50dd52e7dccc37921586b3bf47f"><td class="memItemLeft" align="right" valign="top"><a id="a2ff6c50dd52e7dccc37921586b3bf47f"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_reserve_participation_cost</b> (self, str area, int year)</td></tr>
+<tr class="separator:a2ff6c50dd52e7dccc37921586b3bf47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a349ff8172a994daafe120ce33b5b0350"><td class="memItemLeft" align="right" valign="top"><a id="a349ff8172a994daafe120ce33b5b0350"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><b>min_gen_for_thermal_cluster</b> (self, str area, int year, str cluster)</td></tr>
 <tr class="separator:a349ff8172a994daafe120ce33b5b0350"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,6 +221,27 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>get_mps_files</b> (sel
 <tr class="memitem:a3a3b6989827cf8502c0b859e084851b9"><td class="memItemLeft" align="right" valign="top"><a id="a3a3b6989827cf8502c0b859e084851b9"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><b>get_output_file_with_name</b> (self, str filename)</td></tr>
 <tr class="separator:a3a3b6989827cf8502c0b859e084851b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9833e24fd2973063fc62946d50d90a4"><td class="memItemLeft" align="right" valign="top"><a id="ac9833e24fd2973063fc62946d50d90a4"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_hourly_reserve_unsp_energy</b> (self, str area, int year, str res)</td></tr>
+<tr class="separator:ac9833e24fd2973063fc62946d50d90a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a004ebb503223503d853b0082ae4fb0ef"><td class="memItemLeft" align="right" valign="top"><a id="a004ebb503223503d853b0082ae4fb0ef"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_hourly_reserve_group_energy</b> (self, str area, int year, str res, str group)</td></tr>
+<tr class="separator:a004ebb503223503d853b0082ae4fb0ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a6cb0414e85ca12627bb877732a5bd7"><td class="memItemLeft" align="right" valign="top"><a id="a3a6cb0414e85ca12627bb877732a5bd7"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_reserve_total_participation_for_year_and_cluster</b> (self, str area, int year, str res, str cluster)</td></tr>
+<tr class="separator:a3a6cb0414e85ca12627bb877732a5bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ee55148db4e06f5eb3e45c22b900b38"><td class="memItemLeft" align="right" valign="top"><a id="a6ee55148db4e06f5eb3e45c22b900b38"></a>
+pd.Series&#160;</td><td class="memItemRight" valign="bottom"><b>get_hourly_res_part_mwh</b> (self, str area, int year, str prod_name)</td></tr>
+<tr class="separator:a6ee55148db4e06f5eb3e45c22b900b38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe36343b4c69b296b297810412320fb4"><td class="memItemLeft" align="right" valign="top"><a id="abe36343b4c69b296b297810412320fb4"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_res_part_for_date_mwh</b> (self, str area, int year, str date, str prod_name)</td></tr>
+<tr class="separator:abe36343b4c69b296b297810412320fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad0294b19494cf11a7c4eb68dc63fd6d"><td class="memItemLeft" align="right" valign="top"><a id="aad0294b19494cf11a7c4eb68dc63fd6d"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>get_values_hydro_for_specific_hour_mwh</b> (self, str area, int year, str date, str hydro_val)</td></tr>
+<tr class="separator:aad0294b19494cf11a7c4eb68dc63fd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0624b1ed2fe6487e74fddac2fc0888e6"><td class="memItemLeft" align="right" valign="top"><a id="a0624b1ed2fe6487e74fddac2fc0888e6"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>get_values_for_st_storage_cluster_for_specific_hour_mw</b> (self, str area, int year, str date, str cluster_name, str keySTstorageValue)</td></tr>
+<tr class="separator:a0624b1ed2fe6487e74fddac2fc0888e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
