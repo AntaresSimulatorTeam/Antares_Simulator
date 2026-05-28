@@ -18,6 +18,7 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
+#include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LegacyVariableNameParser.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
@@ -63,6 +64,7 @@ namespace
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const PROBLEME_ANTARES_A_RESOUDRE& problem,
                                const FillContext& fillContext,
+                               const Antares::Optimization::LegacyNameMapper& nameMapper,
                                unsigned currentBlock,
                                unsigned scenario)
 {
@@ -101,7 +103,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
         simulationTable.addEntry(
           {.block = block,
            .component = parsed->component,
-           .output = parsed->output,
+           .output = nameMapper.mapOutput(parsed->output),
            .absolute_time_index = parsed->timeIndex + 1,
            .block_time_index = blockTimeIndex,
            .scenario_index = scenario,
@@ -323,9 +325,11 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 true);
         }
 
+        static const Antares::Optimization::LegacyNameMapper kLegacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *ProblemeAResoudre,
                                   fillCtx,
+                                  kLegacyNameMapper,
                                   currentBlock,
                                   fillCtx.getYear());
 
