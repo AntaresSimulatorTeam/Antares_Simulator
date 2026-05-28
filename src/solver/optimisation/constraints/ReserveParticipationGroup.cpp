@@ -143,7 +143,7 @@ void ReserveParticipationGroup::BuildConstraints()
                         // Add symmetry constraint between first element and all others
                         for (const auto& symmetry: symmetries)
                         {
-                            // 18
+                            // 15 (j)
                             symmetryReserveParticipation.add(pays, symmetry, pdt);
                         }
                     }
@@ -186,7 +186,7 @@ void ReserveParticipationGroup::BuildConstraints()
                     {
                         for (const auto& symmetry: symmetries)
                         {
-                            // 18
+                            // 15 (j)
                             symmetryReserveParticipation.add(pays, symmetry, pdt);
                         }
                     }
@@ -226,7 +226,7 @@ void ReserveParticipationGroup::BuildConstraints()
                 for (const auto& symmetry:
                      data.areaReserves[pays].HydroReservesParticipationSymmetries)
                 {
-                    // 18
+                    // 15 (j)
                     symmetryReserveParticipation.add(pays, symmetry, pdt);
                 }
             }

@@ -1,4 +1,5 @@
 #include "antares/solver/optimisation/constraints/SymmetryReserveParticipation.h"
+#define EPSILON 1e-4
 
 template<ValidReserveParticipation T>
 void SymmetryReserveParticipation::add(
@@ -45,10 +46,18 @@ void SymmetryReserveParticipation::applyReserveParticipationSymmetry(
 
     if constexpr (std::is_same_v<T, RESERVE_PARTICIPATION_THERMAL>)
     {
+        // 15 (j)
+        // Defining the symmetry between two clusters participating to the same reserve
+        // The cluster participation ratio regarding its power is the same for both symmetrical reserves
+        // constraint : P_res1 / B_res1 = P_res2 / B_res2
+        // P_res1 : Participation power of the cluster to the reserve 1
+        // B_res1 : Maximum accessible power if each unit running on the cluster for the reserve 1
+        // P_res2 : Participation power of the cluster to the reserve 2
+        // B_res2 : Maximum accessible power if each unit running on the cluster for the reserve
         auto refMaxPower = reserveParticipationRefWithName.reserveParticipation.get().maxPower;
         auto targetMaxPower = reserveParticipationWithName.reserveParticipation.get().maxPower;
-        if (abs(refMaxPower) > 10e-4
-            && abs(targetMaxPower) > 10e-4) // disableing symetries in case of zero division
+        if (abs(refMaxPower) > EPSILON
+            && abs(targetMaxPower) > EPSILON) // disabling symetries in case of zero division
         {
             builder.ThermalClusterReserveParticipation(refIndex, 1 / refMaxPower)
               .ThermalClusterReserveParticipation(targetIndex, -1 / targetMaxPower);
@@ -56,37 +65,54 @@ void SymmetryReserveParticipation::applyReserveParticipationSymmetry(
     }
     else if constexpr (std::is_same_v<T, RESERVE_PARTICIPATION_STSTORAGE>)
     {
+        // 15 (j)
+        // Defining the symmetry between two STStorage clusters participating to the same reserve
+        // The cluster participation ratio regarding its release and storage power is the same for both symmetrical reserves
+        // constraint : (H_res1 + Π_res1) / (H^max_res1 + Π^max_res1) = (H_res2 + Π_res2) / (H^max_res2 + Π^max_res2)
+        // H_res1 : Release participation power of the cluster to the reserve 1
+        // Π_res1 : Store participation power of the cluster to the reserve 1
+        // H^max_res1 : Maximum accessible release power of the cluster for the reserve 1
+        // Π^max_res1 : Maximum accessible store power of the cluster for the reserve 1
+        // H_res2 : Release participation power of the cluster to the reserve 2
+        // Π_res2 : Store participation power of the cluster to the reserve 2
+        // H^max_res2 : Maximum accessible release power of the cluster for the reserve 2
+        // Π^max_res2 : Maximum accessible store power of the cluster for the reserve 2
         auto refMaxRelease = reserveParticipationRefWithName.reserveParticipation.get().maxRelease;
         auto targetMaxRelease = reserveParticipationWithName.reserveParticipation.get().maxRelease;
         auto refMaxStore = reserveParticipationRefWithName.reserveParticipation.get().maxStore;
         auto targetMaxStore = reserveParticipationWithName.reserveParticipation.get().maxStore;
-        if (abs(refMaxRelease) > 10e-4 && abs(targetMaxRelease) > 10e-4)
+        if (abs(refMaxRelease + refMaxStore) > EPSILON
+            && abs(targetMaxRelease + targetMaxStore) > EPSILON)
         {
-            builder.STStorageReleaseClusterReserveParticipation(refIndex, 1 / refMaxRelease)
-              .STStorageReleaseClusterReserveParticipation(targetIndex, -1 / targetMaxRelease);
-        }
-        if (abs(refMaxStore) > 10e-4 && abs(targetMaxStore) > 10e-4)
-        {
-            builder.STStorageStoreClusterReserveParticipation(refIndex, 1 / refMaxStore)
-              .STStorageStoreClusterReserveParticipation(targetIndex, -1 / targetMaxStore);
+            builder
+              .STStorageReleaseClusterReserveParticipation(refIndex,
+                                                           1 / (refMaxRelease + refMaxStore))
+              .STStorageStoreClusterReserveParticipation(refIndex,
+                                                         1 / (refMaxRelease + refMaxStore))
+              .STStorageReleaseClusterReserveParticipation(targetIndex,
+                                                           -1 / (targetMaxRelease + targetMaxStore))
+              .STStorageStoreClusterReserveParticipation(targetIndex,
+                                                         -1 / (targetMaxRelease + targetMaxStore));
         }
     }
     else if constexpr (std::is_same_v<T, RESERVE_PARTICIPATION_HYDRO>)
     {
+        // 15 (j)
+        //  Same principle as for the STStorage clusters
         auto refMaxRelease = reserveParticipationRefWithName.reserveParticipation.get().maxRelease;
         auto targetMaxRelease = reserveParticipationWithName.reserveParticipation.get().maxRelease;
         auto refMaxStore = reserveParticipationRefWithName.reserveParticipation.get().maxStore;
         auto targetMaxStore = reserveParticipationWithName.reserveParticipation.get().maxStore;
 
-        if (abs(refMaxRelease) > 10e-4 && abs(targetMaxRelease) > 10e-4)
+        if (abs(refMaxRelease + refMaxStore) > EPSILON
+            && abs(targetMaxRelease + targetMaxStore) > EPSILON)
         {
-            builder.HydroReleaseReserveParticipation(refIndex, 1 / refMaxRelease)
-              .HydroReleaseReserveParticipation(targetIndex, -1 / targetMaxRelease);
-        }
-        if (abs(refMaxStore) > 10e-4 && abs(targetMaxStore) > 10e-4)
-        {
-            builder.HydroStoreReserveParticipation(refIndex, 1 / refMaxStore)
-              .HydroStoreReserveParticipation(targetIndex, -1 / targetMaxStore);
+            builder.HydroReleaseReserveParticipation(refIndex, 1 / (refMaxRelease + refMaxStore))
+              .HydroStoreReserveParticipation(refIndex, 1 / (refMaxRelease + refMaxStore))
+              .HydroReleaseReserveParticipation(targetIndex,
+                                                -1 / (targetMaxRelease + targetMaxStore))
+              .HydroStoreReserveParticipation(targetIndex,
+                                              -1 / (targetMaxRelease + targetMaxStore));
         }
     }
 }
