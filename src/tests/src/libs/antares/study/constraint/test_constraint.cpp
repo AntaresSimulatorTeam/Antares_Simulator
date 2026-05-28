@@ -751,7 +751,7 @@ BOOST_AUTO_TEST_CASE(BC_load_legacy_greater)
                     "area1%area2 = 1.000000\n",
                     StudyVersion(8, 6));
 
-    BOOST_CHECK_EQUAL(bcs.size(), 1);
+    BOOST_REQUIRE_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
     // "greater" reads the superior column (index 1) of the legacy matrix.
     BOOST_CHECK_CLOSE(constraint->RHSTimeSeries()[0][0], 0.4, 0.0001);
@@ -921,7 +921,7 @@ BOOST_AUTO_TEST_CASE(BC_cluster_weight_and_offset_are_parsed)
                     "operator = equal\n"
                     "area1.cluster1 = 4.000000%2\n");
 
-    BOOST_CHECK_EQUAL(bcs.size(), 1);
+    BOOST_REQUIRE_EQUAL(bcs.size(), 1);
     auto constraint = *bcs.begin();
     BOOST_CHECK_CLOSE(constraint->weight(cluster.get()), 4.0, 0.0001);
     BOOST_CHECK_EQUAL(constraint->offset(cluster.get()), 2);
