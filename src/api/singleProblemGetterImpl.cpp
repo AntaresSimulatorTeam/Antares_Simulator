@@ -312,7 +312,7 @@ void SingleProblemGetter::setWeeklyData(WeeklyProblemId& id)
 
     OPT_MaxDesPmaxHydrauliques(&pb_);
 
-    if (pb_.OptimisationAvecCoutsDeDemarrage)
+    if (pb_.OptimisationNotFastMode)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(&pb_);
     }

@@ -8,6 +8,8 @@
 #include <string>
 
 #include <antares/inifile/inifile.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/reserveParticipationContainer.h>
 #include <antares/study/version.h>
 
 #include "additionalConstraints.h"
@@ -19,6 +21,9 @@ namespace Antares::Data::ShortTermStorage
 class STStorageCluster final
 {
 public:
+    //! \brief Get the group name string
+    std::string getGroup();
+
     bool enabled() const;
 
     bool validate(StudyVersion studyVersion) const;
@@ -32,5 +37,10 @@ public:
     std::shared_ptr<Series> series = std::make_shared<Series>();
     mutable Properties properties;
     std::vector<std::shared_ptr<AdditionalConstraints>> additionalConstraints;
+
+    //! Reserve participation container to store the participation of the cluster in the reserves
+    //! and the symmetries
+    ReserveOpt<ReserveParticipationContainer<StorageClusterReserveParticipation>>
+      reserveParticipationContainer;
 };
 } // namespace Antares::Data::ShortTermStorage

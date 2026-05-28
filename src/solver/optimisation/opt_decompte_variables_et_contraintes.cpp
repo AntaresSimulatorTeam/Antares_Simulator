@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <antares/antares/fatal-error.h>
+#include "antares/solver/optimisation/opt_decompte_variables_et_contraintes_reserves.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using namespace Antares;
@@ -287,9 +288,13 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
     }
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(problemeHebdo);
+        if (problemeHebdo->allReserves)
+        {
+            OPT_DecompteDesVariablesEtDesContraintesReserves(problemeHebdo);
+        }
     }
 
     return mxPaliers;

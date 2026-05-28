@@ -11,6 +11,12 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+
+std::string STStorageCluster::getGroup()
+{
+    return properties.groupName;
+}
+
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)

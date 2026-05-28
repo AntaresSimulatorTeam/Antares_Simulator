@@ -278,6 +278,11 @@ public:
     */
     bool readonly;
 
+    /*!
+    ** \brief Activation of the reserves
+    */
+    bool reservesEnabled = false;
+
     //! Write the simulation synthesis into the output
     bool synthesis;
 
@@ -307,6 +312,9 @@ public:
             bool primary;
 
         } reserve;
+
+        //! New implemention of reserves, not related to the primary/spinning/strategic reserves
+        bool reserves;
 
         struct Thermal
         {
@@ -476,6 +484,7 @@ bool StringToSimulationMode(SimulationMode& mode, Yuni::CString<20, false> text)
 
 const char* CompatibilityHydroPmaxToCString(const Parameters::Compatibility::HydroPmax);
 bool StringToCompatibilityHydroPmax(Parameters::Compatibility::HydroPmax&, const std::string& text);
+
 } // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARAMETERS_H__

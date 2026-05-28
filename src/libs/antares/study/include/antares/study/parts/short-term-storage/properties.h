@@ -41,6 +41,9 @@ public:
     bool penalizeVariationWithdrawal = false;
     bool penalizeVariationInjection = false;
 
+    /// Cluster global index (across areas)
+    int clusterGlobalIndex;
+
     /// Enabled ?
     bool enabled = true;
 

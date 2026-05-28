@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import shutil
 
 
 class solver_input_handler:
@@ -12,6 +13,11 @@ class solver_input_handler:
         self.files_path["study"] = self.study_root_dir / "study.antares"
         self.files_path["thermal"] = self.study_root_dir / "study.antares"
         self.reference = self.study_root_dir / "output" / "reference"
+        self.files_path["simulation_table1"] = self.reference / "simulation_table--optim-nb-1.csv"
+        self.files_path["simulation_table2"] = self.reference / "simulation_table--optim-nb-2.csv"
+        self.files_path["input"] = self.study_root_dir / "input"
+        self.files_path["reserves"] = self.study_root_dir / "input" / "reserves"
+        self.files_path["reserve_ini_folder"] = self.study_root_dir / ".." / "reserves_ini_files"
 
     def reference_dir(self):
         return self.reference
@@ -61,3 +67,47 @@ class solver_input_handler:
         # Erasing file content with the tmp content (content out)
         with open(file_path, "w") as f:
             f.writelines(content_out)
+
+    def get_optim1_simulation_table(self):
+        assert self.files_path["simulation_table1"].exists(), f"Path %s does not exist." % self.files_path[
+            "simulation_table1"]
+        return open(self.files_path["simulation_table1"], 'r').readlines()
+
+    def get_optim2_simulation_table(self):
+        if self.files_path["simulation_table2"].exists():
+            return open(self.files_path["simulation_table2"], 'r').readlines()
+        else:
+            return None
+
+    def set_reserve_value(self, area, sectionName, variable, value):
+        # File path
+        file = self.files_path["reserves"] / area / "reserves.ini"
+        # Content to print in file (tmp content)
+        content_out = []
+        # Reading the file content (content in)
+        with open(file) as f:
+            # Searching variable and setting its value in a tmp content
+            for line in f:
+                if line.startswith("["):
+                    content_out.append(line)
+                    if f"[{sectionName}]" in line:
+                        correct_section = True
+                    else:
+                        correct_section = False
+                else:
+                    if correct_section and line.strip().startswith(variable):
+                        content_out.append(variable + " = " + value + "\n")
+                    else:
+                        content_out.append(line)
+        # Erasing file content with the tmp content (content out)
+        with open(file, "w") as f:
+            f.writelines(content_out)
+
+    def copy_reserve_ini_from_file(self, origin, destination):
+        # File path
+        fileToReplace = os.path.join(self.study_root_dir, *destination)
+        fileToCopy = os.path.join(self.study_root_dir, *origin)
+        shutil.copyfile(fileToCopy, fileToReplace)
+
+    def set_parameter_from_file(self, area, sectionName, paramName, paramValue):
+        self.set_reserve_value(area.lower(), sectionName, paramName, paramValue)

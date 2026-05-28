@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <string>
 
+#include <antares/inifile/inifile.h>
+#include <antares/study/fwd.h>
 #include <antares/study/version.h>
 
 #include "cluster.h"
@@ -22,6 +24,8 @@ public:
     /// 2. Read ALL series
     bool loadSeriesFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion) const;
 
+    bool loadReserveParticipations(Area& area, const std::filesystem::path& file);
+
     /// Number of enabled ST storages, ignoring disabled ST storages
     std::size_t count() const;
 
@@ -29,6 +33,25 @@ public:
 
     /// erase disabled cluster from the vector
     uint removeDisabledClusters();
+
+    /// Get the names of the cluster and reserve of the participation
+    std::pair<std::string, ReserveID> reserveParticipationClusterAt(const Area* area,
+                                                                    unsigned int index) const;
+
+    /// Get the names of the group and reserve of the participation
+    std::pair<std::string, ReserveID> reserveParticipationGroupAt(const Area* area,
+                                                                  unsigned int index) const;
+
+    bool saveToFolder(const std::string& folder) const;
+
+    bool saveDataSeriesToFolder(const std::string& folder) const;
+
+    STStorageCluster* findInAll(const std::string& name);
+
+    size_t getClusterIdx(STStorageCluster& cluster) const;
+
+    // returns the number of reserve participations of all clusters
+    uint reserveParticipationsCount() const;
 
     std::vector<STStorageCluster> storagesByIndex;
     void resizeTimeseriesNumbers(unsigned int nbYears);

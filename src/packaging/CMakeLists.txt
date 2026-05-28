@@ -121,6 +121,7 @@ set(TARGET_LIBS #No alias
         enums
         modeler-checks
 		structured-linear-problem
+        reserves-parsing-antlr-interface
 )
 
 install(TARGETS ${TARGET_LIBS}
