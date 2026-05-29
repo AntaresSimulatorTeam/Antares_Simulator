@@ -17,36 +17,6 @@ namespace Antares::Solver
 {
 void FileWriter::init(const std::string& time)
 {
-    if (time.empty())
-    {
-        throw Modeler::ModelerError("Time identifier cannot be empty. Exiting simulation.");
-    }
-
-    outputPath_ = studyPath_ / "output" / time;
-
-    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
-    if (!Utils::generatePathWithSuffix(outputPath_))
-    {
-        throw Modeler::ModelerError("Output folder already exists: " + outputPath_.string());
-    }
-
-    logs.info() << "Output folder : " << outputPath_;
-    if (!fs::is_directory(outputPath_) && !fs::create_directories(outputPath_))
-    {
-        throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
-    }
-
-    output_file_ = outputPath_ / "simulation-table";
-
-    // TODO : Here we pass the simulation table output path to a more specific writer (csv /
-    // TODO : parquet), which appends the right extension. So one part of absolute path
-    // TODO : is done here, and the other one in another writer.
-    // TODO : Thinking about this, class FileWriter is useless.
-    // TODO : Removing it, making the specific writer have resonsibility to create this path
-    // TODO : and directly using the specific writer in Modeler would solve the problem
-    // TODO : and simplify the code.
-    writer_ = makeTableWriter(tableFormat_, output_file_);
-    Antares::logs.info() << "Simulation table is written in: " << output_file_.string();
 }
 
 const std::filesystem::path& FileWriter::outputPath() const

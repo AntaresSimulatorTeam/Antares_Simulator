@@ -53,7 +53,7 @@ bool isProblemEmpty(const ILinearProblem& problem)
 }
 
 void checkProblemType(const ILinearProblem& originalProblem,
-                      const operations_research::mb::ModelBuilderHelper& fromMps)
+                      const operations_research::ModelBuilderHelper& fromMps)
 {
     const bool isMip = std::ranges::any_of(std::views::iota(0, fromMps.num_variables()),
                                            [&fromMps](const int vi)
@@ -62,7 +62,7 @@ void checkProblemType(const ILinearProblem& originalProblem,
 }
 
 void checkVariables(const ILinearProblem& originalProblem,
-                    const operations_research::mb::ModelBuilderHelper& fromMps)
+                    const operations_research::ModelBuilderHelper& fromMps)
 {
     BOOST_CHECK_EQUAL(originalProblem.variableCount(), fromMps.num_variables());
     const auto& origVariables = originalProblem.getVariables();
@@ -79,7 +79,7 @@ void checkVariables(const ILinearProblem& originalProblem,
 }
 
 void checkConstraints(const ILinearProblem& originalProblem,
-                      const operations_research::mb::ModelBuilderHelper& fromMps)
+                      const operations_research::ModelBuilderHelper& fromMps)
 {
     BOOST_CHECK_EQUAL(originalProblem.constraintCount(), fromMps.num_constraints());
     const auto& origVariables = originalProblem.getVariables();
@@ -118,7 +118,7 @@ void checkConstraints(const ILinearProblem& originalProblem,
 }
 
 void checkObjective(const ILinearProblem& originalProblem,
-                    const operations_research::mb::ModelBuilderHelper& fromMps)
+                    const operations_research::ModelBuilderHelper& fromMps)
 {
     const auto& origVariables = originalProblem.getVariables();
     BOOST_CHECK_EQUAL(originalProblem.getObjectiveOffset(), fromMps.ObjectiveOffset());
@@ -133,7 +133,7 @@ void checkObjective(const ILinearProblem& originalProblem,
 
 void checkProblem(const ILinearProblem& originalProblem, const fs::path& mpsPath)
 {
-    operations_research::mb::ModelBuilderHelper fromMps;
+    operations_research::ModelBuilderHelper fromMps;
     fromMps.ImportFromMpsFile(mpsPath.string());
     checkProblemType(originalProblem, fromMps);
     checkVariables(originalProblem, fromMps);
@@ -141,11 +141,9 @@ void checkProblem(const ILinearProblem& originalProblem, const fs::path& mpsPath
     checkObjective(originalProblem, fromMps);
 }
 
-void checkMPS(Modeler& modeler)
+void checkMPS(Modeler& modeler, fs::path outputPath)
 {
-    modeler.run();
     const auto& masterProblem = modeler.masterProblem();
-    fs::path outputPath = modeler.writer_.outputPath();
     if (masterProblem && !isProblemEmpty(*masterProblem))
     {
         checkProblem(*masterProblem, outputPath / "master.mps");
@@ -153,28 +151,20 @@ void checkMPS(Modeler& modeler)
     checkProblem(*modeler.subproblems().at(0), outputPath / "1-1.mps");
 }
 
-struct MpsWriterTestFixture
+void processStudy(const filesystem::path& studyDir)
 {
-    LoadFiles::FileLoader loader;
-    FileWriter writer;
+    LoadFiles::FileLoader loader(studyDir);
+    FileWriter writer(studyDir);
 
-    explicit MpsWriterTestFixture(const fs::path& studyPath):
-        loader(studyPath),
-        writer(studyPath)
-    {
-    }
+    fs::path outputPath = studyDir / "output";
+    fs::create_directory(outputPath);
 
-    Modeler build()
-    {
-        return {loader, writer, {}, TableFormat::CSV};
-    }
-};
+    Modeler modeler(loader, writer, outputPath, TableFormat::CSV);
+    modeler.run();
 
-void processStudy(const filesystem::path& entry)
-{
-    MpsWriterTestFixture fixture(entry);
-    auto modeler = fixture.build();
-    checkMPS(modeler);
+    checkMPS(modeler, outputPath);
+
+    fs::remove_all(outputPath);
 }
 
 void checkEpic2Studies()
@@ -185,10 +175,10 @@ void checkEpic2Studies()
         {
             continue;
         }
-        const auto& path = subEntry.path();
-        if (!ignoreList.contains(path.filename().string()))
+        const auto& studyDir = subEntry.path();
+        if (!ignoreList.contains(studyDir.filename().string()))
         {
-            processStudy(path);
+            processStudy(studyDir);
         }
     }
 }
@@ -202,40 +192,25 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
         {
             continue;
         }
-        const auto& path = entry.path();
-        if (!ignoreList.contains(path.filename().string()))
+        const auto& studyDir = entry.path();
+        if (!ignoreList.contains(studyDir.filename().string()))
         {
-            if (path.filename().string() == "epic2")
+            if (studyDir.filename().string() == "epic2")
             {
                 checkEpic2Studies();
                 continue;
             }
-            processStudy(path);
+            processStudy(studyDir);
         }
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_file_writer_init)
+BOOST_AUTO_TEST_CASE(test_13_1)
 {
-    fs::path tempDir = fs::temp_directory_path() / "antares_test_file_writer";
-    fs::create_directories(tempDir);
-    FileWriter writer(tempDir);
-    FileWriter writer2(tempDir);
-    writer.init("abc");
-
-    SimulationTable s;
-    writer.writeSimulationTable(s);
-    BOOST_CHECK(fs::exists(writer.outputPath() / "simulation-table.csv"));
-    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc");
-
-    writer.init("abc");
-    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc-2");
-
-    writer2.init("abc");
-    BOOST_CHECK(writer2.outputPath() == tempDir / "output" / "abc-3");
-
-    fs::remove_all(tempDir);
+    const auto& studyDir = resources / "13_1";
+    processStudy(studyDir);
 }
+
 
 BOOST_AUTO_TEST_SUITE_END()
 

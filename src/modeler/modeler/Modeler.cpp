@@ -328,6 +328,8 @@ void Modeler::run()
             auto outputFile = outputPath_ / "simulation-table";
             ITableWriter::Ptr writer = makeTableWriter(tableFormat_, outputFile);
             writer->writeTable(simulationTable);
+
+            logs.info() << "Simulation table is written in: " << outputFile.string();
         }
     }
 }

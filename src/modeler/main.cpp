@@ -54,7 +54,6 @@ fs::path makeOutputPath(fs::path studyPath)
     {
         throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
     }
-    // output_file = outputPath_ / "simulation-table"; // gp : think about that.
     return outputPath;
 }
 
