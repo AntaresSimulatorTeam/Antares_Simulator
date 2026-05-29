@@ -9,7 +9,11 @@
 #include <ranges>
 #include <vector>
 
+#include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/study/area/capacityReservation.h>
+#include <antares/study/parts/common/cluster.h>
+#include <antares/study/parts/thermal/cluster.h>
 #include <antares/writer/i_writer.h>
 
 #include "../../fwd.h"
@@ -74,6 +78,25 @@ public:
     }
 
     SharedPtr enabledClusterAt(unsigned int index) const;
+
+    /*!
+    ** @brief Get the cluster and reserve names for a given index of reserveParticipation
+    ** @param area The area where to look for the reserveParticipation
+    ** @param index Global index of the reserveParicipation
+    ** @return the cluster and reserve names
+    */
+    std::pair<std::string, ReserveID> reserveParticipationClusterAt(const Area* area,
+                                                                    unsigned int index) const;
+
+    /*!
+    ** @brief Get the group and reserve names for a given index of reserveParticipation
+    ** @param area The area where to look for the reserveParticipation
+    ** @param index Global index of the reserveParicipation
+    ** @return the group and reserve names
+    */
+    std::pair<std::string, ReserveID> reserveParticipationGroupAt(const Area* area,
+                                                                  unsigned int index) const;
+
     /*!
     ** \brief Resize all matrices dedicated to the sampled timeseries numbers
     **
@@ -88,6 +111,15 @@ public:
     /// \name IO functions
     /// @{
     bool loadDataSeriesFromFolder(Study& study, const std::filesystem::path& folder);
+
+    /// @brief Load the reserve participation. For each entry, it checks if the reserve has been
+    /// added to area.allCapacityReservations, if not then log the name of the reserve that has not
+    /// been found.
+    /// @tparam ClusterT Type of the Cluster list
+    /// @param area Reference to area
+    /// @param file File to read the reserve participations entries
+    /// @return false if the file opening failed, true otherwise
+    bool loadReserveParticipations(Area& area, const std::filesystem::path& file);
 
     bool saveDataSeriesToFolder(const AnyString& folder) const;
     ///@}

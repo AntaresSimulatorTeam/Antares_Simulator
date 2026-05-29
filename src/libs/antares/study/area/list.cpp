@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <fstream>
+#include <ranges>
 
 #include <boost/algorithm/string/trim.hpp>
 
@@ -10,12 +11,17 @@
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
+#include <antares/study/area/capacityReservation.h>
 #include <antares/study/area/scratchpad.h>
 #include "antares/array/matrix.h"
-#include "antares/study//study.h"
 #include "antares/study/area/area.h"
+#include "antares/study/area/forTestsOnlyList.h"
 #include "antares/study/parts/load/prepro.h"
+#include "antares/study/parts/parts.h"
+#include "antares/study/study.h"
 #include "antares/utils/utils.h"
+
+#define SEP IO::Separator
 
 using namespace Yuni;
 
@@ -25,11 +31,173 @@ namespace Antares::Data
 {
 namespace // anonymous
 {
+static void toLower(std::string& str)
+{
+    for (char& c: str)
+    {
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+}
+
+bool readReservesAreaParameters(Area& area, const IniFile::Section& section)
+{
+    bool ret = true;
+    for (auto* p = section.firstProperty; p; p = p->next)
+    {
+        std::string key = p->key;
+        toLower(key);
+
+        if (key == "energy-activation-ratio-up")
+        {
+            if (!p->value.to<double>(
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up))
+            {
+                logs.warning() << area.name
+                               << " : invalid maximum energy activation ratio for UP reserves";
+                ret = false;
+            }
+        }
+        else if (key == "energy-activation-ratio-down")
+        {
+            if (!p->value.to<double>(
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down))
+            {
+                logs.warning() << area.name
+                               << " : invalid maximum energy activation ratio for "
+                                  "DOWN reserves";
+                ret = false;
+            }
+        }
+        else if (key == "reference-activation-duration-up")
+        {
+            if (!p->value.to<int>(
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.up))
+            {
+                logs.warning() << area.name
+                               << " : invalid reference energy activation duration "
+                                  "for UP reserves";
+                ret = false;
+            }
+        }
+        else if (key == "reference-activation-duration-down")
+        {
+            if (!p->value.to<int>(
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.down))
+            {
+                logs.warning() << area.name
+                               << " : invalid reference energy activation duration "
+                                  "for DOWN reserves";
+                ret = false;
+            }
+        }
+        else
+        {
+            logs.warning() << area.name << " : invalid key " << key
+                           << " inside global reserve parameters";
+            ret = false;
+        }
+    }
+    return ret;
+}
+
+bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFile::Section& section)
+{
+    bool ret = true;
+    if (area.allCapacityReservations.value().contains(transformNameIntoID(section.name)))
+    {
+        logs.error() << area.name << " : reserve name already exists for reserve " << section.name;
+        return false;
+    }
+
+    CapacityReservation capacityReservation;
+    capacityReservation.setName(section.name);
+
+    for (auto* p = section.firstProperty; p; p = p->next)
+    {
+        std::string key = p->key;
+        toLower(key);
+
+        if (key == "failure-cost")
+        {
+            if (!p->value.to<double>(capacityReservation.unsuppliedCost))
+            {
+                logs.warning() << area.name << " : invalid failure cost for reserve "
+                               << section.name;
+                ret = false;
+            }
+        }
+        else if (key == "spillage-cost")
+        {
+            if (!p->value.to<double>(capacityReservation.spillageCost))
+            {
+                logs.warning() << area.name << " : invalid spillage cost for reserve "
+                               << section.name;
+                ret = false;
+            }
+        }
+        else if (key == "power-activation-ratio")
+        {
+            if (!p->value.to<double>(capacityReservation.powerActivationRatio))
+            {
+                logs.warning() << area.name << " : invalid maximum activation ratio for reserve "
+                               << section.name;
+                ret = false;
+            }
+        }
+        else if (key == "energy-activation-ratio")
+        {
+            if (!p->value.to<double>(capacityReservation.energyActivationRatio))
+            {
+                logs.warning() << area.name << " : invalid energy activation ratio for reserve "
+                               << section.name;
+                ret = false;
+            }
+        }
+        else if (key == "reference-activation-duration")
+        {
+            if (!p->value.to<int>(capacityReservation.referenceActivationDuration))
+            {
+                logs.warning() << area.name
+                               << " : invalid reference activation duration for reserve "
+                               << section.name;
+                ret = false;
+            }
+        }
+        else if (key == "type")
+        {
+            if (p->value == "up")
+            {
+                capacityReservation.type = ReserveType::UP;
+            }
+            else if (p->value == "down")
+            {
+                capacityReservation.type = ReserveType::DOWN;
+            }
+            else
+            {
+                logs.warning() << area.name << " : invalid type for reserve " << section.name;
+                ret = false;
+            }
+        }
+        else
+        {
+            logs.warning() << area.name << " : invalid key " << key
+                           << " inside reserve parameters for " << section.name;
+            ret = false;
+        }
+    }
+    fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
+    capacityReservation.loadNeedFromFile(filePath);
+    area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
+                                                                          capacityReservation);
+    return ret;
+}
+
 static bool AreaListLoadThermalDataFromFile(AreaList& list, const fs::path& filename)
 {
     // Reset to 0
     list.each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           area.thermal.unsuppliedEnergyCost = 0.;
           area.thermal.spilledEnergyCost = 0.;
@@ -297,7 +465,7 @@ bool AreaList::loadListFromFile(const fs::path& filename)
 void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
 {
     each(
-      [&buffer](const Data::Area& area)
+      [&buffer](const Area& area)
       {
           buffer << area.id << '\n';
           auto end = area.links.end();
@@ -322,24 +490,24 @@ static void readAdqPatchMode(Study& study, Area& area)
         auto* section = ini.find("adequacy-patch");
         for (auto* p = section->firstProperty; p; p = p->next)
         {
-            CString<30, false> tmp;
-            tmp = p->key;
-            tmp.toLower();
-            if (tmp == "adequacy-patch-mode")
+            CString<30, false> key;
+            key = p->key;
+            key.toLower();
+            if (key == "adequacy-patch-mode")
             {
                 auto value = (p->value).toLower();
 
                 if (value == "virtual")
                 {
-                    area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
+                    area.adequacyPatchMode = AdequacyPatch::virtualArea;
                 }
                 else if (value == "inside")
                 {
-                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                    area.adequacyPatchMode = AdequacyPatch::physicalAreaInsideAdqPatch;
                 }
                 else
                 {
-                    area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
+                    area.adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
                 }
             }
         }
@@ -444,6 +612,12 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
     }
 
+    // Reserves
+    if (study.parameters.include.reserves)
+    {
+        ret = accessForTests::loadReservesParameters(study.folderInput, area) && ret;
+    }
+
     // Solar
     {
         if (area.solar.prepro) // Prepro
@@ -509,6 +683,14 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         area.hydro.series->resizeTSinDeratedMode(study.parameters.derated,
                                                  studyVersion,
                                                  study.parameters.compatibility.hydroPmax);
+
+        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+            && study.parameters.include.reserves)
+        {
+            fs::path reservesHydroIniPath = study.folderInput / "hydro" / "common" / area.id
+                                            / "reserves.ini";
+            area.hydro.loadReserveParticipations(area, reservesHydroIniPath);
+        }
     }
 
     // Wind
@@ -540,6 +722,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         {
             area.thermal.list.enableMustrunForEveryone();
         }
+        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+            && study.parameters.include.reserves)
+        {
+            fs::path reservesThermal = study.folderInput / "thermal" / "clusters" / area.id
+                                       / "reserves.ini";
+            area.thermal.list.loadReserveParticipations(area, reservesThermal);
+        }
     }
 
     // Short term storage
@@ -549,6 +738,14 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         ret = area.shortTermStorage.loadSeriesFromFolder(seriesPath, studyVersion) && ret;
         ret = area.shortTermStorage.validate(studyVersion) && ret;
+
+        if (study.parameters.unitCommitment.ucMode != UnitCommitmentMode::ucHeuristicFast
+            && study.parameters.include.reserves)
+        {
+            fs::path reservesIniFilePath = study.folderInput / "st-storage" / "clusters" / area.id
+                                           / "reserves.ini";
+            area.shortTermStorage.loadReserveParticipations(area, reservesIniFilePath);
+        }
     }
 
     // Renewable cluster list
@@ -576,10 +773,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           for (auto* p = section.firstProperty; p; p = p->next)
           {
               bool value = p->value.to<bool>();
-              CString<30, false> tmp;
-              tmp = p->key;
-              tmp.toLower();
-              if (tmp == "non-dispatchable-power")
+              CString<30, false> key;
+              key = p->key;
+              key.toLower();
+              if (key == "non-dispatchable-power")
               {
                   if (value)
                   {
@@ -587,7 +784,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "dispatchable-hydro-power")
+              if (key == "dispatchable-hydro-power")
               {
                   if (value)
                   {
@@ -595,7 +792,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "other-dispatchable-power")
+              if (key == "other-dispatchable-power")
               {
                   if (value)
                   {
@@ -603,17 +800,17 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "filter-synthesis")
+              if (key == "filter-synthesis")
               {
                   area.filterSynthesis = stringIntoDatePrecision(p->value);
                   continue;
               }
-              if (tmp == "filter-year-by-year")
+              if (key == "filter-year-by-year")
               {
                   area.filterYearByYear = stringIntoDatePrecision(p->value);
                   continue;
               }
-              if (tmp == "spread-unsupplied-energy-cost")
+              if (key == "spread-unsupplied-energy-cost")
               {
                   if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
                   {
@@ -622,7 +819,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                   }
                   continue;
               }
-              if (tmp == "spread-spilled-energy-cost")
+              if (key == "spread-spilled-energy-cost")
               {
                   if (!p->value.to<double>(area.spreadSpilledEnergyCost))
                   {
@@ -758,7 +955,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     // Load all nodes
     uint indx = 0;
     each(
-      [&options, &ret, &buffer, &indx, this](Data::Area& area)
+      [&options, &ret, &buffer, &indx, this](Area& area)
       {
           // Progression
           options.logMessage.clear()
@@ -832,11 +1029,11 @@ void AreaListEnsureDataLoadPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.load.prepro)
           {
-              area.load.prepro = std::make_unique<Antares::Data::Load::Prepro>();
+              area.load.prepro = std::make_unique<Load::Prepro>();
           }
       });
 }
@@ -847,11 +1044,11 @@ void AreaListEnsureDataSolarPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.solar.prepro)
           {
-              area.solar.prepro = std::make_unique<Antares::Data::Solar::Prepro>();
+              area.solar.prepro = std::make_unique<Solar::Prepro>();
           }
       });
 }
@@ -862,11 +1059,11 @@ void AreaListEnsureDataWindPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.wind.prepro)
           {
-              area.wind.prepro = std::make_unique<Antares::Data::Wind::Prepro>();
+              area.wind.prepro = std::make_unique<Wind::Prepro>();
           }
       });
 }
@@ -877,7 +1074,7 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.hydro.series)
           {
@@ -892,7 +1089,7 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
     assert(l);
 
     l->each(
-      [](Data::Area& area)
+      [](Area& area)
       {
           if (!area.hydro.prepro)
           {
@@ -903,13 +1100,13 @@ void AreaListEnsureDataHydroPrepro(AreaList* l)
 
 void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
-    l->each([](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
+    l->each([](Area& area) { area.thermal.list.ensureDataPrepro(); });
 }
 
 uint AreaList::areaLinkCount() const
 {
     uint ret = 0;
-    each([&ret](const Data::Area& area) { ret += (uint)area.links.size(); });
+    each([&ret](const Area& area) { ret += (uint)area.links.size(); });
     return ret;
 }
 
@@ -917,7 +1114,7 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
 {
     // Ask to resize the matrices dedicated to the sampled timeseries numbers
     // for each area
-    each([n](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
+    each([n](Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
 const AreaLink* AreaList::findLinkFromINIKey(const AnyString& key) const
@@ -975,5 +1172,74 @@ Area::ScratchMap AreaList::buildScratchMap(uint numspace)
     each([&scratchmap, &numspace](Area& a) { scratchmap.try_emplace(&a, a.scratchpad[numspace]); });
     return scratchmap;
 }
+
+namespace accessForTests
+{
+void validateCapacityReservations(const Area& area)
+{
+    if (area.allCapacityReservations)
+    {
+        errorIfNegativeValue("maxGlobalEnergyActivationRatio up",
+                             area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                             area.name);
+        errorIfNegativeValue(
+          "maxGlobalEnergyActivationRatio down",
+          area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+          area.name);
+        errorIfNegativeValue(
+          "referenceGlobalActivationDuration up",
+          area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
+          area.name);
+        errorIfNegativeValue(
+          "referenceGlobalActivationDuration down",
+          area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
+          area.name);
+        for (const auto& [resID, capacityRes]:
+             area.allCapacityReservations.value().areaCapacityReservations)
+        {
+            errorIfNegativeValue("energyActivationRatio",
+                                 capacityRes.energyActivationRatio,
+                                 area.name,
+                                 std::nullopt,
+                                 resID);
+            errorIfNegativeValue("powerActivationRatio",
+                                 capacityRes.powerActivationRatio,
+                                 area.name,
+                                 std::nullopt,
+                                 resID);
+            errorIfNegativeValue("referenceActivationDuration",
+                                 capacityRes.referenceActivationDuration,
+                                 area.name,
+                                 std::nullopt,
+                                 resID);
+        }
+    }
+}
+
+bool loadReservesParameters(fs::path& folderInput, Area& area)
+{
+    bool ret = true;
+    fs::path reservesIni = folderInput / "reserves" / area.id / "reserves.ini";
+    IniFile ini;
+    area.allCapacityReservations.emplace();
+    if (ini.open(reservesIni, false))
+    {
+        ini.each(
+          [&](const IniFile::Section& section)
+          {
+              if (section.name == "globalparameters")
+              {
+                  ret = readReservesAreaParameters(area, section) && ret;
+              }
+              else
+              {
+                  ret = readReserveParameters(folderInput, area, section) && ret;
+              }
+          });
+        validateCapacityReservations(area);
+    }
+    return ret;
+}
+} // namespace accessForTests
 
 } // namespace Antares::Data
