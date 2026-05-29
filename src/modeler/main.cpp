@@ -6,7 +6,6 @@
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/Modeler.h>
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/simulation/solver.h"
@@ -83,8 +82,7 @@ int main(int argc, const char** argv)
     {
         LoadFiles::FileLoader loader(studyPath);
         fs::path outputPath = makeOutputPath(studyPath);
-        FileWriter writer(studyPath, tableFormat);
-        Modeler modeler(loader, writer, outputPath, tableFormat);
+        Modeler modeler(loader, outputPath, tableFormat);
         modeler.run();
     }
     catch (const LoadFiles::ErrorLoadingYaml& e)

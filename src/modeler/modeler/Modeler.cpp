@@ -16,7 +16,6 @@
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/ILoader.h"
-#include "antares/solver/modeler/IWriter.h"
 #include "antares/utils/utils.h"
 #include "antares/writer/table_writer_factory.h"
 
@@ -49,9 +48,8 @@ bool checkSolution(const IMipSolution* solution)
     return false;
 }
 
-Modeler::Modeler(ILoader& loader, IWriter& writer, fs::path ouputPath, TableFormat tableFormat):
+Modeler::Modeler(ILoader& loader, fs::path ouputPath, TableFormat tableFormat):
     loader_{loader},
-    writer_{writer},
     outputPath_{std::move(ouputPath)},
     tableFormat_(tableFormat)
 {

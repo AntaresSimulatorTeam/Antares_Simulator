@@ -32,7 +32,6 @@ class IMipSolution;
 namespace Antares::Solver
 {
 class ILoader;
-class IWriter;
 
 struct ProblemEntity
 {
@@ -52,7 +51,6 @@ class Modeler final
 {
 public:
     Modeler(ILoader& loader,
-            IWriter& writer,
             fs::path outputPath,
             Antares::Writer::TableFormat tableFormat);
 
@@ -74,7 +72,6 @@ public:
     };
 
     ILoader& loader_; // gp : make it private
-    IWriter& writer_; // gp : make it private
 
     [[nodiscard]] const std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>&
     masterProblem() const

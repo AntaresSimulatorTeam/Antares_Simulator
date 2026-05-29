@@ -32,7 +32,6 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
@@ -154,12 +153,11 @@ void checkMPS(Modeler& modeler, fs::path outputPath)
 void processStudy(const filesystem::path& studyDir)
 {
     LoadFiles::FileLoader loader(studyDir);
-    FileWriter writer(studyDir);
 
     fs::path outputPath = studyDir / "output";
     fs::create_directory(outputPath);
 
-    Modeler modeler(loader, writer, outputPath, TableFormat::CSV);
+    Modeler modeler(loader, outputPath, TableFormat::CSV);
     modeler.run();
 
     checkMPS(modeler, outputPath);

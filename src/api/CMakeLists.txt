@@ -71,7 +71,6 @@ target_link_libraries(single_problem_api
         model_antares
         modeler-lib
         load-modeler-files
-        write-modeler-files
         Antares::hydro
         Antares::file-tree-study-loader
         PUBLIC
