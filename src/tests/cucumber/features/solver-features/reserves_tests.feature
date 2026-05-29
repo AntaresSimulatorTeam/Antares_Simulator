@@ -675,7 +675,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
 # Test des symmetries avec clusters thermiques
 # l'objectif est de tester la symétrie pour un cluster sur deux réserves, pour lesquelles il a une certification de participation différente
   Scenario: Thermal_cluster_symmetry_test_1
-    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_1"
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_1_thermal"
     When I run antares simulator 
     Then the simulation succeeds
     And the simulation takes less than 60 seconds
@@ -688,35 +688,68 @@ Scenario: ST_3UP_unavailable_reserves_test3
 
 @fast @short
 # Lot 3_1 : intégration des contraintes de symétries
-# Test des symmetries avec short therm storage
-# l'objectif est de tester la symétrie pour un stock CT sur deux réserves, pour lesquelles il a une certification de participation différente
-
+# l'objectif de ce test est de tester la symétrie d'un stock CT dans un cas où la symétrie est sur une réserve à la hausse + baisse
+# les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries
+# Test des symmetries avec stocks ST
   Scenario: ST_symmetry_test_2
-    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_2"
-    When I run antares simulator
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_2_ST"
+    When I run antares simulator 
     Then the simulation succeeds
     And the simulation takes less than 60 seconds
-    And in area "FRANCE", during year 1, for cluster "st1" and reserve "Res_1_up", reserve participation power is always equal to 44 MWh
-    And in area "FRANCE", during year 1, for cluster "st1" and reserve "Res_1_down", reserve participation power is always equal to 36 MWh
-    And in area "FRANCE", during year 1, for reserve "Res_1_up", reserve unsupplied power is always equal to 6 MWh
-    And in area "FRANCE", during year 1, for reserve "Res_1_down", reserve unsupplied power is always equal to 14 MWh
-    And in area "FRANCE", unsupplied energy on "2 JAN 09:00" of year 1 is of 100 MW
-	  And in area "FRANCE", on "2 JAN 09:00" of year 1, storage injection for cluster "st1" is of 24 MW
-	  And in area "FRANCE", on "2 JAN 09:00" of year 1, storage withdrawal for cluster "st1" is of 24 MW
-
+    And in area "FRANCE", during year 1, for cluster "st1" and reserve "Res_1_up", reserve participation power is always equal to 30 MWh
+    And in area "FRANCE", during year 1, for cluster "st1" and reserve "Res_2_down", reserve participation power is always equal to 7.5 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_1_up", reserve unsupplied power is always equal to 0 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_2_down", reserve unsupplied power is always equal to 52.5 MWh
+    And in area "FRANCE", year 1 and hour 1, withdrawal for short-term storage "st1" is 10
+    And in area "FRANCE", year 1 and hour 1, injection for short-term storage "st1" is 10
+ 
 @fast @short
 # Lot 3_1 : intégration des contraintes de symétries
-# Test des symmetries avec l'hydro
-# l'objectif est de tester la symétrie pour un stock LT sur deux réserves, pour lesquelles il a une certification de participation différente
-  Scenario: LT_symmetry_test_3
-    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_3"
-    When I run antares simulator
+# l'objectif de ce test est de tester la symétrie d'un stock LT dans un cas où la symétrie est sur une réserve à la hausse + baisse
+# les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries
+# Test des symmetries avec stocks LT
+  Scenario: LT_symmetry_test_2
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_2_LT"
+    When I run antares simulator 
     Then the simulation succeeds
     And the simulation takes less than 60 seconds
-    And in area "FRANCE", during year 1, for cluster "Hydro" and reserve "Res_1_up", reserve participation power is always equal to 44 MWh
-    And in area "FRANCE", during year 1, for cluster "Hydro" and reserve "Res_1_down", reserve participation power is always equal to 36 MWh
-    And in area "FRANCE", during year 1, for reserve "Res_1_up", reserve unsupplied power is always equal to 6 MWh
-    And in area "FRANCE", during year 1, for reserve "Res_1_down", reserve unsupplied power is always equal to 14 MWh
-    And in area "FRANCE", unsupplied energy on "2 JAN 09:00" of year 1 is of 44 MW
-    And in area "FRANCE", on "2 JAN 09:00" of year 1, hydro storage injection is of 80 MWh
-	  And in area "FRANCE", on "2 JAN 09:00" of year 1, hydro storage pumping is of 24 MWh
+    And in area "FRANCE", during year 1, for cluster "Hydro" and reserve "Res_1_up", reserve participation power is always equal to 30 MWh
+    And in area "FRANCE", during year 1, for cluster "Hydro" and reserve "Res_2_down", reserve participation power is always equal to 7.5 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_1_up", reserve unsupplied power is always equal to 0 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_2_down", reserve unsupplied power is always equal to 52.5 MWh
+    And in area "FRANCE", during year 1, total hydro production is 87360 MWh
+    And in area "FRANCE", during year 1, total hydro pumping is 87360 MWh
+ 
+@fast @short
+# Lot 3_1 : intégration des contraintes de symétries
+# l'objectif de ce test est de tester la symétrie d'un stock CT dans un cas où la symétrie est sur deux réserve à la hausse
+# les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries
+# Test des symmetries avec stocks ST
+  Scenario: ST_symmetry_test_3
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_3_ST"
+    When I run antares simulator 
+    Then the simulation succeeds
+    And the simulation takes less than 60 seconds
+    And in area "FRANCE", during year 1, for cluster "st1" and reserve "Res_1_up", reserve participation power is always equal to 10 MWh
+    And in area "FRANCE", during year 1, for cluster "st1" and reserve "Res_2_up", reserve participation power is always equal to 20 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_1_up", reserve unsupplied power is always equal to 0 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_2_up", reserve unsupplied power is always equal to 10 MWh
+    And in area "FRANCE", year 1 and hour 1, withdrawal for short-term storage "st1" is 0
+    And in area "FRANCE", year 1 and hour 1, injection for short-term storage "st1" is 0
+ 
+@fast @short
+# Lot 3_1 : intégration des contraintes de symétries
+# l'objectif de ce test est de tester la symétrie d'un stock LT dans un cas où la symétrie est sur deux réserve à la hausse
+# les contraintes physiques sur la participation à la hausse contraignent la participation à la baisse du fait des symétries
+# Test des symmetries avec stocks LT
+  Scenario: LT_symmetry_test_3
+    Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/symmetry_test_3_LT"
+    When I run antares simulator 
+    Then the simulation succeeds
+    And the simulation takes less than 60 seconds
+    And in area "FRANCE", during year 1, for cluster "Hydro" and reserve "Res_1_up", reserve participation power is always equal to 10 MWh
+    And in area "FRANCE", during year 1, for cluster "Hydro" and reserve "Res_2_up", reserve participation power is always equal to 20 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_1_up", reserve unsupplied power is always equal to 0 MWh
+    And in area "FRANCE", during year 1, for reserve "Res_2_up", reserve unsupplied power is always equal to 10 MWh
+    And in area "FRANCE", during year 1, total hydro production is 0 MWh
+    And in area "FRANCE", during year 1, total hydro pumping is 0 MWh

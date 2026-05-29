@@ -193,10 +193,10 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
                   += state.hourlyResults->Reserves.value()[state.hourInTheWeek]
-                       .ValeursHorairesInternalUnsatisfied[reserve.areaReserveIndex];
+                       .ValeursHorairesInternalExcessReserve[reserve.areaReserveIndex];
                 pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]
                   += state.hourlyResults->Reserves.value()[state.hourInTheWeek]
-                       .ValeursHorairesInternalExcessReserve[reserve.areaReserveIndex];
+                       .ValeursHorairesInternalUnsatisfied[reserve.areaReserveIndex];
             }
         }
 
@@ -233,13 +233,13 @@ public:
                   reserveID);
                 // Write the data for the current year
                 Yuni::String caption = reserveName;
-                caption << "_UNSP.";
+                caption << "_SPIL.";
                 results.variableCaption = caption; // VCardType::Caption();
                 pValuesForTheCurrentYear[numSpace][column]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
                 column++;
                 caption = reserveName;
-                caption << "_SPIL.";
+                caption << "_UNSP.";
                 results.variableCaption = caption; // VCardType::Caption();
                 pValuesForTheCurrentYear[numSpace][column]
                   .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
