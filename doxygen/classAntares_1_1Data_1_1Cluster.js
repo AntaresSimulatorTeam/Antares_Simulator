@@ -9,7 +9,6 @@ var classAntares_1_1Data_1_1Cluster =
     [ "isEnabled", "classAntares_1_1Data_1_1Cluster.html#ab99c2591da5313c6096ce8d8731f9f38", null ],
     [ "loadDataSeriesFromFolder", "classAntares_1_1Data_1_1Cluster.html#a73f6dd3032b764da0e310681a73b8283", null ],
     [ "name", "classAntares_1_1Data_1_1Cluster.html#abcca945059844e48edabf6d5b6ffbabe", null ],
-    [ "reset", "classAntares_1_1Data_1_1Cluster.html#ad2fa043c2ab650773c2e137251f09430", null ],
     [ "saveDataSeriesToFolder", "classAntares_1_1Data_1_1Cluster.html#a490bcd5d8603aa5b97da71f84392e599", null ],
     [ "setGroup", "classAntares_1_1Data_1_1Cluster.html#a45267a688c9e15b7bf7c95da3a9ba1c8", null ],
     [ "setName", "classAntares_1_1Data_1_1Cluster.html#a3a67a5f3829e861c899ab4ce1a2f4989", null ],

@@ -745,6 +745,7 @@ var hierarchy =
     [ "Impl", null, [
       [ "Antares::Solver::Simulation::ISimulation< Impl >", "classAntares_1_1Solver_1_1Simulation_1_1ISimulation.html", null ]
     ] ],
+    [ "ImportPreproFixture", "structImportPreproFixture.html", null ],
     [ "Antares::Expressions::IName", "classAntares_1_1Expressions_1_1IName.html", [
       [ "Antares::Expressions::Visitors::NodeVisitor< std::string >", "classAntares_1_1Expressions_1_1Visitors_1_1NodeVisitor.html", [
         [ "Antares::Expressions::Visitors::PrintVisitor", "classAntares_1_1Expressions_1_1Visitors_1_1PrintVisitor.html", null ]

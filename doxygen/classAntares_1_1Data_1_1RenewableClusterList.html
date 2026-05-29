@@ -175,10 +175,6 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><b>each_enabled</b> () c
 <tr class="memitem:ae8be8b32fe073a8d724a5f6c0446f0a2 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="ae8be8b32fe073a8d724a5f6c0446f0a2"></a>
 std::vector&lt; std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>all</b> () const</td></tr>
 <tr class="separator:ae8be8b32fe073a8d724a5f6c0446f0a2 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3bcc3ab30f269f9badaf7eb73d48cf4 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="ab3bcc3ab30f269f9badaf7eb73d48cf4"></a>
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ClusterList.html#ab3bcc3ab30f269f9badaf7eb73d48cf4">remove</a> (const std::string &amp;id)</td></tr>
-<tr class="memdesc:ab3bcc3ab30f269f9badaf7eb73d48cf4 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove properly a cluster. <br /></td></tr>
-<tr class="separator:ab3bcc3ab30f269f9badaf7eb73d48cf4 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34ea5ccff46a89e40ec06196e67f8dca inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="a34ea5ccff46a89e40ec06196e67f8dca"></a>
 SharedPtr&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (std::size_t idx)</td></tr>
 <tr class="separator:a34ea5ccff46a89e40ec06196e67f8dca inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,9 +208,9 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>allClustersCo
 <tr class="memitem:a41275beda3d71e2000d6effa2133a6d6 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="a41275beda3d71e2000d6effa2133a6d6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addToCompleteList</b> (std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> &gt; cluster)</td></tr>
 <tr class="separator:a41275beda3d71e2000d6effa2133a6d6 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dc77ef05e2f8f008efd950e74b2e0d5 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="a7dc77ef05e2f8f008efd950e74b2e0d5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>sortCompleteList</b> ()</td></tr>
-<tr class="separator:a7dc77ef05e2f8f008efd950e74b2e0d5 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc19854e4ef366d6e3e6d7e928fa61fc inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="adc19854e4ef366d6e3e6d7e928fa61fc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildIndexes</b> ()</td></tr>
+<tr class="separator:adc19854e4ef366d6e3e6d7e928fa61fc inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b9d5385626a8d8a5ec3e3416bd62401 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="a9b9d5385626a8d8a5ec3e3416bd62401"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>loadDataSeriesFromFolder</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study, const std::filesystem::path &amp;folder)</td></tr>
 <tr class="separator:a9b9d5385626a8d8a5ec3e3416bd62401 inherit pub_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,10 +227,6 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:aeb6a0146964ba3912c8ac291a74a61a2 inherit pub_types_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="aeb6a0146964ba3912c8ac291a74a61a2"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>SharedPtr</b> = typename std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> &gt;</td></tr>
 <tr class="separator:aeb6a0146964ba3912c8ac291a74a61a2 inherit pub_types_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_classAntares_1_1Data_1_1ClusterList"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classAntares_1_1Data_1_1ClusterList')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAntares_1_1Data_1_1ClusterList.html">Antares::Data::ClusterList&lt; RenewableCluster &gt;</a></td></tr>
-<tr class="memitem:a15e5fd0a7d059a7aab8312a64ecdc057 inherit pro_methods_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="a15e5fd0a7d059a7aab8312a64ecdc057"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rebuildIndexes</b> ()</td></tr>
-<tr class="separator:a15e5fd0a7d059a7aab8312a64ecdc057 inherit pro_methods_classAntares_1_1Data_1_1ClusterList"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classAntares_1_1Data_1_1ClusterList"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classAntares_1_1Data_1_1ClusterList')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classAntares_1_1Data_1_1ClusterList.html">Antares::Data::ClusterList&lt; RenewableCluster &gt;</a></td></tr>
 <tr class="memitem:a5ef6d4bf41805300660ad0986f8bda0e inherit pro_attribs_classAntares_1_1Data_1_1ClusterList"><td class="memItemLeft" align="right" valign="top"><a id="a5ef6d4bf41805300660ad0986f8bda0e"></a>
 std::vector&lt; std::shared_ptr&lt; <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>allClusters_</b></td></tr>

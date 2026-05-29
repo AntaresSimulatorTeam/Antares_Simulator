@@ -1167,6 +1167,7 @@ var annotated_dup =
     [ "HydroStoreCapacityThresholds", "classHydroStoreCapacityThresholds.html", "classHydroStoreCapacityThresholds" ],
     [ "HydroStoreMaxReserve", "classHydroStoreMaxReserve.html", "classHydroStoreMaxReserve" ],
     [ "I_MPS_writer", "classI__MPS__writer.html", "classI__MPS__writer" ],
+    [ "ImportPreproFixture", "structImportPreproFixture.html", "structImportPreproFixture" ],
     [ "IniConstraint", "structIniConstraint.html", "structIniConstraint" ],
     [ "InMemoryLoader", "classInMemoryLoader.html", "classInMemoryLoader" ],
     [ "InMemoryStudyLoader", "classInMemoryStudyLoader.html", "classInMemoryStudyLoader" ],

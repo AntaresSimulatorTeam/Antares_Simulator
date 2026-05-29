@@ -158,21 +158,12 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>RenewableClusterList
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#a3c9a530ab8e9ec5406d23136f31c06c6">RenewableCluster</a> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *parent)</td></tr>
 <tr class="memdesc:a3c9a530ab8e9ec5406d23136f31c06c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor, with a parent area. <br /></td></tr>
 <tr class="separator:a3c9a530ab8e9ec5406d23136f31c06c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45d0c3151285c29957c016f920077693"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#a45d0c3151285c29957c016f920077693">reset</a> () override</td></tr>
-<tr class="memdesc:a45d0c3151285c29957c016f920077693"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset to default values.  <a href="classAntares_1_1Data_1_1RenewableCluster.html#a45d0c3151285c29957c016f920077693">More...</a><br /></td></tr>
-<tr class="separator:a45d0c3151285c29957c016f920077693"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82efd74ab839881d99f179dab4a308ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef">integrityCheck</a> () override</td></tr>
 <tr class="memdesc:a82efd74ab839881d99f179dab4a308ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check and fix all values of a renewable cluster.  <a href="classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef">More...</a><br /></td></tr>
 <tr class="separator:a82efd74ab839881d99f179dab4a308ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42c158eb0bd0eff4fc7868102a8fe924"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html#a42c158eb0bd0eff4fc7868102a8fe924">copyFrom</a> (const <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> &amp;cluster)</td></tr>
-<tr class="memdesc:a42c158eb0bd0eff4fc7868102a8fe924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy data from another cluster.  <a href="classAntares_1_1Data_1_1RenewableCluster.html#a42c158eb0bd0eff4fc7868102a8fe924">More...</a><br /></td></tr>
-<tr class="separator:a42c158eb0bd0eff4fc7868102a8fe924"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06252f78ea63b56b7bc2191ab62e70da"><td class="memItemLeft" align="right" valign="top"><a id="a06252f78ea63b56b7bc2191ab62e70da"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>setTimeSeriesModeFromString</b> (const YString &amp;value)</td></tr>
 <tr class="separator:a06252f78ea63b56b7bc2191ab62e70da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5ef481b29540357a27b0bfc1b6edc77"><td class="memItemLeft" align="right" valign="top"><a id="ae5ef481b29540357a27b0bfc1b6edc77"></a>
-YString&#160;</td><td class="memItemRight" valign="bottom"><b>getTimeSeriesModeAsString</b> () const</td></tr>
-<tr class="separator:ae5ef481b29540357a27b0bfc1b6edc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a765f7b3f2c8fe3031bf05aceea780567"><td class="memItemLeft" align="right" valign="top"><a id="a765f7b3f2c8fe3031bf05aceea780567"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>valueAtTimeStep</b> (uint year, uint hourInYear) const</td></tr>
 <tr class="separator:a765f7b3f2c8fe3031bf05aceea780567"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -275,27 +266,6 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>pID</b></td></
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a42c158eb0bd0eff4fc7868102a8fe924"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42c158eb0bd0eff4fc7868102a8fe924">&#9670;&nbsp;</a></span>copyFrom()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Antares::Data::RenewableCluster::copyFrom </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> &amp;&#160;</td>
-          <td class="paramname"><em>cluster</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Copy data from another cluster. </p>
-<p>The name and the id will remain untouched. </p>
-
-</div>
-</div>
 <a id="a82efd74ab839881d99f179dab4a308ef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82efd74ab839881d99f179dab4a308ef">&#9670;&nbsp;</a></span>integrityCheck()</h2>
 
@@ -323,36 +293,6 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>pID</b></td></
 <dl class="section return"><dt>Returns</dt><dd>False if an error has been detected and fixed with a default value </dd></dl>
 
 <p>Implements <a class="el" href="classAntares_1_1Data_1_1Cluster.html#acd914aeeada706fa6c666551c39930a0">Antares::Data::Cluster</a>.</p>
-
-</div>
-</div>
-<a id="a45d0c3151285c29957c016f920077693"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45d0c3151285c29957c016f920077693">&#9670;&nbsp;</a></span>reset()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Antares::Data::RenewableCluster::reset </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reset to default values. </p>
-<p>This method should only be called from the GUI </p>
-
-<p>Reimplemented from <a class="el" href="classAntares_1_1Data_1_1Cluster.html#ad2fa043c2ab650773c2e137251f09430">Antares::Data::Cluster</a>.</p>
 
 </div>
 </div>

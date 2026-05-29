@@ -190,9 +190,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#acd6521d444413475db5e715adb608ef7">clear</a> ()</td></tr>
 <tr class="memdesc:acd6521d444413475db5e715adb608ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all ressources held by the study. <br /></td></tr>
 <tr class="separator:acd6521d444413475db5e715adb608ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00b28d976a7a0c044601385aa12269d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a00b28d976a7a0c044601385aa12269d3">saveToFolder</a> (const AnyString &amp;newfolder)</td></tr>
-<tr class="memdesc:a00b28d976a7a0c044601385aa12269d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the study into a folder.  <a href="classAntares_1_1Data_1_1Study.html#a00b28d976a7a0c044601385aa12269d3">More...</a><br /></td></tr>
-<tr class="separator:a00b28d976a7a0c044601385aa12269d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Time-series</div></td></tr>
 <tr class="memitem:af9ad1a7b6c23244c61ed1d54db2b78d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#af9ad1a7b6c23244c61ed1d54db2b78d4">resizeAllTimeseriesNumbers</a> (uint n)</td></tr>
 <tr class="memdesc:af9ad1a7b6c23244c61ed1d54db2b78d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resize all matrices dedicated to the sampled timeseries numbers.  <a href="classAntares_1_1Data_1_1Study.html#af9ad1a7b6c23244c61ed1d54db2b78d4">More...</a><br /></td></tr>
@@ -235,7 +232,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ad43b7a846cf79eb0919a9684c0bfff5d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ad43b7a846cf79eb0919a9684c0bfff5d">IsRootStudy</a> (const AnyString &amp;<a class="el" href="classAntares_1_1Data_1_1Study.html#a04980e46140e38a240208669bb06dc3e">folder</a>)</td></tr>
 <tr class="memdesc:ad43b7a846cf79eb0919a9684c0bfff5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if a folder if a study.  <a href="classAntares_1_1Data_1_1Study.html#ad43b7a846cf79eb0919a9684c0bfff5d">More...</a><br /></td></tr>
 <tr class="separator:ad43b7a846cf79eb0919a9684c0bfff5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1926ec8343adc8aab7d1890761005e79"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a1926ec8343adc8aab7d1890761005e79">IsRootStudy</a> (const AnyString &amp;<a class="el" href="classAntares_1_1Data_1_1Study.html#a04980e46140e38a240208669bb06dc3e">folder</a>, YString &amp;<a class="el" href="classAntares_1_1Data_1_1Study.html#a5d8484658149415accffb74b279f891d">buffer</a>)</td></tr>
+<tr class="memitem:a1926ec8343adc8aab7d1890761005e79"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a1926ec8343adc8aab7d1890761005e79">IsRootStudy</a> (const AnyString &amp;<a class="el" href="classAntares_1_1Data_1_1Study.html#a04980e46140e38a240208669bb06dc3e">folder</a>, YString &amp;buffer)</td></tr>
 <tr class="memdesc:a1926ec8343adc8aab7d1890761005e79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if a folder if a study.  <a href="classAntares_1_1Data_1_1Study.html#a1926ec8343adc8aab7d1890761005e79">More...</a><br /></td></tr>
 <tr class="separator:a1926ec8343adc8aab7d1890761005e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -258,6 +255,11 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a clas
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#abab3ba2d3eaea32c649e29c06517c7b8">folderSettings</a></td></tr>
 <tr class="memdesc:abab3ba2d3eaea32c649e29c06517c7b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The settings folder. <br /></td></tr>
 <tr class="separator:abab3ba2d3eaea32c649e29c06517c7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Areas</div></td></tr>
+<tr class="memitem:ad4f8a799f2cf9214dada8b0ad8993214"><td class="memItemLeft" align="right" valign="top"><a id="ad4f8a799f2cf9214dada8b0ad8993214"></a>
+<a class="el" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ad4f8a799f2cf9214dada8b0ad8993214">areas</a></td></tr>
+<tr class="memdesc:ad4f8a799f2cf9214dada8b0ad8993214"><td class="mdescLeft">&#160;</td><td class="mdescRight">All available areas. <br /></td></tr>
+<tr class="separator:ad4f8a799f2cf9214dada8b0ad8993214"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Binding constraints</div></td></tr>
 <tr class="memitem:a24abc348d810c423a622796e34afe476"><td class="memItemLeft" align="right" valign="top"><a id="a24abc348d810c423a622796e34afe476"></a>
 <a class="el" href="classAntares_1_1Data_1_1BindingConstraintsRepository.html">BindingConstraintsRepository</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a24abc348d810c423a622796e34afe476">bindingConstraints</a></td></tr>
@@ -289,12 +291,8 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a clas
 <tr class="memdesc:ab79f4691a33e445f73d06782389a8a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classAntares_1_1Data_1_1Sets.html">Sets</a> of areas. <br /></td></tr>
 <tr class="separator:ab79f4691a33e445f73d06782389a8a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Cache</div></td></tr>
-<tr class="memitem:a5d8484658149415accffb74b279f891d"><td class="memItemLeft" align="right" valign="top">YString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a5d8484658149415accffb74b279f891d">buffer</a></td></tr>
-<tr class="memdesc:a5d8484658149415accffb74b279f891d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the whole study as modified.  <a href="classAntares_1_1Data_1_1Study.html#a5d8484658149415accffb74b279f891d">More...</a><br /></td></tr>
-<tr class="separator:a5d8484658149415accffb74b279f891d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad441def28743298e5a1a6c1ebdb409f1"><td class="memItemLeft" align="right" valign="top"><a id="ad441def28743298e5a1a6c1ebdb409f1"></a>
-<a class="el" href="classAntares_1_1Matrix.html">Matrix</a> ::BufferType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ad441def28743298e5a1a6c1ebdb409f1">dataBuffer</a></td></tr>
-<tr class="memdesc:ad441def28743298e5a1a6c1ebdb409f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A buffer for temporary operations on large amount of data. <br /></td></tr>
+<tr class="memitem:ad441def28743298e5a1a6c1ebdb409f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a> ::BufferType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ad441def28743298e5a1a6c1ebdb409f1">dataBuffer</a></td></tr>
+<tr class="memdesc:ad441def28743298e5a1a6c1ebdb409f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark the whole study as modified.  <a href="classAntares_1_1Data_1_1Study.html#ad441def28743298e5a1a6c1ebdb409f1">More...</a><br /></td></tr>
 <tr class="separator:ad441def28743298e5a1a6c1ebdb409f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada434a01757875a8c244e3a6d0c50344"><td class="memItemLeft" align="right" valign="top"><a id="ada434a01757875a8c244e3a6d0c50344"></a>
 YString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ada434a01757875a8c244e3a6d0c50344">bufferLoadingTS</a></td></tr>
@@ -391,15 +389,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a3f09b156f174f3569d4275e8f760f2ea"><td class="memItemLeft" align="right" valign="top"><a id="a3f09b156f174f3569d4275e8f760f2ea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>saveAboutTheStudy</b> (<a class="el" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a> &amp;resultWriter)</td></tr>
 <tr class="separator:a3f09b156f174f3569d4275e8f760f2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Areas</h2></td></tr>
-<tr class="memitem:ad4f8a799f2cf9214dada8b0ad8993214"><td class="memItemLeft" align="right" valign="top"><a id="ad4f8a799f2cf9214dada8b0ad8993214"></a>
-<a class="el" href="classAntares_1_1Data_1_1AreaList.html">AreaList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#ad4f8a799f2cf9214dada8b0ad8993214">areas</a></td></tr>
-<tr class="memdesc:ad4f8a799f2cf9214dada8b0ad8993214"><td class="mdescLeft">&#160;</td><td class="mdescRight">All available areas. <br /></td></tr>
-<tr class="separator:ad4f8a799f2cf9214dada8b0ad8993214"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72747f33cee6845ff0ae1ab349614962"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1Study.html#a72747f33cee6845ff0ae1ab349614962">modifyAreaNameIfAlreadyTaken</a> (AreaName &amp;out, const AreaName &amp;basename)</td></tr>
-<tr class="memdesc:a72747f33cee6845ff0ae1ab349614962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to find a name for a new area.  <a href="classAntares_1_1Data_1_1Study.html#a72747f33cee6845ff0ae1ab349614962">More...</a><br /></td></tr>
-<tr class="separator:a72747f33cee6845ff0ae1ab349614962"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader">Scenario Builder</h2></td></tr>
 <tr class="memitem:ab38f6175f709dd6eb830dab471b5ec16"><td class="memItemLeft" align="right" valign="top"><a id="ab38f6175f709dd6eb830dab471b5ec16"></a>
@@ -710,44 +699,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
-<a id="a72747f33cee6845ff0ae1ab349614962"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72747f33cee6845ff0ae1ab349614962">&#9670;&nbsp;</a></span>modifyAreaNameIfAlreadyTaken()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Antares::Data::Study::modifyAreaNameIfAlreadyTaken </td>
-          <td>(</td>
-          <td class="paramtype">AreaName &amp;&#160;</td>
-          <td class="paramname"><em>out</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const AreaName &amp;&#160;</td>
-          <td class="paramname"><em>basename</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Try to find a name for a new area. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">out</td><td>The new name </td></tr>
-    <tr><td class="paramname">basename</td><td>The root base name </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if a new name has been found, false otherwise </dd></dl>
-
-</div>
-</div>
 <a id="adbac27cdf3533a86aaf7e0b331b41f00"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adbac27cdf3533a86aaf7e0b331b41f00">&#9670;&nbsp;</a></span>performTransformationsBeforeLaunchingSimulation()</h2>
 
@@ -812,33 +763,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a00b28d976a7a0c044601385aa12269d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00b28d976a7a0c044601385aa12269d3">&#9670;&nbsp;</a></span>saveToFolder()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Antares::Data::Study::saveToFolder </td>
-          <td>(</td>
-          <td class="paramtype">const AnyString &amp;&#160;</td>
-          <td class="paramname"><em>newfolder</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Save the study into a folder. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">folder</td><td>The folder where to write data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if succeeded, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -933,31 +857,6 @@ template&lt;TimeSeriesType TimeSeriesT&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a5d8484658149415accffb74b279f891d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d8484658149415accffb74b279f891d">&#9670;&nbsp;</a></span>buffer</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">YString Antares::Data::Study::buffer</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">mutable</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Mark the whole study as modified. </p>
-<p>A buffer for temporary operations on filename </p>
-
-</div>
-</div>
 <a id="ac281be788c497684c273acbdfc6c20ba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac281be788c497684c273acbdfc6c20ba">&#9670;&nbsp;</a></span>cacheTSGenerator</h2>
 
@@ -1006,6 +905,31 @@ template&lt;TimeSeriesType TimeSeriesT&gt; </div>
 
 <p>Calendar output. </p>
 <p>With leap year mode (if any), for the output results </p>
+
+</div>
+</div>
+<a id="ad441def28743298e5a1a6c1ebdb409f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad441def28743298e5a1a6c1ebdb409f1">&#9670;&nbsp;</a></span>dataBuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAntares_1_1Matrix.html">Matrix</a> ::BufferType Antares::Data::Study::dataBuffer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Mark the whole study as modified. </p>
+<p>A buffer for temporary operations on large amount of data </p>
 
 </div>
 </div>
