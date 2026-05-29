@@ -950,7 +950,7 @@ var namespaces_dup =
         [ "fictitiousLoadConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a46b71a6ea25755421399d5a0ec661061", null ],
         [ "format_as", "MCYearAndTime_8h.html#a42bbf89c2f89bc518949ad86f6818be4", null ],
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
-        [ "hasModelerIntegerVariables", "MipDetection_8h.html#a315948fa5e8b4d579f90f64746ac93f0", null ],
+        [ "hasIntegerVariables", "MipDetection_8h.html#afd16294e3590316f6b1e9942203bc15d", null ],
         [ "Helper", "watched-constraints_8cpp.html#a9957d3cc982e75341f07ae9e56c1e0e5", null ],
         [ "lessTypeName", "report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3", null ],
         [ "makeUnfeasiblePbAnalyzer", "unfeasible-pb-analyzer_8h.html#a14f36c0006d50ed493aa40606b57bb4b", null ],
@@ -990,6 +990,8 @@ var namespaces_dup =
           ] ],
           [ "AreLocationsCompatibleForExpressions", "optimConfig_8h.html#a212e08571d583e009b56ee75c9e62a50", null ],
           [ "AreLocationsCompatibleForFillers", "optimConfig_8h.html#a9c76fbf2b1ae3940ad065de952756e85", null ],
+          [ "isInMasterProblem", "optimConfig_8h.html#ac41479f5fa1838a139c33bc11e285e88", null ],
+          [ "isInSubProblem", "optimConfig_8h.html#a3f5ebe117f541fe55ada88bc18f71304", null ],
           [ "LocationToStr", "optimConfig_8h.html#a487ce8a7604f9a2b9716cbf6a2554ada", null ]
         ] ],
         [ "Implementation", null, [
@@ -1543,6 +1545,14 @@ var namespaces_dup =
           [ "VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable" ],
           [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ],
           [ "computeDynamicAggregationMaxColumns", "dynamicAggregation_8h.html#a46d874edd63992243ecc6fe88f0958cb", null ]
+        ] ],
+        [ "Workflow", null, [
+          [ "GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig" ],
+          [ "SolverType", "generationAndResolutionConfig_8h.html#a8a1d9884e34c8ee9a5f618a9885d936c", [
+            [ "LP", "generationAndResolutionConfig_8h.html#a8a1d9884e34c8ee9a5f618a9885d936ca233724c5adf28da47784390134db3c66", null ],
+            [ "MILP", "generationAndResolutionConfig_8h.html#a8a1d9884e34c8ee9a5f618a9885d936ca3d57651a7c50473ebcab7feab3331a93", null ]
+          ] ],
+          [ "getWorkflow", "generationAndResolutionConfig_8cpp.html#a79bfa341cdf84d81842696679981055b", null ]
         ] ],
         [ "ModelerProblems", "classAntares_1_1Solver_1_1ModelerProblems.html", "classAntares_1_1Solver_1_1ModelerProblems" ],
         [ "SingleProblemGetter", "classAntares_1_1Solver_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1SingleProblemGetter" ],

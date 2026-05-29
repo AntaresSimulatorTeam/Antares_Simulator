@@ -626,6 +626,7 @@ var hierarchy =
     [ "FlowDissociationData", "structFlowDissociationData.html", null ],
     [ "Antares::IO::Inputs::ForbidNodes::ForbiddenNodes", "classAntares_1_1IO_1_1Inputs_1_1ForbidNodes_1_1ForbiddenNodes.html", null ],
     [ "Antares::Concurrency::FutureSet", "classAntares_1_1Concurrency_1_1FutureSet.html", null ],
+    [ "Antares::Solver::Workflow::GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", null ],
     [ "Antares::Solver::Variable::Economy::GenerationTraits< Tag >", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits.html", null ],
     [ "global_JIT_manager", "classglobal__JIT__manager.html", null ],
     [ "Antares::Data::ShortTermStorage::GroupsHours", "classAntares_1_1Data_1_1ShortTermStorage_1_1GroupsHours.html", null ],

@@ -672,204 +672,206 @@ $(document).ready(function(){initNavTree('sim__structure__probleme__economique_8
 <div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;    <span class="keywordtype">bool</span> WaterValueAccurate = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;    <span class="keywordtype">bool</span> OptimisationNotFastMode = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;    <span class="keywordtype">bool</span> OptimisationAvecVariablesEntieres = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;    uint32_t NombreDePays = 0;</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    std::vector&lt;const char*&gt; NomsDesPays;</div>
-<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;    uint32_t NombreDePaliersThermiques = 0;</div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160; </div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;    uint32_t NombreDInterconnexions = 0;</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;    std::vector&lt;int&gt; PaysOrigineDeLInterconnexion;</div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;    std::vector&lt;int&gt; PaysExtremiteDeLInterconnexion;</div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;    std::vector&lt;COUTS_DE_TRANSPORT&gt; CoutDeTransport;</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160; </div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;    std::vector&lt;VALEURS_DE_NTC_ET_RESISTANCES&gt; ValeursDeNTC;</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;    <span class="keywordtype">bool</span> useThermalHeuristic = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160; </div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;    uint32_t NombreDePays = 0;</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;    std::vector&lt;const char*&gt; NomsDesPays;</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;    uint32_t NombreDePaliersThermiques = 0;</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160; </div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;    uint32_t NombreDInterconnexions = 0;</div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;    std::vector&lt;int&gt; PaysOrigineDeLInterconnexion;</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;    std::vector&lt;int&gt; PaysExtremiteDeLInterconnexion;</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;    std::vector&lt;COUTS_DE_TRANSPORT&gt; CoutDeTransport;</div>
 <div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160; </div>
-<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;    uint32_t NombreDePasDeTemps = 0;</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;    std::vector&lt;int32_t&gt; NumeroDeJourDuPasDeTemps;</div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160; </div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;    <span class="comment">// TODO use uint32_t and figure why tests fails</span></div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;    int32_t NombreDePasDeTempsPourUneOptimisation = 0;</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    std::vector&lt;int32_t&gt; NumeroDIntervalleOptimiseDuPasDeTemps;</div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    uint32_t NombreDeJours = 0;</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160; </div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <span class="comment">// TODO same as NombreDePasDeTemps</span></div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;    int32_t NombreDePasDeTempsDUneJournee = 0;</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160; </div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    std::vector&lt;CONSOMMATIONS_ABATTUES&gt; ConsommationsAbattues;</div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;    std::vector&lt;VALEURS_DE_NTC_ET_RESISTANCES&gt; ValeursDeNTC;</div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160; </div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;    uint32_t NombreDePasDeTemps = 0;</div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;    std::vector&lt;int32_t&gt; NumeroDeJourDuPasDeTemps;</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160; </div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    <span class="comment">// TODO use uint32_t and figure why tests fails</span></div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    int32_t NombreDePasDeTempsPourUneOptimisation = 0;</div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;    std::vector&lt;int32_t&gt; NumeroDIntervalleOptimiseDuPasDeTemps;</div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    uint32_t NombreDeJours = 0;</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160; </div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    <span class="comment">// TODO same as NombreDePasDeTemps</span></div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    int32_t NombreDePasDeTempsDUneJournee = 0;</div>
 <div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160; </div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    std::vector&lt;double&gt; CoutDeDefaillancePositive;</div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    std::vector&lt;double&gt; CoutDeDefaillanceNegative;</div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160; </div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;    std::vector&lt;double&gt; CoutDeDebordement;</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    std::vector&lt;CONSOMMATIONS_ABATTUES&gt; ConsommationsAbattues;</div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160; </div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;    std::vector&lt;double&gt; CoutDeDefaillancePositive;</div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;    std::vector&lt;double&gt; CoutDeDefaillanceNegative;</div>
 <div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160; </div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;    std::vector&lt;PALIERS_THERMIQUES&gt; PaliersThermiquesDuPays;</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    std::vector&lt;ENERGIES_ET_PUISSANCES_HYDRAULIQUES&gt; CaracteristiquesHydrauliques;</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160; </div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;    ReserveOpt&lt;std::vector&lt;::AREA_RESERVES_VECTOR&gt;&gt; allReserves;</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;    std::vector&lt;double&gt; CoutDeDebordement;</div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160; </div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;    std::vector&lt;PALIERS_THERMIQUES&gt; PaliersThermiquesDuPays;</div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;    std::vector&lt;ENERGIES_ET_PUISSANCES_HYDRAULIQUES&gt; CaracteristiquesHydrauliques;</div>
 <div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160; </div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;    uint32_t NumberOfShortTermStorages = 0;</div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;    std::vector&lt;::AREA_INPUT&gt; ShortTermStorage;</div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160; </div>
-<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;    <span class="comment">/* Optimization problem */</span></div>
-<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;    std::vector&lt;bool&gt; DefaillanceNegativeUtiliserPMinThermique;</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;    std::vector&lt;bool&gt; DefaillanceNegativeUtiliserHydro;</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;    std::vector&lt;bool&gt; DefaillanceNegativeUtiliserConsoAbattue;</div>
-<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160; </div>
-<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;    std::vector&lt;std::vector&lt;double&gt;&gt; BruitSurCoutHydraulique;</div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;    ReserveOpt&lt;std::vector&lt;::AREA_RESERVES_VECTOR&gt;&gt; allReserves;</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160; </div>
+<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;    uint32_t NumberOfShortTermStorages = 0;</div>
+<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;    std::vector&lt;::AREA_INPUT&gt; ShortTermStorage;</div>
+<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160; </div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;    <span class="comment">/* Optimization problem */</span></div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;    std::vector&lt;bool&gt; DefaillanceNegativeUtiliserPMinThermique;</div>
+<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;    std::vector&lt;bool&gt; DefaillanceNegativeUtiliserHydro;</div>
+<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;    std::vector&lt;bool&gt; DefaillanceNegativeUtiliserConsoAbattue;</div>
 <div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160; </div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    uint32_t NombreDeContraintesCouplantes = 0;</div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;    std::vector&lt;CONTRAINTES_COUPLANTES&gt; MatriceDesContraintesCouplantes;</div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;    std::unordered_map&lt;std::shared_ptr&lt;Data::BindingConstraint&gt;, std::vector&lt;double&gt;&gt;</div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;      ResultatsContraintesCouplantes;</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160; </div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;    std::vector&lt;SOLDE_MOYEN_DES_ECHANGES&gt; SoldeMoyenHoraire; <span class="comment">// Used for quadratic opt</span></div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;    <span class="comment">/* Implementation details : I/O, error management, etc. */</span></div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160; </div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;    Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;    <span class="keywordtype">bool</span> exportMPSOnError = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;    <span class="keywordtype">bool</span> NamedProblems = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;    <span class="keywordtype">bool</span> exportSolutions = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160; </div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    uint32_t HeureDansLAnnee = 0;</div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;    <span class="keywordtype">bool</span> LeProblemeADejaEteInstancie = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160; </div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    std::vector&lt;CORRESPONDANCES_DES_VARIABLES&gt; CorrespondanceVarNativesVarOptim;</div>
-<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;    std::vector&lt;CORRESPONDANCES_DES_CONTRAINTES&gt; CorrespondanceCntNativesCntOptim;</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;    std::vector&lt;CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES&gt;</div>
-<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;      CorrespondanceCntNativesCntOptimJournalieres;</div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;    <a class="code" href="structCORRESPONDANCES__DES__CONTRAINTES__HEBDOMADAIRES.html">CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES</a> CorrespondanceCntNativesCntOptimHebdomadaires;</div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160; </div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;    std::vector&lt;RESERVE_JMOINS1&gt; ReserveJMoins1;</div>
+<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    std::vector&lt;std::vector&lt;double&gt;&gt; BruitSurCoutHydraulique;</div>
+<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160; </div>
+<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;    uint32_t NombreDeContraintesCouplantes = 0;</div>
+<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;    std::vector&lt;CONTRAINTES_COUPLANTES&gt; MatriceDesContraintesCouplantes;</div>
+<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;    std::unordered_map&lt;std::shared_ptr&lt;Data::BindingConstraint&gt;, std::vector&lt;double&gt;&gt;</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;      ResultatsContraintesCouplantes;</div>
+<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160; </div>
+<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;    std::vector&lt;SOLDE_MOYEN_DES_ECHANGES&gt; SoldeMoyenHoraire; <span class="comment">// Used for quadratic opt</span></div>
+<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;    <span class="comment">/* Implementation details : I/O, error management, etc. */</span></div>
+<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160; </div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;    Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;</div>
+<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;    <span class="keywordtype">bool</span> exportMPSOnError = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;    <span class="keywordtype">bool</span> NamedProblems = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    <span class="keywordtype">bool</span> exportSolutions = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160; </div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;    uint32_t HeureDansLAnnee = 0;</div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <span class="keywordtype">bool</span> LeProblemeADejaEteInstancie = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160; </div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;    std::vector&lt;CORRESPONDANCES_DES_VARIABLES&gt; CorrespondanceVarNativesVarOptim;</div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;    std::vector&lt;CORRESPONDANCES_DES_CONTRAINTES&gt; CorrespondanceCntNativesCntOptim;</div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;    std::vector&lt;CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES&gt;</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;      CorrespondanceCntNativesCntOptimJournalieres;</div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;    <a class="code" href="structCORRESPONDANCES__DES__CONTRAINTES__HEBDOMADAIRES.html">CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES</a> CorrespondanceCntNativesCntOptimHebdomadaires;</div>
 <div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160; </div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;    std::vector&lt;int&gt; IndexDebutIntercoOrigine;</div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;    std::vector&lt;int&gt; IndexSuivantIntercoOrigine;</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;    std::vector&lt;int&gt; IndexDebutIntercoExtremite;</div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    std::vector&lt;int&gt; IndexSuivantIntercoExtremite;</div>
-<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160; </div>
-<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;    <span class="keywordtype">bool</span> Expansion = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;    std::vector&lt;RESERVE_JMOINS1&gt; ReserveJMoins1;</div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160; </div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;    std::vector&lt;int&gt; IndexDebutIntercoOrigine;</div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    std::vector&lt;int&gt; IndexSuivantIntercoOrigine;</div>
+<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;    std::vector&lt;int&gt; IndexDebutIntercoExtremite;</div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;    std::vector&lt;int&gt; IndexSuivantIntercoExtremite;</div>
 <div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160; </div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteEnergieHydraulique;</div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteMinEnergieHydraulique;</div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteMaxEnergieHydraulique;</div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteMaxPompage;</div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteDeSoldeDEchange;</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160; </div>
-<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteEquivalenceStockFinal;</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteExpressionStockFinal;</div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160; </div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    std::vector&lt;int&gt; NumeroDeVariableStockFinal;</div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    std::vector&lt;std::vector&lt;int&gt;&gt; NumeroDeVariableDeTrancheDeStock;</div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160; </div>
-<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;    <span class="keywordtype">bool</span> YaDeLaReserveJmoins1 = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;    <span class="keywordtype">bool</span> Expansion = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160; </div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteEnergieHydraulique;</div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteMinEnergieHydraulique;</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteMaxEnergieHydraulique;</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteMaxPompage;</div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteDeSoldeDEchange;</div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160; </div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteEquivalenceStockFinal;</div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    std::vector&lt;int&gt; NumeroDeContrainteExpressionStockFinal;</div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160; </div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    std::vector&lt;int&gt; NumeroDeVariableStockFinal;</div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;    std::vector&lt;std::vector&lt;int&gt;&gt; NumeroDeVariableDeTrancheDeStock;</div>
 <div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160; </div>
-<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    std::vector&lt;ALL_MUST_RUN_GENERATION&gt; AllMustRunGeneration;</div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    <span class="keywordtype">bool</span> YaDeLaReserveJmoins1 = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160; </div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    <a class="code" href="classOptimizationStatistics.html">OptimizationStatistics</a> optimizationStatistics[2];</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    std::vector&lt;ALL_MUST_RUN_GENERATION&gt; AllMustRunGeneration;</div>
 <div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160; </div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;    <span class="comment">/* Adequacy Patch */</span></div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;    std::shared_ptr&lt;AdequacyPatchRuntimeData&gt; adequacyPatchRuntimeData;</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160; </div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    <span class="comment">/* Hydro management */</span></div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    std::vector&lt;double&gt; CoefficientEcretementPMaxHydraulique;</div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;    std::vector&lt;double&gt; previousSimulationFinalLevel;</div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160; </div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    <span class="comment">/* Results */</span></div>
-<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;    std::vector&lt;RESULTATS_HORAIRES&gt; ResultatsHoraires;</div>
-<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;    std::vector&lt;VARIABLES_DUALES_INTERCONNEXIONS&gt; VariablesDualesDesContraintesDeNTC;</div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160; </div>
-<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;    std::vector&lt;double&gt; coutOptimalSolution1;</div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;    std::vector&lt;double&gt; coutOptimalSolution2;</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160; </div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;    TIME_MEASURES timeMeasure;</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;    <a class="code" href="classOptimizationStatistics.html">OptimizationStatistics</a> optimizationStatistics[2];</div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160; </div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;    <span class="comment">/* Adequacy Patch */</span></div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    std::shared_ptr&lt;AdequacyPatchRuntimeData&gt; adequacyPatchRuntimeData;</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160; </div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;    <span class="comment">/* Hydro management */</span></div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;    std::vector&lt;double&gt; CoefficientEcretementPMaxHydraulique;</div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    std::vector&lt;double&gt; previousSimulationFinalLevel;</div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160; </div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;    <span class="comment">/* Results */</span></div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;    std::vector&lt;RESULTATS_HORAIRES&gt; ResultatsHoraires;</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;    std::vector&lt;VARIABLES_DUALES_INTERCONNEXIONS&gt; VariablesDualesDesContraintesDeNTC;</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160; </div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;    std::vector&lt;double&gt; coutOptimalSolution1;</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;    std::vector&lt;double&gt; coutOptimalSolution2;</div>
 <div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160; </div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;    <span class="comment">/* Unused for now, will be used in future revisions */</span></div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;<span class="preprocessor">#if 0</span></div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    <span class="keywordtype">char</span> SecondeOptimisationRelaxee;</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;    <span class="keywordtype">char</span> MarketPoolActivated;</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;    <span class="keywordtype">char</span> FlexUpPoolActivated;</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;    <span class="keywordtype">char</span> FlexDownPoolActivated;</div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;    <span class="keywordtype">char</span> ImpressionDuCritere;</div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;    <span class="keywordtype">char</span> UnitCommitmentExact;</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;    <span class="keywordtype">char</span> BorneDeLaDefaillancePositive;</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160; </div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;    <span class="keywordtype">int</span> NumberOfMarketOfferPool;</div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;    <span class="keywordtype">int</span> NumberOfMarketDemandPool;</div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexUpOfferPool;</div>
-<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexUpDemandPool;</div>
-<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexDownOfferPool;</div>
-<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexDownDemandPool;</div>
-<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160; </div>
-<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;    <span class="keywordtype">int</span>** IsInMarketOfferPool;</div>
-<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;    <span class="keywordtype">int</span>** IsInMarketDemandPool;</div>
-<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;    <span class="keywordtype">int</span>** IsInFlexUpOfferPool;</div>
-<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;    <span class="keywordtype">int</span>** IsInFlexUpDemandPool;</div>
-<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;    <span class="keywordtype">int</span>** IsInFlexDownOfferPool;</div>
-<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    <span class="keywordtype">int</span>** IsInFlexDownDemandPool;</div>
-<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160; </div>
-<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;    <span class="keywordtype">int</span> NumberOfMarketEdge;</div>
-<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;    <span class="keywordtype">int</span>* OfferPoolOfMarketEdge;</div>
-<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;    <span class="keywordtype">int</span>* DemandPoolOfMarketEdge;</div>
-<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160; </div>
-<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;    <span class="keywordtype">int</span>* IndexFirstMarketEdgeOffer;</div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;    <span class="keywordtype">int</span>* IndexNextMarketEdgeOffer;</div>
-<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    <span class="keywordtype">int</span>* IndexFirstMarketEdgeDemand;</div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;    <span class="keywordtype">int</span>* IndexNextMarketEdgeDemand;</div>
-<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160; </div>
-<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexUpEdge;</div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;    <span class="keywordtype">int</span>* OfferPoolOfFlexUpEdge;</div>
-<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;    <span class="keywordtype">int</span>* DemandPoolOfFlexUpEdge;</div>
-<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160; </div>
-<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexUpEdgeOffer;</div>
-<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexUpEdgeOffer;</div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexUpEdgeDemand;</div>
-<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexUpEdgeDemand;</div>
-<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160; </div>
-<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexDownEdge;</div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;    <span class="keywordtype">int</span>* OfferPoolOfFlexDownEdge;</div>
-<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;    <span class="keywordtype">int</span>* DemandPoolOfFlexDownEdge;</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160; </div>
-<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexDownEdgeOffer;</div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexDownEdgeOffer;</div>
-<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexDownEdgeDemand;</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexDownEdgeDemand;</div>
-<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160; </div>
-<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;    <span class="keywordtype">double</span>** MarketPoolQuota;</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;    TIME_MEASURES timeMeasure;</div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160; </div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    <span class="comment">/* Unused for now, will be used in future revisions */</span></div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;    <span class="keywordtype">char</span> SecondeOptimisationRelaxee;</div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;    <span class="keywordtype">char</span> MarketPoolActivated;</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;    <span class="keywordtype">char</span> FlexUpPoolActivated;</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;    <span class="keywordtype">char</span> FlexDownPoolActivated;</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;    <span class="keywordtype">char</span> ImpressionDuCritere;</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;    <span class="keywordtype">char</span> UnitCommitmentExact;</div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;    <span class="keywordtype">char</span> BorneDeLaDefaillancePositive;</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160; </div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;    <span class="keywordtype">int</span> NumberOfMarketOfferPool;</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    <span class="keywordtype">int</span> NumberOfMarketDemandPool;</div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexUpOfferPool;</div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexUpDemandPool;</div>
+<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexDownOfferPool;</div>
+<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexDownDemandPool;</div>
+<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160; </div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;    <span class="keywordtype">int</span>** IsInMarketOfferPool;</div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;    <span class="keywordtype">int</span>** IsInMarketDemandPool;</div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;    <span class="keywordtype">int</span>** IsInFlexUpOfferPool;</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    <span class="keywordtype">int</span>** IsInFlexUpDemandPool;</div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;    <span class="keywordtype">int</span>** IsInFlexDownOfferPool;</div>
+<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;    <span class="keywordtype">int</span>** IsInFlexDownDemandPool;</div>
+<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160; </div>
+<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;    <span class="keywordtype">int</span> NumberOfMarketEdge;</div>
+<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;    <span class="keywordtype">int</span>* OfferPoolOfMarketEdge;</div>
+<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;    <span class="keywordtype">int</span>* DemandPoolOfMarketEdge;</div>
+<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160; </div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    <span class="keywordtype">int</span>* IndexFirstMarketEdgeOffer;</div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;    <span class="keywordtype">int</span>* IndexNextMarketEdgeOffer;</div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;    <span class="keywordtype">int</span>* IndexFirstMarketEdgeDemand;</div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    <span class="keywordtype">int</span>* IndexNextMarketEdgeDemand;</div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160; </div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexUpEdge;</div>
+<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;    <span class="keywordtype">int</span>* OfferPoolOfFlexUpEdge;</div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;    <span class="keywordtype">int</span>* DemandPoolOfFlexUpEdge;</div>
+<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160; </div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexUpEdgeOffer;</div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexUpEdgeOffer;</div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexUpEdgeDemand;</div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexUpEdgeDemand;</div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160; </div>
+<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;    <span class="keywordtype">int</span> NumberOfFlexDownEdge;</div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;    <span class="keywordtype">int</span>* OfferPoolOfFlexDownEdge;</div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;    <span class="keywordtype">int</span>* DemandPoolOfFlexDownEdge;</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160; </div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexDownEdgeOffer;</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexDownEdgeOffer;</div>
+<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;    <span class="keywordtype">int</span>* IndexFirstFlexDownEdgeDemand;</div>
+<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;    <span class="keywordtype">int</span>* IndexNextFlexDownEdgeDemand;</div>
 <div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160; </div>
-<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;    <span class="keywordtype">double</span>** FlexUpPoolQuota;</div>
+<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;    <span class="keywordtype">double</span>** MarketPoolQuota;</div>
 <div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160; </div>
-<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;    <span class="keywordtype">double</span>** FlexDownPoolQuota;</div>
+<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;    <span class="keywordtype">double</span>** FlexUpPoolQuota;</div>
 <div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160; </div>
-<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;    <a class="code" href="structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html">TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE</a>** DataMarketEdges;</div>
-<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;    <a class="code" href="structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html">TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE</a>** DataFlexUpEdges;</div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <a class="code" href="structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html">TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE</a>** DataFlexDownEdges;</div>
-<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160; </div>
-<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;    <a class="code" href="structDEMAND__MARKET__POOL.html">DEMAND_MARKET_POOL</a>** DemandMarketPool;</div>
-<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;    <a class="code" href="structDEMAND__FLEX__UP__POOL.html">DEMAND_FLEX_UP_POOL</a>** DemandFlexUpPool;</div>
-<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;    <a class="code" href="structDEMAND__FLEX__DOWN__POOL.html">DEMAND_FLEX_DOWN_POOL</a>** DemandFlexDownPool;</div>
-<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;    <a class="code" href="structBOUND__FLEX__UP__NODE.html">BOUND_FLEX_UP_NODE</a>** BoundFlexUpNode;</div>
-<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;    <a class="code" href="structBOUND__FLEX__DOWN__NODE.html">BOUND_FLEX_DOWN_NODE</a>** BoundFlexDownNode;</div>
-<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;    <a class="code" href="structLEVEL__FLEX__UP__NODE.html">LEVEL_FLEX_UP_NODE</a>** LevelFlexUpNode;</div>
-<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;    <a class="code" href="structLEVEL__FLEX__DOWN__NODE.html">LEVEL_FLEX_DOWN_NODE</a>** LevelFlexDownNode;</div>
-<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160; </div>
-<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;    <span class="keywordtype">int</span>* MarketOfferPoolOfNode;</div>
-<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;    <span class="keywordtype">int</span>* MarketDemandPoolOfNode;</div>
-<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;    <span class="keywordtype">int</span>* FlexUpOfferPoolOfNode;</div>
-<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;    <span class="keywordtype">int</span>* FlexUpDemandPoolOfNode;</div>
-<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;    <span class="keywordtype">int</span>* FlexDownOfferPoolOfNode;</div>
-<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;    <span class="keywordtype">int</span>* FlexDownDemandPoolOfNode;</div>
-<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160; </div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;    <span class="comment">/* Unknown status */</span></div>
-<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;    std::vector&lt;int&gt; NbGrpCourbeGuide; <span class="comment">// ?</span></div>
-<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;    std::vector&lt;int&gt; NbGrpOpt;         <span class="comment">// ?</span></div>
-<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160; </div>
-<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;    std::unique_ptr&lt;PROBLEME_ANTARES_A_RESOUDRE&gt;</div>
-<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;      ProblemeAResoudre = std::make_unique&lt;PROBLEME_ANTARES_A_RESOUDRE&gt;();</div>
-<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160; </div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;    <span class="comment">// TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions</span></div>
-<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ModelerData.html">Solver::ModelerData</a>* modelerData = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;};</div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;    <span class="keywordtype">double</span>** FlexDownPoolQuota;</div>
+<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160; </div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <a class="code" href="structTRANSFER__BOUND__AND__LEVEL__MARKET__EDGE.html">TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE</a>** DataMarketEdges;</div>
+<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;    <a class="code" href="structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html">TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE</a>** DataFlexUpEdges;</div>
+<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;    <a class="code" href="structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html">TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE</a>** DataFlexDownEdges;</div>
+<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160; </div>
+<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;    <a class="code" href="structDEMAND__MARKET__POOL.html">DEMAND_MARKET_POOL</a>** DemandMarketPool;</div>
+<div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;    <a class="code" href="structDEMAND__FLEX__UP__POOL.html">DEMAND_FLEX_UP_POOL</a>** DemandFlexUpPool;</div>
+<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;    <a class="code" href="structDEMAND__FLEX__DOWN__POOL.html">DEMAND_FLEX_DOWN_POOL</a>** DemandFlexDownPool;</div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;    <a class="code" href="structBOUND__FLEX__UP__NODE.html">BOUND_FLEX_UP_NODE</a>** BoundFlexUpNode;</div>
+<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;    <a class="code" href="structBOUND__FLEX__DOWN__NODE.html">BOUND_FLEX_DOWN_NODE</a>** BoundFlexDownNode;</div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;    <a class="code" href="structLEVEL__FLEX__UP__NODE.html">LEVEL_FLEX_UP_NODE</a>** LevelFlexUpNode;</div>
+<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;    <a class="code" href="structLEVEL__FLEX__DOWN__NODE.html">LEVEL_FLEX_DOWN_NODE</a>** LevelFlexDownNode;</div>
+<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160; </div>
+<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;    <span class="keywordtype">int</span>* MarketOfferPoolOfNode;</div>
+<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;    <span class="keywordtype">int</span>* MarketDemandPoolOfNode;</div>
+<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;    <span class="keywordtype">int</span>* FlexUpOfferPoolOfNode;</div>
+<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;    <span class="keywordtype">int</span>* FlexUpDemandPoolOfNode;</div>
+<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;    <span class="keywordtype">int</span>* FlexDownOfferPoolOfNode;</div>
+<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;    <span class="keywordtype">int</span>* FlexDownDemandPoolOfNode;</div>
+<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160; </div>
+<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;    <span class="comment">/* Unknown status */</span></div>
+<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;    std::vector&lt;int&gt; NbGrpCourbeGuide; <span class="comment">// ?</span></div>
+<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;    std::vector&lt;int&gt; NbGrpOpt;         <span class="comment">// ?</span></div>
+<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160; </div>
+<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;    std::unique_ptr&lt;PROBLEME_ANTARES_A_RESOUDRE&gt;</div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;      ProblemeAResoudre = std::make_unique&lt;PROBLEME_ANTARES_A_RESOUDRE&gt;();</div>
+<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160; </div>
+<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;    <span class="comment">// TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions</span></div>
+<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ModelerData.html">Solver::ModelerData</a>* modelerData = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;};</div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassAdequacyPatchRuntimeData_html"><div class="ttname"><a href="classAdequacyPatchRuntimeData.html">AdequacyPatchRuntimeData</a></div><div class="ttdef"><b>Definition:</b> adequacy_patch_runtime_data.h:14</div></div>
 <div class="ttc" id="aclassHydroStoreCapacityThresholds_html"><div class="ttname"><a href="classHydroStoreCapacityThresholds.html">HydroStoreCapacityThresholds</a></div><div class="ttdef"><b>Definition:</b> HydroStoreCapacityThresholds.h:8</div></div>
 <div class="ttc" id="aclassOptimizationStatistics_html"><div class="ttname"><a href="classOptimizationStatistics.html">OptimizationStatistics</a></div><div class="ttdef"><b>Definition:</b> optimization_statistics.h:12</div></div>

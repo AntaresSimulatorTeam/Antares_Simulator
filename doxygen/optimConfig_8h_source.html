@@ -144,11 +144,14 @@ $(document).ready(function(){initNavTree('optimConfig_8h_source.html',''); initR
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span>* LocationToStr(Location loc);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keywordtype">bool</span> AreLocationsCompatibleForFillers(Location lhs, Location rhs);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// stricter for MASTER_AND_SUBPROLEMS</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keywordtype">bool</span> AreLocationsCompatibleForExpressions(Location lhs, Location rhs);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;} <span class="comment">// namespace Antares::Solver::Config</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keywordtype">bool</span> isInSubProblem(<span class="keyword">const</span> Location&amp; l);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">bool</span> isInMasterProblem(<span class="keyword">const</span> Location&amp; l);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">bool</span> AreLocationsCompatibleForFillers(Location lhs, Location rhs);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// stricter for MASTER_AND_SUBPROLEMS</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">bool</span> AreLocationsCompatibleForExpressions(Location lhs, Location rhs);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;} <span class="comment">// namespace Antares::Solver::Config</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -753,6 +753,9 @@ var annotated_dup =
           [ "VCardDummyVariable", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html", "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable" ],
           [ "DummyVariable", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html", "classAntares_1_1Solver_1_1Variable_1_1DummyVariable" ]
         ] ],
+        [ "Workflow", null, [
+          [ "GenerationAndResolutionConfig", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig.html", "structAntares_1_1Solver_1_1Workflow_1_1GenerationAndResolutionConfig" ]
+        ] ],
         [ "ModelerProblems", "classAntares_1_1Solver_1_1ModelerProblems.html", "classAntares_1_1Solver_1_1ModelerProblems" ],
         [ "SingleProblemGetter", "classAntares_1_1Solver_1_1SingleProblemGetter.html", "classAntares_1_1Solver_1_1SingleProblemGetter" ],
         [ "IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", "classAntares_1_1Solver_1_1IResultWriter" ],
