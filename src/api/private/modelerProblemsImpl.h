@@ -22,7 +22,6 @@ public:
 private:
     std::unique_ptr<Modeler> modeler_;
     std::unique_ptr<LoadFiles::FileLoader> loader_;
-    std::unique_ptr<FileWriter> writer_;
 };
 
 } // namespace Antares::Solver::Implementation

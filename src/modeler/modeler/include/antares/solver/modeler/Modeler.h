@@ -50,9 +50,7 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
 class Modeler final
 {
 public:
-    Modeler(ILoader& loader,
-            fs::path outputPath,
-            Antares::Writer::TableFormat tableFormat);
+    Modeler(ILoader& loader, fs::path outputPath, Antares::Writer::TableFormat tableFormat);
 
     void buildProblems();
     void buildMasterProblem();

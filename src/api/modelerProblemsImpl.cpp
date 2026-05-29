@@ -6,8 +6,6 @@
 #include "antares/logs/logs.h"
 #include "antares/utils/utils.h"
 
-using namespace Antares::Writer;
-
 namespace Antares::Solver::Implementation
 {
 
