@@ -53,7 +53,7 @@ bool isProblemEmpty(const ILinearProblem& problem)
 }
 
 void checkProblemType(const ILinearProblem& originalProblem,
-                      const operations_research::ModelBuilderHelper& fromMps)
+                      const operations_research::mb::ModelBuilderHelper& fromMps)
 {
     const bool isMip = std::ranges::any_of(std::views::iota(0, fromMps.num_variables()),
                                            [&fromMps](const int vi)
@@ -62,7 +62,7 @@ void checkProblemType(const ILinearProblem& originalProblem,
 }
 
 void checkVariables(const ILinearProblem& originalProblem,
-                    const operations_research::ModelBuilderHelper& fromMps)
+                    const operations_research::mb::ModelBuilderHelper& fromMps)
 {
     BOOST_CHECK_EQUAL(originalProblem.variableCount(), fromMps.num_variables());
     const auto& origVariables = originalProblem.getVariables();
@@ -79,7 +79,7 @@ void checkVariables(const ILinearProblem& originalProblem,
 }
 
 void checkConstraints(const ILinearProblem& originalProblem,
-                      const operations_research::ModelBuilderHelper& fromMps)
+                      const operations_research::mb::ModelBuilderHelper& fromMps)
 {
     BOOST_CHECK_EQUAL(originalProblem.constraintCount(), fromMps.num_constraints());
     const auto& origVariables = originalProblem.getVariables();
@@ -118,7 +118,7 @@ void checkConstraints(const ILinearProblem& originalProblem,
 }
 
 void checkObjective(const ILinearProblem& originalProblem,
-                    const operations_research::ModelBuilderHelper& fromMps)
+                    const operations_research::mb::ModelBuilderHelper& fromMps)
 {
     const auto& origVariables = originalProblem.getVariables();
     BOOST_CHECK_EQUAL(originalProblem.getObjectiveOffset(), fromMps.ObjectiveOffset());
@@ -133,7 +133,7 @@ void checkObjective(const ILinearProblem& originalProblem,
 
 void checkProblem(const ILinearProblem& originalProblem, const fs::path& mpsPath)
 {
-    operations_research::ModelBuilderHelper fromMps;
+    operations_research::mb::ModelBuilderHelper fromMps;
     fromMps.ImportFromMpsFile(mpsPath.string());
     checkProblemType(originalProblem, fromMps);
     checkVariables(originalProblem, fromMps);
@@ -205,6 +205,8 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
     }
 }
 
+// gp : this test fails in Win + Debug
+// gp : it's also run in tests TestALLModelerStudiesMps above
 BOOST_AUTO_TEST_CASE(test_13_1)
 {
     const auto& studyDir = resources / "13_1";
