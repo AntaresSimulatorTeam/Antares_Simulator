@@ -106,7 +106,15 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     rhs.componentId = node["component"].as<std::string>();
     rhs.portId = node["port"].as<std::string>();
     const Node thermalComponentNode = node["thermal-component"];
-    if (!thermalComponentNode.IsDefined() || thermalComponentNode.IsNull())
+    if (!thermalComponentNode.IsDefined())
+    {
+        YmlTreeDisplayer displayer(node);
+        throw InputError(
+          fmt::format("Missing required field 'thermal-component'.\n{}{}",
+                      displayer.baseTree(),
+                      displayer.buildMarkedTree({}, {"thermal-component"})));
+    }
+    if (thermalComponentNode.IsNull())
     {
         YmlTreeDisplayer displayer(node);
         throw InputError(
