@@ -361,6 +361,15 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
               state.initFromThermalClusterIndex(cluster->enabledIndex);
           }
 
+          for (int i = 0; i < area.shortTermStorage.storagesByIndex.size(); i++)
+          {
+              // Intiializing the state for the current short term storage cluster
+              state.initFromShortTermStorageClusterIndex(i);
+          }
+
+          // Ajout de l'initialisation pour l'hydro
+          state.initFromHydro();
+
           // Variables
           auto& variablesForArea = pAreas[area.index];
           variablesForArea.hourForEachArea(state, numSpace);
@@ -440,6 +449,12 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
               // Variables
               variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
           } // for each thermal cluster
+
+          // Calculation of reserve participation costs
+          if (state.study.parameters.reservesEnabled)
+          {
+              state.calculateReserveParticipationCosts();
+          }
       }); // for each area
 }
 

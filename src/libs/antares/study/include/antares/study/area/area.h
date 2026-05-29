@@ -14,6 +14,8 @@
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/capacityReservation.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/study/filter.h"
 #include "antares/study/parts/parts.h"
@@ -207,6 +209,9 @@ public:
     //! Spread for the spilled energy cost
     double spreadSpilledEnergyCost = 0.;
     //@}
+
+    /// \name AllCapacityReservations structure to keep track of the added capacity reservations
+    ReserveOpt<AllCapacityReservations> allCapacityReservations;
 
     //! \name Output filtering
     //@{

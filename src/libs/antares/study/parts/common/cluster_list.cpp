@@ -8,10 +8,13 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include <antares/utils/utils.h>
+#include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"
 
 namespace fs = std::filesystem;
+using namespace Yuni;
 
 namespace Antares::Data
 {
@@ -29,6 +32,60 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
     // No operator [] was found for std::view (returned by each_enabled()).
     // The current function is there to replace it.
     return *(std::views::drop(each_enabled(), index).begin());
+}
+
+template<class ClusterT>
+std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationClusterAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (const auto& reserveID:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        for (auto& cluster: allClusters_)
+        {
+            if (cluster->reserveParticipationContainer
+                && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
+                  reserveID))
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster->name(), reserveID};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    throw std::out_of_range("This cluster reserve participation index has not been found in all "
+                            "the reserve participations");
+}
+
+template<class ClusterT>
+std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationGroupAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int column = 0;
+    for (const auto& reserveID:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveID))
+        {
+            for (auto group: area->allCapacityReservations->reserveGroupPartThermal.at(reserveID))
+            {
+                if (column == index)
+                {
+                    return {group, reserveID};
+                }
+                column++;
+            }
+        }
+    }
+    throw std::out_of_range("This group reserve participation index has not been found in all the "
+                            "reserve participations");
 }
 
 template<class ClusterT>
@@ -165,6 +222,13 @@ bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const std::filesy
     return std::ranges::all_of(allClusters_,
                                [&s, &folder](auto c)
                                { return c->loadDataSeriesFromFolder(s, folder); });
+}
+
+template<class ClusterT>
+bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const std::filesystem::path& file)
+{
+    ThermalReserveLoader loader;
+    return loader.load(area, file);
 }
 
 template<class ClusterT>

@@ -52,6 +52,7 @@ class solver_output_handler:
         assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
         return pd.read_csv(absolute_path, header=[0, 1], skiprows=ignore_rows, sep='\t', low_memory=False)
 
+
     def __if_none_then_parse(self, rs: result_type, area, year, file_name: str):
         if self.hourly_results[rs] is None:
             self.hourly_results[rs] = {}
@@ -96,6 +97,17 @@ class solver_output_handler:
 
     def __get_details_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")
+        
+    def __get_details_st_storage_hourly(self, area: str, year: int):
+        return self.__if_none_then_parse(result_type.DETAILS_STS, area.lower(), year, "details-STstorage-hourly.txt")
+        
+    def __get_details_st_storage_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
+        df = self.__get_details_st_storage_hourly(area, year)
+        return df.loc[df['datetime'] == datetime]
+
+    def __get_details_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
+        df = self.__get_details_hourly(area, year)
+        return df.loc[df['datetime'] == datetime]
 
     def details_hourly_for_cluster(self, area: str, year: int, cluster: str):
         return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")[cluster]
@@ -130,6 +142,18 @@ class solver_output_handler:
             return self.__get_values_hourly(area, year)["UNSP. ENRG"]["MWh"].sum()
         else:
             return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
+            
+    def get_overall_cost_eur(self, area: str, year: int, date: str = None) -> float:
+        if date is None:
+            return self.__get_values_hourly(area, year)["OV. COST"]["Euro"].sum()
+        else:
+            return self.__get_values_hourly_for_specific_hour(area, year, date)["OV. COST"]["Euro"].sum()
+
+    def get_battery_level_mwh(self, area: str, year: int, date: str) -> float:
+        return self.__get_values_hourly_for_specific_hour(area, year, date)["BATTERY_LEVEL"]["MWh"].sum()
+
+    def get_reserve_participation_cost(self, area: str, year: int) -> float:
+        return self.__get_values_hourly(area, year)["RESERVE PARTICIPATION COST"]["Euro"].sum()
 
     def min_gen_for_thermal_cluster(self, area: str, year: int, cluster: str):
         return self.__get_details_hourly(area, year)[cluster]["MIN GEN - MWh"]
@@ -160,3 +184,24 @@ class solver_output_handler:
         if path.is_file():
             return str(path)
         return None
+
+    def get_hourly_reserve_unsp_energy(self, area: str, year: int, res: str) -> float:
+        return self.__get_values_hourly(area, year)[res + "_UNSP."]["MWh"]
+        
+    def get_hourly_reserve_group_energy(self, area: str, year: int, res: str, group: str) -> float:
+        return self.__get_values_hourly(area, year)[res + "_" + group]["MWh"]
+
+    def get_reserve_total_participation_for_year_and_cluster(self, area: str, year: int, res: str, cluster: str) -> float:
+        return self.__get_details_hourly(area, year)[res + "_" + cluster]["Reserve Participation Power - MWh"].sum()
+        
+    def get_hourly_res_part_mwh(self, area: str, year: int, prod_name: str) -> pd.Series:
+        return self.__get_details_hourly(area, year)[prod_name]['Reserve Participation Power - MWh']
+
+    def get_res_part_for_date_mwh(self, area: str, year: int, date: str, prod_name: str) -> float:
+        return self.__get_details_hourly_for_specific_hour(area, year, date)[prod_name]['Reserve Participation Power - MWh'].sum()
+        
+    def get_values_hydro_for_specific_hour_mwh(self, area: str, year: int, date: str, hydro_val: str) -> float:
+        return self.__get_values_hourly_for_specific_hour(area, year, date)[hydro_val]['MWh'].sum()
+        
+    def get_values_for_st_storage_cluster_for_specific_hour_mw(self, area: str, year: int, date: str, cluster_name: str, keySTstorageValue: str):
+        return self.__get_details_st_storage_hourly_for_specific_hour(area, year, date)[cluster_name][keySTstorageValue]

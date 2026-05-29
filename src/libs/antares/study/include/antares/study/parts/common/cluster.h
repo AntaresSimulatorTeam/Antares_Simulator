@@ -13,6 +13,8 @@
 
 #include <antares/array/matrix.h>
 #include <antares/series/series.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/reserveParticipationContainer.h>
 
 #include "../../fwd.h"
 
@@ -89,6 +91,11 @@ public:
     ** [modulation cost, modulation capacity, market bid modulation] per hour
     */
     Matrix<> modulation;
+
+    //! Reserve participation container to store the participation of the cluster in the reserves
+    //! and the symmetries
+    ReserveOpt<ReserveParticipationContainer<ThermalClusterReserveParticipation>>
+      reserveParticipationContainer;
 
 protected:
     std::string pName;

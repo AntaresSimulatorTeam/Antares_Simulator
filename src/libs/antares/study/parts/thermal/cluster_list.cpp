@@ -3,6 +3,7 @@
 
 #include "antares/study/parts/thermal/cluster_list.h"
 
+#include <numeric>
 #include <ranges>
 
 #include <antares/utils/utils.h>
@@ -56,16 +57,52 @@ void ThermalClusterList::rebuildIndex() const
     }
 }
 
-unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
+std::size_t ThermalClusterList::enabledAndNotMustRunCount() const
 {
     return std::ranges::count_if(allClusters_,
                                  [](auto c) { return c->isEnabled() && !c->isMustRun(); });
 }
 
-unsigned int ThermalClusterList::enabledAndMustRunCount() const
+std::size_t ThermalClusterList::enabledAndMustRunCount() const
 {
     return std::ranges::count_if(allClusters_,
                                  [](auto c) { return c->isEnabled() && c->isMustRun(); });
+}
+
+std::size_t ThermalClusterList::reserveParticipationsCount() const
+{
+    return std::accumulate(
+      allClusters_.begin(),
+      allClusters_.end(),
+      0,
+      [](std::size_t total, const std::shared_ptr<ThermalCluster> cluster)
+      {
+          if (cluster->reserveParticipationContainer.has_value() && cluster->isEnabled())
+          {
+              return total
+                     + cluster->reserveParticipationContainer.value().reserveParticipationsCount();
+          }
+          else
+          {
+              return total;
+          }
+      });
+}
+
+std::size_t ThermalClusterList::capacityReservationsCount() const
+{
+    std::set<const CapacityReservation*> uniqueReservations;
+    for (auto& cluster: allClusters_)
+    {
+        for (const auto& [_, reserveParticipation]:
+             cluster->reserveParticipationContainer.value().getReservesParticipations())
+        {
+            const CapacityReservation* reservationPtr = reserveParticipation.capacityReservation;
+            uniqueReservations.insert(reservationPtr);
+        }
+    }
+
+    return uniqueReservations.size();
 }
 
 bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Area* area)

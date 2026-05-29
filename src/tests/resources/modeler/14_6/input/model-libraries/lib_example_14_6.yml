@@ -1,0 +1,33 @@
+library:
+  id: lib_example_14_6
+  description: Negative t+ offset (lookback window) as lower bound, fixed zero as upper bound
+
+  models:
+    - id: lookback_sum_demo
+      description: >
+        Variable bounded below by sum(t-2 .. t+0, p): a three-element lookback window.
+        The lower bound t-2 can be negative at early timesteps, in which case the
+        cyclic wrap applies to the accessed indices (negative indices wrap around).
+        With p = {1, 2, 3, 4, 5} and size=5:
+          t=0: from=-2, to=0  -> indices -2,-1, 0 -> normalize: 3, 4, 0 -> p[3]+p[4]+p[0] = 4+5+1 = 10
+          t=1: from=-1, to=1  -> indices -1, 0, 1 -> normalize: 4, 0, 1 -> p[4]+p[0]+p[1] = 5+1+2 = 8
+          t=2: from= 0, to=2  -> indices  0, 1, 2 -> p[0]+p[1]+p[2] = 1+2+3 = 6
+          t=3: from= 1, to=3  -> indices  1, 2, 3 -> p[1]+p[2]+p[3] = 2+3+4 = 9
+          t=4: from= 2, to=4  -> indices  2, 3, 4 -> p[2]+p[3]+p[4] = 3+4+5 = 12
+        This tests the t-k syntax as a sum_bound and the cyclic normalisation for
+        negative raw indices.
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+      variables:
+        - id: x
+          lower-bound: 0
+          upper-bound: 1000
+          variable-type: continuous
+      constraints:
+        - id: lower_bound_from_lookback_sum
+          expression: x >= sum(t-2 .. t+0, p)
+      objective-contributions:
+        - id: objective
+          expression: sum(x)

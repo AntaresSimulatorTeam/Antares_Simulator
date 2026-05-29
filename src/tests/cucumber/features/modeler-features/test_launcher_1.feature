@@ -75,3 +75,71 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
       | c1        | x      | 3        | 10    |
       | c1        | x      | 4        | 15    |
       | c1        | x      | 5        | 16    |
+
+  @fast
+  Scenario: 1.8: Both bounds fixed - sum always accesses the same indices regardless of current timestep
+    Given the modeler study path is "modeler/14_2"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 90
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | c1        | x      | 1-5      | 18    |
+
+  @fast
+  Scenario: 1.9: Both bounds t-relative - symmetric two-element sliding window (regression test)
+    Given the modeler study path is "modeler/14_3"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 30
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | c1        | x      | 1        | 3     |
+      | c1        | x      | 2        | 5     |
+      | c1        | x      | 3        | 7     |
+      | c1        | x      | 4        | 9     |
+      | c1        | x      | 5        | 6     |
+
+  @fast
+  Scenario: 1.10: Inverted t+ bounds (from > to) with constant parameter - detects constant-branch bug
+    Given the modeler study path is "modeler/14_4"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 100
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | c1        | x      | 1-5      | 20    |
+
+  @fast
+  Scenario: 1.11: Fixed bounds with cyclic wrap-around - upper index exceeds window size
+    Given the modeler study path is "modeler/14_5"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 60
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | c1        | x      | 1-5      | 12    |
+
+  @fast
+  Scenario: 1.12: Negative t+ lower bound - three-element lookback window with cyclic wrap at start
+    Given the modeler study path is "modeler/14_6"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 45
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | c1        | x      | 1        | 10    |
+      | c1        | x      | 2        | 8     |
+      | c1        | x      | 3        | 6     |
+      | c1        | x      | 4        | 9     |
+      | c1        | x      | 5        | 12    |
+
+  @fast
+  Scenario: 1.13: Inverted fixed bounds (from > to) with constant parameter - empty sum should give zero
+    Given the modeler study path is "modeler/14_7"
+    When I run antares modeler
+    Then the simulation succeeds
+    And the objective value is 100
+    And the modeler outputs contain the following entries
+      | component | output | timestep | value |
+      | c1        | x      | 1-5      | 20    |
