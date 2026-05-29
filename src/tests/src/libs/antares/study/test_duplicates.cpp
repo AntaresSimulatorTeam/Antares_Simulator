@@ -38,6 +38,7 @@ void addThermalCluster(Data::Area* area, const std::string& name)
     auto c = std::make_shared<ThermalCluster>(area);
     c->setName(name);
     area->thermal.list.addToCompleteList(c);
+    area->thermal.list.buildIndexes();
 }
 
 void addRenewableCluster(Data::Area* area, const std::string& name)
@@ -45,6 +46,7 @@ void addRenewableCluster(Data::Area* area, const std::string& name)
     auto c = std::make_shared<RenewableCluster>(area);
     c->setName(name);
     area->renewable.list.addToCompleteList(c);
+    area->renewable.list.buildIndexes();
 }
 
 void addShortTermStorage(Data::Area* area, const std::string& name)

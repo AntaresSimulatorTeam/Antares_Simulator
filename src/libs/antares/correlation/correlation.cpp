@@ -8,7 +8,6 @@
 #include "antares/study/area/area.h"
 #include "antares/study/study.h"
 
-using namespace Yuni;
 using namespace Antares;
 
 namespace Antares::Data
@@ -160,7 +159,7 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
 
 static inline void ExportCorrelationCoefficients(Study& study,
                                                  const Matrix<>& m,
-                                                 IO::File::Stream& file,
+                                                 std::ostream& file,
                                                  const std::string& name)
 {
     if (m.empty() or m.width != m.height)
@@ -277,11 +276,21 @@ const char* Correlation::ModeToCString(Mode mode)
     return "unknown";
 }
 
-Correlation::Mode Correlation::CStringToMode(const AnyString& str)
+Correlation::Mode Correlation::CStringToMode(const std::string& str)
 {
-    ShortString64 s(str);
-    s.trim(" \t\r\n");
-    s.toLower();
+    std::string s = str;
+    // trim
+    const std::string ws = " \t\r\n";
+    auto start = s.find_first_not_of(ws);
+    if (start == std::string::npos)
+    {
+        return modeNone;
+    }
+    auto end = s.find_last_not_of(ws);
+    s = s.substr(start, end - start + 1);
+    // toLower
+    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+
     if (s == "annual")
     {
         return modeAnnual;

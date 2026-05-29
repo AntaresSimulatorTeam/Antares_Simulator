@@ -107,15 +107,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 
 #undef SEP
 
-void Cluster::reset()
-{
-    unitCount = 0;
-    enabled = true;
-    nominalCapacity = 0.;
-
-    series.timeSeries.reset(1, HOURS_PER_YEAR);
-}
-
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 {
     return (s1->getFullName() < s2->getFullName());

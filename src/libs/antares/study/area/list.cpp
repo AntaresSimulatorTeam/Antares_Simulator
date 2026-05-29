@@ -4,10 +4,11 @@
 #include <cassert>
 #include <fstream>
 #include <ranges>
+#include <string>
 
 #include <boost/algorithm/string/trim.hpp>
 
-#include <yuni/io/file.h>
+#include <yuni/core/string.h>
 
 #include <antares/inifile/inifile.h>
 #include <antares/logs/logs.h>
@@ -24,7 +25,6 @@
 #define SEP IO::Separator
 
 using namespace Yuni;
-
 namespace fs = std::filesystem;
 
 namespace Antares::Data
@@ -462,7 +462,7 @@ bool AreaList::loadListFromFile(const fs::path& filename)
     return true;
 }
 
-void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
+void AreaList::saveLinkListToBuffer(std::ostream& buffer) const
 {
     each(
       [&buffer](const Area& area)
@@ -586,7 +586,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
           && ret;
 
     // Check misc gen
-    buffer.clear() << "Misc Gen: `" << area.id << '`';
+    buffer = "Misc Gen: `" + area.id + '`';
     ret = checkMatrixPositive(area.miscGen, buffer, fhhPSP) && ret;
 
     // Links
@@ -867,7 +867,7 @@ void AreaList::ensureDataIsInitialized(Parameters& params)
 bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 {
     bool ret = true;
-    Clob buffer;
+    std::string buffer;
     auto studyVersion = pStudy.header.version;
 
     // Load the list of all available areas
