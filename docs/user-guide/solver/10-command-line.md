@@ -39,6 +39,7 @@ hide:
 | --year-by-year           | Force the [writing the result output for each year](04-parameters.md#year-by-year) (economy only) |
 | --derated                | Force the [derated](04-parameters.md#derated) mode                                                |
 | -z, --zip-output         | Write the results into a single zip archive                                                       |
+| --parquet                | Write simulation table in format parquet instead of csv format                                    |
 
 ## Optimization
 
