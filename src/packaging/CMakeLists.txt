@@ -83,6 +83,7 @@ set(TARGET_LIBS #No alias
         linear-problem-data-impl
         linear-problem-mpsolver-impl
         modeler-lib
+        workflow
 
         # solver-lib
         args_helper

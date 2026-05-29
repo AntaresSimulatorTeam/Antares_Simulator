@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <antares/study/system-model/optimConfig.h>
+
 namespace Antares::Solver
 {
 struct ModelerData;
@@ -10,7 +12,6 @@ struct ModelerData;
 
 namespace Antares::Optimization
 {
-
-bool hasModelerIntegerVariables(const Solver::ModelerData* modelerData);
-
+bool hasIntegerVariables(const Solver::ModelerData* modelerData,
+                         Antares::Solver::Config::Location location);
 } // namespace Antares::Optimization
