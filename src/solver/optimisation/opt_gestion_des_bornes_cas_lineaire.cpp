@@ -4,6 +4,7 @@
 #include <cmath>
 #include <spx_constantes_externes.h>
 
+#include "antares/solver/optimisation/opt_gestion_des_bornes_reserves.h"
 #include "antares/solver/optimisation/variables/VariableManagerUtils.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -460,11 +461,17 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         }
     }
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
           problemeHebdo,
           PremierPdtDeLIntervalle,
           DernierPdtDeLIntervalle);
+        if (problemeHebdo->allReserves)
+        {
+            OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireReserves(problemeHebdo,
+                                                                           PremierPdtDeLIntervalle,
+                                                                           DernierPdtDeLIntervalle);
+        }
     }
 }

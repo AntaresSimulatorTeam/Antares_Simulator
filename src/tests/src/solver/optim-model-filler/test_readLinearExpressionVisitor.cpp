@@ -510,4 +510,21 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
       checkMessage("A linear expression can't contain extra output operator reduced_cost."));
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum(t+5 .. t+1, param) with from > to should return 0
+    Node* from = create<TPlusNode>(create<LiteralNode>(5.));
+    Node* to = create<TPlusNode>(create<LiteralNode>(1.));
+    Node* sum = create<TimeSumNode>(from, to, create<ParameterNode>("param_ts"));
+
+    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    auto linear_expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0.);
+    BOOST_CHECK_EQUAL(linear_expression[1].constant(), 0.);
+    BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

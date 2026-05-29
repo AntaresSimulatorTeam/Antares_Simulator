@@ -10,16 +10,25 @@ add_subdirectory(constraint)
 add_subdirectory(parts)
 add_subdirectory(series)
 add_subdirectory(parameters)
+add_subdirectory(reserves)
 
 add_boost_test(test-study
   SRC test_study.cpp
   LIBS
+  test_utils_unit
   Antares::study
   Antares::exception
   )
 
 add_boost_test(test-duplicates
   SRC test_duplicates.cpp
+  LIBS
+  test_utils_unit
+  Antares::study
+  Antares::exception)
+
+add_boost_test(test-importprepro
+  SRC test_importprepro.cpp
   LIBS
   test_utils_unit
   Antares::study

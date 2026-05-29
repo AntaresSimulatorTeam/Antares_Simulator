@@ -3,6 +3,7 @@
 
 #include <numeric>
 
+#include "antares/solver/optimisation/opt_gestion_second_membre_reserves.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, uint);
@@ -409,11 +410,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                   problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires,
                                   weekFirstHour,
                                   problemeHebdo->year);
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+    if (problemeHebdo->OptimisationNotFastMode)
     {
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                         PremierPdtDeLIntervalle,
                                                                         DernierPdtDeLIntervalle);
+        if (problemeHebdo->allReserves)
+        {
+            OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(problemeHebdo,
+                                                                    PremierPdtDeLIntervalle,
+                                                                    DernierPdtDeLIntervalle);
+        }
     }
 
     return;

@@ -10,10 +10,12 @@
 #include <numeric>
 #include <string>
 
-#include <yuni/io/file.h>
-
-#include <antares/logs/logs.h>
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include <antares/utils/utils.h>
+#include "antares/study/parts/reserves/reservesParticipationsLoader.h"
+#include "antares/study/parts/short-term-storage/container.h"
+#include "antares/study/parts/short-term-storage/makeGroupsOfHoursFromString.h"
+#include "antares/study/study.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -51,7 +53,7 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const fs::path& path)
         {
             return false;
         }
-
+        cluster.properties.clusterGlobalIndex = storagesByIndex.size();
         storagesByIndex.push_back(cluster);
     }
 
@@ -223,6 +225,12 @@ bool STStorageInput::loadSeriesFromFolder(const fs::path& folder, StudyVersion s
     return ret;
 }
 
+bool STStorageInput::loadReserveParticipations(Area& area, const std::filesystem::path& file)
+{
+    STStorageReserveLoader loader;
+    return loader.load(area, file);
+}
+
 void STStorageInput::resizeTimeseriesNumbers(unsigned int nbYears)
 {
     for (auto& sts: storagesByIndex)
@@ -264,5 +272,103 @@ std::size_t STStorageInput::count() const
 uint STStorageInput::removeDisabledClusters()
 {
     return std::erase_if(storagesByIndex, [](const auto& c) { return !c.enabled(); });
+}
+
+std::pair<std::string, ReserveID> STStorageInput::reserveParticipationClusterAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (const auto& reserveID:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        for (auto& cluster: storagesByIndex)
+        {
+            if (cluster.reserveParticipationContainer
+                && cluster.reserveParticipationContainer.value().isParticipatingInReserve(
+                  reserveID))
+            {
+                if (globalReserveParticipationIdx == index)
+                {
+                    return {cluster.id, reserveID};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    throw std::out_of_range("This cluster reserve participation index has not been found in all "
+                            "the reserve participations");
+}
+
+std::pair<std::string, ReserveID> STStorageInput::reserveParticipationGroupAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int column = 0;
+    for (const auto& reserveID:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        if (area->allCapacityReservations->reserveGroupPartSTS.contains(reserveID))
+        {
+            for (auto group: area->allCapacityReservations->reserveGroupPartSTS.at(reserveID))
+            {
+                if (column == index)
+                {
+                    return {group, reserveID};
+                }
+                column++;
+            }
+        }
+    }
+
+    throw std::out_of_range("This group reserve participation index has not been found in all the "
+                            "reserve participations");
+}
+
+STStorageCluster* STStorageInput::findInAll(const std::string& name)
+{
+    auto it = std::find_if(storagesByIndex.begin(),
+                           storagesByIndex.end(),
+                           [&name](STStorageCluster& cluster) { return cluster.id == name; });
+    if (it != storagesByIndex.end())
+    {
+        return &(*it);
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+size_t STStorageInput::getClusterIdx(STStorageCluster& cluster) const
+{
+    auto it = std::find_if(storagesByIndex.begin(),
+                           storagesByIndex.end(),
+                           [&cluster](const STStorageCluster& elem) { return &elem == &cluster; });
+    if (it != storagesByIndex.end())
+    {
+        return std::distance(storagesByIndex.begin(), it);
+    }
+    else
+    {
+        throw std::out_of_range("This Short Term Storage is not in the list");
+    }
+}
+
+uint STStorageInput::reserveParticipationsCount() const
+{
+    return std::accumulate(
+      storagesByIndex.begin(),
+      storagesByIndex.end(),
+      0,
+      [](int total, const STStorageCluster& cluster)
+      {
+          return cluster.reserveParticipationContainer
+                   ? total
+                       + cluster.reserveParticipationContainer.value().reserveParticipationsCount()
+                   : total;
+      });
 }
 } // namespace Antares::Data::ShortTermStorage

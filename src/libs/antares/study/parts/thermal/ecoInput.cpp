@@ -23,29 +23,6 @@ namespace Antares::Data
 {
 EconomicInputData::EconomicInputData() = default;
 
-void EconomicInputData::copyFrom(const EconomicInputData& rhs)
-{
-    fuelcost = rhs.fuelcost;
-    rhs.fuelcost.unloadFromMemory();
-    co2cost = rhs.co2cost;
-    rhs.co2cost.unloadFromMemory();
-}
-
-bool EconomicInputData::saveToFolder(const AnyString& folder) const
-{
-    bool ret = true;
-    if (IO::Directory::Create(folder))
-    {
-        String buffer;
-        buffer.clear() << folder << SEP << "fuelCost.txt";
-        ret = fuelcost.saveToCSVFile(buffer) && ret;
-        buffer.clear() << folder << SEP << "CO2Cost.txt";
-        ret = co2cost.saveToCSVFile(buffer) && ret;
-        return ret;
-    }
-    return false;
-}
-
 bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
 {
     bool ret = true;
@@ -86,12 +63,6 @@ bool EconomicInputData::loadFromFolder(Study& study, const fs::path& folder)
     }
 
     return ret;
-}
-
-void EconomicInputData::reset()
-{
-    fuelcost.reset(1, HOURS_PER_YEAR, true);
-    co2cost.reset(1, HOURS_PER_YEAR, true);
 }
 
 } // namespace Antares::Data

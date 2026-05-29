@@ -31,6 +31,127 @@ ConstraintBuilder& ConstraintBuilder::DispatchableProduction(unsigned int index,
     return *this;
 }
 
+ConstraintBuilder& ConstraintBuilder::RunningThermalClusterReserveParticipation(unsigned int index,
+                                                                                double coeff,
+                                                                                int offset,
+                                                                                int delta)
+{
+    AddVariable(
+      variableManager_.RunningThermalClusterReserveParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::OffThermalClusterReserveParticipation(unsigned int index,
+                                                                            double coeff,
+                                                                            int offset,
+                                                                            int delta)
+{
+    AddVariable(
+      variableManager_.OffThermalClusterReserveParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::ThermalClusterReserveParticipation(unsigned int index,
+                                                                         double coeff,
+                                                                         int offset,
+                                                                         int delta)
+{
+    AddVariable(
+      variableManager_.ThermalClusterReserveParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::STStorageClusterReserveParticipation(ReserveType type,
+                                                                           unsigned int index,
+                                                                           double coeff,
+                                                                           int offset,
+                                                                           int delta)
+{
+    AddVariable(variableManager_
+                  .STStorageClusterReserveParticipation(type, index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::STStorageReleaseClusterReserveParticipation(
+  unsigned int index,
+  double coeff,
+  int offset,
+  int delta)
+{
+    AddVariable(variableManager_.STStorageReleaseClusterReserveParticipation(index,
+                                                                             hourInWeek_,
+                                                                             offset,
+                                                                             delta),
+                coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::STStorageStoreClusterReserveParticipation(unsigned int index,
+                                                                                double coeff,
+                                                                                int offset,
+                                                                                int delta)
+{
+    AddVariable(
+      variableManager_.STStorageStoreClusterReserveParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::HydroReserveParticipation(ReserveType type,
+                                                                unsigned int index,
+                                                                double coeff,
+                                                                int offset,
+                                                                int delta)
+{
+    AddVariable(variableManager_.HydroReserveParticipation(type, index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::HydroReleaseReserveParticipation(unsigned int index,
+                                                                       double coeff,
+                                                                       int offset,
+                                                                       int delta)
+{
+    AddVariable(
+      variableManager_.HydroReleaseReserveParticipation(index, hourInWeek_, offset, delta),
+      coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::HydroStoreReserveParticipation(unsigned int index,
+                                                                     double coeff,
+                                                                     int offset,
+                                                                     int delta)
+{
+    AddVariable(variableManager_.HydroStoreReserveParticipation(index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::InternalUnsatisfiedReserve(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset,
+                                                                 int delta)
+{
+    AddVariable(variableManager_.InternalUnsatisfiedReserve(index, hourInWeek_, offset, delta),
+                coeff);
+    return *this;
+}
+
+ConstraintBuilder& ConstraintBuilder::InternalExcessReserve(unsigned int index,
+                                                            double coeff,
+                                                            int offset,
+                                                            int delta)
+{
+    AddVariable(variableManager_.InternalExcessReserve(index, hourInWeek_, offset, delta), coeff);
+    return *this;
+}
+
 ConstraintBuilder& ConstraintBuilder::NumberOfDispatchableUnits(unsigned int index, double coeff)
 {
     AddVariable(variableManager_.NumberOfDispatchableUnits(index, hourInWeek_), coeff);

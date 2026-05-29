@@ -5,6 +5,7 @@
 #define __ANTARES_LIBS_STUDY_AREAS_H__
 
 #include <filesystem>
+#include <ostream>
 #include <set>
 #include <stdlib.h>
 #include <vector>
@@ -14,6 +15,8 @@
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/capacityReservation.h>
 #include <antares/study/parameters/adq-patch-params.h>
 #include "antares/study/filter.h"
 #include "antares/study/parts/parts.h"
@@ -208,6 +211,9 @@ public:
     double spreadSpilledEnergyCost = 0.;
     //@}
 
+    /// \name AllCapacityReservations structure to keep track of the added capacity reservations
+    ReserveOpt<AllCapacityReservations> allCapacityReservations;
+
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis
@@ -367,7 +373,7 @@ public:
     ** \param filename The file to read
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
-    void saveLinkListToBuffer(Yuni::Clob& buffer) const;
+    void saveLinkListToBuffer(std::ostream& buffer) const;
 
     //! \name Areas
     //@{

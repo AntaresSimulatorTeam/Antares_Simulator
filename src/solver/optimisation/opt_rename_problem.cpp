@@ -123,9 +123,204 @@ void Namer::SetThermalClusterElementName(unsigned varIndex,
     names_[varIndex] = name;
 }
 
+void Namer::SetThermalClusterAndReserveElementName(unsigned varIndex,
+                                                   const std::string& elementType,
+                                                   const std::string& clusterName,
+                                                   const std::string& reserveName)
+{
+    std::string location = areaLocation() + SEP + "ThermalCluster" + "<" + clusterName + ">" + SEP
+                           + "Reserve" + "<" + reserveName + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(elementType, location, time);
+    names_[varIndex] = name;
+}
+
+void Namer::SetThermalClusterAndReservesElementName(unsigned varIndex,
+                                                    const std::string& elementType,
+                                                    const std::string& clusterName,
+                                                    const std::string& reserveName1,
+                                                    const std::string& reserveName2)
+{
+    std::string location = areaLocation() + SEP + "ThermalCluster" + "<" + clusterName + ">" + SEP
+                           + "Reserves" + "<" + reserveName1 + "," + reserveName2 + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(elementType, location, time);
+    names_[varIndex] = name;
+}
+
+void Namer::SetSTStorageClusterElementName(unsigned varIndex,
+                                           const std::string& elementType,
+                                           const std::string& clusterName)
+{
+    std::string location = areaLocation() + SEP + "ShortTerm Storage Cluster" + "<" + clusterName
+                           + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(elementType, location, time);
+    names_[varIndex] = name;
+}
+
+void Namer::SetSTStorageClusterAndReserveElementName(unsigned varIndex,
+                                                     const std::string& elementType,
+                                                     const std::string& clusterName,
+                                                     const std::string& reserveName)
+{
+    std::string location = areaLocation() + SEP + "ShortTerm Storage Cluster" + "<" + clusterName
+                           + ">" + SEP + "Reserve" + "<" + reserveName + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(elementType, location, time);
+    names_[varIndex] = name;
+}
+
+void Namer::SetHydroElementName(unsigned varIndex,
+                                const std::string& elementType,
+                                const std::string& clusterName)
+{
+    std::string location = areaLocation() + SEP + "Hydro" + "<" + clusterName + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(elementType, location, time);
+    names_[varIndex] = name;
+}
+
+void Namer::SetHydroAndReserveElementName(unsigned varIndex,
+                                          const std::string& elementType,
+                                          const std::string& clusterName,
+                                          const std::string& reserveName)
+{
+    std::string location = areaLocation() + SEP + "Hydro" + "<" + clusterName + ">" + SEP
+                           + "Reserve" + "<" + reserveName + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(elementType, location, time);
+    names_[varIndex] = name;
+}
+
+void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
+                                                const std::string& elementType,
+                                                const std::string& reserveName)
+{
+    std::string location = areaLocation() + SEP + "Reserve" + "<" + reserveName + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(elementType, location, time);
+    names_[varIndex] = name;
+}
+
 void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string& clusterName)
 {
     SetThermalClusterElementName(varIndex, "DispatchableProduction", clusterName);
+}
+
+void VariableNamer::ThermalClusterReserveParticipation(unsigned varIndex,
+                                                       const std::string& clusterName,
+                                                       const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(varIndex,
+                                           "ThermalClusterReserveParticipation",
+                                           clusterName,
+                                           reserveName);
+}
+
+void VariableNamer::ParticipationOfSTStorageReleaseToReserve(unsigned varIndex,
+                                                             const std::string& clusterName,
+                                                             const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(varIndex,
+                                             "ParticipationOfSTStorageReleaseToReserve",
+                                             clusterName,
+                                             reserveName);
+}
+
+void VariableNamer::ParticipationOfSTStorageStoreToReserve(unsigned varIndex,
+                                                           const std::string& clusterName,
+                                                           const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(varIndex,
+                                             "ParticipationOfSTStorageStoreToReserve",
+                                             clusterName,
+                                             reserveName);
+}
+
+void VariableNamer::ParticipationOfSTStorageToReserve(ReserveType type,
+                                                      unsigned varIndex,
+                                                      const std::string& clusterName,
+                                                      const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(varIndex,
+                                             type == ReserveType::UP
+                                               ? "ParticipationOfSTStorageToUpReserve"
+                                               : "ParticipationOfSTStorageToDownReserve",
+                                             clusterName,
+                                             reserveName);
+}
+
+void VariableNamer::ParticipationOfHydroReleaseToReserve(unsigned varIndex,
+                                                         const std::string& clusterName,
+                                                         const std::string& reserveName)
+{
+    SetHydroAndReserveElementName(varIndex,
+                                  "ParticipationOfHydroReleaseToReserve",
+                                  clusterName,
+                                  reserveName);
+}
+
+void VariableNamer::ParticipationOfHydroStoreToReserve(unsigned varIndex,
+                                                       const std::string& clusterName,
+                                                       const std::string& reserveName)
+{
+    SetHydroAndReserveElementName(varIndex,
+                                  "ParticipationOfHydroStoreToReserve",
+                                  clusterName,
+                                  reserveName);
+}
+
+void VariableNamer::ParticipationOfHydroToReserve(ReserveType type,
+                                                  unsigned varIndex,
+                                                  const std::string& clusterName,
+                                                  const std::string& reserveName)
+{
+    if (type == ReserveType::UP)
+    {
+        SetHydroAndReserveElementName(varIndex,
+                                      "ParticipationOfHydroToUpReserve",
+                                      clusterName,
+                                      reserveName);
+    }
+
+    else
+    {
+        SetHydroAndReserveElementName(varIndex,
+                                      "ParticipationOfSTStorageToDownReserve",
+                                      clusterName,
+                                      reserveName);
+    }
+}
+
+void VariableNamer::ParticipationOfRunningUnitsToReserve(unsigned varIndex,
+                                                         const std::string& clusterName,
+                                                         const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(varIndex,
+                                           "ParticipationOfRunningUnitsToReserve",
+                                           clusterName,
+                                           reserveName);
+}
+
+void VariableNamer::ParticipationOfOffUnitsToReserve(unsigned varIndex,
+                                                     const std::string& clusterName,
+                                                     const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(varIndex,
+                                           "ParticipationOfOffUnitsToReserve",
+                                           clusterName,
+                                           reserveName);
+}
+
+void VariableNamer::InternalUnsatisfiedReserve(unsigned varIndex, const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(varIndex, "InternalUnsatisfiedReserve", reserveName);
+}
+
+void VariableNamer::InternalExcessReserve(unsigned varIndex, const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(varIndex, "InternalExcessReserve", reserveName);
 }
 
 void VariableNamer::NODU(unsigned varIndex, const std::string& clusterName)
@@ -288,14 +483,14 @@ void ConstraintNamer::FictiveLoads(unsigned constrIndex)
     SetAreaElementNameHour(constrIndex, "FictiveLoads");
 }
 
-void ConstraintNamer::CsrFictitiousLoad(unsigned int constraint)
+void ConstraintNamer::CsrFictitiousLoad(unsigned constrIndex)
 {
-    SetAreaElementNameHour(constraint, "CsrFictitiousLoad");
+    SetAreaElementNameHour(constrIndex, "CsrFictitiousLoad");
 }
 
-void ConstraintNamer::CsrMaxEnsLoad(unsigned int constraint)
+void ConstraintNamer::CsrMaxEnsLoad(unsigned constrIndex)
 {
-    SetAreaElementNameHour(constraint, "CsrMaxEnsLoad");
+    SetAreaElementNameHour(constrIndex, "CsrMaxEnsLoad");
 }
 
 void ConstraintNamer::MaxUnsuppliedEnergy(unsigned constrIndex)
@@ -392,6 +587,263 @@ void ConstraintNamer::NbDispUnitsMinBoundSinceMinUpTime(unsigned constrIndex,
 void ConstraintNamer::MinDownTime(unsigned constrIndex, const std::string& clusterName)
 {
     SetThermalClusterElementName(constrIndex, "MinDownTime", clusterName);
+}
+
+void ConstraintNamer::PMaxReserve(unsigned constrIndex,
+                                  const std::string& clusterName,
+                                  const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(constrIndex, "PMaxReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::ParticipationOfOffUnitsToReserve(unsigned constrIndex,
+                                                       const std::string& clusterName,
+                                                       const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(constrIndex,
+                                           "ParticipationOfOffUnitsToReserve",
+                                           clusterName,
+                                           reserveName);
+}
+
+void ConstraintNamer::ParticipationOfUnitsToReserve(unsigned constrIndex,
+                                                    const std::string& clusterName,
+                                                    const std::string& reserveName)
+{
+    SetThermalClusterAndReserveElementName(constrIndex,
+                                           "ParticipationOfUnitsToReserve",
+                                           clusterName,
+                                           reserveName);
+}
+
+void ConstraintNamer::SymmetryReserveParticipation(unsigned constrIndex,
+                                                   const std::string& clusterName,
+                                                   const std::string& reserveName1,
+                                                   const std::string& reserveName2)
+{
+    SetThermalClusterAndReservesElementName(constrIndex,
+                                            "ParticipationOfUnitsToReserve",
+                                            clusterName,
+                                            reserveName1,
+                                            reserveName2);
+}
+
+void ConstraintNamer::POffUnitsUpperBound(unsigned constrIndex, const std::string& clusterName)
+{
+    SetThermalClusterElementName(constrIndex, "POffUnitsUpperBound", clusterName);
+}
+
+void ConstraintNamer::POutCapacityThresholdInf(unsigned constrIndex, const std::string& clusterName)
+{
+    SetThermalClusterElementName(constrIndex, "POutCapacityThresholdInf", clusterName);
+}
+
+void ConstraintNamer::POutCapacityThresholdSup(unsigned constrIndex, const std::string& clusterName)
+{
+    SetThermalClusterElementName(constrIndex, "POutCapacityThresholdSup", clusterName);
+}
+
+void ConstraintNamer::POutBoundMin(unsigned constrIndex, const std::string& clusterName)
+{
+    SetThermalClusterElementName(constrIndex, "POutBoundMin", clusterName);
+}
+
+void ConstraintNamer::POutBoundMax(unsigned constrIndex, const std::string& clusterName)
+{
+    SetThermalClusterElementName(constrIndex, "POutBoundMax", clusterName);
+}
+
+void ConstraintNamer::STReserveParticipation(unsigned constrIndex,
+                                             const std::string& clusterName,
+                                             const std::string& reserveName,
+                                             ReserveType type)
+{
+    SetSTStorageClusterAndReserveElementName(constrIndex,
+                                             type == ReserveType::UP ? "STReserveUpParticipation"
+                                                                     : "STReserveDownParticipation",
+                                             clusterName,
+                                             reserveName);
+}
+
+void ConstraintNamer::STReleaseMaxReserve(unsigned constrIndex,
+                                          const std::string& clusterName,
+                                          const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(constrIndex,
+                                             "STReleaseMaxReserve",
+                                             clusterName,
+                                             reserveName);
+}
+
+void ConstraintNamer::STStoreMaxReserve(unsigned constrIndex,
+                                        const std::string& clusterName,
+                                        const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(constrIndex,
+                                             "STStoreMaxReserve",
+                                             clusterName,
+                                             reserveName);
+}
+
+void ConstraintNamer::STReleaseCapacityThresholdsUp(unsigned constrIndex,
+                                                    const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constrIndex, "STReleaseCapacityThresholdsUp", clusterName);
+}
+
+void ConstraintNamer::STStoreCapacityThresholdsUp(unsigned constrIndex,
+                                                  const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constrIndex, "STStoreCapacityThresholdsUp", clusterName);
+}
+
+void ConstraintNamer::STReleaseCapacityThresholdsDown(unsigned constrIndex,
+                                                      const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constrIndex, "STReleaseCapacityThresholdsDown", clusterName);
+}
+
+void ConstraintNamer::STStoreCapacityThresholdsDown(unsigned constrIndex,
+                                                    const std::string& clusterName)
+{
+    SetSTStorageClusterElementName(constrIndex, "STStoreCapacityThresholdsDown", clusterName);
+}
+
+void ConstraintNamer::STStorageLevelReserveParticipation(unsigned constrIndex,
+                                                         const std::string& clusterName,
+                                                         ReserveType type)
+{
+    if (type == ReserveType::DOWN)
+    {
+        SetSTStorageClusterElementName(constrIndex,
+                                       "STStorageLevelReserveParticipationDown",
+                                       clusterName);
+    }
+    else if (type == ReserveType::UP)
+    {
+        SetSTStorageClusterElementName(constrIndex,
+                                       "STStorageLevelReserveParticipationUP",
+                                       clusterName);
+    }
+}
+
+void ConstraintNamer::STEnergyStockLevelReserveParticipation(unsigned constrIndex,
+                                                             const std::string& clusterName,
+                                                             const std::string& reserveName)
+{
+    SetSTStorageClusterAndReserveElementName(constrIndex,
+                                             "STEnergyStockLevelReserveParticipation",
+                                             clusterName,
+                                             reserveName);
+}
+
+void ConstraintNamer::STGlobalEnergyStockLevelReserveParticipation(unsigned constrIndex,
+                                                                   const std::string& clusterName,
+                                                                   ReserveType type)
+{
+    if (type == ReserveType::DOWN)
+    {
+        SetSTStorageClusterElementName(constrIndex,
+                                       "STGlobalEnergyStockLevelReserveParticipationDown",
+                                       clusterName);
+    }
+    else if (type == ReserveType::UP)
+    {
+        SetSTStorageClusterElementName(constrIndex,
+                                       "STGlobalEnergyStockLevelReserveParticipationUp",
+                                       clusterName);
+    }
+    else
+    {
+        throw std::runtime_error("Wrong type inside STGlobalEnergyStockLevelReserveParticipation");
+    }
+}
+
+void ConstraintNamer::HydroReserveParticipation(ReserveType type,
+                                                unsigned constrIndex,
+                                                const std::string& clusterName,
+                                                const std::string& reserveName)
+{
+    SetHydroAndReserveElementName(constrIndex,
+                                  type == ReserveType::UP ? "HydroReserveUpParticipation"
+                                                          : "HydroReserveDownParticipation",
+                                  clusterName,
+                                  reserveName);
+}
+
+void ConstraintNamer::HydroReleaseMaxReserve(unsigned constrIndex,
+                                             const std::string& clusterName,
+                                             const std::string& reserveName)
+{
+    SetHydroAndReserveElementName(constrIndex, "HydroReleaseMaxReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::HydroStoreMaxReserve(unsigned constrIndex,
+                                           const std::string& clusterName,
+                                           const std::string& reserveName)
+{
+    SetHydroAndReserveElementName(constrIndex, "HydroStoreMaxReserve", clusterName, reserveName);
+}
+
+void ConstraintNamer::HydroReleaseCapacityThresholdsUp(unsigned constrIndex,
+                                                       const std::string& clusterName)
+{
+    SetHydroElementName(constrIndex, "HydroReleaseCapacityThresholdsUp", clusterName);
+}
+
+void ConstraintNamer::HydroStoreCapacityThresholdsUp(unsigned constrIndex,
+                                                     const std::string& clusterName)
+{
+    SetHydroElementName(constrIndex, "HydroStoreCapacityThresholdsUp", clusterName);
+}
+
+void ConstraintNamer::HydroReleaseCapacityThresholdsDown(unsigned constrIndex,
+                                                         const std::string& clusterName)
+{
+    SetHydroElementName(constrIndex, "HydroReleaseCapacityThresholdsDown", clusterName);
+}
+
+void ConstraintNamer::HydroStoreCapacityThresholdsDown(unsigned constrIndex,
+                                                       const std::string& clusterName)
+{
+    SetHydroElementName(constrIndex, "HydroStoreCapacityThresholdsDown", clusterName);
+}
+
+void ConstraintNamer::HydroLevelReserveParticipation(ReserveType type,
+                                                     unsigned constrIndex,
+                                                     const std::string& clusterName)
+{
+    SetHydroElementName(constrIndex,
+                        type == ReserveType::UP ? "HydroLevelReserveParticipationUp"
+                                                : "HydroLevelReserveParticipationDown",
+                        clusterName);
+}
+
+void ConstraintNamer::HydroEnergyLevelReserveParticipation(unsigned constrIndex,
+                                                           const std::string& clusterName,
+                                                           const std::string& reserveName)
+{
+    SetHydroAndReserveElementName(constrIndex,
+                                  "HydroEnergyLevelReserveParticipation",
+                                  clusterName,
+                                  reserveName);
+}
+
+void ConstraintNamer::HydroGlobalEnergyLevelReserveParticipationDown(unsigned constrIndex,
+                                                                     const std::string& clusterName)
+{
+    SetHydroElementName(constrIndex, "HydroGlobalEnergyLevelReserveParticipationDown", clusterName);
+}
+
+void ConstraintNamer::HydroGlobalEnergyLevelReserveParticipationUp(unsigned constrIndex,
+                                                                   const std::string& clusterName)
+{
+    SetHydroElementName(constrIndex, "HydroGlobalEnergyLevelReserveParticipationUp", clusterName);
+}
+
+void ConstraintNamer::ReserveSatisfaction(unsigned constrIndex, const std::string& reserveName)
+{
+    SetThermalClusterReserveElementName(constrIndex, "ReserveSatisfaction", reserveName);
 }
 
 void ConstraintNamer::PMaxDispatchableGeneration(unsigned constrIndex,
