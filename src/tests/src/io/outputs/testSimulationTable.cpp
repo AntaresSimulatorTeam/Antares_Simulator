@@ -1071,13 +1071,13 @@ BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, SimulationTableFileFixture)
 {
     SimulationTable table;
     SimulationTableEntry entry{.block = 1,
-                                .component = "test_comp",
-                                .output = "test_var",
-                                .absolute_time_index = 1,
-                                .block_time_index = 1,
-                                .scenario_index = 0,
-                                .value = 123.45,
-                                .status = MipBasisStatus::BASIC};
+                               .component = "test_comp",
+                               .output = "test_var",
+                               .absolute_time_index = 1,
+                               .block_time_index = 1,
+                               .scenario_index = 0,
+                               .value = 123.45,
+                               .status = MipBasisStatus::BASIC};
     table.addEntry(entry);
     csv_writer.writeTable(table);
 
@@ -1215,13 +1215,13 @@ BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, SimulationTableFileFixture
     for (int i = 0; i < 5; ++i)
     {
         SimulationTableEntry entry{.block = static_cast<unsigned>(i + 1),
-                                    .component = "component_" + std::to_string(i),
-                                    .output = "output_" + std::to_string(i),
-                                    .absolute_time_index = i * 10,
-                                    .block_time_index = i * 5,
-                                    .scenario_index = static_cast<unsigned>(i % 3),
-                                    .value = i * 2.5,
-                                    .status = static_cast<MipBasisStatus>(i % 6)};
+                                   .component = "component_" + std::to_string(i),
+                                   .output = "output_" + std::to_string(i),
+                                   .absolute_time_index = i * 10,
+                                   .block_time_index = i * 5,
+                                   .scenario_index = static_cast<unsigned>(i % 3),
+                                   .value = i * 2.5,
+                                   .status = static_cast<MipBasisStatus>(i % 6)};
         table.addEntry(entry);
     }
 

@@ -7,7 +7,6 @@
 #include <memory>
 
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 
 namespace Antares::Solver::Implementation

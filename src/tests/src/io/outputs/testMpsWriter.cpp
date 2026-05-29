@@ -211,7 +211,6 @@ BOOST_AUTO_TEST_CASE(test_13_1)
     processStudy(studyDir);
 }
 
-
 BOOST_AUTO_TEST_SUITE_END()
 
 // ==================== ExportableName Tests ====================
