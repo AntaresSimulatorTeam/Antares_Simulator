@@ -44,7 +44,7 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-static bool ThermalClusterLoadFromSection(const AnyString& filename,
+static bool ThermalClusterLoadFromSection(const std::string& areaName,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section,
                                           bool rampingEnabledGlobal);
@@ -139,7 +139,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         // Load data of a thermal cluster from a ini file section
         bool rampesEnabled = study.parameters.compatibility.rampes
                              == Parameters::Compatibility::Rampes::Enabled;
-        if (!ThermalClusterLoadFromSection(study.buffer, *cluster, *section, rampesEnabled))
+        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section, rampesEnabled))
         {
             continue;
         }
@@ -179,7 +179,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         addToCompleteList(cluster);
     }
 
-    rebuildIndexes();
+    buildIndexes();
     rebuildIndex();
 
     return ret;
@@ -365,7 +365,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     return false;
 }
 
-bool ThermalClusterLoadFromSection(const AnyString& filename,
+bool ThermalClusterLoadFromSection(const std::string& areaName,
                                    ThermalCluster& cluster,
                                    const IniFile::Section& section,
                                    bool rampingEnabledGlobal)
@@ -398,14 +398,15 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
         {
             if (property->key.empty())
             {
-                logs.warning() << '`' << filename << "`: `" << section.name
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
                                << "`: Invalid key/value";
                 continue;
             }
             if (!ThermalClusterLoadFromProperty(cluster, property))
             {
-                logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->key << "`: The property is unknown and ignored";
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
+                               << "`/`" << property->key
+                               << "`: The property is unknown and ignored";
             }
         }
     }
@@ -445,37 +446,6 @@ void ThermalClusterList::ensureDataPrepro()
             c->prepro = std::make_unique<PreproAvailability>(c->id(), c->unitCount);
         }
     }
-}
-
-bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
-{
-    Clob buffer;
-    bool ret = true;
-
-    for (auto& c: allClusters_)
-    {
-        if (c->prepro)
-        {
-            assert(c->parentArea && "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-            ret = c->prepro->saveToFolder(buffer) && ret;
-        }
-    }
-    return ret;
-}
-
-bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
-{
-    Clob buffer;
-    bool ret = true;
-
-    for (auto& c: allClusters_)
-    {
-        assert(c->parentArea && "cluster: invalid parent area");
-        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-        ret = c->ecoInput.saveToFolder(buffer) && ret;
-    }
-    return ret;
 }
 
 bool ThermalClusterList::loadPreproFromFolder(Study& study, const fs::path& folder)

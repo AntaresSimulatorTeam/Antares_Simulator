@@ -12,10 +12,9 @@ namespace Antares::Solver::Implementation
 ModelerProblems::ModelerProblems(const std::filesystem::path& studyPath)
 {
     loader_ = std::make_unique<LoadFiles::FileLoader>(studyPath);
-    writer_ = std::make_unique<FileWriter>(studyPath);
-    writer_->init(formatTime(getCurrentTime(), "%Y%m%d-%H%M"));
+    fs::path outputPath = studyPath / "output" / formatTime(getCurrentTime(), "%Y%m%d-%H%M");
 
-    modeler_ = std::make_unique<Modeler>(*loader_, *writer_);
+    modeler_ = std::make_unique<Modeler>(*loader_, outputPath, TableFormat::CSV);
     modeler_->buildProblems();
     modeler_->exportMps();
     modeler_->exportStructureFile();

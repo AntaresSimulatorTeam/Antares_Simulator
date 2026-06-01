@@ -133,7 +133,7 @@ bool RenewableClusterList::loadFromFolder(const fs::path& folder, Area* area)
             }
         }
 
-        rebuildIndexes();
+        buildIndexes();
 
         return ret;
     }

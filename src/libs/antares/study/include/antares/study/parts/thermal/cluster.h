@@ -65,13 +65,6 @@ public:
     ThermalCluster() = delete;
     ~ThermalCluster() = default;
 
-    /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    void reset() override;
-
     //! \name Spinning
     //@{
     /*!
@@ -99,13 +92,6 @@ public:
     ** \return False if an error has been detected and fixed with a default value
     */
     bool integrityCheck() override;
-
-    /*!
-    ** \brief Copy data from another cluster
-    **
-    ** The name and the id will remain untouched.
-    */
-    void copyFrom(const ThermalCluster& cluster);
 
     //! \name validity of Min Stable Power
     //@{

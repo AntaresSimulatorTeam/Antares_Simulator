@@ -4,10 +4,9 @@
 #include "antares/study/study.h"
 
 #include <cassert>
+#include <string>
 
-using namespace Yuni;
-
-#define SEP IO::Separator
+namespace fs = std::filesystem;
 
 namespace Antares::Data
 {
@@ -35,8 +34,9 @@ bool Study::importTimeseriesIntoInput()
             for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing load timeseries : " << areaName;
-                buffer.clear() << folderInput << SEP << "load" << SEP << "series";
-                ret = area->load.series.saveToFolder(area->id, buffer.c_str(), "load_") && ret;
+                fs::path seriesPath = fs::path(folderInput) / "load" / "series";
+                ret = area->load.series.saveToFolder(area->id, seriesPath.string().c_str(), "load_")
+                      && ret;
             }
         }
 
@@ -47,8 +47,11 @@ bool Study::importTimeseriesIntoInput()
             for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing solar timeseries : " << areaName;
-                buffer.clear() << folderInput << SEP << "solar" << SEP << "series";
-                ret = area->solar.series.saveToFolder(area->id, buffer.c_str(), "solar_") && ret;
+                fs::path seriesPath = fs::path(folderInput) / "solar" / "series";
+                ret = area->solar.series.saveToFolder(area->id,
+                                                      seriesPath.string().c_str(),
+                                                      "solar_")
+                      && ret;
             }
         }
 
@@ -59,9 +62,9 @@ bool Study::importTimeseriesIntoInput()
             for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing hydro timeseries : " << areaName;
-                buffer.clear() << folderInput << SEP << "hydro" << SEP << "series";
+                fs::path seriesPath = fs::path(folderInput) / "hydro" / "series";
                 ret = area->hydro.series->saveToFolder(area->id,
-                                                       buffer,
+                                                       seriesPath.string(),
                                                        parameters.compatibility.hydroPmax)
                       && ret;
             }
@@ -74,8 +77,9 @@ bool Study::importTimeseriesIntoInput()
             for (const auto& [areaName, area]: areas)
             {
                 logs.info() << "Importing wind timeseries : " << areaName;
-                buffer.clear() << folderInput << SEP << "wind" << SEP << "series";
-                area->wind.series.saveToFolder(area->id, buffer.c_str(), "wind_") && ret;
+                fs::path seriesPath = fs::path(folderInput) / "wind" / "series";
+                ret = area->wind.series.saveToFolder(area->id, seriesPath.string().c_str(), "wind_")
+                      && ret;
             }
         }
 
@@ -83,17 +87,16 @@ bool Study::importTimeseriesIntoInput()
         if (importThermal)
         {
             logs.info() << "Importing thermal timeseries...";
-            String msg;
 
             for (const auto& [areaName, area]: areas)
             {
-                msg.clear() << "Importing thermal timeseries : " << areaName;
+                logs.info() << "Importing thermal timeseries : " << areaName;
 
                 // Spinning
                 area->thermal.list.reverseCalculationOfSpinning();
 
-                buffer.clear() << folderInput << SEP << "thermal" << SEP << "series";
-                ret = area->thermal.list.saveDataSeriesToFolder(buffer.c_str()) && ret;
+                fs::path seriesPath = fs::path(folderInput) / "thermal" / "series";
+                ret = area->thermal.list.saveDataSeriesToFolder(seriesPath.string().c_str()) && ret;
             }
         }
 

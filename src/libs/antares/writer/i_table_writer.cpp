@@ -3,6 +3,8 @@
 
 #include "include/antares/writer/i_table_writer.h"
 
+#include <utility>
+
 namespace Antares::Writer
 {
 
@@ -17,7 +19,7 @@ static void ensureParentDir(const std::filesystem::path& file)
     }
 }
 
-ITableWriter::ITableWriter(std::filesystem::path& filePath):
+ITableWriter::ITableWriter(const std::filesystem::path& filePath):
     output_file_(filePath)
 {
     ensureParentDir(output_file_);

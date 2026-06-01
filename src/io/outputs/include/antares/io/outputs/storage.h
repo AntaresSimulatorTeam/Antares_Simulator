@@ -16,10 +16,9 @@ public:
         addColumn<StringColumn>(name);
     }
 
-    template<Integral T>
     void addIntegralColumn(const std::string& name)
     {
-        addColumn<IntegralColumn<T>>(name);
+        addColumn<IntegralColumn>(name);
     }
 
     void addDoubleColumn(const std::string& name)
@@ -42,7 +41,7 @@ public:
         }
         else if constexpr (std::is_integral_v<T>)
         {
-            getColumn<IntegralColumn<T>>(column_name).add(value);
+            getColumn<IntegralColumn>(column_name).add(value);
         }
         else if constexpr (std::is_floating_point_v<T>)
         {

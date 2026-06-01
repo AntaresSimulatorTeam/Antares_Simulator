@@ -17,22 +17,12 @@ public:
     SimulationTable();
     SimulationTable(SimulationTable&& other) noexcept;
     void addEntry(const SimulationTableEntry& entry);
-    [[nodiscard]] std::string headerCsvFormat() const;
     const std::vector<std::unique_ptr<IColumn>>& columns() const;
-    void writeToBuffer();
+    size_t rowCount() const;
     void clear();
-
-    // const std::string& buffer() const;
-    [[nodiscard]] std::string buffer() const;
-
-    // gp : never called in production code, only from tests
-    // gp : should be moved as a free function in tests
-    void writeHeaderToBuffer();
-
     std::vector<std::vector<std::string>> storageIntoRows() const;
 
 private:
-    std::ostringstream buffer_;
     ColumnBasedStorage storage_;
 };
 } // namespace Antares::IO::Outputs

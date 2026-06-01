@@ -60,11 +60,6 @@ public:
 
     std::vector<std::shared_ptr<ClusterT>> all() const;
 
-    /*!
-    ** \brief Remove properly a cluster
-    */
-    virtual bool remove(const std::string& id);
-
     //@}
 
     SharedPtr operator[](std::size_t idx)
@@ -139,18 +134,18 @@ public:
     unsigned int enabledCount() const;
     unsigned int allClustersCount() const;
     void addToCompleteList(std::shared_ptr<ClusterT> cluster);
-    void sortCompleteList();
+
+    // Give a special index to enabled clusters (thermal / renewable)
+    void buildIndexes();
 
 protected:
     std::vector<std::shared_ptr<ClusterT>> allClusters_;
 
     virtual std::string typeID() const = 0;
 
-    // Give a special index to enabled clusters (thermal / renewable)
-    void rebuildIndexes();
-
 private:
     bool alreadyInAllClusters(std::string clusterName);
+    void sortCompleteList();
 
 }; // class ClusterList
 } // namespace Antares::Data

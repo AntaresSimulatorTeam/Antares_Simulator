@@ -88,14 +88,14 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_ramp_parameters, OneProblemOne
     auto cluster = std::make_shared<ThermalCluster>(areaA);
     auto cluster2 = std::make_shared<ThermalCluster>(areaA);
 
-    ThermalClusterLoadFromSection(study->buffer,
+    ThermalClusterLoadFromSection(areaA->name,
                                   *cluster,
                                   *section,
                                   study->parameters.compatibility.rampes
                                     == Parameters::Compatibility::Rampes::Enabled);
     section = section->next;
     BOOST_CHECK_EQUAL(section->name.empty(), false);
-    ThermalClusterLoadFromSection(study->buffer,
+    ThermalClusterLoadFromSection(areaA->name,
                                   *cluster2,
                                   *section,
                                   study->parameters.compatibility.rampes
@@ -148,14 +148,14 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_no_ramp_parameters, OneProblem
     auto cluster = std::make_shared<ThermalCluster>(areaA);
     auto cluster2 = std::make_shared<ThermalCluster>(areaA);
 
-    ThermalClusterLoadFromSection(study->buffer,
+    ThermalClusterLoadFromSection(areaA->name,
                                   *cluster,
                                   *section,
                                   study->parameters.compatibility.rampes
                                     == Parameters::Compatibility::Rampes::Enabled);
     section = section->next;
     BOOST_CHECK_EQUAL(section->name.empty(), false);
-    ThermalClusterLoadFromSection(study->buffer,
+    ThermalClusterLoadFromSection(areaA->name,
                                   *cluster2,
                                   *section,
                                   study->parameters.compatibility.rampes
@@ -189,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_invalid_ramp_parameters,
 
     auto cluster = std::make_shared<ThermalCluster>(areaA);
 
-    ThermalClusterLoadFromSection(study->buffer,
+    ThermalClusterLoadFromSection(areaA->name,
                                   *cluster,
                                   *section,
                                   study->parameters.compatibility.rampes

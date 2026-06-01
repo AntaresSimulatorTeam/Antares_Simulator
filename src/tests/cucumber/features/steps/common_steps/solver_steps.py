@@ -284,12 +284,12 @@ def check_annual_results(context):
 
 @then("simulation tables match the references")
 def check_simulation_tables(context):
-    reference_dir = context.sih.reference_dir()
-    output_dir = context.soh.output_dir()
+    referenceDir = context.sih.reference_dir()
+    outputDir = context.soh.output_dir()
 
-    dirs_match, differences = compare_folders(reference_dir, output_dir)
-    assert dirs_match, "Folders do not match:\n" + "\n".join(f"  - {diff}" for diff in differences)
+    dir_identical, err_messages = compare_folders(referenceDir, outputDir)
 
+    assert dir_identical, f"Folders do not match:\n" + "\n".join(f"  - {d}" for d in err_messages)
 
 def should_check(row, key):
     return key in row.headings and len(row[key]) > 0
@@ -321,11 +321,10 @@ def run_simulation(context):
     context.output_path = parse_output_folder_from_logs(out)
     context.return_code = process.returncode
     context.soh = solver_output_handler(context.output_path, context.mode)
-    # for hybrid studies:
-    output_dir = Path(context.output_path)
-    simulation_tables = sorted(output_dir.glob("simulation_table-*--optim-nb-1.csv"))
-    if simulation_tables:
-        context.moh = modeler_output_handler(simulation_tables)
+    # For hybrid studies:
+    outputPath = Path(context.output_path)
+    if any(outputPath.glob("simulation-table*.csv")):
+        context.moh = modeler_output_handler(outputPath, "simulation-table*-optim-nb-1.csv")
 
 
 def init_simulation(context):

@@ -156,8 +156,6 @@ template<class ClusterT>
 void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 {
     allClusters_.push_back(cluster);
-    sortCompleteList();
-    rebuildIndexes();
 }
 
 template<class ClusterT>
@@ -179,8 +177,10 @@ unsigned int ClusterList<ClusterT>::allClustersCount() const
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::rebuildIndexes()
+void ClusterList<ClusterT>::buildIndexes()
 {
+    sortCompleteList();
+
     // First, we give an index to every cluster, enabled / must-run or not.
     // We do that to :
     //  - Stick to what was done before and not change the results
@@ -197,15 +197,6 @@ void ClusterList<ClusterT>::rebuildIndexes()
     {
         c->enabledIndex = index++;
     }
-}
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::remove(const std::string& id)
-{
-    auto nbDeletion = std::erase_if(allClusters_,
-                                    [&id](const SharedPtr& c) { return c->id() == id; });
-
-    return nbDeletion > 0;
 }
 
 template<class ClusterT>
