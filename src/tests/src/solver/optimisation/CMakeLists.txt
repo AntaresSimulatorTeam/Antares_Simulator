@@ -11,8 +11,8 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_mip_detection.cpp
         test_legacy_variable_name_parser.cpp
         ${CMAKE_SOURCE_DIR}/solver/optimisation/LegacyVariableNameParser.cpp
-        test_legacy_name_mapper.cpp
-        ${CMAKE_SOURCE_DIR}/solver/optimisation/LegacyNameMapper.cpp
+        test_variable_name_mapper.cpp
+        ${CMAKE_SOURCE_DIR}/solver/optimisation/VariableNameMapper.cpp
         LIBS
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl
