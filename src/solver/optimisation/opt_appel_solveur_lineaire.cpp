@@ -18,7 +18,7 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
-#include "antares/solver/optimisation/VariableNameMapper.h"
+#include "antares/solver/modeler/VariableNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LegacyVariableNameParser.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
@@ -64,7 +64,7 @@ namespace
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const PROBLEME_ANTARES_A_RESOUDRE& problem,
                                const FillContext& fillContext,
-                               const Antares::Optimization::VariableNameMapper& nameMapper,
+                               const Antares::Solver::VariableNameMapper& nameMapper,
                                unsigned currentBlock,
                                unsigned scenario)
 {
@@ -324,9 +324,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 true);
         }
 
-        const Antares::Optimization::VariableNameMapper variableNameMapper(
-          hasModelerData ? modelerData->variableNames
-                         : std::unordered_map<std::string, std::string>{});
+        static const Antares::Solver::VariableNameMapper emptyVariableNameMapper;
+        const Antares::Solver::VariableNameMapper& variableNameMapper
+          = hasModelerData ? modelerData->variableNameMapper : emptyVariableNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *ProblemeAResoudre,
                                   fillCtx,

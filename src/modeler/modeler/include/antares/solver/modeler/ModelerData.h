@@ -3,12 +3,11 @@
 
 #pragma once
 
-#include <string>
-#include <unordered_map>
 #include <vector>
 
 #include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
 #include <antares/optimisation/linear-problem-data-impl/linearProblemData.h>
+#include <antares/solver/modeler/VariableNameMapper.h>
 #include <antares/solver/optim-model-filler/BendersDecomposition.h>
 #include <antares/study/system-model/library.h>
 #include <antares/study/system-model/system.h>
@@ -30,8 +29,8 @@ struct ModelerData
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
     Optimisation::BendersDecomposition bendersDecomposition;
-    //! Optional variable-name -> mapped-name map, loaded from input/variable-names.yml
-    std::unordered_map<std::string, std::string> variableNames;
+    //! Maps variable names via the optional study file input/variable-names.yml
+    VariableNameMapper variableNameMapper;
 };
 
 // Operator for printing ResolutionMode in logs and tests

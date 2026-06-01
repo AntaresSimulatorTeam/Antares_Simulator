@@ -19,7 +19,7 @@ Feature: Legacy variables in simulation table
     # `UnsuppliedEnergy::area<area>::hour<33>` (0-based legacy hour); after
     # the parser/mapper it becomes a simulation-table row with
     # component=area<area>, output=unsupplied_energy, absolute_time_index=34.
-    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/002 Thermal fleet - Base"
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
     When I run antares simulator
     Then the simulation succeeds
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW

@@ -3,10 +3,12 @@ add_library(Antares::modeler-lib ALIAS modeler-lib)
 target_sources(modeler-lib
         PRIVATE
         Modeler.cpp
+        VariableNameMapper.cpp
         include/antares/solver/modeler/Modeler.h
         include/antares/solver/modeler/ILoader.h
         include/antares/solver/modeler/IWriter.h
         include/antares/solver/modeler/ModelerData.h
+        include/antares/solver/modeler/VariableNameMapper.h
 )
 
 target_link_libraries(modeler-lib
@@ -18,6 +20,9 @@ target_link_libraries(modeler-lib
         # TODO FIXME don't depend on implementations
         Antares::linear-problem-mpsolver-impl
         Antares::modeler-optimisation-container
+        PRIVATE
+        Antares::io
+        yaml-cpp::yaml-cpp
 )
 
 target_include_directories(modeler-lib

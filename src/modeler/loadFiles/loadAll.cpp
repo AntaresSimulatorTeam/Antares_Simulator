@@ -37,7 +37,7 @@ std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
     data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
     logs.info() << "Scenario groups loaded";
 
-    data.variableNames = loadVariableNames(studyPath);
+    data.variableNameMapper = VariableNameMapper(studyPath);
     measure.tick();
     logs.info() << "Variable names loaded";
 

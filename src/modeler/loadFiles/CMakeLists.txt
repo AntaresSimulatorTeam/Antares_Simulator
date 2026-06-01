@@ -10,7 +10,6 @@ set(SOURCES
         readScenarioGroup.cpp
         readSystem.cpp
         readOptimConfig.cpp
-        readVariableNames.cpp
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
         include/antares/solver/modeler/loadFiles/Fileloader.h
