@@ -46,6 +46,8 @@ constexpr std::string_view unsuppliedSpilledToString(Data::UnsuppliedSpilled typ
         return "UNSP.";
     case Spilled:
         return "SPIL.";
+    case Count:
+        break;
     }
 
     throw std::invalid_argument("Invalid UnsuppliedSpilled value: "
