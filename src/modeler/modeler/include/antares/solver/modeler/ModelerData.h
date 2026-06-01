@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <antares/modeler-optimisation-container/scenarioGroupRepo.h>
@@ -28,6 +30,8 @@ struct ModelerData
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
     Optimisation::BendersDecomposition bendersDecomposition;
+    //! Optional variable-name -> mapped-name map, loaded from input/variable-names.yml
+    std::unordered_map<std::string, std::string> variableNames;
 };
 
 // Operator for printing ResolutionMode in logs and tests

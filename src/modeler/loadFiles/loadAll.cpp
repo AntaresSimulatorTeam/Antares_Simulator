@@ -35,8 +35,11 @@ std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
     logs.info() << "Timeseries loaded";
 
     data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
-    measure.tick();
     logs.info() << "Scenario groups loaded";
+
+    data.variableNames = loadVariableNames(studyPath);
+    measure.tick();
+    logs.info() << "Variable names loaded";
 
     logs.info() << "Modeler loaded in " << measure.toStringInSeconds();
 

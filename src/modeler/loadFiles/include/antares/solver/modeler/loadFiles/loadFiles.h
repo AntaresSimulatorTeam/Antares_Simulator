@@ -4,6 +4,8 @@
 #pragma once
 
 #include <filesystem>
+#include <string>
+#include <unordered_map>
 #include <vector>
 #include <yaml-cpp/yaml.h>
 
@@ -31,6 +33,11 @@ std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblemData> loadDataSeri
   const std::filesystem::path& studyPath);
 
 Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
+  const std::filesystem::path& studyPath);
+
+/// Load the optional variable-name -> mapped-name map from
+/// `<studyPath>/input/variable-names.yml`. Returns an empty map when the file is absent.
+std::unordered_map<std::string, std::string> loadVariableNames(
   const std::filesystem::path& studyPath);
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);

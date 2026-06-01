@@ -6,6 +6,7 @@ add_boost_test(test-load-yaml-files
         testParameters.cpp
         testLoadScenarioGroup.cpp
         test-load-optim-config.cpp
+        testLoadVariableNames.cpp
         LIBS
         Antares::modeler-parameters
         Antares::load-modeler-files

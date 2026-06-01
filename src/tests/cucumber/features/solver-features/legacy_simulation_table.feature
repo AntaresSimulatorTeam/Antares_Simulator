@@ -2,11 +2,11 @@ Feature: Legacy variables in simulation table
 
   # The legacy solver populates PROBLEME_ANTARES_A_RESOUDRE::NomDesVariables
   # with names of the form `<Output>::<location>::hour<N>`. After the per-week
-  # solve, FillLegacySimulationTable parses those names, applies LegacyNameMapper
+  # solve, FillLegacySimulationTable parses those names, applies VariableNameMapper
   # to the output, and pushes one row per parsed variable into the per-numSpace
   # SimulationTable. This scenario checks that:
   #   - the simulation table file is produced for a pure-legacy study
-  #   - the LegacyNameMapper transform (UnsuppliedEnergy -> unsupplied_energy)
+  #   - the VariableNameMapper transform (UnsuppliedEnergy -> unsupplied_energy)
   #     is visible in the CSV output
   #   - the row carries the value the legacy solver computed for that hour
 
