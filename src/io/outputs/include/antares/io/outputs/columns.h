@@ -67,7 +67,7 @@ struct is_optional<std::optional<U>>: std::true_type
 template<typename T>
 inline constexpr bool is_optional_v = is_optional<T>::value;
 
-static std::string FromDouble(const double value)
+[[maybe_unused]] static std::string FromDouble(const double value)
 {
     std::ostringstream oss;
     oss << std::setprecision(15) << value;
