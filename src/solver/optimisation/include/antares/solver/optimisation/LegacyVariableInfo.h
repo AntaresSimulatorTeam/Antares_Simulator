@@ -8,18 +8,13 @@
 namespace Antares::Optimization
 {
 
+// Structured legacy description of an optimization variable, built by VariableNamer
+// at the same time as the variable name and stored parallel to NomDesVariables.
 struct LegacyVariableInfo
 {
     std::string output;
     std::string component;
     unsigned timeIndex;
 };
-
-// Extracts the component name from a legacy location encoded as Model<Component_name>.
-// Locations may be nested (e.g. "Area<area>::ThermalCluster<continuous_generator_candidate>"),
-// in which case the name of the last (innermost) component is kept
-// (-> "continuous_generator_candidate"). Returns an empty string when no non-empty
-// chevron-delimited content is found.
-std::string ExtractLegacyComponentName(const std::string& location);
 
 } // namespace Antares::Optimization

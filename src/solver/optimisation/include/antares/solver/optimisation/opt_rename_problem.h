@@ -24,7 +24,7 @@ protected:
     // No-op unless a legacy-info target has been provided (i.e. for VariableNamer).
     void RecordLegacyVariableInfo(unsigned index,
                                   const std::string& output,
-                                  const std::string& location);
+                                  const std::string& component);
     void SetLinkElementName(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType);
