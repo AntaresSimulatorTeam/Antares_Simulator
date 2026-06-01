@@ -1,5 +1,8 @@
 var NAVTREEINDEX18 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a294cb45677c66b628f9257cae20b2965":[8,0,0,11,6,4,94,4],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a2d7eb129229dd535cf3b54685802a668":[8,0,0,11,6,4,94,7],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a3e015800864ddf416a07776080e61ff0":[8,0,0,11,6,4,94,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a3ea310aae1df3046adcb3006b7f7b779":[8,0,0,11,6,4,94,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a425ca0caa84a35185aa56ce07ea6b282":[8,0,0,11,6,4,94,20],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCost.html#a4c9d2a5e40d52fd5428d318ad3ba5f8a":[8,0,0,11,6,4,94,9],
@@ -246,8 +249,5 @@ var NAVTREEINDEX18 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a54727f3b30e52b27a94a7ecb95597d1f":[8,0,0,11,6,4,1,9,4],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a59dee5d31b34f2b708f18cc903f44b80":[8,0,0,11,6,4,1,9,10],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a67a62ac1b359dfad815b453fdae39c74":[8,0,0,11,6,4,1,9,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a6aa9f534d3357bca0f637ac7b2f22bd6":[8,0,0,11,6,4,1,9,14],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a6bf0962a273bffa8f2c64edb6e98f572":[8,0,0,11,6,4,1,9,11],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a90bfeaf3d46bbc82c4909f2beae3cc73":[8,0,0,11,6,4,1,9,17],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#aa78b812746d9c7c06ff87c21920f90fe":[8,0,0,11,6,4,1,9,9]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a6aa9f534d3357bca0f637ac7b2f22bd6":[8,0,0,11,6,4,1,9,14]
 };

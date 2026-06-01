@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Member List</title>
+<title>Antares Simulator: Antares::Writer::ColumnAdapterFactory Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classScalingWriter.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Writer_1_1ColumnAdapterFactory.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,23 +123,60 @@ $(document).ready(function(){initNavTree('classScalingWriter.html',''); initResi
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classAntares_1_1Writer_1_1ColumnAdapterFactory-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">ScalingWriter Member List</div>  </div>
+<div class="title">Antares::Writer::ColumnAdapterFactory Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>This is the complete list of members for <a class="el" href="classScalingWriter.html">ScalingWriter</a>, including all inherited members.</p>
-<table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>init</b>(const std::string &amp;) override (defined in <a class="el" href="classScalingWriter.html">ScalingWriter</a>)</td><td class="entry"><a class="el" href="classScalingWriter.html">ScalingWriter</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>outputPath</b>() const override (defined in <a class="el" href="classScalingWriter.html">ScalingWriter</a>)</td><td class="entry"><a class="el" href="classScalingWriter.html">ScalingWriter</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ScalingWriter</b>()=default (defined in <a class="el" href="classScalingWriter.html">ScalingWriter</a>)</td><td class="entry"><a class="el" href="classScalingWriter.html">ScalingWriter</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>writeSimulationTable</b>(SimulationTable &amp;simuTable) const override (defined in <a class="el" href="classScalingWriter.html">ScalingWriter</a>)</td><td class="entry"><a class="el" href="classScalingWriter.html">ScalingWriter</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~IWriter</b>()=default (defined in <a class="el" href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a>)</td><td class="entry"><a class="el" href="classAntares_1_1Solver_1_1IWriter.html">Antares::Solver::IWriter</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-</table></div><!-- contents -->
+<div class="dynheader">
+Inheritance diagram for Antares::Writer::ColumnAdapterFactory:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classAntares_1_1Writer_1_1ColumnAdapterFactory.png" usemap="#Antares::Writer::ColumnAdapterFactory_map" alt=""/>
+  <map id="Antares::Writer::ColumnAdapterFactory_map" name="Antares::Writer::ColumnAdapterFactory_map">
+<area href="classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor.html" alt="Antares::IO::Outputs::IColumnAdapterVisitor" shape="rect" coords="0,0,256,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:acc815822a0b4468f550d3a1d7022efff"><td class="memItemLeft" align="right" valign="top"><a id="acc815822a0b4468f550d3a1d7022efff"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">StringColumn</a> &amp;col) override</td></tr>
+<tr class="separator:acc815822a0b4468f550d3a1d7022efff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20a36ce7ca02ecaa6ea49bd9ee307478"><td class="memItemLeft" align="right" valign="top"><a id="a20a36ce7ca02ecaa6ea49bd9ee307478"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">DoubleColumn</a> &amp;col) override</td></tr>
+<tr class="separator:a20a36ce7ca02ecaa6ea49bd9ee307478"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6764652b1b326da21ff368ce4a6bf84"><td class="memItemLeft" align="right" valign="top"><a id="ad6764652b1b326da21ff368ce4a6bf84"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">IntegralColumn</a> &amp;col) override</td></tr>
+<tr class="separator:ad6764652b1b326da21ff368ce4a6bf84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eaa4bad3dc1e7953b4814d71f594dfd"><td class="memItemLeft" align="right" valign="top"><a id="a5eaa4bad3dc1e7953b4814d71f594dfd"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">OptionalColumn</a>&lt; std::string &gt; &amp;col) override</td></tr>
+<tr class="separator:a5eaa4bad3dc1e7953b4814d71f594dfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b05d24e35061ad72cd31b17cd9056d4"><td class="memItemLeft" align="right" valign="top"><a id="a9b05d24e35061ad72cd31b17cd9056d4"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">OptionalColumn</a>&lt; double &gt; &amp;col) override</td></tr>
+<tr class="separator:a9b05d24e35061ad72cd31b17cd9056d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cab36ef292505033672ca53cb64c60d"><td class="memItemLeft" align="right" valign="top"><a id="a7cab36ef292505033672ca53cb64c60d"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">OptionalColumn</a>&lt; unsigned &gt; &amp;col) override</td></tr>
+<tr class="separator:a7cab36ef292505033672ca53cb64c60d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a243fef717c2e3169269caf99f74fe5c3"><td class="memItemLeft" align="right" valign="top"><a id="a243fef717c2e3169269caf99f74fe5c3"></a>
+std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">OptionalColumn</a>&lt; MipBasisStatus &gt; &amp;col) override</td></tr>
+<tr class="separator:a243fef717c2e3169269caf99f74fe5c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor.html">Antares::IO::Outputs::IColumnAdapterVisitor</a></td></tr>
+<tr class="memitem:a6b985e976f9eccbab6c836977862e50d inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor"><td class="memItemLeft" align="right" valign="top"><a id="a6b985e976f9eccbab6c836977862e50d"></a>
+virtual std::shared_ptr&lt; <a class="el" href="classAntares_1_1Writer_1_1IColumnAdapter.html">IColumnAdapter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visit</b> (const <a class="el" href="classAntares_1_1IO_1_1Outputs_1_1TypedColumn.html">OptionalColumn</a>&lt; Optimisation::LinearProblemApi::MipBasisStatus &gt; &amp;)=0</td></tr>
+<tr class="separator:a6b985e976f9eccbab6c836977862e50d inherit pub_methods_classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/libs/antares/writer/columnToArrowAdapter.cpp</li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Writer</b></li><li class="navelem"><a class="el" href="classAntares_1_1Writer_1_1ColumnAdapterFactory.html">ColumnAdapterFactory</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

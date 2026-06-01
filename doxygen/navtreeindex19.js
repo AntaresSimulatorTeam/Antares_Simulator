@@ -1,5 +1,8 @@
 var NAVTREEINDEX19 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a6bf0962a273bffa8f2c64edb6e98f572":[8,0,0,11,6,4,1,9,11],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a90bfeaf3d46bbc82c4909f2beae3cc73":[8,0,0,11,6,4,1,9,17],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#aa78b812746d9c7c06ff87c21920f90fe":[8,0,0,11,6,4,1,9,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#aab1561f233cb45a953add0385356f876":[8,0,0,11,6,4,1,9,8],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#ac1cfc87c4ec108807a7965c32f47d330":[8,0,0,11,6,4,1,9,15],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#ad31afafb2c4da6aa08ae3d6343e52a09":[8,0,0,11,6,4,1,9,18],
@@ -246,8 +249,5 @@ var NAVTREEINDEX19 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html":[8,0,0,11,6,4,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#a00acb678c6def6cbf7f3c3ea9b191ed2":[8,0,0,11,6,4,11,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#a7858950f8fc2d31b9923d652710015cc":[8,0,0,11,6,4,11,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#aaee0ccf5228d546aca4386c5d06f54e0":[8,0,0,11,6,4,11,0],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#ae8c293289d5c03d40cd1d2f42fe82640":[8,0,0,11,6,4,11,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html":[8,0,0,11,6,4,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesLoad.html#a213913a380ca7b911271d15a21771a5b":[8,0,0,11,6,4,13,3]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#aaee0ccf5228d546aca4386c5d06f54e0":[8,0,0,11,6,4,11,0]
 };

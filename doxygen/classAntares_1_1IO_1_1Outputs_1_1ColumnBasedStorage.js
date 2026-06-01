@@ -1,7 +1,7 @@
 var classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage =
 [
     [ "addDoubleColumn", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html#af3a596baa17f50eaaea93b731df910d5", null ],
-    [ "addIntegralColumn", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html#aca8361f7da069e846bfe8eed5d6be9af", null ],
+    [ "addIntegralColumn", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html#a74f19f932b5653b508ac1f3734cb6993", null ],
     [ "addOptionalColumn", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html#af25661c696336c33e51d89c447259ea2", null ],
     [ "addStringColumn", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html#a4c9b8d4d3fd2fbe1c75b6280015c128f", null ],
     [ "addValue", "classAntares_1_1IO_1_1Outputs_1_1ColumnBasedStorage.html#a7744d81d5cf17c3b75267204cb0a7c26", null ],

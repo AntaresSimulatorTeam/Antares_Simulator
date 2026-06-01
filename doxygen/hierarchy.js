@@ -670,6 +670,9 @@ var hierarchy =
       [ "Antares::Writer::OptStringColumnAdapter", "classAntares_1_1Writer_1_1OptStringColumnAdapter.html", null ],
       [ "Antares::Writer::StringColumnAdapter", "classAntares_1_1Writer_1_1StringColumnAdapter.html", null ]
     ] ],
+    [ "Antares::IO::Outputs::IColumnAdapterVisitor", "classAntares_1_1IO_1_1Outputs_1_1IColumnAdapterVisitor.html", [
+      [ "Antares::Writer::ColumnAdapterFactory", "classAntares_1_1Writer_1_1ColumnAdapterFactory.html", null ]
+    ] ],
     [ "Antares::Optimisation::LinearProblemDataImpl::IDataSeries", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1IDataSeries.html", [
       [ "Antares::Optimisation::LinearProblemDataImpl::TimeSeriesSet", "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1TimeSeriesSet.html", null ]
     ] ],
@@ -891,17 +894,13 @@ var hierarchy =
     [ "Antares::Solver::Simulation::ITimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1ITimeSeriesNumbersWriter.html", [
       [ "Antares::Solver::Simulation::BindingConstraintsTimeSeriesNumbersWriter", "classAntares_1_1Solver_1_1Simulation_1_1BindingConstraintsTimeSeriesNumbersWriter.html", null ]
     ] ],
-    [ "Antares::Solver::IWriter", "classAntares_1_1Solver_1_1IWriter.html", [
-      [ "Antares::Solver::FileWriter", "classAntares_1_1Solver_1_1FileWriter.html", null ],
-      [ "InMemoryWriter", "classInMemoryWriter.html", null ],
-      [ "ScalingWriter", "classScalingWriter.html", null ]
-    ] ],
     [ "JIT", "classJIT.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],
     [ "JIT::just_in_time_manager", "classJIT_1_1just__in__time__manager.html", null ],
     [ "LeftT", null, [
       [ "Antares::Solver::Variable::Join< LeftT, RightT >", "classAntares_1_1Solver_1_1Variable_1_1Join.html", null ]
     ] ],
+    [ "Antares::Writer::LegacySimulationTablesWriter", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html", null ],
     [ "LEVEL_FLEX_DOWN_NODE", "structLEVEL__FLEX__DOWN__NODE.html", null ],
     [ "LEVEL_FLEX_UP_NODE", "structLEVEL__FLEX__UP__NODE.html", null ],
     [ "antlr4::Lexer", null, [
@@ -1010,7 +1009,6 @@ var hierarchy =
     [ "Antares::IO::Outputs::MPSFileWriter", "classAntares_1_1IO_1_1Outputs_1_1MPSFileWriter.html", null ],
     [ "Antares::IO::Outputs::MPSGenerator", "classAntares_1_1IO_1_1Outputs_1_1MPSGenerator.html", null ],
     [ "mpsWriterFactory", "classmpsWriterFactory.html", null ],
-    [ "MpsWriterTestFixture", "structMpsWriterTestFixture.html", null ],
     [ "Antares::Solver::Variable::Common::VCardProxy< V >::Multiple", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardCongestionProbability::Multiple", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability_1_1Multiple.html", null ],
     [ "Antares::Solver::Variable::Economy::VCardThermalAirPollutantEmissions::Multiple", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardThermalAirPollutantEmissions_1_1Multiple.html", null ],
@@ -1096,7 +1094,7 @@ var hierarchy =
     [ "Antares::Optimisation::OptimComponent", "structAntares_1_1Optimisation_1_1OptimComponent.html", null ],
     [ "Antares::IO::Inputs::YmlOptimConfig::OptimConfig", "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1OptimConfig.html", null ],
     [ "Antares::Optimisation::OptimEntityContainer", "classAntares_1_1Optimisation_1_1OptimEntityContainer.html", null ],
-    [ "OptimisationsSimulationTable", "classOptimisationsSimulationTable.html", null ],
+    [ "Antares::IO::Outputs::OptimisationsSimulationTable", "classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html", null ],
     [ "Benchmarking::OptimizationInfo", "structBenchmarking_1_1OptimizationInfo.html", null ],
     [ "Antares::Solver::Optimization::OptimizationOptions", "classAntares_1_1Solver_1_1Optimization_1_1OptimizationOptions.html", null ],
     [ "OptimizationStatistics", "classOptimizationStatistics.html", null ],
@@ -1410,6 +1408,9 @@ var hierarchy =
     [ "Antares::API::SimulationResults", "structAntares_1_1API_1_1SimulationResults.html", null ],
     [ "Antares::IO::Outputs::SimulationTable", "classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html", null ],
     [ "Antares::IO::Outputs::SimulationTableEntry", "structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html", null ],
+    [ "SimulationTableFileFixture", "structSimulationTableFileFixture.html", [
+      [ "BasicProblemFixture", "structBasicProblemFixture.html", null ]
+    ] ],
     [ "SimuTableFixture", "structSimuTableFixture.html", [
       [ "LocalFixture", "structLocalFixture.html", null ]
     ] ],
@@ -1651,7 +1652,6 @@ var hierarchy =
       [ "Antares::Optimisation::EvaluationContext::CouldNotEvaluateConstantParameter< T >", "structAntares_1_1Optimisation_1_1EvaluationContext_1_1CouldNotEvaluateConstantParameter.html", null ]
     ] ],
     [ "Antares::Solver::Implementation::Tag", "structAntares_1_1Solver_1_1Implementation_1_1Tag.html", null ],
-    [ "TempDirFixture", "structTempDirFixture.html", null ],
     [ "TempMPSFilePathProvider", "structTempMPSFilePathProvider.html", null ],
     [ "TestContext", "structTestContext.html", null ],
     [ "TestException", "classTestException.html", null ],

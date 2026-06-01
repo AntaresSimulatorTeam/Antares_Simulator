@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: src/solver/optimisation/include/antares/solver/optimisation/OptimisationsSimulationTable.h Source File</title>
+<title>Antares Simulator: src/io/outputs/include/antares/io/outputs/OptimisationsSimulationTable.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -134,40 +134,28 @@ $(document).ready(function(){initNavTree('OptimisationsSimulationTable_8h_source
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/io/outputs/SimulationTable.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Solver</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::IO::Outputs</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">class </span>IResultWriter;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classOptimisationsSimulationTable.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    std::pair&lt;std::string, std::string&gt; moveBuffers();</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">void</span> write();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> writeTo(<span class="keyword">const</span> std::string&amp; filePrefix, <a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a>&amp; writer);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a>* firstOptimSimulationTable();</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a>* secondOptimSimulationTable();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    [[nodiscard]] std::string headerCsvFormat() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a> firstOptimSimulationTable_;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a> secondOptimSimulationTable_;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    std::string firstOptimBuffer_;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::string secondOptimBuffer_;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">OptimisationsSimulationTable</a></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a>* firstOptimSimulationTable();</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a>* secondOptimSimulationTable();</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> clear();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a> firstOptimSimulationTable_;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a> secondOptimSimulationTable_;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace Antares::IO::Outputs</span></div>
+<div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1OptimisationsSimulationTable.html">Antares::IO::Outputs::OptimisationsSimulationTable</a></div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.h:11</div></div>
 <div class="ttc" id="aclassAntares_1_1IO_1_1Outputs_1_1SimulationTable_html"><div class="ttname"><a href="classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html">Antares::IO::Outputs::SimulationTable</a></div><div class="ttdef"><b>Definition:</b> SimulationTable.h:15</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
-<div class="ttc" id="aclassOptimisationsSimulationTable_html"><div class="ttname"><a href="classOptimisationsSimulationTable.html">OptimisationsSimulationTable</a></div><div class="ttdef"><b>Definition:</b> OptimisationsSimulationTable.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_041db6ad6a3d44280e40e5af409429cb.html">solver</a></li><li class="navelem"><a class="el" href="dir_58214dbee968e8ac661492141d050741.html">optimisation</a></li><li class="navelem"><a class="el" href="dir_7f9265255be167d9fc7d889839beddde.html">include</a></li><li class="navelem"><a class="el" href="dir_4f3aa64cbfddff7c3784c9e1340ff9b3.html">antares</a></li><li class="navelem"><a class="el" href="dir_e3cb1c1c156f8a1a0f5e657d39af19ce.html">solver</a></li><li class="navelem"><a class="el" href="dir_703a08c8b9d2f88ac5fb64946c0e4ddb.html">optimisation</a></li><li class="navelem"><b>OptimisationsSimulationTable.h</b></li>
+    <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c184e51c84f2c3f0345bbc8a0d75d3e1.html">io</a></li><li class="navelem"><a class="el" href="dir_228de5959e7a3d5a858a9340fbeb6bc8.html">outputs</a></li><li class="navelem"><a class="el" href="dir_5a112161cdd368098316fb1abaae287b.html">include</a></li><li class="navelem"><a class="el" href="dir_e91bc58f8df2debd35e226d1fdc40568.html">antares</a></li><li class="navelem"><a class="el" href="dir_544aba09cef1e99f1120d2f174154953.html">io</a></li><li class="navelem"><a class="el" href="dir_a04dcb55be73b9a6b591625c6fcd0a85.html">outputs</a></li><li class="navelem"><b>OptimisationsSimulationTable.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

@@ -1,6 +1,11 @@
 var classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization =
 [
-    [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a2963da2116d09bfd2e5d7df478692b97", null ],
+    [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a4624dcbef2c0beaab42ba9bf8b2007d3", null ],
     [ "~WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a59b19addd7403fb8597e94c58817190c", null ],
+    [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#ac77bb571472f62666c64e130614ea25e", null ],
+    [ "WeeklyOptimization", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a442d7e8d4362a139a7f7725786ded120", null ],
+    [ "operator=", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a7040e26b6cdd15d12de6c059138dc7ab", null ],
+    [ "operator=", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#ad94ed95e25d6ec0b859313e8abfcc9a3", null ],
+    [ "simulationTables", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#ac6f5f16c81bdab6d28240ac89925d3ac", null ],
     [ "solve", "classAntares_1_1Solver_1_1Optimization_1_1WeeklyOptimization.html#a77174ea68464c964c3521926f2eecb79", null ]
 ];
