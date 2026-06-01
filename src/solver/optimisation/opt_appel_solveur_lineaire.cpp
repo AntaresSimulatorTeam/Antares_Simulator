@@ -100,15 +100,14 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
             blockTimeIndex = parsed->timeIndex - globalFirstTimeStep + 1;
         }
 
-        simulationTable.addEntry(
-          {.block = block,
-           .component = parsed->component,
-           .output = nameMapper.mapOutput(parsed->output),
-           .absolute_time_index = parsed->timeIndex + 1,
-           .block_time_index = blockTimeIndex,
-           .scenario_index = scenario,
-           .value = problem.X[static_cast<std::size_t>(index)],
-           .status = std::nullopt});
+        simulationTable.addEntry({.block = block,
+                                  .component = parsed->component,
+                                  .output = nameMapper.mapOutput(parsed->output),
+                                  .absolute_time_index = parsed->timeIndex + 1,
+                                  .block_time_index = blockTimeIndex,
+                                  .scenario_index = scenario,
+                                  .value = problem.X[static_cast<std::size_t>(index)],
+                                  .status = std::nullopt});
     }
 }
 } // namespace
