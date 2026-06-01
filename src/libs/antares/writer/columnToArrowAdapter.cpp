@@ -253,24 +253,18 @@ public:
     }
 };
 
-std::shared_ptr<IColumnAdapter> makeColumnAdapter(const std::unique_ptr<IColumn>& column)
+std::shared_ptr<IColumnAdapter> makeColumnAdapter(const IColumn& column)
 {
-    if (!column)
-    {
-        throw InvalidArgumentError("makeColumnAdapter: null column");
-    }
-
     ColumnAdapterFactory factory;
 
     try
     {
-        return column->accept(factory);
+        return column.accept(factory);
     }
     catch (const std::bad_cast& e)
     {
         // This shouldn't happen if all column types are properly registered
-        std::string err_msg = "makeColumnAdapter: column type unknown: " + column->name()
-                              + " (dynamic type: " + std::string(typeid(*column).name()) + ")";
+        std::string err_msg = "makeColumnAdapter: column type unknown: " + column.name();
         throw InvalidArgumentError(err_msg);
     }
 }
