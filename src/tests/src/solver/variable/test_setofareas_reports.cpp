@@ -139,6 +139,7 @@ std::unique_ptr<Antares::Data::Study> makeStudyWithDistricts(
     cluster->index = 0;
     cluster->enabled = true;
     area->thermal.list.addToCompleteList(cluster);
+    area->thermal.list.buildIndexes();
 
     for (const auto& district: districts)
     {

@@ -231,7 +231,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
             throw Error::InvalidFileName();
         }
 
-        writeComment(study);
+        writeComment();
     }
 
     if (!study.initializeRuntimeInfos())
@@ -453,13 +453,13 @@ void Application::prepareWriter(const Antares::Data::Study& study,
                                        duration_collector);
 }
 
-void Application::writeComment(Data::Study& study)
+void Application::writeComment()
 {
-    study.buffer.clear() << "simulation-comments.txt";
+    fs::path commentsPath = "simulation-comments.txt";
 
     if (!pSettings.commentFile.empty())
     {
-        resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+        resultWriter->addEntryFromFile(commentsPath, pSettings.commentFile);
 
         pSettings.commentFile.clear();
     }

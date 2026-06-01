@@ -21,6 +21,16 @@ const char* LocationToStr(Location loc)
     }
 }
 
+bool isInSubProblem(const Location& l)
+{
+    return l == Location::SUBPROBLEMS || l == Location::MASTER_AND_SUBPROBLEMS;
+}
+
+bool isInMasterProblem(const Location& l)
+{
+    return l == Location::MASTER || l == Location::MASTER_AND_SUBPROBLEMS;
+}
+
 bool AreLocationsCompatibleForFillers(Location lhs, Location rhs)
 {
     switch (rhs)

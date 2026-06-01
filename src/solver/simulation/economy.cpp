@@ -10,20 +10,22 @@
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/simulation.h"
 #include "antares/solver/simulation/solver_utils.h"
+#include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;
+using namespace Antares::Writer;
 using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
+
 Economy::Economy(Data::Study& study,
                  IResultWriter& resultWriter,
                  Simulation::ISimulationObserver& simulationObserver):
     study(study),
     preproOnly(false),
     resultWriter_(resultWriter),
-    simulationObserver_(simulationObserver),
-    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -49,25 +51,6 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
-OptimisationsSimulationTable& Economy::getSimulationTable(uint numSpace)
-{
-    if (numSpace >= simulationTables_.size())
-    {
-        throw std::out_of_range("Error: there is no simulation table for numSpace: "
-                                + std::to_string(numSpace));
-    }
-    return simulationTables_[numSpace];
-}
-
-std::string Economy::getSimulationTableHeader() const
-{
-    if (!simulationTables_.empty())
-    {
-        return simulationTables_.at(0).headerCsvFormat();
-    }
-    return "";
-}
-
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -87,13 +70,11 @@ bool Economy::simulationBegin()
                 study.runtime.initializeReservesIndexMaps(study, pProblemesHebdo[numSpace]);
             }
 
-            auto* simulationsTables = simulationTables_.empty() ? nullptr
-                                                                : &simulationTables_[numSpace];
             weeklyOptProblems_.emplace_back(study.parameters.optOptions,
                                             &pProblemesHebdo[numSpace],
                                             resultWriter_,
                                             simulationObserver_.get(),
-                                            simulationsTables);
+                                            !study.parameters.noOutput);
 
             postProcessesList_[numSpace] = interfacePostProcessList::create(
               study.parameters.adqPatchParams,
@@ -135,6 +116,7 @@ bool Economy::year(Variable::State& state,
     // In order to avoid slight differences in parallel/sequential, we clear the basis at the start
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
+    auto* simulationTables = weeklyOptProblems_[numSpace].simulationTables();
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -154,14 +136,10 @@ bool Economy::year(Variable::State& state,
                                         hourInTheYear,
                                         randomForYear.pThermalNoisesByArea,
                                         state.year);
-        auto* currentSimTable = simulationTables_.empty() ? nullptr : &simulationTables_[numSpace];
         try
         {
             weeklyOptProblems_[numSpace].solve();
-            if (currentSimTable)
-            {
-                currentSimTable->write();
-            }
+
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
@@ -222,6 +200,13 @@ bool Economy::year(Variable::State& state,
         }
 
         hourInTheYear += nbHoursInAWeek;
+    }
+
+    if (simulationTables && !study.folderOutput.empty())
+    {
+        LegacySimulationTablesWriter legacyWriter(study.folderOutput, state.year);
+        legacyWriter.write(*simulationTables);
+        simulationTables->clear();
     }
 
     optWriter.finalize();

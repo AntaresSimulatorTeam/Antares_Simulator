@@ -8,10 +8,20 @@
 #include <string>
 #include <vector>
 
+#include "antares/io/outputs/IColumnAdapterVisitor.h"
 #include "antares/optimisation/linear-problem-api/hasStatus.h"
+
+// Forward declarations
+namespace Antares::Writer
+{
+class IColumnAdapter;
+} // namespace Antares::Writer
+
+using namespace Antares::Writer;
 
 namespace Antares::IO::Outputs
 {
+
 class IColumn
 {
 public:
@@ -31,6 +41,9 @@ public:
     [[nodiscard]] virtual size_t size() const = 0;
     virtual void reserve(size_t capacity) = 0;
     virtual void clear() = 0;
+
+    // Accept visitor and return adapter directly
+    virtual std::shared_ptr<IColumnAdapter> accept(IColumnAdapterVisitor& visitor) const = 0;
 
     std::string name() const
     {
@@ -105,11 +118,6 @@ public:
         return FormatValue(data_.at(index));
     }
 
-    const T& get(size_t index) const
-    {
-        return data_.at(index);
-    }
-
     [[nodiscard]] size_t size() const override
     {
         return data_.size();
@@ -130,20 +138,12 @@ public:
         data_.clear();
     }
 
+    std::shared_ptr<IColumnAdapter> accept(IColumnAdapterVisitor& visitor) const override
+    {
+        return visitor.visit(*this);
+    }
+
 private:
     std::vector<T> data_;
 };
-
-using StringColumn = TypedColumn<std::string>;
-
-template<typename T>
-concept Integral = std::is_integral_v<T>;
-
-template<Integral T>
-using IntegralColumn = TypedColumn<T>;
-
-using DoubleColumn = TypedColumn<double>;
-
-template<typename T>
-using OptionalColumn = TypedColumn<std::optional<T>>;
 } // namespace Antares::IO::Outputs

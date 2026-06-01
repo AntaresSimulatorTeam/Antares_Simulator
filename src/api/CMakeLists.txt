@@ -71,7 +71,6 @@ target_link_libraries(single_problem_api
         model_antares
         modeler-lib
         load-modeler-files
-        write-modeler-files
         Antares::hydro
         Antares::file-tree-study-loader
         PUBLIC
@@ -82,7 +81,7 @@ target_link_libraries(single_problem_api
 add_executable(antares-problem-generator main.cpp)
 target_link_libraries(antares-problem-generator
 	single_problem_api)
-copy_project_shared_lib(parquet_writer antares-problem-generator)
+copy_project_shared_lib(simulation-table-writers antares-problem-generator)
 
 install(DIRECTORY include/antares
         DESTINATION "include")

@@ -541,7 +541,6 @@ BOOST_AUTO_TEST_CASE(BC_cluster_weight_is_loaded)
     auto area1 = addAreaToListOfAreas(study->areas, "area1");
     auto cluster = std::make_shared<ThermalCluster>(area1);
     cluster->setName("cluster1");
-    cluster->reset();
     area1->thermal.list.addToCompleteList(cluster);
 
     auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
@@ -874,7 +873,6 @@ BOOST_AUTO_TEST_CASE(BC_cluster_invalid_value_is_ignored)
     auto area1 = addAreaToListOfAreas(study->areas, "area1");
     auto cluster = std::make_shared<ThermalCluster>(area1);
     cluster->setName("cluster1");
-    cluster->reset();
     area1->thermal.list.addToCompleteList(cluster);
     auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
@@ -902,7 +900,6 @@ BOOST_AUTO_TEST_CASE(BC_cluster_weight_and_offset_are_parsed)
     auto area1 = addAreaToListOfAreas(study->areas, "area1");
     auto cluster = std::make_shared<ThermalCluster>(area1);
     cluster->setName("cluster1");
-    cluster->reset();
     area1->thermal.list.addToCompleteList(cluster);
 
     auto dir = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
@@ -940,6 +937,7 @@ BOOST_AUTO_TEST_CASE(BindingConstraint_clusterCount)
         cluster->enabled = enabled;
         cluster->mustrun = mustrun;
         area->thermal.list.addToCompleteList(cluster);
+        area->thermal.list.buildIndexes();
         bc.weight(cluster.get(), 5);
         return bc.clusterCount();
     };

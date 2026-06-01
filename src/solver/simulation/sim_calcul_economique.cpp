@@ -13,6 +13,7 @@
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/workflow/generationAndResolutionConfig.h"
 #include "antares/study/fwd.h"
 
 using namespace Antares;
@@ -296,10 +297,11 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     problem.OptimisationNotFastMode = (study.parameters.unitCommitment.ucMode
                                        != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
 
-    problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
-                                                 == Antares::Data::UnitCommitmentMode::ucMILP)
-                                                || Antares::Optimization::
-                                                  hasModelerIntegerVariables(problem.modelerData);
+    auto workflow = Solver::Workflow::getWorkflow(study);
+
+    problem.OptimisationAvecVariablesEntieres = workflow.subproblems
+                                                == Solver::Workflow::SolverType::MILP;
+    problem.useThermalHeuristic = workflow.useThermalHeuristic;
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 

@@ -26,9 +26,14 @@ std::shared_ptr<ThermalCluster> addClusterToArea(Area* area, const std::string& 
 {
     auto cluster = std::make_shared<ThermalCluster>(area);
     cluster->setName(clusterName);
-    cluster->reset();
+
+    cluster->modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
+    cluster->modulation.fill(1.);
+    cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
+    cluster->series.timeSeries.reset(1, HOURS_PER_YEAR);
 
     area->thermal.list.addToCompleteList(cluster);
+    area->thermal.list.buildIndexes();
 
     return cluster;
 }

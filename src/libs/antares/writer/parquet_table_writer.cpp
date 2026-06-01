@@ -6,13 +6,14 @@
 #include <filesystem>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 
 // Arrow / Parquet
 #include <arrow/api.h>
 #include <arrow/io/api.h>
 #include <parquet/arrow/writer.h>
 
-#include "private/columnToArrowAdapter.h"
+#include "columnToArrowAdapter.h"
 #include "private/parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
@@ -25,7 +26,6 @@ std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::Simulat
 {
     const auto& columns = simuTable.columns();
 
-    // Schema: all columns as UTF8 strings
     arrow::FieldVector fields;
     std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
     for (const auto& column: columns)
@@ -60,10 +60,9 @@ void writeParquet(const std::shared_ptr<arrow::Table>& table, const fs::path& fi
                                                arrow_props));
 }
 
-ParquetTableWriter::ParquetTableWriter(std::filesystem::path& filePath):
+ParquetTableWriter::ParquetTableWriter(const std::filesystem::path& filePath):
     ITableWriter(filePath)
 {
-    output_file_.replace_extension(".parquet");
 }
 
 void ParquetTableWriter::writeTable(const SimulationTable& simuTable) const

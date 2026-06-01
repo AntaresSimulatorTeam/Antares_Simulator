@@ -29,12 +29,13 @@ In May 2018, RTE decided to release the project under the GPLv3 license.
 In January 2024, RTE, as the exclusive copyright owner, decided to switch from the GPLv3 to the MPLv2 license,
 starting with the 9.0 version of Antares Simulator.
 
-# Links:
+# Links
 
-- Antares website:  https://antares-simulator.org
-- RTE web site : http://www.rte-france.com/
+- Antares user documentation: https://antares-doc.readthedocs.io/
+- Antares Simulator technical documentation: https://antares-simulator.readthedocs.io/
+- RTE-I website for Antares: https://antares-simulator.org
+- RTE website: http://www.rte-france.com/
 - Doxygen code documentation: https://antaressimulatorteam.github.io/Antares_Simulator/doxygen
-- Antares Web: https://antares-web.readthedocs.io
 
 # Installation
 

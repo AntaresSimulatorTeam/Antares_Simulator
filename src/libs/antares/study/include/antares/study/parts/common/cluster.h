@@ -49,13 +49,6 @@ public:
     */
     virtual bool integrityCheck() = 0;
 
-    /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    virtual void reset();
-
     bool saveDataSeriesToFolder(const AnyString& folder) const;
     bool loadDataSeriesFromFolder(Study& s, const std::filesystem::path& folder);
 

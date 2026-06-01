@@ -30,31 +30,6 @@ void Study::scenarioRulesLoadIfNotAvailable()
     }
 }
 
-bool Study::modifyAreaNameIfAlreadyTaken(AreaName& out, const AreaName& basename)
-{
-    out = basename;
-    AreaName id = out;
-    boost::to_lower(id);
-
-    if (areas.find(id))
-    {
-        int i = 1;
-        do
-        {
-            if (++i > 10000)
-            {
-                out.clear();
-                return false;
-            }
-            out = basename;
-            out += "-" + std::to_string(i);
-            id = out;
-            boost::to_lower(id);
-        } while (areas.find(id));
-    }
-    return true;
-}
-
 // TODO remove after vacuum
 bool Study::IsRootStudy(const AnyString& folder)
 {
