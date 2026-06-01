@@ -20,7 +20,7 @@
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
-#include "antares/solver/optimisation/LegacyVariableNameParser.h"
+#include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -72,38 +72,32 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
     const unsigned int block = currentBlock + 1;
 
-    const auto namesSize = problem.NomDesVariables.size();
+    const auto infoSize = problem.LegacyVariablesInfo.size();
     const auto valuesSize = problem.X.size();
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
-        if (static_cast<std::size_t>(index) >= namesSize
+        if (static_cast<std::size_t>(index) >= infoSize
             || static_cast<std::size_t>(index) >= valuesSize)
         {
             continue;
         }
 
-        const auto& name = problem.NomDesVariables[index];
-        if (name.empty())
-        {
-            continue;
-        }
-
-        const auto parsed = Antares::Optimization::ParseLegacyVariableName(name);
-        if (!parsed)
+        const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
+        if (!info)
         {
             continue;
         }
 
         std::optional<unsigned> blockTimeIndex;
-        if (parsed->timeIndex >= globalFirstTimeStep && parsed->timeIndex <= globalLastTimeStep)
+        if (info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep)
         {
-            blockTimeIndex = parsed->timeIndex - globalFirstTimeStep + 1;
+            blockTimeIndex = info->timeIndex - globalFirstTimeStep + 1;
         }
 
         simulationTable.addEntry({.block = block,
-                                  .component = parsed->component,
-                                  .output = nameMapper.mapOutput(parsed->output),
-                                  .absolute_time_index = parsed->timeIndex + 1,
+                                  .component = info->component,
+                                  .output = nameMapper.mapOutput(info->output),
+                                  .absolute_time_index = info->timeIndex + 1,
                                   .block_time_index = blockTimeIndex,
                                   .scenario_index = scenario,
                                   .value = problem.X[static_cast<std::size_t>(index)],

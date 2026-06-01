@@ -9,8 +9,8 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_ThermalCapacityFiller.cpp
         test_area_connections--spillage--unsupE.cpp
         test_mip_detection.cpp
-        test_legacy_variable_name_parser.cpp
-        ${CMAKE_SOURCE_DIR}/solver/optimisation/LegacyVariableNameParser.cpp
+        test_legacy_variable_info.cpp
+        ${CMAKE_SOURCE_DIR}/solver/optimisation/LegacyVariableInfo.cpp
         test_legacy_name_mapper.cpp
         ${CMAKE_SOURCE_DIR}/solver/optimisation/LegacyNameMapper.cpp
         LIBS

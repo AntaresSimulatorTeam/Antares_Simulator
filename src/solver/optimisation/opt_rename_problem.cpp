@@ -75,12 +75,27 @@ std::vector<std::string>& Namer::names()
     return names_;
 }
 
+void Namer::RecordLegacyVariableInfo(unsigned index,
+                                     const std::string& output,
+                                     const std::string& location)
+{
+    if (legacyInfo_ == nullptr)
+    {
+        return;
+    }
+    (*legacyInfo_)[index] = Antares::Optimization::LegacyVariableInfo{
+      output,
+      Antares::Optimization::ExtractLegacyComponentName(location),
+      timeStep_};
+}
+
 void Namer::SetLinkElementName(unsigned elementIndex, const std::string& elementType)
 {
     std::string location = linkLocation();
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
+    RecordLegacyVariableInfo(elementIndex, elementType, location);
 }
 
 void Namer::SetAreaElementNameHour(unsigned elementIndex, const std::string& elementType)
@@ -101,6 +116,7 @@ void Namer::SetAreaElementName(unsigned elementIndex,
     std::string time = TimeIdentifier(timeGranularity);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
+    RecordLegacyVariableInfo(elementIndex, elementType, location);
 }
 
 void VariableNamer::SetAreaVariableName(unsigned varIndex,
@@ -111,6 +127,7 @@ void VariableNamer::SetAreaVariableName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(variableType, location, time);
     names()[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, variableType, location);
 }
 
 void Namer::SetThermalClusterElementName(unsigned varIndex,
@@ -121,6 +138,7 @@ void Namer::SetThermalClusterElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void Namer::SetThermalClusterAndReserveElementName(unsigned varIndex,
@@ -133,6 +151,7 @@ void Namer::SetThermalClusterAndReserveElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void Namer::SetThermalClusterAndReservesElementName(unsigned varIndex,
@@ -146,6 +165,7 @@ void Namer::SetThermalClusterAndReservesElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void Namer::SetSTStorageClusterElementName(unsigned varIndex,
@@ -157,6 +177,7 @@ void Namer::SetSTStorageClusterElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void Namer::SetSTStorageClusterAndReserveElementName(unsigned varIndex,
@@ -169,6 +190,7 @@ void Namer::SetSTStorageClusterAndReserveElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void Namer::SetHydroElementName(unsigned varIndex,
@@ -179,6 +201,7 @@ void Namer::SetHydroElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void Namer::SetHydroAndReserveElementName(unsigned varIndex,
@@ -191,6 +214,7 @@ void Namer::SetHydroAndReserveElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
@@ -201,6 +225,7 @@ void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, elementType, location);
 }
 
 void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string& clusterName)
@@ -369,6 +394,7 @@ void VariableNamer::SetShortTermStorageVariableName(unsigned varIndex,
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(variableType, location, time);
     names()[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, variableType, location);
 }
 
 void VariableNamer::ShortTermStorageInjection(unsigned varIndex, const std::string& sts_name)
