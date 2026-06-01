@@ -186,8 +186,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeIndexNode* node)
 
 EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
 {
-    auto result = dispatch(node->expression());
-    result.toConstantVector(fillContext_.getLocalNumberOfTimeSteps());
+    EvaluationResult result = dispatch(node->expression());
+    const double value = result.valueAsDouble();
 
     std::vector<double> values(fillContext_.getLocalNumberOfTimeSteps(), 0.0);
     for (unsigned localTimeStep = 0; localTimeStep < values.size(); ++localTimeStep)
@@ -197,8 +197,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::TimeSumNode* node)
         forEachTimeSumIndex(from,
                             to,
                             static_cast<int>(values.size()),
-                            [&values, &result, localTimeStep](int timeIndex)
-                            { values[localTimeStep] += result[timeIndex].valueAsDouble(); });
+                            [&values, &value, localTimeStep](int)
+                            { values[localTimeStep] += value; });
     }
 
     return EvaluationResult(values);
@@ -384,15 +384,6 @@ size_t EvaluationResult::size() const
         return std::get<std::vector<double>>(value_).size();
     }
     return 1;
-}
-
-void EvaluationResult::toConstantVector(const size_t size)
-{
-    if (std::holds_alternative<double>(value_))
-    {
-        const double value = std::get<double>(value_);
-        value_ = std::vector<double>(size, value);
-    }
 }
 
 double EvaluationResult::value(unsigned i) const
