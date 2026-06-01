@@ -99,7 +99,6 @@ set(TARGET_LIBS #No alias
         system-model-base
         antares-study-system-model
         load-modeler-files
-		write-modeler-files
         modeler-optimisation-container
         expressions
         optim-model-filler

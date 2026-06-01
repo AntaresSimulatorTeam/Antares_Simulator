@@ -26,7 +26,6 @@
 #include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/convertOrtoolsBasisStatus.h"
 #include "antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h"
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/writer/LegacySimulationTablesWriter.h"
@@ -582,23 +581,6 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
     std::unique_ptr<OptimEntityContainer> optimEntityContainer = nullptr;
 };
 
-struct TempDirFixture
-
-{
-    TempDirFixture()
-    {
-        tempDir = std::filesystem::temp_directory_path() / "antares_test";
-        std::filesystem::create_directories(tempDir);
-    }
-
-    ~TempDirFixture()
-    {
-        std::filesystem::remove_all(tempDir);
-    }
-
-    std::filesystem::path tempDir;
-};
-
 BOOST_FIXTURE_TEST_SUITE(ComponentModelIntegrationTests, BasicProblemFixture)
 
 auto count_lines = [](std::string_view s)
@@ -1085,50 +1067,23 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(SimulationTableCsvFileTests)
 
-BOOST_FIXTURE_TEST_CASE(Constructor_ValidPath, TempDirFixture)
+BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, SimulationTableFileFixture)
 {
-    BOOST_CHECK_NO_THROW({
-        FileWriter fileWriter(tempDir);
-        fileWriter.init("test_sim");
-    });
-}
+    SimulationTable table;
+    SimulationTableEntry entry{.block = 1,
+                               .component = "test_comp",
+                               .output = "test_var",
+                               .absolute_time_index = 1,
+                               .block_time_index = 1,
+                               .scenario_index = 0,
+                               .value = 123.45,
+                               .status = MipBasisStatus::BASIC};
+    table.addEntry(entry);
+    csv_writer.writeTable(table);
 
-BOOST_FIXTURE_TEST_CASE(Constructor_EmptySimulationId, TempDirFixture)
-{
-    BOOST_CHECK_EXCEPTION(
-      {
-          FileWriter fileWriter(tempDir);
-          fileWriter.init("");
-      },
-      std::runtime_error,
-      checkMessage("Time identifier cannot be empty. Exiting simulation."));
-}
+    BOOST_CHECK(std::filesystem::exists(out_file_path));
 
-BOOST_FIXTURE_TEST_CASE(Write_CreatesFile, TempDirFixture)
-{
-    {
-        SimulationTable table;
-        FileWriter writer(tempDir);
-        writer.init("test_sim");
-
-        SimulationTableEntry entry{.block = 1,
-                                   .component = "test_comp",
-                                   .output = "test_var",
-                                   .absolute_time_index = 1,
-                                   .block_time_index = 1,
-                                   .scenario_index = 0,
-                                   .value = 123.45,
-                                   .status = MipBasisStatus::BASIC};
-        table.addEntry(entry);
-        writer.writeSimulationTable(table);
-    }
-
-    // Check file was created and contains expected content
-    auto expectedFile = tempDir / "output" / "test_sim" / "simulation-table.csv";
-    BOOST_CHECK(std::filesystem::exists(expectedFile));
-
-    std::ifstream file(expectedFile);
-    std::string content{std::istreambuf_iterator<char>(file), {}};
+    std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("block,component,output") != std::string::npos);
     BOOST_CHECK(content.find("1,test_comp,test_var,1,1,0,123.45,Basic") != std::string::npos);
@@ -1252,39 +1207,30 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FileSystemIntegrationTests)
 
-BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, TempDirFixture)
+BOOST_FIXTURE_TEST_CASE(FullWorkflow_CreateWriteRead, SimulationTableFileFixture)
 {
-    // Create simulation table file
-    std::string simulationId = "integration_test";
+    SimulationTable table;
+
+    // Add multiple entries
+    for (int i = 0; i < 5; ++i)
     {
-        SimulationTable table;
-        FileWriter writer(tempDir);
-        writer.init(simulationId);
-
-        // Add multiple entries
-        for (int i = 0; i < 5; ++i)
-        {
-            SimulationTableEntry entry{.block = static_cast<unsigned>(i + 1),
-                                       .component = "component_" + std::to_string(i),
-                                       .output = "output_" + std::to_string(i),
-                                       .absolute_time_index = i * 10,
-                                       .block_time_index = i * 5,
-                                       .scenario_index = static_cast<unsigned>(i % 3),
-                                       .value = i * 2.5,
-                                       .status = static_cast<MipBasisStatus>(i % 6)};
-            table.addEntry(entry);
-        }
-
-        writer.writeSimulationTable(table);
+        SimulationTableEntry entry{.block = static_cast<unsigned>(i + 1),
+                                   .component = "component_" + std::to_string(i),
+                                   .output = "output_" + std::to_string(i),
+                                   .absolute_time_index = i * 10,
+                                   .block_time_index = i * 5,
+                                   .scenario_index = static_cast<unsigned>(i % 3),
+                                   .value = i * 2.5,
+                                   .status = static_cast<MipBasisStatus>(i % 6)};
+        table.addEntry(entry);
     }
 
-    // Verify file exists and has correct name
-    auto expectedFile = tempDir / "output" / simulationId / "simulation-table.csv";
-    BOOST_CHECK(std::filesystem::exists(expectedFile));
+    csv_writer.writeTable(table);
 
-    // Read and verify content
-    std::ifstream file(expectedFile);
-    std::string content{std::istreambuf_iterator<char>(file), {}};
+    // Verify file exists and has correct name
+    BOOST_CHECK(std::filesystem::exists(out_file_path));
+
+    std::string content = readFileContent(out_file_path);
 
     // Check each entry
     for (int i = 0; i < 5; ++i)

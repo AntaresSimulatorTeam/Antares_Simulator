@@ -2,13 +2,18 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+#include <filesystem>
+
 #include <antares/optimisation/linear-problem-api/linearProblem.h>
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/modeler/parameters/modelerParameters.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
+#include "antares/writer/table_format.h"
 
 #include "ModelerData.h"
+
+namespace fs = std::filesystem;
 
 namespace Antares::Optimisation
 {
@@ -27,7 +32,6 @@ class IMipSolution;
 namespace Antares::Solver
 {
 class ILoader;
-class IWriter;
 
 struct ProblemEntity
 {
@@ -46,7 +50,7 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
 class Modeler final
 {
 public:
-    Modeler(ILoader& loader, IWriter& writer);
+    Modeler(ILoader& loader, fs::path outputPath, Antares::Writer::TableFormat tableFormat);
 
     void buildProblems();
     void buildMasterProblem();
@@ -66,7 +70,6 @@ public:
     };
 
     ILoader& loader_; // gp : make it private
-    IWriter& writer_; // gp : make it private
 
     [[nodiscard]] const std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>&
     masterProblem() const
@@ -92,7 +95,6 @@ private:
       const Optimisation::OptimEntityContainer& subproblemOptimEntityContainer,
       const Optimisation::LinearProblemApi::FillContext& timeScenarioCtx) const;
 
-    void writeSimulationTable(IO::Outputs::SimulationTable&); // gp : const ?
     std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem> masterProblem_ = nullptr;
     std::vector<std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>> subproblems_;
     std::unique_ptr<Optimisation::OptimEntityContainer> subproblemOptimEntityContainer_ = nullptr;
@@ -100,5 +102,7 @@ private:
     Optimisation::LinearProblemApi::IMipSolution* subProbSolution_ = nullptr;
     ModelerParameters parameters_;
     ModelerData data_;
+    fs::path outputPath_;
+    Antares::Writer::TableFormat tableFormat_;
 };
 } // namespace Antares::Solver

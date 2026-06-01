@@ -1,5 +1,4 @@
 add_subdirectory(loadFiles)
-add_subdirectory(fileWriter)
 add_subdirectory(modeler)
 add_subdirectory(parameters)
 add_subdirectory(checks)
@@ -19,7 +18,6 @@ target_link_libraries(antares-modeler
         Antares::modeler-lib
         Antares::load-modeler-files
         Antares::simu-table-generator
-        Antares::write-modeler-files
         Antares::logs)
 
 import_std_libs(antares-modeler)
