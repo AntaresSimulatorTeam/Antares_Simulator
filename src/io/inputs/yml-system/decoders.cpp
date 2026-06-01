@@ -109,10 +109,9 @@ bool convert<YmlSystem::ThermalCapacityConnection>::decode(
     if (!thermalComponentNode.IsDefined())
     {
         YmlTreeDisplayer displayer(node);
-        throw InputError(
-          fmt::format("Missing required field 'thermal-component'.\n{}{}",
-                      displayer.baseTree(),
-                      displayer.buildMarkedTree({}, {"thermal-component"})));
+        throw InputError(fmt::format("Missing required field 'thermal-component'.\n{}{}",
+                                     displayer.baseTree(),
+                                     displayer.buildMarkedTree({}, {"thermal-component"})));
     }
     if (thermalComponentNode.IsNull())
     {
