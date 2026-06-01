@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(known_unsupplied_energy_is_mapped)
 BOOST_AUTO_TEST_CASE(known_spillage_is_mapped)
 {
     const LegacyNameMapper mapper;
-    BOOST_CHECK_EQUAL(mapper.mapOutput("Spillage"), "spillaged_energy");
+    BOOST_CHECK_EQUAL(mapper.mapOutput("Spillage"), "spilled_energy");
 }
 
 BOOST_AUTO_TEST_CASE(unknown_name_is_returned_unchanged)

@@ -8,7 +8,7 @@ namespace Antares::Optimization
 
 const std::unordered_map<std::string, std::string> LegacyNameMapper::kOutputMap = {
   {"UnsuppliedEnergy", "unsupplied_energy"},
-  {"Spillage", "spillaged_energy"},
+  {"Spillage", "spilled_energy"},
 };
 
 std::string LegacyNameMapper::mapOutput(const std::string& legacyName) const
