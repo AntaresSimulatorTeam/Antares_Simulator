@@ -134,7 +134,7 @@ public:
                                              double coeff,
                                              int offset = 0,
                                              int delta = 0);
-    
+
     ConstraintBuilder& ProductionDecreaseAboveMin(unsigned int index,
                                                   double coeff,
                                                   int offset = 0,
