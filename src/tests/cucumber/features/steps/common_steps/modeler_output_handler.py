@@ -10,7 +10,7 @@ from common_steps.simulation_table_checker import (
     get_simulation_table_dataframe,
     get_simulation_table_entry,
 )
-from common_steps.simulation_table_reader import read_simulation_table_csv
+from common_steps.simulation_table_reader import read_simulation_table_csv, read_simulation_table_parquet
 from shared_utils import mps_utils as mpu
 
 
@@ -29,8 +29,11 @@ class invest_problems:
 
 
 class modeler_output_handler:
-    def __init__(self, outputPath: Path, filePattern: str, readInvestFiles=False):
-        self.simulation_table = read_simulation_table_csv(outputPath, filePattern)
+    def __init__(self, outputPath: Path, filePattern: str, useParquet: bool = False, readInvestFiles: bool = False):
+        if useParquet:
+            self.simulation_table = read_simulation_table_parquet(outputPath, filePattern)
+        else:
+            self.simulation_table = read_simulation_table_csv(outputPath, filePattern)
         if readInvestFiles:
             self.problems = self.__read_problems(outputPath)
 

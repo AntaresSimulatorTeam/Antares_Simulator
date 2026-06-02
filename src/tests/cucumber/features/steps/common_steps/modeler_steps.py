@@ -21,6 +21,13 @@ def modeler_study_path_is(context, string):
 
 @when("I run antares modeler")
 def run_antares_modeler(context):
+    context._use_parquet = False
+    run_modeler(context)
+
+
+@when("I run antares modeler with parquet")
+def run_antares_modeler_parquet(context):
+    context._use_parquet = True
     run_modeler(context)
 
 
@@ -92,13 +99,18 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
+        use_parquet = hasattr(context, "_use_parquet") and context._use_parquet
+        file_pattern = "simulation-table*.parquet" if use_parquet else "simulation-table*.csv"
         context.moh = modeler_output_handler(Path(parse_output_folder_from_logs(context.logs_out)),
-                                             "simulation-table*.csv",
+                                             file_pattern,
+                                             use_parquet,
                                              True)
     context.return_code = process.returncode
 
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
+    if context._use_parquet:
+        command.append("--parquet")
     return command
 
 
