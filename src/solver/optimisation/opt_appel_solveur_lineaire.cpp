@@ -146,43 +146,6 @@ void fillLinearProblem(const FillContext& fillCtx,
     logs.debug() << "Modeler build took " << measure.toStringInSeconds();
 }
 
-static void rebuildAndExportNamedMPS(PROBLEME_HEBDO* problemeHebdo,
-                                     const SingleOptimOptions& options,
-                                     int optimizationNumber,
-                                     int NumIntervalle,
-                                     IResultWriter& writer,
-                                     const std::string& filename)
-{
-    const auto& modelerData = problemeHebdo->modelerData;
-    bool hasModelerData = modelerData != nullptr;
-    const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
-
-    LegacyOrtoolsLinearProblem ortoolsProblem(isMip, options.solverName);
-    FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
-    const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
-                                                                 : nullptr;
-    const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
-                                                                      ? &modelerData
-                                                                           ->scenarioGroupRepository
-                                                                      : nullptr;
-
-    OptimEntityContainer optimEntityContainer(ortoolsProblem);
-
-    Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
-                                                                 ? &modelerData
-                                                                      ->bendersDecomposition
-                                                                 : nullptr;
-
-    fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
-
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
-                                        problemeHebdo->exportMPSOnError,
-                                        optimizationNumber,
-                                        ortoolsProblem);
-    auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-    mps_writer_on_error->runIfNeeded(writer, filename);
-}
-
 static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           PROBLEME_HEBDO* problemeHebdo,
                                           const int NumIntervalle,
@@ -266,12 +229,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            rebuildAndExportNamedMPS(problemeHebdo,
-                                     options,
-                                     optimizationNumber,
-                                     NumIntervalle,
-                                     writer,
-                                     filename);
+            auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
+            mps_writer_on_error->runIfNeeded(writer, filename);
 
             return {.timeMeasure = timeMeasure, .objectiveValue = 0};
         }
