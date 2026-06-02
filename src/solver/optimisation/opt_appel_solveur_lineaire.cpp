@@ -229,9 +229,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-            mps_writer_on_error->runIfNeeded(writer, filename);
-
             return {.timeMeasure = timeMeasure, .objectiveValue = 0};
         }
         throw FatalError("Internal error: insufficient memory");
