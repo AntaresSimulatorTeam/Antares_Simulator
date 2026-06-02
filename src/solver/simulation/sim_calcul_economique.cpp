@@ -232,7 +232,8 @@ void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
                     for (const auto& symIdx:
                          hydro.reserveParticipationContainer.value().symmetricalIndices(reserveID))
                     {
-                        if (areaReserves.HydroReservesParticipationSymmetries.size() <= static_cast<uint32_t>(symIdx))
+                        if (areaReserves.HydroReservesParticipationSymmetries.size()
+                            <= static_cast<uint32_t>(symIdx))
                         {
                             areaReserves.HydroReservesParticipationSymmetries.resize(
                               hydro.reserveParticipationContainer.value().getNbSymGroups());
