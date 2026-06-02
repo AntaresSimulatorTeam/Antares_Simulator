@@ -63,6 +63,7 @@ private:
         auto col = std::make_shared<ColumnType>(name);
         columns_.push_back(col);
         return col;
+    }
 
     std::vector<std::shared_ptr<IColumn>> columns_;
 };
