@@ -397,7 +397,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         reserveVariablesRightSidesSetter.setPdtHebdo(pdtHebdo);
         reserveVariablesRightSidesSetter.setPdtGlobal(pdtGlobal);
 
-        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
+        for (uint32_t pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
             reserveVariablesRightSidesSetter.setPays(pays);
             const auto& areaReserves = problemeHebdo->allReserves.value()[pays];
