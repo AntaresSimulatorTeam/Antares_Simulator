@@ -90,8 +90,8 @@ void OptimEntityContainer::addFromSystemComponents(const std::vector<Component>&
         }
 
         optimComponents_.emplace(component.Id(),
-                                 OptimComponent{.modelVariableGlobalIndices =
-                                                  std::move(modelVariableGlobalIndices),
+                                 OptimComponent{.modelVariableGlobalIndices = std::move(
+                                                  modelVariableGlobalIndices),
                                                 .modelConstraintStartLines = {},
                                                 .modelConstraintsVariability = {},
                                                 .modelConstraintCounts = {}});
