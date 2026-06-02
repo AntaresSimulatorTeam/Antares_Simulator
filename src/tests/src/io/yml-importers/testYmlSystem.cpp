@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(empty_system)
             model-libraries: []
             components: []
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK(systemObj.id.empty());
     BOOST_CHECK(systemObj.libraries.empty());
     BOOST_CHECK(systemObj.components.empty());
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(simple_id)
             id: base_system
             description: a basic system
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.id, "base_system");
 }
 
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(libraries_one_model)
             id: base_system
             model-libraries: [abc]
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
 }
 
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(libraries_list_of_models)
             model-libraries: [abc, def, 123]
             components: []
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
     BOOST_CHECK_EQUAL(systemObj.libraries[1], "def");
     BOOST_CHECK_EQUAL(systemObj.libraries[2], "123");
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(one_component)
                   model: abcde
                   scenario-group: group-234
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.components[0].id, "N");
     BOOST_CHECK_EQUAL(systemObj.components[0].model, "abcde");
     BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(two_components)
                   model: std.generator
                   scenario-group: group-thermal
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.components[0].id, "N");
     BOOST_CHECK_EQUAL(systemObj.components[0].model, "std.node");
     BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(component_parameter)
                       scenario-dependent: false
                       value: 30
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     const auto& param = systemObj.components[0].parameters[0];
     BOOST_CHECK_EQUAL(param.id, "cost");
     BOOST_CHECK_EQUAL(param.time_dependent, false);
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
                       scenario-dependent: false
                       value: 100
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     const auto& param = systemObj.components[0].parameters[0];
     const auto& param2 = systemObj.components[0].parameters[1];
     BOOST_CHECK_EQUAL(param.id, "cost");
@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(system_node_is_a_scalar_throws_input_error)
     const auto system = R"(
         system: "not a map"
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(component_is_a_scalar_throws_input_error)
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(component_is_a_scalar_throws_input_error)
             components:
                 - "not a map"
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(parameter_is_a_scalar_throws_input_error)
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE(parameter_is_a_scalar_throws_input_error)
                   parameters:
                     - "not a map"
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(connection_is_a_scalar_throws_input_error)
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(connection_is_a_scalar_throws_input_error)
             connections:
                 - "not a map"
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_is_a_scalar_throws_input_error)
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(area_connection_is_a_scalar_throws_input_error)
             area-connections:
                 - "not a map"
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_is_a_scalar_throws_input_error)
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_is_a_scalar_throws_input_error)
             thermal-capacity-connections:
                 - "not a map"
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
@@ -257,7 +257,7 @@ BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
                   port1: p1
                   component2: M
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
@@ -273,7 +273,7 @@ BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
                   port2: p2
                   extra: bad
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
                 - component: c1
                   port: p1
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_input_error)
@@ -299,7 +299,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_i
                 - component: c1
                   port: p1
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error)
@@ -314,14 +314,11 @@ BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error
                   thermal-component:
                     area: fr
     )"s;
-    BOOST_CHECK_THROW(parser.parse(system), InputError);
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
-BOOST_AUTO_TEST_CASE(thermal_component_null_uses_default_silently)
+BOOST_AUTO_TEST_CASE(thermal_component_null_throws_input_error)
 {
-    // The thermal-component value is explicitly null: this exercises the
-    // silent return-false path of requireMap and yields a default-constructed
-    // ThermalComponent rather than an exception.
     YmlSystem::Parser parser;
     const auto system = R"(
         system:
@@ -331,13 +328,7 @@ BOOST_AUTO_TEST_CASE(thermal_component_null_uses_default_silently)
                   port: p1
                   thermal-component: ~
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
-    BOOST_REQUIRE_EQUAL(systemObj.thermalCapacityConnections.size(), 1u);
-    const auto& tcc = systemObj.thermalCapacityConnections[0];
-    BOOST_CHECK_EQUAL(tcc.componentId, "c1");
-    BOOST_CHECK_EQUAL(tcc.portId, "p1");
-    BOOST_CHECK(tcc.thermalComponent.areaId.empty());
-    BOOST_CHECK(tcc.thermalComponent.clusterId.empty());
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
 }
 
 // Direct unit tests against the decoder templates: they let us exercise the
