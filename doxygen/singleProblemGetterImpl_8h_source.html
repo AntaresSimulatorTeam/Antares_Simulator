@@ -128,95 +128,98 @@ $(document).ready(function(){initNavTree('singleProblemGetterImpl_8h_source.html
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;antares/solver/hydro/management/management.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;antares/solver/lps/LpsFromAntares.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/solver/modeler/Modeler.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optim-model-filler/BendersDecomposition.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optimisation/HebdoProblemToLpsTranslator.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/random.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/sim_structure_probleme_economique.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Implementation</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Copyright 2007-2026, RTE (https://www.rte-france.com)</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">// SPDX-License-Identifier: MPL-2.0</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;antares/solver/hydro/management/management.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;antares/solver/lps/LpsFromAntares.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;antares/solver/modeler/Modeler.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optim-model-filler/BendersDecomposition.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;antares/solver/optimisation/HebdoProblemToLpsTranslator.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/random.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;antares/solver/simulation/sim_structure_probleme_economique.h&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">using</span> HydroLevels = std::map&lt;<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a>*, std::array&lt;double, 54 <span class="comment">/* TODO */</span>&gt;&gt;;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">   17</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    HydroLevels hydroLevels;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Antares::HYDRO_VENTILATION_RESULTS ventilationResults;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">using</span> AllData = std::map&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="comment">/* year */</span>, <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a>&gt;;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html">   25</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html">NameMemo</a></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::size_t left_end;    <span class="comment">// index where the number starts</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    std::size_t right_begin; <span class="comment">// index of &#39;&gt;&#39; (first char of right part)</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">int</span> baseTime;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    std::size_t index; <span class="comment">// index in names vector</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">unsigned</span> base;     <span class="comment">// 168 -&gt; hour, 7 -&gt; day, 1 -&gt; week</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">   34</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">SingleProblemGetter</a> final</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">SingleProblemGetter</a>(<span class="keyword">const</span> std::filesystem::path&amp; studyPath);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">SingleProblemGetter</a>(</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      std::pair&lt;std::unique_ptr&lt;Data::Study&gt;, Solver::IResultWriter::Ptr&gt;&amp;&amp; loadedPair);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a> getConstantData() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a> getWeeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::unique_ptr&lt;Optimisation::LinearProblemApi::ILinearProblem&gt; getWeeklyProblem(</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::vector&lt;WeeklyProblemId&gt; getProblemIds() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> writeNTCTimeSeries(<span class="keyword">const</span> std::filesystem::path&amp; outputDir);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> writeStudyDescriptionFiles(<span class="keyword">const</span> std::filesystem::path&amp; outputDir);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">int</span> nbYears() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">int</span> nbWeeks() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">bool</span> areWeeksIndependent() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ProblemEntity.html">Solver::ProblemEntity</a> getMasterProblem() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">void</span> writeMasterAndStructure() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> printProblems();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::set&lt;int&gt; playedYears() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> initConstantData();</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Implementation</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">using</span> HydroLevels = std::map&lt;<span class="keyword">const</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a>*, std::array&lt;double, 54 <span class="comment">/* TODO */</span>&gt;&gt;;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">   20</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    HydroLevels hydroLevels;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    Antares::HYDRO_VENTILATION_RESULTS ventilationResults;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">using</span> AllData = std::map&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="comment">/* year */</span>, <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a>&gt;;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html">   28</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html">NameMemo</a></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    std::size_t left_end;    <span class="comment">// index where the number starts</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::size_t right_begin; <span class="comment">// index of &#39;&gt;&#39; (first char of right part)</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">int</span> baseTime;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::size_t index; <span class="comment">// index in names vector</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">unsigned</span> base;     <span class="comment">// 168 -&gt; hour, 7 -&gt; day, 1 -&gt; week</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">   37</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">SingleProblemGetter</a> final</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">SingleProblemGetter</a>(<span class="keyword">const</span> std::filesystem::path&amp; studyPath);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">SingleProblemGetter</a>(</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      std::pair&lt;std::unique_ptr&lt;Data::Study&gt;, Solver::IResultWriter::Ptr&gt;&amp;&amp; loadedPair);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">ConstantDataFromAntares</a> getConstantData() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">WeeklyDataFromAntares</a> getWeeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::unique_ptr&lt;Optimisation::LinearProblemApi::ILinearProblem&gt; getWeeklyProblem(</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a> <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::vector&lt;WeeklyProblemId&gt; getProblemIds() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> writeNTCTimeSeries(<span class="keyword">const</span> std::filesystem::path&amp; outputDir);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> writeStudyDescriptionFiles(<span class="keyword">const</span> std::filesystem::path&amp; outputDir);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">int</span> nbYears() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">int</span> nbWeeks() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">bool</span> areWeeksIndependent() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1ProblemEntity.html">Solver::ProblemEntity</a> getMasterProblem() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> writeMasterAndStructure() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> printProblems();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    std::set&lt;int&gt; playedYears() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a>&amp; getYearlyData(<span class="keywordtype">unsigned</span> year);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a> computeHydroLevels(<span class="keywordtype">unsigned</span> year, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; initialLevel);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> initializeRandomNumbers();</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> fillProblem(<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; problem,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                     <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a>&amp; <span class="keywordtype">id</span>);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> setWeeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a>&amp; <span class="keywordtype">id</span>);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    Antares::Data::Area::ScratchMap scratchmap_;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html">HebdoProblemToLpsTranslator</a> translator_;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::unique_ptr&lt;Antares::Data::Study&gt; study_;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> pb_;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    AllData allData_;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    std::optional&lt;Antares::Solver::Simulation::randomNumbers&gt;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      randomForParallelYears_; <span class="comment">// Allow the use of std::optional&lt;T&gt;::emplace for delayed</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                               <span class="comment">// building</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    std::set&lt;int&gt; playedYears_;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">int</span> nbWeeks_;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    std::vector&lt;std::string&gt; variablesName_;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::vector&lt;std::string&gt; constraintsName_;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    std::vector&lt;NameMemo&gt; variablesMemo_;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::vector&lt;NameMemo&gt; constraintsMemo_;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    std::set&lt;int&gt; randomPrepared_;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::shared_ptr&lt;IResultWriter&gt; resultWriter_;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} <span class="comment">// namespace Antares::Solver::Implementation</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> initConstantData();</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a>&amp; getYearlyData(<span class="keywordtype">unsigned</span> year);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">YearlyData</a> computeHydroLevels(<span class="keywordtype">unsigned</span> year, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; initialLevel);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> initializeRandomNumbers();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> fillProblem(<a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; problem,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                     <span class="keyword">const</span> <a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a>&amp; <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> setWeeklyData(<a class="code" href="structAntares_1_1Solver_1_1WeeklyProblemId.html">WeeklyProblemId</a>&amp; <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    Antares::Data::Area::ScratchMap scratchmap_;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html">HebdoProblemToLpsTranslator</a> translator_;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    std::unique_ptr&lt;Antares::Data::Study&gt; study_;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a> pb_;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    AllData allData_;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    std::optional&lt;Antares::Solver::Simulation::randomNumbers&gt;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      randomForParallelYears_; <span class="comment">// Allow the use of std::optional&lt;T&gt;::emplace for delayed</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                               <span class="comment">// building</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    std::set&lt;int&gt; playedYears_;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">int</span> nbWeeks_;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    std::vector&lt;std::string&gt; variablesName_;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    std::vector&lt;std::string&gt; constraintsName_;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::vector&lt;NameMemo&gt; variablesMemo_;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    std::vector&lt;NameMemo&gt; constraintsMemo_;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    std::set&lt;int&gt; randomPrepared_;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::shared_ptr&lt;IResultWriter&gt; resultWriter_;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;};</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;} <span class="comment">// namespace Antares::Solver::Implementation</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:35</div></div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a></div><div class="ttdef"><b>Definition:</b> linearProblem.h:23</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1HebdoProblemToLpsTranslator_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1HebdoProblemToLpsTranslator.html">Antares::Solver::HebdoProblemToLpsTranslator</a></div><div class="ttdoc">Class for translating a weekly problem to a linear programming problem.</div><div class="ttdef"><b>Definition:</b> HebdoProblemToLpsTranslator.h:33</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">Antares::Solver::Implementation::SingleProblemGetter</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetterImpl.h:35</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Implementation_1_1SingleProblemGetter.html">Antares::Solver::Implementation::SingleProblemGetter</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetterImpl.h:38</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1ConstantDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ConstantDataFromAntares.html">Antares::Solver::ConstantDataFromAntares</a></div><div class="ttdoc">The ConstantDataFromAntares class is used to store constant data across all weeks of Antares problems...</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:39</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Implementation_1_1NameMemo_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html">Antares::Solver::Implementation::NameMemo</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetterImpl.h:26</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Implementation_1_1YearlyData_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">Antares::Solver::Implementation::YearlyData</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetterImpl.h:18</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Implementation_1_1NameMemo_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Implementation_1_1NameMemo.html">Antares::Solver::Implementation::NameMemo</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetterImpl.h:29</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Implementation_1_1YearlyData_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Implementation_1_1YearlyData.html">Antares::Solver::Implementation::YearlyData</a></div><div class="ttdef"><b>Definition:</b> singleProblemGetterImpl.h:21</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1ProblemEntity_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1ProblemEntity.html">Antares::Solver::ProblemEntity</a></div><div class="ttdef"><b>Definition:</b> Modeler.h:37</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1WeeklyDataFromAntares_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1WeeklyDataFromAntares.html">Antares::Solver::WeeklyDataFromAntares</a></div><div class="ttdoc">The WeeklyDataFromAntares class is used to store weekly data for an Antares Problem.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:74</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1WeeklyProblemId_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1WeeklyProblemId.html">Antares::Solver::WeeklyProblemId</a></div><div class="ttdoc">The WeeklyProblemId struct is used to identify a weekly problem by year and week.</div><div class="ttdef"><b>Definition:</b> LpsFromAntares.h:22</div></div>
