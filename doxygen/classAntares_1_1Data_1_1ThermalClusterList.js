@@ -11,7 +11,7 @@ var classAntares_1_1Data_1_1ThermalClusterList =
     [ "enableMustrunForEveryone", "classAntares_1_1Data_1_1ThermalClusterList.html#acfdbe09e497ffc9ce817c903638529e6", null ],
     [ "ensureDataPrepro", "classAntares_1_1Data_1_1ThermalClusterList.html#adfa5186bb19b5913bb535053cfde9269", null ],
     [ "loadEconomicCosts", "classAntares_1_1Data_1_1ThermalClusterList.html#a85572ed427c83991a46989ab697a6f03", null ],
-    [ "loadFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a9887e31792e0c7b9035267f8717047dd", null ],
+    [ "loadFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#af659f34fe1d554de37ed89adefadbc7a", null ],
     [ "loadPreproFromFolder", "classAntares_1_1Data_1_1ThermalClusterList.html#a2989173c2d9a84cd2d5f9878234ef6c2", null ],
     [ "reserveParticipationsCount", "classAntares_1_1Data_1_1ThermalClusterList.html#a3d833f23b267ebf54877d2e0c315abcb", null ],
     [ "reverseCalculationOfSpinning", "classAntares_1_1Data_1_1ThermalClusterList.html#ad5a970a75df18a4326b3ddd7a1acd6c4", null ],

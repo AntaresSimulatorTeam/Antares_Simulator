@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('columns_8h_source.html',''); initResiz
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> is_optional_v = <a class="code" href="structAntares_1_1IO_1_1Outputs_1_1is__optional.html">is_optional&lt;T&gt;::value</a>;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">static</span> std::string FromDouble(<span class="keyword">const</span> <span class="keywordtype">double</span> value)</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;[[maybe_unused]] <span class="keyword">static</span> std::string FromDouble(<span class="keyword">const</span> <span class="keywordtype">double</span> value)</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::ostringstream oss;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    oss &lt;&lt; std::setprecision(15) &lt;&lt; value;</div>

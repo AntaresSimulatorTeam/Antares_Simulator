@@ -164,12 +164,12 @@ $(document).ready(function(){initNavTree('CustomErrorListener_8h_source.html',''
 <div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1CustomErrorListener.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1CustomErrorListener.html">CustomErrorListener</a> final: <span class="keyword">public</span> antlr4::BaseErrorListener</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> syntaxError(antlr4::Recognizer* recognizer,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> syntaxError([[maybe_unused]] antlr4::Recognizer* recognizer,</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                     antlr4::Token* offendingSymbol,</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                     <span class="keywordtype">size_t</span> line,</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                     <span class="keywordtype">size_t</span> charPositionInLine,</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                     <span class="keyword">const</span> std::string&amp; msg,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                     std::exception_ptr e)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                     [[maybe_unused]] std::exception_ptr e)<span class="keyword"> override</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        std::ostringstream os;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        os &lt;&lt; <span class="stringliteral">&quot;Syntax error at line &quot;</span> &lt;&lt; line &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; charPositionInLine &lt;&lt; <span class="stringliteral">&quot; - &quot;</span> &lt;&lt; msg</div>
