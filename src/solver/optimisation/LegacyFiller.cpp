@@ -12,7 +12,6 @@ namespace Antares::Optimization
 
 LegacyFiller::LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
                            const PROBLEME_HEBDO* problemeHebdo):
-
     problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
     linearProblem_(linearProblem)
 {

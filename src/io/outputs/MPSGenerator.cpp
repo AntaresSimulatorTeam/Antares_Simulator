@@ -110,9 +110,9 @@ std::vector<std::string> ExtractNames(const std::vector<std::unique_ptr<T>>& ele
     }
     else
     {
-        for (unsigned int ii = 0; ii < elements.size(); ii++)
+        for (std::size_t idx = 0; idx < elements.size(); idx++)
         {
-            names[ii] = fmt::format("{}{}", prefix, ii);
+            names[idx] = fmt::format("{}{}", prefix, idx);
         }
     }
     return names;
