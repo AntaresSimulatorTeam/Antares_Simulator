@@ -40,6 +40,7 @@ using Solver::Optimization::SingleOptimOptions;
 struct SimplexResult
 {
     TIME_MEASURE timeMeasure;
+    mpsWriterFactory mps_writer_factory;
     double objectiveValue;
 };
 
@@ -211,8 +212,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     measure.tick();
     logs.info() << fmt::format("Problem {}-{} solved in {}",
-                               problemeHebdo->year,
                                problemeHebdo->weekInTheYear,
+                               problemeHebdo->year,
                                measure.toStringInSeconds());
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
@@ -229,10 +230,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
             logs.info() << " Solver: resolution failed";
             logs.debug() << " solver: resetting";
 
-            auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-            mps_writer_on_error->runIfNeeded(writer, filename);
-
-            return {.timeMeasure = timeMeasure, .objectiveValue = 0};
+            return {.timeMeasure = timeMeasure,
+                    .mps_writer_factory = mps_writer_factory,
+                    .objectiveValue = 0};
         }
         throw FatalError("Internal error: insufficient memory");
     }
@@ -269,7 +269,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         timeMeasure.simulationTableFillTime = measure.duration_ms();
     }
 
-    return {.timeMeasure = timeMeasure, .objectiveValue = getObjectiveValue(solver.get())};
+    return {.timeMeasure = timeMeasure,
+            .mps_writer_factory = mps_writer_factory,
+            .objectiveValue = getObjectiveValue(solver.get())};
 }
 
 bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
@@ -349,12 +351,28 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
           = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem);
-        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, nullptr);
+        Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
+                                                                     ? &modelerData
+                                                                          ->bendersDecomposition
+                                                                     : nullptr;
+
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
 
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
+        mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                            problemeHebdo->exportMPSOnError,
+                                            optimizationNumber,
+                                            infeasibleProblem);
+        // Since MpProblem must have named vars and constraints in case of infeasibility, we must
+        // use the updated MPSolver
+        auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
+        const std::string filename = createMPSfilename(optPeriodStringGenerator,
+                                                       optimizationNumber);
+        mps_writer_on_error->runIfNeeded(writer, filename);
+
         return false;
     }
 

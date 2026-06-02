@@ -101,7 +101,7 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
 
 std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
 {
-    if (export_mps_on_error_)
+    if (export_mps_on_error_ || doWeExportMPS())
     {
         return createFullmpsWriter();
     }
