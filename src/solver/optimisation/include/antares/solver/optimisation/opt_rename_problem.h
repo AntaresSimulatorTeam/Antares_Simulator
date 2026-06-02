@@ -8,7 +8,6 @@
 #include <vector>
 
 #include <antares/study/fwd.h>
-
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 
 class Namer
@@ -83,8 +82,9 @@ using namespace Antares::Data;
 class VariableNamer: public Namer
 {
 public:
-    VariableNamer(std::vector<std::string>& names,
-                  std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& legacyInfo):
+    VariableNamer(
+      std::vector<std::string>& names,
+      std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& legacyInfo):
         Namer(names)
     {
         legacyInfo_ = &legacyInfo;
