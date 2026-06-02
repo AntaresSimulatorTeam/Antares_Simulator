@@ -31,7 +31,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireReserves(
   PROBLEME_HEBDO* problemeHebdo,
   bool Simulation)
 {
-    VariableNamer variableNamer(problemeHebdo->ProblemeAResoudre->NomDesVariables);
+    VariableNamer variableNamer(problemeHebdo->ProblemeAResoudre->NomDesVariables,
+                                problemeHebdo->ProblemeAResoudre->LegacyVariablesInfo);
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
 

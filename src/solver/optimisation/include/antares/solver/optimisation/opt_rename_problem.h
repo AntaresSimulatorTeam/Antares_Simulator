@@ -3,10 +3,13 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 
 #include <antares/study/fwd.h>
+
+#include "antares/solver/optimisation/LegacyVariableInfo.h"
 
 class Namer
 {
@@ -17,6 +20,11 @@ public:
     void updateExtremities(const std::string& origin, const std::string& destination);
 
 protected:
+    // Records the structured legacy description of a variable, parallel to the name.
+    // No-op unless a legacy-info target has been provided (i.e. for VariableNamer).
+    void RecordLegacyVariableInfo(unsigned index,
+                                  const std::string& output,
+                                  const std::string& component);
     void SetLinkElementName(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType);
@@ -63,6 +71,11 @@ private:
     std::string area_;
     unsigned timeStep_ = 0;
     std::vector<std::string>& names_;
+
+protected:
+    // Optional target for the structured legacy description, parallel to names_.
+    // Only set for VariableNamer; left null for ConstraintNamer.
+    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>* legacyInfo_ = nullptr;
 };
 
 using namespace Antares::Data;
@@ -70,7 +83,13 @@ using namespace Antares::Data;
 class VariableNamer: public Namer
 {
 public:
-    using Namer::Namer;
+    VariableNamer(std::vector<std::string>& names,
+                  std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& legacyInfo):
+        Namer(names)
+    {
+        legacyInfo_ = &legacyInfo;
+    }
+
     void DispatchableProduction(unsigned varIndex, const std::string& clusterName);
     void ThermalClusterReserveParticipation(unsigned varIndex,
                                             const std::string& clusterName,

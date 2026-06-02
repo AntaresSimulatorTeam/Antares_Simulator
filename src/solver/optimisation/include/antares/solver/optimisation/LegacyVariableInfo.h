@@ -3,19 +3,18 @@
 
 #pragma once
 
-#include <optional>
 #include <string>
 
 namespace Antares::Optimization
 {
 
+// Structured legacy description of an optimization variable, built by VariableNamer
+// at the same time as the variable name and stored parallel to NomDesVariables.
 struct LegacyVariableInfo
 {
     std::string output;
     std::string component;
     unsigned timeIndex;
 };
-
-std::optional<LegacyVariableInfo> ParseLegacyVariableName(const std::string& name);
 
 } // namespace Antares::Optimization
