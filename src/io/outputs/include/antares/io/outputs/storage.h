@@ -60,9 +60,9 @@ private:
         {
             throw std::runtime_error("Column already exists: " + name);
         }
-        columns_.push_back(std::make_shared<ColumnType>(name));
-        return std::static_pointer_cast<ColumnType>(columns_.back());
-    }
+        auto col = std::make_shared<ColumnType>(name);
+        columns_.push_back(col);
+        return col;
 
     std::vector<std::shared_ptr<IColumn>> columns_;
 };
