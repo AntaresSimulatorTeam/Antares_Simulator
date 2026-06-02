@@ -104,12 +104,11 @@ FillContext buildFillContext(const PROBLEME_HEBDO* problemeHebdo, int NumInterva
 void fillLinearProblem(const FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
                        OptimEntityContainer& optimEntityContainer,
-                       bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo, namedProblems));
+      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -183,11 +182,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                                                       ->bendersDecomposition
                                                                  : nullptr;
 
-    fillLinearProblem(fillCtx,
-                      problemeHebdo,
-                      optimEntityContainer,
-                      problemeHebdo->NamedProblems,
-                      bendersDecomposition);
+    fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, bendersDecomposition);
     auto solver = ortoolsProblem.getMpSolver();
     ProblemeAResoudre->ProblemesSpx[NumIntervalle] = solver;
 
@@ -200,7 +195,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                         optimizationNumber,
                                         ortoolsProblem);
 
-    auto mps_writer = mps_writer_factory.create();
+    auto mps_writer = mps_writer_factory.create(problemeHebdo->NamedProblems);
     mps_writer->runIfNeeded(writer, filename);
 
     measure.tick();
@@ -356,7 +351,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                                           ->bendersDecomposition
                                                                      : nullptr;
 
-        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, bendersDecomposition);
 
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = makeUnfeasiblePbAnalyzer();

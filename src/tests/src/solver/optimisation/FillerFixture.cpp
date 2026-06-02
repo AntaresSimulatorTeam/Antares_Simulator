@@ -103,33 +103,16 @@ void FillerFixture::addEmptyConstraintsToLinearProblem(std::vector<std::string>&
     }
 }
 
-void FillerFixture::addEmptyConstraints(std::vector<std::string>& constraintNames,
-                                        bool useNamedProblems,
-                                        double rhs)
+void FillerFixture::addEmptyConstraints(std::vector<std::string>& constraintNames, double rhs)
 {
     problemeHebdo->ProblemeAResoudre->NomDesContraintes = constraintNames;
     problemeHebdo->ProblemeAResoudre->NombreDeContraintes = constraintNames.size();
-    if (useNamedProblems)
-    {
-        addEmptyConstraintsToLinearProblem(constraintNames, rhs);
-    }
-    else
-    {
-        std::vector<std::string> lpConstraintNames;
-        for (unsigned int i = 0; i < constraintNames.size(); ++i)
-        {
-            lpConstraintNames.push_back("c" + std::to_string(i));
-        }
-        addEmptyConstraintsToLinearProblem(lpConstraintNames, rhs);
-    }
+    addEmptyConstraintsToLinearProblem(constraintNames, rhs);
 }
 
-void FillerFixture::addLegacyLp(std::vector<std::string>& constraintNames,
-                                bool useNamedProblems,
-                                double rhs)
+void FillerFixture::addLegacyLp(std::vector<std::string>& constraintNames, double rhs)
 {
-    problemeHebdo->NamedProblems = useNamedProblems;
-    addEmptyConstraints(constraintNames, useNamedProblems, rhs);
+    addEmptyConstraints(constraintNames, rhs);
 }
 
 void FillerFixture::fillProblemWithThermalCapacityConnectionFiller(

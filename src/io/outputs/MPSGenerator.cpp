@@ -94,18 +94,17 @@ bool IsBoolean(const IMipVariable& variable)
     return variable.isInteger() && lbIsZero && ubIsOne;
 }
 
-MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name):
+MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name, bool keepNames):
     linearProblem_(lp),
     name_(name)
-
 {
     if (lp.variableCount() == 0)
     {
         logs.warning() << "Linear problem '" << name << "' contains no variables.";
     }
 
-    exportableConstraintsNames_ = ExtractNames(lp.getConstraints());
-    exportableVariablesNames_ = ExtractNames(lp.getVariables());
+    exportableConstraintsNames_ = ExtractNames(lp.getConstraints(), keepNames, 'c');
+    exportableVariablesNames_ = ExtractNames(lp.getVariables(), keepNames, 'x');
 }
 
 void MPSGenerator::writeHeader(std::string& mps) const
