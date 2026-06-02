@@ -16,13 +16,12 @@ Feature: Legacy variables in simulation table
     # shortfall of 52 MW on "2 JAN 09:00" of year 1, i.e. absolute hour 34
     # (1-based), which lives in week 0 -> block 1. Antares lowercases area
     # ids, so the legacy variable produced by the solver is
-    # `UnsuppliedEnergy::area<area>::hour<33>` (0-based legacy hour); after
-    # the parser/mapper it becomes a simulation-table row with
-    # component=area<area>, output=unsupplied_energy, absolute_time_index=34.
-    Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/002 Thermal fleet - Base"
+    # `UnsuppliedEnergy::area<area>::hour<33>` (0-based legacy hour); is stored as
+    # component=area, output=unsupplied_energy, absolute_time_index=34.
+    Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
     When I run antares simulator
     Then the simulation succeeds
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And the modeler outputs contain the following entries
       | block | component  | output            | timestep | scenario | value |
-      | 1     | area<area> | unsupplied_energy | 34       | 0        | 52    |
+      | 1     | area | unsupplied_energy | 34       | 0        | 52    |
