@@ -46,9 +46,20 @@ static YmlOptimConfig::OptimConfig parseOptimConfig(const std::string& content,
 
 YmlOptimConfig::OptimConfig loadOptimConfigFromYaml(const fs::path& studyPath)
 {
-    const fs::path configPath = studyPath / "input" / "optim-config.yml";
+    const fs::path inputDir = studyPath / "input";
+    const fs::path systemPath = inputDir / "system.yml";
+    const fs::path configPath = inputDir / "optim-config.yml";
+
+    warnOnYamlFiles(inputDir);
+
     if (!std::filesystem::exists(configPath))
     {
+        if (std::filesystem::exists(systemPath))
+        {
+            throw std::runtime_error("Missing 'optim-config.yml' in '" + inputDir.string()
+                                     + "'. This file is required when 'system.yml' is present.");
+        }
+
         logs.info() << "Optim config file not found at " << configPath;
         return {};
     }
