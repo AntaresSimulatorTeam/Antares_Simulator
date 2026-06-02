@@ -40,7 +40,7 @@ using Solver::Optimization::SingleOptimOptions;
 struct SimplexResult
 {
     TIME_MEASURE timeMeasure;
-    std::shared_ptr<LegacyOrtoolsLinearProblem> originalProblem;
+    std::shared_ptr<Antares::Optimization::LegacyOrtoolsLinearProblem> originalProblem;
     double objectiveValue;
 };
 
@@ -108,7 +108,8 @@ void fillLinearProblem(const FillContext& fillCtx,
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
-      std::make_unique<LegacyFiller>(optimEntityContainer.Problem(), problemeHebdo));
+      std::make_unique<Antares::Optimization::LegacyFiller>(optimEntityContainer.Problem(),
+                                                            problemeHebdo));
     Utils::TimeMeasurement measure;
     if (problemeHebdo->modelerData)
     {
@@ -120,13 +121,14 @@ void fillLinearProblem(const FillContext& fillCtx,
 
         // Add compatibility filler that connects components to areas
         // Must be the last one, because it uses constraints defined by the other fillers !!
-        fillersCollection.push_back(std::make_unique<ComponentToAreaConnectionFiller>(
-          problemeHebdo,
-          optimEntityContainer,
-          problemeHebdo->modelerData->dataSeries.get(),
-          problemeHebdo->modelerData->scenarioGroupRepository));
+        fillersCollection.push_back(
+          std::make_unique<Antares::Optimization::ComponentToAreaConnectionFiller>(
+            problemeHebdo,
+            optimEntityContainer,
+            problemeHebdo->modelerData->dataSeries.get(),
+            problemeHebdo->modelerData->scenarioGroupRepository));
 
-        fillersCollection.push_back(std::make_unique<ThermalCapacityFiller>(
+        fillersCollection.push_back(std::make_unique<Antares::Optimization::ThermalCapacityFiller>(
           problemeHebdo,
           optimEntityContainer,
           problemeHebdo->modelerData->dataSeries.get(),
@@ -166,7 +168,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     bool hasModelerData = modelerData != nullptr;
     const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-    auto ortoolsProblem = std::make_shared<LegacyOrtoolsLinearProblem>(isMip, options.solverName);
+    auto ortoolsProblem = std::make_shared<Antares::Optimization::LegacyOrtoolsLinearProblem>(
+      isMip,
+      options.solverName);
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
@@ -338,7 +342,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         bool hasModelerData = modelerData != nullptr;
         const bool isMip = problemeHebdo->OptimisationAvecVariablesEntieres;
 
-        LegacyOrtoolsLinearProblem infeasibleProblem(isMip, options.solverName);
+        Antares::Optimization::LegacyOrtoolsLinearProblem infeasibleProblem(isMip,
+                                                                            options.solverName);
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                      : nullptr;
@@ -354,7 +359,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, bendersDecomposition);
 
         auto MPproblem = infeasibleProblem.getMpSolver();
-        auto analyzer = makeUnfeasiblePbAnalyzer();
+        auto analyzer = Antares::Optimization::makeUnfeasiblePbAnalyzer();
         analyzer->run(MPproblem.get());
         analyzer->printReport();
         mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,

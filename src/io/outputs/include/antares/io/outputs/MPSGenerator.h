@@ -55,30 +55,6 @@ private:
     void writeEnd(std::string& mps) const;
 };
 
-template<class T>
-std::vector<std::string> ExtractNames(const std::vector<std::unique_ptr<T>>& elements,
-                                      bool keepOriginalName,
-                                      char prefix)
-{
-    std::vector<std::string> names(elements.size());
-    if (keepOriginalName)
-    {
-        NameManager nameManager;
-        std::ranges::transform(elements,
-                               names.begin(),
-                               [&nameManager](const std::unique_ptr<T>& element)
-                               { return MakeMpsSafeUniqueName(element->getName(), nameManager); });
-    }
-    else
-    {
-        for (unsigned int ii = 0; ii < elements.size(); ii++)
-        {
-            names[ii] = fmt::format("{}{}", prefix, ii);
-        }
-    }
-    return names;
-}
-
 class MPSFileWriter
 {
 public:

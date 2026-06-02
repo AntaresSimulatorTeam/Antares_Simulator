@@ -12,11 +12,6 @@ namespace Antares::Optimisation::LinearProblemApi
 class ILinearProblem;
 }
 
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Antares::Optimization;
-using namespace operations_research;
-
 // ======================
 // MPS files writing
 // ======================
@@ -34,7 +29,6 @@ public:
     virtual void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) = 0;
 
 protected:
-    bool keepNames_;
     uint current_optim_number_ = 0;
 };
 

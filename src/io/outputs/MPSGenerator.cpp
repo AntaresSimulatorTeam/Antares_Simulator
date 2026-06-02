@@ -94,6 +94,30 @@ bool IsBoolean(const IMipVariable& variable)
     return variable.isInteger() && lbIsZero && ubIsOne;
 }
 
+template<class T>
+std::vector<std::string> ExtractNames(const std::vector<std::unique_ptr<T>>& elements,
+                                      bool keepOriginalName,
+                                      char prefix)
+{
+    std::vector<std::string> names(elements.size());
+    if (keepOriginalName)
+    {
+        NameManager nameManager;
+        std::ranges::transform(elements,
+                               names.begin(),
+                               [&nameManager](const std::unique_ptr<T>& element)
+                               { return MakeMpsSafeUniqueName(element->getName(), nameManager); });
+    }
+    else
+    {
+        for (unsigned int ii = 0; ii < elements.size(); ii++)
+        {
+            names[ii] = fmt::format("{}{}", prefix, ii);
+        }
+    }
+    return names;
+}
+
 MPSGenerator::MPSGenerator(const ILinearProblem& lp, const std::string& name, bool keepNames):
     linearProblem_(lp),
     name_(name)
