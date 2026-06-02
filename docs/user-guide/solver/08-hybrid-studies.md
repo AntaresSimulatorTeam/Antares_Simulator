@@ -20,6 +20,14 @@ The results of the modeler's components optimization is exported under the simul
 the [modeler outputs page](../modeler/03-outputs.md), in the same output folder as the legacy outputs.  
 One simulation table for each optimization step (called `simulation_table--optim-nb-X`) will be generated.
 
+In addition, the legacy solver's own optimization variables (such as unsupplied energy and spillage for each area)
+are also written to the simulation table as described in the
+[legacy solver variables section](../modeler/03-outputs.md#legacy-solver-variables-hybrid-studies-only).
+
+The output name of each legacy variable can be remapped using the optional
+[`input/variable-names.yml`](../modeler/02-inputs.md#variable-name-mapping-file) file placed in the study's `input/`
+directory alongside the other modeler input files.
+
 > _**Note:**_ 
 > Because every MC year is divided into multiple simplex ranges (blocks), time-independent outputs will appear once for 
 > every block in the simulation table.

@@ -11,6 +11,7 @@ follows:
         - **data-series**: a directory that contains all [data series](#data-series) needed by the study
             - Contains **modeler-scenariobuilder.dat** file, which is used to map scenarios to data series
         - **system.yml**: the [system file](#system-file) describing the simulated energy system
+        - **variable-names.yml** _(optional, hybrid studies only)_: a [name-mapping file](#variable-name-mapping-file) for legacy solver output names
     - **parameters.yml**: the [parameters](04-parameters.md) file
 
 Note that Antares will automatically create an **output** directory to write the modeler [outputs](03-outputs.md).
@@ -493,6 +494,27 @@ Example file for a simulation with 2 timestamps and 3 scenarios:
 2345 1243 123
 2378 748  0
 ~~~
+
+## Variable name mapping file
+
+In [hybrid studies](../solver/08-hybrid-studies.md), the legacy solver exports its optimization variables to the
+simulation table under names of the form `<Output>::<location>::hour<N>` (for example,
+`UnsuppliedEnergy::area<area>::hour<33>`). The **output** part of that name (e.g. `UnsuppliedEnergy`) can be remapped
+to a different string by providing the optional file `input/variable-names.yml`.
+
+The file is a flat YAML mapping from the original output name (as produced by the legacy solver) to the desired name:
+
+~~~yaml
+UnsuppliedEnergy: unsupplied_energy
+Spillage: spillaged_energy
+~~~
+
+- The mapping is **case-sensitive**.
+- Names absent from the file are left **unchanged**.
+- If the file is missing or empty, all output names are left unchanged (no-op).
+- The mapped name is what appears in the `output` column of the simulation table.
+
+This file is only meaningful in hybrid studies; it has no effect in pure modeler mode.
 
 ## Rules for IDs
 

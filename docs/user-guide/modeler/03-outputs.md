@@ -95,6 +95,36 @@ Code
 This output is intended for advanced users who need to analyze all variables and constraints involved in the
 optimization process, their time and scenario dependencies, and the solution status from the solver.
 
+### Legacy solver variables (hybrid studies only)
+
+In [hybrid studies](../solver/08-hybrid-studies.md), the legacy solver's optimization variables are also exported to
+the simulation table, one row per variable per optimization step.
+
+The legacy solver names its variables internally using the pattern `<Output>::<location>::hour<N>`, for example:
+
+    UnsuppliedEnergy::area<north>::hour<33>
+
+After solving, this is parsed and written to the simulation table as:
+
+| column | value |
+|---|---|
+| `component` | the location part, e.g. `area<north>` |
+| `output` | the output name, optionally remapped via [`variable-names.yml`](02-inputs.md#variable-name-mapping-file), e.g. `unsupplied_energy` |
+| `absolute_time_index` | 0-based hour index N + 1 (1-based) |
+| `block_time_index` | position of the timestep within the current optimization block, or absent if outside the block |
+| `value` | the solver solution value for that variable |
+| `basis_status` | always `None` for legacy variables |
+
+#### Example
+
+With the mapping `UnsuppliedEnergy: unsupplied_energy` in `variable-names.yml`, an unsupplied energy of 52 MW on
+hour 34 (1-based) of year 1 would appear as:
+
+~~~csv
+block,component,output,absolute_time_index,block_time_index,scenario_index,value,basis_status
+1,area<north>,unsupplied_energy,34,34,0,52,None
+~~~
+
 ### Notes
 - The simulation table output is only available in hybrid and pure modeler studies.  
 - Two files may be generated if a second optimization step is performed (e.g., for feasibility or integer relaxation).  
