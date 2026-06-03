@@ -105,7 +105,10 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             }
             else
             {
-                // When ResidualLoadInArea is 0, we need to set the RHS to a real 0, not 1e-5 as this causes ill conditioning of the problem. As much as possible we should avoid small RHS. The 1e-5 slack is used to prevent feasibility issues but only for areas with real load (defined as >= 1)
+                // When ResidualLoadInArea is 0, we need to set the RHS to a real 0, not 1e-5 as
+                // this causes ill conditioning of the problem. As much as possible we should avoid
+                // small RHS. The 1e-5 slack is used to prevent feasibility issues but only for
+                // areas with real load (defined as >= 1)
                 Xmax[var] = std::max(ResidualLoadInArea, 0.);
             }
 
