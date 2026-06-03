@@ -65,6 +65,10 @@ YmlOptimConfig::OptimConfig loadOptimConfigFromYaml(const fs::path& studyPath)
     }
 
     std::string content = readOptimConfigFile(configPath);
+    if (content.empty())
+    {
+        return {};
+    }
     return parseOptimConfig(content, configPath);
 }
 
