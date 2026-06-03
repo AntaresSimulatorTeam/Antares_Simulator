@@ -105,7 +105,7 @@ std::size_t ThermalClusterList::capacityReservationsCount() const
     return uniqueReservations.size();
 }
 
-bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Area* area)
+bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
 {
     assert(area && "A parent area is required");
 

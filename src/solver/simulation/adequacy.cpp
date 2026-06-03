@@ -5,20 +5,24 @@
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/UnfeasibleProblemError.hpp>
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/solver_utils.h"
+#include "antares/writer/LegacySimulationTablesWriter.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;
+using namespace Antares::Writer;
+using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver::Simulation
 {
+
 Adequacy::Adequacy(Data::Study& study,
                    IResultWriter& resultWriter,
                    Simulation::ISimulationObserver& simulationObserver):
     study(study),
     resultWriter(resultWriter),
-    simulationObserver_(simulationObserver),
-    simulationTables_(study.parameters.noOutput ? 0 : study.maxNbYearsInParallel)
+    simulationObserver_(simulationObserver)
 {
 }
 
@@ -43,25 +47,6 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
     state.problemeHebdo = &pProblemesHebdo[numSpace];
     state.resSpilled.reset(study.areas.size(), (uint)nbHoursInAWeek);
     state.numSpace = numSpace;
-}
-
-OptimisationsSimulationTable& Adequacy::getSimulationTable(uint numSpace)
-{
-    if (numSpace >= simulationTables_.size())
-    {
-        throw std::out_of_range("Error: there is no simulation table for numSpace: "
-                                + std::to_string(numSpace));
-    }
-    return simulationTables_[numSpace];
-}
-
-std::string Adequacy::getSimulationTableHeader() const
-{
-    if (!simulationTables_.empty())
-    {
-        return simulationTables_.at(0).headerCsvFormat();
-    }
-    return "";
 }
 
 // valGen maybe_unused to match simulationBegin() declaration in economy.cpp
@@ -143,6 +128,12 @@ bool Adequacy::year(Variable::State& state,
     // of each year
     currentProblem.ProblemeAResoudre->clearBasis();
 
+    std::unique_ptr<Antares::IO::Outputs::OptimisationsSimulationTable> simulationTables;
+    if (!study.parameters.noOutput)
+    {
+        simulationTables = std::make_unique<Antares::IO::Outputs::OptimisationsSimulationTable>();
+    }
+
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -204,17 +195,11 @@ bool Adequacy::year(Variable::State& state,
 
             try
             {
-                auto* currentSimTable = simulationTables_.empty() ? nullptr
-                                                                  : &simulationTables_[numSpace];
                 OPT_OptimisationHebdomadaireLineaire(study.parameters.optOptions,
                                                      &currentProblem,
                                                      resultWriter,
                                                      simulationObserver_.get(),
-                                                     currentSimTable);
-                if (currentSimTable)
-                {
-                    currentSimTable->write();
-                }
+                                                     simulationTables.get());
 
                 RemixHydroForAllAreas(study.areas,
                                       currentProblem,
@@ -353,6 +338,13 @@ bool Adequacy::year(Variable::State& state,
         hourInTheYear += nbHoursInAWeek;
         optWriter.addTime(w, currentProblem.timeMeasure);
         addTimeMeasure(durationCollector, currentProblem.timeMeasure);
+    }
+
+    if (simulationTables && !study.folderOutput.empty())
+    {
+        LegacySimulationTablesWriter legacyWriter(study.folderOutput, state.year);
+        legacyWriter.write(*simulationTables);
+        simulationTables->clear();
     }
 
     optWriter.finalize();

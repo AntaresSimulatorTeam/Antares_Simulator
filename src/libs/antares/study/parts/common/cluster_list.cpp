@@ -50,7 +50,7 @@ std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationClu
                 && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
                   reserveID))
             {
-                if (globalReserveParticipationIdx == index)
+                if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
                 {
                     return {cluster->name(), reserveID};
                 }
@@ -68,7 +68,7 @@ std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationGro
   const Area* area,
   unsigned int index) const
 {
-    int column = 0;
+    unsigned int column = 0;
     for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {

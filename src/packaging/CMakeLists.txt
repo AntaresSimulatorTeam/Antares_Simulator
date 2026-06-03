@@ -83,6 +83,7 @@ set(TARGET_LIBS #No alias
         linear-problem-data-impl
         linear-problem-mpsolver-impl
         modeler-lib
+        workflow
 
         # solver-lib
         args_helper
@@ -98,7 +99,6 @@ set(TARGET_LIBS #No alias
         system-model-base
         antares-study-system-model
         load-modeler-files
-		write-modeler-files
         modeler-optimisation-container
         expressions
         optim-model-filler
@@ -111,7 +111,7 @@ set(TARGET_LIBS #No alias
         modeler-parameters
         data-series-csv-importer
         expressions-iterators
-        additional-constraint-rhs-antlr-interface
+		additional-constraint-rhs-antlr-interface
 		simulation-table
         simu-table-generator
         scenario-builder-antlr
@@ -135,7 +135,7 @@ install(TARGETS ${TARGET_LIBS}
 # It is NOT in TARGET_LIBS to avoid installing its .so to lib/.
 # It IS added to the export set here so that result_writer (which depends on it)
 # can correctly resolve the dependency in the generated CMake config.
-install(TARGETS parquet_writer
+install(TARGETS simulation-table-writers
         EXPORT AntaresTargets
         LIBRARY DESTINATION bin
         ARCHIVE DESTINATION lib

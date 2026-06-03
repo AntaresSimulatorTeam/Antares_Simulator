@@ -155,15 +155,6 @@ public:
                                              pDurationCollector,
                                              scratchmap);
 
-        if (!study.parameters.noOutput)
-        {
-            auto& simTable = simulation_->getSimulationTable(numSpace);
-
-            auto buffers = simTable.moveBuffers();
-
-            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
-        }
-
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
@@ -508,11 +499,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
 
-    if (!study.parameters.noOutput)
-    {
-        aggregateAndWriteSimulationTables();
-    }
-
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution
@@ -533,43 +519,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Writing annual costs statistics
     pAnnualStatistics.endStandardDeviations();
     pAnnualStatistics.writeToOutput(pResultWriter);
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::storeYearBuffers(uint year,
-                                                       std::string&& firstBuffer,
-                                                       std::string&& secondBuffer)
-{
-    std::lock_guard lock(buffersMutex_);
-    yearSimulationBuffers_.emplace(year,
-                                   std::pair{std::move(firstBuffer), std::move(secondBuffer)});
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
-{
-    if (study.parameters.parquetFmtForSimuTables)
-    {
-        // TODO
-    }
-    else
-    {
-        const auto header = ImplementationType::getSimulationTableHeader() + "\n";
-
-        for (const auto& [year, pair_of_buffers]: yearSimulationBuffers_)
-        {
-            std::string writerEntry = header + pair_of_buffers.first;
-            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
-                                               + "--optim-nb-1.csv",
-                                             writerEntry);
-
-            writerEntry = header + pair_of_buffers.second;
-            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
-                                               + "--optim-nb-2.csv",
-                                             writerEntry);
-        }
-    }
-    yearSimulationBuffers_.clear();
 }
 } // namespace Antares::Solver::Simulation
 
