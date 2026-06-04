@@ -153,9 +153,34 @@ if (load >= 0.)
     SecondMembre[Cnt] = load + 1e-5;
 ```
 
+## LMR step — no change required
+
+The LMR step (DENS computation + LMR-violation test) is structurally immune to the
+Modeler-blindness problem: it works entirely from **net main-LP solution outputs** and never
+reconstructs generation or load from legacy-only sub-components (which is what forces the
+CSR-bound fixes above).
+
+| LMR computation | Inputs read | Why already correct |
+|---|---|---|
+| DENS (`adq_patch_curtailment_sharing.cpp:38`) | `ENS_init`, link flows, `Spillage_init` | all are solution outputs that already embed any Modeler injection/absorption at the area |
+| LMR-violation test (`adq_patch_curtailment_sharing.cpp:18`) | `ENS_init`, `totalNodeBalance` (net positions) | same |
+
+Because DENS is correct, its two downstream consumers are correct too, with no further change:
+the ENS upper bound in the QP (`set_variable_boundaries.cpp:26`, `Xmax = ValeursHorairesDENS`)
+and the objective PTO denominator when `priceTakingOrder == isDens`
+(`set_problem_cost_function.cpp:30`).
+
+**Caveat (not LMR, arguably intentional).** The other PTO option, `isLoad`
+(`set_problem_cost_function.cpp:23-26`), weights the objective by
+`ConsommationsAbattues + AllMustRunGeneration` — legacy-only load, ignoring Modeler load. This
+is the same legacy-only-reconstruction pattern as the CSR bounds, but it lives in the CSR
+*objective weighting*, not LMR, and the PTO is a fairness weight for sharing curtailment
+proportionally — so whether Modeler load belongs in it is a modeling decision, not a clear
+correctness bug. Recorded here for completeness; out of scope for this change.
+
 ## What does not change
 
-- **DENS computation** (`adq_patch_curtailment_sharing.cpp:38`): DENS is built from `ENS_init`, link flows, and `Spillage_init` (see the two-branch formula above), all of which already reflect the Modeler's contribution via the main LP solution. No change needed.
+- **DENS computation** (`adq_patch_curtailment_sharing.cpp:38`): see "LMR step" above — built from solution quantities that already reflect the Modeler. No change needed.
 - **CSR area balance RHS** (`construct_problem_constraints_RHS.cpp:32`): same reasoning — already correct through the observable triple.
 - **Legacy CSR formulas** (BT/BH/BF terms): untouched.
 
