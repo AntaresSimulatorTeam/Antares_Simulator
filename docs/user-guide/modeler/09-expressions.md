@@ -135,6 +135,7 @@ For time-dependent parameters, variables, and port fields, you can use these tim
       like the ones defined above
     - **E** represents the last timestamp, either as an expression resolving to an integer, or a time-shift expression
       like the ones defined above
+    - in both forms, `S` and `E` must not depend on time
 
 _Examples:_
 
@@ -142,6 +143,8 @@ _Examples:_
 expression: a[t] + b[t + 5] * c[t - 3 - 65 * parameter_1] - sum(a)
 
 expression: sum(4 .. 87, c) - sum(t - 3 * parameter_15 + 5 .. t, d)
+
+expression: sum(1 .. 2, expr) = expr[1] + expr[2]
 ~~~
 
 ### Scenario operators

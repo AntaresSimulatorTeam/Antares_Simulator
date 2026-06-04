@@ -314,7 +314,7 @@ public:
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
                          const ModelerStudy::SystemModel::Component& component,
                          const Optimisation::LinearProblemApi::ILinearProblemData* data,
-                         const Optimisation::LinearProblemApi::IScenario* scenario);
+                         const Optimisation::LinearProblemApi::IScenario& scenario);
 
     std::string name() const override;
 
@@ -322,7 +322,7 @@ private:
     const Optimisation::OptimEntityContainer& optimContainer_;
     const ModelerStudy::SystemModel::Component& component_;
     const Optimisation::LinearProblemApi::ILinearProblemData* data_;
-    const Optimisation::LinearProblemApi::IScenario* scenario_;
+    const Optimisation::LinearProblemApi::IScenario& scenario_;
     const Optimisation::EvaluationContext evalContext_;
     const Optimisation::LinearProblemApi::FillContext& fillContext_;
 
@@ -342,6 +342,7 @@ private:
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
+    EvaluationResult visit(const Nodes::TPlusNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
     EvaluationResult visit(const Nodes::FunctionNode* node) override;
 

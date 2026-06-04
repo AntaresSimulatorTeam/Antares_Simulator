@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/yml-model/decoders.h"
 #include "antares/io/inputs/yml-model/parser.h"
 
@@ -44,7 +45,7 @@ BOOST_AUTO_TEST_CASE(library_without_id_throws)
             port-types: []
             models: []
     )"s;
-    BOOST_CHECK_THROW(parser.parse(library), YmlModel::LibraryIdNotDefined);
+    BOOST_CHECK_THROW(parser.parse(library), YAML::KeyNotFound);
 }
 
 BOOST_AUTO_TEST_CASE(parameter_without_id_throws)
@@ -141,7 +142,7 @@ BOOST_AUTO_TEST_CASE(checkFields_reports_unexpected_and_missing_keys)
 
 BOOST_AUTO_TEST_CASE(printPathTree_formats_nested_paths)
 {
-    BOOST_CHECK_EQUAL(printPathTree(std::filesystem::path("lib/model/port")),
+    BOOST_CHECK_EQUAL(YmlUtils::printPathTree(std::filesystem::path("lib/model/port")),
                       std::string("lib\n|__ model\n    |__ port\n"));
 }
 
@@ -360,7 +361,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connection_should_have_exactly_one_field)
 
             models: []
         )"s;
-    BOOST_REQUIRE_THROW((void)parser.parse(library), YAML::TypedBadConversion<YmlModel::PortType>);
+    BOOST_REQUIRE_THROW((void)parser.parse(library), InputError);
 }
 
 BOOST_AUTO_TEST_CASE(area__connection_should_have_exactly_3_fields)

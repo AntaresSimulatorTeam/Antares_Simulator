@@ -10,10 +10,12 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/inputs/InputError.h>
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
 
 using namespace std;
+using namespace Antares::IO::Inputs;
 using namespace Antares::IO::Inputs::DataSeriesCsvImporter;
 using namespace Antares::Optimisation::LinearProblemDataImpl;
 
@@ -53,7 +55,7 @@ BOOST_AUTO_TEST_CASE(row_two_has_less_columns)
 {
     const auto filePath = writeFile("wrong.csv", "1;2\n3");
     BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(filePath.string()
                                        + ": row (1) has less columns (1) than the expected (2)."));
 }
@@ -62,7 +64,7 @@ BOOST_AUTO_TEST_CASE(row_two_has_more_columns)
 {
     const auto filePath = writeFile("wrong.csv", "1;2\n3;4;5");
     BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(filePath.string()
                                        + ": row (1) has more columns (3) than the expected (2)."));
 }
@@ -71,7 +73,7 @@ BOOST_AUTO_TEST_CASE(not_a_number)
 {
     const auto filePath = writeFile("wrong.csv", "1;2\nXy;3");
     BOOST_CHECK_EXCEPTION(DataSeriesRepoImporter::importFromDirectory(temp_path, ';'),
-                          std::invalid_argument,
+                          InputError,
                           checkMessage(filePath.string() + ": \"X\" is not a number"));
 }
 

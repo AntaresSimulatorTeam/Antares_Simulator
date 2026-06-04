@@ -2,9 +2,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <fmt/format.h>
-#include <optional>
-#include <ranges>
 
 #include <antares/expressions/nodes/NodesForwardDeclaration.h>
 #include <antares/expressions/visitors/NodeVisitor.h>
@@ -13,14 +10,6 @@
 
 namespace Antares::IO::Inputs::ForbidNodes
 {
-
-class ForbiddenNodeFound final: public std::invalid_argument
-{
-public:
-    explicit ForbiddenNodeFound(const std::string expr,
-                                const std::string node,
-                                const std::string parent = "");
-};
 
 class ForbiddenNodesVisitor: public Expressions::Visitors::NodeVisitor<void>
 {
@@ -45,6 +34,7 @@ public:
     void visit(const Expressions::Nodes::TimeShiftNode*) override;
     void visit(const Expressions::Nodes::TimeIndexNode*) override;
     void visit(const Expressions::Nodes::TimeSumNode*) override;
+    void visit(const Expressions::Nodes::TPlusNode*) override;
     void visit(const Expressions::Nodes::AllTimeSumNode*) override;
     void visit(const Expressions::Nodes::FunctionNode*) override;
 

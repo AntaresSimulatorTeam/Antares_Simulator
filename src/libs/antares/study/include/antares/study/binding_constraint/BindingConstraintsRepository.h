@@ -97,7 +97,7 @@ public:
     */
     void changeConstraintsWeeklyToDaily();
 
-    static Vector LoadBindingConstraint(EnvForLoading env);
+    static Vector LoadBindingConstraint(const EnvForLoading& env);
 
     [[nodiscard]] Vector activeConstraints() const;
 

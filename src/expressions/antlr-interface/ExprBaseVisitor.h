@@ -23,6 +23,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitSum_bound(ExprParser::Sum_boundContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitPortFieldSum(ExprParser::PortFieldSumContext *ctx) override {
     return visitChildren(ctx);
   }

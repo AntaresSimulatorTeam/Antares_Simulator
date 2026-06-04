@@ -626,17 +626,26 @@ def check_area_balance_rhs(context, area, values_str, constant_str):
     mps_problem = mpu.load_problem(mps_file_path)
     balanced_constraints = [c for c in mps_problem.get_linear_constraints() if c.name.startswith(f"AreaBalance::area<{area}>")]
 
+    failures = []
+
     # Checking first balance constraints have expected bounds
     first_constraints = balanced_constraints[0:len(list_values)]
     for c, value in zip(first_constraints, list_values):
-        assert c.lower_bound == value, f"Contraint {c.name} low bound should be {str(value)}"
-        assert c.upper_bound == value, f"Contraint {c.name} up bound should be {str(value)}"
+        if c.lower_bound != value:
+            failures.append(f"Constraint {c.name} low bound should be {str(value)}, is {c.lower_bound}")
+        if c.upper_bound != value:
+            failures.append(f"Constraint {c.name} up bound should be {str(value)}, is {c.upper_bound}")
 
     # Checking remaining balance constraints have same expected bounds
     last_constraints = balanced_constraints[len(list_values):]
     for c in last_constraints:
-        assert c.lower_bound == constant, f"Contraint {c.name} low bound should be {constant_str}"
-        assert c.upper_bound == constant, f"Contraint {c.name} up bound should be {constant_str}"
+        if c.lower_bound != constant:
+            failures.append(f"Constraint {c.name} low bound should be {constant_str}, is {c.lower_bound}")
+        if c.upper_bound != constant:
+            failures.append(f"Constraint {c.name} up bound should be {constant_str}, is {c.upper_bound}")
+
+    if failures:
+        raise AssertionError("Area balance RHS check failed with the following errors:\n" + "\n".join(failures))
 
 @then(
     'enforces: DispatchableProduction {expression} < {rhs} for the thermal capacity connection between GEMS and the {cluster} thermal cluster in area {area}.')

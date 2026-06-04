@@ -9,6 +9,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/exception/RuntimeError.hpp"
+#include "antares/io/inputs/InputError.h"
 #include "antares/io/inputs/model-converter/modelConverter.h"
 #include "antares/io/inputs/yml-model/Library.h"
 #include "antares/study/system-model/library.h"
@@ -66,13 +67,13 @@ BOOST_FIXTURE_TEST_CASE(portType_with_fields_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(lib.PortTypes().at("port2").Fields()[1].Id(), "field4");
 }
 
-bool emptyFields(const ModelConverter::PortTypeDoesntContainsFields& ex)
+bool emptyFields(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "This port type doesn't contains fields: port1");
     return true;
 }
 
-bool portTypeAlreadyExists(const ModelConverter::PortTypeWithThisIdAlreadyExists& ex)
+bool portTypeAlreadyExists(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "Port type with this id already exists: port2");
     return true;
@@ -83,17 +84,13 @@ BOOST_FIXTURE_TEST_CASE(port_type_error_cases, Fixture)
 {
     YmlModel::PortType portType1{"port1", "empty port", {}, "", {}};
     library.port_types = {portType1};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          ModelConverter::PortTypeDoesntContainsFields,
-                          emptyFields);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, emptyFields);
 
     // same name
     YmlModel::PortType portType2{"port2", "flow port", {"field1", "field2"}, "", {}};
     YmlModel::PortType portType3{"port2", "impedance port", {"field3", "field4"}, "", {}};
     library.port_types = {portType2, portType3};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          ModelConverter::PortTypeWithThisIdAlreadyExists,
-                          portTypeAlreadyExists);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portTypeAlreadyExists);
 }
 
 // Test library with models
@@ -192,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(wrong_value_type, Fixture)
       .objectives = {},
       .extra_outputs = {}};
     library.models = {model1};
-    BOOST_CHECK_THROW(ModelConverter::convert(library), std::runtime_error);
+    BOOST_CHECK_THROW(ModelConverter::convert(library), InputError);
 }
 
 // Test library with models and ports
@@ -222,13 +219,13 @@ BOOST_FIXTURE_TEST_CASE(model_ports_properly_translated, Fixture)
     BOOST_CHECK_EQUAL(port2.Id(), "port2");
 }
 
-bool portAlreadyExists(const ModelConverter::PortWithThisIdAlreadyExists& ex)
+bool portAlreadyExists(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "Port with this id already exists: port1");
     return true;
 }
 
-bool typeNotFound(const ModelConverter::PortTypeNotFound& ex)
+bool typeNotFound(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "For the port: port2 , port type not found: not flow");
     return true;
@@ -253,9 +250,7 @@ BOOST_FIXTURE_TEST_CASE(ports_errors_cases, Fixture)
                           .objectives = {},
                           .extra_outputs = {}};
     library.models = {model};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          ModelConverter::PortTypeNotFound,
-                          typeNotFound);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, typeNotFound);
 }
 
 // Test library with models and constraints
@@ -270,9 +265,9 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
       .variables = {},
       .ports = {},
       .port_field_definitions = {},
-      .constraints = {{"constraint1", "expression1", "subproblems"},
-                      {"constraint2", "expression2", "master-and-subproblems"}},
-      .binding_constraints = {{"constraint3", "expression3", "master"}},
+      .constraints = {{"constraint1", "expression1", "subproblems", ""},
+                      {"constraint2", "expression2", "master-and-subproblems", ""}},
+      .binding_constraints = {{"constraint3", "expression3", "master", ""}},
       .objectives = {},
       .extra_outputs = {}};
     library.models = {model1};
@@ -293,7 +288,7 @@ BOOST_FIXTURE_TEST_CASE(model_constraints_properly_translated, Fixture)
     BOOST_CHECK(constraint3.location() == Location::MASTER);
 }
 
-bool constraintAlreadyExists(const ModelConverter::ConstraintWithThisIdAlreadyExists& ex)
+bool constraintAlreadyExists(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "Constraint with this id already exists: constraint1");
     return true;
@@ -400,9 +395,7 @@ BOOST_FIXTURE_TEST_CASE(port_fields_definitions_forbid_usage_of_sum_connections,
 
     std::string err_msg = "'PortFieldSumNode' is not allowed in expression "
                           "'sum_connections(port.field)'";
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          std::invalid_argument,
-                          checkMessage(err_msg));
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, checkMessage(err_msg));
 }
 
 BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_variable, Fixture)
@@ -430,20 +423,20 @@ BOOST_FIXTURE_TEST_CASE(in_port_fields_definitions__min_operator_accepts_a_varia
     BOOST_CHECK_NO_THROW(ModelConverter::convert(library));
 }
 
-bool portNotFoundForDef(const ModelConverter::PortNotFoundForDefinition& ex)
+bool portNotFoundForDef(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(), "In port-field-definitions, port not found: port2");
     return true;
 }
 
-bool fieldNotFoundForDef(const ModelConverter::FieldNotFoundForDefinition& ex)
+bool fieldNotFoundForDef(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(ex.what(),
                       "In port-field-definitions, for port: port2 , field not found: field2");
     return true;
 }
 
-bool portInDef(const ModelConverter::PortInDefinition& ex)
+bool portInDef(const InputError& ex)
 {
     BOOST_CHECK_EQUAL(
       ex.what(),
@@ -468,9 +461,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .objectives = {},
                            .extra_outputs = {}};
     library.models = {model1};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          ModelConverter::PortNotFoundForDefinition,
-                          portNotFoundForDef);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portNotFoundForDef);
 
     YmlModel::Model model2{.id = "model2",
                            .description = "description",
@@ -483,9 +474,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .objectives = {},
                            .extra_outputs = {}};
     library.models = {model2};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          ModelConverter::FieldNotFoundForDefinition,
-                          fieldNotFoundForDef);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, fieldNotFoundForDef);
 
     YmlModel::Model model3{.id = "model3",
                            .description = "description",
@@ -499,9 +488,7 @@ BOOST_FIXTURE_TEST_CASE(port_field_definition_error_cases, Fixture)
                            .objectives = {},
                            .extra_outputs = {}};
     library.models = {model3};
-    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library),
-                          ModelConverter::PortInDefinition,
-                          portInDef);
+    BOOST_CHECK_EXCEPTION(ModelConverter::convert(library), InputError, portInDef);
 }
 
 // Test one model with extra outputs

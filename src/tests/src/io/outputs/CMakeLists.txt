@@ -1,5 +1,8 @@
 include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
 
+# -----------------
+# testOutputs
+# -----------------
 add_boost_test(testOutputs
         SRC
         test_main.cpp

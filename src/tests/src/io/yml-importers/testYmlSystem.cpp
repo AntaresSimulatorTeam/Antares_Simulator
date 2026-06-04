@@ -5,6 +5,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <antares/io/inputs/InputError.h>
+#include <antares/io/inputs/yml-system/decoders.h>
 #include <antares/io/inputs/yml-system/parser.h>
 
 using namespace std::string_literals;
@@ -20,7 +22,7 @@ BOOST_AUTO_TEST_CASE(empty_system)
             model-libraries: []
             components: []
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK(systemObj.id.empty());
     BOOST_CHECK(systemObj.libraries.empty());
     BOOST_CHECK(systemObj.components.empty());
@@ -34,7 +36,7 @@ BOOST_AUTO_TEST_CASE(simple_id)
             id: base_system
             description: a basic system
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.id, "base_system");
 }
 
@@ -46,7 +48,7 @@ BOOST_AUTO_TEST_CASE(libraries_one_model)
             id: base_system
             model-libraries: [abc]
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
 }
 
@@ -60,7 +62,7 @@ BOOST_AUTO_TEST_CASE(libraries_list_of_models)
             model-libraries: [abc, def, 123]
             components: []
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.libraries[0], "abc");
     BOOST_CHECK_EQUAL(systemObj.libraries[1], "def");
     BOOST_CHECK_EQUAL(systemObj.libraries[2], "123");
@@ -79,7 +81,7 @@ BOOST_AUTO_TEST_CASE(one_component)
                   model: abcde
                   scenario-group: group-234
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.components[0].id, "N");
     BOOST_CHECK_EQUAL(systemObj.components[0].model, "abcde");
     BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
@@ -100,7 +102,7 @@ BOOST_AUTO_TEST_CASE(two_components)
                   model: std.generator
                   scenario-group: group-thermal
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     BOOST_CHECK_EQUAL(systemObj.components[0].id, "N");
     BOOST_CHECK_EQUAL(systemObj.components[0].model, "std.node");
     BOOST_CHECK_EQUAL(systemObj.components[0].scenarioGroup, "group-234");
@@ -126,7 +128,7 @@ BOOST_AUTO_TEST_CASE(component_parameter)
                       scenario-dependent: false
                       value: 30
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     const auto& param = systemObj.components[0].parameters[0];
     BOOST_CHECK_EQUAL(param.id, "cost");
     BOOST_CHECK_EQUAL(param.time_dependent, false);
@@ -155,7 +157,7 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
                       scenario-dependent: false
                       value: 100
     )"s;
-    YmlSystem::System systemObj = parser.parse(system);
+    YmlSystem::System systemObj = parser.parse(system, "");
     const auto& param = systemObj.components[0].parameters[0];
     const auto& param2 = systemObj.components[0].parameters[1];
     BOOST_CHECK_EQUAL(param.id, "cost");
@@ -166,4 +168,244 @@ BOOST_AUTO_TEST_CASE(component_two_parameters)
     BOOST_CHECK_EQUAL(param2.time_dependent, false);
     BOOST_CHECK_EQUAL(param2.scenario_dependent, false);
     BOOST_CHECK_EQUAL(std::stod(param2.value), 100);
+}
+
+// --------------------------------------------------------------------------
+// Decoder error-path coverage: requireMap / requireSize / System::decode
+// --------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(system_node_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system: "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(component_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(parameter_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            components:
+                - id: N
+                  model: std.node
+                  parameters:
+                    - "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(connection_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            connections:
+                - "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(area_connection_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            area-connections:
+                - "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(thermal_capacity_connection_is_a_scalar_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            thermal-capacity-connections:
+                - "not a map"
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(connection_with_missing_field_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            connections:
+                - component1: N
+                  port1: p1
+                  component2: M
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(connection_with_extra_field_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            connections:
+                - component1: N
+                  port1: p1
+                  component2: M
+                  port2: p2
+                  extra: bad
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(area_connection_with_wrong_field_count_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            area-connections:
+                - component: c1
+                  port: p1
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(thermal_capacity_connection_with_wrong_field_count_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            thermal-capacity-connections:
+                - component: c1
+                  port: p1
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(thermal_component_with_wrong_field_count_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            thermal-capacity-connections:
+                - component: c1
+                  port: p1
+                  thermal-component:
+                    area: fr
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+BOOST_AUTO_TEST_CASE(thermal_component_null_throws_input_error)
+{
+    YmlSystem::Parser parser;
+    const auto system = R"(
+        system:
+            id: base_system
+            thermal-capacity-connections:
+                - component: c1
+                  port: p1
+                  thermal-component: ~
+    )"s;
+    BOOST_CHECK_THROW(parser.parse(system, ""), InputError);
+}
+
+// Direct unit tests against the decoder templates: they let us exercise the
+// silent "absent/null node -> return false" branch of requireMap for decoder
+// types that cannot reach it through public YAML input (yaml-cpp's vector
+// decoder rethrows when an element decoder returns false, so this branch is
+// otherwise unreachable for Parameter, Component, Connection, AreaConnection
+// and ThermalCapacityConnection).
+BOOST_AUTO_TEST_CASE(decoder_returns_false_for_null_or_undefined_nodes)
+{
+    YAML::Node undefined; // default-constructed: undefined / invalid
+    YAML::Node nullNode = YAML::Load("~");
+
+    {
+        YmlSystem::Parameter p;
+        BOOST_CHECK(!YAML::convert<YmlSystem::Parameter>::decode(undefined, p));
+        BOOST_CHECK(!YAML::convert<YmlSystem::Parameter>::decode(nullNode, p));
+    }
+    {
+        YmlSystem::Component c;
+        BOOST_CHECK(!YAML::convert<YmlSystem::Component>::decode(undefined, c));
+        BOOST_CHECK(!YAML::convert<YmlSystem::Component>::decode(nullNode, c));
+    }
+    {
+        YmlSystem::Connection c;
+        BOOST_CHECK(!YAML::convert<YmlSystem::Connection>::decode(undefined, c));
+        BOOST_CHECK(!YAML::convert<YmlSystem::Connection>::decode(nullNode, c));
+    }
+    {
+        YmlSystem::AreaConnection ac;
+        BOOST_CHECK(!YAML::convert<YmlSystem::AreaConnection>::decode(undefined, ac));
+        BOOST_CHECK(!YAML::convert<YmlSystem::AreaConnection>::decode(nullNode, ac));
+    }
+    {
+        YmlSystem::ThermalComponent tc;
+        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalComponent>::decode(undefined, tc));
+        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalComponent>::decode(nullNode, tc));
+    }
+    {
+        YmlSystem::ThermalCapacityConnection tcc;
+        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(undefined, tcc));
+        BOOST_CHECK(!YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(nullNode, tcc));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(decoder_throws_for_defined_non_map_nodes)
+{
+    YAML::Node scalar = YAML::Load("\"some-scalar\"");
+
+    {
+        YmlSystem::Parameter p;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::Parameter>::decode(scalar, p), InputError);
+    }
+    {
+        YmlSystem::Component c;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::Component>::decode(scalar, c), InputError);
+    }
+    {
+        YmlSystem::Connection c;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::Connection>::decode(scalar, c), InputError);
+    }
+    {
+        YmlSystem::AreaConnection ac;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::AreaConnection>::decode(scalar, ac), InputError);
+    }
+    {
+        YmlSystem::ThermalComponent tc;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::ThermalComponent>::decode(scalar, tc),
+                          InputError);
+    }
+    {
+        YmlSystem::ThermalCapacityConnection tcc;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::ThermalCapacityConnection>::decode(scalar, tcc),
+                          InputError);
+    }
+    {
+        YmlSystem::System s;
+        BOOST_CHECK_THROW(YAML::convert<YmlSystem::System>::decode(scalar, s), InputError);
+    }
 }

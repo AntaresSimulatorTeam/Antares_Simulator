@@ -13,6 +13,7 @@
  */
 namespace Antares::IO::Inputs::DataSeriesCsvImporter
 {
+
 class DataSeriesRepoImporter final
 {
 public:

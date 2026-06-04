@@ -71,7 +71,7 @@ jobs:
       shell: bash
 
     - name: Install Build Wrapper
-      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v7.1.0
+      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8.1.0
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -236,12 +236,12 @@ jobs:
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
-      uses: SonarSource/sonarqube-scan-action@v7.1.0
+      uses: SonarSource/sonarqube-scan-action@v8.1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
-        scannerVersion: 7.3.0.5189 #8.0.1.6346 hangs
+        scannerVersion: 8.1.0.6389
         args: >
           --define sonar.host.url=${{ env.SONAR_SERVER_URL }} --define sonar.cfamily.compile-commands=${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json
 

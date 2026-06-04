@@ -58,6 +58,7 @@ public:
     std::any visitPower(ExprParser::PowerContext* context) override;
     std::any visitRightPower(ExprParser::RightPowerContext* context) override;
     std::any visitShiftPower(ExprParser::ShiftPowerContext* context) override;
+    std::any visitSum_bound(ExprParser::Sum_boundContext* context) override;
 
 private:
     // Methods
@@ -84,11 +85,6 @@ private:
     Expressions::Registry<Node>& registry_;
     const YmlModel::Model& model_;
 };
-
-NoPortWithThisId::NoPortWithThisId(const std::string& name):
-    runtime_error("No port found for this identifier: " + name)
-{
-}
 
 class AntaresErrorListener: public antlr4::BaseErrorListener
 {
@@ -187,7 +183,7 @@ Node* ConvertorVisitor::convertIdentifier(const std::string& identifier) const
             return static_cast<Node*>(registry_.create<VariableNode>(var.id, index, v));
         }
     }
-    throw NoParameterOrVariableWithThisName(identifier);
+    throw InputError("No parameter or variable found for this identifier: " + identifier);
 }
 
 std::any ConvertorVisitor::visitIdentifier(ExprParser::IdentifierContext* context)
@@ -219,6 +215,27 @@ std::any ConvertorVisitor::visitNegation(ExprParser::NegationContext* context)
 std::any ConvertorVisitor::visitExpression(ExprParser::ExpressionContext* context)
 {
     return context->expr()->accept(this);
+}
+
+// TPlus(expr) <= borne mobile
+// expr <= borne fixe
+
+// UnaryNode
+
+// from="t+1" => TPlus(Literal(1))
+//   from="1" => Literal(1)
+std::any ConvertorVisitor::visitSum_bound(ExprParser::Sum_boundContext* context)
+{
+    if (auto* shift = context->shift())
+    {
+        auto* offset = std::any_cast<Node*>(shift->accept(this));
+        return static_cast<Node*>(registry_.create<TPlusNode>(offset));
+    }
+    if (auto* expr = context->expr())
+    {
+        return expr->accept(this);
+    }
+    throw InputError("Invalid sum bound");
 }
 
 std::any ConvertorVisitor::visitComparison(ExprParser::ComparisonContext* context)
@@ -273,12 +290,6 @@ std::any ConvertorVisitor::visitAddsub(ExprParser::AddsubContext* context)
     return static_cast<Node*>(registry_.create<SumNode>(operands));
 }
 
-class NotImplemented final: public std::runtime_error
-{
-public:
-    using std::runtime_error::runtime_error;
-};
-
 static bool isPortRegistered(const std::string& portId, const std::vector<YmlModel::Port>& ports)
 {
     for (const auto& [id, _]: ports)
@@ -300,7 +311,7 @@ PortFieldNode* ConvertorVisitor::processPortRule(ExprParser::PortFieldExprContex
     {
         return registry_.create<PortFieldNode>(portId, portField);
     }
-    throw NoPortWithThisId(portId);
+    throw IO::Inputs::InputError("No port found for this identifier: " + portId);
 }
 
 std::any ConvertorVisitor::visitPortField(ExprParser::PortFieldContext* context)
@@ -379,8 +390,8 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
 
     if (argIds.size() != 1)
     {
-        throw std::invalid_argument("dual operator expects exactly one constraint id got: "
-                                    + boost::algorithm::join(argIds, ", "));
+        throw InputError("dual operator expects exactly one constraint id got: "
+                         + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string constraint_id = argIds[0];
@@ -412,7 +423,8 @@ std::any ConvertorVisitor::visitDual(ExprParser::ArgListContext* context)
         return node;
     }
 
-    throw DualNoConstraintWithThisName(model_.id, constraint_id);
+    throw InputError("dual called with unknown constraint '" + constraint_id + "' in model '"
+                     + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
@@ -421,8 +433,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
 
     if (argIds.size() != 1)
     {
-        throw std::invalid_argument("reduced_cost operator expects exactly one variable id got: "
-                                    + boost::algorithm::join(argIds, ", "));
+        throw InputError("reduced_cost operator expects exactly one variable id got: "
+                         + boost::algorithm::join(argIds, ", "));
     }
 
     const std::string var_id = argIds[0];
@@ -438,7 +450,8 @@ std::any ConvertorVisitor::visitReducedCost(ExprParser::ArgListContext* context)
         }
         ++index;
     }
-    throw ReducedCostNoVariableWithThisName(model_.id, var_id);
+    throw InputError("reduced_cost called with unknown variable '" + var_id + "' in model '"
+                     + model_.id + "'");
 }
 
 std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
@@ -446,8 +459,8 @@ std::any ConvertorVisitor::visitMax(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("max operator expects at least 2 operands got "
-                                    + std::to_string(nodes.size()));
+        throw InputError("max operator expects at least 2 operands got "
+                         + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::max, nodes));
 }
@@ -457,8 +470,8 @@ std::any ConvertorVisitor::visitMin(ExprParser::ArgListContext* context)
     const auto nodes = std::any_cast<std::vector<Node*>>(context->accept(this));
     if (nodes.size() < 2)
     {
-        throw std::invalid_argument("min operator expects at least 2 operands got "
-                                    + std::to_string(nodes.size()));
+        throw InputError("min operator expects at least 2 operands got "
+                         + std::to_string(nodes.size()));
     }
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::min, nodes));
 }
@@ -470,7 +483,7 @@ Node* ConvertorVisitor::extractOneArgument(ExprParser::ArgListContext* context,
     if (size_t size = nodes.size(); size > 1)
     {
         std::string err_msg = opName + "() expects 1 argument, but has " + std::to_string(size);
-        throw std::invalid_argument(err_msg);
+        throw IO::Inputs::InputError(err_msg);
     }
     return nodes[0];
 }
@@ -495,7 +508,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     if (!arglist || arglist->expr().empty())
     {
         std::string err_msg = functionName + " operator expects an argument, got nothing";
-        throw std::invalid_argument(err_msg);
+        throw IO::Inputs::InputError(err_msg);
     }
 
     if (functionName == "reduced_cost")
@@ -523,7 +536,7 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
         return visitCeil(arglist);
     }
 
-    throw std::invalid_argument("Invalid function: '" + functionName + "'");
+    throw IO::Inputs::InputError("Invalid function: '" + functionName + "'");
 }
 
 template<class T>
@@ -558,9 +571,9 @@ Node* ConvertorVisitor::NodeFromShiftContext(ExprParser::Shift_exprContext* shif
 
 std::any ConvertorVisitor::visitTimeSum(ExprParser::TimeSumContext* context)
 {
-    auto* from = NodeFromShiftContext(context->from->shift_expr());
+    auto* from = std::any_cast<Node*>(context->from->accept(this));
 
-    auto* to = NodeFromShiftContext(context->to->shift_expr());
+    auto* to = std::any_cast<Node*>(context->to->accept(this));
 
     auto* expr = std::any_cast<Node*>(context->expr()->accept(this));
 
@@ -596,7 +609,7 @@ std::any ConvertorVisitor::visitRightAtom(ExprParser::RightAtomContext* context)
 
 std::any ConvertorVisitor::visitShift(ExprParser::ShiftContext* context)
 {
-    return std::any_cast<Node*>(visit(context->shift_expr()));
+    return NodeFromShiftContext(context->shift_expr());
 }
 
 std::any ConvertorVisitor::visitShiftAddsub(ExprParser::ShiftAddsubContext* context)
@@ -621,7 +634,7 @@ std::any ConvertorVisitor::visitShiftMuldiv(ExprParser::ShiftMuldivContext* cont
 std::any ConvertorVisitor::visitRightMuldiv(
   [[maybe_unused]] ExprParser::RightMuldivContext* context)
 {
-    throw NotImplemented("Node right mul div not implemented yet");
+    throw IO::Inputs::InputError("Node right mul div not implemented yet");
 }
 
 std::any ConvertorVisitor::visitSignedExpression(ExprParser::SignedExpressionContext* context)
