@@ -6,14 +6,14 @@
 namespace Antares::Optimization
 {
 
-const std::unordered_map<std::string, std::string> LegacyNameMapper::kOutputMap = {
+const std::unordered_map<std::string, std::string> LegacyNameMapper::variableNameMapping = {
   {"UnsuppliedEnergy", "unsupplied_energy"},
   {"Spillage", "spilled_energy"},
 };
 
 std::string LegacyNameMapper::mapOutput(const std::string& legacyName) const
 {
-    if (const auto it = kOutputMap.find(legacyName); it != kOutputMap.end())
+    if (const auto it = variableNameMapping.find(legacyName); it != variableNameMapping.end())
     {
         return it->second;
     }

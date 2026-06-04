@@ -15,7 +15,7 @@ public:
     [[nodiscard]] std::string mapOutput(const std::string& legacyName) const;
 
 private:
-    static const std::unordered_map<std::string, std::string> kOutputMap;
+    static const std::unordered_map<std::string, std::string> variableNameMapping;
 };
 
 } // namespace Antares::Optimization
