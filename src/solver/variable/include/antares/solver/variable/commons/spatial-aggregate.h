@@ -3,12 +3,29 @@
 
 #pragma once
 
+#include <type_traits>
+
+#include "antares/solver/variable/tuple_variable_list.h"
 #include "antares/solver/variable/variable.h"
 
 // #include <antares/logs/logs.h>	// In case it is needed
 
 namespace Antares::Solver::Variable::Common
 {
+template<class VCardOriginT, class = void>
+struct VCardForSpatialAggregateSelector
+{
+    using type = VCardOriginT;
+};
+
+template<class VCardOriginT>
+struct VCardForSpatialAggregateSelector<
+  VCardOriginT,
+  std::void_t<typename VCardOriginT::VCardForSpatialAggregate>>
+{
+    using type = typename VCardOriginT::VCardForSpatialAggregate;
+};
+
 template<int ColumnCountT, class VCardT>
 struct MultipleCaptionProxy
 {
@@ -65,11 +82,11 @@ struct MultipleCaptionProxy<Category::dynamicColumns, VCardT>
     }
 };
 
-template<template<class> class V>
+template<class V>
 struct VCardProxy
 {
     //! The real VCard for the variable
-    typedef typename V<Container::EndOfList>::VCardType VCardOrigin;
+    using VCardOrigin = typename V::VCardType;
 
     //! Caption
     static std::string Caption()
@@ -90,14 +107,14 @@ struct VCardProxy
     }
 
     //! The expecte results
-    typedef typename VCardOrigin::ResultsType ResultsType;
+    using ResultsType = typename VCardOrigin::ResultsType;
     //! The VCard to look for for calculating spatial aggregates
-    typedef typename VCardOrigin::VCardForSpatialAggregate VCardForSpatialAggregate;
+    using VCardForSpatialAggregate = typename VCardForSpatialAggregateSelector<VCardOrigin>::type;
 
-    typedef typename VCardOrigin::IntermediateValuesType IntermediateValuesType;
-    typedef typename VCardOrigin::IntermediateValuesBaseType IntermediateValuesBaseType;
-    typedef
-      typename VCardOrigin::IntermediateValuesTypeForSpatialAg IntermediateValuesTypeForSpatialAg;
+    using IntermediateValuesType = typename VCardOrigin::IntermediateValuesType;
+    using IntermediateValuesBaseType = typename VCardOrigin::IntermediateValuesBaseType;
+    using IntermediateValuesTypeForSpatialAg = typename VCardOrigin::
+      IntermediateValuesTypeForSpatialAg;
 
     //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::setOfAreas;
@@ -105,8 +122,6 @@ struct VCardProxy
     static constexpr uint8_t categoryFileLevel = VCardOrigin::categoryFileLevel;
     //! Precision (views)
     static constexpr uint8_t precision = VCardOrigin::precision;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = VCardOrigin::decimal;
     //! Number of columns used by the variable (One ResultsType per column)
@@ -116,8 +131,6 @@ struct VCardProxy
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
 
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = VCardOrigin::isPossiblyNonApplicable;
 
@@ -136,18 +149,14 @@ struct VCardProxy
 
 }; // class VCard
 
-template<template<class> class VarT, class NextT = Container::EndOfList>
-class SpatialAggregate
-    : public Variable::IVariable<SpatialAggregate<VarT, NextT>, NextT, VCardProxy<VarT>>
+template<class VarT>
+class SpatialAggregate: public Variable::IVariable<SpatialAggregate<VarT>, VCardProxy<VarT>>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-
     //! VCard
     typedef VCardProxy<VarT> VCardType;
     //! Ancestor
-    typedef Variable::IVariable<SpatialAggregate<VarT, NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<SpatialAggregate<VarT>, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -156,8 +165,7 @@ public:
 
     enum
     {
-        //! How many items have we got
-        count = 1 + NextT::count,
+        count = 1,
     };
 
     template<int CDataLevel, int CFile>
@@ -167,9 +175,8 @@ public:
         {
             count = ((VCardType::categoryDataLevel & CDataLevel
                       && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+                       ? VCardType::columnCount * ResultsType::count
+                       : 0),
         };
     };
 
@@ -181,92 +188,12 @@ public:
         pNbYearsParallel = study.maxNbYearsInParallel;
 
         // Intermediate values
-        VarT<Container::EndOfList>::InitializeResultsFromStudy(AncestorType::pResults, study);
+        VarT::InitializeResultsFromStudy(AncestorType::pResults, study);
         pValuesForTheCurrentYear = std::make_unique<IntermediateValuesBaseType[]>(pNbYearsParallel);
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             VariableAccessorType::InitializeAndReset(pValuesForTheCurrentYear[numSpace], study);
         }
-
-        // Next
-        NextType::initializeFromStudy(study);
-    }
-
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
-    }
-
-    void simulationBegin()
-    {
-        // Next
-        NextType::simulationBegin();
-    }
-
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
-    void yearBegin(uint year)
-    {
-        // Next variable
-        NextType::yearBegin(year);
-    }
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year)
-    {
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year);
-    }
-
-    void yearEndBuildForEachThermalCluster(State& state, uint year)
-    {
-        // Next variable
-        NextType::yearEndBuildForEachThermalCluster(state, year);
-    }
-
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
-    }
-
-    void yearEnd(uint year)
-    {
-        // Next variable
-        NextType::yearEnd(year);
-    }
-
-    void weekBegin(State& state)
-    {
-        // Next variable
-        NextType::weekBegin(state);
-    }
-
-    void weekEnd(State& state)
-    {
-        // Next variable
-        NextType::weekEnd(state);
-    }
-
-    void hourBegin(uint hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
     }
 
     template<class V, class SetT>
@@ -276,9 +203,6 @@ public:
         {
             internalSpatialAggregateForCurrentYear(allVars, set, numSpace);
         }
-
-        // Next variable
-        NextType::yearEndSpatialAggregates(allVars, year, set, numSpace);
     }
 
     template<class V>
@@ -288,9 +212,6 @@ public:
         {
             internalSpatialAggregateForParallelYears(year, numSpace);
         }
-
-        // Next variable
-        NextType::computeSpatialAggregatesSummary(allVars, year, numSpace);
     }
 
     template<class V, class SetT>
@@ -300,9 +221,6 @@ public:
         {
             internalSpatialAggregate(allVars, 0, set);
         }
-
-        // Next variable
-        NextType::simulationEndSpatialAggregates(allVars, set);
     }
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
@@ -321,8 +239,6 @@ public:
               digestLevel,
               dataLevel);
         }
-        // Ask to build the digest to the next variable
-        NextType::buildDigest(results, digestLevel, dataLevel);
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
@@ -470,21 +386,16 @@ private:
     //! Intermediate values for each year
     VCardType::IntermediateValuesTypeForSpatialAg pValuesForTheCurrentYear;
 
-    unsigned int pNbYearsParallel;
+    unsigned int pNbYearsParallel = 0;
 
 }; // class SpatialAggregate
 
-// Variadic meta-template to build nested spatial aggregates
-template<template<class> class Head, template<class> class... Tail>
+// Variadic composition of spatial-aggregate variables. Produces a flat tuple
+// dispatcher. Each Vs... is an already-instantiated variable type.
+template<class... Vs>
 struct SpatialAggregateAll
 {
-    using type = SpatialAggregate<Head, typename SpatialAggregateAll<Tail...>::type>;
-};
-
-template<template<class> class Last>
-struct SpatialAggregateAll<Last>
-{
-    using type = SpatialAggregate<Last>;
+    using type = Container::TupleVariableList<SpatialAggregate<Vs>...>;
 };
 
 } // namespace Antares::Solver::Variable::Common

@@ -6,7 +6,6 @@
 
 #include "antares/infoCollection/StudyInfoCollector.h"
 #include "antares/io/outputs/SimulationTable.h"
-#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
@@ -53,7 +52,6 @@ public:
 
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
-    std::string getSimulationTableHeader() const;
     bool simulationBegin();
 
     bool year(Variable::State& state,
@@ -69,8 +67,6 @@ protected:
 
     void initializeState(Variable::State& state, uint numSpace);
 
-    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
-
 private:
     bool simplexIsRequired(uint hourInTheYear,
                            uint numSpace,
@@ -82,9 +78,7 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
     IResultWriter& resultWriter;
-
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    std::vector<OptimisationsSimulationTable> simulationTables_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation

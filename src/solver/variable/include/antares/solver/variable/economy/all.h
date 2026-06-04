@@ -11,7 +11,7 @@
 #include "../bindConstraints.h"
 #include "../commons/compose-all.h"
 #include "../commons/hydro.h"
-#include "../commons/join.h"
+#include "../commons/join_all.h"
 #include "../commons/load.h"
 #include "../commons/miscGenMinusRowPSP.h"
 #include "../commons/psp.h"
@@ -180,20 +180,11 @@ using VariablesPerSetOfAreas = Common::SpatialAggregateAll<OverallCost,
                                                            ResidualLoad,
                                                            NbOfDispatchedUnits>::type;
 
-typedef BindingConstMarginCost< // Marginal cost for a binding constraint
-  Container::EndOfList          // End of variable list
-  >
+using VariablesPerBindingConstraints = BindingConstMarginCost;
 
-  VariablesPerBindingConstraints;
-
-typedef Variable::Join<
-  // Variables for each area / links attached to the areas
-  Variable::Areas<VariablesPerArea>,
-  // Variables for each set of areas
-  Variable::Join<Variable::SetsOfAreas<VariablesPerSetOfAreas>,
-                 // Variables for each binding constraint
-                 Variable::BindingConstraints<VariablesPerBindingConstraints>>>
-  ItemList;
+using ItemList = Variable::JoinAll<Variable::Areas<VariablesPerArea>,
+                                   Variable::SetsOfAreas<VariablesPerSetOfAreas>,
+                                   Variable::BindingConstraints<VariablesPerBindingConstraints>>;
 
 /*!
 ** \brief All variables for a simulation (economy)

@@ -5,28 +5,17 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 
-namespace Antares::Solver
+namespace Antares::IO::Outputs
 {
-class IResultWriter;
-}
-
 class OptimisationsSimulationTable
 {
 public:
-    void clear();
-
-    std::pair<std::string, std::string> moveBuffers();
-
-    void write();
-
-    void writeTo(const std::string& filePrefix, Antares::Solver::IResultWriter& writer);
     Antares::IO::Outputs::SimulationTable* firstOptimSimulationTable();
     Antares::IO::Outputs::SimulationTable* secondOptimSimulationTable();
-    [[nodiscard]] std::string headerCsvFormat() const;
+    void clear();
 
 private:
     Antares::IO::Outputs::SimulationTable firstOptimSimulationTable_;
     Antares::IO::Outputs::SimulationTable secondOptimSimulationTable_;
-    std::string firstOptimBuffer_;
-    std::string secondOptimBuffer_;
 };
+} // namespace Antares::IO::Outputs

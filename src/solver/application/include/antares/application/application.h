@@ -115,7 +115,7 @@ private:
     void prepareWriter(const Antares::Data::Study& study,
                        Benchmarking::DurationCollector& duration_collector);
 
-    void writeComment(Data::Study& study);
+    void writeComment();
     void readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& options);
     // Return false if the user requested the version ,available solvers, etc, true otherwise
     bool handleOptions(const Data::StudyLoadOptions& options);

@@ -6,6 +6,7 @@
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+using namespace IO::Outputs;
 using Antares::Solver::Optimization::OptimizationOptions;
 
 bool OPT_PilotageOptimisationLineaire(const OptimizationOptions& options,

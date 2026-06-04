@@ -251,8 +251,6 @@ set(RTESOLVER_OPT
         ComponentToAreaConnectionFiller.cpp
         include/antares/solver/optimisation/ThermalCapacityFiller.h
         ThermalCapacityFiller.cpp
-        include/antares/solver/optimisation/OptimisationsSimulationTable.h
-        OptimisationsSimulationTable.cpp
 )
 
 

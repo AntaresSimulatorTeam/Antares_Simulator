@@ -1,7 +1,7 @@
 import csv
 import io
+from typing import Optional, Tuple, List
 from pathlib import Path
-from typing import Optional
 
 
 def parse_csv_lines(lines):
@@ -133,83 +133,19 @@ def format_key(key_tuple):
             parts.append(str(v))
     return ", ".join(parts)
 
-
-def diff_message(name: str, ref_lines, out_lines) -> Optional[str]:
+def compare_folders(folder1: Path, folder2: Path) -> Tuple[bool, List[str]]:
     """
-    Compare two sets of CSV lines (reference and output) and generate a
-    human-readable message summarizing the differences.
-    The message will include missing rows, extra rows, and value mismatches.
-    Returns None if there are no differences.
+    Compare files between two folders.
+
+    Args:
+        folder1: First folder (reference)
+        folder2: Second folder (to compare against)
+
+    Returns:
+        Tuple of (all_match: bool, differences: List[str])
+        - all_match: True if all files exist and have identical content
+        - differences: List of difference descriptions
     """
-    ref_rows = parse_csv_lines(ref_lines)
-    out_rows = parse_csv_lines(out_lines)
-    if ref_rows is None and out_rows is None:
-        return None
-    if ref_rows is None:
-        return f"{name}: reference is missing but output exists"
-    if out_rows is None:
-        return f"{name}: output is missing but reference exists"
-
-    ref_index = index_rows(ref_rows)
-    out_index = index_rows(out_rows)
-
-    ref_keys = set(ref_index.keys())
-    out_keys = set(out_index.keys())
-
-    missing_keys = sorted(ref_keys - out_keys)
-    extra_keys = sorted(out_keys - ref_keys)
-
-    msg_lines = []
-    if missing_keys:
-        msg_lines.append(f"- Missing rows in output (samples):")
-        for k in missing_keys[:10]:
-            msg_lines.append(f"  * {format_key(k)}")
-        if len(missing_keys) > 10:
-            msg_lines.append(f"  ... and {len(missing_keys) - 10} more")
-    if extra_keys:
-        msg_lines.append(f"- Unexpected extra rows (samples):")
-        for k in extra_keys[:10]:
-            msg_lines.append(f"  * {format_key(k)}")
-        if len(extra_keys) > 10:
-            msg_lines.append(f"  ... and {len(extra_keys) - 10} more")
-
-    # Compare lines present in both
-    mismatches_shown = 0
-    mismatch_limit = 50
-    for k in sorted(ref_keys & out_keys):
-        ref_list = ref_index[k]
-        out_list = out_index[k]
-        # If multiple, compare in appearance order
-        count = min(len(ref_list), len(out_list))
-        for i in range(count):
-            diffs = compare_rows(ref_list[i], out_list[i])
-            if diffs:
-                if mismatches_shown == 0:
-                    msg_lines.append("- Different values (samples):")
-                mismatches_shown += 1
-                if mismatches_shown <= mismatch_limit:
-                    msg_lines.append(f"  * {format_key(k)}:")
-                    for col, pair in diffs.items():
-                        if col == "__missing_in_out__":
-                            msg_lines.append(f"      columns missing in output: {pair}")
-                        else:
-                            msg_lines.append(f"      {col}: ref='{pair[0]}' vs out='{pair[1]}'")
-        # If different counts for the same key, report
-        if len(ref_list) != len(out_list):
-            msg_lines.append(
-                f"  * {format_key(k)}: occurrence count ref={len(ref_list)} vs out={len(out_list)}")
-
-        if mismatches_shown >= mismatch_limit:
-            msg_lines.append("  ... display limit reached")
-            break
-
-    if msg_lines:
-        header = f"{name} does not match reference"
-        return header + "\n" + "\n".join(msg_lines)
-    return None
-
-
-def compare_folders(folder1: Path, folder2: Path):
     differences = []
 
     if not folder1.exists():
@@ -220,20 +156,31 @@ def compare_folders(folder1: Path, folder2: Path):
         differences.append(f"Folder 2 does not exist: {folder2}")
         return False, differences
 
-    folder1_files = [file for file in folder1.rglob("*") if file.is_file()]
+    # Get all files in folder1 recursively
+    folder1_files = [f for f in folder1.rglob('*') if f.is_file()]
+
     if not folder1_files:
         differences.append(f"No files found in folder 1: {folder1}")
         return False, differences
 
     for file1 in folder1_files:
-        relative_path = file1.relative_to(folder1)
-        file2 = folder2 / relative_path
+        # Get relative path from folder1
+        rel_path = file1.relative_to(folder1)
+        file2 = folder2 / rel_path
+
+        # Check if file exists in folder2
         if not file2.exists():
-            differences.append(f"Missing file in folder 2: {relative_path}")
+            differences.append(f"Missing file in folder 2: {rel_path}")
             continue
 
-        # Normalize line endings to tolerate CRLF/LF differences (e.g. git autocrlf on Windows)
-        if file1.read_bytes().replace(b"\r\n", b"\n") != file2.read_bytes().replace(b"\r\n", b"\n"):
-            differences.append(f"Content mismatch: {relative_path}")
+        # Compare file contents
+        try:
+            content1 = file1.read_text()
+            content2 = file2.read_text()
+
+            if content1 != content2:
+                differences.append(f"Content mismatch: {rel_path}")
+        except Exception as e:
+            differences.append(f"Error reading {rel_path}: {str(e)}")
 
     return len(differences) == 0, differences

@@ -3,11 +3,16 @@
 
 #pragma once
 
-// Arrow / Parquet
-#include <arrow/api.h>
-#include <arrow/io/api.h>
+#include <memory>
+#include <string>
 
 #include "antares/io/outputs/columns.h"
+
+namespace arrow
+{
+class Field;
+class Array;
+} // namespace arrow
 
 namespace Antares::Writer
 {
@@ -57,12 +62,12 @@ private:
 class IntColumnAdapter: public IColumnAdapter
 {
 public:
-    explicit IntColumnAdapter(const IO::Outputs::IntegralColumn<unsigned>* column);
+    explicit IntColumnAdapter(const IO::Outputs::IntegralColumn* column);
     std::shared_ptr<arrow::Field> makeField() const override;
     std::shared_ptr<arrow::Array> makeArray() const override;
 
 private:
-    const IO::Outputs::IntegralColumn<unsigned>* column_;
+    const IO::Outputs::IntegralColumn* column_;
 };
 
 // ================================
@@ -125,7 +130,6 @@ private:
 // ===========================
 // Column adapter factory
 // ===========================
-std::shared_ptr<IColumnAdapter> makeColumnAdapter(
-  const std::unique_ptr<IO::Outputs::IColumn>& column);
+std::shared_ptr<IColumnAdapter> makeColumnAdapter(const IO::Outputs::IColumn& column);
 
 } // namespace Antares::Writer

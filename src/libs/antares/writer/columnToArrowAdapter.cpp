@@ -1,20 +1,34 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "private/columnToArrowAdapter.h"
+#include "columnToArrowAdapter.h"
 
+// Arrow / Parquet — full headers needed for implementation
+#include <arrow/api.h>
+#include <arrow/io/api.h>
+#include <optional>
 #include <stdexcept>
+#include <typeinfo>
+#include <vector>
+
+#include <antares/exception/InvalidArgumentError.hpp>
+#include "antares/io/outputs/IColumnAdapterVisitor.h"
 
 #include "private/parquet_arrow_utils.h"
 
 using namespace Antares::IO::Outputs;
+using namespace Antares::Error;
 using namespace Antares::Optimisation::LinearProblemApi;
 
 namespace Antares::Writer
 {
 
+// ===========================
+// Helper: add optional values to Arrow builder
+// ===========================
+
 template<typename T, typename B>
-void addOptionalsToBuider(const std::vector<std::optional<T>>& in, B& builder)
+void addOptionalsToBuilder(const std::vector<std::optional<T>>& in, B& builder)
 {
     std::vector<T> values(in.size());
     std::vector<bool> valid(in.size());
@@ -87,7 +101,7 @@ std::shared_ptr<arrow::Array> DoubleColumnAdapter::makeArray() const
 // ============================
 // Class IntColumnAdapter
 // ============================
-IntColumnAdapter::IntColumnAdapter(const IntegralColumn<unsigned>* column):
+IntColumnAdapter::IntColumnAdapter(const IntegralColumn* column):
     column_(column)
 {
 }
@@ -152,7 +166,7 @@ std::shared_ptr<arrow::Field> OptDoubleColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptDoubleColumnAdapter::makeArray() const
 {
     arrow::DoubleBuilder builder;
-    addOptionalsToBuider(column_->data(), builder);
+    addOptionalsToBuilder(column_->data(), builder);
     return throwOnResultKO(builder.Finish());
 }
 
@@ -172,7 +186,7 @@ std::shared_ptr<arrow::Field> OptIntColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptIntColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
-    addOptionalsToBuider(column_->data(), builder);
+    addOptionalsToBuilder(column_->data(), builder);
     return throwOnResultKO(builder.Finish());
 }
 
@@ -193,45 +207,66 @@ std::shared_ptr<arrow::Field> OptMipBasisStatusColumnAdapter::makeField() const
 std::shared_ptr<arrow::Array> OptMipBasisStatusColumnAdapter::makeArray() const
 {
     arrow::UInt32Builder builder;
-    addOptionalsToBuider(to_optional_int(column_->data()), builder);
+    addOptionalsToBuilder(to_optional_int(column_->data()), builder);
     return throwOnResultKO(builder.Finish());
 }
 
-// ==========================
+// ===============================
 // Column adapter factory
-// ==========================
-std::shared_ptr<IColumnAdapter> makeColumnAdapter(const std::unique_ptr<IColumn>& column)
+// ===============================
+class ColumnAdapterFactory: public IColumnAdapterVisitor
 {
-    if (auto* c = dynamic_cast<StringColumn*>(column.get()))
+public:
+    std::shared_ptr<IColumnAdapter> visit(const StringColumn& col) override
     {
-        return std::make_shared<StringColumnAdapter>(c);
-    }
-    if (auto* c = dynamic_cast<DoubleColumn*>(column.get()))
-    {
-        return std::make_shared<DoubleColumnAdapter>(c);
-    }
-    if (auto* c = dynamic_cast<IntegralColumn<unsigned>*>(column.get()))
-    {
-        return std::make_shared<IntColumnAdapter>(c);
-    }
-    if (auto* c = dynamic_cast<OptionalColumn<std::string>*>(column.get()))
-    {
-        return std::make_shared<OptStringColumnAdapter>(c);
-    }
-    if (auto* c = dynamic_cast<OptionalColumn<double>*>(column.get()))
-    {
-        return std::make_shared<OptDoubleColumnAdapter>(c);
-    }
-    if (auto* c = dynamic_cast<OptionalColumn<unsigned>*>(column.get()))
-    {
-        return std::make_shared<OptIntColumnAdapter>(c);
-    }
-    if (auto* c = dynamic_cast<OptionalColumn<MipBasisStatus>*>(column.get()))
-    {
-        return std::make_shared<OptMipBasisStatusColumnAdapter>(c);
+        return std::make_shared<StringColumnAdapter>(&col);
     }
 
-    throw std::invalid_argument("makeColumnAdapter: column type unknown: " + column->name());
+    std::shared_ptr<IColumnAdapter> visit(const DoubleColumn& col) override
+    {
+        return std::make_shared<DoubleColumnAdapter>(&col);
+    }
+
+    std::shared_ptr<IColumnAdapter> visit(const IntegralColumn& col) override
+    {
+        return std::make_shared<IntColumnAdapter>(&col);
+    }
+
+    std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<std::string>& col) override
+    {
+        return std::make_shared<OptStringColumnAdapter>(&col);
+    }
+
+    std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<double>& col) override
+    {
+        return std::make_shared<OptDoubleColumnAdapter>(&col);
+    }
+
+    std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<unsigned>& col) override
+    {
+        return std::make_shared<OptIntColumnAdapter>(&col);
+    }
+
+    std::shared_ptr<IColumnAdapter> visit(const OptionalColumn<MipBasisStatus>& col) override
+    {
+        return std::make_shared<OptMipBasisStatusColumnAdapter>(&col);
+    }
+};
+
+std::shared_ptr<IColumnAdapter> makeColumnAdapter(const IColumn& column)
+{
+    ColumnAdapterFactory factory;
+
+    try
+    {
+        return column.accept(factory);
+    }
+    catch (const std::bad_cast& e)
+    {
+        // This shouldn't happen if all column types are properly registered
+        std::string err_msg = "makeColumnAdapter: column type unknown: " + column.name();
+        throw InvalidArgumentError(err_msg);
+    }
 }
 
 } // namespace Antares::Writer

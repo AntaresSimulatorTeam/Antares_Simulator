@@ -6,6 +6,7 @@
 
 #include <antares/study/study.h>
 
+#include "container-scope-defaults.h"
 #include "state.h"
 #include "variable.h"
 
@@ -31,7 +32,7 @@ struct VCardAllSetsOfAreas
         return "";
     }
 
-    //! The expecte results
+    //! Expected results configuration
     typedef Results<> ResultsType;
 
     //! Data Level
@@ -39,27 +40,19 @@ struct VCardAllSetsOfAreas
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
                                                  & Category::FileLevel::de;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +1;
-    //! Number of columns used by the variable (One ResultsType per column)
+    //! Number of columns used by the variable (one results configuration per column)
     static constexpr int columnCount = 0;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCard
 
-template<class NextT = Container::EndOfList>
-class SetsOfAreas
+template<class VariableList>
+class SetsOfAreas: public ContainerScopeDefaults
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
     //! VCard
     typedef VCardAllSetsOfAreas VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<SetsOfAreas<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -67,7 +60,7 @@ public:
     enum
     {
         //! How many items have we got
-        count = NextT::count,
+        count = VariableList::count,
     };
 
     template<int CDataLevel, int CFile>
@@ -75,7 +68,7 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics < CDataLevel,
+            count = VariableList::template Statistics < CDataLevel,
             CFile > ::count
         };
     };
@@ -101,29 +94,6 @@ public:
     //@}
 
     void initializeFromStudy(Data::Study& study);
-    void initializeFromArea(Data::Study*, Data::Area*);
-    void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
-    void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
-
-    void simulationBegin();
-    void simulationEnd();
-
-    void yearBegin(unsigned int year, unsigned int numSpace);
-
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace);
-
-    void yearEnd(unsigned int year, unsigned int numSpace);
-
-    void computeSummary(unsigned int year, unsigned int numSpace);
-
-    void hourBegin(unsigned int hourInTheYear);
-    void hourForEachArea(State& state, unsigned int numSpace);
-    void hourForEachLink(State& state);
-    void hourEnd(State& state, unsigned int hourInTheYear);
-
-    void weekBegin(State&);
-    void weekForEachArea(State&, unsigned int numSpace);
-    void weekEnd(State&);
 
     void buildSurveyReport(SurveyResults& results,
                            int dataLevel,
@@ -139,9 +109,6 @@ public:
     void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
 
     void beforeYearByYearExport(uint year, uint numSpace);
-
-    template<class I>
-    static void provideInformations(I& infos);
 
     template<class V>
     void yearEndSpatialAggregates(V& allVars, unsigned int year, unsigned int numSpace);
@@ -159,9 +126,6 @@ public:
     void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
 
     template<class VCardToFindT>
-    const double* retrieveHourlyResultsForCurrentYear() const;
-
-    template<class VCardToFindT>
     void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::Area* area);
 
@@ -173,14 +137,14 @@ public:
     void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::AreaLink* link);
 
-    const NextType* findSetById(const Data::Study::SetsOfAreas::IDType& setId) const;
+    const VariableList* findSetById(const Data::Study::SetsOfAreas::IDType& setId) const;
 
 public:
     //! Area list
-    typedef std::vector<std::unique_ptr<NextType>> SetOfAreasVector;
+    typedef std::vector<std::unique_ptr<VariableList>> SetOfAreasVector;
     //! Area list
     SetOfAreasVector pSetsOfAreas;
-    //! Reference to the origina set
+    //! Reference to the original set
     std::vector<const Data::Sets::SetAreasType*> pOriginalSets;
     //! The study
     const Data::Study* pStudy;

@@ -5,10 +5,13 @@
 
 #include <filesystem>
 #include <fstream>
+#include <utility>
 
-#include "antares/exception/RuntimeError.hpp"
+#include <antares/exception/InvalidArgumentError.hpp>
+#include <antares/exception/RuntimeError.hpp>
 
 using namespace Antares::IO::Outputs;
+using namespace Antares::Error;
 namespace fs = std::filesystem;
 
 namespace Antares::Writer
@@ -52,10 +55,9 @@ std::string make_line(const std::vector<std::string>& cols)
     return out;
 }
 
-CsvTableWriter::CsvTableWriter(std::filesystem::path& filePath):
+CsvTableWriter::CsvTableWriter(const std::filesystem::path& filePath):
     ITableWriter(filePath)
 {
-    output_file_.replace_extension(".csv");
 }
 
 void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
@@ -65,7 +67,7 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
 
     if (output_file_.empty())
     {
-        throw Antares::Error::RuntimeError("CsvTableWriter: empty output path");
+        throw InvalidArgumentError("CsvTableWriter: empty output path");
     }
 
     if (output_file_.has_parent_path())
@@ -76,8 +78,7 @@ void CsvTableWriter::writeTable(const SimulationTable& simuTable) const
     std::ofstream out(output_file_, std::ios::binary);
     if (!out)
     {
-        throw Antares::Error::RuntimeError("CsvTableWriter: cannot open output file: "
-                                           + output_file_.string());
+        throw RuntimeError("CsvTableWriter: cannot open output file: " + output_file_.string());
     }
 
     std::vector<std::string> names;
