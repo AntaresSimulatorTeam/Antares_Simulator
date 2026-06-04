@@ -86,7 +86,7 @@ void VariableNamer::RecordLegacyVariableInfo(unsigned index,
                                              const std::string& output,
                                              const std::string& component)
 {
-    legacyInfo_[index] = Antares::Optimization::LegacyVariableInfo{output, component, timeStep()};
+    legacyInfo_[index] = {output, component, timeStep()};
 }
 
 void Namer::SetLinkElementName(unsigned elementIndex, const std::string& elementType)
