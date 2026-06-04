@@ -12,7 +12,7 @@ namespace Antares::Optimization
 // at the same time as the variable name and stored parallel to NomDesVariables.
 struct LegacyVariableInfo
 {
-    std::string output;
+    std::string name;
     std::string component;
     unsigned timeIndex;
 };

@@ -95,7 +95,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
 
         simulationTable.addEntry({.block = block,
                                   .component = info->component,
-                                  .output = nameMapper.mapOutput(info->output),
+                                  .output = nameMapper.mapOutput(info->name),
                                   .absolute_time_index = info->timeIndex + 1,
                                   .block_time_index = blockTimeIndex,
                                   .scenario_index = fillContext.getYear(),
