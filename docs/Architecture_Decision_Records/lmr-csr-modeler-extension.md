@@ -5,22 +5,36 @@
 The **adequacy patch** (Antares v8.3+) applies two post-processing steps after the main weekly LP is solved:
 
 **LMR (Local Matching Rule):**  
-For each type-2 area A, computes `DENS(A,h) = max(0, ENS_init + net_position_type2_init)` analytically — no second LP solve.
+For each type-2 area A, computes `DENS(A,h) = max(0, ENS_init + net_position_type2_init)`
+analytically from the main LP solution — no second LP solve.  
+Implementation: `calculateAreaFlowBalance()` in
+`src/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.cpp:38`,
+called from `CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()`
+in `src/solver/optimisation/post_process_commands.cpp:249`.
 
 **CSR (Curtailment Sharing Rule):**  
-For each hour where `Σ_A ENS(A,h) > threshold`, solves a small hourly QP over the type-2 subnetwork with decision variables `{ENS(A), Spillage(A), Flow(A,B)}`.
+For each hour where `Σ_A ENS(A,h) > threshold`
+(`post_process_commands.cpp:292` `identifyHoursForCurtailmentSharing`), solves a small hourly
+QP over the type-2 subnetwork with decision variables `{ENS(A), Spillage(A), Flow(A,B)}`
+(`post_process_commands.cpp:239`, `HourlyCSRProblem::run()`).
 
-The QP has three structural constraints per area:
+The QP has three structural constraints per area, with LHS built in
+`src/solver/optimisation/adequacy_patch_csr/csr_quadratic_problem.cpp`
+and RHS set in
+`src/solver/optimisation/adequacy_patch_csr/construct_problem_constraints_RHS.cpp`:
 
-| Constraint | Current formula |
-|---|---|
-| Area balance | `ENS + net_pos_type2 − Spillage = ENS_init + net_pos_type2_init − Spillage_init` |
-| Fictitious load (`Spillage ≤ ?`) | `STt − (1−BT)·STmint + BH·(Ht + STS_net) + BF·(Ft−Lt)` |
-| Max ENS (`ENS ≤ ?`) | `ConsommationsAbattues + max(0, AllMustRunGeneration) + ε` |
+| Constraint | LHS function | RHS function | Current RHS formula |
+|---|---|---|---|
+| Area balance | `setNodeBalanceConstraints` (`:42`) | `setRHSnodeBalanceValue` (`:32`) | `ENS_init + net_pos_type2_init − Spillage_init` |
+| Fictitious load (`Spillage ≤ ?`) | `setFictitiousLoadConstraints` (`:92`) | `setRHSfictitiousLoadValue` (`:59`) | `STt − (1−BT)·STmint + BH·(Ht + STS_net) + BF·(Ft−Lt)` |
+| Max ENS (`ENS ≤ ?`) | `setMaxEnsLoadConstraints` (`:112`) | `setRHSMaxEnsLoadValue` (`:154`) | `ConsommationsAbattues + max(0, AllMustRunGeneration) + ε` |
 
 ## Problem
 
-The **Modeler** (GEMS) allows custom components to connect to legacy areas. A component with an area connection modifies three LP constraints in the main weekly LP via `ComponentToAreaConnectionFiller::addConstraints()`:
+The **Modeler** (GEMS) allows custom components to connect to legacy areas. A component with an
+area connection modifies three LP constraints in the main weekly LP via
+`ComponentToAreaConnectionFiller::addConstraints()`
+(`src/solver/optimisation/ComponentToAreaConnectionFiller.cpp:183`):
 
 ```
 inject_to_balance       →  NumeroDeContrainteDesBilansPays
@@ -109,8 +123,8 @@ if (load >= 0.)
 
 ## What does not change
 
-- **DENS computation** (`calculateAreaFlowBalance` in `adq_patch_curtailment_sharing.cpp`): DENS is based on `ENS_init + net_position_type2_init`, which already reflects the Modeler's contribution via the main LP solution. No change needed.
-- **CSR area balance RHS** (`setRHSnodeBalanceValue`): same reasoning — already correct through the observable triple.
+- **DENS computation** (`adq_patch_curtailment_sharing.cpp:38`): DENS is based on `ENS_init + net_position_type2_init`, which already reflects the Modeler's contribution via the main LP solution. No change needed.
+- **CSR area balance RHS** (`construct_problem_constraints_RHS.cpp:32`): same reasoning — already correct through the observable triple.
 - **Legacy CSR formulas** (BT/BH/BF terms): untouched.
 
 ## Files to modify
