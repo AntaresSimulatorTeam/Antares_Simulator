@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <cassert>
 #include <mutex>
 #include <optional>
 
@@ -71,16 +72,12 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
     const unsigned int block = currentBlock + 1;
 
-    const auto infoSize = problem.LegacyVariablesInfo.size();
-    const auto valuesSize = problem.X.size();
+    // LegacyVariablesInfo and X are both sized to NombreDeVariables in resizeProbleme,
+    // so indexing by [0, NombreDeVariables) below is always in bounds.
+    assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
+           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
-        if (static_cast<std::size_t>(index) >= infoSize
-            || static_cast<std::size_t>(index) >= valuesSize)
-        {
-            continue;
-        }
-
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
         if (!info)
         {
