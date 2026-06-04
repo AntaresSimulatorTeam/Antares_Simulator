@@ -7,7 +7,7 @@ set(ANTARES_VERSION_REVISION 1)
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 1)
+set(ANTARES_RC 0)
 
 set(ANTARES_VERSION_YEAR 2026)
 
@@ -135,7 +135,7 @@ endif (WIN32)
 # symbols. --start-group/--end-group tells ld to re-scan until all are resolved.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_link_options("LINKER:--start-group")
-endif()
+endif ()
 
 #
 # Beta
