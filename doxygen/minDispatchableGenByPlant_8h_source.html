@@ -132,7 +132,7 @@ $(document).ready(function(){initNavTree('minDispatchableGenByPlant_8h_source.ht
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;DispatchablePlantByCluster_base.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="DispatchablePlantByCluster__base_8h.html">DispatchablePlantByCluster_base.h</a>&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Economy</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
@@ -153,37 +153,33 @@ $(document).ready(function(){initNavTree('minDispatchableGenByPlant_8h_source.ht
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;Min power by cluster&quot;</span>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setHourlyValuesForCurrentYear(std::vector&lt;IntermediateValues&gt;&amp; clusterValues,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                              <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state)</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keyword">auto</span>&amp; area = state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640">area</a>;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">auto</span>&amp; thermal = state.thermal;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster: area-&gt;thermal.list.each_enabled())</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <span class="keywordtype">double</span> minGen = cluster-&gt;PthetaInf[state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910">hourInTheYear</a>];</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="keywordtype">double</span> production = thermal[area-&gt;index]</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                  .thermalClustersProductions[cluster-&gt;enabledIndex];</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            clusterValues[cluster-&gt;enabledIndex].hour[state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910">hourInTheYear</a>] += std::min(production,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                                                                       minGen);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">using</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase.html">VCardMinDispatchableGenByPlant</a> = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase.html">VCardDispatchablePlantByClusterBase</a>&lt;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlantTraits.html">MinDispatchableGenByPlantTraits</a>&gt;;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setHourlyValue(std::vector&lt;IntermediateValues&gt;&amp; clusterValues,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                               <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                               [[maybe_unused]] <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">auto</span>&amp; area = state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640">area</a>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keyword">auto</span>&amp; thermal = state.thermal;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; cluster: area-&gt;thermal.list.each_enabled())</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="keywordtype">double</span> minGen = cluster-&gt;PthetaInf[state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910">hourInTheYear</a>];</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            <span class="keywordtype">double</span> production = thermal[area-&gt;index]</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                  .thermalClustersProductions[cluster-&gt;enabledIndex];</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            clusterValues[cluster-&gt;enabledIndex].hour[state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910">hourInTheYear</a>] += std::min(production,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                                                                       minGen);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html">MinDispatchableGenByPlant</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html">DispatchablePlantByClusterBase&lt;MinDispatchableGenByPlantTraits&gt;</a>;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html">MinDispatchableGenByPlant</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html">DispatchablePlantByClusterBase</a>&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlantTraits.html">MinDispatchableGenByPlantTraits</a>,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                                                 NextT&gt;;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html">Antares::Solver::Variable::Economy::DispatchablePlantByClusterBase</a></div><div class="ttdef"><b>Definition:</b> DispatchablePlantByCluster_base.h:75</div></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
+<div class="ttc" id="aDispatchablePlantByCluster__base_8h_html"><div class="ttname"><a href="DispatchablePlantByCluster__base_8h.html">DispatchablePlantByCluster_base.h</a></div><div class="ttdoc">Base class for dispatchable plant by cluster variables.</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html">Antares::Solver::Variable::Economy::DispatchablePlantByClusterBase</a></div><div class="ttdef"><b>Definition:</b> DispatchablePlantByCluster_base.h:97</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:55</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html_a0531f1e1a845ea1ab8ff7c248b7bf640"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html#a0531f1e1a845ea1ab8ff7c248b7bf640">Antares::Solver::Variable::State::area</a></div><div class="ttdeci">Data::Area * area</div><div class="ttdoc">The current area.</div><div class="ttdef"><b>Definition:</b> state.h:163</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html_afc3a39910241f7d1a8e83c54e872a910"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910">Antares::Solver::Variable::State::hourInTheYear</a></div><div class="ttdeci">unsigned int hourInTheYear</div><div class="ttdoc">Current hour in the year (zero-based)</div><div class="ttdef"><b>Definition:</b> state.h:156</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlantTraits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MinDispatchableGenByPlantTraits.html">Antares::Solver::Variable::Economy::MinDispatchableGenByPlantTraits</a></div><div class="ttdef"><b>Definition:</b> minDispatchableGenByPlant.h:11</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase.html">Antares::Solver::Variable::Economy::VCardDispatchablePlantByClusterBase</a></div><div class="ttdef"><b>Definition:</b> DispatchablePlantByCluster_base.h:15</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

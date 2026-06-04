@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['generation_2eh_3855',['generation.h',['../generation_8h.html',1,'']]]
+  ['dispatchableplantbycluster_5fbase_2eh_3631',['DispatchablePlantByCluster_base.h',['../DispatchablePlantByCluster__base_8h.html',1,'']]],
+  ['dynamic_5fmulti_5fcolumn_5fbase_2eh_3632',['dynamic_multi_column_base.h',['../dynamic__multi__column__base_8h.html',1,'']]]
 ];

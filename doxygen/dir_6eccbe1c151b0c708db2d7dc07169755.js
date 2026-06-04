@@ -12,9 +12,9 @@ var dir_6eccbe1c151b0c708db2d7dc07169755 =
     [ "bindConstraints.h", "bindConstraints_8h_source.html", null ],
     [ "bindConstraints.hxx", "bindConstraints_8hxx_source.html", null ],
     [ "categories.h", "categories_8h_source.html", null ],
+    [ "container-scope-defaults.h", "container-scope-defaults_8h_source.html", null ],
     [ "container.h", "solver_2variable_2include_2antares_2solver_2variable_2container_8h_source.html", null ],
     [ "container.hxx", "solver_2variable_2include_2antares_2solver_2variable_2container_8hxx_source.html", null ],
-    [ "endoflist.h", "endoflist_8h_source.html", null ],
     [ "info.h", "info_8h_source.html", null ],
     [ "print.h", "print_8h_source.html", null ],
     [ "setofareas.h", "setofareas_8h_source.html", null ],
@@ -22,6 +22,7 @@ var dir_6eccbe1c151b0c708db2d7dc07169755 =
     [ "state.h", "state_8h_source.html", null ],
     [ "state.hxx", "state_8hxx_source.html", null ],
     [ "surveyresults.h", "surveyresults_8h_source.html", null ],
+    [ "tuple_variable_list.h", "tuple__variable__list_8h_source.html", null ],
     [ "variable.h", "solver_2variable_2include_2antares_2solver_2variable_2variable_8h_source.html", null ],
     [ "variable.hxx", "variable_8hxx_source.html", null ]
 ];

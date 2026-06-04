@@ -1,13 +1,13 @@
 var structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation =
 [
-    [ "NextType", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae75c526742c65aca4a309c6c16561506", null ],
-    [ "buildSurveyReport", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ae3ac30a527c9f15bc40503e58added6b", null ],
-    [ "initializeFromStudy", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a622ac0eef11558ca6d7597d63495651f", null ],
-    [ "merge", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a259a2d881d92d9432aa0133343e9a273", null ],
-    [ "reset", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ada37935b4e18bad9341852d49456baf0", null ],
-    [ "stdDeviationDaily", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#aed37a620f52b81f5ed215d2f4b3bd18a", null ],
-    [ "stdDeviationHourly", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a010d69528b95fd6e9d32611d597f605d", null ],
-    [ "stdDeviationMonthly", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a020057f73f46233b224a00499c7f32ab", null ],
-    [ "stdDeviationWeekly", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#abd0753b91b382df30b7c6e028d8684a5", null ],
-    [ "stdDeviationYear", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7eced0a5c80c17d3b3fd318d40662509", null ]
+    [ "buildDigest", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a0de1d01409f3b1f8a6f94ae35f524367", null ],
+    [ "buildSurveyReport", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a680c5efd3e282a80888753ebbbea70cf", null ],
+    [ "initializeFromStudy", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a80e2f90b5e256be87faf540032fa199b", null ],
+    [ "merge", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a45abcaac534af258935ce7abe6f3bbd5", null ],
+    [ "reset", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#ac78c0984163b709bf4f00abcb02c28f1", null ],
+    [ "stdDeviationDaily", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a7248c7ae0f264e828923ef90929f90b4", null ],
+    [ "stdDeviationHourly", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a8bb00ce601a2e6458f1b8053163a7cc8", null ],
+    [ "stdDeviationMonthly", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a2114c6c41e549a6d5280c51e7b09ba55", null ],
+    [ "stdDeviationWeekly", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a26eeb924187492712f7f4bf64c2bb143", null ],
+    [ "stdDeviationYear", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html#a26702e02fadf30c17a6c8317789b09c7", null ]
 ];

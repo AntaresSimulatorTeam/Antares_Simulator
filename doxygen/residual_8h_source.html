@@ -132,7 +132,7 @@ $(document).ready(function(){initNavTree('residual_8h_source.html',''); initResi
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;economy_base.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="economy__base_8h.html">economy_base.h</a>&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Economy</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
@@ -153,54 +153,56 @@ $(document).ready(function(){initNavTree('residual_8h_source.html',''); initResi
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">return</span> <span class="stringliteral">&quot;Residual load&quot;</span>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">ResultsType</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;      <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average&lt;R::AllYears::StdDeviation&lt;R::AllYears::Min&lt;R::AllYears::Max&lt;&gt;</a>&gt;&gt;&gt;&gt;;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">static</span> constexpr uint8_t decimal = 0;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">static</span> constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">using</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> = <a class="code" href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a>*;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> initializeFromArea(<a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a>&amp; area, <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* inputArea)</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        area = inputArea;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> checkCondition(<a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp;)</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordflow">return</span> area != <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">ResultsProfile</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">StandardResults&lt;&gt;</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">static</span> constexpr uint8_t decimal = 0;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">static</span> constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">using</span> <a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> = <a class="code" href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a>*;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> initializeFromArea(<a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a>&amp; area, <a class="code" href="classAntares_1_1Data_1_1Study.html">Data::Study</a>*, <a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* inputArea)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        area = inputArea;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">double</span> value(<a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a5972c793b0f194945211997825562594">problemeHebdo</a>-&gt;ConsommationsAbattues[state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a99786f5083293932efe8934c74c0e1d7">hourInTheWeek</a>]</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;          .ConsommationAbattueDuPays[area-&gt;index];</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">double</span> value(<a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area, <span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a5972c793b0f194945211997825562594">problemeHebdo</a>-&gt;ConsommationsAbattues[state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#a99786f5083293932efe8934c74c0e1d7">hourInTheWeek</a>]</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;          .ConsommationAbattueDuPays[area-&gt;index];</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> computeStats(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; intermediateValues)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        intermediateValues.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">computeStatisticsForTheCurrentYear</a>();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> setHourlyValue(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; iv,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                               <a class="code" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                               <span class="keyword">const</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a>&amp; state,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                               <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">if</span> (area != <span class="keyword">nullptr</span>)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            iv[state.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910">hourInTheYear</a>] = value(area, state);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        }</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;};</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">using</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html">VCardResidualLoad</a> = <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html">VCard_Base&lt;ResidualLoadTraits&gt;</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> NextT = Container::EndOfList&gt;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html">ResidualLoad</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html">Economy_Base&lt;ResidualLoadTraits, NextT&gt;</a>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> computeStats(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&amp; intermediateValues)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        intermediateValues.<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">computeStatisticsForTheCurrentYear</a>();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html">ResidualLoad</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html">EconomyVariableBase&lt;ResidualLoadTraits&gt;</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Economy</span></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:35</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1Study_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a></div><div class="ttdoc">Antares Study.</div><div class="ttdef"><b>Definition:</b> study.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Economy__Base.html">Antares::Solver::Variable::Economy::Economy_Base</a></div><div class="ttdoc">Base class for economy variables like LOLP and LOLD.</div><div class="ttdef"><b>Definition:</b> economy_base.h:116</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html">Antares::Solver::Variable::Economy::EconomyVariableBase</a></div><div class="ttdoc">Base class for area-level economy variables like LOLP and LOLD.</div><div class="ttdef"><b>Definition:</b> economy_base.h:201</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">Antares::Solver::Variable::IntermediateValues</a></div><div class="ttdoc">Temporary buffer for allocating results for a single year.</div><div class="ttdef"><b>Definition:</b> intermediate.h:25</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1IntermediateValues_html_ade98373f7d78dd65f18947cc28edb746"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html#ade98373f7d78dd65f18947cc28edb746">Antares::Solver::Variable::IntermediateValues::computeStatisticsForTheCurrentYear</a></div><div class="ttdeci">void computeStatisticsForTheCurrentYear()</div><div class="ttdoc">Compute statistics for the current year.</div><div class="ttdef"><b>Definition:</b> intermediate.cpp:52</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:27</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Results_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Antares::Solver::Variable::Results</a></div><div class="ttdef"><b>Definition:</b> results.h:59</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html">Antares::Solver::Variable::State</a></div><div class="ttdef"><b>Definition:</b> state.h:55</div></div>
-<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html_a5972c793b0f194945211997825562594"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html#a5972c793b0f194945211997825562594">Antares::Solver::Variable::State::problemeHebdo</a></div><div class="ttdeci">PROBLEME_HEBDO * problemeHebdo</div><div class="ttdoc">Probleme Hebdo.</div><div class="ttdef"><b>Definition:</b> state.h:296</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html_a5972c793b0f194945211997825562594"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html#a5972c793b0f194945211997825562594">Antares::Solver::Variable::State::problemeHebdo</a></div><div class="ttdeci">PROBLEME_HEBDO * problemeHebdo</div><div class="ttdoc">Probleme Hebdo.</div><div class="ttdef"><b>Definition:</b> state.h:293</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html_a99786f5083293932efe8934c74c0e1d7"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html#a99786f5083293932efe8934c74c0e1d7">Antares::Solver::Variable::State::hourInTheWeek</a></div><div class="ttdeci">unsigned int hourInTheWeek</div><div class="ttdoc">Current hour in the week (zero-based)</div><div class="ttdef"><b>Definition:</b> state.h:158</div></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1State_html_afc3a39910241f7d1a8e83c54e872a910"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910">Antares::Solver::Variable::State::hourInTheYear</a></div><div class="ttdeci">unsigned int hourInTheYear</div><div class="ttdoc">Current hour in the year (zero-based)</div><div class="ttdef"><b>Definition:</b> state.h:156</div></div>
+<div class="ttc" id="aeconomy__base_8h_html"><div class="ttname"><a href="economy__base_8h.html">economy_base.h</a></div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ResidualLoadTraits.html">Antares::Solver::Variable::Economy::ResidualLoadTraits</a></div><div class="ttdef"><b>Definition:</b> residual.h:11</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__Base.html">Antares::Solver::Variable::Economy::VCard_Base</a></div><div class="ttdef"><b>Definition:</b> economy_base.h:57</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

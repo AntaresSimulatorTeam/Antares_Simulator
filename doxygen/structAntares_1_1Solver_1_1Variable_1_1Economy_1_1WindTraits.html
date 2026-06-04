@@ -130,47 +130,19 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <div class="title">Antares::Solver::Variable::Economy::WindTraits Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Traits for wind generation time series.  
- <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="generation_8h_source.html">generation.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for Antares::Solver::Variable::Economy::WindTraits:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.png" usemap="#Antares::Solver::Variable::Economy::WindTraits_map" alt=""/>
-  <map id="Antares::Solver::Variable::Economy::WindTraits_map" name="Antares::Solver::Variable::Economy::WindTraits_map">
-<area href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_3_01WindTag_01_4.html" title="Specialization mapping WindTag to WindTraits." alt="Antares::Solver::Variable::Economy::GenerationTraits&lt; WindTag &gt;" shape="rect" coords="0,56,383,80"/>
-  </map>
-</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a687e24d67bfedbc73f612e7bc75504ea"><td class="memItemLeft" align="right" valign="top"><a id="a687e24d67bfedbc73f612e7bc75504ea"></a>
-static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#a687e24d67bfedbc73f612e7bc75504ea">kCaption</a> = &quot;WIND&quot;</td></tr>
-<tr class="memdesc:a687e24d67bfedbc73f612e7bc75504ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display name for wind generation in outputs and GUI. <br /></td></tr>
+static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>kCaption</b> = &quot;WIND&quot;</td></tr>
 <tr class="separator:a687e24d67bfedbc73f612e7bc75504ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba17bf0eaa3bf7a0451eb0f7747e8e3a"><td class="memItemLeft" align="right" valign="top">static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#aba17bf0eaa3bf7a0451eb0f7747e8e3a">kDescription</a></td></tr>
-<tr class="memdesc:aba17bf0eaa3bf7a0451eb0f7747e8e3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Descriptive text (preserving original typo for stability)  <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#aba17bf0eaa3bf7a0451eb0f7747e8e3a">More...</a><br /></td></tr>
+<tr class="memitem:aba17bf0eaa3bf7a0451eb0f7747e8e3a"><td class="memItemLeft" align="right" valign="top">static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>kDescription</b></td></tr>
 <tr class="separator:aba17bf0eaa3bf7a0451eb0f7747e8e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a5d42636110be1ccb973e28c448ad77"><td class="memItemLeft" align="right" valign="top"><a id="a2a5d42636110be1ccb973e28c448ad77"></a>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>areaMember</b> = &amp;<a class="el" href="classAntares_1_1Data_1_1Area.html#af593b90ffde0b3e1d025f99fa654161e">Data::Area::wind</a></td></tr>
 <tr class="separator:a2a5d42636110be1ccb973e28c448ad77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Traits for wind generation time series. </p>
-<ul>
-<li>Defines the specific characteristics of wind generation variables:</li>
-<li>Caption: "WIND" (as displayed in outputs)</li>
-<li>Description: Descriptive text for documentation* - Area Member: Points to <a class="el" href="classAntares_1_1Data_1_1Area.html#af593b90ffde0b3e1d025f99fa654161e" title="Wind time-series and Wind prepro data.">Data::Area::wind</a> for</li>
-<li>Description: Descriptive text for documentation</li>
-<li>Area Member: Points to <a class="el" href="classAntares_1_1Data_1_1Area.html#af593b90ffde0b3e1d025f99fa654161e" title="Wind time-series and Wind prepro data.">Data::Area::wind</a> for data access</li>
-<li>## Data Access: The areaMember pointer allows type-safe access to the correct area data: <div class="fragment"><div class="line"><span class="keyword">auto</span>&amp; windData = (area-&gt;*WindTraits::areaMember);</div>
-<div class="line"><span class="comment">// Equivalent to: auto&amp; windData = area-&gt;wind;</span></div>
-</div><!-- fragment --> </li>
-</ul>
-</div><h2 class="groupheader">Member Data Documentation</h2>
+<h2 class="groupheader">Member Data Documentation</h2>
 <a id="aba17bf0eaa3bf7a0451eb0f7747e8e3a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba17bf0eaa3bf7a0451eb0f7747e8e3a">&#9670;&nbsp;</a></span>kDescription</h2>
 
@@ -193,8 +165,6 @@ static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>area
 <b>Initial value:</b><div class="fragment"><div class="line">= <span class="stringliteral">&quot;Wind generation, thoughout all MC &quot;</span></div>
 <div class="line">                                                            <span class="stringliteral">&quot;years&quot;</span></div>
 </div><!-- fragment -->
-<p>Descriptive text (preserving original typo for stability) </p>
-
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>

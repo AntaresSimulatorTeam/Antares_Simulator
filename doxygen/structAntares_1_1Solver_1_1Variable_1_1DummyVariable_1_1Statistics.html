@@ -124,19 +124,50 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structAntares_1_1Solver_1_1Variable_1_1DummyVariable_1_1Statistics-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Solver::Variable::DummyVariable::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a246b8b503af2303e9ce0e5baf4a7c288"><td class="memItemLeft" align="right" valign="top"><a id="a246b8b503af2303e9ce0e5baf4a7c288"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>count</b>
- }</td></tr>
-<tr class="separator:a246b8b503af2303e9ce0e5baf4a7c288"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:aa5d3cdc24ef0e8421da346cbd2693bb8"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>count</b></td></tr>
+<tr class="separator:aa5d3cdc24ef0e8421da346cbd2693bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa5d3cdc24ef0e8421da346cbd2693bb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5d3cdc24ef0e8421da346cbd2693bb8">&#9670;&nbsp;</a></span>count</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int CDataLevel, int CFile&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1DummyVariable_1_1Statistics.html">Antares::Solver::Variable::DummyVariable::Statistics</a>&lt; CDataLevel, CFile &gt;::count</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= ((<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a32722f7b330d535df6747f85f4380f5c">VCardType::categoryDataLevel</a> &amp; CDataLevel</div>
+<div class="line">                                       &amp;&amp; <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#ab9f1f29600cb0f642d99098e80409f59">VCardType::categoryFileLevel</a> &amp; CFile)</div>
+<div class="line">                                        ? <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a6d8829bed5ef4973b7f42411857a30be">VCardType::columnCount</a> * ResultsType::count</div>
+<div class="line">                                        : 0)</div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable_html_a32722f7b330d535df6747f85f4380f5c"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a32722f7b330d535df6747f85f4380f5c">Antares::Solver::Variable::VCardDummyVariable::categoryDataLevel</a></div><div class="ttdeci">static constexpr uint8_t categoryDataLevel</div><div class="ttdoc">Data Level.</div><div class="ttdef"><b>Definition:</b> dummyVariable.h:37</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable_html_a6d8829bed5ef4973b7f42411857a30be"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a6d8829bed5ef4973b7f42411857a30be">Antares::Solver::Variable::VCardDummyVariable::columnCount</a></div><div class="ttdeci">static constexpr int columnCount</div><div class="ttdoc">Number of columns used by the variable (One ResultsType per column)</div><div class="ttdef"><b>Definition:</b> dummyVariable.h:47</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable_html_ab9f1f29600cb0f642d99098e80409f59"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#ab9f1f29600cb0f642d99098e80409f59">Antares::Solver::Variable::VCardDummyVariable::categoryFileLevel</a></div><div class="ttdeci">static constexpr uint8_t categoryFileLevel</div><div class="ttdoc">File level (provided by the type of the results)</div><div class="ttdef"><b>Definition:</b> dummyVariable.h:39</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/tests/src/solver/variable/<a class="el" href="dummyVariable_8h_source.html">dummyVariable.h</a></li>
 </ul>

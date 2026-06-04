@@ -132,35 +132,33 @@ $(document).ready(function(){initNavTree('SymmetryFieldBaseVisitor_8h_source.htm
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;SymmetryFieldVisitor.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;antlr4-runtime.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;SymmetryFieldVisitor.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classSymmetryFieldBaseVisitor.html">   15</a></span>&#160;<span class="keyword">class  </span><a class="code" href="classSymmetryFieldBaseVisitor.html">SymmetryFieldBaseVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymmetryFieldVisitor.html">SymmetryFieldVisitor</a> {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classSymmetryFieldBaseVisitor.html#ad837fec22cab09258fa7514adf7197f3">   18</a></span>&#160;  <span class="keyword">virtual</span> std::any <a class="code" href="classSymmetryFieldBaseVisitor.html#ad837fec22cab09258fa7514adf7197f3">visitSymmetryField</a>(<a class="code" href="classSymmetryFieldParser_1_1SymmetryFieldContext.html">SymmetryFieldParser::SymmetryFieldContext</a> *ctx)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> visitChildren(ctx);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  }</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keyword">virtual</span> std::any visitElementList(<a class="code" href="classSymmetryFieldParser_1_1ElementListContext.html">SymmetryFieldParser::ElementListContext</a> *ctx)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordflow">return</span> visitChildren(ctx);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  }</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classSymmetryFieldBaseVisitor.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymmetryFieldBaseVisitor.html">SymmetryFieldBaseVisitor</a>: <span class="keyword">public</span> <a class="code" href="classSymmetryFieldVisitor.html">SymmetryFieldVisitor</a></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classSymmetryFieldBaseVisitor.html#ad837fec22cab09258fa7514adf7197f3">   16</a></span>&#160;    <span class="keyword">virtual</span> std::any <a class="code" href="classSymmetryFieldBaseVisitor.html#ad837fec22cab09258fa7514adf7197f3">visitSymmetryField</a>(<a class="code" href="classSymmetryFieldParser_1_1SymmetryFieldContext.html">SymmetryFieldParser::SymmetryFieldContext</a>* ctx)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> visitChildren(ctx);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    }</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">virtual</span> std::any visitElementList(<a class="code" href="classSymmetryFieldParser_1_1ElementListContext.html">SymmetryFieldParser::ElementListContext</a>* ctx)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordflow">return</span> visitChildren(ctx);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">virtual</span> std::any visitElement(<a class="code" href="classSymmetryFieldParser_1_1ElementContext.html">SymmetryFieldParser::ElementContext</a> *ctx)<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">return</span> visitChildren(ctx);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  }</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;};</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="ttc" id="aclassSymmetryFieldBaseVisitor_html"><div class="ttname"><a href="classSymmetryFieldBaseVisitor.html">SymmetryFieldBaseVisitor</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldBaseVisitor.h:15</div></div>
-<div class="ttc" id="aclassSymmetryFieldBaseVisitor_html_ad837fec22cab09258fa7514adf7197f3"><div class="ttname"><a href="classSymmetryFieldBaseVisitor.html#ad837fec22cab09258fa7514adf7197f3">SymmetryFieldBaseVisitor::visitSymmetryField</a></div><div class="ttdeci">virtual std::any visitSymmetryField(SymmetryFieldParser::SymmetryFieldContext *ctx) override</div><div class="ttdef"><b>Definition:</b> SymmetryFieldBaseVisitor.h:18</div></div>
-<div class="ttc" id="aclassSymmetryFieldParser_1_1ElementContext_html"><div class="ttname"><a href="classSymmetryFieldParser_1_1ElementContext.html">SymmetryFieldParser::ElementContext</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldParser.h:76</div></div>
-<div class="ttc" id="aclassSymmetryFieldParser_1_1ElementListContext_html"><div class="ttname"><a href="classSymmetryFieldParser_1_1ElementListContext.html">SymmetryFieldParser::ElementListContext</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldParser.h:60</div></div>
-<div class="ttc" id="aclassSymmetryFieldParser_1_1SymmetryFieldContext_html"><div class="ttname"><a href="classSymmetryFieldParser_1_1SymmetryFieldContext.html">SymmetryFieldParser::SymmetryFieldContext</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldParser.h:43</div></div>
-<div class="ttc" id="aclassSymmetryFieldVisitor_html"><div class="ttname"><a href="classSymmetryFieldVisitor.html">SymmetryFieldVisitor</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldVisitor.h:16</div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">virtual</span> std::any visitElement(<a class="code" href="classSymmetryFieldParser_1_1ElementContext.html">SymmetryFieldParser::ElementContext</a>* ctx)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">return</span> visitChildren(ctx);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
+<div class="ttc" id="aclassSymmetryFieldBaseVisitor_html"><div class="ttname"><a href="classSymmetryFieldBaseVisitor.html">SymmetryFieldBaseVisitor</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldBaseVisitor.h:14</div></div>
+<div class="ttc" id="aclassSymmetryFieldBaseVisitor_html_ad837fec22cab09258fa7514adf7197f3"><div class="ttname"><a href="classSymmetryFieldBaseVisitor.html#ad837fec22cab09258fa7514adf7197f3">SymmetryFieldBaseVisitor::visitSymmetryField</a></div><div class="ttdeci">virtual std::any visitSymmetryField(SymmetryFieldParser::SymmetryFieldContext *ctx) override</div><div class="ttdef"><b>Definition:</b> SymmetryFieldBaseVisitor.h:16</div></div>
+<div class="ttc" id="aclassSymmetryFieldParser_1_1ElementContext_html"><div class="ttname"><a href="classSymmetryFieldParser_1_1ElementContext.html">SymmetryFieldParser::ElementContext</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldParser.h:82</div></div>
+<div class="ttc" id="aclassSymmetryFieldParser_1_1ElementListContext_html"><div class="ttname"><a href="classSymmetryFieldParser_1_1ElementListContext.html">SymmetryFieldParser::ElementListContext</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldParser.h:66</div></div>
+<div class="ttc" id="aclassSymmetryFieldParser_1_1SymmetryFieldContext_html"><div class="ttname"><a href="classSymmetryFieldParser_1_1SymmetryFieldContext.html">SymmetryFieldParser::SymmetryFieldContext</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldParser.h:49</div></div>
+<div class="ttc" id="aclassSymmetryFieldVisitor_html"><div class="ttname"><a href="classSymmetryFieldVisitor.html">SymmetryFieldVisitor</a></div><div class="ttdef"><b>Definition:</b> SymmetryFieldVisitor.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

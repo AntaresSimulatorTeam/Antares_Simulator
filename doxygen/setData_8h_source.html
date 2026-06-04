@@ -213,41 +213,41 @@ $(document).ready(function(){initNavTree('setData_8h_source.html',''); initResiz
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> appendToSurvey(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; survey, Category::Precision precision) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> processGroups(<span class="keyword">const</span> std::vector&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average&lt;&gt;</a>&gt;&amp; average,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                       <span class="keyword">const</span> std::vector&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation&lt;&gt;</a>&gt;&amp; stdDev,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                       <span class="keyword">const</span> std::vector&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html">R::AllYears::MinMaxBase&lt;true&gt;</a>&gt;&amp; min,</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                       <span class="keyword">const</span> std::vector&lt;<a class="code" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html">R::AllYears::MinMaxBase&lt;false&gt;</a>&gt;&amp; max,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> processGroups(<span class="keyword">const</span> std::vector&lt;R::AllYears::Average&gt;&amp; average,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                       <span class="keyword">const</span> std::vector&lt;R::AllYears::StdDeviation&gt;&amp; stdDev,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                       <span class="keyword">const</span> std::vector&lt;R::AllYears::Min&gt;&amp; min,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                       <span class="keyword">const</span> std::vector&lt;R::AllYears::Max&gt;&amp; max,</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                       <span class="keyword">const</span> std::set&lt;std::string&gt;&amp; groupNames,</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                       <span class="keyword">const</span> Category::Precision&amp; precision,</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                       <span class="keyword">const</span> std::string&amp; suffix,</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                       <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a>&amp; survey) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;true&gt;&gt; minThermal_;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;false&gt;&gt; maxThermal_;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::vector&lt;R::AllYears::Min&gt; minThermal_;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    std::vector&lt;R::AllYears::Max&gt; maxThermal_;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;true&gt;&gt; minRenewable_;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;false&gt;&gt; maxRenewable_;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::vector&lt;R::AllYears::Min&gt; minRenewable_;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    std::vector&lt;R::AllYears::Max&gt; maxRenewable_;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;true&gt;&gt; minStsInjection_;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;false&gt;&gt; maxStsInjection_;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    std::vector&lt;R::AllYears::Min&gt; minStsInjection_;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::vector&lt;R::AllYears::Max&gt; maxStsInjection_;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;true&gt;&gt; minStsWithdrawal_;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;false&gt;&gt; maxStsWithdrawal_;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    std::vector&lt;R::AllYears::Min&gt; minStsWithdrawal_;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    std::vector&lt;R::AllYears::Max&gt; maxStsWithdrawal_;</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;true&gt;&gt; minStsLevel_;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    std::vector&lt;R::AllYears::MinMaxBase&lt;false&gt;&gt; maxStsLevel_;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::vector&lt;R::AllYears::Min&gt; minStsLevel_;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    std::vector&lt;R::AllYears::Max&gt; maxStsLevel_;</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    std::vector&lt;R::AllYears::Average&lt;&gt;&gt; averageThermal_;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    std::vector&lt;R::AllYears::Average&lt;&gt;&gt; averageRenewable_;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    std::vector&lt;R::AllYears::Average&lt;&gt;&gt; averageStsInjection_;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    std::vector&lt;R::AllYears::Average&lt;&gt;&gt; averageStsWithdrawal_;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    std::vector&lt;R::AllYears::Average&lt;&gt;&gt; averageStsLevel_;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    std::vector&lt;R::AllYears::Average&gt; averageThermal_;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    std::vector&lt;R::AllYears::Average&gt; averageRenewable_;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    std::vector&lt;R::AllYears::Average&gt; averageStsInjection_;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    std::vector&lt;R::AllYears::Average&gt; averageStsWithdrawal_;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    std::vector&lt;R::AllYears::Average&gt; averageStsLevel_;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&lt;&gt;&gt; stdDevThermal_;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&lt;&gt;&gt; stdDevRenewable_;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&lt;&gt;&gt; stdDevStsInjection_;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&lt;&gt;&gt; stdDevStsWithdrawal_;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&lt;&gt;&gt; stdDevStsLevel_;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&gt; stdDevThermal_;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&gt; stdDevRenewable_;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&gt; stdDevStsInjection_;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&gt; stdDevStsWithdrawal_;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    std::vector&lt;R::AllYears::StdDeviation&gt; stdDevStsLevel_;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable</span></div>
@@ -256,9 +256,6 @@ $(document).ready(function(){initNavTree('setData_8h_source.html',''); initResiz
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SetDataBase_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SetDataBase.html">Antares::Solver::Variable::SetDataBase</a></div><div class="ttdoc">Contains common data: group names and areas sets.</div><div class="ttdef"><b>Definition:</b> setData.h:19</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SetDataSingleYear.html">Antares::Solver::Variable::SetDataSingleYear</a></div><div class="ttdoc">Used at the end for each week by adding problem results to Results_ vectors.</div><div class="ttdef"><b>Definition:</b> setData.h:44</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1SurveyResults_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">Antares::Solver::Variable::SurveyResults</a></div><div class="ttdoc">Class utility for building CSV results files.</div><div class="ttdef"><b>Definition:</b> surveyresults.h:24</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">Antares::Solver::Variable::R::AllYears::Average</a></div><div class="ttdef"><b>Definition:</b> average.h:21</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxBase.html">Antares::Solver::Variable::R::AllYears::MinMaxBase</a></div><div class="ttdef"><b>Definition:</b> minmax.h:18</div></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">Antares::Solver::Variable::R::AllYears::StdDeviation</a></div><div class="ttdef"><b>Definition:</b> stdDeviation.h:18</div></div>
 <div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1SetDataBase_1_1VCardDynamic_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1SetDataBase_1_1VCardDynamic.html">Antares::Solver::Variable::SetDataBase::VCardDynamic</a></div><div class="ttdef"><b>Definition:</b> setData.h:36</div></div>
 <div class="ttc" id="astructPROBLEME__HEBDO_html"><div class="ttname"><a href="structPROBLEME__HEBDO.html">PROBLEME_HEBDO</a></div><div class="ttdef"><b>Definition:</b> sim_structure_probleme_economique.h:536</div></div>
 </div><!-- fragment --></div><!-- contents -->

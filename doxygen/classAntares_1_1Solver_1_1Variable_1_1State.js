@@ -16,7 +16,6 @@ var classAntares_1_1Solver_1_1Variable_1_1State =
     [ "averageOptimizationTime1", "classAntares_1_1Solver_1_1Variable_1_1State.html#af9e11b52d917e7ad95b27192555504dc", null ],
     [ "averageOptimizationTime2", "classAntares_1_1Solver_1_1Variable_1_1State.html#a323b6936d7876f116269384595e0f022", null ],
     [ "averageUpdateTime", "classAntares_1_1Solver_1_1Variable_1_1State.html#a503a83fabb270e2dc0fa0f85fbbfefd6", null ],
-    [ "dispatchableMargin", "classAntares_1_1Solver_1_1Variable_1_1State.html#a7b375376dc9f5f80fcb61d8fef04d4ac", null ],
     [ "hourInTheSimulation", "classAntares_1_1Solver_1_1Variable_1_1State.html#a9adacb9422217747e9bde451736c0791", null ],
     [ "hourInTheWeek", "classAntares_1_1Solver_1_1Variable_1_1State.html#a99786f5083293932efe8934c74c0e1d7", null ],
     [ "hourInTheYear", "classAntares_1_1Solver_1_1Variable_1_1State.html#afc3a39910241f7d1a8e83c54e872a910", null ],

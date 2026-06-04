@@ -125,6 +125,7 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageLevelsByClusterTraits-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Solver::Variable::Economy::STStorageLevelsByClusterTraits Struct Reference</div>  </div>
@@ -142,12 +143,24 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Unit</b
 <tr class="memitem:a002dbcf8adcca14472f08d4472bcce8d"><td class="memItemLeft" align="right" valign="top"><a id="a002dbcf8adcca14472f08d4472bcce8d"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b> ()</td></tr>
 <tr class="separator:a002dbcf8adcca14472f08d4472bcce8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad964e50fca7a6b8b016ffa6e9c13f37a"><td class="memItemLeft" align="right" valign="top"><a id="ad964e50fca7a6b8b016ffa6e9c13f37a"></a>
+static size_t&#160;</td><td class="memItemRight" valign="bottom"><b>clusterCount</b> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *area)</td></tr>
+<tr class="separator:ad964e50fca7a6b8b016ffa6e9c13f37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9eed518e0a07b3c3360d47cc534f4ed"><td class="memItemLeft" align="right" valign="top"><a id="ab9eed518e0a07b3c3360d47cc534f4ed"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeStats</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;intermediateValues)</td></tr>
 <tr class="separator:ab9eed518e0a07b3c3360d47cc534f4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a898c4db95aa567a7ddedd01f3032a70b"><td class="memItemLeft" align="right" valign="top"><a id="a898c4db95aa567a7ddedd01f3032a70b"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>setHourlyValue</b> (const std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &gt; &amp;clusterValues, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a898c4db95aa567a7ddedd01f3032a70b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad086f389740fe59e3415647fb5cab36b"><td class="memItemLeft" align="right" valign="top"><a id="ad086f389740fe59e3415647fb5cab36b"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>buildSurveyReport</b> (const std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &gt; &amp;clusterValues, <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;results, int fileLevel, int precision)</td></tr>
+<tr class="separator:ad086f389740fe59e3415647fb5cab36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae687e1d08723b4363d966d53565f6f62"><td class="memItemLeft" align="right" valign="top"><a id="ae687e1d08723b4363d966d53565f6f62"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setHourlyValue</b> (std::vector&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &gt; &amp;clusterValues, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state)</td></tr>
+<tr class="separator:ae687e1d08723b4363d966d53565f6f62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a63a383628d6dd5a5c64f30ce81459d3d"><td class="memItemLeft" align="right" valign="top"><a id="a63a383628d6dd5a5c64f30ce81459d3d"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>fileLevel</b> = Category::FileLevel::de_sts</td></tr>
+<tr class="separator:a63a383628d6dd5a5c64f30ce81459d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/solver/variable/include/antares/solver/variable/economy/<a class="el" href="STStorageLevelsByCluster_8h_source.html">STStorageLevelsByCluster.h</a></li>

@@ -143,7 +143,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html">Antares::Solver::Variable::Economy::HydroTraits</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traits for hydro ROR time series variables.  <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html">Antares::Solver::Variable::Economy::TimeSeriesValuesHydro&lt; NextT &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html">Antares::Solver::Variable::Economy::TimeSeriesValuesHydro</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hydro ROR time series implementation.  <a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesValuesHydro.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -159,7 +159,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Antares::Solver::Var
 <ul>
 <li>This file implements hydro run-of-river time series variables using the modern time series base framework. Hydro variables represent the electricity generation from run-of-river hydroelectric installations.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 Key Features:</h2>
 <ul>
 <li><b>Dynamic Time Series Access</b>: Handles variable time series indices per year</li>
@@ -167,7 +167,7 @@ Key Features:</h2>
 <li><b>Modern Memory Management</b>: Uses std::vector instead of raw pointers</li>
 <li><b>Hourly Processing</b>: Granular access to time series data per simulation hour</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Hydro-Specific Behavior:</h2>
 <p>Hydro variables differ from other time series types:</p><ul>
 <li><b>Dynamic Series Selection</b>: Each year may use a different time series (nbchro)</li>
@@ -175,14 +175,14 @@ Hydro-Specific Behavior:</h2>
 <li><b>ROR Specialization</b>: Focused on run-of-river rather than reservoir hydro</li>
 <li><b>Series Index Mapping</b>: Uses getSeriesIndex() to determine which series to use</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Data Processing Flow:</h2>
 <div class="fragment"><div class="line">Year Begin: area-&gt;hydro.series-&gt;ror.getSeriesIndex(year) → time series selection</div>
 <div class="line">      ↓</div>
 <div class="line">Hour Processing: (*fatalValues[space])[hourInYear] → hourly value extraction</div>
 <div class="line">      ↓</div>
 <div class="line">Storage: yearlyValues[space][hourInYear] ← accumulation <span class="keywordflow">for</span> statistics</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md16"></a>
 ROR vs Reservoir Hydro:</h2>
 <p>This implementation focuses on <b>Run-of-River (ROR)</b> hydro generation:</p><ul>
 <li><b>ROR</b>: Flows directly through turbines, minimal storage, weather-dependent</li>
@@ -190,7 +190,7 @@ ROR vs Reservoir Hydro:</h2>
 </ul>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="timeseries__base_8h.html" title="Base classes and traits for time series variables in Antares Simulator.">timeseries_base.h</a> for the base framework </dd>
 <dd>
-<a class="el" href="generation_8h.html" title="Generic renewable generation variables for solar and wind power.">generation.h</a>, <a class="el" href="load_8h.html" title="Load time series variables for electrical demand modeling This file implements load (electrical deman...">load.h</a> for other time series implementations </dd></dl>
+<a class="el" href="generation_8h_source.html">generation.h</a>, <a class="el" href="load_8h.html" title="Load time series variables for electrical demand modeling This file implements load (electrical deman...">load.h</a> for other time series implementations </dd></dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

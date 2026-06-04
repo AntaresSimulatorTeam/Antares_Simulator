@@ -1,0 +1,4 @@
+var structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector_3_01VCardOrigi75743097dadd4d69c0beae6e290af5cc =
+[
+    [ "type", "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardForSpatialAggregateSelector_3_01VCardOrigi75743097dadd4d69c0beae6e290af5cc.html#a8ae4684ebb915d519966fc844b128cd7", null ]
+];

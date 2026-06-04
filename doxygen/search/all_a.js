@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['k_956',['K',['../classAntares_1_1Data_1_1XCast.html#a7163f4cd43e003cc1bd703071f158a49',1,'Antares::Data::XCast']]],
-  ['kcaption_957',['kCaption',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#aa0c4a7bde5e2d858ab0614ab10716282',1,'Antares::Solver::Variable::Economy::SolarTraits::kCaption()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#a687e24d67bfedbc73f612e7bc75504ea',1,'Antares::Solver::Variable::Economy::WindTraits::kCaption()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html#a6916a4c41fdaff4ad511844735a8e752',1,'Antares::Solver::Variable::Economy::HydroTraits::kCaption()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html#aafc6c513940fa3a3a9975df29e9ef4da',1,'Antares::Solver::Variable::Economy::LoadTraits::kCaption()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a68ae68bc3e6e47d9721ea48746332a07',1,'Antares::Solver::Variable::Economy::VCardTimeSeriesBase::kCaption()']]],
-  ['kdescription_958',['kDescription',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#ac66332845dbc0fee75359c17c8e2cdd6',1,'Antares::Solver::Variable::Economy::SolarTraits::kDescription()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html#aba17bf0eaa3bf7a0451eb0f7747e8e3a',1,'Antares::Solver::Variable::Economy::WindTraits::kDescription()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1HydroTraits.html#a409be76948542a323ba8c4dac75b5f4e',1,'Antares::Solver::Variable::Economy::HydroTraits::kDescription()'],['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1LoadTraits.html#a08596aa25d0e35798b78661e749746dd',1,'Antares::Solver::Variable::Economy::LoadTraits::kDescription()']]],
-  ['key_959',['key',['../classAntares_1_1IniFile_1_1Property.html#a9640168232fb037d3ed7b3c0ffc7e81b',1,'Antares::IniFile::Property']]],
-  ['kunit_960',['kUnit',['../structAntares_1_1Solver_1_1Variable_1_1Economy_1_1TimeSeriesTraits.html#aea9559a560a11aaa0861e3bd057fa2d2',1,'Antares::Solver::Variable::Economy::TimeSeriesTraits']]]
+  ['jit_909',['JIT',['../classJIT.html',1,'']]],
+  ['jit_910',['jit',['../classAntares_1_1Matrix.html#a0299a9df246248542586fb3319c6ad24',1,'Antares::Matrix']]],
+  ['jobfilereader_911',['JobFileReader',['../classJobFileReader.html',1,'JobFileReader'],['../classJobFileReader.html#a35f76210b50cd6c8a86c8d0ac72f517c',1,'JobFileReader::JobFileReader()']]],
+  ['join_912',['join',['../classAntares_1_1Concurrency_1_1FutureSet.html#a8cf68f6c1a66e76acaec9ce67cb20e5f',1,'Antares::Concurrency::FutureSet']]],
+  ['joinall_913',['JoinAll',['../classAntares_1_1Solver_1_1Variable_1_1JoinAll.html',1,'Antares::Solver::Variable']]],
+  ['jsoncollector_914',['jsonCollector',['../classjson__collector_1_1jsonCollector.html',1,'json_collector']]],
+  ['just_5fin_5ftime_5fmanager_915',['just_in_time_manager',['../classJIT_1_1just__in__time__manager.html',1,'JIT']]]
 ];

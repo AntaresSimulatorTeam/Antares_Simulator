@@ -135,9 +135,9 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:af5deb9e7cab5feca66ccfbacfedb69b9"><td class="memItemLeft" align="right" valign="top"><a id="af5deb9e7cab5feca66ccfbacfedb69b9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ResultsType</b> = <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Average.html">R::AllYears::Average</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1StdDeviation.html">R::AllYears::StdDeviation</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Min.html">R::AllYears::Min</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Max.html">R::AllYears::Max</a>&lt;&gt; &gt;&gt; &gt;&gt;</td></tr>
-<tr class="separator:af5deb9e7cab5feca66ccfbacfedb69b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c0cf99bebe4f56a06b51738115ebf8f"><td class="memItemLeft" align="right" valign="top"><a id="a3c0cf99bebe4f56a06b51738115ebf8f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ResultsProfile</b> = <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">StandardResults</a>&lt;&gt;</td></tr>
+<tr class="separator:a3c0cf99bebe4f56a06b51738115ebf8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af75c02a2e70bcba45ecf048967871dc0"><td class="memItemLeft" align="right" valign="top"><a id="af75c02a2e70bcba45ecf048967871dc0"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>AuxiliaryDataType</b> = <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *</td></tr>
 <tr class="separator:af75c02a2e70bcba45ecf048967871dc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,15 +156,12 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>Descrip
 <tr class="memitem:af2ea799d972965f273a61c82efd1447b"><td class="memItemLeft" align="right" valign="top"><a id="af2ea799d972965f273a61c82efd1447b"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromArea</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> &amp;area, <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> *, <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *inputArea)</td></tr>
 <tr class="separator:af2ea799d972965f273a61c82efd1447b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a1ccfeba1dedafafee3e1bda40f38c6"><td class="memItemLeft" align="right" valign="top"><a id="a6a1ccfeba1dedafafee3e1bda40f38c6"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setHourlyValue</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;, <a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> &amp;, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;, unsigned int)</td></tr>
+<tr class="separator:a6a1ccfeba1dedafafee3e1bda40f38c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a340e1d9442606344d1521af70de66998"><td class="memItemLeft" align="right" valign="top"><a id="a340e1d9442606344d1521af70de66998"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>yearBegin</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;yearlyValues, <a class="el" href="classAntares_1_1Data_1_1Area.html">AuxiliaryDataType</a> area, unsigned int year, unsigned int)</td></tr>
 <tr class="separator:a340e1d9442606344d1521af70de66998"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fd89fca3a9d94c081b6fd7a750ee368"><td class="memItemLeft" align="right" valign="top"><a id="a5fd89fca3a9d94c081b6fd7a750ee368"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkCondition</b> (const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;)</td></tr>
-<tr class="separator:a5fd89fca3a9d94c081b6fd7a750ee368"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a098e9c7e1f1450494131f1fd05a46a3e"><td class="memItemLeft" align="right" valign="top"><a id="a098e9c7e1f1450494131f1fd05a46a3e"></a>
-static double&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> (const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;)</td></tr>
-<tr class="separator:a098e9c7e1f1450494131f1fd05a46a3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78c943866ab39fe758ca39cf4d60a055"><td class="memItemLeft" align="right" valign="top"><a id="a78c943866ab39fe758ca39cf4d60a055"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>computeStats</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;intermediateValues)</td></tr>
 <tr class="separator:a78c943866ab39fe758ca39cf4d60a055"><td class="memSeparator" colspan="2">&#160;</td></tr>

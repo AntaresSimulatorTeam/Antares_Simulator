@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- BEGIN opengraph metadata -->
+<meta property="og:title" content="Antares Simulator" />
+<meta property="og:image" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/antares.png" />
+<meta property="og:description" content="Power System Simulator." />
+<meta property="og:url" content="https://antares-simulator.org/" />
+<!-- END opengraph metadata -->
+<!-- BEGIN twitter metadata -->
+<meta name="twitter:image:src" content="https://github.com/AntaresSimulatorTeam/Antares_Simulator/blob/develop/docs/assets/logo.png" />
+<meta name="twitter:title" content="Antares Simulator" />
+<meta name="twitter:description" content="Power System Simulator." />
+<!-- END twitter metadata -->
+<title>Antares Simulator: Antares::Solver::Variable::Economy::MultiColumnBase&lt; Traits, ColCount &gt; Class Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-interactive-toc.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="toggle-alternative-theme.js"></script>
+<script type="text/javascript">
+    DoxygenAwesomeFragmentCopyButton.init()
+    DoxygenAwesomeDarkModeToggle.init()
+    DoxygenAwesomeParagraphLink.init()
+    DoxygenAwesomeInteractiveToc.init()
+    DoxygenAwesomeTabs.init()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="custom-alternative.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- https://github.com/AntaresSimulatorTeam/Antares_Simulator/ -->
+<a href="https://github.com/AntaresSimulatorTeam/Antares_Simulator" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Antares Simulator
+   </div>
+   <div id="projectbrief">Power System Simulator</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(document).ready(function(){initNavTree('classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">Antares::Solver::Variable::Economy::MultiColumnBase&lt; Traits, ColCount &gt; Class Template Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for Antares::Solver::Variable::Economy::MultiColumnBase&lt; Traits, ColCount &gt;:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase.png" usemap="#Antares::Solver::Variable::Economy::MultiColumnBase_3C_20Traits_2C_20ColCount_20_3E_map" alt=""/>
+  <map id="Antares::Solver::Variable::Economy::MultiColumnBase_3C_20Traits_2C_20ColCount_20_3E_map" name="Antares::Solver::Variable::Economy::MultiColumnBase_3C_20Traits_2C_20ColCount_20_3E_map">
+<area href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html" alt="Antares::Solver::Variable::IVariable&lt; MultiColumnBase&lt; Traits, ColCount &gt;, VCardMultiColumn&lt; Traits, ColCount &gt; &gt;" shape="rect" coords="0,0,678,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase_1_1Statistics.html">Statistics</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a55a9529d24b03f1202c9c1d6c8093ec8"><td class="memItemLeft" align="right" valign="top"><a id="a55a9529d24b03f1202c9c1d6c8093ec8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>VCardType</b> = <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html">VCardMultiColumn</a>&lt; Traits, ColCount &gt;</td></tr>
+<tr class="separator:a55a9529d24b03f1202c9c1d6c8093ec8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab629f0859215d1b5ab5446239fc70e9c"><td class="memItemLeft" align="right" valign="top"><a id="ab629f0859215d1b5ab5446239fc70e9c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>AncestorType</b> = <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html">Variable::IVariable</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase.html">MultiColumnBase</a>&lt; Traits, ColCount &gt;, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html">VCardType</a> &gt;</td></tr>
+<tr class="separator:ab629f0859215d1b5ab5446239fc70e9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf844d2d0a4b34e4570263e44bc6a0a9"><td class="memItemLeft" align="right" valign="top"><a id="aaf844d2d0a4b34e4570263e44bc6a0a9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ResultsType</b> = typename VCardType::ResultsType</td></tr>
+<tr class="separator:aaf844d2d0a4b34e4570263e44bc6a0a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a953f1a63f752a0a9ecf1e02d22b99d64"><td class="memItemLeft" align="right" valign="top"><a id="a953f1a63f752a0a9ecf1e02d22b99d64"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>VariableAccessorType</b> = <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html">VariableAccessor</a>&lt; ResultsType, VCardType::columnCount &gt;</td></tr>
+<tr class="separator:a953f1a63f752a0a9ecf1e02d22b99d64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbcd16a9b1c43839d7c67627dfe3e012"><td class="memItemLeft" align="right" valign="top"><a id="acbcd16a9b1c43839d7c67627dfe3e012"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>AuxiliaryDataType</b> = typename <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html">detail::AuxiliaryDataType</a>&lt; Traits &gt;::type</td></tr>
+<tr class="separator:acbcd16a9b1c43839d7c67627dfe3e012"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html">Antares::Solver::Variable::IVariable&lt; MultiColumnBase&lt; Traits, ColCount &gt;, VCardMultiColumn&lt; Traits, ColCount &gt; &gt;</a></td></tr>
+<tr class="memitem:a8d12c3a614922a8cb5dfefab5987b199 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a8d12c3a614922a8cb5dfefab5987b199"></a>
+typedef MultiColumnBase&lt; Traits, ColCount &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a8d12c3a614922a8cb5dfefab5987b199">ChildType</a></td></tr>
+<tr class="memdesc:a8d12c3a614922a8cb5dfefab5987b199 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Child. <br /></td></tr>
+<tr class="separator:a8d12c3a614922a8cb5dfefab5987b199 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95b8ed44542a97d11978294ef46dc46a inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a95b8ed44542a97d11978294ef46dc46a"></a>
+typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html">IVariable</a>&lt; MultiColumnBase&lt; Traits, ColCount &gt;, VCardMultiColumn&lt; Traits, ColCount &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a95b8ed44542a97d11978294ef46dc46a">VariableType</a></td></tr>
+<tr class="memdesc:a95b8ed44542a97d11978294ef46dc46a inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classVariable.html">Variable</a>. <br /></td></tr>
+<tr class="separator:a95b8ed44542a97d11978294ef46dc46a inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eb0c76781b019cbe078399ed8fb51a6 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a3eb0c76781b019cbe078399ed8fb51a6"></a>
+typedef VCardMultiColumn&lt; Traits, ColCount &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3eb0c76781b019cbe078399ed8fb51a6">VCardType</a></td></tr>
+<tr class="memdesc:a3eb0c76781b019cbe078399ed8fb51a6 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">VCard. <br /></td></tr>
+<tr class="separator:a3eb0c76781b019cbe078399ed8fb51a6 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a183513e989673b05cf492c7c7165fed8 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a183513e989673b05cf492c7c7165fed8"></a>
+typedef VCardType::ResultsType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a183513e989673b05cf492c7c7165fed8">ResultsType</a></td></tr>
+<tr class="memdesc:a183513e989673b05cf492c7c7165fed8 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of expected results. <br /></td></tr>
+<tr class="separator:a183513e989673b05cf492c7c7165fed8 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0714ec22d56e1d23a2b1a33f76a1b674 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a0714ec22d56e1d23a2b1a33f76a1b674"></a>
+typedef <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html">VariableAccessor</a>&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a183513e989673b05cf492c7c7165fed8">ResultsType</a>, VCardType::columnCount &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a0714ec22d56e1d23a2b1a33f76a1b674">VariableAccessorType</a></td></tr>
+<tr class="memdesc:a0714ec22d56e1d23a2b1a33f76a1b674 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Proxy for accessing to the intermediate results. <br /></td></tr>
+<tr class="separator:a0714ec22d56e1d23a2b1a33f76a1b674 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6e2339bace7b7bca7b076b56fd1e4f0 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ab6e2339bace7b7bca7b076b56fd1e4f0"></a>
+typedef <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html">Storage</a>&lt; VCardMultiColumn&lt; Traits, ColCount &gt; &gt;::<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a183513e989673b05cf492c7c7165fed8">ResultsType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab6e2339bace7b7bca7b076b56fd1e4f0">StoredResultType</a></td></tr>
+<tr class="memdesc:ab6e2339bace7b7bca7b076b56fd1e4f0 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results. <br /></td></tr>
+<tr class="separator:ab6e2339bace7b7bca7b076b56fd1e4f0 inherit pub_types_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ad2e37889a3ec1256ea53fb6d9a6cfa00"><td class="memItemLeft" align="right" valign="top"><a id="ad2e37889a3ec1256ea53fb6d9a6cfa00"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromStudy</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;study)</td></tr>
+<tr class="separator:ad2e37889a3ec1256ea53fb6d9a6cfa00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a7bca7286c00b78dbf942e8c4bb2f32"><td class="memItemLeft" align="right" valign="top"><a id="a2a7bca7286c00b78dbf942e8c4bb2f32"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromArea</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> *study, <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *area)</td></tr>
+<tr class="separator:a2a7bca7286c00b78dbf942e8c4bb2f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ceac6c655f163fc4c2b39e596238846"><td class="memItemLeft" align="right" valign="top"><a id="a5ceac6c655f163fc4c2b39e596238846"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>yearBegin</b> ([[maybe_unused]] uint year, uint numSpace)</td></tr>
+<tr class="separator:a5ceac6c655f163fc4c2b39e596238846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ebe371d0b4ec831140a4a1115310418"><td class="memItemLeft" align="right" valign="top"><a id="a4ebe371d0b4ec831140a4a1115310418"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEnd</b> ([[maybe_unused]] uint year, uint numSpace)</td></tr>
+<tr class="separator:a4ebe371d0b4ec831140a4a1115310418"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb539d37ae77b7807a8a11fb3a3148cc"><td class="memItemLeft" align="right" valign="top"><a id="adb539d37ae77b7807a8a11fb3a3148cc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>computeSummary</b> (uint year, uint numSpace)</td></tr>
+<tr class="separator:adb539d37ae77b7807a8a11fb3a3148cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa49df62410fe59e70e7fb2f53823abed"><td class="memItemLeft" align="right" valign="top"><a id="aa49df62410fe59e70e7fb2f53823abed"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>hourForEachArea</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, uint numSpace)</td></tr>
+<tr class="separator:aa49df62410fe59e70e7fb2f53823abed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace6b920080dce4e04dcb0db6c558bf35"><td class="memItemLeft" align="right" valign="top"><a id="ace6b920080dce4e04dcb0db6c558bf35"></a>
+<a class="el" href="structAntares_1_1Memory_1_1Stored.html">Antares::Memory::Stored</a>&lt; double &gt;::ConstReturnType&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveRawHourlyValuesForCurrentYear</b> (uint column, uint numSpace) const</td></tr>
+<tr class="separator:ace6b920080dce4e04dcb0db6c558bf35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab02ca4e397d85ae88bbf347dedb466f6"><td class="memItemLeft" align="right" valign="top"><a id="ab02ca4e397d85ae88bbf347dedb466f6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>localBuildAnnualSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, int fileLevel, int precision, uint numSpace) const</td></tr>
+<tr class="separator:ab02ca4e397d85ae88bbf347dedb466f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html">Antares::Solver::Variable::IVariable&lt; MultiColumnBase&lt; Traits, ColCount &gt;, VCardMultiColumn&lt; Traits, ColCount &gt; &gt;</a></td></tr>
+<tr class="memitem:a17cc0708b74756493714ff2f0980a955 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a17cc0708b74756493714ff2f0980a955"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getPrintStatusFromStudy</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;study)</td></tr>
+<tr class="separator:a17cc0708b74756493714ff2f0980a955 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8de757d35eb06fffd0e2c122c0938c4 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ac8de757d35eb06fffd0e2c122c0938c4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>supplyMaxNumberOfColumns</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;study)</td></tr>
+<tr class="separator:ac8de757d35eb06fffd0e2c122c0938c4 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bcc37ff8838c4d6a3ce8c06b12b1477 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a6bcc37ff8838c4d6a3ce8c06b12b1477"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a6bcc37ff8838c4d6a3ce8c06b12b1477">IVariable</a> ()</td></tr>
+<tr class="memdesc:a6bcc37ff8838c4d6a3ce8c06b12b1477 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
+<tr class="separator:a6bcc37ff8838c4d6a3ce8c06b12b1477 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0af36599951adff7ff4203b522787c09 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a0af36599951adff7ff4203b522787c09"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~IVariable</b> ()</td></tr>
+<tr class="separator:a0af36599951adff7ff4203b522787c09 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d14110642f4fa124fa839b3274f317c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a8d14110642f4fa124fa839b3274f317c">initializeFromStudy</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;study)</td></tr>
+<tr class="memdesc:a8d14110642f4fa124fa839b3274f317c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the variable.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a8d14110642f4fa124fa839b3274f317c">More...</a><br /></td></tr>
+<tr class="separator:a8d14110642f4fa124fa839b3274f317c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b2ea57a249341d78d53b1b7df72587b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a2b2ea57a249341d78d53b1b7df72587b"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxNumberColumns</b> () const</td></tr>
+<tr class="separator:a2b2ea57a249341d78d53b1b7df72587b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab67c10c1123bf906d14483e2763fe2e9 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab67c10c1123bf906d14483e2763fe2e9">initializeFromArea</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> *study, <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *area)</td></tr>
+<tr class="memdesc:ab67c10c1123bf906d14483e2763fe2e9 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the variable with a specific area.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab67c10c1123bf906d14483e2763fe2e9">More...</a><br /></td></tr>
+<tr class="separator:ab67c10c1123bf906d14483e2763fe2e9 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e0175348b160b7711c6f29dabb98e03 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5e0175348b160b7711c6f29dabb98e03">initializeFromLink</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> *study, <a class="el" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a> *link)</td></tr>
+<tr class="memdesc:a5e0175348b160b7711c6f29dabb98e03 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the variable with a specific link between two areas.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5e0175348b160b7711c6f29dabb98e03">More...</a><br /></td></tr>
+<tr class="separator:a5e0175348b160b7711c6f29dabb98e03 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eb71bc08f1c493e32508ea886b9a75a inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a6eb71bc08f1c493e32508ea886b9a75a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>broadcastNonApplicability</b> (bool applyNonApplicable)</td></tr>
+<tr class="separator:a6eb71bc08f1c493e32508ea886b9a75a inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b66cf01e9419878a257fc81009f139 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a98b66cf01e9419878a257fc81009f139"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a98b66cf01e9419878a257fc81009f139">simulationBegin</a> ()</td></tr>
+<tr class="memdesc:a98b66cf01e9419878a257fc81009f139 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify to all variables that the simulation is about to begin. <br /></td></tr>
+<tr class="separator:a98b66cf01e9419878a257fc81009f139 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6043cec6c1126900d032f2d1720edec inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="aa6043cec6c1126900d032f2d1720edec"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#aa6043cec6c1126900d032f2d1720edec">simulationEnd</a> ()</td></tr>
+<tr class="memdesc:aa6043cec6c1126900d032f2d1720edec inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify to all variables that the simulation has finished. <br /></td></tr>
+<tr class="separator:aa6043cec6c1126900d032f2d1720edec inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6207a31cb511b3a449d667186dcfca07 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a6207a31cb511b3a449d667186dcfca07">yearBegin</a> (uint year)</td></tr>
+<tr class="memdesc:a6207a31cb511b3a449d667186dcfca07 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify to all variables that a new year is about to start.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a6207a31cb511b3a449d667186dcfca07">More...</a><br /></td></tr>
+<tr class="separator:a6207a31cb511b3a449d667186dcfca07 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a6b715083fcc8542a915602c267d0d4 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a9a6b715083fcc8542a915602c267d0d4">yearEndBuildPrepareDataForEachThermalCluster</a> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, uint year, uint numSpace)</td></tr>
+<tr class="memdesc:a9a6b715083fcc8542a915602c267d0d4 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify to all variables to prepare data for the close to year end calculations for each thermal cluster.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a9a6b715083fcc8542a915602c267d0d4">More...</a><br /></td></tr>
+<tr class="separator:a9a6b715083fcc8542a915602c267d0d4 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada9812f9c96711acf4de192219671807 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ada9812f9c96711acf4de192219671807">yearEndBuildForEachThermalCluster</a> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, uint year, uint numSpace)</td></tr>
+<tr class="memdesc:ada9812f9c96711acf4de192219671807 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify to all variables that the year is close to end.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ada9812f9c96711acf4de192219671807">More...</a><br /></td></tr>
+<tr class="separator:ada9812f9c96711acf4de192219671807 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaacbf7d1ce4ba9343853dcaf4fb3f544 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#aaacbf7d1ce4ba9343853dcaf4fb3f544">yearEnd</a> (uint year)</td></tr>
+<tr class="memdesc:aaacbf7d1ce4ba9343853dcaf4fb3f544 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify to all variables that the year is now over.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#aaacbf7d1ce4ba9343853dcaf4fb3f544">More...</a><br /></td></tr>
+<tr class="separator:aaacbf7d1ce4ba9343853dcaf4fb3f544 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4904e781ba62022a63e695c9064c252c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a4904e781ba62022a63e695c9064c252c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEndSpatialAggregates</b> (V &amp;allVars, uint year, unsigned int numSpace)</td></tr>
+<tr class="separator:a4904e781ba62022a63e695c9064c252c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e50d95938fa8a77bff1db64cb275d4e inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a3e50d95938fa8a77bff1db64cb275d4e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>yearEndSpatialAggregates</b> (V &amp;allVars, uint year, const SetT &amp;set)</td></tr>
+<tr class="separator:a3e50d95938fa8a77bff1db64cb275d4e inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab95588f7f55a2c0a9cbf5c3877227cdc inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ab95588f7f55a2c0a9cbf5c3877227cdc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>simulationEndSpatialAggregates</b> (V &amp;allVars)</td></tr>
+<tr class="separator:ab95588f7f55a2c0a9cbf5c3877227cdc inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a890ac635b7cf5a370eb78070a6ea1c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a0a890ac635b7cf5a370eb78070a6ea1c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>simulationEndSpatialAggregates</b> (V &amp;allVars, const SetT &amp;set)</td></tr>
+<tr class="separator:a0a890ac635b7cf5a370eb78070a6ea1c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace53658f0c8770c0b2f714712bbf0333 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ace53658f0c8770c0b2f714712bbf0333"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ace53658f0c8770c0b2f714712bbf0333">hourBegin</a> (uint hourInTheYear)</td></tr>
+<tr class="memdesc:ace53658f0c8770c0b2f714712bbf0333 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event: A new hour in the year has just began. <br /></td></tr>
+<tr class="separator:ace53658f0c8770c0b2f714712bbf0333 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac33e3cd3599e990a8c96cb3092c26680 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ac33e3cd3599e990a8c96cb3092c26680"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ac33e3cd3599e990a8c96cb3092c26680">hourForEachArea</a> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state)</td></tr>
+<tr class="memdesc:ac33e3cd3599e990a8c96cb3092c26680 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event: For a given hour in the year, walking through all areas. <br /></td></tr>
+<tr class="separator:ac33e3cd3599e990a8c96cb3092c26680 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abec9525929d86dda79ddc5bb290b2e69 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="abec9525929d86dda79ddc5bb290b2e69"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>hourForEachArea</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, unsigned int numSpace)</td></tr>
+<tr class="separator:abec9525929d86dda79ddc5bb290b2e69 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab995f73f87cfba43ab031b4899fd66bd inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ab995f73f87cfba43ab031b4899fd66bd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab995f73f87cfba43ab031b4899fd66bd">hourForEachLink</a> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, uint numSpace)</td></tr>
+<tr class="memdesc:ab995f73f87cfba43ab031b4899fd66bd inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event: For a given hour in the year, walking through all links. <br /></td></tr>
+<tr class="separator:ab995f73f87cfba43ab031b4899fd66bd inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a57e52306c573219abeb839d47f7690 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a9a57e52306c573219abeb839d47f7690"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a9a57e52306c573219abeb839d47f7690">hourEnd</a> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, uint hourInTheYear)</td></tr>
+<tr class="memdesc:a9a57e52306c573219abeb839d47f7690 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event: A new hour in the year has just ended. <br /></td></tr>
+<tr class="separator:a9a57e52306c573219abeb839d47f7690 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4146568fff790ff2ce36c79fc865d0c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ab4146568fff790ff2ce36c79fc865d0c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>weekBegin</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state)</td></tr>
+<tr class="separator:ab4146568fff790ff2ce36c79fc865d0c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59d03432540d07f936713134d472997b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a59d03432540d07f936713134d472997b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>weekForEachArea</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state, uint numSpace)</td></tr>
+<tr class="separator:a59d03432540d07f936713134d472997b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9863690032c2097575f6e7c1fabd1da9 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a9863690032c2097575f6e7c1fabd1da9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>weekEnd</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1State.html">State</a> &amp;state)</td></tr>
+<tr class="separator:a9863690032c2097575f6e7c1fabd1da9 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a610fde5936179760cea84a4048c38ffa inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a610fde5936179760cea84a4048c38ffa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, int dataLevel, int fileLevel, int precision) const</td></tr>
+<tr class="separator:a610fde5936179760cea84a4048c38ffa inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1286519318a2b588f5edaa8fa14cdb31 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a1286519318a2b588f5edaa8fa14cdb31"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildAnnualSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, int dataLevel, int fileLevel, int precision, uint numSpace) const</td></tr>
+<tr class="separator:a1286519318a2b588f5edaa8fa14cdb31 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826d4b0280ab613b63248e51eac97049 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a826d4b0280ab613b63248e51eac97049"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>buildDigest</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, int digestLevel, int dataLevel) const</td></tr>
+<tr class="separator:a826d4b0280ab613b63248e51eac97049 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a752d142685761c027d1743259ee97b7d inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a752d142685761c027d1743259ee97b7d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasColumn</b> () const</td></tr>
+<tr class="separator:a752d142685761c027d1743259ee97b7d inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae886d61f47a9c8152ee8b29b2e135757 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ae886d61f47a9c8152ee8b29b2e135757"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ae886d61f47a9c8152ee8b29b2e135757">beforeYearByYearExport</a> (uint year, uint numSpace)</td></tr>
+<tr class="memdesc:ae886d61f47a9c8152ee8b29b2e135757 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event triggered before exporting a year-by-year survey report. <br /></td></tr>
+<tr class="separator:ae886d61f47a9c8152ee8b29b2e135757 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22aae9abbddbf5e993e1194bcf4a236b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a22aae9abbddbf5e993e1194bcf4a236b">computeSpatialAggregateWith</a> (O &amp;out, uint numSpace)</td></tr>
+<tr class="memdesc:a22aae9abbddbf5e993e1194bcf4a236b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the spatial cluster with the results of a single variable.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a22aae9abbddbf5e993e1194bcf4a236b">More...</a><br /></td></tr>
+<tr class="separator:a22aae9abbddbf5e993e1194bcf4a236b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3b9634169414c9a3992823f823b825a inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab3b9634169414c9a3992823f823b825a">computeSpatialAggregateWith</a> (O &amp;out, const <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *area)</td></tr>
+<tr class="memdesc:ab3b9634169414c9a3992823f823b825a inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the spatial cluster with the results of a single variable and a given area.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab3b9634169414c9a3992823f823b825a">More...</a><br /></td></tr>
+<tr class="separator:ab3b9634169414c9a3992823f823b825a inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af33eebf284d65c175b995bfd9a67b47c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="af33eebf284d65c175b995bfd9a67b47c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveResultsForArea</b> (typename <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html">Storage</a>&lt; VCardToFindT &gt;::<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a183513e989673b05cf492c7c7165fed8">ResultsType</a> **result, const <a class="el" href="classAntares_1_1Data_1_1Area.html">Data::Area</a> *area)</td></tr>
+<tr class="separator:af33eebf284d65c175b995bfd9a67b47c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab310fd09eee14e1969a73f598479f690 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ab310fd09eee14e1969a73f598479f690"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveResultsForThermalCluster</b> (typename <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html">Storage</a>&lt; VCardToFindT &gt;::<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a183513e989673b05cf492c7c7165fed8">ResultsType</a> **result, const <a class="el" href="classAntares_1_1Data_1_1ThermalCluster.html">Data::ThermalCluster</a> *cluster)</td></tr>
+<tr class="separator:ab310fd09eee14e1969a73f598479f690 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab212cb18f3bc5be78039594240f1d208 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="ab212cb18f3bc5be78039594240f1d208"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveResultsForLink</b> (typename <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Storage.html">Storage</a>&lt; VCardToFindT &gt;::<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a183513e989673b05cf492c7c7165fed8">ResultsType</a> **result, const <a class="el" href="classAntares_1_1Data_1_1AreaLink.html">Data::AreaLink</a> *link)</td></tr>
+<tr class="separator:ab212cb18f3bc5be78039594240f1d208 inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa347337ce94502fc28b44e758086cc1b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="aa347337ce94502fc28b44e758086cc1b"></a>
+<a class="el" href="structAntares_1_1Memory_1_1Stored.html">Antares::Memory::Stored</a>&lt; double &gt;::ConstReturnType&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveRawHourlyValuesForCurrentYear</b> (uint column, uint) const</td></tr>
+<tr class="separator:aa347337ce94502fc28b44e758086cc1b inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bea32e4208f92f8493f80ed764c860c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a3bea32e4208f92f8493f80ed764c860c"></a>
+const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab6e2339bace7b7bca7b076b56fd1e4f0">StoredResultType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a> () const</td></tr>
+<tr class="memdesc:a3bea32e4208f92f8493f80ed764c860c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">The results. <br /></td></tr>
+<tr class="separator:a3bea32e4208f92f8493f80ed764c860c inherit pub_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ae3ca7b52e5425898757f6645e0d16920"><td class="memTemplParams" colspan="2"><a id="ae3ca7b52e5425898757f6645e0d16920"></a>
+template&lt;class R &gt; </td></tr>
+<tr class="memitem:ae3ca7b52e5425898757f6645e0d16920"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>InitializeResultsFromStudy</b> (R &amp;<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;study)</td></tr>
+<tr class="separator:ae3ca7b52e5425898757f6645e0d16920"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html">Antares::Solver::Variable::IVariable&lt; MultiColumnBase&lt; Traits, ColCount &gt;, VCardMultiColumn&lt; Traits, ColCount &gt; &gt;</a></td></tr>
+<tr class="memitem:ab4e505100f6d20baff722c0708e6cc57 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab4e505100f6d20baff722c0708e6cc57">InitializeResultsFromStudy</a> (R &amp;<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, <a class="el" href="classAntares_1_1Data_1_1Study.html">Data::Study</a> &amp;study)</td></tr>
+<tr class="memdesc:ab4e505100f6d20baff722c0708e6cc57 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the results of the variable.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab4e505100f6d20baff722c0708e6cc57">More...</a><br /></td></tr>
+<tr class="separator:ab4e505100f6d20baff722c0708e6cc57 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7a31a565253a5ade269dd79cb631fd7 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab7a31a565253a5ade269dd79cb631fd7">RetrieveVariableList</a> (PredicateT &amp;predicate)</td></tr>
+<tr class="memdesc:ab7a31a565253a5ade269dd79cb631fd7 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the list of all individual variables.  <a href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab7a31a565253a5ade269dd79cb631fd7">More...</a><br /></td></tr>
+<tr class="separator:ab7a31a565253a5ade269dd79cb631fd7 inherit pub_static_methods_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a407917ca51611c748eabd4f5e010470d"><td class="memItemLeft" align="right" valign="top"><a id="a407917ca51611c748eabd4f5e010470d"></a>
+static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> = 1</td></tr>
+<tr class="separator:a407917ca51611c748eabd4f5e010470d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html">Antares::Solver::Variable::IVariable&lt; MultiColumnBase&lt; Traits, ColCount &gt;, VCardMultiColumn&lt; Traits, ColCount &gt; &gt;</a></td></tr>
+<tr class="memitem:a951fd8832f23842f632061c0911f2c18 inherit pub_static_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a951fd8832f23842f632061c0911f2c18"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>categoryDataLevel</b></td></tr>
+<tr class="separator:a951fd8832f23842f632061c0911f2c18 inherit pub_static_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5945a111e87cfa2c3706a1466e4524fd inherit pub_static_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a5945a111e87cfa2c3706a1466e4524fd"></a>
+static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>categoryFileLevel</b></td></tr>
+<tr class="separator:a5945a111e87cfa2c3706a1466e4524fd inherit pub_static_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html">Antares::Solver::Variable::IVariable&lt; MultiColumnBase&lt; Traits, ColCount &gt;, VCardMultiColumn&lt; Traits, ColCount &gt; &gt;</a></td></tr>
+<tr class="memitem:a5ab90ddd783ad38d0952ebf956545321 inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a5ab90ddd783ad38d0952ebf956545321"></a>
+<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#ab6e2339bace7b7bca7b076b56fd1e4f0">StoredResultType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a5ab90ddd783ad38d0952ebf956545321">pResults</a></td></tr>
+<tr class="memdesc:a5ab90ddd783ad38d0952ebf956545321 inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="mdescLeft">&#160;</td><td class="mdescRight">All the results about this variable. <br /></td></tr>
+<tr class="separator:a5ab90ddd783ad38d0952ebf956545321 inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48f2ace8acea85926ebdb9fdc373ea29 inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="a48f2ace8acea85926ebdb9fdc373ea29"></a>
+bool *&#160;</td><td class="memItemRight" valign="bottom"><b>isNonApplicable</b></td></tr>
+<tr class="separator:a48f2ace8acea85926ebdb9fdc373ea29 inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe7a237223164c79ba3f2717facd3f27 inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="afe7a237223164c79ba3f2717facd3f27"></a>
+bool *&#160;</td><td class="memItemRight" valign="bottom"><b>isPrinted</b></td></tr>
+<tr class="separator:afe7a237223164c79ba3f2717facd3f27 inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7cfc030b548fc1462c0f67f3bb6e82f inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memItemLeft" align="right" valign="top"><a id="af7cfc030b548fc1462c0f67f3bb6e82f"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>pColumnCount</b></td></tr>
+<tr class="separator:af7cfc030b548fc1462c0f67f3bb6e82f inherit pro_attribs_classAntares_1_1Solver_1_1Variable_1_1IVariable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/solver/variable/include/antares/solver/variable/economy/<a class="el" href="multi__column__base_8h_source.html">multi_column_base.h</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Solver</b></li><li class="navelem"><b>Variable</b></li><li class="navelem"><b>Economy</b></li><li class="navelem"><a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase.html">MultiColumnBase</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

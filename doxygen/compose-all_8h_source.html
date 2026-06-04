@@ -132,28 +132,24 @@ $(document).ready(function(){initNavTree('compose-all_8h_source.html',''); initR
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/variable.h&quot;</span> <span class="comment">// for Container::EndOfList</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;antares/solver/variable/tuple_variable_list.h&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>Antares::Solver::Variable::Common</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// Variadic recursive composition of class templates: ComposeAll&lt;Head, Tail...&gt;::type =</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// Head&lt;Tail&lt;...&lt;Container::EndOfList&gt;&gt;&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>Head, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class</span>... Tail&gt;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">   14</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">ComposeAll</a></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">using</span> type = Head&lt;<span class="keyword">typename</span> <a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">ComposeAll</a>&lt;Tail...&gt;::type&gt;;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;};</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// Base case: single template</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>Last&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll_3_01Last_01_4.html">   21</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">ComposeAll</a>&lt;Last&gt;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">using</span> type = Last&lt;Container::EndOfList&gt;;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Common</span></div>
-<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">Antares::Solver::Variable::Common::ComposeAll</a></div><div class="ttdef"><b>Definition:</b> compose-all.h:15</div></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// Variadic composition of output variables.</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// Each variable is a standalone class; ComposeAll flattens them into a</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">// tuple-based dispatcher.</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span>... Vs&gt;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">   16</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">ComposeAll</a></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">using</span> <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList.html">type</a> = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList.html">Container::TupleVariableList</a>&lt;Vs...&gt;;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace Antares::Solver::Variable::Common</span></div>
+<div class="ttc" id="aclassAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList.html">Antares::Solver::Variable::Container::TupleVariableList</a></div><div class="ttdoc">Flat storage + fold dispatch for a list of output variables.</div><div class="ttdef"><b>Definition:</b> tuple_variable_list.h:47</div></div>
+<div class="ttc" id="astructAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll_html"><div class="ttname"><a href="structAntares_1_1Solver_1_1Variable_1_1Common_1_1ComposeAll.html">Antares::Solver::Variable::Common::ComposeAll</a></div><div class="ttdef"><b>Definition:</b> compose-all.h:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

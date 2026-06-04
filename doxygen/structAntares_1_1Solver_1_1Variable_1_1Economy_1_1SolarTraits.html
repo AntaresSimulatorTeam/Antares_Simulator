@@ -130,46 +130,19 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 <div class="title">Antares::Solver::Variable::Economy::SolarTraits Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Traits for solar generation time series.  
- <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="generation_8h_source.html">generation.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for Antares::Solver::Variable::Economy::SolarTraits:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.png" usemap="#Antares::Solver::Variable::Economy::SolarTraits_map" alt=""/>
-  <map id="Antares::Solver::Variable::Economy::SolarTraits_map" name="Antares::Solver::Variable::Economy::SolarTraits_map">
-<area href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1GenerationTraits_3_01SolarTag_01_4.html" title="Specialization mapping SolarTag to SolarTraits." alt="Antares::Solver::Variable::Economy::GenerationTraits&lt; SolarTag &gt;" shape="rect" coords="0,56,385,80"/>
-  </map>
-</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:aa0c4a7bde5e2d858ab0614ab10716282"><td class="memItemLeft" align="right" valign="top"><a id="aa0c4a7bde5e2d858ab0614ab10716282"></a>
-static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#aa0c4a7bde5e2d858ab0614ab10716282">kCaption</a> = &quot;SOLAR&quot;</td></tr>
-<tr class="memdesc:aa0c4a7bde5e2d858ab0614ab10716282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Display name for solar generation in outputs and GUI. <br /></td></tr>
+static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>kCaption</b> = &quot;SOLAR&quot;</td></tr>
 <tr class="separator:aa0c4a7bde5e2d858ab0614ab10716282"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac66332845dbc0fee75359c17c8e2cdd6"><td class="memItemLeft" align="right" valign="top">static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#ac66332845dbc0fee75359c17c8e2cdd6">kDescription</a></td></tr>
-<tr class="memdesc:ac66332845dbc0fee75359c17c8e2cdd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Descriptive text (preserving original typo for stability)  <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1SolarTraits.html#ac66332845dbc0fee75359c17c8e2cdd6">More...</a><br /></td></tr>
+<tr class="memitem:ac66332845dbc0fee75359c17c8e2cdd6"><td class="memItemLeft" align="right" valign="top">static constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>kDescription</b></td></tr>
 <tr class="separator:ac66332845dbc0fee75359c17c8e2cdd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3543ed81328e674dad7af56eb8121b3"><td class="memItemLeft" align="right" valign="top"><a id="aa3543ed81328e674dad7af56eb8121b3"></a>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>areaMember</b> = &amp;Data::Area::solar</td></tr>
 <tr class="separator:aa3543ed81328e674dad7af56eb8121b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Traits for solar generation time series. </p>
-<ul>
-<li>Defines the specific characteristics of solar generation variables:</li>
-<li>Caption: "SOLAR" (as displayed in outputs)</li>
-<li>Description: Descriptive text for documentation</li>
-<li>Area Member: Points to Data::Area::solar for data access</li>
-<li>## Data Access: The areaMember pointer allows type-safe access to the correct area data: <div class="fragment"><div class="line"><span class="keyword">auto</span>&amp; solarData = (area-&gt;*SolarTraits::areaMember);</div>
-<div class="line"><span class="comment">// Equivalent to: auto&amp; solarData = area-&gt;solar;</span></div>
-</div><!-- fragment --> </li>
-</ul>
-</div><h2 class="groupheader">Member Data Documentation</h2>
+<h2 class="groupheader">Member Data Documentation</h2>
 <a id="ac66332845dbc0fee75359c17c8e2cdd6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac66332845dbc0fee75359c17c8e2cdd6">&#9670;&nbsp;</a></span>kDescription</h2>
 
@@ -192,8 +165,6 @@ static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>area
 <b>Initial value:</b><div class="fragment"><div class="line">= <span class="stringliteral">&quot;Solar generation, thoughout all MC &quot;</span></div>
 <div class="line">                                                            <span class="stringliteral">&quot;years&quot;</span></div>
 </div><!-- fragment -->
-<p>Descriptive text (preserving original typo for stability) </p>
-
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>

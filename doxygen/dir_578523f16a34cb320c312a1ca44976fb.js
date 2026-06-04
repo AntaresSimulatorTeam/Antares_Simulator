@@ -13,6 +13,5 @@ var dir_578523f16a34cb320c312a1ca44976fb =
     [ "raw.hxx", "raw_8hxx_source.html", null ],
     [ "rawdata.h", "rawdata_8h_source.html", null ],
     [ "results.h", "results_8h_source.html", null ],
-    [ "results.hxx", "results_8hxx_source.html", null ],
     [ "stdDeviation.h", "stdDeviation_8h_source.html", null ]
 ];

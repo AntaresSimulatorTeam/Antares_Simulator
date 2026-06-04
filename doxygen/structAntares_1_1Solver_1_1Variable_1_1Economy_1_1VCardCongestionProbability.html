@@ -141,16 +141,16 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a91c021d0e49cd8e6795287c04dcb741b"><td class="memItemLeft" align="right" valign="top"><a id="a91c021d0e49cd8e6795287c04dcb741b"></a>
-typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html">R::AllYears::Raw</a>&lt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a91c021d0e49cd8e6795287c04dcb741b">ResultsType</a></td></tr>
-<tr class="memdesc:a91c021d0e49cd8e6795287c04dcb741b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The expecte results. <br /></td></tr>
-<tr class="separator:a91c021d0e49cd8e6795287c04dcb741b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fc2250a111a738459770f829ed95638"><td class="memItemLeft" align="right" valign="top"><a id="a2fc2250a111a738459770f829ed95638"></a>
-typedef <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateValuesBaseType</b>[<a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a1483753f1fa5c5e8eb26a2b8571c00ef">columnCount</a>]</td></tr>
-<tr class="separator:a2fc2250a111a738459770f829ed95638"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a380cd53234ca0d9402cace16893dc683"><td class="memItemLeft" align="right" valign="top"><a id="a380cd53234ca0d9402cace16893dc683"></a>
-typedef IntermediateValuesBaseType *&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateValuesType</b></td></tr>
-<tr class="separator:a380cd53234ca0d9402cace16893dc683"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a019df18e6c2084449381239d9c52df4b"><td class="memItemLeft" align="right" valign="top"><a id="a019df18e6c2084449381239d9c52df4b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a019df18e6c2084449381239d9c52df4b">ResultsType</a> = <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Results.html">Results</a>&lt; std::tuple&lt; <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html">R::AllYears::Raw</a> &gt; &gt;</td></tr>
+<tr class="memdesc:a019df18e6c2084449381239d9c52df4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expected results configuration. <br /></td></tr>
+<tr class="separator:a019df18e6c2084449381239d9c52df4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dd6556d01432c90a900dfa643efe2e5"><td class="memItemLeft" align="right" valign="top"><a id="a8dd6556d01432c90a900dfa643efe2e5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateValuesBaseType</b> = std::array&lt; <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a>, <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a1483753f1fa5c5e8eb26a2b8571c00ef">columnCount</a> &gt;</td></tr>
+<tr class="separator:a8dd6556d01432c90a900dfa643efe2e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34dcf74afcb58403f83d2fc4d0dd51ff"><td class="memItemLeft" align="right" valign="top"><a id="a34dcf74afcb58403f83d2fc4d0dd51ff"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>IntermediateValuesType</b> = std::vector&lt; IntermediateValuesBaseType &gt;</td></tr>
+<tr class="separator:a34dcf74afcb58403f83d2fc4d0dd51ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -180,17 +180,13 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a c
 static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#afb8a57d6da23fd00925300f394e19892">precision</a> = Category::all</td></tr>
 <tr class="memdesc:afb8a57d6da23fd00925300f394e19892"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precision (views) <br /></td></tr>
 <tr class="separator:afb8a57d6da23fd00925300f394e19892"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab05625745aa9b14496d69a6334a80efb"><td class="memItemLeft" align="right" valign="top"><a id="ab05625745aa9b14496d69a6334a80efb"></a>
-static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#ab05625745aa9b14496d69a6334a80efb">nodeDepthForGUI</a> = +0</td></tr>
-<tr class="memdesc:ab05625745aa9b14496d69a6334a80efb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indentation (GUI) <br /></td></tr>
-<tr class="separator:ab05625745aa9b14496d69a6334a80efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b60e885d81b41b3b6e291fc4b4fc5b8"><td class="memItemLeft" align="right" valign="top"><a id="a6b60e885d81b41b3b6e291fc4b4fc5b8"></a>
 static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a6b60e885d81b41b3b6e291fc4b4fc5b8">decimal</a> = 2</td></tr>
 <tr class="memdesc:a6b60e885d81b41b3b6e291fc4b4fc5b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decimal precision. <br /></td></tr>
 <tr class="separator:a6b60e885d81b41b3b6e291fc4b4fc5b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1483753f1fa5c5e8eb26a2b8571c00ef"><td class="memItemLeft" align="right" valign="top"><a id="a1483753f1fa5c5e8eb26a2b8571c00ef"></a>
 static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a1483753f1fa5c5e8eb26a2b8571c00ef">columnCount</a> = 2</td></tr>
-<tr class="memdesc:a1483753f1fa5c5e8eb26a2b8571c00ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of columns used by the variable (One ResultsType per column) <br /></td></tr>
+<tr class="memdesc:a1483753f1fa5c5e8eb26a2b8571c00ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of columns used by the variable (one results configuration per column) <br /></td></tr>
 <tr class="separator:a1483753f1fa5c5e8eb26a2b8571c00ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa47eb624241c8d4837ceb81f6a64580e"><td class="memItemLeft" align="right" valign="top"><a id="aa47eb624241c8d4837ceb81f6a64580e"></a>
 static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#aa47eb624241c8d4837ceb81f6a64580e">spatialAggregate</a> = Category::spatialAggregateSum</td></tr>
@@ -202,10 +198,6 @@ static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>s
 <tr class="memitem:ab32b5e9e7d944bcf53dd23376f3280e0"><td class="memItemLeft" align="right" valign="top"><a id="ab32b5e9e7d944bcf53dd23376f3280e0"></a>
 static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>spatialAggregatePostProcessing</b> = 0</td></tr>
 <tr class="separator:ab32b5e9e7d944bcf53dd23376f3280e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b0005e9804d91bb0f6e2dc56e05df76"><td class="memItemLeft" align="right" valign="top"><a id="a0b0005e9804d91bb0f6e2dc56e05df76"></a>
-static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a0b0005e9804d91bb0f6e2dc56e05df76">hasIntermediateValues</a> = 1</td></tr>
-<tr class="memdesc:a0b0005e9804d91bb0f6e2dc56e05df76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intermediate values. <br /></td></tr>
-<tr class="separator:a0b0005e9804d91bb0f6e2dc56e05df76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a126fd252fa2582e49337a9095771d9de"><td class="memItemLeft" align="right" valign="top"><a id="a126fd252fa2582e49337a9095771d9de"></a>
 static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardCongestionProbability.html#a126fd252fa2582e49337a9095771d9de">isPossiblyNonApplicable</a> = 0</td></tr>
 <tr class="memdesc:a126fd252fa2582e49337a9095771d9de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can this variable be non applicable (0 : no, 1 : yes) <br /></td></tr>

@@ -28,39 +28,50 @@ var NAVTREE =
     [ "Links", "index.html#autotoc_md1", null ],
     [ "Installation", "index.html#autotoc_md2", null ],
     [ "Source Code Content", "index.html#autotoc_md3", null ],
+    [ "<tt>solver/variable</tt> — architecture", "md_src_solver_variable_ARCHITECTURE.html", [
+      [ "Files", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md5", null ],
+      [ "Traits contract", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md6", [
+        [ "Required", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md7", null ],
+        [ "Optional hooks (methods)", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md8", null ]
+      ] ],
+      [ "Auxiliary data", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md9", null ],
+      [ "Lifecycle", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md10", null ],
+      [ "<tt>detail</tt> namespace", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md11", null ],
+      [ "Future direction", "md_src_solver_variable_ARCHITECTURE.html#autotoc_md12", null ]
+    ] ],
     [ "Antares Cucumber Tests", "md_src_tests_cucumber_readme.html", [
-      [ "Tests structure", "md_src_tests_cucumber_readme.html#autotoc_md19", [
-        [ "Features, scenarios and tags", "md_src_tests_cucumber_readme.html#autotoc_md20", null ],
-        [ "Steps structure", "md_src_tests_cucumber_readme.html#autotoc_md21", null ]
+      [ "Tests structure", "md_src_tests_cucumber_readme.html#autotoc_md33", [
+        [ "Features, scenarios and tags", "md_src_tests_cucumber_readme.html#autotoc_md34", null ],
+        [ "Steps structure", "md_src_tests_cucumber_readme.html#autotoc_md35", null ]
       ] ],
-      [ "Running the tests", "md_src_tests_cucumber_readme.html#autotoc_md22", [
-        [ "On your PC", "md_src_tests_cucumber_readme.html#autotoc_md23", null ],
-        [ "The configuration file", "md_src_tests_cucumber_readme.html#autotoc_md24", null ],
-        [ "In the CI", "md_src_tests_cucumber_readme.html#autotoc_md25", null ]
+      [ "Running the tests", "md_src_tests_cucumber_readme.html#autotoc_md36", [
+        [ "On your PC", "md_src_tests_cucumber_readme.html#autotoc_md37", null ],
+        [ "The configuration file", "md_src_tests_cucumber_readme.html#autotoc_md38", null ],
+        [ "In the CI", "md_src_tests_cucumber_readme.html#autotoc_md39", null ]
       ] ],
-      [ "Under the hood", "md_src_tests_cucumber_readme.html#autotoc_md26", [
-        [ "Test files", "md_src_tests_cucumber_readme.html#autotoc_md27", null ],
-        [ "Code-behind", "md_src_tests_cucumber_readme.html#autotoc_md28", null ]
+      [ "Under the hood", "md_src_tests_cucumber_readme.html#autotoc_md40", [
+        [ "Test files", "md_src_tests_cucumber_readme.html#autotoc_md41", null ],
+        [ "Code-behind", "md_src_tests_cucumber_readme.html#autotoc_md42", null ]
       ] ]
     ] ],
     [ "How does the automatic testing script system work ?", "md_src_tests_run_study_tests_readme.html", [
-      [ "Introduction", "md_src_tests_run_study_tests_readme.html#autotoc_md30", null ],
-      [ "Entry points to the automatic testing script system", "md_src_tests_run_study_tests_readme.html#autotoc_md31", null ],
-      [ "File test_from_json.py", "md_src_tests_run_study_tests_readme.html#autotoc_md32", null ],
-      [ "Fixtures", "md_src_tests_run_study_tests_readme.html#autotoc_md33", null ],
-      [ "Tests parametrization", "md_src_tests_run_study_tests_readme.html#autotoc_md34", null ],
-      [ "The test's body", "md_src_tests_run_study_tests_readme.html#autotoc_md35", [
-        [ "<ins>Run fixtures</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md36", null ],
-        [ "<ins>Checks creation factory</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md37", null ],
-        [ "<ins>Running the checks</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md38", null ],
-        [ "<ins>End of tests</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md39", null ]
+      [ "Introduction", "md_src_tests_run_study_tests_readme.html#autotoc_md44", null ],
+      [ "Entry points to the automatic testing script system", "md_src_tests_run_study_tests_readme.html#autotoc_md45", null ],
+      [ "File test_from_json.py", "md_src_tests_run_study_tests_readme.html#autotoc_md46", null ],
+      [ "Fixtures", "md_src_tests_run_study_tests_readme.html#autotoc_md47", null ],
+      [ "Tests parametrization", "md_src_tests_run_study_tests_readme.html#autotoc_md48", null ],
+      [ "The test's body", "md_src_tests_run_study_tests_readme.html#autotoc_md49", [
+        [ "<ins>Run fixtures</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md50", null ],
+        [ "<ins>Checks creation factory</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md51", null ],
+        [ "<ins>Running the checks</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md52", null ],
+        [ "<ins>End of tests</ins>", "md_src_tests_run_study_tests_readme.html#autotoc_md53", null ]
       ] ],
-      [ "How to add a check on a test ?", "md_src_tests_run_study_tests_readme.html#autotoc_md40", [
-        [ "What to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md41", null ],
-        [ "What NOT to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md42", null ]
+      [ "How to add a check on a test ?", "md_src_tests_run_study_tests_readme.html#autotoc_md54", [
+        [ "What to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md55", null ],
+        [ "What NOT to do ?", "md_src_tests_run_study_tests_readme.html#autotoc_md56", null ]
       ] ],
-      [ "Running the script", "md_src_tests_run_study_tests_readme.html#autotoc_md43", null ],
-      [ "TO DO", "md_src_tests_run_study_tests_readme.html#autotoc_md44", null ]
+      [ "Running the script", "md_src_tests_run_study_tests_readme.html#autotoc_md57", null ],
+      [ "TO DO", "md_src_tests_run_study_tests_readme.html#autotoc_md58", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Modules", "modules.html", "modules" ],
@@ -69,7 +80,6 @@ var NAVTREE =
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
-        [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
         [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
@@ -82,7 +92,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
-        [ "Typedefs", "functions_type.html", "functions_type" ],
+        [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ]
       ] ]
@@ -97,55 +107,51 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "",
-"ForbiddenNodes_8cpp.html#ab4219dba8e964f322a0c1a0b8dd23df8",
-"TimeSumUtils_8h.html#a3acb796eb416a82bbb2c64e246d46cb9",
-"classAntares_1_1Data_1_1AllVariablesPrintInfo.html#a2aa561ce05a2ab9666a5bc1954fba1bf",
-"classAntares_1_1Data_1_1BindingConstraintsRepository.html#a30bf457bc3fc6094e6c9068be1dd7413",
-"classAntares_1_1Data_1_1Parameters.html#ae1b4283ced581cfd2ed58b3a24f839d0",
-"classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a02e2a8ec170baaa4a5390c1514c5788e",
-"classAntares_1_1Data_1_1Study.html#a43caa627f54b086a1b26b352e7400ac2",
-"classAntares_1_1Data_1_1VariablePrintInfo.html",
-"classAntares_1_1Expressions_1_1Nodes_1_1ParentNode.html#aa4e810c2671e292f39024a8f5bbf98ec",
-"classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html#a9d65c8ebc5afe5c3234b159b96f82f5a",
-"classAntares_1_1MinGenerationScaling.html#af8f615e7f2bef05cf55bfbc4a59c0f9b",
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#ace145aa1eed67edce6f6785e32523ca4",
-"classAntares_1_1Optimisation_1_1ReadLinearExpressionVisitor.html#a49b215f500829fea605314514abfb2a8",
-"classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems.html#ac8463364034e03e447f0723dd56365e1",
-"classAntares_1_1Solver_1_1Simulation_1_1interfacePostProcessList.html#a19b88e8ecef5634ff071cd9d0ac266d1",
-"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a11f1b650e7633334e3eacdd58cef5cb8",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DtgMarginCsr.html#a667fbf7159ed62c74f46e4272f8e879c",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MarginalCost.html#ac937816e4583651a1a17586121ff17a9",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Pumping.html#ab6348aef5092ee85863d2405d9fdabf4",
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1RowBalance.html#aab26406deea88401187e43b435da5468",
-"classAntares_1_1Solver_1_1Variable_1_1Join.html#a4bf2c1aedcf63a807046f6bdfec03e05",
-"classAntares_1_1Solver_1_1Variable_1_1State.html#af7a0bd9da36d17b64a2a909e7f56bab6",
-"classBindingConstraintHour.html#a7adbfc31f706154144a22cf4a6c720ea",
-"classExprParser.html#a6825988e89401778f047fe1adabc10c7",
-"classFSWalker_1_1EventsRegistry.html#af868dbeb1c0c17c0534dbe22ef188161",
-"classHoursFieldBaseVisitor.html#ace43d03e08fd13d98d8b55030d4af0f5",
-"classMockLinearProblem.html#a1dd598da95abddcc726c0d955395ad12",
-"classPathList.html#a68fc42ce7e947ea76b34df8a2a2ea6b2",
-"classSimulationHandler.html#a982c1417b7c352a5b9169f23ae72cfe8",
-"classYAML_1_1YmlTreeDisplayer.html#a2b71ed813dfe61cffdd4a35e6662b87e",
-"classmodeler__output__handler_1_1invest__problems.html#a45eb871ed6f59b9d7cb6fb5ecf000b16",
-"date_8h.html#aa8104e849e0d5706a12b06eaa5fbf7a1",
-"dir_9b62109055c7fb9579a2ada8f31545cf.html",
-"functions_func_d.html",
-"law_8h.html#a216163bccb431c1e85890d4b8208cda8a11b2fa0f579d102298e1aa388ee89ecf",
-"lolp_8h.html#a8278069fc1e07c34e4aab2f5acae0513",
-"parseModelerParameters_8h_source.html",
-"solver__steps_8py.html#a3e4ae8358376dec656f4144e8e6e4c05",
-"structAntares_1_1Data_1_1StorageClusterReserveParticipation.html",
-"structAntares_1_1ModelerStudy_1_1SystemModel_1_1ThermalComponent.html#afefa6e3d672d8ce56c8f599db5c1200b",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1VCardReserveParticipationCost.html#ac3f8925dbcc14c7c5c25f6f7eb8d943f",
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSpilledEnergy.html",
-"structBasicProblemFixture.html#a6e17f314e6680796a5e840d6baa65b32",
-"structCsrAreaBalanceData.html#ab959fe88abafd7f8c2303f38d7cfdc82",
-"structFinalStockEquivalentData.html#a47f75fe99a114e81c25761b51b2bb8bb",
-"structPDISP__ET__COUTS__HORAIRES__PAR__PALIER.html#a3f423e7813fab6f798109c8937e8673d",
-"structReserveData.html#acf2a1225138b0b7bdb379a325e7c6c7d",
-"structTimeDependentParameterFixture.html#a58e0058bbf113c8e5799efa07fffab51",
-"variables-creators_8h_source.html"
+"ForbiddenNodes_8cpp.html#a6d1ad808f7089d303852cd600ed6cac8",
+"TSnumberData_8h_source.html",
+"classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a97072ae964166046c40266438ffbd3a6",
+"classAntares_1_1Data_1_1BindingConstraintGroupRepository.html#ab852f43e20dc8a62df382606c4a8aa86",
+"classAntares_1_1Data_1_1Parameters.html#ab1c22ca9d04644cf513fa6475d8d80d9",
+"classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html#ad8fe208c0def8db5f12f36fa0fc4abdd",
+"classAntares_1_1Data_1_1Study.html#a083fcc4ef4e2a4e531a2f3ca520d7100",
+"classAntares_1_1Data_1_1TimeSeriesNumbers.html",
+"classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html#ad93716c8ea3d7d4cf2ccfed1df46672a",
+"classAntares_1_1IO_1_1Inputs_1_1ModelConverter_1_1ConvertorVisitor.html#a4ddd3f7740b3039d8ea32c6bfb9af379",
+"classAntares_1_1Memory.html#ae270a72a98480eba1328922797d1c8ed",
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html#a36ae3bf4633469cd6b6cd9120ed31dc5",
+"classAntares_1_1Optimisation_1_1OptimEntityContainer.html#ad120f3107de9af36624bf39c0012a010",
+"classAntares_1_1Solver_1_1IResultWriter.html#aa6bd89bcd8a5a475a49c26a623ae3741",
+"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#acede9ee07eb1b94787ae67129696e6e9",
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#acbebd86d74e68ef469742e63385ade7c",
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#ac34af2cca962d6a369ac68e1c47575b6",
+"classAntares_1_1Solver_1_1Variable_1_1Links.html#a592d9d9913bb69b8aa7113c6f82088fa",
+"classAntares_1_1Solver_1_1ZipWriter.html#abe8519ea38344f48556958d19cef9260",
+"classConstraintBuilder.html#a9749f5bd7614c94789dd58709e7aee16",
+"classExprParser_1_1FullexprContext.html#a659e58202ee973b8584aa5b31ab93c48",
+"classFSWalker_1_1WalkerThread.html#aa03bf8b6ff2cf5b8551ff7494f37a873",
+"classHydraulicSmoothingGroup.html#aedd8f967c204c600ed992ac73b69bf13",
+"classMockVariable.html#a1c88d2f8a6ca61fc9eb5c1afdd7a24dc",
+"classResultMatrix.html#a3b15782001a37e00af3269be8412c5b7",
+"classSymmetryFieldBaseListener.html#a0fffc8469aa3b893acd196ac35130a6d",
+"classaverageResults.html#a65fc52006d17d336751236d89db3539e",
+"classsolver__output__handler_1_1solver__output__handler.html#a004ebb503223503d853b0082ae4fb0ef",
+"dir_10eff3b615c11c894c5d35fe0b70a5c8.html",
+"dir_bac1b05bbeb3d17522a3d266590990b3.html",
+"functions_j.html",
+"libs_2antares_2study_2include_2antares_2study_2area_2constants_8h.html#af1655e97ba9e4d520e0b177b36659357",
+"md_src_solver_variable_ARCHITECTURE.html#autotoc_md8",
+"print_8h_source.html",
+"solver__steps_8py.html#aa281a354ead0677f44051587f789b3a2",
+"structAntares_1_1Data_1_1ThermalClusterReserveParticipation.html#a0d6c5fc2da3dba48972faaca83fde362",
+"structAntares_1_1Optimization_1_1VariableBounds.html",
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceTraits.html",
+"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1noColumn_01_4.html#a8ba9180fa868f3ad2ae28a1f5ae71b7b",
+"structCOUTS__DE__TRANSPORT.html#a4a112bd111ab3f51856fbf7512b060c2",
+"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a564fcbcc5cfd5abd07cfc93bf42ccfe2",
+"structMockLinearProblemData.html#a2a2b34197a60c98f3b256b5fc208754e",
+"structQpFixture.html",
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html#a051238f88d3fae171a4c4ea4d3161d73",
+"thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a471690288ac168634e38e8973a95c584"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

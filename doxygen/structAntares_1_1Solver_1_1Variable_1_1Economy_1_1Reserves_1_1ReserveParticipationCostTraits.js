@@ -1,0 +1,4 @@
+var structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCostTraits =
+[
+    [ "ResultsProfile", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationCostTraits.html#a245e504949dc35d7f3fcc52e8347d071", null ]
+];

@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Solver::Variable::R::AllYears::Raw&lt; NextT, FileFilter &gt; Struct Template Reference</title>
+<title>Antares Simulator: Antares::Solver::Variable::R::AllYears::Raw Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -124,93 +124,58 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Solver::Variable::R::AllYears::Raw&lt; NextT, FileFilter &gt; Struct Template Reference</div>  </div>
+<div class="title">Antares::Solver::Variable::R::AllYears::Raw Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for Antares::Solver::Variable::R::AllYears::Raw&lt; NextT, FileFilter &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.png" alt=""/>
- </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:ad04e580ca37c8c3d6f6a2b84037e1647"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#ad04e580ca37c8c3d6f6a2b84037e1647a187a27aba53df78c5fe51fcbaa12b0a2">count</a> = 1 + NextT::count
-, <b>categoryFile</b> = NextT::categoryFile | Variable::Category::FileLevel::allFile
- }</td></tr>
-<tr class="separator:ad04e580ca37c8c3d6f6a2b84037e1647"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64a09e4897a39e1a1a14ffb548c91e4b"><td class="memItemLeft" align="right" valign="top"><a id="a64a09e4897a39e1a1a14ffb548c91e4b"></a>
-typedef NextT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a64a09e4897a39e1a1a14ffb548c91e4b">NextType</a></td></tr>
-<tr class="memdesc:a64a09e4897a39e1a1a14ffb548c91e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of the net item in the list. <br /></td></tr>
-<tr class="separator:a64a09e4897a39e1a1a14ffb548c91e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a1ca4ca69348f8bf03d28ec1a0b4ae56a"><td class="memItemLeft" align="right" valign="top"><a id="a1ca4ca69348f8bf03d28ec1a0b4ae56a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromStudy</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &amp;study)</td></tr>
+<tr class="separator:a1ca4ca69348f8bf03d28ec1a0b4ae56a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19cdebb250906744fc7b43075ad53d6b"><td class="memItemLeft" align="right" valign="top"><a id="a19cdebb250906744fc7b43075ad53d6b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
+<tr class="separator:a19cdebb250906744fc7b43075ad53d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3584a659d9374f7b0f8e963c41e7f87a"><td class="memItemLeft" align="right" valign="top"><a id="a3584a659d9374f7b0f8e963c41e7f87a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>merge</b> (uint year, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;rhs)</td></tr>
+<tr class="separator:a3584a659d9374f7b0f8e963c41e7f87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb6746fe5b471d90cb5733ccf8ed8ff0"><td class="memTemplParams" colspan="2"><a id="aeb6746fe5b471d90cb5733ccf8ed8ff0"></a>
+template&lt;class S , class VCardT &gt; </td></tr>
+<tr class="memitem:aeb6746fe5b471d90cb5733ccf8ed8ff0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;report, const S &amp;results, int dataLevel, int fileLevel, int precision) const</td></tr>
+<tr class="separator:aeb6746fe5b471d90cb5733ccf8ed8ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac07bd86be52bd0302490dd4701968f59"><td class="memTemplParams" colspan="2"><a id="ac07bd86be52bd0302490dd4701968f59"></a>
+template&lt;class VCardT &gt; </td></tr>
+<tr class="memitem:ac07bd86be52bd0302490dd4701968f59"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buildDigest</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;report, int digestLevel, int dataLevel) const</td></tr>
+<tr class="separator:ac07bd86be52bd0302490dd4701968f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d6b399d8c77a132f4e947c5a2f0c30c"><td class="memItemLeft" align="right" valign="top"><a id="a4d6b399d8c77a132f4e947c5a2f0c30c"></a>
+<a class="el" href="structAntares_1_1Memory_1_1Stored.html">Antares::Memory::Stored</a>&lt; double &gt;::ConstReturnType&#160;</td><td class="memItemRight" valign="bottom"><b>hourlyForSpatialAggregate</b> () const</td></tr>
+<tr class="separator:a4d6b399d8c77a132f4e947c5a2f0c30c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a6567363770434c88aeef94089e01d618"><td class="memItemLeft" align="right" valign="top"><a id="a6567363770434c88aeef94089e01d618"></a>
-static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1Raw.html#a6567363770434c88aeef94089e01d618">Name</a> ()</td></tr>
-<tr class="memdesc:a6567363770434c88aeef94089e01d618"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the filter. <br /></td></tr>
-<tr class="separator:a6567363770434c88aeef94089e01d618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c12e8362d3c74650366b42ff1a9bb4c"><td class="memItemLeft" align="right" valign="top"><a id="a3c12e8362d3c74650366b42ff1a9bb4c"></a>
+static const char *&#160;</td><td class="memItemRight" valign="bottom"><b>Name</b> ()</td></tr>
+<tr class="separator:a3c12e8362d3c74650366b42ff1a9bb4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a06f92fef5a903bbfec0bf20584cae17c"><td class="memItemLeft" align="right" valign="top"><a id="a06f92fef5a903bbfec0bf20584cae17c"></a>
+<tr class="memitem:a15302b49989c1f3757b35d1915a69af3"><td class="memItemLeft" align="right" valign="top"><a id="a15302b49989c1f3757b35d1915a69af3"></a>
 <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1RawData.html">RawData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rawdata</b></td></tr>
-<tr class="separator:a06f92fef5a903bbfec0bf20584cae17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a15302b49989c1f3757b35d1915a69af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a9e2df288459e557d7a9a1af11bf3f0a8"><td class="memItemLeft" align="right" valign="top"><a id="a9e2df288459e557d7a9a1af11bf3f0a8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeFromStudy</b> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Antares::Data::Study</a> &amp;study)</td></tr>
-<tr class="separator:a9e2df288459e557d7a9a1af11bf3f0a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a922d05bf901907edc3f31a5ed11f6eea"><td class="memItemLeft" align="right" valign="top"><a id="a922d05bf901907edc3f31a5ed11f6eea"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
-<tr class="separator:a922d05bf901907edc3f31a5ed11f6eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4b576219c58edab95d5bc6eb80be510"><td class="memItemLeft" align="right" valign="top"><a id="ab4b576219c58edab95d5bc6eb80be510"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>merge</b> (uint year, const <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IntermediateValues.html">IntermediateValues</a> &amp;rhs)</td></tr>
-<tr class="separator:ab4b576219c58edab95d5bc6eb80be510"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa020c9da90127aeaaac1486d67a8e328"><td class="memTemplParams" colspan="2"><a id="aa020c9da90127aeaaac1486d67a8e328"></a>
-template&lt;class S , class VCardT &gt; </td></tr>
-<tr class="memitem:aa020c9da90127aeaaac1486d67a8e328"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buildSurveyReport</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;report, const S &amp;results, int dataLevel, int fileLevel, int precision) const</td></tr>
-<tr class="separator:aa020c9da90127aeaaac1486d67a8e328"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafc9053228d2b1005ea7f9b3e7e1b3de"><td class="memTemplParams" colspan="2"><a id="aafc9053228d2b1005ea7f9b3e7e1b3de"></a>
-template&lt;class VCardT &gt; </td></tr>
-<tr class="memitem:aafc9053228d2b1005ea7f9b3e7e1b3de"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buildDigest</b> (<a class="el" href="classAntares_1_1Solver_1_1Variable_1_1SurveyResults.html">SurveyResults</a> &amp;report, int digestLevel, int dataLevel) const</td></tr>
-<tr class="separator:aafc9053228d2b1005ea7f9b3e7e1b3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf99733bd2fd9b956be83f72e8ec18cd"><td class="memTemplParams" colspan="2"><a id="acf99733bd2fd9b956be83f72e8ec18cd"></a>
-template&lt;template&lt; class, int &gt; class DecoratorT&gt; </td></tr>
-<tr class="memitem:acf99733bd2fd9b956be83f72e8ec18cd"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structAntares_1_1Memory_1_1Stored.html">Antares::Memory::Stored</a>&lt; double &gt;::ConstReturnType&#160;</td><td class="memTemplItemRight" valign="bottom"><b>hourlyValuesForSpatialAggregate</b> () const</td></tr>
-<tr class="separator:acf99733bd2fd9b956be83f72e8ec18cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a4c16d2714b8ccfdf4aabfebe4820f413"><td class="memItemLeft" align="right" valign="top"><a id="a4c16d2714b8ccfdf4aabfebe4820f413"></a>
+static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>categoryFile</b> = Variable::Category::FileLevel::allFile</td></tr>
+<tr class="separator:a4c16d2714b8ccfdf4aabfebe4820f413"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="ad04e580ca37c8c3d6f6a2b84037e1647"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad04e580ca37c8c3d6f6a2b84037e1647">&#9670;&nbsp;</a></span>anonymous enum</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class NextT , int FileFilter&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">anonymous enum</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ad04e580ca37c8c3d6f6a2b84037e1647a187a27aba53df78c5fe51fcbaa12b0a2"></a>count&#160;</td><td class="fielddoc"><p>The count if item in the list. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>src/solver/variable/include/antares/solver/variable/storage/<a class="el" href="solver_2variable_2include_2antares_2solver_2variable_2storage_2fwd_8h_source.html">fwd.h</a></li>
 <li>src/solver/variable/include/antares/solver/variable/storage/<a class="el" href="raw_8h_source.html">raw.h</a></li>
 <li>src/solver/variable/include/antares/solver/variable/storage/<a class="el" href="raw_8hxx_source.html">raw.hxx</a></li>
 </ul>

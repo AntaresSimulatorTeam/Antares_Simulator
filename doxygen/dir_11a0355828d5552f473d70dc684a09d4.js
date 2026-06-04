@@ -6,13 +6,23 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "all.h", "economy_2all_8h_source.html", null ],
     [ "avail-dispatchable-generation.h", "avail-dispatchable-generation_8h_source.html", null ],
     [ "balance.h", "balance_8h_source.html", null ],
-    [ "ByPlant_base.h", "ByPlant__base_8h_source.html", null ],
     [ "dispatchable-generation-margin.h", "dispatchable-generation-margin_8h_source.html", null ],
     [ "dispatchableGeneration.h", "dispatchableGeneration_8h_source.html", null ],
-    [ "DispatchablePlantByCluster_base.h", "DispatchablePlantByCluster__base_8h_source.html", null ],
+    [ "DispatchablePlantByCluster_base.h", "DispatchablePlantByCluster__base_8h.html", [
+      [ "VCardDispatchablePlantByClusterBase", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDispatchablePlantByClusterBase" ],
+      [ "DispatchablePlantByClusterBase", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase" ],
+      [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DispatchablePlantByClusterBase_1_1Statistics.html", null ]
+    ] ],
     [ "domesticUnsuppliedEnergy.h", "domesticUnsuppliedEnergy_8h_source.html", null ],
     [ "dtgMarginAfterCsr.h", "dtgMarginAfterCsr_8h_source.html", null ],
-    [ "economy_base.h", "economy__base_8h_source.html", null ],
+    [ "dynamic_multi_column_base.h", "dynamic__multi__column__base_8h.html", [
+      [ "ColumnDescriptor", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ColumnDescriptor.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ColumnDescriptor" ],
+      [ "VCardDynamicMultiColumn", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDynamicMultiColumn.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardDynamicMultiColumn" ],
+      [ "DynamicMultiColumnCaption", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DynamicMultiColumnCaption.html", null ],
+      [ "DynamicMultiColumnBase", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DynamicMultiColumnBase.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1DynamicMultiColumnBase" ],
+      [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1DynamicMultiColumnBase_1_1Statistics.html", null ]
+    ] ],
+    [ "economy_base.h", "economy__base_8h.html", "economy__base_8h" ],
     [ "hydroCost.h", "hydroCost_8h_source.html", null ],
     [ "hydrostorage.h", "hydrostorage_8h_source.html", null ],
     [ "inflow.h", "inflow_8h_source.html", null ],
@@ -28,6 +38,12 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "max-mrg-utils.h", "max-mrg-utils_8h_source.html", null ],
     [ "max-mrg.h", "max-mrg_8h_source.html", null ],
     [ "minDispatchableGenByPlant.h", "minDispatchableGenByPlant_8h_source.html", null ],
+    [ "multi_column_base.h", "multi__column__base_8h.html", [
+      [ "VCardMultiColumn", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn" ],
+      [ "Multiple", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardMultiColumn_1_1Multiple.html", null ],
+      [ "MultiColumnBase", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase" ],
+      [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1MultiColumnBase_1_1Statistics.html", null ]
+    ] ],
     [ "nbOfDispatchedUnits.h", "nbOfDispatchedUnits_8h_source.html", null ],
     [ "nbOfDispatchedUnitsByPlant.h", "nbOfDispatchedUnitsByPlant_8h_source.html", null ],
     [ "nearPriceCap.h", "nearPriceCap_8h_source.html", null ],
@@ -48,7 +64,11 @@ var dir_11a0355828d5552f473d70dc684a09d4 =
     [ "residual.h", "residual_8h_source.html", null ],
     [ "spilledEnergy.h", "economy_2spilledEnergy_8h_source.html", null ],
     [ "STSbyGroup.h", "STSbyGroup_8h_source.html", null ],
-    [ "STStorageByCluster_base.h", "STStorageByCluster__base_8h_source.html", null ],
+    [ "STStorageByCluster_base.h", "STStorageByCluster__base_8h.html", [
+      [ "VCardSTStorageByClusterBase", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase.html", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardSTStorageByClusterBase" ],
+      [ "STStorageByClusterBase", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase" ],
+      [ "Statistics", "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase_1_1Statistics.html", null ]
+    ] ],
     [ "STStorageCashFlowByCluster.h", "STStorageCashFlowByCluster_8h_source.html", null ],
     [ "STStorageInjectionByCluster.h", "STStorageInjectionByCluster_8h_source.html", null ],
     [ "STStorageLevelsByCluster.h", "STStorageLevelsByCluster_8h_source.html", null ],

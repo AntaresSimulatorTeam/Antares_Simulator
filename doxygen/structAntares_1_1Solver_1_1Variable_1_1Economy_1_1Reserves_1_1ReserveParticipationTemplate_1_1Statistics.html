@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate&lt; DerivedType, VCardType, NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</title>
+<title>Antares Simulator: Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate&lt; DerivedType, VCardType &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -124,19 +124,50 @@ $(document).ready(function(){initNavTree('structAntares_1_1Solver_1_1Variable_1_
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate_1_1Statistics-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate&lt; DerivedType, VCardType, NextT &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</div>  </div>
+<div class="title">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate&lt; DerivedType, VCardType &gt;::Statistics&lt; CDataLevel, CFile &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a0b483a460e9672c6e9f2f612dd97c860"><td class="memItemLeft" align="right" valign="top"><a id="a0b483a460e9672c6e9f2f612dd97c860"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>count</b>
- }</td></tr>
-<tr class="separator:a0b483a460e9672c6e9f2f612dd97c860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a51df259e517a7d8cff4f31108da06a4c"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>count</b></td></tr>
+<tr class="separator:a51df259e517a7d8cff4f31108da06a4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a51df259e517a7d8cff4f31108da06a4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51df259e517a7d8cff4f31108da06a4c">&#9670;&nbsp;</a></span>count</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DerivedType , typename VCardType &gt; </div>
+<div class="memtemplate">
+template&lt;int CDataLevel, int CFile&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate.html">Antares::Solver::Variable::Economy::Reserves::ReserveParticipationTemplate</a>&lt; DerivedType, <a class="el" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3eb0c76781b019cbe078399ed8fb51a6">VCardType</a> &gt;::<a class="el" href="structAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationTemplate_1_1Statistics.html">Statistics</a>&lt; CDataLevel, CFile &gt;::count</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= ((VCardType::categoryDataLevel &amp; CDataLevel</div>
+<div class="line">                                       &amp;&amp; VCardType::categoryFileLevel &amp; CFile)</div>
+<div class="line">                                        ? <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(VCardType::columnCount)</div>
+<div class="line">                                            * <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(ResultsType::count)</div>
+<div class="line">                                        : 0)</div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/solver/variable/include/antares/solver/variable/economy/reserves/<a class="el" href="reserveParticipationTemplate_8h_source.html">reserveParticipationTemplate.h</a></li>
 </ul>
