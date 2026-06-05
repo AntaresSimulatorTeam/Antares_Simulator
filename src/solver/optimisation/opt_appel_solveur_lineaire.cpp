@@ -65,9 +65,8 @@ namespace
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const PROBLEME_ANTARES_A_RESOUDRE& problem,
                                const FillContext& fillContext,
-                               const Antares::Solver::VariableNameMapper& nameMapper,
-                               unsigned currentBlock,
-                               unsigned scenario)
+                               const Solver::VariableNameMapper& nameMapper,
+                               unsigned currentBlock)
 {
     const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
@@ -93,7 +92,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                                   .output = nameMapper.mapOutput(info->name),
                                   .absolute_time_index = info->timeIndex + 1,
                                   .block_time_index = blockTimeIndex,
-                                  .scenario_index = scenario,
+                                  .scenario_index = fillContext.getYear(),
                                   .value = problem.X[static_cast<std::size_t>(index)],
                                   .status = std::nullopt});
     }
@@ -310,7 +309,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 true);
         }
 
-        static constexpr Antares::Solver::VariableNameMapper legacyNameMapper;
+        const Solver::VariableNameMapper legacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *ProblemeAResoudre,
                                   fillCtx,
