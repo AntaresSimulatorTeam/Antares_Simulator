@@ -4,5 +4,30 @@
 # (right). A study can override this file by providing its own
 # `input/variable-names.yml`; when a study file is present it is used
 # instead of this default.
+
+#Link
+DirectFlow: flow
+PositiveDirectFlow: direct_flow
+PositiveIndirectFlow: indirect_flow
+
+#Thermal
+DispatchableProduction: generation_power
+NODU: num_units_on
+NumberStartingDispatchableUnits: num_units_starting
+NumberStopingDispatchableUnits: num_units_stopping
+NumberBreakingDownDispatchableUnits: num_units_falling
+
+#Short therm storage
+Injection: injection_power
+Withdrawal: withdrawal_power
+Level: level
+#CostVariationInjection
+#CostVariationWithdrawal
+#Overflow
+
+#area
 UnsuppliedEnergy: unsupplied_energy
 Spillage: spilled_energy
+
+#hydro
+#Identity
