@@ -1,5 +1,6 @@
 var classVariableNamer =
 [
+    [ "VariableNamer", "classVariableNamer.html#a1da6587095f50c8a83f730b2e560bcb0", null ],
     [ "AreaBalance", "classVariableNamer.html#ad58b4eba1c8d7052a98ed3f51a1030da", null ],
     [ "DirectFlow", "classVariableNamer.html#ae0518714135bdf9a7ceedd11e3290c19", null ],
     [ "DispatchableProduction", "classVariableNamer.html#afc6bf8c0593f27ed2a882bafbb0943da", null ],
@@ -11,7 +12,6 @@ var classVariableNamer =
     [ "InternalExcessReserve", "classVariableNamer.html#a7c48645dc2bfcf9fc075a8dc655cad2c", null ],
     [ "InternalUnsatisfiedReserve", "classVariableNamer.html#ad2ca25e43719061c2d8a2294dd78f2e0", null ],
     [ "LayerStorage", "classVariableNamer.html#ab3c14fcf429a730ab1e23ebf5bc717b8", null ],
-    [ "Namer", "classVariableNamer.html#ac86fca681803ca8a161de0e5ffe66294", null ],
     [ "NODU", "classVariableNamer.html#a89455751bef11f5b8ff24143fda0fc30", null ],
     [ "NumberBreakingDownDispatchableUnits", "classVariableNamer.html#ac63b11fb4752f1770b102da132dda0bf", null ],
     [ "NumberStartingDispatchableUnits", "classVariableNamer.html#ad5a3412212baf3f2b057cc9a0f2f6262", null ],

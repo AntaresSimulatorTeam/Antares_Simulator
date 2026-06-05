@@ -810,7 +810,9 @@ var hierarchy =
     [ "Antares::Solver::Variable::JoinAll< Wrappers >", "classAntares_1_1Solver_1_1Variable_1_1JoinAll.html", null ],
     [ "json_collector.jsonCollector", "classjson__collector_1_1jsonCollector.html", null ],
     [ "JIT::just_in_time_manager", "classJIT_1_1just__in__time__manager.html", null ],
+    [ "Antares::Optimization::LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", null ],
     [ "Antares::Writer::LegacySimulationTablesWriter", "classAntares_1_1Writer_1_1LegacySimulationTablesWriter.html", null ],
+    [ "Antares::Optimization::LegacyVariableInfo", "structAntares_1_1Optimization_1_1LegacyVariableInfo.html", null ],
     [ "LEVEL_FLEX_DOWN_NODE", "structLEVEL__FLEX__DOWN__NODE.html", null ],
     [ "LEVEL_FLEX_UP_NODE", "structLEVEL__FLEX__UP__NODE.html", null ],
     [ "antlr4::Lexer", null, [

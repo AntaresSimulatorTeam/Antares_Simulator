@@ -1,5 +1,9 @@
 var NAVTREEINDEX16 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a7bf355952e9aafcdda9cc7a550feb7b4":[9,0,0,11,6,63,14],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a7d90f4cba9fc95957b4c653680f47117":[9,0,0,11,6,63,16],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ac1e014d2de9184db2ce2e3d45aa2fafc":[9,0,0,11,6,63,8],
+"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ac329dec2d970a8f203be47f5e3b65885":[9,0,0,11,6,63,5],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#acbebd86d74e68ef469742e63385ade7c":[9,0,0,11,6,63,3],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ad603fc24d59c893ba4e90ef930cce96f":[9,0,0,11,6,63,13],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#ae2aca29028eb0f59a5fd80df96b92f32":[9,0,0,11,6,63,11],
@@ -245,9 +249,5 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a0b02418d7d4e78609271ea5ddbff0deb":[9,0,0,11,6,5,1,8,11],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a32edbcde081a7f388d174b179d906e00":[9,0,0,11,6,5,1,8,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a58a3ae8642eb0acdcf2a3025b4166688":[9,0,0,11,6,5,1,8,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a5bd920cc28074890138044354f948181":[9,0,0,11,6,5,1,8,13],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a613929d71503851d4a5812f3e534774d":[9,0,0,11,6,5,1,8,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a6ec51c74418031050781184d92e8ef18":[9,0,0,11,6,5,1,8,8],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a88c8f0e7a5784a2cebdb5084b229f0a4":[9,0,0,11,6,5,1,8,6],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#ab6afece97f48ee389aef4b665db94f46":[9,0,0,11,6,5,1,8,12]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#a5bd920cc28074890138044354f948181":[9,0,0,11,6,5,1,8,13]
 };

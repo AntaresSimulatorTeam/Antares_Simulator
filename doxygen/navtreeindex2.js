@@ -1,10 +1,12 @@
 var NAVTREEINDEX2 =
 {
+"SymmetryReserveParticipation_8h_source.html":[10,0,0,8,6,1,0,0,0,1,70],
+"TPlusNode_8h_source.html":[10,0,0,2,1,0,0,1,24],
 "TSnumberData_8h_source.html":[10,0,0,4,0,26,0,0,0,7,17],
-"ThermalCapacityFiller_8h_source.html":[10,0,0,8,6,1,0,0,0,26],
+"ThermalCapacityFiller_8h_source.html":[10,0,0,8,6,1,0,0,0,28],
 "ThermalReserveParticipation_8h_source.html":[10,0,0,8,6,1,0,0,0,1,71],
 "ThermalTSNumberData_8h_source.html":[10,0,0,4,0,26,0,0,0,7,16],
-"TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0":[8,0,0,12,30],
+"TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0":[8,0,0,12,32],
 "TimeDependentLinearExpression_8h_source.html":[10,0,0,8,5,0,0,0,0,9],
 "TimeIndexNode_8h_source.html":[10,0,0,2,1,0,0,1,21],
 "TimeShiftNode_8h_source.html":[10,0,0,2,1,0,0,1,22],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html":[9,0,0,3,0,0],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a12c00061eb0692f101b632860650b610":[9,0,0,3,0,0,2],
 "classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a22418992e481268831259da5e28b76a8":[9,0,0,3,0,0,0],
-"classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a22af9ddf555d64580b310e8879fe30d7":[9,0,0,3,0,0,5],
-"classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a74bfb141b03961aeebbcd14201a33734":[9,0,0,3,0,0,6],
-"classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a8b1646ce954c0294367a8b4b39a73ba9":[9,0,0,3,0,0,8]
+"classAntares_1_1Data_1_1AdequacyPatch_1_1CurtailmentSharing.html#a22af9ddf555d64580b310e8879fe30d7":[9,0,0,3,0,0,5]
 };

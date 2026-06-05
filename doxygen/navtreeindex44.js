@@ -1,5 +1,17 @@
 var NAVTREEINDEX44 =
 {
+"structSupplyModelForDualOperator.html#a6a16c6ed9c915a6e62d04e11d98949fb":[9,0,349,0],
+"structSupplyModelForFunctionalOperator.html":[9,0,350],
+"structSupplyModelForFunctionalOperator.html#a64ec1754d36ffc5381246e4ca174914e":[9,0,350,0],
+"structSupplyModelForFunctionalOperator.html#a989f59559f75255316ebe43ee3042534":[9,0,350,1],
+"structSystemBuilderCreationFixture.html":[9,0,359],
+"structSystemBuilderCreationFixture.html#a79f8082d2ff731b6c45b1b9c2b9220af":[9,0,359,0],
+"structSystemBuilderCreationFixture.html#addbcf5e2d9a9bbb6d06eb80343882c55":[9,0,359,1],
+"structTIME__MEASURE.html":[9,0,373],
+"structTIME__MEASURE.html#a04101a7942a20245badd1c4fdb40e2df":[9,0,373,1],
+"structTIME__MEASURE.html#a0e2670c07701a96db4be5cad9b1ea3f4":[9,0,373,2],
+"structTIME__MEASURE.html#a931323f4be4869ff309913b0e32c9cf5":[9,0,373,0],
+"structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html":[9,0,377],
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html#a051238f88d3fae171a4c4ea4d3161d73":[9,0,377,1],
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__DOWN__EDGE.html#a86a23685e1cd9840fb0d2b5c94b93408":[9,0,377,0],
 "structTRANSFER__BOUND__AND__LEVEL__FLEX__UP__EDGE.html":[9,0,378],
@@ -237,17 +249,5 @@ var NAVTREEINDEX44 =
 "tests_2src_2solver_2hydro_2management_2monthly_8cpp.html#a0be944081ab92009f3606b96f6361d4a":[8,0,10,4],
 "tests_2src_2solver_2hydro_2management_2monthly_8cpp.html#ad7ed9889fdbed519508a8a60603f2dd9":[8,0,10,5],
 "thermalAirPollutantEmissions_8h.html#a4e7c704d48d8ea22b0aaa68de130dd60":[8,0,0,14,8,5,151],
-"thermalAirPollutantEmissions_8h_source.html":[10,0,0,8,11,0,0,0,0,3,54],
-"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3b":[8,0,0,4,124],
-"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3ba1fad6a83d89ada1ee053ef87b4878cd7":[8,0,0,4,124,3],
-"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3ba64a2c9820e5fa0fe223ae2c24c743945":[8,0,0,4,124,2],
-"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3ba93d8eefbfea0b5f7e4c6cc2948817a5e":[8,0,0,4,124,1],
-"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3bada54fda10308bd3e52a52532d9c57057":[8,0,0,4,124,0],
-"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3bafc69154d206f2d046476ccb5dca669a2":[8,0,0,4,124,4],
-"thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5":[8,0,0,4,100],
-"thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a3e6f3315e516bbd173d35bd7e04df5a4":[8,0,0,4,100,0],
-"thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a8e934cf0bd3b192d0556a9c00f1c1d72":[8,0,0,4,100,1],
-"thermal_2cluster_8h.html#ad812eaf7aee328a84ce2392b9223a9d9":[8,0,0,4,150],
-"thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378":[8,0,0,4,107],
-"thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a3e4b86aa01228a8a31ca9dad7c613205":[8,0,0,4,107,2]
+"thermalAirPollutantEmissions_8h_source.html":[10,0,0,8,11,0,0,0,0,3,54]
 };

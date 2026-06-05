@@ -1,5 +1,9 @@
 var NAVTREEINDEX14 =
 {
+"classAntares_1_1Solver_1_1IResultWriter.html#a2d3eea88ce7f0fc6ac0aa1c6a5813868":[9,0,0,11,10,0],
+"classAntares_1_1Solver_1_1IResultWriter.html#a866bc43cd373dc27cf69ec3968737c8c":[9,0,0,11,10,5],
+"classAntares_1_1Solver_1_1IResultWriter.html#a8a0056866e79b7bc6176479e0d1421c4":[9,0,0,11,10,1],
+"classAntares_1_1Solver_1_1IResultWriter.html#a8e9f122870f79dada049faf51d8dc5d5":[9,0,0,11,10,6],
 "classAntares_1_1Solver_1_1IResultWriter.html#aa6bd89bcd8a5a475a49c26a623ae3741":[9,0,0,11,10,2],
 "classAntares_1_1Solver_1_1IResultWriter.html#ab27ea9a36948886f43d6eb9bf8cbc15b":[9,0,0,11,10,3],
 "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html":[9,0,0,11,14],
@@ -245,9 +249,5 @@ var NAVTREEINDEX14 =
 "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html#a8d49214aed13b61eb4e15ec0fb67369c":[9,0,0,11,5,12,0],
 "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html#abd6a903b531d69457e8d49130b821d65":[9,0,0,11,5,12,3],
 "classAntares_1_1Solver_1_1Simulation_1_1basePostProcessCommand.html#adfb6a30223e5a24e412bd30dc1e33b7b":[9,0,0,11,5,12,1],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html":[9,0,0,11,5,31],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a60d230b12d37106db67fdb7e6bdb75e9":[9,0,0,11,5,31,6],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a63ef03668fe64dfa59d9bf2ab1fb2d4b":[9,0,0,11,5,31,3],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a96ad7644213ae6e061f6ac1060128f80":[9,0,0,11,5,31,2],
-"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html#a9a22ad906029e28ed985d02525b7d2c5":[9,0,0,11,5,31,0]
+"classAntares_1_1Solver_1_1Simulation_1_1costStatistics.html":[9,0,0,11,5,31]
 };

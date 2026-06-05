@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"classAntares_1_1Data_1_1TimeSeries.html#ae3f9002c882d8d4c9e9741e0f7afe609":[9,0,0,3,11,14],
+"classAntares_1_1Data_1_1TimeSeries.html#ae494bc3c9fcedfe95b423ba40ac8701d":[9,0,0,3,11,3],
 "classAntares_1_1Data_1_1TimeSeriesNumbers.html":[9,0,0,3,10],
 "classAntares_1_1Data_1_1TimeSeriesNumbers.html#a025ce6cc459e28011f5b035060722c11":[9,0,0,3,10,6],
 "classAntares_1_1Data_1_1TimeSeriesNumbers.html#a35a22d1986b674c0ad5a7f9141d1f9ef":[9,0,0,3,10,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX8 =
 "classAntares_1_1Expressions_1_1Nodes_1_1LiteralNode.html#a3882e81387b87080b546fc19e0637ac6":[9,0,0,6,0,13,0],
 "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html":[9,0,0,6,0,14],
 "classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html#a665c9cf559aee7ac894b5bef11c6cbe5":[9,0,0,6,0,14,1],
-"classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html#a893c3edcae6c95ac309885357683b003":[9,0,0,6,0,14,0],
-"classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html":[9,0,0,6,0,15],
-"classAntares_1_1Expressions_1_1Nodes_1_1NegationNode.html#ab72c08835af3684149a2e4ff76a0b110":[9,0,0,6,0,15,1]
+"classAntares_1_1Expressions_1_1Nodes_1_1MultiplicationNode.html#a893c3edcae6c95ac309885357683b003":[9,0,0,6,0,14,0]
 };

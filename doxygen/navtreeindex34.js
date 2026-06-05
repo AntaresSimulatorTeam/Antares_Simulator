@@ -1,5 +1,13 @@
 var NAVTREEINDEX34 =
 {
+"post__process__commands_8cpp.html#ade1f5241a3e238698cafb0c5c17ea95a":[8,0,0,14,6,77],
+"post__process__commands_8h_source.html":[10,0,0,8,6,1,0,0,0,25],
+"pre-order_8h_source.html":[10,0,0,2,1,0,0,0,0],
+"predicate_8hxx_source.html":[10,0,0,8,9,0,0,0,0,0,2],
+"priceCSR_8h.html#a6c946c36bac1267ea4f1241bc99ac8bf":[8,0,0,14,8,5,137],
+"priceCSR_8h_source.html":[10,0,0,8,11,0,0,0,0,3,39],
+"price_8h.html#ad66c7bfb4cde338e0da6ca883226d417":[8,0,0,14,8,5,136],
+"price_8h_source.html":[10,0,0,8,11,0,0,0,0,3,38],
 "print_8h_source.html":[10,0,0,8,11,0,0,0,0,16],
 "print__name_8py.html#a922a8b50fe1e958918e08da49809cc73":[8,0,25,0],
 "probleme__spx__wrapper_8h_source.html":[10,0,0,8,1,0,0,0,0,4],
@@ -49,9 +57,9 @@ var NAVTREEINDEX34 =
 "renewable_2cluster_8hxx_source.html":[10,0,0,4,0,26,0,0,0,5,3,1],
 "renewable_2cluster__list_8h_source.html":[10,0,0,4,0,26,0,0,0,5,3,2],
 "renewable_2defines_8h_source.html":[10,0,0,4,0,26,0,0,0,5,3,5],
-"report_8cpp.html#a1418a64099521dabe8235df401f4f0cc":[8,0,0,12,42],
-"report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3":[8,0,0,12,37],
-"report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[8,0,0,12,34],
+"report_8cpp.html#a1418a64099521dabe8235df401f4f0cc":[8,0,0,12,44],
+"report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3":[8,0,0,12,39],
+"report_8cpp.html#afca59b8c35ac2975defa738d1098f969":[8,0,0,12,36],
 "report_8h_source.html":[10,0,0,8,2,0,0,0,0,1],
 "reportbuilder_8hxx_source.html":[10,0,0,8,11,0,0,0,0,5,1],
 "reserveParticipationBase_8h.html#a2a061041cc609fd86191597f410ba87e":[8,0,0,14,8,5,1,22],
@@ -241,13 +249,5 @@ var NAVTREEINDEX34 =
 "solver__steps_8py.html#a75aefd730b0e676f29cf59b3916d7548":[8,0,30,5],
 "solver__steps_8py.html#a7696c1bc76e2ff40a4c0d748f3cadeae":[8,0,30,19],
 "solver__steps_8py.html#a7b477055733f9ddc85ef26e18a7c4e2d":[8,0,30,27],
-"solver__steps_8py.html#a7e8c09c644d1e5bcb1a13ccf1ef2d49d":[8,0,30,40],
-"solver__steps_8py.html#a7fae04fe284fbcee4746ed5c1cec8fa5":[8,0,30,49],
-"solver__steps_8py.html#a8397c561d5d9a21b01dfcf697e8fbb30":[8,0,30,8],
-"solver__steps_8py.html#a8a5cf7620b720b9e26db4a6b12b8f708":[8,0,30,22],
-"solver__steps_8py.html#a8c31314aab190376232a12ffc3b94bce":[8,0,30,42],
-"solver__steps_8py.html#a940c7814e59b5dcd32843954474d498f":[8,0,30,20],
-"solver__steps_8py.html#a95b7c83f57ed7816eef1bf41641d05e9":[8,0,30,13],
-"solver__steps_8py.html#a9a20cf8bba1102648ac8da70d572218f":[8,0,30,23],
-"solver__steps_8py.html#a9b57d898de72258c60168f75218628c4":[8,0,30,69]
+"solver__steps_8py.html#a7e8c09c644d1e5bcb1a13ccf1ef2d49d":[8,0,30,40]
 };
