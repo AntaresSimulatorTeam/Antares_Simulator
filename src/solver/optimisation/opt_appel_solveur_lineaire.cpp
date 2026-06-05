@@ -20,6 +20,7 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
+#include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
@@ -85,7 +86,10 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
         }
 
         std::optional<unsigned> blockTimeIndex;
-        assert(info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep);
+        if (info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep)
+        {
+            blockTimeIndex = info->timeIndex - globalFirstTimeStep + 1;
+        }
 
         simulationTable.addEntry({.block = block,
                                   .component = info->component,
