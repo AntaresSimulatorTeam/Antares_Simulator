@@ -8,52 +8,6 @@
 
 namespace Antares::Solver::Variable
 {
-class PrintInfosStdCout final
-{
-public:
-    PrintInfosStdCout():
-        pIndent(0)
-    {
-    }
-
-    template<class VCardT>
-    void beginNode()
-    {
-        printVCard<VCardT, true>();
-        ++pIndent;
-    }
-
-    template<class VCardT>
-    void addVCard()
-    {
-        printVCard<VCardT, false>();
-    }
-
-    void endNode()
-    {
-        --pIndent;
-    }
-
-private:
-    template<class VCardT, bool IsNodeT>
-    void printVCard()
-    {
-        pBuffer.clear();
-        pBuffer.resize(1 + pBuffer.size() + pIndent * 4, " ");
-        pBuffer += (IsNodeT ? "+ " : "  ");
-        pBuffer += VCardT::Caption();
-        pBuffer.resize(35, " ");
-        pBuffer += VCardT::Unit();
-        pBuffer.resize(50, " ");
-        pBuffer += VCardT::Description();
-        Antares::logs.info() << pBuffer;
-    }
-
-private:
-    uint pIndent;
-    Yuni::String pBuffer;
-};
-
 template<int I>
 struct PrecisionToPrintfFormat
 {

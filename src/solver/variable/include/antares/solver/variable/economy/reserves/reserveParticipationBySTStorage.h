@@ -3,6 +3,7 @@
 #pragma once
 
 #include "reserveParticipationTemplate.h"
+#include "vCardReserveParticipationBySTStorage.h"
 
 namespace Antares::Solver::Variable::Economy::Reserves
 {
@@ -10,34 +11,27 @@ namespace Antares::Solver::Variable::Economy::Reserves
 /*!
 ** \brief Reserve Participation from short-term storage units
 */
-template<class NextT = Container::EndOfList>
 class ReserveParticipationBySTStorage
-    : public ReserveParticipationTemplate<ReserveParticipationBySTStorage<NextT>,
-                                          VCardReserveParticipationBySTStorage,
-                                          NextT>
+    : public ReserveParticipationTemplate<ReserveParticipationBySTStorage,
+                                          VCardReserveParticipationBySTStorage>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardReserveParticipationBySTStorage VCardType;
-    //! Ancestor
-    typedef ReserveParticipationTemplate<ReserveParticipationBySTStorage<NextT>, VCardType, NextT>
-      AncestorType;
+    using VCardType = VCardReserveParticipationBySTStorage;
+    using AncestorType = ReserveParticipationTemplate<ReserveParticipationBySTStorage, VCardType>;
 
     using AncestorType::pSize;
     using AncestorType::pValuesForTheCurrentYear;
 
     ReserveParticipationBySTStorage() = default;
 
-    size_t getSizeFromArea(Study*, Area* area)
+    size_t getSizeFromArea(Data::Study* /*study*/, Data::Area* area)
     {
         return area->shortTermStorage.reserveParticipationsCount();
     }
 
-    void populateHourlyValues(/*non const*/ State& state, unsigned int numSpace);
+    void populateHourlyValues(State& state, unsigned int numSpace);
 
-    bool hasIndexMapping(const Study& study, const Area* area) const
+    bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
                && !study.runtime.reserveParticipationIndexMaps.value()
@@ -64,8 +58,7 @@ public:
 
 }; // class ReserveParticipationBySTStorage
 
-template<class NextT>
-void ReserveParticipationBySTStorage<NextT>::populateHourlyValues(State& state,
+inline void ReserveParticipationBySTStorage::populateHourlyValues(State& state,
                                                                   unsigned int numSpace)
 {
     if (hasIndexMapping(state.study, state.area))

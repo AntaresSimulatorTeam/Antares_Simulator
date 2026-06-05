@@ -4,6 +4,7 @@
 #pragma once
 
 #include "reserveParticipationTemplate.h"
+#include "vCardReserveParticipationByHydro.h"
 
 namespace Antares::Solver::Variable::Economy::Reserves
 {
@@ -11,34 +12,27 @@ namespace Antares::Solver::Variable::Economy::Reserves
 /*!
 ** \brief Reserve Participation from hydro
 */
-template<class NextT = Container::EndOfList>
 class ReserveParticipationByHydro
-    : public ReserveParticipationTemplate<ReserveParticipationByHydro<NextT>,
-                                          VCardReserveParticipationByHydro,
-                                          NextT>
+    : public ReserveParticipationTemplate<ReserveParticipationByHydro,
+                                          VCardReserveParticipationByHydro>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardReserveParticipationByHydro VCardType;
-    //! Ancestor
-    typedef ReserveParticipationTemplate<ReserveParticipationByHydro<NextT>, VCardType, NextT>
-      AncestorType;
+    using VCardType = VCardReserveParticipationByHydro;
+    using AncestorType = ReserveParticipationTemplate<ReserveParticipationByHydro, VCardType>;
 
     using AncestorType::pSize;
     using AncestorType::pValuesForTheCurrentYear;
 
     ReserveParticipationByHydro() = default;
 
-    size_t getSizeFromArea(Study* /*study*/, Area* area)
+    size_t getSizeFromArea(Data::Study* /*study*/, Data::Area* area)
     {
         return area->hydro.reserveParticipationsCount();
     }
 
-    void populateHourlyValues(/*non const*/ State& state, unsigned int numSpace);
+    void populateHourlyValues(State& state, unsigned int numSpace);
 
-    bool hasIndexMapping(const Study& study, const Area* area) const
+    bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
                && !study.runtime.reserveParticipationIndexMaps.value().at(area->id).Hydro.empty();
@@ -62,8 +56,7 @@ public:
 
 }; // class ReserveParticipationByHydro
 
-template<class NextT>
-void ReserveParticipationByHydro<NextT>::populateHourlyValues(State& state, unsigned int numSpace)
+inline void ReserveParticipationByHydro::populateHourlyValues(State& state, unsigned int numSpace)
 {
     if (hasIndexMapping(state.study, state.area))
     {

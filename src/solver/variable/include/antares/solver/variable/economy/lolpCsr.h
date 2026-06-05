@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include "economy_base.h"
 #include "lolp_base.h"
 
 namespace Antares::Solver::Variable::Economy
@@ -19,16 +20,15 @@ struct LOLP_CSRTraits: public LOLP_Base_Traits
         return "LOLP for CSR";
     }
 
-    static bool checkCondition(const State& state)
+    static void setHourlyValue(IntermediateValues& iv, const State& state, unsigned int)
     {
-        return state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek]
-               > 0.0;
+        if (state.hourlyResults->ValeursHorairesDeDefaillancePositiveCSR[state.hourInTheWeek] > 0.0)
+        {
+            iv[state.hourInTheYear] = value(state);
+        }
     }
 };
 
-using VCardLOLP_CSR = VCard_Base<LOLP_CSRTraits>;
-
-template<class NextT = Container::EndOfList>
-using LOLP_CSR = Economy_Base<LOLP_CSRTraits, NextT>;
+using LOLP_CSR = EconomyVariableBase<LOLP_CSRTraits>;
 
 } // namespace Antares::Solver::Variable::Economy

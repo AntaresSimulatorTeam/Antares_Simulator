@@ -287,9 +287,6 @@ public:
     double thermalClusterPMinOfTheClusterForYear[HOURS_PER_YEAR];
 
     double renewableClusterProduction;
-
-    //! Dispatchable margin for the current area (valid only from weekForEachArea)
-    const double* dispatchableMargin;
     //@}
 
     //! Probleme Hebdo

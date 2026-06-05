@@ -9,38 +9,24 @@
 
 namespace Antares::Solver::Variable
 {
-template<class NextT>
-inline Areas<NextT>::Areas()
-{
-    // Do nothing
-}
-
-template<class NextT>
-inline void Areas<NextT>::initializeFromArea(Data::Study*, Data::Area*)
+template<class VariableList>
+inline void Areas<VariableList>::initializeFromArea(Data::Study*, Data::Area*)
 {
     // Nothing to do here
     // This method is called by initializeFromStudy() to all children
 }
 
-template<class NextT>
-inline void Areas<NextT>::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
+template<class VariableList>
+inline void Areas<VariableList>::initializeFromLink(Data::Study*, Data::AreaLink*)
 {
     // Nothing to do here
 }
 
-template<class NextT>
-inline void Areas<NextT>::initializeFromThermalCluster(Data::Study*,
-                                                       Data::Area*,
-                                                       Data::ThermalCluster*)
-{
-    // This method should not be called at this point
-}
-
-template<class NextT>
-void Areas<NextT>::buildSurveyReport(SurveyResults& results,
-                                     int dataLevel,
-                                     int fileLevel,
-                                     int precision) const
+template<class VariableList>
+void Areas<VariableList>::buildSurveyReport(SurveyResults& results,
+                                            int dataLevel,
+                                            int fileLevel,
+                                            int precision) const
 {
     int count_int = count;
     bool linkDataLevel = dataLevel & Category::DataLevel::link;
@@ -97,12 +83,12 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
     }
 }
 
-template<class NextT>
-void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                           int dataLevel,
-                                           int fileLevel,
-                                           int precision,
-                                           uint numSpace) const
+template<class VariableList>
+void Areas<VariableList>::buildAnnualSurveyReport(SurveyResults& results,
+                                                  int dataLevel,
+                                                  int fileLevel,
+                                                  int precision,
+                                                  uint numSpace) const
 {
     int count_int = count;
     bool linkDataLevel = dataLevel & Category::DataLevel::link;
@@ -164,23 +150,22 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
     }
 }
 
-template<class NextT>
-void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+template<class VariableList>
+void Areas<VariableList>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
 {
     int count_int = count;
     if (count_int)
     {
         if (dataLevel & Category::DataLevel::area)
         {
-            assert(pAreaCount == results.data.study.areas.size());
+            assert(pAreas.size() == results.data.study.areas.size());
 
             // Reset captions
             results.data.rowCaptions.clear();
-            results.data.rowCaptions.resize(pAreaCount);
+            results.data.rowCaptions.resize(pAreas.size());
 
             // For each area
-            // for (uint i = 0; i != results.data.study.areas.byIndex.size(); ++i)
-            for (uint i = 0; i != pAreaCount; ++i)
+            for (uint i = 0; i != pAreas.size(); ++i)
             {
                 results.data.area = results.data.study.areas[i];
                 uint index = results.data.area->index;
@@ -194,69 +179,42 @@ void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int data
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class PredicateT>
-inline void Areas<NextT>::RetrieveVariableList(PredicateT& predicate)
+inline void Areas<VariableList>::RetrieveVariableList(PredicateT& predicate)
 {
-    NextType::RetrieveVariableList(predicate);
+    VariableList::RetrieveVariableList(predicate);
 }
 
-template<class NextT>
-template<class I>
-inline void Areas<NextT>::provideInformations(I& infos)
-{
-    // Begining of the node
-    if (VCardType::nodeDepthForGUI)
-    {
-        infos.template beginNode<VCardType>();
-        // Next variable in the list
-        NextType::template provideInformations<I>(infos);
-        // End of the node
-        infos.endNode();
-    }
-    else
-    {
-        // Giving our VCard
-        infos.template addVCard<VCardType>();
-        // Next variable in the list
-        NextType::template provideInformations<I>(infos);
-    }
-}
-
-template<class NextT>
+template<class VariableList>
 template<class SearchVCardT, class O>
-inline void Areas<NextT>::computeSpatialAggregateWith(O&)
+inline void Areas<VariableList>::computeSpatialAggregateWith(O&)
 {
     // Do nothing
 }
 
-template<class NextT>
+template<class VariableList>
 template<class SearchVCardT, class O>
-inline void Areas<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+inline void Areas<VariableList>::computeSpatialAggregateWith(O& out,
+                                                             const Data::Area* area,
+                                                             uint numSpace)
 {
     assert(NULL != area);
     pAreas[area->index].template computeSpatialAggregateWith<SearchVCardT, O>(out, numSpace);
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-const double* Areas<NextT>::retrieveHourlyResultsForCurrentYear() const
-{
-    return nullptr;
-}
-
-template<class NextT>
-template<class VCardToFindT>
-inline void Areas<NextT>::retrieveResultsForArea(
+inline void Areas<VariableList>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
     pAreas[area->index].template retrieveResultsForArea<VCardToFindT>(result, area);
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline void Areas<NextT>::retrieveResultsForThermalCluster(
+inline void Areas<VariableList>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
@@ -264,37 +222,26 @@ inline void Areas<NextT>::retrieveResultsForThermalCluster(
       .template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline void Areas<NextT>::retrieveResultsForLink(
+inline void Areas<VariableList>::retrieveResultsForLink(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::AreaLink* link)
 {
     pAreas[link->from->index].template retrieveResultsForLink<VCardToFindT>(result, link);
 }
 
-template<class NextT>
-Areas<NextT>::~Areas()
+template<class VariableList>
+void Areas<VariableList>::initializeFromStudy(Data::Study& study)
 {
-    // Releasing the memory occupied by the areas
-    delete[] pAreas;
-}
+    const uint pAreaCount = study.areas.size();
 
-template<class NextT>
-void Areas<NextT>::initializeFromStudy(Data::Study& study)
-{
-    // The total number of areas
-    pAreaCount = study.areas.size();
+    pAreas.resize(pAreaCount);
 
-    // Reserving the memory
-    pAreas = new NextType[pAreaCount];
-
-    // For each area...
     uint tick = 6;
     uint oldPercent = 0;
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
-        // Instancing a new set of variables of the area
         auto* currentArea = study.areas.byIndex[i];
         if (!(--tick))
         {
@@ -304,7 +251,6 @@ void Areas<NextT>::initializeFromStudy(Data::Study& study)
                 logs.info() << "Allocating resources " << ((i * 100u) / pAreaCount) << "%";
                 oldPercent = newPercent;
             }
-            // Reset the tick
             tick = 6;
         }
 
@@ -325,26 +271,26 @@ void Areas<NextT>::initializeFromStudy(Data::Study& study)
     }
 }
 
-template<class NextT>
-void Areas<NextT>::simulationBegin()
+template<class VariableList>
+void Areas<VariableList>::simulationBegin()
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].simulationBegin();
     }
 }
 
-template<class NextT>
-void Areas<NextT>::simulationEnd()
+template<class VariableList>
+void Areas<VariableList>::simulationEnd()
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].simulationEnd();
     }
 }
 
-template<class NextT>
-void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
+template<class VariableList>
+void Areas<VariableList>::hourForEachArea(State& state, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
@@ -385,8 +331,8 @@ void Areas<NextT>::hourForEachArea(State& state, uint numSpace)
       }); // for each area
 }
 
-template<class NextT>
-void Areas<NextT>::weekForEachArea(State& state, uint numSpace)
+template<class VariableList>
+void Areas<VariableList>::weekForEachArea(State& state, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
@@ -399,10 +345,6 @@ void Areas<NextT>::weekForEachArea(State& state, uint numSpace)
 
           auto& variablesForArea = pAreas[area.index];
 
-          // DTG MRG
-          state.dispatchableMargin = variablesForArea.template retrieveHourlyResultsForCurrentYear<
-            Economy::VCardDispatchableGenMargin>(numSpace);
-
           variablesForArea.weekForEachArea(state, numSpace);
 
           // NOTE
@@ -411,17 +353,17 @@ void Areas<NextT>::weekForEachArea(State& state, uint numSpace)
       }); // for each area
 }
 
-template<class NextT>
-void Areas<NextT>::yearBegin(uint year, uint numSpace)
+template<class VariableList>
+void Areas<VariableList>::yearBegin(uint year, uint numSpace)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].yearBegin(year, numSpace);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
+template<class VariableList>
+void Areas<VariableList>::buildThermalClusterYearEndResults(State& state, uint year, uint numSpace)
 {
     // For each area...
     state.study.areas.each(
@@ -458,75 +400,75 @@ void Areas<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
       }); // for each area
 }
 
-template<class NextT>
-void Areas<NextT>::yearEnd(uint year, uint numSpace)
+template<class VariableList>
+void Areas<VariableList>::yearEnd(uint year, uint numSpace)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         // Broadcast to all areas
         pAreas[i].yearEnd(year, numSpace);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::computeSummary(unsigned int year, unsigned int numSpace)
+template<class VariableList>
+void Areas<VariableList>::computeSummary(unsigned int year, unsigned int numSpace)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         // Broadcast to all areas
         pAreas[i].computeSummary(year, numSpace);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::weekBegin(State& state)
+template<class VariableList>
+void Areas<VariableList>::weekBegin(State& state)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].weekBegin(state);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::weekEnd(State& state)
+template<class VariableList>
+void Areas<VariableList>::weekEnd(State& state)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].weekEnd(state);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::hourBegin(uint hourInTheYear)
+template<class VariableList>
+void Areas<VariableList>::hourBegin(uint hourInTheYear)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].hourBegin(hourInTheYear);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::hourForEachLink(State& state, uint numSpace)
+template<class VariableList>
+void Areas<VariableList>::hourForEachLink(State& state, uint numSpace)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].hourForEachLink(state, numSpace);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::hourEnd(State& state, uint hourInTheYear)
+template<class VariableList>
+void Areas<VariableList>::hourEnd(State& state, uint hourInTheYear)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].hourEnd(state, hourInTheYear);
     }
 }
 
-template<class NextT>
-void Areas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
+template<class VariableList>
+void Areas<VariableList>::beforeYearByYearExport(uint year, uint numSpace)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
+    for (uint i = 0; i != pAreas.size(); ++i)
     {
         pAreas[i].beforeYearByYearExport(year, numSpace);
     }
