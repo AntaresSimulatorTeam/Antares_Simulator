@@ -4,7 +4,6 @@
 #include "antares/solver/modeler/VariableNameMapper.h"
 
 #include <stdexcept>
-
 #include <yaml-cpp/yaml.h>
 
 #include <antares/io/file.h>
