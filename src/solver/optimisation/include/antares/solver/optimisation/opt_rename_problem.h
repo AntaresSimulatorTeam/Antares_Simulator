@@ -25,10 +25,12 @@ protected:
     virtual void RecordLegacyVariableInfo(unsigned index,
                                           const std::string& output,
                                           const std::string& component);
+
     unsigned timeStep() const
     {
         return timeStep_;
     }
+
     void SetLinkElementName(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType);
