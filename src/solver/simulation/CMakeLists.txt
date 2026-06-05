@@ -88,6 +88,9 @@ target_link_libraries(antares-solver-simulation
         antares-solver-ts-generator
 		shave-peaks-by-remix-storage-gen
 		Antares::simu-table-generator
+        simulation-table-writers
+        PRIVATE
+		Antares::workflow
 )
 
 install(DIRECTORY include/antares

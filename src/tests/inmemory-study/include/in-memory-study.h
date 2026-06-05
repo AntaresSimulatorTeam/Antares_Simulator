@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <limits>
 
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/economy.h"
 #include "antares/solver/simulation/simulation.h"

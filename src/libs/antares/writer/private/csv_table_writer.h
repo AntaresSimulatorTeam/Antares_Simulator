@@ -10,13 +10,15 @@
 
 #include "antares/writer/i_table_writer.h"
 
+#include "simulation-table-writers_export.h"
+
 namespace Antares::Writer
 {
 
-class CsvTableWriter final: public ITableWriter
+class SIMULATION_TABLE_WRITERS_EXPORT CsvTableWriter final: public ITableWriter
 {
 public:
-    explicit CsvTableWriter(std::filesystem::path& filePath);
+    explicit CsvTableWriter(const std::filesystem::path& filePath);
     void writeTable(const IO::Outputs::SimulationTable& simuTable) const override;
 };
 

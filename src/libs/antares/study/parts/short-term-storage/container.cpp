@@ -278,7 +278,7 @@ std::pair<std::string, ReserveID> STStorageInput::reserveParticipationClusterAt(
   const Area* area,
   unsigned int index) const
 {
-    int globalReserveParticipationIdx = 0;
+    unsigned int globalReserveParticipationIdx = 0;
 
     for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
@@ -306,7 +306,7 @@ std::pair<std::string, ReserveID> STStorageInput::reserveParticipationGroupAt(
   const Area* area,
   unsigned int index) const
 {
-    int column = 0;
+    unsigned int column = 0;
     for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {

@@ -24,9 +24,36 @@ struct STStorageInjectionByClusterTraits
         return "Energy injected by ST storage clusters";
     }
 
+    static constexpr uint8_t fileLevel = Category::FileLevel::de_sts;
+
+    static size_t clusterCount(const Data::Area* area)
+    {
+        return area->shortTermStorage.count();
+    }
+
     static void computeStats(IntermediateValues& intermediateValues)
     {
         intermediateValues.computeStatisticsForTheCurrentYear();
+    }
+
+    static void buildSurveyReport(const std::vector<IntermediateValues>& clusterValues,
+                                  SurveyResults& results,
+                                  int fileLevel,
+                                  int precision)
+    {
+        const auto& shortTermStorage = results.data.area->shortTermStorage;
+        uint clusterIndex = 0;
+        for (const auto& sts: shortTermStorage.storagesByIndex)
+        {
+            results.variableCaption = sts.properties.name;
+            results.variableUnit = Unit();
+            clusterValues[clusterIndex]
+              .template buildAnnualSurveyReport<
+                VCardSTStorageByClusterBase<STStorageInjectionByClusterTraits>>(results,
+                                                                                fileLevel,
+                                                                                precision);
+            clusterIndex++;
+        }
     }
 
     static void setHourlyValue(const std::vector<IntermediateValues>& clusterValues,
@@ -41,11 +68,6 @@ struct STStorageInjectionByClusterTraits
     }
 };
 
-using VCardSTstorageInjectionByCluster = VCardSTStorageByClusterBase<
-  STStorageInjectionByClusterTraits>;
-
-template<class NextT = Container::EndOfList>
-using STstorageInjectionByCluster = STStorageByClusterBase<STStorageInjectionByClusterTraits,
-                                                           NextT>;
+using STstorageInjectionByCluster = STStorageByClusterBase<STStorageInjectionByClusterTraits>;
 
 } // End namespace Antares::Solver::Variable::Economy

@@ -11,6 +11,7 @@ from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import modeler_output_handler
 from shared_utils import mps_utils as mpu
+from pathlib import Path
 
 
 @given('the modeler study path is "{string}"')
@@ -49,9 +50,9 @@ def modeler_output_values(context):
         for block in block_range:
             for scenario in scenario_range:
                 for ts in ts_range:
-                    assert_double_close(
-                        get_value(row, ts), context.moh.get_simulation_table_entry(row["component"], row["output"], block, ts, scenario), 1e-6
-                    )
+                    assert_double_close(get_value(row, ts),
+                                        context.moh.get_simulation_table_entry(row["component"],row["output"], block, ts, scenario),
+                                        1e-6)
 
 def read_int_range(row, key : str):
     if row[key] != "":
@@ -64,13 +65,7 @@ def read_int_range(row, key : str):
 
 def get_value(row, ts):
     ret = row["value"]
-
-    # if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
-    #     ret = ret.split("-")  # Split into a list of strings
-    #     return float(ret[ts])  # Index and convert to float
-
     return float(ret)  # Single value case (apply to all timesteps)
-
 
 def run_modeler(context):
     command = build_antares_modeler_command(context)
@@ -97,19 +92,10 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out),
-                                             parse_output_folder_from_logs(context.logs_out))
-
+        context.moh = modeler_output_handler(Path(parse_output_folder_from_logs(context.logs_out)),
+                                             "simulation-table*.csv",
+                                             True)
     context.return_code = process.returncode
-
-
-def parse_simulation_table_from_logs(logs: str) -> str:
-    for line in logs.splitlines():
-        if 'Simulation table is written in: ' in line:
-            return line.split('Simulation table is written in: ')[1]
-    raise LookupError("Could not find simulation table location in output logs")
-
-
 
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]

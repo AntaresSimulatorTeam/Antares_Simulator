@@ -44,7 +44,6 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 
 State::State(Data::Study& s):
     hourInTheSimulation(0u),
-    dispatchableMargin(nullptr),
     simulationMode(s.parameters.mode),
     unitCommitmentMode(s.parameters.unitCommitment.ucMode),
     study(s),

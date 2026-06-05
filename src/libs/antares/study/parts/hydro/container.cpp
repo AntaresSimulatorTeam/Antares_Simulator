@@ -706,7 +706,7 @@ std::optional<ReserveID> PartHydro::reserveParticipationAt(const Area* area,
     {
         if (reserveParticipationContainer.value().isParticipatingInReserve(reserveID))
         {
-            if (globalReserveParticipationIdx == index)
+            if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
             {
                 return reserveID;
             }

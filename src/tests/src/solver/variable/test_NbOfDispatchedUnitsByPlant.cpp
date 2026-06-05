@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(yearEndBuildPrepare_populatesDispatchedUnitsCountForYear)
     State state(*fixture.study);
     state.area = area;
 
-    NbOfDispatchedUnitsByPlant<> variable;
+    NbOfDispatchedUnitsByPlant variable;
     variable.initializeFromStudy(*fixture.study);
     variable.initializeFromArea(fixture.study.get(), area);
 
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(yearEndBuildForEach_copiesBackDispatchedUnitsCount)
     state.thermalCluster = cluster;
     state.yearEndResetThermal();
 
-    NbOfDispatchedUnitsByPlant<> variable;
+    NbOfDispatchedUnitsByPlant variable;
     variable.initializeFromStudy(*fixture.study);
     variable.initializeFromArea(fixture.study.get(), area);
     variable.yearBegin(0, 0);

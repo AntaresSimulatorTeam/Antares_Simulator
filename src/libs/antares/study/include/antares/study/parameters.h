@@ -18,6 +18,7 @@
 #include <antares/writer/result_format.h>
 #include "antares/antares/antares.h"
 #include "antares/study/fwd.h"
+#include "antares/writer/table_format.h"
 
 #include "parameters/adq-patch-params.h"
 #include "variable-print-info.h"
@@ -435,7 +436,7 @@ public:
     //@}
 
     // In case we print simulation tables, do we print it in csv or parquet ?
-    bool parquetFmtForSimuTables = false;
+    Writer::TableFormat simuTableFormat = Writer::TableFormat::CSV;
 
     bool hydroDebug;
 

@@ -1,6 +1,7 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <cassert>
 #include <mutex>
 #include <optional>
 
@@ -20,7 +21,7 @@
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/modeler/VariableNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
-#include "antares/solver/optimisation/LegacyVariableNameParser.h"
+#include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
@@ -72,33 +73,20 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
     const unsigned int block = currentBlock + 1;
 
-    const auto namesSize = problem.NomDesVariables.size();
-    const auto valuesSize = problem.X.size();
+    // LegacyVariablesInfo and X are both sized to NombreDeVariables in resizeProbleme,
+    // so indexing by [0, NombreDeVariables) below is always in bounds.
+    assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
+           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
-        if (static_cast<std::size_t>(index) >= namesSize
-            || static_cast<std::size_t>(index) >= valuesSize)
-        {
-            continue;
-        }
-
-        const auto& name = problem.NomDesVariables[index];
-        if (name.empty())
-        {
-            continue;
-        }
-
-        const auto parsed = Antares::Optimization::ParseLegacyVariableName(name);
-        if (!parsed)
+        const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
+        if (!info)
         {
             continue;
         }
 
         std::optional<unsigned> blockTimeIndex;
-        if (parsed->timeIndex >= globalFirstTimeStep && parsed->timeIndex <= globalLastTimeStep)
-        {
-            blockTimeIndex = parsed->timeIndex - globalFirstTimeStep + 1;
-        }
+        assert(info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep);
 
         simulationTable.addEntry({.block = block,
                                   .component = parsed->component,
@@ -116,7 +104,7 @@ static void fillModelerComponents(
   std::vector<std::unique_ptr<LinearProblemFiller>>& fillersCollection,
   Solver::ModelerData* modelerData,
   OptimEntityContainer& optimEntityContainer,
-  Optimisation::BendersDecomposition* bendersDecomposition)
+  BendersDecomposition* bendersDecomposition)
 {
     const auto& components = modelerData->system->Components();
     optimEntityContainer.addFromSystemComponents(components);
@@ -161,7 +149,7 @@ void fillLinearProblem(const FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
                        OptimEntityContainer& optimEntityContainer,
                        bool namedProblems,
-                       Optimisation::BendersDecomposition* bendersDecomposition)
+                       BendersDecomposition* bendersDecomposition)
 {
     std::vector<std::unique_ptr<LinearProblemFiller>> fillersCollection;
     fillersCollection.push_back(
@@ -234,10 +222,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     OptimEntityContainer optimEntityContainer(ortoolsProblem);
 
-    Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
-                                                                 ? &modelerData
-                                                                      ->bendersDecomposition
-                                                                 : nullptr;
+    BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
+                                                                : nullptr;
 
     fillLinearProblem(fillCtx,
                       problemeHebdo,
@@ -301,7 +287,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         const unsigned heure = static_cast<unsigned>(problemeHebdo->HeureDansLAnnee);
         if (problemeHebdo->OptimisationAuPasHebdomadaire)
         {
-            currentBlock = heure / Antares::Constants::nbHoursInAWeek;
+            currentBlock = heure / Constants::nbHoursInAWeek;
         }
         else
         {
@@ -315,7 +301,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         {
             FillSimulationTable(*simulationTable,
                                 ortoolsProblem,
-                                ::getObjectiveValue(solver.get()),
+                                getObjectiveValue(solver.get()),
                                 *modelerData,
                                 optimEntityContainer,
                                 fillCtx,
@@ -324,15 +310,12 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 true);
         }
 
-        static const Antares::Solver::VariableNameMapper emptyVariableNameMapper;
-        const Antares::Solver::VariableNameMapper& variableNameMapper
-          = hasModelerData ? modelerData->variableNameMapper : emptyVariableNameMapper;
+        static constexpr Antares::Solver::VariableNameMapper legacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *ProblemeAResoudre,
                                   fillCtx,
-                                  variableNameMapper,
-                                  currentBlock,
-                                  fillCtx.getYear());
+                                  legacyNameMapper,
+                                  currentBlock);
 
         measure.tick();
         timeMeasure.simulationTableFillTime = measure.duration_ms();
@@ -420,10 +403,9 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
           = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
         OptimEntityContainer optimEntityContainer(infeasibleProblem);
-        Optimisation::BendersDecomposition* bendersDecomposition = hasModelerData
-                                                                     ? &modelerData
-                                                                          ->bendersDecomposition
-                                                                     : nullptr;
+        BendersDecomposition* bendersDecomposition = hasModelerData
+                                                       ? &modelerData->bendersDecomposition
+                                                       : nullptr;
 
         fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, bendersDecomposition);
 

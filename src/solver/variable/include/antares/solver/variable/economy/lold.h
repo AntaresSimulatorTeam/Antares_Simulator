@@ -21,15 +21,17 @@ struct LOLDTraits: public LOLD_Base_Traits
         return "LOLD";
     }
 
-    static bool checkCondition(const State& state)
+    static void setHourlyValue(IntermediateValues& iv, const State& state, unsigned int)
     {
-        return state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.5;
+        if (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek] > 0.5)
+        {
+            iv[state.hourInTheYear] = value(state);
+        }
     }
 };
 
-using VCardLOLD = VCard_Base<LOLDTraits>;
+using VCardLOLD = EconomyVariableCard<LOLDTraits>;
 
-template<class NextT = Container::EndOfList>
-using LOLD = Economy_Base<LOLDTraits, NextT>;
+using LOLD = EconomyVariableBase<LOLDTraits>;
 
 } // namespace Antares::Solver::Variable::Economy

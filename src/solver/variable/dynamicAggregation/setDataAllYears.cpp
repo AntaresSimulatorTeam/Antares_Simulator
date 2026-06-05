@@ -126,10 +126,10 @@ void SetDataAllYears::merge(const SetDataSingleYear& toMerge, Data::Study& study
                    { v.computeAveragesForCurrentYearFromHourlyResults(); });
 }
 
-void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average<>>& average,
-                                    const std::vector<R::AllYears::StdDeviation<>>& stdDev,
-                                    const std::vector<R::AllYears::MinMaxBase<true>>& min,
-                                    const std::vector<R::AllYears::MinMaxBase<false>>& max,
+void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average>& average,
+                                    const std::vector<R::AllYears::StdDeviation>& stdDev,
+                                    const std::vector<R::AllYears::Min>& min,
+                                    const std::vector<R::AllYears::Max>& max,
                                     const std::set<std::string>& groupNames,
                                     const Category::Precision& precision,
                                     const std::string& suffix,
@@ -151,7 +151,7 @@ void SetDataAllYears::processGroups(const std::vector<R::AllYears::Average<>>& a
           Category::FileLevel::va,
           precision);
 
-        stdDev[index].buildSurveyReport<R::AllYears::Average<>, VCardDynamic>(
+        stdDev[index].buildSurveyReport<R::AllYears::Average, VCardDynamic>(
           survey,
           average[index],
           Category::DataLevel::setOfAreas,

@@ -4,11 +4,11 @@
 #ifndef __SOLVER_VARIABLE_INC_LINK_H__
 #define __SOLVER_VARIABLE_INC_LINK_H__
 
-// NOTE : template includes are used here to reduce template instanciation
-// which still seems to be really cpu/memory consuming
+#include <vector>
 
 #include "antares/solver/variable/info.h"
 #include "antares/solver/variable/storage/results.h"
+#include "antares/solver/variable/tuple_variable_list.h"
 
 #include "../../state.h"
 
@@ -17,96 +17,56 @@ namespace Antares::Solver::Variable
 
 struct VCardAllLinks
 {
-    //! Caption
     static std::string Caption()
     {
         return "Links";
     }
 
-    //! Unit
     static std::string Unit()
     {
         return "";
     }
 
-    //! The short description of the variable
     static const char* Description()
     {
         return "";
     }
 
-    //! The expecte results
     using ResultsType = Results<>;
 
-    //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::link;
-    //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +1;
-    //! Number of columns used by the variable (One ResultsType per column)
     static constexpr int columnCount = 0;
-    //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCard
 
-template<class VariablePerLink>
+template<class VariablePerLinkList>
 class Links
 {
 public:
-    //! Type of the next static variable
-    using NextType = VariablePerLink;
-    //! VCard
+    using VariablePerLink = VariablePerLinkList;
     using VCardType = VCardAllLinks;
-    //! Ancestor
-    // using AncestorType = Variable::IVariable<Links<NextT>, NextT, VCardType>;
-
-    //! List of expected results
     using ResultsType = VCardType::ResultsType;
 
-    enum
-    {
-        //! How many items have we got
-        count = NextType::count,
-    };
+    static constexpr std::size_t count = VariablePerLink::count;
 
     template<int CDataLevel, int CFile>
     struct Statistics
     {
-        enum
-        {
-            count = NextType::template Statistics < CDataLevel,
-            CFile > ::count
-        };
+        static constexpr int count = VariablePerLink::template Statistics<CDataLevel, CFile>::count;
     };
 
 public:
-    /*!
-    ** \brief Retrieve the list of all individual variables
-    **
-    ** The predicate must implement the method `add(name, unit, comment)`.
-    */
     template<class PredicateT>
-    static void RetrieveVariableList(PredicateT& predicate);
-
-public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
-    Links();
-    //! Destructor
-    ~Links();
-    //@}
+    static void RetrieveVariableList(PredicateT& predicate)
+    {
+        VariablePerLink::RetrieveVariableList(predicate);
+    }
 
     void initializeFromStudy(Data::Study& study);
     void initializeFromArea(Data::Study*, Data::Area*);
-    void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
-    void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
+    void initializeFromLink(Data::Study*, Data::AreaLink*);
 
     void broadcastNonApplicability(bool applyNonApplicable);
     void getPrintStatusFromStudy(Data::Study& study);
@@ -120,7 +80,7 @@ public:
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);
     void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
 
-    void yearEndBuild(State& state, uint year);
+    void buildThermalClusterYearEndResults(State& state, uint year, uint numSpace);
 
     void yearEnd(uint year, uint numSpace);
 
@@ -132,7 +92,7 @@ public:
     void weekEnd(State& state);
 
     void hourBegin(uint hourInTheYear);
-    void hourForEachArea(State& state, uint numSpace);
+    void hourForEachArea(State& state, unsigned int numSpace);
     void hourForEachLink(State& state, uint numSpace);
 
     void hourEnd(State& state, uint hourInTheYear);
@@ -151,15 +111,6 @@ public:
     void beforeYearByYearExport(uint year, uint numSpace);
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
-
-    template<class I>
-    static void provideInformations(I& infos);
-
-    template<class VCardToFindT>
-    inline const double* retrieveHourlyResultsForCurrentYear(uint) const
-    {
-        return nullptr;
-    }
 
     template<class VCardToFindT>
     void retrieveResultsForArea(Storage<VCardToFindT>::ResultsType** result, const Data::Area*)
@@ -184,14 +135,10 @@ public:
     template<class SearchVCardT, class O>
     void computeSpatialAggregateWith(O&, uint)
     {
-        // Do nothing
     }
 
 public:
-    //! Area list
-    NextType* pLinks;
-    //! The total number of links
-    uint pLinkCount;
+    std::vector<VariablePerLink> pLinks;
 
 }; // class Links
 
