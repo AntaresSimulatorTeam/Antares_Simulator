@@ -26,6 +26,17 @@ target_include_directories(load-modeler-files
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+include(GNUInstallDirs)
+# Bake two paths into the library so loadAll.cpp can find variable-names.yml
+# without platform-specific executable-directory detection:
+#   - INSTALL path: where `cmake --install` places the file (FHS data dir)
+#   - SOURCE path:  absolute path in the source tree, used as a fallback for
+#                   development builds where the install prefix may not exist
+target_compile_definitions(load-modeler-files PRIVATE
+    "ANTARES_VARIABLE_NAMES_INSTALL_PATH=\"${CMAKE_INSTALL_FULL_DATADIR}/antares/variable-names.yml\""
+    "ANTARES_VARIABLE_NAMES_SOURCE_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/../resources/variable-names.yml\""
+)
+
 find_package(fmt REQUIRED)
 # Link dependencies (if any)
 target_link_libraries(load-modeler-files

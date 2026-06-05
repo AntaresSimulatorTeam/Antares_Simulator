@@ -29,7 +29,8 @@ struct ModelerData
     Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     ResolutionMode resolutionMode = ResolutionMode::SEQUENTIAL_SUBPROBLEMS;
     Optimisation::BendersDecomposition bendersDecomposition;
-    //! Maps variable names via the optional study file input/variable-names.yml
+    //! Maps variable names via the study file input/variable-names.yml, falling back
+    //! to the default variable-names.yml shipped next to the executable
     VariableNameMapper variableNameMapper;
 };
 

@@ -14,22 +14,36 @@ namespace fs = std::filesystem;
 namespace Antares::Solver
 {
 
-VariableNameMapper::VariableNameMapper(const fs::path& studyPath)
+VariableNameMapper::VariableNameMapper(const fs::path& studyPath, const fs::path& defaultFilePath)
 {
-    const fs::path filePath = studyPath / "input" / "variable-names.yml";
-    if (!fs::exists(filePath))
+    const fs::path studyFilePath = studyPath / "input" / "variable-names.yml";
+    if (fs::exists(studyFilePath))
     {
-        logs.info() << "Variable names file not found at " << filePath
-                    << ", variable names will be left unchanged";
+        logs.info() << "Using variable names file from study: " << studyFilePath;
+        loadFromFile(studyFilePath);
         return;
     }
 
+    if (fs::exists(defaultFilePath))
+    {
+        logs.info() << "No variable names file in study, using default: " << defaultFilePath;
+        loadFromFile(defaultFilePath);
+        return;
+    }
+
+    throw std::runtime_error("No variable names file found: neither in the study ("
+                             + studyFilePath.string() + ") nor as a default ("
+                             + defaultFilePath.string() + ")");
+}
+
+void VariableNameMapper::loadFromFile(const fs::path& filePath)
+{
     std::string content;
     try
     {
         content = IO::readFile(filePath);
     }
-    catch (const std::runtime_error& e)
+    catch (const std::runtime_error&)
     {
         logs.error() << "Error while trying to read file " << filePath;
         throw;

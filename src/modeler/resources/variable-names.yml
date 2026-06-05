@@ -1,0 +1,8 @@
+# Default variable-names mapping shipped with antares-modeler.
+#
+# Maps internal variable names (left) to the names used in the output
+# (right). A study can override this file by providing its own
+# `input/variable-names.yml`; when a study file is present it is used
+# instead of this default.
+UnsuppliedEnergy: unsupplied_energy
+Spillage: spilled_energy

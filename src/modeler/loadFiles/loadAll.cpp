@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <filesystem>
+
 #include <fmt/format.h>
 
 #include <antares/logs/logs.h>
@@ -14,6 +15,22 @@ using namespace Antares::ModelerStudy;
 
 namespace Antares::Solver::LoadFiles
 {
+
+namespace
+{
+/// Returns the path to the shipped default variable-names.yml.
+/// For installed builds this is the FHS data-dir location configured at CMake time.
+/// For development builds the source-tree copy is used as a fallback.
+std::filesystem::path defaultVariableNamesFilePath()
+{
+    const std::filesystem::path installPath(ANTARES_VARIABLE_NAMES_INSTALL_PATH);
+    if (std::filesystem::exists(installPath))
+    {
+        return installPath;
+    }
+    return std::filesystem::path(ANTARES_VARIABLE_NAMES_SOURCE_PATH);
+}
+} // namespace
 
 std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
 {
@@ -37,7 +54,7 @@ std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
     data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
     logs.info() << "Scenario groups loaded";
 
-    data.variableNameMapper = VariableNameMapper(studyPath);
+    data.variableNameMapper = VariableNameMapper(studyPath, defaultVariableNamesFilePath());
     measure.tick();
     logs.info() << "Variable names loaded";
 
