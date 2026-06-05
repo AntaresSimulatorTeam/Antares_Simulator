@@ -10,12 +10,14 @@ second LP solve. The formula has two branches depending on the
 `setToZeroOutsideInsideLinks` parameter (`adq_patch_curtailment_sharing.cpp:82-91`):
 
 ```
-DENS = max(0, ENS_init + net_position_type2_init + flows(outside→A))   if setToZeroOutsideInsideLinks == false  (default)
-DENS = max(0, ENS_init + net_position_type2_init)                      if setToZeroOutsideInsideLinks == true
+DENS = max(0, ENS_init + netPositionInit + flows(outside→A))   if setToZeroOutsideInsideLinks == false  (default)
+DENS = max(0, ENS_init + netPositionInit)                      if setToZeroOutsideInsideLinks == true
 ```
 
-where `flows(outside→A)` is the sum of imports from areas *outside* the patch (type-1→type-2
-links, clamped to imports only, lines 58-59 & 74-75).  
+where `netPositionInit` (code variable name in `calculateAreaFlowBalance` and `calculateCsrParameters`)
+is the algebraic sum of flows on type-2/type-2 links only (links where **both** endpoints are
+`physicalAreaInsideAdqPatch`), and `flows(outside→A)` is the sum of imports from areas *outside*
+the patch (type-1→type-2 links, clamped to imports only, lines 58-59 & 74-75).  
 Implementation: `calculateAreaFlowBalance()` in
 `src/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.cpp:38`,
 called from `CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()`
@@ -36,7 +38,7 @@ and RHS set in
 
 | Constraint | LHS function | RHS function | Current RHS formula |
 |---|---|---|---|
-| Area balance | `setNodeBalanceConstraints` (`:42`) | `setRHSnodeBalanceValue` (`:32`) | `ENS_init + net_pos_type2_init − Spillage_init` |
+| Area balance | `setNodeBalanceConstraints` (`:42`) | `setRHSnodeBalanceValue` (`:32`) | `ENS_init + netPositionInit − Spillage_init` |
 | Fictitious load (`Spillage ≤ ?`) | `setFictitiousLoadConstraints` (`:92`) | `setRHSfictitiousLoadValue` (`:59`) | `STt − (1−BT)·STmint + BH·(Ht + STS_net) + BF·(Ft−Lt)` |
 | Max ENS (`ENS ≤ ?`) | `setMaxEnsLoadConstraints` (`:112`) | `setRHSMaxEnsLoadValue` (`:154`) | `ConsommationsAbattues + max(0, AllMustRunGeneration) + ε` |
 
@@ -181,7 +183,7 @@ correctness bug. Recorded here for completeness; out of scope for this change.
 ## What does not change
 
 - **DENS computation** (`adq_patch_curtailment_sharing.cpp:38`): see "LMR step" above — built from solution quantities that already reflect the Modeler. No change needed.
-- **CSR area balance RHS** (`construct_problem_constraints_RHS.cpp:32`): same reasoning — already correct through the observable triple.
+- **CSR area balance RHS** (`construct_problem_constraints_RHS.cpp:32`): `ENS_init + netPositionInit − Spillage_init` — already correct through the observable triple.
 - **Legacy CSR formulas** (BT/BH/BF terms): untouched.
 
 ## Files to modify
