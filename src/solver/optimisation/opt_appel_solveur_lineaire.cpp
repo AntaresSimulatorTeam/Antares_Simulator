@@ -85,7 +85,10 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
         }
 
         std::optional<unsigned> blockTimeIndex;
-        assert(info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep);
+        if (info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep)
+        {
+            blockTimeIndex = info->timeIndex - globalFirstTimeStep + 1;
+        }
 
         simulationTable.addEntry({.block = block,
                                   .component = info->component,
