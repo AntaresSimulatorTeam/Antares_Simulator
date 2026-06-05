@@ -89,9 +89,9 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
         assert(info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep);
 
         simulationTable.addEntry({.block = block,
-                                  .component = parsed->component,
-                                  .output = nameMapper.mapOutput(parsed->output),
-                                  .absolute_time_index = parsed->timeIndex + 1,
+                                  .component = info->component,
+                                  .output = nameMapper.mapOutput(info->name),
+                                  .absolute_time_index = info->timeIndex + 1,
                                   .block_time_index = blockTimeIndex,
                                   .scenario_index = scenario,
                                   .value = problem.X[static_cast<std::size_t>(index)],
