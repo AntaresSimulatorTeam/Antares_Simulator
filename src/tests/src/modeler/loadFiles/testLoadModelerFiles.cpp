@@ -167,6 +167,7 @@ BOOST_FIXTURE_TEST_CASE(read_system_file, FixtureLoadFile)
                   scenario-group: group-234
     )";
     systemStream.close();
+    std::ofstream(inputPath / "optim-config.yml");
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
@@ -194,6 +195,7 @@ BOOST_FIXTURE_TEST_CASE(read_invalid_system_file, FixtureLoadFile)
         system:
     )";
     systemStream.close();
+    std::ofstream(inputPath / "optim-config.yml");
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
@@ -230,6 +232,7 @@ BOOST_FIXTURE_TEST_CASE(scenario_group_is_optional, FixtureLoadFile)
                   model: std.generator
     )";
     systemStream.close();
+    std::ofstream(inputPath / "optim-config.yml");
 
     auto res = Antares::Solver::LoadFiles::loadLibraries(studyPath);
     BOOST_REQUIRE(res.has_value());
