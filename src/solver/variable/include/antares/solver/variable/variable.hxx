@@ -82,12 +82,17 @@ size_t IVariable<ChildT, VCardT>::getMaxNumberColumns() const
 }
 
 template<class ChildT, class VCardT>
-inline void IVariable<ChildT, VCardT>::yearBegin(uint)
+inline void IVariable<ChildT, VCardT>::yearBegin(uint, uint)
 {
 }
 
 template<class ChildT, class VCardT>
-inline void IVariable<ChildT, VCardT>::yearEnd(uint)
+inline void IVariable<ChildT, VCardT>::yearEnd(uint, uint)
+{
+}
+
+template<class ChildT, class VCardT>
+inline void IVariable<ChildT, VCardT>::computeSummary(uint, uint)
 {
 }
 

@@ -137,34 +137,6 @@ public:
         AncestorType::pResults.merge(0, pValuesForTheCurrentYear);
     }
 
-    void simulationBegin()
-    {
-    }
-
-    void simulationEnd()
-    {
-    }
-
-    void yearBegin(unsigned int /*year*/, unsigned int /*numSpace*/)
-    {
-    }
-
-    void yearEnd(unsigned int /*year*/, unsigned int /*numSpace*/)
-    {
-    }
-
-    void computeSummary(unsigned int /*year*/, unsigned int /*numSpace*/)
-    {
-    }
-
-    void hourBegin(unsigned int /*hourInTheYear*/)
-    {
-    }
-
-    void hourForEachArea(State& /*state*/, unsigned int /*numSpace*/)
-    {
-    }
-
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
