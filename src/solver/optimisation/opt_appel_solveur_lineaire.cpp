@@ -221,7 +221,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    OptimEntityContainer optimEntityContainer(ortoolsProblem);
+    OptimEntityContainer optimEntityContainer(*ortoolsProblem);
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
                                                                 : nullptr;
@@ -398,7 +398,7 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                      : nullptr;
         OptimEntityContainer optimEntityContainer(infeasibleProblem);
-        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, true, nullptr);
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, nullptr);
 
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = Antares::Optimization::makeUnfeasiblePbAnalyzer();
