@@ -607,8 +607,7 @@ BOOST_FIXTURE_TEST_CASE(load_libraries_returns_empty_optional_when_no_model_libr
     BOOST_CHECK(!res.has_value());
 }
 
-BOOST_FIXTURE_TEST_CASE(load_libraries_empty_optim_config_file_returns_empty_optional,
-                        CreateInputFileFixture)
+BOOST_FIXTURE_TEST_CASE(load_libraries_with_empty_optim_config_file, CreateInputFileFixture)
 {
     // Arrange: create library file but empty optim-config.yml
     std::string yamlContent = R"(library:
@@ -624,12 +623,19 @@ BOOST_FIXTURE_TEST_CASE(load_libraries_empty_optim_config_file_returns_empty_opt
     // Create an empty optim-config.yml file
     createOptimConfigFile("");
 
-    // Act & Assert: should return empty optional (same as missing file)
+    // Act: libraries should still load, but without any optim config modifications
     auto res = loadLibraries(studyFolder);
-    BOOST_CHECK(!res.has_value());
+
+    // Assert: the optional is set (libraries loaded), but no optim config was applied
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
+    BOOST_REQUIRE_EQUAL(libraries.size(), 1);
+    BOOST_CHECK_EQUAL(libraries[0].Id(), "my-lib");
+    // Default resolution mode should be sequential-subproblems
+    BOOST_CHECK_EQUAL(res.value().second, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
 
-BOOST_FIXTURE_TEST_CASE(load_libraries_whitespace_only_optim_config_file_returns_empty_optional,
+BOOST_FIXTURE_TEST_CASE(load_libraries_with_whitespace_only_optim_config_file,
                         CreateInputFileFixture)
 {
     // Arrange: create library file but whitespace-only optim-config.yml
@@ -646,7 +652,14 @@ BOOST_FIXTURE_TEST_CASE(load_libraries_whitespace_only_optim_config_file_returns
     // Create a whitespace-only optim-config.yml file
     createOptimConfigFile("   \n\n  \t  ");
 
-    // Act & Assert: should return empty optional (same as missing file)
+    // Act: libraries should still load, but without any optim config modifications
     auto res = loadLibraries(studyFolder);
-    BOOST_CHECK(!res.has_value());
+
+    // Assert: the optional is set (libraries loaded), but no optim config was applied
+    BOOST_REQUIRE(res.has_value());
+    const auto& libraries = res.value().first;
+    BOOST_REQUIRE_EQUAL(libraries.size(), 1);
+    BOOST_CHECK_EQUAL(libraries[0].Id(), "my-lib");
+    // Default resolution mode should be sequential-subproblems
+    BOOST_CHECK_EQUAL(res.value().second, Antares::Solver::ResolutionMode::SEQUENTIAL_SUBPROBLEMS);
 }
