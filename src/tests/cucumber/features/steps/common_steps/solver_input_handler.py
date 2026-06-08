@@ -119,8 +119,17 @@ class solver_input_handler:
         so a variable named `area` does not collide with `area2`, `area.name`,
         etc. Appends the variable line if missing in the section, and appends
         both the section and the variable line if the section is absent.
+        Creates the file and parent directories if they don't exist.
         """
         file = self.study_root_dir / "input" / input_file.replace("/", os.sep)
+        
+        # Create parent directories if they don't exist
+        file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Create the file if it doesn't exist
+        if not file.exists():
+            file.touch()
+        
         content_out = []
         in_section = False
         section_seen = False
