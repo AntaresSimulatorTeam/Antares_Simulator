@@ -3,7 +3,30 @@
 
 #pragma once
 
-#include "antares/solver/variable/variable.h"
+/*!
+** \file STStorageByCluster_base.h
+**
+** \brief Base class for short-term storage by cluster variables
+**
+** ## Traits Contract
+**
+** A valid STStorageByCluster Traits must provide:
+** - Required static methods:
+**   - \c Caption() -> std::string
+**   - \c Unit() -> std::string
+**   - \c Description() -> std::string
+**   - Results profile is provided by the base class (no trait alias required)
+**   - \c clusterCount(const Data::Area*) -> size_t
+**   - \c computeStats(IntermediateValues&) -> void
+**   - \c buildSurveyReport(const std::vector<IntermediateValues>&, SurveyResults&, int, int) ->
+*void
+**
+** - Optional hooks:
+**   - \c setHourlyValue(std::vector<IntermediateValues>&, State&, uint numSpace) -> void
+**   - Fallback (deprecated): \c setHourlyValue(std::vector<IntermediateValues>&, State&) -> void
+*/
+
+#include "economy_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -29,22 +52,18 @@ struct VCardSTStorageByClusterBase
         return Traits::Description();
     }
 
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
-      ResultsType;
+    //! The expected results
+    using ResultsType = Results<std::tuple<R::AllYears::Average>>;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardSTStorageByClusterBase VCardForSpatialAggregate;
+    using VCardForSpatialAggregate = VCardSTStorageByClusterBase;
 
     //! Data Level
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
-                                                 & (Category::FileLevel::de_sts);
+    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile & Traits::fileLevel;
     //! Precision (views)
     static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = 0;
     //! Number of columns used by the variable
@@ -53,82 +72,61 @@ struct VCardSTStorageByClusterBase
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef IntermediateValues IntermediateValuesDeepType;
-    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
+    using IntermediateValuesDeepType = IntermediateValues;
+    using IntermediateValuesBaseType = std::vector<IntermediateValues>;
+    using IntermediateValuesType = std::vector<IntermediateValuesBaseType>;
 
 }; // class VCardSTStorageByClusterBase
 
-template<class Traits, class NextT = Container::EndOfList>
-class STStorageByClusterBase: public Variable::IVariable<STStorageByClusterBase<Traits, NextT>,
-                                                         NextT,
+template<class Traits>
+class STStorageByClusterBase: public Variable::IVariable<STStorageByClusterBase<Traits>,
                                                          VCardSTStorageByClusterBase<Traits>>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardSTStorageByClusterBase<Traits> VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<STStorageByClusterBase<Traits, NextT>, NextT, VCardType>
-      AncestorType;
+    using VCardType = VCardSTStorageByClusterBase<Traits>;
+    using AncestorType = Variable::IVariable<STStorageByClusterBase<Traits>, VCardType>;
 
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
+    using ResultsType = typename VCardType::ResultsType;
 
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
+    using VariableAccessorType = VariableAccessor<ResultsType, VCardType::columnCount>;
 
-    enum
-    {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
+    static constexpr std::size_t count = 1;
 
     template<int CDataLevel, int CFile>
     struct Statistics
     {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
+        static constexpr int count = detail::
+          statisticsCount<VCardType, ResultsType, CDataLevel, CFile>;
     };
 
 public:
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
-        // Get the number of years in parallel
         pNbYearsParallel = study->maxNbYearsInParallel;
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
 
-        // Get the area
-        nbClusters_ = area->shortTermStorage.count();
+        nbClusters_ = Traits::clusterCount(area);
         if (nbClusters_)
         {
             AncestorType::pResults.resize(nbClusters_);
 
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            for (uint numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
                 pValuesForTheCurrentYear[numSpace].resize(nbClusters_);
             }
 
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            for (uint numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             {
-                for (unsigned int i = 0; i != nbClusters_; ++i)
+                for (uint i = 0; i != nbClusters_; ++i)
                 {
                     pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
                 }
             }
 
-            for (unsigned int i = 0; i != nbClusters_; ++i)
+            for (uint i = 0; i != nbClusters_; ++i)
             {
                 AncestorType::pResults[i].initializeFromStudy(*study);
                 AncestorType::pResults[i].reset();
@@ -138,8 +136,6 @@ public:
         {
             AncestorType::pResults.clear();
         }
-        // Next
-        NextType::initializeFromArea(study, area);
     }
 
     size_t getMaxNumberColumns() const
@@ -147,59 +143,50 @@ public:
         return nbClusters_ * ResultsType::count;
     }
 
-    void yearBegin(unsigned int year, unsigned int numSpace)
+    void yearBegin(uint year, uint numSpace)
     {
-        // Reset the values for the current year
-        for (unsigned int i = 0; i != nbClusters_; ++i)
+        for (uint i = 0; i != nbClusters_; ++i)
         {
             pValuesForTheCurrentYear[numSpace][i].reset();
         }
-        // Next variable
-        NextType::yearBegin(year, numSpace);
     }
 
-    void yearEnd(unsigned int year, unsigned int numSpace)
+    void yearEnd(uint year, uint numSpace)
     {
-        for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
+        for (uint clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {
-            // Compute all statistics from hourly results for the current year (daily, weekly,
-            // monthly, ...)
             Traits::computeStats(pValuesForTheCurrentYear[numSpace][clusterIndex]);
         }
-        // Next variable
-        NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(unsigned int year, unsigned int numSpace)
+    void computeSummary(uint year, uint numSpace)
     {
-        for (unsigned int clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
+        for (uint clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {
-            // Merge all those values with the global results
             AncestorType::pResults[clusterIndex]
               .merge(year, pValuesForTheCurrentYear[numSpace][clusterIndex]);
         }
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
+    void hourForEachArea(State& state, uint numSpace)
     {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        Traits::setHourlyValue(pValuesForTheCurrentYear[numSpace], state);
-
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
+        if constexpr (requires {
+                          Traits::setHourlyValue(pValuesForTheCurrentYear[numSpace],
+                                                 state,
+                                                 numSpace);
+                      })
+        {
+            Traits::setHourlyValue(pValuesForTheCurrentYear[numSpace], state, numSpace);
+        }
+        else
+        {
+            Traits::setHourlyValue(pValuesForTheCurrentYear[numSpace], state);
+        }
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
+      uint column,
+      uint numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
@@ -207,28 +194,17 @@ public:
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
-                                      unsigned int numSpace) const
+                                      uint numSpace) const
     {
-        // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
 
         if (AncestorType::isPrinted[0])
         {
             assert(NULL != results.data.area);
-            const auto& shortTermStorage = results.data.area->shortTermStorage;
-
-            // Write the data for the current year
-            uint clusterIndex = 0;
-            for (const auto& sts: shortTermStorage.storagesByIndex)
-            {
-                // Write the data for the current year
-                results.variableCaption = sts.properties.name;
-                results.variableUnit = VCardType::Unit();
-                pValuesForTheCurrentYear[numSpace][clusterIndex]
-                  .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-
-                clusterIndex++;
-            }
+            Traits::buildSurveyReport(pValuesForTheCurrentYear[numSpace],
+                                      results,
+                                      fileLevel,
+                                      precision);
         }
     }
 
@@ -236,7 +212,7 @@ private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     size_t nbClusters_ = 0;
-    unsigned int pNbYearsParallel = 0;
+    uint pNbYearsParallel = 0;
 
 }; // class STStorageByClusterBase
 

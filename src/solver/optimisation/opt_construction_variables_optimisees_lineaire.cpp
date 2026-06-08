@@ -18,7 +18,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                   ->NombreDePasDeTempsPourUneOptimisation;
     int NombreDeVariables = 0;
-    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables);
+    VariableNamer variableNamer(ProblemeAResoudre->NomDesVariables,
+                                ProblemeAResoudre->LegacyVariablesInfo);
     auto variableManager = VariableManagerFromProblemHebdo(problemeHebdo);
 
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)

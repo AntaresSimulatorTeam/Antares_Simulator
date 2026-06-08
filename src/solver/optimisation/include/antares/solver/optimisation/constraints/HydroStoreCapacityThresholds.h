@@ -22,7 +22,7 @@ public:
      * @param cluster : global index of the cluster
      * @param pdt : timestep
      */
-    void add(int pays, int cluster, int pdt);
+    void add(int pays, int pdt);
 
 private:
     ReserveData& data;

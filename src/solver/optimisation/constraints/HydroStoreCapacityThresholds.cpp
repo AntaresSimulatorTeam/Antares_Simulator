@@ -3,7 +3,7 @@
 
 #include "antares/solver/optimisation/constraints/HydroStoreCapacityThresholds.h"
 
-void HydroStoreCapacityThresholds::add(int pays, int cluster, int pdt)
+void HydroStoreCapacityThresholds::add(int pays, int pdt)
 {
     int globalClusterIdx = data.hydroOfArea[pays].GlobalHydroIndex;
 

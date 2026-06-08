@@ -8,16 +8,11 @@
 
 namespace Antares::Solver::Variable
 {
-// Forward declaration
 struct Empty;
 
 namespace R::AllYears
 {
-template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
 struct Raw;
-
-template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
-struct Or;
 
 } // namespace R::AllYears
 } // namespace Antares::Solver::Variable

@@ -30,9 +30,7 @@ struct VCardRowBalance
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Raw< // The raw values
-      >>
-      ResultsType;
+    using ResultsType = Results<std::tuple<R::AllYears::Raw>>;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardRowBalance VCardForSpatialAggregate;
@@ -45,8 +43,6 @@ struct VCardRowBalance
                                                     | Category::FileLevel::va);
     //! Precision (views)
     static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = 0;
     //! Number of columns used by the variable (One ResultsType per column)
@@ -55,8 +51,6 @@ struct VCardRowBalance
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateOnce;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
@@ -70,16 +64,13 @@ struct VCardRowBalance
 /*!
 ** \brief Marginal RowBalance
 */
-template<class NextT = Container::EndOfList>
-class RowBalance: public Variable::IVariable<RowBalance<NextT>, NextT, VCardRowBalance>
+class RowBalance: public Variable::IVariable<RowBalance, VCardRowBalance>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
     //! VCard
     typedef VCardRowBalance VCardType;
     //! Ancestor
-    typedef Variable::IVariable<RowBalance<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<RowBalance, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -88,8 +79,7 @@ public:
 
     enum
     {
-        //! How many items have we got
-        count = 1 + NextT::count,
+        count = 1,
     };
 
     template<int CDataLevel, int CFile>
@@ -99,9 +89,8 @@ public:
         {
             count = ((VCardType::categoryDataLevel & CDataLevel
                       && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+                       ? VCardType::columnCount * ResultsType::count
+                       : 0),
         };
     };
 
@@ -117,9 +106,6 @@ public:
 
         // Intermediate values
         pValuesForTheCurrentYear.initializeFromStudy(study);
-
-        // Next
-        NextType::initializeFromStudy(study);
     }
 
     template<class R>
@@ -149,62 +135,34 @@ public:
 
         // Merge all those values with the global results
         AncestorType::pResults.merge(0, pValuesForTheCurrentYear);
-
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
     }
 
     void simulationBegin()
     {
-        // Next
-        NextType::simulationBegin();
     }
 
     void simulationEnd()
     {
-        NextType::simulationEnd();
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
-        // Next variable
-        NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Next variable
-        NextType::yearEnd(year, numSpace);
     }
 
     void computeSummary(unsigned int year, unsigned int numSpace)
     {
-        // Next variable
-        NextType::computeSummary(year, numSpace);
     }
 
     void hourBegin(unsigned int hourInTheYear)
     {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

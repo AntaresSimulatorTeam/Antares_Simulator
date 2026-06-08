@@ -251,7 +251,7 @@ void ReserveParticipationGroup::BuildConstraints()
 
                 // Short Term Storage Clusters
                 const auto& STStorageDuPays = problemeHebdo_->ShortTermStorage[pays];
-                for (int cluster = 0; cluster < STStorageDuPays.size(); cluster++)
+                for (uint32_t cluster = 0; cluster < STStorageDuPays.size(); cluster++)
                 {
                     // 15 (m)
                     STReleaseCapacityThresholds.add(pays, cluster, pdt);
@@ -271,9 +271,9 @@ void ReserveParticipationGroup::BuildConstraints()
                       { return res.AllHydroReservesParticipation.size() > 0; }))
                 {
                     // 15 (c)
-                    HydroReleaseCapacityThresholds.add(pays, 0, pdt);
+                    HydroReleaseCapacityThresholds.add(pays, pdt);
                     // 15 (d)
-                    HydroStoreCapacityThresholds.add(pays, 0, pdt);
+                    HydroStoreCapacityThresholds.add(pays, pdt);
                     // 15 (r)
                     HydroLevelReserveParticipation.add(pays, 0, pdt);
                     // 15 (t)

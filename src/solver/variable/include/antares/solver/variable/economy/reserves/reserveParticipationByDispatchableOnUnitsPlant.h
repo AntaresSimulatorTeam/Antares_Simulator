@@ -3,6 +3,7 @@
 #pragma once
 
 #include "reserveParticipationTemplate.h"
+#include "vCardReserveParticipationByDispatchableOnUnitsPlant.h"
 
 namespace Antares::Solver::Variable::Economy::Reserves
 {
@@ -10,36 +11,29 @@ namespace Antares::Solver::Variable::Economy::Reserves
 /*!
 ** \brief Reserve Participation from on/running units in thermal clusters
 */
-template<class NextT = Container::EndOfList>
 class ReserveParticipationByDispatchableOnUnitsPlant
-    : public ReserveParticipationTemplate<ReserveParticipationByDispatchableOnUnitsPlant<NextT>,
-                                          VCardReserveParticipationByDispatchableOnUnitsPlant,
-                                          NextT>
+    : public ReserveParticipationTemplate<ReserveParticipationByDispatchableOnUnitsPlant,
+                                          VCardReserveParticipationByDispatchableOnUnitsPlant>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardReserveParticipationByDispatchableOnUnitsPlant VCardType;
-    //! Ancestor
-    typedef ReserveParticipationTemplate<ReserveParticipationByDispatchableOnUnitsPlant<NextT>,
-                                         VCardType,
-                                         NextT>
-      AncestorType;
+    using VCardType = VCardReserveParticipationByDispatchableOnUnitsPlant;
+    using AncestorType = ReserveParticipationTemplate<
+      ReserveParticipationByDispatchableOnUnitsPlant,
+      VCardType>;
 
     using AncestorType::pSize;
     using AncestorType::pValuesForTheCurrentYear;
 
     ReserveParticipationByDispatchableOnUnitsPlant() = default;
 
-    size_t getSizeFromArea(Study* /*study*/, Area* area)
+    size_t getSizeFromArea(Data::Study* /*study*/, Data::Area* area)
     {
         return area->thermal.list.reserveParticipationsCount();
     }
 
-    void populateHourlyValues(/*non const*/ State& state, unsigned int numSpace);
+    void populateHourlyValues(State& state, unsigned int numSpace);
 
-    bool hasIndexMapping(const Study& study, const Area* area) const
+    bool hasIndexMapping(const Data::Study& study, const Data::Area* area) const
     {
         return study.parameters.include.reserves
                && !study.runtime.reserveParticipationIndexMaps.value()
@@ -66,8 +60,7 @@ public:
 
 }; // class ReserveParticipationByDispatchableOnUnitsPlant
 
-template<class NextT>
-void ReserveParticipationByDispatchableOnUnitsPlant<NextT>::populateHourlyValues(
+inline void ReserveParticipationByDispatchableOnUnitsPlant::populateHourlyValues(
   State& state,
   unsigned int numSpace)
 {

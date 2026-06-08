@@ -147,10 +147,6 @@ void Areas<NEXTTYPE>::weekForEachArea(State& state, uint numSpace)
 
           auto& variablesForArea = pAreas[area.index];
 
-          // DTG MRG
-          state.dispatchableMargin = variablesForArea.retrieveHourlyResultsForCurrentYear<
-            Economy::VCardDispatchableGenMargin>(numSpace);
-
           variablesForArea.weekForEachArea(state, numSpace);
 
           // NOTE

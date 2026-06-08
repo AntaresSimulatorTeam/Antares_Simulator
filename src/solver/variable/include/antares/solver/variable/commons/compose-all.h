@@ -3,24 +3,19 @@
 
 #pragma once
 
-#include "antares/solver/variable/variable.h" // for Container::EndOfList
+#include "antares/solver/variable/tuple_variable_list.h"
 
 namespace Antares::Solver::Variable::Common
 {
 
-// Variadic recursive composition of class templates: ComposeAll<Head, Tail...>::type =
-// Head<Tail<...<Container::EndOfList>>>
-template<template<class> class Head, template<class> class... Tail>
+// Variadic composition of output variables.
+//
+// Each variable is a standalone class; ComposeAll flattens them into a
+// tuple-based dispatcher.
+template<class... Vs>
 struct ComposeAll
 {
-    using type = Head<typename ComposeAll<Tail...>::type>;
-};
-
-// Base case: single template
-template<template<class> class Last>
-struct ComposeAll<Last>
-{
-    using type = Last<Container::EndOfList>;
+    using type = Container::TupleVariableList<Vs...>;
 };
 
 } // namespace Antares::Solver::Variable::Common

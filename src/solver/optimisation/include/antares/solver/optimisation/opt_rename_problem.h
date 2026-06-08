@@ -3,20 +3,34 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
 #include <vector>
 
 #include <antares/study/fwd.h>
+#include "antares/solver/optimisation/LegacyVariableInfo.h"
 
 class Namer
 {
 public:
     explicit Namer(std::vector<std::string>& target_names);
+    virtual ~Namer() = default;
     void UpdateTimeStep(unsigned timeStep);
     void UpdateArea(const std::string& area);
     void updateExtremities(const std::string& origin, const std::string& destination);
 
 protected:
+    // Records the structured legacy description of a variable, parallel to the name.
+    // No-op in the base namer; only VariableNamer overrides this to record info.
+    virtual void RecordLegacyVariableInfo(unsigned index,
+                                          const std::string& output,
+                                          const std::string& component);
+
+    unsigned timeStep() const
+    {
+        return timeStep_;
+    }
+
     void SetLinkElementName(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType);
@@ -70,7 +84,14 @@ using namespace Antares::Data;
 class VariableNamer: public Namer
 {
 public:
-    using Namer::Namer;
+    VariableNamer(
+      std::vector<std::string>& names,
+      std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& legacyInfo):
+        Namer(names),
+        legacyInfo_(legacyInfo)
+    {
+    }
+
     void DispatchableProduction(unsigned varIndex, const std::string& clusterName);
     void ThermalClusterReserveParticipation(unsigned varIndex,
                                             const std::string& clusterName,
@@ -129,10 +150,16 @@ public:
     void AreaBalance(unsigned varIndex);
 
 private:
+    void RecordLegacyVariableInfo(unsigned index,
+                                  const std::string& output,
+                                  const std::string& component) override;
     void SetAreaVariableName(unsigned varIndex, const std::string& variableType, int layerIndex);
     void SetShortTermStorageVariableName(unsigned varIndex,
                                          const std::string& variableType,
                                          const std::string& sts_name);
+
+    // Structured legacy description, parallel to names_. Owned only by VariableNamer.
+    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& legacyInfo_;
 };
 
 class ConstraintNamer: public Namer

@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(hourly_values_are_copied_from_state)
     auto study = makeStudy();
 
     // Build the ResidualLoad variable chain
-    Antares::Solver::Variable::Economy::ResidualLoad<> residualLoad;
+    Antares::Solver::Variable::Economy::ResidualLoad residualLoad;
     residualLoad.initializeFromStudy(*study);
 
     // Prepare state
