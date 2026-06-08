@@ -5,6 +5,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <algorithm>
+
 #include <antares/io/file.h>
 #include <antares/logs/logs.h>
 #include "antares/io/inputs/yml-optim-config/parser.h"
@@ -54,6 +56,16 @@ YmlOptimConfig::OptimConfig loadOptimConfigFromYaml(const fs::path& studyPath)
     }
 
     std::string content = readOptimConfigFile(configPath);
+
+    // Treat empty or whitespace-only files the same as missing files
+    auto firstNonWhitespace = std::find_if(
+      content.begin(), content.end(), [](char c) { return !std::isspace(static_cast<unsigned char>(c)); });
+    if (firstNonWhitespace == content.end())
+    {
+        logs.info() << "Optim config file is empty at " << configPath;
+        return {};
+    }
+
     return parseOptimConfig(content, configPath);
 }
 

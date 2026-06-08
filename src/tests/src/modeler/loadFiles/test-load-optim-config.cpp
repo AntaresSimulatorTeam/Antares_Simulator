@@ -606,3 +606,47 @@ BOOST_FIXTURE_TEST_CASE(load_libraries_returns_empty_optional_when_no_model_libr
     // On attend une optional vide (std::nullopt)
     BOOST_CHECK(!res.has_value());
 }
+
+BOOST_FIXTURE_TEST_CASE(load_libraries_empty_optim_config_file_returns_empty_optional,
+                        CreateInputFileFixture)
+{
+    // Arrange: create library file but empty optim-config.yml
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    // Create an empty optim-config.yml file
+    createOptimConfigFile("");
+
+    // Act & Assert: should return empty optional (same as missing file)
+    auto res = loadLibraries(studyFolder);
+    BOOST_CHECK(!res.has_value());
+}
+
+BOOST_FIXTURE_TEST_CASE(load_libraries_whitespace_only_optim_config_file_returns_empty_optional,
+                        CreateInputFileFixture)
+{
+    // Arrange: create library file but whitespace-only optim-config.yml
+    std::string yamlContent = R"(library:
+  id: my-lib
+  description: test-lib
+  models:
+    - id: test-model
+      variables:
+        - id: x)";
+
+    createLibraryFile(yamlContent);
+
+    // Create a whitespace-only optim-config.yml file
+    createOptimConfigFile("   \n\n  \t  ");
+
+    // Act & Assert: should return empty optional (same as missing file)
+    auto res = loadLibraries(studyFolder);
+    BOOST_CHECK(!res.has_value());
+}

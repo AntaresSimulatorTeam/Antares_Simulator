@@ -357,6 +357,14 @@ BOOST_AUTO_TEST_CASE(parse_empty_string_throws)
     BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
 }
 
+BOOST_AUTO_TEST_CASE(parse_whitespace_only_string_throws)
+{
+    std::string yaml_content = "   \n\n  \t  ";
+
+    Parser parser;
+    BOOST_CHECK_THROW(parser.parse(yaml_content), YAML::Exception);
+}
+
 BOOST_AUTO_TEST_CASE(parse_multiple_models_different_structures)
 {
     std::string yaml_content = R"(
