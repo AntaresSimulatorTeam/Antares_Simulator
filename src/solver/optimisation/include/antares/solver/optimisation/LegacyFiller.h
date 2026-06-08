@@ -14,15 +14,13 @@ class LegacyFiller final: public Optimisation::LinearProblemApi::LinearProblemFi
 {
 public:
     explicit LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-                          const PROBLEME_HEBDO* problemeHebdo,
-                          bool namedProblems);
+                          const PROBLEME_HEBDO* problemeHebdo);
     void addVariables(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addConstraints(const Optimisation::LinearProblemApi::FillContext& ctx) override;
     void addObjectives(const Optimisation::LinearProblemApi::FillContext& ctx) override;
 
 private:
     const PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;
-    const bool useNamedProblems_;
 
     Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
     void CreateVariable(unsigned idxVar) const;
