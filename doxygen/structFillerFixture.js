@@ -1,9 +1,9 @@
 var structFillerFixture =
 [
     [ "FillerFixture", "structFillerFixture.html#a18099dd6f5a795b33da004cf6895d497", null ],
-    [ "addEmptyConstraints", "structFillerFixture.html#a883f6893cf93409efb32a965cfa917b4", null ],
+    [ "addEmptyConstraints", "structFillerFixture.html#a711a62530497394c0612be2b268c8341", null ],
     [ "addEmptyConstraintsToLinearProblem", "structFillerFixture.html#a7ac36a91bc0958ebffae4aae6ee7c853", null ],
-    [ "addLegacyLp", "structFillerFixture.html#a192cf4cbc7051369ee88a5b32601daab", null ],
+    [ "addLegacyLp", "structFillerFixture.html#a155cbc9fce171260b9b411fd07772333", null ],
     [ "addLegacyVariables", "structFillerFixture.html#a5eec62891d3d124fc71189ee219873e8", null ],
     [ "addModelerVariables", "structFillerFixture.html#a8f3760b1ca0224c28e992cd33fcf2de5", null ],
     [ "fillProblemWithThermalCapacityConnectionFiller", "structFillerFixture.html#a5985af9273adfeeb6a4c3a5ace6df42d", null ],

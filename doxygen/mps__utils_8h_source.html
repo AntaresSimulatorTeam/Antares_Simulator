@@ -141,84 +141,81 @@ $(document).ready(function(){initNavTree('mps__utils_8h_source.html',''); initRe
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">class </span>ILinearProblem;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;}</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">using namespace </span>Antares;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">using namespace </span>Antares::Data;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">using namespace </span>Antares::Optimization;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">using namespace </span>operations_research;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// ======================</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">// MPS files writing</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// ======================</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classI__MPS__writer.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a>(uint currentOptimNumber):</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        current_optim_number_(currentOptimNumber)</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    }</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classI__MPS__writer.html">I_MPS_writer</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> runIfNeeded(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> std::string&amp; filename) = 0;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    uint current_optim_number_ = 0;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;};</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classMPSwriter.html">   40</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMPSwriter.html">MPSwriter</a>: <span class="keyword">public</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classMPSwriter.html">MPSwriter</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classMPSwriter.html">MPSwriter</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;              uint currentOptimNumber);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> runIfNeeded(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> std::string&amp; filename) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem_;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classnullMPSwriter.html">   52</a></span>&#160;<span class="keyword">class </span><a class="code" href="classnullMPSwriter.html">nullMPSwriter</a>: <span class="keyword">public</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classnullMPSwriter.html">nullMPSwriter</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">using</span> I_MPS_writer::I_MPS_writer;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> runIfNeeded(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; <span class="comment">/*writer*/</span>, <span class="keyword">const</span> std::string&amp; <span class="comment">/*filename*/</span>)<span class="keyword"> override</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment">// Does nothing</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classmpsWriterFactory.html">   64</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmpsWriterFactory.html">mpsWriterFactory</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classmpsWriterFactory.html">mpsWriterFactory</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="classmpsWriterFactory.html">mpsWriterFactory</a>(Data::mpsExportStatus exportMPS,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                     <span class="keywordtype">bool</span> exportMPSOnError,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                     <span class="keywordtype">int</span> current_optim_number,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                     <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">// ======================</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">// MPS files writing</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">// ======================</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classI__MPS__writer.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a>(uint currentOptimNumber):</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        current_optim_number_(currentOptimNumber)</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classI__MPS__writer.html">I_MPS_writer</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> runIfNeeded(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> std::string&amp; filename) = 0;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    uint current_optim_number_ = 0;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classMPSwriter.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMPSwriter.html">MPSwriter</a>: <span class="keyword">public</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classMPSwriter.html">MPSwriter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classMPSwriter.html">MPSwriter</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;              uint currentOptimNumber,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;              <span class="keywordtype">bool</span> keepNames);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> runIfNeeded(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; writer, <span class="keyword">const</span> std::string&amp; filename) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem_;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">bool</span> keepNames_;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;};</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classnullMPSwriter.html">   49</a></span>&#160;<span class="keyword">class </span><a class="code" href="classnullMPSwriter.html">nullMPSwriter</a>: <span class="keyword">public</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classnullMPSwriter.html">nullMPSwriter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">using</span> I_MPS_writer::I_MPS_writer;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> runIfNeeded(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; <span class="comment">/*writer*/</span>, <span class="keyword">const</span> std::string&amp; <span class="comment">/*filename*/</span>)<span class="keyword"> override</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">// Does nothing</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;};</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classmpsWriterFactory.html">   61</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmpsWriterFactory.html">mpsWriterFactory</a></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classmpsWriterFactory.html">mpsWriterFactory</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="classmpsWriterFactory.html">mpsWriterFactory</a>(Data::mpsExportStatus exportMPS,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                     <span class="keywordtype">bool</span> exportMPSOnError,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                     <span class="keywordtype">int</span> current_optim_number,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                     <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    std::unique_ptr&lt;I_MPS_writer&gt; create(<span class="keywordtype">bool</span> keepNames);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    std::unique_ptr&lt;I_MPS_writer&gt; createOnOptimizationError();</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    std::unique_ptr&lt;I_MPS_writer&gt; create();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    std::unique_ptr&lt;I_MPS_writer&gt; createOnOptimizationError();</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">// Member functions...</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    std::unique_ptr&lt;I_MPS_writer&gt; createFullmpsWriter();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">bool</span> doWeExportMPS();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// Member data...</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    Data::mpsExportStatus export_mps_;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">bool</span> export_mps_on_error_;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem_;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    uint current_optim_number_;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// Member functions...</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    std::unique_ptr&lt;I_MPS_writer&gt; createFullmpsWriter(<span class="keywordtype">bool</span> keepNames);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">bool</span> doWeExportMPS();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Member data...</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    Data::mpsExportStatus export_mps_;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">bool</span> export_mps_on_error_;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem_;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    uint current_optim_number_;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;};</div>
 <div class="ttc" id="aclassAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem_html"><div class="ttname"><a href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Antares::Optimisation::LinearProblemApi::ILinearProblem</a></div><div class="ttdef"><b>Definition:</b> linearProblem.h:23</div></div>
 <div class="ttc" id="aclassAntares_1_1Solver_1_1IResultWriter_html"><div class="ttname"><a href="classAntares_1_1Solver_1_1IResultWriter.html">Antares::Solver::IResultWriter</a></div><div class="ttdef"><b>Definition:</b> i_writer.h:15</div></div>
-<div class="ttc" id="aclassI__MPS__writer_html"><div class="ttname"><a href="classI__MPS__writer.html">I_MPS_writer</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:25</div></div>
-<div class="ttc" id="aclassMPSwriter_html"><div class="ttname"><a href="classMPSwriter.html">MPSwriter</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:41</div></div>
-<div class="ttc" id="aclassmpsWriterFactory_html"><div class="ttname"><a href="classmpsWriterFactory.html">mpsWriterFactory</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:65</div></div>
-<div class="ttc" id="aclassnullMPSwriter_html"><div class="ttname"><a href="classnullMPSwriter.html">nullMPSwriter</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:53</div></div>
+<div class="ttc" id="aclassI__MPS__writer_html"><div class="ttname"><a href="classI__MPS__writer.html">I_MPS_writer</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:20</div></div>
+<div class="ttc" id="aclassMPSwriter_html"><div class="ttname"><a href="classMPSwriter.html">MPSwriter</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:36</div></div>
+<div class="ttc" id="aclassmpsWriterFactory_html"><div class="ttname"><a href="classmpsWriterFactory.html">mpsWriterFactory</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:62</div></div>
+<div class="ttc" id="aclassnullMPSwriter_html"><div class="ttname"><a href="classnullMPSwriter.html">nullMPSwriter</a></div><div class="ttdef"><b>Definition:</b> mps_utils.h:50</div></div>
 <div class="ttc" id="anamespaceAntares_1_1Optimisation_1_1LinearProblemApi_html"><div class="ttname"><a href="namespaceAntares_1_1Optimisation_1_1LinearProblemApi.html">Antares::Optimisation::LinearProblemApi</a></div><div class="ttdoc">Namespace for the classes related to the linear problem API.</div><div class="ttdef"><b>Definition:</b> SimulationTableGenerator.h:24</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
