@@ -87,41 +87,41 @@ public:
     void appendToSurvey(SurveyResults& survey, Category::Precision precision) const;
 
 private:
-    void processGroups(const std::vector<R::AllYears::Average<>>& average,
-                       const std::vector<R::AllYears::StdDeviation<>>& stdDev,
-                       const std::vector<R::AllYears::MinMaxBase<true>>& min,
-                       const std::vector<R::AllYears::MinMaxBase<false>>& max,
+    void processGroups(const std::vector<R::AllYears::Average>& average,
+                       const std::vector<R::AllYears::StdDeviation>& stdDev,
+                       const std::vector<R::AllYears::Min>& min,
+                       const std::vector<R::AllYears::Max>& max,
                        const std::set<std::string>& groupNames,
                        const Category::Precision& precision,
                        const std::string& suffix,
                        SurveyResults& survey) const;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minThermal_;
-    std::vector<R::AllYears::MinMaxBase<false>> maxThermal_;
+    std::vector<R::AllYears::Min> minThermal_;
+    std::vector<R::AllYears::Max> maxThermal_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minRenewable_;
-    std::vector<R::AllYears::MinMaxBase<false>> maxRenewable_;
+    std::vector<R::AllYears::Min> minRenewable_;
+    std::vector<R::AllYears::Max> maxRenewable_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minStsInjection_;
-    std::vector<R::AllYears::MinMaxBase<false>> maxStsInjection_;
+    std::vector<R::AllYears::Min> minStsInjection_;
+    std::vector<R::AllYears::Max> maxStsInjection_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minStsWithdrawal_;
-    std::vector<R::AllYears::MinMaxBase<false>> maxStsWithdrawal_;
+    std::vector<R::AllYears::Min> minStsWithdrawal_;
+    std::vector<R::AllYears::Max> maxStsWithdrawal_;
 
-    std::vector<R::AllYears::MinMaxBase<true>> minStsLevel_;
-    std::vector<R::AllYears::MinMaxBase<false>> maxStsLevel_;
+    std::vector<R::AllYears::Min> minStsLevel_;
+    std::vector<R::AllYears::Max> maxStsLevel_;
 
-    std::vector<R::AllYears::Average<>> averageThermal_;
-    std::vector<R::AllYears::Average<>> averageRenewable_;
-    std::vector<R::AllYears::Average<>> averageStsInjection_;
-    std::vector<R::AllYears::Average<>> averageStsWithdrawal_;
-    std::vector<R::AllYears::Average<>> averageStsLevel_;
+    std::vector<R::AllYears::Average> averageThermal_;
+    std::vector<R::AllYears::Average> averageRenewable_;
+    std::vector<R::AllYears::Average> averageStsInjection_;
+    std::vector<R::AllYears::Average> averageStsWithdrawal_;
+    std::vector<R::AllYears::Average> averageStsLevel_;
 
-    std::vector<R::AllYears::StdDeviation<>> stdDevThermal_;
-    std::vector<R::AllYears::StdDeviation<>> stdDevRenewable_;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsInjection_;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsWithdrawal_;
-    std::vector<R::AllYears::StdDeviation<>> stdDevStsLevel_;
+    std::vector<R::AllYears::StdDeviation> stdDevThermal_;
+    std::vector<R::AllYears::StdDeviation> stdDevRenewable_;
+    std::vector<R::AllYears::StdDeviation> stdDevStsInjection_;
+    std::vector<R::AllYears::StdDeviation> stdDevStsWithdrawal_;
+    std::vector<R::AllYears::StdDeviation> stdDevStsLevel_;
 };
 
 } // namespace Antares::Solver::Variable

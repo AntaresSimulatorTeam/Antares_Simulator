@@ -33,7 +33,7 @@ public:
     /*!
     ** \brief Convert a string into the corresponding mode
     */
-    static Mode CStringToMode(const AnyString& str);
+    static Mode CStringToMode(const std::string& str);
 
 public:
     //! \name Constructor & Destructor
@@ -108,7 +108,7 @@ public:
     std::vector<Matrix<>> monthly; // [12]
 
     //! The name to displays in logs
-    Yuni::CString<30, false> correlationName;
+    std::string correlationName;
     //! The associate time-series
     int timeSeries;
 

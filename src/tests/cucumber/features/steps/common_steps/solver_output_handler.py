@@ -22,7 +22,6 @@ class solver_output_handler:
         self.hourly_results = {result_type.VALUES: None,
                                result_type.DETAILS: None,
                                result_type.DETAILS_STS: None}
-
     def output_dir(self):
         return Path(self.study_output_path)
 

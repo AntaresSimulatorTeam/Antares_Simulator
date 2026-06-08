@@ -7,7 +7,6 @@
 #include <memory>
 
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 
 namespace Antares::Solver::Implementation
@@ -23,7 +22,6 @@ public:
 private:
     std::unique_ptr<Modeler> modeler_;
     std::unique_ptr<LoadFiles::FileLoader> loader_;
-    std::unique_ptr<FileWriter> writer_;
 };
 
 } // namespace Antares::Solver::Implementation

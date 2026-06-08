@@ -3,18 +3,22 @@
 
 #include "antares/io/file.h"
 
-#include <yuni/core/system/suspend.h>
-#include <yuni/datetime/timestamp.h>
-#include <yuni/io/file.h>
+#include <cerrno>
+#include <chrono>
+#include <cstdio>
+#include <ctime>
+#include <fstream>
+#include <thread>
 
-#ifdef YUNI_OS_WINDOWS
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <io.h>
-
-#include <yuni/core/system/windows.hdr.h>
+#include <windows.h>
 #else
 #include <sys/types.h>
 #include <unistd.h>
 #endif
+
 #include <errno.h>
 #include <fstream>
 
@@ -52,14 +56,13 @@ std::string readFile(const fs::path& filePath)
 
 bool fileSetContent(const std::string& filename, const std::string& content)
 {
-    if (Yuni::System::windows)
+#ifdef _WIN32
+    // On Windows,  there is still the hard limit to 256 chars even if the API allows more
+    if (filename.size() >= 256)
     {
-        // On Windows,  there is still the hard limit to 256 chars even if the API allows more
-        if (filename.size() >= 256)
-        {
-            logs.warning() << "I/O error: Maximum path length limitation (> 256 characters)";
-        }
+        logs.warning() << "I/O error: Maximum path length limitation (> 256 characters)";
     }
+#endif
 
     uint attempt = 0;
     do
@@ -73,27 +76,39 @@ bool fileSetContent(const std::string& filename, const std::string& content)
                                << " (probably not enough disk space).";
 
                 // Notification via the UI interface
-                Yuni::String text;
-                Yuni::DateTime::TimestampToString(text, "%H:%M");
-                logs.info() << "Not enough disk space since " << text << ". Waiting...";
-                // break;
+                char timeBuffer[16];
+                std::time_t now = std::time(nullptr);
+                std::tm timeInfo{};
+#ifdef _WIN32
+                localtime_s(&timeInfo, &now);
+#else
+                localtime_r(&now, &timeInfo);
+#endif
+                if (std::strftime(timeBuffer, sizeof(timeBuffer), "%H:%M", &timeInfo))
+                {
+                    logs.info() << "Not enough disk space since " << timeBuffer << ". Waiting...";
+                }
+                else
+                {
+                    logs.info() << "Not enough disk space. Waiting...";
+                }
             }
             // waiting a little...
-            Yuni::Suspend(retryTimeout);
+            std::this_thread::sleep_for(std::chrono::seconds(retryTimeout));
         }
         ++attempt;
 
-        Yuni::IO::File::Stream out(filename, Yuni::IO::OpenMode::write);
-        if (not out.opened())
+        std::FILE* fh = std::fopen(filename.c_str(), "wb");
+        if (!fh)
         {
             switch (errno)
             {
             case EACCES:
                 // permission denied, useless to spend more time to try to write
-                // the file, we should abort immediatly
+                // the file, we should abort immediately
                 // aborting only if it is the first attempt, otherwise it could be a
                 // side effect for some cleanup
-                if (0 == attempt)
+                if (1 == attempt)
                 {
                     logs.error() << "I/O error: permission denied: " << filename;
                     return false;
@@ -105,6 +120,7 @@ bool fileSetContent(const std::string& filename, const std::string& content)
 
         if (content.empty()) // ok, good, it's over
         {
+            std::fclose(fh);
             return true;
         }
 
@@ -114,33 +130,38 @@ bool fileSetContent(const std::string& filename, const std::string& content)
         // overall elapsed time for writing
         if (content.size() > 1024 * 1024)
         {
-#ifdef YUNI_OS_WINDOWS
-            int fd = _fileno(out.nativeHandle());
+#ifdef _WIN32
+            int fd = _fileno(fh);
             if (0 != _chsize_s(fd, (__int64)content.size()))
 #else
-            int fd = fileno(out.nativeHandle());
+            int fd = fileno(fh);
             if (0 != ftruncate(fd, (off_t)content.size()))
 #endif
             {
                 // not enough disk space
+                std::fclose(fh);
                 continue;
             }
         }
-        if (content.size() != out.write(content))
+        std::size_t written = std::fwrite(content.data(), 1, content.size(), fh);
+        if (written != content.size())
         {
+            std::fclose(fh);
             continue; // not enough disk space
         }
 
         // OK, good
         // Notifying the user / logs that we can safely continue. It could be interresting
         // to have this log entry if the logs did not have enough disk space for itself
-        if (attempt /* - 1*/ > 1)
+        if (attempt > 1)
         {
-            // do not wait for the end of the loop for closing the file
-            out.close();
-
             // For UI notification
+            std::fclose(fh);
             logs.info() << "Resuming...";
+        }
+        else
+        {
+            std::fclose(fh);
         }
         return true;
     } while (true);

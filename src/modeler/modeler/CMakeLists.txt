@@ -5,7 +5,6 @@ target_sources(modeler-lib
         Modeler.cpp
         include/antares/solver/modeler/Modeler.h
         include/antares/solver/modeler/ILoader.h
-        include/antares/solver/modeler/IWriter.h
         include/antares/solver/modeler/ModelerData.h
 )
 

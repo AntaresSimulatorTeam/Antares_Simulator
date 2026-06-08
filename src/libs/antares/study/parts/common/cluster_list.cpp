@@ -50,7 +50,7 @@ std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationClu
                 && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
                   reserveID))
             {
-                if (globalReserveParticipationIdx == index)
+                if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
                 {
                     return {cluster->name(), reserveID};
                 }
@@ -68,7 +68,7 @@ std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationGro
   const Area* area,
   unsigned int index) const
 {
-    int column = 0;
+    unsigned int column = 0;
     for (const auto& reserveID:
          area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
     {
@@ -156,8 +156,6 @@ template<class ClusterT>
 void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 {
     allClusters_.push_back(cluster);
-    sortCompleteList();
-    rebuildIndexes();
 }
 
 template<class ClusterT>
@@ -179,8 +177,10 @@ unsigned int ClusterList<ClusterT>::allClustersCount() const
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::rebuildIndexes()
+void ClusterList<ClusterT>::buildIndexes()
 {
+    sortCompleteList();
+
     // First, we give an index to every cluster, enabled / must-run or not.
     // We do that to :
     //  - Stick to what was done before and not change the results
@@ -197,15 +197,6 @@ void ClusterList<ClusterT>::rebuildIndexes()
     {
         c->enabledIndex = index++;
     }
-}
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::remove(const std::string& id)
-{
-    auto nbDeletion = std::erase_if(allClusters_,
-                                    [&id](const SharedPtr& c) { return c->id() == id; });
-
-    return nbDeletion > 0;
 }
 
 template<class ClusterT>

@@ -17,7 +17,6 @@
 #include "antares/optimisation/linear-problem-api/mipSolution.h"
 #include "antares/optimisation/linear-problem-data-impl/Scenario.h"
 #include "antares/optimisation/linear-problem-data-impl/timeSeriesSet.h"
-#include "antares/solver/modeler/IWriter.h"
 
 #include "inmemory-modeler.h"
 
@@ -187,33 +186,10 @@ struct Solution
     double objectiveValue{0.0};
 };
 
-class InMemoryWriter final: public IWriter
-{
-public:
-    mutable Solution solution_{};
-
-    void init(const std::string&) override
-    {
-        // No initialization needed for in-memory writer
-    }
-
-    const std::filesystem::path& outputPath() const override
-    {
-        static std::filesystem::path dummy;
-        return dummy;
-    }
-
-    void writeSimulationTable(SimulationTable& simuTable) const override
-    {
-    }
-};
-
 BOOST_AUTO_TEST_CASE(Minimal_system_minimize_to_0)
 {
     InMemoryLoader inMemoryLoader;
-    InMemoryWriter inMemoryWriter;
-
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 0);
@@ -228,9 +204,7 @@ BOOST_AUTO_TEST_CASE(system_with_one_constant_serie_value_10)
 
     inMemoryLoader.data = std::make_unique<ConstantDataSeries>(5);
 
-    InMemoryWriter inMemoryWriter;
-
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 5);
@@ -282,9 +256,7 @@ BOOST_AUTO_TEST_CASE(system_with_two_time_series_use_default_first_all_2)
     inMemoryLoader.data = std::make_unique<LinearProblemDataImpl::LinearProblemData>(
       std::move(data_series_repository));
 
-    InMemoryWriter inMemoryWriter;
-
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 2);
@@ -307,33 +279,11 @@ BOOST_AUTO_TEST_CASE(system_with_three_time_series_use_second_one_all_3)
     inMemoryLoader.addScenario("GROUPA", 0, 2); // Year 0, timeseriesNumber 1
     inMemoryLoader.groupes["some_component"] = "GROUPA";
 
-    InMemoryWriter inMemoryWriter;
-
-    Modeler modeler(inMemoryLoader, inMemoryWriter);
+    Modeler modeler(inMemoryLoader, {}, TableFormat::CSV);
     modeler.run();
     auto* solution = modeler.subProbSolution();
     BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 3);
 }
-
-class ScalingWriter final: public IWriter
-{
-public:
-    ScalingWriter() = default;
-
-    void init(const std::string&) override
-    {
-    }
-
-    const std::filesystem::path& outputPath() const override
-    {
-        static std::filesystem::path dummy;
-        return dummy;
-    }
-
-    void writeSimulationTable(SimulationTable& simuTable) const override
-    {
-    }
-};
 
 class ScalingLoader: public ILoader
 {
@@ -404,10 +354,9 @@ BOOST_DATA_TEST_CASE(modeler_scaling_by_time_steps,
                      nTimeSteps)
 {
     ScalingLoader loader(nTimeSteps);
-    ScalingWriter writer;
 
     auto start_total = std::chrono::high_resolution_clock::now();
-    Modeler modeler(loader, writer);
+    Modeler modeler(loader, {}, TableFormat::CSV);
     modeler.run();
     auto end_total = std::chrono::high_resolution_clock::now();
 

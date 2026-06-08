@@ -13,22 +13,11 @@ using HighPrecision = long double;
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-template<class NextT = Empty, int FileFilter = Variable::Category::FileLevel::allFile>
-struct StdDeviation: public NextT
+struct StdDeviation
 {
 public:
-    //! Type of the net item in the list
-    typedef NextT NextType;
+    static constexpr int categoryFile = Variable::Category::FileLevel::allFile;
 
-    enum
-    {
-        //! The count if item in the list
-        count = 1 + NextT::count,
-
-        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
-    };
-
-    //! Name of the filter
     static const char* Name()
     {
         return "std deviation";
@@ -40,8 +29,6 @@ public:
         stdDeviationDaily.assign(DAYS_PER_YEAR, 0.);
         stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0.);
         stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0.);
-        // Next
-        NextType::initializeFromStudy(study);
 
         yearsWeight = study.parameters.getYearsWeight();
         yearsWeightSum = study.parameters.getYearsWeightSum();
@@ -49,47 +36,35 @@ public:
 
     void reset()
     {
-        // Reset
         stdDeviationHourly.assign(HOURS_PER_YEAR, 0.);
         stdDeviationDaily.assign(DAYS_PER_YEAR, 0.);
         stdDeviationWeekly.assign(WEEKS_PER_YEAR, 0.);
         stdDeviationMonthly.assign(MONTHS_PER_YEAR, 0.);
         stdDeviationYear = 0.;
-        // Next
-        NextType::reset();
     }
 
     void merge(unsigned int year, const IntermediateValues& rhs)
     {
-        // Ratio take into account MC year weight
         double pRatio = (double)yearsWeight[year] / (double)yearsWeightSum;
 
         unsigned int i;
-        // StdDeviation value for each hour throughout all years
         for (i = 0; i != HOURS_PER_YEAR; ++i)
         {
             stdDeviationHourly[i] += rhs.hour[i] * rhs.hour[i] * pRatio;
         }
-        // StdDeviation value for each day throughout all years
         for (i = 0; i != DAYS_PER_YEAR; ++i)
         {
             stdDeviationDaily[i] += rhs.day[i] * rhs.day[i] * pRatio;
         }
-        // StdDeviation value for each week throughout all years
         for (i = 0; i != WEEKS_PER_YEAR; ++i)
         {
             stdDeviationWeekly[i] += rhs.week[i] * rhs.week[i] * pRatio;
         }
-        // StdDeviation value for each month throughout all years
         for (i = 0; i != MONTHS_PER_YEAR; ++i)
         {
             stdDeviationMonthly[i] += rhs.month[i] * rhs.month[i] * pRatio;
         }
-        // StdDeviation value throughout all years
         stdDeviationYear += rhs.year * rhs.year * pRatio;
-
-        // Next
-        NextType::merge(year, rhs);
     }
 
     template<class S, class VCardT>
@@ -134,12 +109,12 @@ public:
                 break;
             }
         }
-        // Next
-        NextType::template buildSurveyReport<S, VCardT>(report,
-                                                        results,
-                                                        dataLevel,
-                                                        fileLevel,
-                                                        precision);
+    }
+
+    template<class VCardT>
+    void buildDigest(SurveyResults& /*report*/, int /*digestLevel*/, int /*dataLevel*/) const
+    {
+        // No digest output for std deviation.
     }
 
     std::vector<HighPrecision> stdDeviationMonthly;
@@ -156,23 +131,33 @@ private:
     {
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
-        // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
         report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex] = "std";
 
-        // Precision
         report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
           VCardT::decimal>::Value();
 
-        // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
-        // Values
         double* target = report.values[report.data.columnIndex];
-        // A mere copy
 
         auto squareRootChecked = [](double d) { return d >= 0 ? std::sqrt(d) : 0.; };
+
+        // Caller may pass either a Results<> (which exposes avgdata via accessor)
+        // or an Average<> directly (where avgdata is a member). Pick whichever
+        // form compiles for this S.
+        const auto& avg = [&]() -> const auto&
+        {
+            if constexpr (requires { results.avgdata(); })
+            {
+                return results.avgdata();
+            }
+            else
+            {
+                return results.avgdata;
+            }
+        }();
 
         switch (PrecisionT)
         {
@@ -180,7 +165,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                double v = results.avgdata.hourly[i];
+                double v = avg.hourly[i];
                 double a = array[i];
                 target[i] = squareRootChecked(a - v * v);
             }
@@ -190,7 +175,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                double v = results.avgdata.daily[i];
+                double v = avg.daily[i];
                 double a = array[i];
                 target[i] = squareRootChecked(a - v * v);
             }
@@ -200,7 +185,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                double v = results.avgdata.weekly[i];
+                double v = avg.weekly[i];
                 double a = array[i];
                 target[i] = squareRootChecked(a - v * v);
             }
@@ -210,7 +195,7 @@ private:
         {
             for (unsigned int i = 0; i != Size; ++i)
             {
-                double v = results.avgdata.monthly[i];
+                double v = avg.monthly[i];
                 double a = array[i];
                 target[i] = squareRootChecked(a - v * v);
             }
@@ -218,13 +203,12 @@ private:
         break;
         case Category::annual:
         {
-            const double d = *array - (double)results.avgdata.year * (double)results.avgdata.year;
+            const double d = *array - (double)avg.year * (double)avg.year;
             *target = squareRootChecked(d);
         }
         break;
         }
 
-        // Next column index
         ++report.data.columnIndex;
     }
 

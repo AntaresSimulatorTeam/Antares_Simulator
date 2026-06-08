@@ -27,7 +27,7 @@ struct VCardAllBindingConstraints
         return "";
     }
 
-    //! The expecte results
+    //! Expected results configuration
     typedef Results<> ResultsType;
 
     //! Data Level
@@ -35,23 +35,17 @@ struct VCardAllBindingConstraints
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
                                                  & Category::FileLevel::bc;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +1;
-    //! Number of columns used by the variable (One ResultsType per column)
+    //! Number of columns used by the variable (one results configuration per column)
     static constexpr int columnCount = 0;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCardAllBindingConstraints
 
-template<class NextT = Container::EndOfList>
+template<class VariableList>
 class BindingConstraints
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
     //! VCard
     typedef VCardAllBindingConstraints VCardType;
 
@@ -61,7 +55,7 @@ public:
     enum
     {
         //! How many items have we got
-        count = NextT::count,
+        count = VariableList::count,
     };
 
     template<int CDataLevel, int CFile>
@@ -69,7 +63,7 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics < CDataLevel,
+            count = VariableList::template Statistics < CDataLevel,
             CFile > ::count
         };
     };
@@ -109,7 +103,7 @@ public:
     void yearBegin(uint year, uint numSpace);
     void yearEnd(uint year, uint numSpace);
 
-    void yearEndBuild(State& state, uint year, uint numSpace);
+    void buildThermalClusterYearEndResults(State& state, uint year, uint numSpace);
 
     void weekBegin(State& state);
     void weekEnd(State& state);
@@ -136,9 +130,6 @@ public:
         // do nothing
     }
 
-    template<class I>
-    static void provideInformations(I& infos);
-
     template<class VCardToFindT>
     void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::Area* area);
@@ -163,7 +154,7 @@ public:
 
 private:
     // For each binding constraint, output variable static list associated.
-    std::vector<NextType> pBindConstraints;
+    std::vector<VariableList> pBindConstraints;
     // The number of counted binding constraints
     uint pBCcount;
 

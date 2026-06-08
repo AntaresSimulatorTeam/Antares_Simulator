@@ -24,8 +24,9 @@ struct NbOfDispatchedUnitsByPlantTraits
         return "Number of Dispatchable Units by plant";
     }
 
-    static void setHourlyValuesForCurrentYear(std::vector<IntermediateValues>& clusterValues,
-                                              State& state)
+    static void setHourlyValue(std::vector<IntermediateValues>& clusterValues,
+                               State& state,
+                               [[maybe_unused]] unsigned int numSpace)
     {
         auto area = state.area;
         auto& thermal = state.thermal;
@@ -80,8 +81,6 @@ using VCardNbOfDispatchedUnitsByPlant = VCardDispatchablePlantByClusterBase<
 ** \brief C02 Average value of the overrall OperatingCost emissions expected from all
 **   the thermal dispatchable clusters
 */
-template<class NextT = Container::EndOfList>
-using NbOfDispatchedUnitsByPlant = DispatchablePlantByClusterBase<NbOfDispatchedUnitsByPlantTraits,
-                                                                  NextT>;
+using NbOfDispatchedUnitsByPlant = DispatchablePlantByClusterBase<NbOfDispatchedUnitsByPlantTraits>;
 
 } // namespace Antares::Solver::Variable::Economy

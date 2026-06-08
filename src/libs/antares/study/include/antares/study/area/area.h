@@ -5,6 +5,7 @@
 #define __ANTARES_LIBS_STUDY_AREAS_H__
 
 #include <filesystem>
+#include <ostream>
 #include <set>
 #include <stdlib.h>
 #include <vector>
@@ -372,7 +373,7 @@ public:
     ** \param filename The file to read
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
-    void saveLinkListToBuffer(Yuni::Clob& buffer) const;
+    void saveLinkListToBuffer(std::ostream& buffer) const;
 
     //! \name Areas
     //@{

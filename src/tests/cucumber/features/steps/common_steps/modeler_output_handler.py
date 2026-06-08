@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 from shared_utils import mps_utils as mpu
 import os
-
+from io import StringIO
+from pathlib import Path
 
 def read_if_exists(path, readfunc):
     if (os.path.exists(path)):
@@ -12,22 +13,46 @@ def read_if_exists(path, readfunc):
     else:
         return None
 
-
 class invest_problems:
     def __init__(self, master, subproblem, structure):
         self.master = master
         self.subproblem = subproblem
         self.structure = structure
 
+def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
+    """
+    Accumulate contents of all simulation-table*.csv files into a single string.
+    Keeps the CSV header from the first file and removes it from subsequent files.
+    """
+    files = sorted(directory.glob(filePattern))
+    if not files:
+        return ""
+
+    accumulated = []
+    for i, csv_file in enumerate(files):
+        content = csv_file.read_text(encoding='utf-8')
+
+        if i == 0:
+            # Keep the entire first file including header
+            accumulated.append(content)
+        else:
+            # Skip the "block, component,output,absolute_time_index,..." header line for subsequent files
+            lines = content.split('\n', 1)
+            if len(lines) > 1:
+                # Add only the data part (skip first line which is the header)
+                accumulated.append(lines[1])
+            # If file only has header or is empty, skip it
+    return "".join(accumulated)
 
 class modeler_output_handler:
-    def __init__(self, simulation_table_location, output_location=None):
-        self.simulation_table = modeler_output_handler.__read_simulation_table(simulation_table_location)
-        if output_location:
-            self.problems = modeler_output_handler.__read_problems(output_location)
+    def __init__(self, outputPath: Path, filePattern: str, readInvestFiles=False):
+        self.simulation_table = modeler_output_handler.__read_simulation_table(outputPath, filePattern)
+        if readInvestFiles:
+            self.problems = modeler_output_handler.__read_problems(outputPath)
 
     @staticmethod
-    def __read_problems(output_location):
+    def __read_problems(outputPath):
+        output_location = str(outputPath)
         # MASTER
         try:
             master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
@@ -44,14 +69,11 @@ class modeler_output_handler:
         return invest_problems(master, subproblem, structure)
 
     @staticmethod
-    def __read_simulation_table(simulation_table_location) -> pd.DataFrame:
-        if isinstance(simulation_table_location, (list, tuple)):
-            paths = list(simulation_table_location)
-        else:
-            paths = [simulation_table_location]
-        frames = [pd.read_csv(p, header=0, sep=",", low_memory=False) for p in paths]
-        df = pd.concat(frames, ignore_index=True) if len(frames) > 1 else frames[0]
-        # We need an int or a range for scenario the modeler step
+    def __read_simulation_table(outputPath: Path, filePattern: str) -> pd.DataFrame:
+        simu_table_str = accumulate_simu_table_files(outputPath, filePattern)
+        df = pd.read_csv(StringIO(simu_table_str), header=0, sep=",", low_memory=False)
+
+        # We need an int or a range for scenario the modeler step 
         df['scenario_index'] = df['scenario_index'].replace("None", 0)
         df['scenario_index'] = df['scenario_index'].replace(np.nan, 0)
         df.replace("None", np.nan, inplace=True)

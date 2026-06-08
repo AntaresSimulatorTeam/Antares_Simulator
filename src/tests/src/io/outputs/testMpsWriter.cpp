@@ -32,7 +32,6 @@
 #include <antares/optimisation/linear-problem-mpsolver-impl/linearProblem.h>
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
-#include "antares/solver/modeler/fileWriter/FileWriter.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
 using namespace Antares::Optimisation::LinearProblemApi;
 using namespace Antares::Optimisation::LinearProblemMpsolverImpl;
@@ -141,11 +140,9 @@ void checkProblem(const ILinearProblem& originalProblem, const fs::path& mpsPath
     checkObjective(originalProblem, fromMps);
 }
 
-void checkMPS(Modeler& modeler)
+void checkMPS(Modeler& modeler, fs::path outputPath)
 {
-    modeler.run();
     const auto& masterProblem = modeler.masterProblem();
-    fs::path outputPath = modeler.writer_.outputPath();
     if (masterProblem && !isProblemEmpty(*masterProblem))
     {
         checkProblem(*masterProblem, outputPath / "master.mps");
@@ -153,28 +150,19 @@ void checkMPS(Modeler& modeler)
     checkProblem(*modeler.subproblems().at(0), outputPath / "1-1.mps");
 }
 
-struct MpsWriterTestFixture
+void processStudy(const filesystem::path& studyDir)
 {
-    LoadFiles::FileLoader loader;
-    FileWriter writer;
+    LoadFiles::FileLoader loader(studyDir);
 
-    explicit MpsWriterTestFixture(const fs::path& studyPath):
-        loader(studyPath),
-        writer(studyPath)
-    {
-    }
+    fs::path outputPath = studyDir / "output";
+    fs::create_directory(outputPath);
 
-    Modeler build()
-    {
-        return {loader, writer};
-    }
-};
+    Modeler modeler(loader, outputPath, TableFormat::CSV);
+    modeler.run();
 
-void processStudy(const filesystem::path& entry)
-{
-    MpsWriterTestFixture fixture(entry);
-    auto modeler = fixture.build();
-    checkMPS(modeler);
+    checkMPS(modeler, outputPath);
+
+    fs::remove_all(outputPath);
 }
 
 void checkEpic2Studies()
@@ -185,10 +173,10 @@ void checkEpic2Studies()
         {
             continue;
         }
-        const auto& path = subEntry.path();
-        if (!ignoreList.contains(path.filename().string()))
+        const auto& studyDir = subEntry.path();
+        if (!ignoreList.contains(studyDir.filename().string()))
         {
-            processStudy(path);
+            processStudy(studyDir);
         }
     }
 }
@@ -202,39 +190,25 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
         {
             continue;
         }
-        const auto& path = entry.path();
-        if (!ignoreList.contains(path.filename().string()))
+        const auto& studyDir = entry.path();
+        if (!ignoreList.contains(studyDir.filename().string()))
         {
-            if (path.filename().string() == "epic2")
+            if (studyDir.filename().string() == "epic2")
             {
                 checkEpic2Studies();
                 continue;
             }
-            processStudy(path);
+            processStudy(studyDir);
         }
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_file_writer_init)
+// gp : this test fails in Win + Debug
+// gp : it's also run in tests TestALLModelerStudiesMps above
+BOOST_AUTO_TEST_CASE(test_13_1)
 {
-    fs::path tempDir = fs::temp_directory_path() / "antares_test_file_writer";
-    fs::create_directories(tempDir);
-    FileWriter writer(tempDir);
-    FileWriter writer2(tempDir);
-    writer.init("abc");
-
-    SimulationTable s;
-    writer.writeSimulationTable(s);
-    BOOST_CHECK(fs::exists(writer.outputPath() / "simulation_table.csv"));
-    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc");
-
-    writer.init("abc");
-    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc-2");
-
-    writer2.init("abc");
-    BOOST_CHECK(writer2.outputPath() == tempDir / "output" / "abc-3");
-
-    fs::remove_all(tempDir);
+    const auto& studyDir = resources / "13_1";
+    processStudy(studyDir);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -53,11 +53,13 @@ Area* addAreaToStudy(Study::Ptr study, const std::string& areaName)
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
     area->thermal.list.addToCompleteList(cluster);
+    area->thermal.list.buildIndexes();
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
     area->renewable.list.addToCompleteList(cluster);
+    area->renewable.list.buildIndexes();
 }
 
 template<class ClusterType>

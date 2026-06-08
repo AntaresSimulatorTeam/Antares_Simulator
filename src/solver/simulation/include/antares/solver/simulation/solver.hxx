@@ -19,7 +19,6 @@
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-#include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -155,19 +154,10 @@ public:
                                              pDurationCollector,
                                              scratchmap);
 
-        if (!study.parameters.noOutput)
-        {
-            auto& simTable = simulation_->getSimulationTable(numSpace);
-
-            auto buffers = simTable.moveBuffers();
-
-            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
-        }
-
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
-        simulation_->variables.yearEndBuild(state, y, numSpace);
+        simulation_->variables.buildThermalClusterYearEndResults(state, y, numSpace);
 
         // 7 - End of the year, this is the last stade where the variables can retrieve
         // their data for this year.
@@ -272,12 +262,6 @@ void ISimulation<ImplementationType>::run()
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
 
     logs.info() << "Allocating resources...";
-
-    // Memory usage
-    {
-        Variable::PrintInfosStdCout c;
-        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
-    }
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
@@ -508,11 +492,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
 
-    if (!study.parameters.noOutput)
-    {
-        aggregateAndWriteSimulationTables();
-    }
-
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution
@@ -533,43 +512,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Writing annual costs statistics
     pAnnualStatistics.endStandardDeviations();
     pAnnualStatistics.writeToOutput(pResultWriter);
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::storeYearBuffers(uint year,
-                                                       std::string&& firstBuffer,
-                                                       std::string&& secondBuffer)
-{
-    std::lock_guard lock(buffersMutex_);
-    yearSimulationBuffers_.emplace(year,
-                                   std::pair{std::move(firstBuffer), std::move(secondBuffer)});
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
-{
-    if (study.parameters.parquetFmtForSimuTables)
-    {
-        // TODO
-    }
-    else
-    {
-        const auto header = ImplementationType::getSimulationTableHeader() + "\n";
-
-        for (const auto& [year, pair_of_buffers]: yearSimulationBuffers_)
-        {
-            std::string writerEntry = header + pair_of_buffers.first;
-            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
-                                               + "--optim-nb-1.csv",
-                                             writerEntry);
-
-            writerEntry = header + pair_of_buffers.second;
-            pResultWriter.addEntryFromBuffer("simulation_table-" + std::to_string(year + 1)
-                                               + "--optim-nb-2.csv",
-                                             writerEntry);
-        }
-    }
-    yearSimulationBuffers_.clear();
 }
 } // namespace Antares::Solver::Simulation
 

@@ -152,7 +152,7 @@ struct ComponentToAreaConnectionFillerFixture
         libraries.push_back(IO::Inputs::ModelConverter::convert(parserModel.parse(libraryYaml)));
 
         IO::Inputs::YmlSystem::Parser parserSystem;
-        auto ymlSystem = parserSystem.parse(systemYaml);
+        auto ymlSystem = parserSystem.parse(systemYaml, "");
         auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
 
         to_return->system = std::make_unique<System>(std::move(system));
