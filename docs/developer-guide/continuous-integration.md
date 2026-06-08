@@ -10,7 +10,6 @@ Here is a description of workflows with their associated status.
 | Ubuntu           | `ubuntu.yml`          | Builds Antares Simulator                                                                | [![Status][ubuntu_ci_svg]][ubuntu_ci_link]           |
 | Windows          | `windows-vcpkg.yml`   | Builds Antares Simulator                                                                | [![Status][windows_ci_svg]][windows_ci_link]         |
 | OracleLinux8     | `oracle8.yml`         | Builds Antares Simulator                                                                | [![Status][oraclelinux_ci_svg]][oraclelinux_ci_link] |
-| -                | `build-userguide.yml` | Generates PDF user guide from material in `docs/user-guide` (uses Sphinx)               | [![Status][userguide_svg]][userguide_link]           |
 | All of the above | `new_release.yml`     | When a release is created, runs the aforementioned workflows and publishes their assets | [![Status][new_release_svg]][new_release_link]       |
 
 ## Additional workflows
