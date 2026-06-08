@@ -15,7 +15,6 @@
 #include <antares/study/filter.h>
 
 #include "../categories.h"
-#include "../endoflist.h"
 #include "../info.h"
 #include "../surveyresults.h"
 

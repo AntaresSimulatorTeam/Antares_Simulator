@@ -3,295 +3,74 @@
 
 #pragma once
 
-#include <antares/utils/utils.h>
-#include "antares/solver/variable/variable.h"
+#include "dynamic_multi_column_base.h"
+#include "economy_base.h"
 
 namespace Antares::Solver::Variable::Economy
 {
-struct VCardDispatchableGeneration
+
+struct DispatchableGenerationTraits
 {
-    //! Caption
     static std::string Caption()
     {
         return "Dispatch. Gen.";
     }
 
-    //! Unit
     static std::string Unit()
     {
         return "MWh";
     }
 
-    //! The short description of the variable
     static std::string Description()
     {
         return "Value of all the dispatchable generation throughout all MC years";
     }
 
-    //! The expected results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    using ResultsProfile = StandardResults<>;
 
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardDispatchableGeneration VCardForSpatialAggregate;
-
-    //! Data Level
-    static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
-    //! File level (provided by the type of the results)
-    static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
-                                                 & (Category::FileLevel::id
-                                                    | Category::FileLevel::va);
-    //! Precision (views)
-    static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
-    //! Decimal precision
     static constexpr uint8_t decimal = 0;
-    //! Nb of columns occupied by this variable in year-by-year results
-    static constexpr int columnCount = Category::dynamicColumns;
-    //! The Spatial aggregation
-    static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
-    static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
-    //! Can this variable be non applicable (0 : no, 1 : yes)
-    static constexpr uint8_t isPossiblyNonApplicable = 0;
 
-    typedef IntermediateValues IntermediateValuesDeepType;
-    typedef std::vector<IntermediateValues> IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValuesBaseType> IntermediateValuesType;
-
-}; // class VCard
-
-/*!
-** \brief Marginal DispatchableGeneration
-*/
-template<class NextT = Container::EndOfList>
-class DispatchableGeneration
-    : public Variable::IVariable<DispatchableGeneration<NextT>, NextT, VCardDispatchableGeneration>
-{
-public:
-    //! Type of the next static variable
-    typedef NextT NextType;
-    //! VCard
-    typedef VCardDispatchableGeneration VCardType;
-    //! Ancestor
-    typedef Variable::IVariable<DispatchableGeneration<NextT>, NextT, VCardType> AncestorType;
-
-    //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
-
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
-
-    enum
+    static std::vector<ColumnDescriptor> buildColumnDescriptors(Data::Area* area)
     {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
+        std::vector<ColumnDescriptor> descriptors;
+        std::map<std::string, size_t> groupNumbers;
 
-    template<int CDataLevel, int CFile>
-    struct Statistics
-    {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
-    };
-
-    void initializeFromArea(Data::Study* study, Data::Area* area)
-    {
-        pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear.resize(pNbYearsParallel);
-
-        // Building the vector of group names the clusters belong to.
-        std::set<std::string> names;
-        for (const auto& cluster: area->thermal.list.each_enabled())
-        {
-            names.insert(cluster->getGroup());
-        }
-        groupNames_ = {names.begin(), names.end()};
-        groupToNumbers_ = Utils::giveNumbersToStrings(groupNames_);
-
-        nbColumns_ = groupNames_.size();
-
-        if (nbColumns_)
-        {
-            AncestorType::pResults.resize(nbColumns_);
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace].resize(nbColumns_);
-            }
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                for (unsigned int i = 0; i != nbColumns_; ++i)
-                {
-                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
-                }
-            }
-
-            for (unsigned int i = 0; i != nbColumns_; ++i)
-            {
-                AncestorType::pResults[i].initializeFromStudy(*study);
-                AncestorType::pResults[i].reset();
-            }
-        }
-        else
-        {
-            AncestorType::pResults.clear();
-        }
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    size_t getMaxNumberColumns() const
-    {
-        return nbColumns_ * ResultsType::count;
-    }
-
-    void yearBegin(unsigned int year, unsigned int numSpace)
-    {
-        // Reset the values for the current year
-        for (unsigned int i = 0; i != nbColumns_; ++i)
-        {
-            pValuesForTheCurrentYear[numSpace][i].reset();
-        }
-        // Next variable
-        NextType::yearBegin(year, numSpace);
-    }
-
-    void yearEnd(unsigned int year, unsigned int numSpace)
-    {
-        for (unsigned int column = 0; column < nbColumns_; column++)
-        {
-            pValuesForTheCurrentYear[numSpace][column].computeStatisticsForTheCurrentYear();
-        }
-
-        // Next variable
-        NextType::yearEnd(year, numSpace);
-    }
-
-    void computeSummary(unsigned int year, unsigned int numSpace)
-    {
-        // Merge all those values with the global results
-
-        VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
-                                             AncestorType::pResults,
-                                             year);
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        auto area = state.area;
-        auto& thermal = state.thermal;
         for (auto& cluster: area->thermal.list.each_enabled())
         {
-            unsigned int groupNumber = groupToNumbers_[cluster->getGroup()];
-
-            pValuesForTheCurrentYear[numSpace][groupNumber][state.hourInTheYear]
-              += thermal[area->index].thermalClustersProductions[cluster->enabledIndex];
-        }
-
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        // Dynamic-columns variables are intentionally excluded from digest generation.
-        NextType::buildDigest(results, digestLevel, dataLevel);
-    }
-
-    Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int column,
-      unsigned int numSpace) const
-    {
-        return pValuesForTheCurrentYear[numSpace][column].hour;
-    }
-
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      unsigned int numSpace) const
-    {
-        // The current variable is actually a multiple-variable.
-        results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-        if (!AncestorType::isPrinted[0])
-        {
-            return;
-        }
-
-        for (unsigned int column = 0; column < nbColumns_; column++)
-        {
-            results.variableCaption = groupNames_[column];
-            results.variableUnit = VCardType::Unit();
-            pValuesForTheCurrentYear[numSpace][column]
-              .template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
-        }
-    }
-
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
-    {
-        // Building synthesis results
-        // ------------------------------
-
-        if (AncestorType::isPrinted[0])
-        {
-            // And only if we match the current data level _and_ precision level
-            if ((dataLevel & VCardType::categoryDataLevel)
-                && (fileLevel & VCardType::categoryFileLevel) && (precision & VCardType::precision))
+            const std::string& group = cluster->getGroup();
+            if (groupNumbers.find(group) == groupNumbers.end())
             {
-                results.isCurrentVarNA[0] = AncestorType::isNonApplicable[0];
-
-                for (unsigned int column = 0; column < nbColumns_; column++)
-                {
-                    results.variableCaption = groupNames_[column];
-                    results.variableUnit = VCardType::Unit();
-                    AncestorType::pResults[column]
-                      .template buildSurveyReport<ResultsType, VCardType>(
-                        results,
-                        AncestorType::pResults[column],
-                        dataLevel,
-                        fileLevel,
-                        precision);
-                }
+                size_t idx = descriptors.size();
+                groupNumbers[group] = idx;
+                descriptors.push_back({group, "MWh"});
             }
         }
-        // Ask to the next item in the static list to export its results as well
-        NextType::buildSurveyReport(results, dataLevel, fileLevel, precision);
+        return descriptors;
     }
 
-private:
-    //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    std::vector<std::string> groupNames_; // Names of group containing the clusters of the area
-    std::map<std::string, unsigned int> groupToNumbers_; // Gives to each group (of area) a number
-    size_t nbColumns_ = 0;
-    unsigned int pNbYearsParallel;
+    static void setHourlyValue(
+      VCardDynamicMultiColumn<DispatchableGenerationTraits>::IntermediateValuesBaseType& pValues,
+      State& state,
+      unsigned int,
+      const std::vector<ColumnDescriptor>& descriptors)
+    {
+        auto& area = state.area;
+        auto& thermal = state.thermal;
+        std::map<std::string, size_t> groupToNumbers;
+        for (size_t i = 0; i < descriptors.size(); ++i)
+        {
+            groupToNumbers[descriptors[i].caption] = i;
+        }
+        for (auto& cluster: area->thermal.list.each_enabled())
+        {
+            size_t groupNumber = groupToNumbers.at(cluster->getGroup());
+            pValues[groupNumber][state.hourInTheYear] += thermal[area->index]
+                                                           .thermalClustersProductions
+                                                             [cluster->enabledIndex];
+        }
+    }
+};
 
-}; // class DispatchableGeneration
+using DispatchableGeneration = DynamicMultiColumnBase<DispatchableGenerationTraits>;
 
 } // namespace Antares::Solver::Variable::Economy

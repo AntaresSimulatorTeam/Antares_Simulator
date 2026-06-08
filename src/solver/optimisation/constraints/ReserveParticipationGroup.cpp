@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2024, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/constraints/ReserveParticipationGroup.h"
 
@@ -269,7 +251,7 @@ void ReserveParticipationGroup::BuildConstraints()
 
                 // Short Term Storage Clusters
                 const auto& STStorageDuPays = problemeHebdo_->ShortTermStorage[pays];
-                for (int cluster = 0; cluster < STStorageDuPays.size(); cluster++)
+                for (uint32_t cluster = 0; cluster < STStorageDuPays.size(); cluster++)
                 {
                     // 15 (m)
                     STReleaseCapacityThresholds.add(pays, cluster, pdt);
@@ -289,9 +271,9 @@ void ReserveParticipationGroup::BuildConstraints()
                       { return res.AllHydroReservesParticipation.size() > 0; }))
                 {
                     // 15 (c)
-                    HydroReleaseCapacityThresholds.add(pays, 0, pdt);
+                    HydroReleaseCapacityThresholds.add(pays, pdt);
                     // 15 (d)
-                    HydroStoreCapacityThresholds.add(pays, 0, pdt);
+                    HydroStoreCapacityThresholds.add(pays, pdt);
                     // 15 (r)
                     HydroLevelReserveParticipation.add(pays, 0, pdt);
                     // 15 (t)

@@ -4,87 +4,172 @@
 #ifndef __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 #define __SOLVER_VARIABLE_STORAGE_RESULTS_H__
 
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
 #include <antares/study/study.h>
 
 #include "../categories.h"
+#include "average.h"
+#include "empty.h"
 #include "fwd.h"
 #include "intermediate.h"
+#include "minmax.h"
+#include "raw.h"
+#include "stdDeviation.h"
 
 namespace Antares::Solver::Variable
 {
-template<class FirstDecoratorT = Empty, // The first decorator for the results
-         template<class, int> class DecoratorForSpatialAggregateT = R::AllYears::Raw>
+
+namespace detail
+{
+template<class T, class Tuple>
+struct TupleContains;
+
+template<class T>
+struct TupleContains<T, std::tuple<>>: std::false_type
+{
+};
+
+template<class T, class Head, class... Tail>
+struct TupleContains<T, std::tuple<Head, Tail...>>
+    : std::conditional_t<std::is_same_v<T, Head>,
+                         std::true_type,
+                         TupleContains<T, std::tuple<Tail...>>>
+{
+};
+
+template<class T, class Tuple>
+inline constexpr bool tuple_can_contain_type_v = TupleContains<T, Tuple>::value;
+
+} // namespace detail
+
+template<class DecoratorTupleT = std::tuple<>, class SpatialAggT = R::AllYears::Raw>
 class Results;
 
-/*!
-** \brief
-**
-** \tparam FirstDecoratorT The first decorator for the class. The common values
-**   are `Raw`, `Average`, `Min`, `Max`... This parameter is a static list.
-*/
-template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>
-class Results: public FirstDecoratorT
+using StandardAllYearsDecorators = std::
+  tuple<R::AllYears::Average, R::AllYears::StdDeviation, R::AllYears::Min, R::AllYears::Max>;
+
+template<class SpatialAggT = R::AllYears::Raw>
+using StandardResults = Results<StandardAllYearsDecorators, SpatialAggT>;
+
+template<class DecoratorTupleT, class SpatialAggT>
+class Results
 {
 public:
-    //! Type of the first decorator
-    typedef FirstDecoratorT DecoratorType;
+    using DecoratorTuple = DecoratorTupleT;
 
-    enum
-    {
-        //! The count if item in the list
-        count = DecoratorType::count,
-    };
+    static constexpr std::size_t count = std::tuple_size_v<DecoratorTuple>;
 
-    enum
+private:
+    template<class Tup>
+    struct CategoryFileFold;
+
+    template<class... Decorators>
+    struct CategoryFileFold<std::tuple<Decorators...>>
     {
-        categoryFile = FirstDecoratorT::categoryFile,
+        static constexpr int value = (0 | ... | Decorators::categoryFile);
     };
 
 public:
-    /*!
-    ** \brief Initialize result outputs from study
-    */
-    void initializeFromStudy(Antares::Data::Study&);
+    static constexpr int categoryFile = CategoryFileFold<DecoratorTuple>::value;
 
-    /*!
-    ** \brief Reset all values
-    */
-    void reset();
+    void initializeFromStudy(Antares::Data::Study& study)
+    {
+        std::apply([&](auto&... d) { (d.initializeFromStudy(study), ...); }, decorators_);
+    }
 
-    /*!
-    ** \brief Merge the intermediate values
-    */
-    void merge(uint year, const IntermediateValues& data);
+    void reset()
+    {
+        std::apply([](auto&... d) { (d.reset(), ...); }, decorators_);
+    }
+
+    void merge(uint year, const IntermediateValues& data)
+    {
+        std::apply([&](auto&... d) { (d.merge(year, data), ...); }, decorators_);
+    }
 
     template<class S, class VCardT>
     void buildSurveyReport(SurveyResults& report,
                            const S& results,
                            int dataLevel,
                            int fileLevel,
-                           int precision) const;
+                           int precision) const
+    {
+        std::apply(
+          [&](const auto&... d)
+          {
+              (d.template buildSurveyReport<S, VCardT>(report,
+                                                       results,
+                                                       dataLevel,
+                                                       fileLevel,
+                                                       precision),
+               ...);
+          },
+          decorators_);
+    }
 
     template<class VCardT>
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
     {
-        // Next
-        DecoratorType::template buildDigest<VCardT>(results, digestLevel, dataLevel);
+        std::apply([&](const auto&... d)
+                   { (d.template buildDigest<VCardT>(report, digestLevel, dataLevel), ...); },
+                   decorators_);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
     {
-        return DecoratorType::template hourlyValuesForSpatialAggregate<
-          DecoratorForSpatialAggregateT>();
+        if constexpr (detail::tuple_can_contain_type_v<SpatialAggT, DecoratorTuple>)
+        {
+            const auto& d = std::get<SpatialAggT>(decorators_);
+            if constexpr (requires { d.hourlyForSpatialAggregate(); })
+            {
+                return d.hourlyForSpatialAggregate();
+            }
+            else
+            {
+                return Antares::Memory::Stored<double>::NullValue();
+            }
+        }
+        else
+        {
+            return Antares::Memory::Stored<double>::NullValue();
+        }
     }
 
+    auto& avgdata()
+    {
+        static_assert(detail::tuple_can_contain_type_v<R::AllYears::Average, DecoratorTuple>,
+                      "avgdata() requires an R::AllYears::Average decorator");
+        return std::get<R::AllYears::Average>(decorators_).avgdata;
+    }
+
+    const auto& avgdata() const
+    {
+        static_assert(detail::tuple_can_contain_type_v<R::AllYears::Average, DecoratorTuple>,
+                      "avgdata() requires an R::AllYears::Average decorator");
+        return std::get<R::AllYears::Average>(decorators_).avgdata;
+    }
+
+    auto& rawdata()
+    {
+        static_assert(detail::tuple_can_contain_type_v<R::AllYears::Raw, DecoratorTuple>,
+                      "rawdata() requires an R::AllYears::Raw decorator");
+        return std::get<R::AllYears::Raw>(decorators_).rawdata;
+    }
+
+    const auto& rawdata() const
+    {
+        static_assert(detail::tuple_can_contain_type_v<R::AllYears::Raw, DecoratorTuple>,
+                      "rawdata() requires an R::AllYears::Raw decorator");
+        return std::get<R::AllYears::Raw>(decorators_).rawdata;
+    }
+
+private:
+    DecoratorTuple decorators_;
 }; // class Results
 
 } // namespace Antares::Solver::Variable
-
-#include "average.h"
-#include "empty.h"
-#include "minmax.h"
-#include "raw.h"
-#include "results.hxx"
-#include "stdDeviation.h"
 
 #endif // __SOLVER_VARIABLE_STORAGE_RESULTS_H__

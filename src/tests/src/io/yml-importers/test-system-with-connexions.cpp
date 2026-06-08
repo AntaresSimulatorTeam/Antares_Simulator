@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(two_components_connected_by_ports_of_same_type_but_differen
     libraries.push_back(ModelConverter::convert(parserModel.parse(libraryYaml)));
 
     YmlSystem::Parser parserSystem;
-    YmlSystem::System system = parserSystem.parse(systemYaml);
+    YmlSystem::System system = parserSystem.parse(systemYaml, "");
     auto systemModel = SystemConverter::convert(system, libraries);
 
     const auto& components = systemModel.Components();
@@ -371,7 +371,7 @@ BOOST_AUTO_TEST_CASE(thermal_capacity_connectivity)
     std::vector<SystemModel::Library> libraries;
     libraries.push_back(ModelConverter::convert(parserModel.parse(thermalConnectionLib)));
     YmlSystem::Parser parserSystem;
-    YmlSystem::System system = parserSystem.parse(thermalConnectionSystem);
+    YmlSystem::System system = parserSystem.parse(thermalConnectionSystem, "");
     auto systemModel = SystemConverter::convert(system, libraries);
     const auto& thermalInvestComponent = systemModel.Components().at(0);
     const auto& connection = thermalInvestComponent.portToThermalCapacityConnections();
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE(binding_constraint_with_sum_connections_op_is_non_linear___
     libraries.push_back(ModelConverter::convert(parserModel.parse(yml_lib)));
 
     YmlSystem::Parser parserSystem;
-    YmlSystem::System system = parserSystem.parse(yml_system);
+    YmlSystem::System system = parserSystem.parse(yml_system, "");
 
     std::string err_msg = "'FunctionNode::dual' is not allowed in expression 'dual(my_constraint)'";
     BOOST_CHECK_EXCEPTION(SystemConverter::convert(system, libraries),

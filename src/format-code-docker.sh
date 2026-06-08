@@ -66,7 +66,7 @@ gather_files() {
     while IFS= read -r f; do
       [ -n "$f" ] && FILES+=("$f")
     done < <(cd "$SCRIPT_DIR" && find "${SOURCE_DIRS[@]}" -regextype egrep -regex ".*\\.(c|cxx|cpp|cc|h|hxx|hpp)$" \
-                 ! -path '*/additionalConstraintRhsExpression/*' ! -path '*/scenarioBuilderExpression/*' ! -path '*/antlr-interface/*' 2>/dev/null)
+                 ! -path '*/additionalConstraintRhsExpression/*' ! -path '*/scenarioBuilderExpression/*' ! -path '*/antlr-interface/*' ! -path '*/reservesParsing/*' 2>/dev/null)
   else
     for a in "${ARGS[@]}"; do
       if [[ "$a" = /* ]] && [[ "$a" == "$PROJECT_ROOT"/* ]]; then

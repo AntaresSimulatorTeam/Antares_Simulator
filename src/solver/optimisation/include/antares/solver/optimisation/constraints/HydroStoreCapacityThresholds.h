@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 #include "ConstraintBuilder.h"
 
@@ -19,7 +22,7 @@ public:
      * @param cluster : global index of the cluster
      * @param pdt : timestep
      */
-    void add(int pays, int cluster, int pdt);
+    void add(int pays, int pdt);
 
 private:
     ReserveData& data;

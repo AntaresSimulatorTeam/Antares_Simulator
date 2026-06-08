@@ -129,7 +129,7 @@ std::unique_ptr<Solver::ModelerData> AreaConnectionFixture::buildModelerSystem()
       parserModel.parse(libraryYamlWithSpillageAndUnsuppliedEnergyBound)));
 
     IO::Inputs::YmlSystem::Parser parserSystem;
-    auto ymlSystem = parserSystem.parse(systemYamlAreaConnection);
+    auto ymlSystem = parserSystem.parse(systemYamlAreaConnection, "");
     auto system = IO::Inputs::SystemConverter::convert(ymlSystem, libraries);
 
     to_return->system = std::make_unique<System>(std::move(system));

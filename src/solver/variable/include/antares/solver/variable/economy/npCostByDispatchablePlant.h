@@ -48,15 +48,10 @@ struct NonProportionalCostByDispatchablePlantTraits
     }
 };
 
-using VCardNonProportionalCostByDispatchablePlant = VCardDispatchablePlantByClusterBase<
-  NonProportionalCostByDispatchablePlantTraits>;
-
 /*!
 ** \brief NP cost expected from all the thermal dispatchable clusters
 */
-template<class NextT = Container::EndOfList>
 using NonProportionalCostByDispatchablePlant = DispatchablePlantByClusterBase<
-  NonProportionalCostByDispatchablePlantTraits,
-  NextT>;
+  NonProportionalCostByDispatchablePlantTraits>;
 
 } // namespace Antares::Solver::Variable::Economy
