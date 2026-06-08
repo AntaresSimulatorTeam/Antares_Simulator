@@ -109,6 +109,5 @@ Optimisation::LinearProblemApi::FillContext buildFillContext(const PROBLEME_HEBD
 void fillLinearProblem(const Optimisation::LinearProblemApi::FillContext& fillCtx,
                        PROBLEME_HEBDO* problemeHebdo,
                        Optimisation::OptimEntityContainer& optimEntityContainer,
-                       bool namedProblems,
                        Optimisation::BendersDecomposition* bendersDecomposition = nullptr);
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */

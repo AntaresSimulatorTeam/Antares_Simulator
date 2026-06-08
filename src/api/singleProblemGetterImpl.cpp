@@ -385,11 +385,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
     }
 
-    fillLinearProblem(fillCtx,
-                      &pb_,
-                      optimEntityContainer,
-                      true,
-                      &modelerData->bendersDecomposition);
+    fillLinearProblem(fillCtx, &pb_, optimEntityContainer, &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -508,7 +504,7 @@ void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
 {
     auto name = problemName(id);
 
-    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps");
+    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps", true);
     std::string mps = mpsGenerator.run();
 
     logs.info() << "Printing problem: " << name << '\n';
@@ -552,7 +548,7 @@ void SingleProblemGetter::writeMasterAndStructure() const
         return;
     }
 
-    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master").run();
+    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master", true).run();
     resultWriter_->addEntryFromBuffer("master.mps", mps);
     logs.info() << "Written: " << "master.mps";
 

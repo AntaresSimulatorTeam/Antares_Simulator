@@ -145,23 +145,23 @@ public:
     {
     }
 
-    void yearBegin(unsigned int year, unsigned int numSpace)
+    void yearBegin(unsigned int /*year*/, unsigned int /*numSpace*/)
     {
     }
 
-    void yearEnd(unsigned int year, unsigned int numSpace)
+    void yearEnd(unsigned int /*year*/, unsigned int /*numSpace*/)
     {
     }
 
-    void computeSummary(unsigned int year, unsigned int numSpace)
+    void computeSummary(unsigned int /*year*/, unsigned int /*numSpace*/)
     {
     }
 
-    void hourBegin(unsigned int hourInTheYear)
+    void hourBegin(unsigned int /*hourInTheYear*/)
     {
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
+    void hourForEachArea(State& /*state*/, unsigned int /*numSpace*/)
     {
     }
 
