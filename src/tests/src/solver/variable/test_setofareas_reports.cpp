@@ -47,62 +47,64 @@ struct VCardSetReportVariable
     using ResultsType = Results<>;
 };
 
-template<class NextT = Container::EndOfList>
-class SetReportVariable: public NextT
+class SetReportVariable
 {
 public:
-    using NextType = NextT;
-
-    enum
-    {
-        count = 1,
-    };
+    static constexpr std::size_t count = 1;
 
     template<int CDataLevel, int CFile>
     struct Statistics
     {
-        enum
-        {
-            count = 0,
-        };
+        static constexpr int count = 0;
     };
 
-    void initializeFromStudy(Antares::Data::Study& study)
+    void initializeFromStudy(Antares::Data::Study&)
     {
-        (void)study;
-        NextT::initializeFromStudy(study);
     }
 
     void broadcastNonApplicability(bool)
     {
     }
 
-    void getPrintStatusFromStudy(Antares::Data::Study& study)
+    void getPrintStatusFromStudy(Antares::Data::Study&)
     {
-        (void)study;
         isPrinted_[0] = true;
         isNonApplicable_[0] = false;
-        NextT::getPrintStatusFromStudy(study);
     }
 
     void buildSurveyReport(SurveyResults& results, int, int, int) const
     {
         results.isPrinted = const_cast<bool*>(isPrinted_);
         results.isCurrentVarNA = const_cast<bool*>(isNonApplicable_);
-        NextT::buildSurveyReport(results, 0, 0, 0);
     }
 
     void buildAnnualSurveyReport(SurveyResults& results, int, int, int, unsigned int) const
     {
         results.isPrinted = const_cast<bool*>(isPrinted_);
         results.isCurrentVarNA = const_cast<bool*>(isNonApplicable_);
-        NextT::buildAnnualSurveyReport(results, 0, 0, 0, 0);
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace)
+    void computeSpatialAggregatesSummary(V&, unsigned int, unsigned int)
     {
-        NextT::computeSpatialAggregatesSummary(allVars, year, numSpace);
+    }
+
+    void buildDigest(SurveyResults&, int, int) const
+    {
+    }
+
+    void beforeYearByYearExport(unsigned int, unsigned int)
+    {
+    }
+
+    template<class V, class SetT>
+    void yearEndSpatialAggregates(V&, unsigned int, const SetT&, unsigned int)
+    {
+    }
+
+    template<class V, class SetT>
+    void simulationEndSpatialAggregates(V&, const SetT&)
+    {
     }
 
 private:
@@ -110,7 +112,7 @@ private:
     bool isNonApplicable_[1] = {false};
 };
 
-using TestVariableTree = Container::List<SetsOfAreas<SetReportVariable<>>>;
+using TestVariableTree = Container::List<SetsOfAreas<SetReportVariable>>;
 
 struct DistrictDefinition
 {

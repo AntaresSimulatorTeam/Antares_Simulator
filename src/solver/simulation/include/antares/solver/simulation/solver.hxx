@@ -19,7 +19,6 @@
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-#include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -158,7 +157,7 @@ public:
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
-        simulation_->variables.yearEndBuild(state, y, numSpace);
+        simulation_->variables.buildThermalClusterYearEndResults(state, y, numSpace);
 
         // 7 - End of the year, this is the last stade where the variables can retrieve
         // their data for this year.
@@ -263,12 +262,6 @@ void ISimulation<ImplementationType>::run()
     study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
 
     logs.info() << "Allocating resources...";
-
-    // Memory usage
-    {
-        Variable::PrintInfosStdCout c;
-        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
-    }
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 

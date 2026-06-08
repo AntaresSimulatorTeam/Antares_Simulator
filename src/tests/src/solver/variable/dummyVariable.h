@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include "antares/solver/variable/endoflist.h"
 #include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable
@@ -29,12 +28,7 @@ struct VCardDummyVariable
     }
 
     //! The expecte results
-    typedef Results<R::AllYears::Average< // The average values throughout all years
-      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
-        R::AllYears::Min<                 // The minimum values throughout all years
-          R::AllYears::Max<               // The maximum values throughout all years
-            >>>>>
-      ResultsType;
+    using ResultsType = StandardResults<>;
 
     //! The VCard to look for for calculating spatial aggregates
     typedef VCardDummyVariable VCardForSpatialAggregate;
@@ -47,8 +41,6 @@ struct VCardDummyVariable
                                                     | Category::FileLevel::va);
     //! Precision (views)
     static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = 0;
     //! Number of columns used by the variable (One ResultsType per column)
@@ -57,8 +49,6 @@ struct VCardDummyVariable
     static constexpr uint8_t spatialAggregate = Category::spatialAggregateSum;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
     static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
     //! Can this variable be non applicable (0 : no, 1 : yes)
     static constexpr uint8_t isPossiblyNonApplicable = 0;
 
@@ -71,40 +61,28 @@ struct VCardDummyVariable
 /*!
 ** \brief Marginal DummyVariable
 */
-class DummyVariable
-    : public Variable::IVariable<DummyVariable, Container::EndOfList, VCardDummyVariable>
+class DummyVariable: public Variable::IVariable<DummyVariable, VCardDummyVariable>
 {
 public:
-    using NextT = Container::EndOfList;
-    //! Type of the next static variable
-    typedef NextT NextType;
     //! VCard
     typedef VCardDummyVariable VCardType;
     //! Ancestor
-    typedef Variable::IVariable<DummyVariable, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<DummyVariable, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
 
     typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
 
-    enum
-    {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
+    static constexpr std::size_t count = 1;
 
     template<int CDataLevel, int CFile>
     struct Statistics
     {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
+        static constexpr int count = ((VCardType::categoryDataLevel & CDataLevel
+                                       && VCardType::categoryFileLevel & CFile)
+                                        ? VCardType::columnCount * ResultsType::count
+                                        : 0);
     };
 
 public:
@@ -120,8 +98,6 @@ public:
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
         }
-
-        NextType::initializeFromStudy(study);
     }
 
     template<class R>
@@ -130,27 +106,20 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Data::Study* /*study*/, Data::Area* /*area*/)
     {
-        // Next
-        NextType::initializeFromArea(study, area);
     }
 
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
+    void initializeFromLink(Data::Study* /*study*/, Data::AreaLink* /*link*/)
     {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
     }
 
     void simulationBegin()
     {
-        // Next
-        NextType::simulationBegin();
     }
 
     void simulationEnd()
     {
-        NextType::simulationEnd();
     }
 
     virtual double hourlyValue(unsigned int year, unsigned int hour) = 0;
@@ -163,44 +132,27 @@ public:
         {
             pValuesForTheCurrentYear[numSpace][h] = hourlyValue(year, h);
         }
-        // Next variable
-        NextType::yearBegin(year, numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
-    }
-
-    void yearEnd(unsigned int year, unsigned int numSpace)
+    void yearEnd(unsigned int /*year*/, unsigned int numSpace)
     {
         VariableAccessorType::template ComputeStatistics<VCardType>(
           pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
-        NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(unsigned int year, unsigned int nbYearsForCurrentSummary)
+    void computeSummary(unsigned int year, unsigned int /*nbYearsForCurrentSummary*/)
     {
         VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[year],
                                              AncestorType::pResults,
                                              year);
-        // Next variable
-        NextType::computeSummary(year, nbYearsForCurrentSummary);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
+    void hourBegin(unsigned int /*hourInTheYear*/)
     {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
+    void hourForEachArea(State& /*state*/, unsigned int /*numSpace*/)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

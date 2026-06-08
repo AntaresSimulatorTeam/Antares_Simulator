@@ -35,7 +35,7 @@ ModelerStudy::SystemModel::System loadSystem(
     YmlSystem::System systemObj;
     try
     {
-        systemObj = parser.parse(systemStr);
+        systemObj = parser.parse(systemStr, (fs::path("input") / filename).string());
     }
     catch (const YAML::Exception& e)
     {

@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"

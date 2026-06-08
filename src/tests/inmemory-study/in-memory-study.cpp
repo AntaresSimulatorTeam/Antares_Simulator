@@ -202,62 +202,60 @@ ShortTermStorageConfig& ShortTermStorageConfig::ShortTermStorageConfig::setEnabl
 averageResults OutputRetriever::overallCost(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardOverallCost>(area);
-    return averageResults(result->avgdata);
+    return averageResults(result->avgdata());
 }
 
 averageResults OutputRetriever::levelForSTSgroup(Area* area, unsigned groupNb)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
     unsigned levelIndex = groupNb * 3 + 2;
-    return result[area->index][levelIndex].avgdata;
+    return result[area->index][levelIndex].avgdata();
 }
 
 averageResults OutputRetriever::withdrawalForSTSgroup(Area* area, unsigned groupNb)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardSTSbyGroup>(area);
     unsigned withdrawalIndex = groupNb * 3 + 1;
-    return result[area->index][withdrawalIndex].avgdata;
+    return result[area->index][withdrawalIndex].avgdata();
 }
 
 averageResults OutputRetriever::load(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardTimeSeriesValuesLoad>(area);
-    return averageResults(result->avgdata);
+    return averageResults(result->avgdata());
 }
 
 averageResults OutputRetriever::hydroStorage(Area* area)
 {
     auto result = retrieveAreaResults<Variable::Economy::VCardHydroStorage>(area);
-    return averageResults(result->avgdata);
+    return averageResults(result->avgdata());
 }
 
 averageResults OutputRetriever::flow(AreaLink* link)
 {
     // There is a problem here :
     //    we cannot easly retrieve the hourly flow for a link and a year :
-    //    - Functions retrieveHourlyResultsForCurrentYear are not coded everywhere it should.
-    //    - Even if those functions were correctly implemented, there is another problem :
-    //      Each year results erase results of previous year, how can we retrieve results of year 1
-    //      if 2 year were run ?
+    //    Each year results erase results of previous year, how can we retrieve results of year 1
+    //    if 2 year were run ?
     //    We should be able to run each year independently, which is not possible now.
     //    A workaround is to retrieve syntheses, and that's what we do here.
 
-    auto result = retrieveLinkResults<Variable::Economy::VCardFlowLinear>(link);
-    return averageResults(result->avgdata);
+    auto result = retrieveLinkResults<Variable::Economy::FlowLinear::VCardType>(link);
+    return averageResults(result->avgdata());
 }
 
 averageResults OutputRetriever::thermalGeneration(ThermalCluster* cluster)
 {
     auto result = retrieveResultsForThermalCluster<
       Variable::Economy::VCardProductionByDispatchablePlant>(cluster);
-    return averageResults((*result)[cluster->enabledIndex].avgdata);
+    return averageResults((*result)[cluster->enabledIndex].avgdata());
 }
 
 averageResults OutputRetriever::thermalNbUnitsON(ThermalCluster* cluster)
 {
     auto result = retrieveResultsForThermalCluster<
       Variable::Economy::VCardNbOfDispatchedUnitsByPlant>(cluster);
-    return averageResults((*result)[cluster->enabledIndex].avgdata);
+    return averageResults((*result)[cluster->enabledIndex].avgdata());
 }
 
 ScenarioBuilderRule::ScenarioBuilderRule(Study& study)

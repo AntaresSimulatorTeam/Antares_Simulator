@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 #pragma once
 
 #include <boost/algorithm/string.hpp>
@@ -128,7 +110,7 @@ public:
 
         if (!reserve || !cluster)
         {
-            Derived::reportMissing(area, reserveID, clusterName.value_or(""), reserve, cluster);
+            Derived::reportMissing(area, reserveID, reserve, cluster);
             return;
         }
 
@@ -269,7 +251,6 @@ public:
 
     static void reportMissing(const Area& area,
                               const std::string& resserveID,
-                              const std::string& clusterName,
                               bool reserveOK,
                               bool clusterOK)
     {
@@ -370,7 +351,6 @@ public:
 
     static void reportMissing(const Area& area,
                               const std::string& reserveID,
-                              const std::string& clusterName,
                               bool reserveOK,
                               bool clusterOK)
     {
@@ -460,11 +440,7 @@ public:
         return hydro->reserveParticipationContainer;
     }
 
-    static void reportMissing(const Area& area,
-                              const std::string& resserveID,
-                              const std::string&,
-                              bool reserveOK,
-                              bool)
+    static void reportMissing(const Area& area, const std::string& resserveID, bool reserveOK, bool)
     {
         if (!reserveOK)
         {
@@ -473,7 +449,8 @@ public:
         }
     }
 
-    static void reportLackOfReserveParticipation(const Area& area, const std::string& clusterName)
+    static void reportLackOfReserveParticipation(const Area& area,
+                                                 [[maybe_unused]] const std::string& clusterName)
     {
         logs.error() << "Area " << area.name
                      << ", hydro : trying to add symmetries without any reserve participation";

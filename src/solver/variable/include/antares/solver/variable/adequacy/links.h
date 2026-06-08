@@ -34,7 +34,6 @@ using VariablePerLink = Common::ComposeAll<Economy::FlowLinear,
                                            Economy::CongestionProbability,
                                            Economy::HurdleCosts>::type;
 
-template<class>
 using Links = Antares::Solver::Variable::Links<VariablePerLink>;
 
 } // namespace Antares::Solver::Variable::Adequacy

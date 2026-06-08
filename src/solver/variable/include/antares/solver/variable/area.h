@@ -4,6 +4,8 @@
 #ifndef __SOLVER_VARIABLE_AREA_H__
 #define __SOLVER_VARIABLE_AREA_H__
 
+#include <vector>
+
 #include "state.h"
 
 namespace Antares::Solver::Variable
@@ -28,7 +30,7 @@ struct VCardAllAreas
         return "";
     }
 
-    //! The expecte results
+    //! Expected results configuration
     typedef Results<> ResultsType;
 
     //! Data Level
@@ -36,27 +38,19 @@ struct VCardAllAreas
     //! File level (provided by the type of the results)
     static constexpr uint8_t categoryFileLevel = ResultsType::categoryFile
                                                  & Category::FileLevel::de;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +1;
-    //! Number of columns used by the variable (One ResultsType per column)
+    //! Number of columns used by the variable (one results configuration per column)
     static constexpr int columnCount = 0;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Category::noSpatialAggregate;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 0;
 
 }; // class VCard
 
-template<class NextT = Container::EndOfList>
-class Areas //: public Variable::IVariable<Areas<NextT>, NextT, VCardAllAreas>
+template<class VariableList>
+class Areas
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
     //! VCard
     typedef VCardAllAreas VCardType;
-    //! Ancestor
-    // typedef Variable::IVariable<Areas<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -64,7 +58,7 @@ public:
     enum
     {
         //! How many items have we got
-        count = NextT::count,
+        count = VariableList::count,
     };
 
     template<int CDataLevel, int CFile>
@@ -72,7 +66,7 @@ public:
     {
         enum
         {
-            count = NextType::template Statistics < CDataLevel,
+            count = VariableList::template Statistics < CDataLevel,
             CFile > ::count
         };
     };
@@ -87,20 +81,9 @@ public:
     static void RetrieveVariableList(PredicateT& predicate);
 
 public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default Constructor
-    */
-    Areas();
-    //! Destructor
-    ~Areas();
-    //@}
-
     void initializeFromStudy(Data::Study& study);
     void initializeFromArea(Data::Study*, Data::Area*);
-    void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
-    void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
+    void initializeFromLink(Data::Study*, Data::AreaLink*);
 
     void simulationBegin();
     void simulationEnd();
@@ -109,7 +92,7 @@ public:
     //	void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year);
     //	void yearEndBuildForEachThermalCluster(State& state, uint year);
 
-    void yearEndBuild(State& state, uint year, uint numSpace);
+    void buildThermalClusterYearEndResults(State& state, uint year, uint numSpace);
 
     void yearEnd(uint year, uint numSpace);
 
@@ -141,9 +124,6 @@ public:
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
-    template<class I>
-    static void provideInformations(I& infos);
-
     template<class V>
     void yearEndSpatialAggregates(V&, uint, uint)
     {
@@ -169,9 +149,6 @@ public:
     void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
 
     template<class VCardToFindT>
-    const double* retrieveHourlyResultsForCurrentYear() const;
-
-    template<class VCardToFindT>
     void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
                                 const Data::Area* area);
 
@@ -185,9 +162,7 @@ public:
 
 private:
     //! Area list
-    NextType* pAreas;
-    //! The number of areas
-    uint pAreaCount;
+    std::vector<VariableList> pAreas;
 
 }; // class Areas
 

@@ -14,46 +14,29 @@
 
 namespace Antares::Solver::Variable::R::AllYears
 {
-template<class NextT /*= Empty*/, int FileFilter /*= Variable::Category::FileLevel::allFile*/>
-struct Raw: public NextT
+struct Raw
 {
 public:
-    //! Type of the net item in the list
-    typedef NextT NextType;
+    static constexpr int categoryFile = Variable::Category::FileLevel::allFile;
 
-    enum
-    {
-        //! The count if item in the list
-        count = 1 + NextT::count,
-
-        categoryFile = NextT::categoryFile | Variable::Category::FileLevel::allFile,
-    };
-
-    //! Name of the filter
     static const char* Name()
     {
         return "raw";
     }
 
-public:
     Raw() = default;
     ~Raw() = default;
 
-protected:
     void initializeFromStudy(Antares::Data::Study& study);
 
     inline void reset()
     {
         rawdata.reset();
-        // Next
-        NextType::reset();
     }
 
     inline void merge(uint year, const IntermediateValues& rhs)
     {
         rawdata.merge(year, rhs);
-        // Next
-        NextType::merge(year, rhs);
     }
 
     template<class S, class VCardT>
@@ -63,7 +46,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (fileLevel & FileFilter && !(fileLevel & Category::FileLevel::id))
+        if (!(fileLevel & Category::FileLevel::id))
         {
             switch (precision)
             {
@@ -88,12 +71,6 @@ protected:
                 break;
             }
         }
-        // Next
-        NextType::template buildSurveyReport<S, VCardT>(report,
-                                                        results,
-                                                        dataLevel,
-                                                        fileLevel,
-                                                        precision);
     }
 
     template<class VCardT>
@@ -108,29 +85,19 @@ protected:
             report.captions[1][report.data.columnIndex] = report.variableUnit;
             report.captions[2][report.data.columnIndex] = "values";
 
-            // Precision
             report.precision[report.data.columnIndex] = PrecisionToPrintfFormat<
               VCardT::decimal>::Value();
-            // Value
             report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
-            // Non applicability
             report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
               = *report.isCurrentVarNA;
 
             ++(report.data.columnIndex);
         }
-        // Next
-        NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
     }
 
-    template<template<class, int> class DecoratorT>
-    Antares::Memory::Stored<double>::ConstReturnType hourlyValuesForSpatialAggregate() const
+    Antares::Memory::Stored<double>::ConstReturnType hourlyForSpatialAggregate() const
     {
-        if (Yuni::Static::Type::StrictlyEqual<DecoratorT<Empty, 0>, Raw<Empty, 0>>::Yes)
-        {
-            return rawdata.hourly;
-        }
-        return NextType::template hourlyValuesForSpatialAggregate<DecoratorT>();
+        return rawdata.hourly;
     }
 
 public:
@@ -143,17 +110,13 @@ private:
         assert(array);
         assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
-        // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
         report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex] = "values";
-        // Precision
         report.precision[report.data.columnIndex] = Solver::Variable::PrecisionToPrintfFormat<
           VCardT::decimal>::Value();
-        // Non applicability
         report.nonApplicableStatus[report.data.columnIndex] = *report.isCurrentVarNA;
 
-        // Values
         if (PrecisionT == Category::annual)
         {
             rawdata.allYears = 0.;
@@ -168,7 +131,6 @@ private:
             (void)::memcpy(report.values[report.data.columnIndex], array, sizeof(double) * Size);
         }
 
-        // Next column index
         ++report.data.columnIndex;
     }
 
