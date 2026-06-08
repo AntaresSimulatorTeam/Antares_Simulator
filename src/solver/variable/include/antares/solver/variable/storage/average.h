@@ -51,8 +51,8 @@ public:
 
     template<class S, class VCardT>
     void buildSurveyReport(SurveyResults& report,
-                           const S& results,
-                           int dataLevel,
+                           const S& /*results*/,
+                           int /*dataLevel*/,
                            int fileLevel,
                            int precision) const
     {
