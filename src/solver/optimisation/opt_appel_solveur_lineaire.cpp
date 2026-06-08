@@ -20,7 +20,6 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
-#include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 #include "antares/solver/optimisation/ThermalCapacityFiller.h"
@@ -313,7 +312,14 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 true);
         }
 
-        const Solver::VariableNameMapper legacyNameMapper;
+        // Reuse the study-driven name mapper loaded into ModelerData from
+        // input/variable-names.yml (e.g. UnsuppliedEnergy -> unsupplied_energy).
+        // For pure-legacy studies without modeler data, fall back to an empty
+        // mapper that leaves every name unchanged.
+        const Solver::VariableNameMapper emptyNameMapper;
+        const Solver::VariableNameMapper& legacyNameMapper = modelerData
+                                                               ? modelerData->variableNameMapper
+                                                               : emptyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *ProblemeAResoudre,
                                   fillCtx,
