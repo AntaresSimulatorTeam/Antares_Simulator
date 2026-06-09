@@ -1,6 +1,6 @@
 include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
-set(include_dir ${CMAKE_SOURCE_DIR}/solver/simulation/include)
+set(include_dir ${CMAKE_SOURCE_DIR}/src/solver/simulation/include)
 
 #-----------------------------
 # Unit tests on utils
