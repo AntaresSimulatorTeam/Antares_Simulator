@@ -265,7 +265,9 @@ public:
     }
 
     template<class SearchVCardT, class O>
-    static void computeSpatialAggregateWith(O& /*out*/, const Data::Area* /*area*/, uint /*numSpace*/)
+    static void computeSpatialAggregateWith(O& /*out*/,
+                                            const Data::Area* /*area*/,
+                                            uint /*numSpace*/)
     {
     }
 
