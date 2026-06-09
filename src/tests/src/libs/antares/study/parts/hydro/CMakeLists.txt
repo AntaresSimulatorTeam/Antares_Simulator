@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 # Hydro data reader
 add_boost_test(test-hydro-reader

@@ -38,7 +38,7 @@ jobs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-ubuntu-
 
@@ -124,7 +124,7 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -G Ninja -B _build -S src \
+        cmake -G Ninja -B _build -S . \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
@@ -255,7 +255,7 @@ jobs:
       uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
     - name: Display ccache statistics
       if: always()

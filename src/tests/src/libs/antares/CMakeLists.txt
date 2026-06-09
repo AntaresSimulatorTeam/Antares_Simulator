@@ -10,7 +10,7 @@ add_subdirectory(scenarioBuilderExpression)
 add_subdirectory(yaml-parser)
 add_subdirectory(antlr4-interface)
 
-set(src_libs_antares "${CMAKE_SOURCE_DIR}/libs/antares")
+set(src_libs_antares "${CMAKE_SOURCE_DIR}/src/libs/antares")
 
 # Adding a library embedding all Antares sources useful to test class Matrix
 
@@ -49,7 +49,7 @@ add_boost_test(tests-matrix-save
         "${src_libs_antares}/memory/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/logs"
         "${CMAKE_CURRENT_SOURCE_DIR}/jit"
-        "${CMAKE_SOURCE_DIR}/tests/src/libs"
+        "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix
         yuni-static-core
@@ -70,7 +70,7 @@ add_boost_test(tests-matrix-load
         "${src_libs_antares}/memory/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/logs"
         "${CMAKE_CURRENT_SOURCE_DIR}/jit"
-        "${CMAKE_SOURCE_DIR}/tests/src/libs"
+        "${CMAKE_SOURCE_DIR}/src/tests/src/libs"
         LIBS
         matrix
         yuni-static-core
