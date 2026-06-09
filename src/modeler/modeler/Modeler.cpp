@@ -237,13 +237,13 @@ void Modeler::exportMps() const
     // 1-1.mps
     if (auto& subproblem_1_1 = subproblems_[0])
     {
-        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1").run();
+        const auto mps = IO::Outputs::MPSGenerator(*subproblem_1_1, "1-1", true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "1-1.mps", mps);
     }
     // master.mps
     if (masterProblem_)
     {
-        const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master").run();
+        const auto mps = IO::Outputs::MPSGenerator(*masterProblem_, "master", true).run();
         Antares::IO::Outputs::MPSFileWriter::write(outputPath_ / "master.mps", mps);
     }
 }
