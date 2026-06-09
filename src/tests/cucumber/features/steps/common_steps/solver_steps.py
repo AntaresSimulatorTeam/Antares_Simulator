@@ -824,3 +824,17 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
     else:
         raise NotImplementedError(f"Unknown value for variable injection_or_withdrawal '{injection_or_withdrawal}'")
     assert_double_close(float(actual_storage_value.item()), float(value_storage), 1e-6)
+
+
+@then('the simulation has two optimization iterations')
+def check_two_optimization_iterations(context):
+    output_path = Path(context.output_path)
+    optim_nb_1_files = list(output_path.glob("*optim-nb-1*"))
+    optim_nb_2_files = list(output_path.glob("*optim-nb-2*"))
+    assert len(optim_nb_1_files) > 0, \
+        f"No first optimization output files found in {output_path}"
+    assert len(optim_nb_2_files) > 0, \
+        f"No second optimization output files found in {output_path}. " \
+        f"This means the thermal heuristic did not run (only 1 iteration)."
+    
+
