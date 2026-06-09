@@ -127,13 +127,13 @@ public:
     {
     }
 
-    void yearBegin(unsigned int year, unsigned int numSpace)
+    void yearBegin(unsigned int /*year*/, unsigned int numSpace)
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
     }
 
-    void yearEnd(unsigned int year, unsigned int numSpace)
+    void yearEnd(unsigned int /*year*/, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
@@ -145,7 +145,7 @@ public:
         AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
+    void hourBegin(unsigned int /*hourInTheYear*/)
     {
     }
 
