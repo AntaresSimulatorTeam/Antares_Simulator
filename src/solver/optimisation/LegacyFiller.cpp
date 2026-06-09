@@ -11,11 +11,8 @@ namespace Antares::Optimization
 {
 
 LegacyFiller::LegacyFiller(Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-                           const PROBLEME_HEBDO* problemeHebdo,
-                           bool namedProblems):
-
+                           const PROBLEME_HEBDO* problemeHebdo):
     problemeAResoudre_(problemeHebdo->ProblemeAResoudre.get()),
-    useNamedProblems_(namedProblems),
     linearProblem_(linearProblem)
 {
 }
@@ -117,19 +114,11 @@ void LegacyFiller::CopyRows() const
 
 std::string LegacyFiller::GetVariableName(unsigned int index) const
 {
-    if (!useNamedProblems_ || problemeAResoudre_->NomDesVariables[index].empty())
-    {
-        return 'x' + std::to_string(index);
-    }
     return problemeAResoudre_->NomDesVariables[index];
 }
 
 std::string LegacyFiller::GetConstraintName(unsigned int index) const
 {
-    if (!useNamedProblems_ || problemeAResoudre_->NomDesContraintes[index].empty())
-    {
-        return 'c' + std::to_string(index);
-    }
     return problemeAResoudre_->NomDesContraintes[index];
 }
 } // namespace Antares::Optimization

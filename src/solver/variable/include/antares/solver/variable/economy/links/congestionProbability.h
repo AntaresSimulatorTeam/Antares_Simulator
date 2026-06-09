@@ -154,7 +154,7 @@ public:
     {
     }
 
-    void yearBegin(uint year, unsigned int numSpace)
+    void yearBegin(uint /*year*/, unsigned int numSpace)
     {
         // Reset
         pValuesForTheCurrentYear[numSpace][0].reset();
@@ -164,7 +164,7 @@ public:
         pValuesForYearLocalReport[numSpace][1].reset();
     }
 
-    void yearEnd(uint year, uint numSpace)
+    void yearEnd(uint /*year*/, uint numSpace)
     {
         for (uint i = 0; i != VCardType::columnCount; ++i)
         {
@@ -183,11 +183,11 @@ public:
         }
     }
 
-    void hourBegin(uint hourInTheYear)
+    void hourBegin(uint /*hourInTheYear*/)
     {
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
+    void hourForEachArea(State& /*state*/, unsigned int /*numSpace*/)
     {
     }
 
