@@ -1294,7 +1294,7 @@ var namespaces_dup =
               [ "STStorageGroupTraits", "reserveParticipationBase_8h.html#a6c999e58641218e83a1b561b329989a6", null ],
               [ "STStorageTraits", "reserveParticipationBase_8h.html#a2da5bee618537a0c3ee12e1a0cb45c6a", null ],
               [ "ThermalGroupTraits", "reserveParticipationBase_8h.html#a2a061041cc609fd86191597f410ba87e", null ],
-              [ "UnsuppliedSpilledTraits", "reserveParticipationBase_8h.html#aae7be8431b97dd822f94c470b2d8b51c", null ],
+              [ "UnsuppliedSpilledTraits", "reserveParticipationBase_8h.html#a64a087a86792a8d0d949a9521ffb115b", null ],
               [ "VCardReserveParticipationByDispatchableOffUnitsPlant", "vCardReserveParticipationByDispatchableOffUnitsPlant_8h.html#a818a67699eda0b21b7f4d4aeac756d86", null ],
               [ "VCardReserveParticipationByDispatchableOnUnitsPlant", "vCardReserveParticipationByDispatchableOnUnitsPlant_8h.html#ad836338abbb3d7743d459a22bd111230", null ],
               [ "VCardReserveParticipationByHydro", "vCardReserveParticipationByHydro_8h.html#ae3a0d94408955ed3b4ace51897d1a2e0", null ],
@@ -1992,12 +1992,6 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2006,6 +2000,12 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],

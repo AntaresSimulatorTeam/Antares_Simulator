@@ -237,10 +237,10 @@ $(document).ready(function(){initNavTree('reserveParticipationUnsuppliedSpilled_
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            {</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                  += state.hourlyResults-&gt;Reserves.value()[state.hourInTheWeek]</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                       .ValeursHorairesInternalUnsatisfied[reserve.areaReserveIndex];</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                       .ValeursHorairesInternalExcessReserve[reserve.areaReserveIndex];</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                pValuesForTheCurrentYear[numSpace][column++].hour[state.hourInTheYear]</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                  += state.hourlyResults-&gt;Reserves.value()[state.hourInTheWeek]</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                       .ValeursHorairesInternalExcessReserve[reserve.areaReserveIndex];</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                       .ValeursHorairesInternalUnsatisfied[reserve.areaReserveIndex];</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            }</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        }</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
@@ -271,14 +271,14 @@ $(document).ready(function(){initNavTree('reserveParticipationUnsuppliedSpilled_
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;                std::string reserveName = <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>.data.study.runtime.reserveIDToName.value().at(</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                  reserveID);</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                Yuni::String caption = reserveName;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                caption &lt;&lt; <span class="stringliteral">&quot;_UNSP.&quot;</span>;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>.variableCaption = caption;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                caption &lt;&lt; <span class="stringliteral">&quot;_SPIL.&quot;</span>;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>.variableCaption = caption; <span class="comment">// VCardType::Caption();</span></div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                pValuesForTheCurrentYear[numSpace][column]</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                  .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, fileLevel, precision);</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                column++;</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                caption = reserveName;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                caption &lt;&lt; <span class="stringliteral">&quot;_SPIL.&quot;</span>;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>.variableCaption = caption;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                caption &lt;&lt; <span class="stringliteral">&quot;_UNSP.&quot;</span>;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                <a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>.variableCaption = caption; <span class="comment">// VCardType::Caption();</span></div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                pValuesForTheCurrentYear[numSpace][column]</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                  .template buildAnnualSurveyReport&lt;VCardType&gt;(<a class="code" href="classAntares_1_1Solver_1_1Variable_1_1IVariable.html#a3bea32e4208f92f8493f80ed764c860c">results</a>, fileLevel, precision);</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                column++;</div>
