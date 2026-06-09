@@ -49,7 +49,7 @@ ModelerStudy::SystemModel::System loadSystem(
     }
     catch (const std::runtime_error& e)
     {
-        logs.error() << "Error while converting the system yaml to components";
+        logs.error() << "Error while converting the system yml to components";
         throw ErrorLoadingYaml(e.what());
     }
 }

@@ -20,6 +20,7 @@ std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
     Utils::TimeMeasurement measure;
     logs.info() << "Loading modeler files...";
     ModelerData data;
+    warnOnYamlFiles(studyPath);
     auto res = loadLibraries(studyPath);
     if (!res.has_value())
     {
