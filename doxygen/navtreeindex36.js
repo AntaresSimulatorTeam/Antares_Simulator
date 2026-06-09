@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html":[9,0,0,7,0,3,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a44a9013c3f447e60a1fa26253dd35610":[9,0,0,7,0,3,1,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a706725679a03cd8397f5b15a41498aec":[9,0,0,7,0,3,1,6],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a87b9532067b2a7ebef4065b957bbb57d":[9,0,0,7,0,3,1,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a6ce988d38a7a4a76ea166b5468f018d4":[9,0,0,11,6,2,7,3],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#a70d69ceb941a8f90fb487b631f60134c":[9,0,0,11,6,2,7,2],
 "structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#ab978c0f6d4af01ec9449180f86ce184e":[9,0,0,11,6,2,7,1],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#acb325c8a2b5905eb7e17feeaedba9a12":[9,0,0,11,6,2,7,6],
-"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy_1_1Multiple.html":[9,0,0,11,6,2,7,0]
+"structAntares_1_1Solver_1_1Variable_1_1Common_1_1VCardProxy.html#acb325c8a2b5905eb7e17feeaedba9a12":[9,0,0,11,6,2,7,6]
 };

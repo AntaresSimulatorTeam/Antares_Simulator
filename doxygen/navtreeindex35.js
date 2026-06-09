@@ -1,5 +1,6 @@
 var NAVTREEINDEX35 =
 {
+"structAntares_1_1Data_1_1AllCapacityReservations.html#ac3c2af377015157330e5f2798959ab1a":[9,0,0,3,16,5],
 "structAntares_1_1Data_1_1AllCapacityReservations.html#ad7fedc6f070e94abc5b275633d133eb5":[9,0,0,3,16,9],
 "structAntares_1_1Data_1_1AllCapacityReservations.html#afd5fe76ee15cd9a9256f3bbf1d0006fe":[9,0,0,3,16,0],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html":[9,0,0,3,57],
@@ -248,6 +249,5 @@ var NAVTREEINDEX35 =
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a39185d8bac5892626b263c09735b11e5":[9,0,0,7,0,3,9,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a865eba3b61b4b2be2cc94922a42f1f02":[9,0,0,7,0,3,9,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#a91f19c42361e39bf30b40b79dee92da0":[9,0,0,7,0,3,9,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#aadd1a76a889f09cf331e0b43ab49bc29":[9,0,0,7,0,3,9,2],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html":[9,0,0,7,0,3,1]
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1PortType.html#aadd1a76a889f09cf331e0b43ab49bc29":[9,0,0,7,0,3,9,2]
 };

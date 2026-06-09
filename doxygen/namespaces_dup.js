@@ -1043,7 +1043,8 @@ var namespaces_dup =
           [ "splitModelId", "readLibraries_8cpp.html#a6f7dbd8479daa1f66cb71bbe4e515567", null ],
           [ "update", "readLibraries_8cpp.html#af6f4c5ffb877f45090311d523454e265", null ],
           [ "updateLibrariesWithOptimConfig", "readLibraries_8cpp.html#adaaa59ce67d6f10a17e7aab9d8dcf9bb", null ],
-          [ "updateSystemModel", "readLibraries_8cpp.html#a8e65a6668c403771ca293e14eb913365", null ]
+          [ "updateSystemModel", "readLibraries_8cpp.html#a8e65a6668c403771ca293e14eb913365", null ],
+          [ "warnOnYamlFiles", "handleErrors_8cpp.html#af75f5ef3bf41a638a6b8511ad2350d6a", null ]
         ] ],
         [ "Optimization", null, [
           [ "SingleOptimOptions", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions.html", "structAntares_1_1Solver_1_1Optimization_1_1SingleOptimOptions" ],

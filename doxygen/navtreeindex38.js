@@ -1,5 +1,6 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html":[9,0,0,11,6,5,16],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a04ad5e4066b38c1b2c80ed10d6a8325d":[9,0,0,11,6,5,16,5],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a6c61d2d66aadcd9af843930955991f0f":[9,0,0,11,6,5,16,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#a8c8731d903a46c3f7167745f92b71ad7":[9,0,0,11,6,5,16,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX38 =
 "structBindingConstraintWeekData.html#a790812a2a36988439140a2ea950e65ef":[9,0,50,1],
 "structBindingConstraintWeekData.html#af28aa3939428e8cf2f50653b61dafea9":[9,0,50,2],
 "structCAPACITY__RESERVATION.html":[9,0,56],
-"structCAPACITY__RESERVATION.html#a17e1e6f450f2e3876bbe0f76c2d35761":[9,0,56,0],
-"structCAPACITY__RESERVATION.html#a2acd40524bee36f35d86febf271c8c6d":[9,0,56,10]
+"structCAPACITY__RESERVATION.html#a17e1e6f450f2e3876bbe0f76c2d35761":[9,0,56,0]
 };
