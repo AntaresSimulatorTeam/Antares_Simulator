@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_LINKS_H__
 #define __ANTARES_LIBS_STUDY_LINKS_H__
 
@@ -66,7 +49,6 @@ public:
 
     using NamePair = std::pair<Yuni::String, Yuni::String>;
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -81,14 +63,6 @@ public:
 
     void storeTimeseriesNumbers(Solver::IResultWriter& writer) const;
 
-    //! \name Area
-    //@{
-    /*!
-    ** \brief Detach the link from the areas
-    */
-    void detach();
-    //@}
-
     //! \name Data management
     //@{
     /*!
@@ -101,32 +75,11 @@ public:
 
     void resetToDefaultValues();
 
-    /*!
-    ** \brief Invalidate all matrices
-    **
-    ** \param reload True to load all missing data
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark the data associated to the link as modified
-    */
-    void markAsModified() const;
-    //@}
-
-    bool isVisibleOnLayer(const size_t& layerID) const;
-
     Yuni::String getName() const;
 
     bool isLinkPhysical() const;
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
-private:
-    bool linkLoadTimeSeries_for_version_below_810(const std::filesystem::path& folder);
-    bool linkLoadTimeSeries_for_version_820_and_later(const std::filesystem::path& folder);
-    NamePair getNamePair() const;
-
-public:
     //! \name Graph
     //@{
     //! The orginal Area
@@ -207,6 +160,13 @@ public:
     int linkWidth;
 
     friend struct CompareLinkName;
+
+    void checkLoadedData();
+
+private:
+    bool linkLoadTimeSeries_for_version_below_810(const std::filesystem::path& folder);
+    bool linkLoadTimeSeries_for_version_820_and_later(const std::filesystem::path& folder);
+    NamePair getNamePair() const;
 }; // class AreaLink
 
 struct CompareLinkName final

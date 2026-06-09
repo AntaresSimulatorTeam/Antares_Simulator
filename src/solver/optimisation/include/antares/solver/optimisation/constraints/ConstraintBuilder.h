@@ -1,30 +1,13 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
+#include "antares/solver/optimisation/variables/VariableManagement.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 #include "../opt_fonctions.h"
 #include "../opt_rename_problem.h"
-#include "../variables/VariableManagement.h"
 
 // TODO God struct should be decomposed
 class ConstraintBuilderData final
@@ -58,7 +41,7 @@ Math:
 |coeffn1 coeffn2 .. coeffnn||varn| |sign_n|   |rhsn|       |constraintn||sign_n||rhsn|
 
 it propose a set of methods  to attach 'Variables' to the Constraint
-ex: calling NTCDirect() implies adding Direct NTC Variable to the current Constraint
+ex: calling DirectFlow() implies adding Direct Flux Variable to the current Constraint
 finally the build() method gather all variables and put them into the matrix
 \endverbatim
 */
@@ -95,6 +78,63 @@ public:
                                               int offset = 0,
                                               int delta = 0);
 
+    ConstraintBuilder& RunningThermalClusterReserveParticipation(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset = 0,
+                                                                 int delta = 0);
+
+    ConstraintBuilder& OffThermalClusterReserveParticipation(unsigned int index,
+                                                             double coeff,
+                                                             int offset = 0,
+                                                             int delta = 0);
+
+    ConstraintBuilder& ThermalClusterReserveParticipation(unsigned int index,
+                                                          double coeff,
+                                                          int offset = 0,
+                                                          int delta = 0);
+
+    ConstraintBuilder& STStorageClusterReserveParticipation(ReserveType type,
+                                                            unsigned int index,
+                                                            double coeff,
+                                                            int offset = 0,
+                                                            int delta = 0);
+
+    ConstraintBuilder& STStorageReleaseClusterReserveParticipation(unsigned int index,
+                                                                   double coeff,
+                                                                   int offset = 0,
+                                                                   int delta = 0);
+
+    ConstraintBuilder& STStorageStoreClusterReserveParticipation(unsigned int index,
+                                                                 double coeff,
+                                                                 int offset = 0,
+                                                                 int delta = 0);
+
+    ConstraintBuilder& HydroReserveParticipation(ReserveType type,
+                                                 unsigned int index,
+                                                 double coeff,
+                                                 int offset = 0,
+                                                 int delta = 0);
+
+    ConstraintBuilder& HydroReleaseReserveParticipation(unsigned int index,
+                                                        double coeff,
+                                                        int offset = 0,
+                                                        int delta = 0);
+
+    ConstraintBuilder& HydroStoreReserveParticipation(unsigned int index,
+                                                      double coeff,
+                                                      int offset = 0,
+                                                      int delta = 0);
+
+    ConstraintBuilder& InternalUnsatisfiedReserve(unsigned int pays,
+                                                  double coeff,
+                                                  int offset = 0,
+                                                  int delta = 0);
+
+    ConstraintBuilder& InternalExcessReserve(unsigned int pays,
+                                             double coeff,
+                                             int offset = 0,
+                                             int delta = 0);
+
     ConstraintBuilder& NumberOfDispatchableUnits(unsigned int index, double coeff);
 
     ConstraintBuilder& NumberStoppingDispatchableUnits(unsigned int index, double coeff);
@@ -103,11 +143,11 @@ public:
 
     ConstraintBuilder& NumberBreakingDownDispatchableUnits(unsigned int index, double coeff);
 
-    ConstraintBuilder& NTCDirect(unsigned int index, double coeff, int offset = 0, int delta = 0);
+    ConstraintBuilder& DirectFlow(unsigned int index, double coeff, int offset = 0, int delta = 0);
 
-    ConstraintBuilder& IntercoDirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& PositiveDirectFlow(unsigned int index, double coeff);
 
-    ConstraintBuilder& IntercoIndirectCost(unsigned int index, double coeff);
+    ConstraintBuilder& PositiveIndirectFlow(unsigned int index, double coeff);
 
     ConstraintBuilder& ShortTermStorageInjection(unsigned int index,
                                                  double coeff,
@@ -152,9 +192,9 @@ public:
 
     ConstraintBuilder& FinalStorage(unsigned int index, double coeff);
 
-    ConstraintBuilder& PositiveUnsuppliedEnergy(unsigned int index, double coeff);
+    ConstraintBuilder& UnsuppliedEnergy(unsigned int index, double coeff);
 
-    ConstraintBuilder& NegativeUnsuppliedEnergy(unsigned int index, double coeff);
+    ConstraintBuilder& Spillage(unsigned int index, double coeff);
 
     ConstraintBuilder& LayerStorage(unsigned area, unsigned layer, double coeff);
 
@@ -310,4 +350,98 @@ struct ShortTermStorageData
 struct ShortTermStorageCumulativeConstraintData: ShortTermStorageData
 {
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES& CorrespondanceCntNativesCntOptimHebdomadaires;
+};
+
+using namespace Antares::Data;
+
+struct ReserveData
+{
+    bool Simulation;
+    std::vector<::AREA_RESERVES_VECTOR>& areaReserves;
+    std::vector<PALIERS_THERMIQUES>& thermalClusters;
+    std::vector<::AREA_INPUT>& shortTermStorageOfArea;
+    std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES>& hydroOfArea;
+    std::vector<CORRESPONDANCES_DES_CONTRAINTES>& CorrespondanceCntNativesCntOptim;
+
+    int countNumberOfConstraintsForThermalReserves(int pays, int cluster)
+    {
+        int count = 0;
+        for (auto type: {ReserveType::UP, ReserveType::DOWN})
+        {
+            if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations | filter(type),
+                                    [&](const auto& r) {
+                                        return r.AllThermalReservesParticipation.count(cluster) > 0;
+                                    }))
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    int countNumberOfConstraintsForHydroReserves(int pays,
+                                                 bool accountForGlobalActivationDuration = false)
+    {
+        int count = 0;
+        for (auto type: {ReserveType::UP, ReserveType::DOWN})
+        {
+            if (!accountForGlobalActivationDuration
+                || areaReserves[pays].referenceGlobalActivationDuration[type])
+            {
+                if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations | filter(type),
+                                        [&](const auto& r)
+                                        { return r.AllHydroReservesParticipation.size() > 0; }))
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    int countNumberOfConstraintsForSTStorageReserves(
+      int pays,
+      int cluster,
+      bool accountForGlobalActivationDuration = false)
+    {
+        int count = 0;
+        for (auto type: {ReserveType::UP, ReserveType::DOWN})
+        {
+            if (!accountForGlobalActivationDuration
+                || areaReserves[pays].referenceGlobalActivationDuration[type])
+            {
+                if (std::ranges::any_of(areaReserves[pays].areaCapacityReservations | filter(type),
+                                        [&](const auto& r) {
+                                            return r.AllSTStorageReservesParticipation.count(
+                                                     cluster)
+                                                   > 0;
+                                        }))
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    static void addRunningThermalClusterReserveParticipationToBuilder(ReserveData& data,
+                                                                      int pays,
+                                                                      int cluster,
+                                                                      ReserveType type,
+                                                                      ConstraintBuilder& builder)
+    {
+        for (const auto& capacityReservation:
+             data.areaReserves[pays].areaCapacityReservations | filter(type))
+        {
+            if (capacityReservation.AllThermalReservesParticipation.contains(cluster))
+            {
+                auto& reserveParticipation = capacityReservation.AllThermalReservesParticipation.at(
+                  cluster);
+                builder.RunningThermalClusterReserveParticipation(
+                  reserveParticipation.globalIndexClusterParticipation,
+                  1);
+            }
+        }
+    }
 };

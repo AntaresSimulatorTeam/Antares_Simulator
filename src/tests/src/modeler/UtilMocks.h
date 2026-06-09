@@ -1,29 +1,11 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/EvalVisitor.h>
-#include <antares/optimisation/linear-problem-api/linearProblem.h>
+#include "antares/optimisation/linear-problem-data-impl/linearProblemData.h"
 
 #include "mockModelerObjects.h"
 
@@ -119,6 +101,11 @@ public:
       const Antares::Optimisation::LinearProblemApi::IMipVariable*) const override
     {
         return 1.0;
+    }
+
+    [[nodiscard]] std::vector<std::pair<int, double>> getCoefficients() const override
+    {
+        return {};
     }
 
     // IHasBounds interface
@@ -278,7 +265,7 @@ public:
     }
 
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
-      const std::string& name) const override
+      const std::string&) const override
     {
         return RandomVariable().get();
     }
@@ -299,6 +286,15 @@ public:
         return 0.;
     }
 
+    void setObjectiveOffset(double) override
+    {
+    }
+
+    double getObjectiveOffset() const override
+    {
+        return {};
+    }
+
     void setMinimization() override
     {
     }
@@ -315,6 +311,11 @@ public:
     [[nodiscard]] bool isMaximization() const override
     {
         return !isMinimization();
+    }
+
+    [[nodiscard]] double objectiveValue() const override
+    {
+        return 0.0;
     }
 
 protected:
@@ -443,7 +444,7 @@ struct PredfinedSolutionLinearProblemMock: MockLinearProblem
     }
 };
 
-inline Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository(
+inline Antares::Optimisation::ScenarioGroupRepository makeScenarioGroupRepo(
   const Antares::ModelerStudy::SystemModel::Component& component)
 {
     Antares::Optimisation::ScenarioGroupRepository repository;
@@ -455,19 +456,18 @@ inline Antares::Optimisation::ScenarioGroupRepository getscenarioGroupRepository
 
 struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Nodes::Node>
 {
-    Antares::Optimisation::LinearProblemApi::EmptyScenario emptyScenario;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::ModelerStudy::SystemModel::Model model = createModelWithoutParameters();
     std::vector<Antares::ModelerStudy::SystemModel::Component> components = {
       std::move(createComponent(model))};
-    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository
-      = getscenarioGroupRepository(components.front());
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository = makeScenarioGroupRepo(
+      components.front());
 
     MockLinearProblem linearProblem = MockLinearProblem(true);
     Antares::Optimisation::LinearProblemApi::FillContext ctx{0, 0, 0, 0, 0};
 
     Antares::Optimisation::OptimEntityContainer optimEntityContainer = Antares::Optimisation::
-      OptimEntityContainer(linearProblem, &data, &scenarioGroupRepository);
+      OptimEntityContainer(linearProblem);
 
     std::unique_ptr<Antares::Expressions::Visitors::EvalVisitor> defaultComponentEvalVisitor;
 
@@ -476,8 +476,13 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
         optimEntityContainer.addFromSystemComponents(components);
         for (const auto& compo: components)
         {
+            const auto& scenario = scenarioGroupRepository.scenario(compo.getScenarioGroupId());
             defaultComponentEvalVisitor = std::make_unique<
-              Antares::Expressions::Visitors::EvalVisitor>(optimEntityContainer, ctx, compo);
+              Antares::Expressions::Visitors::EvalVisitor>(optimEntityContainer,
+                                                           ctx,
+                                                           compo,
+                                                           &data,
+                                                           scenario);
         }
     }
 
@@ -487,7 +492,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
       std::map<std::string, Antares::ModelerStudy::SystemModel::ParameterTypeAndValue>
         paramsAndValues)
     {
-        components.emplace_back(createComponent(model, id, paramsAndValues, components.size()));
+        components.emplace_back(createComponent(model, id, paramsAndValues));
         optimEntityContainer.addFromSystemComponents(components);
         return &components.back();
     }

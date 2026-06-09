@@ -1,28 +1,13 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_FWD_H__
 #define __ANTARES_LIBS_STUDY_FWD_H__
 
 #include <bit>
 #include <map>
+#include <ranges>
+#include <string>
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -42,7 +27,6 @@ class StudyLoadOptions;
 class Area;
 class AreaLink;
 class AreaList;
-class AreaUI;
 class ThermalCluster;
 class RenewableCluster;
 
@@ -55,18 +39,10 @@ class BindingConstraintsRepository;
 
 class StudyRuntimeInfos;
 
-class UIRuntimeInfo;
-
 class Correlation;
 
 //! Name of a single area
-using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
-//! Name of a single link
-using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
-
-using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
-
-using RulesScenarioName = Yuni::CString<64, false>;
+using AreaName = std::string;
 
 //! Name mapping
 using AreaNameMapping = std::map<AreaName, AreaName>;
@@ -508,5 +484,48 @@ namespace Benchmarking
 {
 class DurationCollector;
 }
+
+namespace Antares::Data
+{
+enum class ReserveType
+{
+    DOWN = 0,
+    UP = 1
+};
+
+enum class UnsuppliedSpilled
+{
+    //! Spilled
+    Spilled = 0,
+    //! Unsupplied
+    Unsupplied,
+
+    //! The highest value
+    Count
+};
+
+template<typename T>
+struct ReserveTypeData
+{
+    T up;
+    T down;
+
+    // Optional: array-style access
+    T& operator[](ReserveType type)
+    {
+        return (type == ReserveType::UP) ? up : down;
+    }
+
+    const T& operator[](ReserveType type) const
+    {
+        return (type == ReserveType::UP) ? up : down;
+    }
+};
+
+inline auto filter(ReserveType type)
+{
+    return std::views::filter([type](const auto& r) { return r.type == type; });
+}
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

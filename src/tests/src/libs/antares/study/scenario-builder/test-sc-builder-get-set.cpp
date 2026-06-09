@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define BOOST_TEST_MODULE sc_builder_get_set
 
 /* The goal of this file is to test the setTSnumber and get method for the following classes
@@ -60,7 +43,7 @@ class IntegerIndex
 public:
     IntegerIndex():
         study(std::make_unique<Study>()),
-        area(study->areaAdd("area 1"))
+        area(addAreaToListOfAreas(study->areas, "area 1"))
     {
     }
 
@@ -101,15 +84,17 @@ public:
 
     explicit StructureIndex():
         study(std::make_unique<Study>()),
-        area1(study->areaAdd("area 1")),
-        area2(study->areaAdd("area 2")),
+        area1(addAreaToListOfAreas(study->areas, "area 1")),
+        area2(addAreaToListOfAreas(study->areas, "area 2")),
         link(AreaAddLinkBetweenAreas(area1, area2, false)),
         thcluster(std::make_shared<ThermalCluster>(area1)),
         rencluster(std::make_shared<RenewableCluster>(area1)),
         bc(study->bindingConstraints.add("my-bc"))
     {
         area1->thermal.list.addToCompleteList(thcluster);
+        area1->thermal.list.buildIndexes();
         area1->renewable.list.addToCompleteList(rencluster);
+        area1->renewable.list.buildIndexes();
         area1->shortTermStorage.storagesByIndex.push_back({});
         sts = &(area1->shortTermStorage.storagesByIndex.back());
         sts->additionalConstraints.push_back(

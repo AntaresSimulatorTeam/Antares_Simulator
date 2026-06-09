@@ -23,6 +23,8 @@ public:
 
     virtual std::any visitFullexpr(ExprParser::FullexprContext *context) = 0;
 
+    virtual std::any visitSum_bound(ExprParser::Sum_boundContext *context) = 0;
+
     virtual std::any visitPortFieldSum(ExprParser::PortFieldSumContext *context) = 0;
 
     virtual std::any visitNegation(ExprParser::NegationContext *context) = 0;
@@ -47,15 +49,15 @@ public:
 
     virtual std::any visitTimeSum(ExprParser::TimeSumContext *context) = 0;
 
-    virtual std::any visitReducedCost(ExprParser::ReducedCostContext *context) = 0;
-
-    virtual std::any visitDual(ExprParser::DualContext *context) = 0;
-
     virtual std::any visitTimeIndex(ExprParser::TimeIndexContext *context) = 0;
 
     virtual std::any visitTimeShift(ExprParser::TimeShiftContext *context) = 0;
 
     virtual std::any visitFunction(ExprParser::FunctionContext *context) = 0;
+
+    virtual std::any visitPower(ExprParser::PowerContext *context) = 0;
+
+    virtual std::any visitArgList(ExprParser::ArgListContext *context) = 0;
 
     virtual std::any visitNumber(ExprParser::NumberContext *context) = 0;
 
@@ -71,11 +73,15 @@ public:
 
     virtual std::any visitShiftAddsub(ExprParser::ShiftAddsubContext *context) = 0;
 
+    virtual std::any visitShiftPower(ExprParser::ShiftPowerContext *context) = 0;
+
     virtual std::any visitRightExpression(ExprParser::RightExpressionContext *context) = 0;
 
     virtual std::any visitRightMuldiv(ExprParser::RightMuldivContext *context) = 0;
 
     virtual std::any visitRightAtom(ExprParser::RightAtomContext *context) = 0;
+
+    virtual std::any visitRightPower(ExprParser::RightPowerContext *context) = 0;
 
 
 };

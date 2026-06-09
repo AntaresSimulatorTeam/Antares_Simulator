@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/parts/thermal/cluster.h"
 
@@ -121,109 +103,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent):
     assert(parent && "A parent for a thermal dispatchable cluster can not be null");
 }
 
-void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
-{
-    // Note: In this method, only the data can be copied (and not the name or
-    //   the ID for example)
-
-    // mustrun
-    mustrun = cluster.mustrun;
-    mustrunOrigin = cluster.mustrunOrigin;
-
-    // group
-    setGroup(cluster.getGroup());
-
-    // Enabled
-    enabled = cluster.enabled;
-
-    // unit count
-    unitCount = cluster.unitCount;
-    // nominal capacity
-    nominalCapacity = cluster.nominalCapacity;
-    nominalCapacityWithSpinning = cluster.nominalCapacityWithSpinning;
-
-    minDivModulation = cluster.minDivModulation;
-
-    minStablePower = cluster.minStablePower;
-    minUpTime = cluster.minUpTime;
-    minDownTime = cluster.minDownTime;
-
-    // spinning
-    spinning = cluster.spinning;
-
-    // emissions
-    emissions = cluster.emissions;
-
-    // efficiency
-    fuelEfficiency = cluster.fuelEfficiency;
-
-    // volatility
-    forcedVolatility = cluster.forcedVolatility;
-    plannedVolatility = cluster.plannedVolatility;
-    // law
-    forcedLaw = cluster.forcedLaw;
-    plannedLaw = cluster.plannedLaw;
-
-    // costs
-    costgeneration = cluster.costgeneration;
-    marginalCost = cluster.marginalCost;
-    spreadCost = cluster.spreadCost;
-    variableomcost = cluster.variableomcost;
-    fixedCost = cluster.fixedCost;
-    startupCost = cluster.startupCost;
-    marketBidCost = cluster.marketBidCost;
-
-    // modulation
-    modulation = cluster.modulation;
-    cluster.modulation.unloadFromMemory();
-
-    // Making sure that the data related to the prepro and timeseries are present
-    // prepro
-    if (!prepro)
-    {
-        prepro = std::make_unique<PreproAvailability>(id(), unitCount);
-    }
-
-    prepro->copyFrom(*cluster.prepro);
-    ecoInput.copyFrom(cluster.ecoInput);
-    // timseries
-
-    series.timeSeries = cluster.series.timeSeries;
-    cluster.series.timeSeries.unloadFromMemory();
-    series.timeseriesNumbers.clear();
-
-    // The parent must be invalidated to make sure that the clusters are really
-    // re-written at the next 'Save' from the user interface.
-    if (parentArea)
-    {
-        parentArea->forceReload();
-    }
-}
-
-bool Data::ThermalCluster::forceReload(bool reload) const
-{
-    bool ret = true;
-    ret = modulation.forceReload(reload) && ret;
-    ret = series.forceReload(reload) && ret;
-    if (prepro)
-    {
-        ret = prepro->forceReload(reload) && ret;
-    }
-    ret = ecoInput.forceReload(reload) && ret;
-    return ret;
-}
-
-void Data::ThermalCluster::markAsModified() const
-{
-    modulation.markAsModified();
-    series.markAsModified();
-    if (prepro)
-    {
-        prepro->markAsModified();
-    }
-    ecoInput.markAsModified();
-}
-
 void Data::ThermalCluster::calculationOfSpinning()
 {
     // nominal capacity (for solver)
@@ -280,61 +159,6 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
     // already does this test.
     ts.multiplyAllEntriesBy(1. / (1. - (spinning / 100.)));
     ts.roundAllEntries();
-}
-
-void Data::ThermalCluster::reset()
-{
-    Cluster::reset();
-
-    mustrun = false;
-    mustrunOrigin = false;
-    nominalCapacityWithSpinning = 0.;
-    minDivModulation.isCalculated = false;
-    minStablePower = 0.;
-    minUpDownTime = 1;
-    minUpTime = 1;
-    minDownTime = 1;
-
-    // spinning
-    spinning = 0.;
-
-    // efficiency
-    fuelEfficiency = 100.0;
-
-    // pollutant emissions array
-    emissions.factors.fill(0);
-    // volatility
-    forcedVolatility = 0.;
-    plannedVolatility = 0.;
-    // laws
-    plannedLaw = LawUniform;
-    forcedLaw = LawUniform;
-
-    // costs
-    costgeneration = setManually;
-    marginalCost = 0.;
-    spreadCost = 0.;
-    fixedCost = 0.;
-    startupCost = 0.;
-    marketBidCost = 0.;
-    variableomcost = 0.;
-
-    // modulation
-    modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
-    modulation.fill(1.);
-    modulation.fillColumn(thermalMinGenModulation, 0.);
-
-    // prepro
-    // warning: the variables `prepro` and `series` __must__ not be destroyed
-    //   since the interface may still have a pointer to them.
-    //   we must simply reset their content.
-    if (!prepro)
-    {
-        prepro = std::make_unique<PreproAvailability>(id(), unitCount);
-    }
-
-    prepro->reset();
-    ecoInput.reset();
 }
 
 bool Data::ThermalCluster::integrityCheck()

@@ -1,28 +1,11 @@
-/*
- * Copyright 2007-2024, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
+#include "antares/solver/optim-model-filler/LinearExpression.h"
 
 #include <algorithm>
+#include <cmath>
 #include <stdexcept>
-
-#include "antares/solver/optim-model-filler/TimeDependentLinearExpression.h"
 
 namespace
 {
@@ -108,7 +91,6 @@ LinearExpression& LinearExpression::operator*=(double factor)
 
 LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 {
-    coefs_.reserve(coefs_.size() + other.coefs_.size());
     coefs_.insert(coefs_.end(), other.coefs_.begin(), other.coefs_.end());
     constant_ += other.constant_;
     return *this;
@@ -116,7 +98,6 @@ LinearExpression& LinearExpression::operator+=(const LinearExpression& other)
 
 LinearExpression& LinearExpression::operator-=(const LinearExpression& other)
 {
-    coefs_.reserve(coefs_.size() + other.coefs_.size());
     for (const auto& [index, coef]: other.coefs_)
     {
         coefs_.emplace_back(index, -coef);
@@ -147,6 +128,11 @@ LinearExpression LinearExpression::operator-() const
     }
     ret.constant_ = -constant_;
     return ret;
+}
+
+void LinearExpression::constant(double c)
+{
+    constant_ = c;
 }
 
 double LinearExpression::constant() const
@@ -197,6 +183,39 @@ LinearExpression& LinearExpression::operator*=(const LinearExpression& other)
     }
     // Also if (!hasCoefs() && !other.hasCoefs())
     constant_ *= other.constant_;
+    return *this;
+}
+
+static constexpr double EPS_TO_ZERO = 1e-16;
+
+LinearExpression& LinearExpression::operator^=(const LinearExpression& other)
+{
+    if (other.hasCoefs())
+    {
+        throw std::invalid_argument("the exponent must be constant");
+    }
+
+    if (hasCoefs())
+    {
+        if (std::abs(other.constant()) < EPS_TO_ZERO)
+        {
+            bool isIdenticallyZero = (std::abs(constant_) < EPS_TO_ZERO)
+                                     && std::ranges::all_of(coefs_,
+                                                            [](const auto& coef) {
+                                                                return std::abs(coef.second)
+                                                                       < EPS_TO_ZERO;
+                                                            });
+
+            coefs_.clear();
+            constant_ = isIdenticallyZero ? 0.0 : 1.0;
+            return *this;
+        }
+        if (std::abs(other.constant() - 1) > EPS_TO_ZERO)
+        {
+            throw std::invalid_argument("non-linear expression is not supported.");
+        }
+    }
+    constant_ = std::pow(constant_, other.constant_);
     return *this;
 }
 

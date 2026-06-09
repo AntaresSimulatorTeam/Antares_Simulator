@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <unit_test_utils.h>
@@ -121,23 +104,25 @@ BOOST_FIXTURE_TEST_CASE(test_visit_greater_than_or_equal_node,
 BOOST_FIXTURE_TEST_CASE(test_visit_illegal_node, VisitorFixture<ReadLinearConstraintVisitor>)
 {
     auto lit = create<LiteralNode>(5.);
-    std::vector<Node*> illegal_nodes = {
-      create<SumNode>(),
-      create<SubtractionNode>(lit, lit),
-      create<MultiplicationNode>(lit, lit),
-      create<DivisionNode>(lit, lit),
-      create<NegationNode>(lit),
-      create<VariableNode>("var", 99),
-      create<ParameterNode>("param"),
-      create<LiteralNode>(5.),
-      create<PortFieldNode>("port", "field"),
-      create<PortFieldSumNode>("port", "field"),
-      create<TimeShiftNode>(lit, lit),
-      create<TimeIndexNode>(lit, lit),
-      create<TimeSumNode>(lit, lit, lit),
-      create<AllTimeSumNode>(lit),
-      create<DualNode>("constraint", 0),
-      create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO)};
+    std::vector<Node*> illegal_nodes = {create<SumNode>(),
+                                        create<SubtractionNode>(lit, lit),
+                                        create<MultiplicationNode>(lit, lit),
+                                        create<DivisionNode>(lit, lit),
+                                        create<NegationNode>(lit),
+                                        create<VariableNode>("var", 99),
+                                        create<ParameterNode>("param"),
+                                        create<LiteralNode>(5.),
+                                        create<PortFieldNode>("port", "field"),
+                                        create<PortFieldSumNode>("port", "field"),
+                                        create<TimeShiftNode>(lit, lit),
+                                        create<TimeIndexNode>(lit, lit),
+                                        create<TimeSumNode>(lit, lit, lit),
+                                        create<AllTimeSumNode>(lit),
+                                        create<FunctionNode>(FunctionNodeType::dual,
+                                                             create<ParameterNode>("constraint"),
+                                                             create<LiteralNode>(0)),
+                                        create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                             create<VariableNode>("var", 0))};
 
     for (Node* node: illegal_nodes)
     {

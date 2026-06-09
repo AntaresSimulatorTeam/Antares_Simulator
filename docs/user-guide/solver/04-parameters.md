@@ -254,13 +254,36 @@ These parameters are listed under the `[output]` section in the `.ini` file.
 
 ---
 #### hydro-debug
-[//]: # (TODO: document this parameter)
-_**This section is under construction**_  
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+    - `true`: Create a debug folder containing hourly and monthly detailed infos about hydro levels, inflows, etc
+    - `false`: Doesn't create the folder
 
-- **Expected value:**
-- **Required:** **yes**
-- **Default value:**
-- **Usage:**
+---
+#### remix-storage-debug
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+    - `true`: Output files in format remix-*year*-*week*.csv containing withdrawal for all storages.  Each line of the file is associated to an hour and is formatted like this : *area*, *storage*, *hour*, *withdrawal*
+    - `false`: Doesn't create the files
+
+Format is CSV with spaces as separator.
+
+#### adequacy-patch-debug
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+    - `false`: Doesn't create the files
+    - `true`: Output 2 types of debug files, the first one for regular variables and the second one for link variables:
+         - adequacy-patch-areas-*before|after*-*year*-*week*.csv 
+         - adequacy-patch-links-*before|after*-*year*-*week*.csv 
+
+Each type of file is created before and after adequacy patch process (4 files per week). Files are named accordingly. Format is CSV with spaces as separator.
+
+Regular variables files columns: *Area Hour DENS UnsuppliedEnergy UnsuppliedEnergyCSR MRGPrice MRGPriceCSR DTGmrgCSR SpilledEnergy*
+
+Link variables files columns: *Link Hour Flow*
 
 ---
 #### result-format
@@ -416,6 +439,14 @@ _**This section is under construction**_
 - **Usage:** set this parameter to `true` if you want to activate primary reserve constraints
 
 ---
+#### include-reserves
+[//]: # (TODO: add details + link to contraints doc)
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** set this parameter to `true` if you want to activate the reserves constraints, this is not related to the basic implementation of primary/spinning/strategic reserves
+
+---
 #### include-exportmps
 [//]: # (TODO: in usage paragraph, add links to relevant doc of "first step" and "second step" of optimization)
 - **Expected value:** one of the following (case-insensitive):
@@ -468,17 +499,17 @@ _**This section is under construction**_
 ---
 #### include-unfeasible-problem-behavior
 - **Expected value:** one of the following (case-sensitive):
-    - `WARNING_DRY`
-    - `WARNING_MPS`
-    - `ERROR_DRY`
-    - `ERROR_MPS`
+    - `warning-dry`
+    - `warning-verbose`
+    - `error-dry`
+    - `error-verbose`
 - **Required:** no
-- **Default value:** `ERROR_MPS`
+- **Default value:** `error-verbose`
 - **Usage:** defines the behavior of the simulator in case of an unfeasible problem.
-    - `WARNING_DRY`: continue simulation
-    - `WARNING_MPS`: continue simulation, but export the MPS of the unfeasible problem
-    - `ERROR_DRY`: stop simulation
-    - `ERROR_MPS`: stop simulation, and export the MPS of the unfeasible problem  
+    - `warning-dry`: continue simulation
+    - `warning-verbose`: continue simulation, but export the MPS of the unfeasible problem
+    - `error-dry`: stop simulation
+    - `error-verbose`: stop simulation, and export the MPS of the unfeasible problem
   
 > _**Note:**_ You can find more information on this parameter [here](08-appendix.md#details-on-the-include-unfeasible-problem-behavior-parameter).
 
@@ -651,6 +682,13 @@ These parameters are listed under the `[other preferences]` section in the `.ini
 - **Usage:** power shedding policy:
     - `shave peaks`:
     - `minimize duration`:
+
+---
+#### accurate-shave-peaks-include-short-term-storage
+- **Expected value:** `true` or `false`
+- **Required:** no
+- **Default value:** `false`
+- **Usage:** when the shedding policy is set to `accurate shave peaks`, this parameter controls whether short-term storage (STS) is included in the remix algorithm. If set to `true`, STS is considered alongside conventional hydro storage when solving the power-shaving problem. This can improve the accuracy of the simulation for studies that include short-term storage facilities.
 
 ---
 #### unit-commitment-mode

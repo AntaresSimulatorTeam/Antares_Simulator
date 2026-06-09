@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define BOOST_TEST_MODULE test hydro reader
 
@@ -81,15 +63,20 @@ struct Fixture
 {
     Fixture()
     {
-        study = std::make_shared<Study>(true);
+        study = std::make_shared<Study>();
 
         // Add areas
-        area_1 = study->areaAdd("Area1");
+        area_1 = addAreaToListOfAreas(study->areas, "Area1");
+        if (area_1)
+        {
+            area_1->createMissingData();
+            area_1->resetToDefaultValues();
+        }
         study->areas.rebuildIndexes();
         dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
         reader = std::make_shared<HydroMaxTimeSeriesReader>(area_1->hydro,
-                                                            area_1->id.to<std::string>(),
-                                                            area_1->name.to<std::string>());
+                                                            area_1->id,
+                                                            area_1->name);
 
         // Create necessary folders and files for these two areas
         createFoldersAndFiles();
@@ -199,7 +186,7 @@ BOOST_FIXTURE_TEST_CASE(Testing_support_for_old_studies, Fixture)
 
     buffer.clear();
     buffer = base_folder + SEP + hydro_folder;
-    ret = reader->read(buffer, study->usedByTheSolver) && ret;
+    ret = reader->read(buffer) && ret;
 
     BOOST_CHECK(ret);
     BOOST_CHECK(equalDailyMaxPowerAsHourlyTs(genP, genPReader));

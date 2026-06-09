@@ -158,7 +158,7 @@ Note: Almost all variables of the system are defined twice (one value per state)
 | Notation                                          | Explanation                                                                                                                                                                        |
 |---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|                
 | $\lambda \in \Lambda_n$                           | reservoirs connected to node $n$                                                                                                                                                   |
-| $\Sigma_\lambda \in \mathbb{R}_+$                 | size of reservoir $\lambda$ : amount of energy that can be stored in $\lambda$                                                                                                     |
+| $S_\lambda \in \mathbb{R}_+$                 | size of reservoir $\lambda$ : amount of energy that can be stored in $\lambda$                                                                                                     |
 | $Q\in \mathbb{N}$                                 | number of discrete levels defined in reservoir                                                                                                                                     |
 | $\overline{W}\_\lambda \in \mathbb{R}_+$          | maximum energy output from $\lambda$ throughout the optimization period                                                                                                            |
 | $\underline{W}\_\lambda \in \mathbb{R}_+$         | minimum energy output from $\lambda$ throughout the optimization period                                                                                                            |
@@ -404,7 +404,7 @@ $$
 $$
 
 $$
-(14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq \sum\_{\lambda} \frac{1}{Q}
+(14)(c) \forall n \in N, \forall \lambda \in \Lambda\_n, q=1,Q, \mathfrak{R}\_{\lambda_q} \leq \frac{S_{\lambda}}{Q}
 $$
 
 Reservoir level is bounded by admissible lower and upper bounds (rule curves)
@@ -461,6 +461,33 @@ $$
 All constraints (1) to (23) previously defined for regular operation conditions are repeated with replacement of all variables _Var_ by their twins _$Var^s$_ when they exist.
 
 Besides, in the expression of constraints , all occurrences of are replaced by $D_n + S_n$
+
+### Loop flow
+In Antares Simulator, a loop flow is an fixed amount of power flowing circularly through the grid when all "nodes" are perfectly balanced (no import and no export).
+For a given link, user can ask to include the related passive loop flow.
+For details on including loop flow, see [Links](02-inputs.md#lnks)).
+
+When loop flow is not included for link $l$, relations between $F\_l$, $F\_l^+$ and $F\_l^-$ are given in [Balance between load and generation](#balance-between-load-and-generation).
+
+Including a loop flow for a link $l$ implies :
+$$
+F\_l - F\_l^+ + F\_l^- = LF\_l
+$$
+
+where $LF\_l$ is the passive loop flow on $l$.
+
+In that case, variables bounds change, and we have : 
+$$
+-C\_l^- \leq F\_l \leq C\_l^+
+$$
+
+$$
+0 \leq F\_l^+ \leq C\_l^+ - LF\_l
+$$
+
+$$
+0 \leq F\_l^- \leq C\_l^- + LF\_l
+$$
 
 ## Antares as a SCOPF ("flow-based model")
 

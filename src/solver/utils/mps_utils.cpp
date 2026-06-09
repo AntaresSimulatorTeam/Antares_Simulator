@@ -1,26 +1,10 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/utils/mps_utils.h"
 
 #include <antares/study/study.h>
+#include "antares/io/outputs/MPSGenerator.h"
 #include "antares/solver/utils/ortools_utils.h"
 
 using namespace Antares;
@@ -57,26 +41,37 @@ using namespace Antares::Data;
 #include "antares/solver/optimisation/opt_constants.h"
 
 // ---------------------------------
-// Full mps writing by or-tools
+// Full mps writing
 // ---------------------------------
-fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber):
+MPSwriter::MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
+                     uint optNumber,
+                     bool keepNames):
     I_MPS_writer(optNumber),
-    solver_(solver)
+    linearProblem_(linearProblem),
+    keepNames_(keepNames)
 {
 }
 
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
+void MPSwriter::runIfNeeded(Solver::IResultWriter& writer, const std::string& filename)
 {
-    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
+    // 0. Logging file name
+    logs.info() << "Writing MPS File: `" << filename << "'";
+
+    // 1. Write MPS
+    auto mps = Antares::IO::Outputs::MPSGenerator(linearProblem_, filename, keepNames_).run();
+
+    // 2. add the mps
+    writer.addEntryFromBuffer(filename, mps);
 }
 
-mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
-                                   bool exportMPSOnError,
-                                   const int current_optim_number,
-                                   MPSolver* solver):
+mpsWriterFactory::mpsWriterFactory(
+  Data::mpsExportStatus exportMPS,
+  bool exportMPSOnError,
+  const int current_optim_number,
+  const Optimisation::LinearProblemApi::ILinearProblem& linearProblem):
     export_mps_(exportMPS),
     export_mps_on_error_(exportMPSOnError),
-    solver_(solver),
+    linearProblem_(linearProblem),
     current_optim_number_(current_optim_number)
 {
 }
@@ -96,11 +91,11 @@ bool mpsWriterFactory::doWeExportMPS()
     }
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::create(bool keepNames)
 {
     if (doWeExportMPS())
     {
-        return createFullmpsWriter();
+        return createFullmpsWriter(keepNames);
     }
 
     return std::make_unique<nullMPSwriter>();
@@ -110,13 +105,13 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
 {
     if (export_mps_on_error_ || doWeExportMPS())
     {
-        return createFullmpsWriter();
+        return createFullmpsWriter(true); // Always keep names for error MPS — aids debugging
     }
 
     return std::make_unique<nullMPSwriter>();
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter(bool keepNames)
 {
-    return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_);
+    return std::make_unique<MPSwriter>(linearProblem_, current_optim_number_, keepNames);
 }

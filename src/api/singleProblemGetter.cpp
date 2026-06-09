@@ -1,32 +1,16 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/api/singleProblemGetter.h"
+
+#include "antares/solver/optim-model-filler/BendersDecomposition.h"
 
 #include "singleProblemGetterImpl.h"
 
 namespace Antares::Solver
 {
-SingleProblemGetter::SingleProblemGetter(std::unique_ptr<Antares::Data::Study>&& study):
-    impl_(std::make_unique<Implementation::SingleProblemGetter>(std::move(study)))
+SingleProblemGetter::SingleProblemGetter(const std::filesystem::path& studyPath):
+    impl_(std::make_unique<Implementation::SingleProblemGetter>(studyPath))
 {
 }
 
@@ -42,6 +26,42 @@ ConstantDataFromAntares SingleProblemGetter::getConstantData()
 WeeklyDataFromAntares SingleProblemGetter::getWeeklyData(WeeklyProblemId id)
 {
     return impl_->getWeeklyData(id);
+}
+
+std::unique_ptr<Optimisation::LinearProblemApi::ILinearProblem>
+SingleProblemGetter::getWeeklyProblem(WeeklyProblemId id)
+{
+    return impl_->getWeeklyProblem(id);
+}
+
+std::vector<WeeklyProblemId> SingleProblemGetter::getProblemIds() const
+{
+    return impl_->getProblemIds();
+}
+
+void SingleProblemGetter::writeNTCTimeSeries(const std::filesystem::path& outputDir)
+{
+    impl_->writeNTCTimeSeries(outputDir);
+}
+
+void SingleProblemGetter::writeStudyDescriptionFiles(const std::filesystem::path& outputDir)
+{
+    impl_->writeStudyDescriptionFiles(outputDir);
+}
+
+bool SingleProblemGetter::areWeeksIndependent() const
+{
+    return impl_->areWeeksIndependent();
+}
+
+void SingleProblemGetter::printProblems() const
+{
+    impl_->printProblems();
+}
+
+Solver::ProblemEntity SingleProblemGetter::getMasterProblem() const
+{
+    return impl_->getMasterProblem();
 }
 
 } // namespace Antares::Solver

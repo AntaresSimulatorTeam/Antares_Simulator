@@ -1,28 +1,12 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <filesystem>
+#include <fmt/format.h>
 
 #include <antares/logs/logs.h>
-#include <antares/solver/modeler/data.h>
+#include <antares/solver/modeler/ModelerData.h>
+#include "antares/solver/modeler/checks/checkLocation.h"
 #include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/utils/utils.h"
 
@@ -31,16 +15,19 @@ using namespace Antares::ModelerStudy;
 namespace Antares::Solver::LoadFiles
 {
 
-Modeler::Data loadAll(const std::filesystem::path& studyPath)
+std::optional<ModelerData> loadAll(const std::filesystem::path& studyPath)
 {
-    Antares::Utils::TimeMeasurement measure;
+    Utils::TimeMeasurement measure;
     logs.info() << "Loading modeler files...";
-    Modeler::Data data;
-
-    data.libraries = loadLibraries(studyPath);
+    ModelerData data;
+    warnOnYamlFiles(studyPath);
+    auto res = loadLibraries(studyPath);
+    if (!res.has_value())
+    {
+        return {};
+    }
+    std::tie(data.libraries, data.resolutionMode) = res.value();
     logs.info() << "Libraries loaded";
-
-    loadOptimConfig(studyPath, data.libraries);
 
     data.system = std::make_unique<SystemModel::System>(loadSystem(studyPath, data.libraries));
     logs.info() << "System loaded";
@@ -51,7 +38,12 @@ Modeler::Data loadAll(const std::filesystem::path& studyPath)
     data.scenarioGroupRepository = loadScenarioGroupRepository(studyPath);
     measure.tick();
     logs.info() << "Scenario groups loaded";
+
     logs.info() << "Modeler loaded in " << measure.toStringInSeconds();
+
+    Checks::checkLocations(data);
+    logs.info() << "Locations validity OK";
+
     return data;
 }
 

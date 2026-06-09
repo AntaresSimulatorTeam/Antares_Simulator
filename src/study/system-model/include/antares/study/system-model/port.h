@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <string>
@@ -27,6 +10,17 @@
 namespace Antares::ModelerStudy::SystemModel
 {
 
+enum class FieldRole
+{
+    Sender,
+    Receiver
+};
+
+inline std::ostream& operator<<(std::ostream& os, const SystemModel::FieldRole& role)
+{
+    return role == SystemModel::FieldRole::Sender ? os << "Sender" : os << "Receiver";
+}
+
 class Port final
 {
 public:
@@ -34,6 +28,10 @@ public:
         id_(id),
         type_(type)
     {
+        for (const auto& field: type.Fields())
+        {
+            field_roles_[field.Id()] = FieldRole::Receiver;
+        }
     }
 
     const std::string& Id() const
@@ -46,9 +44,20 @@ public:
         return type_;
     }
 
+    void setFieldRole(const std::string& field_id, FieldRole role)
+    {
+        field_roles_[field_id] = role;
+    }
+
+    FieldRole fieldRole(const std::string& field_id) const
+    {
+        return field_roles_.at(field_id);
+    }
+
 private:
     std::string id_;
     PortType type_;
+    std::map<std::string, FieldRole> field_roles_;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/expressions/visitors/CloneVisitor.h>
 
@@ -30,14 +13,9 @@ CloneVisitor::CloneVisitor(Registry<Nodes::Node>& registry):
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SumNode* node)
 {
-    std::vector<Nodes::Node*> clonedOperands;
-    clonedOperands.reserve(node->size());
-    for (auto* operand: node->getOperands())
-    {
-        clonedOperands.push_back(dispatch(operand));
-    }
-    // Give ownership of clonedOperands to the caller
-    return registry_.create<Nodes::SumNode>(std::move(clonedOperands));
+    auto clonedChildren = visitChildrenNodes(node);
+    // Give ownership of cloned children to caller
+    return registry_.create<Nodes::SumNode>(std::move(clonedChildren));
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::SubtractionNode* node)
@@ -83,7 +61,7 @@ Nodes::Node* CloneVisitor::visit(const Nodes::VariableNode* variableNode)
 {
     return registry_.create<Nodes::VariableNode>(variableNode->value(),
                                                  variableNode->Index(),
-                                                 variableNode->timeIndex());
+                                                 variableNode->variability());
 }
 
 Nodes::Node* CloneVisitor::visit(const Nodes::ParameterNode* parameterNode)
@@ -125,19 +103,21 @@ Nodes::Node* CloneVisitor::visit(const Nodes::TimeSumNode* node)
                                                 dispatch(node->expression()));
 }
 
+Nodes::Node* CloneVisitor::visit(const Nodes::TPlusNode* node)
+{
+    return registry_.create<Nodes::TPlusNode>(dispatch(node->child()));
+}
+
 Nodes::Node* CloneVisitor::visit(const Nodes::AllTimeSumNode* node)
 {
     return registry_.create<Nodes::AllTimeSumNode>(dispatch(node->child()));
 }
 
-Nodes::Node* CloneVisitor::visit(const Nodes::ReducedCostNode* node)
+Nodes::Node* CloneVisitor::visit(const Nodes::FunctionNode* node)
 {
-    return registry_.create<Nodes::ReducedCostNode>(node->value(), node->index());
-}
-
-Nodes::Node* CloneVisitor::visit(const Nodes::DualNode* node)
-{
-    return registry_.create<Nodes::DualNode>(node->value(), node->index());
+    auto clonedChildren = visitChildrenNodes(node);
+    // Give ownership of cloned children to caller
+    return registry_.create<Nodes::FunctionNode>(node->type(), std::move(clonedChildren));
 }
 
 std::string CloneVisitor::name() const

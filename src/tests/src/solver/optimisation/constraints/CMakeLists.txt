@@ -5,3 +5,10 @@ add_boost_test(constraints_builder
         constraints_builder.cpp
         LIBS
 	solver-lib)
+
+add_boost_test(constraints_namer
+        SRC
+        constraints_namer.cpp
+        LIBS
+	model_antares)
+

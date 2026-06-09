@@ -3,7 +3,14 @@ add_boost_test(unit-tests-for-solver-optimisation
         SRC
         test_main.cpp
         adequacy_patch.cpp
+        FillerFixture.cpp
+        FillerFixture.h
         test_componentToAreaConnectionFiller.cpp
+        test_ThermalCapacityFiller.cpp
+        test_area_connections--spillage--unsupE.cpp
+        test_mip_detection.cpp
+        test_legacy_name_mapper.cpp
+        ${CMAKE_SOURCE_DIR}/solver/optimisation/LegacyNameMapper.cpp
         LIBS
         antares-study-system-model
         Antares::linear-problem-mpsolver-impl
@@ -12,7 +19,10 @@ add_boost_test(unit-tests-for-solver-optimisation
         test_utils_unit
         Antares::yml-model
         Antares::model-converter
-        Antares::yml-system)
+        Antares::yml-system
+        Antares::tests::inmemory-modeler
+        INCLUDE
+        ${CMAKE_SOURCE_DIR}/solver/optimisation/include)
 
 add_subdirectory(adequacy_patch)
 add_subdirectory(translator)

@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <algorithm>
 #include <sstream>
@@ -26,10 +8,12 @@
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/study.h>
 #include <antares/utils/utils.h>
+#include "antares/solver/optimisation/MipDetection.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_binding_constraints_rhs.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 #include "antares/solver/simulation/simulation.h"
+#include "antares/solver/workflow/generationAndResolutionConfig.h"
 #include "antares/study/fwd.h"
 
 using namespace Antares;
@@ -37,14 +21,63 @@ using namespace Antares::Data;
 
 constexpr double LEVEL_TOLERANCE_MWH = 1.e-6;
 
-static void importShortTermStorages(const AreaList& areas,
-                                    std::vector<::AREA_INPUT>& ShortTermStorageOut)
+void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
+{
+    int globalReserveIndex = 0;
+    problem.allReserves = std::vector<::AREA_RESERVES_VECTOR>(areas.size());
+    for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
+    {
+        int areaReserveIndex = 0;
+        auto area = areas[areaIndex];
+        auto& areaReserves = problem.allReserves.value()[areaIndex];
+        for (auto type: {ReserveType::DOWN, ReserveType::UP})
+        {
+            areaReserves.referenceGlobalActivationDuration[type]
+              = area->allCapacityReservations.value().referenceGlobalActivationDuration[type];
+            areaReserves.maxGlobalEnergyActivationRatio[type] = area->allCapacityReservations
+                                                                  .value()
+                                                                  .maxGlobalEnergyActivationRatio
+                                                                    [type];
+        }
+
+        for (const auto& [reserveID, reserveCapacity]:
+             area->allCapacityReservations.value().areaCapacityReservations)
+        {
+            CAPACITY_RESERVATION areaCapacityReservation;
+            areaCapacityReservation.type = reserveCapacity.type;
+            areaCapacityReservation.unsuppliedCost = reserveCapacity.unsuppliedCost;
+            areaCapacityReservation.spillageCost = reserveCapacity.spillageCost;
+            areaCapacityReservation.powerActivationRatio = reserveCapacity.powerActivationRatio;
+            areaCapacityReservation.energyActivationRatio = reserveCapacity.energyActivationRatio;
+            areaCapacityReservation.referenceActivationDuration = reserveCapacity
+                                                                    .referenceActivationDuration;
+            areaCapacityReservation.reserveName = reserveCapacity.name();
+            areaCapacityReservation.reserveID = reserveCapacity.id();
+            areaCapacityReservation.globalReserveIndex = globalReserveIndex;
+            areaCapacityReservation.areaReserveIndex = areaReserveIndex;
+            globalReserveIndex++;
+            areaReserveIndex++;
+            areaCapacityReservation.need = reserveCapacity.need;
+
+            areaReserves.areaCapacityReservations.emplace_back(areaCapacityReservation);
+        }
+    }
+}
+
+static void importShortTermStorages(Data::Parameters parameters,
+                                    AreaList& areas,
+                                    std::vector<::AREA_INPUT>& ShortTermStorageOut,
+                                    PROBLEME_HEBDO& problem)
 {
     int clusterGlobalIndex = 0;
     int constraintGlobalIndex = 0;
+    int globalReserveIndex = 0;
+    int globalSTStorageClusterParticipationIndex = 0;
 
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
+        int areaReserveIndex = 0;
+        int areaClusterParticipationIndex = 0;
         const auto* area = areas[areaIndex];
         ShortTermStorageOut[areaIndex].resize(area->shortTermStorage.count());
         int storageIndex = 0;
@@ -84,12 +117,139 @@ static void importShortTermStorages(const AreaList& areas,
                     toInsert.additionalConstraints.push_back(constraint);
                 }
             }
+
+            toInsert.clusterGlobalIndex = clusterGlobalIndex;
             toInsert.series = st.series;
 
             // TODO add missing properties, or use the same struct
             storageIndex++;
             clusterGlobalIndex++;
         }
+
+        if (parameters.include.reserves && area->allCapacityReservations)
+        {
+            auto& areaReserves = problem.allReserves.value()[areaIndex];
+
+            int areaReserveIdx = 0;
+            for (const auto& [reserveID, _]:
+                 area->allCapacityReservations.value().areaCapacityReservations)
+            {
+                for (size_t idx = 0; auto& cluster: area->shortTermStorage.storagesByIndex)
+                {
+                    if (cluster.reserveParticipationContainer
+                        && cluster.reserveParticipationContainer.value().isParticipatingInReserve(
+                          reserveID))
+                    {
+                        RESERVE_PARTICIPATION_STSTORAGE reserveParticipation;
+                        reserveParticipation.maxRelease = cluster.reserveParticipationContainer
+                                                            .value()
+                                                            .reserveMaxRelease(reserveID);
+                        reserveParticipation.maxStore = cluster.reserveParticipationContainer
+                                                          .value()
+                                                          .reserveMaxStore(reserveID);
+                        reserveParticipation.participationCost = cluster
+                                                                   .reserveParticipationContainer
+                                                                   .value()
+                                                                   .reserveCost(reserveID);
+                        reserveParticipation.clusterName = cluster.id;
+                        reserveParticipation.clusterIdInArea = idx;
+                        reserveParticipation.clusterId = cluster.properties.clusterGlobalIndex;
+                        reserveParticipation.globalIndexClusterParticipation
+                          = globalSTStorageClusterParticipationIndex;
+                        reserveParticipation.areaIndexClusterParticipation
+                          = areaClusterParticipationIndex;
+
+                        areaReserves.areaCapacityReservations[areaReserveIdx]
+                          .AllSTStorageReservesParticipation.emplace(idx, reserveParticipation);
+
+                        for (const auto& symIdx:
+                             cluster.reserveParticipationContainer.value().symmetricalIndices(
+                               reserveID))
+                        {
+                            auto& symmetries = areaReserves
+                                                 .STStorageReservesParticipationSymmetries[idx];
+                            if (symmetries.size() <= static_cast<uint32_t>(symIdx))
+                            {
+                                symmetries.resize(
+                                  cluster.reserveParticipationContainer.value().getNbSymGroups());
+                            }
+                            symmetries[symIdx].emplace_back(
+                              reserveID,
+                              areaReserves.areaCapacityReservations[areaReserveIdx]
+                                .AllSTStorageReservesParticipation[idx]);
+                        }
+
+                        ++globalSTStorageClusterParticipationIndex;
+                        ++areaClusterParticipationIndex;
+                    }
+                    ++idx;
+                }
+                ++areaReserveIdx;
+            };
+        }
+    }
+}
+
+void importHydroReserves(AreaList& areas, PROBLEME_HEBDO& problem)
+{
+    int globalReserveIndex = 0;
+    int globalHydroParticipationIndex = 0;
+    for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
+    {
+        int areaReserveIndex = 0;
+        int areaClusterParticipationIndex = 0;
+        auto area = areas[areaIndex];
+        auto& hydro = area->hydro;
+
+        if (area->allCapacityReservations && hydro.reserveParticipationContainer)
+        {
+            auto& areaReserves = problem.allReserves.value()[areaIndex];
+
+            int areaReserveIdx = 0;
+            for (const auto& [reserveID, _]:
+                 area->allCapacityReservations.value().areaCapacityReservations)
+            {
+                if (hydro.reserveParticipationContainer.value().isParticipatingInReserve(reserveID))
+                {
+                    RESERVE_PARTICIPATION_HYDRO reserveParticipation;
+                    reserveParticipation.maxRelease = hydro.reserveParticipationContainer.value()
+                                                        .reserveMaxRelease(reserveID);
+                    reserveParticipation.maxStore = hydro.reserveParticipationContainer.value()
+                                                      .reserveMaxStore(reserveID);
+                    reserveParticipation.participationCost = hydro.reserveParticipationContainer
+                                                               .value()
+                                                               .reserveCost(reserveID);
+                    reserveParticipation.clusterName = "Hydro";
+                    reserveParticipation.clusterIdInArea = 0;
+                    reserveParticipation.globalIndexClusterParticipation
+                      = globalHydroParticipationIndex;
+                    reserveParticipation.areaIndexClusterParticipation
+                      = areaClusterParticipationIndex;
+
+                    areaReserves.areaCapacityReservations[areaReserveIdx]
+                      .AllHydroReservesParticipation.push_back(std::move(reserveParticipation));
+
+                    for (const auto& symIdx:
+                         hydro.reserveParticipationContainer.value().symmetricalIndices(reserveID))
+                    {
+                        if (areaReserves.HydroReservesParticipationSymmetries.size()
+                            <= static_cast<uint32_t>(symIdx))
+                        {
+                            areaReserves.HydroReservesParticipationSymmetries.resize(
+                              hydro.reserveParticipationContainer.value().getNbSymGroups());
+                        }
+                        areaReserves.HydroReservesParticipationSymmetries[symIdx].push_back(
+                          {reserveID,
+                           areaReserves.areaCapacityReservations[areaReserveIdx]
+                             .AllHydroReservesParticipation.back()});
+                    }
+
+                    ++globalHydroParticipationIndex;
+                    ++areaClusterParticipationIndex;
+                }
+                ++areaReserveIdx;
+            }
+        };
     }
 }
 
@@ -125,7 +285,7 @@ void SIM_InitialisationProblemeHebdo(Study& study,
 
     problem.NombreDInterconnexions = study.runtime.interconnectionsCount();
 
-    problem.NumberOfShortTermStorages = study.runtime.shortTermStorageCount;
+    problem.NumberOfShortTermStorages = study.runtime.counts.shortTermStorages;
 
     auto activeConstraints = study.bindingConstraints.activeConstraints();
     problem.NombreDeContraintesCouplantes = activeConstraints.size();
@@ -135,12 +295,14 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     problem.NamedProblems = study.parameters.namedProblems;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
-    problem.OptimisationAvecCoutsDeDemarrage = (study.parameters.unitCommitment.ucMode
-                                                != Antares::Data::UnitCommitmentMode::
-                                                  ucHeuristicFast);
+    problem.OptimisationNotFastMode = (study.parameters.unitCommitment.ucMode
+                                       != Antares::Data::UnitCommitmentMode::ucHeuristicFast);
 
-    problem.OptimisationAvecVariablesEntieres = (study.parameters.unitCommitment.ucMode
-                                                 == Antares::Data::UnitCommitmentMode::ucMILP);
+    auto workflow = Solver::Workflow::getWorkflow(study);
+
+    problem.OptimisationAvecVariablesEntieres = workflow.subproblems
+                                                == Solver::Workflow::SolverType::MILP;
+    problem.useThermalHeuristic = workflow.useThermalHeuristic;
 
     problem.OptimisationAuPasHebdomadaire = (parameters.simplexOptimizationRange == Data::sorWeek);
 
@@ -238,7 +400,13 @@ void SIM_InitialisationProblemeHebdo(Study& study,
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
 
-    importShortTermStorages(study.areas, problem.ShortTermStorage);
+    if (parameters.include.reserves)
+    {
+        importCapacityReservations(study.areas, problem);
+        importHydroReserves(study.areas, problem);
+    }
+
+    importShortTermStorages(study.parameters, study.areas, problem.ShortTermStorage, problem);
 
     for (uint i = 0; i < study.runtime.interconnectionsCount(); ++i)
     {
@@ -296,19 +464,22 @@ void SIM_InitialisationProblemeHebdo(Study& study,
     }
 
     NombrePaliers = 0;
+    int globalReserveIndex = 0;
+    int globalThermalClusterParticipationIndex = 0;
     for (uint i = 0; i < study.areas.size(); ++i)
     {
-        const auto& area = *(study.areas.byIndex[i]);
-
+        int areaReserveIndex = 0;
+        int areaClusterParticipationIndex = 0;
+        auto& area = *(study.areas.byIndex[i]);
         auto& pbPalier = problem.PaliersThermiquesDuPays[i];
         unsigned int clusterCount = area.thermal.list.enabledAndNotMustRunCount();
         pbPalier.NombreDePaliersThermiques = clusterCount;
 
         for (const auto& cluster: area.thermal.list.each_enabled_and_not_mustrun())
         {
-            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index] = NombrePaliers
-                                                                                       + cluster
-                                                                                           ->index;
+            cluster->globalIndex = static_cast<int>(NombrePaliers + cluster->index);
+            pbPalier.NumeroDuPalierDansLEnsembleDesPaliersThermiques[cluster->index]
+              = cluster->globalIndex;
             pbPalier.TailleUnitaireDUnGroupeDuPalierThermique[cluster->index]
               = cluster->nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[cluster->index] = cluster->minStablePower;
@@ -332,6 +503,74 @@ void SIM_InitialisationProblemeHebdo(Study& study,
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[cluster->index]
                   : cluster->minStablePower;
             pbPalier.NomsDesPaliersThermiques[cluster->index] = cluster->name().c_str();
+        }
+
+        if (study.parameters.unitCommitment.ucMode
+              != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+            && study.parameters.include.reserves && area.allCapacityReservations)
+        {
+            auto& areaReserves = problem.allReserves.value()[i];
+
+            int areaReserveIdx = 0;
+            for (const auto& [reserveID, _]:
+                 area.allCapacityReservations.value().areaCapacityReservations)
+            {
+                for (auto& cluster: area.thermal.list.all())
+                {
+                    if (cluster->reserveParticipationContainer
+                        && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
+                          reserveID)
+                        && cluster->isEnabled())
+                    {
+                        RESERVE_PARTICIPATION_THERMAL reserveParticipation;
+                        reserveParticipation.maxPower = cluster->reserveParticipationContainer
+                                                          .value()
+                                                          .reserveMaxPower(reserveID);
+                        reserveParticipation.participationCost = cluster
+                                                                   ->reserveParticipationContainer
+                                                                   .value()
+                                                                   .reserveCost(reserveID);
+                        reserveParticipation.maxPowerOff = cluster->reserveParticipationContainer
+                                                             .value()
+                                                             .reserveMaxPowerOff(reserveID);
+                        reserveParticipation.participationCostOff
+                          = cluster->reserveParticipationContainer.value().reserveCostOff(
+                            reserveID);
+                        reserveParticipation.clusterName = cluster->name();
+                        reserveParticipation.clusterIdInArea = cluster->index;
+                        reserveParticipation.clusterId = NombrePaliers + cluster->index;
+                        reserveParticipation.globalIndexClusterParticipation
+                          = globalThermalClusterParticipationIndex;
+                        reserveParticipation.areaIndexClusterParticipation
+                          = areaClusterParticipationIndex;
+
+                        areaReserves.areaCapacityReservations[areaReserveIdx]
+                          .AllThermalReservesParticipation.emplace(cluster->index,
+                                                                   reserveParticipation);
+
+                        for (const auto& symIdx:
+                             cluster->reserveParticipationContainer.value().symmetricalIndices(
+                               reserveID))
+                        {
+                            auto& symmetries = areaReserves.ThermalReservesParticipationSymmetries
+                                                 [cluster->index];
+                            if (symmetries.size() <= static_cast<uint32_t>(symIdx))
+                            {
+                                symmetries.resize(
+                                  cluster->reserveParticipationContainer.value().getNbSymGroups());
+                            }
+                            symmetries[symIdx].emplace_back(
+                              reserveID,
+                              areaReserves.areaCapacityReservations[areaReserveIdx]
+                                .AllThermalReservesParticipation[cluster->index]);
+                        }
+
+                        ++globalThermalClusterParticipationIndex;
+                        ++areaClusterParticipationIndex;
+                    }
+                }
+                ++areaReserveIdx;
+            };
         }
 
         NombrePaliers += clusterCount;
@@ -388,14 +627,7 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
             problem.CoutDeTransport[k].IntercoGereeAvecDesCouts = false;
         }
 
-        if (lnk->useLoopFlow)
-        {
-            problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow = true;
-        }
-        else
-        {
-            problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow = false;
-        }
+        problem.CoutDeTransport[k].IntercoGereeAvecLoopFlow = lnk->useLoopFlow;
     }
 
     int weekDayIndex[8];
@@ -465,8 +697,8 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                 if (area.hydro.hardBoundsOnRuleCurves
                     && problem.CaracteristiquesHydrauliques[k].SuiviNiveauHoraire)
                 {
-                    auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
-                    auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
+                    const auto* minLvl = area.hydro.series->ruleCurves.min.getColumn(problem.year);
+                    const auto* maxLvl = area.hydro.series->ruleCurves.max.getColumn(problem.year);
 
                     for (int day = 0; day < 7; day++)
                     {
@@ -733,7 +965,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                 const uint nextWeekFirstDay = study.calendar
                                                                 .hours[PasDeTempsDebut + 7 * 24]
                                                                 .dayYear;
-                                auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
+
+                                const auto& minLvl = area.hydro.series->ruleCurves.min.getColumn(
+                                  problem.year);
                                 double V = std::max(0., WSL - minLvl[nextWeekFirstDay] * rc + WNI);
 
                                 if (Utils::isZero(WGU))
@@ -878,8 +1112,9 @@ void SIM_RenseignementProblemeHebdo(const Study& study,
                                     const uint nextWeekFirstDay = study.calendar
                                                                     .hours[PasDeTempsDebut + 7 * 24]
                                                                     .dayYear;
-                                    auto& maxLvl = area.hydro
-                                                     .reservoirLevel[Data::PartHydro::maximum];
+
+                                    const auto* maxLvl = area.hydro.series->ruleCurves.max
+                                                           .getColumn(problem.year);
 
                                     double V = std::max(0.,
                                                         maxLvl[nextWeekFirstDay] * rc

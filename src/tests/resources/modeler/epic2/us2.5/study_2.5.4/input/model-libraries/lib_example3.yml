@@ -42,4 +42,4 @@ library:
           expression: gen_total_p = load
       objective-contributions:
         - id: objective
-          expression: gen_total_p * gen_prop_cost + gen_n_on * gen_fixed_cost
+          expression: sum(gen_total_p * gen_prop_cost + gen_n_on * gen_fixed_cost)

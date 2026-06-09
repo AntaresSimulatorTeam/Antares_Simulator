@@ -1,114 +1,73 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_LIST_H__
 #define __SOLVER_VARIABLE_LIST_H__
+
+#include <vector>
 
 #include <yuni/yuni.h>
 #include <yuni/core/static/types.h>
 #include <yuni/core/string.h>
 
 #include <antares/logs/logs.h>
+#include <antares/solver/variable/dynamicAggregation/dynamicAggregation.h>
 
 #include "categories.h"
-#include "endoflist.h"
 #include "info.h"
+#include "state.h"
 #include "surveyresults.h"
 
 namespace Antares::Solver::Variable::Container
 {
 /*!
-** \brief Static list for all output variables
+** \brief Top-level container for all output variables
 **
-** This structure is merely a static linked list with all variables
+** Owns the inner aggregator (a JoinAll<…> of scope wrappers) by composition
+** and forwards every hook to it. Adds dynamic-aggregation bookkeeping that
+** isn't part of the inner aggregator's responsibilities.
 */
-template<class NextT = Container::EndOfList>
-class List: public NextT
+template<class Inner>
+class List
 {
 public:
-    //! Type of the next static variable
-    using NextType = NextT;
     //! The full type of the class
-    using ListType = List<NextT>;
+    using ListType = List<Inner>;
 
-    enum
+    static constexpr std::size_t count = Inner::count;
+
+    template<int CDataLevel, int CFile>
+    struct Statistics
     {
-        //! How many items have we got
-        count = NextT::count,
+        static constexpr int count = Inner::template Statistics<CDataLevel, CFile>::count;
     };
+
+    template<class PredicateT>
+    static void RetrieveVariableList(PredicateT& predicate)
+    {
+        Inner::RetrieveVariableList(predicate);
+    }
 
 public:
     //! \name Variable initialization
     //@{
-    /*!
-    ** \brief Initialize all output variables
-    */
     void initializeFromStudy(Data::Study& study);
-
-    /*!
-    ** \brief Initialize all output variables according a given area
-    */
     void initializeFromArea(Data::Study* study, Data::Area* area);
-
-    /*!
-    ** \brief Initialize all output variables according a given link
-    */
     void initializeFromLink(Data::Study* study, Data::AreaLink* link);
-
-    /*!
-    ** \brief Initialize all output variables according a given thermal cluster
-    */
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster);
     //@}
 
     //! \name Simulation events
     //@{
-    /*!
-    ** \brief Notify to all variables that the simulation is about to begin
-    */
     void simulationBegin();
-
-    /*!
-    ** \brief Notify to all variables that the simulation has finished
-    */
     void simulationEnd();
     //@}
 
     //! \name Years events
     //@{
-    /*!
-    ** \brief Notify to all variables that a new year is about to start
-    **
-    ** \param year The current year
-    */
     void yearBegin(unsigned int year, unsigned int numSpace);
 
-    /*!
-    ** \brief Notify to all variables that the year is now over
-    **
-    ** That mainly means that all variables should perform the monthly
-    ** aggragations.
-    ** \param year The current year
-    */
+    void buildThermalClusterYearEndResults(State& state, unsigned int year, unsigned int numSpace);
+
     void yearEnd(unsigned int year, unsigned int numSpace);
 
     void computeSummary(unsigned int year, unsigned int numSpace);
@@ -127,26 +86,22 @@ public:
 
     template<class V, class SetT>
     void simulationEndSpatialAggregates(V& allVars, const SetT& set);
+
+    void beforeYearByYearExport(unsigned int year, unsigned int numSpace);
     //@}
 
     //! \name Hourly events
     //@{
-    /*!
-    ** \brief Notify to all variables that a new hour is about to begin
-    */
     void hourBegin(unsigned int hourInTheYear);
-
     void hourForEachArea(State& state, unsigned int numSpace);
-
     void hourForEachLink(State& state);
-
     void hourEnd(State& state, unsigned int hourInTheYear);
     //@}
 
     //! \name Weekly events
     //@{
     void weekBegin(State& state);
-
+    void weekForEachArea(State& state, unsigned int numSpace);
     void weekEnd(State& state);
     //@}
 
@@ -174,9 +129,6 @@ public:
 
     //! \name User reports
     //@{
-    /*!
-    ** \brief Ask to all variables to fullfil the report
-    */
     void buildSurveyReport(SurveyResults& results,
                            int dataLevel,
                            int fileLevel,
@@ -188,26 +140,24 @@ public:
                                  int precision,
                                  unsigned int numSpace) const;
 
-    /*!
-    ** \brief Ask to all variables to fullfil additional reports (like the digest for example)
-    **
-    ** \tparam GlobalT True to write down the results of the simulation, false
-    **   for the results of the current year
-    */
     void exportSurveyResults(bool global,
                              const Yuni::String& output,
                              unsigned int numSpace,
                              IResultWriter& writer);
 
-    /*!
-    ** \brief Ask to all variables to fullfil the digest
-    */
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
     //@}
 
 private:
+    //! Inner aggregator (held by composition).
+    Inner next_;
+
     //! Pointer to the current study
     Data::Study* pStudy;
+
+    // Allow delayed init
+    std::unique_ptr<Solver::Variable::DynamicAggregationAllYears> dynamicAggregationAllYears_;
+    std::vector<Solver::Variable::DynamicAggregationSingleYear> dynamicAggregationSingleYear_;
 
 }; // class List
 

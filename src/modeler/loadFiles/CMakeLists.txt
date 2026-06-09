@@ -13,6 +13,7 @@ set(SOURCES
 
         include/antares/solver/modeler/loadFiles/loadFiles.h
         include/antares/solver/modeler/loadFiles/Fileloader.h
+        include/antares/solver/modeler/loadFiles/readOptimConfig.h
 )
 
 # Create the library
@@ -42,7 +43,8 @@ target_link_libraries(load-modeler-files
         Antares::data-series-csv-importer
         Antares::modeler-lib
         Antares::scenario-group-parser
-        Antares::utils
+        Antares::study-utils
+        Antares::modeler-checks
         fmt::fmt
 )
 

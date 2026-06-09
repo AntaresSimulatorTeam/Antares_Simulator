@@ -48,12 +48,16 @@ target_link_libraries(solver_api
 # Single problem library
 # This API allows the developper to build problems on-demand
 add_library(single_problem_api)
+add_library(Antares::single_problem_api ALIAS single_problem_api)
 
 target_sources(single_problem_api
 	PRIVATE
 	singleProblemGetter.cpp
 	singleProblemGetterImpl.cpp
-	include/antares/api/singleProblemGetter.h)
+	include/antares/api/singleProblemGetter.h
+	modelerProblems.cpp
+	modelerProblemsImpl.cpp
+	include/antares/api/modelerProblems.h)
 
 target_include_directories(single_problem_api
         PUBLIC
@@ -64,18 +68,20 @@ target_include_directories(single_problem_api
 target_link_libraries(single_problem_api
         PRIVATE
         antares-solver-simulation
-        Antares::optimization-options
-	model_antares
-	Antares::hydro
+        model_antares
+        modeler-lib
+        load-modeler-files
+        Antares::hydro
+        Antares::file-tree-study-loader
         PUBLIC
         Antares::study
         Antares::lps)
 
 # TODO move
-add_executable(api_test main.cpp)
-target_link_libraries(api_test
-	single_problem_api
-	Antares::file-tree-study-loader)
+add_executable(antares-problem-generator main.cpp)
+target_link_libraries(antares-problem-generator
+	single_problem_api)
+copy_project_shared_lib(simulation-table-writers antares-problem-generator)
 
 install(DIRECTORY include/antares
         DESTINATION "include")

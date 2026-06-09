@@ -1,29 +1,12 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/variable/state.h"
 
 #include <cmath>
 
 #include <antares/study/study.h>
+#include "antares/solver/variable/variable.h"
 
 namespace Antares::Solver::Variable
 {
@@ -42,6 +25,11 @@ ThermalState::StateForAnArea& ThermalState::operator[](size_t areaIndex)
     return thermal[areaIndex];
 }
 
+const ThermalState::StateForAnArea& ThermalState::operator[](size_t areaIndex) const
+{
+    return thermal[areaIndex];
+}
+
 void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 {
     const auto count = area.thermal.list.enabledCount();
@@ -56,13 +44,20 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 
 State::State(Data::Study& s):
     hourInTheSimulation(0u),
-    dispatchableMargin(nullptr),
     simulationMode(s.parameters.mode),
     unitCommitmentMode(s.parameters.unitCommitment.ucMode),
     study(s),
     thermal(s.areas),
     simplexRunNeeded(true)
 {
+    if (study.parameters.include.reserves)
+    {
+        reserveData.emplace(study.areas.size());
+        for (const auto& area: study.areas | std::views::values)
+        {
+            reserveData.value().at(area->index) = ReserveData();
+        }
+    }
 }
 
 void State::initFromThermalClusterIndex(const uint clusterEnabledIndex)
@@ -148,6 +143,71 @@ void State::initFromThermalClusterIndex(const uint clusterEnabledIndex)
     // en mode fast : est pris depuis l'heuristique
 }
 
+void State::initFromShortTermStorageClusterIndex(const uint clusterAreaWideIndex)
+{
+    // asserts
+    assert(area);
+    assert(clusterAreaWideIndex < area->shortTermStorage.count());
+
+    STStorageCluster = &area->shortTermStorage.storagesByIndex[clusterAreaWideIndex];
+
+    // Reserves
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+        && study.parameters.include.reserves && STStorageCluster->reserveParticipationContainer)
+    {
+        auto& resData = reserveData.value().at(area->index);
+        for (const auto& [resID, resParticipation]:
+             STStorageCluster->reserveParticipationContainer.value().getReservesParticipations())
+        {
+            double participation = hourlyResults->ShortTermStorageReserves
+                                     .value()[study.runtime.reserveParticipationIndexMaps.value()
+                                                .at(area->id)
+                                                .STStorageClusters.left.at(
+                                                  std::make_pair(resID, STStorageCluster->id))]
+                                     .reserveParticipationOfCluster.value()[hourInTheWeek];
+            resData.STStorageClusterReserveParticipationCostForYear[hourInTheYear]
+              += participation
+                 * STStorageCluster->reserveParticipationContainer.value().reserveCost(resID);
+
+            resData.reserveParticipationPerGroupForYear[hourInTheYear]
+              .shortTermStorageGroupsReserveParticipation[STStorageCluster->getGroup()][resID]
+              += participation;
+
+            resData.reserveParticipationPerSTStorageClusterForYear[hourInTheYear]
+                                                                  [STStorageCluster->id][resID]
+              += participation;
+        }
+    }
+}
+
+void State::initFromHydro()
+{
+    // Asserts
+    assert(area);
+
+    auto& Hydro = area->hydro;
+
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+        && study.parameters.include.reserves && Hydro.reserveParticipationContainer)
+    {
+        auto& resData = reserveData.value().at(area->index);
+        for (const auto& [resID, resParticipation]:
+             Hydro.reserveParticipationContainer.value().getReservesParticipations())
+        {
+            double participation = hourlyResults->HydroUsage[hourInTheWeek]
+                                     .reserveParticipationOfCluster
+                                     .value()[study.runtime.reserveParticipationIndexMaps.value()
+                                                .at(area->id)
+                                                .Hydro.left.at(resID)];
+            resData.HydroReserveParticipationCostForYear[hourInTheYear]
+              += participation * Hydro.reserveParticipationContainer.value().reserveCost(resID);
+
+            resData.reserveParticipationPerHydroForYear[hourInTheYear]["Hydro"][resID]
+              += participation;
+        }
+    }
+}
+
 void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex)
 {
     uint serieIndex = thermalCluster->series.timeseriesNumbers[this->year];
@@ -222,6 +282,65 @@ void State::initFromThermalClusterIndexProduction(const uint clusterEnabledIndex
         thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex] = 0.;
         thermal[area->index].unitCountLastHour[clusterEnabledIndex] = 0u;
         thermal[area->index].productionLastHour[clusterEnabledIndex] = 0.;
+    }
+
+    // Reserves
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast
+        && study.parameters.include.reserves && thermalCluster->reserveParticipationContainer)
+    {
+        auto& resData = reserveData.value().at(area->index);
+        for (const auto& [reserveID, reserveParticipation]:
+             thermalCluster->reserveParticipationContainer.value().getReservesParticipations())
+        {
+            int reserveParticipationIdx = study.runtime.reserveParticipationIndexMaps.value()
+                                            .at(area->id)
+                                            .thermalClusters.left.at(
+                                              std::make_pair(reserveID, thermalCluster->id()));
+            if (reserveParticipationIdx != -1)
+            {
+                double participationOn = hourlyResults->ProductionThermique[hourInTheWeek]
+                                           .ParticipationReservesDuPalierOn
+                                           .value()[reserveParticipationIdx];
+
+                double participationOff = hourlyResults->ProductionThermique[hourInTheWeek]
+                                            .ParticipationReservesDuPalierOff
+                                            .value()[reserveParticipationIdx];
+
+                thermal[area->index].thermalClustersOperatingCost[clusterEnabledIndex]
+                  += participationOn
+                       * thermalCluster->reserveParticipationContainer.value().reserveCost(
+                         reserveID)
+                     + participationOff
+                         * thermalCluster->reserveParticipationContainer.value().reserveCostOff(
+                           reserveID);
+
+                resData.thermalClusterReserveParticipationCostForYear[hourInTheYear]
+                  += participationOn
+                       * thermalCluster->reserveParticipationContainer.value().reserveCost(
+                         reserveID)
+                     + participationOff
+                         * thermalCluster->reserveParticipationContainer.value().reserveCostOff(
+                           reserveID);
+
+                resData.reserveParticipationPerGroupForYear[hourInTheYear]
+                  .thermalGroupsReserveParticipation[thermalCluster->getGroup()][reserveID]
+                  += participationOn + participationOff;
+
+                ReserveData::DetailledParticipation participation;
+                participation.addOffParticipation(participationOff);
+                participation.addOnParticipation(participationOn);
+
+                resData
+                  .reserveParticipationPerThermalClusterForYear[hourInTheYear][thermalCluster->id()]
+                                                               [reserveID]
+                  = participation;
+            }
+            else
+            {
+                logs.error() << "No index for cluster " << thermalCluster->id() << " in reserve "
+                             << reserveID;
+            }
+        }
     }
 }
 
@@ -368,6 +487,24 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterEnabledIndex)
 
     // Calculation of non linear and startup costs
     yearEndBuildThermalClusterCalculateStartupCosts(maxDurationON, ON_min, ON_opt, currentCluster);
+}
+
+void State::calculateReserveParticipationCosts()
+{
+    if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+    {
+        uint startHourForCurrentYear = study.runtime.rangeLimits.hour[Data::rangeBegin];
+        uint endHourForCurrentYear = startHourForCurrentYear
+                                     + study.runtime.rangeLimits.hour[Data::rangeCount];
+        auto& resData = reserveData.value().at(area->index);
+        for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
+        {
+            resData.reserveParticipationCostForYear[h]
+              += resData.thermalClusterReserveParticipationCostForYear[h]
+                 + resData.STStorageClusterReserveParticipationCostForYear[h]
+                 + resData.HydroReserveParticipationCostForYear[h];
+        }
+    }
 }
 
 void State::yearEndBuildThermalClusterCalculateStartupCosts(

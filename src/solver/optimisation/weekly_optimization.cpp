@@ -1,27 +1,11 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/weekly_optimization.h"
 
 #include "antares/solver/optimisation/opt_fonctions.h"
+
+using namespace Antares::IO::Outputs;
 
 namespace Antares::Solver::Optimization
 {
@@ -29,13 +13,16 @@ WeeklyOptimization::WeeklyOptimization(const OptimizationOptions& options,
                                        PROBLEME_HEBDO* problemeHebdo,
                                        IResultWriter& writer,
                                        Simulation::ISimulationObserver& simulationObserver,
-                                       OptimisationsSimulationTable* simulationTables):
+                                       bool writeSimuTable):
     options_(options),
     problemeHebdo_(problemeHebdo),
     writer_(writer),
-    simulationObserver_(simulationObserver),
-    simulationTables_(simulationTables)
+    simulationObserver_(simulationObserver)
 {
+    if (writeSimuTable)
+    {
+        simulationTables_ = std::make_unique<OptimisationsSimulationTable>();
+    }
 }
 
 void WeeklyOptimization::solve()
@@ -44,7 +31,12 @@ void WeeklyOptimization::solve()
                                          problemeHebdo_,
                                          writer_,
                                          simulationObserver_.get(),
-                                         simulationTables_);
+                                         simulationTables_.get());
+}
+
+OptimisationsSimulationTable* WeeklyOptimization::simulationTables()
+{
+    return simulationTables_.get();
 }
 
 } // namespace Antares::Solver::Optimization

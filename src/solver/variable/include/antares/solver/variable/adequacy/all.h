@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_ADEQUACY_ALL_H__
 #define __SOLVER_VARIABLE_ADEQUACY_ALL_H__
 
@@ -27,7 +10,7 @@
 #include "antares/solver/variable/area.h"
 #include "antares/solver/variable/bindConstraints.h"
 #include "antares/solver/variable/commons/hydro.h"
-#include "antares/solver/variable/commons/join.h"
+#include "antares/solver/variable/commons/join_all.h"
 #include "antares/solver/variable/commons/load.h"
 #include "antares/solver/variable/commons/miscGenMinusRowPSP.h"
 #include "antares/solver/variable/commons/psp.h"
@@ -57,6 +40,7 @@
 #include "antares/solver/variable/economy/pumping.h"
 #include "antares/solver/variable/economy/renewableGeneration.h"
 #include "antares/solver/variable/economy/reservoirlevel.h"
+#include "antares/solver/variable/economy/residual.h"
 #include "antares/solver/variable/economy/thermalAirPollutantEmissions.h"
 #include "antares/solver/variable/economy/unsupliedEnergy.h"
 #include "antares/solver/variable/economy/waterValue.h"
@@ -111,6 +95,7 @@ using VariablesPerArea = Common::ComposeAll<Variable::Adequacy::OverallCost,
                                             Variable::Economy::DispatchableGenMargin,
                                             Variable::Economy::Marge,
                                             Variable::Economy::ProfitByPlant,
+                                            Variable::Economy::ResidualLoad,
                                             Variable::Adequacy::Links>::type;
 
 /*!
@@ -144,20 +129,11 @@ using VariablesPerSetOfAreas = Common::SpatialAggregateAll<
   Variable::Economy::DispatchableGenMargin,
   Variable::Economy::Marge>::type;
 
-typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
-  Container::EndOfList                             // End of variable list
-  >
+using VariablesPerBindingConstraints = Variable::Economy::BindingConstMarginCost;
 
-  VariablesPerBindingConstraints;
-
-typedef Variable::Join<
-  // Variables for each area / links attached to the areas
-  Variable::Areas<VariablesPerArea>,
-  // Variables for each set of areas
-  Variable::Join<Variable::SetsOfAreas<VariablesPerSetOfAreas>,
-                 // Variables for each binding constraint
-                 Variable::BindingConstraints<VariablesPerBindingConstraints>>>
-  ItemList;
+using ItemList = Variable::JoinAll<Variable::Areas<VariablesPerArea>,
+                                   Variable::SetsOfAreas<VariablesPerSetOfAreas>,
+                                   Variable::BindingConstraints<VariablesPerBindingConstraints>>;
 
 /*!
 ** \brief All variables for a simulation (economy)

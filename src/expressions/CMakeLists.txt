@@ -1,6 +1,7 @@
 project(Expressions)
 
 add_subdirectory(antlr-interface)
+
 set(SRC_Expressions
         nodes/PortFieldNode.cpp
         nodes/PortFieldSumNode.cpp
@@ -8,17 +9,17 @@ set(SRC_Expressions
         nodes/UnaryNode.cpp
         nodes/ParentNode.cpp
         nodes/TimeSumNode.cpp
+        nodes/FunctionNode.cpp
 
-
+        visitors/AstDOTStyleVisitor.cpp
         visitors/CloneVisitor.cpp
         visitors/CompareVisitor.cpp
         visitors/EvalVisitor.cpp
-        visitors/LinearityVisitor.cpp
-        visitors/TimeIndexVisitor.cpp
-        visitors/PrintVisitor.cpp
-        visitors/AstDOTStyleVisitor.cpp
         visitors/InvalidNode.cpp
         visitors/NodeVisitor.cpp
+        visitors/PrintVisitor.cpp
+        visitors/TimeSumUtils.cpp
+        visitors/VariabilityVisitor.cpp
 
 
         NodeRegistry.cpp
@@ -45,20 +46,20 @@ set(SRC_Expressions
         include/antares/expressions/nodes/UnaryNode.h
         include/antares/expressions/nodes/VariableNode.h
         include/antares/expressions/nodes/TimeIndexNode.h
-        include/antares/expressions/nodes/ReducedCostNode.h
-        include/antares/expressions/nodes/DualNode.h
+        include/antares/expressions/nodes/FunctionNode.h
 
+	include/antares/expressions/visitors/TimeSumUtils.h
 
+        include/antares/expressions/visitors/AstDOTStyleVisitor.h
         include/antares/expressions/visitors/CloneVisitor.h
         include/antares/expressions/visitors/CompareVisitor.h
         include/antares/expressions/visitors/EvalVisitor.h
+        include/antares/expressions/visitors/InvalidNode.h
         include/antares/expressions/visitors/LinearStatus.h
-        include/antares/expressions/visitors/LinearityVisitor.h
         include/antares/expressions/visitors/NodeVisitor.h
         include/antares/expressions/visitors/PrintVisitor.h
-        include/antares/expressions/visitors/TimeIndexVisitor.h
-        include/antares/expressions/visitors/AstDOTStyleVisitor.h
-        include/antares/expressions/visitors/InvalidNode.h
+        include/antares/expressions/visitors/VariabilityVisitor.h
+        include/antares/expressions/visitors/HelpVisitNode.h
 
         include/antares/expressions/Registry.hxx
         include/antares/expressions/IName.h
@@ -71,18 +72,22 @@ set(SRC_Expressions
 )
 
 source_group("expressions" FILES ${SRC_Expressions})
-add_library(expressions
-        ${SRC_Expressions})
-add_library(Antares::expressions ALIAS expressions)
+
+add_library(expressions ${SRC_Expressions})
 
 target_include_directories(expressions
         PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+
+add_library(Antares::expressions ALIAS expressions)
+
 target_link_libraries(expressions
         PUBLIC
         Boost::headers
+        Antares::system-model-base
+        Antares::antares-study-system-model
         Antares::logs
+        Antares::vector-utils
         fmt::fmt
         #TODO i need LinearProblemData
         linear-problem-api
@@ -90,7 +95,6 @@ target_link_libraries(expressions
         Antares::modeler-optimisation-container
         Antares::optim-model-filler
         PRIVATE
-        Antares::antares-study-system-model
         Antares::exception
 )
 
@@ -100,8 +104,8 @@ endif ()
 
 
 add_library(expressions-iterators
-        iterators/pre-order.cpp
-        include/antares/expressions/iterators/pre-order.h
+            iterators/pre-order.cpp
+            include/antares/expressions/iterators/pre-order.h
 )
 add_library(Antares::expressions-iterators ALIAS expressions-iterators)
 

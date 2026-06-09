@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/study/parts/common/cluster.h"
 
 #include <boost/algorithm/string/case_conv.hpp>
@@ -97,15 +80,22 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
         return true;
     }
 
+    // Skip time series loading for disabled clusters
+    if (!enabled)
+    {
+        logs.info() << "Skipping time series loading for disabled cluster: " << id();
+        return true;
+    }
+
     auto& buffer = s.bufferLoadingTS;
 
     bool ret = true;
-    fs::path seriesPath = folder / parentArea->id.to<std::string>() / id() / "series.txt";
+    fs::path seriesPath = folder / parentArea->id / id() / "series.txt";
 
     ret = series.timeSeries.loadFromCSVFile(seriesPath.string(), 1, HOURS_PER_YEAR, &s.dataBuffer)
           && ret;
 
-    if (s.usedByTheSolver && s.parameters.derated)
+    if (s.parameters.derated)
     {
         series.timeSeries.averageTimeseries();
     }
@@ -116,28 +106,6 @@ bool Cluster::loadDataSeriesFromFolder(Study& s, const fs::path& folder)
 }
 
 #undef SEP
-
-void Cluster::invalidateArea()
-{
-    if (parentArea)
-    {
-        parentArea->forceReload();
-    }
-}
-
-bool Cluster::isVisibleOnLayer(const size_t& layerID) const
-{
-    return parentArea ? parentArea->isVisibleOnLayer(layerID) : false;
-}
-
-void Cluster::reset()
-{
-    unitCount = 0;
-    enabled = true;
-    nominalCapacity = 0.;
-
-    series.timeSeries.reset(1, HOURS_PER_YEAR);
-}
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const
 {

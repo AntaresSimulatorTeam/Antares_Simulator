@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -221,11 +203,16 @@ BOOST_FIXTURE_TEST_CASE(compare_TimeShift, ComparisonFixture)
 BOOST_FIXTURE_TEST_CASE(compare_dual, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
-    Node* dual1 = registry_.create<DualNode>("constraint1", 0);
-    Node* dual2 = registry_.create<DualNode>("constraint2", 1);
+    Node* dual1 = registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                 registry_.create<ParameterNode>("constraint1"),
+                                                 registry_.create<LiteralNode>(0));
+    Node* dual2 = registry_.create<FunctionNode>(FunctionNodeType::dual,
+                                                 registry_.create<ParameterNode>("constraint2"),
+                                                 registry_.create<LiteralNode>(1));
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(dual1);
+    const auto* n = dynamic_cast<FunctionNode*>(clone);
     BOOST_CHECK(compareVisitor.dispatch(dual1, clone));
     BOOST_CHECK(!compareVisitor.dispatch(dual1, dual2));
 }
@@ -233,13 +220,108 @@ BOOST_FIXTURE_TEST_CASE(compare_dual, ComparisonFixture)
 BOOST_FIXTURE_TEST_CASE(compare_reducedCost, ComparisonFixture)
 {
     CompareVisitor compareVisitor;
-    Node* reducedCost1 = registry_.create<ReducedCostNode>("var1", 0);
-    Node* reducedCost2 = registry_.create<ReducedCostNode>("var2", 1);
+    Node* reducedCost1 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                        registry_.create<VariableNode>("var1", 0));
+    Node* reducedCost2 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                        registry_.create<VariableNode>("var2", 1));
 
     CloneVisitor clone_visitor(registry_);
     const auto clone = clone_visitor.dispatch(reducedCost1);
     BOOST_CHECK(compareVisitor.dispatch(reducedCost1, clone));
     BOOST_CHECK(!compareVisitor.dispatch(reducedCost1, reducedCost2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_pow, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* pow1 = registry_.create<FunctionNode>(FunctionNodeType::pow,
+                                                registry_.create<VariableNode>("var1", 0),
+                                                registry_.create<LiteralNode>(2));
+    Node* pow2 = registry_.create<FunctionNode>(FunctionNodeType::pow,
+                                                registry_.create<VariableNode>("var2", 1),
+                                                registry_.create<LiteralNode>(1722));
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(pow1);
+    BOOST_CHECK(compareVisitor.dispatch(pow1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(pow1, pow2));
+}
+
+BOOST_FIXTURE_TEST_CASE(compare_max, ComparisonFixture)
+{
+    CompareVisitor compareVisitor;
+    Node* max1 = registry_.create<FunctionNode>(FunctionNodeType::max,
+                                                registry_.create<VariableNode>("var1", 0),
+                                                registry_.create<LiteralNode>(2));
+    Node* max2 = registry_.create<FunctionNode>(FunctionNodeType::reduced_cost,
+                                                registry_.create<VariableNode>("var2", 1),
+                                                registry_.create<LiteralNode>(1722),
+                                                registry_.create<ParameterNode>("P"));
+
+    CloneVisitor clone_visitor(registry_);
+    const auto clone = clone_visitor.dispatch(max1);
+    BOOST_CHECK(compareVisitor.dispatch(max1, clone));
+    BOOST_CHECK(!compareVisitor.dispatch(max1, max2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_itself, ComparisonFixture)
+{
+    Node* floorNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                     registry_.create<ParameterNode>("p"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(floorNode, floorNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_its_clone, ComparisonFixture)
+{
+    Node* floorNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                     registry_.create<ParameterNode>("p"));
+    const auto clonedFloorNode = CloneVisitor(registry_).dispatch(floorNode);
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(floorNode, clonedFloorNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_floor_node_to_a_different_floor_node, ComparisonFixture)
+{
+    Node* floorNode1 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p1"));
+    Node* floorNode2 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p2"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(!compareVisitor.dispatch(floorNode1, floorNode2));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_ceil_node_to_itself, ComparisonFixture)
+{
+    Node* ceilNode = registry_.create<FunctionNode>(FunctionNodeType::ceil,
+                                                    registry_.create<ParameterNode>("p"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(ceilNode, ceilNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_ceil_node_to_its_clone, ComparisonFixture)
+{
+    Node* ceilNode = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                    registry_.create<ParameterNode>("p"));
+    const auto clonedCeilNode = CloneVisitor(registry_).dispatch(ceilNode);
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(compareVisitor.dispatch(ceilNode, clonedCeilNode));
+}
+
+BOOST_FIXTURE_TEST_CASE(comparing_a_ceil_node_to_a_different_floor_node, ComparisonFixture)
+{
+    Node* floorNode1 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p1"));
+    Node* floorNode2 = registry_.create<FunctionNode>(FunctionNodeType::floor,
+                                                      registry_.create<ParameterNode>("p2"));
+
+    CompareVisitor compareVisitor;
+    BOOST_CHECK(!compareVisitor.dispatch(floorNode1, floorNode2));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

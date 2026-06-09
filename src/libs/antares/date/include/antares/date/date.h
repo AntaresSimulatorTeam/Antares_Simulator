@@ -1,26 +1,10 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_DATE_DATE_H__
 #define __ANTARES_LIBS_DATE_DATE_H__
 
+#include <string>
 #include <vector>
 
 #include <yuni/yuni.h>
@@ -163,9 +147,9 @@ struct HourInterval
 struct DayInterval
 {
     //! The very first day
-    uint first;
+    uint first{0};
     //! The last day (not included)
-    uint end;
+    uint end{0};
 
     uint numberOfWeeks() const;
 
@@ -179,13 +163,6 @@ struct DayInterval
 class Calendar final
 {
 public:
-    //! Short string representation with maximum 42 characters
-    using ShortString42 = Yuni::CString<41, false>;
-    //! Short string representation with maximum 12 characters
-    using ShortString12 = Yuni::CString<11, false>;
-    //! Short string representation with maximum 8 characters
-    using ShortString8 = Yuni::CString<7, false>;
-
     enum
     {
         //! The maximum number of hours in a year
@@ -216,7 +193,7 @@ public:
         bool firstHourInDay;
         //! First hour in the current month
         bool firstHourInMonth;
-    } hours[maxHoursInYear];
+    } hours[maxHoursInYear] = {};
 
     //! Informations about days in the year according the current
     // calendar settings
@@ -232,7 +209,7 @@ public:
         uint dayMonth;
         //! Week
         uint week;
-    } days[maxDaysInYear];
+    } days[maxDaysInYear] = {};
 
     /*!
     ** \brief Informations about weeks according the current calendar settings
@@ -252,7 +229,7 @@ public:
         // of simulation is. If the 1st january is the same than the first weekday,
         // the week number for this day will be 1, 53 otherwise.
         uint userweek;
-    } weeks[maxWeeksInYear];
+    } weeks[maxWeeksInYear] = {};
 
     /*!
     ** \brief Informations about months according the current calendar settings
@@ -274,7 +251,7 @@ public:
         DayOfTheWeek firstWeekday;
         //! Real month index
         MonthName realmonth;
-    } months[12 + 1]; // september..august for example
+    } months[12 + 1] = {}; // september..august for example
 
     /*!
     ** \brief Mappings between any expected calendar and our own calendar
@@ -282,7 +259,7 @@ public:
     struct
     {
         //! Mapping for months index
-        uint months[12 /*january..december*/];
+        uint months[12 /*january..december*/] = {};
     } mapping;
 
     //! The calendar settings
@@ -305,19 +282,19 @@ public:
         struct
         {
             //! Month name (January..December)
-            ShortString12 name;
+            std::string name;
             //! Short name (3 letters) and uppercase (Jan..Dec)
-            ShortString8 shortName;
+            std::string shortName;
             //! Short name (3 letters) and uppercase (JAN..DEC)
-            ShortString8 shortUpperName;
+            std::string shortUpperName;
         } months[12];
 
         //! Caption for each hour
-        ShortString42 hours[maxHoursInYear];
+        std::string hours[maxHoursInYear];
         //! Caption for each day
-        ShortString42 daysYear[maxHoursInYear];
+        std::string daysYear[maxHoursInYear];
         //! Weekdays
-        ShortString12 weekdays[7];
+        std::string weekdays[7];
     } text;
 
     struct

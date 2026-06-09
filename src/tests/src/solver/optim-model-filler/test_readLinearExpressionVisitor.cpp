@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -55,6 +37,78 @@ BOOST_FIXTURE_TEST_CASE(visit_literal, VisitorFixture<ReadLinearExpressionVisito
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_max_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* max = create<FunctionNode>(FunctionNodeType::max, five, six);
+    auto linear_expression = visitor().dispatch(max);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 6.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_min_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* min = create<FunctionNode>(FunctionNodeType::min, five, six);
+    auto linear_expression = visitor().dispatch(min);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_two_literals, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* five = create<LiteralNode>(5.);
+    Node* six = create<LiteralNode>(6.);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, five, six);
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), std::pow(5, 6));
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_0, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0 /* index */);
+    Node* eight = create<LiteralNode>(8);
+    Node* zero = create<LiteralNode>(0.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, zero); // (8 * variable)^0
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple_linear_1, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* one = create<LiteralNode>(1.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, one); // (8 * variable)^1
+    auto linear_expression = visitor().dispatch(pow);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 1);
+    BOOST_CHECK(linear_expression[0].hasCoefs());
+    BOOST_CHECK_EQUAL(linear_expression[0].begin()->second, 8);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_pow_simple__non_linear_linear,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* variable = create<VariableNode>("variable", 0);
+    Node* eight = create<LiteralNode>(8);
+    Node* six = create<LiteralNode>(6.);
+    Node* mult = create<MultiplicationNode>(eight, variable);
+    Node* pow = create<FunctionNode>(FunctionNodeType::pow, mult, six); // (8 * variable)^6
+    BOOST_CHECK_THROW(visitor().dispatch(pow), std::invalid_argument);
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // 5 + param(3) = 8
@@ -63,6 +117,112 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param, VisitorFixture<ReadLinearExpre
     BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
     BOOST_CHECK_EQUAL(linear_expression[0].constant(), 8.);
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit__max_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // max(5, param(3)) = 5
+    Node* maxNode = create<FunctionNode>(FunctionNodeType::max,
+                                         create<LiteralNode>(5.),
+                                         create<ParameterNode>("param_3"));
+    auto linear_expression = visitor().dispatch(maxNode);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit__min_literal__param, VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // min(5, param(3)) = 3
+    Node* minNode = create<FunctionNode>(FunctionNodeType::min,
+                                         create<LiteralNode>(5.),
+                                         create<ParameterNode>("param_3"));
+    auto linear_expression = visitor().dispatch(minNode);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 3.);
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(4.5) = 4
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor, create<LiteralNode>(4.5));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(param(4.5)) = 4
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor,
+                                           create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(floorNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_floor_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // floor(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* floorNode = create<FunctionNode>(FunctionNodeType::floor, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(floorNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "floor operator: its argument is not constant, but has to be."));
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(4.5) = 5
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil, create<LiteralNode>(4.5));
+
+    auto linear_expression = visitor().dispatch(ceilNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(param(4.5)) = 5
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil,
+                                          create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(ceilNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false); // Not variable
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // ceil(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* ceilNode = create<FunctionNode>(FunctionNodeType::ceil, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(ceilNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "ceil operator: its argument is not constant, but has to be."));
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
@@ -88,12 +248,16 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
 
 BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // param = {0,1,2}
-    // 5 + sum( t-2 .. t+1, param) -->
-    // t = 0 : 5 +param.at(-2) + param.at(-1) + param.at(0) + param.at(1) --> 5 +1 + 2 + 0 + 1 = 9
-    // t = 1 : 5 +param.at(-1) + param.at(0) + param.at(1) + param.at(2) --> 5 + 2+0+1+2 = 10
-    Node* from = create<LiteralNode>(-2.);
-    Node* to = create<LiteralNode>(1.);
+    // param = {0, 1, 2}
+    // 5 + sum( t-2 .. t+1, param) :
+    //
+    // t = 0 :
+    // 5 + param[-2] + param[-1] + param[0] + param[1] = 5 + (1 + 2 + 0 + 1) = 9
+    //
+    // t = 1 :
+    // 5 +param[-1] + param[0] + param[1] + param[2] --> 5 + (2 + 0 + 1 + 2) = 10
+    Node* from = create<TPlusNode>(create<LiteralNode>(-2.));
+    Node* to = create<TPlusNode>(create<LiteralNode>(1.));
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
 
@@ -111,11 +275,58 @@ BOOST_FIXTURE_TEST_CASE(visit_timeSum, VisitorFixture<ReadLinearExpressionVisito
     BOOST_CHECK_EQUAL(linear_expression[1].size(), 0);
 }
 
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_mixed_bounds,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // param = {0, 1, 2}
+    // 5 + sum( 1 .. t+1, param)
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<TPlusNode>(create<LiteralNode>(1.));
+    Node* sum = create<SumNode>(create<LiteralNode>(5.),
+                                create<TimeSumNode>(from, to, create<ParameterNode>("param_ts")));
+
+    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+
+    auto linear_expression = visitor().dispatch(sum);
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 6.);
+    BOOST_CHECK_EQUAL(linear_expression[1].constant(), 8.);
+    BOOST_CHECK_EQUAL(linear_expression[2].constant(), 8.);
+
+    BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[1].size(), 0);
+    BOOST_CHECK_EQUAL(linear_expression[2].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_fixed_bound_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* from = create<VariableNode>("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* to = create<LiteralNode>(2.);
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(1.));
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage("A sum bound must be fixed in time in 'var1'."));
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_moving_bound_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    Node* from = create<LiteralNode>(1.);
+    Node* to = create<TPlusNode>(create<VariableNode>("var1", 0));
+    Node* sum = create<TimeSumNode>(from, to, create<LiteralNode>(1.));
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(sum),
+                          Antares::Error::InvalidArgumentError,
+                          checkMessage("A sum bound must be fixed in time in 't+var1'."));
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVisitor>)
 {
-    // param = {0,1,2}
-    // 5 + sum(param) -->
-    // 5 +param.at(0) + param.at(1) + param.at(2)  --> 5 + 0 + 1  + 2  = 8
+    // param = {0, 1, 2}
+    // 5 + sum(param) = 5 + param[0] + param[1] + param[2] = 5 + (0 + 1 + 2)  = 8
 
     Node* sum = create<SumNode>(create<LiteralNode>(5.),
                                 create<AllTimeSumNode>(create<ParameterNode>("param_ts")));
@@ -129,6 +340,27 @@ BOOST_FIXTURE_TEST_CASE(visit_AllTimeSum, VisitorFixture<ReadLinearExpressionVis
 
     // Coefs
     BOOST_CHECK_EQUAL(linear_expression[0].size(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_time_dependent_variable_coefficients,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // var1 is time-dependent, so the number of coefficients in the sum reflects the window size.
+    // 0..3, 1..3, 2..3, 3..3 -> 4, 3, 2, 1 coefficients.
+    Node* var = create<VariableNode>("var1", 0, VariabilityType::VARYING_IN_TIME_ONLY);
+
+    ctx = LinearProblemApi::FillContext(0, 3, 0, 3, 0);
+
+    auto sum = create<TimeSumNode>(create<LiteralNode>(1.),
+                                   create<TPlusNode>(create<LiteralNode>(0)),
+                                   var);
+
+    auto expr = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(expr[0].size(), 0); // sum(1..0, var1) = 0
+    BOOST_REQUIRE_EQUAL(expr[1].size(), 1); // sum(1..1, var1) = var1[1]
+    BOOST_REQUIRE_EQUAL(expr[2].size(), 2); // sum(1..2, var1) = var1[1] + var1[2]
+    BOOST_REQUIRE_EQUAL(expr[3].size(), 3); // sum(1..3, var1) = var1[1] + var1[2] + var1[3]
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
@@ -160,14 +392,6 @@ BOOST_FIXTURE_TEST_CASE(visit_literal_plus_time_dependent_param_plus_var,
     };
     checkAt(0);
     checkAt(1);
-}
-
-BOOST_FIXTURE_TEST_CASE(visit_param_declared_const_in_library_but_time_dep_in_system,
-                        VisitorFixture<ReadLinearExpressionVisitor>)
-{
-    ParameterNode p("param_ts", Antares::Optimisation::TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
-
-    BOOST_CHECK_THROW(visitor().dispatch(&p), Antares::Error::InvalidArgumentError);
 }
 
 BOOST_FIXTURE_TEST_CASE(visit_negate_literal_plus_var, VisitorFixture<ReadLinearExpressionVisitor>)
@@ -271,17 +495,36 @@ BOOST_FIXTURE_TEST_CASE(not_implemented_nodes__exception_thrown,
                           Antares::Error::InvalidArgumentError,
                           checkMessage("ReadLinearExpressionVisitor cannot visit PortFieldNodes"));
 
-    node = create<DualNode>("constraint1", 0);
+    node = create<FunctionNode>(FunctionNodeType::dual,
+                                create<ParameterNode>("constraint1"),
+                                create<LiteralNode>(0));
     BOOST_CHECK_EXCEPTION(visitor().dispatch(node),
                           Antares::Error::InvalidArgumentError,
                           checkMessage(
                             "A linear expression can't contain extra output operator dual."));
 
-    node = create<ReducedCostNode>("var", 0, TimeIndex::CONSTANT_IN_TIME_AND_SCENARIO);
+    node = create<FunctionNode>(FunctionNodeType::reduced_cost, create<VariableNode>("var", 0));
     BOOST_CHECK_EXCEPTION(
       visitor().dispatch(node),
       Antares::Error::InvalidArgumentError,
       checkMessage("A linear expression can't contain extra output operator reduced_cost."));
+}
+
+BOOST_FIXTURE_TEST_CASE(visit_timeSum_with_inverted_bounds_returns_zero,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // sum(t+5 .. t+1, param) with from > to should return 0
+    Node* from = create<TPlusNode>(create<LiteralNode>(5.));
+    Node* to = create<TPlusNode>(create<LiteralNode>(1.));
+    Node* sum = create<TimeSumNode>(from, to, create<ParameterNode>("param_ts"));
+
+    ctx = LinearProblemApi::FillContext(0, 2, 0, 2, 0);
+    auto linear_expression = visitor().dispatch(sum);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 3);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 0.);
+    BOOST_CHECK_EQUAL(linear_expression[1].constant(), 0.);
+    BOOST_CHECK_EQUAL(linear_expression[2].constant(), 0.);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include <yuni/yuni.h>
 
@@ -325,14 +307,14 @@ bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
         for (auto i = arealist->areas.begin(); i != end; ++i)
         {
             // Ref to the area
-            auto* area = i->second;
+            auto* area = i->second.get();
 
             {
                 // Do not display useless messages
                 logs.verbosityLevel = Logs::Verbosity::Warning::level;
                 // Load all thermal clusters
                 buffer.clear() << infos->folder << "/input/thermal/clusters/" << area->id;
-                if (not area->thermal.list.loadFromFolder(*study, buffer.c_str(), area))
+                if (not area->thermal.list.loadFromFolder(buffer.c_str(), area))
                 {
                     delete arealist;
                     delete study;

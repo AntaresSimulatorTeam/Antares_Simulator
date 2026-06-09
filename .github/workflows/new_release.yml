@@ -20,12 +20,21 @@ on:
         description: "Set the release as latest"
         required: true
         type: boolean
+      generate_results:
+        description: "Generate results?"
+        required: true
+        type: boolean
+        default: false
 jobs:
   release:
     name: Release pushed tag
     runs-on: ubuntu-22.04
+    outputs:
+      release_url: ${{ steps.create_release.outputs.release_url }}
+      tag: ${{ steps.create_release.outputs.tag }}
     steps:
     - name: Create release
+      id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.event.inputs.release_tag }}
@@ -40,7 +49,10 @@ jobs:
             --notes="Run tests: $tests"\
             --target="$target_branch" \
             --latest=$latest
-  
+        # Get release URL from gh CLI
+        REL=$(gh release view "$tag" --repo="$GITHUB_REPOSITORY" --json url --jq '.url') || true
+        echo "release_url=${REL}" >> $GITHUB_OUTPUT
+        echo "tag=${tag}" >> $GITHUB_OUTPUT
 
   ubuntu:
     name: Release - Ubuntu
@@ -58,14 +70,6 @@ jobs:
       run-tests: ${{ inputs.run-tests }}
       target_branch: ${{ inputs.target_branch }}
 
-  centos7:
-    name: Release - centos7
-    needs: release
-    uses: ./.github/workflows/centos7.yml
-    with:
-      run-tests: ${{ inputs.run-tests }}
-      target_branch: ${{ inputs.target_branch }}
-
   oracle8:
     name: Release - oracle8
     needs: release
@@ -74,10 +78,48 @@ jobs:
       run-tests: ${{ inputs.run-tests }}
       target_branch: ${{ inputs.target_branch }}
 
-  user_guide:
-    name: User Guide
+  test_nr_commit_id:
+    name: Get Antares_Simulator_Tests_NR commit id
+    runs-on: ubuntu-22.04
     needs: release
-    uses: ./.github/workflows/build-userguide.yml
+    outputs:
+      tests_commit_hash: ${{ steps.get_test_commit.outputs.commit_hash }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Get Antares_Simulator_Tests_NR commit hash
+        id: get_test_commit
+        run: |
+          # Ensure the submodule is checked out
+          git submodule update --init src/tests/resources/Antares_Simulator_Tests_NR
+          # Get the commit hash for the specific submodule path
+          COMMIT_HASH=$(git ls-tree HEAD src/tests/resources/Antares_Simulator_Tests_NR | awk '{print $3}')
+          echo "commit_hash=${COMMIT_HASH}" >> "$GITHUB_OUTPUT"
+
+  generate_results:
+    name: Generate Results
+    needs:
+      - ubuntu
+      - windows
+      - test_nr_commit_id
+    # Only run this job if the `generate_results` input is true AND all the required build jobs succeeded.
+    # If you'd like to generate results even when some builds fail, replace this condition with a less strict one
+    # (for example, exclude some jobs) or add a new input like `allow_partial_results` to control that behavior.
+    if: ${{ github.event.inputs.generate_results == 'true' && needs.ubuntu.result == 'success' && needs.windows.result == 'success' }}
+    uses: AntaresSimulatorTeam/SimTest/.github/workflows/generate-reference.yml@main
+    permissions:
+      contents: write
+      actions: read
     with:
-      run-tests: ${{ inputs.run-tests }}
-      target_branch: ${{ inputs.target_branch }}
+      # Map inputs expected by the external reusable workflow
+      release_tag: ${{ github.event.inputs.release_tag }}
+      antares_tag: ${{ github.event.inputs.release_tag }}
+      antares_tests_tag: ${{ needs.test_nr_commit_id.outputs.tests_commit_hash }}
+      target_branch: ''
+    # Note: the external reusable workflow currently does not declare secrets in its 'workflow_call',
+    # so we cannot pass SIMTEST_PAT here. If the remote workflow needs a PAT, update its 'on: workflow_call: secrets:'
+    # to declare the secret, then re-add mapping here.
+    secrets:
+      SIMTEST_PAT: ${{ secrets.SIMTEST_REPO_PAT }}
+

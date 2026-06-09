@@ -1,26 +1,9 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/study/parts/thermal/cluster_list.h"
 
+#include <numeric>
 #include <ranges>
 
 #include <antares/utils/utils.h>
@@ -61,7 +44,7 @@ std::string ThermalClusterList::typeID() const
     return "thermal";
 }
 
-static bool ThermalClusterLoadFromSection(const AnyString& filename,
+static bool ThermalClusterLoadFromSection(const std::string& areaName,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
 
@@ -74,19 +57,55 @@ void ThermalClusterList::rebuildIndex() const
     }
 }
 
-unsigned int ThermalClusterList::enabledAndNotMustRunCount() const
+std::size_t ThermalClusterList::enabledAndNotMustRunCount() const
 {
     return std::ranges::count_if(allClusters_,
                                  [](auto c) { return c->isEnabled() && !c->isMustRun(); });
 }
 
-unsigned int ThermalClusterList::enabledAndMustRunCount() const
+std::size_t ThermalClusterList::enabledAndMustRunCount() const
 {
     return std::ranges::count_if(allClusters_,
                                  [](auto c) { return c->isEnabled() && c->isMustRun(); });
 }
 
-bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Area* area)
+std::size_t ThermalClusterList::reserveParticipationsCount() const
+{
+    return std::accumulate(
+      allClusters_.begin(),
+      allClusters_.end(),
+      0,
+      [](std::size_t total, const std::shared_ptr<ThermalCluster> cluster)
+      {
+          if (cluster->reserveParticipationContainer.has_value() && cluster->isEnabled())
+          {
+              return total
+                     + cluster->reserveParticipationContainer.value().reserveParticipationsCount();
+          }
+          else
+          {
+              return total;
+          }
+      });
+}
+
+std::size_t ThermalClusterList::capacityReservationsCount() const
+{
+    std::set<const CapacityReservation*> uniqueReservations;
+    for (auto& cluster: allClusters_)
+    {
+        for (const auto& [_, reserveParticipation]:
+             cluster->reserveParticipationContainer.value().getReservesParticipations())
+        {
+            const CapacityReservation* reservationPtr = reserveParticipation.capacityReservation;
+            uniqueReservations.insert(reservationPtr);
+        }
+    }
+
+    return uniqueReservations.size();
+}
+
+bool ThermalClusterList::loadFromFolder(const fs::path& folder, Area* area)
 {
     assert(area && "A parent area is required");
 
@@ -117,7 +136,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
-        if (!ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
+        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section))
         {
             continue;
         }
@@ -157,7 +176,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         addToCompleteList(cluster);
     }
 
-    rebuildIndexes();
+    buildIndexes();
     rebuildIndex();
 
     return ret;
@@ -314,7 +333,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     return false;
 }
 
-bool ThermalClusterLoadFromSection(const AnyString& filename,
+bool ThermalClusterLoadFromSection(const std::string& areaName,
                                    ThermalCluster& cluster,
                                    const IniFile::Section& section)
 {
@@ -332,14 +351,15 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
         {
             if (property->key.empty())
             {
-                logs.warning() << '`' << filename << "`: `" << section.name
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
                                << "`: Invalid key/value";
                 continue;
             }
             if (!ThermalClusterLoadFromProperty(cluster, property))
             {
-                logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->key << "`: The property is unknown and ignored";
+                logs.warning() << '`' << areaName << "`: thermal cluster: `" << section.name
+                               << "`/`" << property->key
+                               << "`: The property is unknown and ignored";
             }
         }
     }
@@ -381,195 +401,6 @@ void ThermalClusterList::ensureDataPrepro()
     }
 }
 
-#ifdef BUILD_UI
-bool ThermalClusterList::saveToFolder(const AnyString& folder) const
-{
-    // Make sure the folder is created
-    if (!IO::Directory::Create(folder))
-    {
-        logs.error() << "I/O Error: impossible to create '" << folder << "'";
-        return false;
-    }
-
-    bool ret = true;
-    Clob buffer;
-    // Allocate the inifile structure
-    IniFile ini;
-
-    for (auto& c: allClusters_)
-    {
-        // Adding a section to the inifile
-        IniFile::Section* s = ini.addSection(c->name());
-
-        // The section must not be empty
-        // This key will be silently ignored the next time
-        s->add("name", c->name());
-
-        if (!c->getGroup().empty())
-        {
-            s->add("group", c->getGroup());
-        }
-        if (!c->enabled)
-        {
-            s->add("enabled", "false");
-        }
-        if (!Utils::isZero(c->unitCount))
-        {
-            s->add("unitCount", c->unitCount);
-        }
-        if (!Utils::isZero(c->nominalCapacity))
-        {
-            s->add("nominalCapacity", c->nominalCapacity);
-        }
-        // TS generation
-        if (c->tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
-        {
-            s->add("gen-ts", c->tsGenBehavior);
-        }
-        // Min. Stable Power
-        if (!Utils::isZero(c->minStablePower))
-        {
-            s->add("min-stable-power", c->minStablePower);
-        }
-
-        // Min up and min down time
-        if (c->minUpTime != 1)
-        {
-            s->add("min-up-time", c->minUpTime);
-        }
-        if (c->minDownTime != 1)
-        {
-            s->add("min-down-time", c->minDownTime);
-        }
-
-        // must-run
-        if (c->mustrun)
-        {
-            s->add("must-run", "true");
-        }
-
-        // spinning
-        if (!Utils::isZero(c->spinning))
-        {
-            s->add("spinning", c->spinning);
-        }
-
-        // efficiency
-        if (c->fuelEfficiency != 100.0)
-        {
-            s->add("efficiency", c->fuelEfficiency);
-        }
-
-        // volatility
-        if (!Utils::isZero(c->forcedVolatility))
-        {
-            s->add("volatility.forced", Utils::round(c->forcedVolatility, 3));
-        }
-        if (!Utils::isZero(c->plannedVolatility))
-        {
-            s->add("volatility.planned", Utils::round(c->plannedVolatility, 3));
-        }
-
-        // laws
-        if (c->forcedLaw != LawUniform)
-        {
-            s->add("law.forced", c->forcedLaw);
-        }
-        if (c->plannedLaw != LawUniform)
-        {
-            s->add("law.planned", c->plannedLaw);
-        }
-
-        // costs
-        if (c->costgeneration != setManually)
-        {
-            s->add("costgeneration", c->costgeneration);
-        }
-        if (!Utils::isZero(c->marginalCost))
-        {
-            s->add("marginal-cost", Utils::round(c->marginalCost, 3));
-        }
-        if (!Utils::isZero(c->spreadCost))
-        {
-            s->add("spread-cost", c->spreadCost);
-        }
-        if (!Utils::isZero(c->fixedCost))
-        {
-            s->add("fixed-cost", Utils::round(c->fixedCost, 3));
-        }
-        if (!Utils::isZero(c->startupCost))
-        {
-            s->add("startup-cost", Utils::round(c->startupCost, 3));
-        }
-        if (!Utils::isZero(c->marketBidCost))
-        {
-            s->add("market-bid-cost", Utils::round(c->marketBidCost, 3));
-        }
-        if (!Utils::isZero(c->variableomcost))
-        {
-            s->add("variableomcost", Utils::round(c->variableomcost, 3));
-        }
-
-        // pollutant factor
-        for (const auto& [key, val]: Pollutant::namesToEnum)
-        {
-            s->add(key, c->emissions.factors[val]);
-        }
-
-        buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                       << c->parentArea->id << SEP << c->id();
-        if (IO::Directory::Create(buffer))
-        {
-            buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
-                           << c->parentArea->id << SEP << c->id() << SEP << "modulation.txt";
-
-            ret = c->modulation.saveToCSVFile(buffer) && ret;
-        }
-        else
-        {
-            ret = false;
-        }
-    }
-
-    // Write the ini file
-    buffer.clear() << folder << SEP << "list.ini";
-    ret = ini.save(buffer) && ret;
-
-    return ret;
-}
-#endif
-
-bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
-{
-    Clob buffer;
-    bool ret = true;
-
-    for (auto& c: allClusters_)
-    {
-        if (c->prepro)
-        {
-            assert(c->parentArea && "cluster: invalid parent area");
-            buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-            ret = c->prepro->saveToFolder(buffer) && ret;
-        }
-    }
-    return ret;
-}
-
-bool ThermalClusterList::saveEconomicCosts(const AnyString& folder) const
-{
-    Clob buffer;
-    bool ret = true;
-
-    for (auto& c: allClusters_)
-    {
-        assert(c->parentArea && "cluster: invalid parent area");
-        buffer.clear() << folder << SEP << c->parentArea->id << SEP << c->id();
-        ret = c->ecoInput.saveToFolder(buffer) && ret;
-    }
-    return ret;
-}
-
 bool ThermalClusterList::loadPreproFromFolder(Study& study, const fs::path& folder)
 {
     auto hasPrepro = [](auto c) { return (bool)c->prepro; };
@@ -591,11 +422,6 @@ bool ThermalClusterList::validatePrepro(const Study& study)
 
     const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate
                                            & timeSeriesThermal;
-
-    if (!study.usedByTheSolver)
-    {
-        return true;
-    }
 
     return std::ranges::all_of(allClusters_ | std::views::filter(hasPrepro),
                                [&globalThermalTSgeneration](auto& c)

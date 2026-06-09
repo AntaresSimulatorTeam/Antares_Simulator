@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -76,7 +58,7 @@ BOOST_AUTO_TEST_CASE(PortFieldSumNodeTest)
 BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
 {
     auto literalNode = create<LiteralNode>(2024.2);
-    std::map<Node*, std::string> nodes = {
+    const std::map<const Node*, const std::string> nodes = {
       {literalNode, "LiteralNode"},
       {create<SumNode>(literalNode, literalNode), "SumNode"},
       {create<SubtractionNode>(literalNode, literalNode), "SubtractionNode"},
@@ -91,9 +73,10 @@ BOOST_FIXTURE_TEST_CASE(nodes_name, Registry<Node>)
       {create<PortFieldNode>(literalNode->name(), literalNode->name()), "PortFieldNode"},
       {create<PortFieldSumNode>(literalNode->name(), literalNode->name()), "PortFieldSumNode"},
       {create<TimeShiftNode>(literalNode, literalNode), "TimeShiftNode"},
-      {create<TimeIndexNode>(literalNode, literalNode), "TimeIndexNode"}};
+      {create<TimeIndexNode>(literalNode, literalNode), "TimeIndexNode"},
+      {create<TPlusNode>(literalNode), "TPlusNode"}};
 
-    for (auto [node, name]: nodes)
+    for (const auto& [node, name]: nodes)
     {
         BOOST_CHECK_EQUAL(node->name(), name);
     }

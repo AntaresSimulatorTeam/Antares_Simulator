@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_CLUSTER_H__
 
@@ -77,34 +60,10 @@ class ThermalCluster final: public Cluster
 public:
     Pollutant emissions;
 
-    //! Set of thermal clusters
-    using Set = std::set<ThermalCluster*, CompareClusterName>;
-    //! Set of thermal clusters (pointer)
-    using SetPointer = std::set<ThermalCluster*>;
-    //! Vector of thermal clusters
-    using Vector = std::vector<Data::ThermalCluster*>;
-
     explicit ThermalCluster(Data::Area* parent);
 
     ThermalCluster() = delete;
     ~ThermalCluster() = default;
-
-    /*!
-    ** \brief Invalidate all data associated to the thermal cluster
-    */
-    bool forceReload(bool reload) const override;
-
-    /*!
-    ** \brief Mark the thermal cluster as modified
-    */
-    void markAsModified() const override;
-
-    /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    void reset() override;
 
     //! \name Spinning
     //@{
@@ -133,13 +92,6 @@ public:
     ** \return False if an error has been detected and fixed with a default value
     */
     bool integrityCheck() override;
-
-    /*!
-    ** \brief Copy data from another cluster
-    **
-    ** The name and the id will remain untouched.
-    */
-    void copyFrom(const ThermalCluster& cluster);
 
     //! \name validity of Min Stable Power
     //@{
@@ -173,6 +125,9 @@ public:
 
     //! The index of the cluster (within a list)
     uint index = 0;
+
+    //! The global index of the cluster across all areas (used by the solver)
+    int globalIndex = -1;
 
     //! Mustrun
     bool mustrun = false;

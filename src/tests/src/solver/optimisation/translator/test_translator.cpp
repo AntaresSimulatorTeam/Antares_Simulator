@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define BOOST_TEST_MODULE test_translator
 #define WIN32_LEAN_AND_MEAN
@@ -79,6 +61,7 @@ BOOST_AUTO_TEST_CASE(translate_sens)
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
     problemHebdo.Sens = "<=>";
+    problemHebdo.NombreDeContraintes = 3;
 
     auto ret = translator.translate(&problemHebdo, std::string());
     BOOST_CHECK(ret.Direction == std::vector({'<', '=', '>'}));
@@ -123,13 +106,12 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
 {
     HebdoProblemToLpsTranslator translator;
     PROBLEME_ANTARES_A_RESOUDRE problemHebdo;
-    problemHebdo.NombreDeVariables = 1;
+    problemHebdo.NombreDeVariables = 3;
     problemHebdo.NombreDeContraintes = 2;
-    problemHebdo.TypeDeVariable = {0, 1, 2};
     problemHebdo.IndicesDebutDeLigne = {0, 3};
     problemHebdo.NombreDeTermesDesLignes = {3, 3};
     problemHebdo.NomDesVariables = {"a", "b", "c"};
-    problemHebdo.NomDesContraintes = {"d", "e", "f"};
+    problemHebdo.NomDesContraintes = {"d", "e"};
     fillVector(problemHebdo.CoefficientsDeLaMatriceDesContraintes, 6);
     fillVector(problemHebdo.IndicesColonnes, 6);
 
@@ -137,7 +119,6 @@ BOOST_AUTO_TEST_CASE(common_data_properly_copied)
 
     BOOST_CHECK_EQUAL(ret.VariablesCount, problemHebdo.NombreDeVariables);
     BOOST_CHECK_EQUAL(ret.ConstraintesCount, problemHebdo.NombreDeContraintes);
-    BOOST_CHECK(std::ranges::equal(ret.VariablesType, problemHebdo.TypeDeVariable));
     BOOST_CHECK(ret.ConstraintsMatrixCoeff == problemHebdo.CoefficientsDeLaMatriceDesContraintes);
     BOOST_CHECK(std::ranges::equal(ret.ColumnIndexes, problemHebdo.IndicesColonnes));
     auto expectedMdeb = problemHebdo.IndicesDebutDeLigne;

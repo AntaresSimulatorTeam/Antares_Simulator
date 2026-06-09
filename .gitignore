@@ -22,6 +22,7 @@ src/.vs
 src/config/include/antares/config/config.h
 config.h
 src/tests/cucumber/conf.yaml
+src/tests/cucumber/behave.ini
 
 
 # Yuni
@@ -54,10 +55,21 @@ _build*
 .vscode/
 *.dll
 .idea/
+src/tests/resources/modeler/**/output/
 
 # pytest
 __pycache__
 venv/
+/src/tests/cucumber/behave.ini
 vcpkg_installed
 
 src/CMakeUserPresets.json
+.cache/
+.clangd
+build-debug/
+_codeql_detected_source_root
+
+#doxygen
+doxygen-awesome-css/
+html/
+

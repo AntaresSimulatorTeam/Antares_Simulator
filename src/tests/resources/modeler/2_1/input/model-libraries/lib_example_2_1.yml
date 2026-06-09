@@ -31,7 +31,7 @@ library:
         - id: balance_0
           expression: gen1_p[0] + gen2_p[0] = 100
         - id: balance_1
-          expression: gen1_p[1] + gen2_p[1] = 100 
+          expression: gen1_p[1] + gen2_p[1] = 100
       objective-contributions:
         - id: objective
-          expression: gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost 
+          expression: sum(gen1_p * gen1_prop_cost + gen2_p * gen2_prop_cost)

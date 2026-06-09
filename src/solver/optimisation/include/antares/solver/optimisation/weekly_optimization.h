@@ -1,30 +1,13 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
 
+#include <memory>
+
+#include "antares/io/outputs/OptimisationsSimulationTable.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-class OptimisationsSimulationTable;
 
 namespace Antares::Solver::Optimization
 {
@@ -36,15 +19,20 @@ public:
                        PROBLEME_HEBDO* problemeHebdo,
                        IResultWriter& writer,
                        Simulation::ISimulationObserver& simulationObserver,
-                       OptimisationsSimulationTable* simulationTables);
+                       bool writeSimuTable);
     ~WeeklyOptimization() = default;
+    WeeklyOptimization(const WeeklyOptimization&) = delete;
+    WeeklyOptimization& operator=(const WeeklyOptimization&) = delete;
+    WeeklyOptimization(WeeklyOptimization&&) = default;
+    WeeklyOptimization& operator=(WeeklyOptimization&&) = default;
     void solve();
+    IO::Outputs::OptimisationsSimulationTable* simulationTables();
 
 private:
     Antares::Solver::Optimization::OptimizationOptions options_;
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     IResultWriter& writer_;
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    OptimisationsSimulationTable* simulationTables_ = nullptr;
+    std::unique_ptr<IO::Outputs::OptimisationsSimulationTable> simulationTables_;
 };
 } // namespace Antares::Solver::Optimization

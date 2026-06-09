@@ -1,29 +1,14 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
 
 #include <stdexcept>
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/utils/vector-utils.h"
+
+using namespace Antares::Utils;
 
 namespace Antares::Solver::Simulation
 {
@@ -40,8 +25,9 @@ StorageForRemixWithLevels::StorageForRemixWithLevels(std::vector<double>& withdr
                                                      const std::vector<double> upRuleCurve,
                                                      const double initLevel,
                                                      const double withdrawalEff,
-                                                     const double injectionEff):
-    StorageForRemixNoLevels(withdrawal, unsupE, Pmax, Pmin),
+                                                     const double injectionEff,
+                                                     const std::string& name):
+    StorageForRemixNoLevels(withdrawal, unsupE, Pmax, Pmin, name),
     levels_(levels),
     inflows_(inflows),
     overflow_(overflow),
@@ -87,7 +73,7 @@ void StorageForRemixWithLevels::update()
 
 void StorageForRemixWithLevels::checkLevels()
 {
-    if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(levels_ >= -TOLERANCE))
+    if (!(levels_ <= ruleCurveUp_ + TOLERANCE) || !(ruleCurveLow_ - TOLERANCE <= levels_))
     {
         throw std::invalid_argument(error_msg_start_hydro_remix
                                     + "levels computed from input don't respect reservoir bounds");

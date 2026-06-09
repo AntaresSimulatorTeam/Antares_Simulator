@@ -1,8 +1,14 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/simulation/remix-storage/storage-for-remix-no-levels.h"
 
 #include <stdexcept>
 
 #include "antares/solver/simulation/remix-storage/remix-utils.h"
+#include "antares/utils/vector-utils.h"
+
+using namespace Antares::Utils;
 
 namespace Antares::Solver::Simulation
 {
@@ -10,7 +16,9 @@ namespace Antares::Solver::Simulation
 StorageForRemixNoLevels::StorageForRemixNoLevels(std::vector<double>& withdrawal,
                                                  std::vector<double>& unsupE,
                                                  const std::vector<double> Pmax,
-                                                 const std::vector<double> Pmin):
+                                                 const std::vector<double> Pmin,
+                                                 const std::string& name):
+    IStorageForRemix(name),
     withdrawal_(withdrawal),
     initWithdrawal_(withdrawal),
     unsupE_(unsupE),

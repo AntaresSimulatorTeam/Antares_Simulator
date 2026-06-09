@@ -3,20 +3,21 @@
 using namespace Antares::ModelerStudy::SystemModel;
 using namespace Antares::Optimisation;
 using namespace Antares::Expressions;
-using namespace Antares::Modeler;
+using namespace Antares::Solver;
 
 Objective makeObjectiveFromVariable(Registry<Nodes::Node>& nodeRegistry,
                                     const std::string varId,
                                     unsigned varIndex,
                                     const std::string objectiveId,
-                                    Config::Location locoation)
+                                    Config::Location location)
 {
-    auto varNode = nodeRegistry.create<Nodes::VariableNode>(varId,
-                                                            varIndex,
-                                                            TimeIndex::VARYING_IN_TIME_ONLY);
+    auto varNode = nodeRegistry.create<Nodes::AllTimeSumNode>(
+      nodeRegistry.create<Nodes::VariableNode>(varId,
+                                               varIndex,
+                                               VariabilityType::VARYING_IN_TIME_ONLY));
     NodeRegistry node_registry(varNode, std::move(nodeRegistry));
     Expression expression("expr-" + objectiveId, std::move(node_registry));
-    Objective objective(objectiveId, std::move(expression), locoation);
+    Objective objective(objectiveId, std::move(expression), location);
     return objective;
 }
 

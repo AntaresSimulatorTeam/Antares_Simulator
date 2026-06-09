@@ -1,25 +1,14 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #pragma once
+
+//! \file economy_base.h
+//! EconomyVariableCard / EconomyVariableBase templates for area-level Economy variables.
+//! See src/solver/variable/ARCHITECTURE.md for the Traits contract, hook lifecycle,
+//! and the auxiliary-data mechanism.
+
+#include <type_traits>
 
 #include <antares/memory/memory.h>
 #include <antares/solver/variable/categories.h>
@@ -36,8 +25,100 @@
 namespace Antares::Solver::Variable::Economy
 {
 
+// Implementation helpers (SFINAE dispatchers, auxiliary-data fallback,
+// statistics count). Not public API.
+namespace detail
+{
+
+// Triggers static_assert only when a template fallback branch is actually instantiated.
+template<class>
+inline constexpr bool always_false_v = false;
+
+template<class Traits, class AuxData>
+void initializeFromAreaIfSupported(AuxData& aux, Data::Study* study, Data::Area* area)
+{
+    if constexpr (requires { Traits::initializeFromArea(aux, study, area); })
+    {
+        Traits::initializeFromArea(aux, study, area);
+    }
+}
+
+template<class Traits, class IV, class Aux>
+void yearBeginIfSupported(IV& iv, Aux& aux, uint year, uint numSpace)
+{
+    if constexpr (requires { Traits::yearBegin(iv, aux, year, numSpace); })
+    {
+        Traits::yearBegin(iv, aux, year, numSpace);
+    }
+}
+
+template<class Traits, class IV, class State>
+void yearEndBuildForEachIfSupported(IV& iv, State& state, uint year, uint numSpace)
+{
+    if constexpr (requires {
+                      Traits::yearEndBuildForEachThermalCluster(iv, state, year, numSpace);
+                  })
+    {
+        Traits::yearEndBuildForEachThermalCluster(iv, state, year, numSpace);
+    }
+}
+
+template<class Traits, class IV, class State>
+void weekForEachAreaIfSupported(IV& iv, State& state, uint numSpace)
+{
+    if constexpr (requires { Traits::weekForEachArea(iv, state, numSpace); })
+    {
+        Traits::weekForEachArea(iv, state, numSpace);
+    }
+}
+
+template<class Traits, class IV, class Aux, class State>
+void setHourlyValueIfSupported(IV& iv, Aux& aux, State& state, unsigned int numSpace)
+{
+    if constexpr (requires { Traits::setHourlyValue(iv, aux, state, numSpace); })
+    {
+        Traits::setHourlyValue(iv, aux, state, numSpace);
+    }
+    else if constexpr (requires { Traits::setHourlyValue(iv, state, numSpace); })
+    {
+        Traits::setHourlyValue(iv, state, numSpace);
+    }
+    else
+    {
+        static_assert(always_false_v<Traits>,
+                      "Traits must provide either "
+                      "setHourlyValue(IntermediateValues&, AuxiliaryDataType&, "
+                      "const State&, unsigned int) or "
+                      "setHourlyValue(IntermediateValues&, const State&, unsigned int)");
+    }
+}
+
+struct EmptyAuxiliaryData
+{
+};
+
+template<class TraitsT, class = void>
+struct AuxiliaryDataType
+{
+    using type = EmptyAuxiliaryData;
+};
+
+template<class TraitsT>
+struct AuxiliaryDataType<TraitsT, std::void_t<typename TraitsT::AuxiliaryDataType>>
+{
+    using type = typename TraitsT::AuxiliaryDataType;
+};
+
+template<class VCardType, class ResultsType, int CDataLevel, int CFile>
+inline constexpr int statisticsCount = ((VCardType::categoryDataLevel & CDataLevel
+                                         && VCardType::categoryFileLevel & CFile)
+                                          ? VCardType::columnCount * ResultsType::count
+                                          : 0);
+
+} // namespace detail
+
 template<class Traits>
-struct VCard_Base
+struct EconomyVariableCard
 {
     //! Caption
     static std::string Caption()
@@ -57,10 +138,10 @@ struct VCard_Base
         return Traits::Description();
     }
 
-    //! The expecte results
-    typedef typename Traits::ResultsType ResultsType;
+    //! The expected results
+    using ResultsType = typename Traits::ResultsProfile;
 
-    typedef VCard_Base VCardForSpatialAggregate;
+    using VCardForSpatialAggregate = EconomyVariableCard;
 
     static constexpr uint8_t categoryDataLevel = Category::DataLevel::area;
     //! File level (provided by the type of the results)
@@ -69,68 +150,78 @@ struct VCard_Base
                                                     | Category::FileLevel::va);
     //! Precision (views)
     static constexpr uint8_t precision = Category::all;
-    //! Indentation (GUI)
-    static constexpr uint8_t nodeDepthForGUI = +0;
     //! Decimal precision
     static constexpr uint8_t decimal = Traits::decimal;
-    //! Number of columns used by the variable (One ResultsType per column)
+    //! Number of columns used by the variable (one results profile per column)
     static constexpr int columnCount = 1;
     //! The Spatial aggregation
     static constexpr uint8_t spatialAggregate = Traits::spatialAggregate;
     static constexpr uint8_t spatialAggregateMode = Category::spatialAggregateEachYear;
-    static constexpr uint8_t spatialAggregatePostProcessing = 0;
-    //! Intermediate values
-    static constexpr uint8_t hasIntermediateValues = 1;
+    //! Post-processing applied during spatial aggregation (e.g. price-weighted averaging).
+    //! Traits may opt in by defining their own `spatialAggregatePostProcessing`; defaults to 0.
+    static constexpr uint8_t spatialAggregatePostProcessing = []
+    {
+        if constexpr (requires { Traits::spatialAggregatePostProcessing; })
+        {
+            return Traits::spatialAggregatePostProcessing;
+        }
+        else
+        {
+            return uint8_t{0};
+        }
+    }();
     //! Can this variable be non applicable (0 : no, 1 : yes)
-    static constexpr uint8_t isPossiblyNonApplicable = 0;
+    static constexpr uint8_t isPossiblyNonApplicable = []
+    {
+        if constexpr (requires { Traits::isPossiblyNonApplicable; })
+        {
+            return Traits::isPossiblyNonApplicable;
+        }
+        else
+        {
+            return uint8_t{0};
+        }
+    }();
 
-    typedef IntermediateValues IntermediateValuesBaseType;
-    typedef std::vector<IntermediateValues> IntermediateValuesType;
+    using IntermediateValuesBaseType = IntermediateValues;
+    using IntermediateValuesType = std::vector<IntermediateValues>;
 
     using IntermediateValuesTypeForSpatialAg = std::unique_ptr<IntermediateValuesBaseType[]>;
 
-}; // class VCard
+}; // struct EconomyVariableCard
 
 /*!
-** \brief Base class for economy variables like LOLP and LOLD
+** \brief Base class for area-level economy variables like LOLP and LOLD
+**
+** Each variable is standalone and inherits directly from the 2-parameter IVariable.
 */
-template<class Traits, class NextT = Container::EndOfList>
-class Economy_Base
-    : public Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCard_Base<Traits>>
+template<class Traits>
+class EconomyVariableBase
+    : public Variable::IVariable<EconomyVariableBase<Traits>, EconomyVariableCard<Traits>>
 {
 public:
-    //! Type of the next static variable
-    typedef NextT NextType;
     //! VCard
-    typedef VCard_Base<Traits> VCardType;
+    using VCardType = EconomyVariableCard<Traits>;
     //! Ancestor
-    typedef Variable::IVariable<Economy_Base<Traits, NextT>, NextT, VCardType> AncestorType;
+    using AncestorType = Variable::IVariable<EconomyVariableBase<Traits>, VCardType>;
 
     //! List of expected results
-    typedef typename VCardType::ResultsType ResultsType;
+    using ResultsType = typename VCardType::ResultsType;
 
-    typedef VariableAccessor<ResultsType, VCardType::columnCount> VariableAccessorType;
+    using VariableAccessorType = VariableAccessor<ResultsType, VCardType::columnCount>;
 
-    enum
-    {
-        //! How many items have we got
-        count = 1 + NextT::count,
-    };
+    static constexpr std::size_t count = 1;
 
     template<int CDataLevel, int CFile>
     struct Statistics
     {
-        enum
-        {
-            count = ((VCardType::categoryDataLevel & CDataLevel
-                      && VCardType::categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + VCardType::columnCount * ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
-        };
+        static constexpr int count = detail::
+          statisticsCount<VCardType, ResultsType, CDataLevel, CFile>;
     };
 
 public:
+    using AuxiliaryDataType = typename detail::AuxiliaryDataType<Traits>::type;
+
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -139,12 +230,10 @@ public:
         InitializeResultsFromStudy(AncestorType::pResults, study);
 
         pValuesForTheCurrentYear.resize(pNbYearsParallel);
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        for (uint numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
         }
-        // Next
-        NextType::initializeFromStudy(study);
     }
 
     template<class R>
@@ -155,84 +244,66 @@ public:
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
-        // Next
-        NextType::initializeFromArea(study, area);
-    }
-
-    void initializeFromLink(Data::Study* study, Data::AreaLink* link)
-    {
-        // Next
-        NextType::initializeFromAreaLink(study, link);
+        detail::initializeFromAreaIfSupported<Traits>(auxiliaryData_, study, area);
     }
 
     void simulationBegin()
     {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+        for (uint numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
         {
             pValuesForTheCurrentYear[numSpace].reset();
         }
-        // Next
-        NextType::simulationBegin();
     }
 
-    void simulationEnd()
-    {
-        NextType::simulationEnd();
-    }
-
-    void yearBegin(unsigned int year, unsigned int numSpace)
+    void yearBegin(uint year, uint numSpace)
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
 
-        // Next variable
-        NextType::yearBegin(year, numSpace);
+        detail::yearBeginIfSupported<Traits>(pValuesForTheCurrentYear[numSpace],
+                                             auxiliaryData_,
+                                             year,
+                                             numSpace);
     }
 
-    void yearEndBuild(State& state, unsigned int year, unsigned int numSpace)
+    void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace)
     {
-        // Next variable
-        NextType::yearEndBuild(state, year, numSpace);
+        detail::yearEndBuildForEachIfSupported<Traits>(pValuesForTheCurrentYear[numSpace],
+                                                       state,
+                                                       year,
+                                                       numSpace);
     }
 
-    void yearEnd(unsigned int year, unsigned int numSpace)
+    void yearEnd(uint /*year*/, uint numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
         Traits::computeStats(pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
-        NextType::yearEnd(year, numSpace);
     }
 
-    void computeSummary(unsigned int year, unsigned int numSpace)
+    void computeSummary(uint year, uint numSpace)
     {
         // Merge all those values with the global results
         AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-
-        // Next variable
-        NextType::computeSummary(year, numSpace);
     }
 
-    void hourBegin(unsigned int hourInTheYear)
+    void hourForEachArea(State& state, uint numSpace)
     {
-        // Next variable
-        NextType::hourBegin(hourInTheYear);
+        detail::setHourlyValueIfSupported<Traits>(pValuesForTheCurrentYear[numSpace],
+                                                  auxiliaryData_,
+                                                  state,
+                                                  numSpace);
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
+    void weekForEachArea(State& state, uint numSpace)
     {
-        if (Traits::checkCondition(state))
-        {
-            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = Traits::value();
-        }
-
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
+        detail::weekForEachAreaIfSupported<Traits>(pValuesForTheCurrentYear[numSpace],
+                                                   state,
+                                                   numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
-      unsigned int,
-      unsigned int numSpace) const
+      uint,
+      uint numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace].hour;
     }
@@ -240,7 +311,7 @@ public:
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
-                                      unsigned int numSpace) const
+                                      uint numSpace) const
     {
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA = AncestorType::isNonApplicable;
@@ -258,8 +329,9 @@ public:
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pNbYearsParallel;
+    AuxiliaryDataType auxiliaryData_{};
+    uint pNbYearsParallel = 0;
 
-}; // class Economy_Base
+}; // class EconomyVariableBase
 
 } // namespace Antares::Solver::Variable::Economy

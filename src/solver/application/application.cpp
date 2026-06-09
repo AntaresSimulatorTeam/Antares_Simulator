@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/application/application.h"
 
 #include <antares/antares/fatal-error.h>
@@ -35,7 +18,6 @@
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
 #include "antares/config/config.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
 #include "antares/signal-handling/public.h"
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
@@ -48,7 +30,22 @@ namespace fs = std::filesystem;
 
 namespace
 {
-const char totalTimeKey[] = "total";
+
+void logTotalTime(const std::string& msg, unsigned duration)
+{
+    std::chrono::milliseconds d(duration);
+    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
+    d -= hours;
+    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
+    d -= minutes;
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
+
+    logs.info().appendFormat("%s: %02luh%02lum%02lus",
+                             msg.c_str(),
+                             hours.count(),
+                             minutes.count(),
+                             seconds.count());
+}
 
 void printSolvers()
 {
@@ -124,13 +121,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
     options.ignoreConstraints = pSettings.ignoreConstraints;
-    options.loadOnlyNeeded = true;
 
     // Load the study from a folder
     Benchmarking::Timer timer;
@@ -138,14 +134,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     std::exception_ptr loadingException;
     try
     {
-        pDurationCollector("study_loading") << [this, &study, &options]
+        if (study.loadFromFolder(pSettings.studyFolder, options, pDurationCollector))
         {
-            if (study.loadFromFolder(pSettings.studyFolder, options))
-            {
-                logs.info() << "The study is loaded.";
-                logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-            }
-        };
+            logs.info() << "The study is loaded.";
+        }
 
         if (study.areas.empty())
         {
@@ -160,6 +152,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
 
+        if (pSettings.parquetFmtForSimuTables)
+        {
+            study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
+        }
+
         if (pSettings.forceZipOutput)
         {
             pParameters->resultFormat = Antares::Data::zipArchive;
@@ -169,10 +166,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         loadingException = std::current_exception();
     }
-
-    // This settings can only be enabled from the solver
-    // Prepare the output for the study
-    study.prepareOutput();
 
     // Initialize the result writer
     prepareWriter(study, pDurationCollector);
@@ -190,11 +183,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
     {
-        study.simulationComments.name = pSettings.simulationName;
+        study.simulationName = pSettings.simulationName;
     }
 
-    // Removing all callbacks, which are no longer needed
-    logs.callback.clear();
     logs.info();
 
     if (pSettings.noOutput)
@@ -238,18 +229,22 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Checking for filename length limits
     if (!pSettings.noOutput)
     {
-        if (!study.checkForFilenameLimits(true))
+        if (!study.checkForFilenameLimits())
         {
             throw Error::InvalidFileName();
         }
 
-        writeComment(study);
+        writeComment();
     }
 
     if (!study.initializeRuntimeInfos())
     {
         throw Error::RuntimeInfoInitialization();
     }
+
+    // Removing all callbacks, which are no longer needed
+    logs.callback.clear();
+    logs.info();
 
     // Apply transformations needed by the solver only (and not the interface for example)
     study.performTransformationsBeforeLaunchingSimulation();
@@ -275,30 +270,12 @@ void Application::readStudy_makeChecks_and_printThings(Data::StudyLoadOptions& o
 
     logs.info() << "  :: log filename: " << logs.logfile();
 
-    pStudy = std::make_unique<Antares::Data::Study>(true /* for the solver */);
+    pStudy = std::make_unique<Antares::Data::Study>();
 
     pParameters = &(pStudy->parameters);
     readDataForTheStudy(options);
 
     postParametersChecks();
-
-    pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
-    if (pSettings.noOutput)
-    {
-        pSettings.displayProgression = false;
-    }
-
-    if (pSettings.displayProgression)
-    {
-        auto& filename = pStudy->buffer;
-        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
-        pStudy->progression.saveToFile(filename, *resultWriter);
-        pStudy->progression.start();
-    }
-    else
-    {
-        logs.info() << "  The progression is disabled";
-    }
 }
 
 void Application::postParametersChecks() const
@@ -343,7 +320,6 @@ void Application::prepare(int argc, const char* argv[])
 
     // Options
     Data::StudyLoadOptions options;
-    options.usedByTheSolver = true;
 
     // Bind pSettings / options members to command line arguments
     // Something like bind("--foo", options.foo);
@@ -363,35 +339,40 @@ void Application::prepare(int argc, const char* argv[])
         return;
     }
 
-    printPIDtoDisk(pSettings);
+    pDurationCollector("loading") << [this, &options]
+    {
+        printPIDtoDisk(pSettings);
 
-    checkAndCorrectSettingsAndOptions(pSettings, options);
+        checkAndCorrectSettingsAndOptions(pSettings, options);
 
-    checkStudyFolder(options.studyFolder);
-    pSettings.studyFolder = fixStudyFolder(options.studyFolder);
+        checkStudyFolder(options.studyFolder);
+        pSettings.studyFolder = fixStudyFolder(options.studyFolder);
 
-    auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
-    checkStudyVersion(version, pSettings.studyFolder);
+        auto version = Data::StudyHeader::tryToFindTheVersion(pSettings.studyFolder);
+        checkStudyVersion(version, pSettings.studyFolder);
 
-    // Determine the log filename to use for this simulation
-    resetLogFilename();
+        // Determine the log filename to use for this simulation
+        resetLogFilename();
 
-    readStudy_makeChecks_and_printThings(options);
+        readStudy_makeChecks_and_printThings(options);
 
-    // Check solver options
-    const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
-    bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
+        // Check solver options
+        const auto& unitCommitmentMode = pParameters->unitCommitment.ucMode;
+        bool milpRequired = (unitCommitmentMode == Data::UnitCommitmentMode::ucMILP);
 
-    checkSolverOptions(options.solverOptions, milpRequired);
+        checkSolverOptions(options.solverOptions, milpRequired);
 
-    // Set solver options from command line
-    pStudy->parameters.optOptions.initializeWith(options.solverOptions);
+        // Set solver options from command line
+        pStudy->parameters.optOptions.initializeWith(options.solverOptions);
 
-    using namespace Antares::Solver::Optimization;
-    // TODO
-    pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
-                                                     ? ExportBehavior::Once
-                                                     : ExportBehavior::Never;
+        using namespace Antares::Solver::Optimization;
+        // TODO
+        pStudy->parameters.optOptions.exportBehavior = pStudy->parameters.include.exportStructure
+                                                         ? ExportBehavior::Once
+                                                         : ExportBehavior::Never;
+    };
+
+    logTotalTime("Total loading time", pDurationCollector.getTime("loading"));
 }
 
 void Application::onLogMessage(int level, const std::string& message)
@@ -427,7 +408,7 @@ void Application::execute()
     memoryReport.start();
 
     Simulation::NullSimulationObserver observer;
-    pDurationCollector(totalTimeKey) << [&]
+    pDurationCollector("simulation") << [&]
     {
         pOptimizationInfo = simulationRun(*pStudy,
                                           pSettings,
@@ -438,9 +419,6 @@ void Application::execute()
 
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
-
-    // Stop the display of the progression
-    pStudy->progression.stop();
 }
 
 void Application::resetLogFilename() const
@@ -478,41 +456,25 @@ void Application::prepareWriter(const Antares::Data::Study& study,
                                        duration_collector);
 }
 
-void Application::writeComment(Data::Study& study)
+void Application::writeComment()
 {
-    study.buffer.clear() << "simulation-comments.txt";
+    fs::path commentsPath = "simulation-comments.txt";
 
     if (!pSettings.commentFile.empty())
     {
-        resultWriter->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+        resultWriter->addEntryFromFile(commentsPath, pSettings.commentFile);
 
         pSettings.commentFile.clear();
     }
 }
 
-static void logTotalTime(unsigned duration)
-{
-    std::chrono::milliseconds d(duration);
-    auto hours = std::chrono::duration_cast<std::chrono::hours>(d);
-    d -= hours;
-    auto minutes = std::chrono::duration_cast<std::chrono::minutes>(d);
-    d -= minutes;
-    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(d);
-
-    logs.info().appendFormat("Total simulation time: %02luh%02lum%02lus",
-                             hours.count(),
-                             minutes.count(),
-                             seconds.count());
-}
-
-void Application::writeExectutionInfo()
+void Application::writeExecutionInfo()
 {
     if (!pStudy)
     {
         return;
     }
 
-    logTotalTime(pDurationCollector.getTime(totalTimeKey));
     if (pErrorCount == 0 && pWarningCount > 0)
     {
         logs.warning()
@@ -532,13 +494,23 @@ void Application::writeExectutionInfo()
         return;
     }
 
-    // Info collectors : they retrieve data from study and simulation
-    Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
-    Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
+    writeSimulationInfos(*pStudy, pDurationCollector, pOptimizationInfo, resultWriter.get());
+
+    logTotalTime("Total execution time", pDurationCollector.getTime("full_exec"));
+}
+
+void writeSimulationInfos(const Data::Study& study,
+                          Benchmarking::DurationCollector& durationCollector,
+                          const Benchmarking::OptimizationInfo& optimizationInfo,
+                          IResultWriter* resultWriter)
+{
+    logTotalTime("Total simulation time", durationCollector.getTime("simulation"));
+    Benchmarking::StudyInfoCollector study_info_collector(study);
+    Benchmarking::SimulationInfoCollector simulation_info_collector(optimizationInfo);
 
     // Fill file content with data retrieved by collectors
     Benchmarking::FileContent file_content;
-    pDurationCollector.toFileContent(file_content);
+    durationCollector.toFileContent(file_content);
     study_info_collector.toFileContent(file_content);
     simulation_info_collector.toFileContent(file_content);
 
@@ -558,7 +530,7 @@ Application::~Application()
     {
         try
         {
-            logs.info() << LOG_UI_SOLVER_DONE;
+            logs.info() << "[END] Quitting the solver gracefully";
         }
         catch (...)
         {

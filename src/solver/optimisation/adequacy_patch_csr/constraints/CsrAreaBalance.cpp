@@ -1,23 +1,5 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/adequacy_patch_csr/constraints/CsrAreaBalance.h"
 
@@ -31,7 +13,7 @@ void CsrAreaBalance::add()
         }
 
         // + ENS
-        builder.updateHourWithinWeek(data.hour).PositiveUnsuppliedEnergy(Area, 1.0);
+        builder.updateHourWithinWeek(data.hour).UnsuppliedEnergy(Area, 1.0);
 
         // - export flows
         int Interco = data.IndexDebutIntercoOrigine[Area];
@@ -44,7 +26,7 @@ void CsrAreaBalance::add()
             }
 
             // flow (A->2)
-            builder.NTCDirect(Interco, -1.0);
+            builder.DirectFlow(Interco, -1.0);
 
             logs.debug() << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
                          << builder.data.NomsDesPays[Area] << "]-["
@@ -64,7 +46,7 @@ void CsrAreaBalance::add()
                 continue;
             }
             // flow (2 -> A)
-            builder.NTCDirect(Interco, 1.0);
+            builder.DirectFlow(Interco, 1.0);
 
             logs.debug() << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
                          << builder.data.NomsDesPays[Area] << "]-["
@@ -75,7 +57,7 @@ void CsrAreaBalance::add()
         }
 
         // - Spilled Energy
-        builder.NegativeUnsuppliedEnergy(Area, -1.0);
+        builder.Spillage(Area, -1.0);
 
         data.numberOfConstraintCsrAreaBalance[Area] = builder.data.nombreDeContraintes;
 

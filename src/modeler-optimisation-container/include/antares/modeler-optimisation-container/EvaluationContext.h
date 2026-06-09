@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <map>
@@ -56,8 +59,7 @@ public:
                                               unsigned int firstHour,
                                               unsigned int lastHour) const;
 
-    [[nodiscard]] ModelerStudy::SystemModel::ParameterType getParameterType(
-      const std::string& key) const;
+    [[nodiscard]] Optimisation::VariabilityType getParameterType(const std::string& key) const;
 
     [[nodiscard]] ModelerStudy::SystemModel::ParameterTypeAndValue getParameter(
       const std::string& key) const;
@@ -73,13 +75,7 @@ public:
     };
 
 private:
-  
-        const ModelerStudy::SystemModel::Component* component_;
-
-
-    /**
-     * @brief A map storing variable values.
-     */
+    const ModelerStudy::SystemModel::Component* component_;
     const Optimisation::LinearProblemApi::ILinearProblemData* data_;
     const Optimisation::LinearProblemApi::IScenario* scenario_;
 };

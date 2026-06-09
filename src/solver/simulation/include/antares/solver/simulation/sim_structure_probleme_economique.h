@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #ifndef __SOLVER_SIMULATION_ECO_STRUCTS_H__
 #define __SOLVER_SIMULATION_ECO_STRUCTS_H__
@@ -30,7 +12,7 @@
 #include "antares/solver/utils/optimization_statistics.h"
 #include "antares/study/fwd.h"
 #include "antares/study/study.h"
-
+using namespace Antares::Data;
 class AdequacyPatchRuntimeData;
 
 struct CORRESPONDANCES_DES_VARIABLES
@@ -40,9 +22,9 @@ struct CORRESPONDANCES_DES_VARIABLES
     CORRESPONDANCES_DES_VARIABLES(const CORRESPONDANCES_DES_VARIABLES&) = delete;
     CORRESPONDANCES_DES_VARIABLES(CORRESPONDANCES_DES_VARIABLES&&) = default;
 
-    std::vector<int> NumeroDeVariableDeLInterconnexion;
-    std::vector<int> NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
-    std::vector<int> NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
+    std::vector<int> NumeroDeVariableDuFluxDirect;
+    std::vector<int> NumeroDeVariableDuFluxDirectPositif;
+    std::vector<int> NumeroDeVariableDuFluxIndirectPositif;
 
     std::vector<int> NumeroDeVariableDuPalierThermique;
 
@@ -53,17 +35,33 @@ struct CORRESPONDANCES_DES_VARIABLES
     std::vector<int> NumeroDeVariablesDeDebordement;
 
     std::vector<int> NumeroDeVariableDefaillancePositive;
-
     std::vector<int> NumeroDeVariableDefaillanceNegative;
 
     std::vector<int> NumeroDeVariablesVariationHydALaBaisse;
-
     std::vector<int> NumeroDeVariablesVariationHydALaHausse;
 
     std::vector<int> NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
     std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
     std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     std::vector<int> NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+
+    struct ReservesIndices
+    {
+        std::vector<int> runningThermalClusterParticipation;
+        std::vector<int> thermalClusterParticipation;
+        std::vector<int> offThermalClusterParticipation;
+        ReserveTypeData<std::vector<int>> STStorageClusterParticipation;
+        std::vector<int> STStorageReleaseClusterParticipation;
+        std::vector<int> STStorageStoreClusterParticipation;
+        ReserveTypeData<std::vector<int>> HydroParticipation;
+        std::vector<int> HydroReleaseParticipation;
+        std::vector<int> HydroStoreParticipation;
+
+        std::vector<int> internalUnsatisfied;
+        std::vector<int> internalExcess;
+    };
+
+    ReserveOpt<ReservesIndices> reservesIndices;
 
     struct
     {
@@ -85,6 +83,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES
 
     std::vector<int> NumeroDeContrainteDesBilansPays;
     std::vector<int> NumeroDeContraintePourEviterLesChargesFictives;
+    std::vector<int> NumeroDeContraintePourBornerLaDefaillance;
 
     std::vector<int> NumeroPremiereContrainteDeReserveParZone;
     std::vector<int> NumeroDeuxiemeContrainteDeReserveParZone;
@@ -103,6 +102,34 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     std::vector<int> ShortTermStorageCostVariationInjectionBackward;
     std::vector<int> ShortTermStorageCostVariationWithdrawalForward;
     std::vector<int> ShortTermStorageCostVariationWithdrawalBackward;
+
+    struct ReservesIndices
+    {
+        std::vector<int> need;
+        std::vector<int> powerOffGroupUnitsInThermalClusterParticipating;
+        std::vector<int> maxPowerOffUnitsInThermalCluster;
+        std::vector<int> thermalClusterPOutBoundMin;
+        std::vector<int> thermalClusterPOutBoundMax;
+        ReserveTypeData<std::vector<int>> STStorageLevelParticipation;
+        std::vector<int> STStorageEnergyLevelParticipation;
+        ReserveTypeData<std::vector<int>> STStorageGlobalStockEnergyLevelParticipation;
+        std::vector<int> STStorageClusterMaxReleaseParticipation;
+        std::vector<int> STStorageClusterMaxStoreParticipation;
+        std::vector<int> STStorageClusterReleaseCapacityThresholdsMax;
+        std::vector<int> STStorageClusterReleaseCapacityThresholdsMin;
+        std::vector<int> STStorageClusterStoreCapacityThresholds;
+        ReserveTypeData<std::vector<int>> HydroLevelParticipation;
+        std::vector<int> HydroEnergyLevelParticipation;
+        std::vector<int> HydroGlobalEnergyLevelParticipationUp;
+        std::vector<int> HydroGlobalEnergyLevelParticipationDown;
+        std::vector<int> HydroMaxReleaseParticipation;
+        std::vector<int> HydroMaxStoreParticipation;
+        std::vector<int> HydroReleaseCapacityThresholdsMax;
+        std::vector<int> HydroReleaseCapacityThresholdsMin;
+        std::vector<int> HydroStoreCapacityThresholds;
+    };
+
+    ReserveOpt<ReservesIndices> reservesIndices;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -198,6 +225,13 @@ struct RESULTS
     std::vector<double> level;      // MWh
     std::vector<double> injection;  // MWh
     std::vector<double> withdrawal; // MWh
+    std::vector<double> overflow;   // MWh
+};
+
+struct RESULTSRESERVES
+{
+    // Index is the number of the STS reserves participations in the area
+    ReserveOpt<std::vector<double>> reserveParticipationOfCluster; // MWh
 };
 
 struct DEMAND_MARKET_POOL
@@ -264,6 +298,83 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
     std::vector<int> NombreMinDeGroupesEnMarcheDuPalierThermique;
 };
 
+struct RESERVE_PARTICIPATION_BASE
+{
+    double participationCost;
+    int globalIndexClusterParticipation;
+    int areaIndexClusterParticipation;
+    std::string clusterName;
+    int clusterIdInArea;
+    int clusterId;
+
+    virtual ~RESERVE_PARTICIPATION_BASE() = default;
+};
+
+struct RESERVE_PARTICIPATION_THERMAL: public RESERVE_PARTICIPATION_BASE
+{
+    double maxPower;
+    double maxPowerOff;
+    double participationCostOff;
+};
+
+struct RESERVE_PARTICIPATION_STSTORAGE: public RESERVE_PARTICIPATION_BASE
+{
+    double maxRelease;
+    double maxStore;
+};
+
+struct RESERVE_PARTICIPATION_HYDRO: public RESERVE_PARTICIPATION_BASE
+{
+    double maxRelease;
+    double maxStore;
+};
+
+struct CAPACITY_RESERVATION
+{
+    std::map</*area_clusterId*/ int, RESERVE_PARTICIPATION_THERMAL> AllThermalReservesParticipation;
+    std::map</*area_clusterId*/ int, RESERVE_PARTICIPATION_STSTORAGE>
+      AllSTStorageReservesParticipation;
+    std::vector<RESERVE_PARTICIPATION_HYDRO> AllHydroReservesParticipation;
+    std::vector<double> need; //!< Vector size is number of hours in year
+
+    ReserveType type{ReserveType::DOWN};
+    double unsuppliedCost = 0;
+    double spillageCost = 0;
+    double powerActivationRatio = 0;
+    double energyActivationRatio = 1;
+    int referenceActivationDuration = 0;
+    std::string reserveName;
+    std::string reserveID;
+    int globalReserveIndex;
+    int areaReserveIndex;
+};
+
+template<typename T>
+struct RESERVE_PARTICIPATION_WITH_RESERVE_NAME
+{
+    std::string reserveName;
+    std::reference_wrapper<T> reserveParticipation;
+};
+
+// Vector size is number of reserves up or down
+struct AREA_RESERVES_VECTOR
+{
+    ReserveTypeData<double> maxGlobalEnergyActivationRatio{1., 1.};
+    ReserveTypeData<int> referenceGlobalActivationDuration{0, 0};
+    std::vector<CAPACITY_RESERVATION> areaCapacityReservations{};
+    std::map<
+      /*area_clusterId*/ int,
+      std::vector<
+        std::vector<RESERVE_PARTICIPATION_WITH_RESERVE_NAME<RESERVE_PARTICIPATION_THERMAL>>>>
+      ThermalReservesParticipationSymmetries;
+    std::map</*area_clusterId*/ int,
+             std::vector<std::vector<
+               RESERVE_PARTICIPATION_WITH_RESERVE_NAME<RESERVE_PARTICIPATION_STSTORAGE>>>>
+      STStorageReservesParticipationSymmetries;
+    std::vector<std::vector<RESERVE_PARTICIPATION_WITH_RESERVE_NAME<RESERVE_PARTICIPATION_HYDRO>>>
+      HydroReservesParticipationSymmetries;
+};
+
 struct PALIERS_THERMIQUES
 {
     int NombreDePaliersThermiques;
@@ -288,6 +399,8 @@ struct PALIERS_THERMIQUES
 
 struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 {
+    int GlobalHydroIndex;
+
     std::vector<double> MinEnergieHydrauParIntervalleOptimise;
     std::vector<double> MaxEnergieHydrauParIntervalleOptimise;
 
@@ -341,6 +454,9 @@ struct RESERVE_JMOINS1
 struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     std::vector<double> ProductionThermiqueDuPalier;
+    ReserveOpt<std::vector<double>> ParticipationReservesDuPalier;
+    ReserveOpt<std::vector<double>> ParticipationReservesDuPalierOn;
+    ReserveOpt<std::vector<double>> ParticipationReservesDuPalierOff;
 
     std::vector<double> NombreDeGroupesEnMarcheDuPalier;
     std::vector<double> NombreDeGroupesQuiDemarrentDuPalier;
@@ -348,6 +464,18 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     std::vector<double> NombreDeGroupesQuiSArretentDuPalier;
 
     std::vector<double> NombreDeGroupesQuiTombentEnPanneDuPalier;
+};
+
+struct OPTIMAL_HYDRO_USAGE
+{
+    ReserveOpt<std::vector<double>> reserveParticipationOfCluster; // MWh
+};
+
+struct RESERVES
+{
+    std::vector<double> ValeursHorairesInternalUnsatisfied;
+    std::vector<double> ValeursHorairesInternalExcessReserve;
+    std::vector<double> CoutsMarginauxHoraires;
 };
 
 struct RESULTATS_HORAIRES
@@ -371,8 +499,12 @@ struct RESULTATS_HORAIRES
     std::vector<double> CoutsMarginauxHoraires;
     std::vector<double> CoutsMarginauxHorairesCSR;
     std::vector<PRODUCTION_THERMIQUE_OPTIMALE> ProductionThermique; // index is pdtHebdo
+    std::vector<OPTIMAL_HYDRO_USAGE> HydroUsage;                    // index is pdtHebdo
 
     std::vector<::RESULTS> ShortTermStorage;
+
+    ReserveOpt<std::vector<::RESULTSRESERVES>> ShortTermStorageReserves;
+    ReserveOpt<std::vector<RESERVES>> Reserves;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -390,6 +522,7 @@ struct TIME_MEASURE
 {
     long solveTime = 0;
     long updateTime = 0;
+    long simulationTableFillTime = 0;
 };
 
 using TIME_MEASURES = std::array<TIME_MEASURE, 2>;
@@ -407,8 +540,11 @@ struct PROBLEME_HEBDO
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    bool OptimisationAvecCoutsDeDemarrage = false;
+    bool WaterValueAccurate = false;
+    bool OptimisationNotFastMode = false;
     bool OptimisationAvecVariablesEntieres = false;
+    bool useThermalHeuristic = true;
+
     uint32_t NombreDePays = 0;
     std::vector<const char*> NomsDesPays;
     uint32_t NombreDePaliersThermiques = 0;
@@ -440,6 +576,8 @@ struct PROBLEME_HEBDO
 
     std::vector<PALIERS_THERMIQUES> PaliersThermiquesDuPays;
     std::vector<ENERGIES_ET_PUISSANCES_HYDRAULIQUES> CaracteristiquesHydrauliques;
+
+    ReserveOpt<std::vector<::AREA_RESERVES_VECTOR>> allReserves;
 
     uint32_t NumberOfShortTermStorages = 0;
     std::vector<::AREA_INPUT> ShortTermStorage;
@@ -602,6 +740,6 @@ public:
       ProblemeAResoudre = std::make_unique<PROBLEME_ANTARES_A_RESOUDRE>();
 
     // TODO: 1 study but several PROBLEME_HEBDO, may cause race conditions
-    Modeler::Data* modelerData = nullptr;
+    Solver::ModelerData* modelerData = nullptr;
 };
 #endif

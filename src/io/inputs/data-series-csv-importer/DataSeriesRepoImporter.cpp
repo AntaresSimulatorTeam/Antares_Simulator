@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <algorithm>
 #include <charconv>
 #include <ranges>
@@ -28,6 +11,7 @@
 
 #include <antares/io/inputs/data-series-csv-importer/DataSeriesRepoImporter.h>
 #include <antares/optimisation/linear-problem-data-impl/timeSeriesSet.h>
+#include "antares/io/inputs/InputError.h"
 
 namespace fs = std::filesystem;
 
@@ -43,7 +27,7 @@ inline const char* ParseOneDouble(const char* ptr,
     auto [p, ec] = std::from_chars(ptr, end, value);
     if (ec == std::errc::invalid_argument)
     {
-        throw std::invalid_argument(errorMessagePrefix + ": \"" + *p + "\" is not a number");
+        throw InputError(errorMessagePrefix + ": \"" + *p + "\" is not a number");
     }
     return p;
 }
@@ -108,7 +92,7 @@ static bool ParseRow(const char* first,
                 std::ostringstream oss;
                 oss << errorMessagePrefix << ": row (" << rowIndex << ") has more columns ("
                     << colIndex + 1 << ") than the expected (" << columns.front().size() << ").";
-                throw std::invalid_argument(oss.str());
+                throw InputError(oss.str());
             }
         }
     }
@@ -117,7 +101,7 @@ static bool ParseRow(const char* first,
         std::ostringstream oss;
         oss << errorMessagePrefix << ": row (" << rowIndex << ") has less columns (" << colIndex
             << ") than the expected (" << columns.front().size() << ").";
-        throw std::invalid_argument(oss.str());
+        throw InputError(oss.str());
     }
     return colIndex != 0;
 }
@@ -129,8 +113,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
     auto sz = std::filesystem::file_size(filename, ec);
     if (ec)
     {
-        throw std::invalid_argument("Error reading CSV file( " + filename.string()
-                                    + "):" + ec.message());
+        throw InputError("Error reading CSV file( " + filename.string() + "):" + ec.message());
     }
     if (sz == 0)
     {
@@ -141,7 +124,7 @@ static std::vector<std::vector<double>> readCSV(const std::filesystem::path& fil
 
     if (!file.is_open())
     {
-        throw std::runtime_error("Failed to open file: " + fileName);
+        throw InputError("Failed to open file: " + fileName);
     }
 
     std::vector<std::vector<double>> columns;
@@ -191,7 +174,7 @@ DataSeriesRepository DataSeriesRepoImporter::importFromDirectory(const std::file
 {
     if (!is_directory(path))
     {
-        throw std::invalid_argument("Not a directory: " + path.string());
+        throw InputError("Not a directory: " + path.string());
     }
     using std::views::filter;
     auto pathFilter = filter(static_cast<bool (*)(const fs::path&)>(&fs::is_regular_file));

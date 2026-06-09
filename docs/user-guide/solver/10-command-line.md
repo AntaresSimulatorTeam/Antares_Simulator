@@ -39,6 +39,7 @@ hide:
 | --year-by-year           | Force the [writing the result output for each year](04-parameters.md#year-by-year) (economy only) |
 | --derated                | Force the [derated](04-parameters.md#derated) mode                                                |
 | -z, --zip-output         | Write the results into a single zip archive                                                       |
+| --parquet                | Write simulation table in format parquet instead of csv format                                    |
 
 ## Optimization
 
@@ -59,6 +60,11 @@ hide:
 |:----------------|:-----------------------------------------------------------------|
 | --progress      | Display the progress of each task                                |
 | -p, --pid=VALUE | Specify the file where to write the process ID                   |
-| --list-solvers  | Display a list of LP solvers available through OR-Tools and exit |
+| -l, --list-solvers  | Display a list of LP solvers available through OR-Tools and exit |
 | -v, --version   | Print the version of the solver and exit                         |
 | -h, --help      | Display this help and exit                                       |
+
+### Deprecated options
+
+* `--solver` (alias for `--linear-solver`) is deprecated.
+* `--solver-parameters` (alias for `--linear-solver-param`) is deprecated.

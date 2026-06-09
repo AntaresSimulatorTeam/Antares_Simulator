@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <antares/solver/variable/commons/spatial-aggregate.h>
@@ -28,7 +11,7 @@
 #include "../bindConstraints.h"
 #include "../commons/compose-all.h"
 #include "../commons/hydro.h"
-#include "../commons/join.h"
+#include "../commons/join_all.h"
 #include "../commons/load.h"
 #include "../commons/miscGenMinusRowPSP.h"
 #include "../commons/psp.h"
@@ -38,6 +21,7 @@
 #include "../setofareas.h"
 #include "STSbyGroup.h"
 #include "STStorageCashFlowByCluster.h"
+#include "STStorageInjectionByCluster.h"
 #include "STStorageLevelsByCluster.h"
 #include "STStorageWithdrawalByCluster.h"
 #include "avail-dispatchable-generation.h"
@@ -74,11 +58,20 @@
 #include "profitByPlant.h"
 #include "pumping.h"
 #include "renewableGeneration.h"
+#include "reserves/reserveParticipationByDispatchableOffUnitsPlant.h"
+#include "reserves/reserveParticipationByDispatchableOnUnitsPlant.h"
+#include "reserves/reserveParticipationByHydro.h"
+#include "reserves/reserveParticipationBySTStorage.h"
+#include "reserves/reserveParticipationBySTStorageGroup.h"
+#include "reserves/reserveParticipationByThermalGroup.h"
+#include "reserves/reserveParticipationCost.h"
+#include "reserves/reserveParticipationMarginalCost.h"
+#include "reserves/reserveParticipationUnsuppliedSpilled.h"
 #include "reservoirlevel.h"
+#include "residual.h"
 #include "spilledEnergy.h"
 #include "thermalAirPollutantEmissions.h"
 #include "unsupliedEnergy.h"
-#include "unsupliedEnergyCsr.h"
 #include "waterValue.h"
 
 namespace Antares::Solver::Variable::Economy
@@ -87,58 +80,69 @@ namespace Antares::Solver::Variable::Economy
 /*!
 ** \brief All variables for a single area (economy)
 */
-using VariablesPerArea = Common::ComposeAll<OverallCost,
-                                            OverallCostCsr,
-                                            OperatingCost,
-                                            Price,
-                                            PriceCSR,
-                                            ThermalAirPollutantEmissions,
-                                            ProductionByDispatchablePlant,
-                                            MinDispatchableGenByPlant,
-                                            ProductionByRenewablePlant,
-                                            Balance,
-                                            RowBalance,
-                                            PSP,
-                                            MiscGenMinusRowPSP,
-                                            TimeSeriesValuesLoad,
-                                            TimeSeriesValuesHydro,
-                                            TimeSeriesValuesWind,
-                                            TimeSeriesValuesSolar,
-                                            DispatchableGeneration,
-                                            RenewableGeneration,
-                                            HydroStorage,
-                                            Pumping,
-                                            ReservoirLevel,
-                                            Inflows,
-                                            Overflows,
-                                            WaterValue,
-                                            HydroCost,
-                                            STSbyGroup,
-                                            STstorageInjectionByCluster,
-                                            STstorageWithdrawalByCluster,
-                                            STstorageLevelsByCluster,
-                                            STstorageCashFlowByCluster,
-                                            UnsupliedEnergy,
-                                            UnsupliedEnergyCSR,
-                                            DomesticUnsuppliedEnergy,
-                                            LMRViolations,
-                                            SpilledEnergy,
-                                            LOLD,
-                                            LOLD_CSR,
-                                            LOLP,
-                                            NearPriceCap,
-                                            LOLP_CSR,
-                                            AvailableDispatchGen,
-                                            DispatchableGenMargin,
-                                            DtgMarginCsr,
-                                            Marge,
-                                            MaxMrgCsr,
-                                            NonProportionalCost,
-                                            NonProportionalCostByDispatchablePlant,
-                                            NbOfDispatchedUnits,
-                                            NbOfDispatchedUnitsByPlant,
-                                            ProfitByPlant,
-                                            Links>::type;
+using VariablesPerArea = Common::ComposeAll<
+  OverallCost,
+  OverallCostCsr,
+  OperatingCost,
+  Price,
+  PriceCSR,
+  ThermalAirPollutantEmissions,
+  ProductionByDispatchablePlant,
+  MinDispatchableGenByPlant,
+  ProductionByRenewablePlant,
+  Balance,
+  RowBalance,
+  PSP,
+  MiscGenMinusRowPSP,
+  TimeSeriesValuesLoad,
+  TimeSeriesValuesHydro,
+  TimeSeriesValuesWind,
+  TimeSeriesValuesSolar,
+  DispatchableGeneration,
+  RenewableGeneration,
+  HydroStorage,
+  Pumping,
+  ReservoirLevel,
+  Inflows,
+  Overflows,
+  WaterValue,
+  HydroCost,
+  STSbyGroup,
+  STstorageInjectionByCluster,
+  STstorageWithdrawalByCluster,
+  STstorageLevelsByCluster,
+  STstorageCashFlowByCluster,
+  UnsupliedEnergy,
+  UnsupliedEnergyCSR,
+  DomesticUnsuppliedEnergy,
+  LMRViolations,
+  SpilledEnergy,
+  LOLD,
+  LOLD_CSR,
+  LOLP,
+  NearPriceCap,
+  LOLP_CSR,
+  AvailableDispatchGen,
+  DispatchableGenMargin,
+  DtgMarginCsr,
+  Marge,
+  MaxMrgCsr,
+  NonProportionalCost,
+  NonProportionalCostByDispatchablePlant,
+  NbOfDispatchedUnits,
+  NbOfDispatchedUnitsByPlant,
+  ProfitByPlant,
+  ResidualLoad,
+  Reserves::ReserveParticipationCost,
+  Reserves::ReserveParticipationMarginalCost,
+  Reserves::ReserveParticipationByDispatchableOnUnitsPlant,
+  Reserves::ReserveParticipationByDispatchableOffUnitsPlant,
+  Reserves::ReserveParticipationByThermalGroup,
+  Reserves::ReserveParticipationBySTStorage,
+  Reserves::ReserveParticipationBySTStorageGroup,
+  Reserves::ReserveParticipationByHydro,
+  Reserves::ReserveParticipationUnsuppliedSpilled,
+  Links>::type;
 
 /*!\n** \brief All variables for a single set of areas (economy)
  */
@@ -173,22 +177,14 @@ using VariablesPerSetOfAreas = Common::SpatialAggregateAll<OverallCost,
                                                            DtgMarginCsr,
                                                            Marge,
                                                            NonProportionalCost,
+                                                           ResidualLoad,
                                                            NbOfDispatchedUnits>::type;
 
-typedef BindingConstMarginCost< // Marginal cost for a binding constraint
-  Container::EndOfList          // End of variable list
-  >
+using VariablesPerBindingConstraints = BindingConstMarginCost;
 
-  VariablesPerBindingConstraints;
-
-typedef Variable::Join<
-  // Variables for each area / links attached to the areas
-  Variable::Areas<VariablesPerArea>,
-  // Variables for each set of areas
-  Variable::Join<Variable::SetsOfAreas<VariablesPerSetOfAreas>,
-                 // Variables for each binding constraint
-                 Variable::BindingConstraints<VariablesPerBindingConstraints>>>
-  ItemList;
+using ItemList = Variable::JoinAll<Variable::Areas<VariablesPerArea>,
+                                   Variable::SetsOfAreas<VariablesPerSetOfAreas>,
+                                   Variable::BindingConstraints<VariablesPerBindingConstraints>>;
 
 /*!
 ** \brief All variables for a simulation (economy)

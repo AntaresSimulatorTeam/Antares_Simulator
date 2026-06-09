@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define BOOST_TEST_MODULE study
 #define WIN32_LEAN_AND_MEAN
@@ -42,8 +24,8 @@ BOOST_AUTO_TEST_SUITE(study_duplicates)
 struct DuplicateFixture: public Antares::UnitTests::CaptureAntaresLogs
 {
     std::unique_ptr<Study> study = std::make_unique<Study>();
-    Data::Area* areaA = study->areaAdd("A");
-    Data::Area* areaB = study->areaAdd("B");
+    Data::Area* areaA = addAreaToListOfAreas(study->areas, "A");
+    Data::Area* areaB = addAreaToListOfAreas(study->areas, "B");
 
     void addBindingConstraint(const std::string& name)
     {
@@ -56,6 +38,7 @@ void addThermalCluster(Data::Area* area, const std::string& name)
     auto c = std::make_shared<ThermalCluster>(area);
     c->setName(name);
     area->thermal.list.addToCompleteList(c);
+    area->thermal.list.buildIndexes();
 }
 
 void addRenewableCluster(Data::Area* area, const std::string& name)
@@ -63,6 +46,7 @@ void addRenewableCluster(Data::Area* area, const std::string& name)
     auto c = std::make_shared<RenewableCluster>(area);
     c->setName(name);
     area->renewable.list.addToCompleteList(c);
+    area->renewable.list.buildIndexes();
 }
 
 void addShortTermStorage(Data::Area* area, const std::string& name)

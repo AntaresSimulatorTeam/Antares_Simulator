@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/study/parts/common/cluster_list.h"
 
 #include <algorithm>
@@ -25,10 +8,13 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 
+#include <antares/study/parts/reserves/makeGroupsOfSymmetriesFromString.h>
 #include <antares/utils/utils.h>
+#include "antares/study/parts/reserves/reservesParticipationsLoader.h"
 #include "antares/study/study.h"
 
 namespace fs = std::filesystem;
+using namespace Yuni;
 
 namespace Antares::Data
 {
@@ -46,6 +32,60 @@ std::shared_ptr<ClusterT> ClusterList<ClusterT>::enabledClusterAt(unsigned int i
     // No operator [] was found for std::view (returned by each_enabled()).
     // The current function is there to replace it.
     return *(std::views::drop(each_enabled(), index).begin());
+}
+
+template<class ClusterT>
+std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationClusterAt(
+  const Area* area,
+  unsigned int index) const
+{
+    int globalReserveParticipationIdx = 0;
+
+    for (const auto& reserveID:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        for (auto& cluster: allClusters_)
+        {
+            if (cluster->reserveParticipationContainer
+                && cluster->reserveParticipationContainer.value().isParticipatingInReserve(
+                  reserveID))
+            {
+                if (static_cast<unsigned int>(globalReserveParticipationIdx) == index)
+                {
+                    return {cluster->name(), reserveID};
+                }
+                globalReserveParticipationIdx++;
+            }
+        }
+    }
+
+    throw std::out_of_range("This cluster reserve participation index has not been found in all "
+                            "the reserve participations");
+}
+
+template<class ClusterT>
+std::pair<std::string, ReserveID> ClusterList<ClusterT>::reserveParticipationGroupAt(
+  const Area* area,
+  unsigned int index) const
+{
+    unsigned int column = 0;
+    for (const auto& reserveID:
+         area->allCapacityReservations.value().areaCapacityReservations | std::views::keys)
+    {
+        if (area->allCapacityReservations->reserveGroupPartThermal.contains(reserveID))
+        {
+            for (auto group: area->allCapacityReservations->reserveGroupPartThermal.at(reserveID))
+            {
+                if (column == index)
+                {
+                    return {group, reserveID};
+                }
+                column++;
+            }
+        }
+    }
+    throw std::out_of_range("This group reserve participation index has not been found in all the "
+                            "reserve participations");
 }
 
 template<class ClusterT>
@@ -116,8 +156,6 @@ template<class ClusterT>
 void ClusterList<ClusterT>::addToCompleteList(std::shared_ptr<ClusterT> cluster)
 {
     allClusters_.push_back(cluster);
-    sortCompleteList();
-    rebuildIndexes();
 }
 
 template<class ClusterT>
@@ -139,8 +177,10 @@ unsigned int ClusterList<ClusterT>::allClustersCount() const
 }
 
 template<class ClusterT>
-void ClusterList<ClusterT>::rebuildIndexes()
+void ClusterList<ClusterT>::buildIndexes()
 {
+    sortCompleteList();
+
     // First, we give an index to every cluster, enabled / must-run or not.
     // We do that to :
     //  - Stick to what was done before and not change the results
@@ -160,92 +200,6 @@ void ClusterList<ClusterT>::rebuildIndexes()
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::rename(std::string idToFind, std::string newName)
-{
-    if (idToFind.empty() or newName.empty())
-    {
-        return false;
-    }
-
-    // Internal:
-    // It is vital to make copy of these strings. We can not make assumption that these
-    // CString are not from the same buffer (name, id) than ours.
-    // It may have an undefined behavior.
-    // Consequently, the parameters `idToFind` and `newName` shall not be `const &`.
-
-    // Making sure that the id is lowercase
-    boost::to_lower(idToFind);
-
-    // The new ID
-    std::string newID = Antares::transformNameIntoID(newName);
-
-    // Looking for the renewable clusters in the list
-    auto* cluster_ptr = this->findInAll(idToFind);
-    if (!cluster_ptr)
-    {
-        return true;
-    }
-
-    if (idToFind == newID)
-    {
-        cluster_ptr->setName(newName);
-        return true;
-    }
-
-    // The name is the same. Aborting nicely.
-    if (cluster_ptr->name() == newName)
-    {
-        return true;
-    }
-
-    // Already exist
-    if (this->exists(newID))
-    {
-        return false;
-    }
-
-    cluster_ptr->setName(newName);
-
-    // Invalidate matrices attached to the area
-    // It is a bit excessive (all matrices not only those related to the renewable clusters)
-    // will be rewritten but currently it is the less error-prone.
-    if (cluster_ptr->parentArea)
-    {
-        (cluster_ptr->parentArea)->invalidateJIT = true;
-    }
-
-    return true;
-}
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::forceReload(bool reload) const
-{
-    return std::ranges::all_of(allClusters_,
-                               [&reload](const auto& c) { return c->forceReload(reload); });
-}
-
-template<class ClusterT>
-void ClusterList<ClusterT>::markAsModified() const
-{
-    for (const auto& c: allClusters_)
-    {
-        c->markAsModified();
-    }
-}
-
-template<class ClusterT>
-bool ClusterList<ClusterT>::remove(const std::string& id)
-{
-    auto nbDeletion = std::erase_if(allClusters_,
-                                    [&id](const SharedPtr& c) { return c->id() == id; });
-
-    // Invalidating the parent area
-    forceReload();
-
-    return nbDeletion > 0;
-}
-
-template<class ClusterT>
 bool ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
 {
     return std::ranges::all_of(allClusters_,
@@ -259,6 +213,13 @@ bool ClusterList<ClusterT>::loadDataSeriesFromFolder(Study& s, const std::filesy
     return std::ranges::all_of(allClusters_,
                                [&s, &folder](auto c)
                                { return c->loadDataSeriesFromFolder(s, folder); });
+}
+
+template<class ClusterT>
+bool ClusterList<ClusterT>::loadReserveParticipations(Area& area, const std::filesystem::path& file)
+{
+    ThermalReserveLoader loader;
+    return loader.load(area, file);
 }
 
 template<class ClusterT>

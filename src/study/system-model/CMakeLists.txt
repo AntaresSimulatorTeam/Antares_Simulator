@@ -6,6 +6,8 @@ set(SRC_model
         component.cpp
         system.cpp
         connection.cpp
+        optimConfig.cpp
+        portType.cpp
         include/antares/study/system-model/library.h
         include/antares/study/system-model/model.h
         include/antares/study/system-model/parameter.h
@@ -22,7 +24,7 @@ set(SRC_model
         include/antares/study/system-model/timeAndScenarioType.h
         include/antares/study/system-model/connection.h
         include/antares/study/system-model/objective.h
-		include/antares/study/system-model/optimConfig.h
+        include/antares/study/system-model/optimConfig.h
 )
 
 source_group("SystemModel" FILES ${SRC_model})
@@ -36,6 +38,7 @@ target_include_directories(antares-study-system-model
 )
 target_link_libraries(antares-study-system-model
         PUBLIC
+        Antares::system-model-base
         Antares::expressions
         PRIVATE
         Antares::exception

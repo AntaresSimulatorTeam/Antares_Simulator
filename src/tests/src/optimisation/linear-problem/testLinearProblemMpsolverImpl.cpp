@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -257,6 +239,50 @@ BOOST_FIXTURE_TEST_CASE(solve_problem_then_add_new_var___new_var_optimal_value_i
     auto* solution = pb->solve(false);
     auto* newVar = pb->addNumVariable(0, 1, "new var");
     BOOST_CHECK_EQUAL(newVar->solutionValue(), 0);
+}
+
+// New tests for objectiveValue()
+BOOST_FIXTURE_TEST_CASE(objectiveValue_default_is_zero, FixtureEmptyProblem)
+{
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(objectiveValue_with_coeff_but_not_solved_is_zero, FixtureEmptyProblem)
+{
+    auto* var = pb->addNumVariable(0, 10, "var");
+    pb->setObjectiveCoefficient(var, 5);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(objectiveValue_after_solve_matches_solution_objective,
+                        FixtureFeasibleProblem)
+{
+    auto* solution = pb->solve(false);
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 1);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), solution->getObjectiveValue());
+}
+
+BOOST_FIXTURE_TEST_CASE(objectiveOffset_default_and_value_is_zero, FixtureEmptyProblem)
+{
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 0);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(setObjectiveOffset_changes_getter_and_objectiveValue_without_vars,
+                        FixtureEmptyProblem)
+{
+    pb->setObjectiveOffset(2.5);
+    BOOST_CHECK_EQUAL(pb->getObjectiveOffset(), 2.5);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), 2.5);
+}
+
+BOOST_FIXTURE_TEST_CASE(setObjectiveOffset_before_solve_affects_solution_objective,
+                        FixtureFeasibleProblem)
+{
+    pb->setObjectiveOffset(2.0);
+    auto* solution = pb->solve(false);
+    BOOST_CHECK_EQUAL(solution->getObjectiveValue(), 3);
+    BOOST_CHECK_EQUAL(pb->objectiveValue(), solution->getObjectiveValue());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

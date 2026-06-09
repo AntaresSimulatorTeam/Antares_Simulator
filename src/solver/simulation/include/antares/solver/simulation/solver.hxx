@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
 
@@ -26,7 +9,7 @@
 #include <antares/exception/InitializationError.hpp>
 #include <antares/logs/logs.h>
 #include "antares/concurrency/concurrency.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/common-eco-adq.h"
@@ -36,7 +19,6 @@
 #include "antares/solver/simulation/regenerate_timeseries.h"
 #include "antares/solver/simulation/timeseries-numbers.h"
 #include "antares/solver/ts-generator/generator.h"
-#include "antares/solver/variable/print.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -129,8 +111,6 @@ private:
 public:
     void operator()()
     {
-        Progression::Task progression(study, y, Solver::Progression::sectYear);
-
         // Index of the current year in the list of structures
         uint indexYear = randomForParallelYears.yearNumberToIndex[y];
 
@@ -165,27 +145,19 @@ public:
         std::list<uint> failedWeekList;
 
         OptimizationStatisticsWriter optWriter(pResultWriter, y);
-        bool yearFailed = !simulation_->year(progression,
-                                             state,
+        bool yearFailed = !simulation_->year(state,
                                              numSpace,
                                              randomForCurrentYear,
                                              failedWeekList,
                                              hydroManagement.ventilationResults(),
                                              optWriter,
+                                             pDurationCollector,
                                              scratchmap);
-        if (!study.parameters.noOutput)
-        {
-            auto& simTable = simulation_->getSimulationTable(numSpace);
-
-            auto buffers = simTable.moveBuffers();
-
-            simulation_->storeYearBuffers(y, std::move(buffers.first), std::move(buffers.second));
-        }
 
         // Log failing weeks
         logFailedWeek(y, study, failedWeekList);
 
-        simulation_->variables.yearEndBuild(state, y, numSpace);
+        simulation_->variables.buildThermalClusterYearEndResults(state, y, numSpace);
 
         // 7 - End of the year, this is the last stade where the variables can retrieve
         // their data for this year.
@@ -213,20 +185,25 @@ public:
         // Computing the summary : adding the contribution of MC years
         // previously computed in parallel
         aggregationMutex.lock();
+
         yearsFailed[y] = yearFailed;
 
-        simulation_->variables.computeSummary(y, numSpace);
+        pDurationCollector("synthesis_compute") << [this, &numSpace, &state]
+        {
+            simulation_->variables.computeSummary(y, numSpace);
 
-        // Computing summary of spatial aggregations
-        simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables, y, numSpace);
+            // Computing summary of spatial aggregations
+            simulation_->variables.computeSpatialAggregatesSummary(simulation_->variables,
+                                                                   y,
+                                                                   numSpace);
 
-        // Computes statistics on annual (system and solution) costs, to be printed in output
-        // into separate files
-        simulation_->computeAnnualCostsStatistics(state);
+            // Computes statistics on annual (system and solution) costs, to be printed in output
+            // into separate files
+            simulation_->computeAnnualCostsStatistics(state);
+        };
 
         logs.debug() << "year " << y + 1 << " ended and returned numSpace " << numSpace;
         numspaceManager.freeNumSpace(numSpace);
-        simulation_->incrementProgression(progression);
 
         aggregationMutex.unlock();
 
@@ -250,11 +227,8 @@ inline ISimulation<ImplementationType>::ISimulation(
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
-    // Ask to the interface to show the messages
-    logs.info();
-    logs.info() << LOG_UI_DISPLAY_MESSAGES_ON;
-
     // Running !
+    logs.info();
     logs.checkpoint() << "Running the simulation (" << ImplementationType::Name() << ')';
     logs.info() << "Allocating resources...";
 
@@ -275,9 +249,7 @@ inline void ISimulation<ImplementationType>::checkWriter() const
 }
 
 template<class ImplementationType>
-inline ISimulation<ImplementationType>::~ISimulation()
-{
-}
+inline ISimulation<ImplementationType>::~ISimulation() = default;
 
 template<class ImplementationType>
 void ISimulation<ImplementationType>::run()
@@ -286,16 +258,10 @@ void ISimulation<ImplementationType>::run()
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
-    // Computing the max number columns a report of any kind can contain.
-    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
+
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports(study.setsOfAreas);
 
     logs.info() << "Allocating resources...";
-
-    // Memory usage
-    {
-        Variable::PrintInfosStdCout c;
-        ImplementationType::variables.template provideInformations<Variable::PrintInfosStdCout>(c);
-    }
 
     ImplementationType::setNbPerformedYearsInParallel(pNbMaxPerformedYearsInParallel);
 
@@ -394,7 +360,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
 
         // The target folder
         String newPath;
-        newPath << ImplementationType::Name() << IO::Separator;
+        newPath << ImplementationType::Name() << Yuni::IO::Separator;
         if (synthesis)
         {
             newPath << "mc-all";
@@ -403,7 +369,7 @@ void ISimulation<ImplementationType>::writeResults(bool synthesis, uint year, ui
         {
             CString<10, false> tmp;
             tmp = (year + 1);
-            newPath << "mc-ind" << IO::Separator << "00000";
+            newPath << "mc-ind" << Yuni::IO::Separator << "00000";
             newPath.overwriteRight(tmp);
         }
 
@@ -523,13 +489,9 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     }
 
     pQueueService->start();
-
     pQueueService->wait(Yuni::qseIdle);
     pQueueService->stop();
-    if (!study.parameters.noOutput)
-    {
-        aggregateAndWriteSimulationTables();
-    }
+
     results.join();
     pResultWriter.flush();
     // On regarde si au moins une année du lot n'a pas trouvé de solution
@@ -550,55 +512,6 @@ void ISimulation<ImplementationType>::loopThroughYears(uint firstYear,
     // Writing annual costs statistics
     pAnnualStatistics.endStandardDeviations();
     pAnnualStatistics.writeToOutput(pResultWriter);
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::storeYearBuffers(uint year,
-                                                       std::string&& firstBuffer,
-                                                       std::string&& secondBuffer)
-{
-    std::lock_guard lock(buffersMutex_);
-    yearSimulationBuffers_.emplace(year,
-                                   std::pair{std::move(firstBuffer), std::move(secondBuffer)});
-}
-
-template<class ImplementationType>
-void ISimulation<ImplementationType>::aggregateAndWriteSimulationTables()
-{
-    std::lock_guard lock(buffersMutex_);
-    std::string globalFirstBuffer;
-    std::string globalSecondBuffer;
-    // dans l'ordre des années
-    for (uint year = 0; year < study.parameters.nbYears; ++year)
-    {
-        auto it = yearSimulationBuffers_.find(year);
-        if (it != yearSimulationBuffers_.end())
-        {
-            globalFirstBuffer += it->second.first;
-            globalSecondBuffer += it->second.second;
-        }
-    }
-    const auto header = ImplementationType::getSimulationTableHeader() + "\n";
-    if (!globalFirstBuffer.empty())
-    {
-        std::string writerEntry = header + std::move(globalFirstBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-1.csv", writerEntry);
-    }
-    if (!globalSecondBuffer.empty())
-    {
-        std::string writerEntry = header + std::move(globalSecondBuffer);
-        pResultWriter.addEntryFromBuffer("simulation_table--optim-nb-2.csv", writerEntry);
-    }
-
-    yearSimulationBuffers_.clear();
-}
-
-template<class ImplementationType>
-OptimisationsSimulationTable& ISimulation<ImplementationType>::getSimulationTable(uint numSpace)
-{
-    // Cette méthode doit être implémentée dans la classe dérivée (Economy)
-    // pour retourner la table spécifique à l'espace numérique
-    return ImplementationType::getSimulationTable(numSpace);
 }
 } // namespace Antares::Solver::Simulation
 

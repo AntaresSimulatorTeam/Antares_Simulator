@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_VARIABLE_H__
 #define __SOLVER_VARIABLE_VARIABLE_H__
 
@@ -31,7 +14,6 @@
 
 #include "categories.h"
 #include "container.h"
-#include "endoflist.h"
 #include "info.h"
 #include "storage/intermediate.h"
 #include "storage/results.h"
@@ -39,19 +21,18 @@
 
 namespace Antares::Solver::Variable
 {
+
 /*!
 ** \brief Interface for any variable
 */
-template<class ChildT, class NextT, class VCardT>
-class IVariable: protected NextT
+template<class ChildT, class VCardT>
+class IVariable
 {
 public:
     //! Child
     typedef ChildT ChildType;
-    //! Type of the next static variable
-    typedef NextT NextType;
     //! Variable
-    typedef IVariable<ChildT, NextT, VCardT> VariableType;
+    typedef IVariable<ChildT, VCardT> VariableType;
     //! VCard
     typedef VCardT VCardType;
     //! List of expected results
@@ -69,10 +50,7 @@ public:
     {
         enum
         {
-            count = ((categoryDataLevel & CDataLevel && categoryFileLevel & CFile)
-                       ? (NextType::template Statistics<CDataLevel, CFile>::count
-                          + ResultsType::count)
-                       : NextType::template Statistics<CDataLevel, CFile>::count),
+            count = ResultsType::count,
         };
     };
 
@@ -134,17 +112,6 @@ public:
     ** \param link The link
     */
     void initializeFromLink(Data::Study* study, Data::AreaLink* link);
-
-    /*!
-    ** \brief Initialize the variable with a specific thermal cluster
-    **
-    ** \param study The attached study
-    ** \param area The area
-    ** \param cluster The thermal cluster
-    */
-    void initializeFromThermalCluster(Data::Study* study,
-                                      Data::Area* area,
-                                      Data::ThermalCluster* cluster);
     //@}
 
     void broadcastNonApplicability(bool applyNonApplicable);
@@ -170,16 +137,6 @@ public:
     ** \param year The current year
     */
     void yearBegin(uint year);
-
-    /*!
-    ** \brief Notify to all variables that the year is close to end
-    **
-    ** All variables that have specific updates after a whole year calculation
-    ** can now get their results
-    ** \param state The current thermal cluster
-    ** \param year The current year
-    */
-    void yearEndBuild(State& state, uint year);
 
     /*!
     ** \brief Notify to all variables to prepare data for the close to year end calculations for
@@ -262,18 +219,13 @@ public:
                                  uint numSpace) const;
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
+    bool hasColumn() const;
 
     /*!
     ** \brief Event triggered before exporting a year-by-year survey report
     */
     void beforeYearByYearExport(uint year, uint numSpace);
     //@}
-
-    /*!
-    ** \brief "Print" informations about the variable tree
-    */
-    template<class I>
-    static void provideInformations(I& infos);
 
     /*!
     ** \brief Compute the spatial cluster with the results of a single variable
@@ -294,9 +246,6 @@ public:
     */
     template<class VCardSearchT, class O>
     void computeSpatialAggregateWith(O& out, const Data::Area* area);
-
-    template<class VCardToFindT>
-    const double* retrieveHourlyResultsForCurrentYear(uint numSpace) const;
 
     template<class VCardToFindT>
     void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,

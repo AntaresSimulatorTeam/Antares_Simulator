@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include "storage-for-remix-no-levels.h"
@@ -20,7 +23,8 @@ public:
                               const std::vector<double> upRuleCurve,
                               const double initLevel,
                               const double withdrawalEff,
-                              const double injectionEff);
+                              const double injectionEff,
+                              const std::string& name = "");
 
     double maxExchange(unsigned hourOfMaxGen, unsigned hourOfMinGen) const override;
     void update() override;

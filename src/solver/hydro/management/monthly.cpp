@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <iomanip>
 #include <limits>
 #include <sstream>
@@ -185,9 +168,8 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
           auto& data = area.hydro.managementData[y];
           auto& areaMonthlyData = hydro_specific_map[&area].monthly;
 
-          auto& minLvl = area.hydro.reservoirLevel[Data::PartHydro::minimum];
-          auto& maxLvl = area.hydro.reservoirLevel[Data::PartHydro::maximum];
-
+          const auto* minLvl = area.hydro.series->ruleCurves.min.getColumn(y);
+          const auto* maxLvl = area.hydro.series->ruleCurves.max.getColumn(y);
           int initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate;
 
           double lvi = -1.;
@@ -273,12 +255,12 @@ void HydroManagement::prepareMonthlyOptimalGenerations(
 
           else
           {
-              auto& reservoirLevel = area.hydro.reservoirLevel[Data::PartHydro::average];
+              const auto* ruleCurves = area.hydro.series->ruleCurves.avg.getColumn(y);
 
               for (uint realmonth = 0; realmonth != MONTHS_PER_YEAR; ++realmonth)
               {
                   areaMonthlyData[realmonth].MOG = data.inflows[realmonth];
-                  areaMonthlyData[realmonth].MOL = reservoirLevel[realmonth];
+                  areaMonthlyData[realmonth].MOL = ruleCurves[realmonth];
               }
           }
 

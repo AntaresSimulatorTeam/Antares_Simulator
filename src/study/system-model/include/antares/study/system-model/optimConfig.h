@@ -1,26 +1,9 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
-namespace Antares::Modeler::Config
+namespace Antares::Solver::Config
 {
 
 enum class Location
@@ -30,19 +13,13 @@ enum class Location
     SUBPROBLEMS
 };
 
-constexpr bool AreLocationsCompatible(Location lhs, Location rhs)
-{
-    switch (rhs)
-    {
-    case Location::MASTER:
-        return lhs == Location::MASTER || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::SUBPROBLEMS:
-        return lhs == Location::SUBPROBLEMS || lhs == Location::MASTER_AND_SUBPROBLEMS;
-    case Location::MASTER_AND_SUBPROBLEMS:
-        return true;
-    default:
-        return false;
-    }
-}
+const char* LocationToStr(Location loc);
 
-} // namespace Antares::Modeler::Config
+bool isInSubProblem(const Location& l);
+bool isInMasterProblem(const Location& l);
+
+bool AreLocationsCompatibleForFillers(Location lhs, Location rhs);
+// stricter for MASTER_AND_SUBPROLEMS
+bool AreLocationsCompatibleForExpressions(Location lhs, Location rhs);
+
+} // namespace Antares::Solver::Config

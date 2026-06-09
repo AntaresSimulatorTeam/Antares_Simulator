@@ -1,21 +1,6 @@
-#  Copyright 2007-2025, RTE (https://www.rte-france.com)
-#  See AUTHORS.txt
-#  SPDX-License-Identifier: MPL-2.0
-#  This file is part of Antares-Simulator,
-#  Adequacy and Performance assessment for interconnected energy networks.
-#
-#  Antares_Simulator is free software: you can redistribute it and/or modify
-#  it under the terms of the Mozilla Public Licence 2.0 as published by
-#  the Mozilla Foundation, either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  Antares_Simulator is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#  Mozilla Public Licence 2.0 for more details.
-#
-#  You should have received a copy of the Mozilla Public Licence 2.0
-#  along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
+# Copyright 2007-2026, RTE (https://www.rte-france.com)
+# SPDX-License-Identifier: MPL-2.0
+
 import math
 # Test steps definitions specific to antares-modeler
 
@@ -25,7 +10,8 @@ import subprocess
 from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import modeler_output_handler
-import common_steps.mps_utils as mpu
+from shared_utils import mps_utils as mpu
+from pathlib import Path
 
 
 @given('the modeler study path is "{string}"')
@@ -40,7 +26,7 @@ def run_antares_modeler(context):
 
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    assert_double_close(value, context.moh.get_objective_value(), 1e-6)
+    assert_double_close(value, context.moh.get_objective_value(), 1e-5)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')
@@ -64,9 +50,9 @@ def modeler_output_values(context):
         for block in block_range:
             for scenario in scenario_range:
                 for ts in ts_range:
-                    assert_double_close(
-                        get_value(row, ts), context.moh.get_simulation_table_entry(row["component"], row["output"], block, ts, scenario), 1e-6
-                    )
+                    assert_double_close(get_value(row, ts),
+                                        context.moh.get_simulation_table_entry(row["component"],row["output"], block, ts, scenario),
+                                        1e-6)
 
 def read_int_range(row, key : str):
     if row[key] != "":
@@ -79,13 +65,7 @@ def read_int_range(row, key : str):
 
 def get_value(row, ts):
     ret = row["value"]
-
-    # if "-" in ret and not ret.isdigit():  # Handle "80-0" but not single numbers
-    #     ret = ret.split("-")  # Split into a list of strings
-    #     return float(ret[ts])  # Index and convert to float
-
     return float(ret)  # Single value case (apply to all timesteps)
-
 
 def run_modeler(context):
     command = build_antares_modeler_command(context)
@@ -112,18 +92,10 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        context.moh = modeler_output_handler(parse_simulation_table_from_logs(context.logs_out), parse_output_folder_from_logs(context.logs_out))
-
+        context.moh = modeler_output_handler(Path(parse_output_folder_from_logs(context.logs_out)),
+                                             "simulation-table*.csv",
+                                             True)
     context.return_code = process.returncode
-
-
-def parse_simulation_table_from_logs(logs: str) -> str:
-    for line in logs.splitlines():
-        if 'Simulation table is written in: ' in line:
-            return line.split('Simulation table is written in: ')[1]
-    raise LookupError("Could not find simulation table location in output logs")
-
-
 
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
@@ -160,12 +132,13 @@ def check_variables(context, model):
 
 @then(u'the master problem contains the following variables')
 def check_master_variables(context):
-    assert(context.moh.problems != None and context.moh.problems.master != None)
+    assert (context.moh.problems != None and context.moh.problems.master != None)
     check_variables(context, context.moh.problems.master)
+
 
 @then(u'the subproblem contains the following variables')
 def check_subproblem_variables(context):
-    assert(context.moh.problems != None and context.moh.problems.subproblem != None)
+    assert (context.moh.problems != None and context.moh.problems.subproblem != None)
     model = context.moh.problems.subproblem
     check_variables(context, context.moh.problems.subproblem)
 
@@ -187,6 +160,7 @@ def parse_structure(content):
         })
     return entries
 
+
 @then(u'the structure file contains the following entries')
 def check_structure(context):
     structure = context.moh.problems.structure
@@ -205,4 +179,4 @@ def check_structure(context):
     extra = actual_set - expected_set
 
     assert not missing, f"Missing entries: {missing}"
-    assert not extra,   f"Unexpected entries: {extra}"
+    assert not extra, f"Unexpected entries: {extra}"

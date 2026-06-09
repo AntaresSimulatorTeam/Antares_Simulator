@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define BOOST_TEST_MODULE test read scenario - builder.dat
 
 #define WIN32_LEAN_AND_MEAN
@@ -37,11 +20,13 @@ using namespace Antares::Data;
 void addClusterToAreaList(Area* area, std::shared_ptr<ThermalCluster> cluster)
 {
     area->thermal.list.addToCompleteList(cluster);
+    area->thermal.list.buildIndexes();
 }
 
 void addClusterToAreaList(Area* area, std::shared_ptr<RenewableCluster> cluster)
 {
     area->renewable.list.addToCompleteList(cluster);
+    area->renewable.list.buildIndexes();
 }
 
 template<class ClusterType>
@@ -74,9 +59,17 @@ struct Fixture
                                                     // time-series
 
         // Add areas
-        area_1 = study->areaAdd("Area 1");
-        area_2 = study->areaAdd("Area 2");
-        area_3 = study->areaAdd("Area 3");
+        area_1 = addAreaToListOfAreas(study->areas, "Area 1");
+        area_2 = addAreaToListOfAreas(study->areas, "Area 2");
+        area_3 = addAreaToListOfAreas(study->areas, "Area 3");
+        for (auto* area: {area_1, area_2, area_3})
+        {
+            if (area)
+            {
+                area->createMissingData();
+                area->resetToDefaultValues();
+            }
+        }
         study->areas.rebuildIndexes();
 
         // Load : set the nb of ready made TS
@@ -221,15 +214,15 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_18__load_TS_number_11_is_chosen__re
 {
     AreaName yearNumber = "18";
     String tsNumber = "11";
-    AreaName::Vector splitKey = {"l", "area 2", yearNumber};
+    std::vector<std::string> splitKey = {"l", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.load.get_value(yearNumber.to<uint>(), area_2->index),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.load.get_value(std::stoul(yearNumber), area_2->index),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(area_2->load.series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 // =================
@@ -239,15 +232,15 @@ BOOST_FIXTURE_TEST_CASE(on_area3_and_on_year_7__wind_TS_number_5_is_chosen__read
 {
     AreaName yearNumber = "7";
     String tsNumber = "5";
-    AreaName::Vector splitKey = {"w", "area 3", yearNumber};
+    std::vector<std::string> splitKey = {"w", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.wind.get_value(yearNumber.to<uint>(), area_3->index),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.wind.get_value(std::stoul(yearNumber), area_3->index),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(area_3->wind.series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 // =================
@@ -257,15 +250,15 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_4__solar_TS_number_8_is_chosen__rea
 {
     AreaName yearNumber = "4";
     String tsNumber = "8";
-    AreaName::Vector splitKey = {"s", "area 1", yearNumber};
+    std::vector<std::string> splitKey = {"s", "area 1", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.solar.get_value(yearNumber.to<uint>(), area_1->index),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.solar.get_value(std::stoul(yearNumber), area_1->index),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(area_1->solar.series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 // =================
@@ -275,15 +268,15 @@ BOOST_FIXTURE_TEST_CASE(on_area2_and_on_year_15__solar_TS_number_3_is_chosen__re
 {
     AreaName yearNumber = "15";
     String tsNumber = "3";
-    AreaName::Vector splitKey = {"h", "area 2", yearNumber};
+    std::vector<std::string> splitKey = {"h", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.hydro.get_value(yearNumber.to<uint>(), area_2->index),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.hydro.get_value(std::stoul(yearNumber), area_2->index),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(area_2->hydro.series->timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 // ===========================
@@ -295,15 +288,16 @@ BOOST_FIXTURE_TEST_CASE(
 {
     AreaName yearNumber = "6";
     String tsNumber = "3";
-    AreaName::Vector splitKey = {"t", "area 1", yearNumber, "th-cluster-11"};
+    std::vector<std::string> splitKey = {"t", "area 1", yearNumber, "th-cluster-11"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_11.get(), yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_11.get(),
+                                                         std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(thCluster_11->series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -312,15 +306,16 @@ BOOST_FIXTURE_TEST_CASE(
 {
     AreaName yearNumber = "13";
     String tsNumber = "5";
-    AreaName::Vector splitKey = {"t", "area 1", yearNumber, "th-cluster-12"};
+    std::vector<std::string> splitKey = {"t", "area 1", yearNumber, "th-cluster-12"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_12.get(), yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.thermal[area_1->index].get(thCluster_12.get(),
+                                                         std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(thCluster_12->series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -329,15 +324,16 @@ BOOST_FIXTURE_TEST_CASE(
 {
     AreaName yearNumber = "10";
     String tsNumber = "7";
-    AreaName::Vector splitKey = {"t", "area 3", yearNumber, "th-cluster-31"};
+    std::vector<std::string> splitKey = {"t", "area 3", yearNumber, "th-cluster-31"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.thermal[area_3->index].get(thCluster_31.get(), yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.thermal[area_3->index].get(thCluster_31.get(),
+                                                         std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(thCluster_31->series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 // =============================
@@ -351,16 +347,16 @@ BOOST_FIXTURE_TEST_CASE(
 
     AreaName yearNumber = "16";
     String tsNumber = "8";
-    AreaName::Vector splitKey = {"r", "area 2", yearNumber, "rn-cluster-21"};
+    std::vector<std::string> splitKey = {"r", "area 2", yearNumber, "rn-cluster-21"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
     BOOST_CHECK_EQUAL(my_rule.renewable[area_2->index].get(rnCluster_21.get(),
-                                                           yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+                                                           std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(rnCluster_21->series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -371,16 +367,16 @@ BOOST_FIXTURE_TEST_CASE(
 
     AreaName yearNumber = "2";
     String tsNumber = "4";
-    AreaName::Vector splitKey = {"r", "area 3", yearNumber, "rn-cluster-32"};
+    std::vector<std::string> splitKey = {"r", "area 3", yearNumber, "rn-cluster-32"};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
     BOOST_CHECK_EQUAL(my_rule.renewable[area_3->index].get(rnCluster_32.get(),
-                                                           yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+                                                           std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[yearNumber.to<uint>()],
-                      tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(rnCluster_32->series.timeseriesNumbers[std::stoul(yearNumber)],
+                      std::stoul(tsNumber) - 1);
 }
 
 // ========================
@@ -390,15 +386,15 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__re
 {
     AreaName yearNumber = "17";
     String level = "0.123";
-    AreaName::Vector splitKey = {"hl", "area 1", yearNumber};
+    std::vector<std::string> splitKey = {"hl", "area 1", yearNumber};
     my_rule.readLine(splitKey, level);
 
-    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(yearNumber.to<uint>(), area_1->index),
-                      level.to<double>());
+    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(std::stoul(yearNumber), area_1->index),
+                      std::stod(level));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_1->index][yearNumber.to<uint>()],
-                      level.to<double>());
+    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_1->index][std::stoul(yearNumber)],
+                      std::stod(level));
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -407,14 +403,14 @@ BOOST_FIXTURE_TEST_CASE(
 {
     AreaName yearNumber = "9";
     String level = "1.5";
-    AreaName::Vector splitKey = {"hl", "area 2", yearNumber};
+    std::vector<std::string> splitKey = {"hl", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level));
 
-    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(yearNumber.to<uint>(), area_2->index),
+    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(std::stoul(yearNumber), area_2->index),
                       1.);
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_2->index][yearNumber.to<uint>()], 1.);
+    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_2->index][std::stoul(yearNumber)], 1.);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -423,14 +419,14 @@ BOOST_FIXTURE_TEST_CASE(
 {
     AreaName yearNumber = "5";
     String level = "-3.5";
-    AreaName::Vector splitKey = {"hl", "area 3", yearNumber};
+    std::vector<std::string> splitKey = {"hl", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, level));
 
-    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(yearNumber.to<uint>(), area_3->index),
+    BOOST_CHECK_EQUAL(my_rule.hydroInitialLevels.get_value(std::stoul(yearNumber), area_3->index),
                       0.);
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_3->index][yearNumber.to<uint>()], 0.);
+    BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_3->index][std::stoul(yearNumber)], 0.);
 }
 
 // ========================
@@ -440,15 +436,15 @@ BOOST_FIXTURE_TEST_CASE(on_area1_and_on_year_8__hydro_level_0_342_is_chosen__rea
 {
     AreaName yearNumber = "8";
     String level = "0.342";
-    AreaName::Vector splitKey = {"hfl", "area 1", yearNumber};
-    my_rule.readLine(splitKey, level, false);
+    std::vector<std::string> splitKey = {"hfl", "area 1", yearNumber};
+    my_rule.readLine(splitKey, level);
 
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(yearNumber.to<uint>(), area_1->index),
-                      level.to<double>());
+    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_1->index),
+                      std::stod(level));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_1->index][yearNumber.to<uint>()],
-                      level.to<double>());
+    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_1->index][std::stoul(yearNumber)],
+                      std::stod(level));
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -457,13 +453,14 @@ BOOST_FIXTURE_TEST_CASE(
 {
     AreaName yearNumber = "1";
     String level = "2.4";
-    AreaName::Vector splitKey = {"hfl", "area 2", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level, false));
+    std::vector<std::string> splitKey = {"hfl", "area 2", yearNumber};
+    BOOST_CHECK(my_rule.readLine(splitKey, level));
 
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(yearNumber.to<uint>(), area_2->index), 1.);
+    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_2->index),
+                      1.);
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_2->index][yearNumber.to<uint>()], 1.);
+    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_2->index][std::stoul(yearNumber)], 1.);
 }
 
 BOOST_FIXTURE_TEST_CASE(
@@ -472,13 +469,14 @@ BOOST_FIXTURE_TEST_CASE(
 {
     AreaName yearNumber = "3";
     String level = "-5.2";
-    AreaName::Vector splitKey = {"hfl", "area 3", yearNumber};
-    BOOST_CHECK(my_rule.readLine(splitKey, level, false));
+    std::vector<std::string> splitKey = {"hfl", "area 3", yearNumber};
+    BOOST_CHECK(my_rule.readLine(splitKey, level));
 
-    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(yearNumber.to<uint>(), area_3->index), 0.);
+    BOOST_CHECK_EQUAL(my_rule.hydroFinalLevels.get_value(std::stoul(yearNumber), area_3->index),
+                      0.);
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_3->index][yearNumber.to<uint>()], 0.);
+    BOOST_CHECK_EQUAL(study->scenarioFinalHydroLevels[area_3->index][std::stoul(yearNumber)], 0.);
 }
 
 // ======================
@@ -489,14 +487,14 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area2_and_on_year_0__ntc_TS_number_10_is_c
 {
     AreaName yearNumber = "0";
     String tsNumber = "10";
-    AreaName::Vector splitKey = {"ntc", "area 1", "area 2", yearNumber};
+    std::vector<std::string> splitKey = {"ntc", "area 1", "area 2", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_12, yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_12, std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(link_12->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(link_12->timeseriesNumbers[std::stoul(yearNumber)], std::stoul(tsNumber) - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_chosen__reading_OK,
@@ -504,14 +502,14 @@ BOOST_FIXTURE_TEST_CASE(on_link_area1_area3_and_on_year_15__ntc_TS_number_7_is_c
 {
     AreaName yearNumber = "15";
     String tsNumber = "7";
-    AreaName::Vector splitKey = {"ntc", "area 1", "area 3", yearNumber};
+    std::vector<std::string> splitKey = {"ntc", "area 1", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_13, yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.linksNTC[area_1->index].get(link_13, std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(link_13->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(link_13->timeseriesNumbers[std::stoul(yearNumber)], std::stoul(tsNumber) - 1);
 }
 
 BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_chosen__reading_OK,
@@ -519,14 +517,14 @@ BOOST_FIXTURE_TEST_CASE(on_link_area2_area3_and_on_year_19__ntc_TS_number_6_is_c
 {
     AreaName yearNumber = "19";
     String tsNumber = "6";
-    AreaName::Vector splitKey = {"ntc", "area 2", "area 3", yearNumber};
+    std::vector<std::string> splitKey = {"ntc", "area 2", "area 3", yearNumber};
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
-    BOOST_CHECK_EQUAL(my_rule.linksNTC[area_2->index].get(link_23, yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+    BOOST_CHECK_EQUAL(my_rule.linksNTC[area_2->index].get(link_23, std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
-    BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[yearNumber.to<uint>()], tsNumber.to<uint>() - 1);
+    BOOST_CHECK_EQUAL(link_23->timeseriesNumbers[std::stoul(yearNumber)], std::stoul(tsNumber) - 1);
 }
 
 // ========================
@@ -538,7 +536,7 @@ BOOST_FIXTURE_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_
     auto yearNumber = 3;
     uint32_t tsNumber = 4;
 
-    AreaName::Vector splitKey = {"bc", "groupTest", std::to_string(yearNumber)};
+    std::vector<std::string> splitKey = {"bc", "groupTest", std::to_string(yearNumber)};
     BOOST_CHECK(my_rule.readLine(splitKey, std::to_string(tsNumber)));
     BOOST_CHECK_EQUAL(my_rule.binding_constraints.get("groupTest", yearNumber), tsNumber);
 
@@ -576,7 +574,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
 {
     AreaName yearNumber = "5";
     String tsNumber = "3";
-    AreaName::Vector splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
+    std::vector<std::string> splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, tsNumber));
 
@@ -586,13 +584,13 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_valid_cluster_and_year__reading_OK, F
 
     BOOST_CHECK_EQUAL(
       my_rule.shortTermStorageInflows[0].get(&area_1->shortTermStorage.storagesByIndex.back(),
-                                             yearNumber.to<uint>()),
-      tsNumber.to<uint>());
+                                             std::stoul(yearNumber)),
+      std::stoul(tsNumber));
 
     auto* addc = area_1->shortTermStorage.storagesByIndex.back().additionalConstraints[0].get();
     BOOST_CHECK_EQUAL(my_rule.shortTermStorageAdditionalConstraints[0].get(addc,
-                                                                           yearNumber.to<uint>()),
-                      tsNumber.to<uint>());
+                                                                           std::stoul(yearNumber)),
+                      std::stoul(tsNumber));
 
     BOOST_CHECK(my_rule.apply());
 }
@@ -601,7 +599,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_cluster, Fixture)
 {
     AreaName yearNumber = "3";
     String tsNumber = "2";
-    AreaName::Vector splitKey = {"sts", "area 2", yearNumber, "nonexistent-cluster"};
+    std::vector<std::string> splitKey = {"sts", "area 2", yearNumber, "nonexistent-cluster"};
     BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
 }
 
@@ -609,7 +607,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_nonexistent_area, Fixture)
 {
     AreaName yearNumber = "7";
     String tsNumber = "1";
-    AreaName::Vector splitKey = {"sts", "nonexistent area", yearNumber, "any-cluster"};
+    std::vector<std::string> splitKey = {"sts", "nonexistent area", yearNumber, "any-cluster"};
     BOOST_CHECK(!my_rule.readLine(splitKey, tsNumber));
 }
 
@@ -619,7 +617,7 @@ BOOST_FIXTURE_TEST_CASE(short_term_storage_large_ts_number__handled_gracefully, 
 
     AreaName yearNumber = "10";
     String veryLarge = "100000000"; // take maxTSnumber := 10'000
-    AreaName::Vector splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
+    std::vector<std::string> splitKey = {"sts", "area 1", yearNumber, "st-cluster-1"};
 
     BOOST_CHECK(my_rule.readLine(splitKey, veryLarge));
 }

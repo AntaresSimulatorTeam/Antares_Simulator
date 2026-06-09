@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/solver/simulation/remix-storage/create-storage-for-remix.h"
 
 #include "antares/solver/simulation/remix-storage/storage-for-remix-with-levels.h"
@@ -16,7 +19,8 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                     const double initLevel,
                                                     const double reservoirCapacity,
                                                     const double pumpEfficiency,
-                                                    bool reservoirManagement)
+                                                    bool reservoirManagement,
+                                                    const std::string& name)
 {
     if (!reservoirManagement)
     {
@@ -39,7 +43,8 @@ std::shared_ptr<IStorageForRemix> makeHydroForRemix(std::vector<double>& generat
                                                        upRuleCurve,
                                                        initLevel,
                                                        generationEff,
-                                                       pumpEfficiency);
+                                                       pumpEfficiency,
+                                                       name);
 }
 
 std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawal,
@@ -47,16 +52,16 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                   std::vector<double>& levels,
                                                   const std::vector<double>& pmax,
                                                   const std::vector<double>& inflows,
+                                                  const std::vector<double>& overflows,
                                                   const std::vector<double>& injection,
                                                   const std::vector<double>& lowRuleCurve,
                                                   const std::vector<double>& upRuleCurve,
                                                   const double initLevel,
                                                   const double withdrawalEff,
-                                                  const double injectionEff)
+                                                  const double injectionEff,
+                                                  const std::string& name)
 {
     size_t size = withdrawal.size();
-
-    std::vector<double> overflows(size, 0.);
     std::vector<double> pmin(size, 0.);
 
     return std::make_shared<StorageForRemixWithLevels>(withdrawal,
@@ -71,7 +76,8 @@ std::shared_ptr<IStorageForRemix> makeSTSforRemix(std::vector<double>& withdrawa
                                                        upRuleCurve,
                                                        initLevel,
                                                        withdrawalEff,
-                                                       injectionEff);
+                                                       injectionEff,
+                                                       name);
 }
 
 } // namespace Antares::Solver::Simulation

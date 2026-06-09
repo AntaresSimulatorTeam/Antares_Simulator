@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #include "immediate_file_writer.h"
 
@@ -81,12 +63,12 @@ void ImmediateFileResultWriter::addEntryFromFile(const fs::path& entryPath,
     }
     catch (const fs::filesystem_error& exc)
     {
-        logs.error() << exc.what();
+        logs.error() << "Error writing " << filePath << " (exception message " << exc.what() << ")";
     }
 
     if (ec)
     {
-        logs.error() << "Error: " << ec.message();
+        logs.error() << "Error writing " << filePath << " (message " << ec.message() << ")";
     }
 }
 
@@ -102,26 +84,5 @@ bool ImmediateFileResultWriter::needsTheJobQueue() const
 void ImmediateFileResultWriter::finalize(bool /*verbose*/)
 {
     // Do nothing
-}
-
-void NullResultWriter::addEntryFromBuffer(const fs::path&, std::string&)
-{
-}
-
-void NullResultWriter::addEntryFromFile(const fs::path&, const fs::path&)
-{
-}
-
-void NullResultWriter::flush()
-{
-}
-
-bool NullResultWriter::needsTheJobQueue() const
-{
-    return false;
-}
-
-void NullResultWriter::finalize(bool)
-{
 }
 } // namespace Antares::Solver

@@ -1,6 +1,8 @@
-solver: highs
+solver: sirius
 solver-logs: false
-solver-parameters:
+solver-parameters: 
 no-output: false
 first-time-step: 0
 last-time-step: 0
+
+export-mps: true

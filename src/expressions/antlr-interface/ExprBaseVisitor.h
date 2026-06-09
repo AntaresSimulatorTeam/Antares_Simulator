@@ -23,6 +23,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitSum_bound(ExprParser::Sum_boundContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitPortFieldSum(ExprParser::PortFieldSumContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -71,14 +75,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitReducedCost(ExprParser::ReducedCostContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitDual(ExprParser::DualContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitTimeIndex(ExprParser::TimeIndexContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -88,6 +84,14 @@ public:
   }
 
   virtual std::any visitFunction(ExprParser::FunctionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitPower(ExprParser::PowerContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitArgList(ExprParser::ArgListContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -119,6 +123,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitShiftPower(ExprParser::ShiftPowerContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitRightExpression(ExprParser::RightExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -128,6 +136,10 @@ public:
   }
 
   virtual std::any visitRightAtom(ExprParser::RightAtomContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitRightPower(ExprParser::RightPowerContext *ctx) override {
     return visitChildren(ctx);
   }
 

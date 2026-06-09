@@ -1,37 +1,59 @@
-// Copyright 2007-2025, RTE (https://www.rte-france.com)
-// See AUTHORS.txt
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
-// This file is part of Antares-Simulator,
-// Adequacy and Performance assessment for interconnected energy networks.
-//
-// Antares_Simulator is free software: you can redistribute it and/or modify
-// it under the terms of the Mozilla Public Licence 2.0 as published by
-// the Mozilla Foundation, either version 2 of the License, or
-// (at your option) any later version.
-//
-// Antares_Simulator is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// Mozilla Public Licence 2.0 for more details.
-//
-// You should have received a copy of the Mozilla Public Licence 2.0
-// along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
 
+#include <filesystem>
 #include <fstream>
 
 #include <antares/logs/logs.h>
 #include <antares/solver/modeler/Modeler.h>
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
+#include "antares/solver/modeler/loadFiles/loadFiles.h"
 #include "antares/solver/simulation/solver.h"
-
-#include "FileWriter.h"
+#include "antares/writer/table_format.h"
 
 using namespace Antares;
+using namespace Antares::Writer;
+namespace fs = std::filesystem;
 
 static void usage()
 {
     std::cout << "Usage:\n"
-              << "antares-modeler <path/to/study>\n";
+              << "antares-modeler <path/to/study> [--parquet]\n";
+}
+
+TableFormat getTableFormat(int argc, const char** argv)
+{
+    if (argc <= 2)
+    {
+        return TableFormat::CSV;
+    }
+
+    std::string parquetOption = argv[2];
+    if (parquetOption == "--parquet")
+    {
+        return TableFormat::Parquet;
+    }
+
+    return TableFormat::CSV;
+}
+
+fs::path makeOutputPath(fs::path studyPath)
+{
+    const auto simulationId = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
+    fs::path outputPath = studyPath / "output" / simulationId;
+
+    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
+    if (!Utils::generatePathWithSuffix(outputPath))
+    {
+        throw Modeler::ModelerError("Output folder already exists: " + outputPath.string());
+    }
+
+    logs.info() << "Output folder : " << outputPath;
+    if (!fs::is_directory(outputPath) && !fs::create_directories(outputPath))
+    {
+        throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
+    }
+    return outputPath;
 }
 
 int main(int argc, const char** argv)
@@ -44,10 +66,13 @@ int main(int argc, const char** argv)
         return EXIT_FAILURE;
     }
 
-    std::filesystem::path studyPath(argv[1]);
+    // Options parsing
+    fs::path studyPath(argv[1]);
+    TableFormat tableFormat = getTableFormat(argc, argv);
+
     logs.info() << "Study path: " << studyPath;
 
-    if (!std::filesystem::is_directory(studyPath))
+    if (!fs::is_directory(studyPath))
     {
         logs.error() << "The path provided isn't a valid directory, exiting";
         return EXIT_FAILURE;
@@ -56,11 +81,16 @@ int main(int argc, const char** argv)
     try
     {
         LoadFiles::FileLoader loader(studyPath);
-        Antares::Modeler::FileWriter writer(studyPath);
-        Antares::Solver::Modeler modeler(loader, writer);
+        fs::path outputPath = makeOutputPath(studyPath);
+        Modeler modeler(loader, outputPath, tableFormat);
         modeler.run();
     }
-    catch (const Antares::Solver::Modeler::ModelerError& e)
+    catch (const LoadFiles::ErrorLoadingYaml& e)
+    {
+        logs.error() << "Modeler loading error: " << e.what() << "\nExiting simulation.";
+        return EXIT_FAILURE;
+    }
+    catch (const Modeler::ModelerError& e)
     {
         logs.error() << "Modeler error: " << e.what() << "\nExiting simulation.";
         return EXIT_FAILURE;

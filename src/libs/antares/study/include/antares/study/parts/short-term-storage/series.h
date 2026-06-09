@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <filesystem>
@@ -39,8 +22,6 @@ public:
     // load all series files with folder path
     bool loadFromFolder(const std::filesystem::path& folder, StudyVersion studyVersion);
     void fillDefaultSeriesIfEmpty();
-
-    bool saveToFolder(const std::string& folder) const;
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
@@ -64,9 +45,6 @@ private:
     bool validateLowerRuleCurve(const std::string&) const;
 };
 
-bool loadFile(const std::filesystem::path& folder, std::vector<double>& vect);
-bool loadFile(const std::filesystem::path& file, TimeSeries& series, bool average);
-bool writeVectorToFile(const std::string& path, const std::vector<double>& vect);
-void fillIfEmpty(std::vector<double>& v, double value);
+bool loadFile(const std::filesystem::path& file, TimeSeries& series);
 void fillIfEmpty(TimeSeries& series, double value);
 } // namespace Antares::Data::ShortTermStorage

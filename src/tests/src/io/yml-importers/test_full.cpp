@@ -1,23 +1,5 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -98,7 +80,9 @@ library:
       fields:
         - id: flow
       area-connection:
-        - injection-field: flow
+        injection-to-balance: flow
+        spillage-bound: 
+        unsupplied-energy-bound: 
 
   models:
     - id: generator
@@ -263,9 +247,9 @@ library:
         - id: Number of units variation
           expression: nb_on = nb_on + nb_start - nb_stop
         - id: Min up time
-          expression: t-d_min_up + 1 <= nb_on
+          expression: d_min_up[t + 1] <= nb_on
         - id: Min down time
-          expression: t-d_min_down + 1 <= nb_units_max - nb_on
+          expression: d_min_down[t + 1] <= nb_units_max - nb_on
       objective-contributions:
         - id: objective
           expression: cost * generation 
@@ -286,15 +270,15 @@ library:
         BOOST_REQUIRE_EQUAL(portType.Fields().size(), 1);
         auto& portTypeField = portType.Fields().at(0);
         BOOST_CHECK_EQUAL(portTypeField.Id(), "flow");
-        BOOST_CHECK_EQUAL(portType.AreaConnectionFieldId().has_value(), false);
+        BOOST_CHECK_EQUAL(portType.areaConnection().has_value(), false);
 
         auto& portType2 = lib.PortTypes().at("flow_with_area_connection");
         BOOST_CHECK_EQUAL(portType2.Id(), "flow_with_area_connection");
         BOOST_REQUIRE_EQUAL(portType2.Fields().size(), 1);
         auto& portTypeField2 = portType2.Fields().at(0);
         BOOST_CHECK_EQUAL(portTypeField2.Id(), "flow");
-        BOOST_REQUIRE_EQUAL(portType2.AreaConnectionFieldId().has_value(), true);
-        BOOST_CHECK_EQUAL(portType2.AreaConnectionFieldId().value(), "flow");
+        BOOST_REQUIRE_EQUAL(portType2.areaConnection().has_value(), true);
+        BOOST_CHECK_EQUAL(portType2.areaConnection()->inject_to_balance, "flow");
 
         BOOST_REQUIRE_EQUAL(lib.Models().size(), 7);
         auto& model0 = lib.Models().at("generator");
@@ -503,10 +487,10 @@ library:
                         "nb_on = nb_on + nb_start - nb_stop");
         checkConstraint(*getConstraint(model6.Constraints(), "Min up time"),
                         "Min up time",
-                        "t-d_min_up + 1 <= nb_on");
+                        "d_min_up[t + 1] <= nb_on");
         checkConstraint(*getConstraint(model6.Constraints(), "Min down time"),
                         "Min down time",
-                        "t-d_min_down + 1 <= nb_units_max - nb_on");
+                        "d_min_down[t + 1] <= nb_units_max - nb_on");
         BOOST_CHECK_EQUAL(model6.Objectives()[0].expression().Value(), "cost * generation");
     }
     catch (const YAML::Exception& e)

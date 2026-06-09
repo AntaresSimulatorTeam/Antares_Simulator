@@ -1,31 +1,20 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 #define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 
 #include <string>
 #include <vector>
 
+#include <boost/bimap.hpp>
+
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/parameters.h>
+#include "antares/study/area/ReserveOpt.h"
+#include "antares/study/fwd.h"
+
+struct PROBLEME_HEBDO;
 
 namespace Antares::Data
 {
@@ -86,6 +75,7 @@ public:
     bool loadFromStudy(Study& study);
 
     void initializeRandomNumberGenerators(const Parameters& parameters);
+    void initializeReservesIndexMaps(const Study& study, const PROBLEME_HEBDO& problem);
 
 public:
     //! The number of years to process
@@ -106,11 +96,32 @@ public:
     MersenneTwister random[seedMax];
 
     //! Total
-    uint thermalPlantTotalCount;
-    uint thermalPlantTotalCountMustRun;
+    struct Counts
+    {
+        uint thermalPlants = 0;
+        uint thermalPlantsMustRun = 0;
+        uint reserveParticipations = 0; //! Total number of reserve participations
+        uint capacityReservations = 0;  //! Total number of capacity reservations
+        uint shortTermStorages = 0;
+        uint shortTermStorageCumulativeConstraints = 0;
+        uint hydros = 0;
+    } counts;
 
-    uint shortTermStorageCount = 0;
-    uint shortTermStorageCumulativeConstraintCount = 0;
+    //! Name of the reserve
+    using ReserveName = std::string;
+    //! ID of a reserve, obtained by transforming its name
+    using ReserveID = std::string;
+
+    struct ReserveIndexMap
+    {
+        boost::bimap<std::pair<ReserveID, std::string>, int> thermalClusters;
+        boost::bimap<std::pair<ReserveID, std::string>, int> STStorageClusters;
+        boost::bimap<ReserveID, int> Hydro;
+    };
+
+    //! Map used to access reserves participation indices
+    ReserveOpt<std::map<AreaName, ReserveIndexMap>> reserveParticipationIndexMaps;
+    ReserveOpt<std::map<ReserveID, ReserveName>> reserveIDToName;
 
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;

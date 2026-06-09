@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_ARRAY_CORRELATION_H__
 #define __ANTARES_LIBS_ARRAY_CORRELATION_H__
 
@@ -50,7 +33,7 @@ public:
     /*!
     ** \brief Convert a string into the corresponding mode
     */
-    static Mode CStringToMode(const AnyString& str);
+    static Mode CStringToMode(const std::string& str);
 
 public:
     //! \name Constructor & Destructor
@@ -98,11 +81,6 @@ public:
     bool loadFromFile(Study& study, const AnyString& filename, bool warnings = true);
 
     /*!
-    ** \brief Save the correlation matrices into an INI file
-    */
-    bool saveToFile(Study& study, const AnyString& filename) const;
-
-    /*!
     ** \brief Clear all data
     */
     void clear();
@@ -123,16 +101,6 @@ public:
                   const AreaNameMapping& mapping,
                   const Study& study);
 
-    /*!
-    ** \brief Invalidate all matrices
-    */
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark as modified
-    */
-    void markAsModified() const;
-
 public:
     //! The correlation matrix for the whole year
     Matrix<> annual;
@@ -140,15 +108,13 @@ public:
     std::vector<Matrix<>> monthly; // [12]
 
     //! The name to displays in logs
-    Yuni::CString<30, false> correlationName;
+    std::string correlationName;
     //! The associate time-series
     int timeSeries;
 
 private:
     bool internalLoadFromINI(Study& study, const IniFile& ini, bool warnings);
     bool internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings);
-
-    void internalSaveToINI(Study& study, Yuni::IO::File::Stream& file) const;
 
 private:
     Mode pMode;
@@ -207,21 +173,6 @@ int InterAreaCorrelationSaveToFile(const Matrix<>* m, const AreaList* l, const c
 ** \return A non-zero value if the matrix has been loaded, 0 otherwise
 */
 int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings);
-
-#ifdef BUILD_UI
-/*!
-** \brief Save an inter-area correlation matrix to a Ini file structure
-** \ingroup interareacorrelation
-**
-** The matrix must have the good dimensions, otherwise nothin will be
-** done (N*N with N = count of areas).
-**
-** \param m The matrix to save
-** \param l The list of area
-** \return An Ini file structure
-*/
-IniFile* InterAreaCorrelationSaveToIniFile(const Matrix<>* m, const AreaList* l);
-#endif
 
 } // namespace Antares::Data
 

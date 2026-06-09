@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <string>
@@ -41,7 +24,7 @@ public:
              ValueType type,
              TimeDependent timeDependent,
              ScenarioDependent scenarioDependent,
-             Modeler::Config::Location location = Modeler::Config::Location::SUBPROBLEMS):
+             Solver::Config::Location location = Solver::Config::Location::SUBPROBLEMS):
         id_(std::move(id)),
         type_(type),
         lowerBound_(std::move(lower_bound)),
@@ -82,12 +65,7 @@ public:
         return scenarioDependent_ == ScenarioDependent::YES;
     }
 
-    void setLocation(Modeler::Config::Location loc)
-    {
-        location_ = loc;
-    }
-
-    [[nodiscard]] Modeler::Config::Location location() const
+    [[nodiscard]] Solver::Config::Location location() const
     {
         return location_;
     }
@@ -99,7 +77,7 @@ private:
     Expression upperBound_;
     TimeDependent timeDependent_ = TimeDependent::YES;
     ScenarioDependent scenarioDependent_ = ScenarioDependent::YES;
-    Modeler::Config::Location location_ = Modeler::Config::Location::SUBPROBLEMS;
+    Solver::Config::Location location_ = Solver::Config::Location::SUBPROBLEMS;
 };
 
 } // namespace Antares::ModelerStudy::SystemModel

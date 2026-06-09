@@ -1,23 +1,6 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include "antares/study/binding_constraint/BindingConstraint.h"
 
 #include <algorithm>
@@ -28,7 +11,6 @@
 #include <yuni/yuni.h>
 
 #include "antares/study/binding_constraint/BindingConstraintLoader.h"
-#include "antares/study/binding_constraint/BindingConstraintSaver.h"
 #include "antares/study/study.h"
 #include "antares/utils/utils.h"
 
@@ -235,7 +217,6 @@ void BindingConstraint::resetToDefaultValues()
     pEnabled = true;
     pComments.clear();
     RHSTimeSeries_.reset();
-    markAsModified();
 }
 
 void BindingConstraint::copyWeights(
@@ -373,16 +354,6 @@ void BindingConstraint::clear()
     this->pEnabled = true;
 }
 
-void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
-{
-    auto i = pLinkWeights.find(lnk);
-    if (i != pLinkWeights.end())
-    {
-        i->second *= -1.;
-        logs.info() << "Updated the binding constraint `" << pName << '`';
-    }
-}
-
 bool BindingConstraint::contains(const Area* area) const
 {
     for (const auto& [sourceLink, _]: pLinkWeights)
@@ -502,56 +473,6 @@ uint BindingConstraint::synthesisFilter() const
     return pFilterSynthesis;
 }
 
-bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = this->end();
-
-    for (auto j = this->begin(); j != endWeights; ++j)
-    {
-        auto* areaLink = j->first;
-        if (!areaLink)
-        {
-            continue;
-        }
-
-        if (!areaLink->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool BindingConstraint::hasAllWeightedClustersOnLayer(size_t layerID)
-{
-    if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
-    {
-        return true;
-    }
-
-    auto endWeights = pClusterWeights.end();
-
-    for (auto j = pClusterWeights.begin(); j != endWeights; ++j)
-    {
-        auto* cluster = j->first;
-        if (!cluster)
-        {
-            continue;
-        }
-
-        if (!cluster->isVisibleOnLayer(layerID) || j->second == 0)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
 double BindingConstraint::weight(const AreaLink* lnk) const
 {
     auto i = pLinkWeights.find(lnk);
@@ -652,16 +573,6 @@ const BindingConstraint::clusterWeightMap& BindingConstraint::clustersAndWeights
     return pClusterWeights;
 }
 
-bool BindingConstraint::forceReload(bool reload) const
-{
-    return RHSTimeSeries().forceReload(reload);
-}
-
-void BindingConstraint::markAsModified() const
-{
-    RHSTimeSeries().markAsModified();
-}
-
 void BindingConstraint::clearAndReset(const AnyString& name,
                                       BindingConstraint::Type newType,
                                       BindingConstraint::Operator op)
@@ -714,7 +625,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
         break;
     }
     }
-    RHSTimeSeries_.markAsModified();
 }
 
 std::string BindingConstraint::group() const
@@ -725,7 +635,6 @@ std::string BindingConstraint::group() const
 void BindingConstraint::group(std::string group_name)
 {
     group_ = std::move(group_name);
-    markAsModified();
 }
 
 const Matrix<>& BindingConstraint::RHSTimeSeries() const

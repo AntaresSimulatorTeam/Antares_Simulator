@@ -1,27 +1,14 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_HYDRO_CONTAINER_H__
 
 #include <optional>
+
+#include <antares/inifile/inifile.h>
+#include <antares/study/area/ReserveOpt.h>
+#include <antares/study/area/reserveParticipationContainer.h>
 
 #include "../../fwd.h"
 #include "allocation.h"
@@ -103,6 +90,12 @@ public:
         pumpMod,
     };
 
+    struct HydroReserveParticipationWithName
+    {
+        std::reference_wrapper<StorageClusterReserveParticipation> reserveParticipation;
+        std::string reserveID;
+    };
+
     static bool LoadIniFile(Study& study, const std::filesystem::path& folder);
 
     /*!
@@ -146,13 +139,6 @@ public:
 
     void copyFrom(const PartHydro& rhs);
 
-    bool forceReload(bool reload = false) const;
-
-    /*!
-    ** \brief Mark all data as modified
-    */
-    void markAsModified() const;
-
     /*!
     ** \brief Load daily max energy
     */
@@ -160,6 +146,15 @@ public:
 
     bool CheckDailyMaxEnergy(const AnyString& areaName);
 
+    uint reserveParticipationsCount() const;
+
+    std::optional<ReserveID> reserveParticipationAt(const Area* area, unsigned int index) const;
+
+    uint count() const;
+
+    bool loadReserveParticipations(Area& area, const std::filesystem::path& file);
+
+public:
     //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
     double interDailyBreakdown;
     //! Intra-daily modulation
@@ -203,9 +198,6 @@ public:
     //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
     Matrix<double> inflowPattern;
 
-    //! Daily reservoir level ({min,avg,max}x365)
-    Matrix<double> reservoirLevel;
-
     //! Daily water value ({0,1,2%...100%}x365)
     Matrix<double> waterValues;
 
@@ -226,10 +218,15 @@ public:
 
     std::vector<std::optional<double>> deltaBetweenFinalAndInitialLevels;
 
+    //! Reserve participation container to store the participation of the cluster in the reserves
+    //! and the symmetries
+    ReserveOpt<ReserveParticipationContainer<StorageClusterReserveParticipation>>
+      reserveParticipationContainer;
+
     double overflowSpilledCostDifference = 1.;
 
 private:
-    static bool checkReservoirLevels(const Study& study);
+    static bool checkInflowPatternAndCredModul(const Study& study);
     static bool checkProperties(Study& study);
 
 }; // class PartHydro

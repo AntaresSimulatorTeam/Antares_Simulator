@@ -1,30 +1,13 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 #define __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 
 namespace Antares::Solver::Variable
 {
-template<class NextT>
-void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
+template<class VariableList>
+void SetsOfAreas<VariableList>::initializeFromStudy(Data::Study& study)
 {
     using namespace Antares;
 
@@ -35,6 +18,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
     // Reserving the memory
     pSetsOfAreas.reserve(sets.size());
     pOriginalSets.reserve(sets.size());
+    pIds.reserve(sets.size());
 
     // For each set...
     for (uint setIndex = 0; setIndex != sets.size(); ++setIndex)
@@ -54,7 +38,7 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
             continue;
         }
 
-        auto n = std::make_unique<NextT>();
+        auto n = std::make_unique<VariableList>();
 
         // Initialize the variables
         // From the study
@@ -76,147 +60,64 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         assert(!originalSet->empty());
         pOriginalSets.push_back(originalSet);
 
+        pIds.push_back(sets.nameByIndex(setIndex));
         pNames.push_back(setname);
     }
 }
 
-template<class NextT>
-inline void SetsOfAreas<NextT>::initializeFromArea(Data::Study*, Data::Area*)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::initializeFromThermalCluster(Data::Study*,
-                                                             Data::Area*,
-                                                             Data::ThermalCluster*)
-{
-    // This method should not be called at this stage
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::simulationBegin()
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::simulationEnd()
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::yearBegin(uint /*year*/, uint /* numSpace */)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::yearEndBuild(State& /*state*/, uint /*year*/, uint /*numSpace*/)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::yearEnd(uint /*year*/, uint /*numSpace*/)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::computeSummary(unsigned int /* year */, unsigned int /* numSpace */)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::hourBegin(uint /*hourInTheYear*/)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::weekBegin(State&)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::weekForEachArea(State&, unsigned int /*numSpace*/)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::weekEnd(State&)
-{
-    // Nothing to do here
-}
-
-template<class NextT>
-void SetsOfAreas<NextT>::hourForEachArea(State& state, unsigned int)
-{
-    (void)state;
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::hourForEachLink(State& state)
-{
-    (void)state;
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::hourEnd(State& state, uint hourInTheYear)
-{
-    (void)state;
-    (void)hourInTheYear;
-}
-
-template<class NextT>
-inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
-                                                  int dataLevel,
-                                                  int fileLevel,
-                                                  int precision) const
+template<class VariableList>
+inline void SetsOfAreas<VariableList>::buildSurveyReport(SurveyResults& results,
+                                                         int dataLevel,
+                                                         int fileLevel,
+                                                         int precision) const
 {
     int count_int = count;
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildSurveyReport(results,
-                                                                      dataLevel,
-                                                                      fileLevel,
-                                                                      precision);
+        if (const auto* set = findSetById(results.data.setOfAreasName))
+        {
+            set->buildSurveyReport(results, dataLevel, fileLevel, precision);
+        }
     }
 }
 
-template<class NextT>
-inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                                        int dataLevel,
-                                                        int fileLevel,
-                                                        int precision,
-                                                        uint numSpace) const
+template<class VariableList>
+inline void SetsOfAreas<VariableList>::buildAnnualSurveyReport(SurveyResults& results,
+                                                               int dataLevel,
+                                                               int fileLevel,
+                                                               int precision,
+                                                               uint numSpace) const
 {
     int count_int = count;
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
     if (count_int && setOfAreasDataLevel)
     {
-        pSetsOfAreas[results.data.setOfAreasIndex]->buildAnnualSurveyReport(results,
-                                                                            dataLevel,
-                                                                            fileLevel,
-                                                                            precision,
-                                                                            numSpace);
+        if (const auto* set = findSetById(results.data.setOfAreasName))
+        {
+            set->buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+        }
     }
 }
 
-template<class NextT>
-void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+template<class VariableList>
+const VariableList* SetsOfAreas<VariableList>::findSetById(
+  const Data::Study::SetsOfAreas::IDType& setId) const
+{
+    for (uint i = 0; i != pNames.size(); ++i)
+    {
+        if (pIds[i] == setId)
+        {
+            return pSetsOfAreas[i].get();
+        }
+    }
+    return nullptr;
+}
+
+template<class VariableList>
+void SetsOfAreas<VariableList>::buildDigest(SurveyResults& results,
+                                            int digestLevel,
+                                            int dataLevel) const
 {
     int count_int = count;
     bool setOfAreasDataLevel = dataLevel & Category::DataLevel::setOfAreas;
@@ -239,31 +140,9 @@ void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, in
     }
 }
 
-template<class NextT>
-template<class I>
-inline void SetsOfAreas<NextT>::provideInformations(I& infos)
-{
-    // Begining of the node
-    if (VCardType::nodeDepthForGUI)
-    {
-        infos.template beginNode<VCardType>();
-        // Next variable in the list
-        NextType::template provideInformations<I>(infos);
-        // End of the node
-        infos.endNode();
-    }
-    else
-    {
-        // Giving our VCard
-        infos.template addVCard<VCardType>();
-        // Next variable in the list
-        NextType::template provideInformations<I>(infos);
-    }
-}
-
-template<class NextT>
+template<class VariableList>
 template<class V>
-void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint numSpace)
+void SetsOfAreas<VariableList>::yearEndSpatialAggregates(V& allVars, uint year, uint numSpace)
 {
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
@@ -275,11 +154,11 @@ void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint nu
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class V>
-void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(V& allVars,
-                                                         unsigned int year,
-                                                         unsigned int numSpace)
+void SetsOfAreas<VariableList>::computeSpatialAggregatesSummary(V& allVars,
+                                                                unsigned int year,
+                                                                unsigned int numSpace)
 {
     for (uint setindex = 0; setindex != pSetsOfAreas.size(); ++setindex)
     {
@@ -288,9 +167,9 @@ void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(V& allVars,
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class V>
-void SetsOfAreas<NextT>::simulationEndSpatialAggregates(V& allVars)
+void SetsOfAreas<VariableList>::simulationEndSpatialAggregates(V& allVars)
 {
     for (uint i = 0; i != pSetsOfAreas.size(); ++i)
     {
@@ -298,8 +177,8 @@ void SetsOfAreas<NextT>::simulationEndSpatialAggregates(V& allVars)
     }
 }
 
-template<class NextT>
-void SetsOfAreas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
+template<class VariableList>
+void SetsOfAreas<VariableList>::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pSetsOfAreas.size(); ++i)
     {
@@ -307,18 +186,18 @@ void SetsOfAreas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
     }
 }
 
-template<class NextT>
+template<class VariableList>
 template<class SearchVCardT, class O>
-inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O&)
+inline void SetsOfAreas<VariableList>::computeSpatialAggregateWith(O&)
 {
     // Do nothing
 }
 
-template<class NextT>
+template<class VariableList>
 template<class SearchVCardT, class O>
-inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out,
-                                                            const Data::Area* area,
-                                                            uint numSpace)
+inline void SetsOfAreas<VariableList>::computeSpatialAggregateWith(O& out,
+                                                                   const Data::Area* area,
+                                                                   uint numSpace)
 {
     (void)out;
     (void)area;
@@ -326,16 +205,9 @@ inline void SetsOfAreas<NextT>::computeSpatialAggregateWith(O& out,
     // pSetsOfAreas[area->index]->computeSpatialAggregateWith<SearchVCardT,O>(out);
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline const double* SetsOfAreas<NextT>::retrieveHourlyResultsForCurrentYear() const
-{
-    return nullptr;
-}
-
-template<class NextT>
-template<class VCardToFindT>
-inline void SetsOfAreas<NextT>::retrieveResultsForArea(
+inline void SetsOfAreas<VariableList>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
@@ -343,9 +215,9 @@ inline void SetsOfAreas<NextT>::retrieveResultsForArea(
     (void)area;
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline void SetsOfAreas<NextT>::retrieveResultsForThermalCluster(
+inline void SetsOfAreas<VariableList>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
@@ -353,9 +225,9 @@ inline void SetsOfAreas<NextT>::retrieveResultsForThermalCluster(
     (void)cluster;
 }
 
-template<class NextT>
+template<class VariableList>
 template<class VCardToFindT>
-inline void SetsOfAreas<NextT>::retrieveResultsForLink(
+inline void SetsOfAreas<VariableList>::retrieveResultsForLink(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::AreaLink* link)
 {
@@ -363,9 +235,9 @@ inline void SetsOfAreas<NextT>::retrieveResultsForLink(
     (void)link;
 }
 
-template<class NextT>
+template<class VariableList>
 template<class PredicateT>
-inline void SetsOfAreas<NextT>::RetrieveVariableList(PredicateT& /*predicate*/)
+inline void SetsOfAreas<VariableList>::RetrieveVariableList(PredicateT& /*predicate*/)
 {
 }
 

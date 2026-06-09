@@ -14,13 +14,12 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
-    T__14 = 15, NUMBER = 16, TIME = 17, IDENTIFIER = 18, COMPARISON = 19, 
-    WS = 20
+    NUMBER = 15, TIME = 16, IDENTIFIER = 17, COMPARISON = 18, WS = 19
   };
 
   enum {
-    RulePortFieldExpr = 0, RuleFullexpr = 1, RuleExpr = 2, RuleAtom = 3, 
-    RuleShift = 4, RuleShift_expr = 5, RuleRight_expr = 6
+    RulePortFieldExpr = 0, RuleFullexpr = 1, RuleSum_bound = 2, RuleExpr = 3, 
+    RuleArgList = 4, RuleAtom = 5, RuleShift = 6, RuleShift_expr = 7, RuleRight_expr = 8
   };
 
   explicit ExprParser(antlr4::TokenStream *input);
@@ -42,7 +41,9 @@ public:
 
   class PortFieldExprContext;
   class FullexprContext;
+  class Sum_boundContext;
   class ExprContext;
+  class ArgListContext;
   class AtomContext;
   class ShiftContext;
   class Shift_exprContext;
@@ -75,6 +76,20 @@ public:
   };
 
   FullexprContext* fullexpr();
+
+  class  Sum_boundContext : public antlr4::ParserRuleContext {
+  public:
+    Sum_boundContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    ExprContext *expr();
+    ShiftContext *shift();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Sum_boundContext* sum_bound();
 
   class  ExprContext : public antlr4::ParserRuleContext {
   public:
@@ -200,29 +215,11 @@ public:
   public:
     TimeSumContext(ExprContext *ctx);
 
-    ExprParser::ShiftContext *from = nullptr;
-    ExprParser::ShiftContext *to = nullptr;
+    ExprParser::Sum_boundContext *from = nullptr;
+    ExprParser::Sum_boundContext *to = nullptr;
     ExprContext *expr();
-    std::vector<ShiftContext *> shift();
-    ShiftContext* shift(size_t i);
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  ReducedCostContext : public ExprContext {
-  public:
-    ReducedCostContext(ExprContext *ctx);
-
-    antlr4::tree::TerminalNode *IDENTIFIER();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  DualContext : public ExprContext {
-  public:
-    DualContext(ExprContext *ctx);
-
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    std::vector<Sum_boundContext *> sum_bound();
+    Sum_boundContext* sum_bound(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -252,13 +249,37 @@ public:
     FunctionContext(ExprContext *ctx);
 
     antlr4::tree::TerminalNode *IDENTIFIER();
-    ExprContext *expr();
+    ArgListContext *argList();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  PowerContext : public ExprContext {
+  public:
+    PowerContext(ExprContext *ctx);
+
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   ExprContext* expr();
   ExprContext* expr(int precedence);
+  class  ArgListContext : public antlr4::ParserRuleContext {
+  public:
+    ArgListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ExprContext *> expr();
+    ExprContext* expr(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ArgListContext* argList();
+
   class  AtomContext : public antlr4::ParserRuleContext {
   public:
     AtomContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -361,6 +382,16 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  ShiftPowerContext : public Shift_exprContext {
+  public:
+    ShiftPowerContext(Shift_exprContext *ctx);
+
+    Shift_exprContext *shift_expr();
+    Right_exprContext *right_expr();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   Shift_exprContext* shift_expr();
   Shift_exprContext* shift_expr(int precedence);
   class  Right_exprContext : public antlr4::ParserRuleContext {
@@ -401,6 +432,16 @@ public:
     RightAtomContext(Right_exprContext *ctx);
 
     AtomContext *atom();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  RightPowerContext : public Right_exprContext {
+  public:
+    RightPowerContext(Right_exprContext *ctx);
+
+    std::vector<Right_exprContext *> right_expr();
+    Right_exprContext* right_expr(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

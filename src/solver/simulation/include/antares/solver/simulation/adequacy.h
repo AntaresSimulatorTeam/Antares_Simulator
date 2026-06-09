@@ -1,29 +1,11 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
 #include "antares/infoCollection/StudyInfoCollector.h"
-#include "antares/io/outputs/SimulationTableCsv.h"
-#include "antares/solver/optimisation/OptimisationsSimulationTable.h"
+#include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/opt_time_writer.h"
 #include "antares/solver/simulation/solver.h" // for definition of type yearRandomNumbers
@@ -31,8 +13,6 @@
 #include "antares/solver/variable/economy/all.h"
 #include "antares/solver/variable/state.h"
 #include "antares/solver/variable/variable.h"
-
-class ISimulationTable;
 
 namespace Antares::Solver::Simulation
 {
@@ -72,25 +52,20 @@ public:
 
 protected:
     void setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel);
-    std::string getSimulationTableHeader() const;
     bool simulationBegin();
 
-    bool year(Progression::Task& progression,
-              Variable::State& state,
+    bool year(Variable::State& state,
               uint numSpace,
               yearRandomNumbers& randomForYear,
               std::list<uint>& failedWeekList,
               const HYDRO_VENTILATION_RESULTS&,
               OptimizationStatisticsWriter& optWriter,
+              Benchmarking::DurationCollector& durationCollector,
               const Antares::Data::Area::ScratchMap& scratchmap);
-
-    void incrementProgression(Progression::Task& progression) const;
 
     void simulationEnd();
 
     void initializeState(Variable::State& state, uint numSpace);
-
-    OptimisationsSimulationTable& getSimulationTable(uint numSpace);
 
 private:
     bool simplexIsRequired(uint hourInTheYear,
@@ -103,9 +78,7 @@ private:
     std::vector<PROBLEME_HEBDO> pProblemesHebdo;
     Matrix<> pRES;
     IResultWriter& resultWriter;
-
     std::reference_wrapper<Simulation::ISimulationObserver> simulationObserver_;
-    std::vector<OptimisationsSimulationTable> simulationTables_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation

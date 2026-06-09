@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
 #include <filesystem>
@@ -41,7 +24,7 @@ public:
     ** \brief Get the size (bytes) occupied in memory by a `ThermalClusterList` structure
     ** \return A size (in bytes)
     */
-    bool loadFromFolder(Study& s, const std::filesystem::path& folder, Area* area);
+    bool loadFromFolder(const std::filesystem::path& folder, Area* area);
 
     //! \name Constructor & Destructor
     //@{
@@ -120,12 +103,14 @@ public:
     bool savePreproToFolder(const AnyString& folder) const;
     bool saveEconomicCosts(const AnyString& folder) const;
 
-#ifdef BUILD_UI
-    bool saveToFolder(const AnyString& folder) const override;
-#endif
+    std::size_t enabledAndMustRunCount() const;
+    std::size_t enabledAndNotMustRunCount() const;
 
-    unsigned int enabledAndMustRunCount() const;
-    unsigned int enabledAndNotMustRunCount() const;
+    // returns the number of reserve participations of all clusters
+    std::size_t reserveParticipationsCount() const;
+    // returns the number of capacity reserves that all the clusters are participating to
+    // (count only capacity resarvations once)
+    std::size_t capacityReservationsCount() const;
 
 private:
     // Give a special index to enbled and not must-run THERMAL clusters

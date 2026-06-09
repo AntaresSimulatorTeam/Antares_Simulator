@@ -1,26 +1,8 @@
-/*
-** Copyright 2007-2025, RTE (https://www.rte-france.com)
-** See AUTHORS.txt
-** SPDX-License-Identifier: MPL-2.0
-** This file is part of Antares-Simulator,
-** Adequacy and Performance assessment for interconnected energy networks.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the Mozilla Public Licence 2.0 as published by
-** the Mozilla Foundation, either version 2 of the License, or
-** (at your option) any later version.
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** Mozilla Public Licence 2.0 for more details.
-**
-** You should have received a copy of the Mozilla Public Licence 2.0
-** along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
-*/
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma once
 
-#include <cmath>
 #include <functional>
 #include <sstream>
 #include <variant>
@@ -29,8 +11,11 @@
 #include "antares/expressions/visitors/NodeVisitor.h"
 #include "antares/modeler-optimisation-container/EvaluationContext.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
+#include "antares/modeler-optimisation-container/scenarioGroupRepo.h"
 #include "antares/solver/optim-model-filler/Dimensions.h"
 #include "antares/study/system-model/component.h"
+
+#include "HelpVisitNode.h"
 
 namespace Antares::Expressions::Visitors
 {
@@ -47,11 +32,47 @@ public:
     EvalVisitorNotImplemented(const std::string& visitor, const std::string& node);
 };
 
+class EvalResultTypeError: public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
+class EvalResultTimeIndexOutOfRange: public std::out_of_range
+{
+public:
+    using std::out_of_range::out_of_range;
+};
+
+static constexpr double DEFAULT_THRESHOLD = 1e-16;
+
+struct SafeDivides
+{
+    explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
+        threshold_(threshold)
+    {
+    }
+
+    double operator()(double lhs, double rhs) const
+    {
+        if (std::abs(rhs) <= threshold_)
+        {
+            throw EvalVisitorDivisionException(lhs, rhs, "Division by zero");
+        }
+        return lhs / rhs;
+    }
+
+private:
+    double threshold_;
+};
+
+// gp : Many methods defined in class declaration.
+// gp : They should be declared here but defined in .cpp file.
+// gp : it would make EvaluationResult interface much more readable.
 class EvaluationResult
 {
 public:
     explicit EvaluationResult(double value);
-
     explicit EvaluationResult(const std::vector<double>& values);
 
     EvaluationResult operator+(const EvaluationResult& right) const
@@ -90,27 +111,8 @@ public:
         return evaluateBinaryOperation(right, std::greater_equal<>());
     }
 
-    struct SafeDivides
-    {
-        static constexpr double DEFAULT_THRESHOLD = 1e-16;
-
-        explicit SafeDivides(double threshold = DEFAULT_THRESHOLD):
-            threshold_(threshold)
-        {
-        }
-
-        double operator()(double lhs, double rhs) const
-        {
-            if (std::abs(rhs) <= threshold_)
-            {
-                throw EvalVisitorDivisionException(lhs, rhs, "Division by zero");
-            }
-            return lhs / rhs;
-        }
-
-    private:
-        double threshold_;
-    };
+    size_t size() const;
+    double value(unsigned i) const;
 
     EvaluationResult operator/(const EvaluationResult& right) const
     {
@@ -122,22 +124,10 @@ public:
         return evaluateUnaryOperation(std::negate<>());
     }
 
-    [[nodiscard]] std::variant<double, std::vector<double>> value() const
+    [[nodiscard]] const std::variant<double, std::vector<double>>& value() const
     {
         return value_;
     }
-
-    class EvalResultTypeError: public std::runtime_error
-    {
-    public:
-        using std::runtime_error::runtime_error;
-    };
-
-    class EvalResultTimeIndexOutOfRange: public std::out_of_range
-    {
-    public:
-        using std::out_of_range::out_of_range;
-    };
 
     double valueAsDouble() const
     {
@@ -157,6 +147,8 @@ public:
         throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
+    void toConstantVector(const size_t size);
+
     [[nodiscard]] double getValueInVector(unsigned index) const
     {
         if (const auto* v = std::get_if<std::vector<double>>(&value_))
@@ -166,26 +158,23 @@ public:
         throw EvalResultTypeError("Expected a vector but found a double.");
     }
 
+    // gp : Some of these functions don't have to be member functions
+    // gp : as they are specific to a given context.
+    // gp : They could be free function instead.
     EvaluationResult operator[](int timeIndex) const;
     EvaluationResult timeShift(int time_shift) const;
-    EvaluationResult timeSum(int from, int to) const;
+    EvaluationResult timeSumOnVector(int from, int to) const;
     EvaluationResult alltimeSum(int numberOfTimeStep) const;
+
+    template<typename Op>
+    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
+
+    template<typename Op>
+    EvaluationResult evaluateUnaryOperation(Op op) const;
 
 private:
     std::variant<double, std::vector<double>> value_;
     explicit EvaluationResult(const std::variant<double, std::vector<double>>& value);
-
-    template<typename Op>
-    EvaluationResult evaluateBinaryOperation(const EvaluationResult& right, Op op) const;
-    template<typename Op>
-    EvaluationResult evaluateUnaryOperation(Op op) const;
-
-    static double shift(double value, int)
-    {
-        return value;
-    }
-
-    static std::vector<double> shift(const std::vector<double>& values, int shiftValue);
 };
 
 template<typename BinaryOp>
@@ -280,6 +269,34 @@ EvaluationResult EvaluationResult::evaluateUnaryOperation(Op op) const
                  value_));
 }
 
+template<class Operation>
+EvaluationResult applyOperation(const std::vector<EvaluationResult>& in, Operation op)
+{
+    if (in.size() < 2)
+    {
+        throw std::invalid_argument("Expected at least two EvaluationResult");
+    }
+    const size_t size = getMaxSize(in);
+    std::vector<double> values(size);
+    std::vector<double> row(in.size());
+
+    for (size_t timeIndex = 0; timeIndex < size; ++timeIndex)
+    {
+        for (size_t evalIndex = 0; evalIndex < in.size(); ++evalIndex)
+        {
+            const auto& evalResult = in[evalIndex];
+            row[evalIndex] = evalResult.value(timeIndex);
+        }
+        values[timeIndex] = op(row);
+    }
+    if (size > 1)
+    {
+        return EvaluationResult(values);
+    }
+
+    return EvaluationResult(values.at(0));
+}
+
 /**
  * @brief Represents a visitor for evaluating expressions within a given context.
  */
@@ -295,15 +312,19 @@ public:
 
     explicit EvalVisitor(const Optimisation::OptimEntityContainer& optimContainer,
                          const Optimisation::LinearProblemApi::FillContext& fillContext,
-                         const ModelerStudy::SystemModel::Component& component);
+                         const ModelerStudy::SystemModel::Component& component,
+                         const Optimisation::LinearProblemApi::ILinearProblemData* data,
+                         const Optimisation::LinearProblemApi::IScenario& scenario);
 
     std::string name() const override;
 
 private:
     const Optimisation::OptimEntityContainer& optimContainer_;
-    const Optimisation::EvaluationContext& context_;
-    const Optimisation::LinearProblemApi::FillContext& fillContext_;
     const ModelerStudy::SystemModel::Component& component_;
+    const Optimisation::LinearProblemApi::ILinearProblemData* data_;
+    const Optimisation::LinearProblemApi::IScenario& scenario_;
+    const Optimisation::EvaluationContext evalContext_;
+    const Optimisation::LinearProblemApi::FillContext& fillContext_;
 
     EvaluationResult visit(const Nodes::SumNode* node) override;
     EvaluationResult visit(const Nodes::SubtractionNode* node) override;
@@ -321,8 +342,14 @@ private:
     EvaluationResult visit(const Nodes::TimeShiftNode* node) override;
     EvaluationResult visit(const Nodes::TimeIndexNode* node) override;
     EvaluationResult visit(const Nodes::TimeSumNode* node) override;
+    EvaluationResult visit(const Nodes::TPlusNode* node) override;
     EvaluationResult visit(const Nodes::AllTimeSumNode* node) override;
-    EvaluationResult visit(const Nodes::ReducedCostNode* node) override;
-    EvaluationResult visit(const Nodes::DualNode* node) override;
+    EvaluationResult visit(const Nodes::FunctionNode* node) override;
+
+    EvaluationResult visitReducedCost(const Nodes::FunctionNode* node);
+    EvaluationResult visitDual(const Nodes::FunctionNode* node);
+    EvaluationResult visitPow(const Nodes::FunctionNode* node);
+    EvaluationResult visitFloor(const Nodes::FunctionNode* node);
+    EvaluationResult visitCeil(const Nodes::FunctionNode* node);
 };
 } // namespace Antares::Expressions::Visitors

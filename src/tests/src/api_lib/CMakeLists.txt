@@ -9,4 +9,9 @@ add_boost_test(test-single-problem-api
   test_single_problem_api.cpp
   LIBS
   single_problem_api
-  Antares::tests::in-memory-study)
+  Antares::tests::in-memory-study
+# While this is ugly, but we need Implementation::SingleProblemGetter
+# since unlike SingleProblemGetter, it exposes the
+# "Study" constructor, allowing to create the study in memory
+  INCLUDE
+  "${CMAKE_SOURCE_DIR}/api/private")

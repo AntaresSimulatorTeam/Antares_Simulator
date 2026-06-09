@@ -1,23 +1,6 @@
-/*
- * Copyright 2007-2025, RTE (https://www.rte-france.com)
- * See AUTHORS.txt
- * SPDX-License-Identifier: MPL-2.0
- * This file is part of Antares-Simulator,
- * Adequacy and Performance assessment for interconnected energy networks.
- *
- * Antares_Simulator is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public Licence 2.0 as published by
- * the Mozilla Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * Antares_Simulator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * Mozilla Public Licence 2.0 for more details.
- *
- * You should have received a copy of the Mozilla Public Licence 2.0
- * along with Antares_Simulator. If not, see <https://opensource.org/license/mpl-2-0/>.
- */
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #define BOOST_TEST_MODULE "test thermal price definition"
 
 #define WIN32_LEAN_AND_MEAN
@@ -113,7 +96,7 @@ struct FixtureFull: private ThermalIniFile
 
     FixtureFull()
     {
-        area = study->areaAdd("area");
+        area = addAreaToListOfAreas(study->areas, "area");
         study->parameters.include.thermal.minUPTime = true;
         study->parameters.include.thermal.minStablePower = true;
         study->parameters.include.reserve.spinning = true;
@@ -168,7 +151,7 @@ BOOST_AUTO_TEST_SUITE(s)
 
 BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 {
-    clusterList.loadFromFolder(*study, folder, area);
+    clusterList.loadFromFolder(folder, area);
     auto cluster = clusterList.findInAll("some cluster");
 
     BOOST_CHECK(cluster->startupCost == 70000.0);
@@ -179,7 +162,7 @@ BOOST_FIXTURE_TEST_CASE(ThermalClusterList_loadFromFolder_basic, FixtureFull)
 
 BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
 {
-    area->thermal.list.loadFromFolder(*study, folder, area);
+    area->thermal.list.loadFromFolder(folder, area);
     auto cluster = area->thermal.list.findInAll("some cluster");
 
     cluster->series.timeSeries.reset(3, 8760);
@@ -192,7 +175,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_OK, FixtureFull)
 
 BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
 {
-    area->thermal.list.loadFromFolder(*study, folder, area);
+    area->thermal.list.loadFromFolder(folder, area);
     auto cluster = area->thermal.list.findInAll("some cluster");
 
     cluster->series.timeSeries.reset(3, 8760);
@@ -206,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE(checkCo2_checkCO2CostColumnNumber_KO, FixtureFull)
 
 BOOST_FIXTURE_TEST_CASE(checkFuelAndCo2_checkColumnNumber_OK, FixtureFull)
 {
-    area->thermal.list.loadFromFolder(*study, folder, area);
+    area->thermal.list.loadFromFolder(folder, area);
     auto cluster = area->thermal.list.findInAll("some cluster");
 
     cluster->series.timeSeries.reset(3, 8760);
@@ -233,7 +216,7 @@ double marginalCostModulation(uint hour)
 BOOST_FIXTURE_TEST_CASE(ThermalCluster_costGenManualCalculationOfMarketBidAndMarginalCostPerHour,
                         FixtureFull)
 {
-    clusterList.loadFromFolder(*study, folder, area);
+    clusterList.loadFromFolder(folder, area);
     auto cluster = clusterList.findInAll("some cluster");
 
     cluster->modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -262,7 +245,7 @@ BOOST_FIXTURE_TEST_CASE(
     TimeSeriesFile fuel("fuelCost.txt", 8760);
     TimeSeriesFile co2("CO2Cost.txt", 8760);
 
-    clusterList.loadFromFolder(*study, folder, area);
+    clusterList.loadFromFolder(folder, area);
     auto cluster = clusterList.findInAll("some cluster");
 
     cluster->modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
@@ -279,7 +262,7 @@ BOOST_FIXTURE_TEST_CASE(
 
 BOOST_FIXTURE_TEST_CASE(computeMarketBidCost_useTimeSeries, FixtureFull)
 {
-    clusterList.loadFromFolder(*study, folder, area);
+    clusterList.loadFromFolder(folder, area);
     auto cluster = clusterList.findInAll("some cluster");
     BOOST_CHECK_CLOSE(
       computeMarketBidCost(1, cluster->fuelEfficiency, 2, 1, cluster->variableomcost),

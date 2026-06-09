@@ -12,6 +12,7 @@ on:
     - doc/*
     - dependabot/**
     - tests/*
+    - copilot/*
   schedule:
   - cron: '21 2 * * *'
   workflow_call:
@@ -31,7 +32,7 @@ env:
   REF: ${{ inputs.target_branch =='' && github.ref || inputs.target_branch}}
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   triplet: x64-linux
-  WX_CONFIG: /usr/bin/wx-config
+  PYTHON_VERSION: "3.12"
 
 jobs:
 
@@ -46,8 +47,16 @@ jobs:
     runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - testNRTarget: versionTestNR
+          isUploadTarget: true
+        - testNRTarget: latestTestNR
+          isUploadTarget: false
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         ref: ${{ env.REF }}
 
@@ -56,7 +65,7 @@ jobs:
 
     - name: Restore vcpkg binary dir from cache
       id: cache-vcpkg-binary
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -69,12 +78,12 @@ jobs:
 
     - name: Restore ccache cache
       id: cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ env.os }}-${{ github.ref_name }}
         restore-keys: |
-          ${{ env.os }}-  
+          ${{ env.os }}-
 
     - name: Configure ccache
       run: |
@@ -87,7 +96,7 @@ jobs:
     - name: Install libraries
       run: |
         sudo apt-get update
-        sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+        sudo apt-get install uuid-dev
         sudo apt-get install xsltproc
 
     - name: Config OR-Tools URL
@@ -105,7 +114,7 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: ${{env.PYTHON_VERSION}}
 
     - name: Install dependencies
       run: |
@@ -130,13 +139,13 @@ jobs:
         cmake --build _build -j$(nproc)
 
     - name: Creation of complete .tar.gz archive
-      if: ${{ success() }}
+      if: ${{ success() && matrix.isUploadTarget }}
       run: |
         cd _build
         cpack -G TGZ -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Creation of solver only .tar.gz archive
-      if: ${{ success() }}
+      if: ${{ success() && matrix.isUploadTarget }}
       run: |
         cd _build
         cmake --install . --prefix install
@@ -148,8 +157,8 @@ jobs:
         rm -rf install
 
     - name: Both previous archives upload
-      if: ${{ success() }}
-      uses: actions/upload-artifact@v5
+      if: ${{ success() && matrix.isUploadTarget }}
+      uses: actions/upload-artifact@v7
       with:
         name: ubuntu-targz
         path: _build/*.tar.gz
@@ -180,7 +189,13 @@ jobs:
       run: |
         echo "SIMTEST=${{ fromJson(env.SIMTEST_JSON).version }}" >> $GITHUB_ENV
 
-    - name: Init submodule Antares_Simulator_Tests_NR
+    - name: Init submodule Antares_Simulator_Tests_NR (committed submodule)
+      if: ${{ matrix.testNRTarget == 'versionTestNR' }}
+      run: |
+        git submodule update --init --depth 1 --recursive src/tests/resources/Antares_Simulator_Tests_NR
+
+    - name: Init submodule Antares_Simulator_Tests_NR (latest)
+      if: ${{ matrix.testNRTarget == 'latestTestNR' }}
       run: |
         git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
 
@@ -227,9 +242,9 @@ jobs:
 
     - name: Upload logs for failed tests
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v7
       with:
-        name: test-log
+        name: test-log-${{ matrix.testNRTarget }}
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     - name: Run tests about infinity on BCs RHS
@@ -385,19 +400,21 @@ jobs:
       run: exit 1
 
     - name: Installer .deb creation
+      if: ${{ matrix.isUploadTarget }}
       run: |
         cd _build
         cpack -G DEB -D CPACK_INSTALLED_DIRECTORIES="${{ env.ORTOOLS_DIR }}/install/lib;bin"
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v5
+      if: ${{ matrix.isUploadTarget }}
+      uses: actions/upload-artifact@v7
       with:
         name: deb
         path: _build/*.deb
 
 
     - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_RELEASE == 'true' && matrix.isUploadTarget }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
         tag: ${{ github.event.inputs.release_tag }}
@@ -406,7 +423,7 @@ jobs:
 
 
     - name: Update continuous-delivery release
-      if: github.ref == 'refs/heads/develop'
+      if: ${{ github.ref == 'refs/heads/develop' && matrix.isUploadTarget  && env.IS_RELEASE != 'true' }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -420,7 +437,7 @@ jobs:
     - name: Cache vcpkg binary dir
       if: always()
       id: save-cache-vcpkg-binary
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
         key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
@@ -442,7 +459,7 @@ jobs:
 
     - name: Save ccache cache
       if: ${{ !cancelled() }}
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/.ccache_ubuntu
         key: ${{ steps.cache.outputs.cache-primary-key }}

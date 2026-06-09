@@ -59,15 +59,10 @@ Here is a list of mandatory or optional CMake configuration options:
 | `CMAKE_C_COMPILER`     | OS-dependent | Select C compiler                                                                | `gcc-10`                                    |               |
 | `CMAKE_CXX_COMPILER`   | OS-dependent | Select C++ compiler                                                              | `g++-10`                                    |               |
 | `CMAKE_BUILD_TYPE`     | **yes**      | Define build type                                                                | `Release` / `Debug` / `RelWithDebInfo`      |               |
-| `BUILD_UI`             | no           | Enable or disable Antares Simulator UI[^1] compilation                           | `ON` / `OFF`                                | `ON`          |
 | `BUILD_TESTING`        | no           | Enable build for unit tests                                                      | `ON` / `OFF`                                | `OFF`         |
 | `BUILD_ORTOOLS`        | no           | Enable build for OR-Tools and its dependencies (requires an Internet connection) | `ON` / `OFF`                                | `OFF`         |
 | `CMAKE_TOOLCHAIN_FILE` | no           | Path to VCPKG toolchain file, allows to integrate VCPKG with cmake build         | `../vcpkg/scripts/buildsystems/vcpkg.cmake` |               |
 | `VCPKG_TARGET_TRIPLET` | no           | Define VCPKG triplet (build type for dependencies etc.)                          | `x64-windows-antares` / `x64-linux-antares` |               |
-
-> 💡 **Disable the UI build to make builds faster**  
-> The UI takes up a good chunk of compilation time. It is enabled by default, but you can disable it by turning off
-`BUILD_UI`
 
 > 💡 **Use Ninja to speed up target generation by CMake**  
 > At configure time, you may specify Ninja for generation instead of traditional Make. This will speed up the update
@@ -123,8 +118,6 @@ ignore = all
 This way git won't waste time computing diff on these when checking out, diffing commits, etc. git operations should be
 a lot faster.
 Keep in mind that your submodules won't be updated.
-
-[^1]: GUI support has been dropped in favor of [Antares Web](https://antares-web.readthedocs.io)
 
 ### Using CMake presets
 

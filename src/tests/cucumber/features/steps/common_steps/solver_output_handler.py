@@ -22,6 +22,8 @@ class solver_output_handler:
         self.hourly_results = {result_type.VALUES: None,
                                result_type.DETAILS: None,
                                result_type.DETAILS_STS: None}
+    def output_dir(self):
+        return Path(self.study_output_path)
 
     def get_annual_system_cost(self):
         if self.annual_system_cost is None:
@@ -41,25 +43,14 @@ class solver_output_handler:
     def get_simu_time(self) -> float:
         execution_info = configparser.ConfigParser()
         execution_info.read(os.path.join(self.study_output_path, "execution_info.ini"))
-        return float(execution_info['durations_ms']['total']) / 1000
-
-    def get_optim1_simulation_table(self):
-        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-1.csv"))
-        assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
-        return open(absolute_path, 'r').readlines()
-
-    def get_optim2_simulation_table(self):
-        absolute_path = Path(os.path.join(self.study_output_path, "simulation_table--optim-nb-2.csv"))
-        if absolute_path.exists():
-            return open(absolute_path, 'r').readlines()
-        else:
-            return None
+        return float(execution_info['durations_ms']['simulation']) / 1000
 
     def __read_csv(self, file_name) -> pd.DataFrame:
         ignore_rows = [0, 1, 2, 3, 6]
         absolute_path = Path(os.path.join(self.study_output_path, file_name.replace("/", os.sep)))
         assert absolute_path.exists(), f"Path %s does not exist." % absolute_path
         return pd.read_csv(absolute_path, header=[0, 1], skiprows=ignore_rows, sep='\t', low_memory=False)
+
 
     def __if_none_then_parse(self, rs: result_type, area, year, file_name: str):
         if self.hourly_results[rs] is None:
@@ -105,6 +96,17 @@ class solver_output_handler:
 
     def __get_details_hourly(self, area: str, year: int):
         return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")
+        
+    def __get_details_st_storage_hourly(self, area: str, year: int):
+        return self.__if_none_then_parse(result_type.DETAILS_STS, area.lower(), year, "details-STstorage-hourly.txt")
+        
+    def __get_details_st_storage_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
+        df = self.__get_details_st_storage_hourly(area, year)
+        return df.loc[df['datetime'] == datetime]
+
+    def __get_details_hourly_for_specific_hour(self, area: str, year: int, datetime: str):
+        df = self.__get_details_hourly(area, year)
+        return df.loc[df['datetime'] == datetime]
 
     def details_hourly_for_cluster(self, area: str, year: int, cluster: str):
         return self.__if_none_then_parse(result_type.DETAILS, area.lower(), year, "details-hourly.txt")[cluster]
@@ -139,6 +141,18 @@ class solver_output_handler:
             return self.__get_values_hourly(area, year)["UNSP. ENRG"]["MWh"].sum()
         else:
             return self.__get_values_hourly_for_specific_hour(area, year, date)["UNSP. ENRG"]["MWh"].sum()
+            
+    def get_overall_cost_eur(self, area: str, year: int, date: str = None) -> float:
+        if date is None:
+            return self.__get_values_hourly(area, year)["OV. COST"]["Euro"].sum()
+        else:
+            return self.__get_values_hourly_for_specific_hour(area, year, date)["OV. COST"]["Euro"].sum()
+
+    def get_battery_level_mwh(self, area: str, year: int, date: str) -> float:
+        return self.__get_values_hourly_for_specific_hour(area, year, date)["BATTERY_LEVEL"]["MWh"].sum()
+
+    def get_reserve_participation_cost(self, area: str, year: int) -> float:
+        return self.__get_values_hourly(area, year)["RESERVE PARTICIPATION COST"]["Euro"].sum()
 
     def min_gen_for_thermal_cluster(self, area: str, year: int, cluster: str):
         return self.__get_details_hourly(area, year)[cluster]["MIN GEN - MWh"]
@@ -160,3 +174,33 @@ class solver_output_handler:
         # Return NPCAP HOURS indicator at a specific hour (0-based index)
         df = self.__get_values_hourly(area, year)
         return int(df["NPCAP HOURS"]["Hours"].iloc[hour])
+
+    def get_mps_files(self):
+        return list(Path(self.study_output_path).glob("*.mps"))
+
+    def get_output_file_with_name(self, filename: str):
+        path = Path(self.study_output_path) / filename
+        if path.is_file():
+            return str(path)
+        return None
+
+    def get_hourly_reserve_unsp_energy(self, area: str, year: int, res: str) -> float:
+        return self.__get_values_hourly(area, year)[res + "_UNSP."]["MWh"]
+        
+    def get_hourly_reserve_group_energy(self, area: str, year: int, res: str, group: str) -> float:
+        return self.__get_values_hourly(area, year)[res + "_" + group]["MWh"]
+
+    def get_reserve_total_participation_for_year_and_cluster(self, area: str, year: int, res: str, cluster: str) -> float:
+        return self.__get_details_hourly(area, year)[res + "_" + cluster]["Reserve Participation Power - MWh"].sum()
+        
+    def get_hourly_res_part_mwh(self, area: str, year: int, prod_name: str) -> pd.Series:
+        return self.__get_details_hourly(area, year)[prod_name]['Reserve Participation Power - MWh']
+
+    def get_res_part_for_date_mwh(self, area: str, year: int, date: str, prod_name: str) -> float:
+        return self.__get_details_hourly_for_specific_hour(area, year, date)[prod_name]['Reserve Participation Power - MWh'].sum()
+        
+    def get_values_hydro_for_specific_hour_mwh(self, area: str, year: int, date: str, hydro_val: str) -> float:
+        return self.__get_values_hourly_for_specific_hour(area, year, date)[hydro_val]['MWh'].sum()
+        
+    def get_values_for_st_storage_cluster_for_specific_hour_mw(self, area: str, year: int, date: str, cluster_name: str, keySTstorageValue: str):
+        return self.__get_details_st_storage_hourly_for_specific_hour(area, year, date)[cluster_name][keySTstorageValue]
