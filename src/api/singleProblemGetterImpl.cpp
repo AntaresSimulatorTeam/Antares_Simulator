@@ -9,13 +9,11 @@
 
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/writer/null_result_writer.h>
-#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
-#include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -376,8 +374,6 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
     bool hasModelerData = modelerData != nullptr;
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
-      = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
     Optimisation::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
