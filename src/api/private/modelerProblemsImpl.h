@@ -6,8 +6,10 @@
 #include <filesystem>
 #include <memory>
 
+#include "antares/solver/modeler/ILoader.h"
 #include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/modeler/loadFiles/Fileloader.h"
+#include "antares/writer/table_format.h"
 
 namespace Antares::Solver::Implementation
 {
@@ -16,6 +18,11 @@ class ModelerProblems final
 {
 public:
     explicit ModelerProblems(const std::filesystem::path& modelerPath);
+
+    // used for tests only
+    ModelerProblems(ILoader& loader,
+                    const std::filesystem::path& outputPath,
+                    Antares::Writer::TableFormat tableFormat);
 
     void logSize() const;
 
