@@ -123,7 +123,7 @@ using MarginalCostTraits = ReserveParticipationTraits<Detail::MarginalCost,
                                                       CategoryLevels::GroupLevel>;
 using UnsuppliedSpilledTraits = ReserveParticipationTraits<Detail::UnsuppliedSpilled,
                                                            CategoryLevels::GroupLevel,
-                                                           0,
+                                                           2,
                                                            ResultTypes::AverageOnly>;
 
 // ============================================================================
