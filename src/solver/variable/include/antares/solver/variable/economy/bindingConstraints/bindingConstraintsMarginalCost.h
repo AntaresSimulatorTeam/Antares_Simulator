@@ -96,14 +96,6 @@ public:
     BindingConstMarginCost& operator=(const BindingConstMarginCost&) = delete;
     BindingConstMarginCost& operator=(BindingConstMarginCost&&) = delete;
 
-    void simulationBegin()
-    {
-    }
-
-    void simulationEnd()
-    {
-    }
-
     void initializeFromStudy(Data::Study& study)
     {
         pNbYearsParallel = study.maxNbYearsInParallel;
@@ -226,18 +218,6 @@ public:
         }
     }
 
-    void hourBegin(unsigned int /*hourInTheYear*/)
-    {
-    }
-
-    void hourForEachArea(State& /*state*/, unsigned int /*numSpace*/)
-    {
-    }
-
-    void weekForEachArea(State& /*state*/, unsigned int /*numSpace*/)
-    {
-    }
-
     template<class VCardToFindT>
     static void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
                                        const Data::Area* area)
@@ -257,10 +237,6 @@ public:
     static void computeSpatialAggregatesSummary(V& allVars,
                                                 unsigned int year,
                                                 unsigned int numSpace)
-    {
-    }
-
-    void beforeYearByYearExport(uint /*year*/, uint /*numSpace*/)
     {
     }
 

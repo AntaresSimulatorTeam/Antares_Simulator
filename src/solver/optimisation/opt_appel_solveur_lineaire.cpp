@@ -221,11 +221,6 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
     FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    const ScenarioGroupRepository* modelerScenarioGroupRepository = hasModelerData
-                                                                      ? &modelerData
-                                                                           ->scenarioGroupRepository
-                                                                      : nullptr;
-
     OptimEntityContainer optimEntityContainer(*ortoolsProblem);
 
     BendersDecomposition* bendersDecomposition = hasModelerData ? &modelerData->bendersDecomposition
@@ -256,8 +251,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
     measure.tick();
     logs.info() << fmt::format("Problem {}-{} solved in {}",
-                               problemeHebdo->weekInTheYear,
                                problemeHebdo->year,
+                               problemeHebdo->weekInTheYear,
                                measure.toStringInSeconds());
     timeMeasure.solveTime = measure.duration_ms();
     optimizationStatistics.addSolveTime(timeMeasure.solveTime);
@@ -402,15 +397,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
         FillContext fillCtx = buildFillContext(problemeHebdo, NumIntervalle);
         const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                      : nullptr;
-        const ScenarioGroupRepository* modelerScenarioGroupRepository
-          = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
-
         OptimEntityContainer optimEntityContainer(infeasibleProblem);
-        BendersDecomposition* bendersDecomposition = hasModelerData
-                                                       ? &modelerData->bendersDecomposition
-                                                       : nullptr;
-
-        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, bendersDecomposition);
+        fillLinearProblem(fillCtx, problemeHebdo, optimEntityContainer, nullptr);
 
         auto MPproblem = infeasibleProblem.getMpSolver();
         auto analyzer = Antares::Optimization::makeUnfeasiblePbAnalyzer();
