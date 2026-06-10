@@ -22,8 +22,8 @@ ModelerProblems::ModelerProblems(const std::filesystem::path& studyPath)
 
 // used for unit tests only, not output path needed
 ModelerProblems::ModelerProblems(ILoader& loader,
-                                  const fs::path& outputPath,
-                                  const Antares::Writer::TableFormat tableFormat)
+                                 const fs::path& outputPath,
+                                 const Antares::Writer::TableFormat tableFormat)
 {
     modeler_ = std::make_unique<Modeler>(loader, outputPath, tableFormat);
     modeler_->buildProblems();
