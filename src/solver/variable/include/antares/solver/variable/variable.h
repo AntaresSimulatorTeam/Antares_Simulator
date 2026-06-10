@@ -135,8 +135,9 @@ public:
     ** \brief Notify to all variables that a new year is about to start
     **
     ** \param year The current year
+    ** \param numSpace The parallel-year slot index
     */
-    void yearBegin(uint year);
+    void yearBegin(uint year, uint numSpace);
 
     /*!
     ** \brief Notify to all variables to prepare data for the close to year end calculations for
@@ -165,8 +166,17 @@ public:
     ** That mainly means that all variables should perform the monthly
     ** aggragations.
     ** \param year The current year
+    ** \param numSpace The parallel-year slot index
     */
-    void yearEnd(uint year);
+    void yearEnd(uint year, uint numSpace);
+
+    /*!
+    ** \brief Merge the values of the current year into the global results
+    **
+    ** \param year The current year
+    ** \param numSpace The parallel-year slot index
+    */
+    void computeSummary(uint year, uint numSpace);
 
     template<class V>
     void yearEndSpatialAggregates(V& allVars, uint year, unsigned int numSpace);

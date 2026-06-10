@@ -128,18 +128,6 @@ public:
         AncestorType::pResults.merge(0, pValuesForTheCurrentYear);
     }
 
-    void yearBegin([[maybe_unused]] uint year, [[maybe_unused]] uint numSpace)
-    {
-    }
-
-    void yearEnd([[maybe_unused]] uint year, [[maybe_unused]] uint numSpace)
-    {
-    }
-
-    void computeSummary([[maybe_unused]] uint year, [[maybe_unused]] uint numSpace)
-    {
-    }
-
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
         if constexpr (requires {
