@@ -1647,6 +1647,8 @@ var namespaces_dup =
         [ "getFirstTSnumberInterModalMatrixFoundInArea", "timeseries-numbers_8cpp.html#a22a57ed680f58dced8e48b5ecd079c28", null ],
         [ "getProblem", "Modeler_8cpp.html#acc7fd0f5be095885b7716105a5518c3c", null ],
         [ "initializeSignalHandlers", "public_8h.html#a208e1702f166ec879b512d049a6fd610", null ],
+        [ "makeOutputPath", "Modeler_8cpp.html#a28ef57806cb789809ded21bb1d7d72d8", null ],
+        [ "makeOutputPath", "Modeler_8h.html#abfa68ae6faacc4e6e985baab8f38e3db", null ],
         [ "MatrixDPMake", "matrix-dp-make_8hxx.html#a0ba3dc459a637b4d4c17d0b7867fe889", null ],
         [ "MatrixDPMake", "matrix-dp-make_8h.html#a974a844fb3ae602605d9249096df967b", null ],
         [ "operator<<", "ModelerData_8h.html#ae589ebe159662ac9534f60b58140872a", null ],
