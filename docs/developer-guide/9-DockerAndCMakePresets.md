@@ -18,7 +18,7 @@ From the project root:
 
 ```sh
 cd docker/clang
-docker build -t antares/clang:latest .
+docker build -f Ubuntu22-04-clang-toolchain.dockerfile -t antares/clang:latest .
 ```
 
 ### 2.2. Start a container and follow the developer guide as usual
@@ -48,7 +48,7 @@ sudo docker run -it \
 
 - Replace `/path/to/ortools` with the path to your local ortools directory.
 - Now, `/work/Antares_Simulator` and `/work/ortools` in the container point to your host files.
-- You can configure and build as always just point CMAKE_PREFIX_PATH to `/work/ortools`.
+- You can configure and build as usual; just point `CMAKE_PREFIX_PATH` to `/work/ortools`.
 
 **Local** = on your host (your computer).  
 **Remote** = inside the Docker container.
@@ -114,12 +114,6 @@ This ensures that your build artifacts and caches are preserved between sessions
 
 With this setup, you can configure, build, and run Antares Simulator entirely within CLion, using Docker for a
 reproducible environment and leveraging build caching for fast iteration.
-
----
-
-
-> **Note:** CLion requires the build directory to be inside the source folder. While it is cleaner to keep build output
-> outside (e.g., `/tmp/build`), you must ensure the build directory is within the source tree for full IDE integration.
 
 ---
 
@@ -198,14 +192,14 @@ docker run -it \
 ```
 
 ```sh
-cmake --preset=default --build-dir=/tmp/build
+cmake --preset=default -B /tmp/build
 ```
 
 ### 6.2. Using ccache
 
 `ccache` is a compiler cache that stores previously compiled object files to speed up subsequent builds.
 
-- Set the following varible at configure time or in a preset to use `ccache`:
+- Set the following variable at configure time or in a preset to use `ccache`:
     - Variable: `CMAKE_CXX_COMPILER_LAUNCHER=ccache`
     - Cache directory: `CCACHE_DIR=/tmp/deps/ccache`
 - Make sure the cache directory is persistent (see above) to benefit from caching across container runs.
@@ -220,7 +214,7 @@ docker run -it \
 
 ```sh
 export CCACHE_DIR=/tmp/deps/ccache
-cmake --preset=with_ccache --build-dir=/tmp/build
+cmake --preset=with_ccache -B /tmp/build
 ```
 
 ### 6.3. vcpkg caching
