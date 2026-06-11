@@ -826,4 +826,15 @@ def check_two_optimization_iterations(context):
         f"No second optimization output files found in {output_path}. " \
         f"This means the thermal heuristic did not run (only 1 iteration)."
     
+@then('in area "{area}", during year {year:d}, weekly overall cost for week {week:d} is {value:g}')
+def check_weekly_overall_cost(context, area, year, week, value):
+    actual = context.soh.get_weekly_overall_cost_eur(area, year, week)
+    assert_double_close(value, actual, 0.001, f"Weekly OV. COST week {week}")
+
+@then('in area "{area}", during year {year:d}, total NODU for hour {hour:d} is {value:d}')
+def check_total_nodu(context, area, year, hour, value):
+    actual = int(context.soh.get_hourly_nodu(area, year).iloc[hour])
+    assert actual == value, \
+        f"Total NODU mismatch at hour {hour}: expected {value}, got {actual}"
+    
 

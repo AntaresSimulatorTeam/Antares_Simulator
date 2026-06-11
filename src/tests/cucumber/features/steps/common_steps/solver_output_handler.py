@@ -116,6 +116,9 @@ class solver_output_handler:
 
     def get_hourly_n_dispatched_units(self, area: str, year: int, prod_name: str) -> pd.Series:
         return self.__get_details_hourly(area, year)[prod_name]['NODU']
+    
+    def get_hourly_nodu(self, area: str, year: int) -> pd.Series:
+        return self.__get_values_hourly(area, year)["NODU"][" "]
 
     def get_loss_of_load_weekly_duration_h(self, area: str, year: int, week: int) -> int:
         df = self.__get_values_hourly_for_specific_week(area, year, week)
@@ -147,6 +150,9 @@ class solver_output_handler:
             return self.__get_values_hourly(area, year)["OV. COST"]["Euro"].sum()
         else:
             return self.__get_values_hourly_for_specific_hour(area, year, date)["OV. COST"]["Euro"].sum()
+        
+    def get_weekly_overall_cost_eur(self, area: str, year: int, week: int) -> float:
+        return self.__get_values_hourly_for_specific_week(area, year, week)["OV. COST"]["Euro"].sum()
 
     def get_battery_level_mwh(self, area: str, year: int, date: str) -> float:
         return self.__get_values_hourly_for_specific_hour(area, year, date)["BATTERY_LEVEL"]["MWh"].sum()
