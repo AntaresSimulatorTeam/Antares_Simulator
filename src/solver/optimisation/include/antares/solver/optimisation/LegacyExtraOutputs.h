@@ -37,14 +37,13 @@ namespace Antares::Optimization
 //    constraint (links managed with hurdle costs only);
 //  - hydro `hydro_shadow_price`: dual of the final stock expression
 //    constraint (accurate water value mode only).
-void AddLegacyExtraOutputs(
-  Antares::IO::Outputs::SimulationTable& simulationTable,
-  const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
-  const std::vector<double>& solutionValues,
-  const std::vector<double>& linearCosts,
-  const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
-  const std::vector<double>& constraintDuals,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
-  unsigned currentBlock);
+void AddLegacyExtraOutputs(Antares::IO::Outputs::SimulationTable& simulationTable,
+                           const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
+                           const std::vector<double>& solutionValues,
+                           const std::vector<double>& linearCosts,
+                           const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
+                           const std::vector<double>& constraintDuals,
+                           const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                           unsigned currentBlock);
 
 } // namespace Antares::Optimization

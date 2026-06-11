@@ -19,8 +19,7 @@ void FinalStockExpression::add(int pays)
 
         // The recording constructor: this dual feeds the `hydro_shadow_price`
         // extra output of the simulation table.
-        ConstraintNamer namer(builder.data.NomDesContraintes,
-                              builder.data.LegacyConstraintsInfo);
+        ConstraintNamer namer(builder.data.NomDesContraintes, builder.data.LegacyConstraintsInfo);
 
         namer.UpdateArea(builder.data.NomsDesPays[pays]);
         namer.UpdateTimeStep(builder.data.weekInTheYear * 168 + pdt);

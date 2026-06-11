@@ -79,8 +79,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     // resizeProbleme, so the index-based reads below are always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
            && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.CoutLineaire.size()
-                == static_cast<std::size_t>(problem.NombreDeVariables));
+           && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     assert(problem.LegacyConstraintsInfo.size()
              == static_cast<std::size_t>(problem.NombreDeContraintes)
            && problem.CoutsMarginauxDesContraintes.size()
