@@ -3,14 +3,8 @@
 import os
 from pathlib import Path
 
-from common_steps.simulation_table_checker import (
-    get_column_names,
-    get_objective_value,
-    get_objective_values_by_block,
-    get_simulation_table_dataframe,
-    get_simulation_table_entry,
-)
-from common_steps.simulation_table_reader import read_simulation_table_csv, read_simulation_table_parquet
+from common_steps.simulation_table_checker import SimulationTable
+from common_steps.simulation_table_reader import make_simulation_table_reader
 from shared_utils import mps_utils as mpu
 
 
@@ -28,45 +22,41 @@ class invest_problems:
         self.structure = structure
 
 
+def read_invest_problems(output_path: Path) -> invest_problems:
+    """Read investment problem files (master.mps, 1-1.mps, structure.txt)."""
+    output_location = str(output_path)
+    try:
+        master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
+    except Exception:
+        master = None
+
+    try:
+        subproblem = read_if_exists(os.path.join(output_location, "1-1.mps"), mpu.load_problem)
+    except Exception:
+        subproblem = None
+
+    structure = read_if_exists(
+        os.path.join(output_location, "structure.txt"),
+        lambda x: open(x, 'r').readlines(),
+    )
+    return invest_problems(master, subproblem, structure)
+
+
 class modeler_output_handler:
-    def __init__(self, outputPath: Path, filePattern: str, useParquet: bool = False, readInvestFiles: bool = False):
-        if useParquet:
-            self.simulation_table = read_simulation_table_parquet(outputPath, filePattern)
-        else:
-            self.simulation_table = read_simulation_table_csv(outputPath, filePattern)
-        if readInvestFiles:
-            self.problems = self.__read_problems(outputPath)
+    """Backward-compatible wrapper for solver tests.
 
-    @staticmethod
-    def __read_problems(outputPath):
-        output_location = str(outputPath)
-        try:
-            master = read_if_exists(os.path.join(output_location, "master.mps"), mpu.load_problem)
-        except Exception:
-            master = None
+    Solver tests still reference context.moh (modeler_output_handler),
+    so we keep this class for compatibility. It delegates to SimulationTable.
+    """
 
-        try:
-            subproblem = read_if_exists(os.path.join(output_location, "1-1.mps"), mpu.load_problem)
-        except Exception:
-            subproblem = None
-
-        structure = read_if_exists(
-            os.path.join(output_location, "structure.txt"),
-            lambda x: open(x, 'r').readlines(),
+    def __init__(self, outputPath: Path, filePattern: str = "simulation-table*.csv"):
+        self.simulation_table = SimulationTable(
+            make_simulation_table_reader(outputPath, use_parquet=False)()
         )
-        return invest_problems(master, subproblem, structure)
-
-    def get_simulation_table_entry(self, component: str, output: str, block, timestep, scenario):
-        return get_simulation_table_entry(self.simulation_table, component, output, block, timestep, scenario)
+        self.problems = read_invest_problems(outputPath)
 
     def get_objective_value(self):
-        return get_objective_value(self.simulation_table)
+        return self.simulation_table.get_objective_value()
 
     def get_objective_values_by_block(self):
-        return get_objective_values_by_block(self.simulation_table)
-
-    def get_table(self):
-        return get_simulation_table_dataframe(self.simulation_table)
-
-    def get_column_names(self):
-        return get_column_names(self.simulation_table)
+        return self.simulation_table.get_objective_values_by_block()

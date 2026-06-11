@@ -9,7 +9,9 @@ import subprocess
 
 from behave import *
 from common_steps.assertions import *
-from common_steps.modeler_output_handler import modeler_output_handler
+from common_steps.modeler_output_handler import read_invest_problems
+from common_steps.simulation_table_checker import SimulationTable
+from common_steps.simulation_table_reader import make_simulation_table_reader
 from shared_utils import mps_utils as mpu
 from pathlib import Path
 
@@ -33,35 +35,22 @@ def run_antares_modeler_parquet(context):
 
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
-    assert_double_close(value, context.moh.get_objective_value(), 1e-5)
+    assert_double_close(value, context.simu_table.get_objective_value(), 1e-5)
 
 
 @step('the objective value is greater than {lb:g} and lower than {ub:g}')
 def modeler_obj_value(context, lb, ub):
-    assert lb <= context.moh.get_objective_value() <= ub, \
-        f"Objective value is not inside expected range: {context.moh.get_objective_value()}"
+    assert lb <= context.simu_table.get_objective_value() <= ub, \
+        f"Objective value is not inside expected range: {context.simu_table.get_objective_value()}"
 
 
 @step('the modeler outputs contain the following entries')
-def modeler_output_values(context):
-    for row in context.table:
-        ts_range = read_int_range(row, "timestep")
-        if "scenario" not in context.table.headings:
-            scenario_range = [0]
-        else:
-            scenario_range = read_int_range(row, "scenario")
-        if "block" in context.table.headings:
-            block_range = read_int_range(row, "block")
-        else:
-            block_range = [math.nan]
-        for block in block_range:
-            for scenario in scenario_range:
-                for ts in ts_range:
-                    assert_double_close(get_value(row, ts),
-                                        context.moh.get_simulation_table_entry(row["component"],row["output"], block, ts, scenario),
-                                        1e-6)
+def check_simulation_table_content(context):
+    expected_entries = read_expected_entries(context.table)
+    check_st_entries(context.simu_table, expected_entries)
 
-def read_int_range(row, key : str):
+
+def read_int_range(row, key: str):
     if row[key] != "":
         array = row[key].split("-")
         start = int(array[0])
@@ -70,9 +59,49 @@ def read_int_range(row, key : str):
     else:
         return [math.nan]
 
-def get_value(row, ts):
-    ret = row["value"]
-    return float(ret)  # Single value case (apply to all timesteps)
+
+def read_expected_entries(table):
+    """Read expected entries from a Gherkin table.
+
+    Returns a list of dicts, each with keys:
+        component, output, timestep (range), block (range or None), scenario (range or None), value
+    """
+    entries = []
+    for row in table:
+        entry = {
+            "component": row["component"],
+            "output": row["output"],
+            "timestep": read_int_range(row, "timestep"),
+            "value": float(row["value"]),
+        }
+        entry["scenario"] = (
+            read_int_range(row, "scenario")
+            if "scenario" in table.headings
+            else [0]
+        )
+        entry["block"] = (
+            read_int_range(row, "block")
+            if "block" in table.headings
+            else [math.nan]
+        )
+        entries.append(entry)
+    return entries
+
+
+def check_st_entries(simulation_table: SimulationTable, expected_entries):
+    """Check that the simulation table contains all expected entries."""
+    for entry in expected_entries:
+        component = entry["component"]
+        output = entry["output"]
+        value = entry["value"]
+        for block in entry["block"]:
+            for scenario in entry["scenario"]:
+                for ts in entry["timestep"]:
+                    actual = simulation_table.get_entry(
+                        component, output, block, ts, scenario
+                    )
+                    assert_double_close(value, actual, 1e-6)
+
 
 def run_modeler(context):
     command = build_antares_modeler_command(context)
@@ -100,12 +129,11 @@ def run_modeler(context):
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
         use_parquet = hasattr(context, "_use_parquet") and context._use_parquet
-        file_pattern = "simulation-table*.parquet" if use_parquet else "simulation-table*.csv"
-        context.moh = modeler_output_handler(Path(parse_output_folder_from_logs(context.logs_out)),
-                                             file_pattern,
-                                             use_parquet,
-                                             True)
+        reader_factory = make_simulation_table_reader(Path(parse_output_folder_from_logs(context.logs_out)), use_parquet)
+        context.simu_table = SimulationTable(reader_factory())
+        context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
     context.return_code = process.returncode
+
 
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
@@ -144,15 +172,14 @@ def check_variables(context, model):
 
 @then(u'the master problem contains the following variables')
 def check_master_variables(context):
-    assert (context.moh.problems != None and context.moh.problems.master != None)
-    check_variables(context, context.moh.problems.master)
+    assert context.invest_pb is not None and context.invest_pb.master is not None
+    check_variables(context, context.invest_pb.master)
 
 
 @then(u'the subproblem contains the following variables')
 def check_subproblem_variables(context):
-    assert (context.moh.problems != None and context.moh.problems.subproblem != None)
-    model = context.moh.problems.subproblem
-    check_variables(context, context.moh.problems.subproblem)
+    assert context.invest_pb is not None and context.invest_pb.subproblem is not None
+    check_variables(context, context.invest_pb.subproblem)
 
 
 def parse_structure(content):
@@ -175,7 +202,7 @@ def parse_structure(content):
 
 @then(u'the structure file contains the following entries')
 def check_structure(context):
-    structure = context.moh.problems.structure
+    structure = context.invest_pb.structure
     assert structure is not None
     actual = parse_structure(structure)
     expected = [row.as_dict() for row in context.table]

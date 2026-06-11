@@ -529,9 +529,9 @@ def compare_objective_values_all_studies(context):
     # Collect all objective values
     all_objectives = []
     for study in context.multi_studies:
-        assert study['moh'] is not None, \
+        assert study['simu_table'] is not None, \
             f"Study {study['index'] + 1} (path: {study['path']}) does not have modeler outputs (simulation_table)"
-        objectives = study['moh'].get_objective_values_by_block()
+        objectives = study['simu_table'].get_objective_values_by_block()
         all_objectives.append({
             'index': study['index'],
             'path': study['path'],

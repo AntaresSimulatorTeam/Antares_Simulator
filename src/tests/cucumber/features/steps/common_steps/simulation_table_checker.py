@@ -1,6 +1,7 @@
-# Simulation table checkers (business logic)
-# These functions operate on pandas DataFrames returned by simulation_table_reader.
-# They are format-agnostic: the same checks work for CSV or Parquet data.
+# Simulation table class and checkers (business logic)
+# The SimulationTable class wraps a pandas DataFrame and provides
+# query methods. These are format-agnostic: the same methods work
+# for CSV or Parquet data.
 
 from typing import Optional
 
@@ -57,73 +58,81 @@ def _build_lookup_error_msg(
     )
 
 
-def get_simulation_table_entry(
-    simulation_table: pd.DataFrame,
-    component: str,
-    output: str,
-    block: Optional[float],
-    timestep: Optional[float],
-    scenario: Optional[float],
-) -> float:
-    """
-    Look up a single entry in the simulation table by component, output, block, timestep, and scenario.
-    Returns the float value.
-    """
-    df = simulation_table[
-        (simulation_table["component"] == component)
-        & (simulation_table["output"] == output)
-    ]
-    if not pd.isna(block):
-        df = df[df["block"] == block]
-    if pd.isna(timestep):
-        df = df[pd.isna(df["absolute_time_index"])]
-    else:
-        df = df[df["absolute_time_index"] == timestep]
-    if pd.isna(scenario):
-        df = df[pd.isna(df["scenario_index"])]
-    else:
-        df = df[df["scenario_index"] == scenario]
+class SimulationTable:
+    """Wraps a pandas DataFrame representing a simulation table.
 
-    if len(df) != 1:
-        raise LookupError(
-            _build_lookup_error_msg(component, output, block, timestep, scenario, df, simulation_table)
-        )
-    return float(df["value"].iloc[0])
-
-
-def get_objective_value(simulation_table: pd.DataFrame) -> float:
+    Provides query methods for looking up entries, objective values,
+    and column information.
     """
-    Returns the objective value from the simulation table (scenario_index == 0).
-    """
-    df = simulation_table[
-        (simulation_table["output"] == "OBJECTIVE_VALUE")
-        & (simulation_table["scenario_index"] == 0)
-    ]
-    if len(df) != 1:
-        raise LookupError(
-            f"Simulation table contains {len(df)} objective value(s), expected 1"
-        )
-    value = df["value"].iloc[0]
-    if pd.isna(value):
-        raise LookupError("Simulation table objective value is NULL")
-    return float(value)
 
+    def __init__(self, dataframe: pd.DataFrame):
+        self._dataframe = dataframe
 
-def get_objective_values_by_block(simulation_table: pd.DataFrame) -> dict:
-    """
-    Returns a dictionary mapping block number to objective value.
-    Each block represents a time step in the optimization.
-    """
-    df = simulation_table[simulation_table["output"] == "OBJECTIVE_VALUE"]
-    if df.empty:
-        raise LookupError("Simulation table contains no objective values")
+    def get_entry(
+        self,
+        component: str,
+        output: str,
+        block: Optional[float],
+        timestep: Optional[float],
+        scenario: Optional[float],
+    ) -> float:
+        """Look up a single entry by component, output, block, timestep, and scenario."""
+        df = self._dataframe[
+            (self._dataframe["component"] == component)
+            & (self._dataframe["output"] == output)
+        ]
+        if not pd.isna(block):
+            df = df[df["block"] == block]
+        if pd.isna(timestep):
+            df = df[pd.isna(df["absolute_time_index"])]
+        else:
+            df = df[df["absolute_time_index"] == timestep]
+        if pd.isna(scenario):
+            df = df[pd.isna(df["scenario_index"])]
+        else:
+            df = df[df["scenario_index"] == scenario]
 
-    result = {}
-    for _, row in df.iterrows():
-        block = int(row["block"])
-        value = row["value"]
-        result[block] = float(value)
-    return result
+        if len(df) != 1:
+            raise LookupError(
+                _build_lookup_error_msg(component, output, block, timestep, scenario, df, self._dataframe)
+            )
+        return float(df["value"].iloc[0])
+
+    def get_objective_value(self) -> float:
+        """Returns the objective value from the simulation table (scenario_index == 0)."""
+        df = self._dataframe[
+            (self._dataframe["output"] == "OBJECTIVE_VALUE")
+            & (self._dataframe["scenario_index"] == 0)
+        ]
+        if len(df) != 1:
+            raise LookupError(
+                f"Simulation table contains {len(df)} objective value(s), expected 1"
+            )
+        value = df["value"].iloc[0]
+        if pd.isna(value):
+            raise LookupError("Simulation table objective value is NULL")
+        return float(value)
+
+    def get_objective_values_by_block(self) -> dict:
+        """Returns a dictionary mapping block number to objective value."""
+        df = self._dataframe[self._dataframe["output"] == "OBJECTIVE_VALUE"]
+        if df.empty:
+            raise LookupError("Simulation table contains no objective values")
+
+        result = {}
+        for _, row in df.iterrows():
+            block = int(row["block"])
+            value = row["value"]
+            result[block] = float(value)
+        return result
+
+    def get_dataframe(self) -> pd.DataFrame:
+        """Return the full DataFrame for advanced queries."""
+        return self._dataframe
+
+    def get_column_names(self) -> list:
+        """Return the list of column names in the simulation table."""
+        return list(self._dataframe.columns)
 
 
 def get_simulation_table_dataframe(simulation_table: pd.DataFrame) -> pd.DataFrame:

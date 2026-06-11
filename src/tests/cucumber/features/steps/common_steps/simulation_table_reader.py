@@ -8,8 +8,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-import pyarrow as pa
-import pyarrow.parquet as pq
+import pyarrow as arrow
+import pyarrow.parquet as parquet
 
 
 def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
@@ -30,7 +30,7 @@ def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
     return "".join(accumulated)
 
 
-def read_simulation_table_csv(outputPath: Path, filePattern: str) -> pd.DataFrame:
+def read_simulation_table_csv(outputPath: Path, filePattern: str = "simulation-table*.csv") -> pd.DataFrame:
     """
     Read simulation-table*.csv files from the output directory.
     If multiple files exist (e.g., for multiple optimisations), concatenate them.
@@ -45,7 +45,7 @@ def read_simulation_table_csv(outputPath: Path, filePattern: str) -> pd.DataFram
     return _normalize_simulation_table(df)
 
 
-def read_simulation_table_parquet(outputPath: Path, filePattern: str) -> pd.DataFrame:
+def read_simulation_table_parquet(outputPath: Path, filePattern: str = "simulation-table*.parquet") -> pd.DataFrame:
     """
     Read simulation-table*.parquet files from the output directory.
     If multiple files exist (e.g., for multiple optimisations), concatenate them.
@@ -58,8 +58,8 @@ def read_simulation_table_parquet(outputPath: Path, filePattern: str) -> pd.Data
             f"No simulation table files matching '{filePattern}' found in '{outputPath}'"
         )
 
-    tables = [pq.read_table(f) for f in files]
-    pa_table = pa.concat_tables(tables)
+    tables = [parquet.read_table(f) for f in files]
+    pa_table = arrow.concat_tables(tables)
 
     df = pa_table.to_pandas()
     return _normalize_simulation_table(df)
@@ -80,3 +80,14 @@ def _normalize_simulation_table(df: pd.DataFrame) -> pd.DataFrame:
         if col in df.columns:
             df[col] = df[col].astype(float)
     return df
+
+
+def make_simulation_table_reader(output_path: Path, use_parquet: bool) -> object:
+    """Factory function that returns the appropriate simulation table reader.
+
+    The file pattern is defined and used privately inside each reader.
+    """
+    if use_parquet:
+        return lambda: read_simulation_table_parquet(output_path)
+    else:
+        return lambda: read_simulation_table_csv(output_path)
