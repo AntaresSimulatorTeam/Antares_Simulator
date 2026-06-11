@@ -7,6 +7,7 @@ var classsolver__input__handler_1_1solver__input__handler =
     [ "get_optim2_simulation_table", "classsolver__input__handler_1_1solver__input__handler.html#ac41a1895cbf969b66647b6261e47f29d", null ],
     [ "get_value", "classsolver__input__handler_1_1solver__input__handler.html#ad0312a7468d3001b3dceb018d9c640f0", null ],
     [ "reference_dir", "classsolver__input__handler_1_1solver__input__handler.html#a6437bfcaba7b58b056cee22efea998e7", null ],
+    [ "set_input", "classsolver__input__handler_1_1solver__input__handler.html#a2d2a76936077472799a5d7bc634ce594", null ],
     [ "set_parameter_from_file", "classsolver__input__handler_1_1solver__input__handler.html#a9cf668bdea360a523da4431d1c0611a1", null ],
     [ "set_parameter_value", "classsolver__input__handler_1_1solver__input__handler.html#ac38d2ad5b4926ab06c42f6d60f7f0380", null ],
     [ "set_reserve_value", "classsolver__input__handler_1_1solver__input__handler.html#acd0b58da1ada8d40eb2931a927c86bc7", null ],

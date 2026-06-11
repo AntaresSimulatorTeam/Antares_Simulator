@@ -3,6 +3,7 @@ var structCommonFixture =
     [ "CommonFixture", "structCommonFixture.html#a7e857d7a36118588d9b0496d3e320fa2", null ],
     [ "~CommonFixture", "structCommonFixture.html#aa805477ed6aee7b227ba37f024d589ac", null ],
     [ "load", "structCommonFixture.html#a63a6dca7ef2f76e7adf9c1de859b828d", null ],
+    [ "writeFile", "structCommonFixture.html#acd61cf859fa3086ac0e0a40368abf86b", null ],
     [ "writeInvalidFile", "structCommonFixture.html#aab7556b97e8491a2c8698c82e2459272", null ],
     [ "writeValidFile", "structCommonFixture.html#a38c4907074260ede2987187e59262f5d", null ],
     [ "east", "structCommonFixture.html#a673cfdc1de1cd2460da44ec34ac86799", null ],

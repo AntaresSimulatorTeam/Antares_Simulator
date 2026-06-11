@@ -167,6 +167,8 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>copy_reserve_ini_from_
 <tr class="memitem:a9cf668bdea360a523da4431d1c0611a1"><td class="memItemLeft" align="right" valign="top"><a id="a9cf668bdea360a523da4431d1c0611a1"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><b>set_parameter_from_file</b> (self, area, sectionName, paramName, paramValue)</td></tr>
 <tr class="separator:a9cf668bdea360a523da4431d1c0611a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d2a76936077472799a5d7bc634ce594"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsolver__input__handler_1_1solver__input__handler.html#a2d2a76936077472799a5d7bc634ce594">set_input</a> (self, input_file, section, variable, value)</td></tr>
+<tr class="separator:a2d2a76936077472799a5d7bc634ce594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -183,6 +185,60 @@ Public Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>reference</b></td></tr>
 <tr class="separator:a38a0a4170d6b7aa2a0f366e0e9433364"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2d2a76936077472799a5d7bc634ce594"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d2a76936077472799a5d7bc634ce594">&#9670;&nbsp;</a></span>set_input()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def solver_input_handler.solver_input_handler.set_input </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>input_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>section</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>variable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Set `variable = value` inside `[section]` of an input/ ini file.
+
+Matches the key by exact equality (the substring before `=`, stripped),
+so a variable named `area` does not collide with `area2`, `area.name`,
+etc. Appends the variable line if missing in the section, and appends
+both the section and the variable line if the section is absent.
+Creates the file and parent directories if they don't exist.
+</pre> 
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/tests/cucumber/features/steps/common_steps/solver_input_handler.py</li>
 </ul>
