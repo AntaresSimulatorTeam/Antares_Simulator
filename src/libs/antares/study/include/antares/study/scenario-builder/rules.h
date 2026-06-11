@@ -17,6 +17,7 @@
 #include "LoadTSNumberData.h"
 #include "NTCTSNumberData.h"
 #include "RenewableTSNumberData.h"
+#include "ReservesNeedTSNumberData.h"
 #include "ShortTermAdditionalConstraintsTSNumberData.h"
 #include "ShortTermInflowsTSNumberData.h"
 #include "TSnumberData.h"
@@ -88,6 +89,8 @@ public:
     //! Wind
     windTSNumberData wind;
 
+    //! ReserveNeed (array [0..pAreaCount - 1])
+    ReserveOpt<std::vector<ReservesNeedTSNumberData>> reservesNeed;
     //! Thermal (array [0..pAreaCount - 1])
     std::vector<thermalTSNumberData> thermal;
     //! Renewable (array [0..pAreaCount - 1])
@@ -111,6 +114,7 @@ private:
     bool readThermalCluster(const std::vector<std::string>& instrs, const String& value);
     bool readRenewableCluster(const std::vector<std::string>& instrs, const String& value);
     bool readLoad(const std::vector<std::string>& instrs, const String& value);
+    bool readReservesNeed(const std::vector<std::string>& instrs, const String& value);
     bool readWind(const std::vector<std::string>& instrs, const String& value);
     bool readHydro(const std::vector<std::string>& instrs, const String& value);
     bool readSolar(const std::vector<std::string>& instrs, const String& value);

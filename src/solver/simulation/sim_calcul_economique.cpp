@@ -43,7 +43,7 @@ void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
         for (const auto& [reserveID, reserveCapacity]:
              area->allCapacityReservations.value().areaCapacityReservations)
         {
-            CAPACITY_RESERVATION areaCapacityReservation;
+            CAPACITY_RESERVATION areaCapacityReservation(reserveCapacity.need);
             areaCapacityReservation.type = reserveCapacity.type;
             areaCapacityReservation.unsuppliedCost = reserveCapacity.unsuppliedCost;
             areaCapacityReservation.spillageCost = reserveCapacity.spillageCost;
@@ -57,7 +57,6 @@ void importCapacityReservations(AreaList& areas, PROBLEME_HEBDO& problem)
             areaCapacityReservation.areaReserveIndex = areaReserveIndex;
             globalReserveIndex++;
             areaReserveIndex++;
-            areaCapacityReservation.need = reserveCapacity.need;
 
             areaReserves.areaCapacityReservations.emplace_back(areaCapacityReservation);
         }

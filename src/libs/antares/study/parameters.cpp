@@ -39,6 +39,10 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
                     {
                         v |= timeSeriesLoad;
                     }
+                    else if (word == "reservesneed")
+                    {
+                        v |= timeSeriesReservesNeed;
+                    }
                     else if (word == "wind")
                     {
                         v |= timeSeriesWind;
@@ -283,6 +287,7 @@ void Parameters::reset()
 
     // TimeSeries
     nbTimeSeriesLoad = 1;
+    nbTimeSeriesReservesNeed = 1;
     nbTimeSeriesSolar = 1;
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
@@ -451,6 +456,10 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     if (key == "nbtimeseriesload")
     {
         return value.to<uint>(d.nbTimeSeriesLoad);
+    }
+    if (key == "nbtimeseriesreservesneed")
+    {
+        return value.to<uint>(d.nbTimeSeriesReservesNeed);
     }
     if (key == "nbtimeserieshydro")
     {
@@ -1238,6 +1247,10 @@ void Parameters::fixBadValues()
     if (!nbTimeSeriesLoad)
     {
         nbTimeSeriesLoad = 1;
+    }
+    if (!nbTimeSeriesReservesNeed)
+    {
+        nbTimeSeriesReservesNeed = 1;
     }
     if (!nbTimeSeriesThermal)
     {

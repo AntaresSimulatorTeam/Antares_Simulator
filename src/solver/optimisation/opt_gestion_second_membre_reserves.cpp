@@ -67,7 +67,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
                         .need[reserve.globalReserveIndex];
             if (cnt >= 0)
             {
-                SecondMembre[cnt] = reserve.need.at(pdtGlobal);
+                SecondMembre[cnt] = reserve.need->getCoefficient(problemeHebdo->year, pdtGlobal);
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
                                                 .Reserves.value()[pdtHebdo]
                                                 .CoutsMarginauxHoraires[reserve.areaReserveIndex]);

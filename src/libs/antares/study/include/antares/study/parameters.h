@@ -203,6 +203,8 @@ public:
     //@{
     //! Nb of timeSeries : Load
     uint nbTimeSeriesLoad;
+    //! Nb of timeSeries : Reserves need
+    uint nbTimeSeriesReservesNeed;
     //! Nb of timeSeries : Hydro
     uint nbTimeSeriesHydro;
     //! Nb of timeSeries : Wind

@@ -38,8 +38,9 @@ Note that this file is used only if `custom-scenario = true` in file `settigns/g
 
 Indices for TS numbers start at **1**. Indices for years start at **0**.
 
-### Wind, solar, load, hydro
-Wind, solar, load, hydro objects are unique in their area. Implicitely, they are referred to with a prefix and an area identifier.
+### Wind, solar, load, hydro, reserves need
+Wind, solar, load, hydro objects are unique in their area. Implicitely, they are referred to with a prefix and an area identifier. 
+Reserves need are not unique int their area, but the TS number is defined at the area level, so they are also referred to with a prefix and an area identifier.
 
 ```
 prefix,area,year = TS number
@@ -89,6 +90,7 @@ bc,group,year = TS number
 | Short-term storage inflows                | sts    |
 | Short-term storage additional constraints | sta    |
 | Binding constraints                       | bc     |
+| Reserves need                             | res    |
 
 ## Definition of regional districts
 

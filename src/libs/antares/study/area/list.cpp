@@ -103,13 +103,14 @@ bool readReservesAreaParameters(Area& area, const IniFile::Section& section)
 bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFile::Section& section)
 {
     bool ret = true;
-    if (area.allCapacityReservations.value().contains(transformNameIntoID(section.name)))
+    auto& reserves = area.allCapacityReservations.value();
+    if (reserves.contains(transformNameIntoID(section.name)))
     {
         logs.error() << area.name << " : reserve name already exists for reserve " << section.name;
         return false;
     }
 
-    CapacityReservation capacityReservation;
+    CapacityReservation capacityReservation(reserves.TSNumbers);
     capacityReservation.setName(section.name);
 
     for (auto* p = section.firstProperty; p; p = p->next)
@@ -186,10 +187,12 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const IniFil
             ret = false;
         }
     }
+    reserves.TSNumbers.clear();
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
-    area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
-                                                                          capacityReservation);
+    reserves.areaCapacityReservations.emplace(capacityReservation.id(),
+                                              std::move(capacityReservation));
+    reserves.rebuildIndexes();
     return ret;
 }
 
@@ -1179,23 +1182,21 @@ void validateCapacityReservations(const Area& area)
 {
     if (area.allCapacityReservations)
     {
+        auto& areaCapacityRes = area.allCapacityReservations.value();
         errorIfNegativeValue("maxGlobalEnergyActivationRatio up",
-                             area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                             areaCapacityRes.maxGlobalEnergyActivationRatio.up,
                              area.name);
-        errorIfNegativeValue(
-          "maxGlobalEnergyActivationRatio down",
-          area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
-          area.name);
-        errorIfNegativeValue(
-          "referenceGlobalActivationDuration up",
-          area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
-          area.name);
-        errorIfNegativeValue(
-          "referenceGlobalActivationDuration down",
-          area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
-          area.name);
-        for (const auto& [resID, capacityRes]:
-             area.allCapacityReservations.value().areaCapacityReservations)
+        errorIfNegativeValue("maxGlobalEnergyActivationRatio down",
+                             areaCapacityRes.maxGlobalEnergyActivationRatio.down,
+                             area.name);
+        errorIfNegativeValue("referenceGlobalActivationDuration up",
+                             areaCapacityRes.referenceGlobalActivationDuration.up,
+                             area.name);
+        errorIfNegativeValue("referenceGlobalActivationDuration down",
+                             areaCapacityRes.referenceGlobalActivationDuration.down,
+                             area.name);
+
+        for (const auto& [resID, capacityRes]: areaCapacityRes.areaCapacityReservations)
         {
             errorIfNegativeValue("energyActivationRatio",
                                  capacityRes.energyActivationRatio,

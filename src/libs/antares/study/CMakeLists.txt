@@ -26,6 +26,8 @@ set(SRC_STUDY_SCENARIO_BUILDER
         scenario-builder/WindTSNumberData.cpp
         include/antares/study/scenario-builder/LoadTSNumberData.h
         scenario-builder/LoadTSNumberData.cpp
+        include/antares/study/scenario-builder/ReservesNeedTSNumberData.h
+        scenario-builder/ReservesNeedTSNumberData.cpp
         include/antares/study/scenario-builder/ShortTermInflowsTSNumberData.h
         scenario-builder/ShortTermInflowsTSNumberData.cpp
         include/antares/study/scenario-builder/ShortTermAdditionalConstraintsTSNumberData.h

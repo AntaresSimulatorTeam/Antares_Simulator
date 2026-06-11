@@ -46,7 +46,6 @@ struct OneProblemWithReservesTwoAreas
         study = std::make_unique<Study>();
         areaA = addAreaToListOfAreas(study->areas, "A");
         areaB = addAreaToListOfAreas(study->areas, "B");
-        CAPACITY_RESERVATION areaCapacityReservations;
         study->parameters.simulationDays.first = 0;
         study->parameters.simulationDays.end = 7;
         study->parameters.include.reserves = true;
@@ -93,9 +92,15 @@ struct OneProblemWithReservesTwoAreas
 
         areaA->allCapacityReservations.value()
           .areaCapacityReservations.at("reserveup")
-          .need.resize(2);
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[0] = 2;
-        areaA->allCapacityReservations.value().areaCapacityReservations.at("reserveup").need[1] = 3;
+          .need->resize(1, 2);
+        areaA->allCapacityReservations.value()
+          .areaCapacityReservations.at("reserveup")
+          .need->timeSeries[0][0]
+          = 2;
+        areaA->allCapacityReservations.value()
+          .areaCapacityReservations.at("reserveup")
+          .need->timeSeries[0][1]
+          = 3;
     }
 
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
@@ -134,9 +139,9 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
             BOOST_CHECK_EQUAL(reserve.powerActivationRatio, 3);
             BOOST_CHECK_EQUAL(reserve.energyActivationRatio, 4);
             containsUp = true;
-            BOOST_CHECK_EQUAL(reserve.need.size(), 2);
-            BOOST_CHECK_EQUAL(reserve.need[0], 2);
-            BOOST_CHECK_EQUAL(reserve.need[1], 3);
+            BOOST_CHECK_EQUAL(reserve.need->timeseriesNumbers.height(), 2);
+            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 0), 2);
+            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 3);
         }
         else
         {
@@ -235,9 +240,9 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
             maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
                                                         part.globalIndexClusterParticipation);
             BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUp");
-            BOOST_CHECK_EQUAL(reserve.need.size(), 2);
-            BOOST_CHECK_EQUAL(reserve.need[0], 2);
-            BOOST_CHECK_EQUAL(reserve.need[1], 3);
+            BOOST_CHECK_EQUAL(reserve.need->timeseriesNumbers.height(), 2);
+            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 0), 2);
+            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 3);
             containsUp = true;
         }
         else

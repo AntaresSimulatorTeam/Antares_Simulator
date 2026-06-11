@@ -12,6 +12,7 @@
 #include <antares/logs/logs.h>
 #include <antares/study/fwd.h>
 #include <antares/utils/utils.h>
+#include "antares/series/series.h"
 
 namespace fs = std::filesystem;
 //! ID of a reserve, obtained by transforming its name
@@ -44,30 +45,21 @@ struct CapacityReservation
     double powerActivationRatio = 0.;
     double energyActivationRatio = 1.;
     int referenceActivationDuration = 1.;
-    std::vector<double> need = {};
+    std::shared_ptr<TimeSeries> need = nullptr;
+
+    unsigned int areaWideIndex = (uint)-1;
+
+    CapacityReservation() = default;
+
+    CapacityReservation(TimeSeriesNumbers& tsNumbers):
+        need(std::make_shared<TimeSeries>(tsNumbers))
+    {
+    }
 
     void loadNeedFromFile(const fs::path& path)
     {
-        std::ifstream file(path);
-        if (!file.is_open())
-        {
-            throw std::runtime_error("Could not open " + path.string());
-        }
-        double x;
-        std::vector<double> tmp;
-
-        while (file >> x)
-        {
-            tmp.push_back(x);
-        }
-
-        if (!file.eof())
-        {
-            logs.error() << "Invalid numeric data in " << path.string();
-            throw std::runtime_error("Invalid data in " + path.string());
-        }
-
-        need = std::move(tmp);
+        Matrix<>::BufferType fileContent;
+        need->timeSeries.loadFromCSVFile(path.string(), 1, HOURS_PER_YEAR, &fileContent);
     }
 
     void setName(const AnyString& newname)
@@ -102,6 +94,8 @@ struct AllCapacityReservations
     std::map<ReserveID, std::set<std::string /*name of the group*/>> reserveGroupPartSTS;
 
     std::map<ReserveID, CapacityReservation> areaCapacityReservations;
+
+    TimeSeriesNumbers TSNumbers;
 
     /// @brief Check if the capacity reservation name already exist in the reserves
     /// @param name
@@ -164,6 +158,24 @@ struct AllCapacityReservations
     {
         auto it = std::next(areaCapacityReservations.begin(), index);
         return it->first;
+    }
+
+    void rebuildIndexes()
+    {
+        unsigned int index = 0;
+        for (auto& [resID, capacityRes]: areaCapacityReservations)
+        {
+            capacityRes.areaWideIndex = index;
+            index++;
+        }
+    }
+
+    void resizeTimeseriesNumbers(unsigned int nbYears)
+    {
+        for (auto& [resID, capacityRes]: areaCapacityReservations)
+        {
+            capacityRes.need->timeseriesNumbers.reset(nbYears);
+        }
     }
 };
 } // namespace Antares::Data
