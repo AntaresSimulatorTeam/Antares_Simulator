@@ -148,4 +148,6 @@ Feature: hybrid (simulator+modeler) studies
     When I run antares simulator
     Then the simulation succeeds
     And the simulation has two optimization iterations
+    And in area "west", during year 1, weekly overall cost for week 1 is 4441208
+    And in area "west", during year 1, total NODU for hour 0 is 5
 
