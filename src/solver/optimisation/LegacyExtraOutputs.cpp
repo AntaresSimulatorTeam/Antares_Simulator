@@ -81,7 +81,7 @@ void AddAreaImbalanceCost(SimulationTable& simulationTable,
         return;
     }
 
-    const double value = *spillageCost * *spilled + linearCosts[index] * solutionValues[index];
+    const double value = spillageCost.value() * spilled.value() + linearCosts[index] * solutionValues[index];
     AddExtraOutputEntry(simulationTable, "imbalance_cost", info, value, fillContext, currentBlock);
 }
 
@@ -162,7 +162,7 @@ void AddLinkPropCost(SimulationTable& simulationTable,
     }
 
     const double value = linearCosts[index] * solutionValues[index]
-                         + *indirectCost * *indirect;
+                         + indirectCost.value() * indirect.value();
     AddExtraOutputEntry(simulationTable, "prop_cost", info, value, fillContext, currentBlock);
 }
 } // namespace
