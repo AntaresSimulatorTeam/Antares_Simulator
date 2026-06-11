@@ -456,8 +456,8 @@ def _store_simulation_result(context, study_index: int):
         'logs_err': context.logs_err,
         'output_path': context.output_path,
         'soh': context.soh,
-        'moh': context.moh if hasattr(context, 'moh') else None,
-        'simu_table': context.simu_table if hasattr(context, 'simu_table') else None
+        'moh': getattr(context, 'moh', None),
+        'simu_table': getattr(context, 'simu_table', None),
     }
     context.multi_studies.append(result)
 
