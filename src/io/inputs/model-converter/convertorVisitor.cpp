@@ -70,6 +70,7 @@ private:
     std::any visitFloor(ExprParser::ArgListContext* context);
     std::any visitCeil(ExprParser::ArgListContext* context);
     std::any visitRound(ExprParser::ArgListContext* context);
+    std::any visitAbs(ExprParser::ArgListContext* context);
     Node* extractOneArgument(ExprParser::ArgListContext* context, const std::string& opName);
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
@@ -507,6 +508,12 @@ std::any ConvertorVisitor::visitRound(ExprParser::ArgListContext* context)
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::round, node));
 }
 
+std::any ConvertorVisitor::visitAbs(ExprParser::ArgListContext* context)
+{
+    Node* node = extractOneArgument(context, "abs");
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::round, node));
+}
+
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
@@ -545,6 +552,10 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     else if (functionName == "round")
     {
         return visitRound(arglist);
+    }
+    else if (functionName == "abs")
+    {
+        return visitAbs(arglist);
     }
 
     throw IO::Inputs::InputError("Invalid function: '" + functionName + "'");

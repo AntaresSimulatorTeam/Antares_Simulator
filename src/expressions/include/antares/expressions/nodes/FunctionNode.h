@@ -39,6 +39,8 @@ enum class FunctionNodeType
  * - dual(constraint) -> FunctionNode(FunctionNodeType::dual, ParameterNode("constraint"))
  * - floor(p) -> FunctionNode(FunctionNodeType::floor, ParameterNode(param))
  * - ceil(p) -> FunctionNode(FunctionNodeType::ceil, ParameterNode(param))
+ * - round(p) -> FunctionNode(FunctionNodeType::round, ParameterNode(param))
+ * - abs(p) -> FunctionNode(FunctionNodeType::abs, ParameterNode(param))
  */
 class FunctionNode final: public ParentNode
 {

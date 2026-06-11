@@ -277,6 +277,7 @@ auto PowerOp = [](const auto& a, const auto& b) { return std::pow(a, b); };
 auto FloorOp = [](double d) { return std::floor(d); };
 auto CeilOp = [](double d) { return std::ceil(d); };
 auto RoundOp = [](double d) { return std::round(d); };
+auto AbsOp = [](double d) { return std::abs(d); };
 
 EvaluationResult EvalVisitor::visitPow(const Nodes::FunctionNode* node)
 {
@@ -304,6 +305,12 @@ EvaluationResult EvalVisitor::visitRound(const Nodes::FunctionNode* node)
     return dispatch(ceil_arg).evaluateUnaryOperation(RoundOp);
 }
 
+EvaluationResult EvalVisitor::visitAbs(const Nodes::FunctionNode* node)
+{
+    auto* ceil_arg = node->getOperands()[0];
+    return dispatch(ceil_arg).evaluateUnaryOperation(AbsOp);
+}
+
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
 {
     switch (node->type())
@@ -326,6 +333,8 @@ EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
         return visitCeil(node);
     case Nodes::FunctionNodeType::round:
         return visitRound(node);
+    case Nodes::FunctionNodeType::abs:
+        return visitAbs(node);
     default:
         return EvaluationResult(0);
     }

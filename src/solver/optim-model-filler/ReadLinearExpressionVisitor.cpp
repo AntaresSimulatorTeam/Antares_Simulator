@@ -339,6 +339,7 @@ auto checkIsConstant = [](const std::string& op, const auto& expression)
 auto checkExpressionIsConstantForFloor = [](const auto& expr) { checkIsConstant("floor", expr); };
 auto checkExpressionIsConstantForCeil = [](const auto& expr) { checkIsConstant("ceil", expr); };
 auto checkExpressionIsConstantForRound = [](const auto& expr) { checkIsConstant("round", expr); };
+auto checkExpressionIsConstantForAbs = [](const auto& expr) { checkIsConstant("abs", expr); };
 
 auto floorExpression = [](auto& expr) { expr.constant(std::floor(expr.constant())); };
 auto ceilExpression = [](auto& expr) { expr.constant(std::ceil(expr.constant())); };
@@ -365,7 +366,15 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visitRound(
   const Nodes::FunctionNode* node)
 {
     auto expressions = dispatch(node->getOperands()[0]);
-    std::ranges::for_each(expressions, checkExpressionIsConstantForCeil);
+    std::ranges::for_each(expressions, checkExpressionIsConstantForRound);
+    std::ranges::for_each(expressions, ceilExpression);
+    return expressions;
+}
+
+TimeDependentLinearExpression ReadLinearExpressionVisitor::visitAbs(const Nodes::FunctionNode* node)
+{
+    auto expressions = dispatch(node->getOperands()[0]);
+    std::ranges::for_each(expressions, checkExpressionIsConstantForAbs);
     std::ranges::for_each(expressions, ceilExpression);
     return expressions;
 }
@@ -393,6 +402,8 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visit(const Nodes::Fu
         return visitCeil(node);
     case Nodes::FunctionNodeType::round:
         return visitRound(node);
+    case Nodes::FunctionNodeType::abs:
+        return visitAbs(node);
     default:
         throw std::runtime_error("Function " + node->typeToString() + " is not implemented.");
     }
