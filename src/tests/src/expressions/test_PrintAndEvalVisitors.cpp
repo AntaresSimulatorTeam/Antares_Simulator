@@ -1566,6 +1566,20 @@ BOOST_FIXTURE_TEST_CASE(print_round_applied_to_a_parameter, MyDummyFixture)
     BOOST_CHECK(printVisitor.dispatch(round_node) == "round(p)");
 }
 
+BOOST_FIXTURE_TEST_CASE(print_abs_applied_to_a_literal, MyDummyFixture)
+{
+    Node* abs_node = create<FunctionNode>(FunctionNodeType::abs, create<LiteralNode>(3.7));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(abs_node) == "abs(3.700000)");
+}
+
+BOOST_FIXTURE_TEST_CASE(print_abs_applied_to_a_parameter, MyDummyFixture)
+{
+    Node* abs_node = create<FunctionNode>(FunctionNodeType::abs, create<ParameterNode>("p"));
+    PrintVisitor printVisitor;
+    BOOST_CHECK(printVisitor.dispatch(abs_node) == "abs(p)");
+}
+
 BOOST_AUTO_TEST_CASE(shift_empty_vector)
 {
     std::vector<int> emptyVector;

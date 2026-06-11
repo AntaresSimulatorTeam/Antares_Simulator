@@ -30,6 +30,7 @@ struct CreateAST
     Node* floor(Node* node);
     Node* ceil(Node* node);
     Node* round(Node* node);
+    Node* abs(Node* node);
 
 private:
     Registry<Nodes::Node> registry_;
@@ -58,6 +59,11 @@ Node* CreateAST::ceil(Node* node)
 Node* CreateAST::round(Node* node)
 {
     return registry_.create<FunctionNode>(FunctionNodeType::round, node);
+}
+
+Node* CreateAST::abs(Node* node)
+{
+    return registry_.create<FunctionNode>(FunctionNodeType::abs, node);
 }
 
 // =================================
@@ -240,6 +246,43 @@ BOOST_FIXTURE_TEST_CASE(round_applied_to_a_constant_parameter, eval_function_op_
     auto evalResult = evalVisitor->dispatch(round_node);
 
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 5.);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(test_round_operator)
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_literal_positive, eval_function_op_fixture)
+{
+    // Expression : abs(2.3)
+    Node* p = literal(2.3);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 2.3);
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_literal_negative, eval_function_op_fixture)
+{
+    // Expression : abs(-2.7)
+    Node* p = literal(-2.7);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 2.7);
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_constant_parameter, eval_function_op_fixture)
+{
+    // Expression : abs(p), where p = {4.5, 4.5, 4.5}
+    Node* p = parameter("p-const", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 4.5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
