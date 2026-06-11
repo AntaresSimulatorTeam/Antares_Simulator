@@ -17,12 +17,8 @@ def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
     Accumulate contents of all simulation-table*.csv files into a single string.
     Keeps the CSV header from the first file and removes it from subsequent files.
     """
-    files = sorted(directory.glob(filePattern))
-    if not files:
-        return ""
-
     accumulated = []
-    for i, csv_file in enumerate(files):
+    for i, csv_file in enumerate(sorted(directory.glob(filePattern))):
         content = csv_file.read_text(encoding='utf-8')
 
         if i == 0:
@@ -63,10 +59,7 @@ def read_simulation_table_parquet(outputPath: Path, filePattern: str) -> pd.Data
         )
 
     tables = [pq.read_table(f) for f in files]
-    if len(tables) == 1:
-        pa_table = tables[0]
-    else:
-        pa_table = pa.concat_tables(tables)
+    pa_table = pa.concat_tables(tables)
 
     df = pa_table.to_pandas()
     return _normalize_simulation_table(df)
