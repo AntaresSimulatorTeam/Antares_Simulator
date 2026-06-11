@@ -7,8 +7,32 @@ namespace Antares::Optimization
 {
 
 const std::unordered_map<std::string, std::string> LegacyNameMapper::variableNameMapping = {
+  // Link
+  {"DirectFlow", "flow"},
+  {"PositiveDirectFlow", "direct_flow"},
+  {"PositiveIndirectFlow", "indirect_flow"},
+
+  // Thermal
+  {"DispatchableProduction", "generation_power"},
+  {"NODU", "num_units_on"},
+  {"NumberStartingDispatchableUnits", "num_units_starting"},
+  {"NumberStopingDispatchableUnits", "num_units_stopping"},
+  {"NumberBreakingDownDispatchableUnits", "num_units_falling"},
+
+  // Short term storage
+  {"Injection", "injection_power"},
+  {"Withdrawal", "withdrawal_power"},
+  {"Level", "level"},
+  // CostVariationInjection
+  // CostVariationWithdrawal
+  // Overflow
+
+  // Area
   {"UnsuppliedEnergy", "unsupplied_energy"},
   {"Spillage", "spilled_energy"},
+
+  // Hydro
+  // Identity
 };
 
 std::string LegacyNameMapper::mapOutput(const std::string& legacyName) const

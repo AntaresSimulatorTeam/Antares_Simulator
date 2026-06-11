@@ -5,5 +5,7 @@ antares-solver = $<TARGET_FILE:antares-solver>\
 \n\
 antares-modeler = $<TARGET_FILE:antares-modeler>\
 \n\
+antares-problem-generator = $<TARGET_FILE:antares-problem-generator>\
+\n\
 resources-path = ${CMAKE_SOURCE_DIR}/tests/resources"
         CONDITION $<STREQUAL:$<CONFIG>,${CMAKE_BUILD_TYPE}>)
