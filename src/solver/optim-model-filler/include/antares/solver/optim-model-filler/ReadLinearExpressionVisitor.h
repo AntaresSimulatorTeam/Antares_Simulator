@@ -103,6 +103,7 @@ private:
     Optimization::TimeDependentLinearExpression visitPower(const Nodes::FunctionNode* node);
     Optimization::TimeDependentLinearExpression visitFloor(const Nodes::FunctionNode* node);
     Optimization::TimeDependentLinearExpression visitCeil(const Nodes::FunctionNode* node);
+    Optimization::TimeDependentLinearExpression visitRound(const Nodes::FunctionNode* node);
 
     const Antares::Optimisation::OptimEntityContainer& optimEntityContainer_;
     const Antares::ModelerStudy::SystemModel::Component& component_;

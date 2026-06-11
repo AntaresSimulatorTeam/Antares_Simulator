@@ -69,6 +69,7 @@ private:
     std::any visitMin(ExprParser::ArgListContext* arglist);
     std::any visitFloor(ExprParser::ArgListContext* context);
     std::any visitCeil(ExprParser::ArgListContext* context);
+    std::any visitRound(ExprParser::ArgListContext* context);
     Node* extractOneArgument(ExprParser::ArgListContext* context, const std::string& opName);
     std::any buildShiftNode(Node* shifted_expr, ExprParser::ShiftContext* context);
     Node* NodeFromShiftContext(ExprParser::Shift_exprContext* shift_expr);
@@ -500,6 +501,12 @@ std::any ConvertorVisitor::visitCeil(ExprParser::ArgListContext* context)
     return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::ceil, node));
 }
 
+std::any ConvertorVisitor::visitRound(ExprParser::ArgListContext* context)
+{
+    Node* node = extractOneArgument(context, "round");
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::round, node));
+}
+
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
 {
     const auto functionName = context->IDENTIFIER()->getText();
@@ -534,6 +541,10 @@ std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
     else if (functionName == "ceil")
     {
         return visitCeil(arglist);
+    }
+    else if (functionName == "round")
+    {
+        return visitRound(arglist);
     }
 
     throw IO::Inputs::InputError("Invalid function: '" + functionName + "'");
