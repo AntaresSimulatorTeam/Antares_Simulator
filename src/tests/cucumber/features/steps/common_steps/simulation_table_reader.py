@@ -82,12 +82,12 @@ def _normalize_simulation_table(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def make_simulation_table_reader(output_path: Path, use_parquet: bool) -> object:
+def make_simulation_table_reader(output_path: Path, use_parquet: bool, filePattern: str = "simulation-table*.csv") -> object:
     """Factory function that returns the appropriate simulation table reader.
 
-    The file pattern is defined and used privately inside each reader.
+    The file pattern is used to filter which simulation table files to read.
     """
     if use_parquet:
-        return lambda: read_simulation_table_parquet(output_path)
+        return lambda: read_simulation_table_parquet(output_path, filePattern)
     else:
-        return lambda: read_simulation_table_csv(output_path)
+        return lambda: read_simulation_table_csv(output_path, filePattern)

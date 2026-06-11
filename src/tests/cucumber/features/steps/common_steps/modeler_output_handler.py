@@ -51,7 +51,7 @@ class modeler_output_handler:
 
     def __init__(self, outputPath: Path, filePattern: str = "simulation-table*.csv"):
         self.simulation_table = SimulationTable(
-            make_simulation_table_reader(outputPath, use_parquet=False)()
+            make_simulation_table_reader(outputPath, use_parquet=False, filePattern=filePattern)()
         )
         self.problems = read_invest_problems(outputPath)
 

@@ -325,6 +325,7 @@ def run_simulation(context):
     outputPath = Path(context.output_path)
     if any(outputPath.glob("simulation-table*.csv")):
         context.moh = modeler_output_handler(outputPath, "simulation-table*-optim-nb-1.csv")
+        context.simu_table = context.moh.simulation_table
 
 
 def init_simulation(context):
@@ -455,7 +456,8 @@ def _store_simulation_result(context, study_index: int):
         'logs_err': context.logs_err,
         'output_path': context.output_path,
         'soh': context.soh,
-        'moh': context.moh if hasattr(context, 'moh') else None
+        'moh': context.moh if hasattr(context, 'moh') else None,
+        'simu_table': context.simu_table if hasattr(context, 'simu_table') else None
     }
     context.multi_studies.append(result)
 
