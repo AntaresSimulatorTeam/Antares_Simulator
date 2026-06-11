@@ -30,7 +30,7 @@ def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
     return "".join(accumulated)
 
 
-def read_simulation_table_csv(outputPath: Path, filePattern: str = "simulation-table*.csv") -> pd.DataFrame:
+def read_simulation_table_csv(outputPath: Path, filePattern: str) -> pd.DataFrame:
     """
     Read simulation-table*.csv files from the output directory.
     If multiple files exist (e.g., for multiple optimisations), concatenate them.
@@ -45,7 +45,7 @@ def read_simulation_table_csv(outputPath: Path, filePattern: str = "simulation-t
     return _normalize_simulation_table(df)
 
 
-def read_simulation_table_parquet(outputPath: Path, filePattern: str = "simulation-table*.parquet") -> pd.DataFrame:
+def read_simulation_table_parquet(outputPath: Path, filePattern: str) -> pd.DataFrame:
     """
     Read simulation-table*.parquet files from the output directory.
     If multiple files exist (e.g., for multiple optimisations), concatenate them.
@@ -82,11 +82,12 @@ def _normalize_simulation_table(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def make_simulation_table_reader(output_path: Path, use_parquet: bool, filePattern: str = "simulation-table*.csv") -> object:
+def make_simulation_table_reader(output_path: Path, use_parquet: bool) -> object:
     """Factory function that returns the appropriate simulation table reader.
 
-    The file pattern is used to filter which simulation table files to read.
+    The file pattern is set based on the format: parquet or CSV.
     """
+    filePattern = "simulation-table*.parquet" if use_parquet else "simulation-table*.csv"
     if use_parquet:
         return lambda: read_simulation_table_parquet(output_path, filePattern)
     else:

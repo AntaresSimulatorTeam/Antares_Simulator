@@ -49,9 +49,9 @@ class modeler_output_handler:
     so we keep this class for compatibility. It delegates to SimulationTable.
     """
 
-    def __init__(self, outputPath: Path, filePattern: str = "simulation-table*.csv"):
+    def __init__(self, outputPath: Path):
         self.simulation_table = SimulationTable(
-            make_simulation_table_reader(outputPath, use_parquet=False, filePattern=filePattern)()
+            make_simulation_table_reader(outputPath, use_parquet=False)()
         )
         self.problems = read_invest_problems(outputPath)
 
