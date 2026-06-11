@@ -26,6 +26,8 @@ void forbidVariablesInFunctionNodes(ForbiddenNodes& f)
     f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::round, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::abs, VariableNode>();
 }
 
 void forbidPortFieldsInFunctionNodes(ForbiddenNodes& f)
@@ -45,6 +47,14 @@ void forbidPortFieldsInFunctionNodes(ForbiddenNodes& f)
     // ceil(node) : fordidding children
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldSumNode>();
+
+    // round(node) : fordidding children
+    f.parentForbidsChild<FunctionNodeType::round, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::round, PortFieldSumNode>();
+
+    // abs(node) : fordidding children
+    f.parentForbidsChild<FunctionNodeType::abs, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::abs, PortFieldSumNode>();
 }
 
 void ForbidInFunctionNodes(ForbiddenNodes& f)
@@ -118,6 +128,8 @@ static ForbiddenNodes ForbidNonLinearNodes()
                      FunctionNodeType::min,
                      FunctionNodeType::floor,
                      FunctionNodeType::ceil,
+                     FunctionNodeType::round,
+                     FunctionNodeType::abs,
                      FunctionNodeType::pow>();
     return f;
 }
