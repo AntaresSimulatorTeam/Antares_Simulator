@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 from common_steps.simulation_table_checker import SimulationTable
-from common_steps.simulation_table_reader import make_simulation_table_reader
+from common_steps.simulation_table_reader import OutputFormat, make_simulation_table_reader
 from shared_utils import mps_utils as mpu
 
 
@@ -51,7 +51,7 @@ class modeler_output_handler:
 
     def __init__(self, outputPath: Path):
         self.simulation_table = SimulationTable(
-            make_simulation_table_reader(outputPath, use_parquet=False)()
+            make_simulation_table_reader(outputPath, OutputFormat.CSV)()
         )
         self.problems = read_invest_problems(outputPath)
 

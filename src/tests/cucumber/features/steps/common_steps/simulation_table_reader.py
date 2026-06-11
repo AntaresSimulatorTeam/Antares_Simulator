@@ -2,6 +2,7 @@
 # These readers decouple format-specific parsing from business logic checks.
 # They return pandas DataFrames that can be consumed by shared check methods.
 
+from enum import Enum
 from io import StringIO
 from pathlib import Path
 
@@ -10,6 +11,13 @@ import pandas as pd
 
 import pyarrow as arrow
 import pyarrow.parquet as parquet
+
+
+class OutputFormat(Enum):
+    """Output file format for simulation tables."""
+
+    CSV = "csv"
+    PARQUET = "parquet"
 
 
 def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
@@ -82,13 +90,13 @@ def _normalize_simulation_table(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def make_simulation_table_reader(output_path: Path, use_parquet: bool) -> object:
+def make_simulation_table_reader(output_path: Path, output_format: OutputFormat) -> object:
     """Factory function that returns the appropriate simulation table reader.
 
-    The file pattern is set based on the format: parquet or CSV.
+    The file pattern is set based on the format (CSV or Parquet).
     """
-    filePattern = "simulation-table*.parquet" if use_parquet else "simulation-table*.csv"
-    if use_parquet:
+    filePattern = f"simulation-table*.{output_format.value}"
+    if output_format == OutputFormat.PARQUET:
         return lambda: read_simulation_table_parquet(output_path, filePattern)
     else:
         return lambda: read_simulation_table_csv(output_path, filePattern)

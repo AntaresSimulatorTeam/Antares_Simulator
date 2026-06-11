@@ -324,7 +324,7 @@ def run_simulation(context):
     # For hybrid studies:
     outputPath = Path(context.output_path)
     if any(outputPath.glob("simulation-table*.csv")):
-        context.moh = modeler_output_handler(outputPath, "simulation-table*-optim-nb-1.csv")
+        context.moh = modeler_output_handler(outputPath)
         context.simu_table = context.moh.simulation_table
 
 

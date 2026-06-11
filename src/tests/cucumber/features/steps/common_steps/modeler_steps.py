@@ -11,7 +11,7 @@ from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import read_invest_problems
 from common_steps.simulation_table_checker import SimulationTable
-from common_steps.simulation_table_reader import make_simulation_table_reader
+from common_steps.simulation_table_reader import OutputFormat, make_simulation_table_reader
 from shared_utils import mps_utils as mpu
 from pathlib import Path
 
@@ -23,13 +23,13 @@ def modeler_study_path_is(context, string):
 
 @when("I run antares modeler")
 def run_antares_modeler(context):
-    context._use_parquet = False
+    context.outputFormat = OutputFormat.CSV
     run_modeler(context)
 
 
 @when("I run antares modeler with parquet")
 def run_antares_modeler_parquet(context):
-    context._use_parquet = True
+    context.outputFormat = OutputFormat.PARQUET
     run_modeler(context)
 
 
@@ -128,8 +128,8 @@ def run_modeler(context):
     else:
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
-        use_parquet = hasattr(context, "_use_parquet") and context._use_parquet
-        reader_factory = make_simulation_table_reader(Path(parse_output_folder_from_logs(context.logs_out)), use_parquet)
+        output_format = getattr(context, "outputFormat", OutputFormat.CSV)
+        reader_factory = make_simulation_table_reader(Path(parse_output_folder_from_logs(context.logs_out)), output_format)
         context.simu_table = SimulationTable(reader_factory())
         context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
     context.return_code = process.returncode
@@ -137,7 +137,7 @@ def run_modeler(context):
 
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
-    if context._use_parquet:
+    if getattr(context, "outputFormat", OutputFormat.CSV) == OutputFormat.PARQUET:
         command.append("--parquet")
     return command
 
