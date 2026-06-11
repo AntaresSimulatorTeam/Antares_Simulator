@@ -26,12 +26,11 @@ namespace Antares::Optimization
 //  - link `prop_cost`: hurdle costs times positive direct/indirect flows,
 //    the hurdle costs being the objective coefficients on those variables
 //    (only emitted for links managed with hurdle costs).
-void AddLegacyExtraOutputs(
-  Antares::IO::Outputs::SimulationTable& simulationTable,
-  const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
-  const std::vector<double>& solutionValues,
-  const std::vector<double>& linearCosts,
-  const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
-  unsigned currentBlock);
+void AddLegacyExtraOutputs(Antares::IO::Outputs::SimulationTable& simulationTable,
+                           const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
+                           const std::vector<double>& solutionValues,
+                           const std::vector<double>& linearCosts,
+                           const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
+                           unsigned currentBlock);
 
 } // namespace Antares::Optimization

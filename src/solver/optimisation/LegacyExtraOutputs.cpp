@@ -81,7 +81,8 @@ void AddAreaImbalanceCost(SimulationTable& simulationTable,
         return;
     }
 
-    const double value = spillageCost.value() * spilled.value() + linearCosts[index] * solutionValues[index];
+    const double value = spillageCost.value() * spilled.value()
+                         + linearCosts[index] * solutionValues[index];
     AddExtraOutputEntry(simulationTable, "imbalance_cost", info, value, fillContext, currentBlock);
 }
 

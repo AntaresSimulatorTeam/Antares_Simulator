@@ -78,8 +78,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     // resizeProbleme, so indexing by [0, NombreDeVariables) below is always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
            && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.CoutLineaire.size()
-                == static_cast<std::size_t>(problem.NombreDeVariables));
+           && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
