@@ -35,6 +35,7 @@ Optimisation::ScenarioGroupRepository loadScenarioGroupRepository(
 
 void handleYamlError(const YAML::Exception& e, const std::string& filename);
 std::string markYamlError(const YAML::Exception& e, const std::string& filename);
+void warnOnYamlFiles(const std::filesystem::path& directory);
 
 /// Generic error class for all loading errors to catch in the main
 class ErrorLoadingYaml final: public std::runtime_error

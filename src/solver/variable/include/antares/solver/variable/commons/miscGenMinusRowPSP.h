@@ -109,7 +109,7 @@ public:
         }
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void initializeFromArea(Data::Study* /*study*/, Data::Area* area)
     {
         // Copy raw values
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
@@ -139,19 +139,7 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void simulationBegin()
-    {
-    }
-
-    void simulationEnd()
-    {
-    }
-
-    void yearBegin(unsigned int year, unsigned int numSpace)
-    {
-    }
-
-    void yearEnd(unsigned int year, unsigned int numSpace)
+    void yearEnd(unsigned int /*year*/, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
         pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();
@@ -161,14 +149,6 @@ public:
     {
         // Merge all those values with the global results
         AncestorType::pResults.merge(year, pValuesForTheCurrentYear[numSpace]);
-    }
-
-    void hourBegin(unsigned int hourInTheYear)
-    {
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

@@ -12,11 +12,6 @@ namespace Antares::Optimisation::LinearProblemApi
 class ILinearProblem;
 }
 
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Antares::Optimization;
-using namespace operations_research;
-
 // ======================
 // MPS files writing
 // ======================
@@ -42,11 +37,13 @@ class MPSwriter: public I_MPS_writer
 public:
     virtual ~MPSwriter() = default;
     MPSwriter(const Optimisation::LinearProblemApi::ILinearProblem& linearProblem,
-              uint currentOptimNumber);
+              uint currentOptimNumber,
+              bool keepNames);
     void runIfNeeded(Solver::IResultWriter& writer, const std::string& filename) override;
 
 private:
     const Optimisation::LinearProblemApi::ILinearProblem& linearProblem_;
+    bool keepNames_;
 };
 
 class nullMPSwriter: public I_MPS_writer
@@ -70,12 +67,12 @@ public:
                      int current_optim_number,
                      const Optimisation::LinearProblemApi::ILinearProblem& linearProblem);
 
-    std::unique_ptr<I_MPS_writer> create();
+    std::unique_ptr<I_MPS_writer> create(bool keepNames);
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
 
 private:
     // Member functions...
-    std::unique_ptr<I_MPS_writer> createFullmpsWriter();
+    std::unique_ptr<I_MPS_writer> createFullmpsWriter(bool keepNames);
     bool doWeExportMPS();
 
     // Member data...
