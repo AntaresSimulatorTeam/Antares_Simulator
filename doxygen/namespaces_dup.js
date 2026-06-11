@@ -2060,6 +2060,7 @@ var namespaces_dup =
     ] ],
     [ "modeler_steps", null, [
       [ "build_antares_modeler_command", "modeler__steps_8py.html#a41ab8fa06f009156a60e170d983cb11e", null ],
+      [ "build_antares_problem_generator_command", "modeler__steps_8py.html#afd79907cf9c997c47c408d999f77dee9", null ],
       [ "check_master_variables", "modeler__steps_8py.html#aa1f528fb6b4a05599be6b74ab77ba255", null ],
       [ "check_structure", "modeler__steps_8py.html#a3f7c47f78cc7a017dbfccde4dbe427bd", null ],
       [ "check_subproblem_variables", "modeler__steps_8py.html#aefd22498d025d6b84243866779ebb346", null ],
@@ -2073,7 +2074,10 @@ var namespaces_dup =
       [ "parse_structure", "modeler__steps_8py.html#a0815c3fcfca57b7fa239710b481bf026", null ],
       [ "read_int_range", "modeler__steps_8py.html#a76a36c51e375a6a7aa0f6ed0b352b904", null ],
       [ "run_antares_modeler", "modeler__steps_8py.html#a46943a258f11896089708a54ac5b0df2", null ],
-      [ "run_modeler", "modeler__steps_8py.html#a9d99e3e1985a65e970317fcf0a7d30b2", null ]
+      [ "run_antares_problem_generator", "modeler__steps_8py.html#a60b259476f84a7366c00fc4fe970c8a0", null ],
+      [ "run_executable", "modeler__steps_8py.html#acf315a0ded2cf2d18311c9e8feb082ce", null ],
+      [ "run_modeler", "modeler__steps_8py.html#a9d99e3e1985a65e970317fcf0a7d30b2", null ],
+      [ "run_problem_generator", "modeler__steps_8py.html#acb66c572b61c942fbb9d2972ad285a7f", null ]
     ] ],
     [ "modified_inode", null, [
       [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
