@@ -511,7 +511,7 @@ std::any ConvertorVisitor::visitRound(ExprParser::ArgListContext* context)
 std::any ConvertorVisitor::visitAbs(ExprParser::ArgListContext* context)
 {
     Node* node = extractOneArgument(context, "abs");
-    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::round, node));
+    return static_cast<Node*>(registry_.create<FunctionNode>(FunctionNodeType::abs, node));
 }
 
 std::any ConvertorVisitor::visitFunction(ExprParser::FunctionContext* context)
