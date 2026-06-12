@@ -78,14 +78,6 @@ jobs:
       run-tests: ${{ inputs.run-tests }}
       target_branch: ${{ inputs.target_branch }}
 
-  user_guide:
-    name: User Guide
-    needs: release
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      run-tests: ${{ inputs.run-tests }}
-      target_branch: ${{ inputs.target_branch }}
-
   test_nr_commit_id:
     name: Get Antares_Simulator_Tests_NR commit id
     runs-on: ubuntu-22.04

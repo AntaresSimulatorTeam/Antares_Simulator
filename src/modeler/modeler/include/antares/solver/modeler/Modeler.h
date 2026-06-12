@@ -47,6 +47,8 @@ ProblemEntity buildProblem(const Antares::Solver::ModelerData& data,
                            const ResolutionMode& resolutionMode,
                            const std::optional<std::string>& solver);
 
+std::filesystem::path makeOutputPath(std::filesystem::path studyPath);
+
 class Modeler final
 {
 public:
