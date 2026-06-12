@@ -301,14 +301,14 @@ EvaluationResult EvalVisitor::visitCeil(const Nodes::FunctionNode* node)
 
 EvaluationResult EvalVisitor::visitRound(const Nodes::FunctionNode* node)
 {
-    auto* ceil_arg = node->getOperands()[0];
-    return dispatch(ceil_arg).evaluateUnaryOperation(RoundOp);
+    auto* round_arg = node->getOperands()[0];
+    return dispatch(round_arg).evaluateUnaryOperation(RoundOp);
 }
 
 EvaluationResult EvalVisitor::visitAbs(const Nodes::FunctionNode* node)
 {
-    auto* ceil_arg = node->getOperands()[0];
-    return dispatch(ceil_arg).evaluateUnaryOperation(AbsOp);
+    auto* abs_arg = node->getOperands()[0];
+    return dispatch(abs_arg).evaluateUnaryOperation(AbsOp);
 }
 
 EvaluationResult EvalVisitor::visit(const Nodes::FunctionNode* node)
