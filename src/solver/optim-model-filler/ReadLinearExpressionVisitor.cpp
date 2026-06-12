@@ -343,6 +343,8 @@ auto checkExpressionIsConstantForAbs = [](const auto& expr) { checkIsConstant("a
 
 auto floorExpression = [](auto& expr) { expr.constant(std::floor(expr.constant())); };
 auto ceilExpression = [](auto& expr) { expr.constant(std::ceil(expr.constant())); };
+auto roundExpression = [](auto& expr) { expr.constant(std::round(expr.constant())); };
+auto absExpression = [](auto& expr) { expr.constant(std::abs(expr.constant())); };
 
 TimeDependentLinearExpression ReadLinearExpressionVisitor::visitFloor(
   const Nodes::FunctionNode* node)
@@ -367,7 +369,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visitRound(
 {
     auto expressions = dispatch(node->getOperands()[0]);
     std::ranges::for_each(expressions, checkExpressionIsConstantForRound);
-    std::ranges::for_each(expressions, ceilExpression);
+    std::ranges::for_each(expressions, roundExpression);
     return expressions;
 }
 
@@ -375,7 +377,7 @@ TimeDependentLinearExpression ReadLinearExpressionVisitor::visitAbs(const Nodes:
 {
     auto expressions = dispatch(node->getOperands()[0]);
     std::ranges::for_each(expressions, checkExpressionIsConstantForAbs);
-    std::ranges::for_each(expressions, ceilExpression);
+    std::ranges::for_each(expressions, absExpression);
     return expressions;
 }
 
