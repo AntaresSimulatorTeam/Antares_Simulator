@@ -3,8 +3,11 @@
 import os
 from pathlib import Path
 
-from common_steps.simulation_table_checker import SimulationTable
-from common_steps.simulation_table_reader import OutputFormat, make_simulation_table_reader
+from common_steps.simulation_table import SimulationTable
+from common_steps.simulation_table_reader import (
+    OutputFormat,
+    make_simulation_table_reader,
+)
 from shared_utils import mps_utils as mpu
 
 
@@ -55,8 +58,4 @@ class modeler_output_handler:
         )
         self.problems = read_invest_problems(outputPath)
 
-    def get_objective_value(self):
-        return self.simulation_table.get_objective_value()
 
-    def get_objective_values_by_block(self):
-        return self.simulation_table.get_objective_values_by_block()

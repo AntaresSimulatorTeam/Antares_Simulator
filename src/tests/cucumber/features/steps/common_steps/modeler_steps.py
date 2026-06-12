@@ -10,8 +10,11 @@ import subprocess
 from behave import *
 from common_steps.assertions import *
 from common_steps.modeler_output_handler import read_invest_problems
-from common_steps.simulation_table_checker import SimulationTable
-from common_steps.simulation_table_reader import OutputFormat, make_simulation_table_reader
+from common_steps.simulation_table import SimulationTable
+from common_steps.simulation_table_reader import (
+    OutputFormat,
+    make_modeler_simulation_table_reader,
+)
 from shared_utils import mps_utils as mpu
 from pathlib import Path
 
@@ -129,7 +132,9 @@ def run_modeler(context):
         context.output_path = os.path.join(context.study_path,
                                            "output")  # TODO : fixme parse_output_folder_from_logs(out)
         output_format = getattr(context, "outputFormat", OutputFormat.CSV)
-        reader_factory = make_simulation_table_reader(Path(parse_output_folder_from_logs(context.logs_out)), output_format)
+        reader_factory = make_modeler_simulation_table_reader(
+            Path(parse_output_folder_from_logs(context.logs_out)), output_format
+        )
         context.simu_table = SimulationTable(reader_factory())
         context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
     context.return_code = process.returncode
