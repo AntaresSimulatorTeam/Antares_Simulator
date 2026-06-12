@@ -43,8 +43,6 @@ bool ReservesNeedTSNumberData::apply(Study& study)
     // The total number of areas;
     const uint areaCount = study.areas.size();
 
-    const uint tsGenCountReservesNeed = get_tsGenCount(study);
-
     for (uint areaIndex = 0; areaIndex != areaCount; ++areaIndex)
     {
         // Alias to the current area
@@ -59,21 +57,9 @@ bool ReservesNeedTSNumberData::apply(Study& study)
         {
             logprefix.clear() << "Reserves Need: Area '" << area.name << "', Reserve '" << reserveID
                               << "': ";
-            ret = ApplyToMatrix(errors, logprefix, *reserve.need, col, tsGenCountReservesNeed)
-                  && ret;
+            ret = ApplyToMatrix(errors, logprefix, *reserve.need, col, 0) && ret;
         }
     }
     return ret;
 }
-
-uint ReservesNeedTSNumberData::get_tsGenCount(const Study& study) const
-{
-    // General data
-    auto& parameters = study.parameters;
-
-    const bool tsGenReservesNeed = (0
-                                    != (parameters.timeSeriesToGenerate & timeSeriesReservesNeed));
-    return tsGenReservesNeed ? parameters.nbTimeSeriesReservesNeed : 0u;
-}
-
 } // namespace Antares::Data::ScenarioBuilder

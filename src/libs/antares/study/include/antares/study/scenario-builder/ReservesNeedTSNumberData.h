@@ -26,7 +26,11 @@ public:
     uint get(const Antares::Data::CapacityReservation& res, const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
-    uint get_tsGenCount(const Study& study) const override;
+
+    uint get_tsGenCount(const Study& study) const override
+    {
+        return 0; // This time series is not generated, so we return 0
+    }
 
 private:
     //! The attached area, if any

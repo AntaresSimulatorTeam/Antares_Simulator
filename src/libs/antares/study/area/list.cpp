@@ -1214,6 +1214,22 @@ void validateCapacityReservations(const Area& area)
                                  std::nullopt,
                                  resID);
         }
+
+        // check size of need time series (should have the same number of years)
+        const auto it = std::ranges::adjacent_find(areaCapacityRes.areaCapacityReservations,
+                                                   std::not_equal_to{},
+                                                   [](const auto& entry) {
+                                                       return entry.second.need->numberOfColumns();
+                                                   });
+
+        if (it != areaCapacityRes.areaCapacityReservations.end())
+        {
+            const auto& [resID, capacityRes] = *it;
+            logs.error() << "Inconsistent size of need time series for capacity reservation `"
+                         << resID << "` in area `" << area.name
+                         << "`. Expected size: " << std::next(it)->second.need->numberOfColumns()
+                         << ", actual size: " << capacityRes.need->numberOfColumns();
+        }
     }
 }
 
