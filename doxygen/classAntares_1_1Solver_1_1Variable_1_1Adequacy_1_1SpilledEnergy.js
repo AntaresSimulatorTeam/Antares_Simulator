@@ -11,6 +11,6 @@ var classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy =
     [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a0539897cb2ef67ae9b3924c62c530a07", null ],
     [ "retrieveRawHourlyValuesForCurrentYear", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a5d73ea919a1e7033ac77adb1accf41f1", null ],
     [ "simulationBegin", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a2b73d0749f79b3f8ac4be057bf7cef46", null ],
-    [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#aff589fc54fb982624cf6fbec336d5508", null ],
-    [ "yearEnd", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#ae364538263bf9a34d474337807094625", null ]
+    [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a466160d6b375b24da870b63d4455a9f9", null ],
+    [ "yearEnd", "classAntares_1_1Solver_1_1Variable_1_1Adequacy_1_1SpilledEnergy.html#a783f4f803bd5a56a7c641860ff59c42f", null ]
 ];

@@ -233,13 +233,13 @@ $(document).ready(function(){initNavTree('adequacy_2spilledEnergy_8h_source.html
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        }</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    }</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordtype">void</span> yearBegin(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordtype">void</span> yearBegin(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="comment">/*year*/</span>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    {</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="comment">// Reset the values for the current year</span></div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        pValuesForTheCurrentYear[numSpace].reset();</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">void</span> yearEnd(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> year, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">void</span> yearEnd(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <span class="comment">/*year*/</span>, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numSpace)</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    {</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="comment">// Compute all statistics for the current year (daily,weekly,monthly)</span></div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        pValuesForTheCurrentYear[numSpace].computeStatisticsForTheCurrentYear();</div>

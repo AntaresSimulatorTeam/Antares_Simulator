@@ -11,6 +11,6 @@ var classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase =
     [ "initializeFromArea", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html#a805affd71c953b1c8386bc0575e07e7f", null ],
     [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html#a8e2c2e99d16d08aa068744ada4717cea", null ],
     [ "retrieveRawHourlyValuesForCurrentYear", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html#ad2578b2ed81aae6d5723fae8db688a6d", null ],
-    [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html#a52ee2b5a3156db71d2d6ad52ad81d5c3", null ],
-    [ "yearEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html#a23e5680f84e6988d51eaf36c86cae8a7", null ]
+    [ "yearBegin", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html#a8175b422b856ab2982b4fc3555202dfb", null ],
+    [ "yearEnd", "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1STStorageByClusterBase.html#a86ceb5443c4dc94c0e836a48aa3cb3d2", null ]
 ];

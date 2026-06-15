@@ -10,5 +10,5 @@ var classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate =
     [ "initializeFromStudy", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#ada9bc0a1ed13bce1651798af64cf44c6", null ],
     [ "localBuildAnnualSurveyReport", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#aafe626f4816a1b6a4a087e9bdc40e1c0", null ],
     [ "simulationEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#a4d5c18caa66adbcd5d581fc6b8a4cd09", null ],
-    [ "yearEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#ab79d5398272c1bea35d42ccdd4a3b7f6", null ]
+    [ "yearEndSpatialAggregates", "classAntares_1_1Solver_1_1Variable_1_1Common_1_1SpatialAggregate.html#aff411cdec82b7a2cfd9286ebd5215275", null ]
 ];
