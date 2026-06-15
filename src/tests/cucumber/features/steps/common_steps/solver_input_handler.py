@@ -111,3 +111,52 @@ class solver_input_handler:
 
     def set_parameter_from_file(self, area, sectionName, paramName, paramValue):
         self.set_reserve_value(area.lower(), sectionName, paramName, paramValue)
+
+    def set_input(self, input_file, section, variable, value):
+        """Set `variable = value` inside `[section]` of an input/ ini file.
+
+        Matches the key by exact equality (the substring before `=`, stripped),
+        so a variable named `area` does not collide with `area2`, `area.name`,
+        etc. Appends the variable line if missing in the section, and appends
+        both the section and the variable line if the section is absent.
+        Creates the file and parent directories if they don't exist.
+        """
+        file = self.study_root_dir / "input" / input_file.replace("/", os.sep)
+        
+        # Create parent directories if they don't exist
+        file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Create the file if it doesn't exist
+        if not file.exists():
+            file.touch()
+        
+        content_out = []
+        in_section = False
+        section_seen = False
+        var_written = False
+        with open(file) as f:
+            for line in f:
+                if line.startswith("["):
+                    if in_section and not var_written:
+                        content_out.append(f"{variable} = {value}\n")
+                        var_written = True
+                    in_section = line.strip() == f"[{section}]"
+                    if in_section:
+                        section_seen = True
+                    content_out.append(line)
+                else:
+                    key = line.split('=', 1)[0].strip() if '=' in line else None
+                    if in_section and key == variable:
+                        content_out.append(f"{variable} = {value}\n")
+                        var_written = True
+                    else:
+                        content_out.append(line)
+        if in_section and not var_written:
+            content_out.append(f"{variable} = {value}\n")
+            var_written = True
+        if not section_seen:
+            if content_out and not content_out[-1].endswith("\n"):
+                content_out.append("\n")
+            content_out.append(f"\n[{section}]\n{variable} = {value}\n")
+        with open(file, "w") as f:
+            f.writelines(content_out)
