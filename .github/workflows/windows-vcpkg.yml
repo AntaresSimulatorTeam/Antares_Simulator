@@ -377,13 +377,13 @@ jobs:
       run: |
         cd _build
         FIXED_PATH=${ORTOOLS_DIR//\\//}
-        cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
+        cp ${FIXED_PATH}/install/bin/*.dll* src/solver/Release
 
     - name: Create solver-only archive
       shell: pwsh
       run: |
         cd _build
-        Compress-Archive -Path solver/Release/antares-solver.exe, solver/Release/*.dll -DestinationPath antares-solver_windows.zip -Force
+        Compress-Archive -Path src/solver/Release/antares-solver.exe, src/solver/Release/*.dll -DestinationPath antares-solver_windows.zip -Force
 
     - name: NSIS Installer creation
       shell: bash
