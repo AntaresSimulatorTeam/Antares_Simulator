@@ -206,7 +206,7 @@ public:
     }
 
     template<class V>
-    void computeSpatialAggregatesSummary(V& allVars, unsigned int year, unsigned int numSpace)
+    void computeSpatialAggregatesSummary([[maybe_unused]] V& allVars, unsigned int year, unsigned int numSpace)
     {
         if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
         {
