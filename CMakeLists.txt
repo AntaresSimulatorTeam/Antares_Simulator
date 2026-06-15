@@ -20,7 +20,7 @@ set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 
 # OR-Tools tag
-file(READ "../ortools_tag" ORTOOLS_TAG)
+file(READ "ortools_tag" ORTOOLS_TAG)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -43,18 +43,18 @@ endif ()
 
 
 #CMake function
-include("cmake/utils.cmake")
+include("src/cmake/utils.cmake")
 
 # Only used for code generation (optional)
 set(ANTLR_JAR_PATH "" CACHE FILEPATH "Path to ANTLR 4 .jar file (e.g., antlr-4.13.2-complete.jar)")
 message(STATUS "ANTLR_JAR_PATH is: ${ANTLR_JAR_PATH}")
 
 #Generate ANTLR4 source files from grammar files
-include("cmake/antlr4-generate.cmake")
+include("src/cmake/antlr4-generate.cmake")
 
 
 #CMake Macro to display message
-include("cmake/messages.cmake")
+include("src/cmake/messages.cmake")
 
 set(ANTARES_VERSION_TAG "")
 
@@ -87,10 +87,10 @@ OMESSAGE("")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Copy changelog
-include("cmake/changelog.cmake")
+include("src/cmake/changelog.cmake")
 
 #Check compiler version
-include("cmake/checks.cmake")
+include("src/cmake/checks.cmake")
 
 
 if (ANTARES_LICENSE)
@@ -179,7 +179,7 @@ if (CODE_COVERAGE)
     # if code-coverage is ON, force tests build
     set(BUILD_TESTING ON)
 
-    include("cmake/CodeCoverage.cmake")
+    include("src/cmake/CodeCoverage.cmake")
     code_coverage(NAME code-coverage
             OUTPUT_DIR coverage
             EXCLUDE_DIRS tests)
@@ -327,34 +327,34 @@ else ()
 endif ()
 
 # TODO : review Standard Settings
-include(cmake/common-settings.cmake)
+include(src/cmake/common-settings.cmake)
 
-add_subdirectory(config)
+add_subdirectory("src/config")
 
 # Configure config.h with current ANTARES version
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config/config.h.in"
-        "${CMAKE_CURRENT_SOURCE_DIR}/config/include/antares/config/config.h")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/config/config.h.in"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/config/include/antares/config/config.h")
 
 # Yuni Framework
-configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
-add_subdirectory("ext/yuni/src")
+configure_file("src/cmake/ProfileBuild.template.cmake" "src/ext/yuni/src/ProfileBuild.cmake")
+add_subdirectory("src/ext/yuni/src")
 
 OMESSAGE("") # empty line
 
-add_subdirectory(api)
-add_subdirectory(io)
-add_subdirectory(libs)   #antares-core fswalker
+add_subdirectory("src/api")
+add_subdirectory("src/io")
+add_subdirectory("src/libs")   #antares-core fswalker
 
-add_subdirectory(expressions)   #modeler expressions (AST)
-add_subdirectory(optimisation)  #optimisation APIs
-add_subdirectory(study)         #antares study model
-add_subdirectory(solver)     #antares solver and all associated libs
-add_subdirectory(modeler)       #antares modeler
-add_subdirectory(modeler-optimisation-container)       #antares modeler
+add_subdirectory("src/expressions")   #modeler expressions (AST)
+add_subdirectory("src/optimisation")  #optimisation APIs
+add_subdirectory("src/study")         #antares study model
+add_subdirectory("src/solver")     #antares solver and all associated libs
+add_subdirectory("src/modeler")       #antares modeler
+add_subdirectory("src/modeler-optimisation-container")       #antares modeler
 
 # Tools
 if (BUILD_TOOLS)
-    add_subdirectory(tools) #All antares tools
+    add_subdirectory("src/tools") #All antares tools
 endif ()
 
 # Tests
@@ -365,7 +365,7 @@ if (BUILD_TESTING)
     # include(CTest) # calls enable_testing() and turns BUILD_TESTING to ON by default (among other useful things)
     enable_testing()
 
-    add_subdirectory(tests)
+    add_subdirectory("src/tests")
 endif ()
 
 OMESSAGE("")
@@ -385,13 +385,13 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
 set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
 set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
 
-configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
+configure_file("src/distrib/unix/packages.cmake" "distrib/unix/packages.sh")
 
 # Load packaging facilities.
 include(CPack)
 
 #Last. We need all target defined
-add_subdirectory(packaging)
+add_subdirectory("src/packaging")
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_link_options("LINKER:--end-group")
 endif()

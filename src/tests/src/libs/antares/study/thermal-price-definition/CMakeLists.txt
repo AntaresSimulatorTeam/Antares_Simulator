@@ -1,8 +1,8 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 # Useful variables definitions
-set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
-set(src_libs_antares_checks "${CMAKE_SOURCE_DIR}/libs/antares/checks")
+set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/src/libs/antares/study")
+set(src_libs_antares_checks "${CMAKE_SOURCE_DIR}/src/libs/antares/checks")
 
 # ====================================
 # Tests on thermal price definition

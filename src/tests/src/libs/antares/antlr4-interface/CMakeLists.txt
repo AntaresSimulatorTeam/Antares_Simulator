@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 find_package(antlr4-runtime CONFIG REQUIRED)
 add_boost_test(antlr-interface-test
