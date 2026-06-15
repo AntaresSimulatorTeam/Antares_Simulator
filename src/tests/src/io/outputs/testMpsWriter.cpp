@@ -140,15 +140,16 @@ void checkProblem(const ILinearProblem& originalProblem, const fs::path& mpsPath
     checkObjective(originalProblem, fromMps);
 }
 
-void checkMPS(const fs::path& studyPath, Modeler& modeler)
+void checkMPS(Modeler& modeler)
 {
     modeler.run();
     const auto& masterProblem = modeler.masterProblem();
+    fs::path outputPath = modeler.writer_.outputPath();
     if (masterProblem && !isProblemEmpty(*masterProblem))
     {
-        checkProblem(*masterProblem, studyPath / "output" / "master.mps");
+        checkProblem(*masterProblem, outputPath / "master.mps");
     }
-    checkProblem(*modeler.subproblems().at(0), studyPath / "output" / "1-1.mps");
+    checkProblem(*modeler.subproblems().at(0), outputPath / "1-1.mps");
 }
 
 struct MpsWriterTestFixture
@@ -172,7 +173,7 @@ void processStudy(const filesystem::path& entry)
 {
     MpsWriterTestFixture fixture(entry);
     auto modeler = fixture.build();
-    checkMPS(entry, modeler);
+    checkMPS(modeler);
 }
 
 void checkEpic2Studies()
@@ -211,6 +212,24 @@ BOOST_AUTO_TEST_CASE(TestALLModelerStudiesMps)
             processStudy(path);
         }
     }
+}
+
+BOOST_AUTO_TEST_CASE(test_file_writer_init)
+{
+    fs::path tempDir = fs::temp_directory_path() / "antares_test_file_writer";
+    fs::create_directories(tempDir);
+    FileWriter writer(tempDir);
+    FileWriter writer2(tempDir);
+    writer.init("abc");
+    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc");
+
+    writer.init("abc");
+    BOOST_CHECK(writer.outputPath() == tempDir / "output" / "abc-2");
+
+    writer2.init("abc");
+    BOOST_CHECK(writer2.outputPath() == tempDir / "output" / "abc-3");
+
+    fs::remove_all(tempDir);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

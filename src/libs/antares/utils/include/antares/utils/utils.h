@@ -5,6 +5,7 @@
 #define __ANTARES_LIBS_UTILS_H__
 
 #include <chrono>
+#include <filesystem>
 #include <map>
 #include <set>
 #include <string>
@@ -53,6 +54,8 @@ std::map<std::string, unsigned> giveNumbersToStrings(const std::vector<std::stri
 std::map<std::string, unsigned> giveNumbersToStrings(const std::set<std::string>& strs);
 bool checkAllElementsIdenticalOrOne(std::vector<unsigned> w);
 bool checkAllElementsIdenticalOrOne(std::vector<std::pair<unsigned, std::string>>& p);
+
+bool generatePathWithSuffix(std::filesystem::path& outputPath, const std::string& suffix = "");
 
 class TimeMeasurement final
 {

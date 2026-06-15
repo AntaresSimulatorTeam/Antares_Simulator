@@ -1,4 +1,3 @@
-
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
@@ -14,16 +13,29 @@
 #include "antares/io/outputs/SimulationTableCsvFile.h"
 #include "antares/io/outputs/SimulationTableGenerator.h"
 #include "antares/solver/modeler/Modeler.h"
+#include "antares/utils/utils.h"
+
+namespace fs = std::filesystem;
 
 namespace Antares::Solver
 {
-void FileWriter::init(const std::string& simulationId)
+void FileWriter::init(const std::string& time)
 {
-    outputPath_ = studyPath_ / "output";
-    simulationId_ = simulationId;
+    if (time.empty())
+    {
+        throw Modeler::ModelerError("Time identifier cannot be empty. Exiting simulation.");
+    }
+
+    outputPath_ = studyPath_ / "output" / time;
+
+    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
+    if (!Utils::generatePathWithSuffix(outputPath_))
+    {
+        throw Modeler::ModelerError("Output folder already exists: " + outputPath_.string());
+    }
+
     logs.info() << "Output folder : " << outputPath_;
-    if (!std::filesystem::is_directory(outputPath_)
-        && !std::filesystem::create_directory(outputPath_))
+    if (!fs::is_directory(outputPath_) && !fs::create_directories(outputPath_))
     {
         throw Solver::Modeler::ModelerError(
           "Failed to create output directory. Exiting simulation.");
@@ -42,7 +54,7 @@ void FileWriter::writeSimulationTable(
   const Optimisation::OptimEntityContainer& variableContainer,
   const Optimisation::LinearProblemApi::FillContext& fillContext) const
 {
-    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, simulationId_);
+    IO::Outputs::SimulationTableCsvFile simulationTable(outputPath_, "");
     IO::Outputs::FillSimulationTable(simulationTable,
                                      linearProblem,
                                      solution.getObjectiveValue(),
