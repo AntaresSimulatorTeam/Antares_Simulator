@@ -283,8 +283,7 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_abs_of_a_constant_param,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {
     // abs(param(-2)) = 2
-    Node* absNode = create<FunctionNode>(FunctionNodeType::abs,
-                                         create<ParameterNode>("param1"));
+    Node* absNode = create<FunctionNode>(FunctionNodeType::abs, create<ParameterNode>("param1"));
 
     auto linear_expression = visitor().dispatch(absNode);
 
