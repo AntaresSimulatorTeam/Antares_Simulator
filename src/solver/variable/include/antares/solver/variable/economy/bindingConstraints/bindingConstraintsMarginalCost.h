@@ -248,7 +248,8 @@ public:
     }
 
     template<class VCardToFindT>
-    static void retrieveResultsForLink([[maybe_unused]] typename Storage<VCardToFindT>::ResultsType** result,
+    static void retrieveResultsForLink([[maybe_unused]]
+                                       typename Storage<VCardToFindT>::ResultsType** result,
                                        [[maybe_unused]] const Data::AreaLink* link)
     {
     }
