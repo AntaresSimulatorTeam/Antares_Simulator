@@ -197,7 +197,7 @@ public:
     }
 
     template<class V, class SetT>
-    void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set, uint numSpace)
+    void yearEndSpatialAggregates(V& allVars, uint /*year*/, const SetT& set, uint numSpace)
     {
         if (VCardType::VCardOrigin::spatialAggregateMode & Category::spatialAggregateEachYear)
         {
