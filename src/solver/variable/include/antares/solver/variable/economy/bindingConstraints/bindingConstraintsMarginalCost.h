@@ -248,15 +248,16 @@ public:
     }
 
     template<class VCardToFindT>
-    static void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
-                                       const Data::AreaLink* link)
+    static void retrieveResultsForLink([[maybe_unused]]
+                                       typename Storage<VCardToFindT>::ResultsType** result,
+                                       [[maybe_unused]] const Data::AreaLink* link)
     {
     }
 
     template<class VCardToFindT>
     static void retrieveResultsForThermalCluster(
-      typename Storage<VCardToFindT>::ResultsType** result,
-      const Data::ThermalCluster* cluster)
+      [[maybe_unused]] typename Storage<VCardToFindT>::ResultsType** result,
+      [[maybe_unused]] const Data::ThermalCluster* cluster)
     {
     }
 
