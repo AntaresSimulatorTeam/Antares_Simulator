@@ -88,7 +88,7 @@ private:
 
 CreateEvalVisitor::CreateEvalVisitor():
     linearProblem_(true),
-    fillCtx_(0, 2, 0, 2, 0),
+    fillCtx_(0, 3, 0, 3, 0),
     model_(
       createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),
                                  Parameter("p-const", TimeDependent::NO, ScenarioDependent::NO)})),
@@ -101,8 +101,8 @@ CreateEvalVisitor::CreateEvalVisitor():
     scenarioGroupRepo_(makeScenarioGroupRepo(component_))
 {
     // Parameter p : make associated time-series
-    auto ts = std::make_unique<TimeSeriesSet>("p", 3);
-    ts->add({1.5, 2.3, 3.7});
+    auto ts = std::make_unique<TimeSeriesSet>("p", 4);
+    ts->add({1.5, 2.3, 3.7, -1.2});
     data_.addDataSeries(std::move(ts));
 
     // Creation of a OptimEntityContainer
@@ -129,14 +129,17 @@ BOOST_AUTO_TEST_SUITE(test_floor_operator)
 
 BOOST_FIXTURE_TEST_CASE(floor_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
 {
-    // Expression : floor(p), where p = {1.5, 2.3, 3.7}
+    // Expression : floor(p), where p = {1.5, 2.3, 3.7, -1.2}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* floor_node = floor(p);
 
     auto evalResult = evalVisitor->dispatch(floor_node);
 
-    std::vector<double> expected_result = {1., 2., 3.};
-    BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
+    std::vector<double> expected_result = {1., 2., 3., -2.};
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[0], expected_result[0]);
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[1], expected_result[1]);
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[2], expected_result[2]);
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[3], expected_result[3]);
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_applied_to_a_literal, eval_function_op_fixture)
@@ -167,13 +170,13 @@ BOOST_AUTO_TEST_SUITE(test_ceil_operator)
 
 BOOST_FIXTURE_TEST_CASE(ceil_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
 {
-    // Expression : ceil(p), where p = {1.5, 2.3, 3.7}
+    // Expression : ceil(p), where p = {1.5, 2.3, 3.7, -1.2}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* ceil_node = ceil(p);
 
     auto evalResult = evalVisitor->dispatch(ceil_node);
 
-    std::vector<double> expected_result = {2., 3., 4.};
+    std::vector<double> expected_result = {2., 3., 4., -1.};
     BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
 }
 
@@ -205,13 +208,13 @@ BOOST_AUTO_TEST_SUITE(test_round_operator)
 
 BOOST_FIXTURE_TEST_CASE(round_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
 {
-    // Expression : round(p), where p = {1.5, 2.3, 3.7}
+    // Expression : round(p), where p = {1.5, 2.3, 3.7, -1.2}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* round_node = round(p);
 
     auto evalResult = evalVisitor->dispatch(round_node);
 
-    std::vector<double> expected_result = {2., 2., 4.};
+    std::vector<double> expected_result = {2., 2., 4., -1.};
     BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
 }
 
@@ -228,7 +231,7 @@ BOOST_FIXTURE_TEST_CASE(round_applied_to_a_literal_floor, eval_function_op_fixtu
 
 BOOST_FIXTURE_TEST_CASE(round_applied_to_a_literal_ceil, eval_function_op_fixture)
 {
-    // Expression : round(2.3)
+    // Expression : round(2.7)
     Node* p = literal(2.7);
     Node* round_node = round(p);
 
@@ -250,7 +253,19 @@ BOOST_FIXTURE_TEST_CASE(round_applied_to_a_constant_parameter, eval_function_op_
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(test_round_operator)
+BOOST_AUTO_TEST_SUITE(test_abs_operator)
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
+{
+    // Expression : abs(p), where p = {1.5, 2.3, 3.7, -1.2}
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    std::vector<double> expected_result = {1.5, 2.3, 3.7, 1.2};
+    BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
+}
 
 BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_literal_positive, eval_function_op_fixture)
 {
