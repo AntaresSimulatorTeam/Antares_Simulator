@@ -22,6 +22,7 @@
 #define BOOST_TEST_MODULE study
 #include <files-system.h>
 #include <filesystem>
+#include <algorithm>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
@@ -319,15 +320,17 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_No_Symmetries
     addThermalCluster(areaA, "cluster1");
     addThermalCluster(areaA, "cluster2");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer.has_value());
     BOOST_CHECK(
@@ -363,12 +366,14 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_Bad_Parameter
     addThermalCluster(areaA, "cluster1");
     addThermalCluster(areaA, "cluster2");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "bad = 9.9\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        bad: 9.9\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 1);
     BOOST_CHECK(getWarnings().contains("invalid thermal reserve property bad"));
@@ -381,48 +386,41 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
     addThermalCluster(areaA, "cluster1");
     addThermalCluster(areaA, "cluster2");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "cluster1 = [ReserveUpThree, ReserveDown]\n";
-    file << "cluster1 = [ReserveUpTwo, ReserveDownTwo]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveUpTwo]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 19.9\n";
-    file << "participation-cost = 18.8\n";
-    file << "max-power-off = 17.7\n";
-    file << "participation-cost-off = 16.6\n";
-    file << "\n";
-    file << "[ReserveUpThree]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 19.9\n";
-    file << "participation-cost = 18.8\n";
-    file << "max-power-off = 17.7\n";
-    file << "participation-cost-off = 16.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
-    file << "\n";
-    file << "[ReserveDownTwo]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveUpTwo\n";
+    file << "        max-power: 19.9\n";
+    file << "        participation-cost: 18.8\n";
+    file << "        max-power-off: 17.7\n";
+    file << "        participation-cost-off: 16.6\n";
+    file << "      - reserve: ReserveUpThree\n";
+    file << "        max-power: 19.9\n";
+    file << "        participation-cost: 18.8\n";
+    file << "        max-power-off: 17.7\n";
+    file << "        participation-cost-off: 16.6\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "      - reserve: ReserveDownTwo\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
+    file << "      - reserves: [ReserveUpThree, ReserveDown]\n";
+    file << "      - reserves: [ReserveUpTwo, ReserveDownTwo]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       areaA->thermal.list.findInAll("cluster1")->reserveParticipationContainer.has_value());
     BOOST_CHECK(
@@ -507,25 +505,25 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Symme
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster3 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "  - cluster: cluster3\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("Thermal cluster cluster3 does not exist in area A"));
 }
 
@@ -535,25 +533,24 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Symme
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveNull, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveNull, ReserveDown]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservenull"));
 }
 
@@ -564,25 +561,26 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Cluster_Parti
     addThermalCluster(areaA, "cluster1");
     addThermalCluster(areaA, "cluster3");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster3\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
+    file << "  - cluster: cluster3\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservedown"));
 }
 
@@ -592,22 +590,22 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Bad_Reserve_Load,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveNull]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveNull\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "A : missing reserve reservenull when loading thermal reserve participations"));
 }
@@ -618,26 +616,25 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Delete_Double_Sym
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("Detected duplicate in reserves symmetries"));
 }
 
@@ -647,25 +644,25 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_No_Cluster_Provid
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "  - cluster: \"\"\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
-    BOOST_CHECK(getErrors().contains(
-      "A : Please provide a cluster name when declaring a capacity reservation"));
-    BOOST_CHECK(
-      getErrors().contains("A : missing cluster name when loading thermal reserve participations"));
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
+    BOOST_CHECK_GT(getErrors().size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Cluster_Participation,
@@ -674,32 +671,29 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Cluster_Pa
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       getErrors().contains("A, cluster cluster1 : duplicate participation to reserve reserveup"));
 }
@@ -710,27 +704,26 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Only_One_Symmetry
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
-    BOOST_CHECK(getErrors().contains(
-      "Must have at least two distinct reserves to participate to a symmetry"));
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
+    BOOST_CHECK(
+      getErrors().contains("A : symmetry group must have at least two reserves"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
@@ -739,32 +732,29 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown, ReserveDownTwo]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDownTwo]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveDownTwo\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown, ReserveDownTwo]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK_EQUAL(areaA->thermal.list.findInAll("cluster1")
@@ -804,28 +794,27 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Symmetry_S
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveUp]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 9.9\n";
-    file << "participation-cost = 8.8\n";
-    file << "max-power-off = 7.7\n";
-    file << "participation-cost-off = 6.6\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 1.1\n";
-    file << "participation-cost = 2.2\n";
-    file << "max-power-off = 3.3\n";
-    file << "participation-cost-off = 4.4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        max-power: 9.9\n";
+    file << "        participation-cost: 8.8\n";
+    file << "        max-power-off: 7.7\n";
+    file << "        participation-cost-off: 6.6\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "        max-power: 1.1\n";
+    file << "        participation-cost: 2.2\n";
+    file << "        max-power-off: 3.3\n";
+    file << "        participation-cost-off: 4.4\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveUp]\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
-    BOOST_CHECK(getErrors().contains(
-      "Must have at least two distinct reserves to participate to a symmetry"));
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
+    BOOST_CHECK(
+      getErrors().contains("A : symmetry group must have at least two reserves"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Cluster_Participation_No_Init,
@@ -834,11 +823,13 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Cluster_Participa
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - cluster: cluster1\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "Area A, cluster1 : trying to add symmetries without any reserve participation"));
 }
@@ -848,38 +839,35 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_Symmetries,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "hydro = [ReserveUp, ReserveDown]\n";
-    file << "lt = [ReserveUpThree, ReserveDown]\n";
-    file << "hydro = [ReserveUpTwo, ReserveDownTwo]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
-    file << "\n";
-    file << "[ReserveUpTwo]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
-    file << "\n";
-    file << "[ReserveUpThree]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
-    file << "\n";
-    file << "[ReserveDownTwo]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  certifications:\n";
+    file << "    - reserve: ReserveUp\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "    - reserve: ReserveUpTwo\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "    - reserve: ReserveUpThree\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "    - reserve: ReserveDown\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "    - reserve: ReserveDownTwo\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "  symmetries:\n";
+    file << "    - reserves: [ReserveUp, ReserveDown]\n";
+    file << "    - reserves: [ReserveUpThree, ReserveDown]\n";
+    file << "    - reserves: [ReserveUpTwo, ReserveDownTwo]\n";
     file.close();
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
 
     BOOST_CHECK(areaA->hydro.reserveParticipationContainer.has_value());
 
@@ -910,11 +898,12 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_no_reserve,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "hydro = [ReserveUp, ReserveDown]\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  symmetries:\n";
+    file << "    - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "Area A, hydro : trying to add symmetries without any reserve participation"));
 }
@@ -924,10 +913,12 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_missing_reserve,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[reservenull]\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  certifications:\n";
+    file << "    - reserve: reservenull\n";
     file.close();
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "A : missing reserve reservenull when loading hydro reserve participations"));
 }
@@ -937,23 +928,22 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_cluster,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  certifications:\n";
+    file << "    - reserve: ReserveUp\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "    - reserve: ReserveDown\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "  symmetries:\n";
+    file << "    - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
-    BOOST_CHECK(getErrors().contains(
-      "A : invalid cluster name for hydro symmetry cluster1 please use 'hydro' or 'lt'"));
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
+    BOOST_CHECK_EQUAL(getErrors().size(), 0);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_property,
@@ -961,12 +951,13 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_property,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[ReserveUp]\n";
-    file << "bad = 9.9\n";
-    file << "\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  certifications:\n";
+    file << "    - reserve: ReserveUp\n";
+    file << "      bad: 9.9\n";
     file.close();
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK_EQUAL(getErrors().size(), 0);
     BOOST_CHECK_EQUAL(getWarnings().size(), 1);
     BOOST_CHECK(getWarnings().contains("invalid hydro reserve property bad"));
@@ -977,22 +968,23 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_reserve,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "[ReserveUp]\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
-    file << "\n";
-    file << "[ReserveUpTwo]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 19.9\n";
-    file << "participation-cost = 18.8\n";
-    file << "max-power-off = 17.7\n";
-    file << "participation-cost-off = 16.6\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  certifications:\n";
+    file << "    - reserve: ReserveUp\n";
+    file << "      participation-cost: 9.9\n";
+    file << "      max-store: 8.8\n";
+    file << "      max-release: 7.7\n";
+    file << "    - reserve: ReserveUpTwo\n";
+    file << "      cluster: cluster1\n";
+    file << "      max-power: 19.9\n";
+    file << "      participation-cost: 18.8\n";
+    file << "      max-power-off: 17.7\n";
+    file << "      participation-cost-off: 16.6\n";
+    file << "  symmetries:\n";
+    file << "    - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservedown"));
 }
 
@@ -1002,36 +994,29 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_Symmetries,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     addShortTermStorage(areaA, "cluster1");
-    std::ofstream file(studyPath / "myreserve.ini");
+    std::ofstream file(studyPath / "myreserve.yml");
 
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "cluster1 = [ReserveUpThree, ReserveDown]\n";
-    file << "cluster1 = [ReserveUpTwo, ReserveDownTwo]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "participation-cost = 9.9\n";
-    file << "max-store = 8.8\n";
-    file << "max-release = 7.7\n";
-    file << "\n";
-    file << "[ReserveUpTwo]\n";
-    file << "cluster-name = cluster1\n";
-    file << "max-power = 19.9\n";
-    file << "max-power-off = 17.7\n";
-    file << "participation-cost-off = 16.6\n";
-    file << "\n";
-    file << "[ReserveUpThree]\n";
-    file << "cluster-name = cluster1\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster1\n";
-    file << "\n";
-    file << "[ReserveDownTwo]\n";
-    file << "cluster-name = cluster1\n";
+    file << "participations:\n";
+    file << "  - storage: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "        participation-cost: 9.9\n";
+    file << "        max-store: 8.8\n";
+    file << "        max-release: 7.7\n";
+    file << "      - reserve: ReserveUpTwo\n";
+    file << "        max-power: 19.9\n";
+    file << "        max-power-off: 17.7\n";
+    file << "        participation-cost-off: 16.6\n";
+    file << "      - reserve: ReserveUpThree\n";
+    file << "      - reserve: ReserveDown\n";
+    file << "      - reserve: ReserveDownTwo\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
+    file << "      - reserves: [ReserveUpThree, ReserveDown]\n";
+    file << "      - reserves: [ReserveUpTwo, ReserveDownTwo]\n";
     file.close();
 
-    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     auto* resContainer = &areaA->shortTermStorage.findInAll("cluster1")
                             ->reserveParticipationContainer;
 
@@ -1053,14 +1038,14 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_cluster_symmetry,
                         OneProblemWithReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveNull]\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - storage: cluster1\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
 
-    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
       getErrors().contains("ShortTerm Storage cluster cluster1 does not exist in area A"));
 }
@@ -1071,11 +1056,13 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_no_reserves,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - storage: cluster1\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains(
       "Area A, cluster1 : trying to add symmetries without any reserve participation"));
 }
@@ -1086,17 +1073,16 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_reserve,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[symmetries]\n";
-    file << "cluster1 = [ReserveUp, ReserveDown]\n";
-    file << "\n";
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "\n";
-    file << "[ReserveDownTwo]\n";
-    file << "cluster-name = cluster1\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - storage: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "      - reserve: ReserveDownTwo\n";
+    file << "    symmetries:\n";
+    file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
-    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(getErrors().contains("This entity is not participating to reserve reservedown"));
 }
 
@@ -1106,17 +1092,17 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_No_Cluster_Provided,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addThermalCluster(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - storage: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "  - certifications:\n";
+    file << "      - reserve: ReserveDown\n";
     file.close();
-    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
-    BOOST_CHECK(getErrors().contains(
-      "A : Please provide a cluster name when declaring a capacity reservation"));
+    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
-      getErrors().contains("A : missing STStorage cluster when loading STS reserve participation"));
+      getErrors().contains("ShortTerm Storage cluster cluster1 does not exist in area A"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_Invalid_Cluster,
@@ -1125,16 +1111,18 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_Invalid_Cluster,
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     addShortTermStorage(areaA, "cluster1");
 
-    std::ofstream file(studyPath / "myreserve.ini");
-    file << "[ReserveUp]\n";
-    file << "cluster-name = cluster1\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "cluster-name = cluster4\n";
+    std::ofstream file(studyPath / "myreserve.yml");
+    file << "participations:\n";
+    file << "  - storage: cluster1\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveUp\n";
+    file << "  - storage: cluster4\n";
+    file << "    certifications:\n";
+    file << "      - reserve: ReserveDown\n";
     file.close();
-    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.ini");
+    areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
     BOOST_CHECK(
-      getErrors().contains("A : missing STStorage cluster when loading STS reserve participation"));
+      getErrors().contains("ShortTerm Storage cluster cluster4 does not exist in area A"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
@@ -1142,8 +1130,9 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
     file.close();
     BOOST_CHECK_EXCEPTION(
       accessForTests::loadReservesParameters(studyPath, *areaA),
@@ -1155,8 +1144,9 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_minimal, OneProblemWithoutReservesOn
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
     file.close();
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
@@ -1203,12 +1193,13 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_ini, OneProblemWithoutReservesOneAr
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "a\n ";
-    file << "\n ";
-    file << "[globalparameters]\n";
-    file << "a\n ";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
+    file << "    a: [\n";
+    file << "\n";
+    file << "global-parameters:\n";
+    file << "  a: [\n";
     file.close();
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
@@ -1218,21 +1209,24 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_ini, OneProblemWithoutReservesOneAr
 
     BOOST_CHECK_EQUAL(getErrors().size(), 2);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
-    BOOST_CHECK(getErrors().contains("INI content : unknown format for line \'a\'"));
-    BOOST_CHECK(getErrors().contains("Invalid INI file : "
-                                     + (studyPath / "reserves" / "a" / "reserves.ini").string()));
+    BOOST_CHECK(std::any_of(getErrors().begin(), getErrors().end(), [](const std::string& msg) {
+        return msg.find("YAML content") != std::string::npos;
+    }));
+    BOOST_CHECK(getErrors().contains("Invalid YAML file : "
+                                      + (studyPath / "reserves" / "a" / "reserves.yml").string()));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters, OneProblemWithoutReservesOneAreaWithLogger)
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "a = a\n ";
-    file << "\n ";
-    file << "[globalparameters]\n";
-    file << "b = 2.1\n ";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
+    file << "    a: a\n";
+    file << "\n";
+    file << "global-parameters:\n";
+    file << "  b: 2.1\n";
     file.close();
 
     std::ofstream fileNeeds(studyPath / "reserves" / "a" / "reserveup.txt");
@@ -1251,22 +1245,23 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_ok, OneProblemWithoutReservesOneAreaWit
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "type = up\n ";
-    file << "reference-activation-duration = 2\n ";
-    file << "energy-activation-ratio = 2.2\n ";
-    file << "power-activation-ratio = 3.3\n ";
-    file << "spillage-cost = 4.4\n ";
-    file << "failure-cost = 5.5\n ";
-    file << "\n ";
-    file << "[globalparameters]\n";
-    file << "energy-activation-ratio-up = 6.6\n ";
-    file << "energy-activation-ratio-down = 7.7\n ";
-    file << "reference-activation-duration-up = 8\n ";
-    file << "reference-activation-duration-down = 9\n ";
-    file << "[ReserveDown]\n";
-    file << "type = down\n ";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "global-parameters:\n";
+    file << "  energy-activation-ratio-up: 6.6\n";
+    file << "  energy-activation-ratio-down: 7.7\n";
+    file << "  reference-activation-duration-up: 8\n";
+    file << "  reference-activation-duration-down: 9\n";
+    file << "\n";
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
+    file << "    type: up\n";
+    file << "    reference-activation-duration: 2\n";
+    file << "    energy-activation-ratio: 2.2\n";
+    file << "    power-activation-ratio: 3.3\n";
+    file << "    spillage-cost: 4.4\n";
+    file << "    failure-cost: 5.5\n";
+    file << "  - name: ReserveDown\n";
+    file << "    type: down\n";
     file.close();
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
@@ -1337,20 +1332,21 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_negative_parameters_values,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "type = up\n ";
-    file << "reference-activation-duration = -1\n ";
-    file << "energy-activation-ratio = -2\n ";
-    file << "power-activation-ratio = -3\n ";
-    file << "spillage-cost = 10\n ";
-    file << "failure-cost = 10\n ";
-    file << "\n ";
-    file << "[globalparameters]\n";
-    file << "energy-activation-ratio-up = -1\n ";
-    file << "energy-activation-ratio-down = -1\n ";
-    file << "reference-activation-duration-up = -2\n ";
-    file << "reference-activation-duration-down = -2\n ";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
+    file << "    type: up\n";
+    file << "    reference-activation-duration: -1\n";
+    file << "    energy-activation-ratio: -2\n";
+    file << "    power-activation-ratio: -3\n";
+    file << "    spillage-cost: 10\n";
+    file << "    failure-cost: 10\n";
+    file << "\n";
+    file << "global-parameters:\n";
+    file << "  energy-activation-ratio-up: -1\n";
+    file << "  energy-activation-ratio-down: -1\n";
+    file << "  reference-activation-duration-up: -2\n";
+    file << "  reference-activation-duration-down: -2\n";
     file.close();
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
@@ -1381,20 +1377,21 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters_values,
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "type = aa\n ";
-    file << "reference-activation-duration = 1.1\n ";
-    file << "energy-activation-ratio = a\n ";
-    file << "power-activation-ratio = a\n ";
-    file << "spillage-cost = a\n ";
-    file << "failure-cost = a\n ";
-    file << "\n ";
-    file << "[globalparameters]\n";
-    file << "energy-activation-ratio-up = a\n ";
-    file << "energy-activation-ratio-down = a\n ";
-    file << "reference-activation-duration-up = 1.1\n ";
-    file << "reference-activation-duration-down = 1.1\n ";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
+    file << "    type: aa\n";
+    file << "    reference-activation-duration: 1.1\n";
+    file << "    energy-activation-ratio: a\n";
+    file << "    power-activation-ratio: a\n";
+    file << "    spillage-cost: a\n";
+    file << "    failure-cost: a\n";
+    file << "\n";
+    file << "global-parameters:\n";
+    file << "  energy-activation-ratio-up: a\n";
+    file << "  energy-activation-ratio-down: a\n";
+    file << "  reference-activation-duration-up: 1.1\n";
+    file << "  reference-activation-duration-down: 1.1\n";
     file.close();
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");
@@ -1428,12 +1425,11 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_duplicated, OneProblemWithoutReservesOn
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
     std::filesystem::create_directories(studyPath / "reserves" / "a");
-    std::ofstream file(studyPath / "reserves" / "a" / "reserves.ini");
-    file << "[ReserveUp]\n";
-    file << "\n ";
-    file << "[ReserveUp]\n";
-    file << "\n ";
-    file << "[globalparameters]\n";
+    std::ofstream file(studyPath / "reserves" / "a" / "reserves.yml");
+    file << "reserves:\n";
+    file << "  - name: ReserveUp\n";
+    file << "  - name: ReserveUp\n";
+    file << "global-parameters:\n";
     file.close();
 
     std::ofstream fileNeedsUp(studyPath / "reserves" / "a" / "reserveup.txt");

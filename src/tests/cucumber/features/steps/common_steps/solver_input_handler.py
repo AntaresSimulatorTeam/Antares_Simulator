@@ -81,30 +81,41 @@ class solver_input_handler:
 
     def set_reserve_value(self, area, sectionName, variable, value):
         # File path
-        file = self.files_path["reserves"] / area / "reserves.ini"
+        file = self.files_path["reserves"] / area / "reserves.yml"
         # Content to print in file (tmp content)
         content_out = []
         # Reading the file content (content in)
         with open(file) as f:
-            # Searching variable and setting its value in a tmp content
+            in_reserve = False
             for line in f:
-                if line.startswith("["):
+                stripped = line.rstrip()
+                if stripped == "":
                     content_out.append(line)
-                    if f"[{sectionName}]" in line:
-                        correct_section = True
-                    else:
-                        correct_section = False
-                else:
-                    if correct_section and line.strip().startswith(variable):
-                        content_out.append(variable + " = " + value + "\n")
+                    in_reserve = False
+                    continue
+                indent = len(line) - len(line.lstrip())
+                if stripped.lstrip().startswith("- name: "):
+                    name = stripped.split("- name: ", 1)[1].strip()
+                    content_out.append(line)
+                    in_reserve = (name == sectionName)
+                elif in_reserve and indent >= 4:
+                    key = stripped.lstrip().split(":")[0].strip()
+                    if key == variable:
+                        content_out.append(f"      {variable}: {value}\n")
                     else:
                         content_out.append(line)
+                else:
+                    content_out.append(line)
+                    if stripped == "reserves:" or stripped.startswith("global-parameters"):
+                        in_reserve = False
         # Erasing file content with the tmp content (content out)
         with open(file, "w") as f:
             f.writelines(content_out)
 
     def copy_reserve_ini_from_file(self, origin, destination):
         # File path
+        origin[-1] = origin[-1].replace(".ini", ".yml")
+        destination[-1] = destination[-1].replace(".ini", ".yml")
         fileToReplace = os.path.join(self.study_root_dir, *destination)
         fileToCopy = os.path.join(self.study_root_dir, *origin)
         shutil.copyfile(fileToCopy, fileToReplace)

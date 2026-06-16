@@ -179,27 +179,30 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
 {
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
-    std::ofstream file(studyPath / "myreserveA.ini");
-    file << "[ReserveUp]\n";
-    file << "participation-cost = 1.1\n";
-    file << "max-store = 2.2\n";
-    file << "max-release = 3.3\n";
-    file << "\n";
-    file << "[ReserveDown]\n";
-    file << "participation-cost = 4.4\n";
-    file << "max-store = 5.5\n";
-    file << "max-release = 6.6\n";
+    std::ofstream file(studyPath / "myreserveA.yml");
+    file << "participations:\n";
+    file << "  certifications:\n";
+    file << "    - reserve: ReserveUp\n";
+    file << "      participation-cost: 1.1\n";
+    file << "      max-store: 2.2\n";
+    file << "      max-release: 3.3\n";
+    file << "    - reserve: ReserveDown\n";
+    file << "      participation-cost: 4.4\n";
+    file << "      max-store: 5.5\n";
+    file << "      max-release: 6.6\n";
     file.close();
 
-    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.ini");
+    areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.yml");
 
-    std::ofstream fileB(studyPath / "myreserveB.ini");
-    fileB << "[ReserveUp]\n";
-    fileB << "participation-cost = 9.9\n";
-    fileB << "max-store = 8.8\n";
-    fileB << "max-release = 7.7\n";
+    std::ofstream fileB(studyPath / "myreserveB.yml");
+    fileB << "participations:\n";
+    fileB << "  certifications:\n";
+    fileB << "    - reserve: ReserveUp\n";
+    fileB << "      participation-cost: 9.9\n";
+    fileB << "      max-store: 8.8\n";
+    fileB << "      max-release: 7.7\n";
     fileB.close();
-    areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.ini");
+    areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.yml");
 
     areaA->hydro.reserveParticipationContainer.value().addReserveParticipationSymmetry(
       {"reserveup", "reservedown"});
