@@ -62,6 +62,66 @@ void static errorIfNegativeValue(const std::string& propertyName,
     }
 }
 
+static void readStorageProperties(const YAML::Node& cert,
+                                   StorageClusterReserveParticipation& rp,
+                                   const std::string& typeName)
+{
+    for (const auto& prop: cert)
+    {
+        auto k = prop.first.as<std::string>();
+        if (k == "reserve")
+        {
+            continue;
+        }
+        if (k == "participation-cost")
+        {
+            try
+            {
+                rp.participationCost = prop.second.as<double>();
+            }
+            catch (const YAML::Exception&)
+            {
+                logs.warning() << "invalid " << typeName << " reserve property " << k;
+            }
+        }
+        else if (k == "max-release")
+        {
+            try
+            {
+                rp.maxRelease = prop.second.as<double>();
+            }
+            catch (const YAML::Exception&)
+            {
+                logs.warning() << "invalid " << typeName << " reserve property " << k;
+            }
+        }
+        else if (k == "max-store")
+        {
+            try
+            {
+                rp.maxStore = prop.second.as<double>();
+            }
+            catch (const YAML::Exception&)
+            {
+                logs.warning() << "invalid " << typeName << " reserve property " << k;
+            }
+        }
+        else
+        {
+            logs.warning() << "invalid " << typeName << " reserve property " << k;
+        }
+    }
+}
+
+static void validateStorageSpecificInputs(const std::string& areaName,
+                                           const StorageClusterReserveParticipation& rp,
+                                           const std::string& clusterName,
+                                           const std::string& reserveID)
+{
+    errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveID);
+    errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveID);
+}
+
 class HydroReserveLoader;
 
 template<typename Derived, typename ParticipationT>
@@ -198,6 +258,20 @@ public:
     }
 
 protected:
+    static void duplicateParticipation(const std::string& areaName,
+                                        const std::string& clusterName,
+                                        const std::string& reserveID)
+    {
+        logs.error() << areaName << ", cluster " << clusterName
+                     << " : duplicate participation to reserve " << reserveID;
+    }
+
+    static void reportLackOfReserveParticipation(const Area& area, const std::string& clusterName)
+    {
+        logs.error() << "Area " << area.name << ", " << clusterName
+                     << " : trying to add symmetries without any reserve participation";
+    }
+
     template<class ClusterT>
     static void addGroupToResIndex(Area& area, const std::string& reserveID, ClusterT* cluster)
     {
@@ -342,19 +416,8 @@ public:
                      << area.name;
     }
 
-    static void duplicateParticipation(const std::string& areaName,
-                                       const std::string& clusterName,
-                                       const std::string& resserveID)
-    {
-        logs.error() << areaName << ", cluster " << clusterName
-                     << " : duplicate participation to reserve " << resserveID;
-    }
-
-    static void reportLackOfReserveParticipation(const Area& area, const std::string& clusterName)
-    {
-        logs.error() << "Area " << area.name << ", " << clusterName
-                     << " : trying to add symmetries without any reserve participation";
-    }
+    using ReserveLoaderMixin::duplicateParticipation;
+    using ReserveLoaderMixin::reportLackOfReserveParticipation;
 };
 
 class STStorageReserveLoader
@@ -380,60 +443,15 @@ public:
 
     static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
-        for (const auto& prop: cert)
-        {
-            auto k = prop.first.as<std::string>();
-            if (k == "reserve")
-            {
-                continue;
-            }
-            if (k == "participation-cost")
-            {
-                try
-                {
-                    rp.participationCost = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid STS reserve property " << k;
-                }
-            }
-            else if (k == "max-release")
-            {
-                try
-                {
-                    rp.maxRelease = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid STS reserve property " << k;
-                }
-            }
-            else if (k == "max-store")
-            {
-                try
-                {
-                    rp.maxStore = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid STS reserve property " << k;
-                }
-            }
-            else
-            {
-                logs.warning() << "invalid STS reserve property " << k;
-            }
-        }
+        readStorageProperties(cert, rp, "STS");
     }
 
     static void validateSpecificInputs(const std::string& areaName,
-                                       const StorageClusterReserveParticipation& rp,
-                                       const std::string& clusterName,
-                                       const std::string& reserveID)
+                                        const StorageClusterReserveParticipation& rp,
+                                        const std::string& clusterName,
+                                        const std::string& reserveID)
     {
-        errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveID);
-        errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveID);
+        validateStorageSpecificInputs(areaName, rp, clusterName, reserveID);
     }
 
     static auto* findCluster(Area& area, const std::string& name)
@@ -469,19 +487,8 @@ public:
                      << area.name;
     }
 
-    static void duplicateParticipation(const std::string& areaName,
-                                       const std::string& clusterName,
-                                       const std::string& reserveID)
-    {
-        logs.error() << areaName << ", cluster " << clusterName
-                     << " : duplicate participation to reserve " << reserveID;
-    }
-
-    static void reportLackOfReserveParticipation(const Area& area, const std::string& clusterName)
-    {
-        logs.error() << "Area " << area.name << ", " << clusterName
-                     << " : trying to add symmetries without any reserve participation";
-    }
+    using ReserveLoaderMixin::duplicateParticipation;
+    using ReserveLoaderMixin::reportLackOfReserveParticipation;
 };
 
 class HydroReserveLoader
@@ -558,60 +565,15 @@ public:
 
     static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
-        for (const auto& prop: cert)
-        {
-            auto k = prop.first.as<std::string>();
-            if (k == "reserve")
-            {
-                continue;
-            }
-            if (k == "participation-cost")
-            {
-                try
-                {
-                    rp.participationCost = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid hydro reserve property " << k;
-                }
-            }
-            else if (k == "max-release")
-            {
-                try
-                {
-                    rp.maxRelease = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid hydro reserve property " << k;
-                }
-            }
-            else if (k == "max-store")
-            {
-                try
-                {
-                    rp.maxStore = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid hydro reserve property " << k;
-                }
-            }
-            else
-            {
-                logs.warning() << "invalid hydro reserve property " << k;
-            }
-        }
+        readStorageProperties(cert, rp, "hydro");
     }
 
     static void validateSpecificInputs(const std::string& areaName,
-                                       const StorageClusterReserveParticipation& rp,
-                                       const std::string& clusterName,
-                                       const std::string& reserveID)
+                                        const StorageClusterReserveParticipation& rp,
+                                        const std::string& clusterName,
+                                        const std::string& reserveID)
     {
-        errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveID);
-        errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveID);
+        validateStorageSpecificInputs(areaName, rp, clusterName, reserveID);
     }
 
     static void duplicateParticipation(const std::string& areaName,
