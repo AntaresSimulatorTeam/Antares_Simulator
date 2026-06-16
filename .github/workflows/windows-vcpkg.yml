@@ -295,6 +295,14 @@ jobs:
         batch-name: short-tests
         os: ${{ env.os }}
 
+    - name: Run reserves-tests
+      if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{ env.SIMTEST }}
+        batch-name: reserves-tests 
+        os: ${{ env.os }}
+
     - name: Run cucumber on v9.2 tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
       uses: ./.github/workflows/cucumber-tests
