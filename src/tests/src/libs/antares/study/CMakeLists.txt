@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 set(src_tests_src_libs_antares_study "${CMAKE_CURRENT_SOURCE_DIR}")
 

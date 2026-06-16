@@ -857,4 +857,192 @@ BOOST_FIXTURE_TEST_CASE(ceil_operator_forbidden_on_variable_with_forbidden_nodes
                           checkMessage(err_msg));
 }
 
+// ─────────────────────────────────────────────
+// round operator tests
+// ─────────────────────────────────────────────
+
+BOOST_FIXTURE_TEST_CASE(round_operator___nominal_case, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "round(pmin)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    // Root node is a 'round' node
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::round");
+
+    auto roundNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(roundNode->typeToString(), "round");
+
+    // Child node must be unique, and be the parameter node 'pmin' from the model
+    BOOST_CHECK_EQUAL(roundNode->getOperands().size(), 1);
+    auto* childNode = roundNode->getOperands()[0];
+
+    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
+    BOOST_CHECK(paramNode);
+    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
+}
+
+BOOST_FIXTURE_TEST_CASE(round_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "round(3.7)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::round");
+
+    auto roundNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(roundNode->typeToString(), "round");
+
+    BOOST_CHECK_EQUAL(roundNode->getOperands().size(), 1);
+    auto* childNode = roundNode->getOperands()[0];
+
+    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
+    BOOST_CHECK(literalNode);
+    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
+}
+
+BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "round()";
+
+    std::string err_msg = "round operator expects an argument, got nothing";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          InputError,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(round_operator_should_not_take_more_than_one_arg,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "round(pmin, 5)";
+
+    std::string err_msg = "round() expects 1 argument, but has 2";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          InputError,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(round_operator_forbidden_on_variable_with_forbidden_nodes,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "round(varA)";
+
+    auto node = convertExpressionToNode(expression, model);
+
+    // Forbid variables as children of round
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::round, Nodes::VariableNode>();
+
+    std::string err_msg = "'FunctionNode::round' is not allowed to contain 'VariableNode' in "
+                          "expression '"
+                          + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          InputError,
+                          checkMessage(err_msg));
+}
+
+// ─────────────────────────────────────────────
+// abs operator tests
+// ─────────────────────────────────────────────
+
+BOOST_FIXTURE_TEST_CASE(abs_operator___nominal_case, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "abs(pmin)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    // Root node is an 'abs' node
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::abs");
+
+    auto absNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(absNode->typeToString(), "abs");
+
+    // Child node must be unique, and be the parameter node 'pmin' from the model
+    BOOST_CHECK_EQUAL(absNode->getOperands().size(), 1);
+    auto* childNode = absNode->getOperands()[0];
+
+    const auto* paramNode = dynamic_cast<Nodes::ParameterNode*>(childNode);
+    BOOST_CHECK(paramNode);
+    BOOST_CHECK_EQUAL(paramNode->value(), "pmin");
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_operator_applied_to_a_literal, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "abs(3.7)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::abs");
+
+    auto absNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(absNode->typeToString(), "abs");
+
+    BOOST_CHECK_EQUAL(absNode->getOperands().size(), 1);
+    auto* childNode = absNode->getOperands()[0];
+
+    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(childNode);
+    BOOST_CHECK(literalNode);
+    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_operator_applied_to_negative_literal, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "abs(-3.7)";
+
+    auto expr = convertExpressionToNode(expression, model);
+
+    BOOST_CHECK_EQUAL(expr.node->name(), "FunctionNode::abs");
+
+    auto absNode = dynamic_cast<Nodes::FunctionNode*>(expr.node);
+    BOOST_CHECK_EQUAL(absNode->typeToString(), "abs");
+
+    BOOST_CHECK_EQUAL(absNode->getOperands().size(), 1);
+    auto* childNode = absNode->getOperands()[0];
+
+    // Negative literals are represented as NegationNode(LiteralNode(3.7))
+    const auto* negNode = dynamic_cast<Nodes::NegationNode*>(childNode);
+    BOOST_CHECK(negNode);
+    const auto* literalNode = dynamic_cast<Nodes::LiteralNode*>(negNode->child());
+    BOOST_CHECK(literalNode);
+    BOOST_CHECK_EQUAL(literalNode->value(), 3.7);
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_no_arg, SupplyModelForFunctionalOperator)
+{
+    std::string expression = "abs()";
+
+    std::string err_msg = "abs operator expects an argument, got nothing";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          InputError,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_operator_should_not_take_more_than_one_arg,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "abs(pmin, 5)";
+
+    std::string err_msg = "abs() expects 1 argument, but has 2";
+    BOOST_CHECK_EXCEPTION(convertExpressionToNode(expression, model),
+                          InputError,
+                          checkMessage(err_msg));
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_operator_forbidden_on_variable_with_forbidden_nodes,
+                        SupplyModelForFunctionalOperator)
+{
+    std::string expression = "abs(varA)";
+
+    auto node = convertExpressionToNode(expression, model);
+
+    // Forbid variables as children of abs
+    forbiddenNodes.parentForbidsChild<Nodes::FunctionNodeType::abs, Nodes::VariableNode>();
+
+    std::string err_msg = "'FunctionNode::abs' is not allowed to contain 'VariableNode' in "
+                          "expression '"
+                          + expression + "'";
+    BOOST_CHECK_EXCEPTION(ForbiddenNodesVisitor(forbiddenNodes, expression).dispatch(node.node),
+                          InputError,
+                          checkMessage(err_msg));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

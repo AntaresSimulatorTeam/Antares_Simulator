@@ -188,6 +188,10 @@ std::type_index functionNodeTypeIndex(const FunctionNode* functionNode)
         return typeIndexOf<FunctionNodeType::floor>();
     case FunctionNodeType::ceil:
         return typeIndexOf<FunctionNodeType::ceil>();
+    case FunctionNodeType::round:
+        return typeIndexOf<FunctionNodeType::round>();
+    case FunctionNodeType::abs:
+        return typeIndexOf<FunctionNodeType::abs>();
     default:
         throw InputError("ForbiddenNodesVisitor > function '" + functionNode->name()
                          + "' is unknown.");

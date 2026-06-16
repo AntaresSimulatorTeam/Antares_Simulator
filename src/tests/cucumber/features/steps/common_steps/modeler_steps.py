@@ -24,6 +24,11 @@ def run_antares_modeler(context):
     run_modeler(context)
 
 
+@when("I run antares problem generator")
+def run_antares_problem_generator(context):
+    run_problem_generator(context)
+
+
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
     assert_double_close(value, context.moh.get_objective_value(), 1e-5)
@@ -67,8 +72,7 @@ def get_value(row, ts):
     ret = row["value"]
     return float(ret)  # Single value case (apply to all timesteps)
 
-def run_modeler(context):
-    command = build_antares_modeler_command(context)
+def run_executable(context, command):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
@@ -90,15 +94,26 @@ def run_modeler(context):
         print(err.replace(b'\r\n', b'\n').decode('utf-8'))
         print("*********************** End stderr ***********************")
     else:
-        context.output_path = os.path.join(context.study_path,
-                                           "output")  # TODO : fixme parse_output_folder_from_logs(out)
+        context.output_path = os.path.join(context.study_path, "output")
         context.moh = modeler_output_handler(Path(parse_output_folder_from_logs(context.logs_out)),
                                              "simulation-table*.csv",
                                              True)
     context.return_code = process.returncode
 
+def run_modeler(context):
+    run_executable(context, build_antares_modeler_command(context))
+
+
+def run_problem_generator(context):
+    run_executable(context, build_antares_problem_generator_command(context))
+
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
+    return command
+
+
+def build_antares_problem_generator_command(context):
+    command = [context.config.userdata["antares-problem-generator"], str(context.study_path)]
     return command
 
 
