@@ -1,5 +1,9 @@
 var NAVTREEINDEX26 =
 {
+"classVariableManagement_1_1VariableManager.html#ac5b7391512f247bce2166d33e779f256":[9,0,22,0,4],
+"classVariableManagement_1_1VariableManager.html#acff9199cdc5081c55ce27227f3226126":[9,0,22,0,32],
+"classVariableManagement_1_1VariableManager.html#ad7b2c2ebef348bf49c76c338926710f3":[9,0,22,0,3],
+"classVariableManagement_1_1VariableManager.html#ae05f4ae6e4c60a84a22a5ebc1b246573":[9,0,22,0,28],
 "classVariableNamer.html":[9,0,390],
 "classVariableNamer.html#a016f6f8d81b2b98da0e646e2b8ae3be8":[9,0,390,27],
 "classVariableNamer.html#a0ab2e2b356789758ec79a53a4e1522cb":[9,0,390,34],
@@ -245,9 +249,5 @@ var NAVTREEINDEX26 =
 "classfind__reference_1_1reference__folder__finder.html#a4d568db1d4fa1a15c86489eac805e66e":[9,0,9,0,0],
 "classfind__reference_1_1reference__folder__finder.html#a943b51ca83e40fe0e331837897064acf":[9,0,9,0,6],
 "classfind__reference_1_1reference__folder__finder.html#ab57075f28bdda199b129facf6418d73c":[9,0,9,0,1],
-"classfind__reference_1_1reference__folder__finder.html#af0d0c093fb4453e5a5ed505f3826cd53":[9,0,9,0,3],
-"classfixtures_1_1check__handler.html":[9,0,10,0],
-"classfixtures_1_1check__handler.html#a124c00f464bc5fce3d014615fb5b9e0b":[9,0,10,0,2],
-"classfixtures_1_1check__handler.html#a1d1e16efee46867ee603f0b9f7222e94":[9,0,10,0,4],
-"classfixtures_1_1check__handler.html#a3a1f5dcc7203b3964cacd863a2824f3b":[9,0,10,0,5]
+"classfind__reference_1_1reference__folder__finder.html#af0d0c093fb4453e5a5ed505f3826cd53":[9,0,9,0,3]
 };

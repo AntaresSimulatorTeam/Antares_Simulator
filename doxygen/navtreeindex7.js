@@ -1,5 +1,9 @@
 var NAVTREEINDEX7 =
 {
+"classAntares_1_1Data_1_1StudyLoadOptions.html#adf6f5e11176d0b8178e26988b28a5b58":[9,0,0,3,47,13],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ae8d39c7e1c8b47f84b368499d2c0cdb5":[9,0,0,3,47,15],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#af50262cd54b1b9d426ac4a7cce4a7cb4":[9,0,0,3,47,6],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#afce3627865b70364ce39f6a16ccb3a49":[9,0,0,3,47,14],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html":[9,0,0,3,81],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a040ec87a869a27fdebdf7e456ab1bfdb":[9,0,0,3,81,13],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html#a0a53bd4cf37a20a44e2db60badb91c3d":[9,0,0,3,81,14],
@@ -245,9 +249,5 @@ var NAVTREEINDEX7 =
 "classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html#a8a89ae11d872ff5b17d5b38d329c6cc9":[9,0,0,5,13,0],
 "classAntares_1_1Error_1_1IncompatibleOutputOptions.html":[9,0,0,5,23],
 "classAntares_1_1Error_1_1IncompatibleOutputOptions.html#aa104ff68c2e718c3aaf18e6997a632c0":[9,0,0,5,23,0],
-"classAntares_1_1Error_1_1IncompatibleParallelOptions.html":[9,0,0,5,9],
-"classAntares_1_1Error_1_1IncompatibleParallelOptions.html#ae6b15909e99fee071900e7f5a6f66135":[9,0,0,5,9,0],
-"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html":[9,0,0,5,30],
-"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html#ad9f4d9a0757eb427fd1a014954a4ffb7":[9,0,0,5,30,0],
-"classAntares_1_1Error_1_1InvalidArgumentError.html":[9,0,0,5,0]
+"classAntares_1_1Error_1_1IncompatibleParallelOptions.html":[9,0,0,5,9]
 };

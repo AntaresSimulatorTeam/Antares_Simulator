@@ -1,5 +1,15 @@
 var NAVTREEINDEX41 =
 {
+"structFixture_1_1STSAdditionalConstraints.html":[9,0,130,3],
+"structFixture_1_1STSAdditionalConstraints.html#a6d9bd1fa8d8c33b8e9d3ec2416d55af5":[9,0,130,3,2],
+"structFixture_1_1STSAdditionalConstraints.html#aabbf8d25963c82abee981f2c1574e42e":[9,0,130,3,1],
+"structFixture_1_1STSAdditionalConstraints.html#ac8db8b3f561a8412c39bbde053028562":[9,0,130,3,0],
+"structFixture_1_1STSInflows.html":[9,0,130,4],
+"structFixture_1_1STSInflows.html#a0148d9a54c76aea1d11da44cc0882431":[9,0,130,4,1],
+"structFixture_1_1STSInflows.html#ad926a89cd506c6220494720d540f8dd8":[9,0,130,4,0],
+"structFixture_1_1STSInflows.html#ae11aaaa7ca63398e2207bbafb017f974":[9,0,130,4,2],
+"structFixture_1_1Thermal.html":[9,0,130,5],
+"structFixture_1_1Thermal.html#a1be1f508074a7dd41bff86155d9e3aee":[9,0,130,5,0],
 "structFixture_1_1Thermal.html#a830f8eb3700dec10c00c84813f334203":[9,0,130,5,1],
 "structFlowDissociationData.html":[9,0,139],
 "structFlowDissociationData.html#a526ad2a342723bea892e5a06267220eb":[9,0,139,2],
@@ -239,15 +249,5 @@ var NAVTREEINDEX41 =
 "structPROBLEME__HEBDO.html#a700c350e70d3eaf6e2e98de2cd4b2ebb":[9,0,264,7],
 "structPROBLEME__HEBDO.html#a7115731ab76f12e21e0fed1b1e0f0b2e":[9,0,264,19],
 "structPROBLEME__HEBDO.html#a71d0af6aff41752f4c3b6616b524e777":[9,0,264,37],
-"structPROBLEME__HEBDO.html#a75f65d424a16268b992dc2ef20b81f3f":[9,0,264,32],
-"structPROBLEME__HEBDO.html#a76891964aec36ef4706b98793dca471f":[9,0,264,64],
-"structPROBLEME__HEBDO.html#a79876a6aba8d6117ddf02a51c321de06":[9,0,264,76],
-"structPROBLEME__HEBDO.html#a7b4ca65395c08797f9114620591cab60":[9,0,264,23],
-"structPROBLEME__HEBDO.html#a7e189a08e30d403890eb6d019d987089":[9,0,264,21],
-"structPROBLEME__HEBDO.html#a84092aa3795e495aecb914c80939b272":[9,0,264,11],
-"structPROBLEME__HEBDO.html#a84447d9ff229108331faf8ba0099fc9f":[9,0,264,39],
-"structPROBLEME__HEBDO.html#a85edb54aeb2aa706a159ea2296d239b9":[9,0,264,69],
-"structPROBLEME__HEBDO.html#a8fad2d600c90fb07edaaeff6763252b5":[9,0,264,35],
-"structPROBLEME__HEBDO.html#a942670b312b62c76caf1ae7b20932ded":[9,0,264,67],
-"structPROBLEME__HEBDO.html#a9614128358d659f120c737c98ea7360f":[9,0,264,2]
+"structPROBLEME__HEBDO.html#a75f65d424a16268b992dc2ef20b81f3f":[9,0,264,32]
 };

@@ -52,11 +52,15 @@ var namespaceAntares_1_1Optimisation =
     [ "variability", "namespaceAntares_1_1Optimisation.html#a7946a6158774791be219711cab7b5238", null ],
     [ "visitDual", "namespaceAntares_1_1Optimisation.html#a89744a0431e8da516ee3779eef6601e2", null ],
     [ "visitReducedCost", "namespaceAntares_1_1Optimisation.html#af9329f96ca81dd142a53fac6ff1ff125", null ],
+    [ "absExpression", "namespaceAntares_1_1Optimisation.html#af4bca8e9244fcacc809474c5f02812b5", null ],
     [ "ceilExpression", "namespaceAntares_1_1Optimisation.html#aa2431ea743725913aeb276c0c02ac662", null ],
+    [ "checkExpressionIsConstantForAbs", "namespaceAntares_1_1Optimisation.html#a999839dc33cd605f1533771de20adb37", null ],
     [ "checkExpressionIsConstantForCeil", "namespaceAntares_1_1Optimisation.html#ab95b88008f45058e19a87a5cfb056c88", null ],
     [ "checkExpressionIsConstantForFloor", "namespaceAntares_1_1Optimisation.html#a227b72927fdf65dae0d5d458074a7431", null ],
+    [ "checkExpressionIsConstantForRound", "namespaceAntares_1_1Optimisation.html#ac9c140c6030f31a9860d99ad246316a7", null ],
     [ "checkIsConstant", "namespaceAntares_1_1Optimisation.html#a3cf175f439c286c14b62f6bf0c38714d", null ],
     [ "floorExpression", "namespaceAntares_1_1Optimisation.html#a2cc5a5b73fb20f5fb61391dcbe964653", null ],
     [ "max_element_of_vector", "namespaceAntares_1_1Optimisation.html#aab6a6f7cb1e1304c605d03ef54c82d3c", null ],
-    [ "min_element_of_vector", "namespaceAntares_1_1Optimisation.html#ae24894f7251d36dced8bb0fabd91ed5f", null ]
+    [ "min_element_of_vector", "namespaceAntares_1_1Optimisation.html#ae24894f7251d36dced8bb0fabd91ed5f", null ],
+    [ "roundExpression", "namespaceAntares_1_1Optimisation.html#a6535d26c2d4015da96fe46d611bdcfc2", null ]
 ];

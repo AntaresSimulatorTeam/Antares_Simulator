@@ -1,5 +1,13 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#ac5d79dc9cd6168df1e817d874355d72b":[9,0,0,11,6,15,7],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#acb80c7cf57141bc2e37eff31605bffe9":[9,0,0,11,6,15,4],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#ad5aed74d33b96e98964c2fa79e605b4f":[9,0,0,11,6,15,3],
+"structAntares_1_1Solver_1_1Variable_1_1Container_1_1List_1_1Statistics.html":[9,0,0,11,6,3,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList_1_1Statistics.html":[9,0,0,11,6,3,1,0],
+"structAntares_1_1Solver_1_1Variable_1_1DummyVariable_1_1Statistics.html":[9,0,0,11,6,63,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html":[9,0,0,11,6,5,18],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html#a3c0cf99bebe4f56a06b51738115ebf8f":[9,0,0,11,6,5,18,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1AvailableDispatchGenTraits.html#af75c02a2e70bcba45ecf048967871dc0":[9,0,0,11,6,5,18,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1BalanceTraits.html":[9,0,0,11,6,5,19],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1BalanceTraits.html#a89a21436553dddcd195ca7a677421dce":[9,0,0,11,6,5,19,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a87eb157830a2a2028d3bcf9199d73bd5":[9,0,0,11,6,5,46,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#af6278104b4fb66ab8c0ec9d3bc9e1d84":[9,0,0,11,6,5,46,2],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html":[9,0,0,11,6,5,97],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html#a3f64088e6de7cc269ab463ff687846ef":[9,0,0,11,6,5,97,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[9,0,0,11,6,5,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html":[9,0,0,11,6,5,0,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html#ab8ce822182052e00299c20a6042d1e5e":[9,0,0,11,6,5,0,1,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html":[9,0,0,11,6,5,0,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html#ace5d9be9f19e33ff87071acc14b67e31":[9,0,0,11,6,5,0,2,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1EmptyAuxiliaryData.html":[9,0,0,11,6,5,0,0],
-"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,11,6,57],
-"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,11,6,61,0]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html#a3f64088e6de7cc269ab463ff687846ef":[9,0,0,11,6,5,97,0]
 };

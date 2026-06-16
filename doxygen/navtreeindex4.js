@@ -1,5 +1,9 @@
 var NAVTREEINDEX4 =
 {
+"classAntares_1_1Data_1_1DataSeriesHydro.html#a9059611c7cee449d1916ad462cd60536":[9,0,0,3,63,1],
+"classAntares_1_1Data_1_1DataSeriesHydro.html#a93a0b52ec251f04201b93278b6e644b1":[9,0,0,3,63,18],
+"classAntares_1_1Data_1_1DataSeriesHydro.html#a99d584445157a6e0de16f55d063f2519":[9,0,0,3,63,12],
+"classAntares_1_1Data_1_1DataSeriesHydro.html#a9f6974064f28b7366db5b602b7d82d2e":[9,0,0,3,63,13],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#ab86670851635b2ec0fb0a6bec0833043":[9,0,0,3,63,4],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#ac19100162bc273064d4f906c0344c2c9":[9,0,0,3,63,11],
 "classAntares_1_1Data_1_1DataSeriesHydro.html#aea8f189d6acbbb0466c7486ae273d5cd":[9,0,0,3,63,7],
@@ -245,9 +249,5 @@ var NAVTREEINDEX4 =
 "classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4":[9,0,0,3,64,0,1],
 "classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646":[9,0,0,3,64,0,0],
 "classAntares_1_1Data_1_1RenewableCluster.html#a765f7b3f2c8fe3031bf05aceea780567":[9,0,0,3,64,4],
-"classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef":[9,0,0,3,64,2],
-"classAntares_1_1Data_1_1RenewableCluster.html#ab4c1cbf12ad7f61a33ddebb3b38327fd":[9,0,0,3,64,6],
-"classAntares_1_1Data_1_1RenewableCluster.html#addf0cb04b60edf3f8bb3b4223eeb7806":[9,0,0,3,64,5],
-"classAntares_1_1Data_1_1RenewableClusterList.html":[9,0,0,3,65],
-"classAntares_1_1Data_1_1RenewableClusterList.html#a1fec25d9b00db96176d9b552aed9754b":[9,0,0,3,65,0]
+"classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef":[9,0,0,3,64,2]
 };

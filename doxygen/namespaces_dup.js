@@ -634,7 +634,9 @@ var namespaces_dup =
             [ "min", "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4bad8bd79cc131920d5de426f914d17405a", null ],
             [ "pow", "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4ba30d7e0494351def45591fccb21d3510b", null ],
             [ "floor", "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4ba7515875808ef6219fa6fd725e2105588", null ],
-            [ "ceil", "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4ba6fee666d16bfa3ecbc516290cb59aa0a", null ]
+            [ "ceil", "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4ba6fee666d16bfa3ecbc516290cb59aa0a", null ],
+            [ "round", "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4ba9bbd993d9da7df60b3fd4a4ed721b082", null ],
+            [ "abs", "FunctionNode_8h.html#a75b846a25e4b7c499da5bd4f08cebf4baf9ac6b05beccb0fc5837b6a7fef4c1d3", null ]
           ] ],
           [ "FunctionNodeTypeToString", "FunctionNode_8cpp.html#a87008388efd3532f7898c5b9e4759d78", null ],
           [ "requires", "ParentNode_8h.html#adf0eb6c8fc10070cdb224c79244e5227", null ],
@@ -690,10 +692,12 @@ var namespaces_dup =
           [ "resolveTimeSumBound", "TimeSumUtils_8h.html#a3acb796eb416a82bbb2c64e246d46cb9", null ],
           [ "trimAndFormat", "PrintVisitor_8h.html#ab5ded562bde75e4a3dd84cca95675982", null ],
           [ "tryVisit", "NodeVisitor_8h.html#a1223b5e8ad3c7f529adba9a8c80778d2", null ],
+          [ "AbsOp", "EvalVisitor_8cpp.html#aec4a0d5626ba5e36855f253ebc20ea57", null ],
           [ "CeilOp", "EvalVisitor_8cpp.html#ab0a99a93aef08bc6b32b00d2741dad73", null ],
           [ "FloorOp", "EvalVisitor_8cpp.html#ae942321c4d48027485a79d3cbe628204", null ],
           [ "HasSizeMethod", "HelpVisitNode_8h.html#aabd5de1611ffd4aa7bbe6ede8605d349", null ],
-          [ "PowerOp", "EvalVisitor_8cpp.html#a0aa74d056a1b09af2552b08af3af0265", null ]
+          [ "PowerOp", "EvalVisitor_8cpp.html#a0aa74d056a1b09af2552b08af3af0265", null ],
+          [ "RoundOp", "EvalVisitor_8cpp.html#ad315dc2dc78418c696718e0245d2b268", null ]
         ] ],
         [ "IName", "classAntares_1_1Expressions_1_1IName.html", "classAntares_1_1Expressions_1_1IName" ],
         [ "NodeRegistry", "classAntares_1_1Expressions_1_1NodeRegistry.html", "classAntares_1_1Expressions_1_1NodeRegistry" ],

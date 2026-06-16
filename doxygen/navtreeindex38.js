@@ -1,5 +1,13 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[9,0,0,11,6,5,3],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html":[9,0,0,11,6,5,0,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html#ab8ce822182052e00299c20a6042d1e5e":[9,0,0,11,6,5,0,1,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html":[9,0,0,11,6,5,0,2],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType_3_01TraitsT_00_01s7ae8a9e1ef354901ff27fa473e8a5fe0.html#ace5d9be9f19e33ff87071acc14b67e31":[9,0,0,11,6,5,0,2,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1EmptyAuxiliaryData.html":[9,0,0,11,6,5,0,0],
+"structAntares_1_1Solver_1_1Variable_1_1Empty.html":[9,0,0,11,6,57],
+"structAntares_1_1Solver_1_1Variable_1_1IVariable_1_1Statistics.html":[9,0,0,11,6,61,0],
 "structAntares_1_1Solver_1_1Variable_1_1JoinAll_1_1Statistics.html":[9,0,0,11,6,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Links_1_1Statistics.html":[9,0,0,11,6,14,0],
 "structAntares_1_1Solver_1_1Variable_1_1PrecisionToPrintfFormat.html":[9,0,0,11,6,46],
@@ -241,13 +249,5 @@ var NAVTREEINDEX38 =
 "structCAPACITY__RESERVATION.html#aba8ec1d668654bcbd311639efb87c9b5":[9,0,56,8],
 "structCAPACITY__RESERVATION.html#ad5ddf7f9eb70e107d5879c14f628f7aa":[9,0,56,9],
 "structCAPACITY__RESERVATION.html#af192634187334aa0ea2c26039d5375f5":[9,0,56,1],
-"structCONSOMMATIONS__ABATTUES.html":[9,0,66],
-"structCONSOMMATIONS__ABATTUES.html#ad366306eea2a5f98fca8b256db3ffd6f":[9,0,66,0],
-"structCONTRAINTES__COUPLANTES.html":[9,0,76],
-"structCONTRAINTES__COUPLANTES.html#a17c2f8e10e65a0368c874c451ed8a464":[9,0,76,8],
-"structCONTRAINTES__COUPLANTES.html#a1fc1d4a30ff4c32b41bec683132fe8da":[9,0,76,3],
-"structCONTRAINTES__COUPLANTES.html#a2f19770a600ff0c57b8a6cdf40dc8ad5":[9,0,76,10],
-"structCONTRAINTES__COUPLANTES.html#a33f9a1b3b619e8e82eb5a6f37f6a3440":[9,0,76,0],
-"structCONTRAINTES__COUPLANTES.html#a4fb9f18e9db16295adb6d22a8e5d3039":[9,0,76,7],
-"structCONTRAINTES__COUPLANTES.html#a85a9278e6b5d72c76d29a7926d510b11":[9,0,76,12]
+"structCONSOMMATIONS__ABATTUES.html":[9,0,66]
 };

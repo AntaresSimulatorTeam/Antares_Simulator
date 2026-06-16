@@ -1,5 +1,9 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a01a411d5387a228f6f225a8c46011f13":[9,0,0,11,6,11,22],
+"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a0f51290593806b27a159e3ee414bce91":[9,0,0,11,6,11,10],
+"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a1152c97961f8bdda528e3d0277e8722b":[9,0,0,11,6,11,5],
+"classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a123a92b4b2ca4abfb82fe5750e1dbdfb":[9,0,0,11,6,11,1],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a1d623d43ec109899ff494a1ee798c5b3":[9,0,0,11,6,11,20],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a280e545d3d52d5a1eb9d48f1ee454a0a":[9,0,0,11,6,11,27],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a33a0ab773552bf01dc82297003eb595b":[9,0,0,11,6,11,4],
@@ -245,9 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a060214714bbba898fad16b9b71442308":[9,0,0,11,6,5,61,2],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a3cc51f2287d46ba5fec169871266f246":[9,0,0,11,6,5,61,0],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a5fde6026e5fb0b415425c4627e04cfe2":[9,0,0,11,6,5,61,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a82d28aa599b00aeb52b305432a68b933":[9,0,0,11,6,5,61,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#ac37a84b2a0f736ff35b548d418e556dc":[9,0,0,11,6,5,61,3],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#af18d138570a5674313d4871c6e44c506":[9,0,0,11,6,5,61,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgUsualDataFactory.html":[9,0,0,11,6,5,62],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgUsualDataFactory.html#afa487290ac52e7e1cebc93bed313a00c":[9,0,0,11,6,5,62,0]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a82d28aa599b00aeb52b305432a68b933":[9,0,0,11,6,5,61,5]
 };

@@ -1,5 +1,15 @@
 var NAVTREEINDEX40 =
 {
+"structDEMAND__FLEX__DOWN__POOL.html":[9,0,102],
+"structDEMAND__FLEX__DOWN__POOL.html#a4b91aa5f6b0605c637f074c435c46bdd":[9,0,102,0],
+"structDEMAND__FLEX__UP__POOL.html":[9,0,103],
+"structDEMAND__FLEX__UP__POOL.html#af984221093cc2b5d97fe9b7ca6bc1562":[9,0,103,0],
+"structDEMAND__MARKET__POOL.html":[9,0,104],
+"structDEMAND__MARKET__POOL.html#a39a0643c2eee267c6ee3a987506a5a0c":[9,0,104,0],
+"structDONNEES__ANNUELLES.html":[9,0,105],
+"structDONNEES__ANNUELLES.html#a0a55d18ec598c1bc4c7244c68e8d0acf":[9,0,105,7],
+"structDONNEES__ANNUELLES.html#a285c24ba96771edd7ad6a0f9d6c709bb":[9,0,105,14],
+"structDONNEES__ANNUELLES.html#a32fafb68a12664845fe25df8a44d70b8":[9,0,105,3],
 "structDONNEES__ANNUELLES.html#a3a6f462e2ad6a15754861d3876db74a3":[9,0,105,5],
 "structDONNEES__ANNUELLES.html#a3e3060acaf9b0174f806cc0cb8cbeae6":[9,0,105,2],
 "structDONNEES__ANNUELLES.html#a46b34b16e56635871a41de180011cb60":[9,0,105,9],
@@ -239,15 +249,5 @@ var NAVTREEINDEX40 =
 "structFixture_1_1Link.html#af0b5f8052ca2570165cbad0885f467a9":[9,0,130,1,1],
 "structFixture_1_1Renewable.html":[9,0,130,2],
 "structFixture_1_1Renewable.html#a164aa89da7dc27649540bc1876d68a0c":[9,0,130,2,1],
-"structFixture_1_1Renewable.html#a8f6e9698637c7c2faa3dcc29aada526d":[9,0,130,2,0],
-"structFixture_1_1STSAdditionalConstraints.html":[9,0,130,3],
-"structFixture_1_1STSAdditionalConstraints.html#a6d9bd1fa8d8c33b8e9d3ec2416d55af5":[9,0,130,3,2],
-"structFixture_1_1STSAdditionalConstraints.html#aabbf8d25963c82abee981f2c1574e42e":[9,0,130,3,1],
-"structFixture_1_1STSAdditionalConstraints.html#ac8db8b3f561a8412c39bbde053028562":[9,0,130,3,0],
-"structFixture_1_1STSInflows.html":[9,0,130,4],
-"structFixture_1_1STSInflows.html#a0148d9a54c76aea1d11da44cc0882431":[9,0,130,4,1],
-"structFixture_1_1STSInflows.html#ad926a89cd506c6220494720d540f8dd8":[9,0,130,4,0],
-"structFixture_1_1STSInflows.html#ae11aaaa7ca63398e2207bbafb017f974":[9,0,130,4,2],
-"structFixture_1_1Thermal.html":[9,0,130,5],
-"structFixture_1_1Thermal.html#a1be1f508074a7dd41bff86155d9e3aee":[9,0,130,5,0]
+"structFixture_1_1Renewable.html#a8f6e9698637c7c2faa3dcc29aada526d":[9,0,130,2,0]
 };

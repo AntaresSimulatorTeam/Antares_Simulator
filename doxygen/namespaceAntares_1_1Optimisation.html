@@ -243,12 +243,24 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><b>checkExpressionIsCons
 <tr class="memitem:ab95b88008f45058e19a87a5cfb056c88"><td class="memItemLeft" align="right" valign="top"><a id="ab95b88008f45058e19a87a5cfb056c88"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>checkExpressionIsConstantForCeil</b> = [](const auto&amp; expr) { checkIsConstant(&quot;ceil&quot;, expr); }</td></tr>
 <tr class="separator:ab95b88008f45058e19a87a5cfb056c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9c140c6030f31a9860d99ad246316a7"><td class="memItemLeft" align="right" valign="top"><a id="ac9c140c6030f31a9860d99ad246316a7"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>checkExpressionIsConstantForRound</b> = [](const auto&amp; expr) { checkIsConstant(&quot;round&quot;, expr); }</td></tr>
+<tr class="separator:ac9c140c6030f31a9860d99ad246316a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a999839dc33cd605f1533771de20adb37"><td class="memItemLeft" align="right" valign="top"><a id="a999839dc33cd605f1533771de20adb37"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>checkExpressionIsConstantForAbs</b> = [](const auto&amp; expr) { checkIsConstant(&quot;abs&quot;, expr); }</td></tr>
+<tr class="separator:a999839dc33cd605f1533771de20adb37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cc5a5b73fb20f5fb61391dcbe964653"><td class="memItemLeft" align="right" valign="top"><a id="a2cc5a5b73fb20f5fb61391dcbe964653"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>floorExpression</b> = [](auto&amp; expr) { expr.constant(std::floor(expr.constant())); }</td></tr>
 <tr class="separator:a2cc5a5b73fb20f5fb61391dcbe964653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2431ea743725913aeb276c0c02ac662"><td class="memItemLeft" align="right" valign="top"><a id="aa2431ea743725913aeb276c0c02ac662"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>ceilExpression</b> = [](auto&amp; expr) { expr.constant(std::ceil(expr.constant())); }</td></tr>
 <tr class="separator:aa2431ea743725913aeb276c0c02ac662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6535d26c2d4015da96fe46d611bdcfc2"><td class="memItemLeft" align="right" valign="top"><a id="a6535d26c2d4015da96fe46d611bdcfc2"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>roundExpression</b> = [](auto&amp; expr) { expr.constant(std::round(expr.constant())); }</td></tr>
+<tr class="separator:a6535d26c2d4015da96fe46d611bdcfc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4bca8e9244fcacc809474c5f02812b5"><td class="memItemLeft" align="right" valign="top"><a id="af4bca8e9244fcacc809474c5f02812b5"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>absExpression</b> = [](auto&amp; expr) { expr.constant(std::abs(expr.constant())); }</td></tr>
+<tr class="separator:af4bca8e9244fcacc809474c5f02812b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab6a6f7cb1e1304c605d03ef54c82d3c"><td class="memItemLeft" align="right" valign="top"><a id="aab6a6f7cb1e1304c605d03ef54c82d3c"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>max_element_of_vector</b> = [](const auto&amp; v) { return *std::ranges::max_element(v); }</td></tr>
 <tr class="separator:aab6a6f7cb1e1304c605d03ef54c82d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
