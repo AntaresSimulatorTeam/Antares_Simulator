@@ -1,0 +1,134 @@
+name: Warning inventory (temporary)
+
+# TEMPORARY workflow: builds the whole project with Clang, warnings NON-fatal
+# and NOT promoted to errors, keep-going, and prints a deduplicated + categorized
+# inventory of all compiler warnings. Used to plan the -Werror cleanup batches.
+# Delete once the inventory has been collected.
+
+on:
+  push:
+    branches:
+    - tmp/warning-inventory
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+  PYTHON_VERSION: "3.12"
+  CLANG_VERSION: "22"
+
+jobs:
+  inventory:
+    name: Collect warnings
+    runs-on: ubuntu-22.04
+    env:
+      os: ubuntu-22.04
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Install up-to-date Clang ${{ env.CLANG_VERSION }}
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh ${{ env.CLANG_VERSION }}
+        echo "CC=clang-${{ env.CLANG_VERSION }}" >> $GITHUB_ENV
+        echo "CXX=clang++-${{ env.CLANG_VERSION }}" >> $GITHUB_ENV
+
+    - name: Install VCPKG
+      run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+    - name: Restore vcpkg binary dir from cache
+      uses: actions/cache/restore@v5
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-clang-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        restore-keys: vcpkg-cache-ubuntu-clang-
+
+    - name: Install APT dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ccache uuid-dev xsltproc
+
+    - name: Config OR-Tools URL
+      run: |
+        echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
+
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        os: ${{ env.os }}
+        ortools-url: ${{ env.ORTOOLS_URL }}
+        ortools-dir: ${{ env.ORTOOLS_DIR }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip3 install -r src/tests/examples/requirements.txt
+
+    - name: Configure (warnings non-fatal, NOT errors)
+      run: |
+        cmake -B _build -S . \
+        -DCMAKE_C_COMPILER=clang-${{ env.CLANG_VERSION }} \
+        -DCMAKE_CXX_COMPILER=clang++-${{ env.CLANG_VERSION }} \
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+        -DVCPKG_TARGET_TRIPLET=x64-linux \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DBUILD_TESTING=ON \
+        -DBUILD_TOOLS=ON \
+        -DCMAKE_CXX_FLAGS="-Wno-fatal-errors" \
+        -DCMAKE_C_FLAGS="-Wno-fatal-errors" \
+        -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+        -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
+
+    - name: Build (keep going, capture warnings)
+      run: |
+        set +e
+        cmake --build _build -j$(nproc) -- -k 2>&1 | tee build_full.log
+        echo "build exit: ${PIPESTATUS[0]}"
+
+    - name: Summarize warnings
+      if: always()
+      run: |
+        echo "######## WARNING INVENTORY ########"
+        # Keep only our own sources (drop vcpkg deps and system headers noise),
+        # normalize the absolute workspace prefix to a repo-relative path.
+        grep -E "warning:" build_full.log \
+          | sed -E "s#${GITHUB_WORKSPACE}/##g" \
+          > warns_raw.txt || true
+        # Unique warning lines (same warning emitted from many TUs collapses)
+        sort -u warns_raw.txt > warns_uniq.txt
+
+        echo ""
+        echo "===== COUNTS PER WARNING FLAG (all occurrences) ====="
+        grep -oE "\[-W[A-Za-z0-9_-]+\]" warns_raw.txt | sort | uniq -c | sort -rn
+
+        echo ""
+        echo "===== UNIQUE WARNINGS PER FLAG x TOP-LEVEL DIR ====="
+        # crude module = first 3 path segments
+        while IFS= read -r line; do
+          flag=$(echo "$line" | grep -oE "\[-W[A-Za-z0-9_-]+\]" | head -1)
+          path=$(echo "$line" | grep -oE "^[^:]+" | head -1)
+          mod=$(echo "$path" | cut -d/ -f1-3)
+          echo "${flag:-[none]}|${mod}"
+        done < warns_uniq.txt | sort | uniq -c | sort -rn
+
+        echo ""
+        echo "Total raw warning lines: $(wc -l < warns_raw.txt)"
+        echo "Total unique warning lines: $(wc -l < warns_uniq.txt)"
+
+    - name: Upload warning logs
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: warning-inventory
+        path: |
+          build_full.log
+          warns_raw.txt
+          warns_uniq.txt
