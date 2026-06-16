@@ -288,21 +288,11 @@ jobs:
           cp ${FIXED_PATH}/install/bin/*.dll* solver/Release
           zip -r antares-solver_windows.zip solver/Release/antares-8.8-solver.exe solver/Release/*.dll
 
-      - name: NSIS Installer creation
-        shell: bash
-        run: |
-          rm -rf src/tests/resources/Antares_Simulator_Tests
-          cd _build
-          cpack -GNSIS
-          export NSIS_NAME=$(ls *.exe)
-          echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
-
-      - name: Upload NSIS log on failure
-        if: ${{ failure() }}
+      - name: Installer upload
         uses: actions/upload-artifact@v4
         with:
-          name: NSISError.log
-          path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
+          name: antares-solver
+          path: _build/antares-solver_windows.zip
 
       - name: .zip creation
         shell: bash
@@ -310,12 +300,6 @@ jobs:
           cd _build
           FIXED_PATH=${ORTOOLS_DIR//\\//}
           cpack -G ZIP -D CPACK_INSTALLED_DIRECTORIES="${FIXED_PATH}/install/bin;bin"
-
-      - name: Installer upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: installer
-          path: _build/${{env.NSIS_NAME}}
 
       - name: Publish assets
         if: ${{ env.IS_RELEASE == 'true' }}
