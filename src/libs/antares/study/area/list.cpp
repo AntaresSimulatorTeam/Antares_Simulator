@@ -41,6 +41,21 @@ static void toLower(std::string& str)
     }
 }
 
+template<typename T>
+static bool tryParseYamlField(const YAML::Node& node, T& value, const std::string& warningMsg)
+{
+    try
+    {
+        value = node.as<T>();
+        return true;
+    }
+    catch (const YAML::Exception&)
+    {
+        logs.warning() << warningMsg;
+        return false;
+    }
+}
+
 bool readReservesAreaParameters(Area& area, const YAML::Node& params)
 {
     bool ret = true;
@@ -51,60 +66,41 @@ bool readReservesAreaParameters(Area& area, const YAML::Node& params)
 
         if (key == "energy-activation-ratio-up")
         {
-            try
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up,
+                  area.name + " : invalid maximum energy activation ratio for UP reserves"))
             {
-                area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.up
-                  = param.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name
-                               << " : invalid maximum energy activation ratio for UP reserves";
                 ret = false;
             }
         }
         else if (key == "energy-activation-ratio-down")
         {
-            try
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down,
+                  area.name + " : invalid maximum energy activation ratio for DOWN reserves"))
             {
-                area.allCapacityReservations.value().maxGlobalEnergyActivationRatio.down
-                  = param.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name
-                               << " : invalid maximum energy activation ratio for "
-                                  "DOWN reserves";
                 ret = false;
             }
         }
         else if (key == "reference-activation-duration-up")
         {
-            try
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.up,
+                  area.name + " : invalid reference energy activation duration for UP reserves"))
             {
-                area.allCapacityReservations.value().referenceGlobalActivationDuration.up
-                  = param.second.as<int>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name
-                               << " : invalid reference energy activation duration "
-                                  "for UP reserves";
                 ret = false;
             }
         }
         else if (key == "reference-activation-duration-down")
         {
-            try
+            if (!tryParseYamlField(
+                  param.second,
+                  area.allCapacityReservations.value().referenceGlobalActivationDuration.down,
+                  area.name + " : invalid reference energy activation duration for DOWN reserves"))
             {
-                area.allCapacityReservations.value().referenceGlobalActivationDuration.down
-                  = param.second.as<int>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name
-                               << " : invalid reference energy activation duration "
-                                  "for DOWN reserves";
                 ret = false;
             }
         }
@@ -123,13 +119,10 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
     bool ret = true;
 
     std::string reserveName;
-    try
+    if (!tryParseYamlField(reserveNode["name"],
+                           reserveName,
+                           area.name + " : reserve missing required 'name' field"))
     {
-        reserveName = reserveNode["name"].as<std::string>();
-    }
-    catch (const YAML::Exception&)
-    {
-        logs.error() << area.name << " : reserve missing required 'name' field";
         return false;
     }
 
@@ -154,90 +147,73 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
         }
         if (key == "failure-cost")
         {
-            try
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.unsuppliedCost,
+                                   area.name + " : invalid failure cost for reserve "
+                                     + reserveName))
             {
-                capacityReservation.unsuppliedCost = entry.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name << " : invalid failure cost for reserve "
-                               << reserveName;
                 ret = false;
             }
         }
         else if (key == "spillage-cost")
         {
-            try
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.spillageCost,
+                                   area.name + " : invalid spillage cost for reserve "
+                                     + reserveName))
             {
-                capacityReservation.spillageCost = entry.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name << " : invalid spillage cost for reserve "
-                               << reserveName;
                 ret = false;
             }
         }
         else if (key == "power-activation-ratio")
         {
-            try
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.powerActivationRatio,
+                                   area.name + " : invalid maximum activation ratio for reserve "
+                                     + reserveName))
             {
-                capacityReservation.powerActivationRatio = entry.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name << " : invalid maximum activation ratio for reserve "
-                               << reserveName;
                 ret = false;
             }
         }
         else if (key == "energy-activation-ratio")
         {
-            try
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.energyActivationRatio,
+                                   area.name + " : invalid energy activation ratio for reserve "
+                                     + reserveName))
             {
-                capacityReservation.energyActivationRatio = entry.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name << " : invalid energy activation ratio for reserve "
-                               << reserveName;
                 ret = false;
             }
         }
         else if (key == "reference-activation-duration")
         {
-            try
+            if (!tryParseYamlField(entry.second,
+                                   capacityReservation.referenceActivationDuration,
+                                   area.name
+                                     + " : invalid reference activation duration for reserve "
+                                     + reserveName))
             {
-                capacityReservation.referenceActivationDuration = entry.second.as<int>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << area.name
-                               << " : invalid reference activation duration for reserve "
-                               << reserveName;
                 ret = false;
             }
         }
         else if (key == "type")
         {
-            try
+            std::string value;
+            if (!tryParseYamlField(entry.second,
+                                   value,
+                                   area.name + " : invalid type for reserve " + reserveName))
             {
-                auto value = entry.second.as<std::string>();
-                if (value == "up")
-                {
-                    capacityReservation.type = ReserveType::UP;
-                }
-                else if (value == "down")
-                {
-                    capacityReservation.type = ReserveType::DOWN;
-                }
-                else
-                {
-                    logs.warning() << area.name << " : invalid type for reserve " << reserveName;
-                    ret = false;
-                }
+                ret = false;
             }
-            catch (const YAML::Exception&)
+            else if (value == "up")
+            {
+                capacityReservation.type = ReserveType::UP;
+            }
+            else if (value == "down")
+            {
+                capacityReservation.type = ReserveType::DOWN;
+            }
+            else
             {
                 logs.warning() << area.name << " : invalid type for reserve " << reserveName;
                 ret = false;
