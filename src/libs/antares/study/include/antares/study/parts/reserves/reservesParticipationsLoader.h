@@ -193,6 +193,8 @@ public:
             std::string clusterName = Derived::extractName(entry);
             if (clusterName.empty())
             {
+                logs.error() << area.name
+                             << " : cluster/storage name is missing in a participation entry";
                 continue;
             }
 
@@ -548,6 +550,8 @@ public:
             }
             if (symGroup.size() < 2)
             {
+                logs.error() << area.name
+                             << " : symmetry group must have at least two reserves";
                 continue;
             }
             if (area.hydro.reserveParticipationContainer)
