@@ -36,6 +36,11 @@ def run_antares_modeler_parquet(context):
     run_modeler(context)
 
 
+@when("I run antares problem generator")
+def run_antares_problem_generator(context):
+    run_problem_generator(context)
+
+
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
     assert_double_close(value, context.simu_table.get_objective_value(), 1e-5)
@@ -144,6 +149,39 @@ def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
     if getattr(context, "outputFormat", OutputFormat.CSV) == OutputFormat.PARQUET:
         command.append("--parquet")
+    return command
+
+
+def run_problem_generator(context):
+    command = build_antares_problem_generator_command(context)
+    print(f"Running command: {command}")
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = process.communicate()
+    if out:
+        context.logs_out = out.decode("utf-8")
+    else:
+        context.logs_out = ""
+    if err:
+        context.logs_err = err.decode("utf-8")
+    else:
+        context.logs_err = ""
+
+    if process.returncode != 0:
+        print("*********************** Begin stdout ***********************")
+        print(out.replace(b'\r\n', b'\n').decode('utf-8'))
+        print("*********************** End stdout ***********************")
+
+        print("*********************** Begin stderr ***********************")
+        print(err.replace(b'\r\n', b'\n').decode('utf-8'))
+        print("*********************** End stderr ***********************")
+    else:
+        context.output_path = os.path.join(context.study_path, "output")
+        context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
+    context.return_code = process.returncode
+
+
+def build_antares_problem_generator_command(context):
+    command = [context.config.userdata["antares-problem-generator"], str(context.study_path)]
     return command
 
 
