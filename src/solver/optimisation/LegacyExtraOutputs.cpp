@@ -95,10 +95,11 @@ void AddAreaIsLossOfLoad(SimulationTable& simulationTable,
                          const FillContext& fillContext,
                          unsigned currentBlock)
 {
+    constexpr double lossOfLoadthreshold = 0.5;
     AddExtraOutputEntry(simulationTable,
                         "is_loss_of_load",
                         info,
-                        solutionValues[index] > 0.5 ? 1. : 0.,
+                        solutionValues[index] > lossOfLoadthreshold ? 1. : 0.,
                         fillContext,
                         currentBlock);
 }
