@@ -1,6 +1,6 @@
 project(AntaresAnalyzer)
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14)
 
 include(../cmake/messages.cmake)
 OMESSAGE("antares-analyzer")
