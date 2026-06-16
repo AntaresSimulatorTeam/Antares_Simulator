@@ -5,10 +5,10 @@
 #include <fstream>
 #include <ranges>
 #include <string>
+#include <yaml-cpp/yaml.h>
 
 #include <boost/algorithm/string/trim.hpp>
 
-#include <yaml-cpp/yaml.h>
 #include <yuni/core/string.h>
 
 #include <antares/inifile/inifile.h>
@@ -253,7 +253,7 @@ bool readReserveParameters(const fs::path& folderInput, Area& area, const YAML::
     fs::path filePath = folderInput / "reserves" / area.id / (capacityReservation.id() + ".txt");
     capacityReservation.loadNeedFromFile(filePath);
     area.allCapacityReservations.value().areaCapacityReservations.emplace(capacityReservation.id(),
-                                                                           capacityReservation);
+                                                                          capacityReservation);
     return ret;
 }
 

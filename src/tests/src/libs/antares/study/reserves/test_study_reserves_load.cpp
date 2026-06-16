@@ -20,9 +20,9 @@
  */
 
 #define BOOST_TEST_MODULE study
+#include <algorithm>
 #include <files-system.h>
 #include <filesystem>
-#include <algorithm>
 #include <unit_test_utils.h>
 
 #include <boost/test/unit_test.hpp>
@@ -722,8 +722,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Only_One_Symmetry
     file << "      - reserves: [ReserveUp]\n";
     file.close();
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(
-      getErrors().contains("A : symmetry group must have at least two reserves"));
+    BOOST_CHECK(getErrors().contains("A : symmetry group must have at least two reserves"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Triple_Symmetry,
@@ -813,8 +812,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Symmetry_S
     file << "      - reserves: [ReserveUp, ReserveDown]\n";
     file.close();
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(
-      getErrors().contains("A : symmetry group must have at least two reserves"));
+    BOOST_CHECK(getErrors().contains("A : symmetry group must have at least two reserves"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Cluster_Participation_No_Init,
@@ -1209,11 +1207,12 @@ BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_ini, OneProblemWithoutReservesOneAr
 
     BOOST_CHECK_EQUAL(getErrors().size(), 2);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
-    BOOST_CHECK(std::any_of(getErrors().begin(), getErrors().end(), [](const std::string& msg) {
-        return msg.find("YAML content") != std::string::npos;
-    }));
+    BOOST_CHECK(std::any_of(getErrors().begin(),
+                            getErrors().end(),
+                            [](const std::string& msg)
+                            { return msg.find("YAML content") != std::string::npos; }));
     BOOST_CHECK(getErrors().contains("Invalid YAML file : "
-                                      + (studyPath / "reserves" / "a" / "reserves.yml").string()));
+                                     + (studyPath / "reserves" / "a" / "reserves.yml").string()));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters, OneProblemWithoutReservesOneAreaWithLogger)

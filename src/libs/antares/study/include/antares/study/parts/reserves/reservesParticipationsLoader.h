@@ -3,7 +3,6 @@
 #pragma once
 
 #include <fstream>
-
 #include <yaml-cpp/yaml.h>
 
 #include <antares/study/area/area.h>
@@ -154,7 +153,8 @@ public:
                 }
                 catch (const YAML::Exception&)
                 {
-                    logs.error() << area.name << " : missing or invalid reserve name in certification";
+                    logs.error() << area.name
+                                 << " : missing or invalid reserve name in certification";
                     continue;
                 }
 
@@ -180,7 +180,8 @@ public:
                 }
                 if (symGroup.size() < 2)
                 {
-                    logs.error() << area.name << " : symmetry group must have at least two reserves";
+                    logs.error() << area.name
+                                 << " : symmetry group must have at least two reserves";
                     continue;
                 }
                 auto& container = Derived::getContainer(cluster);
@@ -234,8 +235,7 @@ public:
         }
     }
 
-    static void readProperties(const YAML::Node& cert,
-                               ThermalClusterReserveParticipation& rp)
+    static void readProperties(const YAML::Node& cert, ThermalClusterReserveParticipation& rp)
     {
         for (const auto& prop: cert)
         {
@@ -378,8 +378,7 @@ public:
         }
     }
 
-    static void readProperties(const YAML::Node& cert,
-                               StorageClusterReserveParticipation& rp)
+    static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
         for (const auto& prop: cert)
         {
@@ -550,14 +549,14 @@ public:
             }
             else
             {
-                logs.error() << "Area " << area.name
-                             << ", hydro : trying to add symmetries without any reserve participation";
+                logs.error()
+                  << "Area " << area.name
+                  << ", hydro : trying to add symmetries without any reserve participation";
             }
         }
     }
 
-    static void readProperties(const YAML::Node& cert,
-                               StorageClusterReserveParticipation& rp)
+    static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
         for (const auto& prop: cert)
         {
