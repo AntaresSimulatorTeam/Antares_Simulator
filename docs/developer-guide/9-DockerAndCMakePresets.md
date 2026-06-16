@@ -100,7 +100,8 @@ cmake --list-presets
 ## 3. Using CLion as an IDE
 
 CLion consumes the same CMake presets described above, and can build either with a local toolchain or through a Docker
-toolchain (see [section 4](#4-combining-a-docker-toolchain-and-presets-in-clion)). To work on Antares Simulator in CLion:
+toolchain (see [section 4](#4-combining-a-docker-toolchain-and-presets-in-clion)). To work on Antares Simulator in
+CLion:
 
 - Open the `src/` folder (the CMake project root) in CLion.
 - Choose a toolchain under **File > Settings > Build, Execution, Deployment > Toolchains** — a local toolchain, or a
@@ -131,7 +132,8 @@ documentation: [Create a Docker toolchain](https://www.jetbrains.com/help/clion/
 
 - Go to **File > Settings > Build, Execution, Deployment > Toolchains**.
 - Click the **+** button and select **Docker**.
-- Choose the Docker image you want to use (e.g., `antares/clang:latest`, built in [section 1](#1-using-a-docker-image-as-a-toolchain)).
+- Choose the Docker image you want to use (e.g., `antares/clang:latest`, built
+  in [section 1](#1-using-a-docker-image-as-a-toolchain)).
 - Set up the CMake, C, and C++ compilers as detected in the container.
 - Set the Make/Ninja executable if needed.
 
@@ -161,6 +163,8 @@ reproducible environment and leveraging build caching for fast iteration.
 
 ### How `CMakeUserPresetsExample.json` is used
 
+A example CMake preset is provided as `docs/developer-guide/CMakeUserPresetsExample.json`. You may copy it to the root
+of the repository and rename it to `CMakeUserPresets.json`.
 The `configurePresets` section in `CMakeUserPresetsExample.json` sets up environment variables and cache paths to
 optimize builds inside Docker:
 
