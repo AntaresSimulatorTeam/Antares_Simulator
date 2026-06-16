@@ -18,6 +18,7 @@
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
@@ -73,10 +74,11 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
     const unsigned int block = currentBlock + 1;
 
-    // LegacyVariablesInfo and X are both sized to NombreDeVariables in resizeProbleme,
-    // so indexing by [0, NombreDeVariables) below is always in bounds.
+    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables in
+    // resizeProbleme, so indexing by [0, NombreDeVariables) below is always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables));
+           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
+           && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
@@ -100,6 +102,13 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                                   .value = problem.X[static_cast<std::size_t>(index)],
                                   .status = std::nullopt});
     }
+
+    AddLegacyExtraOutputs(simulationTable,
+                          problem.LegacyVariablesInfo,
+                          problem.X,
+                          problem.CoutLineaire,
+                          fillContext,
+                          currentBlock);
 }
 } // namespace
 
