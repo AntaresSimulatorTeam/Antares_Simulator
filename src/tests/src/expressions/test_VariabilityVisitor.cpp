@@ -267,6 +267,42 @@ BOOST_AUTO_TEST_CASE(variability_of_ceil_operator___case_varying_in_scenario_onl
                       VariabilityType::VARYING_IN_SCENARIO_ONLY);
 }
 
+BOOST_AUTO_TEST_CASE(variability_of_round_operator___case_constant)
+{
+    LiteralNode literalNode(3.7);
+    FunctionNode roundNode(FunctionNodeType::round, &literalNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&roundNode),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_round_operator___case_varying_in_scenario_only)
+{
+    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
+    FunctionNode roundNode(FunctionNodeType::round, &paramNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&roundNode),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_abs_operator___case_constant)
+{
+    LiteralNode literalNode(3.7);
+    FunctionNode absNode(FunctionNodeType::abs, &literalNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&absNode),
+                      VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+}
+
+BOOST_AUTO_TEST_CASE(variability_of_abs_operator___case_varying_in_scenario_only)
+{
+    ParameterNode paramNode = ParameterNode("param", VariabilityType::VARYING_IN_TIME_ONLY);
+    FunctionNode absNode(FunctionNodeType::abs, &paramNode);
+
+    BOOST_CHECK_EQUAL(variabilityVisitor->dispatch(&absNode),
+                      VariabilityType::VARYING_IN_SCENARIO_ONLY);
+}
+
 template<class T>
 static Node* singleNode(Registry<Node>& registry)
 {
