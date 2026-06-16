@@ -178,6 +178,8 @@ VariabilityType VariabilityVisitor::visit(const Nodes::FunctionNode* node)
     case Nodes::FunctionNodeType::min:
     case Nodes::FunctionNodeType::floor:
     case Nodes::FunctionNodeType::ceil:
+    case Nodes::FunctionNodeType::round:
+    case Nodes::FunctionNodeType::abs:
         return visitChildrenNodes(node);
     case Nodes::FunctionNodeType::pow:
         return visitPow(node);

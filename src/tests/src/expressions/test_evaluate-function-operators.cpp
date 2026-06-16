@@ -29,6 +29,8 @@ struct CreateAST
     Node* parameter(const std::string& name, const VariabilityType variability);
     Node* floor(Node* node);
     Node* ceil(Node* node);
+    Node* round(Node* node);
+    Node* abs(Node* node);
 
 private:
     Registry<Nodes::Node> registry_;
@@ -54,6 +56,16 @@ Node* CreateAST::ceil(Node* node)
     return registry_.create<FunctionNode>(FunctionNodeType::ceil, node);
 }
 
+Node* CreateAST::round(Node* node)
+{
+    return registry_.create<FunctionNode>(FunctionNodeType::round, node);
+}
+
+Node* CreateAST::abs(Node* node)
+{
+    return registry_.create<FunctionNode>(FunctionNodeType::abs, node);
+}
+
 // =================================
 // Fixture to create an EvalVisitor
 // =================================
@@ -76,7 +88,7 @@ private:
 
 CreateEvalVisitor::CreateEvalVisitor():
     linearProblem_(true),
-    fillCtx_(0, 2, 0, 2, 0),
+    fillCtx_(0, 3, 0, 3, 0),
     model_(
       createModelWithParameters({Parameter("p", TimeDependent::YES, ScenarioDependent::NO),
                                  Parameter("p-const", TimeDependent::NO, ScenarioDependent::NO)})),
@@ -89,8 +101,8 @@ CreateEvalVisitor::CreateEvalVisitor():
     scenarioGroupRepo_(makeScenarioGroupRepo(component_))
 {
     // Parameter p : make associated time-series
-    auto ts = std::make_unique<TimeSeriesSet>("p", 3);
-    ts->add({1.5, 2.3, 3.7});
+    auto ts = std::make_unique<TimeSeriesSet>("p", 4);
+    ts->add({1.5, 2.3, 3.7, -1.2});
     data_.addDataSeries(std::move(ts));
 
     // Creation of a OptimEntityContainer
@@ -117,14 +129,17 @@ BOOST_AUTO_TEST_SUITE(test_floor_operator)
 
 BOOST_FIXTURE_TEST_CASE(floor_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
 {
-    // Expression : floor(p), where p = {1.5, 2.3, 3.7}
+    // Expression : floor(p), where p = {1.5, 2.3, 3.7, -1.2}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* floor_node = floor(p);
 
     auto evalResult = evalVisitor->dispatch(floor_node);
 
-    std::vector<double> expected_result = {1., 2., 3.};
-    BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
+    std::vector<double> expected_result = {1., 2., 3., -2.};
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[0], expected_result[0]);
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[1], expected_result[1]);
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[2], expected_result[2]);
+    BOOST_CHECK_EQUAL(evalResult.valuesAsVector()[3], expected_result[3]);
 }
 
 BOOST_FIXTURE_TEST_CASE(floor_applied_to_a_literal, eval_function_op_fixture)
@@ -155,13 +170,13 @@ BOOST_AUTO_TEST_SUITE(test_ceil_operator)
 
 BOOST_FIXTURE_TEST_CASE(ceil_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
 {
-    // Expression : ceil(p), where p = {1.5, 2.3, 3.7}
+    // Expression : ceil(p), where p = {1.5, 2.3, 3.7, -1.2}
     Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
     Node* ceil_node = ceil(p);
 
     auto evalResult = evalVisitor->dispatch(ceil_node);
 
-    std::vector<double> expected_result = {2., 3., 4.};
+    std::vector<double> expected_result = {2., 3., 4., -1.};
     BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
 }
 
@@ -185,6 +200,104 @@ BOOST_FIXTURE_TEST_CASE(ceil_applied_to_a_constant_parameter, eval_function_op_f
     auto evalResult = evalVisitor->dispatch(ceil_node);
 
     BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 5.);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(test_round_operator)
+
+BOOST_FIXTURE_TEST_CASE(round_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
+{
+    // Expression : round(p), where p = {1.5, 2.3, 3.7, -1.2}
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* round_node = round(p);
+
+    auto evalResult = evalVisitor->dispatch(round_node);
+
+    std::vector<double> expected_result = {2., 2., 4., -1.};
+    BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
+}
+
+BOOST_FIXTURE_TEST_CASE(round_applied_to_a_literal_floor, eval_function_op_fixture)
+{
+    // Expression : round(2.3)
+    Node* p = literal(2.3);
+    Node* round_node = round(p);
+
+    auto evalResult = evalVisitor->dispatch(round_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 2.);
+}
+
+BOOST_FIXTURE_TEST_CASE(round_applied_to_a_literal_ceil, eval_function_op_fixture)
+{
+    // Expression : round(2.7)
+    Node* p = literal(2.7);
+    Node* round_node = round(p);
+
+    auto evalResult = evalVisitor->dispatch(round_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 3.);
+}
+
+BOOST_FIXTURE_TEST_CASE(round_applied_to_a_constant_parameter, eval_function_op_fixture)
+{
+    // Expression : round(p), where p = {4.5, 4.5, 4.5}
+    Node* p = parameter("p-const", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    Node* round_node = round(p);
+
+    auto evalResult = evalVisitor->dispatch(round_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 5.);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(test_abs_operator)
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_time_dependent_parameter, eval_function_op_fixture)
+{
+    // Expression : abs(p), where p = {1.5, 2.3, 3.7, -1.2}
+    Node* p = parameter("p", VariabilityType::VARYING_IN_TIME_ONLY);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    std::vector<double> expected_result = {1.5, 2.3, 3.7, 1.2};
+    BOOST_CHECK(evalResult.valuesAsVector() == expected_result);
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_literal_positive, eval_function_op_fixture)
+{
+    // Expression : abs(2.3)
+    Node* p = literal(2.3);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 2.3);
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_literal_negative, eval_function_op_fixture)
+{
+    // Expression : abs(-2.7)
+    Node* p = literal(-2.7);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 2.7);
+}
+
+BOOST_FIXTURE_TEST_CASE(abs_applied_to_a_constant_parameter, eval_function_op_fixture)
+{
+    // Expression : abs(p), where p = {4.5, 4.5, 4.5}
+    Node* p = parameter("p-const", VariabilityType::CONSTANT_IN_TIME_AND_SCENARIO);
+    Node* abs_node = abs(p);
+
+    auto evalResult = evalVisitor->dispatch(abs_node);
+
+    BOOST_CHECK_EQUAL(evalResult.valueAsDouble(), 4.5);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

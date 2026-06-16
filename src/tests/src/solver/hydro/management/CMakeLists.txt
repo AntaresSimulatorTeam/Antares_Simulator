@@ -1,6 +1,6 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
-set(src_solver_hydro "${CMAKE_SOURCE_DIR}/solver/hydro")
+set(src_solver_hydro "${CMAKE_SOURCE_DIR}/src/solver/hydro")
 
 # Hydro input checker
 add_boost_test(test-hydro-inputs-checker

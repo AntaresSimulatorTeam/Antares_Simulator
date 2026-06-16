@@ -90,6 +90,38 @@ Code
     1,GENERATOR,constraint_1,1,1,1,,At lower bound
 ~~~
 
+### Legacy variable name mapping
+
+In hybrid studies, the simulation table also contains the variables of the legacy (classic) solver.
+Internally these variables use historical, implementation-oriented names. To make the simulation table
+easier to read and consistent with the modeler's naming conventions, these legacy names are translated
+to standardized output names before being written to the `output` column.
+
+The translation is applied automatically; no configuration is required. Any legacy variable whose name
+is not part of the mapping is written to the `output` column unchanged.
+
+Currently mapped names, grouped by domain:
+
+| Domain             | Legacy variable name                  | `output` value       |
+|--------------------|---------------------------------------|----------------------|
+| Link               | `DirectFlow`                          | `flow`               |
+| Link               | `PositiveDirectFlow`                  | `direct_flow`        |
+| Link               | `PositiveIndirectFlow`                | `indirect_flow`      |
+| Thermal            | `DispatchableProduction`              | `generation_power`   |
+| Thermal            | `NODU`                                | `num_units_on`       |
+| Thermal            | `NumberStartingDispatchableUnits`     | `num_units_starting` |
+| Thermal            | `NumberStopingDispatchableUnits`      | `num_units_stopping` |
+| Thermal            | `NumberBreakingDownDispatchableUnits` | `num_units_falling`  |
+| Short term storage | `Injection`                           | `injection_power`    |
+| Short term storage | `Withdrawal`                          | `withdrawal_power`   |
+| Short term storage | `Level`                               | `level`              |
+| Area               | `UnsuppliedEnergy`                    | `unsupplied_energy`  |
+| Area               | `Spillage`                            | `spilled_energy`     |
+
+This mapping only affects how legacy variables are labelled in the simulation table; it does not change
+the values nor the structure of the output. The mapping is gradually extended as more legacy variables
+are exposed through the simulation table.
+
 ### Usage
 
 This output is intended for advanced users who need to analyze all variables and constraints involved in the
