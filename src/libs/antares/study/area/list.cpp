@@ -42,7 +42,7 @@ static void toLower(std::string& str)
 }
 
 template<typename T>
-static bool tryParseYamlField(const YAML::Node& node, T& value, const std::string& warningMsg)
+bool tryParseYamlField(const YAML::Node& node, T& value, const std::string& warningMsg)
 {
     try
     {
