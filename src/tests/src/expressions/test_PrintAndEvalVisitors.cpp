@@ -36,11 +36,11 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
             return 123.45; // Mock return value for testing
         }
 
-        [[nodiscard]] virtual std::span<const double> getData(
+        [[nodiscard]] std::span<const double> getData(
           [[maybe_unused]] const std::string& dataSetId,
           [[maybe_unused]] unsigned timeSeriesNumber,
           [[maybe_unused]] unsigned firstHour,
-          [[maybe_unused]] unsigned lastHour) const
+          [[maybe_unused]] unsigned lastHour) const override
         {
             static std::vector<double> data = {123.45};
             return data;
