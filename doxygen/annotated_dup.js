@@ -426,6 +426,7 @@ var annotated_dup =
         [ "LegacyFiller", "classAntares_1_1Optimization_1_1LegacyFiller.html", "classAntares_1_1Optimization_1_1LegacyFiller" ],
         [ "LegacyNameMapper", "classAntares_1_1Optimization_1_1LegacyNameMapper.html", "classAntares_1_1Optimization_1_1LegacyNameMapper" ],
         [ "LegacyOrtoolsLinearProblem", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem.html", "classAntares_1_1Optimization_1_1LegacyOrtoolsLinearProblem" ],
+        [ "LegacySolutionView", "classAntares_1_1Optimization_1_1LegacySolutionView.html", "classAntares_1_1Optimization_1_1LegacySolutionView" ],
         [ "LegacyVariableInfo", "structAntares_1_1Optimization_1_1LegacyVariableInfo.html", "structAntares_1_1Optimization_1_1LegacyVariableInfo" ],
         [ "ThermalCapacityFiller", "classAntares_1_1Optimization_1_1ThermalCapacityFiller.html", "classAntares_1_1Optimization_1_1ThermalCapacityFiller" ],
         [ "BasisStatusImpl", "classAntares_1_1Optimization_1_1BasisStatusImpl.html", "classAntares_1_1Optimization_1_1BasisStatusImpl" ],
