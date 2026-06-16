@@ -1,0 +1,184 @@
+name: Ubuntu Clang sanitizers & checks
+
+# Quality-gate workflow:
+#  - builds Antares with an up-to-date Clang
+#  - enables AddressSanitizer (ASan) + UndefinedBehaviorSanitizer (UBSan)
+#  - treats compiler warnings as errors (-Werror)
+#  - enables hardened libstdc++ assertions (_GLIBCXX_ASSERTIONS)
+#  - runs the unit & end-to-end test suite under the sanitizers
+#
+# It is intentionally separate from the main Ubuntu CI so a sanitizer/warning
+# regression is easy to spot and does not block the release pipeline.
+
+on:
+  push:
+    branches:
+    - develop
+    - feature/*
+    - features/*
+    - fix/*
+    - issue-*
+    - release/*
+    - dependabot/**
+  pull_request:
+  schedule:
+  - cron: '34 3 * * *'
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+  PYTHON_VERSION: "3.12"
+  # Up-to-date Clang installed from the official LLVM apt repository.
+  CLANG_VERSION: "18"
+
+jobs:
+
+  build:
+    name: Build & test (Clang ASan/UBSan)
+    runs-on: ubuntu-22.04
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    env:
+      os: ubuntu-22.04
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
+      # Sanitizer runtime configuration, honoured by every executable run in
+      # this job (tests included). halt_on_error guarantees a non-zero exit on
+      # the first issue so the workflow turns red.
+      ASAN_OPTIONS: "halt_on_error=1:abort_on_error=1:detect_leaks=0:strict_string_checks=1:check_initialization_order=1:detect_stack_use_after_return=1"
+      UBSAN_OPTIONS: "halt_on_error=1:print_stacktrace=1"
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Install up-to-date Clang ${{ env.CLANG_VERSION }}
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh ${{ env.CLANG_VERSION }}
+        sudo apt-get install -y clang-${{ env.CLANG_VERSION }} \
+          clang-tools-${{ env.CLANG_VERSION }} \
+          libclang-rt-${{ env.CLANG_VERSION }}-dev \
+          lld-${{ env.CLANG_VERSION }}
+        echo "CC=clang-${{ env.CLANG_VERSION }}" >> $GITHUB_ENV
+        echo "CXX=clang++-${{ env.CLANG_VERSION }}" >> $GITHUB_ENV
+
+    - name: Display Clang version
+      run: clang++-${{ env.CLANG_VERSION }} --version
+
+    - name: Install VCPKG
+      run: git submodule update --init vcpkg && ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+
+    - name: Restore vcpkg binary dir from cache
+      id: cache-vcpkg-binary
+      uses: actions/cache/restore@v5
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-clang-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        restore-keys: vcpkg-cache-ubuntu-clang-
+
+    - name: Install APT dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ccache uuid-dev xsltproc
+
+    - name: Restore ccache cache
+      id: cache
+      uses: actions/cache/restore@v5
+      with:
+        path: ${{ github.workspace }}/.ccache_ubuntu_clang
+        key: ${{ env.os }}-clang-${{ github.ref_name }}
+        restore-keys: |
+          ${{ env.os }}-clang-
+
+    - name: Configure ccache
+      run: |
+        ccache --set-config=cache_dir=${{ github.workspace }}/.ccache_ubuntu_clang
+        ccache --set-config=max_size=1G
+        ccache --set-config=compression=true
+        # Required for reliable hits with sanitizer builds
+        ccache --set-config=sloppiness=time_macros,include_file_mtime,include_file_ctime
+        ccache -p
+        ccache -z
+
+    - name: Config OR-Tools URL
+      run: |
+        echo "ORTOOLS_URL=https://github.com/rte-france/or-tools-rte/releases/download/$(cat ortools_tag)/ortools_cxx_ubuntu-22.04_static_sirius.zip" >> $GITHUB_ENV
+
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        os: ${{ env.os }}
+        ortools-url: ${{ env.ORTOOLS_URL }}
+        ortools-dir: ${{ env.ORTOOLS_DIR }}
+
+    - name: Set up Python
+      id: setup-python
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip3 install -r src/tests/examples/requirements.txt
+
+    - name: Configure
+      # Sanitizer + hardening flags are injected through CMAKE_<LANG>_FLAGS so
+      # they are appended to the per-configuration flags set by the project.
+      #   * -fsanitize=address,undefined        : the actual sanity checks
+      #   * -fno-sanitize-recover=all           : make every UBSan finding fatal
+      #   * -fno-omit-frame-pointer             : readable sanitizer stack traces
+      #   * -Werror                             : compiler warnings become blocking
+      #   * -D_GLIBCXX_ASSERTIONS               : hardened libstdc++ bounds checks
+      run: |
+        SANITIZE_FLAGS="-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -g"
+        cmake -B _build -S . \
+        -DCMAKE_C_COMPILER=clang-${{ env.CLANG_VERSION }} \
+        -DCMAKE_CXX_COMPILER=clang++-${{ env.CLANG_VERSION }} \
+        -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+        -DVCPKG_TARGET_TRIPLET=x64-linux \
+        -DCMAKE_BUILD_TYPE=Debug \
+        -DBUILD_TESTING=ON \
+        -DBUILD_TOOLS=ON \
+        -DCMAKE_CXX_FLAGS="$SANITIZE_FLAGS -Werror -D_GLIBCXX_ASSERTIONS" \
+        -DCMAKE_C_FLAGS="$SANITIZE_FLAGS" \
+        -DCMAKE_EXE_LINKER_FLAGS="$SANITIZE_FLAGS" \
+        -DCMAKE_SHARED_LINKER_FLAGS="$SANITIZE_FLAGS" \
+        -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+        -DPython3_EXECUTABLE="${{ env.Python3_ROOT_DIR }}/bin/python"
+
+    - name: Build
+      run: cmake --build _build -j$(nproc)
+
+    - name: Run unit and end-to-end tests under sanitizers
+      run: |
+        cd _build
+        ctest -C Debug --output-on-failure -L "unit|end-to-end"
+
+    - name: Upload logs for failed tests
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: test-log-clang-sanitizers
+        path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
+
+    - name: Cache vcpkg binary dir
+      if: always()
+      uses: actions/cache/save@v5
+      with:
+        path: ${{ github.workspace }}/vcpkg_cache
+        key: vcpkg-cache-ubuntu-clang-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+
+    - name: Display ccache statistics
+      run: ccache -s
+
+    - name: Save ccache cache
+      if: ${{ !cancelled() }}
+      uses: actions/cache/save@v5
+      with:
+        path: ${{ github.workspace }}/.ccache_ubuntu_clang
+        key: ${{ steps.cache.outputs.cache-primary-key }}
