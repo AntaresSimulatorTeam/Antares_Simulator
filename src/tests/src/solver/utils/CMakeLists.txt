@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 add_boost_test(tests-solver-utils
         SRC
@@ -7,7 +7,7 @@ add_boost_test(tests-solver-utils
         test_ortools_quadratic_wrapper.cpp
         test_ortools_utils.cpp
         INCLUDE
-        "${CMAKE_SOURCE_DIR}/solver/utils"
+        "${CMAKE_SOURCE_DIR}/src/solver/utils"
         LIBS
         ortools::ortools
         Antares::solverUtils

@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 add_boost_test(test-client-api
   SRC test_api.cpp
@@ -14,4 +14,4 @@ add_boost_test(test-single-problem-api
 # since unlike SingleProblemGetter, it exposes the
 # "Study" constructor, allowing to create the study in memory
   INCLUDE
-  "${CMAKE_SOURCE_DIR}/api/private")
+  "${CMAKE_SOURCE_DIR}/src/api/private")

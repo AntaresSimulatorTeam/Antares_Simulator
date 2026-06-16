@@ -255,7 +255,7 @@ public:
         VariableAccessorType::InitializeAndReset(results, study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area) noexcept
+    void initializeFromArea(Data::Study* /*study*/, Data::Area* area) noexcept
     {
         areaPtr = area;
     }
@@ -270,7 +270,7 @@ public:
         static_cast<Derived*>(this)->yearBeginImpl(year, space);
     }
 
-    void yearEnd(unsigned int year, unsigned int space)
+    void yearEnd(unsigned int /*year*/, unsigned int space)
     {
         yearlyValues[space].computeStatisticsForTheCurrentYear();
     }

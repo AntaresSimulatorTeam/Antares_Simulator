@@ -35,18 +35,18 @@ and add your OR-tools install path to `CMAKE_PREFIX_PATH`:
 === "Windows"
 
     ```
-    cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake \
+    cmake -B _build -S . -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake \
                            -DVCPKG_TARGET_TRIPLET=x64-windows-antares \
                            -DCMAKE_BUILD_TYPE=Release \
                            -DCMAKE_PREFIX_PATH=</path/to/or-tools>
     ```
 
-    > **Note:** cpack NSIS installer creation needs an 'out-of-source build'. The build directory must be outside `src` directory
+    > **Note:** cpack NSIS installer creation needs an 'out-of-source build'. The build directory must be outside the project root.
 
 === "Linux"
 
     ```
-    cmake -B _build -S src -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake \
+    cmake -B _build -S . -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake \
                            -DVCPKG_TARGET_TRIPLET=x64-linux-antares \
                            -DCMAKE_BUILD_TYPE=Release \
                            -DCMAKE_PREFIX_PATH=</path/to/or-tools>
@@ -61,14 +61,14 @@ Here is a list of mandatory or optional CMake configuration options:
 | `CMAKE_BUILD_TYPE`     | **yes**      | Define build type                                                                | `Release` / `Debug` / `RelWithDebInfo`      |               |
 | `BUILD_TESTING`        | no           | Enable build for unit tests                                                      | `ON` / `OFF`                                | `OFF`         |
 | `BUILD_ORTOOLS`        | no           | Enable build for OR-Tools and its dependencies (requires an Internet connection) | `ON` / `OFF`                                | `OFF`         |
-| `CMAKE_TOOLCHAIN_FILE` | no           | Path to VCPKG toolchain file, allows to integrate VCPKG with cmake build         | `../vcpkg/scripts/buildsystems/vcpkg.cmake` |               |
+| `CMAKE_TOOLCHAIN_FILE` | no           | Path to VCPKG toolchain file, allows to integrate VCPKG with cmake build         | `vcpkg/scripts/buildsystems/vcpkg.cmake` |               |
 | `VCPKG_TARGET_TRIPLET` | no           | Define VCPKG triplet (build type for dependencies etc.)                          | `x64-windows-antares` / `x64-linux-antares` |               |
 
 > 💡 **Use Ninja to speed up target generation by CMake**  
 > At configure time, you may specify Ninja for generation instead of traditional Make. This will speed up the update
 > step after you make small changes to the code.
 > ```
-> cmake -S src [...] -G Ninja
+> cmake -S . -G Ninja
 > ```
 > Note that you may need to install Ninja first (package `ninja-build` on Ubuntu).
 
