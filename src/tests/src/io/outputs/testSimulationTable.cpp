@@ -1099,8 +1099,8 @@ BOOST_AUTO_TEST_CASE(ConvertTimeStep)
 {
     auto result = convertBlockTimeStepToAbsoluteTimeStep(42, TimeConversionMode::SingleBlock, 45);
     BOOST_CHECK_EQUAL(result.block, 1);
-    BOOST_CHECK_EQUAL(*result.blockTimeIndex, 43);    // 42 + 1
-    BOOST_CHECK_EQUAL(*result.absoluteTimeIndex, 43); // 42 + 1
+    BOOST_CHECK_EQUAL(*result.blockTimeIndex, 42);    // 42 + 1
+    BOOST_CHECK_EQUAL(*result.absoluteTimeIndex, 42); // 42 + 1
     auto result0 = convertBlockTimeStepToAbsoluteTimeStep(0, TimeConversionMode::SingleBlock, 99);
     BOOST_CHECK_EQUAL(result0.block, 1);
     BOOST_CHECK_EQUAL(*result0.blockTimeIndex, 1);
@@ -1109,28 +1109,28 @@ BOOST_AUTO_TEST_CASE(ConvertTimeStep)
     // Daily blocks - exactly at day boundary
     auto result1 = convertBlockTimeStepToAbsoluteTimeStep(23, TimeConversionMode::DailyBlocks, 0);
     BOOST_CHECK_EQUAL(result1.block, 1);
-    BOOST_CHECK_EQUAL(*result1.blockTimeIndex, 24);
-    BOOST_CHECK_EQUAL(*result1.absoluteTimeIndex, 24);
+    BOOST_CHECK_EQUAL(*result1.blockTimeIndex, 23);
+    BOOST_CHECK_EQUAL(*result1.absoluteTimeIndex, 23);
 
     auto result2 = convertBlockTimeStepToAbsoluteTimeStep(10, TimeConversionMode::DailyBlocks, 2);
     BOOST_CHECK_EQUAL(result2.block, 3);
-    BOOST_CHECK_EQUAL(*result2.blockTimeIndex, 11);
+    BOOST_CHECK_EQUAL(*result2.blockTimeIndex, 10);
     BOOST_CHECK_EQUAL(*result2.absoluteTimeIndex, 59);
 
     // Weekly blocks - exactly at week boundary
     auto result3 = convertBlockTimeStepToAbsoluteTimeStep(10, TimeConversionMode::WeeklyBlocks, 0);
     BOOST_CHECK_EQUAL(result3.block, 1);
-    BOOST_CHECK_EQUAL(*result3.blockTimeIndex, 11);
-    BOOST_CHECK_EQUAL(*result3.absoluteTimeIndex, 11);
+    BOOST_CHECK_EQUAL(*result3.blockTimeIndex, 10);
+    BOOST_CHECK_EQUAL(*result3.absoluteTimeIndex, 10);
 
     auto result4 = convertBlockTimeStepToAbsoluteTimeStep(0, TimeConversionMode::WeeklyBlocks, 1);
     BOOST_CHECK_EQUAL(result4.block, 2);
-    BOOST_CHECK_EQUAL(*result4.blockTimeIndex, 1);
+    BOOST_CHECK_EQUAL(*result4.blockTimeIndex, 0);
     BOOST_CHECK_EQUAL(*result4.absoluteTimeIndex, 169);
 
     auto result5 = convertBlockTimeStepToAbsoluteTimeStep(167, TimeConversionMode::WeeklyBlocks, 1);
     BOOST_CHECK_EQUAL(result5.block, 2);
-    BOOST_CHECK_EQUAL(*result5.blockTimeIndex, 168);
+    BOOST_CHECK_EQUAL(*result5.blockTimeIndex, 167);
     BOOST_CHECK_EQUAL(*result5.absoluteTimeIndex, 336);
 }
 

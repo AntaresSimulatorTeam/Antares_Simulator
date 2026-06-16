@@ -30,16 +30,16 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
     switch (mode)
     {
     case TimeConversionMode::WeeklyBlocks:
-        return {.block = currentBlock + 1,
-                .blockTimeIndex = timeStep + 1,
-                .absoluteTimeIndex = currentBlock * 168 + timeStep + 1};
+        return {.block = currentBlock,
+                .blockTimeIndex = timeStep,
+                .absoluteTimeIndex = currentBlock * 168 + timeStep};
     case TimeConversionMode::DailyBlocks:
-        return {.block = currentBlock + 1,
-                .blockTimeIndex = timeStep + 1,
-                .absoluteTimeIndex = currentBlock * 24 + timeStep + 1};
+        return {.block = currentBlock,
+                .blockTimeIndex = timeStep,
+                .absoluteTimeIndex = currentBlock * 24 + timeStep};
     case TimeConversionMode::SingleBlock:
     default:
-        return {.block = 1, .blockTimeIndex = timeStep + 1, .absoluteTimeIndex = timeStep + 1};
+        return {.block = 1, .blockTimeIndex = timeStep, .absoluteTimeIndex = timeStep};
     }
 }
 
