@@ -169,7 +169,7 @@ public:
         return nbColumns_ * ResultsType::count;
     }
 
-    void yearBegin(uint year, uint numSpace)
+    void yearBegin(uint /*year*/, uint numSpace)
     {
         for (size_t i = 0; i < nbColumns_; ++i)
         {
@@ -177,7 +177,7 @@ public:
         }
     }
 
-    void yearEnd(uint year, uint numSpace)
+    void yearEnd(uint /*year*/, uint numSpace)
     {
         for (size_t column = 0; column < nbColumns_; ++column)
         {
@@ -208,7 +208,7 @@ public:
         Traits::setHourlyValue(pValuesForTheCurrentYear[numSpace], state, numSpace, descriptors_);
     }
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    void buildDigest(SurveyResults& /*results*/, int /*digestLevel*/, int /*dataLevel*/) const
     {
     }
 

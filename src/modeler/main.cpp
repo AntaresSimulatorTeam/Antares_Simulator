@@ -37,25 +37,6 @@ TableFormat getTableFormat(int argc, const char** argv)
     return TableFormat::CSV;
 }
 
-fs::path makeOutputPath(fs::path studyPath)
-{
-    const auto simulationId = formatTime(getCurrentTime(), "%Y%m%d-%H%M");
-    fs::path outputPath = studyPath / "output" / simulationId;
-
-    // avoid overwriting existing output by adding a suffix (-2, -3, etc.)
-    if (!Utils::generatePathWithSuffix(outputPath))
-    {
-        throw Modeler::ModelerError("Output folder already exists: " + outputPath.string());
-    }
-
-    logs.info() << "Output folder : " << outputPath;
-    if (!fs::is_directory(outputPath) && !fs::create_directories(outputPath))
-    {
-        throw Modeler::ModelerError("Failed to create output directory. Exiting simulation.");
-    }
-    return outputPath;
-}
-
 int main(int argc, const char** argv)
 {
     logs.applicationName("modeler");

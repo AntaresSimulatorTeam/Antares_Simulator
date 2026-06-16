@@ -150,10 +150,6 @@ public:
         }
     }
 
-    void simulationEnd()
-    {
-    }
-
     void yearBegin(uint /*year*/, unsigned int numSpace)
     {
         // Reset
@@ -181,14 +177,6 @@ public:
             // Merge all those values with the global results
             AncestorType::pResults[i].merge(year, pValuesForTheCurrentYear[numSpace][i]);
         }
-    }
-
-    void hourBegin(uint /*hourInTheYear*/)
-    {
-    }
-
-    void hourForEachArea(State& /*state*/, unsigned int /*numSpace*/)
-    {
     }
 
     void hourForEachLink(State& state, unsigned int numSpace)
