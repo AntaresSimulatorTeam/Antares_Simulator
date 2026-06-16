@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
     for (int t = 0; t < numThreads; ++t)
     {
         threads.emplace_back(
-          [&table, &tableMutex, t, entriesPerThread]()
+          [&table, &tableMutex, t]()
           {
               for (int i = 0; i < entriesPerThread; ++i)
               {
