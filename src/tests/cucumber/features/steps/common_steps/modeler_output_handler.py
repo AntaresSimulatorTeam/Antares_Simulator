@@ -56,6 +56,5 @@ class modeler_output_handler:
         self.simulation_table = SimulationTable(
             make_simulation_table_reader(outputPath, OutputFormat.CSV)()
         )
-        self.problems = read_invest_problems(outputPath)
 
 
