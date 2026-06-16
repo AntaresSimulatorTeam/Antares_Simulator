@@ -343,8 +343,16 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
             ON_max[h] = ON_min[h];
     }
 
-    if (maxDurationON > 0)
+    if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicFast)
+    {
+        // Temporary test release: disable the year-end thermal smoothing only in fast mode.
+        // The downstream cost builder already falls back to ON_min when maxDurationON == 0.
+        maxDurationON = 0;
+    }
+    else if (maxDurationON > 0)
+    {
         ON_opt = computeEconomicallyOptimalNbClustersONforEachHour(maxDurationON, ON_min, ON_max);
+    }
 
     // Calculation of non linear and startup costs
     yearEndBuildThermalClusterCalculateStartupCosts(maxDurationON, ON_min, ON_opt, currentCluster);
