@@ -39,7 +39,7 @@ TimeBlock convertBlockTimeStepToAbsoluteTimeStep(unsigned int timeStep,
                 .absoluteTimeIndex = currentBlock * 24 + timeStep};
     case TimeConversionMode::SingleBlock:
     default:
-        return {.block = 1, .blockTimeIndex = timeStep, .absoluteTimeIndex = timeStep};
+        return {.block = 0, .blockTimeIndex = timeStep, .absoluteTimeIndex = timeStep};
     }
 }
 
@@ -96,7 +96,7 @@ void addVariableEntries(SimulationTable& simulationTable,
             TimeBlock tb = timeStep ? convertBlockTimeStepToAbsoluteTimeStep(*timeStep,
                                                                              timeConversionMode,
                                                                              currentBlock)
-                                    : TimeBlock{.block = currentBlock + 1,
+                                    : TimeBlock{.block = currentBlock,
                                                 .blockTimeIndex = std::nullopt,
                                                 .absoluteTimeIndex = std::nullopt};
             const auto& var = componentVariables[timeStep.value_or(0)];
@@ -236,7 +236,7 @@ void addConstraintEntries(SimulationTable& simulationTable,
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
                                                                        currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
+                              : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
             simulationTable.addEntry(
@@ -262,7 +262,7 @@ void addObjectiveValue(SimulationTable& simulation,
                        unsigned year)
 {
     // TODO : handle scenario-independent objectives in full-modeler mode
-    simulation.addEntry({.block = currentBlock + 1,
+    simulation.addEntry({.block = currentBlock,
                          .component = std::nullopt,
                          .output = "OBJECTIVE_VALUE",
                          .absolute_time_index = std::nullopt,
@@ -316,7 +316,7 @@ void addEntriesForNode(SimulationTable& simulationTable,
         TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                    timeConversionMode,
                                                                    currentBlock)
-                          : TimeBlock{.block = currentBlock + 1,
+                          : TimeBlock{.block = currentBlock,
                                       .blockTimeIndex = std::nullopt,
                                       .absoluteTimeIndex = std::nullopt};
         auto val = ts ? value.getValueInVector(ts.value()) : value.valueAsDouble();
@@ -361,7 +361,7 @@ void addPortEntries(SimulationTable& simulationTable,
             TimeBlock tb = ts ? convertBlockTimeStepToAbsoluteTimeStep(*ts,
                                                                        timeConversionMode,
                                                                        currentBlock)
-                              : TimeBlock{.block = currentBlock + 1,
+                              : TimeBlock{.block = currentBlock,
                                           .blockTimeIndex = std::nullopt,
                                           .absoluteTimeIndex = std::nullopt};
 

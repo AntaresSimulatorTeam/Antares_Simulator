@@ -72,7 +72,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
 {
     const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
-    const unsigned int block = currentBlock + 1;
+    const unsigned int block = currentBlock;
 
     // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables in
     // resizeProbleme, so indexing by [0, NombreDeVariables) below is always in bounds.
