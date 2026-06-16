@@ -254,7 +254,8 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipConstraint* getConstraint(
       std::size_t) const override
     {
-        return RandomConstraint().get();
+        adHocConstraints_.push_back(RandomConstraint());
+        return adHocConstraints_.back().get();
     }
 
     [[nodiscard]]
@@ -267,7 +268,8 @@ public:
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
       const std::string&) const override
     {
-        return RandomVariable().get();
+        adHocVariables_.push_back(RandomVariable());
+        return adHocVariables_.back().get();
     }
 
     [[nodiscard]] int variableCount() const override
@@ -325,6 +327,13 @@ protected:
       constraints_;
     int variableCount_ = 0;
     int constraintCount_ = 0;
+    // Storage backing the pointers handed out by the const getConstraint()/
+    // lookupVariable() accessors, so they outlive the call (was returning the
+    // address of a destroyed temporary: -Wreturn-stack-address).
+    mutable std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>>
+      adHocConstraints_;
+    mutable std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>>
+      adHocVariables_;
 };
 
 // Mock component and model classes for testing template functions
@@ -459,7 +468,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::ModelerStudy::SystemModel::Model model = createModelWithoutParameters();
     std::vector<Antares::ModelerStudy::SystemModel::Component> components = {
-      std::move(createComponent(model))};
+      createComponent(model)};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository = makeScenarioGroupRepo(
       components.front());
 
