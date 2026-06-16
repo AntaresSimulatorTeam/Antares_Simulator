@@ -30,7 +30,7 @@ env:
   VCPKG_ROOT: ${{ github.workspace }}/vcpkg
   PYTHON_VERSION: "3.12"
   # Up-to-date Clang installed from the official LLVM apt repository.
-  CLANG_VERSION: "18"
+  CLANG_VERSION: "22"
 
 jobs:
 
