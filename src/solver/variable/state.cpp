@@ -352,11 +352,14 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
             if (ON_opt[h] != ON_min[h])
                 ++smoothingDiffCount;
         }
-        if (smoothingDiffCount > 0)
+        int totalDifference = 0;
+        for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
         {
-            logs.info() << "Thermal smoothing changes cluster " << clusterAreaWideIndex << " on "
-                        << smoothingDiffCount << " hour(s)";
+            totalDifference += ON_opt[h] - ON_min[h];
         }
+        logs.info() << "Thermal smoothing check year " << this->year << " " << area->name << " / "
+                    << currentCluster->name() << " diff=" << smoothingDiffCount
+                    << " hour(s), total NODU difference " << totalDifference;
     }
 
     if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicFast)
