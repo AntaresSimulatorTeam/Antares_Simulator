@@ -215,7 +215,8 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
 
     // 2 prop_cost (cluster1, link) + 1 imbalance_cost + 3 is_loss_of_load
     // + 1 actual_num_units_on + 1 abs_flow
-    BOOST_CHECK_EQUAL(table.rowCount(), 8);
+    BOOST_CHECK_EQUAL(table.rowCount(),
+                      8); // update this count when adding new outputs to the fixture
 }
 
 BOOST_AUTO_TEST_SUITE_END()
