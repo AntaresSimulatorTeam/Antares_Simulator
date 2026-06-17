@@ -500,11 +500,12 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
-                                                  .dispatch(constraint.expression().RootNode());
-            optimEntityContainer->registerConstraint(compo, constraint_variability);
-            if (isTimeDependent(constraint_variability))
+            const auto ctVariability = VariabilityVisitor(*optimEntityContainer, compo)
+                                         .dispatch(constraint.expression().RootNode());
+            unsigned ctCount = 1;
+            if (isTimeDependent(ctVariability))
             {
+                ctCount = fillContext.getLocalNumberOfTimeSteps();
                 for (unsigned t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {
                     linearProblem->addConstraint(0, 0, "");
@@ -514,6 +515,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
             {
                 linearProblem->addConstraint(0, 0, "");
             }
+            optimEntityContainer->registerConstraint(compo, ctVariability, ctCount);
         }
     }
 
