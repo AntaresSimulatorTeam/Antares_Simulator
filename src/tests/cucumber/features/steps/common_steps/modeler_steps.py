@@ -42,6 +42,15 @@ def modeler_obj_value(context, lb, ub):
 
 @step('the modeler outputs contain the following entries')
 def modeler_output_values(context):
+    check_modeler_output_values(context, 1e-6)
+
+
+@step('the modeler outputs contain the following entries with relative tolerance {tolerance:g}')
+def modeler_output_values_with_tolerance(context, tolerance):
+    check_modeler_output_values(context, tolerance)
+
+
+def check_modeler_output_values(context, tolerance):
     for row in context.table:
         ts_range = read_int_range(row, "timestep")
         if "scenario" not in context.table.headings:
@@ -57,7 +66,7 @@ def modeler_output_values(context):
                 for ts in ts_range:
                     assert_double_close(get_value(row, ts),
                                         context.moh.get_simulation_table_entry(row["component"],row["output"], block, ts, scenario),
-                                        1e-6)
+                                        tolerance)
 
 def read_int_range(row, key : str):
     if row[key] != "":
