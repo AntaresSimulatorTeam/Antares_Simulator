@@ -214,25 +214,6 @@ bool StringToCompatibilityHydroRuleCurves(Parameters::Compatibility::HydroRuleCu
     return false;
 }
 
-bool StringToCompatibilityRampes(Parameters::Compatibility::Rampes& mode, const std::string& text)
-{
-    if (text.empty())
-    {
-        return false;
-    }
-    if (text == "disabled")
-    {
-        mode = Parameters::Compatibility::Rampes::Disabled;
-        return true;
-    }
-    if (text == "enabled")
-    {
-        mode = Parameters::Compatibility::Rampes::Enabled;
-        return true;
-    }
-    return false;
-}
-
 bool Parameters::economy() const
 {
     return mode == SimulationMode::Economy;
@@ -349,6 +330,8 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.reserves = false;
+
+    include.thermal_ramping = false;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
@@ -619,6 +602,10 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-reserves")
     {
         return value.to<bool>(d.include.reserves);
+    }
+    if (key == "include-thermal-cluster-ramping")
+    {
+        return value.to<bool>(d.include.thermal_ramping);
     }
 
     if (key == "include-exportmps")
@@ -1021,11 +1008,6 @@ static bool SGDIntLoadFamily_Compatibility(Parameters& d,
     if (key == "hydro-pmax")
     {
         return StringToCompatibilityHydroPmax(d.compatibility.hydroPmax, value);
-    }
-
-    else if (key == "rampes")
-    {
-        return StringToCompatibilityRampes(d.compatibility.rampes, value);
     }
 
     else if (key == "hydro-rule-curves")

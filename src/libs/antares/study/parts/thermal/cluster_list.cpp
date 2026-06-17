@@ -137,9 +137,10 @@ bool ThermalClusterList::loadFromFolder(Study& study, const fs::path& folder, Ar
         auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
-        bool rampesEnabled = study.parameters.compatibility.rampes
-                             == Parameters::Compatibility::Rampes::Enabled;
-        if (!ThermalClusterLoadFromSection(area->name, *cluster, *section, rampesEnabled))
+        if (!ThermalClusterLoadFromSection(area->name,
+                                           *cluster,
+                                           *section,
+                                           study.parameters.include.thermal_ramping))
         {
             continue;
         }

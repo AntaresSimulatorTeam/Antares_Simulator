@@ -26,7 +26,7 @@ public:
     {
         study = std::make_unique<Study>();
         areaA = addAreaToListOfAreas(study->areas, "A");
-        study->parameters.compatibility.rampes = Parameters::Compatibility::Rampes::Enabled;
+        study->parameters.include.thermal_ramping = true;
     }
 
     std::unique_ptr<Study> study;
@@ -40,7 +40,7 @@ public:
     {
         study = std::make_unique<Study>();
         areaA = addAreaToListOfAreas(study->areas, "A");
-        study->parameters.compatibility.rampes = Parameters::Compatibility::Rampes::Disabled;
+        study->parameters.include.thermal_ramping = false;
     }
 
     std::unique_ptr<Study> study;
@@ -91,15 +91,13 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_ramp_parameters, OneProblemOne
     ThermalClusterLoadFromSection(areaA->name,
                                   *cluster,
                                   *section,
-                                  study->parameters.compatibility.rampes
-                                    == Parameters::Compatibility::Rampes::Enabled);
+                                  study->parameters.include.thermal_ramping);
     section = section->next;
     BOOST_CHECK_EQUAL(section->name.empty(), false);
     ThermalClusterLoadFromSection(areaA->name,
                                   *cluster2,
                                   *section,
-                                  study->parameters.compatibility.rampes
-                                    == Parameters::Compatibility::Rampes::Enabled);
+                                  study->parameters.include.thermal_ramping);
     BOOST_CHECK_EQUAL(cluster->name(), "thermal_1");
     BOOST_CHECK(cluster->ramping.has_value());
     BOOST_CHECK_EQUAL(cluster->ramping->maxUpwardPowerRampingRate, 2.2);
@@ -151,15 +149,13 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_no_ramp_parameters, OneProblem
     ThermalClusterLoadFromSection(areaA->name,
                                   *cluster,
                                   *section,
-                                  study->parameters.compatibility.rampes
-                                    == Parameters::Compatibility::Rampes::Enabled);
+                                  study->parameters.include.thermal_ramping);
     section = section->next;
     BOOST_CHECK_EQUAL(section->name.empty(), false);
     ThermalClusterLoadFromSection(areaA->name,
                                   *cluster2,
                                   *section,
-                                  study->parameters.compatibility.rampes
-                                    == Parameters::Compatibility::Rampes::Enabled);
+                                  study->parameters.include.thermal_ramping);
     BOOST_CHECK_EQUAL(cluster->name(), "thermal_1");
     BOOST_CHECK_EQUAL(cluster->ramping.has_value(), false);
 
@@ -192,8 +188,7 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_load_cluster_invalid_ramp_parameters,
     ThermalClusterLoadFromSection(areaA->name,
                                   *cluster,
                                   *section,
-                                  study->parameters.compatibility.rampes
-                                    == Parameters::Compatibility::Rampes::Enabled);
+                                  study->parameters.include.thermal_ramping);
 
     BOOST_CHECK_EQUAL(cluster->name(), "thermal_1");
     BOOST_CHECK_EQUAL(cluster->ramping.has_value(), true);
