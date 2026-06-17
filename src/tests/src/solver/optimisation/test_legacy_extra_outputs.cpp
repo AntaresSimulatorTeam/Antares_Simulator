@@ -190,6 +190,16 @@ BOOST_AUTO_TEST_CASE(is_loss_of_load_is_one_above_threshold_and_zero_below)
     BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 0.);
 }
 
+BOOST_AUTO_TEST_CASE(is_loss_of_load_is_zero_exactly_at_threshold)
+{
+    // area3's UnsuppliedEnergy is at index 10; the threshold check is strict
+    // (> 0.5), so exactly 0.5 MW must not count as loss of load.
+    values[10] = 0.5;
+    fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "is_loss_of_load", "area3")->value, 0.);
+}
+
 BOOST_AUTO_TEST_CASE(actual_num_units_on_is_ceil_of_nodu)
 {
     fill();

@@ -38,6 +38,13 @@ LegacySolutionView::LegacySolutionView(
     linearCosts_(linearCosts),
     indexByKey_(BuildIndex(variablesInfo))
 {
+    for (std::size_t index = 0; index < variablesInfo.size(); ++index)
+    {
+        if (const auto& info = variablesInfo[index])
+        {
+            indexByKey_.emplace(MakeKey(info->name, info->component, info->timeIndex), index);
+        }
+    }
 }
 
 std::optional<std::size_t> LegacySolutionView::indexOf(const std::string& name,

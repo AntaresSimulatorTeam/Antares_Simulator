@@ -42,10 +42,18 @@ Feature: Legacy variables in simulation table
     #     between its bounds, the marginal MW is served at the unsupplied
     #     energy cost
     #   - is_near_loss_of_load = 1 since price (10000) > 10000 - 5
+
+    # The derived costs are computed from the objective coefficients, which
+    # carry the anti-degeneracy noise the legacy solver always adds to costs
+    # (PrepareRandomNumbers in common-eco-adq.cpp: |noise| is forced into
+    # [5e-4, 6e-4] per thermal cluster cost even with spread-cost = 0, and
+    # this study sets spread-unsupplied-energy-cost = 0.01). Hence the relaxed
+    # tolerance: relative 1e-4 covers a noise of 6e-4 on the cheapest cost
+    # (35) while still pinning the value to the theoretical formula.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
     When I run antares simulator
     Then the simulation succeeds
-    And the modeler outputs contain the following entries
+    And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output         | timestep | scenario | value  |
       | 1     | base      | prop_cost      | 34       | 0        | 126000 |
       | 1     | semi base | prop_cost      | 34       | 0        | 75000  |

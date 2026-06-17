@@ -23,10 +23,12 @@ def accumulate_simu_table_files(directory: Path, filePattern: str) -> str:
     """
     Accumulate contents of all simulation-table*.csv files into a single string.
     Keeps the CSV header from the first file and removes it from subsequent files.
+    Returns a valid CSV header if no files are found (for executables that don't
+    produce a simulation table, e.g., antares-problem-generator).
     """
     files = sorted(directory.glob(filePattern))
     if not files:
-        return ""
+        return "block,component,output,absolute_time_index,block_time_index,scenario_index,value,basis_status\n"
 
     accumulated = []
     for i, csv_file in enumerate(files):

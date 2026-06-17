@@ -83,6 +83,10 @@ The hurdle costs in the link `prop_cost` formula are the objective coefficients 
 
 The "driven by" column matters: each derived row is anchored on one recorded variable, which supplies the component and time index of the emitted row. When a required companion variable is missing from the view (e.g. no `Spillage` recorded for the area), the output is skipped for that anchor rather than emitting a partial value.
 
+### Cost noise
+
+`CoutLineaire` holds the costs the optimizer actually used, and those are **not** the raw study costs: the legacy solver deliberately perturbs them to break degeneracy (`PrepareRandomNumbers` in `src/solver/simulation/common-eco-adq.cpp`). Each thermal cluster cost gets a noise whose absolute value is forced into `[5e-4, 6e-4]` even when the cluster's `spread-cost` is 0 (with a non-zero spread, the noise is `(rnd − 0.5) × spread`), and the unsupplied/spilled energy costs get the same treatment driven by the area's `spread-unsupplied-energy-cost`/`spread-spilled-energy-cost`. Consequently every cost-derived output (`prop_cost`, `imbalance_cost`) deviates from the theoretical `study_cost × quantity` by a relative error of up to roughly `6e-4 / cheapest_cost` — about `2e-5` for typical thermal costs. The quantities themselves (`X`) are unaffected. Tests comparing these outputs against theoretical values must allow for this (the cucumber scenario uses a relative tolerance of `1e-4`); producing noise-free costs would require reading study data instead of objective coefficients (§6).
+
 ### By-index versus by-name reads
 
 When the value needed belongs to the anchor variable itself, helpers read `X[index]` / `CoutLineaire[index]` directly instead of going through the view. Besides being cheaper, this sidesteps a known limitation of the recorded info: **thermal cluster components are recorded as the cluster name only, not qualified by area** (`sim_calcul_economique.cpp` stores `cluster->name()`). Two identically-named clusters in different areas therefore collide in the by-name index — last writer wins. The rule is:
