@@ -11,7 +11,6 @@ Two components implement this:
 | Component | Files | Role |
 |-----------|-------|------|
 | `LegacySolutionView` | `src/solver/optimisation/include/antares/solver/optimisation/LegacySolutionView.h`, `src/solver/optimisation/LegacySolutionView.cpp` | Read-only lookup of solution values and linear objective coefficients by (variable name, component, time index) |
-| `LegacyDualsView` | same files | Same lookup over the recorded constraints, against the dual values |
 | `LegacyExtraOutputs` | `src/solver/optimisation/include/antares/solver/optimisation/LegacyExtraOutputs.h`, `src/solver/optimisation/LegacyExtraOutputs.cpp` | Computes the derived outputs and appends them to the `SimulationTable` |
 
 Both live in namespace `Antares::Optimization` and are part of the `model_antares` target.
@@ -70,14 +69,12 @@ Outputs implemented so far:
 | `prop_cost` (link) | each `PositiveDirectFlow` variable | `directHurdle × posDirect + indirectHurdle × posIndirect` | direct part by index; `PositiveIndirectFlow` of the same link and time through the view |
 | `price` (area) | each `AreaBalance` constraint | `-dual[i]` | dual by index |
 | `is_near_loss_of_load` (area) | each `AreaBalance` constraint | `-dual[i] > unsCost - 5 ? 1 : 0` | dual by index; the unsupplied energy cost is the objective coefficient on the area's `UnsuppliedEnergy` variable, through the view |
-| `alg_congestion_fee` (link) | each `DirectFlow` variable | `flow × (price_dest - price_orig)` | flow by index; the two area prices through `LegacyDualsView` (`AreaBalance` duals of the areas split from the `origin$$destination` component) |
-| `abs_congestion_fee` (link) | each `DirectFlow` variable | `abs(flow) × abs(price_dest - price_orig)` | same as `alg_congestion_fee` |
 | `capacity_shadow_price` (link) | each `FlowDissociation` constraint | `abs(dual[i])` | dual by index |
 | `hydro_shadow_price` (area) | each `FinalStockExpression` constraint | `dual[i]` | dual by index; one row per area and week (constraint exists only in accurate water value mode) |
 
-The `price` formula negates the stored dual: with the legacy balance-constraint sign convention, `CoutsMarginauxDesContraintes` holds the **negative** of the marginal price (the legacy outputs print `-CoutsMarginauxHoraires`, and the adequacy-patch post-processing stores `-unsuppliedEnergyCost` to mean "price = unsupplied energy cost"). The congestion fees inherit it: `price_dest - price_orig = dual_orig - dual_dest`.
+The `price` formula negates the stored dual: with the legacy balance-constraint sign convention, `CoutsMarginauxDesContraintes` holds the **negative** of the marginal price (the legacy outputs print `-CoutsMarginauxHoraires`, and the adequacy-patch post-processing stores `-unsuppliedEnergyCost` to mean "price = unsupplied energy cost").
 
-Outputs anchored on a recorded constraint read their own dual by index. The congestion fees are the first outputs anchored on a *variable* that need duals; they go through `LegacyDualsView`, the constraint-side twin of the solution view, keyed the same way. `FlowDissociation` (hence `capacity_shadow_price`) only exists for links managed with hurdle costs, like the flow decomposition variables.
+Outputs anchored on a recorded constraint read their own dual by index. `FlowDissociation` (hence `capacity_shadow_price`) only exists for links managed with hurdle costs, like the flow decomposition variables.
 
 The hurdle costs in the link `prop_cost` formula are the objective coefficients on the flow decomposition variables (`opt_gestion_des_couts_cas_lineaire.cpp` sets them straight from the link's `fhlHurdlesCostDirect`/`fhlHurdlesCostIndirect` series); those variables only carry legacy info for links managed with hurdle costs, so the output is naturally restricted to them. Link components are recorded as `origin$$destination`, a unique key safe for view lookups.
 
@@ -109,6 +106,7 @@ Lifting the limitation would mean adding an area qualifier to `LegacyVariableInf
 
 The full extra-output specification (area prices, thermal non-proportional costs and emissions, link congestion fees, storage profits, hydro shadow prices, ...) is being implemented incrementally. The remaining increments need capabilities this design deliberately leaves out for now:
 
+- **Port-based outputs.** Outputs the specification expresses with `in_port`/`out_port` (notably `alg_congestion_fee` and `abs_congestion_fee`, where `price` is read on each end's port) are out of scope for this step. The legacy weekly problem has no port concept, and resolving `in_port`/`out_port` to the right per-area dual is a design question of its own.
 - **Profit outputs.** Thermal `profit` needs study data on top of the area price (`cluster_min_gen_modulation`, unit count, unit capacity), and the thermal anchor's component is not area-qualified, so the cluster's area price cannot even be looked up yet. STS `profit` has the same problem: the recorded component is the storage name, not its area. Both are blocked on the component-qualification item below (plus study data for thermal).
 - **`bellman_value`.** `sum(cost_layer × LayerStorage)` is computable from `CoutLineaire × X`, but `LayerStorage` variables are recorded with the layer index as component — without the area, the sum cannot be attributed. Also blocked on component qualification.
 - **MIP solves.** When the weekly problem is a MIP, OR-Tools' dual extraction is skipped and `CoutsMarginauxDesContraintes` is zero-filled (`extract_from_MPSolver`, a known TODO in `ortools_utils.cpp`), so `price` and `is_near_loss_of_load` read 0 — the same caveat as the legacy marginal-price output.
@@ -122,4 +120,4 @@ The full extra-output specification (area prices, thermal non-proportional costs
 - `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` — unit tests of the derived rows: formulas (including the dual sign negation for `price`), row metadata conventions, skip-on-missing-companion, and that unrelated variables and constraints emit nothing. Both run in the `unit-tests-for-solver-optimisation` Boost test target, which compiles the two `.cpp` files directly and links `Antares::simulation-table`.
 - `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` — end-to-end scenario on the "002 Thermal fleet - Base" study at a loss-of-load hour where every cluster is provably at maximum, giving closed-form expected values for `prop_cost`, `imbalance_cost`, `is_loss_of_load`, `price` (= the unsupplied energy cost, since the marginal MW is unserved) and `is_near_loss_of_load`.
 
-Several outputs currently have unit-test coverage only, because no fast test study exercises them: `actual_num_units_on` needs an accurate unit-commitment study (all `hybrid/` studies use `unit-commitment-mode = fast`, where NODU variables do not exist); `abs_flow`, the congestion fees, link `prop_cost` and `capacity_shadow_price` need a study with a configured link (with hurdle costs for the last two) — no `hybrid/` study has one; `hydro_shadow_price` needs a study with accurate water value mode. Adding a small two-area study with a hurdle-cost link and a reservoir would close most of the gap.
+Several outputs currently have unit-test coverage only, because no fast test study exercises them: `actual_num_units_on` needs an accurate unit-commitment study (all `hybrid/` studies use `unit-commitment-mode = fast`, where NODU variables do not exist); `abs_flow`, link `prop_cost` and `capacity_shadow_price` need a study with a configured link (with hurdle costs for the last two) — no `hybrid/` study has one; `hydro_shadow_price` needs a study with accurate water value mode. Adding a small two-area study with a hurdle-cost link and a reservoir would close most of the gap.

@@ -83,24 +83,4 @@ std::optional<double> LegacySolutionView::linearCost(const std::string& name,
     return std::nullopt;
 }
 
-LegacyDualsView::LegacyDualsView(
-  const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
-  const std::vector<double>& dualValues):
-    dualValues_(dualValues),
-    indexByKey_(BuildIndex(constraintsInfo))
-{
-}
-
-std::optional<double> LegacyDualsView::dual(const std::string& name,
-                                            const std::string& component,
-                                            unsigned timeIndex) const
-{
-    if (const auto it = indexByKey_.find(MakeKey(name, component, timeIndex));
-        it != indexByKey_.end() && it->second < dualValues_.size())
-    {
-        return dualValues_[it->second];
-    }
-    return std::nullopt;
-}
-
 } // namespace Antares::Optimization

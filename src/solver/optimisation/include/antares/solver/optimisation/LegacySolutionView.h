@@ -50,23 +50,4 @@ private:
     std::unordered_map<std::string, std::size_t> indexByKey_;
 };
 
-// Same lookup over the recorded constraints, against the dual values
-// (CoutsMarginauxDesContraintes). Same key conventions and lifetime rules as
-// LegacySolutionView.
-class LegacyDualsView
-{
-public:
-    LegacyDualsView(const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
-                    const std::vector<double>& dualValues);
-
-    // Dual value of the constraint, or nullopt if no such constraint was recorded
-    std::optional<double> dual(const std::string& name,
-                               const std::string& component,
-                               unsigned timeIndex) const;
-
-private:
-    const std::vector<double>& dualValues_;
-    std::unordered_map<std::string, std::size_t> indexByKey_;
-};
-
 } // namespace Antares::Optimization

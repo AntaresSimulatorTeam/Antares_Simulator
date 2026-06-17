@@ -249,50 +249,6 @@ void AddHydroShadowPrice(SimulationTable& simulationTable,
                         currentBlock);
 }
 
-// alg_congestion_fee = flow * (price(destination) - price(origin))
-// abs_congestion_fee = |flow| * |price(destination) - price(origin)|
-// Driven by the link's (signed) DirectFlow variable; the area prices are
-// minus the balance-constraint duals of the link's two areas, found through
-// the duals view. Skipped when either balance dual is missing.
-void AddLinkCongestionFees(SimulationTable& simulationTable,
-                           const LegacyVariableInfo& info,
-                           std::size_t index,
-                           const std::vector<double>& solutionValues,
-                           const LegacyDualsView& duals,
-                           const FillContext& fillContext,
-                           unsigned currentBlock)
-{
-    const auto separator = info.component.find("$$");
-    if (separator == std::string::npos)
-    {
-        return;
-    }
-    const std::string origin = info.component.substr(0, separator);
-    const std::string destination = info.component.substr(separator + 2);
-
-    const auto originDual = duals.dual("AreaBalance", origin, info.timeIndex);
-    const auto destinationDual = duals.dual("AreaBalance", destination, info.timeIndex);
-    if (!originDual || !destinationDual)
-    {
-        return;
-    }
-
-    // price = -dual, so price(destination) - price(origin) = dual(origin) - dual(destination)
-    const double priceDelta = *originDual - *destinationDual;
-    const double flow = solutionValues[index];
-    AddExtraOutputEntry(simulationTable,
-                        "alg_congestion_fee",
-                        info,
-                        flow * priceDelta,
-                        fillContext,
-                        currentBlock);
-    AddExtraOutputEntry(simulationTable,
-                        "abs_congestion_fee",
-                        info,
-                        std::abs(flow) * std::abs(priceDelta),
-                        fillContext,
-                        currentBlock);
-}
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
@@ -305,7 +261,6 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            unsigned currentBlock)
 {
     const LegacySolutionView solution(variablesInfo, solutionValues, linearCosts);
-    const LegacyDualsView duals(constraintsInfo, constraintDuals);
 
     for (std::size_t index = 0; index < variablesInfo.size(); ++index)
     {
@@ -359,13 +314,6 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            solutionValues,
                            fillContext,
                            currentBlock);
-            AddLinkCongestionFees(simulationTable,
-                                  *info,
-                                  index,
-                                  solutionValues,
-                                  duals,
-                                  fillContext,
-                                  currentBlock);
         }
         else if (info->name == "PositiveDirectFlow")
         {

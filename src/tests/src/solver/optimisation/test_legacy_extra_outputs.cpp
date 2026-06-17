@@ -242,10 +242,8 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     fill();
 
     // 2 prop_cost (cluster1, link) + 1 imbalance_cost + 3 is_loss_of_load
-    // + 1 actual_num_units_on + 2 abs_flow; without recorded constraints
-    // there are no duals, so the congestion fees are skipped too.
+    // + 1 actual_num_units_on + 2 abs_flow.
     BOOST_CHECK_EQUAL(table.rowCount(), 9);
-    BOOST_CHECK(RowsForOutput(table, "alg_congestion_fee").empty());
 }
 
 BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
@@ -278,30 +276,6 @@ BOOST_AUTO_TEST_CASE(is_near_loss_of_load_is_skipped_without_unsupplied_variable
     BOOST_CHECK(!FindRow(table, "is_near_loss_of_load", "area4").has_value());
 }
 
-BOOST_AUTO_TEST_CASE(congestion_fees_use_the_price_difference_of_the_link_areas)
-{
-    withConstraints().fill();
-
-    // priceDelta = price(area2) - price(area1) = 50 - 10000; flow = 120.
-    const auto alg = FindRow(table, "alg_congestion_fee", "area1$$area2");
-    const auto abs = FindRow(table, "abs_congestion_fee", "area1$$area2");
-    BOOST_REQUIRE(alg.has_value());
-    BOOST_REQUIRE(abs.has_value());
-    BOOST_CHECK_CLOSE(alg->value, 120. * (50. - 10000.), 1e-9);
-    BOOST_CHECK_CLOSE(abs->value, 120. * (10000. - 50.), 1e-9);
-}
-
-BOOST_AUTO_TEST_CASE(congestion_fees_are_skipped_when_a_balance_dual_is_missing)
-{
-    withConstraints().fill();
-
-    // "area3" has no recorded balance constraint, so the fees of link
-    // "area2$$area3" cannot be computed; its abs_flow is still there.
-    BOOST_CHECK(!FindRow(table, "alg_congestion_fee", "area2$$area3").has_value());
-    BOOST_CHECK(!FindRow(table, "abs_congestion_fee", "area2$$area3").has_value());
-    BOOST_CHECK(FindRow(table, "abs_flow", "area2$$area3").has_value());
-}
-
 BOOST_AUTO_TEST_CASE(capacity_shadow_price_is_the_absolute_flow_dissociation_dual)
 {
     withConstraints().fill();
@@ -326,10 +300,10 @@ BOOST_AUTO_TEST_CASE(other_constraints_produce_no_extra_output)
 {
     withConstraints().fill();
 
-    // 9 variable-driven rows + 2 congestion fees + 3 price
-    // + 2 is_near_loss_of_load + 1 capacity_shadow_price
-    // + 1 hydro_shadow_price; the unnamed slot adds nothing.
-    BOOST_CHECK_EQUAL(table.rowCount(), 18);
+    // 9 variable-driven rows + 3 price + 2 is_near_loss_of_load
+    // + 1 capacity_shadow_price + 1 hydro_shadow_price; the unnamed
+    // slot adds nothing.
+    BOOST_CHECK_EQUAL(table.rowCount(), 16);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

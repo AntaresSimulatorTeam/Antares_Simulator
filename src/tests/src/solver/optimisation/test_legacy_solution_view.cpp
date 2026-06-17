@@ -69,14 +69,4 @@ BOOST_AUTO_TEST_CASE(variables_without_recorded_info_are_not_indexed)
     BOOST_CHECK(!view.value("", "", 0).has_value());
 }
 
-BOOST_AUTO_TEST_CASE(duals_view_finds_recorded_constraints_only)
-{
-    // Reuse the fixture vectors as constraint info and dual values.
-    const Antares::Optimization::LegacyDualsView view(info, values);
-    BOOST_REQUIRE(view.dual("UnsuppliedEnergy", "area1", 7).has_value());
-    BOOST_CHECK_EQUAL(*view.dual("UnsuppliedEnergy", "area1", 7), 52.);
-    BOOST_CHECK(!view.dual("UnsuppliedEnergy", "area1", 8).has_value());
-    BOOST_CHECK(!view.dual("", "", 0).has_value());
-}
-
 BOOST_AUTO_TEST_SUITE_END()
