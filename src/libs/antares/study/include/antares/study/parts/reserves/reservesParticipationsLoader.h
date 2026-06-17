@@ -160,7 +160,7 @@ public:
 
         if (!reserve || !cluster)
         {
-            Derived::reportMissing(area, reserveID, reserve, cluster);
+            Derived::reportMissing(area, reserveID, reserve != nullptr, cluster != nullptr);
             return;
         }
 
