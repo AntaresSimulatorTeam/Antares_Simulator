@@ -501,7 +501,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
         {
             const auto& constraintId = constraint.Id();
             const auto ctVariability = VariabilityVisitor(*optimEntityContainer, compo)
-                                                  .dispatch(constraint.expression().RootNode());
+                                         .dispatch(constraint.expression().RootNode());
             unsigned ctCount = 1;
             if (isTimeDependent(ctVariability))
             {
