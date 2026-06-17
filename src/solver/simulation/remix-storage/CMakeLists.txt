@@ -1,6 +1,6 @@
 
 set(local_target "shave-peaks-by-remix-storage-gen")
-set(include_dir ${CMAKE_SOURCE_DIR}/solver/simulation/include)
+set(include_dir ${CMAKE_SOURCE_DIR}/src/solver/simulation/include)
 
 add_library(${local_target})
 

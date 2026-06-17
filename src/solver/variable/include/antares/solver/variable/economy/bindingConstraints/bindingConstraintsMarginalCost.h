@@ -219,8 +219,8 @@ public:
     }
 
     template<class VCardToFindT>
-    static void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
-                                       const Data::Area* area)
+    static void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** /*result*/,
+                                       const Data::Area* /*area*/)
     {
     }
 
@@ -229,32 +229,35 @@ public:
     }
 
     template<class V>
-    static void simulationEndSpatialAggregates(V& allVars)
+    static void simulationEndSpatialAggregates(V& /*allVars*/)
     {
     }
 
     template<class V>
-    static void computeSpatialAggregatesSummary(V& allVars,
-                                                unsigned int year,
-                                                unsigned int numSpace)
+    static void computeSpatialAggregatesSummary(V& /*allVars*/,
+                                                unsigned int /*year*/,
+                                                unsigned int /*numSpace*/)
     {
     }
 
     template<class SearchVCardT, class O>
-    static void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+    static void computeSpatialAggregateWith(O& /*out*/,
+                                            const Data::Area* /*area*/,
+                                            uint /*numSpace*/)
     {
     }
 
     template<class VCardToFindT>
-    static void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
-                                       const Data::AreaLink* link)
+    static void retrieveResultsForLink([[maybe_unused]]
+                                       typename Storage<VCardToFindT>::ResultsType** result,
+                                       [[maybe_unused]] const Data::AreaLink* link)
     {
     }
 
     template<class VCardToFindT>
     static void retrieveResultsForThermalCluster(
-      typename Storage<VCardToFindT>::ResultsType** result,
-      const Data::ThermalCluster* cluster)
+      [[maybe_unused]] typename Storage<VCardToFindT>::ResultsType** result,
+      [[maybe_unused]] const Data::ThermalCluster* cluster)
     {
     }
 
