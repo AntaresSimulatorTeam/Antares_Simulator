@@ -1,6 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html":[9,0,0,11,6,35],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html#a196f76979862b0dfe282eed48220f590":[9,0,0,11,6,35,0],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html#a79c00dea9d991ccaf846ca2741d7fd31":[9,0,0,11,6,35,1],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1dynamicColumns_01_4.html":[9,0,0,11,6,36],
@@ -249,5 +248,6 @@ var NAVTREEINDEX39 =
 "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#a9a688319815a6723187272f70c462e68":[9,0,81,0,5],
 "structCORRESPONDANCES__DES__VARIABLES_1_1ReservesIndices.html#aaeff8d46665f175c833561fe20e47f8b":[9,0,81,0,6],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html":[9,0,77],
-"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#a0253e47bed366739b6919328fa5e8306":[9,0,77,3]
+"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#a0253e47bed366739b6919328fa5e8306":[9,0,77,3],
+"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#a0cbbe0ebe0b1a0e8b788e34585f2512f":[9,0,77,7]
 };

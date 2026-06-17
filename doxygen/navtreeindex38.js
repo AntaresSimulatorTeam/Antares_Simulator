@@ -1,6 +1,5 @@
 var NAVTREEINDEX38 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html#acde9a3be5701cc4c4d21e646eb697772":[9,0,0,11,6,5,75,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostTraits.html":[9,0,0,11,6,5,74],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostTraits.html#ac2fae52d6ec1c3dbde209f9fb56b059c":[9,0,0,11,6,5,74,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverflowsTraits.html":[9,0,0,11,6,5,76],
@@ -249,5 +248,6 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a30e2bce7bf8725e4faeb6bff1d278fa7":[9,0,0,11,6,62,4],
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a3750a1b71293c6ea6b191d6880fba1d7":[9,0,0,11,6,62,1],
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a61f234773186606b5c626e7f37c03940":[9,0,0,11,6,62,0],
-"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a6d966cf874e32355f6be63a6ddff7d38":[9,0,0,11,6,62,2]
+"structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a6d966cf874e32355f6be63a6ddff7d38":[9,0,0,11,6,62,2],
+"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html":[9,0,0,11,6,35]
 };

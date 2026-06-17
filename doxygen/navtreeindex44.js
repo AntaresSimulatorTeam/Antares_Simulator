@@ -1,6 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"structSupplyModelForFunctionalOperator.html":[9,0,350],
 "structSupplyModelForFunctionalOperator.html#a64ec1754d36ffc5381246e4ca174914e":[9,0,350,0],
 "structSupplyModelForFunctionalOperator.html#a989f59559f75255316ebe43ee3042534":[9,0,350,1],
 "structSystemBuilderCreationFixture.html":[9,0,359],
@@ -249,5 +248,6 @@ var NAVTREEINDEX44 =
 "tests_2src_2solver_2hydro_2management_2monthly_8cpp.html#ad7ed9889fdbed519508a8a60603f2dd9":[8,0,10,5],
 "thermalAirPollutantEmissions_8h.html#a4e7c704d48d8ea22b0aaa68de130dd60":[8,0,0,14,8,5,151],
 "thermalAirPollutantEmissions_8h_source.html":[10,0,0,8,11,0,0,0,0,3,54],
-"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3b":[8,0,0,4,124]
+"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3b":[8,0,0,4,124],
+"thermal_2cluster_8h.html#a30c8ff1c9671f56da6c32cf85223ad3ba1fad6a83d89ada1ee053ef87b4878cd7":[8,0,0,4,124,3]
 };

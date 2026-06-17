@@ -1,6 +1,5 @@
 var NAVTREEINDEX36 =
 {
-"structAntares_1_1Data_1_1StudyRuntimeInfos_1_1ReserveIndexMap.html#ad0a9ccda4b8709f0445b42bd3d2116ef":[9,0,0,3,81,1,2],
 "structAntares_1_1Data_1_1StudyRuntimeInfos_1_1ReserveIndexMap.html#ad48bc27af09730b92f1feebf7923a8a4":[9,0,0,3,81,1,1],
 "structAntares_1_1Data_1_1Symmetries_1_1SymmetriesError.html":[9,0,0,3,5,0],
 "structAntares_1_1Data_1_1ThermalClusterReserveParticipation.html":[9,0,0,3,20],
@@ -249,5 +248,6 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Optimisation_1_1OptimComponent.html#a31fe16d28ff41edd0d3d96779c96eee5":[9,0,0,9,4,3],
 "structAntares_1_1Optimisation_1_1OptimComponent.html#a5fc2b6d4691b7a41b56aec780af69058":[9,0,0,9,4,0],
 "structAntares_1_1Optimisation_1_1OptimComponent.html#accc4aa917fe742c9887a7ff119760a80":[9,0,0,9,4,2],
-"structAntares_1_1Optimisation_1_1OptimComponent.html#ad4bcb63d94fb1aff618251865731fe45":[9,0,0,9,4,1]
+"structAntares_1_1Optimisation_1_1OptimComponent.html#ad4bcb63d94fb1aff618251865731fe45":[9,0,0,9,4,1],
+"structAntares_1_1Optimization_1_1LegacyVariableInfo.html":[9,0,0,10,24]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Optimization_1_1LegacyVariableInfo.html":[9,0,0,10,24],
 "structAntares_1_1Optimization_1_1LegacyVariableInfo.html#a4ad2494aadb94b87d4c13ef02bb6453e":[9,0,0,10,24,0],
 "structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae2808fc8cf18bf3e85495fcaeb02bee3":[9,0,0,10,24,1],
 "structAntares_1_1Optimization_1_1LegacyVariableInfo.html#ae47cb152ff265ff007d6febf687b1483":[9,0,0,10,24,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits.html":[9,0,0,11,6,5,73],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OperatingCostTraits.html#ac9df8dd45924f9e36e6468948c3e5457":[9,0,0,11,6,5,73,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html":[9,0,0,11,6,5,75],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html#a7008dbcc7e56128a041c48b48e1db824":[9,0,0,11,6,5,75,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html#a7008dbcc7e56128a041c48b48e1db824":[9,0,0,11,6,5,75,1],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostCsrTraits.html#acde9a3be5701cc4c4d21e646eb697772":[9,0,0,11,6,5,75,0]
 };
