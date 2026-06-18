@@ -204,3 +204,9 @@ class solver_output_handler:
         
     def get_values_for_st_storage_cluster_for_specific_hour_mw(self, area: str, year: int, date: str, cluster_name: str, keySTstorageValue: str):
         return self.__get_details_st_storage_hourly_for_specific_hour(area, year, date)[cluster_name][keySTstorageValue]
+        
+    def get_ramp_cost_cluster(self, area: str, year: int, cluster: str) -> pd.Series:
+        return self.__get_details_hourly(area, year)[cluster]["Ramping Cost - Euro"]
+        
+    def get_ramp_cost_area(self, area: str, year: int) -> pd.Series:
+        return self.__get_values_hourly(area, year)["RAMP COST"]["Euro"]

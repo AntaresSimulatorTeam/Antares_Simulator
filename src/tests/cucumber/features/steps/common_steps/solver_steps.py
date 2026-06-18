@@ -813,3 +813,13 @@ def check_storages_values_for_specific_year_hour_and_cluster(context, area, year
     else:
         raise NotImplementedError(f"Unknown value for variable injection_or_withdrawal '{injection_or_withdrawal}'")
     assert_double_close(float(actual_storage_value.item()), float(value_storage), 1e-6)
+
+@then('in area "{area}", during year {year:d}, ramping cost of cluster "{cluster}" for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_cluster(context, area, year, cluster, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_cluster(area, year, cluster)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)
+    
+@then('in area "{area}", during year {year:d}, ramping cost for hour {hour:d} is equal to {ramp_cost}')
+def check_ramp_cost_for_specific_year_hour_and_area(context, area, year, hour, ramp_cost):
+    actual_ramp_cost = context.soh.get_ramp_cost_area(area, year)[hour]
+    assert_double_close(float(ramp_cost), float(actual_ramp_cost), 1e-6)

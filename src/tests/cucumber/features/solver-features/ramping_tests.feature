@@ -61,9 +61,21 @@ Feature: ramping tests
     And the simulation takes less than 20 seconds
     And in area "area", during year 1, hourly production of "thermal_all_cheap" for hour 0 is equal to 0 MWh
 	And in area "area", during year 1, hourly production of "thermal_all_cheap" for hour 1 is equal to 10 MWh
+	And in area "area", during year 1, ramping cost of cluster "thermal_all_cheap" for hour 1 is equal to 0
+	And in area "area", during year 1, ramping cost for hour 1 is equal to 0
+	And in area "area", during year 1, ramping cost of cluster "thermal_all_cheap" for hour 2 is equal to 10
+	And in area "area", during year 1, ramping cost for hour 2 is equal to 10
+	And in area "area", during year 1, ramping cost of cluster "thermal_all_cheap" for hour 3 is equal to 10
+	And in area "area", during year 1, ramping cost for hour 3 is equal to 10
 	And in area "area", during year 1, hourly production of "thermal_all_cheap" for hour 5 is equal to 50 MWh
 	And in area "area", during year 1, hourly production of "thermal_all_cheap" for hour 10 is equal to 40 MWh
+	And in area "area", during year 1, ramping cost of cluster "thermal_all_cheap" for hour 11 is equal to 10
+	And in area "area", during year 1, ramping cost of cluster "thermal_all_cheap" for hour 12 is equal to 0
+	And in area "area", during year 1, ramping cost of cluster "thermal_all_cheap" for hour 13 is equal to 10
     And in area "area", during year 1, hourly production of "thermal_all_expensive" for hour 15 is equal to 0 MWh
+	And in area "area", during year 1, ramping cost of cluster "thermal_all_cheap" for hour 16 is equal to 10
+	And in area "area", during year 1, ramping cost of cluster "thermal_decrease_expensive" for hour 16 is equal to 0
+	And in area "area", during year 1, ramping cost for hour 16 is equal to 10
 	And in area "area", during year 1, hourly production of "thermal_all_expensive" for hour 16 is equal to 50 MWh
 	And in area "area", during year 1, hourly production of "thermal_all_expensive" for hour 41 is equal to 50 MWh
 	And in area "area", during year 1, hourly production of "thermal_all_expensive" for hour 42 is equal to 0 MWh
