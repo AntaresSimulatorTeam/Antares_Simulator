@@ -254,8 +254,9 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipConstraint* getConstraint(
       std::size_t) const override
     {
-        adHocConstraints_.push_back(RandomConstraint());
-        return adHocConstraints_.back().get();
+        static MockMipConstraint mock(
+          Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND);
+        return &mock;
     }
 
     [[nodiscard]]
@@ -268,8 +269,11 @@ public:
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
       const std::string&) const override
     {
-        adHocVariables_.push_back(RandomVariable());
-        return adHocVariables_.back().get();
+        static MockMipVariable mock(
+          12.25,
+          Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND,
+          false);
+        return &mock;
     }
 
     [[nodiscard]] int variableCount() const override
@@ -327,13 +331,6 @@ protected:
       constraints_;
     int variableCount_ = 0;
     int constraintCount_ = 0;
-    // Storage backing the pointers handed out by the const getConstraint()/
-    // lookupVariable() accessors, so they outlive the call (was returning the
-    // address of a destroyed temporary: -Wreturn-stack-address).
-    mutable std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipConstraint>>
-      adHocConstraints_;
-    mutable std::vector<std::unique_ptr<Antares::Optimisation::LinearProblemApi::IMipVariable>>
-      adHocVariables_;
 };
 
 // Mock component and model classes for testing template functions
