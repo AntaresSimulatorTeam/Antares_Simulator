@@ -8,6 +8,7 @@
 
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/optimisation/linear-problem-api/ILinearProblemData.h"
+#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 
 namespace Antares::Optimization
@@ -21,6 +22,7 @@ void AddLegacyExtraOutputs(Antares::IO::Outputs::SimulationTable& simulationTabl
                            const std::vector<double>& linearCosts,
                            const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
                            const std::vector<double>& constraintDuals,
+                           const LegacyExtraOutputsContext& context,
                            const Antares::Optimisation::LinearProblemApi::FillContext& fillContext,
                            unsigned currentBlock);
 

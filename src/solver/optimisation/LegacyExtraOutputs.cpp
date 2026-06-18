@@ -5,6 +5,7 @@
 
 #include <cmath>
 
+#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacySolutionView.h"
 
 using Antares::IO::Outputs::SimulationTable;
@@ -250,6 +251,99 @@ void AddHydroShadowPrice(SimulationTable& simulationTable,
                         currentBlock);
 }
 
+// level_percentage = HydroLevel / reservoir_capacity; the reservoir capacity
+// is not an objective coefficient on any recorded variable, so it is carried
+// in LegacyExtraOutputsContext. Skipped when the area has no reservoir
+// (capacity unknown or non-positive).
+void AddAreaLevelPercentage(SimulationTable& simulationTable,
+                            const LegacyVariableInfo& info,
+                            std::size_t index,
+                            const std::vector<double>& solutionValues,
+                            const LegacyExtraOutputsContext& context,
+                            const FillContext& fillContext,
+                            unsigned currentBlock)
+{
+    const auto it = context.reservoirCapacityByArea.find(info.component);
+    if (it == context.reservoirCapacityByArea.end() || it->second <= 0.)
+    {
+        return;
+    }
+    AddExtraOutputEntry(simulationTable,
+                        "level_percentage",
+                        info,
+                        solutionValues[index] / it->second,
+                        fillContext,
+                        currentBlock);
+}
+
+// is_directly_congested = 1 when the link is at (or near) its
+// origin->extremity transmission capacity in the direct direction; 0
+// otherwise. The capacity is not an objective coefficient — it is the
+// upper bound of the DirectFlow variable — and is carried per-pdt in
+// LegacyExtraOutputsContext. Skipped when the link's capacity is not
+// known to the context.
+void AddLinkIsDirectlyCongested(SimulationTable& simulationTable,
+                                const LegacyVariableInfo& info,
+                                std::size_t index,
+                                const std::vector<double>& solutionValues,
+                                const LegacyExtraOutputsContext& context,
+                                const FillContext& fillContext,
+                                unsigned currentBlock)
+{
+    constexpr double saturationEpsilon = 1e-3;
+    const auto it = context.directCapacityByLink.find(info.component);
+    if (it == context.directCapacityByLink.end())
+    {
+        return;
+    }
+    const unsigned pdt = info.timeIndex - fillContext.getGlobalFirstTimeStep();
+    if (pdt >= it->second.size())
+    {
+        return;
+    }
+    const double capacity = it->second[pdt];
+    const double saturated = solutionValues[index] >= capacity - saturationEpsilon ? 1. : 0.;
+    AddExtraOutputEntry(simulationTable,
+                        "is_directly_congested",
+                        info,
+                        saturated,
+                        fillContext,
+                        currentBlock);
+}
+
+// is_indirectly_congested = 1 when the link is at (or near) its
+// extremity->origin transmission capacity. DirectFlow is signed: negative
+// values mean the link is used in the indirect direction, so the indicator
+// compares -X against the indirect capacity.
+void AddLinkIsIndirectlyCongested(SimulationTable& simulationTable,
+                                  const LegacyVariableInfo& info,
+                                  std::size_t index,
+                                  const std::vector<double>& solutionValues,
+                                  const LegacyExtraOutputsContext& context,
+                                  const FillContext& fillContext,
+                                  unsigned currentBlock)
+{
+    constexpr double saturationEpsilon = 1e-3;
+    const auto it = context.indirectCapacityByLink.find(info.component);
+    if (it == context.indirectCapacityByLink.end())
+    {
+        return;
+    }
+    const unsigned pdt = info.timeIndex - fillContext.getGlobalFirstTimeStep();
+    if (pdt >= it->second.size())
+    {
+        return;
+    }
+    const double capacity = it->second[pdt];
+    const double saturated = -solutionValues[index] >= capacity - saturationEpsilon ? 1. : 0.;
+    AddExtraOutputEntry(simulationTable,
+                        "is_indirectly_congested",
+                        info,
+                        saturated,
+                        fillContext,
+                        currentBlock);
+}
+
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
@@ -258,6 +352,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            const std::vector<double>& linearCosts,
                            const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
                            const std::vector<double>& constraintDuals,
+                           const LegacyExtraOutputsContext& context,
                            const FillContext& fillContext,
                            unsigned currentBlock)
 {
@@ -315,6 +410,20 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            solutionValues,
                            fillContext,
                            currentBlock);
+            AddLinkIsDirectlyCongested(simulationTable,
+                                       *info,
+                                       index,
+                                       solutionValues,
+                                       context,
+                                       fillContext,
+                                       currentBlock);
+            AddLinkIsIndirectlyCongested(simulationTable,
+                                         *info,
+                                         index,
+                                         solutionValues,
+                                         context,
+                                         fillContext,
+                                         currentBlock);
         }
         else if (info->name == "PositiveDirectFlow")
         {
@@ -326,6 +435,16 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                             solution,
                             fillContext,
                             currentBlock);
+        }
+        else if (info->name == "HydroLevel")
+        {
+            AddAreaLevelPercentage(simulationTable,
+                                   *info,
+                                   index,
+                                   solutionValues,
+                                   context,
+                                   fillContext,
+                                   currentBlock);
         }
     }
 

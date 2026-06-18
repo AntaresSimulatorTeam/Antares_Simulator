@@ -6,10 +6,12 @@
 #include <boost/test/unit_test.hpp>
 
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
+#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::Optimisation::LinearProblemApi::FillContext;
 using Antares::Optimization::AddLegacyExtraOutputs;
+using Antares::Optimization::LegacyExtraOutputsContext;
 using Antares::Optimization::LegacyVariableInfo;
 
 namespace
@@ -77,10 +79,11 @@ struct Fixture
     //  - link "area1$$area2" with flow and hurdle-cost decomposition
     //    variables, link "area2$$area3" with a (negative) flow and a direct
     //    decomposition variable but no indirect counterpart,
-    //  - one unnamed slot (index 4).
+    //  - one unnamed slot (index 4),
+    //  - HydroLevel for "area1".
     Fixture()
     {
-        info.resize(12);
+        info.resize(13);
         info[0] = LegacyVariableInfo{"DispatchableProduction", "cluster1", 168};
         info[1] = LegacyVariableInfo{"UnsuppliedEnergy", "area1", 168};
         info[2] = LegacyVariableInfo{"Spillage", "area1", 168};
@@ -92,11 +95,14 @@ struct Fixture
         info[9] = LegacyVariableInfo{"PositiveDirectFlow", "area2$$area3", 168};
         info[10] = LegacyVariableInfo{"UnsuppliedEnergy", "area3", 168};
         info[11] = LegacyVariableInfo{"DirectFlow", "area2$$area3", 168};
+        info[12] = LegacyVariableInfo{"HydroLevel", "area1", 168};
     }
 
     std::vector<std::optional<LegacyVariableInfo>> info;
-    std::vector<double> values = {3600., 52., 7., 13., -1., 2.3, 120., 0., 120., 10., 0.2, -30.};
-    std::vector<double> costs = {35., 10000., 4., 20000., -1., 100., 0., 0.5, 0.7, 0.5, 9000., 0.};
+    std::vector<double> values
+      = {3600., 52., 7., 13., -1., 2.3, 120., 0., 120., 10., 0.2, -30., 4000.};
+    std::vector<double> costs
+      = {35., 10000., 4., 20000., -1., 100., 0., 0.5, 0.7, 0.5, 9000., 0., 0.};
 
     // Constraints: balance constraints for "area1" (at loss of load: the
     // stored dual is minus the price), "area2" (cheap marginal unit) and
@@ -115,8 +121,31 @@ struct Fixture
         return *this;
     }
 
+    // Reservoir capacity for "area1" only, so HydroLevel for any other area
+    // is correctly skipped.
+    Fixture& withReservoirs()
+    {
+        context.reservoirCapacityByArea["area1"] = 5000.;
+        return *this;
+    }
+
+    // Per-pdt link capacities. The fixture uses a single recorded pdt (the
+    // anchor is at globalFirst), so a 1-entry vector is enough.
+    Fixture& withLinkCapacities(double directArea1Area2 = 200.,
+                                double indirectArea1Area2 = 200.,
+                                double directArea2Area3 = 200.,
+                                double indirectArea2Area3 = 200.)
+    {
+        context.directCapacityByLink["area1$$area2"] = {directArea1Area2};
+        context.indirectCapacityByLink["area1$$area2"] = {indirectArea1Area2};
+        context.directCapacityByLink["area2$$area3"] = {directArea2Area3};
+        context.indirectCapacityByLink["area2$$area3"] = {indirectArea2Area3};
+        return *this;
+    }
+
     std::vector<std::optional<LegacyVariableInfo>> constraintsInfo;
     std::vector<double> duals;
+    LegacyExtraOutputsContext context;
     // Block covering timesteps [168, 335], year 2.
     FillContext fillContext{0, 167, 168, 335, 2};
     unsigned currentBlock = 1;
@@ -130,6 +159,7 @@ struct Fixture
                               costs,
                               constraintsInfo,
                               duals,
+                              context,
                               fillContext,
                               currentBlock);
     }
@@ -242,8 +272,73 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     fill();
 
     // 2 prop_cost (cluster1, link) + 1 imbalance_cost + 3 is_loss_of_load
-    // + 1 actual_num_units_on + 2 abs_flow.
+    // + 1 actual_num_units_on + 2 abs_flow. The context is empty, so
+    // level_percentage and is_*_congested are skipped.
     BOOST_CHECK_EQUAL(table.rowCount(), 9);
+}
+
+BOOST_AUTO_TEST_CASE(level_percentage_is_hydro_level_over_reservoir_capacity)
+{
+    withReservoirs().fill();
+
+    const auto rows = RowsForOutput(table, "level_percentage");
+    BOOST_REQUIRE_EQUAL(rows.size(), 1);
+    BOOST_CHECK_EQUAL(rows[0].component, "area1");
+    BOOST_CHECK_CLOSE(rows[0].value, 4000. / 5000., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(level_percentage_is_skipped_without_a_known_capacity)
+{
+    // Default context has no reservoir for "area1": the HydroLevel anchor
+    // emits nothing.
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "level_percentage").empty());
+}
+
+BOOST_AUTO_TEST_CASE(level_percentage_is_skipped_when_capacity_is_non_positive)
+{
+    context.reservoirCapacityByArea["area1"] = 0.;
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "level_percentage").empty());
+}
+
+BOOST_AUTO_TEST_CASE(is_directly_congested_is_one_at_capacity_and_zero_below)
+{
+    // area1$$area2 carries flow 120 (direct direction), area2$$area3 carries -30
+    // (indirect direction). With direct capacities 120 and 100 respectively,
+    // only the first link is saturated in the direct direction.
+    withLinkCapacities(/*directArea1Area2=*/120.,
+                       /*indirectArea1Area2=*/200.,
+                       /*directArea2Area3=*/100.,
+                       /*indirectArea2Area3=*/200.)
+      .fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area1$$area2")->value, 1.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_directly_congested", "area2$$area3")->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(is_indirectly_congested_compares_minus_flow_to_indirect_capacity)
+{
+    // area2$$area3's flow is -30: it saturates the indirect direction when
+    // the indirect capacity is also 30. area1$$area2's flow is +120: it never
+    // saturates the indirect direction.
+    withLinkCapacities(/*directArea1Area2=*/200.,
+                       /*indirectArea1Area2=*/200.,
+                       /*directArea2Area3=*/200.,
+                       /*indirectArea2Area3=*/30.)
+      .fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area1$$area2")->value, 0.);
+    BOOST_CHECK_EQUAL(FindRow(table, "is_indirectly_congested", "area2$$area3")->value, 1.);
+}
+
+BOOST_AUTO_TEST_CASE(congestion_indicators_are_skipped_without_a_known_capacity)
+{
+    // Default context has no link capacities: every DirectFlow anchor goes
+    // unindexed and the congestion rows are skipped.
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "is_directly_congested").empty());
+    BOOST_CHECK(RowsForOutput(table, "is_indirectly_congested").empty());
 }
 
 BOOST_AUTO_TEST_CASE(price_is_minus_the_area_balance_dual)
@@ -302,8 +397,18 @@ BOOST_AUTO_TEST_CASE(other_constraints_produce_no_extra_output)
 
     // 9 variable-driven rows + 3 price + 2 is_near_loss_of_load
     // + 1 capacity_shadow_price + 1 hydro_shadow_price; the unnamed
-    // slot adds nothing.
+    // slot adds nothing. Context-driven outputs are skipped here because
+    // no study data was injected.
     BOOST_CHECK_EQUAL(table.rowCount(), 16);
+}
+
+BOOST_AUTO_TEST_CASE(study_data_outputs_add_one_level_percentage_and_four_congestion_rows)
+{
+    withConstraints().withReservoirs().withLinkCapacities().fill();
+
+    // Same 16 rows as before, plus 1 level_percentage (area1) and 4
+    // congestion rows (2 directions for each of the 2 links).
+    BOOST_CHECK_EQUAL(table.rowCount(), 16 + 1 + 4);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

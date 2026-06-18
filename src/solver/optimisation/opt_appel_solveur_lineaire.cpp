@@ -19,6 +19,7 @@
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
+#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
@@ -64,12 +65,51 @@ static void logProblemSize(const MPSolver* mpSolver)
 
 namespace
 {
+// Snapshot the per-problem study data the legacy extra outputs need but cannot
+// read off the problem's variables. Built once per weekly solve from
+// problemeHebdo, then passed to AddLegacyExtraOutputs. Keys mirror the
+// `component` field on LegacyVariableInfo (lowercased area names; for links,
+// `origin$$destination` matching AREA_SEP in opt_rename_problem.cpp).
+LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& problemeHebdo)
+{
+    LegacyExtraOutputsContext context;
+    for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
+    {
+        context.reservoirCapacityByArea[problemeHebdo.NomsDesPays[pays]]
+          = problemeHebdo.CaracteristiquesHydrauliques[pays].TailleReservoir;
+    }
+    const std::size_t nPdt = static_cast<std::size_t>(
+      problemeHebdo.NombreDePasDeTempsPourUneOptimisation);
+    for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
+    {
+        std::string linkKey = std::string(
+                                problemeHebdo.NomsDesPays[problemeHebdo.PaysOrigineDeLInterconnexion
+                                                            [interco]])
+                              + "$$"
+                              + problemeHebdo.NomsDesPays[problemeHebdo.PaysExtremiteDeLInterconnexion
+                                                            [interco]];
+        std::vector<double> directCapacity(nPdt);
+        std::vector<double> indirectCapacity(nPdt);
+        for (std::size_t pdt = 0; pdt < nPdt; ++pdt)
+        {
+            directCapacity[pdt] = problemeHebdo.ValeursDeNTC[pdt]
+                                    .ValeurDeNTCOrigineVersExtremite[interco];
+            indirectCapacity[pdt] = problemeHebdo.ValeursDeNTC[pdt]
+                                      .ValeurDeNTCExtremiteVersOrigine[interco];
+        }
+        context.directCapacityByLink[linkKey] = std::move(directCapacity);
+        context.indirectCapacityByLink[std::move(linkKey)] = std::move(indirectCapacity);
+    }
+    return context;
+}
+
 void FillLegacySimulationTable(SimulationTable& simulationTable,
-                               const PROBLEME_ANTARES_A_RESOUDRE& problem,
+                               const PROBLEME_HEBDO& problemeHebdo,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock)
 {
+    const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
     const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
     const unsigned int block = currentBlock + 1;
@@ -108,12 +148,14 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                                   .status = std::nullopt});
     }
 
+    const LegacyExtraOutputsContext context = BuildLegacyExtraOutputsContext(problemeHebdo);
     AddLegacyExtraOutputs(simulationTable,
                           problem.LegacyVariablesInfo,
                           problem.X,
                           problem.CoutLineaire,
                           problem.LegacyConstraintsInfo,
                           problem.CoutsMarginauxDesContraintes,
+                          context,
                           fillContext,
                           currentBlock);
 }
@@ -325,7 +367,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
 
         static constexpr LegacyNameMapper legacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
-                                  *ProblemeAResoudre,
+                                  *problemeHebdo,
                                   fillCtx,
                                   legacyNameMapper,
                                   currentBlock);

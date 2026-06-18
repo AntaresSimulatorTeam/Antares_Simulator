@@ -92,12 +92,20 @@ Feature: Legacy variables in simulation table
     When I run antares simulator
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
-      | block | component  | output                | timestep | scenario | value   |
-      | 3     | east$$west | abs_flow              | 426      | 0        | 213.452 |
-      | 3     | east$$west | prop_cost             | 426      | 0        | 213.452 |
-      | 3     | east$$west | capacity_shadow_price | 426      | 0        | 1.0     |
-      | 3     | east       | price                 | 426      | 0        | 44.926  |
-      | 3     | west       | price                 | 426      | 0        | 45.926  |
+      | block | component  | output                  | timestep | scenario | value   |
+      | 3     | east$$west | abs_flow                | 426      | 0        | 213.452 |
+      | 3     | east$$west | prop_cost               | 426      | 0        | 213.452 |
+      | 3     | east$$west | capacity_shadow_price   | 426      | 0        | 1.0     |
+      | 3     | east       | price                   | 426      | 0        | 44.926  |
+      | 3     | west       | price                   | 426      | 0        | 45.926  |
+      # is_directly/indirectly_congested compare the (signed) DirectFlow to the
+      # link's per-hour capacity (3000 MW direct and indirect, constant in this
+      # study). At 213.45 MW the link is far from either bound, so both
+      # indicators are 0; the saturation case (= 1) is covered by the unit
+      # tests, since no realistic single-week dispatch on this fixture pushes
+      # the link to 3000 MW.
+      | 3     | east$$west | is_directly_congested   | 426      | 0        | 0       |
+      | 3     | east$$west | is_indirectly_congested | 426      | 0        | 0       |
 
   @fast @short
   Scenario: hydro_shadow_price is emitted when hydro-pricing-mode is accurate
@@ -116,8 +124,12 @@ Feature: Legacy variables in simulation table
     When I run antares simulator
     Then the simulation succeeds
     And the modeler outputs contain the following entries
-      | block | component | output             | timestep | scenario | value |
-      | 1     | he        | hydro_shadow_price | 168      | 0        | -56   |
+      | block | component | output             | timestep | scenario | value         |
+      | 1     | he        | hydro_shadow_price | 168      | 0        | -56           |
+      # level_percentage = HydroLevel / reservoir_capacity. The "he" area has a
+      # 10 000 000 MWh reservoir and the initial level for hour 1 of week 1 is
+      # 5 110 638.139 MWh => 0.51106381.
+      | 1     | he        | level_percentage   | 1        | 0        | 0.51106381    |
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
