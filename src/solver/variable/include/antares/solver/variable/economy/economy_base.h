@@ -217,6 +217,17 @@ public:
         NextType::yearEndBuild(state, year, numSpace);
     }
 
+    void yearEndBuildForEachThermalCluster(State& state, unsigned int year, unsigned int numSpace)
+    {
+        yearEndBuildForEachThermalClusterIfSupported(pValuesForTheCurrentYear[numSpace],
+                                                     state,
+                                                     year,
+                                                     numSpace);
+
+        // Next variable
+        NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
+    }
+
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
@@ -296,6 +307,22 @@ private:
         if constexpr (requires { Traits::yearBegin(yearlyValues, auxiliaryData, year, numSpace); })
         {
             Traits::yearBegin(yearlyValues, auxiliaryData, year, numSpace);
+        }
+    }
+
+    static void yearEndBuildForEachThermalClusterIfSupported(IntermediateValues& yearlyValues,
+                                                             State& state,
+                                                             unsigned int year,
+                                                             unsigned int numSpace)
+    {
+        if constexpr (requires {
+                          Traits::yearEndBuildForEachThermalCluster(yearlyValues,
+                                                                    state,
+                                                                    year,
+                                                                    numSpace);
+                      })
+        {
+            Traits::yearEndBuildForEachThermalCluster(yearlyValues, state, year, numSpace);
         }
     }
 
