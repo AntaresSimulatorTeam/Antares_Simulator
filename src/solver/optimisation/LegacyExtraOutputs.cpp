@@ -339,12 +339,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
 
         if (info->name == "AreaBalance")
         {
-            AddAreaPrice(simulationTable,
-                         *info,
-                         index,
-                         constraintDuals,
-                         fillContext,
-                         currentBlock);
+            AddAreaPrice(simulationTable, *info, index, constraintDuals, fillContext, currentBlock);
             AddAreaIsNearLossOfLoad(simulationTable,
                                     *info,
                                     index,
