@@ -206,10 +206,11 @@ void AddAreaIsNearLossOfLoad(SimulationTable& simulationTable,
     }
 
     const double price = -constraintDuals[index];
+    constexpr unsigned cutoff = 5;
     AddExtraOutputEntry(simulationTable,
                         "is_near_loss_of_load",
                         info,
-                        price > *unsuppliedCost - 5. ? 1. : 0.,
+                        price > unsuppliedCost.value() - cutoff ? 1. : 0.,
                         fillContext,
                         currentBlock);
 }
