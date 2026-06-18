@@ -77,8 +77,6 @@ std::optional<std::vector<YmlModel::Library>> loadLibrariesFromYaml(const fs::pa
         return {};
     }
 
-    warnOnYamlFiles(directoryPath);
-
     for (const auto& entry: fs::directory_iterator(directoryPath))
     {
         if (entry.path().extension() != ".yml")
