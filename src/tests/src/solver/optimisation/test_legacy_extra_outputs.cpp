@@ -99,10 +99,10 @@ struct Fixture
     }
 
     std::vector<std::optional<LegacyVariableInfo>> info;
-    std::vector<double> values
-      = {3600., 52., 7., 13., -1., 2.3, 120., 0., 120., 10., 0.2, -30., 4000.};
-    std::vector<double> costs
-      = {35., 10000., 4., 20000., -1., 100., 0., 0.5, 0.7, 0.5, 9000., 0., 0.};
+    std::vector<double>
+      values = {3600., 52., 7., 13., -1., 2.3, 120., 0., 120., 10., 0.2, -30., 4000.};
+    std::vector<double>
+      costs = {35., 10000., 4., 20000., -1., 100., 0., 0.5, 0.7, 0.5, 9000., 0., 0.};
 
     // Constraints: balance constraints for "area1" (at loss of load: the
     // stored dual is minus the price), "area2" (cheap marginal unit) and

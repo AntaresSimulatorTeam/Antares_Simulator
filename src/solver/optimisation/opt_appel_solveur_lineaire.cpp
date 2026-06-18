@@ -83,11 +83,11 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
     for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
     {
         std::string linkKey = std::string(
-                                problemeHebdo.NomsDesPays[problemeHebdo.PaysOrigineDeLInterconnexion
-                                                            [interco]])
+                                problemeHebdo
+                                  .NomsDesPays[problemeHebdo.PaysOrigineDeLInterconnexion[interco]])
                               + "$$"
-                              + problemeHebdo.NomsDesPays[problemeHebdo.PaysExtremiteDeLInterconnexion
-                                                            [interco]];
+                              + problemeHebdo.NomsDesPays
+                                  [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
         std::vector<double> directCapacity(nPdt);
         std::vector<double> indirectCapacity(nPdt);
         for (std::size_t pdt = 0; pdt < nPdt; ++pdt)
