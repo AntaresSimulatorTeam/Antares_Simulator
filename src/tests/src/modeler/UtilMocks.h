@@ -254,7 +254,9 @@ public:
     Antares::Optimisation::LinearProblemApi::IMipConstraint* getConstraint(
       std::size_t) const override
     {
-        return RandomConstraint().get();
+        static MockMipConstraint mock(
+          Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND);
+        return &mock;
     }
 
     [[nodiscard]]
@@ -267,7 +269,11 @@ public:
     [[nodiscard]] Antares::Optimisation::LinearProblemApi::IMipVariable* lookupVariable(
       const std::string&) const override
     {
-        return RandomVariable().get();
+        static MockMipVariable mock(
+          12.25,
+          Antares::Optimisation::LinearProblemApi::MipBasisStatus::AT_LOWER_BOUND,
+          false);
+        return &mock;
     }
 
     [[nodiscard]] int variableCount() const override
@@ -459,7 +465,7 @@ struct MyDummyFixture: Antares::Expressions::Registry<Antares::Expressions::Node
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData data;
     Antares::ModelerStudy::SystemModel::Model model = createModelWithoutParameters();
     std::vector<Antares::ModelerStudy::SystemModel::Component> components = {
-      std::move(createComponent(model))};
+      createComponent(model)};
     Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository = makeScenarioGroupRepo(
       components.front());
 
