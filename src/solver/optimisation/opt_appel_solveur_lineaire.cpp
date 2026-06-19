@@ -63,23 +63,28 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
 }
 
-namespace
+namespace Antares::Optimization
 {
 // Snapshot the per-problem study data the legacy extra outputs need but cannot
-// read off the problem's variables. Built once per weekly solve from
-// problemeHebdo, then passed to AddLegacyExtraOutputs. Keys mirror the
-// `component` field on LegacyVariableInfo (lowercased area names; for links,
-// `origin$$destination` matching AREA_SEP in opt_rename_problem.cpp).
+// read off the problem's variables. Built once per week from problemeHebdo (the
+// snapshotted data — reservoir capacities and NTC — is week-wide and constant
+// across the daily/weekly blocks of that week), then passed to
+// AddLegacyExtraOutputs. Keys mirror the `component` field on LegacyVariableInfo
+// (lowercased area names; for links, `origin$$destination` matching AREA_SEP in
+// opt_rename_problem.cpp).
 LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& problemeHebdo)
 {
     LegacyExtraOutputsContext context;
+    context.weekFirstTimeStep = static_cast<unsigned>(problemeHebdo.HeureDansLAnnee);
     for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
     {
         context.reservoirCapacityByArea[problemeHebdo.NomsDesPays[pays]]
           = problemeHebdo.CaracteristiquesHydrauliques[pays].TailleReservoir;
     }
-    const std::size_t nPdt = static_cast<std::size_t>(
-      problemeHebdo.NombreDePasDeTempsPourUneOptimisation);
+    // ValeursDeNTC spans the whole week and is indexed by hour-in-week, so the
+    // capacities are snapshotted over [0, NombreDePasDeTemps) once; the consumer
+    // indexes them with hourInWeek = timeIndex - weekFirstTimeStep.
+    const std::size_t nPdt = static_cast<std::size_t>(problemeHebdo.NombreDePasDeTemps);
     for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
     {
         std::string linkKey = std::string(
@@ -102,9 +107,13 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
     }
     return context;
 }
+} // namespace Antares::Optimization
 
+namespace
+{
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const PROBLEME_HEBDO& problemeHebdo,
+                               const LegacyExtraOutputsContext& extraOutputsContext,
                                const FillContext& fillContext,
                                const LegacyNameMapper& nameMapper,
                                unsigned currentBlock)
@@ -148,14 +157,13 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
                                   .status = std::nullopt});
     }
 
-    const LegacyExtraOutputsContext context = BuildLegacyExtraOutputsContext(problemeHebdo);
     AddLegacyExtraOutputs(simulationTable,
                           problem.LegacyVariablesInfo,
                           problem.X,
                           problem.CoutLineaire,
                           problem.LegacyConstraintsInfo,
                           problem.CoutsMarginauxDesContraintes,
-                          context,
+                          extraOutputsContext,
                           fillContext,
                           currentBlock);
 }
@@ -259,7 +267,8 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                           const int optimizationNumber,
                                           const OptPeriodStringGenerator& optPeriodStringGenerator,
                                           IResultWriter& writer,
-                                          SimulationTable* simulationTable)
+                                          SimulationTable* simulationTable,
+                                          const LegacyExtraOutputsContext& extraOutputsContext)
 {
     Utils::TimeMeasurement measure;
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
@@ -368,6 +377,7 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
         static constexpr LegacyNameMapper legacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *problemeHebdo,
+                                  extraOutputsContext,
                                   fillCtx,
                                   legacyNameMapper,
                                   currentBlock);
@@ -387,7 +397,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int optimizationNumber,
                          const OptPeriodStringGenerator& optPeriodStringGenerator,
                          IResultWriter& writer,
-                         SimulationTable* simulationTable)
+                         SimulationTable* simulationTable,
+                         const LegacyExtraOutputsContext& extraOutputsContext)
 {
     const auto& ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
@@ -397,7 +408,8 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                                                        optimizationNumber,
                                                        optPeriodStringGenerator,
                                                        writer,
-                                                       simulationTable);
+                                                       simulationTable,
+                                                       extraOutputsContext);
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {

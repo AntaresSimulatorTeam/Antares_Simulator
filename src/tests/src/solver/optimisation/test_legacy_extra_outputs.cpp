@@ -96,6 +96,10 @@ struct Fixture
         info[10] = LegacyVariableInfo{"UnsuppliedEnergy", "area3", 168};
         info[11] = LegacyVariableInfo{"DirectFlow", "area2$$area3", 168};
         info[12] = LegacyVariableInfo{"HydroLevel", "area1", 168};
+
+        // The week's first hour matches the block anchor (168), so the link
+        // congestion indicators read hour-in-week 0 of the capacity vectors.
+        context.weekFirstTimeStep = 168;
     }
 
     std::vector<std::optional<LegacyVariableInfo>> info;

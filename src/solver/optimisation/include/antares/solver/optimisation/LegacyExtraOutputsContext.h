@@ -30,12 +30,19 @@ struct LegacyExtraOutputsContext
     // row is skipped.
     std::unordered_map<std::string, double> reservoirCapacityByArea;
 
-    // Per-link transmission capacities in MW, indexed by within-block pdt
-    // (0 .. NombreDePasDeTempsPourUneOptimisation - 1). A missing key means
-    // the congestion indicators cannot be computed for that link and the rows
-    // are skipped.
+    // Per-link transmission capacities in MW, indexed by hour-in-week
+    // (0 .. NombreDePasDeTemps - 1). The context is built once per week, so the
+    // vectors span the whole week and every block (daily or weekly) reads its
+    // own hour. A missing key means the congestion indicators cannot be
+    // computed for that link and the rows are skipped.
     std::unordered_map<std::string, std::vector<double>> directCapacityByLink;
     std::unordered_map<std::string, std::vector<double>> indirectCapacityByLink;
+
+    // Absolute time index of the week's first hour (PROBLEME_HEBDO::HeureDansLAnnee,
+    // i.e. weekInTheYear * hoursPerWeek). LegacyVariableInfo::timeIndex is
+    // absolute, so hourInWeek = timeIndex - weekFirstTimeStep indexes the
+    // per-link vectors above.
+    unsigned weekFirstTimeStep = 0;
 };
 
 } // namespace Antares::Optimization

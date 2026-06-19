@@ -296,7 +296,7 @@ void AddLinkIsDirectlyCongested(SimulationTable& simulationTable,
     {
         return;
     }
-    const unsigned pdt = info.timeIndex - fillContext.getGlobalFirstTimeStep();
+    const unsigned pdt = info.timeIndex - context.weekFirstTimeStep;
     if (pdt >= it->second.size())
     {
         return;
@@ -329,7 +329,7 @@ void AddLinkIsIndirectlyCongested(SimulationTable& simulationTable,
     {
         return;
     }
-    const unsigned pdt = info.timeIndex - fillContext.getGlobalFirstTimeStep();
+    const unsigned pdt = info.timeIndex - context.weekFirstTimeStep;
     if (pdt >= it->second.size())
     {
         return;

@@ -10,6 +10,7 @@
 #include "antares/config/config.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/optim-model-filler/BendersDecomposition.h"
+#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/study/parameters/adq-patch-params.h"
@@ -71,7 +72,13 @@ bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
                          const int,
                          const OptPeriodStringGenerator&,
                          Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable);
+                         IO::Outputs::SimulationTable* simulationTable,
+                         const Antares::Optimization::LegacyExtraOutputsContext& extraOutputsContext);
+
+// Snapshot the week-wide study data (reservoir capacities, link NTC) the legacy
+// extra outputs need. Built once per week and reused across the week's blocks.
+Antares::Optimization::LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(
+  const PROBLEME_HEBDO& problemeHebdo);
 
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,

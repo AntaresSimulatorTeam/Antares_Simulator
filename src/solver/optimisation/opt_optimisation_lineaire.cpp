@@ -135,6 +135,14 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
     const int NombreDePasDeTempsPourUneOptimisation = problemeHebdo
                                                         ->NombreDePasDeTempsPourUneOptimisation;
 
+    // The legacy extra outputs need week-wide study data (reservoir capacities,
+    // link NTC) that is constant across the week's blocks; snapshot it once here
+    // rather than rebuilding it for every interval. Only needed when a simulation
+    // table is being filled.
+    const Antares::Optimization::LegacyExtraOutputsContext extraOutputsContext
+      = simulationTable ? BuildLegacyExtraOutputsContext(*problemeHebdo)
+                        : Antares::Optimization::LegacyExtraOutputsContext{};
+
     int DernierPdtDeLIntervalle;
     for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
          pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
@@ -176,7 +184,8 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
                                  optimizationNumber,
                                  *optPeriodStringGenerator,
                                  writer,
-                                 simulationTable))
+                                 simulationTable,
+                                 extraOutputsContext))
         {
             return false;
         }
