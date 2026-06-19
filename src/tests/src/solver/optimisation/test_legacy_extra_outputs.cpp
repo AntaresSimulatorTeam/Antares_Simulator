@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(level_percentage_is_hydro_level_over_reservoir_capacity)
     const auto rows = RowsForOutput(table, "level_percentage");
     BOOST_REQUIRE_EQUAL(rows.size(), 1);
     BOOST_CHECK_EQUAL(rows[0].component, "area1");
-    BOOST_CHECK_CLOSE(rows[0].value, 4000. / 5000., 1e-9);
+    BOOST_CHECK_CLOSE(rows[0].value, 4000. / 5000. * 100., 1e-9);
 }
 
 BOOST_AUTO_TEST_CASE(level_percentage_is_skipped_without_a_known_capacity)

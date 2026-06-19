@@ -251,9 +251,9 @@ void AddHydroShadowPrice(SimulationTable& simulationTable,
                         currentBlock);
 }
 
-// level_percentage = HydroLevel / reservoir_capacity; the reservoir capacity
-// is not an objective coefficient on any recorded variable, so it is carried
-// in LegacyExtraOutputsContext. Skipped when the area has no reservoir
+// level_percentage = HydroLevel / reservoir_capacity * 100; the reservoir
+// capacity is not an objective coefficient on any recorded variable, so it is
+// carried in LegacyExtraOutputsContext. Skipped when the area has no reservoir
 // (capacity unknown or non-positive).
 void AddAreaLevelPercentage(SimulationTable& simulationTable,
                             const LegacyVariableInfo& info,
@@ -271,7 +271,7 @@ void AddAreaLevelPercentage(SimulationTable& simulationTable,
     AddExtraOutputEntry(simulationTable,
                         "level_percentage",
                         info,
-                        solutionValues[index] / it->second,
+                        solutionValues[index] / it->second * 100.,
                         fillContext,
                         currentBlock);
 }
