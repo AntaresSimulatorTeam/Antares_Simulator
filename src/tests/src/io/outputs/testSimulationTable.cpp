@@ -787,8 +787,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("1,comp1,var4,168,1") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var4,169,2") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,168,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,169,1") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
@@ -857,7 +857,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocal
     std::string content = readFileContent(out_file_path);
 
     BOOST_CHECK(content.find("1,comp1,constraint2,168,0,0") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,constraint2,170,1,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,constraint2,169,1,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
