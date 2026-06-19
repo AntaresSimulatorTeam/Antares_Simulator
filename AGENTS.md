@@ -4,11 +4,11 @@ Antares Simulator: open-source power system planning tool for long-term adequacy
 
 ## Build & Test
 
-**Configure and build** (from `src/` directory):
+**Configure and build** (from project root):
 ```bash
-cmake -B ../build-debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build ../build-debug -j$(nproc)
-cmake --build ../build-debug --target antares-solver  # Specific target
+cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-debug -j$(nproc)
+cmake --build build-debug --target antares-solver  # Specific target
 ```
 
 **Run tests:**
@@ -22,7 +22,7 @@ python -m pytest -m json --antares-simu-path=<path_to_solver>
 
 **Format code:**
 ```bash
-cd src && ./format-code.sh
+./src/format-code.sh
 ```
 
 ## Detailed Guidelines

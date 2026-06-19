@@ -27,13 +27,19 @@ bool lessTypeName(const std::shared_ptr<WatchedConstraint> a,
                   const std::shared_ptr<WatchedConstraint> b)
 {
     // TODO Compiler-dependent behavior
-    return typeid(*a).before(typeid(*b));
+    // Dereference before applying typeid so its operand is a side-effect-free
+    // glvalue (the dynamic type is still resolved): -Wpotentially-evaluated-expression.
+    const WatchedConstraint& ra = *a;
+    const WatchedConstraint& rb = *b;
+    return typeid(ra).before(typeid(rb));
 }
 
 bool sameType(const std::shared_ptr<WatchedConstraint> a,
               const std::shared_ptr<WatchedConstraint> b)
 {
-    return typeid(*a) == typeid(*b);
+    const WatchedConstraint& ra = *a;
+    const WatchedConstraint& rb = *b;
+    return typeid(ra) == typeid(rb);
 }
 
 bool greaterValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<WatchedConstraint> b)

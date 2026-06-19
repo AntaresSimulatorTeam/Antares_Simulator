@@ -9,13 +9,11 @@
 
 #include <antares/optimisation/linear-problem-api/StructuredLinearProblem.h>
 #include <antares/writer/null_result_writer.h>
-#include "antares/application/ScenarioBuilderOwner.h"
 #include "antares/benchmarking/DurationCollector.h"
 #include "antares/file-tree-study-loader/FileTreeStudyLoader.h"
 #include "antares/io/outputs/MPSGenerator.h"
 #include "antares/modeler-optimisation-container/OptimEntityContainer.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
-#include "antares/solver/modeler/Modeler.h"
 #include "antares/solver/optimisation/LinearProblemMatrix.h"
 #include "antares/solver/optimisation/opt_export_structure.h"
 #include "antares/solver/optimisation/opt_fonctions.h"
@@ -376,8 +374,6 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
     bool hasModelerData = modelerData != nullptr;
     const ILinearProblemData* modelerDataSeries = hasModelerData ? modelerData->dataSeries.get()
                                                                  : nullptr;
-    const Optimisation::ScenarioGroupRepository* modelerScenarioGroupRepository
-      = hasModelerData ? &modelerData->scenarioGroupRepository : nullptr;
 
     Optimisation::OptimEntityContainer optimEntityContainer(problem);
     if (hasModelerData)
@@ -385,11 +381,7 @@ void SingleProblemGetter::fillProblem(ILinearProblem& problem, const WeeklyProbl
         modelerData->bendersDecomposition.setCurrentProblemId(problemName({id.year, id.week + 1}));
     }
 
-    fillLinearProblem(fillCtx,
-                      &pb_,
-                      optimEntityContainer,
-                      true,
-                      &modelerData->bendersDecomposition);
+    fillLinearProblem(fillCtx, &pb_, optimEntityContainer, &modelerData->bendersDecomposition);
 }
 
 const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
@@ -508,7 +500,7 @@ void writeWeekMPS(const std::unique_ptr<ILinearProblem>& weekly,
 {
     auto name = problemName(id);
 
-    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps");
+    IO::Outputs::MPSGenerator mpsGenerator(*weekly, name + ".mps", true);
     std::string mps = mpsGenerator.run();
 
     logs.info() << "Printing problem: " << name << '\n';
@@ -552,7 +544,7 @@ void SingleProblemGetter::writeMasterAndStructure() const
         return;
     }
 
-    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master").run();
+    auto mps = IO::Outputs::MPSGenerator(*masterProblem, "master", true).run();
     resultWriter_->addEntryFromBuffer("master.mps", mps);
     logs.info() << "Written: " << "master.mps";
 

@@ -229,6 +229,7 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits.resize(nombreDeVariables);
     ProblemeAResoudre->PositionDeLaVariable.resize(nombreDeVariables);
     ProblemeAResoudre->NomDesVariables.resize(nombreDeVariables);
+    ProblemeAResoudre->LegacyVariablesInfo.resize(nombreDeVariables);
     ProblemeAResoudre->VariablesEntieres.resize(nombreDeVariables);
 
     ProblemeAResoudre->Sens.resize(nombreDeContraintes);

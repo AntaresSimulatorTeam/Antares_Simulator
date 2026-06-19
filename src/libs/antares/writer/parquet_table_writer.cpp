@@ -30,7 +30,7 @@ std::shared_ptr<arrow::Table> makeArrowTable(const Antares::IO::Outputs::Simulat
     std::vector<std::shared_ptr<arrow::Array>> arrow_columns;
     for (const auto& column: columns)
     {
-        auto columnAdapter = makeColumnAdapter(column);
+        auto columnAdapter = makeColumnAdapter(*column);
         fields.push_back(columnAdapter->makeField());
         arrow_columns.push_back(columnAdapter->makeArray());
     }

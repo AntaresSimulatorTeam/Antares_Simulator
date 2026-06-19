@@ -76,6 +76,7 @@ std::optional<std::vector<YmlModel::Library>> loadLibrariesFromYaml(const fs::pa
         logs.warning() << "Model library missing";
         return {};
     }
+
     for (const auto& entry: fs::directory_iterator(directoryPath))
     {
         if (entry.path().extension() != ".yml")

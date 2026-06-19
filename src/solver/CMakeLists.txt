@@ -97,7 +97,7 @@ target_link_libraries(antares-solver
 
 target_include_directories(antares-solver
         PRIVATE
-        ${CMAKE_SOURCE_DIR}/solver
+        ${CMAKE_SOURCE_DIR}/src/solver
 )
 
 import_std_libs(antares-solver)

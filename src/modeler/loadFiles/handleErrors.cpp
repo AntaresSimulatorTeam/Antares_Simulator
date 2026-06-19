@@ -11,7 +11,7 @@ namespace Antares::Solver::LoadFiles
 
 void handleYamlError(const YAML::Exception& e, const std::string& context)
 {
-    logs.error() << "Error while parsing the yaml file: " << context;
+    logs.error() << "Error while parsing the yml file: " << context;
     if (!e.mark.is_null())
     {
         logs.error() << "Line " << e.mark.line << " column " << e.mark.column;
@@ -22,7 +22,7 @@ void handleYamlError(const YAML::Exception& e, const std::string& context)
 std::string markYamlError(const YAML::Exception& e, const std::string& context)
 {
     std::ostringstream ss;
-    ss << "Error while parsing the yaml file: " << context;
+    ss << "Error while parsing the yml file: " << context;
     if (!e.mark.is_null())
     {
         ss << "\nLine " << e.mark.line << " column " << e.mark.column;
@@ -30,4 +30,5 @@ std::string markYamlError(const YAML::Exception& e, const std::string& context)
     ss << "\n" << e.what();
     return ss.str();
 }
+
 } // namespace Antares::Solver::LoadFiles

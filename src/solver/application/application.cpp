@@ -152,7 +152,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         // no output ?
         study.parameters.noOutput = pSettings.noOutput;
 
-        study.parameters.parquetFmtForSimuTables = pSettings.parquetFmtForSimuTables;
+        if (pSettings.parquetFmtForSimuTables)
+        {
+            study.parameters.simuTableFormat = Writer::TableFormat::Parquet;
+        }
 
         if (pSettings.forceZipOutput)
         {

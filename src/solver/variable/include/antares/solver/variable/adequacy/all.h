@@ -10,7 +10,7 @@
 #include "antares/solver/variable/area.h"
 #include "antares/solver/variable/bindConstraints.h"
 #include "antares/solver/variable/commons/hydro.h"
-#include "antares/solver/variable/commons/join.h"
+#include "antares/solver/variable/commons/join_all.h"
 #include "antares/solver/variable/commons/load.h"
 #include "antares/solver/variable/commons/miscGenMinusRowPSP.h"
 #include "antares/solver/variable/commons/psp.h"
@@ -129,20 +129,11 @@ using VariablesPerSetOfAreas = Common::SpatialAggregateAll<
   Variable::Economy::DispatchableGenMargin,
   Variable::Economy::Marge>::type;
 
-typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
-  Container::EndOfList                             // End of variable list
-  >
+using VariablesPerBindingConstraints = Variable::Economy::BindingConstMarginCost;
 
-  VariablesPerBindingConstraints;
-
-typedef Variable::Join<
-  // Variables for each area / links attached to the areas
-  Variable::Areas<VariablesPerArea>,
-  // Variables for each set of areas
-  Variable::Join<Variable::SetsOfAreas<VariablesPerSetOfAreas>,
-                 // Variables for each binding constraint
-                 Variable::BindingConstraints<VariablesPerBindingConstraints>>>
-  ItemList;
+using ItemList = Variable::JoinAll<Variable::Areas<VariablesPerArea>,
+                                   Variable::SetsOfAreas<VariablesPerSetOfAreas>,
+                                   Variable::BindingConstraints<VariablesPerBindingConstraints>>;
 
 /*!
 ** \brief All variables for a simulation (economy)

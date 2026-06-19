@@ -157,36 +157,6 @@ static inline void ReadCorrelationCoefficients(Correlation& correlation,
     }
 }
 
-static inline void ExportCorrelationCoefficients(Study& study,
-                                                 const Matrix<>& m,
-                                                 std::ostream& file,
-                                                 const std::string& name)
-{
-    if (m.empty() or m.width != m.height)
-    {
-        return;
-    }
-
-    file << '[' << name << "]\n";
-
-    // For each column
-    for (uint x = 0; x != m.width; ++x)
-    {
-        const AreaName& from = study.areas.byIndex[x]->id;
-
-        auto& col = m.entry[x];
-        for (uint y = 0; y < x; ++y)
-        {
-            if (!Utils::isZero(col[y]))
-            {
-                file << from << '%' << study.areas.byIndex[y]->id << " = " << col[y] << '\n';
-            }
-        }
-    }
-
-    file << '\n';
-}
-
 int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings)
 {
     // Asserts

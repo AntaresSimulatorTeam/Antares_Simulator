@@ -72,7 +72,7 @@ jobs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
-        key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-oracle8-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-oracle8-
 
@@ -102,7 +102,7 @@ jobs:
     - name: Configure
       run: |
         source /opt/rh/gcc-toolset-11/enable
-        cmake -B _build -S src \
+        cmake -B _build -S . \
           -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DVCPKG_TARGET_TRIPLET=x64-linux-release \
           -DCMAKE_BUILD_TYPE=Release \
@@ -178,4 +178,4 @@ jobs:
       uses: actions/cache/save@v5
       with:
         path: ${{ env.VCPKG_CACHE_DIR }}
-        key: vcpkg-cache-oracle8-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-oracle8-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}

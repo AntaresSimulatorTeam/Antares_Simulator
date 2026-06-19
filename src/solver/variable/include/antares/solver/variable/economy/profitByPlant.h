@@ -26,8 +26,9 @@ struct ProfitByPlantTraits
         return "Profit for thermal units";
     }
 
-    static void setHourlyValuesForCurrentYear(std::vector<IntermediateValues>& clusterValues,
-                                              State& state)
+    static void setHourlyValue(std::vector<IntermediateValues>& clusterValues,
+                               State& state,
+                               [[maybe_unused]] unsigned int numSpace)
     {
         auto area = state.area;
         auto& thermal = state.thermal;
@@ -57,12 +58,6 @@ struct ProfitByPlantTraits
     }
 };
 
-using VCardProfitByPlant = VCardDispatchablePlantByClusterBase<ProfitByPlantTraits>;
-
-/*!
-** \brief Profit by plant for thermal dispatchable clusters
-*/
-template<class NextT = Container::EndOfList>
-using ProfitByPlant = DispatchablePlantByClusterBase<ProfitByPlantTraits, NextT>;
+using ProfitByPlant = DispatchablePlantByClusterBase<ProfitByPlantTraits>;
 
 } // namespace Antares::Solver::Variable::Economy

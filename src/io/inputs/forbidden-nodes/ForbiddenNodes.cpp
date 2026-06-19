@@ -1,3 +1,6 @@
+// Copyright 2007-2026, RTE (https://www.rte-france.com)
+// SPDX-License-Identifier: MPL-2.0
+
 #include <antares/expressions/nodes/ExpressionsNodes.h>
 #include <antares/io/inputs/forbidden-nodes/ForbiddenNodes.h>
 
@@ -23,25 +26,35 @@ void forbidVariablesInFunctionNodes(ForbiddenNodes& f)
     f.parentForbidsChild<FunctionNodeType::min, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::floor, VariableNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::round, VariableNode>();
+    f.parentForbidsChild<FunctionNodeType::abs, VariableNode>();
 }
 
 void forbidPortFieldsInFunctionNodes(ForbiddenNodes& f)
 {
-    // max(...) : fordidding children
+    // max(...) : fordiding children
     f.parentForbidsChild<FunctionNodeType::max, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::max, PortFieldSumNode>();
 
-    // min(...) : fordidding children
+    // min(...) : fordiding children
     f.parentForbidsChild<FunctionNodeType::min, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::min, PortFieldSumNode>();
 
-    // floor(node) : fordidding children
+    // floor(node) : fordiding children
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::floor, PortFieldSumNode>();
 
-    // ceil(node) : fordidding children
+    // ceil(node) : fordiding children
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldNode>();
     f.parentForbidsChild<FunctionNodeType::ceil, PortFieldSumNode>();
+
+    // round(node) : fordiding children
+    f.parentForbidsChild<FunctionNodeType::round, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::round, PortFieldSumNode>();
+
+    // abs(node) : fordiding children
+    f.parentForbidsChild<FunctionNodeType::abs, PortFieldNode>();
+    f.parentForbidsChild<FunctionNodeType::abs, PortFieldSumNode>();
 }
 
 void ForbidInFunctionNodes(ForbiddenNodes& f)
@@ -115,6 +128,8 @@ static ForbiddenNodes ForbidNonLinearNodes()
                      FunctionNodeType::min,
                      FunctionNodeType::floor,
                      FunctionNodeType::ceil,
+                     FunctionNodeType::round,
+                     FunctionNodeType::abs,
                      FunctionNodeType::pow>();
     return f;
 }

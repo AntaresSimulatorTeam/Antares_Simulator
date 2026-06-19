@@ -24,6 +24,11 @@ def run_antares_modeler(context):
     run_modeler(context)
 
 
+@when("I run antares problem generator")
+def run_antares_problem_generator(context):
+    run_problem_generator(context)
+
+
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
     assert_double_close(value, context.moh.get_objective_value(), 1e-5)
@@ -37,6 +42,15 @@ def modeler_obj_value(context, lb, ub):
 
 @step('the modeler outputs contain the following entries')
 def modeler_output_values(context):
+    check_modeler_output_values(context, 1e-6)
+
+
+@step('the modeler outputs contain the following entries with relative tolerance {tolerance:g}')
+def modeler_output_values_with_tolerance(context, tolerance):
+    check_modeler_output_values(context, tolerance)
+
+
+def check_modeler_output_values(context, tolerance):
     for row in context.table:
         ts_range = read_int_range(row, "timestep")
         if "scenario" not in context.table.headings:
@@ -52,7 +66,7 @@ def modeler_output_values(context):
                 for ts in ts_range:
                     assert_double_close(get_value(row, ts),
                                         context.moh.get_simulation_table_entry(row["component"],row["output"], block, ts, scenario),
-                                        1e-6)
+                                        tolerance)
 
 def read_int_range(row, key : str):
     if row[key] != "":
@@ -67,8 +81,7 @@ def get_value(row, ts):
     ret = row["value"]
     return float(ret)  # Single value case (apply to all timesteps)
 
-def run_modeler(context):
-    command = build_antares_modeler_command(context)
+def run_executable(context, command):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
@@ -90,15 +103,26 @@ def run_modeler(context):
         print(err.replace(b'\r\n', b'\n').decode('utf-8'))
         print("*********************** End stderr ***********************")
     else:
-        context.output_path = os.path.join(context.study_path,
-                                           "output")  # TODO : fixme parse_output_folder_from_logs(out)
+        context.output_path = os.path.join(context.study_path, "output")
         context.moh = modeler_output_handler(Path(parse_output_folder_from_logs(context.logs_out)),
                                              "simulation-table*.csv",
                                              True)
     context.return_code = process.returncode
 
+def run_modeler(context):
+    run_executable(context, build_antares_modeler_command(context))
+
+
+def run_problem_generator(context):
+    run_executable(context, build_antares_problem_generator_command(context))
+
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
+    return command
+
+
+def build_antares_problem_generator_command(context):
+    command = [context.config.userdata["antares-problem-generator"], str(context.study_path)]
     return command
 
 

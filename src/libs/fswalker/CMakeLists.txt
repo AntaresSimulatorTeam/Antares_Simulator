@@ -17,7 +17,7 @@ add_library(Antares::fswalker ALIAS antares-fswalker)
 
 target_include_directories(antares-fswalker
 		PUBLIC
-			${CMAKE_SOURCE_DIR}/libs
+			${CMAKE_SOURCE_DIR}/src/libs
 		)
 target_link_libraries(antares-fswalker
 		PRIVATE
