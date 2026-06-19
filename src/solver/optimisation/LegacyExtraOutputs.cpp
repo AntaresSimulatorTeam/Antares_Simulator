@@ -290,7 +290,7 @@ void AddLinkIsDirectlyCongested(SimulationTable& simulationTable,
                                 const FillContext& fillContext,
                                 unsigned currentBlock)
 {
-    constexpr double saturationEpsilon = 1e-3;
+    constexpr double saturationEpsilon = 1e-5;
     const auto it = context.directCapacityByLink.find(info.component);
     if (it == context.directCapacityByLink.end())
     {
@@ -323,7 +323,7 @@ void AddLinkIsIndirectlyCongested(SimulationTable& simulationTable,
                                   const FillContext& fillContext,
                                   unsigned currentBlock)
 {
-    constexpr double saturationEpsilon = 1e-3;
+    constexpr double saturationEpsilon = 1e-5;
     const auto it = context.indirectCapacityByLink.find(info.component);
     if (it == context.indirectCapacityByLink.end())
     {
