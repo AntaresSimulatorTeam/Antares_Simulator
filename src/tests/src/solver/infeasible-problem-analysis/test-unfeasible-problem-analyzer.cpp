@@ -430,6 +430,7 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
     SimulationTable simulationTable;
+    Antares::Optimization::LegacyExtraOutputsContext extraOutputsContext;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
@@ -437,7 +438,8 @@ BOOST_AUTO_TEST_CASE(feasible_problem_does_not_trigger_analyzer_or_named_flag)
                                             1, // optimizationNumber
                                             generator,
                                             writer,
-                                            &simulationTable);
+                                            &simulationTable,
+                                            extraOutputsContext);
 
     const auto expectedMps = R"(* Antares Simulator MPSGenerator
 * Number of variables: 1
@@ -494,6 +496,7 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
     NullWriterExtension writer;
     DummyOptPeriodStringGenerator generator;
     SimulationTable simulationTable;
+    Antares::Optimization::LegacyExtraOutputsContext extraOutputsContext;
 
     const bool result = OPT_AppelDuSimplexe(options,
                                             &problemeHebdo,
@@ -501,7 +504,8 @@ BOOST_AUTO_TEST_CASE(infeasible_problem_triggers_analyzer_and_named_flag)
                                             1, // optimizationNumber
                                             generator,
                                             writer,
-                                            &simulationTable);
+                                            &simulationTable,
+                                            extraOutputsContext);
     const auto expectedMps = R"(* Antares Simulator MPSGenerator
 * Number of variables: 1
 * Number of constraints: 2

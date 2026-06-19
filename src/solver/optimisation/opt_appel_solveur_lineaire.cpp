@@ -63,15 +63,14 @@ static void logProblemSize(const MPSolver* mpSolver)
     logs.info();
 }
 
-namespace Antares::Optimization
-{
 // Snapshot the per-problem study data the legacy extra outputs need but cannot
 // read off the problem's variables. Built once per week from problemeHebdo (the
 // snapshotted data — reservoir capacities and NTC — is week-wide and constant
 // across the daily/weekly blocks of that week), then passed to
 // AddLegacyExtraOutputs. Keys mirror the `component` field on LegacyVariableInfo
 // (lowercased area names; for links, `origin$$destination` matching AREA_SEP in
-// opt_rename_problem.cpp).
+// opt_rename_problem.cpp). Declared at global scope in opt_fonctions.h so the
+// per-week caller (runWeeklyOptimization) can build it.
 LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& problemeHebdo)
 {
     LegacyExtraOutputsContext context;
@@ -90,7 +89,8 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
         std::string linkKey = std::string(
                                 problemeHebdo
                                   .NomsDesPays[problemeHebdo.PaysOrigineDeLInterconnexion[interco]])
-                              + "$$"
+             + "$$"
+
                               + problemeHebdo.NomsDesPays
                                   [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
         std::vector<double> directCapacity(nPdt);
@@ -107,7 +107,6 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
     }
     return context;
 }
-} // namespace Antares::Optimization
 
 namespace
 {
