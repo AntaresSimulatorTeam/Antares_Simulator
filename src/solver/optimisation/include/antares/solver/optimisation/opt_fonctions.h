@@ -66,14 +66,15 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(const SingleOptimOptions& options,
-                         PROBLEME_HEBDO*,
-                         int,
-                         const int,
-                         const OptPeriodStringGenerator&,
-                         Solver::IResultWriter& writer,
-                         IO::Outputs::SimulationTable* simulationTable,
-                         const Antares::Optimization::LegacyExtraOutputsContext& extraOutputsContext);
+bool OPT_AppelDuSimplexe(
+  const SingleOptimOptions& options,
+  PROBLEME_HEBDO*,
+  int,
+  const int,
+  const OptPeriodStringGenerator&,
+  Solver::IResultWriter& writer,
+  IO::Outputs::SimulationTable* simulationTable,
+  const Antares::Optimization::LegacyExtraOutputsContext& extraOutputsContext);
 
 // Snapshot the week-wide study data (reservoir capacities, link NTC) the legacy
 // extra outputs need. Built once per week and reused across the week's blocks.

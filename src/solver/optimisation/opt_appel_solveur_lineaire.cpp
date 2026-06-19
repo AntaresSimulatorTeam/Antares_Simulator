@@ -89,7 +89,7 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
         std::string linkKey = std::string(
                                 problemeHebdo
                                   .NomsDesPays[problemeHebdo.PaysOrigineDeLInterconnexion[interco]])
-             + "$$"
+                              + "$$"
 
                               + problemeHebdo.NomsDesPays
                                   [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
