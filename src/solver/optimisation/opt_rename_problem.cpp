@@ -6,23 +6,13 @@
 #include <algorithm>
 #include <map>
 
-const std::string SEP = "::";
-const std::string AREA_SEP = "$$";
-
 const std::string HOUR("hour");
 const std::string DAY("day");
 const std::string WEEK("week");
-const std::string LINK("link");
-const std::string AREA("area");
 
 std::string ShortTermStorageCumulationIdentifier(const std::string& name)
 {
     return "Constraint<" + name + ">";
-}
-
-std::string LocationIdentifier(const std::string& location, const std::string& locationType)
-{
-    return locationType + "<" + location + ">";
 }
 
 std::string BuildName(const std::string& name,
