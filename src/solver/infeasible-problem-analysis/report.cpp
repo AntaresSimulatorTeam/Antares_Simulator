@@ -50,7 +50,14 @@ bool greaterValue(const std::shared_ptr<WatchedConstraint> a, std::shared_ptr<Wa
 void InfeasibleProblemReport::filterConstraintsToOneByType()
 {
     // 1. Grouping constraints by C++ type (inside a group, order of instances remains unchanged)
+    // NOTE: libstdc++'s std::stable_sort instantiates std::get_temporary_buffer, which is
+    // deprecated since C++17. The deprecation comes from the standard library internals, not
+    // from our code; silence it locally. std::sort is not an option here because stability is
+    // required (step 2 keeps the first instance of each type group).
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     std::ranges::stable_sort(constraints_, lessTypeName);
+#pragma GCC diagnostic pop
     // 2. Keeping the first instances of each group, and rejecting others (= duplicates) to the end.
     auto duplicates = std::ranges::unique(constraints_, sameType);
     // 3. Removing trailing duplicates
