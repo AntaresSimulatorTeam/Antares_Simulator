@@ -52,6 +52,8 @@ Make `mkdocs build --strict` and a Doxygen build with `WARN_AS_ERROR`/`WARN_IF_U
 
 On each PR, send the **code diff** plus the **`docs/` file tree** (and any doc changes already in the PR) to an LLM, and ask one question: *given this code change, is the documentation now stale or incomplete, and where?* The model returns a structured verdict, posted as a single advisory PR comment.
 
+> **Good idea!** To improve signal quality, the prompt should include contextual hints about which areas of the codebase are user-facing. For example: "format changes are found in `src/libs/antares`" — this helps the model focus on the right subsystems and reduces false positives from internal refactors in less visible areas.
+
 - **Pros:** the only option that reasons about *semantic* consistency between code and prose. Catches "you added `--foo` but didn't document it" class of drift.
 - **Cons:** probabilistic (false positives/negatives); depends on an external API and a secret; small per-PR cost.
 
@@ -106,7 +108,7 @@ Two small files:
 
 ### 3.5 Model
 
-**`claude-sonnet-4-6`** — strong judgment for this task at moderate cost. (Higher-quality `claude-opus-4-8` or cheaper `claude-haiku-4-5` are drop-in alternatives; see costs below.)
+**`claude-haiku-4-5`** — this is a simple classification task ("is this change user-facing and undocumented?"), not a complex reasoning task. Haiku is faster, cheaper, and well-suited for this kind of structured judgment. (Higher-quality `claude-sonnet-4-6` or `claude-opus-4-8` are drop-in alternatives if precision proves insufficient.)
 
 ## 4. The fork-secrets constraint (key design decision)
 
@@ -128,13 +130,13 @@ Per-PR cost is dominated by the input diff (typically a few thousand tokens) and
 
 | Model | Input $/1M | Output $/1M | Est. cost / PR* | Notes |
 |---|---|---|---|---|
-| `claude-opus-4-8` | $5.00 | $25.00 | ~$0.02–0.05 | Best judgment |
-| **`claude-sonnet-4-6`** | **$3.00** | **$15.00** | **~$0.01–0.03** | **Chosen — strong judgment, moderate cost** |
-| `claude-haiku-4-5` | $1.00 | $5.00 | ~$0.005–0.01 | Coarse "take a look" signal |
+| `claude-opus-4-8` | $5.00 | $25.00 | ~$0.02–0.05 | Overkill for this task |
+| `claude-sonnet-4-6` | $3.00 | $15.00 | ~$0.01–0.03 | Strong judgment, moderate cost |
+| **`claude-haiku-4-5`** | **$1.00** | **$5.00** | **~$0.005–0.01** | **Chosen — fast, cheap, well-suited for classification** |
 
 \* Assumes ~4k input + ~0.5k output tokens for a representative PR. Large diffs cost proportionally more; the script can cap/trim very large diffs.
 
-**Order-of-magnitude:** at, say, 50 PRs/month on Sonnet, this is roughly **$0.50–1.50/month** — negligible relative to the maintenance cost of stale docs. There is no fixed/idle cost; spend is strictly per-PR.
+**Order-of-magnitude:** at, say, 50 PRs/month on Haiku, this is roughly **$0.25–0.50/month** — negligible relative to the maintenance cost of stale docs. There is no fixed/idle cost; spend is strictly per-PR.
 
 ### Other costs
 
@@ -162,6 +164,6 @@ Per-PR cost is dominated by the input diff (typically a few thousand tokens) and
 
 ## 8. Decision requested
 
-- Approve adopting Option 4 in advisory mode with the same-repo-only / Sonnet 4.6 configuration above?
+- Approve adopting Option 4 in advisory mode with the same-repo-only / Haiku 4.5 configuration above?
 - Approve provisioning an `ANTHROPIC_API_KEY` repository secret?
 - Decide whether to bundle Option 3 (strict docs build) in the same effort.
