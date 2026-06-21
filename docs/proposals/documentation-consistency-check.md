@@ -52,7 +52,7 @@ Make `mkdocs build --strict` and a Doxygen build with `WARN_AS_ERROR`/`WARN_IF_U
 
 On each PR, send the **code diff** plus the **`docs/` file tree** (and any doc changes already in the PR) to an LLM, and ask one question: *given this code change, is the documentation now stale or incomplete, and where?* The model returns a structured verdict, posted as a single advisory PR comment.
 
-> **Good idea!** To improve signal quality, the prompt should include contextual hints about which areas of the codebase are user-facing. For example: "format changes are found in `src/libs/antares`" — this helps the model focus on the right subsystems and reduces false positives from internal refactors in less visible areas.
+> To improve signal quality, the prompt should include contextual hints about which areas of the codebase are user-facing. For example: "format changes are found in `src/libs/antares`" — this helps the model focus on the right subsystems and reduces false positives from internal refactors in less visible areas.
 
 - **Pros:** the only option that reasons about *semantic* consistency between code and prose. Catches "you added `--foo` but didn't document it" class of drift.
 - **Cons:** probabilistic (false positives/negatives); depends on an external API and a secret; small per-PR cost.
