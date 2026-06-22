@@ -214,13 +214,6 @@ constexpr unsigned int allTimeSeriesMask = static_cast<unsigned int>(timeSeriesL
 */
 constexpr unsigned int timeSeriesCount = std::popcount(allTimeSeriesMask);
 
-template<unsigned int T>
-requires(T > 0 && (T & (T - 1)) == 0) // T must be power of two
-struct TimeSeriesBitPatternIntoIndex
-{
-    static constexpr int value = std::countr_zero(T);
-};
-
 template<int T>
 struct TimeSeriesToCStr;
 
