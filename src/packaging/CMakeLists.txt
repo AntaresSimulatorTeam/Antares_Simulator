@@ -121,6 +121,7 @@ set(TARGET_LIBS #No alias
         modeler-checks
 		structured-linear-problem
         reserves-parsing-antlr-interface
+        view-builder
 )
 
 install(TARGETS ${TARGET_LIBS}

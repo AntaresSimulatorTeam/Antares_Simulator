@@ -29,6 +29,7 @@ target_link_libraries(application
         Antares::resources
         Antares::file-tree-study-loader
         Antares::simu-table-generator
+        Antares::view-builder
 )
 
 target_include_directories(application
