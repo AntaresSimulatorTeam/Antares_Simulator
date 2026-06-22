@@ -86,7 +86,7 @@ jobs:
       tests_commit_hash: ${{ steps.get_test_commit.outputs.commit_hash }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Get Antares_Simulator_Tests_NR commit hash
         id: get_test_commit
