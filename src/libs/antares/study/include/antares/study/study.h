@@ -43,19 +43,6 @@ public:
     //! Multiple sets of areas
     using SetsOfAreas = Antares::Data::Sets;
 
-    //! Extension filename
-    using FileExtension = std::string;
-
-    /*!
-    ** \brief Extract the title of a study
-    **
-    ** \param folder A study folder
-    ** \param[out] out      The variable where the title will be written
-    ** \param      warnings False to prevent warnings/errors when loading
-    ** \return True if the operation succeeded, false otherwise
-    */
-    static bool TitleFromStudyFolder(const AnyString& folder, YString& out, bool warnings = false);
-
     /*!
     ** \brief Get if a folder if a study
     **
@@ -324,14 +311,6 @@ public:
     ** These informations are only needed when a study is processed.
     */
     StudyRuntimeInfos runtime;
-
-    /*!
-    ** \brief The file extension for file within the input ('txt' or 'csv')
-    **
-    ** Since the v3.1, the file extensions in the input have been renamed into .txt,
-    ** (instead of .csv)
-    */
-    FileExtension inputExtension = "txt";
 
     /*!
     ** \name Cache
