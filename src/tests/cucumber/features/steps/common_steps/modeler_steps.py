@@ -29,6 +29,9 @@ def run_antares_modeler(context):
     context.outputFormat = OutputFormat.CSV
     run_modeler(context)
 
+@when("I run antares problem generator")
+def run_antares_problem_generator(context):
+    run_problem_generator(context)
 
 @when("I run antares modeler with parquet")
 def run_antares_modeler_parquet(context):
