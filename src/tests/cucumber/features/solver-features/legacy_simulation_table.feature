@@ -42,6 +42,10 @@ Feature: Legacy variables in simulation table
     #     between its bounds, the marginal MW is served at the unsupplied
     #     energy cost
     #   - is_near_loss_of_load = 1 since price (10000) > 10000 - 5
+    #   - actual_load = raw load = 6111 MW (input/load/series line 34). The
+    #     extra output reads the residual load and adds the must-run generation
+    #     back, recovering the raw load series; it is anchored on the area's
+    #     UnsuppliedEnergy variable, which exists in fast mode too.
     # actual_num_units_on is asserted on a separate accurate-mode scenario; the
     # NODU legacy variable is only created when unit-commitment-mode != fast
     # (opt_construction_variables_optimisees_lineaire.cpp guards the call on
@@ -66,6 +70,7 @@ Feature: Legacy variables in simulation table
       | 1     | area      | is_loss_of_load | 34      | 0        | 1      |
       | 1     | area      | price          | 34       | 0        | 10000  |
       | 1     | area      | is_near_loss_of_load | 34  | 0        | 1      |
+      | 1     | area      | actual_load    | 34       | 0        | 6111   |
 
   @fast @short
   Scenario: Link extra outputs are derived from the legacy flow variables and duals
@@ -77,6 +82,11 @@ Feature: Legacy variables in simulation table
     # exporting to west. At absolute hour 426 (block 3, hour 90 of the block):
     #   - abs_flow = |DirectFlow| = 213.45 MW (the link carries this much
     #     east -> west).
+    #   - minus_flow = -DirectFlow = -213.45 MW; the flow is positive (east
+    #     exporting to west), so its negation is negative.
+    #   - actual_loop_flow = 0: this fixture configures no loop flow on the
+    #     link, so the loop-flow input series is zero and the extra output is
+    #     emitted as 0.
     #   - prop_cost (link) = direct_hurdle_cost * positive_direct_flow
     #                        + indirect_hurdle_cost * positive_indirect_flow
     #                      = 1 * 213.45 + 1 * 0 = 213.45.
@@ -94,6 +104,8 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component  | output                  | timestep | scenario | value   |
       | 3     | east$$west | abs_flow                | 426      | 0        | 213.452 |
+      | 3     | east$$west | minus_flow              | 426      | 0        | -213.452 |
+      | 3     | east$$west | actual_loop_flow        | 426      | 0        | 0       |
       | 3     | east$$west | prop_cost               | 426      | 0        | 213.452 |
       | 3     | east$$west | capacity_shadow_price   | 426      | 0        | 1.0     |
       | 3     | east       | price                   | 426      | 0        | 44.926  |
@@ -130,6 +142,9 @@ Feature: Legacy variables in simulation table
       # 10 000 000 MWh reservoir and the initial level for hour 1 of week 1 is
       # 5 110 638.139 MWh => 0.51106381.
       | 1     | he        | level_percentage   | 1        | 0        | 0.51106381    |
+      # actual_inflows = round(inflows). The "he" hydro series carry no natural
+      # inflow (empty mod.txt / ror.txt), so the rounded inflow is 0 at hour 1.
+      | 1     | he        | actual_inflows     | 1        | 0        | 0             |
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
@@ -145,6 +160,16 @@ Feature: Legacy variables in simulation table
     # unitcount for each cluster: base = 4, semi base = 5, peak = 8. NODU is
     # integer in accurate mode so the ceil() is a no-op; we still assert the
     # value to lock in the extra-output transform.
+    #
+    # non_prop_cost = startup_cost * units_started_since_t-1
+    #               + fixed_cost * ceil(NODU).
+    # The "base" cluster is the cheapest (marginal 35) and the load never drops
+    # below the energy its 4 committed units provide, so all 4 base units run
+    # from hour 1 onwards (min-up-time 24h) and none start at hour 34. Its
+    # non_prop_cost is therefore the fixed-cost term only: fixed-cost (1700) *
+    # 4 units = 6800. fixed-cost is the objective coefficient on the NODU
+    # variable and carries the legacy anti-degeneracy noise, hence the relaxed
+    # tolerance.
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/008 Thermal fleet - Accurate unit commitment"
     When I run antares simulator
     Then the simulation succeeds
@@ -153,3 +178,6 @@ Feature: Legacy variables in simulation table
       | 1     | base      | actual_num_units_on | 34       | 0        | 4     |
       | 1     | semi base | actual_num_units_on | 34       | 0        | 5     |
       | 1     | peak      | actual_num_units_on | 34       | 0        | 8     |
+    And the modeler outputs contain the following entries with relative tolerance 1e-4
+      | block | component | output        | timestep | scenario | value |
+      | 1     | base      | non_prop_cost | 34       | 0        | 6800  |
