@@ -8,7 +8,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
@@ -43,19 +42,6 @@ public:
     //! Multiple sets of areas
     using SetsOfAreas = Antares::Data::Sets;
 
-    //! Extension filename
-    using FileExtension = std::string;
-
-    /*!
-    ** \brief Extract the title of a study
-    **
-    ** \param folder A study folder
-    ** \param[out] out      The variable where the title will be written
-    ** \param      warnings False to prevent warnings/errors when loading
-    ** \return True if the operation succeeded, false otherwise
-    */
-    static bool TitleFromStudyFolder(const AnyString& folder, YString& out, bool warnings = false);
-
     /*!
     ** \brief Get if a folder if a study
     **
@@ -63,15 +49,6 @@ public:
     ** \return True if the folder is a study, false otherwise
     */
     static bool IsRootStudy(const AnyString& folder);
-
-    /*!
-    ** \brief Get if a folder if a study
-    **
-    ** \param folder A study folder
-    ** \param buffer A buffer to reuse for temporary operations
-    ** \return True if the folder is a study, false otherwise
-    */
-    static bool IsRootStudy(const AnyString& folder, YString& buffer);
 
     //! \name Constructor & Destructor
     //@{
@@ -335,14 +312,6 @@ public:
     StudyRuntimeInfos runtime;
 
     /*!
-    ** \brief The file extension for file within the input ('txt' or 'csv')
-    **
-    ** Since the v3.1, the file extensions in the input have been renamed into .txt,
-    ** (instead of .csv)
-    */
-    FileExtension inputExtension = "txt";
-
-    /*!
     ** \name Cache
     */
 
@@ -356,10 +325,6 @@ public:
     mutable YString bufferLoadingTS;
 
     //@}
-
-    //! The queue service that runs every set of parallel years
-    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
-
     //! \name TS Generators
     //@{
     /*!
