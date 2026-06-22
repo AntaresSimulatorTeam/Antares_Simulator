@@ -356,10 +356,6 @@ public:
     mutable YString bufferLoadingTS;
 
     //@}
-
-    //! The queue service that runs every set of parallel years
-    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
-
     //! \name TS Generators
     //@{
     /*!

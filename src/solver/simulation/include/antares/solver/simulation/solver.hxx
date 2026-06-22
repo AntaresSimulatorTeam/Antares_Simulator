@@ -223,7 +223,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pDurationCollector(duration_collector),
-    pQueueService(study.pQueueService),
+    pQueueService(std::make_shared<Yuni::Job::QueueService>()),
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
