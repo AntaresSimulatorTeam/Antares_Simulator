@@ -6,7 +6,7 @@ from check_on_results.sim_return_code import simulation_success
 
 from fixtures import *
 
-ALL_STUDIES_PATH = Path('../../resources/Antares_Simulator_Tests_NR/unfeasible-problem').resolve()
+ALL_STUDIES_PATH = Path('../../../resources/Antares_Simulator_Tests_NR/unfeasible-problem').resolve()
 
 # --------------------------------------------------------------
 # Test behavior when an infeasible problem occurs
