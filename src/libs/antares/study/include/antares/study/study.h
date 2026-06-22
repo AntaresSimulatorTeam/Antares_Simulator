@@ -8,7 +8,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>
@@ -326,10 +325,6 @@ public:
     mutable YString bufferLoadingTS;
 
     //@}
-
-    //! The queue service that runs every set of parallel years
-    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
-
     //! \name TS Generators
     //@{
     /*!
