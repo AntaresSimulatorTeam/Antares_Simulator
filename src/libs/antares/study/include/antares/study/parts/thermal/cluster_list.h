@@ -35,7 +35,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    virtual ~ThermalClusterList();
+    ~ThermalClusterList();
     //@}
 
     //! \name Spinning
