@@ -59,9 +59,9 @@ def modeler_output_values(context):
 def modeler_output_values_with_tolerance(context, tolerance):
     check_simulation_table_content(context, tolerance)
 
-def check_simulation_table_content(context):
+def check_simulation_table_content(context, tolerance):
     expected_entries = read_expected_entries(context.table)
-    check_st_entries(context.simu_table, expected_entries)
+    check_st_entries(context.simu_table, expected_entries, tolerance)
 
 
 def read_int_range(row, key: str):
@@ -102,7 +102,7 @@ def read_expected_entries(table):
     return entries
 
 
-def check_st_entries(simulation_table: SimulationTable, expected_entries):
+def check_st_entries(simulation_table: SimulationTable, expected_entries, tolerance):
     """Check that the simulation table contains all expected entries."""
     for entry in expected_entries:
         component = entry["component"]
@@ -114,11 +114,10 @@ def check_st_entries(simulation_table: SimulationTable, expected_entries):
                     actual = simulation_table.get_entry(
                         component, output, block, ts, scenario
                     )
-                    assert_double_close(value, actual, 1e-6)
+                    assert_double_close(value, actual, tolerance)
 
 
-def run_modeler(context):
-    command = build_antares_modeler_command(context)
+def run_executable(context, command):
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
