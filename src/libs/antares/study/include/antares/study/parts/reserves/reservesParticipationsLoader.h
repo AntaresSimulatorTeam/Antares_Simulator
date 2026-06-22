@@ -3,6 +3,7 @@
 #pragma once
 
 #include <fstream>
+#include <unordered_map>
 #include <yaml-cpp/yaml.h>
 
 #include <antares/study/area/area.h>
@@ -62,9 +63,11 @@ void static errorIfNegativeValue(const std::string& propertyName,
     }
 }
 
-static void readStorageProperties(const YAML::Node& cert,
-                                   StorageClusterReserveParticipation& rp,
-                                   const std::string& typeName)
+template<typename T>
+void readYamlProperties(const YAML::Node& cert,
+                         T& rp,
+                         const std::string& typeName,
+                         const std::unordered_map<std::string, double T::*>& propMap)
 {
     for (const auto& prop: cert)
     {
@@ -73,33 +76,13 @@ static void readStorageProperties(const YAML::Node& cert,
         {
             continue;
         }
-        if (k == "participation-cost")
+
+        auto it = propMap.find(k);
+        if (it != propMap.end())
         {
             try
             {
-                rp.participationCost = prop.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << "invalid " << typeName << " reserve property " << k;
-            }
-        }
-        else if (k == "max-release")
-        {
-            try
-            {
-                rp.maxRelease = prop.second.as<double>();
-            }
-            catch (const YAML::Exception&)
-            {
-                logs.warning() << "invalid " << typeName << " reserve property " << k;
-            }
-        }
-        else if (k == "max-store")
-        {
-            try
-            {
-                rp.maxStore = prop.second.as<double>();
+                rp.*(it->second) = prop.second.as<double>();
             }
             catch (const YAML::Exception&)
             {
@@ -313,62 +296,13 @@ public:
 
     static void readProperties(const YAML::Node& cert, ThermalClusterReserveParticipation& rp)
     {
-        for (const auto& prop: cert)
-        {
-            auto k = prop.first.as<std::string>();
-            if (k == "reserve")
-            {
-                continue;
-            }
-            if (k == "participation-cost")
-            {
-                try
-                {
-                    rp.participationCost = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid thermal reserve property " << k;
-                }
-            }
-            else if (k == "max-power")
-            {
-                try
-                {
-                    rp.maxPower = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid thermal reserve property " << k;
-                }
-            }
-            else if (k == "max-power-off")
-            {
-                try
-                {
-                    rp.maxPowerOff = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid thermal reserve property " << k;
-                }
-            }
-            else if (k == "participation-cost-off")
-            {
-                try
-                {
-                    rp.participationCostOff = prop.second.as<double>();
-                }
-                catch (const YAML::Exception&)
-                {
-                    logs.warning() << "invalid thermal reserve property " << k;
-                }
-            }
-            else
-            {
-                logs.warning() << "invalid thermal reserve property " << k;
-            }
-        }
+        static const std::unordered_map<std::string, double ThermalClusterReserveParticipation::*> propMap = {
+            {"participation-cost",     &ThermalClusterReserveParticipation::participationCost},
+            {"max-power",              &ThermalClusterReserveParticipation::maxPower},
+            {"max-power-off",          &ThermalClusterReserveParticipation::maxPowerOff},
+            {"participation-cost-off", &ThermalClusterReserveParticipation::participationCostOff}
+        };
+        readYamlProperties(cert, rp, "thermal", propMap);
     }
 
     static void validateSpecificInputs(const std::string& areaName,
@@ -445,7 +379,12 @@ public:
 
     static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
-        readStorageProperties(cert, rp, "STS");
+        static const std::unordered_map<std::string, double StorageClusterReserveParticipation::*> propMap = {
+            {"participation-cost", &StorageClusterReserveParticipation::participationCost},
+            {"max-release",        &StorageClusterReserveParticipation::maxRelease},
+            {"max-store",          &StorageClusterReserveParticipation::maxStore}
+        };
+        readYamlProperties(cert, rp, "STS", propMap);
     }
 
     static void validateSpecificInputs(const std::string& areaName,
@@ -569,7 +508,12 @@ public:
 
     static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
-        readStorageProperties(cert, rp, "hydro");
+        static const std::unordered_map<std::string, double StorageClusterReserveParticipation::*> propMap = {
+            {"participation-cost", &StorageClusterReserveParticipation::participationCost},
+            {"max-release",        &StorageClusterReserveParticipation::maxRelease},
+            {"max-store",          &StorageClusterReserveParticipation::maxStore}
+        };
+        readYamlProperties(cert, rp, "hydro", propMap);
     }
 
     static void validateSpecificInputs(const std::string& areaName,
@@ -581,8 +525,8 @@ public:
     }
 
     static void duplicateParticipation(const std::string& areaName,
-                                       const std::string&,
-                                       const std::string& reserveID)
+                                        const std::string&,
+                                        const std::string& reserveID)
     {
         logs.error() << areaName << ", hydro: duplicate participation to reserve " << reserveID;
     }
