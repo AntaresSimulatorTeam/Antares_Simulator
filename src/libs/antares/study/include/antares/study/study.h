@@ -64,15 +64,6 @@ public:
     */
     static bool IsRootStudy(const AnyString& folder);
 
-    /*!
-    ** \brief Get if a folder if a study
-    **
-    ** \param folder A study folder
-    ** \param buffer A buffer to reuse for temporary operations
-    ** \return True if the folder is a study, false otherwise
-    */
-    static bool IsRootStudy(const AnyString& folder, YString& buffer);
-
     //! \name Constructor & Destructor
     //@{
     /*!

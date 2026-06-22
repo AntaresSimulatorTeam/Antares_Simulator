@@ -149,12 +149,6 @@ public:
     SimulationMode mode{SimulationMode::Economy};
     //@}
 
-    //! \name Horizon
-    //@{
-    //! Horizon year, not used by the solver
-    Yuni::String horizon;
-    //@}
-
     //! \name Calendar
     //@{
     //! Number of years to study
@@ -278,11 +272,6 @@ public:
     ** generaldata.ini. The default value is `false`.
     */
     bool readonly;
-
-    /*!
-    ** \brief Activation of the reserves
-    */
-    bool reservesEnabled = false;
 
     //! Write the simulation synthesis into the output
     bool synthesis;
