@@ -126,10 +126,10 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain the following entries
       | block | component | output             | timestep | scenario | value         |
       | 1     | he        | hydro_shadow_price | 168      | 0        | -56           |
-      # level_percentage = HydroLevel / reservoir_capacity. The "he" area has a
+      # level_percentage = HydroLevel / reservoir_capacity * 100. The "he" area has a
       # 10 000 000 MWh reservoir and the initial level for hour 1 of week 1 is
-      # 5 110 638.139 MWh => 0.51106381.
-      | 1     | he        | level_percentage   | 1        | 0        | 0.51106381    |
+      # 5 110 638.139 MWh => 51.10638138
+      | 1     | he        | level_percentage   | 1        | 0        | 51.10638138    |
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
