@@ -138,10 +138,10 @@ Feature: Legacy variables in simulation table
     And the modeler outputs contain the following entries
       | block | component | output             | timestep | scenario | value         |
       | 1     | he        | hydro_shadow_price | 168      | 0        | -56           |
-      # level_percentage = HydroLevel / reservoir_capacity. The "he" area has a
+      # level_percentage = HydroLevel / reservoir_capacity * 100. The "he" area has a
       # 10 000 000 MWh reservoir and the initial level for hour 1 of week 1 is
-      # 5 110 638.139 MWh => 0.51106381.
-      | 1     | he        | level_percentage   | 1        | 0        | 0.51106381    |
+      # 5 110 638.139 MWh => 51.10638138.
+      | 1     | he        | level_percentage   | 1        | 0        | 51.10638138    |
       # actual_inflows = round(inflows). The "he" hydro series carry no natural
       # inflow (empty mod.txt / ror.txt), so the rounded inflow is 0 at hour 1.
       | 1     | he        | actual_inflows     | 1        | 0        | 0             |
