@@ -47,11 +47,13 @@ bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer)
         xcast->random = nullptr;
         assert(false and "invalid ts type");
     }
+    // Run the generation of the time-series
+    bool ret = xcast->run();
 
     // TODO REMOVE
     study.destroyTSGeneratorData<T>();
-    // Run the generation of the time-series
-    return xcast->run();
+
+    return ret;
 }
 
 } // namespace Antares::TSGenerator
