@@ -41,7 +41,8 @@ void InfeasibleProblemReport::filterConstraintsToOneByType()
                   [&seenTypes](const std::shared_ptr<WatchedConstraint>& constraint)
                   {
                       // Bind to a reference before typeid so its operand is a side-effect-free
-                      // glvalue (the dynamic type is still resolved): -Wpotentially-evaluated-expression.
+                      // glvalue (the dynamic type is still resolved):
+                      // -Wpotentially-evaluated-expression.
                       const WatchedConstraint& ref = *constraint;
                       return !seenTypes.insert(std::type_index(typeid(ref))).second;
                   });
