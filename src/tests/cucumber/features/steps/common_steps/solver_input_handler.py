@@ -79,39 +79,6 @@ class solver_input_handler:
         else:
             return None
 
-    def set_reserve_value(self, area, sectionName, variable, value):
-        # File path
-        file = self.files_path["reserves"] / area / "reserves.yml"
-        # Content to print in file (tmp content)
-        content_out = []
-        # Reading the file content (content in)
-        with open(file) as f:
-            in_reserve = False
-            for line in f:
-                stripped = line.rstrip()
-                if stripped == "":
-                    content_out.append(line)
-                    in_reserve = False
-                    continue
-                indent = len(line) - len(line.lstrip())
-                if stripped.lstrip().startswith("- name: "):
-                    name = stripped.split("- name: ", 1)[1].strip()
-                    content_out.append(line)
-                    in_reserve = (name == sectionName)
-                elif in_reserve and indent >= 4:
-                    key = stripped.lstrip().split(":")[0].strip()
-                    if key == variable:
-                        content_out.append(f"      {variable}: {value}\n")
-                    else:
-                        content_out.append(line)
-                else:
-                    content_out.append(line)
-                    if stripped == "reserves:" or stripped.startswith("global-parameters"):
-                        in_reserve = False
-        # Erasing file content with the tmp content (content out)
-        with open(file, "w") as f:
-            f.writelines(content_out)
-
     def copy_reserve_ini_from_file(self, origin, destination):
         # File path
         origin[-1] = origin[-1].replace(".ini", ".yml")
@@ -119,9 +86,6 @@ class solver_input_handler:
         fileToReplace = os.path.join(self.study_root_dir, *destination)
         fileToCopy = os.path.join(self.study_root_dir, *origin)
         shutil.copyfile(fileToCopy, fileToReplace)
-
-    def set_parameter_from_file(self, area, sectionName, paramName, paramValue):
-        self.set_reserve_value(area.lower(), sectionName, paramName, paramValue)
 
     def set_input(self, input_file, section, variable, value):
         """Set `variable = value` inside `[section]` of an input/ ini file.
