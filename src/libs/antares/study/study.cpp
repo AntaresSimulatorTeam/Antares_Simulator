@@ -77,7 +77,6 @@ void Study::clear()
     folderInput.clear();
     folderOutput.clear();
     folderSettings.clear();
-    inputExtension.clear();
 }
 
 void Study::reduceMemoryUsage()
