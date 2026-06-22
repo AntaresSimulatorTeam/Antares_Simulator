@@ -1,6 +1,5 @@
 var NAVTREEINDEX41 =
 {
-"structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html":[9,0,7,0],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a0aa3d054e8ff91debf0ce3403ddd8745":[9,0,7,0,2],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a104aec0788f479dcaaf594d36fa04a02":[9,0,7,0,0],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__LINEAIRE__PARTIE__FIXE.html#a1c7ef183a2ebc64c23148614ce207c66":[9,0,7,0,8],
@@ -249,5 +248,6 @@ var NAVTREEINDEX41 =
 "structMinHydroPowerData.html":[9,0,200],
 "structMinHydroPowerData.html#a24a0318ec864d5d3cccc16fdf449db18":[9,0,200,2],
 "structMinHydroPowerData.html#ae608d18b4923971be95eacb3b4d1802e":[9,0,200,0],
-"structMinHydroPowerData.html#af66d42ef2021b6be1733e1bd218fb62d":[9,0,200,1]
+"structMinHydroPowerData.html#af66d42ef2021b6be1733e1bd218fb62d":[9,0,200,1],
+"structMipDetectionFixture.html":[9,0,202]
 };

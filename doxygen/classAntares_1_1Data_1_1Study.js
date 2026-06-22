@@ -51,7 +51,6 @@ var classAntares_1_1Data_1_1Study =
     [ "header", "classAntares_1_1Data_1_1Study.html#a9c91e0c5ad590b3a250e5d5485a2fdd0", null ],
     [ "maxNbYearsInParallel", "classAntares_1_1Data_1_1Study.html#a832b90fd4daaeb1f782330c1f6bded99", null ],
     [ "parameters", "classAntares_1_1Data_1_1Study.html#a054693459e0a64b430496e04ac49e5dc", null ],
-    [ "pQueueService", "classAntares_1_1Data_1_1Study.html#ac649f129a5739fc31fb6e02b2c04a160", null ],
     [ "preproHydroCorrelation", "classAntares_1_1Data_1_1Study.html#ad4d603dcfb42b1ac34b33f6772681662", null ],
     [ "preproLoadCorrelation", "classAntares_1_1Data_1_1Study.html#ac4e3cfbfb697c707b7456409e4913ea4", null ],
     [ "preproSolarCorrelation", "classAntares_1_1Data_1_1Study.html#aaf996a639ab75c54a0c7fea79690904c", null ],

@@ -1,6 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"classMyStudyFinder.html#a107166525bfd233824332ac1bdeecfd7":[9,0,218,0],
 "classMyStudyFinder.html#a748a79050702c60bb65b7fc018913d62":[9,0,218,1],
 "classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[9,0,218,4],
 "classMyStudyFinder.html#af2ed39729a10dcdf4c864d62e67a690b":[9,0,218,2],
@@ -222,8 +221,8 @@ var NAVTREEINDEX24 =
 "classProgress.html#ac4b5ef750872e2013c6925c203a35d4cadfe3149fcd3440053bcdf797ab68efc8":[9,0,271,1,0],
 "classProgress.html#ac871f3914f9fb67fa2da2783d5be9a0f":[9,0,271,7],
 "classPublicStudy.html":[9,0,273],
-"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,273,0],
 "classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,273,1],
+"classPublicStudy.html#a7bd1904c52c42533e39390182c2d1726":[9,0,273,0],
 "classQuadraticProblemMatrix.html":[9,0,275],
 "classQuadraticProblemMatrix.html#a125f854b3137ecb3e79b501a8530ced2":[9,0,275,1],
 "classQuadraticProblemMatrix.html#a7722642ba2cc688ff94a834baa6c1ffc":[9,0,275,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX24 =
 "classSTReleaseMaxReserve.html":[9,0,329],
 "classSTReleaseMaxReserve.html#a70250056091a50ad54241dc7ffac6757":[9,0,329,1],
 "classSTReleaseMaxReserve.html#a96ee9eca68cad512f57ab7495c68a847":[9,0,329,0],
-"classSTReserveDownParticipation.html":[9,0,330]
+"classSTReserveDownParticipation.html":[9,0,330],
+"classSTReserveDownParticipation.html#a18c99480c7f4030a97c3910d958bd37b":[9,0,330,1]
 };

@@ -1,6 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html":[9,0,0,11,6,63],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a049862a6ed48d9f1dd5bcbb3d78ac82c":[9,0,0,11,6,63,10],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a27778041e2d0c75809cf84ac29ef69ad":[9,0,0,11,6,63,4],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a3717acba555ea2e7bd2e56b5a8140736":[9,0,0,11,6,63,7],
@@ -249,5 +248,6 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#ae04c8891c2f12606c166fadd3256e6bb":[9,0,0,11,6,5,1,8,5],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#aeb6d486636c19fb88f39da0d458e47e2":[9,0,0,11,6,5,1,8,7],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html":[9,0,0,11,6,5,1,10],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#a160d33e70076a638f114552b85507fc1":[9,0,0,11,6,5,1,10,1]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#a160d33e70076a638f114552b85507fc1":[9,0,0,11,6,5,1,10,1],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#a544ffede57efa7469788949841bca21c":[9,0,0,11,6,5,1,10,8]
 };
