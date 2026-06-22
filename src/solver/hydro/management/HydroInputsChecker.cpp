@@ -40,6 +40,7 @@ void HydroInputsChecker::Execute(uint year)
     {
         CheckFinalReservoirLevelsConfiguration(year);
     }
+    checkInitialLevelAgainstFinalRuleCurves(year);
     prepareInflows_.changeInflowsToAccommodateFinalLevels(year);
 }
 
@@ -255,4 +256,61 @@ void HydroInputsChecker::CheckForErrors() const
 {
     errorCollector_.CheckForErrors();
 }
+
+void HydroInputsChecker::checkInitialLevelAgainstFinalRuleCurves(uint year)
+{
+    if (!parameters_.yearsFilter.at(year))
+    {
+        return;
+    }
+
+    areas_.each(
+      [this, year](const Data::Area& area)
+      {
+          // Only check areas with reservoir management and non-zero capacity
+          if (!area.hydro.reservoirManagement
+              || area.hydro.reservoirCapacity < 1e-4)
+          {
+              return;
+          }
+
+          // Get the final day rule curves
+          const auto& minRuleCurves = area.hydro.series->ruleCurves.min.getColumn(year);
+          const auto& maxRuleCurves = area.hydro.series->ruleCurves.max.getColumn(year);
+          const double finalMinLevel = minRuleCurves[DAYS_PER_YEAR - 1];
+          const double finalMaxLevel = maxRuleCurves[DAYS_PER_YEAR - 1];
+
+          // Determine the initial level to check
+          double initialLevel;
+
+          if (parameters_.useCustomScenario)
+          {
+              // Custom scenario: use the explicitly set initial level
+              initialLevel = scenarioInitialHydroLevels_.entry[area.index][year];
+          }
+          else
+          {
+              // No custom scenario: the initial level is drawn randomly from
+              // the rule curves at the initialization month. We use the max
+              // rule curve at that month as the worst-case initial level,
+              // since the random draw could produce any value in [min, max].
+              int initMonth = area.hydro.initializeReservoirLevelDate;
+              int initSimMonth = calendar_.mapping.months[initMonth];
+              int firstDayOfMonth = calendar_.months[initSimMonth].daysYear.first;
+              initialLevel = maxRuleCurves[firstDayOfMonth];
+          }
+
+          // Check if initial level is outside final rule curves
+          if (initialLevel < finalMinLevel || initialLevel > finalMaxLevel)
+          {
+              logs.warning()
+                << "Hydro area '" << area.name << "' (year " << year + 1
+                << "): Initial reservoir level (" << initialLevel
+                << ") is outside the final rule curves [" << finalMinLevel << ", "
+                << finalMaxLevel << "]. The heuristic may produce a final reservoir "
+                << "level different from the initial level to respect the rule curves.";
+          }
+      });
+}
+
 } // namespace Antares
