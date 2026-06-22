@@ -147,6 +147,31 @@ struct Fixture
         return *this;
     }
 
+    // Per-area residual load, single recorded pdt like the link capacities.
+    Fixture& withLoads(double area1 = 800., double area2 = 500., double area3 = 300.)
+    {
+        context.loadByArea["area1"] = {area1};
+        context.loadByArea["area2"] = {area2};
+        context.loadByArea["area3"] = {area3};
+        return *this;
+    }
+
+    // Per-area inflows; only "area1" carries a series (the only HydroLevel
+    // anchor in the fixture).
+    Fixture& withInflows(double area1 = 123.4)
+    {
+        context.inflowsByArea["area1"] = {area1};
+        return *this;
+    }
+
+    // Per-link loop flow, single recorded pdt.
+    Fixture& withLoopFlows(double area1Area2 = 15., double area2Area3 = -8.)
+    {
+        context.loopFlowByLink["area1$$area2"] = {area1Area2};
+        context.loopFlowByLink["area2$$area3"] = {area2Area3};
+        return *this;
+    }
+
     std::vector<std::optional<LegacyVariableInfo>> constraintsInfo;
     std::vector<double> duals;
     LegacyExtraOutputsContext context;
@@ -276,9 +301,10 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     fill();
 
     // 2 prop_cost (cluster1, link) + 1 imbalance_cost + 3 is_loss_of_load
-    // + 1 actual_num_units_on + 2 abs_flow. The context is empty, so
-    // level_percentage and is_*_congested are skipped.
-    BOOST_CHECK_EQUAL(table.rowCount(), 9);
+    // + 1 actual_num_units_on + 1 non_prop_cost + 2 abs_flow + 2 minus_flow.
+    // The context is empty, so level_percentage, is_*_congested, actual_load,
+    // actual_inflows and actual_loop_flow are skipped.
+    BOOST_CHECK_EQUAL(table.rowCount(), 12);
 }
 
 BOOST_AUTO_TEST_CASE(level_percentage_is_hydro_level_over_reservoir_capacity)
@@ -399,20 +425,107 @@ BOOST_AUTO_TEST_CASE(other_constraints_produce_no_extra_output)
 {
     withConstraints().fill();
 
-    // 9 variable-driven rows + 3 price + 2 is_near_loss_of_load
+    // 12 variable-driven rows + 3 price + 2 is_near_loss_of_load
     // + 1 capacity_shadow_price + 1 hydro_shadow_price; the unnamed
     // slot adds nothing. Context-driven outputs are skipped here because
     // no study data was injected.
-    BOOST_CHECK_EQUAL(table.rowCount(), 16);
+    BOOST_CHECK_EQUAL(table.rowCount(), 19);
 }
 
 BOOST_AUTO_TEST_CASE(study_data_outputs_add_one_level_percentage_and_four_congestion_rows)
 {
     withConstraints().withReservoirs().withLinkCapacities().fill();
 
-    // Same 16 rows as before, plus 1 level_percentage (area1) and 4
-    // congestion rows (2 directions for each of the 2 links).
-    BOOST_CHECK_EQUAL(table.rowCount(), 16 + 1 + 4);
+    // Same 19 rows as before, plus 1 level_percentage (area1) and 4
+    // congestion rows (2 directions for each of the 2 links). load, inflow and
+    // loop-flow series are still absent, so those outputs stay skipped.
+    BOOST_CHECK_EQUAL(table.rowCount(), 19 + 1 + 4);
+}
+
+BOOST_AUTO_TEST_CASE(minus_flow_is_the_negated_signed_flow)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "minus_flow");
+    BOOST_REQUIRE_EQUAL(rows.size(), 2);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area1$$area2")->value, -120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area2$$area3")->value, 30.); // -(-30)
+}
+
+BOOST_AUTO_TEST_CASE(non_prop_cost_is_fixed_cost_times_units_without_a_previous_hour)
+{
+    // The fixture has no previous-hour NODU and no starting-units variable, so
+    // the start-up term is zero: non_prop_cost = fixed_cost * ceil(NODU).
+    fill();
+
+    const auto row = FindRow(table, "non_prop_cost", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 100. * 3., 1e-9); // costs[5] * ceil(2.3)
+}
+
+BOOST_AUTO_TEST_CASE(non_prop_cost_adds_startup_cost_for_units_started_since_t_minus_one)
+{
+    // Append a previous-hour NODU (2 units on) and the cluster's starting-units
+    // variable carrying the startup cost as its objective coefficient.
+    info.push_back(LegacyVariableInfo{"NODU", "cluster1", 167});
+    values.push_back(2.);
+    costs.push_back(0.);
+    info.push_back(LegacyVariableInfo{"NumberStartingDispatchableUnits", "cluster1", 168});
+    values.push_back(1.);
+    costs.push_back(5000.);
+
+    fill();
+
+    // 3 units on now, 2 last hour: 1 unit started.
+    // non_prop_cost = 5000 * 1 + 100 * 3.
+    const auto row = FindRow(table, "non_prop_cost", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 5000. * 1. + 100. * 3., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(actual_load_reads_the_area_load_series)
+{
+    withLoads().fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1")->value, 800.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2")->value, 500.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3")->value, 300.);
+}
+
+BOOST_AUTO_TEST_CASE(actual_load_is_skipped_without_a_load_series)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "actual_load").empty());
+}
+
+BOOST_AUTO_TEST_CASE(actual_inflows_is_the_rounded_inflow_series)
+{
+    withInflows(/*area1=*/123.4).fill();
+
+    const auto rows = RowsForOutput(table, "actual_inflows");
+    BOOST_REQUIRE_EQUAL(rows.size(), 1);
+    BOOST_CHECK_EQUAL(rows[0].component, "area1");
+    BOOST_CHECK_EQUAL(rows[0].value, 123.); // round(123.4)
+}
+
+BOOST_AUTO_TEST_CASE(actual_inflows_is_skipped_without_an_inflow_series)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "actual_inflows").empty());
+}
+
+BOOST_AUTO_TEST_CASE(actual_loop_flow_reads_the_link_loop_flow_series)
+{
+    withLoopFlows(/*area1Area2=*/15., /*area2Area3=*/-8.).fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area1$$area2")->value, 15.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area2$$area3")->value, -8.);
+}
+
+BOOST_AUTO_TEST_CASE(actual_loop_flow_is_skipped_without_a_loop_flow_series)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "actual_loop_flow").empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

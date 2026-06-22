@@ -75,15 +75,37 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
 {
     LegacyExtraOutputsContext context;
     context.weekFirstTimeStep = static_cast<unsigned>(problemeHebdo.HeureDansLAnnee);
+    // ConsommationsAbattues and ApportNaturelHoraire span the whole week and are
+    // indexed by hour-in-week, just like ValeursDeNTC below; they are snapshotted
+    // over [0, NombreDePasDeTemps) once and the consumer indexes them with
+    // hourInWeek = timeIndex - weekFirstTimeStep.
+    const std::size_t nPdt = static_cast<std::size_t>(problemeHebdo.NombreDePasDeTemps);
     for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
     {
-        context.reservoirCapacityByArea[problemeHebdo.NomsDesPays[pays]]
-          = problemeHebdo.CaracteristiquesHydrauliques[pays].TailleReservoir;
+        const auto& areaName = problemeHebdo.NomsDesPays[pays];
+        const auto& hydro = problemeHebdo.CaracteristiquesHydrauliques[pays];
+        context.reservoirCapacityByArea[areaName] = hydro.TailleReservoir;
+
+        std::vector<double> load(nPdt);
+        for (std::size_t pdt = 0; pdt < nPdt; ++pdt)
+        {
+            load[pdt] = problemeHebdo.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays];
+        }
+        context.loadByArea[areaName] = std::move(load);
+
+        // Non-hydro areas leave ApportNaturelHoraire empty; only carry inflows
+        // when the series covers the week (the HydroLevel anchor only exists for
+        // areas with a reservoir anyway).
+        if (hydro.ApportNaturelHoraire.size() >= nPdt)
+        {
+            std::vector<double> inflows(nPdt);
+            for (std::size_t pdt = 0; pdt < nPdt; ++pdt)
+            {
+                inflows[pdt] = hydro.ApportNaturelHoraire[pdt];
+            }
+            context.inflowsByArea[areaName] = std::move(inflows);
+        }
     }
-    // ValeursDeNTC spans the whole week and is indexed by hour-in-week, so the
-    // capacities are snapshotted over [0, NombreDePasDeTemps) once; the consumer
-    // indexes them with hourInWeek = timeIndex - weekFirstTimeStep.
-    const std::size_t nPdt = static_cast<std::size_t>(problemeHebdo.NombreDePasDeTemps);
     for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
     {
         std::string linkKey = std::string(
@@ -95,15 +117,19 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
                                   [problemeHebdo.PaysExtremiteDeLInterconnexion[interco]];
         std::vector<double> directCapacity(nPdt);
         std::vector<double> indirectCapacity(nPdt);
+        std::vector<double> loopFlow(nPdt);
         for (std::size_t pdt = 0; pdt < nPdt; ++pdt)
         {
             directCapacity[pdt] = problemeHebdo.ValeursDeNTC[pdt]
                                     .ValeurDeNTCOrigineVersExtremite[interco];
             indirectCapacity[pdt] = problemeHebdo.ValeursDeNTC[pdt]
                                       .ValeurDeNTCExtremiteVersOrigine[interco];
+            loopFlow[pdt] = problemeHebdo.ValeursDeNTC[pdt]
+                              .ValeurDeLoopFlowOrigineVersExtremite[interco];
         }
         context.directCapacityByLink[linkKey] = std::move(directCapacity);
-        context.indirectCapacityByLink[std::move(linkKey)] = std::move(indirectCapacity);
+        context.indirectCapacityByLink[linkKey] = std::move(indirectCapacity);
+        context.loopFlowByLink[std::move(linkKey)] = std::move(loopFlow);
     }
     return context;
 }

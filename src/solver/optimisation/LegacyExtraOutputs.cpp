@@ -3,12 +3,14 @@
 
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 
+fe
+#include <algorithm>
 #include <cmath>
 
 #include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacySolutionView.h"
 
-using Antares::IO::Outputs::SimulationTable;
+  using Antares::IO::Outputs::SimulationTable;
 using Antares::Optimisation::LinearProblemApi::FillContext;
 
 namespace Antares::Optimization
@@ -24,6 +26,29 @@ std::optional<unsigned> BlockTimeIndex(const FillContext& fillContext, unsigned 
         return timeIndex - fillContext.getGlobalFirstTimeStep() + 1;
     }
     return std::nullopt;
+}
+
+// Reads a per-hour study series carried in the context (load, inflows, loop
+// flow): finds the component's vector, then indexes it by hour-in-week. Returns
+// nullopt when the component is unknown to the context or the hour is out of
+// range, so the caller can skip the row.
+std::optional<double> ContextValueAtHour(
+  const std::unordered_map<std::string, std::vector<double>>& byKey,
+  const std::string& key,
+  unsigned timeIndex,
+  unsigned weekFirstTimeStep)
+{
+    const auto it = byKey.find(key);
+    if (it == byKey.end())
+    {
+        return std::nullopt;
+    }
+    const unsigned pdt = timeIndex - weekFirstTimeStep;
+    if (pdt >= it->second.size())
+    {
+        return std::nullopt;
+    }
+    return it->second[pdt];
 }
 
 void AddExtraOutputEntry(SimulationTable& simulationTable,
@@ -344,6 +369,141 @@ void AddLinkIsIndirectlyCongested(SimulationTable& simulationTable,
                         currentBlock);
 }
 
+// minus_flow = -flow: the signed convention of the GEMS view, anchored on the
+// link's DirectFlow variable.
+void AddLinkMinusFlow(SimulationTable& simulationTable,
+                      const LegacyVariableInfo& info,
+                      std::size_t index,
+                      const std::vector<double>& solutionValues,
+                      const FillContext& fillContext,
+                      unsigned currentBlock)
+{
+    AddExtraOutputEntry(simulationTable,
+                        "minus_flow",
+                        info,
+                        -solutionValues[index],
+                        fillContext,
+                        currentBlock);
+}
+
+// actual_loop_flow = loop_flow: the link's input loop-flow parameter, carried
+// per-hour in the context. Skipped when the link is unknown to the context.
+void AddLinkActualLoopFlow(SimulationTable& simulationTable,
+                           const LegacyVariableInfo& info,
+                           const LegacyExtraOutputsContext& context,
+                           const FillContext& fillContext,
+                           unsigned currentBlock)
+{
+    const auto loopFlow = ContextValueAtHour(context.loopFlowByLink,
+                                             info.component,
+                                             info.timeIndex,
+                                             context.weekFirstTimeStep);
+    if (!loopFlow)
+    {
+        return;
+    }
+    AddExtraOutputEntry(simulationTable,
+                        "actual_loop_flow",
+                        info,
+                        loopFlow.value(),
+                        fillContext,
+                        currentBlock);
+}
+
+// non_prop_cost = startup_cost * started_units + fixed_cost * units_on, with
+// units rounded up (the NODU variable may be fractional when relaxed).
+// fixed_cost is the objective coefficient on NODU itself; startup_cost is the
+// coefficient on the same cluster's NumberStartingDispatchableUnits variable,
+// read through the solution view (0 when that variable is not recorded). The
+// started-units count compares ceil(NODU) against the previous hour; at the
+// first hour of the week the previous NODU is not part of this weekly solution,
+// so the start-up term is dropped.
+void AddThermalNonPropCost(SimulationTable& simulationTable,
+                           const LegacyVariableInfo& info,
+                           std::size_t index,
+                           const std::vector<double>& solutionValues,
+                           const std::vector<double>& linearCosts,
+                           const LegacySolutionView& solution,
+                           const FillContext& fillContext,
+                           unsigned currentBlock)
+{
+    const double unitsOn = std::ceil(solutionValues[index]);
+    const double fixedCost = linearCosts[index];
+
+    double startupCost = 0.;
+    if (const auto cost = solution.linearCost("NumberStartingDispatchableUnits",
+                                              info.component,
+                                              info.timeIndex))
+    {
+        startupCost = cost.value();
+    }
+
+    double startedUnits = 0.;
+    if (info.timeIndex > 0)
+    {
+        if (const auto previous = solution.value("NODU", info.component, info.timeIndex - 1))
+        {
+            startedUnits = std::max(0., unitsOn - std::ceil(previous.value()));
+        }
+    }
+
+    AddExtraOutputEntry(simulationTable,
+                        "non_prop_cost",
+                        info,
+                        startupCost * startedUnits + fixedCost * unitsOn,
+                        fillContext,
+                        currentBlock);
+}
+
+// actual_load = load: the area's input residual-load series, carried per-hour in
+// the context. Skipped when the area is unknown to the context.
+void AddAreaActualLoad(SimulationTable& simulationTable,
+                       const LegacyVariableInfo& info,
+                       const LegacyExtraOutputsContext& context,
+                       const FillContext& fillContext,
+                       unsigned currentBlock)
+{
+    const auto load = ContextValueAtHour(context.loadByArea,
+                                         info.component,
+                                         info.timeIndex,
+                                         context.weekFirstTimeStep);
+    if (!load)
+    {
+        return;
+    }
+    AddExtraOutputEntry(simulationTable,
+                        "actual_load",
+                        info,
+                        load.value(),
+                        fillContext,
+                        currentBlock);
+}
+
+// actual_inflows = round(inflows): the area's input natural-inflow series,
+// carried per-hour in the context (only areas with a reservoir have one).
+// Skipped when the area is unknown to the context.
+void AddHydroActualInflows(SimulationTable& simulationTable,
+                           const LegacyVariableInfo& info,
+                           const LegacyExtraOutputsContext& context,
+                           const FillContext& fillContext,
+                           unsigned currentBlock)
+{
+    const auto inflows = ContextValueAtHour(context.inflowsByArea,
+                                            info.component,
+                                            info.timeIndex,
+                                            context.weekFirstTimeStep);
+    if (!inflows)
+    {
+        return;
+    }
+    AddExtraOutputEntry(simulationTable,
+                        "actual_inflows",
+                        info,
+                        std::round(inflows.value()),
+                        fillContext,
+                        currentBlock);
+}
+
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
@@ -392,6 +552,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                                 solutionValues,
                                 fillContext,
                                 currentBlock);
+            AddAreaActualLoad(simulationTable, *info, context, fillContext, currentBlock);
         }
         else if (info->name == "NODU")
         {
@@ -401,6 +562,14 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                                        solutionValues,
                                        fillContext,
                                        currentBlock);
+            AddThermalNonPropCost(simulationTable,
+                                  *info,
+                                  index,
+                                  solutionValues,
+                                  linearCosts,
+                                  solution,
+                                  fillContext,
+                                  currentBlock);
         }
         else if (info->name == "DirectFlow")
         {
@@ -410,6 +579,13 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            solutionValues,
                            fillContext,
                            currentBlock);
+            AddLinkMinusFlow(simulationTable,
+                             *info,
+                             index,
+                             solutionValues,
+                             fillContext,
+                             currentBlock);
+            AddLinkActualLoopFlow(simulationTable, *info, context, fillContext, currentBlock);
             AddLinkIsDirectlyCongested(simulationTable,
                                        *info,
                                        index,
@@ -445,6 +621,7 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                                    context,
                                    fillContext,
                                    currentBlock);
+            AddHydroActualInflows(simulationTable, *info, context, fillContext, currentBlock);
         }
     }
 

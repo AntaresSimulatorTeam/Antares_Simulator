@@ -38,6 +38,21 @@ struct LegacyExtraOutputsContext
     std::unordered_map<std::string, std::vector<double>> directCapacityByLink;
     std::unordered_map<std::string, std::vector<double>> indirectCapacityByLink;
 
+    // Per-area residual load in MW, indexed by hour-in-week. Carries the input
+    // load series so actual_load can be emitted on the area's UnsuppliedEnergy
+    // anchor. A missing key means actual_load is skipped for that area.
+    std::unordered_map<std::string, std::vector<double>> loadByArea;
+
+    // Per-area natural hydro inflows in MWh, indexed by hour-in-week. Only the
+    // areas with a reservoir carry this series; actual_inflows is emitted on the
+    // area's HydroLevel anchor and skipped when the key is missing.
+    std::unordered_map<std::string, std::vector<double>> inflowsByArea;
+
+    // Per-link loop flow (origin->extremity) in MW, indexed by hour-in-week.
+    // actual_loop_flow is emitted on the link's DirectFlow anchor and skipped
+    // when the key is missing.
+    std::unordered_map<std::string, std::vector<double>> loopFlowByLink;
+
     // Absolute time index of the week's first hour (PROBLEME_HEBDO::HeureDansLAnnee,
     // i.e. weekInTheYear * hoursPerWeek). LegacyVariableInfo::timeIndex is
     // absolute, so hourInWeek = timeIndex - weekFirstTimeStep indexes the
