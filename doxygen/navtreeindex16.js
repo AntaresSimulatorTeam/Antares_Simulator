@@ -1,7 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList.html#afd0d13be0720619782f8c7eca2d593e8":[9,0,0,11,6,3,1,1],
-"classAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList.html#afedc9daabc0c6afd49e4bdd2fa2ecf75":[9,0,0,11,6,3,1,16],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html":[9,0,0,11,6,63],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a049862a6ed48d9f1dd5bcbb3d78ac82c":[9,0,0,11,6,63,10],
 "classAntares_1_1Solver_1_1Variable_1_1DummyVariable.html#a27778041e2d0c75809cf84ac29ef69ad":[9,0,0,11,6,63,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX16 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#acb3414dc8e2b3ed15bcadd033e5cce3e":[9,0,0,11,6,5,1,8,3],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#acdff0dcfc0acb410204862d14802a90e":[9,0,0,11,6,5,1,8,1],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#ae04c8891c2f12606c166fadd3256e6bb":[9,0,0,11,6,5,1,8,5],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#aeb6d486636c19fb88f39da0d458e47e2":[9,0,0,11,6,5,1,8,7]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationByThermalGroup.html#aeb6d486636c19fb88f39da0d458e47e2":[9,0,0,11,6,5,1,8,7],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html":[9,0,0,11,6,5,1,10],
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1Reserves_1_1ReserveParticipationMarginalCost.html#a160d33e70076a638f114552b85507fc1":[9,0,0,11,6,5,1,10,1]
 };

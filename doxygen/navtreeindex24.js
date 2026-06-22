@@ -1,7 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"classMyStudyFinder.html":[9,0,218],
-"classMyStudyFinder.html#a003f153d7f4bfabfe207c1d616cf1acd":[9,0,218,3],
 "classMyStudyFinder.html#a107166525bfd233824332ac1bdeecfd7":[9,0,218,0],
 "classMyStudyFinder.html#a748a79050702c60bb65b7fc018913d62":[9,0,218,1],
 "classMyStudyFinder.html#ad6c57712c579b96e22962c1f63441c31":[9,0,218,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX24 =
 "classSTReleaseCapacityThresholds.html#a3e5fa1209d60a2d4d48a51692558c030":[9,0,328,1],
 "classSTReleaseCapacityThresholds.html#a79d249a1117c0e720f9672f082a425fe":[9,0,328,0],
 "classSTReleaseMaxReserve.html":[9,0,329],
-"classSTReleaseMaxReserve.html#a70250056091a50ad54241dc7ffac6757":[9,0,329,1]
+"classSTReleaseMaxReserve.html#a70250056091a50ad54241dc7ffac6757":[9,0,329,1],
+"classSTReleaseMaxReserve.html#a96ee9eca68cad512f57ab7495c68a847":[9,0,329,0],
+"classSTReserveDownParticipation.html":[9,0,330]
 };

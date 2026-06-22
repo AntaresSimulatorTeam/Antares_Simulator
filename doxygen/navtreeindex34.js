@@ -1,7 +1,5 @@
 var NAVTREEINDEX34 =
 {
-"price_8h_source.html":[10,0,0,8,11,0,0,0,0,3,38],
-"print_8h_source.html":[10,0,0,8,11,0,0,0,0,16],
 "print__name_8py.html#a922a8b50fe1e958918e08da49809cc73":[8,0,25,0],
 "probleme__spx__wrapper_8h_source.html":[10,0,0,8,1,0,0,0,0,4],
 "productionByDispatchablePlant_8h.html#a69dcc4c3812e726a7684cb0a67c8fcc9":[8,0,0,14,8,5,166],
@@ -249,5 +247,7 @@ var NAVTREEINDEX34 =
 "solver__steps_8py.html#a8a5cf7620b720b9e26db4a6b12b8f708":[8,0,30,22],
 "solver__steps_8py.html#a8c31314aab190376232a12ffc3b94bce":[8,0,30,42],
 "solver__steps_8py.html#a940c7814e59b5dcd32843954474d498f":[8,0,30,20],
-"solver__steps_8py.html#a95b7c83f57ed7816eef1bf41641d05e9":[8,0,30,13]
+"solver__steps_8py.html#a95b7c83f57ed7816eef1bf41641d05e9":[8,0,30,13],
+"solver__steps_8py.html#a9a20cf8bba1102648ac8da70d572218f":[8,0,30,23],
+"solver__steps_8py.html#a9b57d898de72258c60168f75218628c4":[8,0,30,70]
 };

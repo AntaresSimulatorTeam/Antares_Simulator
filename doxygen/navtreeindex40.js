@@ -1,7 +1,5 @@
 var NAVTREEINDEX40 =
 {
-"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ac6b7a45f54c65a0b2dc0df567e9bed83":[9,0,77,0],
-"structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ad425e36b62ba42367a4027e60488c2e8":[9,0,77,6],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#ae65ab890a83c22c63317641cc9d9b86b":[9,0,77,5],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#af45632a6e506b396e03a8ed0d062dc76":[9,0,77,2],
 "structCORRESPONDANCE__DES__VARIABLES__PB__ETENDU.html#aff53c62edba248fe08988c61ed6931e2":[9,0,77,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX40 =
 "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#a40d4976e84282615ec5ddf7e00733d5a":[9,0,7,3,4],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#a7fd19f35b8a3e8321bbc3b15dcd3e561":[9,0,7,3,0],
 "structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#a947f6a698bb348ff4872d5419a8d9751":[9,0,7,3,3],
-"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#ab8af32e63fb1e1555ab3851846534eef":[9,0,7,3,6]
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#ab8af32e63fb1e1555ab3851846534eef":[9,0,7,3,6],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#aca645fbfa46d3eb2dd50bf6a56c7a4a7":[9,0,7,3,1],
+"structDonneesOptimisationMensuelle_1_1PROBLEME__HYDRAULIQUE.html#af4a274f693d8567c84f2d0203503350a":[9,0,7,3,2]
 };

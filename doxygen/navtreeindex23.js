@@ -1,7 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"classHydroPowerGroup.html":[9,0,157],
-"classHydroPowerGroup.html#a83aee8659878014b25a079764befe8fa":[9,0,157,0],
 "classHydroPowerGroup.html#aedd8f967c204c600ed992ac73b69bf13":[9,0,157,1],
 "classHydroPowerSmoothingUsingVariationMaxDown.html":[9,0,158],
 "classHydroPowerSmoothingUsingVariationMaxDown.html#a16f83c45906b11c5f8dcf26670674503":[9,0,158,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX23 =
 "classModifiedINode.html#aaeb51ade34e956aff5ff6104231d2af3":[9,0,213,1],
 "classModifiedINode.html#ad0840cb4d096056fba4fe5bac78ce0d8":[9,0,213,3],
 "classModifiedINode.html#ad8466489af29030ece2fe8af5db2bcb8":[9,0,213,9],
-"classModifiedINode.html#aef5298e99ca8bc33a33c40e05a3cd6d2":[9,0,213,6]
+"classModifiedINode.html#aef5298e99ca8bc33a33c40e05a3cd6d2":[9,0,213,6],
+"classMyStudyFinder.html":[9,0,218],
+"classMyStudyFinder.html#a003f153d7f4bfabfe207c1d616cf1acd":[9,0,218,3]
 };

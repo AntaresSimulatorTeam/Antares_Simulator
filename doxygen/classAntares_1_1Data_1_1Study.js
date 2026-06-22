@@ -1,6 +1,5 @@
 var classAntares_1_1Data_1_1Study =
 [
-    [ "FileExtension", "classAntares_1_1Data_1_1Study.html#a4348caf11338e671372a7732fa475136", null ],
     [ "List", "classAntares_1_1Data_1_1Study.html#afd78b96038f65e1b8c5f53fbd92ca063", null ],
     [ "Ptr", "classAntares_1_1Data_1_1Study.html#a69a144b636623dd0c0a2fec221e61c84", null ],
     [ "Set", "classAntares_1_1Data_1_1Study.html#ac84095305b6524e9b8fecda02070e825", null ],
@@ -50,7 +49,6 @@ var classAntares_1_1Data_1_1Study =
     [ "folderOutput", "classAntares_1_1Data_1_1Study.html#a581ab1c0c2e867181c88c2efee61c23d", null ],
     [ "folderSettings", "classAntares_1_1Data_1_1Study.html#abab3ba2d3eaea32c649e29c06517c7b8", null ],
     [ "header", "classAntares_1_1Data_1_1Study.html#a9c91e0c5ad590b3a250e5d5485a2fdd0", null ],
-    [ "inputExtension", "classAntares_1_1Data_1_1Study.html#a7066dfe9bfb9537d12bb3fe161d36fb3", null ],
     [ "maxNbYearsInParallel", "classAntares_1_1Data_1_1Study.html#a832b90fd4daaeb1f782330c1f6bded99", null ],
     [ "parameters", "classAntares_1_1Data_1_1Study.html#a054693459e0a64b430496e04ac49e5dc", null ],
     [ "pQueueService", "classAntares_1_1Data_1_1Study.html#ac649f129a5739fc31fb6e02b2c04a160", null ],

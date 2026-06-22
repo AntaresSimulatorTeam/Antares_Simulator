@@ -1,7 +1,5 @@
 var NAVTREEINDEX38 =
 {
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverallCostTraits.html#ac2fae52d6ec1c3dbde209f9fb56b059c":[9,0,0,11,6,5,74,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverflowsTraits.html":[9,0,0,11,6,5,76],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverflowsTraits.html#ae37d681153711b1ff64c60139a17b31f":[9,0,0,11,6,5,76,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[9,0,0,11,6,5,12,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSRTraits.html":[9,0,0,11,6,5,78],
@@ -249,5 +247,7 @@ var NAVTREEINDEX38 =
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a61f234773186606b5c626e7f37c03940":[9,0,0,11,6,62,0],
 "structAntares_1_1Solver_1_1Variable_1_1VCardDummyVariable.html#a6d966cf874e32355f6be63a6ddff7d38":[9,0,0,11,6,62,2],
 "structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html":[9,0,0,11,6,35],
-"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html#a196f76979862b0dfe282eed48220f590":[9,0,0,11,6,35,0]
+"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html#a196f76979862b0dfe282eed48220f590":[9,0,0,11,6,35,0],
+"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor.html#a79c00dea9d991ccaf846ca2741d7fd31":[9,0,0,11,6,35,1],
+"structAntares_1_1Solver_1_1Variable_1_1VariableAccessor_3_01ResultsT_00_01Category_1_1dynamicColumns_01_4.html":[9,0,0,11,6,36]
 };

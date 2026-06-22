@@ -1,7 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classAntares_1_1MatrixSubColumn_3_01U_01_5_5_01_4.html":[9,0,0,22],
-"classAntares_1_1MatrixSubColumn_3_01U_01_5_5_01_4.html#a264131dd08291dd0a54e4904be3aa38f":[9,0,0,22,0],
 "classAntares_1_1MatrixSubColumn_3_01U_01_5_5_01_4.html#a849374c850b01e4205d86ea10e8e04d2":[9,0,0,22,1],
 "classAntares_1_1Memory.html":[9,0,0,28],
 "classAntares_1_1Memory.html#a1e460bed8929aa271443f1127267089f":[9,0,0,28,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX11 =
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasBounds.html#ad45e4b712a09837e30d243b2910c0ae1":[9,0,0,9,0,0,2],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html":[9,0,0,9,0,1],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html#a6bbf1e7c71525bc7effb7fef8e827796":[9,0,0,9,0,1,0],
-"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html#a7743c66b03b83b5eecfa317600060b1a":[9,0,0,9,0,1,1]
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasName.html#a7743c66b03b83b5eecfa317600060b1a":[9,0,0,9,0,1,1],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html":[9,0,0,9,0,2],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1IHasStatus.html#a2f5bccd5b993ab5e6666a2f4b9933452":[9,0,0,9,0,2,0]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"md_src_tests_cucumber_readme.html#autotoc_md39":[4,1,2],
-"md_src_tests_cucumber_readme.html#autotoc_md40":[4,2],
 "md_src_tests_cucumber_readme.html#autotoc_md41":[4,2,0],
 "md_src_tests_cucumber_readme.html#autotoc_md42":[4,2,1],
 "md_src_tests_run_study_tests_readme.html":[5],
@@ -249,5 +247,7 @@ var NAVTREEINDEX33 =
 "predicate_8hxx_source.html":[10,0,0,8,9,0,0,0,0,0,2],
 "priceCSR_8h.html#a6c946c36bac1267ea4f1241bc99ac8bf":[8,0,0,14,8,5,137],
 "priceCSR_8h_source.html":[10,0,0,8,11,0,0,0,0,3,39],
-"price_8h.html#ad66c7bfb4cde338e0da6ca883226d417":[8,0,0,14,8,5,136]
+"price_8h.html#ad66c7bfb4cde338e0da6ca883226d417":[8,0,0,14,8,5,136],
+"price_8h_source.html":[10,0,0,8,11,0,0,0,0,3,38],
+"print_8h_source.html":[10,0,0,8,11,0,0,0,0,16]
 };
