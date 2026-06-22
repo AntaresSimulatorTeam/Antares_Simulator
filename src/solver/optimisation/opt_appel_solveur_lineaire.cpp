@@ -86,10 +86,14 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
         const auto& hydro = problemeHebdo.CaracteristiquesHydrauliques[pays];
         context.reservoirCapacityByArea[areaName] = hydro.TailleReservoir;
 
+        // actual_load is the raw load series; ConsommationAbattueDuPays is the
+        // residual load (load minus must-run generation, see
+        // sim_calcul_economique.cpp), so the must-run part is added back.
         std::vector<double> load(nPdt);
         for (std::size_t pdt = 0; pdt < nPdt; ++pdt)
         {
-            load[pdt] = problemeHebdo.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays];
+            load[pdt] = problemeHebdo.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
+                        + problemeHebdo.AllMustRunGeneration[pdt].AllMustRunGenerationOfArea[pays];
         }
         context.loadByArea[areaName] = std::move(load);
 
