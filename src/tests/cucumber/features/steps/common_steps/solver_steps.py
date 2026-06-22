@@ -330,7 +330,8 @@ def run_simulation(context):
     # For hybrid studies:
     outputPath = Path(context.output_path)
     if any(outputPath.glob("simulation-table*.csv")):
-        context.moh = modeler_output_handler(outputPath, "simulation-table*-optim-nb-1.csv")
+        context.moh = modeler_output_handler(outputPath)
+        context.simu_table = context.moh.simulation_table
 
 
 def init_simulation(context):
@@ -461,7 +462,8 @@ def _store_simulation_result(context, study_index: int):
         'logs_err': context.logs_err,
         'output_path': context.output_path,
         'soh': context.soh,
-        'moh': context.moh if hasattr(context, 'moh') else None
+        'moh': getattr(context, 'moh', None),
+        'simu_table': getattr(context, 'simu_table', None),
     }
     context.multi_studies.append(result)
 
@@ -535,9 +537,9 @@ def compare_objective_values_all_studies(context):
     # Collect all objective values
     all_objectives = []
     for study in context.multi_studies:
-        assert study['moh'] is not None, \
+        assert study['simu_table'] is not None, \
             f"Study {study['index'] + 1} (path: {study['path']}) does not have modeler outputs (simulation_table)"
-        objectives = study['moh'].get_objective_values_by_block()
+        objectives = study['simu_table'].get_objective_values_by_block()
         all_objectives.append({
             'index': study['index'],
             'path': study['path'],
