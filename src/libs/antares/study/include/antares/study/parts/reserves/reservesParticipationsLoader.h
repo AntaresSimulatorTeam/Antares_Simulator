@@ -86,12 +86,12 @@ void readYamlProperties(const YAML::Node& cert,
             }
             catch (const YAML::Exception&)
             {
-                logs.warning() << "invalid " << typeName << " reserve property " << k;
+                logs.error() << "invalid " << typeName << " reserve property " << k;
             }
         }
         else
         {
-            logs.warning() << "invalid " << typeName << " reserve property " << k;
+            logs.error() << "invalid " << typeName << " reserve property " << k;
         }
     }
 }
