@@ -29,8 +29,7 @@ static inline void ClearAndShrink(StringT& string)
 }
 
 Study::Study():
-    areas(*this),
-    pQueueService(std::make_shared<Yuni::Job::QueueService>())
+    areas(*this)
 {
     // Correlation names
     preproLoadCorrelation.correlationName = "Correlation: Load";
@@ -71,7 +70,6 @@ void Study::clear()
     folderInput.clear();
     folderOutput.clear();
     folderSettings.clear();
-    inputExtension.clear();
 }
 
 void Study::reduceMemoryUsage()

@@ -3,6 +3,7 @@
 
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
+#include <memory>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/date/date.h>
@@ -223,7 +224,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pDurationCollector(duration_collector),
-    pQueueService(study.pQueueService),
+    pQueueService(std::make_shared<Yuni::Job::QueueService>()),
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
