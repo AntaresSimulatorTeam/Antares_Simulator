@@ -273,10 +273,6 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Only the preprocessors are enabled.";
 
         regenerateTimeSeries(study, pResultWriter, pDurationCollector);
-
-        // Destroy the TS Generators if any
-        // It will export the time-series into the output at the same time
-        TSGenerator::DestroyAll(study);
     }
     else
     {
@@ -311,9 +307,6 @@ void ISimulation<ImplementationType>::run()
             pDurationCollector("mc_years")
               << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
         }
-        // Destroy the TS Generators if any
-        // It will export the time-series into the output in the same time
-        TSGenerator::DestroyAll(study);
 
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };

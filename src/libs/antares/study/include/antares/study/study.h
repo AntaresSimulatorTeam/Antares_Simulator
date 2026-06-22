@@ -360,16 +360,6 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
 
-    //! \name TS Generators
-    //@{
-    /*!
-    ** \brief Time-series generators used by the solver
-    ** \warning These variables should not be used directly
-    */
-    void* cacheTSGenerator[timeSeriesCount];
-
-    //@}
-
     Solver::ModelerData* getModelerData() const
     {
         return modelerInput_.get();

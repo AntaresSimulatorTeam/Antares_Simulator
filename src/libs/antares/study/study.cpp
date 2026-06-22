@@ -32,12 +32,6 @@ Study::Study():
     areas(*this),
     pQueueService(std::make_shared<Yuni::Job::QueueService>())
 {
-    // TS generators
-    for (uint i = 0; i != timeSeriesCount; ++i)
-    {
-        cacheTSGenerator[i] = nullptr;
-    }
-
     // Correlation names
     preproLoadCorrelation.correlationName = "Correlation: Load";
     preproSolarCorrelation.correlationName = "Correlation: Solar";
