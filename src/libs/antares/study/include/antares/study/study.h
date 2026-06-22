@@ -8,7 +8,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/noncopyable.h>
-#include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/correlation/correlation.h>

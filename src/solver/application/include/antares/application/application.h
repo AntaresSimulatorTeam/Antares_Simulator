@@ -4,6 +4,7 @@
 #pragma once
 
 #include <yuni/core/string.h>
+#include <yuni/job/queue/service.h>
 
 #include <antares/benchmarking/DurationCollector.h>
 #include <antares/benchmarking/timer.h>
