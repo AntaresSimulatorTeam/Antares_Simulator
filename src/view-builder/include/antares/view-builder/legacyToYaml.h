@@ -10,7 +10,13 @@
 namespace Antares::ViewBuilder
 {
 
-YAML::Node studyToSystemYaml(const Antares::Data::Study& study);
+std::string areaLocation(const std::string& areaId);
+std::string makeComponentId(const std::string& areaId, const std::string& childType, const std::string& childId = "");
+std::string miscGenTypeName(int index);
+
+YAML::Node generateSystemForView(const Antares::Data::Study& study);
+YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study);
+YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::Node& legacyYaml);
 
 YAML::Node areaToYaml(const Antares::Data::Area& area);
 YAML::Node loadToYaml(const Antares::Data::Area& area);

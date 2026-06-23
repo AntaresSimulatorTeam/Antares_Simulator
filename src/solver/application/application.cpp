@@ -405,7 +405,7 @@ void Application::execute()
     // Save about-the-study files (comments, notes, etc.)
     pStudy->saveAboutTheStudy(*resultWriter);
 
-    YAML::Node viewsYaml = Antares::ViewBuilder::studyToSystemYaml(*pStudy);
+    YAML::Node viewsYaml = Antares::ViewBuilder::generateSystemForView(*pStudy);
     std::string yamlContent = YAML::Dump(viewsYaml);
     resultWriter->addEntryFromBuffer("system-for-views.yml", yamlContent);
 

@@ -13,21 +13,6 @@ using namespace Antares::Data;
 namespace
 {
 
-std::string areaLocation(const std::string& areaId)
-{
-    return LocationIdentifier(areaId, AREA);
-}
-
-std::string makeComponentId(const std::string& areaId, const std::string& childType, const std::string& childId = "")
-{
-    std::string result = areaLocation(areaId) + SEP + childType;
-    if (!childId.empty())
-    {
-        result += "<" + childId + ">";
-    }
-    return result;
-}
-
 YAML::Node makeComponent(const std::string& id, const std::string& modelId, const std::vector<std::string>& properties)
 {
     YAML::Node component;
@@ -46,6 +31,26 @@ YAML::Node makeComponent(const std::string& id, const std::string& modelId, cons
     }
 
     return component;
+}
+
+} // anonymous namespace
+
+namespace Antares::ViewBuilder
+{
+
+std::string areaLocation(const std::string& areaId)
+{
+    return LocationIdentifier(areaId, AREA);
+}
+
+std::string makeComponentId(const std::string& areaId, const std::string& childType, const std::string& childId)
+{
+    std::string result = areaLocation(areaId) + SEP + childType;
+    if (!childId.empty())
+    {
+        result += "<" + childId + ">";
+    }
+    return result;
 }
 
 std::string miscGenTypeName(int index)
@@ -71,64 +76,6 @@ std::string miscGenTypeName(int index)
     default:
         return "Unknown";
     }
-}
-
-} // anonymous namespace
-
-namespace Antares::ViewBuilder
-{
-
-YAML::Node studyToSystemYaml(const Antares::Data::Study& study)
-{
-    YAML::Node system;
-    system["id"] = "legacy_converted";
-    YAML::Node libs = YAML::Node(YAML::NodeType::Sequence);
-    libs.push_back("antares_legacy_models");
-    system["model-libraries"] = libs;
-
-    YAML::Node components = YAML::Node(YAML::NodeType::Sequence);
-
-    study.areas.each([&](const Area& area)
-    {
-        components.push_back(areaToYaml(area));
-        components.push_back(loadToYaml(area));
-        components.push_back(windToYaml(area));
-        components.push_back(solarToYaml(area));
-        components.push_back(rorToYaml(area));
-
-        for (int i = 0; i < MiscGenIndex::fhhMax; i++)
-        {
-            components.push_back(miscGenToYaml(area, i));
-        }
-
-        for (const auto& cluster : area.thermal.list.all())
-        {
-            components.push_back(thermalClusterToYaml(*cluster));
-        }
-
-        for (const auto& cluster : area.renewable.list.all())
-        {
-            components.push_back(renewableClusterToYaml(*cluster));
-        }
-
-        for (const auto& st : area.shortTermStorage.storagesByIndex)
-        {
-            components.push_back(shortTermStorageToYaml(area, st));
-        }
-
-        components.push_back(longTermStorageToYaml(area));
-
-        for (const auto& [linkName, link] : area.links)
-        {
-            components.push_back(linkToYaml(*link));
-        }
-    });
-
-    system["components"] = components;
-
-    YAML::Node root;
-    root["system"] = system;
-    return root;
 }
 
 YAML::Node areaToYaml(const Area& area)

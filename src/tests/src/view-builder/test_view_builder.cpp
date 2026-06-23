@@ -66,7 +66,7 @@ BOOST_FIXTURE_TEST_SUITE(view_builder_tests, ViewBuilderFixture)
 
 BOOST_AUTO_TEST_CASE(study_to_yaml_structure)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     BOOST_REQUIRE(root.IsMap());
     BOOST_REQUIRE(root["system"].IsDefined());
 
@@ -87,11 +87,21 @@ BOOST_AUTO_TEST_CASE(study_to_yaml_structure)
     //     hydro(1) = 14
     // total: 32
     BOOST_CHECK_EQUAL(components.size(), 32);
+
+    auto connections = sys["connections"];
+    BOOST_REQUIRE(connections.IsSequence());
+    // fr sub-components: load(1) + wind(1) + solar(1) + ror(1) + miscGen(8) +
+    //     thermal(1) + renewable(1) + sts(1) + hydro(1) = 16
+    // de sub-components: load(1) + wind(1) + solar(1) + ror(1) + miscGen(8) +
+    //     hydro(1) = 13
+    // link: in_port + out_port = 2
+    // total: 31
+    BOOST_CHECK_EQUAL(connections.size(), 31);
 }
 
 BOOST_AUTO_TEST_CASE(area_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -112,7 +122,7 @@ BOOST_AUTO_TEST_CASE(area_component)
 
 BOOST_AUTO_TEST_CASE(load_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -133,7 +143,7 @@ BOOST_AUTO_TEST_CASE(load_component)
 
 BOOST_AUTO_TEST_CASE(wind_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -155,7 +165,7 @@ BOOST_AUTO_TEST_CASE(wind_component)
 
 BOOST_AUTO_TEST_CASE(thermal_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -178,7 +188,7 @@ BOOST_AUTO_TEST_CASE(thermal_component)
 
 BOOST_AUTO_TEST_CASE(renewable_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -200,7 +210,7 @@ BOOST_AUTO_TEST_CASE(renewable_component)
 
 BOOST_AUTO_TEST_CASE(sts_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -222,7 +232,7 @@ BOOST_AUTO_TEST_CASE(sts_component)
 
 BOOST_AUTO_TEST_CASE(hydro_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -244,7 +254,7 @@ BOOST_AUTO_TEST_CASE(hydro_component)
 
 BOOST_AUTO_TEST_CASE(link_component)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     bool found = false;
@@ -265,7 +275,7 @@ BOOST_AUTO_TEST_CASE(link_component)
 
 BOOST_AUTO_TEST_CASE(misc_gen_components)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     std::vector<std::string> miscGenNames
@@ -296,7 +306,7 @@ BOOST_AUTO_TEST_CASE(misc_gen_components)
 
 BOOST_AUTO_TEST_CASE(parameters_are_empty)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
     for (const auto& comp : components)
@@ -309,7 +319,7 @@ BOOST_AUTO_TEST_CASE(parameters_are_empty)
 
 BOOST_AUTO_TEST_CASE(round_trip_yaml_parse)
 {
-    YAML::Node root = studyToSystemYaml(*study);
+    YAML::Node root = generateSystemForView(*study);
     std::string yamlStr = YAML::Dump(root);
 
     YAML::Node reparsed = YAML::Load(yamlStr);
@@ -321,6 +331,93 @@ BOOST_AUTO_TEST_CASE(round_trip_yaml_parse)
     BOOST_REQUIRE(sys["model-libraries"].IsSequence());
     BOOST_REQUIRE(sys["components"].IsSequence());
     BOOST_CHECK_EQUAL(sys["components"].size(), 32);
+    BOOST_REQUIRE(sys["connections"].IsSequence());
+    BOOST_CHECK_EQUAL(sys["connections"].size(), 31);
+}
+
+BOOST_AUTO_TEST_CASE(connections_structure)
+{
+    YAML::Node root = generateSystemForView(*study);
+    auto connections = root["system"]["connections"];
+
+    BOOST_REQUIRE(connections.IsSequence());
+    BOOST_CHECK_EQUAL(connections.size(), 31);
+
+    for (const auto& conn : connections)
+    {
+        BOOST_REQUIRE(conn["component1"].IsDefined());
+        BOOST_REQUIRE(conn["port1"].IsDefined());
+        BOOST_REQUIRE(conn["component2"].IsDefined());
+        BOOST_REQUIRE(conn["port2"].IsDefined());
+        BOOST_CHECK(conn["component1"].as<std::string>() != conn["component2"].as<std::string>());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(connection_for_load)
+{
+    YAML::Node root = generateSystemForView(*study);
+    auto connections = root["system"]["connections"];
+
+    bool found = false;
+    for (const auto& conn : connections)
+    {
+        if (conn["component1"].as<std::string>() == "area<france>::Load"
+            && conn["component2"].as<std::string>() == "area<france>")
+        {
+            found = true;
+            BOOST_CHECK_EQUAL(conn["port1"].as<std::string>(), "balance_port");
+            BOOST_CHECK_EQUAL(conn["port2"].as<std::string>(), "balance_port");
+        }
+    }
+    BOOST_CHECK(found);
+}
+
+BOOST_AUTO_TEST_CASE(connection_for_thermal)
+{
+    YAML::Node root = generateSystemForView(*study);
+    auto connections = root["system"]["connections"];
+
+    bool found = false;
+    for (const auto& conn : connections)
+    {
+        if (conn["component1"].as<std::string>() == "area<france>::ThermalCluster<nuc_fr>"
+            && conn["component2"].as<std::string>() == "area<france>")
+        {
+            found = true;
+            BOOST_CHECK_EQUAL(conn["port1"].as<std::string>(), "balance_port");
+            BOOST_CHECK_EQUAL(conn["port2"].as<std::string>(), "balance_port");
+        }
+    }
+    BOOST_CHECK(found);
+}
+
+BOOST_AUTO_TEST_CASE(connection_for_link)
+{
+    YAML::Node root = generateSystemForView(*study);
+    auto connections = root["system"]["connections"];
+
+    bool foundInPort = false;
+    bool foundOutPort = false;
+    for (const auto& conn : connections)
+    {
+        if (conn["component1"].as<std::string>() == "link<france$$germany>")
+        {
+            if (conn["port1"].as<std::string>() == "in_port"
+                && conn["component2"].as<std::string>() == "area<france>"
+                && conn["port2"].as<std::string>() == "balance_port")
+            {
+                foundInPort = true;
+            }
+            if (conn["port1"].as<std::string>() == "out_port"
+                && conn["component2"].as<std::string>() == "area<germany>"
+                && conn["port2"].as<std::string>() == "balance_port")
+            {
+                foundOutPort = true;
+            }
+        }
+    }
+    BOOST_CHECK_MESSAGE(foundInPort, "Missing link in_port -> area<france> connection");
+    BOOST_CHECK_MESSAGE(foundOutPort, "Missing link out_port -> area<germany> connection");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
