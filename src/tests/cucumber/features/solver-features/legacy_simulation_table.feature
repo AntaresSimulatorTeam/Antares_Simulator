@@ -13,22 +13,22 @@ Feature: Legacy variables in simulation table
   @fast @short
   Scenario: Legacy UnsuppliedEnergy is mapped to unsupplied_energy and carries the solver value
     # "002 Thermal fleet - Base" has a single area (id "area") with a known
-    # shortfall of 52 MW on "2 JAN 09:00" of year 1, i.e. absolute hour 34
-    # (1-based), which lives in week 0 -> block 1. Antares lowercases area
+    # shortfall of 52 MW on "2 JAN 09:00" of year 1, i.e. absolute hour 33
+    # (0-based), which lives in week 0 -> block 0. Antares lowercases area
     # ids, so the legacy variable produced by the solver is
     # `UnsuppliedEnergy::area<area>::hour<33>` (0-based legacy hour); is stored as
-    # component=area, output=unsupplied_energy, absolute_time_index=34.
+    # component=area, output=unsupplied_energy, absolute_time_index=33.
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/002 Thermal fleet - Base"
     When I run antares simulator
     Then the simulation succeeds
     And in area "AREA", unsupplied energy on "2 JAN 09:00" of year 1 is of 52 MW
     And the modeler outputs contain the following entries
       | block | component  | output            | timestep | scenario | value |
-      | 1     | area | unsupplied_energy | 34       | 0        | 52    |
+      | 0     | area | unsupplied_energy | 33       | 0        | 52    |
 
   @fast @short
   Scenario: Extra outputs prop_cost and imbalance_cost are derived from the legacy solution
-    # Same study, same shortfall hour (absolute hour 34, block 1). With 52 MW
+    # Same study, same shortfall hour (absolute hour 33, block 0). With 52 MW
     # of unsupplied energy every thermal cluster is at its maximum, so:
     #   - prop_cost = marginal_cost * generated_power per cluster:
     #       base:      35 * (4 * 900) = 126000
@@ -59,13 +59,13 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output         | timestep | scenario | value  |
-      | 1     | base      | prop_cost      | 34       | 0        | 126000 |
-      | 1     | semi base | prop_cost      | 34       | 0        | 75000  |
-      | 1     | peak      | prop_cost      | 34       | 0        | 64000  |
-      | 1     | area      | imbalance_cost | 34       | 0        | 520000 |
-      | 1     | area      | is_loss_of_load | 34      | 0        | 1      |
-      | 1     | area      | price          | 34       | 0        | 10000  |
-      | 1     | area      | is_near_loss_of_load | 34  | 0        | 1      |
+      | 0     | base      | prop_cost      | 33       | 0        | 126000 |
+      | 0     | semi base | prop_cost      | 33       | 0        | 75000  |
+      | 0     | peak      | prop_cost      | 33       | 0        | 64000  |
+      | 0     | area      | imbalance_cost | 33       | 0        | 520000 |
+      | 0     | area      | is_loss_of_load | 33      | 0        | 1      |
+      | 0     | area      | price          | 33       | 0        | 10000  |
+      | 0     | area      | is_near_loss_of_load | 33  | 0        | 1      |
 
   @fast @short
   Scenario: Link extra outputs are derived from the legacy flow variables and duals
@@ -93,11 +93,11 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component  | output                | timestep | scenario | value   |
-      | 3     | east$$west | abs_flow              | 426      | 0        | 213.452 |
-      | 3     | east$$west | prop_cost             | 426      | 0        | 213.452 |
-      | 3     | east$$west | capacity_shadow_price | 426      | 0        | 1.0     |
-      | 3     | east       | price                 | 426      | 0        | 44.926  |
-      | 3     | west       | price                 | 426      | 0        | 45.926  |
+      | 2     | east$$west | abs_flow              | 425      | 0        | 213.452 |
+      | 2     | east$$west | prop_cost             | 425      | 0        | 213.452 |
+      | 2     | east$$west | capacity_shadow_price | 425      | 0        | 1.0     |
+      | 2     | east       | price                 | 425      | 0        | 44.926  |
+      | 2     | west       | price                 | 425      | 0        | 45.926  |
 
   @fast @short
   Scenario: hydro_shadow_price is emitted when hydro-pricing-mode is accurate
@@ -117,7 +117,7 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries
       | block | component | output             | timestep | scenario | value |
-      | 1     | he        | hydro_shadow_price | 168      | 0        | -56   |
+      | 0     | he        | hydro_shadow_price | 167      | 0        | -56   |
 
   @fast @short
   Scenario: actual_num_units_on is emitted in accurate unit-commitment mode
@@ -138,6 +138,12 @@ Feature: Legacy variables in simulation table
     Then the simulation succeeds
     And the modeler outputs contain the following entries
       | block | component | output              | timestep | scenario | value |
-      | 1     | base      | actual_num_units_on | 34       | 0        | 4     |
-      | 1     | semi base | actual_num_units_on | 34       | 0        | 5     |
-      | 1     | peak      | actual_num_units_on | 34       | 0        | 8     |
+      | 0     | base      | actual_num_units_on | 33       | 0        | 4     |
+      | 0     | semi base | actual_num_units_on | 33       | 0        | 5     |
+      | 0     | peak      | actual_num_units_on | 33       | 0        | 8     |
+      | 0     | base      | prop_cost      | 33       | 0        | 126000 |
+      | 0     | semi base | prop_cost      | 33       | 0        | 75000  |
+      | 0     | peak      | prop_cost      | 33       | 0        | 64000  |
+      | 0     | area      | imbalance_cost | 33       | 0        | 520000 |
+      | 0     | area      | is_loss_of_load | 33      | 0        | 1      |
+
