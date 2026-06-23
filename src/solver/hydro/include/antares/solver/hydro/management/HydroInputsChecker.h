@@ -44,8 +44,6 @@ private:
     bool checkMinGeneration(uint year);
     //! check reservoir levels
     bool checkRuleCurves(uint year);
-    //! warn if initial reservoir level is outside final rule curves
-    void checkInitialLevelAgainstFinalRuleCurves(uint year);
 };
 
 } // namespace Antares
