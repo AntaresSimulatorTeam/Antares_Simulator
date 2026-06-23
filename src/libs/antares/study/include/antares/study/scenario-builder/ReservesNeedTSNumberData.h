@@ -22,8 +22,8 @@ public:
         pArea = area;
     }
 
-    void setTSnumber(const Antares::Data::CapacityReservation& res, const uint year, uint value);
-    uint get(const Antares::Data::CapacityReservation& res, const uint year) const;
+    void setAreaTSnumber(const uint year, uint value);
+    uint get(const uint year) const;
     bool apply(Study& study) override;
     CString<512, false> get_prefix() const override;
 
@@ -37,13 +37,11 @@ private:
     const Area* pArea = nullptr;
 };
 
-inline uint ReservesNeedTSNumberData::get(const Antares::Data::CapacityReservation& res,
-                                          const uint year) const
+inline uint ReservesNeedTSNumberData::get(const uint year) const
 {
-    if (year < pTSNumberRules.height && res.areaWideIndex < pTSNumberRules.width)
+    if (year < pTSNumberRules.height)
     {
-        const uint index = res.areaWideIndex;
-        return pTSNumberRules[index][year];
+        return pTSNumberRules[0][year];
     }
     return 0;
 }

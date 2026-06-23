@@ -37,10 +37,13 @@ void singleAreaStoreTimeseriesNumbers<TimeSeriesType::timeSeriesReservesNeed>(
   Solver::IResultWriter& writer,
   const Area& area)
 {
-    const auto& [resID, cr] = *area.allCapacityReservations.value()
-                                 .areaCapacityReservations.begin();
-    const std::string reserveName = resID;
-    storeTSnumbers(writer, cr.need->timeseriesNumbers, area.id, "reservesNeed");
+    if (area.allCapacityReservations)
+    {
+        const auto& [resID, cr] = *area.allCapacityReservations.value()
+                                     .areaCapacityReservations.begin();
+        const std::string reserveName = resID;
+        storeTSnumbers(writer, cr.need->timeseriesNumbers, area.id, "reservesNeed");
+    }
 }
 
 template<>

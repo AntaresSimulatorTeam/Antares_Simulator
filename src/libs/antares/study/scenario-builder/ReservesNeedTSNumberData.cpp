@@ -1,10 +1,6 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-//
-// Created by marechaljas on 04/07/23.
-//
-
 #include "antares/study/scenario-builder/ReservesNeedTSNumberData.h"
 
 #include "antares/study/scenario-builder/applyToMatrix.hxx"
@@ -19,17 +15,15 @@ bool ReservesNeedTSNumberData::reset(const Study& study)
     uint reservesCount = pArea->allCapacityReservations.value().areaCapacityReservations.size();
 
     // Resize
-    pTSNumberRules.reset(reservesCount, nbYears);
+    pTSNumberRules.reset(1, nbYears);
     return true;
 }
 
-void ReservesNeedTSNumberData::setTSnumber(const Antares::Data::CapacityReservation& res,
-                                           const uint year,
-                                           uint value)
+void ReservesNeedTSNumberData::setAreaTSnumber(const uint year, uint value)
 {
-    if (year < pTSNumberRules.height && res.areaWideIndex < pTSNumberRules.width)
+    if (year < pTSNumberRules.height)
     {
-        pTSNumberRules[res.areaWideIndex][year] = value;
+        pTSNumberRules[0][year] = value;
     }
 }
 

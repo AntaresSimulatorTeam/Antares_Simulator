@@ -166,7 +166,17 @@ bool Rules::readRenewableCluster(const std::vector<std::string>& splitKey, const
 bool Rules::readReservesNeed(const std::vector<std::string>& splitKey, const String& value)
 {
     const AreaName& areaname = splitKey[1];
-    const uint year = std::stoul(splitKey[2]);
+    uint year;
+    try
+    {
+        year = std::stoul(splitKey[2]);
+    }
+    catch (const std::exception&)
+    {
+        logs.error() << "[scenario-builder] Invalid year value for reserves need TS number: '"
+                     << splitKey[2] << "'";
+        return false;
+    }
 
     if (!study_.parameters.include.reserves)
     {
@@ -182,12 +192,7 @@ bool Rules::readReservesNeed(const std::vector<std::string>& splitKey, const Str
     uint val = fromStringToTSnumber(value);
     if (area->allCapacityReservations)
     {
-        const auto& reserveCapacities = area->allCapacityReservations.value()
-                                          .areaCapacityReservations;
-        for (const auto& reserveCapacity: reserveCapacities)
-        {
-            reservesNeed.value()[area->index].setTSnumber(reserveCapacity.second, year, val);
-        }
+        reservesNeed.value()[area->index].setAreaTSnumber(year, val);
     }
     return true;
 }

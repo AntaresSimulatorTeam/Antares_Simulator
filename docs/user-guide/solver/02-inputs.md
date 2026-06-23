@@ -40,7 +40,7 @@ Indices for TS numbers start at **1**. Indices for years start at **0**.
 
 ### Wind, solar, load, hydro, reserves need
 Wind, solar, load, hydro objects are unique in their area. Implicitely, they are referred to with a prefix and an area identifier. 
-Reserves need are not unique int their area, but the TS number is defined at the area level, so they are also referred to with a prefix and an area identifier.
+Reserves need are not unique in their area, but the TS number is defined at the area level. TS number is applied to all reserves need objects in the area, they are not used if reserves are disabled.
 
 ```
 prefix,area,year = TS number
@@ -717,7 +717,7 @@ spillage-cost = 1111
 type = down
 ```
 
-- The need for each of those defined reserves are defined in the same folder as _reserveName.txt_ files with 8760 values to define the need for each hour of the year.
+- The need for each of those defined reserves are defined in the same folder as _reserveName.txt_ files with 8760 values per column to define the need for each hour of the year for multiple monte-carlo years.
 
 Then, each plant has to define their participation to the defined reserves in the _reserves.ini_ file in the plant folder. Thermal, short term storage and long term storage plants can participate to reserves. The files are located in:
 

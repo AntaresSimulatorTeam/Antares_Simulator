@@ -51,7 +51,7 @@ struct CapacityReservation
 
     CapacityReservation() = delete;
 
-    CapacityReservation(TimeSeriesNumbers& tsNumbers):
+    explicit CapacityReservation(TimeSeriesNumbers& tsNumbers):
         need(std::make_shared<TimeSeries>(tsNumbers))
     {
     }

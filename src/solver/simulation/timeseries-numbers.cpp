@@ -606,18 +606,19 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
 
     // Reserves need for capacity reservations
     study.areas.each(
-      [&](const Antares::Data::Area& area)
+      [&year, &study](const Antares::Data::Area& area)
       {
-          for (const auto& reserveCapacity:
-               area.allCapacityReservations
-                 ? area.allCapacityReservations.value().areaCapacityReservations
-                 : map<string, CapacityReservation>{})
+          if (area.allCapacityReservations)
           {
-              const auto nbTimeSeries = reserveCapacity.second.need->timeSeries.width;
-              if (nbTimeSeries > 1)
+              for (const auto& reserveCapacity:
+                   area.allCapacityReservations.value().areaCapacityReservations)
               {
-                  reserveCapacity.second.need->timeseriesNumbers[year] = (uint32_t)(floor(
-                    study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                  const auto nbTimeSeries = reserveCapacity.second.need->timeSeries.width;
+                  if (nbTimeSeries > 1)
+                  {
+                      reserveCapacity.second.need->timeseriesNumbers[year] = (uint32_t)(floor(
+                        study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                  }
               }
           }
       });
