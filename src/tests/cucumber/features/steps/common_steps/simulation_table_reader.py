@@ -90,10 +90,10 @@ def _normalize_simulation_table(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def make_simulation_table_reader(
+def make_simu_table_reader(
     output_path: Path,
     output_format: OutputFormat,
-    file_pattern: str | None = None,
+    file_pattern: str
 ) -> object:
     """Factory function that returns the appropriate simulation table reader.
 
@@ -104,23 +104,6 @@ def make_simulation_table_reader(
             Defaults to the solver pattern "simulation-table-*-optim-nb-1.{format}".
             For modeler output, use "simulation-table*.{format}".
     """
-    if file_pattern is None:
-        file_pattern = f"simulation-table-*-optim-nb-1.{output_format.value}"
-    if output_format == OutputFormat.PARQUET:
-        return lambda: read_simulation_table_parquet(output_path, file_pattern)
-    else:
-        return lambda: read_simulation_table_csv(output_path, file_pattern)
-
-
-def make_modeler_simulation_table_reader(
-    output_path: Path, output_format: OutputFormat
-) -> object:
-    """Factory function for antares-modeler simulation table output.
-
-    The modeler writes files named "simulation-table.{format}" (no year/optim suffix),
-    so the glob pattern is "simulation-table*.{format}".
-    """
-    file_pattern = f"simulation-table*.{output_format.value}"
     if output_format == OutputFormat.PARQUET:
         return lambda: read_simulation_table_parquet(output_path, file_pattern)
     else:

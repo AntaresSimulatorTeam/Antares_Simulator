@@ -13,7 +13,7 @@ from common_steps.invest_problems import read_invest_problems
 from common_steps.simulation_table import SimulationTable
 from common_steps.simulation_table_reader import (
     OutputFormat,
-    make_modeler_simulation_table_reader,
+    make_simu_table_reader,
 )
 from shared_utils import mps_utils as mpu
 from pathlib import Path
@@ -149,10 +149,11 @@ def run_modeler(context):
         return
 
     output_format = getattr(context, "outputFormat", OutputFormat.CSV)
-    reader_factory = make_modeler_simulation_table_reader(
-        Path(parse_output_folder_from_logs(context.logs_out)), output_format
-    )
+    file_pattern = f"simulation-table*.{output_format.value}"
+    output_path = Path(parse_output_folder_from_logs(context.logs_out))
+    reader_factory = make_simu_table_reader(output_path, output_format, file_pattern)
     context.simu_table = SimulationTable(reader_factory())
+
     context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
 
 

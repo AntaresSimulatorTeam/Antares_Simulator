@@ -14,7 +14,7 @@ from common_steps.solver_output_handler import solver_output_handler
 from common_steps.simulation_table import SimulationTable
 from common_steps.simulation_table_reader import (
     OutputFormat,
-    make_simulation_table_reader,
+    make_simu_table_reader,
 )
 
 from common_steps.assertions import assert_double_close
@@ -334,9 +334,9 @@ def run_simulation(context):
     # For hybrid studies:
     outputPath = Path(context.output_path)
     if any(outputPath.glob("simulation-table*.csv")):
-        context.simu_table = SimulationTable(
-            make_simulation_table_reader(outputPath, OutputFormat.CSV)()
-        )
+        file_pattern = f"simulation-table-*-optim-nb-1.{OutputFormat.CSV}"
+        ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
+        context.simu_table = SimulationTable(ST_reader_factory())
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
