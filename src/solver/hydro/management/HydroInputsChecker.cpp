@@ -259,11 +259,6 @@ void HydroInputsChecker::CheckForErrors() const
 
 void HydroInputsChecker::checkInitialLevelAgainstFinalRuleCurves(uint year)
 {
-    if (!parameters_.useCustomScenario)
-    {
-        return;
-    }
-
     if (!parameters_.yearsFilter.at(year))
     {
         return;

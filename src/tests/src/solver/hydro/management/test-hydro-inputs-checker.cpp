@@ -27,6 +27,7 @@ struct HydroInputCheckerFixture
         study->parameters.simulationDays.end = 365;
         study->parameters.firstMonthInYear = january;
         uint nbYears = study->parameters.nbYears = 1;
+        study->parameters.yearsFilter = {1};
 
         area_1 = addAreaToListOfAreas(study->areas, "Area1");
         if (area_1)
