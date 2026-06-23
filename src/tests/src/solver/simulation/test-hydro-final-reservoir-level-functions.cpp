@@ -4,6 +4,8 @@
 
 #define BOOST_TEST_MODULE hydro - final - level
 #define WIN32_LEAN_AND_MEAN
+#include <unit_test_utils.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/study/study.h>
@@ -289,6 +291,46 @@ BOOST_AUTO_TEST_CASE(check_all_areas_final_levels_when_config_is_ok___all_checks
     BOOST_CHECK_EQUAL(area_2->hydro.deltaBetweenFinalAndInitialLevels[1].has_value(), true);
     BOOST_CHECK_EQUAL(area_2->hydro.deltaBetweenFinalAndInitialLevels[0].value(), 3.5 - 1.5);
     BOOST_CHECK_EQUAL(area_2->hydro.deltaBetweenFinalAndInitialLevels[1].value(), 4.3 - 2.4);
+}
+
+BOOST_AUTO_TEST_CASE(default_final_level_and_initial_level_outside_rule_curves___warning_is_logged)
+{
+    const uint year = 0;
+    study->scenarioFinalHydroLevels[area_1->index][year] = std::numeric_limits<double>::quiet_NaN();
+
+    std::vector<double> initialLevels(study->areas.size());
+    initialLevels[area_1->index] = study->scenarioInitialHydroLevels[area_1->index][year];
+    initialLevels[area_2->index] = study->scenarioInitialHydroLevels[area_2->index][year];
+
+    Antares::UnitTests::CaptureAntaresLogs logCapture;
+
+    warnIfDefaultFinalLevelsMayBeAdjustedToRespectRuleCurves(*study, initialLevels, year);
+
+    BOOST_CHECK_EQUAL(logCapture.getWarnings().size(), 1);
+    const auto& warning = *logCapture.getWarnings().begin();
+    BOOST_CHECK(warning.find("Hydro area 'Area1' (year 1): Initial reservoir level")
+                != std::string::npos);
+    BOOST_CHECK(warning.find("outside the final rule curves") != std::string::npos);
+    BOOST_CHECK(warning.find("The heuristic may produce a final reservoir level different from "
+                             "the initial level to respect the rule curves.")
+                != std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(
+  default_final_level_and_initial_level_inside_rule_curves___no_warning_is_logged)
+{
+    const uint year = 0;
+    study->scenarioFinalHydroLevels[area_1->index][year] = std::numeric_limits<double>::quiet_NaN();
+
+    std::vector<double> initialLevels(study->areas.size());
+    initialLevels[area_1->index] = 2.4;
+    initialLevels[area_2->index] = study->scenarioInitialHydroLevels[area_2->index][year];
+
+    Antares::UnitTests::CaptureAntaresLogs logCapture;
+
+    warnIfDefaultFinalLevelsMayBeAdjustedToRespectRuleCurves(*study, initialLevels, year);
+
+    BOOST_CHECK(logCapture.getWarnings().empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

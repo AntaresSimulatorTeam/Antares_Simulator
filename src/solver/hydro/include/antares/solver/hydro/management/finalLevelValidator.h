@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #pragma once
 
+#include <vector>
+
 #include "antares/solver/hydro/management/HydroErrorsCollector.h"
 #include "antares/study/parts/hydro/container.h"
 
@@ -10,10 +12,16 @@ namespace Antares
 namespace Data
 {
 class PartHydro;
-}
+class Study;
+} // namespace Data
 
 namespace Solver
 {
+void warnIfDefaultFinalLevelsMayBeAdjustedToRespectRuleCurves(
+  const Antares::Data::Study& study,
+  const std::vector<double>& initialLevels,
+  unsigned int year);
+
 class FinalLevelValidator final
 {
 public:

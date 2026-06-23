@@ -12,6 +12,7 @@
 #include "antares/concurrency/concurrency.h"
 #include "antares/io/outputs/SimulationTable.h"
 #include "antares/solver/hydro/management/HydroInputsChecker.h"
+#include "antares/solver/hydro/management/finalLevelValidator.h"
 #include "antares/solver/hydro/management/management.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/simulation/numspace_manager.h"
@@ -132,6 +133,7 @@ public:
         prepareClustersInMustRunMode(study, scratchmap, y, Impl::mode);
 
         // 4 - Hydraulic ventilation
+        warnIfDefaultFinalLevelsMayBeAdjustedToRespectRuleCurves(study, randomReservoirLevel, y);
         pDurationCollector("hydro_ventilation") << [this, &scratchmap, &randomReservoirLevel]
         { hydroManagement.makeVentilation(randomReservoirLevel, y, scratchmap); };
 

@@ -3,8 +3,57 @@
 
 #include "antares/solver/hydro/management/finalLevelValidator.h"
 
+#include <cmath>
+
+#include "antares/study/study.h"
+
 namespace Antares::Solver
 {
+
+void warnIfDefaultFinalLevelsMayBeAdjustedToRespectRuleCurves(
+  const Antares::Data::Study& study,
+  const std::vector<double>& initialLevels,
+  unsigned int year)
+{
+    study.areas.each(
+      [&study, &initialLevels, year](const Data::Area& area)
+      {
+          if (area.index >= initialLevels.size())
+          {
+              return;
+          }
+
+          const bool finalLevelSetInScenarioBuilder = area.index
+                                                        < study.scenarioFinalHydroLevels.width
+                                                      && year
+                                                           < study.scenarioFinalHydroLevels.height
+                                                      && !std::isnan(
+                                                        study.scenarioFinalHydroLevels[area.index]
+                                                                                      [year]);
+          if (finalLevelSetInScenarioBuilder || !area.hydro.reservoirManagement
+              || area.hydro.useWaterValue)
+          {
+              return;
+          }
+
+          const double initialLevel = initialLevels[area.index];
+          const double lowLevelLastDay = area.hydro.series->ruleCurves.min
+                                           .getCoefficient(year, DAYS_PER_YEAR - 1);
+          const double highLevelLastDay = area.hydro.series->ruleCurves.max
+                                            .getCoefficient(year, DAYS_PER_YEAR - 1);
+
+          if (initialLevel < lowLevelLastDay || initialLevel > highLevelLastDay)
+          {
+              logs.warning()
+                << "Hydro area '" << area.name << "' (year " << year + 1
+                << "): Initial reservoir level (" << initialLevel
+                << ") is outside the final rule curves [" << lowLevelLastDay << ", "
+                << highLevelLastDay
+                << "]. The heuristic may produce a final reservoir level different from the "
+                   "initial level to respect the rule curves.";
+          }
+      });
+}
 
 FinalLevelValidator::FinalLevelValidator(
   const Antares::Data::PartHydro& hydro,
@@ -47,7 +96,7 @@ bool FinalLevelValidator::skippingFinalLevelUse()
 
 bool FinalLevelValidator::wasSetInScenarioBuilder()
 {
-    return !isnan(finalLevel_);
+    return !std::isnan(finalLevel_);
 }
 
 bool FinalLevelValidator::compatibleWithReservoirProperties()
@@ -119,8 +168,9 @@ double FinalLevelValidator::calculateTotalInflows() const
 
 bool FinalLevelValidator::isBetweenRuleCurves() const
 {
-    double lowLevelLastDay = hydro_.series->ruleCurves.min.getColumn(year_)[DAYS_PER_YEAR - 1];
-    double highLevelLastDay = hydro_.series->ruleCurves.max.getColumn(year_)[DAYS_PER_YEAR - 1];
+    double lowLevelLastDay = hydro_.series->ruleCurves.min.getCoefficient(year_, DAYS_PER_YEAR - 1);
+    double highLevelLastDay = hydro_.series->ruleCurves.max.getCoefficient(year_,
+                                                                           DAYS_PER_YEAR - 1);
 
     if (finalLevel_ < lowLevelLastDay || finalLevel_ > highLevelLastDay)
     {
