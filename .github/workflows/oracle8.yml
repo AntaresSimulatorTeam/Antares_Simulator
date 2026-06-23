@@ -24,6 +24,9 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'workflow_dispatch' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  RUN_SIMPLE_TESTS: ${{ github.event_name == 'push' || inputs.run-tests == 'true' }}
+  RUN_DEVELOP_TESTS: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/develop') || inputs.run-tests == 'true' }}
+  RUN_EXTENDED_TESTS: ${{ github.event_name == 'schedule' || inputs.run-tests == 'true' }}
   REF: ${{ inputs.target_branch =='' && github.ref_name || inputs.target_branch}}
 
 jobs:

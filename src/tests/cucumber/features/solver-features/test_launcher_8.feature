@@ -1,6 +1,6 @@
 Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
 
-  @fast @short
+  @short
   Scenario: 8.1 : Study 028b Electrolyser
     # - V8.6 Small test case with two Legacy nodes (areas). One electric node :  3 thermal clusters, 1 load, 1 wind, one H2 node :  1 H2 load, 1 H2 back-up production, one electrolyser as modeler component
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/8_1"
@@ -21,7 +21,7 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
     And in area "west", during year 1, hourly production of "p" for hour 32 is equal to 0 MWh
     And in area "west-H2", during year 1, hourly production of "SMR" for hour 32 is equal to 126 MWh
 
-  @fast @short
+  @short
   Scenario: 8.2: Study 028b DSR - V8.6
    # Small test case with one node (3 thermal clusters, 1 load, 1 wind, 1 demand-side response model)
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/8_2"
@@ -39,7 +39,7 @@ Feature: 8 - End-to-end tests for Andromede V1 models - hybrid mode
     And in area "west", during year 1, hourly production of "sb" for hour 34 is equal to 775 MWh
     And in area "west", during year 1, hourly production of "p" for hour 34 is equal to 0 MWh
 
-  @fast @short
+  @short
   Scenario: 8.3: Study 028b Storage - V8.6
    # Small test case with one node (3 thermal clusters, 1 one load, 1 wind, 1 short-term storage)
     Given the solver study path is "Antares_Simulator_Tests_NR/hybrid/8_3"
