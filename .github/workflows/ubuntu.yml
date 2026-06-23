@@ -192,12 +192,12 @@ jobs:
     - name: Init submodule Antares_Simulator_Tests_NR (committed submodule)
       if: ${{ matrix.testNRTarget == 'versionTestNR' }}
       run: |
-        git submodule update --init --depth 1 --recursive src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 --recursive resources/Antares_Simulator_Tests_NR
 
     - name: Init submodule Antares_Simulator_Tests_NR (latest)
       if: ${{ matrix.testNRTarget == 'latestTestNR' }}
       run: |
-        git submodule update --init --remote --recursive src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --remote --recursive resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && !cancelled() }}
