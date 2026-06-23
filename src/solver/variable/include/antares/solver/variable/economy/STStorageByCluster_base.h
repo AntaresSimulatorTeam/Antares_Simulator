@@ -143,7 +143,7 @@ public:
         return nbClusters_ * ResultsType::count;
     }
 
-    void yearBegin(uint year, uint numSpace)
+    void yearBegin(uint /*year*/, uint numSpace)
     {
         for (uint i = 0; i != nbClusters_; ++i)
         {
@@ -151,7 +151,7 @@ public:
         }
     }
 
-    void yearEnd(uint year, uint numSpace)
+    void yearEnd(uint /*year*/, uint numSpace)
     {
         for (uint clusterIndex = 0; clusterIndex < nbClusters_; ++clusterIndex)
         {

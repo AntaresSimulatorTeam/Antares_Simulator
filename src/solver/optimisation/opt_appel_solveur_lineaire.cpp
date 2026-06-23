@@ -18,6 +18,7 @@
 #include "antares/solver/infeasible-problem-analysis/unfeasible-pb-analyzer.h"
 #include "antares/solver/optim-model-filler/ComponentFiller.h"
 #include "antares/solver/optimisation/ComponentToAreaConnectionFiller.h"
+#include "antares/solver/optimisation/LegacyExtraOutputs.h"
 #include "antares/solver/optimisation/LegacyFiller.h"
 #include "antares/solver/optimisation/LegacyNameMapper.h"
 #include "antares/solver/optimisation/LegacyOrtoolsLinearProblem.h"
@@ -71,12 +72,13 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
 {
     const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
-    const unsigned int block = currentBlock + 1;
+    const unsigned int block = currentBlock;
 
-    // LegacyVariablesInfo and X are both sized to NombreDeVariables in resizeProbleme,
-    // so indexing by [0, NombreDeVariables) below is always in bounds.
+    // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables in
+    // resizeProbleme, so indexing by [0, NombreDeVariables) below is always in bounds.
     assert(problem.LegacyVariablesInfo.size() == static_cast<std::size_t>(problem.NombreDeVariables)
-           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables));
+           && problem.X.size() == static_cast<std::size_t>(problem.NombreDeVariables)
+           && problem.CoutLineaire.size() == static_cast<std::size_t>(problem.NombreDeVariables));
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
@@ -88,18 +90,25 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
         std::optional<unsigned> blockTimeIndex;
         if (info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep)
         {
-            blockTimeIndex = info->timeIndex - globalFirstTimeStep + 1;
+            blockTimeIndex = info->timeIndex - globalFirstTimeStep;
         }
 
         simulationTable.addEntry({.block = block,
                                   .component = info->component,
                                   .output = nameMapper.mapOutput(info->name),
-                                  .absolute_time_index = info->timeIndex + 1,
+                                  .absolute_time_index = info->timeIndex,
                                   .block_time_index = blockTimeIndex,
                                   .scenario_index = fillContext.getYear(),
                                   .value = problem.X[static_cast<std::size_t>(index)],
                                   .status = std::nullopt});
     }
+
+    AddLegacyExtraOutputs(simulationTable,
+                          problem.LegacyVariablesInfo,
+                          problem.X,
+                          problem.CoutLineaire,
+                          fillContext,
+                          currentBlock);
 }
 } // namespace
 

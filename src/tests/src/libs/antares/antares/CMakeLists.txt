@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 add_boost_test(Enums
         SRC
@@ -10,4 +10,4 @@ add_boost_test(Enums
 
 target_include_directories(Enums
         PRIVATE
-        "${CMAKE_SOURCE_DIR}/libs/antares/include")
+        "${CMAKE_SOURCE_DIR}/src/libs/antares/include")

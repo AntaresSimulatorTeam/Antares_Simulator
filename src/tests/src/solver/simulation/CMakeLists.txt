@@ -1,11 +1,11 @@
-include(${CMAKE_SOURCE_DIR}/tests/macros.cmake)
+include(${CMAKE_SOURCE_DIR}/src/tests/macros.cmake)
 
 add_subdirectory(remix-storage)
 
 # Useful variables definitions
-set(src_solver_simulation "${CMAKE_SOURCE_DIR}/solver/simulation")
-set(src_solver_hydro "${CMAKE_SOURCE_DIR}/solver/hydro")
-set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
+set(src_solver_simulation "${CMAKE_SOURCE_DIR}/src/solver/simulation")
+set(src_solver_hydro "${CMAKE_SOURCE_DIR}/src/solver/hydro")
+set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/src/libs/antares/study")
 
 
 add_boost_test(tests-ts-numbers

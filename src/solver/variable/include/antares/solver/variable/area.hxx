@@ -393,7 +393,7 @@ void Areas<VariableList>::buildThermalClusterYearEndResults(State& state, uint y
           } // for each thermal cluster
 
           // Calculation of reserve participation costs
-          if (state.study.parameters.reservesEnabled)
+          if (state.study.parameters.include.reserves)
           {
               state.calculateReserveParticipationCosts();
           }

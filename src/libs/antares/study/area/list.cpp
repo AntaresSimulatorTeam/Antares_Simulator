@@ -1127,7 +1127,7 @@ const AreaLink* AreaList::findLinkFromINIKey(const AnyString& key) const
         return nullptr;
     }
     auto offset = key.find('%');
-    if (offset == AreaName::npos || (0 == offset) || (offset == key.size() - 1))
+    if (offset == AnyString::npos || (0 == offset) || (offset == key.size() - 1))
     {
         return nullptr;
     }
@@ -1144,7 +1144,7 @@ ThermalCluster* AreaList::findClusterFromINIKey(const AnyString& key)
         return nullptr;
     }
     auto offset = key.find('.');
-    if (offset == AreaName::npos || (0 == offset) || (offset == key.size() - 1))
+    if (offset == AnyString::npos || (0 == offset) || (offset == key.size() - 1))
     {
         return nullptr;
     }

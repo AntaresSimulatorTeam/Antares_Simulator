@@ -26,7 +26,7 @@ jobs:
       PYTHON_VERSION: "3.12"
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
@@ -38,7 +38,7 @@ jobs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
         # Allows to restore a cache when deps have only partially changed (like adding a dependency)
         restore-keys: vcpkg-cache-ubuntu-
 
@@ -71,7 +71,7 @@ jobs:
       shell: bash
 
     - name: Install Build Wrapper
-      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8.1.0
+      uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v8.2.0
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -120,11 +120,11 @@ jobs:
 
     - name: Init submodule
       run: |
-        git submodule update --init --depth 1 src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 resources/Antares_Simulator_Tests_NR
 
     - name: Configure
       run: |
-        cmake -G Ninja -B _build -S src \
+        cmake -G Ninja -B _build -S . \
         -DCMAKE_C_COMPILER_LAUNCHER=ccache \
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
@@ -232,11 +232,11 @@ jobs:
 
     - name: Remove Antares_Simulator_Tests_NR
       run: |
-        rm -rf src/tests/resources/Antares_Simulator_Tests_NR
+        rm -rf resources/Antares_Simulator_Tests_NR
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
-      uses: SonarSource/sonarqube-scan-action@v8.1.0
+      uses: SonarSource/sonarqube-scan-action@v8.2.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -255,7 +255,7 @@ jobs:
       uses: actions/cache/save@v5
       with:
         path: ${{ github.workspace }}/vcpkg_cache
-        key: vcpkg-cache-ubuntu-${{ hashFiles('src/vcpkg.json', '.git/modules/vcpkg/HEAD') }}
+        key: vcpkg-cache-ubuntu-${{ hashFiles('vcpkg.json', '.git/modules/vcpkg/HEAD') }}
 
     - name: Display ccache statistics
       if: always()

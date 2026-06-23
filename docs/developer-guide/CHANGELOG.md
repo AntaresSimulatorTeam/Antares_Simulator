@@ -168,6 +168,16 @@ Fix: several issues on CentOS7 (#3561)
 
 ## Branch 9.3.x
 
+### 9.3.11
+
+#### Bugfixes
+
+* Fix memory leak in thermal (#3619)
+* Reduce memory usage of minmax values (#3626)
+* Properly populate digest with dynamic group variables and districts (#3643)
+* Fix value of inter-monthly-breakdown not being read
+* Fix remix hydro sts levels computation [ANT-4888] (#3557)
+
 ### 9.3.10
 
 #### Bugfixes

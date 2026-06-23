@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(ConcurrentAccess_MultipleThreads)
     for (int t = 0; t < numThreads; ++t)
     {
         threads.emplace_back(
-          [&table, &tableMutex, t, entriesPerThread]()
+          [&table, &tableMutex, t]()
           {
               for (int i = 0; i < entriesPerThread; ++i)
               {
@@ -500,11 +500,12 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
         for (const auto& constraint: model->Constraints())
         {
             const auto& constraintId = constraint.Id();
-            const auto constraint_variability = VariabilityVisitor(*optimEntityContainer, compo)
-                                                  .dispatch(constraint.expression().RootNode());
-            optimEntityContainer->registerConstraint(compo, constraint_variability);
-            if (isTimeDependent(constraint_variability))
+            const auto ctVariability = VariabilityVisitor(*optimEntityContainer, compo)
+                                         .dispatch(constraint.expression().RootNode());
+            unsigned ctCount = 1;
+            if (isTimeDependent(ctVariability))
             {
+                ctCount = fillContext.getLocalNumberOfTimeSteps();
                 for (unsigned t = 0; t < fillContext.getLocalNumberOfTimeSteps(); ++t)
                 {
                     linearProblem->addConstraint(0, 0, "");
@@ -514,6 +515,7 @@ struct BasicProblemFixture: Test::Modeler::LinearProblemBuildingFixture, Simulat
             {
                 linearProblem->addConstraint(0, 0, "");
             }
+            optimEntityContainer->registerConstraint(compo, ctVariability, ctCount);
         }
     }
 
@@ -769,7 +771,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ModelerIntegration)
 BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
 {
     SimulationTable table;
-    FillContext fillContext(0, 1, 168, 169, 0); // 2 local time steps, week 2 globally
+    FillContext fillContext(0, 1, 168, 169, 0); // 1 local time steps, week 2 globally
     MockLinearProblem linearProblem(true);
 
     build(fillContext, &linearProblem);
@@ -785,14 +787,14 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockTimeIndexUsesLocalStep)
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("2,comp1,var4,169,1") != std::string::npos);
-    BOOST_CHECK(content.find("2,comp1,var4,170,2") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,168,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,169,1") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
 {
     SimulationTable table;
-    FillContext fillContext(0, 1, 24, 25, 0); // 2 local time steps, day 2 globally
+    FillContext fillContext(0, 1, 24, 25, 0); // 1 local time steps, day 2 globally
     MockLinearProblem linearProblem(true);
 
     build(fillContext, &linearProblem);
@@ -808,8 +810,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_DailyBlockTimeIndexUsesLocalStep)
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("2,comp1,var4,25,1") != std::string::npos);
-    BOOST_CHECK(content.find("2,comp1,var4,26,2") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,24,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,var4,25,1") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
@@ -831,8 +833,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SingleBlockTimeIndexUsesLocalStep)
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("1,comp1,var4,1,1") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var4,2,2") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var4,0,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var4,1,1") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocalStep)
@@ -854,8 +856,8 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_WeeklyBlockConstraintTimeIndexUsesLocal
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("2,comp1,constraint2,169,1,0") != std::string::npos);
-    BOOST_CHECK(content.find("2,comp1,constraint2,170,2,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,constraint2,168,0,0") != std::string::npos);
+    BOOST_CHECK(content.find("1,comp1,constraint2,169,1,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
@@ -878,7 +880,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_ForceScenarioIndexForTimeOnlyVariables)
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("1,comp1,constraint1,None,None,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,constraint1,None,None,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutputs)
@@ -900,7 +902,7 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_BlockTimeIndexAbsentForScenarioOnlyOutp
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("1,comp1,var3,None,None,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var3,None,None,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
@@ -922,12 +924,12 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_VariabilityCombinations)
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
-    BOOST_CHECK(content.find("1,comp1,var1,None,None,0,") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var2,1,1,0") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var2,2,2,0") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var3,None,None,0") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var4,1,1,0") != std::string::npos);
-    BOOST_CHECK(content.find("1,comp1,var4,2,2,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var1,None,None,0,") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var2,0,0,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var2,1,1,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var3,None,None,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var4,0,0,0") != std::string::npos);
+    BOOST_CHECK(content.find("0,comp1,var4,1,1,0") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
@@ -977,12 +979,12 @@ BOOST_AUTO_TEST_CASE(FillSimulationTable_SkipsDroppedDualExtraOutputTimesteps)
     csv_writer.writeTable(table);
     std::string content = readFileContent(out_file_path);
 
+    BOOST_CHECK(content.find(",componentToto,ct_drop,0,0,") != std::string::npos);
     BOOST_CHECK(content.find(",componentToto,ct_drop,1,1,") != std::string::npos);
-    BOOST_CHECK(content.find(",componentToto,ct_drop,2,2,") != std::string::npos);
-    BOOST_CHECK(content.find(",componentToto,ct_drop,3,3,") == std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_drop,2,2,") == std::string::npos);
+    BOOST_CHECK(content.find(",componentToto,ct_cyclic,0,0,") != std::string::npos);
     BOOST_CHECK(content.find(",componentToto,ct_cyclic,1,1,") != std::string::npos);
     BOOST_CHECK(content.find(",componentToto,ct_cyclic,2,2,") != std::string::npos);
-    BOOST_CHECK(content.find(",componentToto,ct_cyclic,3,3,") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -1096,40 +1098,40 @@ BOOST_AUTO_TEST_SUITE(TimeConversionTests)
 BOOST_AUTO_TEST_CASE(ConvertTimeStep)
 {
     auto result = convertBlockTimeStepToAbsoluteTimeStep(42, TimeConversionMode::SingleBlock, 45);
-    BOOST_CHECK_EQUAL(result.block, 1);
-    BOOST_CHECK_EQUAL(*result.blockTimeIndex, 43);    // 42 + 1
-    BOOST_CHECK_EQUAL(*result.absoluteTimeIndex, 43); // 42 + 1
+    BOOST_CHECK_EQUAL(result.block, 0);
+    BOOST_CHECK_EQUAL(*result.blockTimeIndex, 42);
+    BOOST_CHECK_EQUAL(*result.absoluteTimeIndex, 42);
     auto result0 = convertBlockTimeStepToAbsoluteTimeStep(0, TimeConversionMode::SingleBlock, 99);
-    BOOST_CHECK_EQUAL(result0.block, 1);
-    BOOST_CHECK_EQUAL(*result0.blockTimeIndex, 1);
-    BOOST_CHECK_EQUAL(*result0.absoluteTimeIndex, 1);
+    BOOST_CHECK_EQUAL(result0.block, 0);
+    BOOST_CHECK_EQUAL(*result0.blockTimeIndex, 0);
+    BOOST_CHECK_EQUAL(*result0.absoluteTimeIndex, 0);
 
     // Daily blocks - exactly at day boundary
     auto result1 = convertBlockTimeStepToAbsoluteTimeStep(23, TimeConversionMode::DailyBlocks, 0);
-    BOOST_CHECK_EQUAL(result1.block, 1);
-    BOOST_CHECK_EQUAL(*result1.blockTimeIndex, 24);
-    BOOST_CHECK_EQUAL(*result1.absoluteTimeIndex, 24);
+    BOOST_CHECK_EQUAL(result1.block, 0);
+    BOOST_CHECK_EQUAL(*result1.blockTimeIndex, 23);
+    BOOST_CHECK_EQUAL(*result1.absoluteTimeIndex, 23);
 
     auto result2 = convertBlockTimeStepToAbsoluteTimeStep(10, TimeConversionMode::DailyBlocks, 2);
-    BOOST_CHECK_EQUAL(result2.block, 3);
-    BOOST_CHECK_EQUAL(*result2.blockTimeIndex, 11);
-    BOOST_CHECK_EQUAL(*result2.absoluteTimeIndex, 59);
+    BOOST_CHECK_EQUAL(result2.block, 2);
+    BOOST_CHECK_EQUAL(*result2.blockTimeIndex, 10);
+    BOOST_CHECK_EQUAL(*result2.absoluteTimeIndex, 58);
 
     // Weekly blocks - exactly at week boundary
     auto result3 = convertBlockTimeStepToAbsoluteTimeStep(10, TimeConversionMode::WeeklyBlocks, 0);
-    BOOST_CHECK_EQUAL(result3.block, 1);
-    BOOST_CHECK_EQUAL(*result3.blockTimeIndex, 11);
-    BOOST_CHECK_EQUAL(*result3.absoluteTimeIndex, 11);
+    BOOST_CHECK_EQUAL(result3.block, 0);
+    BOOST_CHECK_EQUAL(*result3.blockTimeIndex, 10);
+    BOOST_CHECK_EQUAL(*result3.absoluteTimeIndex, 10);
 
     auto result4 = convertBlockTimeStepToAbsoluteTimeStep(0, TimeConversionMode::WeeklyBlocks, 1);
-    BOOST_CHECK_EQUAL(result4.block, 2);
-    BOOST_CHECK_EQUAL(*result4.blockTimeIndex, 1);
-    BOOST_CHECK_EQUAL(*result4.absoluteTimeIndex, 169);
+    BOOST_CHECK_EQUAL(result4.block, 1);
+    BOOST_CHECK_EQUAL(*result4.blockTimeIndex, 0);
+    BOOST_CHECK_EQUAL(*result4.absoluteTimeIndex, 168);
 
     auto result5 = convertBlockTimeStepToAbsoluteTimeStep(167, TimeConversionMode::WeeklyBlocks, 1);
-    BOOST_CHECK_EQUAL(result5.block, 2);
-    BOOST_CHECK_EQUAL(*result5.blockTimeIndex, 168);
-    BOOST_CHECK_EQUAL(*result5.absoluteTimeIndex, 336);
+    BOOST_CHECK_EQUAL(result5.block, 1);
+    BOOST_CHECK_EQUAL(*result5.blockTimeIndex, 167);
+    BOOST_CHECK_EQUAL(*result5.absoluteTimeIndex, 335);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
