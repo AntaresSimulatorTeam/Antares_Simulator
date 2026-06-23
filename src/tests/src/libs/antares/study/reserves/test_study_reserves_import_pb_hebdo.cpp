@@ -50,68 +50,64 @@ struct OneProblemWithReservesTwoAreas
         study->parameters.simulationDays.end = 7;
         study->parameters.include.reserves = true;
 
-        tmpCapacityReservationUp.type = ReserveType::UP;
-        tmpCapacityReservationUp.unsuppliedCost = 1;
-        tmpCapacityReservationUp.referenceActivationDuration = 2;
-        tmpCapacityReservationUp.powerActivationRatio = 3;
-        tmpCapacityReservationUp.energyActivationRatio = 4;
-        tmpCapacityReservationUp.setName("ReserveUp");
+        tsnum.reset(1);
+        tsnum[0] = 0;
 
-        tmpCapacityReservationDown.type = ReserveType::DOWN;
-        tmpCapacityReservationDown.unsuppliedCost = 5;
-        tmpCapacityReservationDown.referenceActivationDuration = 6;
-        tmpCapacityReservationDown.powerActivationRatio = 7;
-        tmpCapacityReservationDown.energyActivationRatio = 8;
-        tmpCapacityReservationDown.setName("ReserveDown");
+        auto makeReservation = [this](const std::string& resName,
+                                      ReserveType type,
+                                      double u,
+                                      double r,
+                                      double p,
+                                      double e)
+        {
+            CapacityReservation res(tsnum);
+            res.setName(resName);
+            res.type = type;
+            res.unsuppliedCost = u;
+            res.referenceActivationDuration = r;
+            res.powerActivationRatio = p;
+            res.energyActivationRatio = e;
+            res.need->resize(2, HOURS_PER_YEAR);
+            res.need->fill(2);
+            return res;
+        };
 
-        tmpCapacityReservationUpB.type = ReserveType::UP;
-        tmpCapacityReservationUpB.unsuppliedCost = 11;
-        tmpCapacityReservationUpB.referenceActivationDuration = 12;
-        tmpCapacityReservationUpB.powerActivationRatio = 13;
-        tmpCapacityReservationUpB.energyActivationRatio = 14;
-        tmpCapacityReservationUpB.setName("ReserveUpB");
+        areaA->allCapacityReservations.emplace();
+        initReservations(areaA, makeReservation);
 
-        tmpCapacityReservationDownB.type = ReserveType::DOWN;
-        tmpCapacityReservationDownB.unsuppliedCost = 15;
-        tmpCapacityReservationDownB.referenceActivationDuration = 16;
-        tmpCapacityReservationDownB.powerActivationRatio = 17;
-        tmpCapacityReservationDownB.energyActivationRatio = 18;
-        tmpCapacityReservationDownB.setName("ReserveDownB");
-
-        areaA->allCapacityReservations = AllCapacityReservations();
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUp);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDown);
-
-        areaB->allCapacityReservations = AllCapacityReservations();
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reserveup", tmpCapacityReservationUpB);
-        areaB->allCapacityReservations.value()
-          .areaCapacityReservations.emplace("reservedown", tmpCapacityReservationDownB);
-
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.at("reserveup")
-          .need->resize(1, 2);
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.at("reserveup")
-          .need->timeSeries[0][0]
-          = 2;
-        areaA->allCapacityReservations.value()
-          .areaCapacityReservations.at("reserveup")
-          .need->timeSeries[0][1]
-          = 3;
+        areaB->allCapacityReservations.emplace();
+        initReservations(areaB, makeReservation);
     }
 
+    void initReservations(Area* area, auto makeReservation)
+    {
+        auto& reservations = area->allCapacityReservations.value().areaCapacityReservations;
+        if (area == areaA)
+        {
+            const auto& resUpA = makeReservation("ReserveUpA", ReserveType::UP, 1, 2, 3, 4);
+            const auto& resDownA = makeReservation("ReserveDownA", ReserveType::DOWN, 5, 6, 7, 8);
+            reservations.emplace(resUpA.id(), resUpA);
+            reservations.emplace(resDownA.id(), resDownA);
+        }
+        else
+        {
+            const auto& resUpB = makeReservation("ReserveUpB", ReserveType::UP, 11, 12, 13, 14);
+            const auto& resDownB = makeReservation("ReserveDownB",
+                                                   ReserveType::DOWN,
+                                                   15,
+                                                   16,
+                                                   17,
+                                                   18);
+            reservations.emplace(resUpB.id(), resUpB);
+            reservations.emplace(resDownB.id(), resDownB);
+        }
+    }
+
+    TimeSeriesNumbers tsnum;
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
     std::unique_ptr<Study> study;
     Area* areaA;
     Area* areaB;
-    CapacityReservation tmpCapacityReservationUp;
-    CapacityReservation tmpCapacityReservationDown;
-
-    CapacityReservation tmpCapacityReservationUpB;
-    CapacityReservation tmpCapacityReservationDownB;
 };
 
 BOOST_AUTO_TEST_SUITE(reserves_operations_import)
@@ -139,9 +135,9 @@ BOOST_FIXTURE_TEST_CASE(test_importCapacityReservation_allGood, OneProblemWithRe
             BOOST_CHECK_EQUAL(reserve.powerActivationRatio, 3);
             BOOST_CHECK_EQUAL(reserve.energyActivationRatio, 4);
             containsUp = true;
-            BOOST_CHECK_EQUAL(reserve.need->timeseriesNumbers.height(), 2);
+            BOOST_CHECK_EQUAL(reserve.need->numberOfColumns(), 2);
             BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 0), 2);
-            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 3);
+            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 2);
         }
         else
         {
@@ -185,12 +181,12 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     auto studyPath = CREATE_TMP_DIR_BASED_ON_TEST_NAME();
 
     std::ofstream file(studyPath / "myreserveA.ini");
-    file << "[ReserveUp]\n";
+    file << "[ReserveUpA]\n";
     file << "participation-cost = 1.1\n";
     file << "max-store = 2.2\n";
     file << "max-release = 3.3\n";
     file << "\n";
-    file << "[ReserveDown]\n";
+    file << "[ReserveDownA]\n";
     file << "participation-cost = 4.4\n";
     file << "max-store = 5.5\n";
     file << "max-release = 6.6\n";
@@ -199,7 +195,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserveA.ini");
 
     std::ofstream fileB(studyPath / "myreserveB.ini");
-    fileB << "[ReserveUp]\n";
+    fileB << "[ReserveUpB]\n";
     fileB << "participation-cost = 9.9\n";
     fileB << "max-store = 8.8\n";
     fileB << "max-release = 7.7\n";
@@ -207,7 +203,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
     areaA->hydro.loadReserveParticipations(*areaB, studyPath / "myreserveB.ini");
 
     areaA->hydro.reserveParticipationContainer.value().addReserveParticipationSymmetry(
-      {"reserveup", "reservedown"});
+      {"reserveupa", "reservedowna"});
 
     importCapacityReservations(study->areas, *problemeHebdo);
     importHydroReserves(study->areas, *problemeHebdo);
@@ -218,7 +214,6 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
                       2);
     BOOST_CHECK_EQUAL(problemeHebdo->allReserves.value()[indexB].areaCapacityReservations.size(),
                       2);
-    int maxGlobalHydroParticipationIndex;
     bool containsUp = false;
     bool containsDown = false;
 
@@ -237,12 +232,10 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
             BOOST_CHECK_EQUAL(part.participationCost, 1.1);
             BOOST_CHECK_EQUAL(part.maxStore, 2.2);
             BOOST_CHECK_EQUAL(part.maxRelease, 3.3);
-            maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
-                                                        part.globalIndexClusterParticipation);
-            BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUp");
-            BOOST_CHECK_EQUAL(reserve.need->timeseriesNumbers.height(), 2);
+            BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUpA");
+            BOOST_CHECK_EQUAL(reserve.need->numberOfColumns(), 2);
             BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 0), 2);
-            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 3);
+            BOOST_CHECK_EQUAL(reserve.need->getCoefficient(0, 1), 2);
             containsUp = true;
         }
         else
@@ -250,9 +243,7 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
             BOOST_CHECK_EQUAL(part.participationCost, 4.4);
             BOOST_CHECK_EQUAL(part.maxStore, 5.5);
             BOOST_CHECK_EQUAL(part.maxRelease, 6.6);
-            maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
-                                                        part.globalIndexClusterParticipation);
-            BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveDown");
+            BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveDownA");
             containsDown = true;
         }
     }
@@ -271,8 +262,6 @@ BOOST_FIXTURE_TEST_CASE(test_importHydroReserves, OneProblemWithReservesTwoAreas
                 BOOST_CHECK_EQUAL(part.participationCost, 9.9);
                 BOOST_CHECK_EQUAL(part.maxStore, 8.8);
                 BOOST_CHECK_EQUAL(part.maxRelease, 7.7);
-                maxGlobalHydroParticipationIndex = std::max(maxGlobalHydroParticipationIndex,
-                                                            part.globalIndexClusterParticipation);
                 BOOST_CHECK_EQUAL(reserve.reserveName, "ReserveUpB");
                 containsUp = true;
             }

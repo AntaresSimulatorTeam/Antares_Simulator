@@ -49,7 +49,7 @@ struct CapacityReservation
 
     unsigned int areaWideIndex = (uint)-1;
 
-    CapacityReservation() = default;
+    CapacityReservation() = delete;
 
     CapacityReservation(TimeSeriesNumbers& tsNumbers):
         need(std::make_shared<TimeSeries>(tsNumbers))

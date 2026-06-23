@@ -180,13 +180,14 @@ bool Rules::readReservesNeed(const std::vector<std::string>& splitKey, const Str
     }
 
     uint val = fromStringToTSnumber(value);
-    const auto& reserveCapacities = area->allCapacityReservations
-                                      ? area->allCapacityReservations.value()
-                                          .areaCapacityReservations
-                                      : std::map<std::string, Data::CapacityReservation>{};
-    for (const auto& reserveCapacity: reserveCapacities)
+    if (area->allCapacityReservations)
     {
-        reservesNeed.value()[area->index].setTSnumber(reserveCapacity.second, year, val);
+        const auto& reserveCapacities = area->allCapacityReservations.value()
+                                          .areaCapacityReservations;
+        for (const auto& reserveCapacity: reserveCapacities)
+        {
+            reservesNeed.value()[area->index].setTSnumber(reserveCapacity.second, year, val);
+        }
     }
     return true;
 }
