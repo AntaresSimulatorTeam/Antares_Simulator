@@ -38,7 +38,6 @@ def run_antares_modeler_parquet(context):
     context.outputFormat = OutputFormat.PARQUET
     run_modeler(context)
 
-
 @step('the objective value is {value:g}')
 def modeler_obj_value(context, value):
     assert_double_close(value, context.simu_table.get_objective_value(), 1e-5)
@@ -117,7 +116,8 @@ def check_st_entries(simulation_table: SimulationTable, expected_entries, tolera
                     assert_double_close(value, actual, tolerance)
 
 
-def run_executable(context, command):
+def run_executable(context, command) -> bool:
+    context.output_path = os.path.join(context.study_path, "output")
     print(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
@@ -138,22 +138,28 @@ def run_executable(context, command):
         print("*********************** Begin stderr ***********************")
         print(err.replace(b'\r\n', b'\n').decode('utf-8'))
         print("*********************** End stderr ***********************")
-    else:
-        context.output_path = os.path.join(context.study_path, "output")
-        output_format = getattr(context, "outputFormat", OutputFormat.CSV)
-        reader_factory = make_modeler_simulation_table_reader(
-            Path(parse_output_folder_from_logs(context.logs_out)), output_format
-        )
-        context.simu_table = SimulationTable(reader_factory())
-        context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
-    context.return_code = process.returncode
+        return False
+    return True
 
 def run_modeler(context):
-    run_executable(context, build_antares_modeler_command(context))
+    modeler_cmd = build_antares_modeler_command(context)
+    if not run_executable(context, modeler_cmd):
+        return
+
+    output_format = getattr(context, "outputFormat", OutputFormat.CSV)
+    reader_factory = make_modeler_simulation_table_reader(
+        Path(parse_output_folder_from_logs(context.logs_out)), output_format
+    )
+    context.simu_table = SimulationTable(reader_factory())
+    context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
 
 
 def run_problem_generator(context):
-    run_executable(context, build_antares_problem_generator_command(context))
+    pb_generator_cmd = build_antares_problem_generator_command(context)
+    if not run_executable(context, pb_generator_cmd):
+        return
+
+    context.invest_pb = read_invest_problems(Path(parse_output_folder_from_logs(context.logs_out)))
 
 def build_antares_modeler_command(context):
     command = [context.config.userdata["antares-modeler"], str(context.study_path)]
