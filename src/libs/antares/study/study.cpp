@@ -31,12 +31,6 @@ static inline void ClearAndShrink(StringT& string)
 Study::Study():
     areas(*this)
 {
-    // TS generators
-    for (uint i = 0; i != timeSeriesCount; ++i)
-    {
-        cacheTSGenerator[i] = nullptr;
-    }
-
     // Correlation names
     preproLoadCorrelation.correlationName = "Correlation: Load";
     preproSolarCorrelation.correlationName = "Correlation: Solar";
