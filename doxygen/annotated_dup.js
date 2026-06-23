@@ -916,20 +916,25 @@ var annotated_dup =
       [ "EventsRegistry", "classFSWalker_1_1EventsRegistry.html", "classFSWalker_1_1EventsRegistry" ],
       [ "Statistics", "classFSWalker_1_1Statistics.html", "classFSWalker_1_1Statistics" ]
     ] ],
+    [ "invest_problems", null, [
+      [ "invest_problems", "classinvest__problems_1_1invest__problems.html", "classinvest__problems_1_1invest__problems" ]
+    ] ],
     [ "json_collector", null, [
       [ "error", "classjson__collector_1_1error.html", "classjson__collector_1_1error" ],
       [ "checksRetriever", "classjson__collector_1_1checksRetriever.html", "classjson__collector_1_1checksRetriever" ],
       [ "jsonCollector", "classjson__collector_1_1jsonCollector.html", "classjson__collector_1_1jsonCollector" ]
-    ] ],
-    [ "modeler_output_handler", null, [
-      [ "invest_problems", "classmodeler__output__handler_1_1invest__problems.html", "classmodeler__output__handler_1_1invest__problems" ],
-      [ "modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", "classmodeler__output__handler_1_1modeler__output__handler" ]
     ] ],
     [ "modified_inode", null, [
       [ "UserData", "classmodified__inode_1_1UserData.html", "classmodified__inode_1_1UserData" ]
     ] ],
     [ "results_remover", null, [
       [ "results_remover", "classresults__remover_1_1results__remover.html", "classresults__remover_1_1results__remover" ]
+    ] ],
+    [ "simulation_table", null, [
+      [ "SimulationTable", "classsimulation__table_1_1SimulationTable.html", "classsimulation__table_1_1SimulationTable" ]
+    ] ],
+    [ "simulation_table_reader", null, [
+      [ "OutputFormat", "classsimulation__table__reader_1_1OutputFormat.html", null ]
     ] ],
     [ "solver_input_handler", null, [
       [ "solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", "classsolver__input__handler_1_1solver__input__handler" ]

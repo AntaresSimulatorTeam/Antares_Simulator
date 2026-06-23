@@ -666,7 +666,7 @@ var hierarchy =
       [ "Antares::Optimisation::ScenarioGroupRepository::DoesNotExist", "classAntares_1_1Optimisation_1_1ScenarioGroupRepository_1_1DoesNotExist.html", null ],
       [ "Antares::Solver::Checks::LocationError", "classAntares_1_1Solver_1_1Checks_1_1LocationError.html", null ]
     ] ],
-    [ "modeler_output_handler.invest_problems", "classmodeler__output__handler_1_1invest__problems.html", null ],
+    [ "invest_problems.invest_problems", "classinvest__problems_1_1invest__problems.html", null ],
     [ "Antares::Solver::IResultWriter", "classAntares_1_1Solver_1_1IResultWriter.html", [
       [ "Antares::Solver::ImmediateFileResultWriter", "classAntares_1_1Solver_1_1ImmediateFileResultWriter.html", null ],
       [ "Antares::Solver::InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html", null ],
@@ -921,7 +921,6 @@ var hierarchy =
     [ "Antares::ModelerStudy::SystemModel::Model", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1Model.html", null ],
     [ "Antares::ModelerStudy::SystemModel::ModelBuilder", "classAntares_1_1ModelerStudy_1_1SystemModel_1_1ModelBuilder.html", null ],
     [ "Antares::Solver::Modeler", "classAntares_1_1Solver_1_1Modeler.html", null ],
-    [ "modeler_output_handler.modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", null ],
     [ "Antares::Solver::ModelerData", "structAntares_1_1Solver_1_1ModelerData.html", null ],
     [ "Antares::Solver::ModelerParameters", "structAntares_1_1Solver_1_1ModelerParameters.html", null ],
     [ "Antares::Solver::Implementation::ModelerProblems", "classAntares_1_1Solver_1_1Implementation_1_1ModelerProblems.html", null ],
@@ -1324,6 +1323,7 @@ var hierarchy =
     [ "Benchmarking::SimulationInfoCollector", "classBenchmarking_1_1SimulationInfoCollector.html", null ],
     [ "Antares::API::SimulationResults", "structAntares_1_1API_1_1SimulationResults.html", null ],
     [ "Antares::IO::Outputs::SimulationTable", "classAntares_1_1IO_1_1Outputs_1_1SimulationTable.html", null ],
+    [ "simulation_table.SimulationTable", "classsimulation__table_1_1SimulationTable.html", null ],
     [ "Antares::IO::Outputs::SimulationTableEntry", "structAntares_1_1IO_1_1Outputs_1_1SimulationTableEntry.html", null ],
     [ "SimulationTableFileFixture", "structSimulationTableFileFixture.html", [
       [ "BasicProblemFixture", "structBasicProblemFixture.html", null ]
@@ -1655,6 +1655,7 @@ var hierarchy =
     [ "YAML::YmlTreeDisplayer", "classYAML_1_1YmlTreeDisplayer.html", null ],
     [ "Antares::Solver::ZipWriteJob< ContentT >", "classAntares_1_1Solver_1_1ZipWriteJob.html", null ],
     [ "Enum", null, [
+      [ "simulation_table_reader.OutputFormat", "classsimulation__table__reader_1_1OutputFormat.html", null ],
       [ "solver_output_handler.result_type", "classsolver__output__handler_1_1result__type.html", null ]
     ] ]
 ];

@@ -1,5 +1,12 @@
 var NAVTREEINDEX37 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aa498bc069891dc13de9263ffd552a5f6":[9,0,0,11,6,15,6],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aa666fd85a3bd29a811f5090b3869c86b":[9,0,0,11,6,15,2],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aa966b94265671ec957c8b78d5567ac08":[9,0,0,11,6,15,0],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aaa7640a72821bb8c6936ce8b25e3e8e7":[9,0,0,11,6,15,9],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aac66c3393af5293357987a59762cceb7":[9,0,0,11,6,15,14],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#ac5d79dc9cd6168df1e817d874355d72b":[9,0,0,11,6,15,7],
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#acb80c7cf57141bc2e37eff31605bffe9":[9,0,0,11,6,15,4],
 "structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#ad5aed74d33b96e98964c2fa79e605b4f":[9,0,0,11,6,15,3],
 "structAntares_1_1Solver_1_1Variable_1_1Container_1_1List_1_1Statistics.html":[9,0,0,11,6,3,0,0],
 "structAntares_1_1Solver_1_1Variable_1_1Container_1_1TupleVariableList_1_1Statistics.html":[9,0,0,11,6,3,1,0],
@@ -242,12 +249,5 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#ae3490cf14380addc26f51773888d0b49":[9,0,0,11,6,5,16,4],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#af80b4409d947fcae2fdd48f15ed194b9":[9,0,0,11,6,5,16,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html":[9,0,0,11,6,5,46],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a25b284596ff490dd490e43c722699a9e":[9,0,0,11,6,5,46,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a84d6c68a0d100e854ab07e6651f01296":[9,0,0,11,6,5,46,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a87eb157830a2a2028d3bcf9199d73bd5":[9,0,0,11,6,5,46,1],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#af6278104b4fb66ab8c0ec9d3bc9e1d84":[9,0,0,11,6,5,46,2],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html":[9,0,0,11,6,5,97],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WaterValueTraits.html#a3f64088e6de7cc269ab463ff687846ef":[9,0,0,11,6,5,97,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1WindTraits.html":[9,0,0,11,6,5,3],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1detail_1_1AuxiliaryDataType.html":[9,0,0,11,6,5,0,1]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a25b284596ff490dd490e43c722699a9e":[9,0,0,11,6,5,46,3]
 };

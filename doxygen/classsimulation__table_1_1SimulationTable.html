@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Member List</title>
+<title>Antares Simulator: simulation_table.SimulationTable Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classmodeler__output__handler_1_1invest__problems.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classsimulation__table_1_1SimulationTable.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,22 +123,129 @@ $(document).ready(function(){initNavTree('classmodeler__output__handler_1_1inves
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classsimulation__table_1_1SimulationTable-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">modeler_output_handler.invest_problems Member List</div>  </div>
+<div class="title">simulation_table.SimulationTable Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a46bfa0635f1ba8dd52fdd1e71a8cabe4"><td class="memItemLeft" align="right" valign="top"><a id="a46bfa0635f1ba8dd52fdd1e71a8cabe4"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, pd.DataFrame dataframe)</td></tr>
+<tr class="separator:a46bfa0635f1ba8dd52fdd1e71a8cabe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad824dd40bd791dbd8c8aef2bc8813ee5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#ad824dd40bd791dbd8c8aef2bc8813ee5">get_entry</a> (self, str component, str output, Optional[float] block, Optional[float] timestep, Optional[float] scenario)</td></tr>
+<tr class="separator:ad824dd40bd791dbd8c8aef2bc8813ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53bf15e7fd04e4ebaa14613ef56f9300"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#a53bf15e7fd04e4ebaa14613ef56f9300">get_objective_value</a> (self)</td></tr>
+<tr class="separator:a53bf15e7fd04e4ebaa14613ef56f9300"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9179e3b7e1c0bae862b937a8b9acb297"><td class="memItemLeft" align="right" valign="top">dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsimulation__table_1_1SimulationTable.html#a9179e3b7e1c0bae862b937a8b9acb297">get_objective_values_by_block</a> (self)</td></tr>
+<tr class="separator:a9179e3b7e1c0bae862b937a8b9acb297"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Wraps a pandas DataFrame representing a simulation table.
 
-<p>This is the complete list of members for <a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a>, including all inherited members.</p>
-<table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>__init__</b>(self, master, subproblem, structure) (defined in <a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a>)</td><td class="entry"><a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>master</b> (defined in <a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a>)</td><td class="entry"><a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>structure</b> (defined in <a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a>)</td><td class="entry"><a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>subproblem</b> (defined in <a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a>)</td><td class="entry"><a class="el" href="classmodeler__output__handler_1_1invest__problems.html">modeler_output_handler.invest_problems</a></td><td class="entry"></td></tr>
-</table></div><!-- contents -->
+Provides query methods for looking up entries, objective values,
+and column information.
+</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad824dd40bd791dbd8c8aef2bc8813ee5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad824dd40bd791dbd8c8aef2bc8813ee5">&#9670;&nbsp;</a></span>get_entry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float simulation_table.SimulationTable.get_entry </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>component</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[float]&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[float]&#160;</td>
+          <td class="paramname"><em>timestep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[float]&#160;</td>
+          <td class="paramname"><em>scenario</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Look up a single entry by component, output, block, timestep, and scenario.</pre> 
+</div>
+</div>
+<a id="a53bf15e7fd04e4ebaa14613ef56f9300"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53bf15e7fd04e4ebaa14613ef56f9300">&#9670;&nbsp;</a></span>get_objective_value()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float simulation_table.SimulationTable.get_objective_value </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Returns the objective value from the simulation table (scenario_index == 0).</pre> 
+</div>
+</div>
+<a id="a9179e3b7e1c0bae862b937a8b9acb297"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9179e3b7e1c0bae862b937a8b9acb297">&#9670;&nbsp;</a></span>get_objective_values_by_block()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> dict simulation_table.SimulationTable.get_objective_values_by_block </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Returns a dictionary mapping block number to objective value.</pre> 
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>src/tests/cucumber/features/steps/common_steps/simulation_table.py</li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><b>simulation_table</b></li><li class="navelem"><a class="el" href="classsimulation__table_1_1SimulationTable.html">SimulationTable</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

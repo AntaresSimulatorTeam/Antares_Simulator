@@ -1994,12 +1994,6 @@ var namespaces_dup =
       [ "reference_folder_finder", "classfind__reference_1_1reference__folder__finder.html", "classfind__reference_1_1reference__folder__finder" ],
       [ "find_reference_folder", "find__reference_8py.html#a9a1c9809dbe51b7d00621cd03854ec6e", null ]
     ] ],
-    [ "Fixtures", null, [
-      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
-      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
-      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
-      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
-    ] ],
     [ "fixtures", null, [
       [ "check_handler", "classfixtures_1_1check__handler.html", "classfixtures_1_1check__handler" ],
       [ "antares_problem_generator", "fixtures_8py.html#a532fab1323b92d1f3eb74f5213a6b6c0", null ],
@@ -2008,6 +2002,12 @@ var namespaces_dup =
       [ "resultsRemover", "fixtures_8py.html#a4b9048662ccb12913b857b9a3b910084", null ],
       [ "simulation", "fixtures_8py.html#ac46e8b1ec42c568ff491677c104f3a77", null ],
       [ "study_path", "fixtures_8py.html#a15dd6c53721f69434e66232668625898", null ]
+    ] ],
+    [ "Fixtures", null, [
+      [ "SingleMixedVarNoObjective", "test-component-filler-to-master-pb_8cpp.html#a2ee0e63b1f20c792b0a2c1eb7049ccde", null ],
+      [ "VarOneSubOneMasterNoObjective", "test-component-filler-to-master-pb_8cpp.html#a17f969f72d55d65392090da24fd5f363", null ],
+      [ "VarTwoSubNoObjConstrOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a556c7b0f7b588c672c690b7a30fc693b", null ],
+      [ "VarTwoSubObjeOneSubOneMaster", "test-component-filler-to-master-pb_8cpp.html#a27af354cd3ec04e3a5bb77f6d8439208", null ]
     ] ],
     [ "FSWalker", null, [
       [ "FileJob", "classFSWalker_1_1FileJob.html", "classFSWalker_1_1FileJob" ],
@@ -2026,6 +2026,11 @@ var namespaces_dup =
         [ "flAbort", "fswalker_8h.html#aa9f4cc25fd19c29c51f4461303a2f8a6a4642c59ccfe3ea3177c7eb8ea8cad5e0", null ],
         [ "flSkip", "fswalker_8h.html#aa9f4cc25fd19c29c51f4461303a2f8a6acbeb8f8226d44e8ff80f6a426c729b02", null ]
       ] ]
+    ] ],
+    [ "invest_problems", null, [
+      [ "invest_problems", "classinvest__problems_1_1invest__problems.html", "classinvest__problems_1_1invest__problems" ],
+      [ "read_if_exists", "invest__problems_8py.html#a26e64a232d84118b20ccebd93a2aa8c4", null ],
+      [ "read_invest_problems", "invest__problems_8py.html#a88eeef54ff71b1627c1997e59a4ce2c3", null ]
     ] ],
     [ "json_collector", null, [
       [ "error", "classjson__collector_1_1error.html", "classjson__collector_1_1error" ],
@@ -2052,21 +2057,15 @@ var namespaces_dup =
       [ "skip_folder", "look__for__studies_8py.html#ac06ef2f00e89c140cf692bba89ff1799", null ],
       [ "skip_study", "look__for__studies_8py.html#a8fab7a88147d6a934d8b18955945f4f7", null ]
     ] ],
-    [ "modeler_output_handler", null, [
-      [ "invest_problems", "classmodeler__output__handler_1_1invest__problems.html", "classmodeler__output__handler_1_1invest__problems" ],
-      [ "modeler_output_handler", "classmodeler__output__handler_1_1modeler__output__handler.html", "classmodeler__output__handler_1_1modeler__output__handler" ],
-      [ "accumulate_simu_table_files", "modeler__output__handler_8py.html#a1786050bd563648a815eb3bdd1a12285", null ],
-      [ "read_if_exists", "modeler__output__handler_8py.html#ae1c7529bb5c840c71052b0aa8e61921a", null ]
-    ] ],
     [ "modeler_steps", null, [
       [ "build_antares_modeler_command", "modeler__steps_8py.html#a41ab8fa06f009156a60e170d983cb11e", null ],
       [ "build_antares_problem_generator_command", "modeler__steps_8py.html#afd79907cf9c997c47c408d999f77dee9", null ],
       [ "check_master_variables", "modeler__steps_8py.html#aa1f528fb6b4a05599be6b74ab77ba255", null ],
-      [ "check_modeler_output_values", "modeler__steps_8py.html#ad564af8ab7384943dc66d69216dca0e0", null ],
+      [ "check_simulation_table_content", "modeler__steps_8py.html#a95de885e827f2e5fbd839ca3208e3468", null ],
+      [ "check_st_entries", "modeler__steps_8py.html#a5e4938748c11fe0b56ce7a68a2500f28", null ],
       [ "check_structure", "modeler__steps_8py.html#a3f7c47f78cc7a017dbfccde4dbe427bd", null ],
       [ "check_subproblem_variables", "modeler__steps_8py.html#aefd22498d025d6b84243866779ebb346", null ],
       [ "check_variables", "modeler__steps_8py.html#a6a3ea5a0be821f5ba22fb765c5a4ea5f", null ],
-      [ "get_value", "modeler__steps_8py.html#a109b1ad3dda0bf646d91b54fd231db86", null ],
       [ "modeler_obj_value", "modeler__steps_8py.html#af5e8a8caff7e09da270cd93877f5bbaa", null ],
       [ "modeler_obj_value", "modeler__steps_8py.html#a68ec571e892067af4f648b84600afd3a", null ],
       [ "modeler_output_values", "modeler__steps_8py.html#a46e51627eea404e8093f8f07addcc312", null ],
@@ -2074,10 +2073,12 @@ var namespaces_dup =
       [ "modeler_study_path_is", "modeler__steps_8py.html#a4b60789db78871ca85f1563bc7f0070b", null ],
       [ "parse_output_folder_from_logs", "modeler__steps_8py.html#aa20861b4b7d40db3245b78f9a82c75dc", null ],
       [ "parse_structure", "modeler__steps_8py.html#a0815c3fcfca57b7fa239710b481bf026", null ],
+      [ "read_expected_entries", "modeler__steps_8py.html#a0fae7433b0215ec466dff0b86faed874", null ],
       [ "read_int_range", "modeler__steps_8py.html#a76a36c51e375a6a7aa0f6ed0b352b904", null ],
       [ "run_antares_modeler", "modeler__steps_8py.html#a46943a258f11896089708a54ac5b0df2", null ],
+      [ "run_antares_modeler_parquet", "modeler__steps_8py.html#af7e516ae75d5db21215d772862c6e2c5", null ],
       [ "run_antares_problem_generator", "modeler__steps_8py.html#a60b259476f84a7366c00fc4fe970c8a0", null ],
-      [ "run_executable", "modeler__steps_8py.html#acf315a0ded2cf2d18311c9e8feb082ce", null ],
+      [ "run_executable", "modeler__steps_8py.html#a1c13c3b74baad6b18a2548885c0e2867", null ],
       [ "run_modeler", "modeler__steps_8py.html#a9d99e3e1985a65e970317fcf0a7d30b2", null ],
       [ "run_problem_generator", "modeler__steps_8py.html#acb66c572b61c942fbb9d2972ad285a7f", null ]
     ] ],
@@ -2106,6 +2107,18 @@ var namespaces_dup =
       [ "fetchBindingConstraintRHS", "sim__binding__constraints__rhs_8cpp.html#af805589f66c6d21072273290732e4b63", null ],
       [ "filterByMustrunCluster", "sim__binding__constraints__rhs_8cpp.html#a43d632744c2da1046c2161be300fee9f", null ],
       [ "setBindingConstraintsRHS", "sim__binding__constraints__rhs_8h.html#afad00fb25244815afedc70fe7775be9a", null ]
+    ] ],
+    [ "simulation_table", null, [
+      [ "SimulationTable", "classsimulation__table_1_1SimulationTable.html", "classsimulation__table_1_1SimulationTable" ],
+      [ "_build_lookup_error_msg", "simulation__table_8py.html#aa2ad0605ab52dd4259c1c8ce2e61109b", null ]
+    ] ],
+    [ "simulation_table_reader", null, [
+      [ "OutputFormat", "classsimulation__table__reader_1_1OutputFormat.html", null ],
+      [ "_normalize_simulation_table", "simulation__table__reader_8py.html#abfde0cfba6564853280225d602842f6f", null ],
+      [ "accumulate_simu_table_files", "simulation__table__reader_8py.html#a0ade5856730ddbc6b610c7e4b03bd196", null ],
+      [ "make_simu_table_reader", "simulation__table__reader_8py.html#a86cd5a37b52053baaa3ec6cf80307926", null ],
+      [ "read_simulation_table_csv", "simulation__table__reader_8py.html#a49b40803a2333f1c4425f1f61c7a2ca9", null ],
+      [ "read_simulation_table_parquet", "simulation__table__reader_8py.html#a188cf52af0c3d9602264175e686f22e1", null ]
     ] ],
     [ "solver_input_handler", null, [
       [ "solver_input_handler", "classsolver__input__handler_1_1solver__input__handler.html", "classsolver__input__handler_1_1solver__input__handler" ]

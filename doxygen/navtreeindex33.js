@@ -1,5 +1,6 @@
 var NAVTREEINDEX33 =
 {
+"namespaceLocalPolicy.html#aeee1fcbcea6a68643d0eb7929e246933":[8,0,19,6],
 "namespacemembers.html":[8,1,0],
 "namespacemembers_enum.html":[8,1,3],
 "namespacemembers_func.html":[8,1,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX33 =
 "scratchpad_8cpp.html#a7a4274db1bda7528094a7dac6540c116":[8,0,0,4,153],
 "scratchpad_8cpp.html#a8e4ce560b4f8012b2242f2cacc9b687c":[8,0,0,4,146],
 "scratchpad_8h_source.html":[10,0,0,4,0,26,0,0,0,0,9],
-"series_2include_2antares_2series_2series_8h_source.html":[10,0,0,4,0,25,0,0,0,0],
-"setData_8h_source.html":[10,0,0,8,11,0,0,0,0,2,1]
+"series_2include_2antares_2series_2series_8h_source.html":[10,0,0,4,0,25,0,0,0,0]
 };
