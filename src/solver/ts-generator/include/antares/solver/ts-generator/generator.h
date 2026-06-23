@@ -101,17 +101,6 @@ bool generateLinkTimeSeries(std::vector<LinkTSgenerationParams>& links,
 std::vector<Data::ThermalCluster*> getAllClustersToGen(const Data::AreaList& areas,
                                                        bool globalThermalTSgeneration);
 
-/*!
-** \brief Destroy all TS Generators
-*/
-void DestroyAll(Data::Study& study);
-
-/*!
-** \brief Destroy a TS generator if it exists and no longer needed
-*/
-template<enum Data::TimeSeriesType T>
-void Destroy(Data::Study& study);
-
 } // namespace Antares::TSGenerator
 
 #include "generator.hxx"

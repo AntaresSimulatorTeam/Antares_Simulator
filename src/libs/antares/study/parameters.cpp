@@ -359,7 +359,7 @@ bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 static bool SGDIntLoadFamily_General(Parameters& d,
                                      const String& key,
                                      const String& value,
-                                     const String& rawvalue)
+                                     const String&)
 {
     if (key == "active-rules-scenario")
     {

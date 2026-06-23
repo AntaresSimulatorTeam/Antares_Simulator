@@ -325,15 +325,6 @@ public:
     mutable YString bufferLoadingTS;
 
     //@}
-    //! \name TS Generators
-    //@{
-    /*!
-    ** \brief Time-series generators used by the solver
-    ** \warning These variables should not be used directly
-    */
-    void* cacheTSGenerator[timeSeriesCount];
-
-    //@}
 
     Solver::ModelerData* getModelerData() const
     {

@@ -120,7 +120,7 @@ jobs:
 
     - name: Init submodule
       run: |
-        git submodule update --init --depth 1 src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 resources/Antares_Simulator_Tests_NR
 
     - name: Configure
       run: |
@@ -232,7 +232,7 @@ jobs:
 
     - name: Remove Antares_Simulator_Tests_NR
       run: |
-        rm -rf src/tests/resources/Antares_Simulator_Tests_NR
+        rm -rf resources/Antares_Simulator_Tests_NR
 
     - name: SonarQube Scan
       if: ${{ !cancelled() }}
