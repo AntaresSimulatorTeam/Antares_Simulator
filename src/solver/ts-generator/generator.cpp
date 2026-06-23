@@ -47,13 +47,4 @@ void ResizeGeneratedTimeSeries(Data::AreaList& areas, Data::Parameters& params)
       });
 }
 
-void DestroyAll(Data::Study& study)
-{
-    Destroy<Data::timeSeriesLoad>(study);
-    Destroy<Data::timeSeriesSolar>(study);
-    Destroy<Data::timeSeriesWind>(study);
-    Destroy<Data::timeSeriesHydro>(study);
-    Destroy<Data::timeSeriesThermal>(study);
-}
-
 } // namespace Antares::TSGenerator
