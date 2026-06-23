@@ -4,6 +4,8 @@
 #define BOOST_TEST_MODULE view_builder_tests
 #define WIN32_LEAN_AND_MEAN
 
+#include <yaml-cpp/yaml.h>
+
 #include <boost/test/unit_test.hpp>
 
 #include <antares/study/area/area.h>
@@ -14,8 +16,6 @@
 #include <antares/study/parts/thermal/cluster.h>
 #include <antares/study/study.h>
 #include <antares/view-builder/legacyToYaml.h>
-
-#include <yaml-cpp/yaml.h>
 
 using namespace Antares::Data;
 using namespace Antares::ViewBuilder;
@@ -36,7 +36,7 @@ struct ViewBuilderFixture
         fr = addAreaToListOfAreas(study->areas, "france");
         de = addAreaToListOfAreas(study->areas, "germany");
 
-        for (auto* area : {fr, de})
+        for (auto* area: {fr, de})
         {
             area->createMissingData();
             area->resetToDefaultValues();
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(area_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "area<france>")
         {
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(load_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "area<france>::Load")
         {
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(wind_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "area<france>::Wind")
         {
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(thermal_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "area<france>::ThermalCluster<nuc_fr>")
         {
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(renewable_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "area<france>::RenewableCluster<wind_fr>")
         {
@@ -214,12 +214,13 @@ BOOST_AUTO_TEST_CASE(sts_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "area<france>::ShortTermStorage<battery_fr>")
         {
             found = true;
-            BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.short_term_storage");
+            BOOST_CHECK_EQUAL(comp["model"].as<std::string>(),
+                              "antares_legacy_models.short_term_storage");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 2);
@@ -236,12 +237,13 @@ BOOST_AUTO_TEST_CASE(hydro_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "area<france>::Hydro")
         {
             found = true;
-            BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.long_term_storage");
+            BOOST_CHECK_EQUAL(comp["model"].as<std::string>(),
+                              "antares_legacy_models.long_term_storage");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 2);
@@ -258,7 +260,7 @@ BOOST_AUTO_TEST_CASE(link_component)
     auto components = root["system"]["components"];
 
     bool found = false;
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         if (comp["id"].as<std::string>() == "link<france$$germany>")
         {
@@ -278,14 +280,20 @@ BOOST_AUTO_TEST_CASE(misc_gen_components)
     YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
-    std::vector<std::string> miscGenNames
-        = {"CHP", "BioMass", "BioGaz", "Waste", "GeoThermal", "Other", "PSP", "RowBalance"};
+    std::vector<std::string> miscGenNames = {"CHP",
+                                             "BioMass",
+                                             "BioGaz",
+                                             "Waste",
+                                             "GeoThermal",
+                                             "Other",
+                                             "PSP",
+                                             "RowBalance"};
 
-    for (const auto& name : miscGenNames)
+    for (const auto& name: miscGenNames)
     {
         std::string expectedId = "area<france>::MiscGen<" + name + ">";
         bool found = false;
-        for (const auto& comp : components)
+        for (const auto& comp: components)
         {
             if (comp["id"].as<std::string>() == expectedId)
             {
@@ -309,7 +317,7 @@ BOOST_AUTO_TEST_CASE(parameters_are_empty)
     YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
-    for (const auto& comp : components)
+    for (const auto& comp: components)
     {
         auto params = comp["parameters"];
         BOOST_REQUIRE(params.IsSequence());
@@ -343,7 +351,7 @@ BOOST_AUTO_TEST_CASE(connections_structure)
     BOOST_REQUIRE(connections.IsSequence());
     BOOST_CHECK_EQUAL(connections.size(), 31);
 
-    for (const auto& conn : connections)
+    for (const auto& conn: connections)
     {
         BOOST_REQUIRE(conn["component1"].IsDefined());
         BOOST_REQUIRE(conn["port1"].IsDefined());
@@ -359,7 +367,7 @@ BOOST_AUTO_TEST_CASE(connection_for_load)
     auto connections = root["system"]["connections"];
 
     bool found = false;
-    for (const auto& conn : connections)
+    for (const auto& conn: connections)
     {
         if (conn["component1"].as<std::string>() == "area<france>::Load"
             && conn["component2"].as<std::string>() == "area<france>")
@@ -378,7 +386,7 @@ BOOST_AUTO_TEST_CASE(connection_for_thermal)
     auto connections = root["system"]["connections"];
 
     bool found = false;
-    for (const auto& conn : connections)
+    for (const auto& conn: connections)
     {
         if (conn["component1"].as<std::string>() == "area<france>::ThermalCluster<nuc_fr>"
             && conn["component2"].as<std::string>() == "area<france>")
@@ -398,7 +406,7 @@ BOOST_AUTO_TEST_CASE(connection_for_link)
 
     bool foundInPort = false;
     bool foundOutPort = false;
-    for (const auto& conn : connections)
+    for (const auto& conn: connections)
     {
         if (conn["component1"].as<std::string>() == "link<france$$germany>")
         {
