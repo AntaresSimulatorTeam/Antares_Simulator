@@ -50,7 +50,6 @@ bool convert<YmlSystem::Component>::decode(const Node& node, YmlSystem::Componen
     rhs.model = node["model"].as<std::string>();
     rhs.scenarioGroup = node["scenario-group"].as<std::string>("");
     rhs.parameters = as_fallback_default<std::vector<YmlSystem::Parameter>>(node["parameters"]);
-    rhs.properties = as_fallback_default<std::vector<std::string>>(node["properties"]);
     return true;
 }
 

@@ -351,7 +351,6 @@ add_subdirectory("src/study")         #antares study model
 add_subdirectory("src/solver")     #antares solver and all associated libs
 add_subdirectory("src/modeler")       #antares modeler
 add_subdirectory("src/modeler-optimisation-container")       #antares modeler
-add_subdirectory("src/view-builder")                         #legacy study to YAML converter
 
 # Tools
 if (BUILD_TOOLS)

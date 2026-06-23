@@ -10,16 +10,6 @@
 #include <antares/study/fwd.h>
 #include "antares/solver/optimisation/LegacyVariableInfo.h"
 
-inline const std::string SEP = "::";
-inline const std::string AREA_SEP = "$$";
-inline const std::string LINK("link");
-inline const std::string AREA("area");
-
-inline std::string LocationIdentifier(const std::string& location, const std::string& locationType)
-{
-    return locationType + "<" + location + ">";
-}
-
 class Namer
 {
 public:

@@ -23,7 +23,6 @@ struct Component
     std::string model;
     std::string scenarioGroup;
     std::vector<Parameter> parameters;
-    std::vector<std::string> properties;
 };
 
 struct ConnectionEntry
