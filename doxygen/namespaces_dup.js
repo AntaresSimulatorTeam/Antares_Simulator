@@ -961,12 +961,10 @@ var namespaces_dup =
         [ "greaterValue", "report_8cpp.html#afca59b8c35ac2975defa738d1098f969", null ],
         [ "hasIntegerVariables", "MipDetection_8h.html#afd16294e3590316f6b1e9942203bc15d", null ],
         [ "Helper", "watched-constraints_8cpp.html#a9957d3cc982e75341f07ae9e56c1e0e5", null ],
-        [ "lessTypeName", "report_8cpp.html#a91c4c1f08ecb72c6075e60eeda6aa3f3", null ],
         [ "makeUnfeasiblePbAnalyzer", "unfeasible-pb-analyzer_8h.html#a14f36c0006d50ed493aa40606b57bb4b", null ],
         [ "maxUnsupEnergyConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a3a0a12194e913ae104d3e387ef0b78e8", null ],
         [ "operator<<", "MCYearAndTime_8h.html#a4acd8157dc362e4991f60f2436acc4f4", null ],
         [ "operator<<", "MCYearAndTime_8h.html#a577631761643b7e0a0785e4a82b75f34", null ],
-        [ "sameType", "report_8cpp.html#a1418a64099521dabe8235df401f4f0cc", null ],
         [ "INJECTION", "watched-constraints_8h.html#a520b3b8184f58d9c8cb41588b5514d8c", null ],
         [ "NETTING", "watched-constraints_8h.html#a5afa496b079694f802024e34366de8a7", null ],
         [ "WITHDRAWAL", "watched-constraints_8h.html#a49826da5a72d4e5d0264543dea5727c0", null ]
