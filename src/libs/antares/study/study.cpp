@@ -29,8 +29,7 @@ static inline void ClearAndShrink(StringT& string)
 }
 
 Study::Study():
-    areas(*this),
-    pQueueService(std::make_shared<Yuni::Job::QueueService>())
+    areas(*this)
 {
     // TS generators
     for (uint i = 0; i != timeSeriesCount; ++i)
@@ -77,7 +76,6 @@ void Study::clear()
     folderInput.clear();
     folderOutput.clear();
     folderSettings.clear();
-    inputExtension.clear();
 }
 
 void Study::reduceMemoryUsage()
