@@ -1,9 +1,5 @@
 var NAVTREEINDEX37 =
 {
-"structAntares_1_1Optimization_1_1MCYearAndTime.html#af523489c66678cdf6721b3c0775c1952":[9,0,0,10,17,0],
-"structAntares_1_1Optimization_1_1VariableBounds.html":[9,0,0,10,4],
-"structAntares_1_1Optimization_1_1VariableBounds.html#a03e3cbbfabe7cc02a18535fd955b7b6e":[9,0,0,10,4,0],
-"structAntares_1_1Optimization_1_1VariableBounds.html#a2212021f92d0c5922a0e698178a2b22a":[9,0,0,10,4,3],
 "structAntares_1_1Optimization_1_1VariableBounds.html#ab585fb575c38a211d9f6a9e3a4b67a71":[9,0,0,10,4,2],
 "structAntares_1_1Optimization_1_1VariableBounds.html#acb6a350257a9655e941067a3383a4041":[9,0,0,10,4,1],
 "structAntares_1_1ScenarioGroupParser_1_1Line.html":[9,0,0,30,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX37 =
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverflowsTraits.html":[9,0,0,11,6,5,76],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1OverflowsTraits.html#ae37d681153711b1ff64c60139a17b31f":[9,0,0,11,6,5,76,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PSP_1_1Statistics.html":[9,0,0,11,6,5,12,0],
-"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSRTraits.html":[9,0,0,11,6,5,78]
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSRTraits.html":[9,0,0,11,6,5,78],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceCSRTraits.html#ad4ac2ee24c0a52d6ed5383da2d01da90":[9,0,0,11,6,5,78,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceTraits.html":[9,0,0,11,6,5,77],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1PriceTraits.html#a5aec729a71c87d32023d9d869c35ebff":[9,0,0,11,6,5,77,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1ProductionByDispatchablePlantTraits.html":[9,0,0,11,6,5,79]
 };

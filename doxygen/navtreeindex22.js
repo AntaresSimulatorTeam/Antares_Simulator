@@ -1,6 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"classFictitiousLoad.html":[9,0,121],
 "classFictitiousLoad.html#a4597b168f370edc3076054ad585a3465":[9,0,121,1],
 "classFictitiousLoad.html#ab977d75676476c8c59512bba15e0568c":[9,0,121,0],
 "classFinalStockEquivalent.html":[9,0,124],
@@ -65,8 +64,8 @@ var NAVTREEINDEX22 =
 "classFixture.html#a71eea93b051143e3989e89fe76a6c77d":[9,0,130,34],
 "classFixture.html#a76c63c8af83a1743582d3eb589271466":[9,0,130,53],
 "classFixture.html#a76c63c8af83a1743582d3eb589271466":[9,0,130,54],
-"classFixture.html#a76c63c8af83a1743582d3eb589271466":[9,0,130,56],
 "classFixture.html#a76c63c8af83a1743582d3eb589271466":[9,0,130,55],
+"classFixture.html#a76c63c8af83a1743582d3eb589271466":[9,0,130,56],
 "classFixture.html#a76df5f079d097b1132c4ee22eb39dd66":[9,0,130,8],
 "classFixture.html#a7765a6e6203ac031b2b8cbc43a83b158":[9,0,130,85],
 "classFixture.html#a7bd87f852602d02a205b4a811530dfe4":[9,0,130,10],
@@ -132,8 +131,8 @@ var NAVTREEINDEX22 =
 "classFixture.html#afaa76475a0bcdd3c7de06188a603bcdf":[9,0,130,95],
 "classFixture.html#afb9bd5b3bfbec3cf1bf4760d05e12e24":[9,0,130,121],
 "classFixture.html#afbfe96b345eb578933d52e98a2e525e2":[9,0,130,119],
-"classFixture.html#afec6b047cc6e8e3f115306596cc00512":[9,0,130,32],
 "classFixture.html#afec6b047cc6e8e3f115306596cc00512":[9,0,130,23],
+"classFixture.html#afec6b047cc6e8e3f115306596cc00512":[9,0,130,32],
 "classFixtureMultipleTS.html":[9,0,136],
 "classFixtureMultipleTS.html#a2041f6405e28e304aadb40e5a7c92348":[9,0,136,1],
 "classFixtureMultipleTS.html#ac77e1c89065a9b53758d9c784552be75":[9,0,136,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX22 =
 "classHydroPower.html#ac001ea4d2bd31e114bf555c831565ddd":[9,0,155,2],
 "classHydroPowerGroup.html":[9,0,157],
 "classHydroPowerGroup.html#a83aee8659878014b25a079764befe8fa":[9,0,157,0],
-"classHydroPowerGroup.html#aedd8f967c204c600ed992ac73b69bf13":[9,0,157,1]
+"classHydroPowerGroup.html#aedd8f967c204c600ed992ac73b69bf13":[9,0,157,1],
+"classHydroPowerSmoothingUsingVariationMaxDown.html":[9,0,158]
 };

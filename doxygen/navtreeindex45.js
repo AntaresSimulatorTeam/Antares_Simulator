@@ -1,9 +1,5 @@
 var NAVTREEINDEX45 =
 {
-"thermal_2cluster_8h.html#a8f516d1e51949ecea43fb6b10376a2a5a8e934cf0bd3b192d0556a9c00f1c1d72":[8,0,0,4,100,1],
-"thermal_2cluster_8h.html#ad812eaf7aee328a84ce2392b9223a9d9":[8,0,0,4,150],
-"thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378":[8,0,0,4,107],
-"thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a3e4b86aa01228a8a31ca9dad7c613205":[8,0,0,4,107,2],
 "thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378a471690288ac168634e38e8973a95c584":[8,0,0,4,107,0],
 "thermal_2cluster_8h.html#ae155111eb9e7ecab971984a68cdd2378afb89438f572053e7b5dc7973347751a9":[8,0,0,4,107,1],
 "thermal_2cluster_8h_source.html":[10,0,0,4,0,26,0,0,0,5,7,0],
