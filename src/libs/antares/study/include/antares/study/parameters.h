@@ -409,7 +409,8 @@ public:
     bool accurateShavePeaksIncludeShortTermStorage = false;
 
     //! Transmission capacities
-    GlobalTransmissionCapacities transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
+    GlobalTransmissionCapacities transmissionCapacities = GlobalTransmissionCapacities::
+      localValuesForAllLinks;
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange = sorWeek;
     //@}
