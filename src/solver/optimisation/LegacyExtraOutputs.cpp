@@ -3,14 +3,13 @@
 
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 
-fe
 #include <algorithm>
 #include <cmath>
 
 #include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacySolutionView.h"
 
-  using Antares::IO::Outputs::SimulationTable;
+using Antares::IO::Outputs::SimulationTable;
 using Antares::Optimisation::LinearProblemApi::FillContext;
 
 namespace Antares::Optimization
