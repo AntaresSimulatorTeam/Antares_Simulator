@@ -125,21 +125,3 @@ class SimulationTable:
             value = row["value"]
             result[block] = float(value)
         return result
-
-    def get_dataframe(self) -> pd.DataFrame:
-        """Return the full DataFrame for advanced queries."""
-        return self._dataframe
-
-    def get_column_names(self) -> list:
-        """Return the list of column names in the simulation table."""
-        return list(self._dataframe.columns)
-
-
-def get_simulation_table_dataframe(simulation_table: pd.DataFrame) -> pd.DataFrame:
-    """Return the full DataFrame for advanced queries."""
-    return simulation_table
-
-
-def get_column_names(simulation_table: pd.DataFrame) -> list:
-    """Return the list of column names in the simulation table."""
-    return list(simulation_table.columns)
