@@ -53,7 +53,7 @@ Design points:
 
 ## 4. LegacyExtraOutputs
 
-`AddLegacyExtraOutputs` builds a `LegacySolutionView`, then makes a single pass over `LegacyVariablesInfo` and dispatches on the recorded variable name. Each derived output is implemented as a small helper that computes a value and emits a `SimulationTableEntry` via a shared `AddExtraOutputEntry` helper, which fixes the row conventions once: `block = currentBlock + 1`, `absolute_time_index = timeIndex + 1` (1-based, like the raw rows), `block_time_index` relative to the block's global time window, `scenario_index = fillContext.getYear()`.
+`AddLegacyExtraOutputs` builds a `LegacySolutionView`, then makes a single pass over `LegacyVariablesInfo` and dispatches on the recorded variable name. Each derived output is implemented as a small helper that computes a value and emits a `SimulationTableEntry` via a shared `AddExtraOutputEntry` helper, which fixes the row conventions once: `block = currentBlock`, `absolute_time_index = timeIndex` (0-based, like the raw rows), `block_time_index` relative to the block's global time window, `scenario_index = fillContext.getYear()`.
 
 Outputs implemented so far:
 

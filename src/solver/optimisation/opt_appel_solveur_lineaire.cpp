@@ -72,7 +72,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
 {
     const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
-    const unsigned int block = currentBlock + 1;
+    const unsigned int block = currentBlock;
 
     // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables in
     // resizeProbleme, so indexing by [0, NombreDeVariables) below is always in bounds.
@@ -90,13 +90,13 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
         std::optional<unsigned> blockTimeIndex;
         if (info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep)
         {
-            blockTimeIndex = info->timeIndex - globalFirstTimeStep + 1;
+            blockTimeIndex = info->timeIndex - globalFirstTimeStep;
         }
 
         simulationTable.addEntry({.block = block,
                                   .component = info->component,
                                   .output = nameMapper.mapOutput(info->name),
-                                  .absolute_time_index = info->timeIndex + 1,
+                                  .absolute_time_index = info->timeIndex,
                                   .block_time_index = blockTimeIndex,
                                   .scenario_index = fillContext.getYear(),
                                   .value = problem.X[static_cast<std::size_t>(index)],
