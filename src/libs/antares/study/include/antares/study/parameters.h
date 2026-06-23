@@ -327,7 +327,7 @@ public:
         bool exportStructure;
 
         //! Enum to define unfeasible problem behavior \see UnfeasibleProblemBehavior
-        UnfeasibleProblemBehavior unfeasibleProblemBehavior;
+        UnfeasibleProblemBehavior unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
 
         bool exportSolutions;
     } include;
@@ -354,19 +354,19 @@ public:
     struct
     {
         //! Shedding policy
-        SheddingPolicy policy;
+        SheddingPolicy policy = shpShavePeaks;
     } shedding;
 
     struct
     {
         //! Power fluctuations
-        PowerFluctuations fluctuations;
+        PowerFluctuations fluctuations = lssFreeModulations;
     } power;
 
     struct UCMode
     {
         //! Unit Commitment Mode
-        UnitCommitmentMode ucMode;
+        UnitCommitmentMode ucMode = ucHeuristicFast;
 
         //! Some variables rely on dual values & marginal costs
         void addExcludedVariables(std::vector<std::string>&) const;
@@ -377,13 +377,13 @@ public:
     struct
     {
         //! Number of Cores Mode
-        NumberOfCoresMode ncMode;
+        NumberOfCoresMode ncMode = ncAvg;
     } nbCores;
 
     struct RenewableGeneration
     {
         //! Renewable generation mode
-        RenewableGenerationModelling rgModelling;
+        RenewableGenerationModelling rgModelling = rgAggregated;
         void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
@@ -397,19 +397,19 @@ public:
     struct
     {
         //! Hydro heuristic policy
-        HydroHeuristicPolicy hhPolicy;
+        HydroHeuristicPolicy hhPolicy = hhpAccommodateRuleCurves;
     } hydroHeuristicPolicy;
 
     struct
     {
         //! Hydro Pricing Mode
-        HydroPricingMode hpMode;
+        HydroPricingMode hpMode = hpHeuristic;
     } hydroPricing;
 
     bool accurateShavePeaksIncludeShortTermStorage = false;
 
     //! Transmission capacities
-    GlobalTransmissionCapacities transmissionCapacities;
+    GlobalTransmissionCapacities transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange = sorWeek;
     //@}
