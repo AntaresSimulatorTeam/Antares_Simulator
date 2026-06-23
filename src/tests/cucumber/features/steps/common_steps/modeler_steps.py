@@ -130,6 +130,8 @@ def run_executable(context, command) -> bool:
     else:
         context.logs_err = ""
 
+    context.return_code = process.returncode
+
     if process.returncode != 0:
         print("*********************** Begin stdout ***********************")
         print(out.replace(b'\r\n', b'\n').decode('utf-8'))
