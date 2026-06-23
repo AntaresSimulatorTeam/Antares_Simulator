@@ -9,7 +9,7 @@ import subprocess
 
 from behave import *
 from common_steps.assertions import *
-from common_steps.modeler_output_handler import read_invest_problems
+from common_steps.invest_problems import read_invest_problems
 from common_steps.simulation_table import SimulationTable
 from common_steps.simulation_table_reader import (
     OutputFormat,
