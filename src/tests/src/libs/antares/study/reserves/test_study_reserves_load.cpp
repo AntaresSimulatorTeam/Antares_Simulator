@@ -374,9 +374,9 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_One_Bad_Parameter
     file << "        bad: 9.9\n";
     file.close();
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK_EQUAL(getErrors().size(), 0);
-    BOOST_CHECK_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK(getWarnings().contains("invalid thermal reserve property bad"));
+    BOOST_CHECK_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK(getErrors().contains("invalid thermal reserve property bad"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Symmetries,
@@ -956,9 +956,9 @@ BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_property,
     file << "      bad: 9.9\n";
     file.close();
     areaA->hydro.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK_EQUAL(getErrors().size(), 0);
-    BOOST_CHECK_EQUAL(getWarnings().size(), 1);
-    BOOST_CHECK(getWarnings().contains("invalid hydro reserve property bad"));
+    BOOST_CHECK_EQUAL(getErrors().size(), 1);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK(getErrors().contains("invalid hydro reserve property bad"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_hydro_loadReserveParticipations_bad_reserve,
@@ -1025,11 +1025,11 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_Symmetries,
     BOOST_CHECK_EQUAL(resContainer->value().reserveCost("reserveup"), 9.9);
     BOOST_CHECK_EQUAL(resContainer->value().reserveMaxStore("reserveup"), 8.8);
     BOOST_CHECK_EQUAL(resContainer->value().reserveMaxRelease("reserveup"), 7.7);
-    BOOST_CHECK_EQUAL(getWarnings().size(), 3);
-    BOOST_CHECK_EQUAL(getErrors().size(), 0);
-    BOOST_CHECK(getWarnings().contains("invalid STS reserve property max-power"));
-    BOOST_CHECK(getWarnings().contains("invalid STS reserve property max-power-off"));
-    BOOST_CHECK(getWarnings().contains("invalid STS reserve property participation-cost-off"));
+    BOOST_CHECK_EQUAL(getErrors().size(), 3);
+    BOOST_CHECK_EQUAL(getWarnings().size(), 0);
+    BOOST_CHECK(getErrors().contains("invalid STS reserve property max-power"));
+    BOOST_CHECK(getErrors().contains("invalid STS reserve property max-power-off"));
+    BOOST_CHECK(getErrors().contains("invalid STS reserve property participation-cost-off"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_cluster_symmetry,
