@@ -259,6 +259,11 @@ void HydroInputsChecker::CheckForErrors() const
 
 void HydroInputsChecker::checkInitialLevelAgainstFinalRuleCurves(uint year)
 {
+    if (!parameters_.useCustomScenario)
+    {
+        return;
+    }
+
     if (!parameters_.yearsFilter.at(year))
     {
         return;
@@ -268,8 +273,7 @@ void HydroInputsChecker::checkInitialLevelAgainstFinalRuleCurves(uint year)
       [this, year](const Data::Area& area)
       {
           // Only check areas with reservoir management and non-zero capacity
-          if (!area.hydro.reservoirManagement
-              || area.hydro.reservoirCapacity < 1e-4)
+          if (!area.hydro.reservoirManagement || area.hydro.reservoirCapacity < 1e-4)
           {
               return;
           }
@@ -306,8 +310,8 @@ void HydroInputsChecker::checkInitialLevelAgainstFinalRuleCurves(uint year)
               logs.warning()
                 << "Hydro area '" << area.name << "' (year " << year + 1
                 << "): Initial reservoir level (" << initialLevel
-                << ") is outside the final rule curves [" << finalMinLevel << ", "
-                << finalMaxLevel << "]. The heuristic may produce a final reservoir "
+                << ") is outside the final rule curves [" << finalMinLevel << ", " << finalMaxLevel
+                << "]. The heuristic may produce a final reservoir "
                 << "level different from the initial level to respect the rule curves.";
           }
       });
