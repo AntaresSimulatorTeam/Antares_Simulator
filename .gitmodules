@@ -1,3 +1,6 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/microsoft/vcpkg.git
+[submodule "Antares_Simulator_Tests_NR"]
+	path = resources/Antares_Simulator_Tests_NR
+	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR.git
