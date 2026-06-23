@@ -315,18 +315,15 @@ void AddLinkIsDirectlyCongested(SimulationTable& simulationTable,
                                 unsigned currentBlock)
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto it = context.directCapacityByLink.find(info.component);
-    if (it == context.directCapacityByLink.end())
+    const auto capacity = ContextValueAtHour(context.directCapacityByLink,
+                                             info.component,
+                                             info.timeIndex,
+                                             context.weekFirstTimeStep);
+    if (!capacity)
     {
         return;
     }
-    const unsigned pdt = info.timeIndex - context.weekFirstTimeStep;
-    if (pdt >= it->second.size())
-    {
-        return;
-    }
-    const double capacity = it->second[pdt];
-    const double saturated = solutionValues[index] >= capacity - saturationEpsilon ? 1. : 0.;
+    const double saturated = solutionValues[index] >= capacity.value() - saturationEpsilon ? 1. : 0.;
     AddExtraOutputEntry(simulationTable,
                         "is_directly_congested",
                         info,
@@ -348,18 +345,15 @@ void AddLinkIsIndirectlyCongested(SimulationTable& simulationTable,
                                   unsigned currentBlock)
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto it = context.indirectCapacityByLink.find(info.component);
-    if (it == context.indirectCapacityByLink.end())
+    const auto capacity = ContextValueAtHour(context.indirectCapacityByLink,
+                                             info.component,
+                                             info.timeIndex,
+                                             context.weekFirstTimeStep);
+    if (!capacity)
     {
         return;
     }
-    const unsigned pdt = info.timeIndex - context.weekFirstTimeStep;
-    if (pdt >= it->second.size())
-    {
-        return;
-    }
-    const double capacity = it->second[pdt];
-    const double saturated = -solutionValues[index] >= capacity - saturationEpsilon ? 1. : 0.;
+    const double saturated = -solutionValues[index] >= capacity.value() - saturationEpsilon ? 1. : 0.;
     AddExtraOutputEntry(simulationTable,
                         "is_indirectly_congested",
                         info,
