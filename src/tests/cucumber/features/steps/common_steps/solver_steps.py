@@ -11,9 +11,13 @@ import numpy as np
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
+from common_steps.simulation_table import SimulationTable
+from common_steps.simulation_table_reader import (
+    OutputFormat,
+    make_simulation_table_reader,
+)
 
 from common_steps.assertions import assert_double_close
-from common_steps.modeler_output_handler import modeler_output_handler
 from common_steps.table_compare import *
 from shared_utils import mps_utils as mpu
 
@@ -330,9 +334,9 @@ def run_simulation(context):
     # For hybrid studies:
     outputPath = Path(context.output_path)
     if any(outputPath.glob("simulation-table*.csv")):
-        context.moh = modeler_output_handler(outputPath)
-        context.simu_table = context.moh.simulation_table
-
+        context.simu_table = SimulationTable(
+            make_simulation_table_reader(outputPath, OutputFormat.CSV)()
+        )
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
@@ -462,7 +466,6 @@ def _store_simulation_result(context, study_index: int):
         'logs_err': context.logs_err,
         'output_path': context.output_path,
         'soh': context.soh,
-        'moh': getattr(context, 'moh', None),
         'simu_table': getattr(context, 'simu_table', None),
     }
     context.multi_studies.append(result)

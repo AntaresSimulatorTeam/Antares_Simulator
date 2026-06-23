@@ -3,11 +3,6 @@
 import os
 from pathlib import Path
 
-from common_steps.simulation_table import SimulationTable
-from common_steps.simulation_table_reader import (
-    OutputFormat,
-    make_simulation_table_reader,
-)
 from shared_utils import mps_utils as mpu
 
 
@@ -43,19 +38,3 @@ def read_invest_problems(output_path: Path) -> invest_problems:
         lambda x: open(x, 'r').readlines(),
     )
     return invest_problems(master, subproblem, structure)
-
-
-class modeler_output_handler:
-    """Backward-compatible wrapper for solver tests.
-
-    Solver tests still reference context.moh (modeler_output_handler),
-    so we keep this class for compatibility. It delegates to SimulationTable.
-    """
-
-    def __init__(self, outputPath: Path):
-        self.simulation_table = SimulationTable(
-            make_simulation_table_reader(outputPath, OutputFormat.CSV)()
-        )
-        self.problems = read_invest_problems(outputPath)
-
-

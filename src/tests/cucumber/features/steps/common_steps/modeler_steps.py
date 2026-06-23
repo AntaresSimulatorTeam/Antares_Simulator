@@ -174,7 +174,7 @@ def build_antares_problem_generator_command(context):
     command = [context.config.userdata["antares-problem-generator"], str(context.study_path)]
     return command
 
-
+# TODO: code duplicated with solver steps
 def parse_output_folder_from_logs(logs: str) -> str:
     for line in logs.splitlines():
         if 'Output folder : ' in line:
