@@ -334,7 +334,7 @@ def run_simulation(context):
     # For hybrid studies:
     outputPath = Path(context.output_path)
     if any(outputPath.glob("simulation-table*.csv")):
-        file_pattern = f"simulation-table-*-optim-nb-1.{OutputFormat.CSV}"
+        file_pattern = f"simulation-table-*-optim-nb-1.csv"
         ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
         context.simu_table = SimulationTable(ST_reader_factory())
 
