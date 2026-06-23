@@ -8,5 +8,5 @@ Feature: Parquet output format tests for antares-modeler
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 1-2      | 80    |
-      | node1     | gen2_p | 1-2      | 20    |
+      | node1     | gen1_p | 0-1      | 80    |
+      | node1     | gen2_p | 0-1      | 20    |
