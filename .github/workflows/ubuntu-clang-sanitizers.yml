@@ -54,13 +54,16 @@ jobs:
 
     - name: Install up-to-date Clang ${{ env.CLANG_VERSION }}
       run: |
+        # clang-${CLANG_VERSION} is not in the Ubuntu repositories, so llvm.sh
+        # adds the apt.llvm.org repository and installs clang/lld for that
+        # version. The extra apt-get pulls the packages llvm.sh does not install
+        # but that this job needs: the sanitizer runtime (libclang-rt-*-dev) and
+        # clang-tools.
         wget https://apt.llvm.org/llvm.sh
         chmod +x llvm.sh
         sudo ./llvm.sh ${{ env.CLANG_VERSION }}
-        sudo apt-get install -y clang-${{ env.CLANG_VERSION }} \
-          clang-tools-${{ env.CLANG_VERSION }} \
-          libclang-rt-${{ env.CLANG_VERSION }}-dev \
-          lld-${{ env.CLANG_VERSION }}
+        sudo apt-get install -y clang-tools-${{ env.CLANG_VERSION }} \
+          libclang-rt-${{ env.CLANG_VERSION }}-dev
         echo "CC=clang-${{ env.CLANG_VERSION }}" >> $GITHUB_ENV
         echo "CXX=clang++-${{ env.CLANG_VERSION }}" >> $GITHUB_ENV
 
