@@ -138,8 +138,6 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     };
 
     ReserveOpt<ReservesIndices> reservesIndices;
-
-    std::vector<int> ConstraintIndexRampingIncrease;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES

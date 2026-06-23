@@ -16,7 +16,7 @@ void RampingDecreaseRate::add(int pays, int index, int pdt)
         double pminDUnGroupeDuPalierThermique = data.PaliersThermiquesDuPays[pays]
                                                   .pminDUnGroupeDuPalierThermique[index];
         // 18 (ter)
-        // Equation : P(t) >= P(t-1) - ((R^-) * (M(t) - M^+(t)) - (u * M^-(t)) + (l * M^+(t))
+        // Equation : P(t) >= P(t-1) - ((R^-) * (M(t) - M^+(t))) - (u * M^-(t)) + (l * M^+(t))
         // P(t) : Power output of the cluster at timestep t
         // R^- : Max ramping down for cluster
         // M(t) : number of running units

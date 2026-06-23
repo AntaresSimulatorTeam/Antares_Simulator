@@ -492,7 +492,7 @@ std::ostream& operator<<(std::ostream& os, const ThermalCluster::Ramping& r)
 {
     return os << "powerIncreaseCost = " << r.powerIncreaseCost
               << "\tpowerDecreaseCost = " << r.powerDecreaseCost
-              << "\tmaxDownwardPowerRampingRate = " << r.maxUpwardPowerRampingRate
+              << "\tmaxUpwardPowerRampingRate = " << r.maxUpwardPowerRampingRate
               << "\tmaxDownwardPowerRampingRate = " << r.maxDownwardPowerRampingRate;
 }
 

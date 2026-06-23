@@ -142,10 +142,8 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         variablesMapping.NumeroDeVariableDuFluxIndirectPositif.assign(linkCount, 0);
 
         variablesMapping.NumeroDeVariableDuPalierThermique.assign(thermalCount, 0);
-        variablesMapping.NumeroDeVariableDuPalierThermique
-          .assign(study.runtime.counts.thermalPlants, 0);
-        variablesMapping.powerRampingIncreaseIndex.assign(study.runtime.counts.thermalPlants, 0);
-        variablesMapping.powerRampingDecreaseIndex.assign(study.runtime.counts.thermalPlants, 0);
+        variablesMapping.powerRampingIncreaseIndex.assign(thermalCount, 0);
+        variablesMapping.powerRampingDecreaseIndex.assign(thermalCount, 0);
         variablesMapping.NumeroDeVariablesDeLaProdHyd.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDePompage.assign(nbPays, 0);
         variablesMapping.NumeroDeVariablesDeNiveau.assign(nbPays, 0);
@@ -261,9 +259,6 @@ void SIM_AllocationProblemePasDeTemps(PROBLEME_HEBDO& problem,
         problem.CorrespondanceCntNativesCntOptim[k]
           .NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
           .assign(thermalCount, 0);
-
-        problem.CorrespondanceCntNativesCntOptim[k]
-          .ConstraintIndexRampingIncrease.assign(study.runtime.counts.thermalPlants, 0);
 
         problem.VariablesDualesDesContraintesDeNTC[k]
           .VariableDualeParInterconnexion.assign(linkCount, 0.);
@@ -480,17 +475,6 @@ void SIM_AllocateAreas(PROBLEME_HEBDO& problem,
         const uint nbReserves = resEnabled
                                   ? study.areas.byIndex[k]->allCapacityReservations.value().size()
                                   : 0;
-
-        // count clusters with ramping enabled
-        uint nRampingClusters = 0;
-        for (uint clusterIndex = 0; clusterIndex != nbPaliers; ++clusterIndex)
-        {
-            auto& cluster = *(study.areas.byIndex[k]->thermal.list[clusterIndex]);
-            if (cluster.ramping)
-            {
-                nRampingClusters++;
-            }
-        }
 
         problem.PaliersThermiquesDuPays[k].minUpDownTime.assign(nbPaliers, 0);
         problem.PaliersThermiquesDuPays[k].PminDuPalierThermiquePendantUneHeure.assign(nbPaliers,
