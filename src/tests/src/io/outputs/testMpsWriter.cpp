@@ -40,8 +40,7 @@ using namespace Antares;
 using namespace Antares::Solver;
 using namespace Antares::IO::Outputs; //
 namespace fs = std::filesystem;
-const fs::path resources = std::filesystem::path(CMAKE_SOURCE_DIR) / "tests" / "resources"
-                           / "modeler";
+const fs::path resources = std::filesystem::path(RESOURCES_DIR) / "modeler";
 
 const std::set<std::string> ignoreList{"1_3", "1_5", "simple_system_cyclic", "simple_system_drop"};
 BOOST_AUTO_TEST_SUITE(ValidateMps)
