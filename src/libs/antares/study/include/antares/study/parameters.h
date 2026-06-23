@@ -278,12 +278,6 @@ public:
     ** generaldata.ini. The default value is `false`.
     */
     bool readonly;
-
-    /*!
-    ** \brief Activation of the reserves
-    */
-    bool reservesEnabled = false;
-
     //! Write the simulation synthesis into the output
     bool synthesis;
 

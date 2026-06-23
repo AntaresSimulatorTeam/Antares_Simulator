@@ -248,6 +248,10 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacyFiller.h
         LegacyFiller.cpp
         include/antares/solver/optimisation/LegacyVariableInfo.h
+        include/antares/solver/optimisation/LegacySolutionView.h
+        LegacySolutionView.cpp
+        include/antares/solver/optimisation/LegacyExtraOutputs.h
+        LegacyExtraOutputs.cpp
         include/antares/solver/optimisation/LegacyNameMapper.h
         LegacyNameMapper.cpp
         include/antares/solver/optimisation/ComponentToAreaConnectionFiller.h

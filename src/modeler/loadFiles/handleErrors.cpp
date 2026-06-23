@@ -31,21 +31,4 @@ std::string markYamlError(const YAML::Exception& e, const std::string& context)
     return ss.str();
 }
 
-void warnOnYamlFiles(const std::filesystem::path& directory)
-{
-    if (!std::filesystem::exists(directory))
-    {
-        return;
-    }
-
-    for (const auto& entry: std::filesystem::directory_iterator(directory))
-    {
-        if (entry.path().extension() == ".yaml")
-        {
-            logs.warning() << "Found '" << entry.path()
-                           << "' which is ignored. Only '.yml' files are supported.";
-        }
-    }
-}
-
 } // namespace Antares::Solver::LoadFiles

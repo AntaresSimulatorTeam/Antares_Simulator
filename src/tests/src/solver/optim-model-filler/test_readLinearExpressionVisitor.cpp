@@ -225,6 +225,87 @@ BOOST_FIXTURE_TEST_CASE(linear_expr_from_ceil_of_a_variable_throws,
                             "ceil operator: its argument is not constant, but has to be."));
 }
 
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_round_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // round(4.4) = 4
+    Node* roundNode = create<FunctionNode>(FunctionNodeType::round, create<LiteralNode>(4.4));
+
+    auto linear_expression = visitor().dispatch(roundNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false);
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_round_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // round(param(4.5)) = 5
+    Node* roundNode = create<FunctionNode>(FunctionNodeType::round,
+                                           create<ParameterNode>("four.five"));
+
+    auto linear_expression = visitor().dispatch(roundNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 5.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false);
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_round_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // round(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* roundNode = create<FunctionNode>(FunctionNodeType::round, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(roundNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "round operator: its argument is not constant, but has to be."));
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_abs_of_a_literal,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // abs(-4.5) = 4.5
+    Node* absNode = create<FunctionNode>(FunctionNodeType::abs, create<LiteralNode>(-4.5));
+
+    auto linear_expression = visitor().dispatch(absNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 4.5);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false);
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_abs_of_a_constant_param,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // abs(param(-2)) = 2
+    Node* absNode = create<FunctionNode>(FunctionNodeType::abs, create<ParameterNode>("param1"));
+
+    auto linear_expression = visitor().dispatch(absNode);
+
+    BOOST_REQUIRE_EQUAL(linear_expression.size(), 1);
+    BOOST_CHECK_EQUAL(linear_expression[0].constant(), 2.);
+    BOOST_CHECK_EQUAL(linear_expression[0].hasCoefs(), false);
+}
+
+BOOST_FIXTURE_TEST_CASE(linear_expr_from_abs_of_a_variable_throws,
+                        VisitorFixture<ReadLinearExpressionVisitor>)
+{
+    // abs(7 * var) is not linear: argument has non-zero coefficients
+    Node* var = create<VariableNode>("var", 0);
+    Node* product = create<MultiplicationNode>(create<LiteralNode>(7.), var);
+    Node* absNode = create<FunctionNode>(FunctionNodeType::abs, product);
+
+    BOOST_CHECK_EXCEPTION(visitor().dispatch(absNode),
+                          std::invalid_argument,
+                          checkMessage(
+                            "abs operator: its argument is not constant, but has to be."));
+}
+
 BOOST_FIXTURE_TEST_CASE(visit_literal_plus_param_plus_var,
                         VisitorFixture<ReadLinearExpressionVisitor>)
 {

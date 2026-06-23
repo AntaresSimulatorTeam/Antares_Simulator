@@ -50,8 +50,6 @@ YmlOptimConfig::OptimConfig loadOptimConfigFromYaml(const fs::path& studyPath)
     const fs::path systemPath = inputDir / "system.yml";
     const fs::path configPath = inputDir / "optim-config.yml";
 
-    warnOnYamlFiles(inputDir);
-
     if (!std::filesystem::exists(configPath))
     {
         if (std::filesystem::exists(systemPath))
