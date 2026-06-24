@@ -15,7 +15,6 @@ class HydroFinalLevelsData final: public HydroLevelsData
 {
 public:
     bool apply(Study& study) override;
-
 }; // class HydroFinalLevelsData
 
 } // namespace Antares::Data::ScenarioBuilder

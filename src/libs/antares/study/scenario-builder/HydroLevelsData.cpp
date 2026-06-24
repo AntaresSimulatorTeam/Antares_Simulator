@@ -3,9 +3,6 @@
 
 #include "antares/study/scenario-builder/HydroLevelsData.h"
 
-#include <iomanip>
-#include <sstream>
-
 #include "antares/study/scenario-builder/scBuilderUtils.h"
 
 namespace Antares::Data::ScenarioBuilder
@@ -23,8 +20,7 @@ bool HydroLevelsData::reset(const Study& study)
 
 void HydroLevelsData::setTSnumber(uint areaindex, uint year, double value)
 {
-    assert(areaindex < pHydroLevelsRules.width);
-    if (year < pHydroLevelsRules.height)
+    if (areaindex < pHydroLevelsRules.width && year < pHydroLevelsRules.height)
     {
         pHydroLevelsRules[areaindex][year] = value;
     }
