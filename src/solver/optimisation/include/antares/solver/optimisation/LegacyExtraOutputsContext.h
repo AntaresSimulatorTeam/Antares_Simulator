@@ -3,9 +3,12 @@
 
 #pragma once
 
+#include <array>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include "antares/study/parts/thermal/pollutant.h"
 
 namespace Antares::Optimization
 {
@@ -52,6 +55,39 @@ struct LegacyExtraOutputsContext
     // actual_loop_flow is emitted on the link's DirectFlow anchor and skipped
     // when the key is missing.
     std::unordered_map<std::string, std::vector<double>> loopFlowByLink;
+
+    // Per-cluster pollutant emission factors (tons/MWh), keyed by
+    // "area$$cluster": the thermal anchor's component is the cluster name alone,
+    // which is not unique across areas, so the area qualifier on
+    // LegacyVariableInfo is folded into the key. A missing key means the
+    // emissions outputs are skipped for that cluster.
+    std::unordered_map<std::string, std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>>
+      emissionFactorsByCluster;
+
+    // Per-cluster thermal data for the margin outputs (cluster_availability,
+    // up_margin, min_gen_power, down_margin), keyed "area$$cluster" like the
+    // emission factors. These are the spinning-adjusted quantities the weekly
+    // problem already carries; the spec's raw cluster_max_generation /
+    // max_power_per_unit differ from them by the same (1 - spinning/100) factor,
+    // which cancels in cluster_availability = max(availability,
+    // minStablePower * ceil(availability / unitSize)). A missing key (or a
+    // per-hour vector shorter than the week) means the margin outputs are
+    // skipped for that cluster.
+    struct ThermalMarginData
+    {
+        // Nominal capacity per unit, with spinning (TailleUnitaireDUnGroupe...).
+        double unitSize = 0.;
+        // Min stable power per unit (PminDuPalierThermiquePendantUneHeure).
+        double minStablePower = 0.;
+        // Available power per hour-in-week (PuissanceDisponibleDuPalierThermique).
+        std::vector<double> availability;
+        // Min generation per hour-in-week (PuissanceMinDuPalierThermique), i.e.
+        // min(availability, modulation-based floor); equals the spec's
+        // min(., M) once clamped against availability.
+        std::vector<double> minGenPower;
+    };
+
+    std::unordered_map<std::string, ThermalMarginData> thermalMarginByCluster;
 
     // Absolute time index of the week's first hour (PROBLEME_HEBDO::HeureDansLAnnee,
     // i.e. weekInTheYear * hoursPerWeek). LegacyVariableInfo::timeIndex is

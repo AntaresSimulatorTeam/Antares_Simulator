@@ -4,6 +4,7 @@
 #include "antares/solver/optimisation/LegacyExtraOutputs.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 
 #include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
@@ -65,6 +66,122 @@ void AddExtraOutputEntry(SimulationTable& simulationTable,
                               .scenario_index = fillContext.getYear(),
                               .value = value,
                               .status = std::nullopt});
+}
+
+// Emission extra-output IDs, ordered to match Antares::Data::Pollutant::PollutantEnum
+// so each pollutant's factor (read by ordinal from the context) maps to its row.
+constexpr std::array<const char*, Antares::Data::Pollutant::POLLUTANT_MAX> emissionOutputNames = {
+  "co2_emissions",
+  "nh3_emissions",
+  "so2_emissions",
+  "nox_emissions",
+  "pm2_5_emissions",
+  "pm5_emissions",
+  "pm10_emissions",
+  "nmvoc_emissions",
+  "op1_emissions",
+  "op2_emissions",
+  "op3_emissions",
+  "op4_emissions",
+  "op5_emissions"};
+
+// <pollutant>_emissions = generation_power * emission_rate, one row per pollutant.
+// generation_power is the DispatchableProduction value (by index, area-safe); the
+// rates come from the context keyed by "area$$cluster", since the cluster name
+// alone collides across areas. Skipped for clusters absent from the context.
+void AddThermalEmissions(SimulationTable& simulationTable,
+                         const LegacyVariableInfo& info,
+                         std::size_t index,
+                         const std::vector<double>& solutionValues,
+                         const LegacyExtraOutputsContext& context,
+                         const FillContext& fillContext,
+                         unsigned currentBlock)
+{
+    const auto it = context.emissionFactorsByCluster.find(info.area + "$$" + info.component);
+    if (it == context.emissionFactorsByCluster.end())
+    {
+        return;
+    }
+    const double generation = solutionValues[index];
+    for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)
+    {
+        AddExtraOutputEntry(simulationTable,
+                            emissionOutputNames[pollutant],
+                            info,
+                            generation * it->second[pollutant],
+                            fillContext,
+                            currentBlock);
+    }
+}
+
+// Thermal margin outputs, all anchored on the cluster's DispatchableProduction
+// variable and computed from the per-cluster data carried in the context
+// (keyed "area$$cluster"):
+//   cluster_availability = max(availability, minStablePower * ceil(availability /
+//                              unitSize))
+//   up_margin            = cluster_availability - generation_power
+//   min_gen_power        = min(generation_power, minGenPower)
+//   down_margin          = generation_power - min(cluster_availability, minGenPower)
+// availability, unitSize and minStablePower are the spinning-adjusted weekly-
+// problem quantities; the spec's raw cluster_max_generation / max_power_per_unit
+// differ by the same (1 - spinning/100) factor, which cancels in the formulas
+// above. Skipped when the cluster is absent from the context or its per-hour
+// vectors do not cover the anchor's hour.
+void AddThermalMargins(SimulationTable& simulationTable,
+                       const LegacyVariableInfo& info,
+                       std::size_t index,
+                       const std::vector<double>& solutionValues,
+                       const LegacyExtraOutputsContext& context,
+                       const FillContext& fillContext,
+                       unsigned currentBlock)
+{
+    const auto it = context.thermalMarginByCluster.find(info.area + "$$" + info.component);
+    if (it == context.thermalMarginByCluster.end())
+    {
+        return;
+    }
+    const auto& data = it->second;
+    const unsigned pdt = info.timeIndex - context.weekFirstTimeStep;
+    if (pdt >= data.availability.size() || pdt >= data.minGenPower.size())
+    {
+        return;
+    }
+
+    const double generation = solutionValues[index];
+    const double available = data.availability[pdt];
+    const double minGen = data.minGenPower[pdt];
+
+    double unitFloor = 0.;
+    if (data.unitSize > 0.)
+    {
+        unitFloor = data.minStablePower * std::ceil(available / data.unitSize);
+    }
+    const double clusterAvailability = std::max(available, unitFloor);
+
+    AddExtraOutputEntry(simulationTable,
+                        "cluster_availability",
+                        info,
+                        clusterAvailability,
+                        fillContext,
+                        currentBlock);
+    AddExtraOutputEntry(simulationTable,
+                        "up_margin",
+                        info,
+                        clusterAvailability - generation,
+                        fillContext,
+                        currentBlock);
+    AddExtraOutputEntry(simulationTable,
+                        "min_gen_power",
+                        info,
+                        std::min(generation, minGen),
+                        fillContext,
+                        currentBlock);
+    AddExtraOutputEntry(simulationTable,
+                        "down_margin",
+                        info,
+                        generation - std::min(clusterAvailability, minGen),
+                        fillContext,
+                        currentBlock);
 }
 
 // prop_cost = generation_cost * generation_power: both factors belong to the
@@ -528,6 +645,20 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                                linearCosts,
                                fillContext,
                                currentBlock);
+            AddThermalEmissions(simulationTable,
+                                *info,
+                                index,
+                                solutionValues,
+                                context,
+                                fillContext,
+                                currentBlock);
+            AddThermalMargins(simulationTable,
+                              *info,
+                              index,
+                              solutionValues,
+                              context,
+                              fillContext,
+                              currentBlock);
         }
         else if (info->name == "UnsuppliedEnergy")
         {

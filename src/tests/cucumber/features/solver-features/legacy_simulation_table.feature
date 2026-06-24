@@ -170,14 +170,55 @@ Feature: Legacy variables in simulation table
     # 4 units = 6800. fixed-cost is the objective coefficient on the NODU
     # variable and carries the legacy anti-degeneracy noise, hence the relaxed
     # tolerance.
+    #
+    # co2_emissions = generation_power * co2_emissions_rate. At the shortfall
+    # hour every cluster is at maximum, so generation is unitcount*nominalcapacity
+    # (base 4*900=3600, semi base 5*300=1500, peak 8*100=800) and the CO2 rates
+    # from list.ini are base 1.2, semi base 0.6, peak 0.7:
+    #   base:      3600 * 1.2 = 4320
+    #   semi base: 1500 * 0.6 =  900
+    #   peak:       800 * 0.7 =  560
+    # Unlike prop_cost the factor is read straight from study data (not an
+    # objective coefficient), so the value carries no anti-degeneracy noise and
+    # the default tolerance applies. The other pollutant rates are all 0, so
+    # those rows would be 0 and are not asserted here.
+    #
+    # Thermal margins at the same hour. The thermal availability series are empty,
+    # so each cluster's available power defaults to unitcount*nominalcapacity
+    # (base 3600, semi base 1500, peak 800); at the shortfall hour every cluster
+    # is fully dispatched, so generation_power == availability.
+    #   cluster_availability = max(availability,
+    #                              min_stable_power * ceil(availability/unit_size))
+    #     base:      max(3600, 400*ceil(3600/900)=1600) = 3600
+    #     semi base: max(1500, 100*ceil(1500/300)= 500) = 1500
+    #     peak:      max( 800,  10*ceil( 800/100)=  80) =  800
+    #   up_margin = cluster_availability - generation_power = 0 for every cluster
+    #     (full dispatch).
+    # The min-gen-modulation column of the modulation matrix is 0 at this hour,
+    # so the min-generation floor is 0:
+    #   min_gen_power = min(generation_power, 0) = 0
+    #   down_margin   = generation_power - min(cluster_availability, 0)
+    #                 = generation_power (3600 / 1500 / 800)
+    # These are quantities / study data, so no anti-degeneracy noise applies.
     Given the solver study path is "Antares_Simulator_Tests_NR/short-tests/008 Thermal fleet - Accurate unit commitment"
     When I run antares simulator
     Then the simulation succeeds
     And the modeler outputs contain the following entries
-      | block | component | output              | timestep | scenario | value |
-      | 1     | base      | actual_num_units_on | 34       | 0        | 4     |
-      | 1     | semi base | actual_num_units_on | 34       | 0        | 5     |
-      | 1     | peak      | actual_num_units_on | 34       | 0        | 8     |
+      | block | component | output               | timestep | scenario | value |
+      | 1     | base      | actual_num_units_on  | 34       | 0        | 4     |
+      | 1     | semi base | actual_num_units_on  | 34       | 0        | 5     |
+      | 1     | peak      | actual_num_units_on  | 34       | 0        | 8     |
+      | 1     | base      | co2_emissions        | 34       | 0        | 4320  |
+      | 1     | semi base | co2_emissions        | 34       | 0        | 900   |
+      | 1     | peak      | co2_emissions        | 34       | 0        | 560   |
+      | 1     | base      | cluster_availability | 34       | 0        | 3600  |
+      | 1     | semi base | cluster_availability | 34       | 0        | 1500  |
+      | 1     | peak      | cluster_availability | 34       | 0        | 800   |
+      | 1     | base      | up_margin            | 34       | 0        | 0     |
+      | 1     | semi base | up_margin            | 34       | 0        | 0     |
+      | 1     | peak      | up_margin            | 34       | 0        | 0     |
+      | 1     | base      | min_gen_power        | 34       | 0        | 0     |
+      | 1     | base      | down_margin          | 34       | 0        | 3600  |
     And the modeler outputs contain the following entries with relative tolerance 1e-4
       | block | component | output        | timestep | scenario | value |
       | 1     | base      | non_prop_cost | 34       | 0        | 6800  |
