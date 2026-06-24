@@ -393,16 +393,6 @@ const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
 
     auto& dataForYear = allData_[year];
 
-    /*
-      Side effects for HydroInputsChecker are limited to the year scope
-      inside the study.
-      more specifically, area.hydro.managementData[year]
-      So "out-of-order" such as calls "y=0, y=4, y=0" should be fine
-    */
-    Antares::HydroInputsChecker hydroInputsChecker(*study_);
-    hydroInputsChecker.Execute(year);
-    hydroInputsChecker.CheckForErrors();
-
     Antares::Solver::Simulation::prepareClustersInMustRunMode(*study_,
                                                               scratchmap_,
                                                               year,
@@ -412,6 +402,16 @@ const YearlyData& SingleProblemGetter::getYearlyData(unsigned year)
     auto& randomForCurrentYear = randomForParallelYears_->pYears[indexYear];
 
     dataForYear = computeHydroLevels(year, randomForCurrentYear.pReservoirLevels);
+
+    /*
+      Side effects for HydroInputsChecker are limited to the year scope
+      inside the study.
+      more specifically, area.hydro.managementData[year]
+      So "out-of-order" such as calls "y=0, y=4, y=0" should be fine
+    */
+    Antares::HydroInputsChecker hydroInputsChecker(*study_);
+    hydroInputsChecker.Execute(year, randomForCurrentYear.pReservoirLevels);
+    hydroInputsChecker.checkForErrors();
 
     return dataForYear;
 }
