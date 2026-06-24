@@ -151,5 +151,5 @@ Feature: Legacy variables in simulation table
       | 0     | base      | prop_cost      | 33       | 0        | 126000 |
       | 0     | semi base | prop_cost      | 33       | 0        | 75000  |
       | 0     | peak      | prop_cost      | 33       | 0        | 64000  |
-      | 0     | area      | imbalance_cost | 33       | 0        | 520000 |
+      | 0     | area      | imbalance_cost | 33       | 0        | 1040000 |
 
