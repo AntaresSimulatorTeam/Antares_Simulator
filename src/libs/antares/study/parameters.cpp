@@ -255,8 +255,6 @@ void Parameters::reset()
 {
     // Mode
     mode = SimulationMode::Economy;
-    // Calendar
-    horizon.clear();
 
     // Reset output variables print info tool
     variablesPrintInfo.clear();
@@ -299,8 +297,6 @@ void Parameters::reset()
 
     // timeseries numbers
     storeTimeseriesNumbers = false;
-    // readonly
-    readonly = false;
     synthesis = true;
 
     // Hydro heuristic policy
@@ -365,7 +361,7 @@ bool Parameters::isTSGeneratedByPrepro(const TimeSeriesType ts) const
 static bool SGDIntLoadFamily_General(Parameters& d,
                                      const String& key,
                                      const String& value,
-                                     const String& rawvalue)
+                                     const String&)
 {
     if (key == "active-rules-scenario")
     {
@@ -400,13 +396,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
     if (key == "generate")
     {
         return ConvertCStrToListTimeSeries(value, d.timeSeriesToGenerate);
-    }
-
-    if (key == "horizon")
-    {
-        d.horizon = rawvalue;
-        d.horizon.trim(" \t\n\r");
-        return true;
     }
 
     // Same time-series
@@ -475,11 +464,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         // This data is among solver data, but is useless while running a simulation
         // Only by TS generator. We skip it here (otherwise, we get a reading error).
         return true;
-    }
-    // readonly
-    if (key == "readonly")
-    {
-        return value.to<bool>(d.readonly);
     }
 
     if (key == "simulation.start")
@@ -573,7 +557,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
     if (key == "include-loopflowfee") // backward compatibility
     {
-        return true; // value.to<bool>(d.include.loopFlowFee);
+        return true;
     }
     if (key == "include-tc-minstablepower")
     {
@@ -1129,6 +1113,18 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
     }
 
+    // was never used, metadata
+    if (key == "horizon")
+    {
+        return true;
+    }
+
+    // ignored since the GUI is gone
+    if (key == "readonly")
+    {
+        return true;
+    }
+
     return false;
 }
 
@@ -1380,9 +1376,6 @@ void Parameters::setYearWeight(uint year, float weight)
 
 void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 {
-    // We don't care of the variable `horizon` since it is not used by the solver
-    horizon.clear();
-
     // Simplex optimization range
     switch (simplexOptimizationRange)
     {

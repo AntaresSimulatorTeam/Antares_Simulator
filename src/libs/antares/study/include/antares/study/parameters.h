@@ -176,9 +176,9 @@ public:
     //! Export results each year
     bool yearByYear;
     //! Derated
-    bool derated;
+    bool derated = false;
     //! Custom scenario
-    bool useCustomScenario;
+    bool useCustomScenario = false;
     //! Custom playlist (each year will be manually selected by the user)
     bool userPlaylist;
     //! Flag to perform the calculations or not from the solver
@@ -278,12 +278,6 @@ public:
     ** generaldata.ini. The default value is `false`.
     */
     bool readonly;
-
-    /*!
-    ** \brief Activation of the reserves
-    */
-    bool reservesEnabled = false;
-
     //! Write the simulation synthesis into the output
     bool synthesis;
 
@@ -420,7 +414,7 @@ public:
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
     //! Simplex optimization range (day/week)
-    SimplexOptimization simplexOptimizationRange;
+    SimplexOptimization simplexOptimizationRange = sorWeek;
     //@}
 
     AdequacyPatch::AdqPatchParams adqPatchParams;

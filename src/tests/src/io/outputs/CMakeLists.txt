@@ -23,7 +23,7 @@ add_boost_test(testOutputs
         Boost::unit_test_framework)
 
 target_compile_definitions(testOutputs PRIVATE
-        CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}/src"
+        RESOURCES_DIR="${CMAKE_SOURCE_DIR}/resources"
 )
 
 copy_project_shared_lib(Antares::simulation-table-writers testOutputs)

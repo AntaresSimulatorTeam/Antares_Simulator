@@ -1,7 +1,6 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/microsoft/vcpkg.git
-[submodule "src/tests/resources/Antares_Simulator_Tests_NR"]
-	path = src/tests/resources/Antares_Simulator_Tests_NR
-	url = https://github.com/sylvmara/Antares_Simulator_Tests_NR.git
-	branch = scalian_ramping_tests
+[submodule "Antares_Simulator_Tests_NR"]
+	path = resources/Antares_Simulator_Tests_NR
+	url = https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR.git

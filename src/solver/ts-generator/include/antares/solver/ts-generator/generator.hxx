@@ -23,15 +23,8 @@ inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, IResul
 template<enum Data::TimeSeriesType T>
 bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer)
 {
-    auto* xcast = reinterpret_cast<XCast::XCast*>(
-      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
-
-    if (not xcast)
-    {
-        logs.debug() << "Preparing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-        xcast = new XCast::XCast(study, T, writer);
-        study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = xcast;
-    }
+    logs.debug() << "Preparing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
+    auto xcast = std::make_unique<XCast::XCast>(study, T, writer);
 
     // The current year
     xcast->year = 0;
@@ -54,30 +47,13 @@ bool GenerateTimeSeries(Data::Study& study, IResultWriter& writer)
         xcast->random = nullptr;
         assert(false and "invalid ts type");
     }
-
     // Run the generation of the time-series
-    bool r = xcast->run();
-    // Destroy if required the TS Generator
-    Destroy<T>(study);
-    return r;
-}
+    bool ret = xcast->run();
 
-// TODO REMOVE
-template<Data::TimeSeriesType T>
-void Destroy(Data::Study& study)
-{
-    auto* xcast = reinterpret_cast<XCast::XCast*>(
-      study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
-    if (not xcast)
-    {
-        return;
-    }
-
-    logs.info() << "  Releasing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-    study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = nullptr;
+    // TODO REMOVE
     study.destroyTSGeneratorData<T>();
-    delete xcast;
-    xcast = nullptr;
+
+    return ret;
 }
 
 } // namespace Antares::TSGenerator

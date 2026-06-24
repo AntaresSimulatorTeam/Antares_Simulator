@@ -48,7 +48,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         ref: ${{ env.REF }}
 
@@ -186,7 +186,7 @@ jobs:
 
     - name: Init submodule Antares_Simulator_Tests_NR
       run: |
-        git submodule update --init --remote src/tests/resources/Antares_Simulator_Tests_NR
+        git submodule update --init --depth 1 resources/Antares_Simulator_Tests_NR
 
     - name: Run named mps tests
       if: ${{ env.RUN_SIMPLE_TESTS == 'true' && ! cancelled() }}
@@ -389,7 +389,7 @@ jobs:
       shell: bash
       run: |
         rm -rf src/tests/resources/Antares_Simulator_Tests
-        rm -rf src/tests/resources/Antares_Simulator_Tests_NR
+        rm -rf resources/Antares_Simulator_Tests_NR
         cd _build
         cpack -GNSIS
         export NSIS_NAME=$(ls *.exe)
