@@ -455,20 +455,23 @@ BOOST_AUTO_TEST_CASE(other_constraints_produce_no_extra_output)
     withConstraints().fill();
 
     // 12 variable-driven rows + 3 price + 2 is_near_loss_of_load
-    // + 1 capacity_shadow_price + 1 hydro_shadow_price; the unnamed
-    // slot adds nothing. Context-driven outputs are skipped here because
-    // no study data was injected.
-    BOOST_CHECK_EQUAL(table.rowCount(), 19);
+    // + 1 capacity_shadow_price + 1 hydro_shadow_price + 2 congestion fees
+    // (abs/alg on area1$$area2, whose endpoints both have a price); the unnamed
+    // slot adds nothing. Thermal profit and other context-driven outputs are
+    // skipped here because no study data was injected.
+    BOOST_CHECK_EQUAL(table.rowCount(), 21);
 }
 
 BOOST_AUTO_TEST_CASE(study_data_outputs_add_one_level_percentage_and_four_congestion_rows)
 {
     withConstraints().withReservoirs().withLinkCapacities().fill();
 
-    // Same 19 rows as before, plus 1 level_percentage (area1) and 4
-    // congestion rows (2 directions for each of the 2 links). load, inflow and
-    // loop-flow series are still absent, so those outputs stay skipped.
-    BOOST_CHECK_EQUAL(table.rowCount(), 19 + 1 + 4);
+    // The 21 rows of other_constraints_produce_no_extra_output (which already
+    // include the 2 congestion fees), plus 1 level_percentage (area1) and 4
+    // congestion-indicator rows (2 directions for each of the 2 links). load,
+    // inflow and loop-flow series are still absent, so those outputs stay
+    // skipped.
+    BOOST_CHECK_EQUAL(table.rowCount(), 21 + 1 + 4);
 }
 
 BOOST_AUTO_TEST_CASE(minus_flow_is_the_negated_signed_flow)
@@ -645,6 +648,76 @@ BOOST_AUTO_TEST_CASE(thermal_margins_are_skipped_for_clusters_absent_from_the_co
     BOOST_CHECK(RowsForOutput(table, "up_margin").empty());
     BOOST_CHECK(RowsForOutput(table, "min_gen_power").empty());
     BOOST_CHECK(RowsForOutput(table, "down_margin").empty());
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_margin_price_times_generation_above_the_min_gen_floor)
+{
+    // area1 price = -(-10000) = 10000; generation_cost = costs[0] = 35;
+    // generation_power = values[0] = 3600; min_gen_power floor = 500.
+    // profit = (10000 - 35) * max(3600 - 500, 0) = 9965 * 3100.
+    withConstraints().withThermalMargin(4000., 900., 300., /*minGenPower=*/500.).fill();
+
+    const auto row = FindRow(table, "profit", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 9965. * 3100., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_zero_when_generation_does_not_exceed_the_floor)
+{
+    // A floor above the generation clamps the dispatchable quantity to zero.
+    withConstraints().withThermalMargin(4000., 900., 300., /*minGenPower=*/5000.).fill();
+
+    const auto row = FindRow(table, "profit", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_EQUAL(row->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_skipped_without_an_area_price)
+{
+    // No constraints recorded: the area-price map is empty, so profit cannot be
+    // computed even though the margin context is present.
+    withThermalMargin().fill();
+    BOOST_CHECK(RowsForOutput(table, "profit").empty());
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_skipped_without_the_thermal_margin_floor)
+{
+    // The price is known but the cluster is absent from the margin context, so
+    // the min_gen_power floor is unknown and profit is skipped.
+    withConstraints().fill();
+    BOOST_CHECK(RowsForOutput(table, "profit").empty());
+}
+
+BOOST_AUTO_TEST_CASE(congestion_fees_use_the_endpoint_area_prices)
+{
+    // Link area1$$area2, flow = values[6] = 120. price_in = area1 = 10000,
+    // price_out = area2 = 50, delta = 50 - 10000 = -9950.
+    withConstraints().fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area1$$area2")->value,
+                      120. * 9950.,
+                      1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area1$$area2")->value,
+                      120. * -9950.,
+                      1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(congestion_fees_are_skipped_when_an_endpoint_has_no_price)
+{
+    // Link area2$$area3: area3 has no balance constraint, so its price is
+    // unknown and both congestion fees are skipped for that link.
+    withConstraints().fill();
+
+    BOOST_CHECK(!FindRow(table, "abs_congestion_fee", "area2$$area3").has_value());
+    BOOST_CHECK(!FindRow(table, "alg_congestion_fee", "area2$$area3").has_value());
+}
+
+BOOST_AUTO_TEST_CASE(congestion_fees_are_skipped_without_any_prices)
+{
+    // No constraints: the area-price map is empty, so no link gets a fee.
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "abs_congestion_fee").empty());
+    BOOST_CHECK(RowsForOutput(table, "alg_congestion_fee").empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

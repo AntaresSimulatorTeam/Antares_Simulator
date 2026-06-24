@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <string_view>
+#include <utility>
 
 #include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacySolutionView.h"
@@ -49,6 +51,42 @@ std::optional<double> ContextValueAtHour(
         return std::nullopt;
     }
     return it->second[pdt];
+}
+
+// area -> price (= -dual(AreaBalance)), built up front from the recorded
+// AreaBalance constraints so the variable-anchored consumers (thermal profit,
+// link congestion fees, ...) can look up their area's price before the variable
+// dispatch loop. Zero on MIP weeks, where the duals are not extracted (same
+// limitation as the price output).
+std::unordered_map<std::string, double> BuildPriceByArea(
+  const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
+  const std::vector<double>& constraintDuals)
+{
+    std::unordered_map<std::string, double> priceByArea;
+    for (std::size_t index = 0; index < constraintsInfo.size(); ++index)
+    {
+        const auto& info = constraintsInfo[index];
+        if (info && info->name == "AreaBalance")
+        {
+            priceByArea.emplace(info->component, -constraintDuals[index]);
+        }
+    }
+    return priceByArea;
+}
+
+// Splits a link component "origin$$destination" (see AREA_SEP in
+// opt_rename_problem.cpp) into its origin and extremity area names. Returns
+// nullopt when the separator is absent.
+std::optional<std::pair<std::string, std::string>> SplitLinkEndpoints(
+  const std::string& component)
+{
+    constexpr std::string_view sep = "$$";
+    const auto pos = component.find(sep);
+    if (pos == std::string::npos)
+    {
+        return std::nullopt;
+    }
+    return std::make_pair(component.substr(0, pos), component.substr(pos + sep.size()));
 }
 
 void AddExtraOutputEntry(SimulationTable& simulationTable,
@@ -182,6 +220,47 @@ void AddThermalMargins(SimulationTable& simulationTable,
                         generation - std::min(clusterAvailability, minGen),
                         fillContext,
                         currentBlock);
+}
+
+// profit = (area_price - generation_cost)
+//          * max(generation_power - min_gen_power, 0)
+// area_price is the cluster area's balance dual, looked up in the area-price map
+// (A); generation_cost and generation_power belong to the DispatchableProduction
+// variable, read by index (area-safe); the min_gen_power floor is the same
+// min_gen_mod * num_units * Mpu quantity the context carries for the margin
+// outputs. Skipped when the area has no recorded price, the cluster is absent
+// from the context, or the per-hour floor does not cover the anchor's hour.
+void AddThermalProfit(SimulationTable& simulationTable,
+                      const LegacyVariableInfo& info,
+                      std::size_t index,
+                      const std::vector<double>& solutionValues,
+                      const std::vector<double>& linearCosts,
+                      const std::unordered_map<std::string, double>& priceByArea,
+                      const LegacyExtraOutputsContext& context,
+                      const FillContext& fillContext,
+                      unsigned currentBlock)
+{
+    const auto priceIt = priceByArea.find(info.area);
+    if (priceIt == priceByArea.end())
+    {
+        return;
+    }
+    const auto marginIt = context.thermalMarginByCluster.find(info.area + "$$" + info.component);
+    if (marginIt == context.thermalMarginByCluster.end())
+    {
+        return;
+    }
+    const unsigned pdt = info.timeIndex - context.weekFirstTimeStep;
+    if (pdt >= marginIt->second.minGenPower.size())
+    {
+        return;
+    }
+
+    const double generation = solutionValues[index];
+    const double floor = marginIt->second.minGenPower[pdt];
+    const double profit = (priceIt->second - linearCosts[index])
+                          * std::max(generation - floor, 0.);
+    AddExtraOutputEntry(simulationTable, "profit", info, profit, fillContext, currentBlock);
 }
 
 // prop_cost = generation_cost * generation_power: both factors belong to the
@@ -520,6 +599,48 @@ void AddLinkActualLoopFlow(SimulationTable& simulationTable,
                         currentBlock);
 }
 
+// abs_congestion_fee = |flow| * |price_out - price_in|
+// alg_congestion_fee = flow  * (price_out - price_in)
+// price_in / price_out are the balance duals (area-price map (A)) of the link's
+// origin / extremity areas, parsed from the "origin$$destination" component.
+// Anchored on the link's DirectFlow variable; skipped when either endpoint area
+// has no recorded price.
+void AddLinkCongestionFees(SimulationTable& simulationTable,
+                           const LegacyVariableInfo& info,
+                           std::size_t index,
+                           const std::vector<double>& solutionValues,
+                           const std::unordered_map<std::string, double>& priceByArea,
+                           const FillContext& fillContext,
+                           unsigned currentBlock)
+{
+    const auto endpoints = SplitLinkEndpoints(info.component);
+    if (!endpoints)
+    {
+        return;
+    }
+    const auto priceIn = priceByArea.find(endpoints->first);
+    const auto priceOut = priceByArea.find(endpoints->second);
+    if (priceIn == priceByArea.end() || priceOut == priceByArea.end())
+    {
+        return;
+    }
+
+    const double flow = solutionValues[index];
+    const double delta = priceOut->second - priceIn->second;
+    AddExtraOutputEntry(simulationTable,
+                        "abs_congestion_fee",
+                        info,
+                        std::abs(flow) * std::abs(delta),
+                        fillContext,
+                        currentBlock);
+    AddExtraOutputEntry(simulationTable,
+                        "alg_congestion_fee",
+                        info,
+                        flow * delta,
+                        fillContext,
+                        currentBlock);
+}
+
 // non_prop_cost = startup_cost * started_units + fixed_cost * units_on, with
 // units rounded up (the NODU variable may be fractional when relaxed).
 // fixed_cost is the objective coefficient on NODU itself; startup_cost is the
@@ -628,6 +749,11 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
 {
     const LegacySolutionView solution(variablesInfo, solutionValues, linearCosts);
 
+    // The area price is a constraint dual; the consumers below (thermal profit,
+    // link congestion fees) are variable-anchored, so the lookup is built up
+    // front, before the variable dispatch loop.
+    const auto priceByArea = BuildPriceByArea(constraintsInfo, constraintDuals);
+
     for (std::size_t index = 0; index < variablesInfo.size(); ++index)
     {
         const auto& info = variablesInfo[index];
@@ -659,6 +785,15 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                               context,
                               fillContext,
                               currentBlock);
+            AddThermalProfit(simulationTable,
+                             *info,
+                             index,
+                             solutionValues,
+                             linearCosts,
+                             priceByArea,
+                             context,
+                             fillContext,
+                             currentBlock);
         }
         else if (info->name == "UnsuppliedEnergy")
         {
@@ -724,6 +859,13 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                                          context,
                                          fillContext,
                                          currentBlock);
+            AddLinkCongestionFees(simulationTable,
+                                  *info,
+                                  index,
+                                  solutionValues,
+                                  priceByArea,
+                                  fillContext,
+                                  currentBlock);
         }
         else if (info->name == "PositiveDirectFlow")
         {
