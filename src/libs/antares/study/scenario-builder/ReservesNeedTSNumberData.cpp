@@ -12,8 +12,6 @@ bool ReservesNeedTSNumberData::reset(const Study& study)
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
-    uint reservesCount = pArea->allCapacityReservations.value().areaCapacityReservations.size();
-
     // Resize
     pTSNumberRules.reset(1, nbYears);
     return true;

@@ -3,6 +3,8 @@
 
 #include "antares/solver/optimisation/opt_gestion_second_membre_reserves.h"
 
+#include <sys/types.h>
+
 #include <antares/study/study.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/sim_structure_donnees.h"
@@ -26,7 +28,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         const std::unique_ptr<PROBLEME_ANTARES_A_RESOUDRE>& ProblemeAResoudre;
         std::vector<double>& SecondMembre;
         std::vector<double*>& AdresseOuPlacerLaValeurDesCoutsMarginaux;
-        int pdtJour = 0, pdtHebdo = 0, pdtGlobal = 0, pays = 0;
+        uint32_t pdtJour = 0, pdtHebdo = 0, pdtGlobal = 0, pays = 0;
 
         ReserveVariablesRightSidesSetter(PROBLEME_HEBDO* hebdo):
             problemeHebdo(hebdo),
@@ -37,22 +39,22 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireReserves(PROBLEME_HEBDO* pro
         {
         }
 
-        void setPdtJour(int pdt)
+        void setPdtJour(uint32_t pdt)
         {
             pdtJour = pdt;
         }
 
-        void setPdtHebdo(int pdt)
+        void setPdtHebdo(uint32_t pdt)
         {
             pdtHebdo = pdt;
         }
 
-        void setPdtGlobal(int pdt)
+        void setPdtGlobal(uint32_t pdt)
         {
             pdtGlobal = pdt;
         }
 
-        void setPays(int p)
+        void setPays(uint32_t p)
         {
             pays = p;
         }

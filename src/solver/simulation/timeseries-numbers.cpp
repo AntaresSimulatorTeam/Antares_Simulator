@@ -616,8 +616,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                   const auto nbTimeSeries = reserveCapacity.second.need->timeSeries.width;
                   if (nbTimeSeries > 1)
                   {
-                      reserveCapacity.second.need->timeseriesNumbers[year] = (uint32_t)(floor(
-                        study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
+                      reserveCapacity.second.need->timeseriesNumbers[year] = static_cast<uint32_t>(
+                        floor(study.runtime.random[seedTimeseriesNumbers].next() * nbTimeSeries));
                   }
               }
           }

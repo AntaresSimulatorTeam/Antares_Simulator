@@ -47,7 +47,7 @@ struct CapacityReservation
     int referenceActivationDuration = 1.;
     std::shared_ptr<TimeSeries> need = nullptr;
 
-    unsigned int areaWideIndex = (uint)-1;
+    uint32_t areaWideIndex = 0;
 
     CapacityReservation() = delete;
 
@@ -130,9 +130,9 @@ struct AllCapacityReservations
     /// @param index the index of the reserve spilled/unsupplied variable
     /// @return the capacity reservation name and type if the reserve was found throw otherwise
     std::pair<UnsuppliedSpilled, ReserveID> reserveParticipationUnsuppliedSpilledAt(
-      unsigned int index) const
+      uint32_t index) const
     {
-        unsigned int column = 0;
+        uint32_t column = 0;
         for (const auto& reserveID: areaCapacityReservations | std::views::keys)
         {
             for (int indexUnsuppliedSpilled = 0;
@@ -162,7 +162,7 @@ struct AllCapacityReservations
 
     void rebuildIndexes()
     {
-        unsigned int index = 0;
+        uint32_t index = 0;
         for (auto& [resID, capacityRes]: areaCapacityReservations)
         {
             capacityRes.areaWideIndex = index;
@@ -170,7 +170,7 @@ struct AllCapacityReservations
         }
     }
 
-    void resizeTimeseriesNumbers(unsigned int nbYears)
+    void resizeTimeseriesNumbers(uint32_t nbYears)
     {
         for (auto& [resID, capacityRes]: areaCapacityReservations)
         {
