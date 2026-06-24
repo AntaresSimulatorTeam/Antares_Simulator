@@ -1,5 +1,9 @@
 var NAVTREEINDEX36 =
 {
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#abfd487d1fcbf3d69db998b753f408655":[9,0,0,7,0,3,1,4],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#ac1382ba15497727f7e58ef2e081760ec":[9,0,0,7,0,3,1,1],
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#acee72ca6cf8f3706e9068e666b5d5ee5":[9,0,0,7,0,3,1,2],
+"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html":[9,0,0,7,0,4,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html#a2590fcd6ba1d69468b7b0f26ca2bfb9b":[9,0,0,7,0,4,1,0],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html#aead3e451f0d40ab7ed7f38c764ec259a":[9,0,0,7,0,4,1,1],
 "structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1ConstraintOutOfBoundsProcessing.html":[9,0,0,7,0,4,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX36 =
 "structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html":[9,0,0,11,6,15],
 "structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a0866bd54ac1b61fef63100596ca5ac25":[9,0,0,11,6,15,1],
 "structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a09a3440e3c1e83695d5862b33ff6dee8":[9,0,0,11,6,15,13],
-"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a44c6612ba6a4b747f618e917be7a1af7":[9,0,0,11,6,15,5],
-"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a61f3ab4a0d72dba3e9bc71a8d2347b71":[9,0,0,11,6,15,8],
-"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a79bbe59a9bb6a9c25d713190e1b00fe9":[9,0,0,11,6,15,10],
-"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a9adb870a3cb9d10032b21a8b81628053":[9,0,0,11,6,15,11],
-"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#aa3e72a2d0b8475f23aea8bec5991fa8b":[9,0,0,11,6,15,12]
+"structAntares_1_1Solver_1_1Variable_1_1ContainerScopeDefaults.html#a44c6612ba6a4b747f618e917be7a1af7":[9,0,0,11,6,15,5]
 };

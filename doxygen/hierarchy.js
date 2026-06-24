@@ -345,6 +345,10 @@ var hierarchy =
     [ "Antares::Solver::Variable::R::AllYears::MinMaxData::Data", "structAntares_1_1Solver_1_1Variable_1_1R_1_1AllYears_1_1MinMaxData_1_1Data.html", null ],
     [ "DataFile", "classDataFile.html", null ],
     [ "Antares::Data::ScenarioBuilder::dataInterface", "classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html", [
+      [ "Antares::Data::ScenarioBuilder::HydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html", [
+        [ "Antares::Data::ScenarioBuilder::HydroFinalLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroFinalLevelsData.html", null ],
+        [ "Antares::Data::ScenarioBuilder::HydroInitialLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroInitialLevelsData.html", null ]
+      ] ],
       [ "Antares::Data::ScenarioBuilder::TSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1TSNumberData.html", [
         [ "Antares::Data::ScenarioBuilder::BindingConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::ShortTermAdditionalConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ShortTermAdditionalConstraintsTSNumberData.html", null ],
@@ -356,8 +360,7 @@ var hierarchy =
         [ "Antares::Data::ScenarioBuilder::solarTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1solarTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::thermalTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1thermalTSNumberData.html", null ],
         [ "Antares::Data::ScenarioBuilder::windTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1windTSNumberData.html", null ]
-      ] ],
-      [ "Antares::Data::ScenarioBuilder::hydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html", null ]
+      ] ]
     ] ],
     [ "Antares::Data::DataSeriesHydro", "classAntares_1_1Data_1_1DataSeriesHydro.html", null ],
     [ "Antares::IO::Inputs::DataSeriesCsvImporter::DataSeriesRepoImporter", "classAntares_1_1IO_1_1Inputs_1_1DataSeriesCsvImporter_1_1DataSeriesRepoImporter.html", null ],

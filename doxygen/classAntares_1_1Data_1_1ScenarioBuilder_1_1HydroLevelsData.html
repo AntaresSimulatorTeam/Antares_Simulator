@@ -16,7 +16,7 @@
 <meta name="twitter:title" content="Antares Simulator" />
 <meta name="twitter:description" content="Power System Simulator." />
 <!-- END twitter metadata -->
-<title>Antares Simulator: Antares::Data::ScenarioBuilder::hydroLevelsData Class Reference</title>
+<title>Antares Simulator: Antares::Data::ScenarioBuilder::HydroLevelsData Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.drawio.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,7 +104,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -125,70 +125,72 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1ScenarioBuilde
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData-members.html">List of all members</a>  </div>
+<a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Antares::Data::ScenarioBuilder::hydroLevelsData Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div>  </div>
+<div class="title">Antares::Data::ScenarioBuilder::HydroLevelsData Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html" title="Rules for TS numbers, for all years and a single timeseries.">Rules</a> for hydro levels, for all years and areas.  
- <a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#details">More...</a></p>
+<p>Abstract base for hydro levels rules (initial or final), for all years and areas.  
+ <a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="hydroLevelsData_8h_source.html">hydroLevelsData.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="HydroLevelsData_8h_source.html">HydroLevelsData.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for Antares::Data::ScenarioBuilder::hydroLevelsData:</div>
+Inheritance diagram for Antares::Data::ScenarioBuilder::HydroLevelsData:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.png" usemap="#Antares::Data::ScenarioBuilder::hydroLevelsData_map" alt=""/>
-  <map id="Antares::Data::ScenarioBuilder::hydroLevelsData_map" name="Antares::Data::ScenarioBuilder::hydroLevelsData_map">
-<area href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html" title="Interface for scenario builder data (time series, hydro levels, ...)" alt="Antares::Data::ScenarioBuilder::dataInterface" shape="rect" coords="0,0,287,24"/>
+  <img src="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.png" usemap="#Antares::Data::ScenarioBuilder::HydroLevelsData_map" alt=""/>
+  <map id="Antares::Data::ScenarioBuilder::HydroLevelsData_map" name="Antares::Data::ScenarioBuilder::HydroLevelsData_map">
+<area href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html" title="Interface for scenario builder data (time series, hydro levels, ...)" alt="Antares::Data::ScenarioBuilder::dataInterface" shape="rect" coords="164,0,482,24"/>
+<area href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroFinalLevelsData.html" title="Rules for final hydro levels, for all years and areas." alt="Antares::Data::ScenarioBuilder::HydroFinalLevelsData" shape="rect" coords="0,112,318,136"/>
+<area href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroInitialLevelsData.html" title="Rules for initial hydro levels, for all years and areas." alt="Antares::Data::ScenarioBuilder::HydroInitialLevelsData" shape="rect" coords="328,112,646,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aae921ed87cf680a726ad510549d50e60"><td class="memItemLeft" align="right" valign="top"><a id="aae921ed87cf680a726ad510549d50e60"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#aae921ed87cf680a726ad510549d50e60">MatrixType</a> = <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;</td></tr>
-<tr class="memdesc:aae921ed87cf680a726ad510549d50e60"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classAntares_1_1Matrix.html" title="A n-by-n matrix.">Matrix</a>. <br /></td></tr>
-<tr class="separator:aae921ed87cf680a726ad510549d50e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c561dc8b6d1956ea3e2ae0d846419c8"><td class="memItemLeft" align="right" valign="top"><a id="a6c561dc8b6d1956ea3e2ae0d846419c8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#a6c561dc8b6d1956ea3e2ae0d846419c8">MatrixType</a> = <a class="el" href="classAntares_1_1Matrix.html">Matrix</a>&lt; double &gt;</td></tr>
+<tr class="memdesc:a6c561dc8b6d1956ea3e2ae0d846419c8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classAntares_1_1Matrix.html" title="A n-by-n matrix.">Matrix</a>. <br /></td></tr>
+<tr class="separator:a6c561dc8b6d1956ea3e2ae0d846419c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a02c31d0373aa4e5a1c3a5705e5f7da10"><td class="memItemLeft" align="right" valign="top"><a id="a02c31d0373aa4e5a1c3a5705e5f7da10"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>hydroLevelsData</b> (std::function&lt; void(<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;, <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#aae921ed87cf680a726ad510549d50e60">MatrixType</a> &amp;)&gt; applyToTarget)</td></tr>
-<tr class="separator:a02c31d0373aa4e5a1c3a5705e5f7da10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">Data manupulation</div></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader">Data manupulation</h2></td></tr>
-<tr class="memitem:adc6752b717f5145274e5c6c9ff523c90"><td class="memItemLeft" align="right" valign="top"><a id="adc6752b717f5145274e5c6c9ff523c90"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#adc6752b717f5145274e5c6c9ff523c90">reset</a> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study) override</td></tr>
-<tr class="memdesc:adc6752b717f5145274e5c6c9ff523c90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset data from the study. <br /></td></tr>
-<tr class="separator:adc6752b717f5145274e5c6c9ff523c90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdbaf82f578b6a8d6242ed9873967b32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">setTSnumber</a> (uint index, uint year, double value)</td></tr>
-<tr class="memdesc:abdbaf82f578b6a8d6242ed9873967b32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a single value.  <a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#abdbaf82f578b6a8d6242ed9873967b32">More...</a><br /></td></tr>
-<tr class="separator:abdbaf82f578b6a8d6242ed9873967b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02e2a8ec170baaa4a5390c1514c5788e"><td class="memItemLeft" align="right" valign="top"><a id="a02e2a8ec170baaa4a5390c1514c5788e"></a>
+<tr class="heading"><td colspan="2"><h2 class="groupheader">Data manipulation</h2></td></tr>
+<tr class="memitem:abb8859f78262e3c6f384ce1f1d4edcc4"><td class="memItemLeft" align="right" valign="top"><a id="abb8859f78262e3c6f384ce1f1d4edcc4"></a>
+<a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#a6c561dc8b6d1956ea3e2ae0d846419c8">MatrixType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#abb8859f78262e3c6f384ce1f1d4edcc4">pHydroLevelsRules</a></td></tr>
+<tr class="memdesc:abb8859f78262e3c6f384ce1f1d4edcc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hydro levels overlay (0 if auto) <br /></td></tr>
+<tr class="separator:abb8859f78262e3c6f384ce1f1d4edcc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4ba1e1f867db5304edcce72d36e4dcd"><td class="memItemLeft" align="right" valign="top"><a id="ac4ba1e1f867db5304edcce72d36e4dcd"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#ac4ba1e1f867db5304edcce72d36e4dcd">reset</a> (const <a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study) override</td></tr>
+<tr class="memdesc:ac4ba1e1f867db5304edcce72d36e4dcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset data from the study. <br /></td></tr>
+<tr class="separator:ac4ba1e1f867db5304edcce72d36e4dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad90d091050c167535c1ef7137963d720"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#ad90d091050c167535c1ef7137963d720">setTSnumber</a> (uint index, uint year, double value)</td></tr>
+<tr class="memdesc:ad90d091050c167535c1ef7137963d720"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign a single value.  <a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#ad90d091050c167535c1ef7137963d720">More...</a><br /></td></tr>
+<tr class="separator:ad90d091050c167535c1ef7137963d720"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaee167d9b8c6ac5be1cd201eb3b307c3"><td class="memItemLeft" align="right" valign="top"><a id="aaee167d9b8c6ac5be1cd201eb3b307c3"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>width</b> () const override</td></tr>
-<tr class="separator:a02e2a8ec170baaa4a5390c1514c5788e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0cea4487f30f47247f045ca4d663c7f"><td class="memItemLeft" align="right" valign="top"><a id="ae0cea4487f30f47247f045ca4d663c7f"></a>
+<tr class="separator:aaee167d9b8c6ac5be1cd201eb3b307c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a424e8056f8ebbef2c6adcebbb7527065"><td class="memItemLeft" align="right" valign="top"><a id="a424e8056f8ebbef2c6adcebbb7527065"></a>
 uint&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> () const override</td></tr>
-<tr class="separator:ae0cea4487f30f47247f045ca4d663c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a48cf5ee97a8e39105d304d8c2aa7dc"><td class="memItemLeft" align="right" valign="top"><a id="a9a48cf5ee97a8e39105d304d8c2aa7dc"></a>
+<tr class="separator:a424e8056f8ebbef2c6adcebbb7527065"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a158a299c5cc8c95c9a0f80950f23bc30"><td class="memItemLeft" align="right" valign="top"><a id="a158a299c5cc8c95c9a0f80950f23bc30"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>get_value</b> (uint x, uint y) const</td></tr>
-<tr class="separator:a9a48cf5ee97a8e39105d304d8c2aa7dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac108971d65f5dee6aee8ee620a2f5638"><td class="memItemLeft" align="right" valign="top"><a id="ac108971d65f5dee6aee8ee620a2f5638"></a>
+<tr class="separator:a158a299c5cc8c95c9a0f80950f23bc30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a53510ba770884f5dbc0fc3526bd3aa"><td class="memItemLeft" align="right" valign="top"><a id="a8a53510ba770884f5dbc0fc3526bd3aa"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> (uint x, uint y, double value)</td></tr>
-<tr class="separator:ac108971d65f5dee6aee8ee620a2f5638"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a852d15c068492fc02e8cd9315d9320bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a852d15c068492fc02e8cd9315d9320bd">apply</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study) override</td></tr>
-<tr class="memdesc:a852d15c068492fc02e8cd9315d9320bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the changes to the study corresponding data (time series, hydro levels, ...)  <a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html#a852d15c068492fc02e8cd9315d9320bd">More...</a><br /></td></tr>
-<tr class="separator:a852d15c068492fc02e8cd9315d9320bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a8a53510ba770884f5dbc0fc3526bd3aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c29de693d063dfc8cff0bcc9d85efe5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#a3c29de693d063dfc8cff0bcc9d85efe5">apply</a> (<a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;study)=0</td></tr>
+<tr class="memdesc:a3c29de693d063dfc8cff0bcc9d85efe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the changes to the study corresponding data (time series, hydro levels, ...)  <a href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html#a3c29de693d063dfc8cff0bcc9d85efe5">More...</a><br /></td></tr>
+<tr class="separator:a3c29de693d063dfc8cff0bcc9d85efe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">Data manupulation</div></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1Rules.html" title="Rules for TS numbers, for all years and a single timeseries.">Rules</a> for hydro levels, for all years and areas. </p>
+<div class="textblock"><p>Abstract base for hydro levels rules (initial or final), for all years and areas. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a852d15c068492fc02e8cd9315d9320bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a852d15c068492fc02e8cd9315d9320bd">&#9670;&nbsp;</a></span>apply()</h2>
+<a id="a3c29de693d063dfc8cff0bcc9d85efe5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c29de693d063dfc8cff0bcc9d85efe5">&#9670;&nbsp;</a></span>apply()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -197,7 +199,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> (uint x
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Antares::Data::ScenarioBuilder::hydroLevelsData::apply </td>
+          <td class="memname">virtual bool Antares::Data::ScenarioBuilder::HydroLevelsData::apply </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAntares_1_1Data_1_1Study.html">Study</a> &amp;&#160;</td>
           <td class="paramname"><em>study</em></td><td>)</td>
@@ -206,7 +208,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> (uint x
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -216,19 +218,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> (uint x
 
 <p>Implements <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1dataInterface.html#a513077ec87d869a8a958912c846cbd95">Antares::Data::ScenarioBuilder::dataInterface</a>.</p>
 
+<p>Implemented in <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroInitialLevelsData.html#ac9ef349b4f7d147a15a6c212a7795c7a">Antares::Data::ScenarioBuilder::HydroInitialLevelsData</a>, and <a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroFinalLevelsData.html#a1cb024546f826f2aed068f91ac71c66c">Antares::Data::ScenarioBuilder::HydroFinalLevelsData</a>.</p>
+
 </div>
 </div>
-<a id="abdbaf82f578b6a8d6242ed9873967b32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abdbaf82f578b6a8d6242ed9873967b32">&#9670;&nbsp;</a></span>setTSnumber()</h2>
+<a id="ad90d091050c167535c1ef7137963d720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad90d091050c167535c1ef7137963d720">&#9670;&nbsp;</a></span>setTSnumber()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Antares::Data::ScenarioBuilder::hydroLevelsData::setTSnumber </td>
+          <td class="memname">void Antares::Data::ScenarioBuilder::HydroLevelsData::setTSnumber </td>
           <td>(</td>
           <td class="paramtype">uint&#160;</td>
           <td class="paramname"><em>index</em>, </td>
@@ -251,11 +252,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> (uint x
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Assign a single value. </p>
@@ -271,15 +267,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_value</b> (uint x
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/libs/antares/study/include/antares/study/scenario-builder/<a class="el" href="hydroLevelsData_8h_source.html">hydroLevelsData.h</a></li>
-<li>src/libs/antares/study/scenario-builder/hydroLevelsData.cpp</li>
+<li>src/libs/antares/study/include/antares/study/scenario-builder/<a class="el" href="HydroLevelsData_8h_source.html">HydroLevelsData.h</a></li>
+<li>src/libs/antares/study/scenario-builder/HydroLevelsData.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Data</b></li><li class="navelem"><b>ScenarioBuilder</b></li><li class="navelem"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html">hydroLevelsData</a></li>
+    <li class="navelem"><b>Antares</b></li><li class="navelem"><b>Data</b></li><li class="navelem"><b>ScenarioBuilder</b></li><li class="navelem"><a class="el" href="classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html">HydroLevelsData</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

@@ -1,5 +1,12 @@
 var NAVTREEINDEX7 =
 {
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ab050b0cc2f04f643ac71bd7e57dfd4bd":[9,0,0,3,47,16],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ac1107d8cb654efcedb5f34d126245f4f":[9,0,0,3,47,4],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ac6a4b3ef6417c0c875fedb892e8d89fe":[9,0,0,3,47,2],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ad09650f60d3f5d0cfb9457ab4bc659e5":[9,0,0,3,47,8],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ad4ac05f7bbfb4a51f549fd6e6ea281d9":[9,0,0,3,47,17],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#adf6f5e11176d0b8178e26988b28a5b58":[9,0,0,3,47,13],
+"classAntares_1_1Data_1_1StudyLoadOptions.html#ae8d39c7e1c8b47f84b368499d2c0cdb5":[9,0,0,3,47,15],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#af50262cd54b1b9d426ac4a7cce4a7cb4":[9,0,0,3,47,6],
 "classAntares_1_1Data_1_1StudyLoadOptions.html#afce3627865b70364ce39f6a16ccb3a49":[9,0,0,3,47,14],
 "classAntares_1_1Data_1_1StudyRuntimeInfos.html":[9,0,0,3,81],
@@ -242,12 +249,5 @@ var NAVTREEINDEX7 =
 "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html":[9,0,0,5,10],
 "classAntares_1_1Error_1_1IncompatibleMILPOrtoolsSolver.html#a34b20dcd9edab578075f9453e630828a":[9,0,0,5,10,0],
 "classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html":[9,0,0,5,12],
-"classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html#a71a92c95457ca7146bdcd3343ca0ed40":[9,0,0,5,12,0],
-"classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html":[9,0,0,5,13],
-"classAntares_1_1Error_1_1IncompatibleOptRangeUCMode.html#a8a89ae11d872ff5b17d5b38d329c6cc9":[9,0,0,5,13,0],
-"classAntares_1_1Error_1_1IncompatibleOutputOptions.html":[9,0,0,5,23],
-"classAntares_1_1Error_1_1IncompatibleOutputOptions.html#aa104ff68c2e718c3aaf18e6997a632c0":[9,0,0,5,23,0],
-"classAntares_1_1Error_1_1IncompatibleParallelOptions.html":[9,0,0,5,9],
-"classAntares_1_1Error_1_1IncompatibleParallelOptions.html#ae6b15909e99fee071900e7f5a6f66135":[9,0,0,5,9,0],
-"classAntares_1_1Error_1_1IncompatibleSimulationModeForAdqPatch.html":[9,0,0,5,30]
+"classAntares_1_1Error_1_1IncompatibleOptRangeHydroPricing.html#a71a92c95457ca7146bdcd3343ca0ed40":[9,0,0,5,12,0]
 };

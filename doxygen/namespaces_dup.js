@@ -91,7 +91,9 @@ var namespaces_dup =
         ] ],
         [ "ScenarioBuilder", null, [
           [ "BindingConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData" ],
-          [ "hydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData" ],
+          [ "HydroFinalLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroFinalLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroFinalLevelsData" ],
+          [ "HydroInitialLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroInitialLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroInitialLevelsData" ],
+          [ "HydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData" ],
           [ "hydroTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData" ],
           [ "loadTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData" ],
           [ "ntcTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData" ],
@@ -109,13 +111,11 @@ var namespaces_dup =
           [ "CheckValidity< BindingConstraintGroup >", "applyToMatrix_8hxx.html#ae6a7dbf6b9e472a482b531444d8c6f16", null ],
           [ "CheckValidity< Data::AreaLink >", "applyToMatrix_8hxx.html#af30e747f971738c4736da604c8cccbcb", null ],
           [ "CheckValidity< Data::DataSeriesHydro >", "applyToMatrix_8hxx.html#a08217ea100ad38869ef81de455e225d9", null ],
-          [ "finalLevelApply", "hydroLevelsData_8h.html#a0cdd801ac45d582e9ee10dea4de0fb2f", null ],
           [ "fromHydroLevelToString", "scBuilderUtils_8h.html#a525bf59f524da5f8c9173f1cbaa700d9", null ],
           [ "fromStringToHydroLevel", "scBuilderUtils_8h.html#a51df4aa73747876518a36e10251a703f", null ],
           [ "fromStringToTSnumber", "scBuilderUtils_8h.html#ab6de8b3d3bbd3aa6f1d07bea5a7415e2", null ],
           [ "getShortTermStorage", "rules_8cpp.html#a633f7294f7e6edaf28234ed508cb8c0c", null ],
-          [ "getShortTermStorageAdditionalConstraint", "rules_8cpp.html#a6e15fbd168b962e2beb025dda6b11544", null ],
-          [ "initLevelApply", "hydroLevelsData_8h.html#a0a410d7a47fdae804e85708ce15a4dfd", null ]
+          [ "getShortTermStorageAdditionalConstraint", "rules_8cpp.html#a6e15fbd168b962e2beb025dda6b11544", null ]
         ] ],
         [ "ShortTermStorage", null, [
           [ "SingleAdditionalConstraint", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint.html", "classAntares_1_1Data_1_1ShortTermStorage_1_1SingleAdditionalConstraint" ],

@@ -1,5 +1,9 @@
 var NAVTREEINDEX35 =
 {
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a663632954510a40a15c142cc52c83a1f":[9,0,0,3,57,3],
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a90bf17c584ea36e506a0acf21bc3516f":[9,0,0,3,57,1],
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a91be09ab1b04fb428495540cd3fa551f":[9,0,0,3,57,5],
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aa7021e0821e7d5ff21e620512df2bdf0":[9,0,0,3,57,0],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aa7be674b4ad148105a640a78cecb82cf":[9,0,0,3,57,2],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aac1c472f1c5822ed2673146d73fa1fb3":[9,0,0,3,57,6],
 "structAntares_1_1Data_1_1BindingConstraintStructures.html":[9,0,0,3,34],
@@ -245,9 +249,5 @@ var NAVTREEINDEX35 =
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a44a9013c3f447e60a1fa26253dd35610":[9,0,0,7,0,3,1,3],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a706725679a03cd8397f5b15a41498aec":[9,0,0,7,0,3,1,6],
 "structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a87b9532067b2a7ebef4065b957bbb57d":[9,0,0,7,0,3,1,0],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a96a2d09b1d14f94d2145315e9bbed64e":[9,0,0,7,0,3,1,5],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#abfd487d1fcbf3d69db998b753f408655":[9,0,0,7,0,3,1,4],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#ac1382ba15497727f7e58ef2e081760ec":[9,0,0,7,0,3,1,1],
-"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#acee72ca6cf8f3706e9068e666b5d5ee5":[9,0,0,7,0,3,1,2],
-"structAntares_1_1IO_1_1Inputs_1_1YmlOptimConfig_1_1Constraint.html":[9,0,0,7,0,4,1]
+"structAntares_1_1IO_1_1Inputs_1_1YmlModel_1_1Variable.html#a96a2d09b1d14f94d2145315e9bbed64e":[9,0,0,7,0,3,1,5]
 };

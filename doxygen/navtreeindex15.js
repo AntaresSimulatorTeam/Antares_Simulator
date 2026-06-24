@@ -1,5 +1,12 @@
 var NAVTREEINDEX15 =
 {
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#addf39b1b15792169b66eb62a4b60f77a":[9,0,0,11,6,9,25],
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#ae096b3fd5a6b5200edcbcfd7e6fc678a":[9,0,0,11,6,9,39],
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#ae1b7742c894349d7dcf74cbd7018d3ba":[9,0,0,11,6,9,44],
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#ae1d9e6a9d0b48994ee2820642734142a":[9,0,0,11,6,9,43],
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#ae3eb7c628bb6f8ec63d3f8b92c574313":[9,0,0,11,6,9,5],
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#ae87658cebfd4be9267e61df09b4c2a04":[9,0,0,11,6,9,4],
+"classAntares_1_1Solver_1_1Variable_1_1Areas.html#af32972b7aded43d754d5e278eefc8658":[9,0,0,11,6,9,38],
 "classAntares_1_1Solver_1_1Variable_1_1Areas.html#afc10ecdd18fda546bf1ec16d58b7c640":[9,0,0,11,6,9,31],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html":[9,0,0,11,6,11],
 "classAntares_1_1Solver_1_1Variable_1_1BindingConstraints.html#a01a411d5387a228f6f225a8c46011f13":[9,0,0,11,6,11,22],
@@ -242,12 +249,5 @@ var NAVTREEINDEX15 =
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html#ad6ee60db0a2dd173ea5e76b98fe28e0a":[9,0,0,11,6,5,33,9],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html#ae2900a5bdd8bf6ea915a289e5e5e472c":[9,0,0,11,6,5,33,6],
 "classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html#af5bb6aa2a54456c410499087b822492c":[9,0,0,11,6,5,33,1],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html#af94bb4bcccf81f697d5951c4317a2c7b":[9,0,0,11,6,5,33,4],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html#af9977aed94b27092428b0157da0adeed":[9,0,0,11,6,5,33,7],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html#afb750068e06d620c99b7b98bb37b278e":[9,0,0,11,6,5,33,16],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html":[9,0,0,11,6,5,63],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgCSRdataFactory.html#a0e7bb04bcfa4339d1b2fea455cf815dd":[9,0,0,11,6,5,63,0],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html":[9,0,0,11,6,5,61],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a060214714bbba898fad16b9b71442308":[9,0,0,11,6,5,61,2],
-"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1MaxMrgDataFactory.html#a3cc51f2287d46ba5fec169871266f246":[9,0,0,11,6,5,61,0]
+"classAntares_1_1Solver_1_1Variable_1_1Economy_1_1EconomyVariableBase.html#af94bb4bcccf81f697d5951c4317a2c7b":[9,0,0,11,6,5,33,4]
 };

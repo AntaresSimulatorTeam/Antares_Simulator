@@ -1,5 +1,9 @@
 var NAVTREEINDEX32 =
 {
+"libs_2antares_2study_2include_2antares_2study_2xcast_2xcast_8h_source.html":[10,0,0,4,0,26,0,0,0,8,0],
+"libs_2antares_2study_2include_2antares_2study_2xcast_8h_source.html":[10,0,0,4,0,26,0,0,0,24],
+"libs_2antares_2study_2study_8cpp.html#a496f41aecfbee1f5f1d017224115a609":[8,0,0,4,207],
+"libs_2antares_2study_2study_8cpp.html#ab0458e72d21755e20ced56014dd4bd12":[8,0,0,4,209],
 "libs_2antares_2study_2study_8cpp.html#ab5556f2ed19653e1a866b557366e16e5":[8,0,0,4,208],
 "libs_2antares_2study_2study_8cpp.html#ad9767caa4758b84659b2584ab1b419f4":[8,0,0,4,206],
 "libs_2antares_2study_2study_8cpp.html#af4e5b575b12671d2e61abec2747d29a3":[8,0,0,4,205],
@@ -245,9 +249,5 @@ var NAVTREEINDEX32 =
 "namespaceLocalPolicy.html#a3edae9b28d73d8a57ea4104248b95b99":[8,0,19,8],
 "namespaceLocalPolicy.html#a47b0c7226dcf5d16ee301e7bbc468b14":[8,0,19,0],
 "namespaceLocalPolicy.html#a5437ae904734d642b435bd37a8f38e03":[8,0,19,3],
-"namespaceLocalPolicy.html#a7915bde1ef843f82d141f66bb5817731":[8,0,19,4],
-"namespaceLocalPolicy.html#a948cec0d64b3dccb1fb46a257c25ce24":[8,0,19,5],
-"namespaceLocalPolicy.html#aa279d371e5b4e23c77448611eb2f4f04":[8,0,19,1],
-"namespaceLocalPolicy.html#aab35e1fd8909c5b6a70fb8a8e0e8c0ee":[8,0,19,7],
-"namespaceLocalPolicy.html#ae48d9a3da78c07bbf43d0d97e68f5606":[8,0,19,2]
+"namespaceLocalPolicy.html#a7915bde1ef843f82d141f66bb5817731":[8,0,19,4]
 };

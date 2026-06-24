@@ -28,7 +28,9 @@ var annotated_dup =
         ] ],
         [ "ScenarioBuilder", null, [
           [ "BindingConstraintsTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1BindingConstraintsTSNumberData" ],
-          [ "hydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroLevelsData" ],
+          [ "HydroFinalLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroFinalLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroFinalLevelsData" ],
+          [ "HydroInitialLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroInitialLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroInitialLevelsData" ],
+          [ "HydroLevelsData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1HydroLevelsData" ],
           [ "hydroTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1hydroTSNumberData" ],
           [ "loadTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1loadTSNumberData" ],
           [ "ntcTSNumberData", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData.html", "classAntares_1_1Data_1_1ScenarioBuilder_1_1ntcTSNumberData" ],

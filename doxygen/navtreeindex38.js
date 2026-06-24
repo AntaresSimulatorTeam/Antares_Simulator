@@ -1,5 +1,9 @@
 var NAVTREEINDEX38 =
 {
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#ae3490cf14380addc26f51773888d0b49":[9,0,0,11,6,5,16,4],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCardTimeSeriesBase.html#af80b4409d947fcae2fdd48f15ed194b9":[9,0,0,11,6,5,16,0],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html":[9,0,0,11,6,5,46],
+"structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a25b284596ff490dd490e43c722699a9e":[9,0,0,11,6,5,46,3],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a84d6c68a0d100e854ab07e6651f01296":[9,0,0,11,6,5,46,0],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#a87eb157830a2a2028d3bcf9199d73bd5":[9,0,0,11,6,5,46,1],
 "structAntares_1_1Solver_1_1Variable_1_1Economy_1_1VCard__LinkBase.html#af6278104b4fb66ab8c0ec9d3bc9e1d84":[9,0,0,11,6,5,46,2],
@@ -245,9 +249,5 @@ var NAVTREEINDEX38 =
 "structCAPACITY__RESERVATION.html#a2d8975d98da04e2c8982d0625a43c25b":[9,0,58,11],
 "structCAPACITY__RESERVATION.html#a4268a5b2e75c3e16aa7c1c7245d1a123":[9,0,58,12],
 "structCAPACITY__RESERVATION.html#a4a3114b855c75a098f519276215957f1":[9,0,58,6],
-"structCAPACITY__RESERVATION.html#a6393ae822e8163501a350e46bdc6a3bc":[9,0,58,13],
-"structCAPACITY__RESERVATION.html#a795b9e4594ed209991413b293d36031c":[9,0,58,7],
-"structCAPACITY__RESERVATION.html#a87cf2bea02861a82b9497c7b2ada5bf5":[9,0,58,3],
-"structCAPACITY__RESERVATION.html#a8dabc5b986b688003ac69d29c1a4a6a9":[9,0,58,5],
-"structCAPACITY__RESERVATION.html#ab45dc1b2a7ec420e249765a319b03376":[9,0,58,2]
+"structCAPACITY__RESERVATION.html#a6393ae822e8163501a350e46bdc6a3bc":[9,0,58,13]
 };

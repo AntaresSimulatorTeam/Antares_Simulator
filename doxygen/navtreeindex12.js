@@ -1,5 +1,12 @@
 var NAVTREEINDEX12 =
 {
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html#aedc548d2b31b4df740d4f346c16803b2":[9,0,0,9,0,19,3],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1TwoVarsTwoConstraintsFiller.html#afd7113d1a72b325868184e345bbcb3cb":[9,0,0,9,0,19,2],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html":[9,0,0,9,0,16],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html#a31ea0c0c5b753b49cf3474dfd77e9468":[9,0,0,9,0,16,1],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html#a50898eafdb47f91267ae4b4b35cfc021":[9,0,0,9,0,16,4],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html#a51407b061e010a65ac6be5205bd2688a":[9,0,0,9,0,16,2],
+"classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html#a74a479f0c9a8ce51746a8a4edd1d7e58":[9,0,0,9,0,16,5],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html#ac42041aef2ba5c21b0711c452845fd0a":[9,0,0,9,0,16,0],
 "classAntares_1_1Optimisation_1_1LinearProblemApi_1_1VarFillerContext.html#ad10c0e990767639aa6b94e90c28bfc5b":[9,0,0,9,0,16,3],
 "classAntares_1_1Optimisation_1_1LinearProblemDataImpl_1_1DataSeriesRepository.html":[9,0,0,9,1,1],
@@ -242,12 +249,5 @@ var NAVTREEINDEX12 =
 "classAntares_1_1Optimization_1_1LinearExpression.html#a33d263872cf8e7b4c1e556789b0a3dcd":[9,0,0,10,16,6],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a3c2dfb68371aa0872dc947d52ff6012f":[9,0,0,10,16,1],
 "classAntares_1_1Optimization_1_1LinearExpression.html#a4ca0e53c482d7282e2f1cab05dd470a8":[9,0,0,10,16,19],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a588604c52f984aca4bcc128db9044d83":[9,0,0,10,16,3],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a6690fab36052219d64b00479ed16e2f0":[9,0,0,10,16,9],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a790c3a233e3734d18856339f34470a5e":[9,0,0,10,16,18],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a87d6759f4a447a5a7843882030f26fe8":[9,0,0,10,16,20],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a8c21d5d2c3be0143604b1e67db38f7c2":[9,0,0,10,16,21],
-"classAntares_1_1Optimization_1_1LinearExpression.html#a9e0c509e2159f6c9646ee30ad0b4a667":[9,0,0,10,16,11],
-"classAntares_1_1Optimization_1_1LinearExpression.html#aa5f76aa00928330575ae9c8b39920389":[9,0,0,10,16,8],
-"classAntares_1_1Optimization_1_1LinearExpression.html#aaaa16e91425bcf118587d40f7a71e02d":[9,0,0,10,16,13]
+"classAntares_1_1Optimization_1_1LinearExpression.html#a588604c52f984aca4bcc128db9044d83":[9,0,0,10,16,3]
 };

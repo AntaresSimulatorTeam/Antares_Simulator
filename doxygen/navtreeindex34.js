@@ -1,10 +1,14 @@
 var NAVTREEINDEX34 =
 {
+"scratchpad_8cpp.html#a7a4274db1bda7528094a7dac6540c116":[8,0,0,4,153],
+"scratchpad_8cpp.html#a8e4ce560b4f8012b2242f2cacc9b687c":[8,0,0,4,146],
+"scratchpad_8h_source.html":[10,0,0,4,0,26,0,0,0,0,9],
+"series_2include_2antares_2series_2series_8h_source.html":[10,0,0,4,0,25,0,0,0,0],
 "setData_8h_source.html":[10,0,0,8,11,0,0,0,0,2,1],
 "setofareas_8h_source.html":[10,0,0,8,11,0,0,0,0,17],
 "setofareas_8hxx_source.html":[10,0,0,8,11,0,0,0,0,18],
 "sets_8h_source.html":[10,0,0,4,0,26,0,0,0,19],
-"sets_8hxx_source.html":[10,0,0,4,0,26,0,0,0,7,12],
+"sets_8hxx_source.html":[10,0,0,4,0,26,0,0,0,7,14],
 "shave-peaks-by-remix-help_8h.html#a0dca85fdb36f5289211a7723ba109b2d":[8,0,0,14,6,42],
 "shave-peaks-by-remix-help_8h.html#a194416baeb9057cc4e1803e5b6f5a1cf":[8,0,0,14,6,73],
 "shave-peaks-by-remix-help_8h.html#a1ce7f2520ce4e57370b5a56f0e861710":[8,0,0,14,6,70],
@@ -47,7 +51,7 @@ var NAVTREEINDEX34 =
 "singleProblemGetterImpl_8h.html#a617e072aea936398b0eba0dce3c844d3":[8,0,0,14,2,6],
 "singleProblemGetterImpl_8h_source.html":[10,0,0,0,1,3],
 "singleProblemGetter_8h_source.html":[10,0,0,0,0,0,0,2],
-"solarTSNumberData_8h_source.html":[10,0,0,4,0,26,0,0,0,7,15],
+"solarTSNumberData_8h_source.html":[10,0,0,4,0,26,0,0,0,7,17],
 "solar_2prepro_8hxx_source.html":[10,0,0,4,0,26,0,0,0,5,6,2],
 "solar_8h_source.html":[10,0,0,8,11,0,0,0,0,1,10],
 "solve__problem_8h_source.html":[10,0,0,8,6,0,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX34 =
 "structAntares_1_1Data_1_1AllCapacityReservations.html#ad7fedc6f070e94abc5b275633d133eb5":[9,0,0,3,16,9],
 "structAntares_1_1Data_1_1AllCapacityReservations.html#afd5fe76ee15cd9a9256f3bbf1d0006fe":[9,0,0,3,16,0],
 "structAntares_1_1Data_1_1AreaDependantHydroManagementData.html":[9,0,0,3,57],
-"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a60fcd44e887317aed1a6fd9b1091beca":[9,0,0,3,57,4],
-"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a663632954510a40a15c142cc52c83a1f":[9,0,0,3,57,3],
-"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a90bf17c584ea36e506a0acf21bc3516f":[9,0,0,3,57,1],
-"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a91be09ab1b04fb428495540cd3fa551f":[9,0,0,3,57,5],
-"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#aa7021e0821e7d5ff21e620512df2bdf0":[9,0,0,3,57,0]
+"structAntares_1_1Data_1_1AreaDependantHydroManagementData.html#a60fcd44e887317aed1a6fd9b1091beca":[9,0,0,3,57,4]
 };
