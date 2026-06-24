@@ -22,7 +22,8 @@
 #include "TSnumberData.h"
 #include "ThermalTSNumberData.h"
 #include "WindTSNumberData.h"
-#include "hydroLevelsData.h"
+#include "HydroFinalLevelsData.h"
+#include "HydroInitialLevelsData.h"
 #include "solarTSNumberData.h"
 
 namespace Antares::Data::ScenarioBuilder
@@ -94,9 +95,9 @@ public:
     std::vector<renewableTSNumberData> renewable;
 
     //! hydro initial levels
-    hydroLevelsData hydroInitialLevels{initLevelApply};
+    HydroInitialLevelsData hydroInitialLevels;
     //! hydro final levels
-    hydroLevelsData hydroFinalLevels{finalLevelApply};
+    HydroFinalLevelsData hydroFinalLevels;
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;
