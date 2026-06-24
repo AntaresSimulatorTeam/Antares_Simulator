@@ -13,6 +13,8 @@
 
 #include "../fwd.h"
 #include "BindingConstraintsTSNumbersData.h"
+#include "HydroFinalLevelsData.h"
+#include "HydroInitialLevelsData.h"
 #include "HydroTSNumberData.h"
 #include "LoadTSNumberData.h"
 #include "NTCTSNumberData.h"
@@ -22,8 +24,6 @@
 #include "TSnumberData.h"
 #include "ThermalTSNumberData.h"
 #include "WindTSNumberData.h"
-#include "HydroFinalLevelsData.h"
-#include "HydroInitialLevelsData.h"
 #include "solarTSNumberData.h"
 
 namespace Antares::Data::ScenarioBuilder
