@@ -60,6 +60,40 @@ public:
     {
     }
 
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
+                               PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
+        data({ProblemeAResoudre.Pi,
+              ProblemeAResoudre.Colonne,
+              ProblemeAResoudre.NombreDeContraintes,
+              ProblemeAResoudre.NombreDeTermesDansLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesDebutDeLigne,
+              ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes,
+              ProblemeAResoudre.IndicesColonnes,
+              ProblemeAResoudre.NombreDeTermesDesLignes,
+              ProblemeAResoudre.Sens,
+              ProblemeAResoudre.IncrementDAllocationMatriceDesContraintes,
+              problemeHebdo->CorrespondanceVarNativesVarOptim,
+              problemeHebdo->NombreDePasDeTempsPourUneOptimisation,
+              problemeHebdo->NumeroDeVariableStockFinal,
+              problemeHebdo->NumeroDeVariableDeTrancheDeStock,
+              ProblemeAResoudre.NomDesContraintes,
+              problemeHebdo->NomsDesPays,
+              problemeHebdo->weekInTheYear,
+              problemeHebdo->NombreDePasDeTemps,
+              ProblemeAResoudre.LegacyConstraintsInfo}),
+
+        variableManager_(data.CorrespondanceVarNativesVarOptim,
+            data.NumeroDeVariableStockFinal,
+            data.NumeroDeVariableDeTrancheDeStock,
+            data.NombreDePasDeTempsPourUneOptimisation)
+    {
+    }
+
+    explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo) :
+        ConstraintBuilder(problemeHebdo, *problemeHebdo->ProblemeAResoudre)
+    {
+    }
+
     ConstraintBuilder& updateHourWithinWeek(unsigned hour)
     {
         hourInWeek_ = hour;
@@ -270,7 +304,7 @@ public:
         return nombreDeTermes_;
     }
 
-    ConstraintBuilderData& data;
+    ConstraintBuilderData data;
 
 private:
     void OPT_ChargerLaContrainteDansLaMatriceDesContraintes();
