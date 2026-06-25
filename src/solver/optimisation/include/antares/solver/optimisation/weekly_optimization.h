@@ -24,7 +24,7 @@ public:
     WeeklyOptimization(const WeeklyOptimization&) = delete;
     WeeklyOptimization& operator=(const WeeklyOptimization&) = delete;
     WeeklyOptimization(WeeklyOptimization&&) = default;
-    WeeklyOptimization& operator=(WeeklyOptimization&&) = default;
+    WeeklyOptimization& operator=(WeeklyOptimization&&) = delete;
     void solve();
     IO::Outputs::OptimisationsSimulationTable* simulationTables();
 

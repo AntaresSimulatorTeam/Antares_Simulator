@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE(dual_not_available)
     (void)lp.addNumVariable(0.0, 10.0, "x");
     auto* c = lp.addConstraint(1.0, 10.0, "c");
 
-    BOOST_CHECK_THROW(c->dual(), RuntimeError);
+    BOOST_CHECK_THROW((void)c->dual(), RuntimeError);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

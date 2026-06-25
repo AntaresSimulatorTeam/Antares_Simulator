@@ -530,4 +530,4 @@ hydro_group, 2 = 7
 ## Full examples
 
 You can find some simple to more complex studies in
-our [test base here](https://github.com/AntaresSimulatorTeam/Antares_Simulator/tree/develop/src/tests/resources/modeler).
+our [test base here](https://github.com/AntaresSimulatorTeam/Antares_Simulator/tree/develop/resources/modeler).
