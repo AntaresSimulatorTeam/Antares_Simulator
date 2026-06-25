@@ -42,7 +42,7 @@ public:
 
     void set_value(uint x, uint y, double value);
 
-    virtual bool apply(Study& study) = 0;
+    bool apply(Study& study) override = 0;
 
 protected:
     //! Hydro levels overlay (0 if auto)
