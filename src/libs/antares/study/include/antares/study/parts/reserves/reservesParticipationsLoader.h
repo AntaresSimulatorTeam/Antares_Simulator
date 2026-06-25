@@ -427,7 +427,7 @@ public:
         if (!clusterOK)
         {
             logs.error() << area.name
-                         << " : missing STStorage cluster when loading STS reserve participation";
+                         << " : missing STStorage when loading STS reserve participation";
         }
     }
 
@@ -538,13 +538,8 @@ public:
         logs.error() << areaName << ", hydro: duplicate participation to reserve " << reserveID;
     }
 
-    static auto* findCluster(Area& area, const std::string& clusterName)
+    static auto* findCluster(Area& area, const std::string&)
     {
-        if (!clusterName.empty())
-        {
-            logs.error() << area.name << " : invalid cluster name for hydro symmetry "
-                         << clusterName << " please use 'hydro' or 'lt'";
-        }
         return &area.hydro;
     }
 

@@ -760,16 +760,15 @@ participations:
 **EXAMPLE OF RESERVE-PARTICIPATIONS.YML FILE FOR LONG TERM STORAGE PLANTS**
 ```yaml
 participations:
-  - storage: lt
-    certifications:
-      - reserve: res_1_up
-        max-release: 20
-        max-store: 30
-        participation-cost: 1
-      - reserve: res_1_down
-        max-release: 20
-        max-store: 20
-        participation-cost: 1
+  certifications:
+    - reserve: res_1_up
+      max-release: 20
+      max-store: 30
+      participation-cost: 1
+    - reserve: res_1_down
+      max-release: 20
+      max-store: 20
+      participation-cost: 1
 ```
 
 Those _reserve-participations.yml_ files can also define symmetries:
@@ -777,18 +776,17 @@ Those _reserve-participations.yml_ files can also define symmetries:
 **EXAMPLE OF full RESERVE-PARTICIPATIONS.YML FILE FOR Long TERM STORAGE PLANTS**
 ```yaml
 participations:
-  - storage: lt
-    certifications:
-      - reserve: res_1_up
-        max-release: 20
-        max-store: 30
-        participation-cost: 1
-      - reserve: res_1_down
-        max-release: 20
-        max-store: 20
-        participation-cost: 1
-    symmetries:
-      - reserves: [res_1_up, res_1_down]
+  certifications:
+    - reserve: res_1_up
+      max-release: 20
+      max-store: 30
+      participation-cost: 1
+    - reserve: res_1_down
+      max-release: 20
+      max-store: 20
+      participation-cost: 1
+  symmetries:
+    - reserves: [res_1_up, res_1_down]
 ```
 
 ## Reserves / DSM (old)

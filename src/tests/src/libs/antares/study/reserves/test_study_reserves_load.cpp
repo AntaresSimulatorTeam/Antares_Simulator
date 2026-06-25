@@ -653,8 +653,8 @@ BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_No_Cluster_Provid
 )";
     file.close();
     areaA->thermal.list.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(getErrors().contains(
-      "A : cluster/storage name is missing in a participation entry"));
+    BOOST_CHECK(
+      getErrors().contains("A : cluster/storage name is missing in a participation entry"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_thermal_loadReserveParticipations_Double_Cluster_Participation,
@@ -1048,8 +1048,7 @@ BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_bad_cluster_symmetry,
     file.close();
 
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(
-      getErrors().contains("Short term storage cluster1 does not exist in area A"));
+    BOOST_CHECK(getErrors().contains("Short term storage cluster1 does not exist in area A"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_STS_loadReserveParticipations_no_reserves,
@@ -1106,8 +1105,7 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_No_Cluster_Provided,
 )";
     file.close();
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(
-      getErrors().contains("Short term storage cluster1 does not exist in area A"));
+    BOOST_CHECK(getErrors().contains("Short term storage cluster1 does not exist in area A"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_Invalid_Cluster,
@@ -1127,8 +1125,7 @@ BOOST_FIXTURE_TEST_CASE(test_sts_loadReserveParticipations_Invalid_Cluster,
 )";
     file.close();
     areaA->shortTermStorage.loadReserveParticipations(*areaA, studyPath / "myreserve.yml");
-    BOOST_CHECK(
-      getErrors().contains("Short term storage cluster4 does not exist in area A"));
+    BOOST_CHECK(getErrors().contains("Short term storage cluster4 does not exist in area A"));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_ok_file_missing_needs,
