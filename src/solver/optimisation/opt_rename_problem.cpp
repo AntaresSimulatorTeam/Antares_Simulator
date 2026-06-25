@@ -34,6 +34,10 @@ std::string BuildName(const std::string& name,
     return result;
 }
 
+// =====================
+// ===  Class Namer ====
+// =====================
+
 Namer::Namer(std::vector<std::string>& target_names):
     names_(target_names)
 {
@@ -76,27 +80,10 @@ std::vector<std::string>& Namer::names()
 }
 
 void Namer::RecordLegacyVariableInfo(unsigned /*index*/,
-                                     const std::string& /*output*/,
+                                     const std::string& /*name*/,
                                      const std::string& /*component*/)
 {
     // No-op for the base namer (e.g. ConstraintNamer); only VariableNamer records legacy info.
-}
-
-void VariableNamer::RecordLegacyVariableInfo(unsigned index,
-                                             const std::string& output,
-                                             const std::string& component)
-{
-    legacyInfo_[index] = {output, component, timeStep()};
-}
-
-void ConstraintNamer::RecordLegacyVariableInfo(unsigned index,
-                                               const std::string& output,
-                                               const std::string& component)
-{
-    if (legacyInfo_ != nullptr)
-    {
-        (*legacyInfo_)[index] = {output, component, timeStep()};
-    }
 }
 
 void Namer::SetLinkElementName(unsigned elementIndex, const std::string& elementType)
@@ -127,17 +114,6 @@ void Namer::SetAreaElementName(unsigned elementIndex,
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
     RecordLegacyVariableInfo(elementIndex, elementType, area_);
-}
-
-void VariableNamer::SetAreaVariableName(unsigned varIndex,
-                                        const std::string& variableType,
-                                        int layerIndex)
-{
-    std::string location = areaLocation() + SEP + "Layer<" + std::to_string(layerIndex) + ">";
-    std::string time = TimeIdentifier(HOUR);
-    std::string name = BuildName(variableType, location, time);
-    names()[varIndex] = name;
-    RecordLegacyVariableInfo(varIndex, variableType, std::to_string(layerIndex));
 }
 
 void Namer::SetThermalClusterElementName(unsigned varIndex,
@@ -236,6 +212,28 @@ void Namer::SetThermalClusterReserveElementName(unsigned varIndex,
     std::string name = BuildName(elementType, location, time);
     names_[varIndex] = name;
     RecordLegacyVariableInfo(varIndex, elementType, reserveName);
+}
+
+// =============================
+// ==== Class VariableNamer ====
+// =============================
+
+void VariableNamer::RecordLegacyVariableInfo(unsigned index,
+                                             const std::string& name,
+                                             const std::string& component)
+{
+    legacyInfo_[index] = {name, component, timeStep()};
+}
+
+void VariableNamer::SetAreaVariableName(unsigned varIndex,
+                                        const std::string& variableType,
+                                        int layerIndex)
+{
+    std::string location = areaLocation() + SEP + "Layer<" + std::to_string(layerIndex) + ">";
+    std::string time = TimeIdentifier(HOUR);
+    std::string name = BuildName(variableType, location, time);
+    names()[varIndex] = name;
+    RecordLegacyVariableInfo(varIndex, variableType, std::to_string(layerIndex));
 }
 
 void VariableNamer::DispatchableProduction(unsigned varIndex, const std::string& clusterName)
@@ -492,6 +490,20 @@ void VariableNamer::Spillage(unsigned varIndex)
 void VariableNamer::AreaBalance(unsigned varIndex)
 {
     SetAreaElementNameHour(varIndex, "AreaBalance");
+}
+
+// ===============================
+// ==== Class ConstraintNamer ====
+// ===============================
+
+void ConstraintNamer::RecordLegacyVariableInfo(unsigned index,
+                                               const std::string& name,
+                                               const std::string& component)
+{
+    if (legacyInfo_ != nullptr)
+    {
+        (*legacyInfo_)[index] = {name, component, timeStep()};
+    }
 }
 
 void ConstraintNamer::FlowDissociation(unsigned constrIndex)

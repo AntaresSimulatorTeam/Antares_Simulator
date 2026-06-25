@@ -23,7 +23,7 @@ protected:
     // Records the structured legacy description of a variable, parallel to the name.
     // No-op in the base namer; only VariableNamer overrides this to record info.
     virtual void RecordLegacyVariableInfo(unsigned index,
-                                          const std::string& output,
+                                          const std::string& name,
                                           const std::string& component);
 
     unsigned timeStep() const
@@ -151,7 +151,7 @@ public:
 
 private:
     void RecordLegacyVariableInfo(unsigned index,
-                                  const std::string& output,
+                                  const std::string& name,
                                   const std::string& component) override;
     void SetAreaVariableName(unsigned varIndex, const std::string& variableType, int layerIndex);
     void SetShortTermStorageVariableName(unsigned varIndex,
@@ -285,7 +285,7 @@ public:
 
 private:
     void RecordLegacyVariableInfo(unsigned index,
-                                  const std::string& output,
+                                  const std::string& name,
                                   const std::string& component) override;
 
     void BindingConstraint(unsigned constrIndex,
