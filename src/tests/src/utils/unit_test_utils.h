@@ -18,7 +18,7 @@ class CaptureAntaresLogs
 {
 public:
     CaptureAntaresLogs();
-    ~CaptureAntaresLogs();
+    ~CaptureAntaresLogs() override;
 
     const std::set<std::string>& getFatals() const;
     const std::set<std::string>& getErrors() const;

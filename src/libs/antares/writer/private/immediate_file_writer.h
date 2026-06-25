@@ -16,7 +16,7 @@ class ImmediateFileResultWriter final: public IResultWriter
 {
 public:
     ImmediateFileResultWriter(const std::filesystem::path& folderOutput);
-    virtual ~ImmediateFileResultWriter();
+    ~ImmediateFileResultWriter() override;
     // Write to file immediately, creating directories if needed
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent) override;

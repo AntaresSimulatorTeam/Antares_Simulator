@@ -22,7 +22,7 @@ public:
                             Calendar& calendar,
                             IResultWriter& resultWriter);
 
-    virtual ~AdqPatchPostProcessList() = default;
+    ~AdqPatchPostProcessList() override = default;
 };
 
 } // namespace Antares::Solver::Simulation

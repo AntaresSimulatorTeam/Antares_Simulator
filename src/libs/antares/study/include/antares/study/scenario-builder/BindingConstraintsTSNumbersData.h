@@ -15,7 +15,7 @@ class BindingConstraintsTSNumberData final: public TSNumberData
 {
 public:
     BindingConstraintsTSNumberData() = default;
-    virtual ~BindingConstraintsTSNumberData() = default;
+    ~BindingConstraintsTSNumberData() override = default;
 
     bool reset(const Study& study) override;
 

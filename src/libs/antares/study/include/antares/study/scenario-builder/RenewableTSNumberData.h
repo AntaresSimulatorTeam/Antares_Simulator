@@ -16,7 +16,7 @@ class renewableTSNumberData final: public TSNumberData
 public:
     renewableTSNumberData() = default;
 
-    virtual ~renewableTSNumberData()
+    ~renewableTSNumberData() override
     {
     }
 
