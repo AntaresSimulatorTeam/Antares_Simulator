@@ -16,9 +16,7 @@ class renewableTSNumberData final: public TSNumberData
 public:
     renewableTSNumberData() = default;
 
-    ~renewableTSNumberData() override
-    {
-    }
+    ~renewableTSNumberData() override = default;
 
     bool reset(const Study& study) override;
 

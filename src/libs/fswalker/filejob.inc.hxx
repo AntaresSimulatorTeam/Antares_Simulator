@@ -18,9 +18,7 @@ public:
     {
     }
 
-    ~FileJob() override
-    {
-    }
+    ~FileJob() override = default;
 
 public:
     //! All files
