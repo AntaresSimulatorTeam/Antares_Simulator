@@ -18,10 +18,7 @@ public:
     {
     }
 
-    ~FileJob() override
-    {
-    }
-
+    ~FileJob() override = default;
 public:
     //! All files
     String::Vector files;
