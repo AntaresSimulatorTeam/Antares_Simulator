@@ -51,15 +51,6 @@ class ConstraintBuilder final
 public:
     ConstraintBuilder() = delete;
 
-    explicit ConstraintBuilder(ConstraintBuilderData& data):
-        data(data),
-        variableManager_(data.CorrespondanceVarNativesVarOptim,
-                         data.NumeroDeVariableStockFinal,
-                         data.NumeroDeVariableDeTrancheDeStock,
-                         data.NombreDePasDeTempsPourUneOptimisation)
-    {
-    }
-
     explicit ConstraintBuilder(PROBLEME_HEBDO* problemeHebdo,
                                PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre):
         data({ProblemeAResoudre.Pi,
