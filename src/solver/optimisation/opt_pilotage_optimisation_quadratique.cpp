@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/QuadraticProblemMatrix.h"
-#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
 #include "antares/solver/optimisation/opt_appel_solveur_quadratique.h"
 
 bool OPT_PilotageOptimisationQuadratique(const SingleOptimOptions& options,

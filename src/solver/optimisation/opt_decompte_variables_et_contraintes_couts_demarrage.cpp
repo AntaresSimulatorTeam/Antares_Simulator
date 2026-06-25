@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/solver/optimisation/LinearProblemMatrixStartUpCosts.h"
-#include "antares/solver/optimisation/constraints/constraint_builder_utils.h"
+#include "antares/solver/optimisation/constraints/ConstraintBuilder.h"
+
 
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
