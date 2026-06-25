@@ -49,11 +49,11 @@ def change_transmission_capacities(context, link, value):
     context.sih.set_value(variable="transmission-capacities", value=value, file_path=file_path)
 
 @when('I replace the "{destinationPath}" file with "{originPath}"')
-def replace_reserve_ini(context, destinationPath, originPath):
+def replace_reserve_yml(context, destinationPath, originPath):
     destination = destinationPath.split("/")
     origin = originPath.split("/")
     input_handler = solver_input_handler(Path(context.study_path))
-    input_handler.copy_reserve_ini_from_file(origin, destination)
+    input_handler.copy_reserve_yml_from_file(origin, destination)
 
 
 @given('in input "{input_file}" section "{section}" variable "{variable}" is set to "{value}"')

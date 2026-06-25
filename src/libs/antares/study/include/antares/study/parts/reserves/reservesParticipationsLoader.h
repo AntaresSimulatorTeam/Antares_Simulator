@@ -286,7 +286,12 @@ public:
     {
         try
         {
-            return transformNameIntoID(entry["cluster"].as<std::string>());
+            auto name = entry["cluster"].as<std::string>();
+            if (name.empty())
+            {
+                return {};
+            }
+            return transformNameIntoID(name);
         }
         catch (const YAML::Exception&)
         {
@@ -369,7 +374,12 @@ public:
     {
         try
         {
-            return transformNameIntoID(entry["storage"].as<std::string>());
+            auto name = entry["storage"].as<std::string>();
+            if (name.empty())
+            {
+                return {};
+            }
+            return transformNameIntoID(name);
         }
         catch (const YAML::Exception&)
         {
@@ -423,7 +433,7 @@ public:
 
     static void reportMissingCluster(const Area& area, const std::string& clusterName)
     {
-        logs.error() << "ShortTerm Storage cluster " << clusterName << " does not exist in area "
+        logs.error() << "Short term storage " << clusterName << " does not exist in area "
                      << area.name;
     }
 

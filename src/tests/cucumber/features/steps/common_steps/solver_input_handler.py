@@ -79,10 +79,8 @@ class solver_input_handler:
         else:
             return None
 
-    def copy_reserve_ini_from_file(self, origin, destination):
+    def copy_reserve_yml_from_file(self, origin, destination):
         # File path
-        origin[-1] = origin[-1].replace(".ini", ".yml")
-        destination[-1] = destination[-1].replace(".ini", ".yml")
         fileToReplace = os.path.join(self.study_root_dir, *destination)
         fileToCopy = os.path.join(self.study_root_dir, *origin)
         shutil.copyfile(fileToCopy, fileToReplace)
