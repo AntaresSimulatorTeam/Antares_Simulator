@@ -14,7 +14,7 @@ template<typename Derived>
 class ReserveParticipationLoader
 {
 public:
-    bool load(Area& area, const std::filesystem::path& file)
+    [[nodiscard]] bool load(Area& area, const std::filesystem::path& file)
     {
         if (!std::filesystem::exists(file))
         {
@@ -65,9 +65,9 @@ void static errorIfNegativeValue(const std::string& propertyName,
 
 template<typename T>
 void readYamlProperties(const YAML::Node& cert,
-                         T& rp,
-                         const std::string& typeName,
-                         const std::unordered_map<std::string, double T::*>& propMap)
+                        T& rp,
+                        const std::string& typeName,
+                        const std::unordered_map<std::string, double T::*>& propMap)
 {
     for (const auto& prop: cert)
     {
@@ -97,9 +97,9 @@ void readYamlProperties(const YAML::Node& cert,
 }
 
 static void validateStorageSpecificInputs(const std::string& areaName,
-                                           const StorageClusterReserveParticipation& rp,
-                                           const std::string& clusterName,
-                                           const std::string& reserveID)
+                                          const StorageClusterReserveParticipation& rp,
+                                          const std::string& clusterName,
+                                          const std::string& reserveID)
 {
     errorIfNegativeValue("max-release", rp.maxRelease, areaName, clusterName, reserveID);
     errorIfNegativeValue("max-store", rp.maxStore, areaName, clusterName, reserveID);
@@ -244,8 +244,8 @@ public:
 
 protected:
     static void duplicateParticipation(const std::string& areaName,
-                                        const std::string& clusterName,
-                                        const std::string& reserveID)
+                                       const std::string& clusterName,
+                                       const std::string& reserveID)
     {
         logs.error() << areaName << ", cluster " << clusterName
                      << " : duplicate participation to reserve " << reserveID;
@@ -296,12 +296,12 @@ public:
 
     static void readProperties(const YAML::Node& cert, ThermalClusterReserveParticipation& rp)
     {
-        static const std::unordered_map<std::string, double ThermalClusterReserveParticipation::*> propMap = {
-            {"participation-cost",     &ThermalClusterReserveParticipation::participationCost},
-            {"max-power",              &ThermalClusterReserveParticipation::maxPower},
-            {"max-power-off",          &ThermalClusterReserveParticipation::maxPowerOff},
-            {"participation-cost-off", &ThermalClusterReserveParticipation::participationCostOff}
-        };
+        static const std::unordered_map<std::string, double ThermalClusterReserveParticipation::*>
+          propMap = {{"participation-cost", &ThermalClusterReserveParticipation::participationCost},
+                     {"max-power", &ThermalClusterReserveParticipation::maxPower},
+                     {"max-power-off", &ThermalClusterReserveParticipation::maxPowerOff},
+                     {"participation-cost-off",
+                      &ThermalClusterReserveParticipation::participationCostOff}};
         readYamlProperties(cert, rp, "thermal", propMap);
     }
 
@@ -379,18 +379,17 @@ public:
 
     static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
-        static const std::unordered_map<std::string, double StorageClusterReserveParticipation::*> propMap = {
-            {"participation-cost", &StorageClusterReserveParticipation::participationCost},
-            {"max-release",        &StorageClusterReserveParticipation::maxRelease},
-            {"max-store",          &StorageClusterReserveParticipation::maxStore}
-        };
+        static const std::unordered_map<std::string, double StorageClusterReserveParticipation::*>
+          propMap = {{"participation-cost", &StorageClusterReserveParticipation::participationCost},
+                     {"max-release", &StorageClusterReserveParticipation::maxRelease},
+                     {"max-store", &StorageClusterReserveParticipation::maxStore}};
         readYamlProperties(cert, rp, "STS", propMap);
     }
 
     static void validateSpecificInputs(const std::string& areaName,
-                                        const StorageClusterReserveParticipation& rp,
-                                        const std::string& clusterName,
-                                        const std::string& reserveID)
+                                       const StorageClusterReserveParticipation& rp,
+                                       const std::string& clusterName,
+                                       const std::string& reserveID)
     {
         validateStorageSpecificInputs(areaName, rp, clusterName, reserveID);
     }
@@ -489,8 +488,7 @@ public:
             }
             if (symGroup.size() < 2)
             {
-                logs.error() << area.name
-                             << " : symmetry group must have at least two reserves";
+                logs.error() << area.name << " : symmetry group must have at least two reserves";
                 continue;
             }
             if (area.hydro.reserveParticipationContainer)
@@ -508,25 +506,24 @@ public:
 
     static void readProperties(const YAML::Node& cert, StorageClusterReserveParticipation& rp)
     {
-        static const std::unordered_map<std::string, double StorageClusterReserveParticipation::*> propMap = {
-            {"participation-cost", &StorageClusterReserveParticipation::participationCost},
-            {"max-release",        &StorageClusterReserveParticipation::maxRelease},
-            {"max-store",          &StorageClusterReserveParticipation::maxStore}
-        };
+        static const std::unordered_map<std::string, double StorageClusterReserveParticipation::*>
+          propMap = {{"participation-cost", &StorageClusterReserveParticipation::participationCost},
+                     {"max-release", &StorageClusterReserveParticipation::maxRelease},
+                     {"max-store", &StorageClusterReserveParticipation::maxStore}};
         readYamlProperties(cert, rp, "hydro", propMap);
     }
 
     static void validateSpecificInputs(const std::string& areaName,
-                                        const StorageClusterReserveParticipation& rp,
-                                        const std::string& clusterName,
-                                        const std::string& reserveID)
+                                       const StorageClusterReserveParticipation& rp,
+                                       const std::string& clusterName,
+                                       const std::string& reserveID)
     {
         validateStorageSpecificInputs(areaName, rp, clusterName, reserveID);
     }
 
     static void duplicateParticipation(const std::string& areaName,
-                                        const std::string&,
-                                        const std::string& reserveID)
+                                       const std::string&,
+                                       const std::string& reserveID)
     {
         logs.error() << areaName << ", hydro: duplicate participation to reserve " << reserveID;
     }
