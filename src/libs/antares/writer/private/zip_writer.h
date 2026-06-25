@@ -63,7 +63,7 @@ public:
     ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
               const std::filesystem::path& archivePath,
               Benchmarking::DurationCollector& duration_collector);
-    virtual ~ZipWriter();
+    ~ZipWriter() override;
     void addEntryFromBuffer(const std::filesystem::path& entryPath,
                             std::string& entryContent) override;
     void addEntryFromFile(const std::filesystem::path& entryPath,

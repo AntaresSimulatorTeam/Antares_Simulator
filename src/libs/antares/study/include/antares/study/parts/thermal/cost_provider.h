@@ -23,7 +23,7 @@ class ConstantCostProvider final: public CostProvider
 {
 public:
     explicit ConstantCostProvider(const ThermalCluster& cluster);
-    virtual ~ConstantCostProvider() = default;
+    ~ConstantCostProvider() override = default;
     double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarketBidCost(uint hourInTheYear, uint year) const override;
@@ -36,7 +36,7 @@ class ScenarizedCostProvider final: public CostProvider
 {
 public:
     explicit ScenarizedCostProvider(const ThermalCluster& cluster);
-    virtual ~ScenarizedCostProvider() = default;
+    ~ScenarizedCostProvider() override = default;
     double getOperatingCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarginalCost(uint serieIndex, uint hourInTheYear) const override;
     double getMarketBidCost(uint hourInTheYear, uint year) const override;
