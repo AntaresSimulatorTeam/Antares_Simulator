@@ -63,7 +63,7 @@ public:
     explicit ThermalCluster(Data::Area* parent);
 
     ThermalCluster() = delete;
-    ~ThermalCluster() = default;
+    ~ThermalCluster() override = default;
 
     //! \name Spinning
     //@{

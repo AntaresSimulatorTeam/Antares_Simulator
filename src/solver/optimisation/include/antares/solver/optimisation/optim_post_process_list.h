@@ -17,7 +17,7 @@ public:
                        Calendar& calendar,
                        IResultWriter& resultWriter);
 
-    virtual ~OptPostProcessList() = default;
+    ~OptPostProcessList() override = default;
 };
 
 } // namespace Antares::Solver::Simulation
