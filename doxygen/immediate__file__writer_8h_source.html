@@ -145,7 +145,7 @@ $(document).ready(function(){initNavTree('immediate__file__writer_8h_source.html
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html">ImmediateFileResultWriter</a>(<span class="keyword">const</span> std::filesystem::path&amp; folderOutput);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html">ImmediateFileResultWriter</a>();</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    ~<a class="code" href="classAntares_1_1Solver_1_1ImmediateFileResultWriter.html">ImmediateFileResultWriter</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="comment">// Write to file immediately, creating directories if needed</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> addEntryFromBuffer(<span class="keyword">const</span> std::filesystem::path&amp; entryPath,</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                            std::string&amp; entryContent) <span class="keyword">override</span>;</div>

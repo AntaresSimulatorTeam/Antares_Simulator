@@ -2,7 +2,7 @@ var classAntares_1_1Solver_1_1InMemoryWriter =
 [
     [ "MapType", "classAntares_1_1Solver_1_1InMemoryWriter.html#a2b6b35b4c91e3fd77b4e0f6a0031efcb", null ],
     [ "InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html#a31970313a0ab45a1606530b4682454bb", null ],
-    [ "~InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html#ae42917b819027ba901afee81514a0d2e", null ],
+    [ "~InMemoryWriter", "classAntares_1_1Solver_1_1InMemoryWriter.html#a7a4e2e90cc6e8a088cb8f146bd32b3d3", null ],
     [ "addEntryFromBuffer", "classAntares_1_1Solver_1_1InMemoryWriter.html#af4649e785d4277c4ffd9e4b8324b4d8e", null ],
     [ "addEntryFromFile", "classAntares_1_1Solver_1_1InMemoryWriter.html#a9edd0f1f4856037959fa62ba05002afe", null ],
     [ "finalize", "classAntares_1_1Solver_1_1InMemoryWriter.html#a869ad6d0755f664efc50d6a21e28c79d", null ],

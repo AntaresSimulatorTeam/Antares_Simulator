@@ -164,7 +164,7 @@ $(document).ready(function(){initNavTree('mps__utils_8h_source.html',''); initRe
 <div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classMPSwriter.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMPSwriter.html">MPSwriter</a>: <span class="keyword">public</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classMPSwriter.html">MPSwriter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    ~<a class="code" href="classMPSwriter.html">MPSwriter</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="classMPSwriter.html">MPSwriter</a>(<span class="keyword">const</span> <a class="code" href="classAntares_1_1Optimisation_1_1LinearProblemApi_1_1ILinearProblem.html">Optimisation::LinearProblemApi::ILinearProblem</a>&amp; linearProblem,</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;              uint currentOptimNumber,</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;              <span class="keywordtype">bool</span> keepNames);</div>
@@ -178,7 +178,7 @@ $(document).ready(function(){initNavTree('mps__utils_8h_source.html',''); initRe
 <div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classnullMPSwriter.html">   49</a></span>&#160;<span class="keyword">class </span><a class="code" href="classnullMPSwriter.html">nullMPSwriter</a>: <span class="keyword">public</span> <a class="code" href="classI__MPS__writer.html">I_MPS_writer</a></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classnullMPSwriter.html">nullMPSwriter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    ~<a class="code" href="classnullMPSwriter.html">nullMPSwriter</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">using</span> I_MPS_writer::I_MPS_writer;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> runIfNeeded(<a class="code" href="classAntares_1_1Solver_1_1IResultWriter.html">Solver::IResultWriter</a>&amp; <span class="comment">/*writer*/</span>, <span class="keyword">const</span> std::string&amp; <span class="comment">/*filename*/</span>)<span class="keyword"> override</span></div>

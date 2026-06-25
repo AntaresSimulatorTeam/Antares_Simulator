@@ -1,7 +1,7 @@
 var classSystemMemoryLogger =
 [
     [ "SystemMemoryLogger", "classSystemMemoryLogger.html#a4ae808128767843f680c4aa1759aaead", null ],
-    [ "~SystemMemoryLogger", "classSystemMemoryLogger.html#a5ae8d302631fc7e891607d897b7771a6", null ],
-    [ "onInterval", "classSystemMemoryLogger.html#a24ec5be7f986cc6a881a28e10d7f0bde", null ],
-    [ "onStarting", "classSystemMemoryLogger.html#aafec914140ac3995ca484cbbb4b66090", null ]
+    [ "~SystemMemoryLogger", "classSystemMemoryLogger.html#a44733a3a261c0d847bb3cd8630e329b1", null ],
+    [ "onInterval", "classSystemMemoryLogger.html#afc6a56ba516ac8c1dc80ac73c6d43778", null ],
+    [ "onStarting", "classSystemMemoryLogger.html#a6814f91d269af40e8191aaacde667c81", null ]
 ];

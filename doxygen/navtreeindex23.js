@@ -245,7 +245,7 @@ var NAVTREEINDEX23 =
 "classPMinDispatchableGeneration.html#a2d46790c674fec6498eb4a31d948e74a":[9,0,256,1],
 "classPMinMaxDispatchableGenerationGroup.html":[9,0,257],
 "classPMinMaxDispatchableGenerationGroup.html#a0640a47d12fe6575ac78e2ce18ac85cd":[9,0,257,1],
-"classPMinMaxDispatchableGenerationGroup.html#a9c350292abde5369bce78679b8923e32":[9,0,257,0],
+"classPMinMaxDispatchableGenerationGroup.html#a2665d251cd5731dc3002d7c2b8849bd5":[9,0,257,0],
 "classPMinMaxDispatchableGenerationGroup.html#ae2b413b2ff78d8568f20bbe2aafcb763":[9,0,257,2],
 "classPOffUnits.html":[9,0,258],
 "classPOffUnits.html#a1d4fcf40a928b49e8f858d568630ea1b":[9,0,258,0],

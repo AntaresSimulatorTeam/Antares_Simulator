@@ -3,7 +3,7 @@ var classAntares_1_1Data_1_1ThermalCluster =
     [ "DivModulation", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation.html", "structAntares_1_1Data_1_1ThermalCluster_1_1DivModulation" ],
     [ "ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#adbae5e0bff6e2a24eb11d6064d0ea213", null ],
     [ "ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#a8f60c0a7c1e1003310c551337e86688a", null ],
-    [ "~ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#a3b42fc7c68561bcc31f95c0144875a48", null ],
+    [ "~ThermalCluster", "classAntares_1_1Data_1_1ThermalCluster.html#a1c86a68b0da51ad118513f3fc109ee70", null ],
     [ "calculationOfSpinning", "classAntares_1_1Data_1_1ThermalCluster.html#aae370b01d673e0e05409ee318e036614", null ],
     [ "calculatMinDivModulation", "classAntares_1_1Data_1_1ThermalCluster.html#a34cf70e585c4682be1890fd108ed90f1", null ],
     [ "checkAndCorrectAvailability", "classAntares_1_1Data_1_1ThermalCluster.html#a786fa265a53f1d770393a73a7b39852c", null ],
