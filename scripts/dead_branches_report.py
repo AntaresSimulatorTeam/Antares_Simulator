@@ -3,24 +3,21 @@
 Generate a dead-branches report for a GitHub repository.
 
 Usage:
-    python3 dead_branches_report.py [--repo OWNER/REPO] [--output FILE] [--token TOKEN]
+    python3 dead_branches_report.py [--repo OWNER/REPO] [--output FILE]
 
 Requires:
     - git (with remote already configured)
-    - GITHUB_TOKEN env var or --token argument (for PR lookups)
+    - gh CLI (https://cli.github.com/) authenticated for PR lookups
 
 Owner/repo defaults to the remote origin of the current git repo.
 """
 
 import argparse
 import json
-import os
 import subprocess
 import sys
-import urllib.request
-import urllib.error
-from dataclasses import dataclass, field
-from datetime import date, datetime, timedelta
+from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 
@@ -120,45 +117,42 @@ def last_real_commit(branch: str) -> tuple[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# GitHub API helpers
+# gh CLI helpers
 # ---------------------------------------------------------------------------
 
-def github_api(path: str, token: str) -> list | dict:
-    url = f"https://api.github.com{path}"
-    req = urllib.request.Request(url, headers={
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-    })
+def gh_available() -> bool:
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            return json.loads(resp.read())
-    except urllib.error.HTTPError as e:
-        print(f"  GitHub API error {e.code} for {path}", file=sys.stderr)
-        return []
+        result = subprocess.run(["gh", "--version"], capture_output=True)
+        return result.returncode == 0
+    except FileNotFoundError:
+        return False
 
 
-def fetch_open_prs(owner: str, repo: str, token: str) -> dict[str, str]:
-    """Return mapping: head_branch → '#NNN' for all open PRs."""
-    result: dict[str, str] = {}
-    page = 1
-    while True:
-        prs = github_api(
-            f"/repos/{owner}/{repo}/pulls?state=open&per_page=100&page={page}",
-            token,
-        )
-        if not prs:
-            break
-        for pr in prs:
-            head = pr.get("head", {}).get("ref", "")
-            number = pr.get("number", "")
-            draft = " (draft)" if pr.get("draft") else ""
-            if head:
-                result[head] = f"#{number}{draft}"
-        if len(prs) < 100:
-            break
-        page += 1
-    return result
+def fetch_open_prs(owner: str, repo: str) -> dict[str, str]:
+    """Return mapping: head_branch → '#NNN[(draft)]' using gh pr list."""
+    result = subprocess.run(
+        [
+            "gh", "pr", "list",
+            "--repo", f"{owner}/{repo}",
+            "--state", "open",
+            "--limit", "500",
+            "--json", "number,headRefName,isDraft",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print(f"  gh pr list failed: {result.stderr.strip()}", file=sys.stderr)
+        return {}
+    prs = json.loads(result.stdout or "[]")
+    out: dict[str, str] = {}
+    for pr in prs:
+        branch = pr.get("headRefName", "")
+        number = pr.get("number", "")
+        draft = " (draft)" if pr.get("isDraft") else ""
+        if branch:
+            out[branch] = f"#{number}{draft}"
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -328,7 +322,6 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate a dead-branches markdown report.")
     parser.add_argument("--repo", help="OWNER/REPO (default: parsed from git remote origin)")
     parser.add_argument("--output", default="dead-branches-report.md", help="Output file path")
-    parser.add_argument("--token", help="GitHub token (default: GITHUB_TOKEN env var)")
     parser.add_argument("--active-months", type=int, default=3,
                         help="Branches newer than this are 'Active' (default: 3)")
     parser.add_argument("--dead-months", type=int, default=12,
@@ -337,8 +330,6 @@ def main() -> None:
                         help="Branch names to always skip (default: develop main gh-pages)")
     parser.add_argument("--no-fetch", action="store_true", help="Skip git fetch --prune")
     args = parser.parse_args()
-
-    token = args.token or os.environ.get("GITHUB_TOKEN", "")
 
     if args.repo:
         owner, repo = args.repo.split("/", 1)
@@ -355,14 +346,14 @@ def main() -> None:
     branch_names = list_remote_branches(protected)
     print(f"→ Found {len(branch_names)} branches (excluding {', '.join(sorted(protected))})")
 
-    # Fetch open PRs if token available
+    # Fetch open PRs via gh CLI
     open_prs: dict[str, str] = {}
-    if token:
-        print("→ Fetching open PRs from GitHub API ...", flush=True)
-        open_prs = fetch_open_prs(owner, repo, token)
+    if gh_available():
+        print("→ Fetching open PRs via gh CLI ...", flush=True)
+        open_prs = fetch_open_prs(owner, repo)
         print(f"  {len(open_prs)} open PRs found")
     else:
-        print("  (no GITHUB_TOKEN — skipping PR lookup; set it for full report)", file=sys.stderr)
+        print("  (gh CLI not found — skipping PR lookup; install https://cli.github.com/)", file=sys.stderr)
 
     # Build branch data
     branches: list[Branch] = []
