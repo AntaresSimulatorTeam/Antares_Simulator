@@ -67,9 +67,9 @@ namespace
 void FillLegacySimulationTable(SimulationTable& simulationTable,
                                const PROBLEME_ANTARES_A_RESOUDRE& problem,
                                const FillContext& fillContext,
-                               const LegacyNameMapper& nameMapper,
                                unsigned currentBlock)
 {
+    static constexpr LegacyNameMapper nameMapper;
     const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
     const unsigned int block = currentBlock;
@@ -84,6 +84,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
              == static_cast<std::size_t>(problem.NombreDeContraintes)
            && problem.CoutsMarginauxDesContraintes.size()
                 == static_cast<std::size_t>(problem.NombreDeContraintes));
+
     for (int index = 0; index < problem.NombreDeVariables; ++index)
     {
         const auto& info = problem.LegacyVariablesInfo[static_cast<std::size_t>(index)];
@@ -323,11 +324,9 @@ static SimplexResult OPT_TryToCallSimplex(const SingleOptimOptions& options,
                                 true);
         }
 
-        static constexpr LegacyNameMapper legacyNameMapper;
         FillLegacySimulationTable(*simulationTable,
                                   *ProblemeAResoudre,
                                   fillCtx,
-                                  legacyNameMapper,
                                   currentBlock);
 
         measure.tick();
