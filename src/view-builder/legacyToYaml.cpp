@@ -19,6 +19,7 @@ YAML::Node makeComponent(const std::string& id, const std::string& modelId, cons
     component["id"] = id;
     component["model"] = modelId;
     component["parameters"] = YAML::Node(YAML::NodeType::Sequence);
+    component["parameters"].SetStyle(YAML::EmitterStyle::Flow);
 
     if (!properties.empty())
     {

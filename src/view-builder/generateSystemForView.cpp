@@ -176,6 +176,7 @@ YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::
         compNode["id"] = component.Id();
         compNode["model"] = findModelName(component);
         compNode["parameters"] = YAML::Node(YAML::NodeType::Sequence);
+        compNode["parameters"].SetStyle(YAML::EmitterStyle::Flow);
         components.push_back(compNode);
     }
     for (const auto& comp : legacyComponents)
