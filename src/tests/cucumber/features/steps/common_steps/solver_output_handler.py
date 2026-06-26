@@ -120,6 +120,13 @@ class solver_output_handler:
     def get_hourly_nodu(self, area: str, year: int) -> pd.Series:
         return self.__get_values_hourly(area, year)["NODU"][" "]
 
+    def get_reference_nodu(self, study_path):
+        ignore_rows = [0, 1, 2, 3, 6]
+        reference_path = Path(study_path) / "reference" / "values-hourly.txt"
+        assert reference_path.exists(), f"Reference file not found: {reference_path}"
+        df = pd.read_csv(reference_path, header=[0, 1], skiprows=ignore_rows, sep='\t', low_memory=False)
+        return df["NODU"].iloc[:, 0]
+
     def get_loss_of_load_weekly_duration_h(self, area: str, year: int, week: int) -> int:
         df = self.__get_values_hourly_for_specific_week(area, year, week)
         return self.__get_values_hourly_for_specific_week(area, year, week)["LOLD"]["Hours"].sum()

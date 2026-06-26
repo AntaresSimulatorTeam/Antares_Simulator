@@ -841,11 +841,17 @@ def check_two_optimization_iterations(context):
 def check_weekly_overall_cost(context, area, year, week, value):
     actual = context.soh.get_weekly_overall_cost_eur(area, year, week)
     assert_double_close(value, actual, 0.001, f"Weekly OV. COST week {week}")
-
-@then('in area "{area}", during year {year:d}, total NODU for hour {hour:d} is {value:d}')
-def check_total_nodu(context, area, year, hour, value):
-    actual = int(context.soh.get_hourly_nodu(area, year).iloc[hour])
-    assert actual == value, \
-        f"Total NODU mismatch at hour {hour}: expected {value}, got {actual}"
     
-
+@then('in area "{area}", during year {year:d}, NODU for all hours matches reference')
+def check_all_nodu_against_reference(context, area, year):
+    actual_nodu = context.soh.get_hourly_nodu(area, year)
+    ref_nodu = context.soh.get_reference_nodu(context.study_path)
+    assert len(actual_nodu) == len(ref_nodu), \
+        f"Length mismatch: simulation has {len(actual_nodu)} hours, reference has {len(ref_nodu)} hours"
+    mismatches = []
+    for hour in range(len(ref_nodu)):
+        if int(actual_nodu.iloc[hour]) != int(ref_nodu.iloc[hour]):
+            mismatches.append(
+                f"  Hour {hour}: expected {int(ref_nodu.iloc[hour])}, got {int(actual_nodu.iloc[hour])}")
+    assert len(mismatches) == 0, \
+        f"NODU mismatches found:\n" + "\n".join(mismatches[:20])
