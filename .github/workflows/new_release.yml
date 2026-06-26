@@ -86,15 +86,15 @@ jobs:
       tests_commit_hash: ${{ steps.get_test_commit.outputs.commit_hash }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Get Antares_Simulator_Tests_NR commit hash
         id: get_test_commit
         run: |
           # Ensure the submodule is checked out
-          git submodule update --init src/tests/resources/Antares_Simulator_Tests_NR
+          git submodule update --init resources/Antares_Simulator_Tests_NR
           # Get the commit hash for the specific submodule path
-          COMMIT_HASH=$(git ls-tree HEAD src/tests/resources/Antares_Simulator_Tests_NR | awk '{print $3}')
+          COMMIT_HASH=$(git ls-tree HEAD resources/Antares_Simulator_Tests_NR | awk '{print $3}')
           echo "commit_hash=${COMMIT_HASH}" >> "$GITHUB_OUTPUT"
 
   generate_results:

@@ -88,7 +88,7 @@ Workflow file: [here](../../../.github/workflows/cucumber-tests/action.yml)
 ## Under the hood
 ### Test files
 Tests are hosted in the [Antares_Simulator_Tests_NR submodule](https://github.com/AntaresSimulatorTeam/Antares_Simulator_Tests_NR) 
-into the `src/test/resources` folder. Adding or modifying a study should thus change contents of this submodule.
+into the `resources` folder. Adding or modifying a study should thus change contents of this submodule.
 
 ### Code-behind
 All Gherkin steps have a code-behind definition called "step definitions". These are defined in the python files under 

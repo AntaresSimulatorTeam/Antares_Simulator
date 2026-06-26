@@ -3,6 +3,7 @@
 
 #ifndef __SOLVER_SIMULATION_SOLVER_HXX__
 #define __SOLVER_SIMULATION_SOLVER_HXX__
+#include <memory>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/date/date.h>
@@ -223,7 +224,7 @@ inline ISimulation<ImplementationType>::ISimulation(
     pNbMaxPerformedYearsInParallel(0),
     pYearByYear(study.parameters.yearByYear),
     pDurationCollector(duration_collector),
-    pQueueService(study.pQueueService),
+    pQueueService(std::make_shared<Yuni::Job::QueueService>()),
     pResultWriter(resultWriter),
     simulationObserver_(simulationObserver)
 {
@@ -273,10 +274,6 @@ void ISimulation<ImplementationType>::run()
         logs.info() << " Only the preprocessors are enabled.";
 
         regenerateTimeSeries(study, pResultWriter, pDurationCollector);
-
-        // Destroy the TS Generators if any
-        // It will export the time-series into the output at the same time
-        TSGenerator::DestroyAll(study);
     }
     else
     {
@@ -311,9 +308,6 @@ void ISimulation<ImplementationType>::run()
             pDurationCollector("mc_years")
               << [finalYear, &state, this] { loopThroughYears(0, finalYear, state); };
         }
-        // Destroy the TS Generators if any
-        // It will export the time-series into the output in the same time
-        TSGenerator::DestroyAll(study);
 
         // Post operations
         pDurationCollector("post_processing") << [this] { ImplementationType::simulationEnd(); };

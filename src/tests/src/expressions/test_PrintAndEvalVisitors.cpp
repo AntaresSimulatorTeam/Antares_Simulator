@@ -36,11 +36,11 @@ BOOST_AUTO_TEST_CASE(test_getSystemParameterValueAsDouble)
             return 123.45; // Mock return value for testing
         }
 
-        [[nodiscard]] virtual std::span<const double> getData(
+        [[nodiscard]] std::span<const double> getData(
           [[maybe_unused]] const std::string& dataSetId,
           [[maybe_unused]] unsigned timeSeriesNumber,
           [[maybe_unused]] unsigned firstHour,
-          [[maybe_unused]] unsigned lastHour) const
+          [[maybe_unused]] unsigned lastHour) const override
         {
             static std::vector<double> data = {123.45};
             return data;
@@ -849,8 +849,13 @@ EvaluationResult CreateAndEvaluateTimeNode(Node* p)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+                                                                           last /*three hours*/,
+                                                                           first,
+                                                                           last,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {first, last /*three hours*/, first, last, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
@@ -902,8 +907,13 @@ EvaluationResult CreateAndEvaluateTimeSumNode(Node* from, Node* to)
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+                                                                           last /*three hours*/,
+                                                                           first,
+                                                                           last,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {first, last /*three hours*/, first, last, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
@@ -970,8 +980,13 @@ EvaluationResult CreateAndEvaluateAllTimeSumNode()
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{first,
+                                                                           last /*three hours*/,
+                                                                           first,
+                                                                           last,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {first, last /*three hours*/, first, last, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
@@ -1010,8 +1025,13 @@ BOOST_FIXTURE_TEST_CASE(evaluate_time_dependent_multiplication, MyDummyFixture)
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
+                                                                           hour_1 /*two hours*/,
+                                                                           hour_0,
+                                                                           hour_1,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {hour_0, hour_1 /*two hours*/, hour_0, hour_1, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
@@ -1076,8 +1096,13 @@ void evaluate_time_dependent_operation()
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
 
+    const Antares::Optimisation::LinearProblemApi::FillContext fillContext{hour_0,
+                                                                           hour_1 /*three hours*/,
+                                                                           hour_0,
+                                                                           hour_1,
+                                                                           0};
     EvalVisitor visitor(optimContainer,
-                        {hour_0, hour_1 /*three hours*/, hour_0, hour_1, 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
@@ -1114,8 +1139,10 @@ void evaluate_time_dependent_operation_on_TimeShiftNode(Node* timeShift)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
+    const Antares::Optimisation::LinearProblemApi::FillContext
+      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
     EvalVisitor visitor(optimContainer,
-                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
@@ -1160,8 +1187,10 @@ void evaluate_time_dependent_operation_on_TimeIndexNode(Node* timeIndex)
     MockLinearProblem linearProblem = MockLinearProblem(true);
     OptimEntityContainer optimContainer(linearProblem);
     optimContainer.addFromSystemComponents(components);
+    const Antares::Optimisation::LinearProblemApi::FillContext
+      fillContext{hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0};
     EvalVisitor visitor(optimContainer,
-                        {hours.at(0), hours.at(1) /*two hours*/, hours.at(0), hours.at(1), 0},
+                        fillContext,
                         components.back(),
                         &dummy_data,
                         scenarioGroupRepo.scenario(components.back().getScenarioGroupId()));
