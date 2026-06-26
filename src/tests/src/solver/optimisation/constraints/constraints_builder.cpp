@@ -128,13 +128,7 @@ struct ConstraintBuilderDataFixture
         pb_hebdo.NomsDesPays = {"CountryA", "CountryB", "CountryC"};
         pb_hebdo.weekInTheYear = 1;
         pb_hebdo.NombreDePasDeTemps = 168;
-    }
 
-    int32_t nbTimeStepsOptim = 50;
-    PROBLEME_HEBDO pb_hebdo;
-
-    void set_correspondances_des_variables()
-    {
         pb_hebdo.CorrespondanceVarNativesVarOptim.resize(pb_hebdo.NombreDePasDeTemps);
         for (auto i = 0; i < nbTimeStepsOptim; i++)
         {
@@ -146,6 +140,9 @@ struct ConstraintBuilderDataFixture
 #pragma GCC diagnostic pop
         }
     }
+
+    int32_t nbTimeStepsOptim = 50;
+    PROBLEME_HEBDO pb_hebdo;
 };
 
 struct ConstraintBuilderFixture: public STScumulativeConstaintFixture,
