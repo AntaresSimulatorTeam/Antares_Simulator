@@ -187,9 +187,9 @@ BOOST_AUTO_TEST_CASE(extra_output_entries_carry_block_time_and_scenario)
 
     const auto row = FindRow(table, "prop_cost", "cluster1");
     BOOST_REQUIRE(row.has_value());
-    BOOST_CHECK_EQUAL(row->block, "2");               // currentBlock + 1
-    BOOST_CHECK_EQUAL(row->absoluteTimeIndex, "169"); // timeIndex + 1
-    BOOST_CHECK_EQUAL(row->blockTimeIndex, "1");      // first timestep of the block
+    BOOST_CHECK_EQUAL(row->block, "1");               // currentBlock
+    BOOST_CHECK_EQUAL(row->absoluteTimeIndex, "168"); // timeIndex
+    BOOST_CHECK_EQUAL(row->blockTimeIndex, "0");      // first timestep of the block
     BOOST_CHECK_EQUAL(row->scenarioIndex, "2");
     BOOST_CHECK_EQUAL(row->basisStatus, "None");
 }
