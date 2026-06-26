@@ -198,7 +198,7 @@ public:
                                       const std::string& clusterName,
                                       const std::string& reserveName1,
                                       const std::string& reserveName2);
-    void POffUnitsUpperBound(unsigned constrIndex, const std::string& clusterName);
+    void ParticipationOfOffUnitsToReserves(unsigned constrIndex, const std::string& clusterName);
     void POutCapacityThresholdInf(unsigned constrIndex, const std::string& clusterName);
     void POutCapacityThresholdSup(unsigned constrIndex, const std::string& clusterName);
     void POutBoundMin(unsigned constrIndex, const std::string& clusterName);

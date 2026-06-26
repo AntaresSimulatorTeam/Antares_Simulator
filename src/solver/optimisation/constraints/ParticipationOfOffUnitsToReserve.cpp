@@ -1,18 +1,20 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include "antares/solver/optimisation/constraints/OffUnitsThermalParticipatingToReserves.h"
+#include "antares/solver/optimisation/constraints/ParticipationOfOffUnitsToReserve.h"
 
-void OffUnitsThermalParticipatingToReserves::add(int pays, int reserve, int cluster, int pdt)
+void ParticipationOfOffUnitsToReserve::add(int pays, int reserve, int cluster, int pdt)
 {
     if (!data.Simulation)
     {
         // 16 ter
         // The max power of off units participating to Reserves is bounded by the number of units
-        // and max power of each unit : P^off +(Pmax^off . M)  <= (Pmax^off . M^on) with P^off:
-        // total participation of turned off units to res Pmax^off : max participation for each off
-        // unit M : Number of units in the cluster M^on : Number of running units in the cluster
-        //
+        // and max power of each unit : 
+        // P^off +(Pmax^off . M)  <= (Pmax^off . M^on)
+        // with P^off: total participation of turned off units to res
+        // Pmax^off : max participation for each off unit 
+        // M : Number of units in the cluster 
+        // M^on : Number of running units in the cluster
 
         CAPACITY_RESERVATION& capacityReservation = data.areaReserves[pays]
                                                       .areaCapacityReservations[reserve];
