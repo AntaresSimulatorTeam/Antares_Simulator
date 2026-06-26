@@ -81,7 +81,7 @@ Feature: reserves tests
 
 @fast @short
 # Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
-# TODO : Ask test description to Thibault Toujouse
+# Description : L'objectif de ce test est de permettre la participation d'un cluster lorsqu'il est allumé ou éteint. l'optimisation doit donner la répartition allumé/éteint optimale pour minimiser le coût total.
   Scenario: lot_2_cluster_off_1_area
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_cluster_off_1_area"
     When I run antares simulator
@@ -92,11 +92,11 @@ Feature: reserves tests
     And in area "AREA", during year 1, for cluster "cluster1" and reserve "Res_2", participation of off units to the reserve is always equal to 50 MWh
     And in area "AREA", during year 1, for reserve "Res_2", reserve unsupplied power is always equal to 10 MWh
     And in area "AREA", during year 1, for reserve "Res_1", reserve unsupplied power is always equal to 5 MWh
-    And in area "AREA", overall cost on "1 JAN 06:00" of year 1 is of 6500 Euro 
-
+    And in area "AREA", overall cost on "1 JAN 06:00" of year 1 is of 6500 Euro
+ 
 @fast @short
-# Lot 2 : Intégration de la participation du thermique éteint et des stockage CT et LT
-# TODO : Ask test description to Thibault Toujouse
+# Lot 2 : Intégration de la participation du thermique éteint sur 2 zones
+# Description : L'objectif de ce test est de permettre la participation d'un cluster lorsqu'il est allumé ou éteint. l'optimisation doit donner la répartition allumé/éteint optimale pour minimiser le coût total. On considère plusieurs zones afin de vérifier les résultats dans ce contexte.
   Scenario: lot_2_cluster_off_2_areas
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/lot_2_cluster_off_2_areas"
     When I run antares simulator
