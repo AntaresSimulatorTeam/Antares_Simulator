@@ -4,14 +4,13 @@
 #include "antares/solver/optimisation/post_process_commands.h"
 
 #include <fmt/format.h>
+#include <pi_constantes_externes.h>
 #include <sstream>
 
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
 #include "antares/solver/utils/quadratic_mps_writer.h"
-
-#include <pi_constantes_externes.h>
 
 namespace Antares::Solver::Simulation
 {

@@ -1,12 +1,12 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
+#include <fmt/format.h>
+
 #include "antares/solver/optimisation/adequacy_patch_csr/hourly_csr_problem.h"
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
-
-#include <fmt/format.h>
 
 #include "pi_constantes_externes.h"
 
@@ -81,8 +81,7 @@ void HourlyCSRProblem::constructVariableFlows()
             int indirectVar;
             algebraicFluxVar = variableManager_.DirectFlow(Interco, triggeredHour)
               = NumberOfVariables;
-            problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("FLOW_{}",
-                                                                                 Interco);
+            problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("FLOW_{}", Interco);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug()
               << NumberOfVariables << " flow[" << Interco << "]. ["
@@ -96,7 +95,7 @@ void HourlyCSRProblem::constructVariableFlows()
             directVar = variableManager_.PositiveDirectFlow(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("FLOW_DIRECT_{}",
-                                                                                 Interco);
+                                                                                Interco);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
@@ -104,7 +103,7 @@ void HourlyCSRProblem::constructVariableFlows()
             indirectVar = variableManager_.PositiveIndirectFlow(Interco, triggeredHour)
               = NumberOfVariables;
             problemeAResoudre_.NomDesVariables[NumberOfVariables] = fmt::format("FLOW_INDIRECT_{}",
-                                                                                 Interco);
+                                                                                Interco);
             problemeAResoudre_.TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
             NumberOfVariables++;

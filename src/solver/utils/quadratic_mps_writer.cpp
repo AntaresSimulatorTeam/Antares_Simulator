@@ -3,10 +3,11 @@
 
 #include "antares/solver/utils/quadratic_mps_writer.h"
 
-#include <cmath>
 #include <cctype>
+#include <cmath>
 #include <fmt/format.h>
 #include <limits>
+#include <pi_constantes_externes.h>
 #include <stdexcept>
 #include <string_view>
 #include <unordered_set>
@@ -14,8 +15,6 @@
 
 #include <antares/logs/logs.h>
 #include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
-#include <pi_constantes_externes.h>
 
 namespace
 {
@@ -176,8 +175,7 @@ void writeRows(std::string& mps,
             sense = 'G';
             break;
         default:
-            throw std::invalid_argument("Unknown constraint sense: "
-                                        + problem.Sens.substr(i, 1));
+            throw std::invalid_argument("Unknown constraint sense: " + problem.Sens.substr(i, 1));
         }
         fmt::format_to(std::back_inserter(mps), "{}{}  {}\n", pad, sense, constraintNames[i]);
     }
@@ -292,7 +290,11 @@ void writeBounds(std::string& mps,
             }
             if (isBooleanVariable(problem, i))
             {
-                fmt::format_to(std::back_inserter(mps), "{}BV {} {}\n", pad, boundName, variableName);
+                fmt::format_to(std::back_inserter(mps),
+                               "{}BV {} {}\n",
+                               pad,
+                               boundName,
+                               variableName);
                 break;
             }
             if (!isEqual(lb, 0.0))
@@ -391,8 +393,7 @@ std::string buildQuadraticMps(const PROBLEME_ANTARES_A_RESOUDRE& problem,
 {
     if (problem.NombreDeVariables == 0)
     {
-        Antares::logs.warning() << "Quadratic problem '" << filename
-                                 << "' contains no variables.";
+        Antares::logs.warning() << "Quadratic problem '" << filename << "' contains no variables.";
         return {};
     }
 
