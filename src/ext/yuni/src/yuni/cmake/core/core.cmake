@@ -92,12 +92,6 @@ add_library(yuni-static-core STATIC
 		core/bit/bit.h
 		core/bit/bit.hxx
 		core/bit.h
-		core/boundingbox.h
-		core/color/fwd.h
-		core/color/rgb.h
-		core/color/rgb.hxx
-		core/color/rgba.h
-		core/color/rgba.hxx
 		core/dictionary.h
 		core/dynamiclibrary/file.cpp
 		core/dynamiclibrary/file.h
@@ -122,11 +116,7 @@ add_library(yuni-static-core STATIC
 		core/event/statistics/none.h
 		core/event/traits.h
 		core/event.h
-		core/exceptions/badcast.h
-		core/exceptions.h
 		core/foreach.h
-		core/functional/fold.h
-		core/functional/fold.hxx
 		core/fwd.h
 		core/getopt/option.cpp
 		core/getopt/option.h
@@ -161,22 +151,6 @@ add_library(yuni-static-core STATIC
 		core/math/distance.hxx
 		core/math/exponential.h
 		core/math/exponential.hxx
-		core/math/geometry/boundingbox.h
-		core/math/geometry/boundingbox.hxx
-		core/math/geometry/edge.h
-		core/math/geometry/point2D.h
-		core/math/geometry/point2D.hxx
-		core/math/geometry/point3D.h
-		core/math/geometry/quaternion.h
-		core/math/geometry/quaternion.hxx
-		core/math/geometry/rect2D.h
-		core/math/geometry/rect2D.hxx
-		core/math/geometry/triangle.h
-		core/math/geometry/vector3D.h
-		core/math/geometry/vector3D.hxx
-		core/math/geometry/vertex.h
-		core/math/geometry.h
-		core/math/geometry.hxx
 		core/math/log.h
 		core/math/log.hxx
 		core/math/math.h
@@ -196,16 +170,6 @@ add_library(yuni-static-core STATIC
 		core/math.h
 		core/noncopyable.h
 		core/nonmovable.h
-		core/nullable/extension.hxx
-		core/nullable/holder.h
-		core/nullable/nullable.h
-		core/nullable/nullable.hxx
-		core/nullable.h
-		core/point2D.h
-		core/point3D.h
-		core/predicate/result/and.h
-		core/predicate/result/or.h
-		core/predicate/result/sum.h
 		core/preprocessor/capabilities.h
 		core/preprocessor/enum.h
 		core/preprocessor/math.h
@@ -219,8 +183,6 @@ add_library(yuni-static-core STATIC
 		core/process/program/windows.inc.hpp
 		core/process/program/unix.inc.hpp
 		core/process.h
-		core/quaternion.h
-		core/rect2D.h
 		core/singleton/policies/creation.h
 		core/singleton/policies/lifetime.h
 		core/singleton/singleton.h
@@ -300,34 +262,6 @@ add_library(yuni-static-core STATIC
 		core/traits/extension/into-cstring.h
 		core/traits/extension/length.h
 		core/traits/length.h
-		core/tree/n/iterator/childiterator.h
-		core/tree/n/iterator/childiterator.hxx
-		core/tree/n/iterator/depthinfixiterator.h
-		core/tree/n/iterator/depthinfixiterator.hxx
-		core/tree/n/iterator/depthprefixiterator.h
-		core/tree/n/iterator/depthprefixiterator.hxx
-		core/tree/n/iterator/depthsuffixiterator.h
-		core/tree/n/iterator/depthsuffixiterator.hxx
-		core/tree/n/iterator/iterator.h
-		core/tree/n/treeN.h
-		core/tree/n/treeN.hxx
-		core/tree/treeN.h
-		core/tribool.h
-		core/tribool.hxx
-		core/unit/angle.h
-		core/unit/data.h
-		core/unit/define.h
-		core/unit/length
-		core/unit/length/extra.h
-		core/unit/length/length.h
-		core/unit/length/metric.h
-		core/unit/length.h
-		core/unit/luminance.h
-		core/unit/time.h
-		core/unit/undef.h
-		core/unit/unit.h
-		core/unit/unit.hxx
-		core/unit.h
 		core/utils/hexdump.cpp
 		core/utils/hexdump.h
 		core/utils/hexdump.hxx
@@ -338,7 +272,6 @@ add_library(yuni-static-core STATIC
 		core/validator/text/default.private.h
 		core/validator/text/validator.h
 		core/validator/validator.h
-		core/vector3D.h
 		core/version/version.cpp
 		core/version/version.h
 		core/version/version.hxx
