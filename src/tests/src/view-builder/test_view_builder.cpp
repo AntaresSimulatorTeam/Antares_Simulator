@@ -114,7 +114,8 @@ BOOST_AUTO_TEST_CASE(area_component)
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 1);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
         }
     }
     BOOST_CHECK(found);
@@ -135,7 +136,8 @@ BOOST_AUTO_TEST_CASE(load_component)
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 1);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
         }
     }
     BOOST_CHECK(found);
@@ -156,8 +158,10 @@ BOOST_AUTO_TEST_CASE(wind_component)
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 2);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
-            BOOST_CHECK_EQUAL(props[1].as<std::string>(), "technology");
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
+            BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "wind");
         }
     }
     BOOST_CHECK(found);
@@ -177,10 +181,11 @@ BOOST_AUTO_TEST_CASE(thermal_component)
             BOOST_CHECK_EQUAL(comp["model"].as<std::string>(), "antares_legacy_models.thermal");
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
-            BOOST_REQUIRE_EQUAL(props.size(), 3);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "plant");
-            BOOST_CHECK_EQUAL(props[1].as<std::string>(), "carrier");
-            BOOST_CHECK_EQUAL(props[2].as<std::string>(), "technology");
+            BOOST_REQUIRE_EQUAL(props.size(), 2);
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
+            BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER");
         }
     }
     BOOST_CHECK(found);
@@ -201,8 +206,10 @@ BOOST_AUTO_TEST_CASE(renewable_component)
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 2);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
-            BOOST_CHECK_EQUAL(props[1].as<std::string>(), "technology");
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
+            BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER");
         }
     }
     BOOST_CHECK(found);
@@ -224,8 +231,10 @@ BOOST_AUTO_TEST_CASE(sts_component)
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 2);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
-            BOOST_CHECK_EQUAL(props[1].as<std::string>(), "group");
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
+            BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "group");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "OTHER1");
         }
     }
     BOOST_CHECK(found);
@@ -247,8 +256,10 @@ BOOST_AUTO_TEST_CASE(hydro_component)
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 2);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
-            BOOST_CHECK_EQUAL(props[1].as<std::string>(), "group");
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
+            BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "group");
+            BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), "hydro");
         }
     }
     BOOST_CHECK(found);
@@ -269,7 +280,8 @@ BOOST_AUTO_TEST_CASE(link_component)
             auto props = comp["properties"];
             BOOST_REQUIRE(props.IsSequence());
             BOOST_REQUIRE_EQUAL(props.size(), 1);
-            BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+            BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
         }
     }
     BOOST_CHECK(found);
@@ -280,16 +292,25 @@ BOOST_AUTO_TEST_CASE(misc_gen_components)
     YAML::Node root = generateSystemForView(*study);
     auto components = root["system"]["components"];
 
-    std::vector<std::string> miscGenNames = {"CHP",
-                                             "BioMass",
-                                             "BioGaz",
-                                             "Waste",
-                                             "GeoThermal",
-                                             "Other",
-                                             "PSP",
-                                             "RowBalance"};
+    struct MiscGenTestCase
+    {
+        std::string name;
+        std::string expectedTechnology;
+        std::string expectedMiscType;
+    };
 
-    for (const auto& name: miscGenNames)
+    std::vector<MiscGenTestCase> miscGenCases = {
+        {"CHP",         "chp",         "misc_ndg"},
+        {"BioMass",     "biomass",     "misc_ndg"},
+        {"BioGaz",      "biogaz",      "misc_ndg"},
+        {"Waste",       "waste",       "misc_ndg"},
+        {"GeoThermal",  "geothermal",  "misc_ndg"},
+        {"Other",       "other",       "misc_ndg"},
+        {"PSP",         "psp",         "pumped_storage_power"},
+        {"RowBalance",  "rowbalance",  "rest_world"},
+    };
+
+    for (const auto& [name, expectedTech, expectedMiscType]: miscGenCases)
     {
         std::string expectedId = "area<france>::MiscGen<" + name + ">";
         bool found = false;
@@ -303,9 +324,12 @@ BOOST_AUTO_TEST_CASE(misc_gen_components)
                 auto props = comp["properties"];
                 BOOST_REQUIRE(props.IsSequence());
                 BOOST_REQUIRE_EQUAL(props.size(), 3);
-                BOOST_CHECK_EQUAL(props[0].as<std::string>(), "carrier");
-                BOOST_CHECK_EQUAL(props[1].as<std::string>(), "technology");
-                BOOST_CHECK_EQUAL(props[2].as<std::string>(), "miscellaneous_type");
+                BOOST_CHECK_EQUAL(props[0]["id"].as<std::string>(), "carrier");
+                BOOST_CHECK_EQUAL(props[0]["value"].as<std::string>(), "electricity");
+                BOOST_CHECK_EQUAL(props[1]["id"].as<std::string>(), "technology");
+                BOOST_CHECK_EQUAL(props[1]["value"].as<std::string>(), expectedTech);
+                BOOST_CHECK_EQUAL(props[2]["id"].as<std::string>(), "miscellaneous_type");
+                BOOST_CHECK_EQUAL(props[2]["value"].as<std::string>(), expectedMiscType);
             }
         }
         BOOST_CHECK_MESSAGE(found, "MiscGen component not found: " + expectedId);
