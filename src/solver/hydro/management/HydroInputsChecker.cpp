@@ -280,17 +280,16 @@ void HydroInputsChecker::checkInitialReservoirLevel(
               const auto* maxRuleCurves = area.hydro.series->ruleCurves.max.getColumn(year);
               const double initialLevel = initialReservoirLevels[area.index];
 
-              if (initialLevel > minRuleCurves[DAYS_PER_YEAR - 1]
-                  || initialLevel < maxRuleCurves[DAYS_PER_YEAR - 1])
+              if (initialLevel < minRuleCurves[DAYS_PER_YEAR - 1]
+                  || initialLevel > maxRuleCurves[DAYS_PER_YEAR - 1])
               {
-                  logs.warning()
-                    << "Final reservoir level (= initial level) for area '" << area.name
-                    << "' in year " << year
-                    << " is outside the valid range defined by the rule curves. "
-                    << "Initial level: " << initialLevel << ", " << "Expected range: ["
-                    << maxRuleCurves[DAYS_PER_YEAR - 1] << ", " << minRuleCurves[DAYS_PER_YEAR - 1]
-                    << "]. "
-                    << "Please check the initial hydro level data in the scenario builder.";
+                  logs.warning() << "Final reservoir level (= initial level) for area '"
+                                 << area.name << "' in year " << year
+                                 << " is outside the valid range defined by the rule curves. "
+                                 << "Initial level: " << initialLevel << ", " << "Expected range: ["
+                                 << minRuleCurves[DAYS_PER_YEAR - 1] << ", "
+                                 << maxRuleCurves[DAYS_PER_YEAR - 1] << "]. "
+                                 << "The prescribed final reservoir level cannot be fullfiled.";
               }
           }
       });
