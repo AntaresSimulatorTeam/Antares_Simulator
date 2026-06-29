@@ -91,14 +91,12 @@ add_library(yuni-static-core STATIC
 		core/bit/array.hxx
 		core/bit/bit.h
 		core/bit/bit.hxx
-		core/bit.h
 		core/dictionary.h
 		core/dynamiclibrary/file.cpp
 		core/dynamiclibrary/file.h
 		core/dynamiclibrary/file.hxx
 		core/dynamiclibrary/symbol.h
 		core/dynamiclibrary/symbol.hxx
-		core/dynamiclibrary.h
 		core/event/event.h
 		core/event/event.hxx
 		core/event/flow/continuous.h
@@ -109,13 +107,8 @@ add_library(yuni-static-core STATIC
 		core/event/loop.fwd.h
 		core/event/loop.h
 		core/event/loop.hxx
-		core/event/observer/item.h
-		core/event/observer/item.hxx
-		core/event/observer/observer.h
-		core/event/observer/observer.hxx
 		core/event/statistics/none.h
 		core/event/traits.h
-		core/event.h
 		core/foreach.h
 		core/fwd.h
 		core/getopt/option.cpp
@@ -145,34 +138,15 @@ add_library(yuni-static-core STATIC
 		core/logs.h
 		core/math
 		core/math/base.h
-		core/math/complex.h
-		core/math/complex.hxx
-		core/math/distance.h
-		core/math/distance.hxx
-		core/math/exponential.h
-		core/math/exponential.hxx
-		core/math/log.h
-		core/math/log.hxx
 		core/math/math.h
 		core/math/math.hxx
 		core/math/msvc.hxx
-		core/math/random/constant.h
-		core/math/random/default.h
-		core/math/random/default.hxx
 		core/math/random/distribution.h
 		core/math/random/distribution.hxx
-		core/math/random/range.h
-		core/math/random/range.hxx
-		core/math/random/table.h
-		core/math/random/table.hxx
-		core/math/trigonometric.h
-		core/math/trigonometric.hxx
 		core/math.h
 		core/noncopyable.h
 		core/nonmovable.h
 		core/preprocessor/capabilities.h
-		core/preprocessor/enum.h
-		core/preprocessor/math.h
 		core/preprocessor/std.h
 		core/preprocessor/unixes.h
 		core/preprocessor/windows.h
@@ -234,7 +208,6 @@ add_library(yuni-static-core STATIC
 		core/string/wstring.cpp
 		core/string/wstring.hxx
 		core/string.h
-		core/suspend.h
 		core/system/capabilities.h
 		core/system/console/console.cpp
 		core/system/console/console.h
@@ -265,8 +238,6 @@ add_library(yuni-static-core STATIC
 		core/utils/hexdump.cpp
 		core/utils/hexdump.h
 		core/utils/hexdump.hxx
-		core/utils/utils.h
-		core/utils.h
 		core/validator/text/default.h
 		core/validator/text/default.hxx
 		core/validator/text/default.private.h
