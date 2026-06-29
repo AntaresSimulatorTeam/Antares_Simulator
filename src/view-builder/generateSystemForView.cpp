@@ -156,17 +156,8 @@ YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::
 
     auto findModelName = [&](const ModelerStudy::SystemModel::Component& component) -> std::string
     {
-        for (const auto& library : modelerData->libraries)
-        {
-            for (const auto& [mId, model] : library.Models())
-            {
-                if (&model == component.getModel())
-                {
-                    return library.Id() + "." + mId;
-                }
-            }
-        }
-        return "unknown.unknown";
+        const auto* model = component.getModel();
+        return model->LibraryId() + "." + model->Id();
     };
 
     YAML::Node components(YAML::NodeType::Sequence);
