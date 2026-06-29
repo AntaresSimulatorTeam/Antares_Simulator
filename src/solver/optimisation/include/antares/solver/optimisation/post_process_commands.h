@@ -93,7 +93,8 @@ public:
                                      PROBLEME_HEBDO* problemeHebdo,
                                      AreaList& areas,
                                      unsigned int numSpace,
-                                     const OptimizationOptions& solverOptions);
+                                     const OptimizationOptions& solverOptions,
+                                     IResultWriter& writer);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -108,6 +109,7 @@ private:
     const AdqPatchParams& adqPatchParams_;
     unsigned int numSpace_ = 0;
     const OptimizationOptions& solverOptions_;
+    IResultWriter& writer_;
 };
 
 class WriteDebugAdequacyPatch final: public basePostProcessCommand

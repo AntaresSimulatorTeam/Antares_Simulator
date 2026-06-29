@@ -9,6 +9,9 @@
 #include "antares/solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "antares/solver/simulation/adequacy_patch_runtime_data.h"
 #include "antares/solver/simulation/common-eco-adq.h"
+#include "antares/solver/utils/quadratic_mps_writer.h"
+
+#include <pi_constantes_externes.h>
 
 namespace Antares::Solver::Simulation
 {
@@ -218,12 +221,14 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
   PROBLEME_HEBDO* problemeHebdo,
   AreaList& areas,
   unsigned int numSpace,
-  const OptimizationOptions& solverOptions):
+  const OptimizationOptions& solverOptions,
+  IResultWriter& writer):
     basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     adqPatchParams_(adqPatchParams),
     numSpace_(numSpace),
-    solverOptions_(solverOptions)
+    solverOptions_(solverOptions),
+    writer_(writer)
 {
 }
 
@@ -243,6 +248,16 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
                     << " Hour:" << week * nbHoursInWeek + hourInWeek + 1;
         hourlyCsrProblem.setHour(hourInWeek);
         hourlyCsrProblem.run(week, year);
+
+        if (problemeHebdo_->exportMPSOnError
+            && hourlyCsrProblem.problemeAResoudre_.ExistenceDUneSolution == NON_PI)
+        {
+            const std::string filename = fmt::format("problem-csr-y{}-w{}-h{}.mps",
+                                                     year + 1,
+                                                     week + 1,
+                                                     hourInWeek + 1);
+            writeQuadraticMps(hourlyCsrProblem.problemeAResoudre_, writer_, filename, true);
+        }
     }
 }
 
