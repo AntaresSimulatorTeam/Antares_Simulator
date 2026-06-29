@@ -144,6 +144,7 @@ Feature: hybrid (simulator+modeler) studies
   @fast @short
   Scenario: MILP with thermal heuristic - two MILP iterations with heuristic in between
     Given the solver study path is "Antares_Simulator_Tests_NR/thermal_milp_gems_and_thermal_legacy"
+    And the linear solver is xpress
     When I run antares simulator
     Then the simulation succeeds
     And the simulation has two optimization iterations
