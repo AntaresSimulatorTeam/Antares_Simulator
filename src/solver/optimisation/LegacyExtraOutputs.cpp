@@ -657,6 +657,65 @@ void LegacyExtraOutputEmitter::finalStockExpression(const LegacyVariableInfo& in
 
 } // namespace
 
+void ProcessVariablesLoop(LegacyExtraOutputEmitter& emitter,
+                          const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo)
+{
+    static const std::unordered_map<std::string_view,
+                                     void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
+                                                                        std::size_t)>
+        handlers = {
+            {"DispatchableProduction", &LegacyExtraOutputEmitter::dispatchableProduction},
+            {"UnsuppliedEnergy", &LegacyExtraOutputEmitter::unsuppliedEnergy},
+            {"NODU", &LegacyExtraOutputEmitter::nodu},
+            {"DirectFlow", &LegacyExtraOutputEmitter::directFlow},
+            {"PositiveDirectFlow", &LegacyExtraOutputEmitter::positiveDirectFlow},
+            {"HydroLevel", &LegacyExtraOutputEmitter::hydroLevel},
+        };
+
+    for (std::size_t index = 0; index < variablesInfo.size(); ++index)
+    {
+        const auto& info = variablesInfo[index];
+        if (!info)
+        {
+            continue;
+        }
+
+        const auto handler = handlers.find(info->name);
+        if (handler != handlers.end())
+        {
+            (emitter.*handler->second)(*info, index);
+        }
+    }
+}
+
+void ProcessConstraintsLoop(LegacyExtraOutputEmitter& emitter,
+                            const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo)
+{
+    static const std::unordered_map<std::string_view,
+                                     void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
+                                                                        std::size_t)>
+        handlers = {
+            {"AreaBalance", &LegacyExtraOutputEmitter::areaBalance},
+            {"FlowDissociation", &LegacyExtraOutputEmitter::flowDissociation},
+            {"FinalStockExpression", &LegacyExtraOutputEmitter::finalStockExpression},
+        };
+
+    for (std::size_t index = 0; index < constraintsInfo.size(); ++index)
+    {
+        const auto& info = constraintsInfo[index];
+        if (!info)
+        {
+            continue;
+        }
+
+        const auto handler = handlers.find(info->name);
+        if (handler != handlers.end())
+        {
+            (emitter.*handler->second)(*info, index);
+        }
+    }
+}
+
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                            const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
                            const std::vector<double>& solutionValues,
@@ -684,61 +743,10 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
                                      fillContext,
                                      currentBlock);
 
-    for (std::size_t index = 0; index < variablesInfo.size(); ++index)
-    {
-        const auto& info = variablesInfo[index];
-        if (!info)
-        {
-            continue;
-        }
-
-        if (info->name == "DispatchableProduction")
-        {
-            emitter.dispatchableProduction(*info, index);
-        }
-        else if (info->name == "UnsuppliedEnergy")
-        {
-            emitter.unsuppliedEnergy(*info, index);
-        }
-        else if (info->name == "NODU")
-        {
-            emitter.nodu(*info, index);
-        }
-        else if (info->name == "DirectFlow")
-        {
-            emitter.directFlow(*info, index);
-        }
-        else if (info->name == "PositiveDirectFlow")
-        {
-            emitter.positiveDirectFlow(*info, index);
-        }
-        else if (info->name == "HydroLevel")
-        {
-            emitter.hydroLevel(*info, index);
-        }
-    }
-
-    for (std::size_t index = 0; index < constraintsInfo.size(); ++index)
-    {
-        const auto& info = constraintsInfo[index];
-        if (!info)
-        {
-            continue;
-        }
-
-        if (info->name == "AreaBalance")
-        {
-            emitter.areaBalance(*info, index);
-        }
-        else if (info->name == "FlowDissociation")
-        {
-            emitter.flowDissociation(*info, index);
-        }
-        else if (info->name == "FinalStockExpression")
-        {
-            emitter.finalStockExpression(*info, index);
-        }
-    }
+    ProcessVariablesLoop(emitter, variablesInfo);
+    ProcessConstraintsLoop(emitter, constraintsInfo);
 }
 
+
 } // namespace Antares::Optimization
+
