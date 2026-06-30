@@ -14,6 +14,5 @@ void exportSystemForView(const Data::Study& study, Solver::IResultWriter* result
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study);
 YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study);
-YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::Node& legacyYaml);
 
 } // namespace Antares::ViewBuilder

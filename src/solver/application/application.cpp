@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "antares/application/application.h"
+#include <chrono>
 
 #include <antares/antares/fatal-error.h>
 #include <antares/application/ScenarioBuilderOwner.h>
@@ -406,6 +407,7 @@ void Application::execute()
     pStudy->saveAboutTheStudy(*resultWriter);
 
     ViewBuilder::exportSystemForView(*pStudy, resultWriter.get());
+    logs.info() << "system-for-views.yml has been generated in the output folder.";
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes
