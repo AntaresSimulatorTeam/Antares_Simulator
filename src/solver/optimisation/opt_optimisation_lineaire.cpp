@@ -140,7 +140,7 @@ bool runWeeklyOptimization(const SingleOptimOptions& options,
     // rather than rebuilding it for every interval. Only needed when a simulation
     // table is being filled.
     const Antares::Optimization::LegacyExtraOutputsContext extraOutputsContext
-      = simulationTable ? BuildLegacyExtraOutputsContext(*problemeHebdo)
+      = simulationTable ? Antares::Optimization::LegacyExtraOutputsContext{*problemeHebdo}
                         : Antares::Optimization::LegacyExtraOutputsContext{};
 
     int DernierPdtDeLIntervalle;

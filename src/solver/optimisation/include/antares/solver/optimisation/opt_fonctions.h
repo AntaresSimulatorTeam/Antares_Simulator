@@ -76,11 +76,6 @@ bool OPT_AppelDuSimplexe(
   IO::Outputs::SimulationTable* simulationTable,
   const Antares::Optimization::LegacyExtraOutputsContext& extraOutputsContext);
 
-// Snapshot the week-wide study data (reservoir capacities, link NTC) the legacy
-// extra outputs need. Built once per week and reused across the week's blocks.
-Antares::Optimization::LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(
-  const PROBLEME_HEBDO& problemeHebdo);
-
 bool OPT_OptimisationLineaire(const OptimizationOptions& options,
                               PROBLEME_HEBDO* problemeHebdo,
                               Solver::IResultWriter& writer,

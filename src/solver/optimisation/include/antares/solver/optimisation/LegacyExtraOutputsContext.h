@@ -10,6 +10,11 @@
 
 #include "antares/study/parts/thermal/pollutant.h"
 
+// Forward-declared so the constructor below can take a PROBLEME_HEBDO without
+// dragging the full simulation problem into this header: the unit tests build a
+// minimal context by setting the public members directly (see the note below).
+struct PROBLEME_HEBDO;
+
 namespace Antares::Optimization
 {
 
@@ -28,6 +33,18 @@ namespace Antares::Optimization
 //     opt_rename_problem.cpp).
 struct LegacyExtraOutputsContext
 {
+    // Empty context (used by unit tests and the no-table path).
+    LegacyExtraOutputsContext() = default;
+
+    // Snapshot the week-wide study data the legacy extra outputs need but cannot
+    // read off the problem's variables (reservoir capacities, link NTC, loads,
+    // inflows, thermal margins...). Built once per week from problemeHebdo: the
+    // snapshotted data is week-wide and constant across the week's daily/weekly
+    // blocks. Keys mirror the `component` field on LegacyVariableInfo (lowercased
+    // area names; for links, "origin$$destination" matching AREA_SEP in
+    // opt_rename_problem.cpp).
+    explicit LegacyExtraOutputsContext(const PROBLEME_HEBDO& problemeHebdo);
+
     // Reservoir capacity in MWh per area. A missing key or a non-positive
     // value means level_percentage cannot be computed for that area and the
     // row is skipped.
