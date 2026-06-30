@@ -1264,6 +1264,7 @@ bool loadReservesParameters(fs::path& folderInput, Area& area)
 
     if (!fs::exists(reservesFile))
     {
+        logs.info() << "No reserves file found for area " << area.name;
         return ret;
     }
 
@@ -1272,8 +1273,9 @@ bool loadReservesParameters(fs::path& folderInput, Area& area)
     {
         content = IO::readFile(reservesFile);
     }
-    catch (const std::exception&)
+    catch (const std::exception& e)
     {
+        logs.error() << "Failed to read reserves file: " << reservesFile << " - " << e.what();
         return false;
     }
 
@@ -1284,8 +1286,7 @@ bool loadReservesParameters(fs::path& folderInput, Area& area)
     }
     catch (const YAML::Exception& e)
     {
-        logs.error() << "YAML content : " << e.what();
-        logs.error() << "Invalid YAML file : " << reservesFile;
+        logs.error() << "Invalid reserves config : " << reservesFile << " " << e.what();
         return false;
     }
 

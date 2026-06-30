@@ -38,8 +38,10 @@ public:
         {
             root = YAML::Load(content);
         }
-        catch (const YAML::Exception&)
+        catch (const YAML::Exception& e)
         {
+            logs.error() << "Error while reading reserve participations file " << file << ": "
+                         << e.what();
             return false;
         }
 
