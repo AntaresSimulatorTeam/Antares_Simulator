@@ -158,18 +158,18 @@ private:
     void thermalProfit(const LegacyVariableInfo& info, std::size_t index);
     void areaImbalanceCost(const LegacyVariableInfo& info, std::size_t index);
     void areaIsLossOfLoad(const LegacyVariableInfo& info, std::size_t index);
-    void areaActualLoad(const LegacyVariableInfo& info, std::size_t index);
+    void areaActualLoad(const LegacyVariableInfo& info);
     void thermalActualNumUnitsOn(const LegacyVariableInfo& info, std::size_t index);
     void thermalNonPropCost(const LegacyVariableInfo& info, std::size_t index);
     void linkAbsFlow(const LegacyVariableInfo& info, std::size_t index);
     void linkMinusFlow(const LegacyVariableInfo& info, std::size_t index);
-    void linkActualLoopFlow(const LegacyVariableInfo& info, std::size_t index);
+    void linkActualLoopFlow(const LegacyVariableInfo& info);
     void linkIsDirectlyCongested(const LegacyVariableInfo& info, std::size_t index);
     void linkIsIndirectlyCongested(const LegacyVariableInfo& info, std::size_t index);
     void linkCongestionFees(const LegacyVariableInfo& info, std::size_t index);
     void linkPropCost(const LegacyVariableInfo& info, std::size_t index);
     void areaLevelPercentage(const LegacyVariableInfo& info, std::size_t index);
-    void hydroActualInflows(const LegacyVariableInfo& info, std::size_t index);
+    void hydroActualInflows(const LegacyVariableInfo& info);
     void areaPrice(const LegacyVariableInfo& info, std::size_t index);
     void areaIsNearLossOfLoad(const LegacyVariableInfo& info, std::size_t index);
     void linkCapacityShadowPrice(const LegacyVariableInfo& info, std::size_t index);
@@ -346,7 +346,7 @@ void LegacyExtraOutputEmitter::areaIsLossOfLoad(const LegacyVariableInfo& info, 
 
 // actual_load = load: the area's input residual-load series, carried per-hour in
 // the context. Skipped when the area is unknown to the context.
-void LegacyExtraOutputEmitter::areaActualLoad(const LegacyVariableInfo& info, std::size_t)
+void LegacyExtraOutputEmitter::areaActualLoad(const LegacyVariableInfo& info)
 {
     const auto load = ContextValueAtHour(context_.loadByArea,
                                          info.component,
@@ -416,7 +416,7 @@ void LegacyExtraOutputEmitter::linkMinusFlow(const LegacyVariableInfo& info, std
 
 // actual_loop_flow = loop_flow: the link's input loop-flow parameter, carried
 // per-hour in the context. Skipped when the link is unknown to the context.
-void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info, std::size_t)
+void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info)
 {
     const auto loopFlow = ContextValueAtHour(context_.loopFlowByLink,
                                              info.component,
@@ -537,7 +537,7 @@ void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& inf
 // actual_inflows = round(inflows): the area's input natural-inflow series,
 // carried per-hour in the context (only areas with a reservoir have one).
 // Skipped when the area is unknown to the context.
-void LegacyExtraOutputEmitter::hydroActualInflows(const LegacyVariableInfo& info, std::size_t)
+void LegacyExtraOutputEmitter::hydroActualInflows(const LegacyVariableInfo& info)
 {
     const auto inflows = ContextValueAtHour(context_.inflowsByArea,
                                             info.component,
@@ -608,7 +608,7 @@ void LegacyExtraOutputEmitter::unsuppliedEnergy(const LegacyVariableInfo& info, 
 {
     areaImbalanceCost(info, index);
     areaIsLossOfLoad(info, index);
-    areaActualLoad(info, index);
+    areaActualLoad(info);
 }
 
 void LegacyExtraOutputEmitter::nodu(const LegacyVariableInfo& info, std::size_t index)
@@ -621,7 +621,7 @@ void LegacyExtraOutputEmitter::directFlow(const LegacyVariableInfo& info, std::s
 {
     linkAbsFlow(info, index);
     linkMinusFlow(info, index);
-    linkActualLoopFlow(info, index);
+    linkActualLoopFlow(info);
     linkIsDirectlyCongested(info, index);
     linkIsIndirectlyCongested(info, index);
     linkCongestionFees(info, index);
@@ -635,7 +635,7 @@ void LegacyExtraOutputEmitter::positiveDirectFlow(const LegacyVariableInfo& info
 void LegacyExtraOutputEmitter::hydroLevel(const LegacyVariableInfo& info, std::size_t index)
 {
     areaLevelPercentage(info, index);
-    hydroActualInflows(info, index);
+    hydroActualInflows(info);
 }
 
 void LegacyExtraOutputEmitter::areaBalance(const LegacyVariableInfo& info, std::size_t index)
