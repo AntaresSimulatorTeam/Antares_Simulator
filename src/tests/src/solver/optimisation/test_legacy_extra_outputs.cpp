@@ -84,7 +84,9 @@ struct Fixture
     Fixture()
     {
         info.resize(13);
-        info[0] = LegacyVariableInfo{"DispatchableProduction", "cluster1", 168};
+        // "cluster1" lives in "area1"; the area qualifier disambiguates the
+        // cluster name (not unique across areas) when keying study data.
+        info[0] = LegacyVariableInfo{"DispatchableProduction", "cluster1", 168, "area1"};
         info[1] = LegacyVariableInfo{"UnsuppliedEnergy", "area1", 168};
         info[2] = LegacyVariableInfo{"Spillage", "area1", 168};
         info[3] = LegacyVariableInfo{"UnsuppliedEnergy", "area2", 168};
@@ -169,6 +171,33 @@ struct Fixture
     {
         context.loopFlowByLink["area1$$area2"] = {area1Area2};
         context.loopFlowByLink["area2$$area3"] = {area2Area3};
+        return *this;
+    }
+
+    // Emission factors for "cluster1" (keyed "area1$$cluster1"). A few distinct
+    // pollutants are set to non-zero so the ordinal-to-row mapping is checked.
+    Fixture& withEmissionFactors(double co2 = 0.5, double nox = 0.01, double op5 = 2.)
+    {
+        std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX> factors{};
+        factors[Antares::Data::Pollutant::CO2] = co2;
+        factors[Antares::Data::Pollutant::NOX] = nox;
+        factors[Antares::Data::Pollutant::OP5] = op5;
+        context.emissionFactorsByCluster["area1$$cluster1"] = factors;
+        return *this;
+    }
+
+    // Margin data for "cluster1" (keyed "area1$$cluster1"), single recorded pdt.
+    Fixture& withThermalMargin(double availability = 4000.,
+                               double unitSize = 900.,
+                               double minStablePower = 300.,
+                               double minGenPower = 500.)
+    {
+        LegacyExtraOutputsContext::ThermalMarginData margin;
+        margin.unitSize = unitSize;
+        margin.minStablePower = minStablePower;
+        margin.availability = {availability};
+        margin.minGenPower = {minGenPower};
+        context.thermalMarginByCluster["area1$$cluster1"] = margin;
         return *this;
     }
 
@@ -526,6 +555,96 @@ BOOST_AUTO_TEST_CASE(actual_loop_flow_is_skipped_without_a_loop_flow_series)
 {
     fill();
     BOOST_CHECK(RowsForOutput(table, "actual_loop_flow").empty());
+}
+
+BOOST_AUTO_TEST_CASE(emissions_are_generation_power_times_each_factor)
+{
+    withEmissionFactors(/*co2=*/0.5, /*nox=*/0.01, /*op5=*/2.).fill();
+
+    // generation_power = values[0] = 3600.
+    BOOST_CHECK_CLOSE(FindRow(table, "co2_emissions", "cluster1")->value, 3600. * 0.5, 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "nox_emissions", "cluster1")->value, 3600. * 0.01, 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "op5_emissions", "cluster1")->value, 3600. * 2., 1e-9);
+    // A pollutant with a zero factor still gets a row, valued 0.
+    const auto so2 = FindRow(table, "so2_emissions", "cluster1");
+    BOOST_REQUIRE(so2.has_value());
+    BOOST_CHECK_EQUAL(so2->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(emissions_emit_one_row_per_pollutant)
+{
+    withEmissionFactors().fill();
+
+    // One row per pollutant in Pollutant::PollutantEnum, all on "cluster1".
+    BOOST_CHECK_EQUAL(RowsForOutput(table, "co2_emissions").size(), 1);
+    std::size_t emissionRows = 0;
+    for (const auto& columns: table.storageIntoRows())
+    {
+        if (columns[2].size() > 10 && columns[2].substr(columns[2].size() - 10) == "_emissions")
+        {
+            ++emissionRows;
+        }
+    }
+    BOOST_CHECK_EQUAL(emissionRows, Antares::Data::Pollutant::POLLUTANT_MAX);
+}
+
+BOOST_AUTO_TEST_CASE(emissions_are_skipped_for_clusters_absent_from_the_context)
+{
+    // Default context carries no emission factors: the DispatchableProduction
+    // anchor emits prop_cost but no emission rows.
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "co2_emissions").empty());
+}
+
+BOOST_AUTO_TEST_CASE(emissions_use_the_area_qualified_key)
+{
+    // Same cluster name but a different area: the key "area2$$cluster1" does not
+    // match the anchor's "area1$$cluster1", so nothing is emitted.
+    std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX> factors{};
+    factors[Antares::Data::Pollutant::CO2] = 1.;
+    context.emissionFactorsByCluster["area2$$cluster1"] = factors;
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "co2_emissions").empty());
+}
+
+BOOST_AUTO_TEST_CASE(thermal_margins_are_derived_from_availability_and_generation)
+{
+    // availability=4000, unitSize=900, minStablePower=300, minGenPower=500.
+    // generation_power = values[0] = 3600.
+    // cluster_availability = max(4000, 300*ceil(4000/900)=300*5=1500) = 4000.
+    withThermalMargin(4000., 900., 300., 500.).fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 4000., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "up_margin", "cluster1")->value, 4000. - 3600., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "min_gen_power", "cluster1")->value, 500., 1e-9); // min(3600,500)
+    BOOST_CHECK_CLOSE(FindRow(table, "down_margin", "cluster1")->value, 3600. - 500., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(cluster_availability_takes_the_unit_floor_when_it_dominates)
+{
+    // availability=250, unitSize=100, minStablePower=200:
+    // cluster_availability = max(250, 200*ceil(250/100)=200*3=600) = 600.
+    withThermalMargin(/*availability=*/250., /*unitSize=*/100., /*minStablePower=*/200., 0.).fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 600., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(cluster_availability_ignores_the_unit_floor_when_unit_size_is_zero)
+{
+    // A zero unit size would divide by zero in the floor term; it is treated as
+    // no floor, so cluster_availability is just the availability.
+    withThermalMargin(/*availability=*/250., /*unitSize=*/0., /*minStablePower=*/200., 0.).fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 250., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(thermal_margins_are_skipped_for_clusters_absent_from_the_context)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "cluster_availability").empty());
+    BOOST_CHECK(RowsForOutput(table, "up_margin").empty());
+    BOOST_CHECK(RowsForOutput(table, "min_gen_power").empty());
+    BOOST_CHECK(RowsForOutput(table, "down_margin").empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

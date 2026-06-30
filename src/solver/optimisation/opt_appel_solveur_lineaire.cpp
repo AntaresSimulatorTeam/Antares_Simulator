@@ -109,6 +109,34 @@ LegacyExtraOutputsContext BuildLegacyExtraOutputsContext(const PROBLEME_HEBDO& p
             }
             context.inflowsByArea[areaName] = std::move(inflows);
         }
+
+        // Thermal per-cluster data is keyed by "area$$cluster" because the
+        // thermal anchor's component (the cluster name) is not unique across
+        // areas. Emission factors feed the emissions outputs; the unit/min/
+        // availability data feeds the margin outputs.
+        const auto& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
+        for (int palier = 0; palier < paliers.NombreDePaliersThermiques; ++palier)
+        {
+            const std::string key = std::string(areaName) + "$$"
+                                    + paliers.NomsDesPaliersThermiques[palier];
+            context.emissionFactorsByCluster[key] = paliers.emissionFactors[palier];
+
+            LegacyExtraOutputsContext::ThermalMarginData margin;
+            margin.unitSize = paliers.TailleUnitaireDUnGroupeDuPalierThermique[palier];
+            margin.minStablePower = paliers.PminDuPalierThermiquePendantUneHeure[palier];
+            const auto& disp = paliers.PuissanceDisponibleEtCout[palier];
+            if (disp.PuissanceDisponibleDuPalierThermique.size() >= nPdt
+                && disp.PuissanceMinDuPalierThermique.size() >= nPdt)
+            {
+                margin.availability.assign(disp.PuissanceDisponibleDuPalierThermique.begin(),
+                                           disp.PuissanceDisponibleDuPalierThermique.begin()
+                                             + static_cast<std::ptrdiff_t>(nPdt));
+                margin.minGenPower.assign(disp.PuissanceMinDuPalierThermique.begin(),
+                                          disp.PuissanceMinDuPalierThermique.begin()
+                                            + static_cast<std::ptrdiff_t>(nPdt));
+            }
+            context.thermalMarginByCluster[key] = std::move(margin);
+        }
     }
     for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
     {

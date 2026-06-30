@@ -86,7 +86,7 @@ void VariableNamer::RecordLegacyVariableInfo(unsigned index,
                                              const std::string& output,
                                              const std::string& component)
 {
-    legacyInfo_[index] = {output, component, timeStep()};
+    legacyInfo_[index] = {output, component, timeStep(), area()};
 }
 
 void ConstraintNamer::RecordLegacyVariableInfo(unsigned index,
@@ -95,7 +95,7 @@ void ConstraintNamer::RecordLegacyVariableInfo(unsigned index,
 {
     if (legacyInfo_ != nullptr)
     {
-        (*legacyInfo_)[index] = {output, component, timeStep()};
+        (*legacyInfo_)[index] = {output, component, timeStep(), area()};
     }
 }
 
