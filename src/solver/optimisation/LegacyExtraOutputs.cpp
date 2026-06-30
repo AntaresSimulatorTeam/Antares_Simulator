@@ -207,10 +207,10 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
                                     const LegacyVariableInfo& info,
                                     double value)
 {
-    table_.addEntry({.block = block_ + 1,
+    table_.addEntry({.block = block_,
                      .component = info.component,
                      .output = output,
-                     .absolute_time_index = info.timeIndex + 1,
+                     .absolute_time_index = info.timeIndex,
                      .block_time_index = BlockTimeIndex(fillContext_, info.timeIndex),
                      .scenario_index = fillContext_.getYear(),
                      .value = value,
