@@ -65,7 +65,7 @@ Component → `miscGen.entry` index mapping:
 
 ---
 
-## 2.4.2.4 — Model: thermal  🟨 mostly done (profit left)
+## 2.4.2.4 — Model: thermal  ✅ complete
 
 | Done | Output | Formula | Anchor / Design |
 |------|--------|---------|-----------------|
@@ -77,12 +77,14 @@ Component → `miscGen.entry` index mapping:
 | [x] | `up_margin` | `cluster_availability - generation_power` | `DispatchableProduction` |
 | [x] | `down_margin` | `generation_power - min(cluster_availability, min_gen_mod·num_units·Mpu)` | `DispatchableProduction` |
 | [x] | `co2/nh3/so2/nox/pm2_5/pm5/pm10/nmvoc/op1..op5_emissions` (13) | `generation_power · emission_rate` | `DispatchableProduction` (factors in context, keyed `area$$cluster`) |
-| [ ] | `profit` | `(area_price - generation_cost)·max(generation_power - min_gen_mod·num_units·Mpu, 0)` | **Area-price map** (A); cluster→area now available via `info.area` |
+| [x] | `profit` | `(area_price - generation_cost)·max(generation_power - min_gen_mod·num_units·Mpu, 0)` | **Area-price map** (A); cluster→area via `info.area` |
 
-`profit` needs the price of the cluster's area (the `AreaBalance` dual). The cluster
-anchor is now area-qualified (`info.area`), so the only missing piece is an
-area→price lookup (A). The `min_gen_mod·num_units·Mpu` floor is the same term used
-by `min_gen_power`/`down_margin` (carried in the context as `minGenPower`).
+`profit` uses the price of the cluster's area (the `AreaBalance` dual) via the
+area-price map (A), `generation_cost`/`generation_power` read by index off the
+`DispatchableProduction` anchor, and the `min_gen_mod·num_units·Mpu` floor reused
+from the context's `minGenPower` (same term as `min_gen_power`/`down_margin`).
+Skipped when the area has no recorded price or the cluster is absent from the
+margin context.
 
 ---
 
@@ -94,7 +96,7 @@ by `min_gen_power`/`down_margin` (carried in the context as `minGenPower`).
 
 ---
 
-## 2.4.2.6 — Model: link  🟨 mostly done (congestion fees left)
+## 2.4.2.6 — Model: link  ✅ complete
 
 | Done | Output | Formula | Anchor / Design |
 |------|--------|---------|-----------------|
@@ -105,13 +107,13 @@ by `min_gen_power`/`down_margin` (carried in the context as `minGenPower`).
 | [x] | `is_directly_congested` | `flow >= direct_capacity` | `DirectFlow` (capacity in context) |
 | [x] | `is_indirectly_congested` | `flow <= -indirect_capacity` | `DirectFlow` (capacity in context) |
 | [x] | `actual_loop_flow` | `loop_flow` | `DirectFlow` (loop flow in context) |
-| [ ] | `abs_congestion_fee` | `max(flow,-flow)·\|price_out - price_in\|` | **Area-price map** (A) + **link→endpoint-area** resolution |
-| [ ] | `alg_congestion_fee` | `flow·(price_out - price_in)` | **Area-price map** (A) + **link→endpoint-area** resolution |
+| [x] | `abs_congestion_fee` | `max(flow,-flow)·\|price_out - price_in\|` | **Area-price map** (A) + link→endpoint-area resolution |
+| [x] | `alg_congestion_fee` | `flow·(price_out - price_in)` | **Area-price map** (A) + link→endpoint-area resolution |
 
-`price_out`/`price_in` are the balance duals of the link's extremity / origin areas
-(spec writes them via `sum_connections(out_port.price)` / `in_port.price`). Both
-endpoint area names are known from `problemeHebdo`; the only missing piece is the
-area→price lookup (A).
+`price_out`/`price_in` are the balance duals of the link's extremity / origin areas,
+looked up in the area-price map (A) after splitting the `DirectFlow` anchor's
+`origin$$destination` component into its two endpoint area names. Skipped when
+either endpoint area has no recorded price.
 
 ---
 
@@ -171,9 +173,9 @@ endpoints' `*_port.price`.
 | area | 4 / 4 | — |
 | renewable | 0 / 2 | generation_power, minus_generation |
 | misc_gen | 0 / 2 | generation_power, minus_generation |
-| thermal | 22 / 23 | profit |
+| thermal | 23 / 23 | — |
 | load | 1 / 1 | — |
-| link | 7 / 9 | abs_congestion_fee, alg_congestion_fee |
+| link | 9 / 9 | — |
 | short_term_storage | 0 / 1 | profit |
 | hydro | 3 / 4 | bellman_value |
 | ports (2.5) | 0 / 9 | all |
@@ -185,14 +187,13 @@ endpoints' `*_port.price`.
 The remaining work clusters around a few reusable capabilities. Implementing each
 once unlocks several outputs.
 
-### (A) Area-price map  — *highest leverage*
+### (A) Area-price map  — ✅ implemented
 A lookup `area → price` (i.e. `-dual(AreaBalance)`), built from the recorded
-`AreaBalance` constraints + duals already passed to `AddLegacyExtraOutputs`.
-Unlocks: **thermal profit**, **STS profit**, **link abs/alg_congestion_fee**, and
-the area `balance_port.price` field.
-- Note: the price is a constraint dual (computed in the constraints pass); the
-  consumers are variable-anchored, so build the map up front (one pass over
-  `constraintsInfo`/`duals`) before the variable dispatch loop.
+`AreaBalance` constraints + duals already passed to `AddLegacyExtraOutputs`
+(`BuildPriceByArea` in `LegacyExtraOutputs.cpp`, run once up front before the
+variable dispatch loop). Now consumed by **thermal profit** and **link
+abs/alg_congestion_fee**. Still to wire onto it: **STS profit** (needs C) and the
+area `balance_port.price` field (E).
 - Caveat: zero on MIP weeks (duals not extracted) — same limitation as `price`.
 
 ### (B) Anchorless study-data emission path
@@ -224,8 +225,9 @@ Unlocks all of §2.5. Needed in full for the GEMS port views; the congestion fee
 
 ## Suggested order
 
-1. **(A) Area-price map** → unlocks thermal profit, STS profit (with C), and link
-   congestion fees in one go. Biggest single unlock, no new study-data plumbing.
+1. ~~**(A) Area-price map** → unlocks thermal profit, STS profit (with C), and link
+   congestion fees in one go.~~ ✅ done — thermal profit and link congestion fees
+   are emitted; STS profit and `balance_port.price` still pending (need C / E).
 2. **(C) View area-qualification** → enables STS profit cleanly; small, additive.
 3. **(D) Per-area layer aggregation** → bellman_value; self-contained.
 4. **(B) Anchorless emission path** → renewable + misc_gen; distinct mechanism.
