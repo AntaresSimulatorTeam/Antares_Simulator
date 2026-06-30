@@ -135,22 +135,10 @@ YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::
     system["id"] = modelerData->system->Id();
 
     YAML::Node libs(YAML::NodeType::Sequence);
+    libs.push_back("antares_legacy_models");
     for (const auto& lib : modelerData->libraries)
     {
         libs.push_back(lib.Id());
-    }
-    bool hasLegacy = false;
-    for (const auto& lib : libs)
-    {
-        if (lib.as<std::string>() == "antares_legacy_models")
-        {
-            hasLegacy = true;
-            break;
-        }
-    }
-    if (!hasLegacy)
-    {
-        libs.push_back("antares_legacy_models");
     }
     system["model-libraries"] = libs;
 
