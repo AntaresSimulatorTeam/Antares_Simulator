@@ -75,13 +75,6 @@ std::vector<std::string>& Namer::names()
     return names_;
 }
 
-void Namer::RecordLegacyVariableInfo(unsigned /*index*/,
-                                     const std::string& /*output*/,
-                                     const std::string& /*component*/)
-{
-    // No-op for the base namer (e.g. ConstraintNamer); only VariableNamer records legacy info.
-}
-
 void VariableNamer::RecordLegacyVariableInfo(unsigned index,
                                              const std::string& output,
                                              const std::string& component)

@@ -178,7 +178,7 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
     const PROBLEME_ANTARES_A_RESOUDRE& problem = *problemeHebdo.ProblemeAResoudre;
     const unsigned globalFirstTimeStep = fillContext.getGlobalFirstTimeStep();
     const unsigned globalLastTimeStep = fillContext.getGlobalLastTimeStep();
-    const unsigned int block = currentBlock + 1;
+    const unsigned int block = currentBlock;
 
     // LegacyVariablesInfo, X and CoutLineaire are all sized to NombreDeVariables, and
     // LegacyConstraintsInfo and CoutsMarginauxDesContraintes to NombreDeContraintes, in
@@ -201,13 +201,13 @@ void FillLegacySimulationTable(SimulationTable& simulationTable,
         std::optional<unsigned> blockTimeIndex;
         if (info->timeIndex >= globalFirstTimeStep && info->timeIndex <= globalLastTimeStep)
         {
-            blockTimeIndex = info->timeIndex - globalFirstTimeStep + 1;
+            blockTimeIndex = info->timeIndex - globalFirstTimeStep;
         }
 
         simulationTable.addEntry({.block = block,
                                   .component = info->component,
                                   .output = nameMapper.mapOutput(info->name),
-                                  .absolute_time_index = info->timeIndex + 1,
+                                  .absolute_time_index = info->timeIndex,
                                   .block_time_index = blockTimeIndex,
                                   .scenario_index = fillContext.getYear(),
                                   .value = problem.X[static_cast<std::size_t>(index)],
