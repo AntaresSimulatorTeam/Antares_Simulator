@@ -240,6 +240,7 @@ void resizeProbleme(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->CoutsMarginauxDesContraintes.resize(nombreDeContraintes);
     ProblemeAResoudre->ComplementDeLaBase.resize(nombreDeContraintes);
     ProblemeAResoudre->NomDesContraintes.resize(nombreDeContraintes);
+    ProblemeAResoudre->LegacyConstraintsInfo.resize(nombreDeContraintes);
 }
 } // namespace
 

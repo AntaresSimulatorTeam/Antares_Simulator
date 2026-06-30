@@ -93,6 +93,11 @@ public:
        Filled by VariableNamer at the same time as the variable name. */
     std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>> LegacyVariablesInfo;
 
+    /* Structured legacy description of each constraint, parallel to NomDesContraintes.
+       Filled by ConstraintNamer at the same time as the constraint name; only the
+       constraints whose dual is needed for an extra output are recorded. */
+    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>> LegacyConstraintsInfo;
+
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
 
     // PIMPL is used to break dependency to OR-Tools' linear_solver.h (big header)
