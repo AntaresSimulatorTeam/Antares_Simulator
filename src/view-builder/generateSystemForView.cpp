@@ -55,7 +55,7 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
     YAML::Node connections = YAML::Node(YAML::NodeType::Sequence);
 
     study.areas.each(
-      [&](const Area& area)
+      [&components, &connections](const Area& area)
       {
           std::string areaLoc = areaLocation(area.id);
 
@@ -167,8 +167,8 @@ YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::Node& legacyYaml)
 {
     auto* modelerData = study.getModelerData();
-    YAML::Node legacyComponents = legacyYaml["system"]["components"];
-    YAML::Node legacyConnections = legacyYaml["system"]["connections"];
+    const auto& legacyComponents = legacyYaml["system"]["components"];
+    const auto& legacyConnections = legacyYaml["system"]["connections"];
 
     YAML::Node system;
     system["id"] = modelerData->system->Id();
