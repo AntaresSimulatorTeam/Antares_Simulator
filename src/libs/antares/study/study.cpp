@@ -29,15 +29,8 @@ static inline void ClearAndShrink(StringT& string)
 }
 
 Study::Study():
-    areas(*this),
-    pQueueService(std::make_shared<Yuni::Job::QueueService>())
+    areas(*this)
 {
-    // TS generators
-    for (uint i = 0; i != timeSeriesCount; ++i)
-    {
-        cacheTSGenerator[i] = nullptr;
-    }
-
     // Correlation names
     preproLoadCorrelation.correlationName = "Correlation: Load";
     preproSolarCorrelation.correlationName = "Correlation: Solar";
@@ -77,7 +70,6 @@ void Study::clear()
     folderInput.clear();
     folderOutput.clear();
     folderSettings.clear();
-    inputExtension.clear();
 }
 
 void Study::reduceMemoryUsage()

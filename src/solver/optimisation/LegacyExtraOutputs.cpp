@@ -23,7 +23,7 @@ std::optional<unsigned> BlockTimeIndex(const FillContext& fillContext, unsigned 
     if (timeIndex >= fillContext.getGlobalFirstTimeStep()
         && timeIndex <= fillContext.getGlobalLastTimeStep())
     {
-        return timeIndex - fillContext.getGlobalFirstTimeStep() + 1;
+        return timeIndex - fillContext.getGlobalFirstTimeStep();
     }
     return std::nullopt;
 }
@@ -58,10 +58,10 @@ void AddExtraOutputEntry(SimulationTable& simulationTable,
                          const FillContext& fillContext,
                          unsigned currentBlock)
 {
-    simulationTable.addEntry({.block = currentBlock + 1,
+    simulationTable.addEntry({.block = currentBlock,
                               .component = info.component,
                               .output = output,
-                              .absolute_time_index = info.timeIndex + 1,
+                              .absolute_time_index = info.timeIndex,
                               .block_time_index = BlockTimeIndex(fillContext, info.timeIndex),
                               .scenario_index = fillContext.getYear(),
                               .value = value,

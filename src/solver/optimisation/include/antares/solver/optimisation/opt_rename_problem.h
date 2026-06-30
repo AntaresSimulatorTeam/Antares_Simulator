@@ -21,10 +21,10 @@ public:
 
 protected:
     // Records the structured legacy description of a variable, parallel to the name.
-    // No-op in the base namer; only VariableNamer overrides this to record info.
     virtual void RecordLegacyVariableInfo(unsigned index,
                                           const std::string& output,
-                                          const std::string& component);
+                                          const std::string& component)
+      = 0;
 
     unsigned timeStep() const
     {

@@ -8,8 +8,8 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 1-2      | 80    |
-      | node1     | gen2_p | 1-2      | 20    |
+      | node1     | gen1_p | 0-1      | 80    |
+      | node1     | gen2_p | 0-1      | 20    |
 
   @fast
   Scenario: 1.2: One model with one load and two generators, two timesteps ; mix of constant parameters and timeseries
@@ -19,8 +19,8 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 320
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 1-2      | 80    |
-      | node1     | gen2_p | 1-2      | 20    |
+      | node1     | gen1_p | 0-1      | 80    |
+      | node1     | gen2_p | 0-1      | 20    |
 
   @fast
   Scenario: 1.3: One model with one load and two generators, one timestep ; fails because of timeseries of different lengths
@@ -37,12 +37,12 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 765
     And the modeler outputs contain the following entries
       | component | output        | timestep | value |
-      | node1     | gen1_p        | 1        | 80    |
-      | node1     | gen2_p        | 1        | 20    |
-      | node1     | gen1_p        | 2        | 0     |
-      | node1     | gen2_p        | 2        | 100   |
-      | node1     | on_off_gen1_p | 1        | 1     |
-      | node1     | on_off_gen1_p | 2        | 0     |
+      | node1     | gen1_p        | 0        | 80    |
+      | node1     | gen2_p        | 0        | 20    |
+      | node1     | gen1_p        | 1        | 0     |
+      | node1     | gen2_p        | 1        | 100   |
+      | node1     | on_off_gen1_p | 0        | 1     |
+      | node1     | on_off_gen1_p | 1        | 0     |
 
 
   @fast
@@ -59,8 +59,8 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 16000
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | node1     | gen1_p | 1-100    | 80    |
-      | node1     | gen2_p | 1-100    | 20    |
+      | node1     | gen1_p | 0-99    | 80    |
+      | node1     | gen2_p | 0-99    | 20    |
 
   @fast
   Scenario: 1.7: One variable bounded below by a time sum with fixed lower bound and t+ upper bound
@@ -70,11 +70,11 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 50
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 1        | 3     |
-      | c1        | x      | 2        | 6     |
-      | c1        | x      | 3        | 10    |
-      | c1        | x      | 4        | 15    |
-      | c1        | x      | 5        | 16    |
+      | c1        | x      | 0        | 3     |
+      | c1        | x      | 1        | 6     |
+      | c1        | x      | 2        | 10    |
+      | c1        | x      | 3        | 15    |
+      | c1        | x      | 4        | 16    |
 
   @fast
   Scenario: 1.8: Both bounds fixed - sum always accesses the same indices regardless of current timestep
@@ -84,7 +84,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 90
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 1-5      | 18    |
+      | c1        | x      | 0-4      | 18    |
 
   @fast
   Scenario: 1.9: Both bounds t-relative - symmetric two-element sliding window (regression test)
@@ -94,11 +94,11 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 30
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 1        | 3     |
-      | c1        | x      | 2        | 5     |
-      | c1        | x      | 3        | 7     |
-      | c1        | x      | 4        | 9     |
-      | c1        | x      | 5        | 6     |
+      | c1        | x      | 0        | 3     |
+      | c1        | x      | 1        | 5     |
+      | c1        | x      | 2        | 7     |
+      | c1        | x      | 3        | 9     |
+      | c1        | x      | 4        | 6     |
 
   @fast
   Scenario: 1.10: Inverted t+ bounds (from > to) with constant parameter - detects constant-branch bug
@@ -108,7 +108,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 100
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 1-5      | 20    |
+      | c1        | x      | 0-4      | 20    |
 
   @fast
   Scenario: 1.11: Fixed bounds with cyclic wrap-around - upper index exceeds window size
@@ -118,7 +118,7 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 60
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 1-5      | 12    |
+      | c1        | x      | 0-4      | 12    |
 
   @fast
   Scenario: 1.12: Negative t+ lower bound - three-element lookback window with cyclic wrap at start
@@ -128,11 +128,11 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 45
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 1        | 10    |
-      | c1        | x      | 2        | 8     |
-      | c1        | x      | 3        | 6     |
-      | c1        | x      | 4        | 9     |
-      | c1        | x      | 5        | 12    |
+      | c1        | x      | 0        | 10    |
+      | c1        | x      | 1        | 8     |
+      | c1        | x      | 2        | 6     |
+      | c1        | x      | 3        | 9     |
+      | c1        | x      | 4        | 12    |
 
   @fast
   Scenario: 1.13: Inverted fixed bounds (from > to) with constant parameter - empty sum should give zero
@@ -142,4 +142,4 @@ Feature: 1 - Simple end-to-end tests to test temporal expression management
     And the objective value is 100
     And the modeler outputs contain the following entries
       | component | output | timestep | value |
-      | c1        | x      | 1-5      | 20    |
+      | c1        | x      | 0-4      | 20    |
