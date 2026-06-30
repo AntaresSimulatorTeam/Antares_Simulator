@@ -14,7 +14,7 @@ class ntcTSNumberData final: public TSNumberData
 {
 public:
     ntcTSNumberData() = default;
-    virtual ~ntcTSNumberData() = default;
+    ~ntcTSNumberData() override = default;
 
     bool reset(const Study& study) override;
 

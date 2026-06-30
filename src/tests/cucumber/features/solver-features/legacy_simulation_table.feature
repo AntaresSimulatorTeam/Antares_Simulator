@@ -110,7 +110,7 @@ Feature: Legacy variables in simulation table
       | 2     | east$$west | capacity_shadow_price   | 425      | 0        | 1.0     |
       | 2     | east       | price                   | 425      | 0        | 44.926  |
       | 2     | west       | price                   | 425      | 0        | 45.926  |
-      
+
       # is_directly/indirectly_congested compare the (signed) DirectFlow to the
       # link's per-hour capacity (3000 MW direct and indirect, constant in this
       # study). At 213.45 MW the link is far from either bound, so both

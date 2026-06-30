@@ -111,20 +111,20 @@ public:
     {
     }
 
-    virtual ~PathListIterator()
+    ~PathListIterator() override
     {
         // For code robustness and to avoid corrupt vtable
         stop();
     }
 
 protected:
-    virtual bool onStart(const String& rootFolder)
+    bool onStart(const String& rootFolder) override
     {
         offset = rootFolder.size() + 1;
         return true;
     }
 
-    virtual Flow onBeginFolder(const String& filename, const String&, const String&)
+    Flow onBeginFolder(const String& filename, const String&, const String&) override
     {
         if (pathListOptNotFound == exclude.find(filename.c_str() + offset))
         {
@@ -134,7 +134,7 @@ protected:
         return IO::flowSkip;
     }
 
-    virtual Flow onFile(const String& filename, const String&, const String&, uint64_t size)
+    Flow onFile(const String& filename, const String&, const String&, uint64_t size) override
     {
         if (pathListOptNotFound == exclude.find(filename.c_str() + offset))
         {
