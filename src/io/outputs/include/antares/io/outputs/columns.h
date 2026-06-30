@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #pragma once
-#include <iomanip>
+#include <fmt/format.h>
 #include <optional>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -69,9 +68,7 @@ inline constexpr bool is_optional_v = is_optional<T>::value;
 
 [[maybe_unused]] static std::string FromDouble(const double value)
 {
-    std::ostringstream oss;
-    oss << std::setprecision(15) << value;
-    return oss.str();
+    return fmt::format("{:.15g}", value);
 }
 
 template<typename U>
