@@ -23,6 +23,9 @@ struct Component
     std::string model;
     std::string scenarioGroup;
     std::vector<Parameter> parameters;
+
+    // This field isn't an input, it's an output for the view builder
+    // It's only used for building the system-for-views.yml
     std::vector<std::string> properties;
 };
 
