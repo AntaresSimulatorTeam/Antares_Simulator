@@ -54,7 +54,8 @@ YAML::Node generateSystemForView(const Antares::Data::Study& study)
 YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study)
 {
     YAML::Node system;
-    system["id"] = "legacy_converted";
+    system["id"] = study.folder.string();
+
     YAML::Node libs = YAML::Node(YAML::NodeType::Sequence);
     libs.push_back("antares_legacy_models");
     system["model-libraries"] = libs;
@@ -179,7 +180,7 @@ YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::
     const auto& legacyConnections = legacyYaml["system"]["connections"];
 
     YAML::Node system;
-    system["id"] = modelerData->system->Id();
+    system["id"] = study.folder.string();
 
     YAML::Node libs(YAML::NodeType::Sequence);
     libs.push_back("antares_legacy_models");
