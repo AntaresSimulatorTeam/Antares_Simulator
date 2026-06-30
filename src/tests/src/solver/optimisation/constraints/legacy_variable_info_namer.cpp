@@ -24,14 +24,16 @@ namespace
 struct VarFixture
 {
     std::vector<std::string> names = std::vector<std::string>(8);
-    std::vector<std::optional<LegacyVariableInfo>> info = std::vector<std::optional<LegacyVariableInfo>>(8);
+    std::vector<std::optional<LegacyVariableInfo>>
+      info = std::vector<std::optional<LegacyVariableInfo>>(8);
     VariableNamer namer{names, info};
 };
 
 struct ConstrFixture
 {
     std::vector<std::string> names = std::vector<std::string>(4);
-    std::vector<std::optional<LegacyVariableInfo>> info = std::vector<std::optional<LegacyVariableInfo>>(4);
+    std::vector<std::optional<LegacyVariableInfo>>
+      info = std::vector<std::optional<LegacyVariableInfo>>(4);
 };
 } // namespace
 

@@ -619,7 +619,9 @@ BOOST_AUTO_TEST_CASE(thermal_margins_are_derived_from_availability_and_generatio
 
     BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 4000., 1e-9);
     BOOST_CHECK_CLOSE(FindRow(table, "up_margin", "cluster1")->value, 4000. - 3600., 1e-9);
-    BOOST_CHECK_CLOSE(FindRow(table, "min_gen_power", "cluster1")->value, 500., 1e-9); // min(3600,500)
+    BOOST_CHECK_CLOSE(FindRow(table, "min_gen_power", "cluster1")->value,
+                      500.,
+                      1e-9); // min(3600,500)
     BOOST_CHECK_CLOSE(FindRow(table, "down_margin", "cluster1")->value, 3600. - 500., 1e-9);
 }
 
