@@ -300,14 +300,14 @@ BOOST_AUTO_TEST_CASE(misc_gen_components)
     };
 
     std::vector<MiscGenTestCase> miscGenCases = {
-        {"CHP",         "chp",         "misc_ndg"},
-        {"BioMass",     "biomass",     "misc_ndg"},
-        {"BioGaz",      "biogaz",      "misc_ndg"},
-        {"Waste",       "waste",       "misc_ndg"},
-        {"GeoThermal",  "geothermal",  "misc_ndg"},
-        {"Other",       "other",       "misc_ndg"},
-        {"PSP",         "psp",         "pumped_storage_power"},
-        {"RowBalance",  "rowbalance",  "rest_world"},
+      {"CHP", "chp", "misc_ndg"},
+      {"BioMass", "biomass", "misc_ndg"},
+      {"BioGaz", "biogaz", "misc_ndg"},
+      {"Waste", "waste", "misc_ndg"},
+      {"GeoThermal", "geothermal", "misc_ndg"},
+      {"Other", "other", "misc_ndg"},
+      {"PSP", "psp", "pumped_storage_power"},
+      {"RowBalance", "rowbalance", "rest_world"},
     };
 
     for (const auto& [name, expectedTech, expectedMiscType]: miscGenCases)
