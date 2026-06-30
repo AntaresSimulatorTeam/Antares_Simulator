@@ -1,9 +1,8 @@
 // Copyright 2007-2026, RTE (https://www.rte-france.com)
 // SPDX-License-Identifier: MPL-2.0
 
-#include <yaml-cpp/yaml.h>
-
 #include <utility>
+#include <yaml-cpp/yaml.h>
 
 #include <antares/solver/optimisation/opt_rename_problem.h>
 #include <antares/study/area/constants.h>
@@ -15,7 +14,9 @@ using namespace Antares::Data;
 namespace
 {
 
-YAML::Node makeComponent(const std::string& id, const std::string& modelId, const std::vector<std::pair<std::string, std::string>>& properties)
+YAML::Node makeComponent(const std::string& id,
+                         const std::string& modelId,
+                         const std::vector<std::pair<std::string, std::string>>& properties)
 {
     YAML::Node component;
     component["id"] = id;
@@ -26,7 +27,7 @@ YAML::Node makeComponent(const std::string& id, const std::string& modelId, cons
     if (!properties.empty())
     {
         YAML::Node props = YAML::Node(YAML::NodeType::Sequence);
-        for (const auto& [propId, propValue] : properties)
+        for (const auto& [propId, propValue]: properties)
         {
             YAML::Node prop;
             prop["id"] = propId;
@@ -87,7 +88,9 @@ std::string areaLocation(const std::string& areaId)
     return LocationIdentifier(areaId, AREA);
 }
 
-std::string makeComponentId(const std::string& areaId, const std::string& childType, const std::string& childId)
+std::string makeComponentId(const std::string& areaId,
+                            const std::string& childType,
+                            const std::string& childId)
 {
     std::string result = areaLocation(areaId) + SEP + childType;
     if (!childId.empty())
@@ -160,9 +163,7 @@ YAML::Node rorToYaml(const Area& area)
 YAML::Node linkToYaml(const AreaLink& link)
 {
     std::string id = LocationIdentifier(link.from->id + AREA_SEP + link.with->id, LINK);
-    return makeComponent(id,
-                         "antares_legacy_models.link",
-                         {{"carrier", "electricity"}});
+    return makeComponent(id, "antares_legacy_models.link", {{"carrier", "electricity"}});
 }
 
 YAML::Node thermalClusterToYaml(const ThermalCluster& cluster)
@@ -188,7 +189,8 @@ YAML::Node miscGenToYaml(const Area& area, int miscGenIndex)
                           {"miscellaneous_type", miscGenMiscellaneousType(miscGenIndex)}});
 }
 
-YAML::Node shortTermStorageToYaml(const Area& area, const ShortTermStorage::STStorageCluster& storage)
+YAML::Node shortTermStorageToYaml(const Area& area,
+                                  const ShortTermStorage::STStorageCluster& storage)
 {
     return makeComponent(makeComponentId(area.id, "ShortTermStorage", storage.id),
                          "antares_legacy_models.short_term_storage",
