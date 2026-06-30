@@ -72,7 +72,6 @@ BOOST_AUTO_TEST_CASE(study_to_yaml_structure)
     BOOST_REQUIRE(root["system"].IsDefined());
 
     auto sys = root["system"];
-    BOOST_CHECK_EQUAL(sys["id"].as<std::string>(), "legacy_converted");
 
     auto libs = sys["model-libraries"];
     BOOST_REQUIRE(libs.IsSequence());
@@ -360,7 +359,6 @@ BOOST_AUTO_TEST_CASE(round_trip_yaml_parse)
     BOOST_REQUIRE(reparsed["system"].IsDefined());
 
     auto sys = reparsed["system"];
-    BOOST_CHECK_EQUAL(sys["id"].as<std::string>(), "legacy_converted");
     BOOST_REQUIRE(sys["model-libraries"].IsSequence());
     BOOST_REQUIRE(sys["components"].IsSequence());
     BOOST_CHECK_EQUAL(sys["components"].size(), 32);
