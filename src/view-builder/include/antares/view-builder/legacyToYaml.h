@@ -11,23 +11,22 @@ namespace Antares::ViewBuilder
 {
 
 std::string areaLocation(const std::string& areaId);
-std::string makeComponentId(const std::string& areaId, const std::string& childType, const std::string& childId = "");
+std::string makeComponentId(const std::string& areaId,
+                            const std::string& childType,
+                            const std::string& childId = "");
 std::string miscGenTypeName(int index);
 
-YAML::Node generateSystemForView(const Antares::Data::Study& study);
-YAML::Node generateSystemLegacyComponents(const Antares::Data::Study& study);
-YAML::Node mergeHybridSystemYaml(const Antares::Data::Study& study, const YAML::Node& legacyYaml);
-
-YAML::Node areaToYaml(const Antares::Data::Area& area);
-YAML::Node loadToYaml(const Antares::Data::Area& area);
-YAML::Node windToYaml(const Antares::Data::Area& area);
-YAML::Node solarToYaml(const Antares::Data::Area& area);
-YAML::Node rorToYaml(const Antares::Data::Area& area);
-YAML::Node linkToYaml(const Antares::Data::AreaLink& link);
-YAML::Node thermalClusterToYaml(const Antares::Data::ThermalCluster& cluster);
-YAML::Node renewableClusterToYaml(const Antares::Data::RenewableCluster& cluster);
-YAML::Node miscGenToYaml(const Antares::Data::Area& area, int miscGenIndex);
-YAML::Node shortTermStorageToYaml(const Antares::Data::Area& area, const Antares::Data::ShortTermStorage::STStorageCluster& storage);
-YAML::Node longTermStorageToYaml(const Antares::Data::Area& area);
+YAML::Node areaToYaml(const Data::Area& area);
+YAML::Node loadToYaml(const Data::Area& area);
+YAML::Node windToYaml(const Data::Area& area);
+YAML::Node solarToYaml(const Data::Area& area);
+YAML::Node rorToYaml(const Data::Area& area);
+YAML::Node linkToYaml(const Data::AreaLink& link);
+YAML::Node thermalClusterToYaml(const Data::ThermalCluster& cluster);
+YAML::Node renewableClusterToYaml(const Data::RenewableCluster& cluster);
+YAML::Node miscGenToYaml(const Data::Area& area, int miscGenIndex);
+YAML::Node shortTermStorageToYaml(const Data::Area& area,
+                                  const Data::ShortTermStorage::STStorageCluster& storage);
+YAML::Node longTermStorageToYaml(const Data::Area& area);
 
 } // namespace Antares::ViewBuilder

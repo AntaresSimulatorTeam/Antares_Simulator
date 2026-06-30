@@ -2,6 +2,7 @@ set(SOURCES
     legacyToYaml.cpp
     generateSystemForView.cpp
     include/antares/view-builder/legacyToYaml.h
+    include/antares/view-builder/viewBuilder.h
 )
 
 add_library(view-builder ${SOURCES})

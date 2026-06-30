@@ -14,7 +14,7 @@
 #include <antares/study/duplicates.h>
 #include <antares/study/header.h>
 #include <antares/sys/policy.h>
-#include <antares/view-builder/legacyToYaml.h>
+#include <antares/view-builder/viewBuilder.h>
 #include <antares/writer/writer_factory.h>
 #include "antares/antares/version.h"
 #include "antares/checks/checksOnLPsolver.h"
@@ -405,9 +405,7 @@ void Application::execute()
     // Save about-the-study files (comments, notes, etc.)
     pStudy->saveAboutTheStudy(*resultWriter);
 
-    YAML::Node viewsYaml = Antares::ViewBuilder::generateSystemForView(*pStudy);
-    std::string yamlContent = YAML::Dump(viewsYaml);
-    resultWriter->addEntryFromBuffer("system-for-views.yml", yamlContent);
+    ViewBuilder::exportSystemForView(*pStudy, resultWriter.get());
 
     SystemMemoryLogger memoryReport;
     memoryReport.interval(1000 * 60 * 5); // 5 minutes

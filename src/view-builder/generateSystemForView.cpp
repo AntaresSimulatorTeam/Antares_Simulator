@@ -9,6 +9,7 @@
 #include <antares/study/system-model/component.h>
 #include <antares/study/system-model/system.h>
 #include <antares/view-builder/legacyToYaml.h>
+#include <antares/view-builder/viewBuilder.h>
 
 using namespace Antares::Data;
 
@@ -32,6 +33,13 @@ YAML::Node makeConnection(const std::string& component1,
 
 namespace Antares::ViewBuilder
 {
+
+void exportSystemForView(const Antares::Data::Study& study, Solver::IResultWriter* resultWriter)
+{
+    YAML::Node systemYaml = generateSystemForView(study);
+    std::string yamlContent = YAML::Dump(systemYaml);
+    resultWriter->addEntryFromBuffer("system-for-views.yml", yamlContent);
+}
 
 YAML::Node generateSystemForView(const Antares::Data::Study& study)
 {

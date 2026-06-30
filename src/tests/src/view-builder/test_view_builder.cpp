@@ -16,6 +16,7 @@
 #include <antares/study/parts/thermal/cluster.h>
 #include <antares/study/study.h>
 #include <antares/view-builder/legacyToYaml.h>
+#include <antares/view-builder/viewBuilder.h>
 
 using namespace Antares::Data;
 using namespace Antares::ViewBuilder;
