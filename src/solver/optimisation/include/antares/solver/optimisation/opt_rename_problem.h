@@ -31,6 +31,11 @@ protected:
         return timeStep_;
     }
 
+    const std::string& area() const
+    {
+        return area_;
+    }
+
     void SetLinkElementName(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameHour(unsigned varIndex, const std::string& variableType);
     void SetAreaElementNameWeek(unsigned varIndex, const std::string& variableType);

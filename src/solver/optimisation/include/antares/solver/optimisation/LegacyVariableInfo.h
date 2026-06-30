@@ -15,6 +15,14 @@ struct LegacyVariableInfo
     std::string name;
     std::string component;
     unsigned timeIndex;
+
+    // Area the variable belongs to, captured from the namer's current area at
+    // record time. It is meaningful for area- and cluster-anchored variables
+    // (where `component` alone is not unique across areas, e.g. two thermal
+    // clusters of the same name) and lets extra outputs key study data by
+    // (area, component). Unspecified for link variables, which carry their full
+    // "origin$$destination" identity in `component` and never read `area`.
+    std::string area;
 };
 
 } // namespace Antares::Optimization

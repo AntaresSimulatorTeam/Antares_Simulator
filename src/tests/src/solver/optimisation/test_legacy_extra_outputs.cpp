@@ -84,7 +84,9 @@ struct Fixture
     Fixture()
     {
         info.resize(13);
-        info[0] = LegacyVariableInfo{"DispatchableProduction", "cluster1", 168};
+        // "cluster1" lives in "area1"; the area qualifier disambiguates the
+        // cluster name (not unique across areas) when keying study data.
+        info[0] = LegacyVariableInfo{"DispatchableProduction", "cluster1", 168, "area1"};
         info[1] = LegacyVariableInfo{"UnsuppliedEnergy", "area1", 168};
         info[2] = LegacyVariableInfo{"Spillage", "area1", 168};
         info[3] = LegacyVariableInfo{"UnsuppliedEnergy", "area2", 168};
@@ -144,6 +146,58 @@ struct Fixture
         context.indirectCapacityByLink["area1$$area2"] = {indirectArea1Area2};
         context.directCapacityByLink["area2$$area3"] = {directArea2Area3};
         context.indirectCapacityByLink["area2$$area3"] = {indirectArea2Area3};
+        return *this;
+    }
+
+    // Per-area residual load, single recorded pdt like the link capacities.
+    Fixture& withLoads(double area1 = 800., double area2 = 500., double area3 = 300.)
+    {
+        context.loadByArea["area1"] = {area1};
+        context.loadByArea["area2"] = {area2};
+        context.loadByArea["area3"] = {area3};
+        return *this;
+    }
+
+    // Per-area inflows; only "area1" carries a series (the only HydroLevel
+    // anchor in the fixture).
+    Fixture& withInflows(double area1 = 123.4)
+    {
+        context.inflowsByArea["area1"] = {area1};
+        return *this;
+    }
+
+    // Per-link loop flow, single recorded pdt.
+    Fixture& withLoopFlows(double area1Area2 = 15., double area2Area3 = -8.)
+    {
+        context.loopFlowByLink["area1$$area2"] = {area1Area2};
+        context.loopFlowByLink["area2$$area3"] = {area2Area3};
+        return *this;
+    }
+
+    // Emission factors for "cluster1" (keyed "area1$$cluster1"). A few distinct
+    // pollutants are set to non-zero so the ordinal-to-row mapping is checked.
+    Fixture& withEmissionFactors(double co2 = 0.5, double nox = 0.01, double op5 = 2.)
+    {
+        std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX> factors{};
+        factors[Antares::Data::Pollutant::CO2] = co2;
+        factors[Antares::Data::Pollutant::NOX] = nox;
+        factors[Antares::Data::Pollutant::OP5] = op5;
+        context.emissionFactorsByCluster["area1$$cluster1"] = factors;
+        return *this;
+    }
+
+    // Margin data for "cluster1" (keyed "area1$$cluster1"), single recorded pdt.
+    Fixture& withThermalMargin(double availability = 4000.,
+                               double unitSize = 900.,
+                               double minStablePower = 300.,
+                               double minGenPower = 500.)
+    {
+        LegacyExtraOutputsContext::ThermalMarginData margin;
+        margin.unitSize = unitSize;
+        margin.minStablePower = minStablePower;
+        margin.availability = {availability};
+        margin.minGenPower = {minGenPower};
+        context.thermalMarginByCluster["area1$$cluster1"] = margin;
         return *this;
     }
 
@@ -276,9 +330,10 @@ BOOST_AUTO_TEST_CASE(no_other_rows_are_emitted)
     fill();
 
     // 2 prop_cost (cluster1, link) + 1 imbalance_cost + 3 is_loss_of_load
-    // + 1 actual_num_units_on + 2 abs_flow. The context is empty, so
-    // level_percentage and is_*_congested are skipped.
-    BOOST_CHECK_EQUAL(table.rowCount(), 9);
+    // + 1 actual_num_units_on + 1 non_prop_cost + 2 abs_flow + 2 minus_flow.
+    // The context is empty, so level_percentage, is_*_congested, actual_load,
+    // actual_inflows and actual_loop_flow are skipped.
+    BOOST_CHECK_EQUAL(table.rowCount(), 12);
 }
 
 BOOST_AUTO_TEST_CASE(level_percentage_is_hydro_level_over_reservoir_capacity)
@@ -399,20 +454,270 @@ BOOST_AUTO_TEST_CASE(other_constraints_produce_no_extra_output)
 {
     withConstraints().fill();
 
-    // 9 variable-driven rows + 3 price + 2 is_near_loss_of_load
-    // + 1 capacity_shadow_price + 1 hydro_shadow_price; the unnamed
-    // slot adds nothing. Context-driven outputs are skipped here because
-    // no study data was injected.
-    BOOST_CHECK_EQUAL(table.rowCount(), 16);
+    // 12 variable-driven rows + 3 price + 2 is_near_loss_of_load
+    // + 1 capacity_shadow_price + 1 hydro_shadow_price + 2 congestion fees
+    // (abs/alg on area1$$area2, whose endpoints both have a price); the unnamed
+    // slot adds nothing. Thermal profit and other context-driven outputs are
+    // skipped here because no study data was injected.
+    BOOST_CHECK_EQUAL(table.rowCount(), 21);
 }
 
 BOOST_AUTO_TEST_CASE(study_data_outputs_add_one_level_percentage_and_four_congestion_rows)
 {
     withConstraints().withReservoirs().withLinkCapacities().fill();
 
-    // Same 16 rows as before, plus 1 level_percentage (area1) and 4
-    // congestion rows (2 directions for each of the 2 links).
-    BOOST_CHECK_EQUAL(table.rowCount(), 16 + 1 + 4);
+    // The 21 rows of other_constraints_produce_no_extra_output (which already
+    // include the 2 congestion fees), plus 1 level_percentage (area1) and 4
+    // congestion-indicator rows (2 directions for each of the 2 links). load,
+    // inflow and loop-flow series are still absent, so those outputs stay
+    // skipped.
+    BOOST_CHECK_EQUAL(table.rowCount(), 21 + 1 + 4);
+}
+
+BOOST_AUTO_TEST_CASE(minus_flow_is_the_negated_signed_flow)
+{
+    fill();
+
+    const auto rows = RowsForOutput(table, "minus_flow");
+    BOOST_REQUIRE_EQUAL(rows.size(), 2);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area1$$area2")->value, -120.);
+    BOOST_CHECK_EQUAL(FindRow(table, "minus_flow", "area2$$area3")->value, 30.); // -(-30)
+}
+
+BOOST_AUTO_TEST_CASE(non_prop_cost_is_fixed_cost_times_units_without_a_previous_hour)
+{
+    // The fixture has no previous-hour NODU and no starting-units variable, so
+    // the start-up term is zero: non_prop_cost = fixed_cost * ceil(NODU).
+    fill();
+
+    const auto row = FindRow(table, "non_prop_cost", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 100. * 3., 1e-9); // costs[5] * ceil(2.3)
+}
+
+BOOST_AUTO_TEST_CASE(non_prop_cost_adds_startup_cost_for_units_started_since_t_minus_one)
+{
+    // Append a previous-hour NODU (2 units on) and the cluster's starting-units
+    // variable carrying the startup cost as its objective coefficient.
+    info.push_back(LegacyVariableInfo{"NODU", "cluster1", 167});
+    values.push_back(2.);
+    costs.push_back(0.);
+    info.push_back(LegacyVariableInfo{"NumberStartingDispatchableUnits", "cluster1", 168});
+    values.push_back(1.);
+    costs.push_back(5000.);
+
+    fill();
+
+    // 3 units on now, 2 last hour: 1 unit started.
+    // non_prop_cost = 5000 * 1 + 100 * 3.
+    const auto row = FindRow(table, "non_prop_cost", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 5000. * 1. + 100. * 3., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(actual_load_reads_the_area_load_series)
+{
+    withLoads().fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area1")->value, 800.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area2")->value, 500.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_load", "area3")->value, 300.);
+}
+
+BOOST_AUTO_TEST_CASE(actual_load_is_skipped_without_a_load_series)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "actual_load").empty());
+}
+
+BOOST_AUTO_TEST_CASE(actual_inflows_is_the_rounded_inflow_series)
+{
+    withInflows(/*area1=*/123.4).fill();
+
+    const auto rows = RowsForOutput(table, "actual_inflows");
+    BOOST_REQUIRE_EQUAL(rows.size(), 1);
+    BOOST_CHECK_EQUAL(rows[0].component, "area1");
+    BOOST_CHECK_EQUAL(rows[0].value, 123.); // round(123.4)
+}
+
+BOOST_AUTO_TEST_CASE(actual_inflows_is_skipped_without_an_inflow_series)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "actual_inflows").empty());
+}
+
+BOOST_AUTO_TEST_CASE(actual_loop_flow_reads_the_link_loop_flow_series)
+{
+    withLoopFlows(/*area1Area2=*/15., /*area2Area3=*/-8.).fill();
+
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area1$$area2")->value, 15.);
+    BOOST_CHECK_EQUAL(FindRow(table, "actual_loop_flow", "area2$$area3")->value, -8.);
+}
+
+BOOST_AUTO_TEST_CASE(actual_loop_flow_is_skipped_without_a_loop_flow_series)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "actual_loop_flow").empty());
+}
+
+BOOST_AUTO_TEST_CASE(emissions_are_generation_power_times_each_factor)
+{
+    withEmissionFactors(/*co2=*/0.5, /*nox=*/0.01, /*op5=*/2.).fill();
+
+    // generation_power = values[0] = 3600.
+    BOOST_CHECK_CLOSE(FindRow(table, "co2_emissions", "cluster1")->value, 3600. * 0.5, 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "nox_emissions", "cluster1")->value, 3600. * 0.01, 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "op5_emissions", "cluster1")->value, 3600. * 2., 1e-9);
+    // A pollutant with a zero factor still gets a row, valued 0.
+    const auto so2 = FindRow(table, "so2_emissions", "cluster1");
+    BOOST_REQUIRE(so2.has_value());
+    BOOST_CHECK_EQUAL(so2->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(emissions_emit_one_row_per_pollutant)
+{
+    withEmissionFactors().fill();
+
+    // One row per pollutant in Pollutant::PollutantEnum, all on "cluster1".
+    BOOST_CHECK_EQUAL(RowsForOutput(table, "co2_emissions").size(), 1);
+    std::size_t emissionRows = 0;
+    for (const auto& columns: table.storageIntoRows())
+    {
+        if (columns[2].size() > 10 && columns[2].substr(columns[2].size() - 10) == "_emissions")
+        {
+            ++emissionRows;
+        }
+    }
+    BOOST_CHECK_EQUAL(emissionRows, Antares::Data::Pollutant::POLLUTANT_MAX);
+}
+
+BOOST_AUTO_TEST_CASE(emissions_are_skipped_for_clusters_absent_from_the_context)
+{
+    // Default context carries no emission factors: the DispatchableProduction
+    // anchor emits prop_cost but no emission rows.
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "co2_emissions").empty());
+}
+
+BOOST_AUTO_TEST_CASE(emissions_use_the_area_qualified_key)
+{
+    // Same cluster name but a different area: the key "area2$$cluster1" does not
+    // match the anchor's "area1$$cluster1", so nothing is emitted.
+    std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX> factors{};
+    factors[Antares::Data::Pollutant::CO2] = 1.;
+    context.emissionFactorsByCluster["area2$$cluster1"] = factors;
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "co2_emissions").empty());
+}
+
+BOOST_AUTO_TEST_CASE(thermal_margins_are_derived_from_availability_and_generation)
+{
+    // availability=4000, unitSize=900, minStablePower=300, minGenPower=500.
+    // generation_power = values[0] = 3600.
+    // cluster_availability = max(4000, 300*ceil(4000/900)=300*5=1500) = 4000.
+    withThermalMargin(4000., 900., 300., 500.).fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 4000., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "up_margin", "cluster1")->value, 4000. - 3600., 1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "min_gen_power", "cluster1")->value, 500., 1e-9); // min(3600,500)
+    BOOST_CHECK_CLOSE(FindRow(table, "down_margin", "cluster1")->value, 3600. - 500., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(cluster_availability_takes_the_unit_floor_when_it_dominates)
+{
+    // availability=250, unitSize=100, minStablePower=200:
+    // cluster_availability = max(250, 200*ceil(250/100)=200*3=600) = 600.
+    withThermalMargin(/*availability=*/250., /*unitSize=*/100., /*minStablePower=*/200., 0.).fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 600., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(cluster_availability_ignores_the_unit_floor_when_unit_size_is_zero)
+{
+    // A zero unit size would divide by zero in the floor term; it is treated as
+    // no floor, so cluster_availability is just the availability.
+    withThermalMargin(/*availability=*/250., /*unitSize=*/0., /*minStablePower=*/200., 0.).fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "cluster_availability", "cluster1")->value, 250., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(thermal_margins_are_skipped_for_clusters_absent_from_the_context)
+{
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "cluster_availability").empty());
+    BOOST_CHECK(RowsForOutput(table, "up_margin").empty());
+    BOOST_CHECK(RowsForOutput(table, "min_gen_power").empty());
+    BOOST_CHECK(RowsForOutput(table, "down_margin").empty());
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_margin_price_times_generation_above_the_min_gen_floor)
+{
+    // area1 price = -(-10000) = 10000; generation_cost = costs[0] = 35;
+    // generation_power = values[0] = 3600; min_gen_power floor = 500.
+    // profit = (10000 - 35) * max(3600 - 500, 0) = 9965 * 3100.
+    withConstraints().withThermalMargin(4000., 900., 300., /*minGenPower=*/500.).fill();
+
+    const auto row = FindRow(table, "profit", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_CLOSE(row->value, 9965. * 3100., 1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_zero_when_generation_does_not_exceed_the_floor)
+{
+    // A floor above the generation clamps the dispatchable quantity to zero.
+    withConstraints().withThermalMargin(4000., 900., 300., /*minGenPower=*/5000.).fill();
+
+    const auto row = FindRow(table, "profit", "cluster1");
+    BOOST_REQUIRE(row.has_value());
+    BOOST_CHECK_EQUAL(row->value, 0.);
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_skipped_without_an_area_price)
+{
+    // No constraints recorded: the area-price map is empty, so profit cannot be
+    // computed even though the margin context is present.
+    withThermalMargin().fill();
+    BOOST_CHECK(RowsForOutput(table, "profit").empty());
+}
+
+BOOST_AUTO_TEST_CASE(profit_is_skipped_without_the_thermal_margin_floor)
+{
+    // The price is known but the cluster is absent from the margin context, so
+    // the min_gen_power floor is unknown and profit is skipped.
+    withConstraints().fill();
+    BOOST_CHECK(RowsForOutput(table, "profit").empty());
+}
+
+BOOST_AUTO_TEST_CASE(congestion_fees_use_the_endpoint_area_prices)
+{
+    // Link area1$$area2, flow = values[6] = 120. price_in = area1 = 10000,
+    // price_out = area2 = 50, delta = 50 - 10000 = -9950.
+    withConstraints().fill();
+
+    BOOST_CHECK_CLOSE(FindRow(table, "abs_congestion_fee", "area1$$area2")->value,
+                      120. * 9950.,
+                      1e-9);
+    BOOST_CHECK_CLOSE(FindRow(table, "alg_congestion_fee", "area1$$area2")->value,
+                      120. * -9950.,
+                      1e-9);
+}
+
+BOOST_AUTO_TEST_CASE(congestion_fees_are_skipped_when_an_endpoint_has_no_price)
+{
+    // Link area2$$area3: area3 has no balance constraint, so its price is
+    // unknown and both congestion fees are skipped for that link.
+    withConstraints().fill();
+
+    BOOST_CHECK(!FindRow(table, "abs_congestion_fee", "area2$$area3").has_value());
+    BOOST_CHECK(!FindRow(table, "alg_congestion_fee", "area2$$area3").has_value());
+}
+
+BOOST_AUTO_TEST_CASE(congestion_fees_are_skipped_without_any_prices)
+{
+    // No constraints: the area-price map is empty, so no link gets a fee.
+    fill();
+    BOOST_CHECK(RowsForOutput(table, "abs_congestion_fee").empty());
+    BOOST_CHECK(RowsForOutput(table, "alg_congestion_fee").empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
