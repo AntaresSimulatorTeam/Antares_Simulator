@@ -136,7 +136,22 @@ public:
     {
     }
 
-    // Variable-anchored emitters; index addresses the value / cost arrays.
+    // One method per anchor: the recorded variable / constraint name that
+    // AddLegacyExtraOutputs dispatches on. Each emits every output derived from
+    // that anchor. Variable anchors index the value / cost arrays; constraint
+    // anchors index the dual array.
+    void dispatchableProduction(const LegacyVariableInfo& info, std::size_t index);
+    void unsuppliedEnergy(const LegacyVariableInfo& info, std::size_t index);
+    void nodu(const LegacyVariableInfo& info, std::size_t index);
+    void directFlow(const LegacyVariableInfo& info, std::size_t index);
+    void positiveDirectFlow(const LegacyVariableInfo& info, std::size_t index);
+    void hydroLevel(const LegacyVariableInfo& info, std::size_t index);
+    void areaBalance(const LegacyVariableInfo& info, std::size_t index);
+    void flowDissociation(const LegacyVariableInfo& info, std::size_t index);
+    void finalStockExpression(const LegacyVariableInfo& info, std::size_t index);
+
+private:
+    // Per-output emitters, grouped by the anchor that drives them.
     void thermalPropCost(const LegacyVariableInfo& info, std::size_t index);
     void thermalEmissions(const LegacyVariableInfo& info, std::size_t index);
     void thermalMargins(const LegacyVariableInfo& info, std::size_t index);
@@ -155,14 +170,11 @@ public:
     void linkPropCost(const LegacyVariableInfo& info, std::size_t index);
     void areaLevelPercentage(const LegacyVariableInfo& info, std::size_t index);
     void hydroActualInflows(const LegacyVariableInfo& info, std::size_t index);
-
-    // Constraint-anchored emitters; index addresses the dual array.
     void areaPrice(const LegacyVariableInfo& info, std::size_t index);
     void areaIsNearLossOfLoad(const LegacyVariableInfo& info, std::size_t index);
     void linkCapacityShadowPrice(const LegacyVariableInfo& info, std::size_t index);
     void hydroShadowPrice(const LegacyVariableInfo& info, std::size_t index);
 
-private:
     // Pushes one row into the simulation table for the given anchor and value.
     void emit(const std::string& output, const LegacyVariableInfo& info, double value);
 
@@ -581,6 +593,68 @@ void LegacyExtraOutputEmitter::hydroShadowPrice(const LegacyVariableInfo& info, 
     emit("hydro_shadow_price", info, duals_[index]);
 }
 
+// Per-anchor entry points: each gathers the outputs derived from one recorded
+// variable / constraint.
+void LegacyExtraOutputEmitter::dispatchableProduction(const LegacyVariableInfo& info,
+                                                      std::size_t index)
+{
+    thermalPropCost(info, index);
+    thermalEmissions(info, index);
+    thermalMargins(info, index);
+    thermalProfit(info, index);
+}
+
+void LegacyExtraOutputEmitter::unsuppliedEnergy(const LegacyVariableInfo& info, std::size_t index)
+{
+    areaImbalanceCost(info, index);
+    areaIsLossOfLoad(info, index);
+    areaActualLoad(info, index);
+}
+
+void LegacyExtraOutputEmitter::nodu(const LegacyVariableInfo& info, std::size_t index)
+{
+    thermalActualNumUnitsOn(info, index);
+    thermalNonPropCost(info, index);
+}
+
+void LegacyExtraOutputEmitter::directFlow(const LegacyVariableInfo& info, std::size_t index)
+{
+    linkAbsFlow(info, index);
+    linkMinusFlow(info, index);
+    linkActualLoopFlow(info, index);
+    linkIsDirectlyCongested(info, index);
+    linkIsIndirectlyCongested(info, index);
+    linkCongestionFees(info, index);
+}
+
+void LegacyExtraOutputEmitter::positiveDirectFlow(const LegacyVariableInfo& info, std::size_t index)
+{
+    linkPropCost(info, index);
+}
+
+void LegacyExtraOutputEmitter::hydroLevel(const LegacyVariableInfo& info, std::size_t index)
+{
+    areaLevelPercentage(info, index);
+    hydroActualInflows(info, index);
+}
+
+void LegacyExtraOutputEmitter::areaBalance(const LegacyVariableInfo& info, std::size_t index)
+{
+    areaPrice(info, index);
+    areaIsNearLossOfLoad(info, index);
+}
+
+void LegacyExtraOutputEmitter::flowDissociation(const LegacyVariableInfo& info, std::size_t index)
+{
+    linkCapacityShadowPrice(info, index);
+}
+
+void LegacyExtraOutputEmitter::finalStockExpression(const LegacyVariableInfo& info,
+                                                    std::size_t index)
+{
+    hydroShadowPrice(info, index);
+}
+
 } // namespace
 
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
@@ -620,39 +694,27 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
 
         if (info->name == "DispatchableProduction")
         {
-            emitter.thermalPropCost(*info, index);
-            emitter.thermalEmissions(*info, index);
-            emitter.thermalMargins(*info, index);
-            emitter.thermalProfit(*info, index);
+            emitter.dispatchableProduction(*info, index);
         }
         else if (info->name == "UnsuppliedEnergy")
         {
-            emitter.areaImbalanceCost(*info, index);
-            emitter.areaIsLossOfLoad(*info, index);
-            emitter.areaActualLoad(*info, index);
+            emitter.unsuppliedEnergy(*info, index);
         }
         else if (info->name == "NODU")
         {
-            emitter.thermalActualNumUnitsOn(*info, index);
-            emitter.thermalNonPropCost(*info, index);
+            emitter.nodu(*info, index);
         }
         else if (info->name == "DirectFlow")
         {
-            emitter.linkAbsFlow(*info, index);
-            emitter.linkMinusFlow(*info, index);
-            emitter.linkActualLoopFlow(*info, index);
-            emitter.linkIsDirectlyCongested(*info, index);
-            emitter.linkIsIndirectlyCongested(*info, index);
-            emitter.linkCongestionFees(*info, index);
+            emitter.directFlow(*info, index);
         }
         else if (info->name == "PositiveDirectFlow")
         {
-            emitter.linkPropCost(*info, index);
+            emitter.positiveDirectFlow(*info, index);
         }
         else if (info->name == "HydroLevel")
         {
-            emitter.areaLevelPercentage(*info, index);
-            emitter.hydroActualInflows(*info, index);
+            emitter.hydroLevel(*info, index);
         }
     }
 
@@ -666,16 +728,15 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
 
         if (info->name == "AreaBalance")
         {
-            emitter.areaPrice(*info, index);
-            emitter.areaIsNearLossOfLoad(*info, index);
+            emitter.areaBalance(*info, index);
         }
         else if (info->name == "FlowDissociation")
         {
-            emitter.linkCapacityShadowPrice(*info, index);
+            emitter.flowDissociation(*info, index);
         }
         else if (info->name == "FinalStockExpression")
         {
-            emitter.hydroShadowPrice(*info, index);
+            emitter.finalStockExpression(*info, index);
         }
     }
 }
