@@ -951,7 +951,7 @@ var namespaces_dup =
         [ "STSInjectionSum", "watched-constraints_8h.html#a512aba669c091827c6b436d0b3408192", null ],
         [ "STSNettingSum", "watched-constraints_8h.html#a92ecfd5cfe8111fcc5761687e57227fa", null ],
         [ "STSWithdrawalSum", "watched-constraints_8h.html#aac13d5895b888127d4d62045556476ba", null ],
-        [ "AddLegacyExtraOutputs", "LegacyExtraOutputs_8h.html#adcc1c621071dd061f06ffea0b0f80d02", null ],
+        [ "AddLegacyExtraOutputs", "LegacyExtraOutputs_8h.html#a3bc14d44590b23decf6ea19cf565814a", null ],
         [ "applyOperation", "LinearExpression_8h.html#ae0afdb45eb93e24332629b1b32ae10c3", null ],
         [ "applyOperation", "TimeDependentLinearExpression_8h.html#a2ee21c86960b2d7fb5ca86724ec77fd0", null ],
         [ "balanceConstraintIndices", "ComponentToAreaConnectionFiller_8cpp.html#a70b02987bc0443abb2f9fba61f119869", null ],

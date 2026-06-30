@@ -1,5 +1,6 @@
 var classConstraintNamer =
 [
+    [ "ConstraintNamer", "classConstraintNamer.html#a3aa6ba7fad98d10facaf9b13fb83d248", null ],
     [ "AreaBalance", "classConstraintNamer.html#ad1ebfea0507157f92cff981ff4ce2da9", null ],
     [ "AreaHydroLevel", "classConstraintNamer.html#a35ddeb8cea22a9dce09b7dd65ef1dc0c", null ],
     [ "BindingConstraintDay", "classConstraintNamer.html#ad7f3cb340a4462a73cd835bc3ab1642b", null ],

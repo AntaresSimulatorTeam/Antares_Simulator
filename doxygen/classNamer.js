@@ -5,7 +5,7 @@ var classNamer =
     [ "areaLocation", "classNamer.html#a529faa6e41852c7352156e09d8ec42af", null ],
     [ "linkLocation", "classNamer.html#a9d890af6a29b4c1ccb61d29969061308", null ],
     [ "names", "classNamer.html#a7abf76b84765b0dda3e43f80f03775b5", null ],
-    [ "RecordLegacyVariableInfo", "classNamer.html#aebc57ba4977dfa307c343363a580c444", null ],
+    [ "RecordLegacyVariableInfo", "classNamer.html#a9f83256d3b5c53485094b07c74d1025e", null ],
     [ "SetAreaElementName", "classNamer.html#a6ad7cc40b38cccce1bd9ae7820cf380e", null ],
     [ "SetAreaElementNameHour", "classNamer.html#ade767035cb03ed27c830d90b07a3f723", null ],
     [ "SetAreaElementNameWeek", "classNamer.html#a95fd1e61eff567c628f7821e41cb55f2", null ],
