@@ -140,40 +140,40 @@ public:
     // AddLegacyExtraOutputs dispatches on. Each emits every output derived from
     // that anchor. Variable anchors index the value / cost arrays; constraint
     // anchors index the dual array.
-    void dispatchableProduction(const LegacyVariableInfo& info, std::size_t index) const;
-    void unsuppliedEnergy(const LegacyVariableInfo& info, std::size_t index) const;
-    void nodu(const LegacyVariableInfo& info, std::size_t index) const;
-    void directFlow(const LegacyVariableInfo& info, std::size_t index) const;
-    void positiveDirectFlow(const LegacyVariableInfo& info, std::size_t index) const;
-    void hydroLevel(const LegacyVariableInfo& info, std::size_t index) const;
-    void areaBalance(const LegacyVariableInfo& info, std::size_t index) const;
-    void flowDissociation(const LegacyVariableInfo& info, std::size_t index) const;
-    void finalStockExpression(const LegacyVariableInfo& info, std::size_t index) const;
+    void dispatchableProduction(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void unsuppliedEnergy(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void nodu(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void directFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void positiveDirectFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void hydroLevel(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void areaBalance(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void flowDissociation(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void finalStockExpression(const LegacyVariableInfo& info, std::size_t variableIndex) const;
 
 private:
     // Per-output emitters, grouped by the anchor that drives them.
-    void thermalPropCost(const LegacyVariableInfo& info, std::size_t index) const;
-    void thermalEmissions(const LegacyVariableInfo& info, std::size_t index) const;
-    void thermalMargins(const LegacyVariableInfo& info, std::size_t index) const;
-    void thermalProfit(const LegacyVariableInfo& info, std::size_t index) const;
-    void areaImbalanceCost(const LegacyVariableInfo& info, std::size_t index) const;
-    void areaIsLossOfLoad(const LegacyVariableInfo& info, std::size_t index) const;
+    void thermalPropCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void thermalEmissions(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void thermalMargins(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void thermalProfit(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void areaImbalanceCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void areaIsLossOfLoad(const LegacyVariableInfo& info, std::size_t variableIndex) const;
     void areaActualLoad(const LegacyVariableInfo& info) const;
-    void thermalActualNumUnitsOn(const LegacyVariableInfo& info, std::size_t index) const;
-    void thermalNonPropCost(const LegacyVariableInfo& info, std::size_t index) const;
-    void linkAbsFlow(const LegacyVariableInfo& info, std::size_t index) const;
-    void linkMinusFlow(const LegacyVariableInfo& info, std::size_t index) const;
+    void thermalActualNumUnitsOn(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void thermalNonPropCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void linkAbsFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void linkMinusFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
     void linkActualLoopFlow(const LegacyVariableInfo& info) const;
-    void linkIsDirectlyCongested(const LegacyVariableInfo& info, std::size_t index) const;
-    void linkIsIndirectlyCongested(const LegacyVariableInfo& info, std::size_t index) const;
-    void linkCongestionFees(const LegacyVariableInfo& info, std::size_t index) const;
-    void linkPropCost(const LegacyVariableInfo& info, std::size_t index) const;
-    void areaLevelPercentage(const LegacyVariableInfo& info, std::size_t index) const;
+    void linkIsDirectlyCongested(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void linkIsIndirectlyCongested(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void linkCongestionFees(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void linkPropCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void areaLevelPercentage(const LegacyVariableInfo& info, std::size_t variableIndex) const;
     void hydroActualInflows(const LegacyVariableInfo& info) const;
-    void areaPrice(const LegacyVariableInfo& info, std::size_t index) const;
-    void areaIsNearLossOfLoad(const LegacyVariableInfo& info, std::size_t index) const;
-    void linkCapacityShadowPrice(const LegacyVariableInfo& info, std::size_t index) const;
-    void hydroShadowPrice(const LegacyVariableInfo& info, std::size_t index) const;
+    void areaPrice(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void areaIsNearLossOfLoad(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void linkCapacityShadowPrice(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void hydroShadowPrice(const LegacyVariableInfo& info, std::size_t variableIndex) const;
 
     // Pushes one row into the simulation table for the given anchor and value.
     void emit(const std::string& output, const LegacyVariableInfo& info, double value) const;
@@ -221,9 +221,9 @@ void LegacyExtraOutputEmitter::emit(const std::string& output,
 // generation variable itself, so they are read by index, which also keeps
 // identically-named clusters of different areas apart.
 void LegacyExtraOutputEmitter::thermalPropCost(const LegacyVariableInfo& info,
-                                               std::size_t index) const
+                                               std::size_t variableIndex) const
 {
-    emit("prop_cost", info, costs_[index] * values_[index]);
+    emit("prop_cost", info, costs_[variableIndex] * values_[variableIndex]);
 }
 
 // <pollutant>_emissions = generation_power * emission_rate, one row per pollutant.
@@ -231,10 +231,10 @@ void LegacyExtraOutputEmitter::thermalPropCost(const LegacyVariableInfo& info,
 // rates come from the context keyed by "area$$cluster". Skipped for clusters
 // absent from the context.
 void LegacyExtraOutputEmitter::thermalEmissions(const LegacyVariableInfo& info,
-                                                std::size_t index) const
+                                                std::size_t variableIndex) const
 {
     const auto it = context_.emissionFactorsByCluster.find(clusterKey(info));
-    const double generation = values_[index];
+    const double generation = values_[variableIndex];
     for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)
     {
         emit(emissionOutputNames[pollutant], info, generation * it->second[pollutant]);
@@ -255,7 +255,7 @@ void LegacyExtraOutputEmitter::thermalEmissions(const LegacyVariableInfo& info,
 // above. Skipped when the cluster is absent from the context or its per-hour
 // vectors do not cover the anchor's hour.
 void LegacyExtraOutputEmitter::thermalMargins(const LegacyVariableInfo& info,
-                                              std::size_t index) const
+                                              std::size_t variableIndex) const
 {
     const auto it = context_.thermalMarginByCluster.find(clusterKey(info));
     if (it == context_.thermalMarginByCluster.end())
@@ -269,7 +269,7 @@ void LegacyExtraOutputEmitter::thermalMargins(const LegacyVariableInfo& info,
         return;
     }
 
-    const double generation = values_[index];
+    const double generation = values_[variableIndex];
     const double available = data.availability[pdt];
     const double minGen = data.minGenPower[pdt];
 
@@ -295,7 +295,7 @@ void LegacyExtraOutputEmitter::thermalMargins(const LegacyVariableInfo& info,
 // no recorded price, the cluster is absent from the context, or the per-hour
 // floor does not cover the anchor's hour.
 void LegacyExtraOutputEmitter::thermalProfit(const LegacyVariableInfo& info,
-                                             std::size_t index) const
+                                             std::size_t variableIndex) const
 {
     const auto priceIt = priceByArea_.find(info.area);
     if (priceIt == priceByArea_.end())
@@ -313,9 +313,10 @@ void LegacyExtraOutputEmitter::thermalProfit(const LegacyVariableInfo& info,
         return;
     }
 
-    const double generation = values_[index];
+    const double generation = values_[variableIndex];
     const double floor = marginIt->second.minGenPower[pdt];
-    const double profit = (priceIt->second - costs_[index]) * std::max(generation - floor, 0.);
+    const double profit = (priceIt->second - costs_[variableIndex])
+                          * std::max(generation - floor, 0.);
     emit("profit", info, profit);
 }
 
@@ -324,7 +325,7 @@ void LegacyExtraOutputEmitter::thermalProfit(const LegacyVariableInfo& info,
 // Driven by the area's UnsuppliedEnergy variable; the Spillage variable of the
 // same area and timestep is found through the solution view.
 void LegacyExtraOutputEmitter::areaImbalanceCost(const LegacyVariableInfo& info,
-                                                 std::size_t index) const
+                                                 std::size_t variableIndex) const
 {
     const auto spilled = solution_.value("Spillage", info.component, info.timeIndex);
     const auto spillageCost = solution_.linearCost("Spillage", info.component, info.timeIndex);
@@ -333,17 +334,18 @@ void LegacyExtraOutputEmitter::areaImbalanceCost(const LegacyVariableInfo& info,
         return;
     }
 
-    const double value = spillageCost.value() * spilled.value() + costs_[index] * values_[index];
+    const double value = spillageCost.value() * spilled.value()
+                         + costs_[variableIndex] * values_[variableIndex];
     emit("imbalance_cost", info, value);
 }
 
 // is_loss_of_load = 1 when the area has unsupplied energy (above the 0.5 MW
 // solver-noise threshold), 0 otherwise.
 void LegacyExtraOutputEmitter::areaIsLossOfLoad(const LegacyVariableInfo& info,
-                                                std::size_t index) const
+                                                std::size_t variableIndex) const
 {
     constexpr double lossOfLoadthreshold = 0.5;
-    emit("is_loss_of_load", info, values_[index] > lossOfLoadthreshold ? 1. : 0.);
+    emit("is_loss_of_load", info, values_[variableIndex] > lossOfLoadthreshold ? 1. : 0.);
 }
 
 // actual_load = load: the area's input residual-load series, carried per-hour in
@@ -364,9 +366,9 @@ void LegacyExtraOutputEmitter::areaActualLoad(const LegacyVariableInfo& info) co
 // actual_num_units_on = ceil(num_units_on): the NODU variable may be
 // fractional when the unit-commitment problem is relaxed.
 void LegacyExtraOutputEmitter::thermalActualNumUnitsOn(const LegacyVariableInfo& info,
-                                                       std::size_t index) const
+                                                       std::size_t variableIndex) const
 {
-    emit("actual_num_units_on", info, std::ceil(values_[index]));
+    emit("actual_num_units_on", info, std::ceil(values_[variableIndex]));
 }
 
 // non_prop_cost = startup_cost * started_units + fixed_cost * units_on, with
@@ -378,10 +380,10 @@ void LegacyExtraOutputEmitter::thermalActualNumUnitsOn(const LegacyVariableInfo&
 // first hour of the week the previous NODU is not part of this weekly solution,
 // so the start-up term is dropped.
 void LegacyExtraOutputEmitter::thermalNonPropCost(const LegacyVariableInfo& info,
-                                                  std::size_t index) const
+                                                  std::size_t variableIndex) const
 {
-    const double unitsOn = std::ceil(values_[index]);
-    const double fixedCost = costs_[index];
+    const double unitsOn = std::ceil(values_[variableIndex]);
+    const double fixedCost = costs_[variableIndex];
 
     double startupCost = 0.;
     if (const auto cost = solution_.linearCost("NumberStartingDispatchableUnits",
@@ -405,17 +407,18 @@ void LegacyExtraOutputEmitter::thermalNonPropCost(const LegacyVariableInfo& info
 
 // abs_flow = |flow|: the DirectFlow variable is signed (negative when the
 // link is used from destination to origin).
-void LegacyExtraOutputEmitter::linkAbsFlow(const LegacyVariableInfo& info, std::size_t index) const
+void LegacyExtraOutputEmitter::linkAbsFlow(const LegacyVariableInfo& info,
+                                           std::size_t variableIndex) const
 {
-    emit("abs_flow", info, std::abs(values_[index]));
+    emit("abs_flow", info, std::abs(values_[variableIndex]));
 }
 
 // minus_flow = -flow: the signed convention of the GEMS view, anchored on the
 // link's DirectFlow variable.
 void LegacyExtraOutputEmitter::linkMinusFlow(const LegacyVariableInfo& info,
-                                             std::size_t index) const
+                                             std::size_t variableIndex) const
 {
-    emit("minus_flow", info, -values_[index]);
+    emit("minus_flow", info, -values_[variableIndex]);
 }
 
 // actual_loop_flow = loop_flow: the link's input loop-flow parameter, carried
@@ -440,7 +443,7 @@ void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info
 // LegacyExtraOutputsContext. Skipped when the link's capacity is not
 // known to the context.
 void LegacyExtraOutputEmitter::linkIsDirectlyCongested(const LegacyVariableInfo& info,
-                                                       std::size_t index) const
+                                                       std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
     const auto capacity = ContextValueAtHour(context_.directCapacityByLink,
@@ -451,7 +454,8 @@ void LegacyExtraOutputEmitter::linkIsDirectlyCongested(const LegacyVariableInfo&
     {
         return;
     }
-    const double saturated = values_[index] >= capacity.value() - saturationEpsilon ? 1. : 0.;
+    const double saturated = values_[variableIndex] >= capacity.value() - saturationEpsilon ? 1.
+                                                                                            : 0.;
     emit("is_directly_congested", info, saturated);
 }
 
@@ -460,7 +464,7 @@ void LegacyExtraOutputEmitter::linkIsDirectlyCongested(const LegacyVariableInfo&
 // values mean the link is used in the indirect direction, so the indicator
 // compares -X against the indirect capacity.
 void LegacyExtraOutputEmitter::linkIsIndirectlyCongested(const LegacyVariableInfo& info,
-                                                         std::size_t index) const
+                                                         std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
     const auto capacity = ContextValueAtHour(context_.indirectCapacityByLink,
@@ -471,7 +475,8 @@ void LegacyExtraOutputEmitter::linkIsIndirectlyCongested(const LegacyVariableInf
     {
         return;
     }
-    const double saturated = -values_[index] >= capacity.value() - saturationEpsilon ? 1. : 0.;
+    const double saturated = -values_[variableIndex] >= capacity.value() - saturationEpsilon ? 1.
+                                                                                             : 0.;
     emit("is_indirectly_congested", info, saturated);
 }
 
@@ -482,7 +487,7 @@ void LegacyExtraOutputEmitter::linkIsIndirectlyCongested(const LegacyVariableInf
 // Anchored on the link's DirectFlow variable; skipped when either endpoint area
 // has no recorded price.
 void LegacyExtraOutputEmitter::linkCongestionFees(const LegacyVariableInfo& info,
-                                                  std::size_t index) const
+                                                  std::size_t variableIndex) const
 {
     const auto endpoints = SplitLinkEndpoints(info.component);
     if (!endpoints)
@@ -496,7 +501,7 @@ void LegacyExtraOutputEmitter::linkCongestionFees(const LegacyVariableInfo& info
         return;
     }
 
-    const double flow = values_[index];
+    const double flow = values_[variableIndex];
     const double delta = priceOut->second - priceIn->second;
     emit("abs_congestion_fee", info, std::abs(flow) * std::abs(delta));
     emit("alg_congestion_fee", info, flow * delta);
@@ -509,7 +514,8 @@ void LegacyExtraOutputEmitter::linkCongestionFees(const LegacyVariableInfo& info
 // only exist for links managed with hurdle costs. Driven by the link's
 // PositiveDirectFlow variable; the PositiveIndirectFlow variable of the same
 // link and timestep is found through the solution view.
-void LegacyExtraOutputEmitter::linkPropCost(const LegacyVariableInfo& info, std::size_t index) const
+void LegacyExtraOutputEmitter::linkPropCost(const LegacyVariableInfo& info,
+                                            std::size_t variableIndex) const
 {
     const auto indirect = solution_.value("PositiveIndirectFlow", info.component, info.timeIndex);
     const auto indirectCost = solution_.linearCost("PositiveIndirectFlow",
@@ -520,7 +526,8 @@ void LegacyExtraOutputEmitter::linkPropCost(const LegacyVariableInfo& info, std:
         return;
     }
 
-    const double value = costs_[index] * values_[index] + indirectCost.value() * indirect.value();
+    const double value = costs_[variableIndex] * values_[variableIndex]
+                         + indirectCost.value() * indirect.value();
     emit("prop_cost", info, value);
 }
 
@@ -529,14 +536,14 @@ void LegacyExtraOutputEmitter::linkPropCost(const LegacyVariableInfo& info, std:
 // carried in LegacyExtraOutputsContext. Skipped when the area has no reservoir
 // (capacity unknown or non-positive).
 void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& info,
-                                                   std::size_t index) const
+                                                   std::size_t variableIndex) const
 {
     const auto it = context_.reservoirCapacityByArea.find(info.component);
     if (it == context_.reservoirCapacityByArea.end() || it->second <= 0.)
     {
         return;
     }
-    emit("level_percentage", info, values_[index] / it->second * 100.);
+    emit("level_percentage", info, values_[variableIndex] / it->second * 100.);
 }
 
 // actual_inflows = round(inflows): the area's input natural-inflow series,
@@ -557,9 +564,10 @@ void LegacyExtraOutputEmitter::hydroActualInflows(const LegacyVariableInfo& info
 
 // price = -dual(area balance constraint): the stored dual is the negative of
 // the marginal price (the legacy outputs print -CoutsMarginauxHoraires).
-void LegacyExtraOutputEmitter::areaPrice(const LegacyVariableInfo& info, std::size_t index) const
+void LegacyExtraOutputEmitter::areaPrice(const LegacyVariableInfo& info,
+                                         std::size_t variableIndex) const
 {
-    emit("price", info, -duals_[index]);
+    emit("price", info, -duals_[variableIndex]);
 }
 
 // is_near_loss_of_load = 1 when the area price approaches the unsupplied
@@ -567,7 +575,7 @@ void LegacyExtraOutputEmitter::areaPrice(const LegacyVariableInfo& info, std::si
 // linear objective coefficient on the area's UnsuppliedEnergy variable, found
 // through the solution view; skipped if that variable is not recorded.
 void LegacyExtraOutputEmitter::areaIsNearLossOfLoad(const LegacyVariableInfo& info,
-                                                    std::size_t index) const
+                                                    std::size_t variableIndex) const
 {
     const auto unsuppliedCost = solution_.linearCost("UnsuppliedEnergy",
                                                      info.component,
@@ -577,7 +585,7 @@ void LegacyExtraOutputEmitter::areaIsNearLossOfLoad(const LegacyVariableInfo& in
         return;
     }
 
-    const double price = -duals_[index];
+    const double price = -duals_[variableIndex];
     constexpr unsigned cutoff = 5;
     emit("is_near_loss_of_load", info, price > unsuppliedCost.value() - cutoff ? 1. : 0.);
 }
@@ -586,82 +594,85 @@ void LegacyExtraOutputEmitter::areaIsNearLossOfLoad(const LegacyVariableInfo& in
 // constraint only exists (and is only recorded) for links managed with
 // hurdle costs.
 void LegacyExtraOutputEmitter::linkCapacityShadowPrice(const LegacyVariableInfo& info,
-                                                       std::size_t index) const
+                                                       std::size_t variableIndex) const
 {
-    emit("capacity_shadow_price", info, std::abs(duals_[index]));
+    emit("capacity_shadow_price", info, std::abs(duals_[variableIndex]));
 }
 
 // hydro_shadow_price = dual(final stock expression constraint); one per area
 // and week, recorded only when accurate water value mode is on.
 void LegacyExtraOutputEmitter::hydroShadowPrice(const LegacyVariableInfo& info,
-                                                std::size_t index) const
+                                                std::size_t variableIndex) const
 {
-    emit("hydro_shadow_price", info, duals_[index]);
+    emit("hydro_shadow_price", info, duals_[variableIndex]);
 }
 
 // Per-anchor entry points: each gathers the outputs derived from one recorded
 // variable / constraint.
 void LegacyExtraOutputEmitter::dispatchableProduction(const LegacyVariableInfo& info,
-                                                      std::size_t index) const
+                                                      std::size_t variableIndex) const
 {
-    thermalPropCost(info, index);
-    thermalEmissions(info, index);
-    thermalMargins(info, index);
-    thermalProfit(info, index);
+    thermalPropCost(info, variableIndex);
+    thermalEmissions(info, variableIndex);
+    thermalMargins(info, variableIndex);
+    thermalProfit(info, variableIndex);
 }
 
 void LegacyExtraOutputEmitter::unsuppliedEnergy(const LegacyVariableInfo& info,
-                                                std::size_t index) const
+                                                std::size_t variableIndex) const
 {
-    areaImbalanceCost(info, index);
-    areaIsLossOfLoad(info, index);
+    areaImbalanceCost(info, variableIndex);
+    areaIsLossOfLoad(info, variableIndex);
     areaActualLoad(info);
 }
 
-void LegacyExtraOutputEmitter::nodu(const LegacyVariableInfo& info, std::size_t index) const
+void LegacyExtraOutputEmitter::nodu(const LegacyVariableInfo& info, std::size_t variableIndex) const
 {
-    thermalActualNumUnitsOn(info, index);
-    thermalNonPropCost(info, index);
+    thermalActualNumUnitsOn(info, variableIndex);
+    thermalNonPropCost(info, variableIndex);
 }
 
-void LegacyExtraOutputEmitter::directFlow(const LegacyVariableInfo& info, std::size_t index) const
+void LegacyExtraOutputEmitter::directFlow(const LegacyVariableInfo& info,
+                                          std::size_t variableIndex) const
 {
-    linkAbsFlow(info, index);
-    linkMinusFlow(info, index);
+    linkAbsFlow(info, variableIndex);
+    linkMinusFlow(info, variableIndex);
     linkActualLoopFlow(info);
-    linkIsDirectlyCongested(info, index);
-    linkIsIndirectlyCongested(info, index);
-    linkCongestionFees(info, index);
+    linkIsDirectlyCongested(info, variableIndex);
+    linkIsIndirectlyCongested(info, variableIndex);
+    linkCongestionFees(info, variableIndex);
 }
 
 void LegacyExtraOutputEmitter::positiveDirectFlow(const LegacyVariableInfo& info,
-                                                  std::size_t index) const
+                                                  std::size_t variableIndex) const
 {
-    linkPropCost(info, index);
+    linkPropCost(info, variableIndex);
 }
 
-void LegacyExtraOutputEmitter::hydroLevel(const LegacyVariableInfo& info, std::size_t index) const
+void LegacyExtraOutputEmitter::hydroLevel(const LegacyVariableInfo& info,
+                                          std::size_t variableIndex) const
 {
-    areaLevelPercentage(info, index);
+    areaLevelPercentage(info, variableIndex);
     hydroActualInflows(info);
 }
 
-void LegacyExtraOutputEmitter::areaBalance(const LegacyVariableInfo& info, std::size_t index) const
+void LegacyExtraOutputEmitter::areaBalance(const LegacyVariableInfo& info,
+                                           std::size_t variableIndex) const
 {
-    areaPrice(info, index);
-    areaIsNearLossOfLoad(info, index);
+    areaPrice(info, variableIndex);
+    areaIsNearLossOfLoad(info, variableIndex);
 }
 
 void LegacyExtraOutputEmitter::flowDissociation(const LegacyVariableInfo& info,
-                                                std::size_t index) const
+                                                std::size_t variableIndex) const
 {
-    linkCapacityShadowPrice(info, index);
+    linkCapacityShadowPrice(info, variableIndex);
 }
 
 void LegacyExtraOutputEmitter::finalStockExpression(const LegacyVariableInfo& info,
-                                                    std::size_t index) const
+                                                    std::size_t variableIndex) const
 {
-    hydroShadowPrice(info, index);
+    hydroShadowPrice(info, variableIndex);
 }
 
 } // namespace
