@@ -234,10 +234,6 @@ void LegacyExtraOutputEmitter::thermalEmissions(const LegacyVariableInfo& info,
                                                 std::size_t index) const
 {
     const auto it = context_.emissionFactorsByCluster.find(clusterKey(info));
-    if (it == context_.emissionFactorsByCluster.end())
-    {
-        return;
-    }
     const double generation = values_[index];
     for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)
     {
