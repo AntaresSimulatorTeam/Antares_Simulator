@@ -12,6 +12,19 @@
 
 namespace Antares::Optimization
 {
+
+LegacyExtraOutputsContext::ThermalMarginData::ThermalMarginData(
+  double unitSize,
+  double minStablePower,
+  const std::vector<double>& availability,
+  const std::vector<double>& minGenPower):
+    unitSize{unitSize},
+    minStablePower{minStablePower},
+    availability{availability},
+    minGenPower{minGenPower}
+{
+}
+
 LegacyExtraOutputsContext::LegacyExtraOutputsContext(const PROBLEME_HEBDO& problemeHebdo)
 {
     weekFirstTimeStep = static_cast<unsigned>(problemeHebdo.HeureDansLAnnee);
@@ -61,21 +74,12 @@ LegacyExtraOutputsContext::LegacyExtraOutputsContext(const PROBLEME_HEBDO& probl
                                     + paliers.NomsDesPaliersThermiques[palier];
             emissionFactorsByCluster[key] = paliers.emissionFactors[palier];
 
-            ThermalMarginData margin;
-            margin.unitSize = paliers.TailleUnitaireDUnGroupeDuPalierThermique[palier];
-            margin.minStablePower = paliers.PminDuPalierThermiquePendantUneHeure[palier];
             const auto& disp = paliers.PuissanceDisponibleEtCout[palier];
-            if (disp.PuissanceDisponibleDuPalierThermique.size() >= nPdt
-                && disp.PuissanceMinDuPalierThermique.size() >= nPdt)
-            {
-                margin.availability.assign(disp.PuissanceDisponibleDuPalierThermique.begin(),
-                                           disp.PuissanceDisponibleDuPalierThermique.begin()
-                                             + static_cast<std::ptrdiff_t>(nPdt));
-                margin.minGenPower.assign(disp.PuissanceMinDuPalierThermique.begin(),
-                                          disp.PuissanceMinDuPalierThermique.begin()
-                                            + static_cast<std::ptrdiff_t>(nPdt));
-            }
-            thermalMarginByCluster[key] = std::move(margin);
+            ThermalMarginData margin(paliers.TailleUnitaireDUnGroupeDuPalierThermique[palier],
+                                     paliers.PminDuPalierThermiquePendantUneHeure[palier],
+                                     disp.PuissanceDisponibleDuPalierThermique,
+                                     disp.PuissanceMinDuPalierThermique);
+            thermalMarginByCluster.emplace(key, margin);
         }
     }
     for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)

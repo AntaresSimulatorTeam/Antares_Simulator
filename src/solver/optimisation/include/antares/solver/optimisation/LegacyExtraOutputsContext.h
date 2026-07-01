@@ -78,7 +78,7 @@ struct LegacyExtraOutputsContext
     // which is not unique across areas, so the area qualifier on
     // LegacyVariableInfo is folded into the key. A missing key means the
     // emissions outputs are skipped for that cluster.
-    std::unordered_map<std::string, std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX>>
+    std::unordered_map<std::string, std::array<double, Data::Pollutant::POLLUTANT_MAX>>
       emissionFactorsByCluster;
 
     // Per-cluster thermal data for the margin outputs (cluster_availability,
@@ -92,16 +92,20 @@ struct LegacyExtraOutputsContext
     // skipped for that cluster.
     struct ThermalMarginData
     {
+        ThermalMarginData(double unitSize,
+                          double minStablePower,
+                          const std::vector<double>& availability,
+                          const std::vector<double>& minGenPower);
         // Nominal capacity per unit, with spinning (TailleUnitaireDUnGroupe...).
         double unitSize = 0.;
         // Min stable power per unit (PminDuPalierThermiquePendantUneHeure).
         double minStablePower = 0.;
         // Available power per hour-in-week (PuissanceDisponibleDuPalierThermique).
-        std::vector<double> availability;
+        const std::vector<double>& availability;
         // Min generation per hour-in-week (PuissanceMinDuPalierThermique), i.e.
         // min(availability, modulation-based floor); equals the spec's
         // min(., M) once clamped against availability.
-        std::vector<double> minGenPower;
+        const std::vector<double>& minGenPower;
     };
 
     std::unordered_map<std::string, ThermalMarginData> thermalMarginByCluster;
