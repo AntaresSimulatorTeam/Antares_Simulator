@@ -134,61 +134,60 @@ $(document).ready(function(){initNavTree('renewable_2cluster_8h_source.html','')
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#define __ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;yuni/yuni.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;yuni/core/noncopyable.h&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;antares/array/matrix.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;../common/cluster.h&quot;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;defines.h&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">** \brief A single renewable cluster</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Data_1_1Cluster.html">Cluster</a></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">   25</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">TimeSeriesMode</a></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    {</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">   29</a></span>&#160;        <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">powerGeneration</a> = 0,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4">productionFactor</a></div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4">   33</a></span>&#160;    };</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;antares/array/matrix.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;../../fwd.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;../common/cluster.h&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;defines.h&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>Antares::Data</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">** \brief A single renewable cluster</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html">   21</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html">RenewableCluster</a> final: <span class="keyword">public</span> <a class="code" href="classAntares_1_1Data_1_1Cluster.html">Cluster</a></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">   24</a></span>&#160;    <span class="keyword">enum</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">TimeSeriesMode</a></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    {</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">   28</a></span>&#160;        <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">powerGeneration</a> = 0,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4">productionFactor</a></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4">   32</a></span>&#160;    };</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a3c9a530ab8e9ec5406d23136f31c06c6">RenewableCluster</a>(<a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* parent);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef">integrityCheck</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">bool</span> setTimeSeriesModeFromString(<span class="keyword">const</span> YString&amp; value);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">/* !</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">    ** Get production value at time-step ts</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">    */</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">double</span> valueAtTimeStep(uint year, uint hourInYear) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">enum</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">TimeSeriesMode</a> tsMode = <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">powerGeneration</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1RenewableClusterList.html">RenewableClusterList</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> precision() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}; <span class="comment">// class RenewableCluster</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//__ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__</span></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:35</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1Cluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Cluster.html">Antares::Data::Cluster</a></div><div class="ttdef"><b>Definition:</b> cluster.h:31</div></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a3c9a530ab8e9ec5406d23136f31c06c6">RenewableCluster</a>(<a class="code" href="classAntares_1_1Data_1_1Area.html">Data::Area</a>* parent);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef">integrityCheck</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">bool</span> setTimeSeriesModeFromString(<span class="keyword">const</span> YString&amp; value);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">/* !</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">    ** Get production value at time-step ts</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">    */</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">double</span> valueAtTimeStep(uint year, uint hourInYear) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">enum</span> <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">TimeSeriesMode</a> tsMode = <a class="code" href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">powerGeneration</a>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classAntares_1_1Data_1_1RenewableClusterList.html">RenewableClusterList</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> precision() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}; <span class="comment">// class RenewableCluster</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <span class="comment">// namespace Antares::Data</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//__ANTARES_LIBS_STUDY_PARTS_RENEWABLE_CLUSTER_H__</span></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Area_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Area.html">Antares::Data::Area</a></div><div class="ttdoc">Definition for a single area.</div><div class="ttdef"><b>Definition:</b> area.h:34</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1Cluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1Cluster.html">Antares::Data::Cluster</a></div><div class="ttdef"><b>Definition:</b> cluster.h:30</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1RenewableClusterList_html"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableClusterList.html">Antares::Data::RenewableClusterList</a></div><div class="ttdoc">List of renewable clusters.</div><div class="ttdef"><b>Definition:</b> cluster_list.h:20</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html">Antares::Data::RenewableCluster</a></div><div class="ttdef"><b>Definition:</b> cluster.h:23</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html">Antares::Data::RenewableCluster</a></div><div class="ttdef"><b>Definition:</b> cluster.h:22</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a3c9a530ab8e9ec5406d23136f31c06c6"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a3c9a530ab8e9ec5406d23136f31c06c6">Antares::Data::RenewableCluster::RenewableCluster</a></div><div class="ttdeci">RenewableCluster(Data::Area *parent)</div><div class="ttdoc">Default constructor, with a parent area.</div><div class="ttdef"><b>Definition:</b> cluster.cpp:17</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a4e8f1513b5d1b2b4f06b9da1edeb2d76"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">Antares::Data::RenewableCluster::TimeSeriesMode</a></div><div class="ttdeci">TimeSeriesMode</div><div class="ttdef"><b>Definition:</b> cluster.h:26</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4">Antares::Data::RenewableCluster::productionFactor</a></div><div class="ttdeci">@ productionFactor</div><div class="ttdef"><b>Definition:</b> cluster.h:32</div></div>
-<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">Antares::Data::RenewableCluster::powerGeneration</a></div><div class="ttdeci">@ powerGeneration</div><div class="ttdef"><b>Definition:</b> cluster.h:29</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a4e8f1513b5d1b2b4f06b9da1edeb2d76"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76">Antares::Data::RenewableCluster::TimeSeriesMode</a></div><div class="ttdeci">TimeSeriesMode</div><div class="ttdef"><b>Definition:</b> cluster.h:25</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76a743e0e2f86fd56e598bd49dc43e2b7c4">Antares::Data::RenewableCluster::productionFactor</a></div><div class="ttdeci">@ productionFactor</div><div class="ttdef"><b>Definition:</b> cluster.h:31</div></div>
+<div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a4e8f1513b5d1b2b4f06b9da1edeb2d76ab453418249e824c51b9fb26bce4f6646">Antares::Data::RenewableCluster::powerGeneration</a></div><div class="ttdeci">@ powerGeneration</div><div class="ttdef"><b>Definition:</b> cluster.h:28</div></div>
 <div class="ttc" id="aclassAntares_1_1Data_1_1RenewableCluster_html_a82efd74ab839881d99f179dab4a308ef"><div class="ttname"><a href="classAntares_1_1Data_1_1RenewableCluster.html#a82efd74ab839881d99f179dab4a308ef">Antares::Data::RenewableCluster::integrityCheck</a></div><div class="ttdeci">bool integrityCheck() override</div><div class="ttdoc">Check and fix all values of a renewable cluster.</div><div class="ttdef"><b>Definition:</b> cluster.cpp:24</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

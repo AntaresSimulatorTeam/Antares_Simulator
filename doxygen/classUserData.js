@@ -1,6 +1,8 @@
 var classUserData =
 [
+    [ "UserData", "classUserData.html#a8ab667f44480a712b2acff183b09061b", null ],
     [ "UserData", "classUserData.html#a1d4f7b61ec5dd67bbd4e03efd4f85ce8", null ],
+    [ "operator=", "classUserData.html#aa5f69fd01bcac14413d6c25de313a032", null ],
     [ "bytesDeleted", "classUserData.html#aeb5b7324ce4a590c3732a013a1cb7b1d", null ],
     [ "dateLimit", "classUserData.html#a6b17ba387711a3ed61deb73eaf6e946e", null ],
     [ "filesDeleted", "classUserData.html#ad8d6bab7a86e9de40ed073d94ce23a34", null ],

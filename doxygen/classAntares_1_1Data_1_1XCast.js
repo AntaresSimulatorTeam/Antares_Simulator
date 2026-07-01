@@ -14,10 +14,12 @@ var classAntares_1_1Data_1_1XCast =
       [ "tsTranslationBeforeConversion", "classAntares_1_1Data_1_1XCast.html#a9d63568c3e292b02528b7dd1c99c2abca77c0dc0adf6bba8edd561beaf354974f", null ],
       [ "tsTranslationAfterConversion", "classAntares_1_1Data_1_1XCast.html#a9d63568c3e292b02528b7dd1c99c2abcaba8d19211b3f0ef379ed6e1c8bec757c", null ]
     ] ],
+    [ "XCast", "classAntares_1_1Data_1_1XCast.html#a397b863a052bfc651625bc9d4129d965", null ],
     [ "XCast", "classAntares_1_1Data_1_1XCast.html#ac159177cec8ce6038c0ca2744c6407d2", null ],
     [ "~XCast", "classAntares_1_1Data_1_1XCast.html#a68e093ea14a112d281ae5690b4119d48", null ],
     [ "copyFrom", "classAntares_1_1Data_1_1XCast.html#a72657dea94cc3ff99b4647d2ac685f33", null ],
     [ "loadFromFolder", "classAntares_1_1Data_1_1XCast.html#a88f5f10e297e1b50ca8304c3fbb5a5a1", null ],
+    [ "operator=", "classAntares_1_1Data_1_1XCast.html#a082b6d3d18612338bedb2e4d394734a0", null ],
     [ "resetToDefaultValues", "classAntares_1_1Data_1_1XCast.html#aefcf3b9d0a2c9c3f7db4afac00db2016", null ],
     [ "resetTransferFunction", "classAntares_1_1Data_1_1XCast.html#a68774e025c65ce0d45c354f47dac5310", null ],
     [ "saveToFolder", "classAntares_1_1Data_1_1XCast.html#aa542cfed40fe837e8be95f8d4e115e15", null ],

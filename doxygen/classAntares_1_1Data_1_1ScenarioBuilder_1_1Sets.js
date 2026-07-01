@@ -2,6 +2,7 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets =
 [
     [ "const_iterator", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#ae4816782d7eb2173e8ae9bafbb53a888", null ],
     [ "iterator", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a9576fa3d5d7eee12fcf46a05090fd39d", null ],
+    [ "Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#aff7031314ef9f5fefd00c43e92c83f99", null ],
     [ "Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a3ae7e79c0a016886f52430cff4eea808", null ],
     [ "~Sets", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#acbbd6dfe6a081824504c4491dc646314", null ],
     [ "begin", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a576446e16ffaf35159e8f0f3579a8dde", null ],
@@ -15,6 +16,7 @@ var classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets =
     [ "find", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a6c8433003f1eb561e3b364831f0d8db2", null ],
     [ "loadFromINIFile", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#a65525c03a9d41529a8bf54f8d3f298f6", null ],
     [ "loadFromStudy", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#aacea4d12442fc046187a685e2a24ea43", null ],
+    [ "operator=", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#aff9ec71bcfb3fd9fe20b0daba389ae1b", null ],
     [ "remove", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#ae854d272559c3dae424a24265fb212fa", null ],
     [ "setStudy", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#ac6a1d56ea54e0afca0e35e35a5d2e526", null ],
     [ "size", "classAntares_1_1Data_1_1ScenarioBuilder_1_1Sets.html#af0e04aa669f1aa7f2c2fa65d85678ce0", null ]

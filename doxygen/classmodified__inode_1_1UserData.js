@@ -1,6 +1,8 @@
 var classmodified__inode_1_1UserData =
 [
+    [ "UserData", "classmodified__inode_1_1UserData.html#a8e547bde3dcb8b1cf1635fb6b010c01d", null ],
     [ "UserData", "classmodified__inode_1_1UserData.html#a65c4dbf98ce91b16ca70a440c01ca82d", null ],
+    [ "operator=", "classmodified__inode_1_1UserData.html#ac2c94b6d003c9f0c8e46b0b2f39c63e0", null ],
     [ "pushToLogs", "classmodified__inode_1_1UserData.html#a8cdb7c13074af31c61c5b29790df4098", null ],
     [ "syncBeforeRelease", "classmodified__inode_1_1UserData.html#aefa5b5c6bc54c39f3786c3ecb662245f", null ],
     [ "bytesDeleted", "classmodified__inode_1_1UserData.html#a6b2e8c902f9c3cae83c46cdfdb8544ee", null ],
