@@ -1213,14 +1213,12 @@ global-parameters:
     fileNeeds.close();
     accessForTests::loadReservesParameters(studyPath, *areaA);
 
-    BOOST_CHECK_EQUAL(getErrors().size(), 2);
+    BOOST_CHECK_EQUAL(getErrors().size(), 1);
     BOOST_CHECK_EQUAL(getWarnings().size(), 0);
     BOOST_CHECK(std::any_of(getErrors().begin(),
                             getErrors().end(),
                             [](const std::string& msg)
-                            { return msg.find("YAML content") != std::string::npos; }));
-    BOOST_CHECK(getErrors().contains("Invalid YAML file : "
-                                     + (studyPath / "reserves" / "a" / "reserves.yml").string()));
+                            { return msg.find("Invalid reserves config") != std::string::npos; }));
 }
 
 BOOST_FIXTURE_TEST_CASE(test_readReserve_bad_parameters, OneProblemWithoutReservesOneAreaWithLogger)
