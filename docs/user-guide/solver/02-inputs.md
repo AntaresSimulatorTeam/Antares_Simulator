@@ -703,11 +703,20 @@ The folder "reserves" is used to define the reserves in each area. For each area
 **EXAMPLE OF RESERVES.YML FILE**
 
 ```yaml
+global-parameters:
+  energy-activation-ratio-up: 10.0    # double
+  energy-activation-ratio-down: 10.0    # double 
+  reference-activation-duration-up: 10   # int
+  reference-activation-duration-down: 10   # int 
+
 reserves:
   - name: res_1_up
     failure-cost: 3000
     spillage-cost: 1111
     type: up
+    power-activation-ratio: 0.5
+    energy-activation-ratio: 0.5
+    reference-activation-duration: 1
 
   - name: res_1_down
     failure-cost: 2000
@@ -740,6 +749,14 @@ participations:
         participation-cost: 5
         max-power-off: 20
         participation-cost-off: 1
+      - reserve: res_1_down
+        max-power: 20
+        participation-cost: 5
+        max-power-off: 20
+        participation-cost-off: 1
+
+    symmetries:
+      - reserves: [res_1_up, res_1_down]
 ```
 
 **EXAMPLE OF RESERVE-PARTICIPATIONS.YML FILE FOR SHORT TERM STORAGE PLANTS**
@@ -755,6 +772,9 @@ participations:
         max-release: 20
         max-store: 20
         participation-cost: 2
+
+    symmetries:
+      - reserves: [res_1_up, res_1_down]
 ```
 
 **EXAMPLE OF RESERVE-PARTICIPATIONS.YML FILE FOR LONG TERM STORAGE PLANTS**
@@ -769,24 +789,9 @@ participations:
       max-release: 20
       max-store: 20
       participation-cost: 1
-```
 
-Those _reserve-participations.yml_ files can also define symmetries:
-
-**EXAMPLE OF full RESERVE-PARTICIPATIONS.YML FILE FOR Long TERM STORAGE PLANTS**
-```yaml
-participations:
-  certifications:
-    - reserve: res_1_up
-      max-release: 20
-      max-store: 30
-      participation-cost: 1
-    - reserve: res_1_down
-      max-release: 20
-      max-store: 20
-      participation-cost: 1
-  symmetries:
-    - reserves: [res_1_up, res_1_down]
+    symmetries:
+      - reserves: [res_1_up, res_1_down]
 ```
 
 ## Reserves / DSM (old)
