@@ -45,7 +45,7 @@ class MaxMrgUsualDataFactory: public MaxMrgDataFactory
     using MaxMrgDataFactory::MaxMrgDataFactory;
 
 public:
-    virtual MaxMRGinput data() override;
+    MaxMRGinput data() override;
 };
 
 class MaxMrgCSRdataFactory: public MaxMrgDataFactory
@@ -53,7 +53,7 @@ class MaxMrgCSRdataFactory: public MaxMrgDataFactory
     using MaxMrgDataFactory::MaxMrgDataFactory;
 
 public:
-    virtual MaxMRGinput data() override;
+    MaxMRGinput data() override;
 };
 
 } // namespace Antares::Solver::Variable::Economy

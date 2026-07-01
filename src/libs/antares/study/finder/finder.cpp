@@ -27,19 +27,19 @@ public:
     {
     }
 
-    virtual ~MyIterator()
+    ~MyIterator() override
     {
         // For code robustness and to avoid corrupt vtable
         stop();
     }
 
 protected:
-    virtual bool onStart(const String& filename)
+    bool onStart(const String& filename) override
     {
         return (IO::flowContinue == onBeginFolder(filename, filename, filename));
     }
 
-    virtual Flow onBeginFolder(const String& filename, const String&, const String&)
+    Flow onBeginFolder(const String& filename, const String&, const String&) override
     {
         const StudyVersion versionFound = StudyHeader::tryToFindTheVersion(filename);
         if (versionFound > StudyVersion::latest())
@@ -56,12 +56,12 @@ protected:
         return IO::flowSkip;
     }
 
-    virtual void onTerminate()
+    void onTerminate() override
     {
         pFinder.onLookupFinished();
     }
 
-    virtual void onAbort()
+    void onAbort() override
     {
         pFinder.onLookupAborted();
     }

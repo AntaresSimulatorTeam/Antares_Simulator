@@ -11,9 +11,13 @@ import numpy as np
 from behave import *
 from common_steps.solver_input_handler import solver_input_handler
 from common_steps.solver_output_handler import solver_output_handler
+from common_steps.simulation_table import SimulationTable
+from common_steps.simulation_table_reader import (
+    OutputFormat,
+    make_simu_table_reader,
+)
 
 from common_steps.assertions import assert_double_close
-from common_steps.modeler_output_handler import modeler_output_handler
 from common_steps.table_compare import *
 from shared_utils import mps_utils as mpu
 
@@ -330,8 +334,9 @@ def run_simulation(context):
     # For hybrid studies:
     outputPath = Path(context.output_path)
     if any(outputPath.glob("simulation-table*.csv")):
-        context.moh = modeler_output_handler(outputPath, "simulation-table*-optim-nb-1.csv")
-
+        file_pattern = f"simulation-table-*-optim-nb-1.csv"
+        ST_reader_factory = make_simu_table_reader(outputPath, OutputFormat.CSV, file_pattern)
+        context.simu_table = SimulationTable(ST_reader_factory())
 
 def init_simulation(context):
     sih = solver_input_handler(context.study_path)
@@ -461,7 +466,7 @@ def _store_simulation_result(context, study_index: int):
         'logs_err': context.logs_err,
         'output_path': context.output_path,
         'soh': context.soh,
-        'moh': context.moh if hasattr(context, 'moh') else None
+        'simu_table': getattr(context, 'simu_table', None),
     }
     context.multi_studies.append(result)
 
@@ -535,9 +540,9 @@ def compare_objective_values_all_studies(context):
     # Collect all objective values
     all_objectives = []
     for study in context.multi_studies:
-        assert study['moh'] is not None, \
+        assert study['simu_table'] is not None, \
             f"Study {study['index'] + 1} (path: {study['path']}) does not have modeler outputs (simulation_table)"
-        objectives = study['moh'].get_objective_values_by_block()
+        objectives = study['simu_table'].get_objective_values_by_block()
         all_objectives.append({
             'index': study['index'],
             'path': study['path'],
