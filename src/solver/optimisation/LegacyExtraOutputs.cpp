@@ -181,13 +181,13 @@ private:
     // Context key for per-cluster study data: the thermal anchor's component is
     // the cluster name alone, which is not unique across areas, so the area
     // qualifier is folded in (see AREA_SEP in opt_rename_problem.cpp).
-    std::string clusterKey(const LegacyVariableInfo& info) const
+    [[nodiscard]] std::string clusterKey(const LegacyVariableInfo& info) const
     {
         return info.area + "$$" + info.component;
     }
 
     // Hour-in-week of the anchor, used to index the context's per-hour vectors.
-    unsigned hourInWeek(const LegacyVariableInfo& info) const
+    [[nodiscard]] unsigned hourInWeek(const LegacyVariableInfo& info) const
     {
         return info.timeIndex - context_.weekFirstTimeStep;
     }
@@ -661,16 +661,16 @@ void ProcessVariablesLoop(LegacyExtraOutputEmitter& emitter,
                           const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo)
 {
     static const std::unordered_map<std::string_view,
-                                     void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
-                                                                        std::size_t)>
-        handlers = {
-            {"DispatchableProduction", &LegacyExtraOutputEmitter::dispatchableProduction},
-            {"UnsuppliedEnergy", &LegacyExtraOutputEmitter::unsuppliedEnergy},
-            {"NODU", &LegacyExtraOutputEmitter::nodu},
-            {"DirectFlow", &LegacyExtraOutputEmitter::directFlow},
-            {"PositiveDirectFlow", &LegacyExtraOutputEmitter::positiveDirectFlow},
-            {"HydroLevel", &LegacyExtraOutputEmitter::hydroLevel},
-        };
+                                    void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
+                                                                       std::size_t)>
+      handlers = {
+        {"DispatchableProduction", &LegacyExtraOutputEmitter::dispatchableProduction},
+        {"UnsuppliedEnergy", &LegacyExtraOutputEmitter::unsuppliedEnergy},
+        {"NODU", &LegacyExtraOutputEmitter::nodu},
+        {"DirectFlow", &LegacyExtraOutputEmitter::directFlow},
+        {"PositiveDirectFlow", &LegacyExtraOutputEmitter::positiveDirectFlow},
+        {"HydroLevel", &LegacyExtraOutputEmitter::hydroLevel},
+      };
 
     for (std::size_t index = 0; index < variablesInfo.size(); ++index)
     {
@@ -692,13 +692,13 @@ void ProcessConstraintsLoop(LegacyExtraOutputEmitter& emitter,
                             const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo)
 {
     static const std::unordered_map<std::string_view,
-                                     void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
-                                                                        std::size_t)>
-        handlers = {
-            {"AreaBalance", &LegacyExtraOutputEmitter::areaBalance},
-            {"FlowDissociation", &LegacyExtraOutputEmitter::flowDissociation},
-            {"FinalStockExpression", &LegacyExtraOutputEmitter::finalStockExpression},
-        };
+                                    void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
+                                                                       std::size_t)>
+      handlers = {
+        {"AreaBalance", &LegacyExtraOutputEmitter::areaBalance},
+        {"FlowDissociation", &LegacyExtraOutputEmitter::flowDissociation},
+        {"FinalStockExpression", &LegacyExtraOutputEmitter::finalStockExpression},
+      };
 
     for (std::size_t index = 0; index < constraintsInfo.size(); ++index)
     {
@@ -747,6 +747,4 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
     ProcessConstraintsLoop(emitter, constraintsInfo);
 }
 
-
 } // namespace Antares::Optimization
-
