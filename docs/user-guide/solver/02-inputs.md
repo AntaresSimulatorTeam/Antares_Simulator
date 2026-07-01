@@ -722,9 +722,6 @@ reserves:
     failure-cost: 2000
     spillage-cost: 1111
     type: down
-
-global-parameters:
-  value: 100
 ```
 
 - The need for each of those defined reserves are defined in the same folder as _reserveName.txt_ files with 8760 values to define the need for each hour of the year.
