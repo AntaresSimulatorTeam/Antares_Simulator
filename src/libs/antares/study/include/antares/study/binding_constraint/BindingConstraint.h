@@ -32,6 +32,7 @@ class BindingConstraint final
     friend class BindingConstraintLoader;
 
 public:
+    BindingConstraint() = default;
     BindingConstraint(const BindingConstraint&) = delete;
     BindingConstraint& operator=(const BindingConstraint&) = delete;
 
