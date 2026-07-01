@@ -5,7 +5,6 @@
 #define __ANTARES_SOLVER_TS_GENERATOR_XCAST_XCAST_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 
 #include <antares/mersenne-twister/mersenne-twister.h>
 #include <antares/study/fwd.h>
@@ -21,9 +20,12 @@ namespace Antares::TSGenerator::XCast
 **
 ** \see predicate.hxx for specializations
 */
-class XCast final: private Yuni::NonCopyable<XCast>
+class XCast final
 {
 public:
+    XCast(const XCast&) = delete;
+    XCast& operator=(const XCast&) = delete;
+
     /*!
     ** \brief Compute
     */

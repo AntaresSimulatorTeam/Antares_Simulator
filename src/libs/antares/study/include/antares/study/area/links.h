@@ -7,7 +7,6 @@
 #include <set>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
@@ -37,9 +36,12 @@ struct CompareLinkName;
 **
 ** \ingroup area
 */
-class AreaLink final: public Yuni::NonCopyable<AreaLink>
+class AreaLink final
 {
 public:
+    AreaLink(const AreaLink&) = delete;
+    AreaLink& operator=(const AreaLink&) = delete;
+
     //! Vector of links
     using Vector = std::vector<AreaLink*>;
     //! Set of links

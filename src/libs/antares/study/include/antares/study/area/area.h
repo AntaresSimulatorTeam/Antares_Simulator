@@ -11,7 +11,6 @@
 #include <vector>
 
 #include <yuni/yuni.h>
-#include <yuni/core/noncopyable.h>
 #include <yuni/core/string.h>
 
 #include <antares/array/matrix.h>
@@ -31,9 +30,12 @@ struct CompareAreaName;
 /*!
 ** \brief Definition for a single area
 */
-class Area final: private Yuni::NonCopyable<Area>
+class Area final
 {
 public:
+    Area(const Area&) = delete;
+    Area& operator=(const Area&) = delete;
+
     using NameSet = std::set<AreaName>;
     using Map = std::map<AreaName, Area*>;
     using Vector = std::vector<Area*>;
@@ -275,9 +277,12 @@ private:
 ** printf("Area name : `%s`\n", (*(l->byIndex[2])).name);
 ** \endcode
 */
-class AreaList final: public Yuni::NonCopyable<AreaList>
+class AreaList final
 {
 public:
+    AreaList(const AreaList&) = delete;
+    AreaList& operator=(const AreaList&) = delete;
+
     using OwningAreaMap = std::map<AreaName, std::unique_ptr<Area>>;
 
     //! An iterator
