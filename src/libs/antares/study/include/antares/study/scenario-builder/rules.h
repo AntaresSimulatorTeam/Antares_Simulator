@@ -31,9 +31,12 @@ namespace Antares::Data::ScenarioBuilder
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
 */
-class Rules final: private Yuni::NonCopyable<Rules>
+class Rules final
 {
 public:
+    Rules(const Rules&) = delete;
+    Rules& operator=(const Rules&) = delete;
+
     //! Smart pointer
     using Ptr = std::shared_ptr<Rules>;
     //! Map
