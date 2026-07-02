@@ -1,6 +1,6 @@
 Feature: tests for v9.3
 
-  @fast @short
+  @short
   Scenario: scenarized STS additional constraints
   Given the solver study path is "Antares_Simulator_Tests_NR/valid-v930/ST-additional-constraints-scenarized"
   When I run antares simulator
@@ -18,7 +18,7 @@ Feature: tests for v9.3
 # 50000 - 4 + 1 + 1
   And in area "AREA", year 2 and hour 0, level for short-term storage "cluster-11" is 49998
 
-  @fast @short
+  @short
   Scenario: near price cap
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-v930/tests-near-price-cap"
     And the linear solver is sirius

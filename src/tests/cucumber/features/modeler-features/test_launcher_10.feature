@@ -1,6 +1,6 @@
 Feature: 10 - Modeler extra outputs
 
-  @fast
+  @short
   Scenario: 10.1: Extra-outputs, basic features
     Given the modeler study path is "modeler/10_1"
     When I run antares modeler
@@ -27,7 +27,7 @@ Feature: 10 - Modeler extra outputs
       | 0     | gas_base_zone  | squared_generation_cost | 4        | 0        | 40000  |
       | 0     | gas_base_zone  | total_generation_cost   |          | 0        | 600    |
 
-  @fast
+  @short
   Scenario: 10.2: Extra-outputs, basic features
     Given the modeler study path is "modeler/10_2"
     When I run antares modeler
@@ -49,7 +49,7 @@ Feature: 10 - Modeler extra outputs
       | 0     | storage_base_zone | cumulative_withdrawal   |          | 0        | 80    |
       | 0     | storage_base_zone | constant_expression     |          | 0        | 1     |
 
-  @fast
+  @short
   Scenario: 10.3: Extra-outputs, with timeshift operator
     Given the modeler study path is "modeler/10_3"
     When I run antares modeler
@@ -73,7 +73,7 @@ Feature: 10 - Modeler extra outputs
       | 0     | storage_base_zone | cumulative_withdrawal   |          | 0        | 80    |
       | 0     | storage_base_zone | constant_expression     |          | 0        | 1     |
 
-  @fast
+  @short
   Scenario: 10.4: Extra-outputs, with comparison operator
     Given the modeler study path is "modeler/10_4"
     When I run antares modeler
@@ -85,7 +85,7 @@ Feature: 10 - Modeler extra outputs
       | 0     | base_zone         | loss_of_load            | 0-3      | 0        | 0     |
       | 0     | base_zone         | loss_of_load            | 4        | 0        | 1     |
 
-  @fast
+  @short
   Scenario: 10.5: Extra-outputs, with dual and reduced_cost, single timestep
     Given the modeler study path is "modeler/10_5"
     When I run antares modeler
@@ -97,7 +97,7 @@ Feature: 10 - Modeler extra outputs
       | 0     | gas_base_zone     | generation_reduced_cost | 0        | 0        | 0     |
       | 0     | oil_base_zone     | generation_reduced_cost | 0        | 0        | 40    |
 
-  @fast
+  @short
   Scenario: 10.5-1: Extra-outputs, with dual and reduced_cost, single timestep
     Given the modeler study path is "modeler/10_5_1"
     When I run antares modeler
@@ -109,7 +109,7 @@ Feature: 10 - Modeler extra outputs
       | 0     | gas_base_zone     | generation_reduced_cost | 0        | 0        | -40   |
       | 0     | oil_base_zone     | generation_reduced_cost | 0        | 0        | 0     |
 
-  @fast
+  @short
   Scenario: 10.5-2: Extra-outputs, with dual and reduced_cost
     Given the modeler study path is "modeler/10_5_2"
     When I run antares modeler
@@ -127,7 +127,7 @@ Feature: 10 - Modeler extra outputs
       | 0     | oil_base_zone | generation_reduced_cost | 1        | 0        | -5     |
       | 0     | oil_base_zone | generation_reduced_cost | 2        | 0        | -19990 |
 
-  @fast
+  @short
   Scenario: 10.6: be able to compute the income of a thermal cluster, through a port.
     Given the modeler study path is "modeler/10_6"
     When I run antares modeler
