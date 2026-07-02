@@ -248,16 +248,6 @@ set(RTESOLVER_OPT
         include/antares/solver/optimisation/LegacyFiller.h
         LegacyFiller.cpp
         include/antares/solver/optimisation/LegacyVariableInfo.h
-        include/antares/solver/optimisation/LegacySolutionView.h
-        LegacySolutionView.cpp
-        include/antares/solver/optimisation/LegacyExtraOutputsContext.h
-        LegacyExtraOutputsContext.cpp
-        include/antares/solver/optimisation/HydroOutputsContext.h
-        HydroOutputsContext.cpp
-        include/antares/solver/optimisation/LinksOutputsContext.h
-        LinksOutputsContext.cpp
-        include/antares/solver/optimisation/ThermalOutputsContext.h
-        ThermalOutputsContext.cpp
         include/antares/solver/optimisation/LegacyExtraOutputs.h
         LegacyExtraOutputs.cpp
         include/antares/solver/optimisation/LegacyNameMapper.h

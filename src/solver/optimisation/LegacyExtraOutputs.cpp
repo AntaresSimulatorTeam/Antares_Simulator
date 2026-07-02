@@ -6,13 +6,11 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
-#include <string_view>
-#include <utility>
+#include <string>
 
-#include <antares/logs/logs.h>
-
-#include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
-#include "antares/solver/optimisation/LegacySolutionView.h"
+#include "antares/solver/optimisation/opt_structure_probleme_a_resoudre.h"
+#include "antares/solver/optimisation/variables/VariableManagerUtils.h"
+#include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
 using Antares::IO::Outputs::SimulationTable;
 using Antares::Optimisation::LinearProblemApi::FillContext;
@@ -20,9 +18,7 @@ using Antares::Optimisation::LinearProblemApi::FillContext;
 namespace Antares::Optimization
 {
 
-namespace
-{
-std::optional<unsigned> BlockTimeIndex(const FillContext& fillContext, unsigned timeIndex)
+std::optional<unsigned> LegacyBlockTimeIndex(const FillContext& fillContext, unsigned timeIndex)
 {
     if (timeIndex >= fillContext.getGlobalFirstTimeStep()
         && timeIndex <= fillContext.getGlobalLastTimeStep())
@@ -32,43 +28,10 @@ std::optional<unsigned> BlockTimeIndex(const FillContext& fillContext, unsigned 
     return std::nullopt;
 }
 
-// area -> price (= -dual(AreaBalance)), built up front from the recorded
-// AreaBalance constraints so the variable-anchored consumers (thermal profit,
-// link congestion fees, ...) can look up their area's price before the variable
-// dispatch loop. Zero on MIP weeks, where the duals are not extracted (same
-// limitation as the price output).
-std::unordered_map<std::string, double> BuildPriceByArea(
-  const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
-  const std::vector<double>& constraintDuals)
+namespace
 {
-    std::unordered_map<std::string, double> priceByArea;
-    for (std::size_t index = 0; index < constraintsInfo.size(); ++index)
-    {
-        const auto& info = constraintsInfo[index];
-        if (info && info->name == "AreaBalance")
-        {
-            priceByArea.emplace(info->component, -constraintDuals[index]);
-        }
-    }
-    return priceByArea;
-}
-
-// Splits a link component "origin$$destination" (see AREA_SEP in
-// opt_rename_problem.cpp) into its origin and extremity area names. Returns
-// nullopt when the separator is absent.
-std::optional<std::pair<std::string, std::string>> SplitLinkEndpoints(const std::string& component)
-{
-    constexpr std::string_view sep = "$$";
-    const auto pos = component.find(sep);
-    if (pos == std::string::npos)
-    {
-        return std::nullopt;
-    }
-    return std::make_pair(component.substr(0, pos), component.substr(pos + sep.size()));
-}
-
 // Emission extra-output IDs, ordered to match Antares::Data::Pollutant::PollutantEnum
-// so each pollutant's factor (read by ordinal from the context) maps to its row.
+// so each pollutant's factor (read by ordinal from the cluster data) maps to its row.
 constexpr std::array<const char*, Data::Pollutant::POLLUTANT_MAX> emissionOutputNames = {
   "co2_emissions",
   "nh3_emissions",
@@ -84,682 +47,346 @@ constexpr std::array<const char*, Data::Pollutant::POLLUTANT_MAX> emissionOutput
   "op4_emissions",
   "op5_emissions"};
 
-// Emits the legacy extra outputs for one weekly solve. The constructor captures
-// everything that is invariant across the dispatch loop (the table, the solution
-// view, the study-data context, the derived area-price map, the raw value / cost
-// / dual arrays, the fill context and the block); each emitter method then takes
-// only the two things that vary per row: the anchor's LegacyVariableInfo and its
-// index. Variable-anchored methods index the value / cost arrays; constraint-
-// anchored methods index the dual array.
+// Emits the legacy extra outputs for one weekly solve, driven by the study
+// structure: the entity methods below are called for every area / link /
+// thermal cluster and hour of the optimization interval, fetch the solution
+// values, objective coefficients and duals by index through the
+// correspondence tables, and read study data straight from PROBLEME_HEBDO.
+// Guards mirror the construction sites: variable indices use the -1 sentinel
+// where construction writes one (HydroLevel); variables that exist only in a
+// given mode are guarded by that mode's condition (hurdle-cost links, unit
+// commitment, accurate water value), because their correspondence slots are
+// not sentinel-initialized.
 class LegacyExtraOutputEmitter
 {
 public:
     LegacyExtraOutputEmitter(SimulationTable& simulationTable,
-                             const LegacySolutionView& solution,
-                             const LegacyExtraOutputsContext& context,
-                             const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
-                             const std::vector<double>& solutionValues,
-                             const std::vector<double>& linearCosts,
-                             const std::vector<double>& constraintDuals,
+                             PROBLEME_HEBDO& problemeHebdo,
                              const FillContext& fillContext,
                              unsigned currentBlock):
         table_(simulationTable),
-        solution_(solution),
-        context_(context),
-        priceByArea_(BuildPriceByArea(constraintsInfo, constraintDuals)),
-        values_(solutionValues),
-        costs_(linearCosts),
-        duals_(constraintDuals),
+        problemeHebdo_(problemeHebdo),
+        problem_(*problemeHebdo.ProblemeAResoudre),
+        variableManager_(VariableManagerFromProblemHebdo(&problemeHebdo)),
         fillContext_(fillContext),
         block_(currentBlock)
     {
     }
 
-    // One method per anchor: the recorded variable / constraint name that
-    // AddLegacyExtraOutputs dispatches on. Each emits every output derived from
-    // that anchor. Variable anchors index the value / cost arrays; constraint
-    // anchors index the dual array.
-    void dispatchableProduction(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void unsuppliedEnergy(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void nodu(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void directFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void positiveDirectFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void hydroLevel(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void areaBalance(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void flowDissociation(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void finalStockExpression(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void areaOutputs(uint32_t pays, int pdt);
+    void linkOutputs(uint32_t interco, int pdt);
+    void thermalOutputs(uint32_t pays, int index, int pdt);
+    // hydro_shadow_price is anchored on the weekly FinalStockExpression
+    // constraint: one row per area, not one per hour.
+    void weeklyHydroOutputs(uint32_t pays);
 
 private:
-    // Per-output emitters, grouped by the anchor that drives them.
-    void thermalPropCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void thermalEmissions(const LegacyVariableInfo& info,
-                          std::size_t variableIndex,
-                          const ThermalClusterData& cluster) const;
-    void thermalMargins(const LegacyVariableInfo& info,
-                        std::size_t variableIndex,
-                        const ThermalClusterData& cluster) const;
-    void thermalProfit(const LegacyVariableInfo& info,
-                       std::size_t variableIndex,
-                       const ThermalClusterData& cluster) const;
-    void areaImbalanceCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void areaIsLossOfLoad(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void areaActualLoad(const LegacyVariableInfo& info) const;
-    void thermalActualNumUnitsOn(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void thermalNonPropCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void linkAbsFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void linkMinusFlow(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void linkActualLoopFlow(const LegacyVariableInfo& info) const;
-    void linkIsDirectlyCongested(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void linkIsIndirectlyCongested(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void linkCongestionFees(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void linkPropCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void areaLevelPercentage(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void hydroActualInflows(const LegacyVariableInfo& info) const;
-    void areaPrice(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void areaIsNearLossOfLoad(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void linkCapacityShadowPrice(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void hydroShadowPrice(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void emit(const std::string& output, const std::string& component, int pdt, double value);
 
-    // Pushes one row into the simulation table for the given anchor and value.
-    void emit(const std::string& output, const LegacyVariableInfo& info, double value) const;
-
-    // Context key for per-cluster study data: the thermal anchor's component is
-    // the cluster name alone, which is not unique across areas, so the area
-    // qualifier is folded in (see AREA_SEP in opt_rename_problem.cpp).
-    [[nodiscard]] std::string clusterKey(const LegacyVariableInfo& info) const
+    double x(int variableIndex) const
     {
-        return info.area.value() + "$$" + info.component;
+        return problem_.X[static_cast<std::size_t>(variableIndex)];
     }
 
-    // Single cluster lookup shared by the three emitters below (thermalEmissions,
-    // thermalMargins, thermalProfit), all keyed on the same cluster. Every
-    // DispatchableProduction anchor is expected to have a matching entry in
-    // context_.thermal.byCluster (it is built from the same clusters the
-    // solver dispatches over), so a miss here means the two views of the
-    // problem have drifted apart. This is the single place that checks for
-    // that, so callers can rely on the lookup instead of re-checking it
-    // themselves; a warning is logged here rather than failing silently, so
-    // the drift is visible without aborting the run. Returns nullptr when the
-    // cluster is absent from the context.
-    [[nodiscard]] const ThermalClusterData* findClusterOrWarn(
-      const LegacyVariableInfo& info) const
+    double cost(int variableIndex) const
     {
-        const auto it = context_.thermal.byCluster.find(clusterKey(info));
-        if (it == context_.thermal.byCluster.end())
-        {
-            logs.warning() << "Extra outputs: thermal cluster '" << clusterKey(info)
-                           << "' not found in context, skipping its emissions/margins/profit "
-                              "outputs";
-            return nullptr;
-        }
-        return &it->second;
+        return problem_.CoutLineaire[static_cast<std::size_t>(variableIndex)];
     }
 
-    // Hour-in-week of the anchor, used to index the context's per-hour vectors.
-    [[nodiscard]] unsigned hourInWeek(const LegacyVariableInfo& info) const
+    double dual(int constraintIndex) const
     {
-        return info.timeIndex - context_.weekFirstTimeStep;
+        return problem_.CoutsMarginauxDesContraintes[static_cast<std::size_t>(constraintIndex)];
+    }
+
+    // price = -dual(area balance constraint): the stored dual is the negative
+    // of the marginal price (the legacy outputs print -CoutsMarginauxHoraires).
+    double areaPrice(uint32_t pays, int pdt) const
+    {
+        return -dual(problemeHebdo_.CorrespondanceCntNativesCntOptim[pdt]
+                       .NumeroDeContrainteDesBilansPays[pays]);
     }
 
     SimulationTable& table_;
-    const LegacySolutionView& solution_;
-    const LegacyExtraOutputsContext& context_;
-    const std::unordered_map<std::string, double> priceByArea_;
-    const std::vector<double>& values_;
-    const std::vector<double>& costs_;
-    const std::vector<double>& duals_;
+    PROBLEME_HEBDO& problemeHebdo_;
+    const PROBLEME_ANTARES_A_RESOUDRE& problem_;
+    VariableManagement::VariableManager variableManager_;
     const FillContext& fillContext_;
     unsigned block_;
 };
 
 void LegacyExtraOutputEmitter::emit(const std::string& output,
-                                    const LegacyVariableInfo& info,
-                                    double value) const
+                                    const std::string& component,
+                                    int pdt,
+                                    double value)
 {
+    // Absolute hour of the year, matching the time index recorded on the raw
+    // rows (opt_construction_variables_optimisees_lineaire.cpp).
+    const unsigned hour = problemeHebdo_.weekInTheYear * 168 + static_cast<unsigned>(pdt);
     table_.addEntry({.block = block_,
-                     .component = info.component,
+                     .component = component,
                      .output = output,
-                     .absolute_time_index = info.timeIndex,
-                     .block_time_index = BlockTimeIndex(fillContext_, info.timeIndex),
+                     .absolute_time_index = hour,
+                     .block_time_index = LegacyBlockTimeIndex(fillContext_, hour),
                      .scenario_index = fillContext_.getYear(),
                      .value = value,
                      .status = std::nullopt});
 }
 
-// prop_cost = generation_cost * generation_power: both factors belong to the
-// generation variable itself, so they are read by index, which also keeps
-// identically-named clusters of different areas apart.
-void LegacyExtraOutputEmitter::thermalPropCost(const LegacyVariableInfo& info,
-                                               std::size_t variableIndex) const
+void LegacyExtraOutputEmitter::areaOutputs(uint32_t pays, int pdt)
 {
-    emit("prop_cost", info, costs_[variableIndex] * values_[variableIndex]);
+    const std::string area = problemeHebdo_.NomsDesPays[pays];
+
+    const int unsupplied = variableManager_.UnsuppliedEnergy(pays, pdt);
+    const int spillage = variableManager_.Spillage(pays, pdt);
+
+    // imbalance_cost = spillage_cost * spilled_energy
+    //                  + unsupplied_energy_cost * unsupplied_energy
+    // The costs are the objective coefficients on the two slack variables.
+    emit("imbalance_cost", area, pdt, cost(spillage) * x(spillage) + cost(unsupplied) * x(unsupplied));
+
+    // is_loss_of_load = 1 when the area has unsupplied energy (above the
+    // 0.5 MW solver-noise threshold), 0 otherwise.
+    constexpr double lossOfLoadThreshold = 0.5;
+    emit("is_loss_of_load", area, pdt, x(unsupplied) > lossOfLoadThreshold ? 1. : 0.);
+
+    // actual_load = raw load: ConsommationAbattueDuPays is the residual load
+    // (load minus must-run generation, see sim_calcul_economique.cpp), so the
+    // must-run part is added back.
+    emit("actual_load",
+         area,
+         pdt,
+         problemeHebdo_.ConsommationsAbattues[pdt].ConsommationAbattueDuPays[pays]
+           + problemeHebdo_.AllMustRunGeneration[pdt].AllMustRunGenerationOfArea[pays]);
+
+    const double price = areaPrice(pays, pdt);
+    emit("price", area, pdt, price);
+
+    // is_near_loss_of_load = 1 when the area price approaches the unsupplied
+    // energy cost (within 5), 0 otherwise.
+    constexpr double nearLossOfLoadCutoff = 5.;
+    emit("is_near_loss_of_load", area, pdt, price > cost(unsupplied) - nearLossOfLoadCutoff ? 1. : 0.);
+
+    // Hydro outputs, only for areas whose reservoir is managed (the HydroLevel
+    // variable is -1 otherwise, see opt_construction_variables_optimisees_lineaire.cpp).
+    const int hydroLevel = variableManager_.HydroLevel(pays, pdt);
+    if (hydroLevel < 0)
+    {
+        return;
+    }
+    const auto& hydro = problemeHebdo_.CaracteristiquesHydrauliques[pays];
+    if (hydro.TailleReservoir > 0.)
+    {
+        emit("level_percentage", area, pdt, x(hydroLevel) / hydro.TailleReservoir * 100.);
+    }
+    if (static_cast<std::size_t>(pdt) < hydro.ApportNaturelHoraire.size())
+    {
+        emit("actual_inflows", area, pdt, std::round(hydro.ApportNaturelHoraire[pdt]));
+    }
 }
 
-// <pollutant>_emissions = generation_power * emission_rate, one row per pollutant.
-// generation_power is the DispatchableProduction value (by index, area-safe); the
-// rates come from the context keyed by "area$$cluster". Skipped for clusters
-// absent from the context.
-void LegacyExtraOutputEmitter::thermalEmissions(
-  const LegacyVariableInfo& info,
-  std::size_t variableIndex,
-  const ThermalClusterData& cluster) const
+void LegacyExtraOutputEmitter::linkOutputs(uint32_t interco, int pdt)
 {
-    const double generation = values_[variableIndex];
+    const uint32_t origin = problemeHebdo_.PaysOrigineDeLInterconnexion[interco];
+    const uint32_t destination = problemeHebdo_.PaysExtremiteDeLInterconnexion[interco];
+    const std::string link = std::string(problemeHebdo_.NomsDesPays[origin]) + "$$"
+                             + problemeHebdo_.NomsDesPays[destination];
+
+    // The DirectFlow variable is signed: negative when the link is used from
+    // destination to origin.
+    const double flow = x(variableManager_.DirectFlow(interco, pdt));
+    emit("abs_flow", link, pdt, std::abs(flow));
+    // minus_flow = -flow: the signed convention of the GEMS view.
+    emit("minus_flow", link, pdt, -flow);
+
+    const auto& ntc = problemeHebdo_.ValeursDeNTC[pdt];
+    emit("actual_loop_flow", link, pdt, ntc.ValeurDeLoopFlowOrigineVersExtremite[interco]);
+
+    // is_directly/indirectly_congested = 1 when the link is at (or near) its
+    // transmission capacity in that direction. The capacities are the bounds
+    // of the DirectFlow variable, not objective coefficients.
+    constexpr double saturationEpsilon = 1e-5;
+    emit("is_directly_congested",
+         link,
+         pdt,
+         flow >= ntc.ValeurDeNTCOrigineVersExtremite[interco] - saturationEpsilon ? 1. : 0.);
+    emit("is_indirectly_congested",
+         link,
+         pdt,
+         -flow >= ntc.ValeurDeNTCExtremiteVersOrigine[interco] - saturationEpsilon ? 1. : 0.);
+
+    // abs_congestion_fee = |flow| * |price_out - price_in|
+    // alg_congestion_fee = flow  * (price_out - price_in)
+    // price_in / price_out are the balance duals of the link's endpoints.
+    const double priceDelta = areaPrice(destination, pdt) - areaPrice(origin, pdt);
+    emit("abs_congestion_fee", link, pdt, std::abs(flow) * std::abs(priceDelta));
+    emit("alg_congestion_fee", link, pdt, flow * priceDelta);
+
+    // The flow decomposition variables and the FlowDissociation constraint
+    // only exist for links managed with hurdle costs (same guard as their
+    // construction sites).
+    if (!problemeHebdo_.CoutDeTransport[interco].IntercoGereeAvecDesCouts)
+    {
+        return;
+    }
+
+    // prop_cost (link) = direct_hurdle_cost * positive_direct_flow
+    //                    + indirect_hurdle_cost * positive_indirect_flow
+    // The hurdle costs are the objective coefficients on the decomposition
+    // variables (opt_gestion_des_couts_cas_lineaire.cpp).
+    const int positiveDirect = variableManager_.PositiveDirectFlow(interco, pdt);
+    const int positiveIndirect = variableManager_.PositiveIndirectFlow(interco, pdt);
+    emit("prop_cost",
+         link,
+         pdt,
+         cost(positiveDirect) * x(positiveDirect) + cost(positiveIndirect) * x(positiveIndirect));
+
+    // capacity_shadow_price = |dual(flow dissociation constraint)|.
+    const int dissociation = problemeHebdo_.CorrespondanceCntNativesCntOptim[pdt]
+                               .NumeroDeContrainteDeDissociationDeFlux[interco];
+    emit("capacity_shadow_price", link, pdt, std::abs(dual(dissociation)));
+}
+
+void LegacyExtraOutputEmitter::thermalOutputs(uint32_t pays, int index, int pdt)
+{
+    const PALIERS_THERMIQUES& paliers = problemeHebdo_.PaliersThermiquesDuPays[pays];
+    const std::string& cluster = paliers.NomsDesPaliersThermiques[index];
+    const int palier = paliers.NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+
+    const int production = variableManager_.DispatchableProduction(palier, pdt);
+    const double generation = x(production);
+
+    // prop_cost = generation_cost * generation_power: both factors belong to
+    // the generation variable itself.
+    emit("prop_cost", cluster, pdt, cost(production) * generation);
+
+    // <pollutant>_emissions = generation_power * emission_rate, one row per pollutant.
     for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)
     {
-        emit(emissionOutputNames[pollutant], info, generation * cluster.emissionFactors[pollutant]);
-    }
-}
-
-// Thermal margin outputs, all anchored on the cluster's DispatchableProduction
-// variable and computed from the per-cluster data carried in the context
-// (keyed "area$$cluster"):
-//   cluster_availability = max(availability, minStablePower * ceil(availability /
-//                              unitSize))
-//   up_margin            = cluster_availability - generation_power
-//   min_gen_power        = min(generation_power, minGenPower)
-//   down_margin          = generation_power - min(cluster_availability, minGenPower)
-// availability, unitSize and minStablePower are the spinning-adjusted weekly-
-// problem quantities; the spec's raw cluster_max_generation / max_power_per_unit
-// differ by the same (1 - spinning/100) factor, which cancels in the formulas
-// above. Skipped when the cluster is absent from the context or its per-hour
-// vectors do not cover the anchor's hour.
-void LegacyExtraOutputEmitter::thermalMargins(
-  const LegacyVariableInfo& info,
-  std::size_t variableIndex,
-  const ThermalClusterData& cluster) const
-{
-    const unsigned pdt = hourInWeek(info);
-    if (pdt >= cluster.availability.size() || pdt >= cluster.minGenPower.size())
-    {
-        return;
+        emit(emissionOutputNames[pollutant],
+             cluster,
+             pdt,
+             generation * paliers.emissionFactors[index][pollutant]);
     }
 
-    const double generation = values_[variableIndex];
-    const double available = cluster.availability[pdt];
-    const double minGen = cluster.minGenPower[pdt];
-
-    double unitFloor = 0.;
-    if (cluster.unitSize > 0.)
+    // Margin outputs:
+    //   cluster_availability = max(availability, minStablePower * ceil(availability /
+    //                              unitSize))
+    //   up_margin            = cluster_availability - generation_power
+    //   min_gen_power        = min(generation_power, minGenPower)
+    //   down_margin          = generation_power - min(cluster_availability, minGenPower)
+    // availability, unitSize and minStablePower are the spinning-adjusted
+    // weekly-problem quantities; the spec's raw cluster_max_generation /
+    // max_power_per_unit differ by the same (1 - spinning/100) factor, which
+    // cancels in the formulas above.
+    const auto& disp = paliers.PuissanceDisponibleEtCout[index];
+    const auto& availabilitySeries = disp.PuissanceDisponibleDuPalierThermique;
+    const auto& minGenSeries = disp.PuissanceMinDuPalierThermique;
+    if (static_cast<std::size_t>(pdt) < availabilitySeries.size()
+        && static_cast<std::size_t>(pdt) < minGenSeries.size())
     {
-        unitFloor = cluster.minStablePower * std::ceil(available / cluster.unitSize);
-    }
-    const double clusterAvailability = std::max(available, unitFloor);
+        const double available = availabilitySeries[pdt];
+        const double minGen = minGenSeries[pdt];
+        const double unitSize = paliers.TailleUnitaireDUnGroupeDuPalierThermique[index];
+        const double minStablePower = paliers.PminDuPalierThermiquePendantUneHeure[index];
 
-    emit("cluster_availability", info, clusterAvailability);
-    emit("up_margin", info, clusterAvailability - generation);
-    emit("min_gen_power", info, std::min(generation, minGen));
-    emit("down_margin", info, generation - std::min(clusterAvailability, minGen));
-}
-
-// profit = (area_price - generation_cost)
-//          * max(generation_power - min_gen_power, 0)
-// area_price is the cluster area's balance dual, looked up in the area-price map;
-// generation_cost and generation_power belong to the DispatchableProduction
-// variable, read by index (area-safe); the min_gen_power floor is the same
-// quantity the context carries for the margin outputs. Skipped when the area has
-// no recorded price, the cluster is absent from the context, or the per-hour
-// floor does not cover the anchor's hour.
-void LegacyExtraOutputEmitter::thermalProfit(
-  const LegacyVariableInfo& info,
-  std::size_t variableIndex,
-  const ThermalClusterData& cluster) const
-{
-    const auto priceIt = priceByArea_.find(info.area.value());
-    if (priceIt == priceByArea_.end())
-    {
-        return;
-    }
-    const unsigned pdt = hourInWeek(info);
-    if (pdt >= cluster.minGenPower.size())
-    {
-        return;
-    }
-
-    const double generation = values_[variableIndex];
-    const double floor = cluster.minGenPower[pdt];
-    const double profit = (priceIt->second - costs_[variableIndex])
-                          * std::max(generation - floor, 0.);
-    emit("profit", info, profit);
-}
-
-// imbalance_cost = spillage_cost * spilled_energy
-//                  + unsupplied_energy_cost * unsupplied_energy
-// Driven by the area's UnsuppliedEnergy variable; the Spillage variable of the
-// same area and timestep is found through the solution view.
-void LegacyExtraOutputEmitter::areaImbalanceCost(const LegacyVariableInfo& info,
-                                                 std::size_t variableIndex) const
-{
-    const auto spilled = solution_.value("Spillage", info.component, info.timeIndex);
-    const auto spillageCost = solution_.linearCost("Spillage", info.component, info.timeIndex);
-    if (!spilled || !spillageCost)
-    {
-        return;
-    }
-
-    const double value = spillageCost.value() * spilled.value()
-                         + costs_[variableIndex] * values_[variableIndex];
-    emit("imbalance_cost", info, value);
-}
-
-// is_loss_of_load = 1 when the area has unsupplied energy (above the 0.5 MW
-// solver-noise threshold), 0 otherwise.
-void LegacyExtraOutputEmitter::areaIsLossOfLoad(const LegacyVariableInfo& info,
-                                                std::size_t variableIndex) const
-{
-    constexpr double lossOfLoadthreshold = 0.5;
-    emit("is_loss_of_load", info, values_[variableIndex] > lossOfLoadthreshold ? 1. : 0.);
-}
-
-// actual_load = load: the area's input residual-load series, carried per-hour in
-// the context.
-void LegacyExtraOutputEmitter::areaActualLoad(const LegacyVariableInfo& info) const
-{
-    const RequiredHourlyValue load = context_.load(info.component, info.timeIndex);
-    if (!load)
-    {
-        return;
-    }
-    emit("actual_load", info, load.value());
-}
-
-// actual_num_units_on = ceil(num_units_on): the NODU variable may be
-// fractional when the unit-commitment problem is relaxed.
-void LegacyExtraOutputEmitter::thermalActualNumUnitsOn(const LegacyVariableInfo& info,
-                                                       std::size_t variableIndex) const
-{
-    emit("actual_num_units_on", info, std::ceil(values_[variableIndex]));
-}
-
-// non_prop_cost = startup_cost * started_units + fixed_cost * units_on, with
-// units rounded up (the NODU variable may be fractional when relaxed).
-// fixed_cost is the objective coefficient on NODU itself; startup_cost is the
-// coefficient on the same cluster's NumberStartingDispatchableUnits variable,
-// read through the solution view (0 when that variable is not recorded). The
-// started-units count compares ceil(NODU) against the previous hour; at the
-// first hour of the week the previous NODU is not part of this weekly solution,
-// so the start-up term is dropped.
-void LegacyExtraOutputEmitter::thermalNonPropCost(const LegacyVariableInfo& info,
-                                                  std::size_t variableIndex) const
-{
-    const double unitsOn = std::ceil(values_[variableIndex]);
-    const double fixedCost = costs_[variableIndex];
-
-    double startupCost = 0.;
-    if (const auto cost = solution_.linearCost("NumberStartingDispatchableUnits",
-                                               info.component,
-                                               info.timeIndex))
-    {
-        startupCost = cost.value();
-    }
-
-    double startedUnits = 0.;
-    if (info.timeIndex > 0)
-    {
-        if (const auto previous = solution_.value("NODU", info.component, info.timeIndex - 1))
+        double unitFloor = 0.;
+        if (unitSize > 0.)
         {
-            startedUnits = std::max(0., unitsOn - std::ceil(previous.value()));
+            unitFloor = minStablePower * std::ceil(available / unitSize);
         }
+        const double clusterAvailability = std::max(available, unitFloor);
+
+        emit("cluster_availability", cluster, pdt, clusterAvailability);
+        emit("up_margin", cluster, pdt, clusterAvailability - generation);
+        emit("min_gen_power", cluster, pdt, std::min(generation, minGen));
+        emit("down_margin", cluster, pdt, generation - std::min(clusterAvailability, minGen));
+
+        // profit = (area_price - generation_cost)
+        //          * max(generation_power - min_gen_power, 0)
+        const double profit = (areaPrice(pays, pdt) - cost(production))
+                              * std::max(generation - minGen, 0.);
+        emit("profit", cluster, pdt, profit);
     }
 
-    emit("non_prop_cost", info, startupCost * startedUnits + fixedCost * unitsOn);
-}
-
-// abs_flow = |flow|: the DirectFlow variable is signed (negative when the
-// link is used from destination to origin).
-void LegacyExtraOutputEmitter::linkAbsFlow(const LegacyVariableInfo& info,
-                                           std::size_t variableIndex) const
-{
-    emit("abs_flow", info, std::abs(values_[variableIndex]));
-}
-
-// minus_flow = -flow: the signed convention of the GEMS view, anchored on the
-// link's DirectFlow variable.
-void LegacyExtraOutputEmitter::linkMinusFlow(const LegacyVariableInfo& info,
-                                             std::size_t variableIndex) const
-{
-    emit("minus_flow", info, -values_[variableIndex]);
-}
-
-// actual_loop_flow = loop_flow: the link's input loop-flow parameter, carried
-// per-hour in the context.
-void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info) const
-{
-    const RequiredHourlyValue loopFlow = context_.loopFlow(info.component, info.timeIndex);
-    if (!loopFlow)
-    {
-        return;
-    }
-    emit("actual_loop_flow", info, loopFlow.value());
-}
-
-// is_directly_congested = 1 when the link is at (or near) its
-// origin->extremity transmission capacity in the direct direction; 0
-// otherwise. The capacity is not an objective coefficient — it is the
-// upper bound of the DirectFlow variable — and is carried per-pdt in
-// LegacyExtraOutputsContext.
-void LegacyExtraOutputEmitter::linkIsDirectlyCongested(const LegacyVariableInfo& info,
-                                                       std::size_t variableIndex) const
-{
-    constexpr double saturationEpsilon = 1e-5;
-    const RequiredHourlyValue capacity = context_.directCapacity(info.component, info.timeIndex);
-    if (!capacity)
-    {
-        return;
-    }
-    const double saturated = values_[variableIndex] >= capacity.value() - saturationEpsilon ? 1.
-                                                                                            : 0.;
-    emit("is_directly_congested", info, saturated);
-}
-
-// is_indirectly_congested = 1 when the link is at (or near) its
-// extremity->origin transmission capacity. DirectFlow is signed: negative
-// values mean the link is used in the indirect direction, so the indicator
-// compares -X against the indirect capacity.
-void LegacyExtraOutputEmitter::linkIsIndirectlyCongested(const LegacyVariableInfo& info,
-                                                         std::size_t variableIndex) const
-{
-    constexpr double saturationEpsilon = 1e-5;
-    const RequiredHourlyValue capacity = context_.indirectCapacity(info.component, info.timeIndex);
-    if (!capacity)
-    {
-        return;
-    }
-    const double saturated = -values_[variableIndex] >= capacity.value() - saturationEpsilon ? 1.
-                                                                                             : 0.;
-    emit("is_indirectly_congested", info, saturated);
-}
-
-// abs_congestion_fee = |flow| * |price_out - price_in|
-// alg_congestion_fee = flow  * (price_out - price_in)
-// price_in / price_out are the balance duals (area-price map) of the link's
-// origin / extremity areas, parsed from the "origin$$destination" component.
-// Anchored on the link's DirectFlow variable; skipped when either endpoint area
-// has no recorded price.
-void LegacyExtraOutputEmitter::linkCongestionFees(const LegacyVariableInfo& info,
-                                                  std::size_t variableIndex) const
-{
-    const auto endpoints = SplitLinkEndpoints(info.component);
-    if (!endpoints)
-    {
-        return;
-    }
-    const auto priceIn = priceByArea_.find(endpoints->first);
-    const auto priceOut = priceByArea_.find(endpoints->second);
-    if (priceIn == priceByArea_.end() || priceOut == priceByArea_.end())
+    // The unit-commitment variables only exist in "not fast" mode (their
+    // construction in opt_construction_variables_couts_demarrages.cpp is
+    // guarded by the same condition).
+    if (!problemeHebdo_.OptimisationNotFastMode)
     {
         return;
     }
 
-    const double flow = values_[variableIndex];
-    const double delta = priceOut->second - priceIn->second;
-    emit("abs_congestion_fee", info, std::abs(flow) * std::abs(delta));
-    emit("alg_congestion_fee", info, flow * delta);
+    // actual_num_units_on = ceil(num_units_on): the NODU variable may be
+    // fractional when the unit-commitment problem is relaxed.
+    const int nodu = variableManager_.NumberOfDispatchableUnits(palier, pdt);
+    const double unitsOn = std::ceil(x(nodu));
+    emit("actual_num_units_on", cluster, pdt, unitsOn);
+
+    // non_prop_cost = startup_cost * started_units + fixed_cost * units_on.
+    // fixed_cost is the objective coefficient on NODU itself; startup_cost the
+    // one on NumberStartingDispatchableUnits. The started-units count compares
+    // ceil(NODU) against the previous hour; at the first hour of the interval
+    // the previous NODU is not part of this solution, so the start-up term is
+    // dropped.
+    const double startupCost = cost(variableManager_.NumberStartingDispatchableUnits(palier, pdt));
+    double startedUnits = 0.;
+    if (pdt > 0)
+    {
+        const double previousUnitsOn = std::ceil(
+          x(variableManager_.NumberOfDispatchableUnits(palier, pdt - 1)));
+        startedUnits = std::max(0., unitsOn - previousUnitsOn);
+    }
+    emit("non_prop_cost", cluster, pdt, startupCost * startedUnits + cost(nodu) * unitsOn);
 }
 
-// prop_cost (link) = direct_hurdle_cost * positive_direct_flow
-//                    + indirect_hurdle_cost * positive_indirect_flow
-// The hurdle costs are the linear objective coefficients on the flow
-// decomposition variables (opt_gestion_des_couts_cas_lineaire.cpp), which
-// only exist for links managed with hurdle costs. Driven by the link's
-// PositiveDirectFlow variable; the PositiveIndirectFlow variable of the same
-// link and timestep is found through the solution view.
-void LegacyExtraOutputEmitter::linkPropCost(const LegacyVariableInfo& info,
-                                            std::size_t variableIndex) const
+void LegacyExtraOutputEmitter::weeklyHydroOutputs(uint32_t pays)
 {
-    const auto indirect = solution_.value("PositiveIndirectFlow", info.component, info.timeIndex);
-    const auto indirectCost = solution_.linearCost("PositiveIndirectFlow",
-                                                   info.component,
-                                                   info.timeIndex);
-    if (!indirect || !indirectCost)
+    // hydro_shadow_price = dual(final stock expression constraint); the
+    // constraint exists only in accurate water value mode and is anchored on
+    // the last hour of the interval (see FinalStockExpression::add).
+    if (!problemeHebdo_.CaracteristiquesHydrauliques[pays].AccurateWaterValue)
     {
         return;
     }
-
-    const double value = costs_[variableIndex] * values_[variableIndex]
-                         + indirectCost.value() * indirect.value();
-    emit("prop_cost", info, value);
-}
-
-// level_percentage = HydroLevel / reservoir_capacity * 100; the reservoir
-// capacity is not an objective coefficient on any recorded variable, so it is
-// carried in LegacyExtraOutputsContext. reservoirCapacityByArea carries an
-// entry for every area (see HydroOutputsContext), so a missing key means the
-// context and the solved problem have drifted apart; a non-positive value is
-// the normal "no reservoir" case and stays silent.
-void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& info,
-                                                   std::size_t variableIndex) const
-{
-    const auto it = context_.hydro.reservoirCapacityByArea.find(info.component);
-    if (it == context_.hydro.reservoirCapacityByArea.end())
-    {
-        logs.warning() << "Extra outputs: no reservoir capacity data found for area '"
-                       << info.component << "', skipping level_percentage";
-        return;
-    }
-    if (it->second <= 0.)
-    {
-        return;
-    }
-    emit("level_percentage", info, values_[variableIndex] / it->second * 100.);
-}
-
-// actual_inflows = round(inflows): the area's input natural-inflow series,
-// carried per-hour in the context. Only areas with a reservoir have one.
-void LegacyExtraOutputEmitter::hydroActualInflows(const LegacyVariableInfo& info) const
-{
-    const OptionalHourlyValue inflows = context_.inflows(info.component, info.timeIndex);
-    if (!inflows)
-    {
-        return;
-    }
-    emit("actual_inflows", info, std::round(inflows.value()));
-}
-
-// price = -dual(area balance constraint): the stored dual is the negative of
-// the marginal price (the legacy outputs print -CoutsMarginauxHoraires).
-void LegacyExtraOutputEmitter::areaPrice(const LegacyVariableInfo& info,
-                                         std::size_t variableIndex) const
-{
-    emit("price", info, -duals_[variableIndex]);
-}
-
-// is_near_loss_of_load = 1 when the area price approaches the unsupplied
-// energy cost (within 5), 0 otherwise. The unsupplied energy cost is the
-// linear objective coefficient on the area's UnsuppliedEnergy variable, found
-// through the solution view; skipped if that variable is not recorded.
-void LegacyExtraOutputEmitter::areaIsNearLossOfLoad(const LegacyVariableInfo& info,
-                                                    std::size_t variableIndex) const
-{
-    const auto unsuppliedCost = solution_.linearCost("UnsuppliedEnergy",
-                                                     info.component,
-                                                     info.timeIndex);
-    if (!unsuppliedCost)
-    {
-        return;
-    }
-
-    const double price = -duals_[variableIndex];
-    constexpr unsigned cutoff = 5;
-    emit("is_near_loss_of_load", info, price > unsuppliedCost.value() - cutoff ? 1. : 0.);
-}
-
-// capacity_shadow_price = |dual(flow dissociation constraint)|. The
-// constraint only exists (and is only recorded) for links managed with
-// hurdle costs.
-void LegacyExtraOutputEmitter::linkCapacityShadowPrice(const LegacyVariableInfo& info,
-                                                       std::size_t variableIndex) const
-{
-    emit("capacity_shadow_price", info, std::abs(duals_[variableIndex]));
-}
-
-// hydro_shadow_price = dual(final stock expression constraint); one per area
-// and week, recorded only when accurate water value mode is on.
-void LegacyExtraOutputEmitter::hydroShadowPrice(const LegacyVariableInfo& info,
-                                                std::size_t variableIndex) const
-{
-    emit("hydro_shadow_price", info, duals_[variableIndex]);
-}
-
-// Per-anchor entry points: each gathers the outputs derived from one recorded
-// variable / constraint.
-void LegacyExtraOutputEmitter::dispatchableProduction(const LegacyVariableInfo& info,
-                                                      std::size_t variableIndex) const
-{
-    thermalPropCost(info, variableIndex);
-
-    const auto* cluster = findClusterOrWarn(info);
-    if (!cluster)
-    {
-        return;
-    }
-    thermalEmissions(info, variableIndex, *cluster);
-    thermalMargins(info, variableIndex, *cluster);
-    thermalProfit(info, variableIndex, *cluster);
-}
-
-void LegacyExtraOutputEmitter::unsuppliedEnergy(const LegacyVariableInfo& info,
-                                                std::size_t variableIndex) const
-{
-    areaImbalanceCost(info, variableIndex);
-    areaIsLossOfLoad(info, variableIndex);
-    areaActualLoad(info);
-}
-
-void LegacyExtraOutputEmitter::nodu(const LegacyVariableInfo& info, std::size_t variableIndex) const
-{
-    thermalActualNumUnitsOn(info, variableIndex);
-    thermalNonPropCost(info, variableIndex);
-}
-
-void LegacyExtraOutputEmitter::directFlow(const LegacyVariableInfo& info,
-                                          std::size_t variableIndex) const
-{
-    linkAbsFlow(info, variableIndex);
-    linkMinusFlow(info, variableIndex);
-    linkActualLoopFlow(info);
-    linkIsDirectlyCongested(info, variableIndex);
-    linkIsIndirectlyCongested(info, variableIndex);
-    linkCongestionFees(info, variableIndex);
-}
-
-void LegacyExtraOutputEmitter::positiveDirectFlow(const LegacyVariableInfo& info,
-                                                  std::size_t variableIndex) const
-{
-    linkPropCost(info, variableIndex);
-}
-
-void LegacyExtraOutputEmitter::hydroLevel(const LegacyVariableInfo& info,
-                                          std::size_t variableIndex) const
-{
-    areaLevelPercentage(info, variableIndex);
-    hydroActualInflows(info);
-}
-
-void LegacyExtraOutputEmitter::areaBalance(const LegacyVariableInfo& info,
-                                           std::size_t variableIndex) const
-{
-    areaPrice(info, variableIndex);
-    areaIsNearLossOfLoad(info, variableIndex);
-}
-
-void LegacyExtraOutputEmitter::flowDissociation(const LegacyVariableInfo& info,
-                                                std::size_t variableIndex) const
-{
-    linkCapacityShadowPrice(info, variableIndex);
-}
-
-void LegacyExtraOutputEmitter::finalStockExpression(const LegacyVariableInfo& info,
-                                                    std::size_t variableIndex) const
-{
-    hydroShadowPrice(info, variableIndex);
+    const int pdt = problemeHebdo_.NombreDePasDeTempsPourUneOptimisation - 1;
+    emit("hydro_shadow_price",
+         problemeHebdo_.NomsDesPays[pays],
+         pdt,
+         dual(problemeHebdo_.NumeroDeContrainteExpressionStockFinal[pays]));
 }
 
 } // namespace
 
-void ProcessVariablesLoop(const LegacyExtraOutputEmitter& emitter,
-                          const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo)
-{
-    static const std::unordered_map<std::string_view,
-                                    void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
-                                                                       std::size_t) const>
-      handlers = {
-        {"DispatchableProduction", &LegacyExtraOutputEmitter::dispatchableProduction},
-        {"UnsuppliedEnergy", &LegacyExtraOutputEmitter::unsuppliedEnergy},
-        {"NODU", &LegacyExtraOutputEmitter::nodu},
-        {"DirectFlow", &LegacyExtraOutputEmitter::directFlow},
-        {"PositiveDirectFlow", &LegacyExtraOutputEmitter::positiveDirectFlow},
-        {"HydroLevel", &LegacyExtraOutputEmitter::hydroLevel},
-      };
-
-    for (std::size_t index = 0; index < variablesInfo.size(); ++index)
-    {
-        const auto& info = variablesInfo[index];
-        if (!info)
-        {
-            continue;
-        }
-
-        const auto handler = handlers.find(info->name);
-        if (handler != handlers.end())
-        {
-            (emitter.*handler->second)(*info, index);
-        }
-    }
-}
-
-void ProcessConstraintsLoop(const LegacyExtraOutputEmitter& emitter,
-                            const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo)
-{
-    static const std::unordered_map<std::string_view,
-                                    void (LegacyExtraOutputEmitter::*)(const LegacyVariableInfo&,
-                                                                       std::size_t) const>
-      handlers = {
-        {"AreaBalance", &LegacyExtraOutputEmitter::areaBalance},
-        {"FlowDissociation", &LegacyExtraOutputEmitter::flowDissociation},
-        {"FinalStockExpression", &LegacyExtraOutputEmitter::finalStockExpression},
-      };
-
-    for (std::size_t index = 0; index < constraintsInfo.size(); ++index)
-    {
-        const auto& info = constraintsInfo[index];
-        if (!info)
-        {
-            continue;
-        }
-
-        const auto handler = handlers.find(info->name);
-        if (handler != handlers.end())
-        {
-            (emitter.*handler->second)(*info, index);
-        }
-    }
-}
-
 void AddLegacyExtraOutputs(SimulationTable& simulationTable,
-                           const std::vector<std::optional<LegacyVariableInfo>>& variablesInfo,
-                           const std::vector<double>& solutionValues,
-                           const std::vector<double>& linearCosts,
-                           const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
-                           const std::vector<double>& constraintDuals,
-                           const LegacyExtraOutputsContext& context,
+                           PROBLEME_HEBDO& problemeHebdo,
                            const FillContext& fillContext,
                            unsigned currentBlock)
 {
-    const LegacySolutionView solution(variablesInfo, solutionValues, linearCosts);
+    LegacyExtraOutputEmitter emitter(simulationTable, problemeHebdo, fillContext, currentBlock);
 
-    LegacyExtraOutputEmitter emitter(simulationTable,
-                                     solution,
-                                     context,
-                                     constraintsInfo,
-                                     solutionValues,
-                                     linearCosts,
-                                     constraintDuals,
-                                     fillContext,
-                                     currentBlock);
+    for (int pdt = 0; pdt < problemeHebdo.NombreDePasDeTempsPourUneOptimisation; ++pdt)
+    {
+        for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
+        {
+            emitter.areaOutputs(pays, pdt);
 
-    ProcessVariablesLoop(emitter, variablesInfo);
-    ProcessConstraintsLoop(emitter, constraintsInfo);
+            const PALIERS_THERMIQUES& paliers = problemeHebdo.PaliersThermiquesDuPays[pays];
+            for (int index = 0; index < paliers.NombreDePaliersThermiques; ++index)
+            {
+                emitter.thermalOutputs(pays, index, pdt);
+            }
+        }
+
+        for (uint32_t interco = 0; interco < problemeHebdo.NombreDInterconnexions; ++interco)
+        {
+            emitter.linkOutputs(interco, pdt);
+        }
+    }
+
+    for (uint32_t pays = 0; pays < problemeHebdo.NombreDePays; ++pays)
+    {
+        emitter.weeklyHydroOutputs(pays);
+    }
 }
 
 } // namespace Antares::Optimization

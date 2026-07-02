@@ -80,17 +80,9 @@ void Namer::RecordLegacyVariableInfo(unsigned index,
                                      const std::string& output,
                                      const std::string& component) const
 {
-    RecordLegacyVariableInfo(index, output, component, area_);
-}
-
-void Namer::RecordLegacyVariableInfo(unsigned index,
-                                     const std::string& output,
-                                     const std::string& component,
-                                     std::optional<std::string> area) const
-{
     if (legacyInfo_ != nullptr)
     {
-        (*legacyInfo_)[index] = {output, component, timeStep(), std::move(area)};
+        (*legacyInfo_)[index] = {output, component, timeStep()};
     }
 }
 
@@ -100,13 +92,7 @@ void Namer::SetLinkElementName(unsigned elementIndex, const std::string& element
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
-    // Link variables have no single area; record explicitly rather than via the
-    // namer's current area_, which may hold a stale value left over from a prior
-    // area-anchored variable earlier in the same namer's lifetime.
-    RecordLegacyVariableInfo(elementIndex,
-                             elementType,
-                             origin_ + AREA_SEP + destination_,
-                             std::nullopt);
+    RecordLegacyVariableInfo(elementIndex, elementType, origin_ + AREA_SEP + destination_);
 }
 
 void Namer::SetAreaElementNameHour(unsigned elementIndex, const std::string& elementType) const
