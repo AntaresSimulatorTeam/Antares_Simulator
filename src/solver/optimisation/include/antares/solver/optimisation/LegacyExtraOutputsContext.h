@@ -18,6 +18,64 @@ struct PROBLEME_HEBDO;
 namespace Antares::Optimization
 {
 
+// Result of a per-hour context lookup that every known component (area or
+// link) is expected to satisfy. A miss means the context and the solved
+// problem have drifted apart; LegacyExtraOutputsContext logs that as a
+// warning itself, so callers only decide whether to skip the row, they must
+// not warn again.
+class RequiredHourlyValue
+{
+public:
+    RequiredHourlyValue() = default;
+
+    RequiredHourlyValue(std::nullopt_t): value_(std::nullopt)
+    {
+    }
+
+    RequiredHourlyValue(std::optional<double> value): value_(value)
+    {
+    }
+
+    explicit operator bool() const noexcept
+    {
+        return value_.has_value();
+    }
+
+    double value() const
+    {
+        return *value_;
+    }
+
+private:
+    std::optional<double> value_;
+};
+
+// Result of a per-hour context lookup whose absence is legitimate by design
+// for some components (e.g. inflows, only carried for areas with a
+// reservoir). A miss here is an expected, silent case: no warning is logged.
+class OptionalHourlyValue
+{
+public:
+    OptionalHourlyValue() = default;
+
+    OptionalHourlyValue(std::optional<double> value): value_(value)
+    {
+    }
+
+    explicit operator bool() const noexcept
+    {
+        return value_.has_value();
+    }
+
+    double value() const
+    {
+        return *value_;
+    }
+
+private:
+    std::optional<double> value_;
+};
+
 // Study-data lookups the legacy extra outputs need when the formula uses a
 // parameter that is NOT an objective coefficient on a recorded variable (and
 // therefore cannot be read through LegacySolutionView::linearCost).
@@ -46,14 +104,14 @@ struct LegacyExtraOutputsContext
 
     // Per-hour lookups on the sub-contexts below, keyed by component (area or
     // link name) and absolute time index. Each converts timeIndex to
-    // hourInWeek via weekFirstTimeStep and returns nullopt when the component
-    // is unknown to the context or the hour is out of range, so the caller
-    // can skip the row.
-    std::optional<double> load(const std::string& component, unsigned timeIndex) const;
-    std::optional<double> inflows(const std::string& component, unsigned timeIndex) const;
-    std::optional<double> loopFlow(const std::string& component, unsigned timeIndex) const;
-    std::optional<double> directCapacity(const std::string& component, unsigned timeIndex) const;
-    std::optional<double> indirectCapacity(const std::string& component, unsigned timeIndex) const;
+    // hourInWeek via weekFirstTimeStep. The return type says whether a miss
+    // is expected: RequiredHourlyValue is already warned about internally,
+    // OptionalHourlyValue is not.
+    RequiredHourlyValue load(const std::string& component, unsigned timeIndex) const;
+    OptionalHourlyValue inflows(const std::string& component, unsigned timeIndex) const;
+    RequiredHourlyValue loopFlow(const std::string& component, unsigned timeIndex) const;
+    RequiredHourlyValue directCapacity(const std::string& component, unsigned timeIndex) const;
+    RequiredHourlyValue indirectCapacity(const std::string& component, unsigned timeIndex) const;
 
     HydroOutputsContext hydro;
     LinksOutputsContext links;

@@ -181,7 +181,7 @@ private:
     // themselves; a warning is logged here rather than failing silently, so
     // the drift is visible without aborting the run. Returns nullptr when the
     // cluster is absent from the context.
-    [[nodiscard]] const ThermalClusterData* findCluster(
+    [[nodiscard]] const ThermalClusterData* findClusterOrWarn(
       const LegacyVariableInfo& info) const
     {
         const auto it = context_.thermal.byCluster.find(clusterKey(info));
@@ -352,10 +352,10 @@ void LegacyExtraOutputEmitter::areaIsLossOfLoad(const LegacyVariableInfo& info,
 }
 
 // actual_load = load: the area's input residual-load series, carried per-hour in
-// the context. Skipped when the area is unknown to the context.
+// the context.
 void LegacyExtraOutputEmitter::areaActualLoad(const LegacyVariableInfo& info) const
 {
-    const auto load = context_.load(info.component, info.timeIndex);
+    const RequiredHourlyValue load = context_.load(info.component, info.timeIndex);
     if (!load)
     {
         return;
@@ -422,10 +422,10 @@ void LegacyExtraOutputEmitter::linkMinusFlow(const LegacyVariableInfo& info,
 }
 
 // actual_loop_flow = loop_flow: the link's input loop-flow parameter, carried
-// per-hour in the context. Skipped when the link is unknown to the context.
+// per-hour in the context.
 void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info) const
 {
-    const auto loopFlow = context_.loopFlow(info.component, info.timeIndex);
+    const RequiredHourlyValue loopFlow = context_.loopFlow(info.component, info.timeIndex);
     if (!loopFlow)
     {
         return;
@@ -437,13 +437,12 @@ void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info
 // origin->extremity transmission capacity in the direct direction; 0
 // otherwise. The capacity is not an objective coefficient — it is the
 // upper bound of the DirectFlow variable — and is carried per-pdt in
-// LegacyExtraOutputsContext. Skipped when the link's capacity is not
-// known to the context.
+// LegacyExtraOutputsContext.
 void LegacyExtraOutputEmitter::linkIsDirectlyCongested(const LegacyVariableInfo& info,
                                                        std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto capacity = context_.directCapacity(info.component, info.timeIndex);
+    const RequiredHourlyValue capacity = context_.directCapacity(info.component, info.timeIndex);
     if (!capacity)
     {
         return;
@@ -461,7 +460,7 @@ void LegacyExtraOutputEmitter::linkIsIndirectlyCongested(const LegacyVariableInf
                                                          std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto capacity = context_.indirectCapacity(info.component, info.timeIndex);
+    const RequiredHourlyValue capacity = context_.indirectCapacity(info.component, info.timeIndex);
     if (!capacity)
     {
         return;
@@ -546,11 +545,10 @@ void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& inf
 }
 
 // actual_inflows = round(inflows): the area's input natural-inflow series,
-// carried per-hour in the context (only areas with a reservoir have one).
-// Skipped when the area is unknown to the context.
+// carried per-hour in the context. Only areas with a reservoir have one.
 void LegacyExtraOutputEmitter::hydroActualInflows(const LegacyVariableInfo& info) const
 {
-    const auto inflows = context_.inflows(info.component, info.timeIndex);
+    const OptionalHourlyValue inflows = context_.inflows(info.component, info.timeIndex);
     if (!inflows)
     {
         return;
@@ -610,7 +608,7 @@ void LegacyExtraOutputEmitter::dispatchableProduction(const LegacyVariableInfo& 
 {
     thermalPropCost(info, variableIndex);
 
-    const auto* cluster = findCluster(info);
+    const auto* cluster = findClusterOrWarn(info);
     if (!cluster)
     {
         return;

@@ -15,25 +15,18 @@ namespace
 // byKey is built once per week from PROBLEME_HEBDO, covering every area/link
 // and the whole week (see HydroOutputsContext / LinksOutputsContext), so a
 // missing key or an out-of-range hour normally means the study data and the
-// solved problem have drifted apart. warnIfMissingKey is false for series
-// that are only carried for a subset of components by design (e.g. inflows,
-// carried only for areas with a reservoir), so that legitimate case stays
-// silent; an out-of-range hour is unexpected either way and always logged.
+// solved problem have drifted apart. An out-of-range hour is always
+// unexpected and logged; a missing key is only logged for series where every
+// component is expected to have one (see the two callers below).
 std::optional<double> valueAtHour(const std::unordered_map<std::string, std::vector<double>>& byKey,
                                    const std::string& key,
                                    unsigned timeIndex,
                                    unsigned weekFirstTimeStep,
-                                   const std::string& label,
-                                   bool warnIfMissingKey)
+                                   const std::string& label)
 {
     const auto it = byKey.find(key);
     if (it == byKey.end())
     {
-        if (warnIfMissingKey)
-        {
-            logs.warning() << "Extra outputs: no " << label << " data found for '" << key
-                           << "', skipping its outputs";
-        }
         return std::nullopt;
     }
     const unsigned pdt = timeIndex - weekFirstTimeStep;
@@ -45,6 +38,25 @@ std::optional<double> valueAtHour(const std::unordered_map<std::string, std::vec
     }
     return it->second[pdt];
 }
+
+// Wraps valueAtHour() for series every known component is expected to carry:
+// a missing key is logged here, so the returned RequiredHourlyValue is
+// already accounted for and the caller only decides whether to skip the row.
+RequiredHourlyValue requiredValueAtHour(
+  const std::unordered_map<std::string, std::vector<double>>& byKey,
+  const std::string& key,
+  unsigned timeIndex,
+  unsigned weekFirstTimeStep,
+  const std::string& label)
+{
+    if (!byKey.contains(key))
+    {
+        logs.warning() << "Extra outputs: no " << label << " data found for '" << key
+                       << "', skipping its outputs";
+        return std::nullopt;
+    }
+    return valueAtHour(byKey, key, timeIndex, weekFirstTimeStep, label);
+}
 } // namespace
 
 LegacyExtraOutputsContext::LegacyExtraOutputsContext(const PROBLEME_HEBDO& problemeHebdo):
@@ -55,41 +67,37 @@ LegacyExtraOutputsContext::LegacyExtraOutputsContext(const PROBLEME_HEBDO& probl
     weekFirstTimeStep = static_cast<unsigned>(problemeHebdo.HeureDansLAnnee);
 }
 
-std::optional<double> LegacyExtraOutputsContext::load(const std::string& component,
+RequiredHourlyValue LegacyExtraOutputsContext::load(const std::string& component,
+                                                     unsigned timeIndex) const
+{
+    return requiredValueAtHour(hydro.loadByArea, component, timeIndex, weekFirstTimeStep, "load");
+}
+
+OptionalHourlyValue LegacyExtraOutputsContext::inflows(const std::string& component,
                                                         unsigned timeIndex) const
 {
-    return valueAtHour(hydro.loadByArea, component, timeIndex, weekFirstTimeStep, "load", true);
+    return valueAtHour(hydro.inflowsByArea, component, timeIndex, weekFirstTimeStep, "inflows");
 }
 
-std::optional<double> LegacyExtraOutputsContext::inflows(const std::string& component,
-                                                           unsigned timeIndex) const
+RequiredHourlyValue LegacyExtraOutputsContext::loopFlow(const std::string& component,
+                                                         unsigned timeIndex) const
 {
-    // Only areas with a reservoir carry an inflows series (see
-    // HydroOutputsContext::inflowsByArea): a missing key here is expected,
-    // not a bug.
-    return valueAtHour(hydro.inflowsByArea, component, timeIndex, weekFirstTimeStep, "inflows",
-                       false);
+    return requiredValueAtHour(links.loopFlowByLink, component, timeIndex, weekFirstTimeStep,
+                               "loop flow");
 }
 
-std::optional<double> LegacyExtraOutputsContext::loopFlow(const std::string& component,
-                                                            unsigned timeIndex) const
+RequiredHourlyValue LegacyExtraOutputsContext::directCapacity(const std::string& component,
+                                                               unsigned timeIndex) const
 {
-    return valueAtHour(links.loopFlowByLink, component, timeIndex, weekFirstTimeStep, "loop flow",
-                       true);
+    return requiredValueAtHour(links.directCapacityByLink, component, timeIndex, weekFirstTimeStep,
+                               "direct capacity");
 }
 
-std::optional<double> LegacyExtraOutputsContext::directCapacity(const std::string& component,
-                                                                  unsigned timeIndex) const
+RequiredHourlyValue LegacyExtraOutputsContext::indirectCapacity(const std::string& component,
+                                                                 unsigned timeIndex) const
 {
-    return valueAtHour(links.directCapacityByLink, component, timeIndex, weekFirstTimeStep,
-                       "direct capacity", true);
-}
-
-std::optional<double> LegacyExtraOutputsContext::indirectCapacity(const std::string& component,
-                                                                    unsigned timeIndex) const
-{
-    return valueAtHour(links.indirectCapacityByLink, component, timeIndex, weekFirstTimeStep,
-                       "indirect capacity", true);
+    return requiredValueAtHour(links.indirectCapacityByLink, component, timeIndex,
+                               weekFirstTimeStep, "indirect capacity");
 }
 
 } // namespace Antares::Optimization
