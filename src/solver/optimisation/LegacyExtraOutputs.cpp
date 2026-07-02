@@ -30,29 +30,6 @@ std::optional<unsigned> BlockTimeIndex(const FillContext& fillContext, unsigned 
     return std::nullopt;
 }
 
-// Reads a per-hour study series carried in the context (load, inflows, loop
-// flow): finds the component's vector, then indexes it by hour-in-week. Returns
-// nullopt when the component is unknown to the context or the hour is out of
-// range, so the caller can skip the row.
-std::optional<double> ContextValueAtHour(
-  const std::unordered_map<std::string, std::vector<double>>& byKey,
-  const std::string& key,
-  unsigned timeIndex,
-  unsigned weekFirstTimeStep)
-{
-    const auto it = byKey.find(key);
-    if (it == byKey.end())
-    {
-        return std::nullopt;
-    }
-    const unsigned pdt = timeIndex - weekFirstTimeStep;
-    if (pdt >= it->second.size())
-    {
-        return std::nullopt;
-    }
-    return it->second[pdt];
-}
-
 // area -> price (= -dual(AreaBalance)), built up front from the recorded
 // AreaBalance constraints so the variable-anchored consumers (thermal profit,
 // link congestion fees, ...) can look up their area's price before the variable
@@ -362,10 +339,7 @@ void LegacyExtraOutputEmitter::areaIsLossOfLoad(const LegacyVariableInfo& info,
 // the context. Skipped when the area is unknown to the context.
 void LegacyExtraOutputEmitter::areaActualLoad(const LegacyVariableInfo& info) const
 {
-    const auto load = ContextValueAtHour(context_.hydro.loadByArea,
-                                         info.component,
-                                         info.timeIndex,
-                                         context_.weekFirstTimeStep);
+    const auto load = context_.load(info.component, info.timeIndex);
     if (!load)
     {
         return;
@@ -435,10 +409,7 @@ void LegacyExtraOutputEmitter::linkMinusFlow(const LegacyVariableInfo& info,
 // per-hour in the context. Skipped when the link is unknown to the context.
 void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info) const
 {
-    const auto loopFlow = ContextValueAtHour(context_.links.loopFlowByLink,
-                                             info.component,
-                                             info.timeIndex,
-                                             context_.weekFirstTimeStep);
+    const auto loopFlow = context_.loopFlow(info.component, info.timeIndex);
     if (!loopFlow)
     {
         return;
@@ -456,10 +427,7 @@ void LegacyExtraOutputEmitter::linkIsDirectlyCongested(const LegacyVariableInfo&
                                                        std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto capacity = ContextValueAtHour(context_.links.directCapacityByLink,
-                                             info.component,
-                                             info.timeIndex,
-                                             context_.weekFirstTimeStep);
+    const auto capacity = context_.directCapacity(info.component, info.timeIndex);
     if (!capacity)
     {
         return;
@@ -477,10 +445,7 @@ void LegacyExtraOutputEmitter::linkIsIndirectlyCongested(const LegacyVariableInf
                                                          std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto capacity = ContextValueAtHour(context_.links.indirectCapacityByLink,
-                                             info.component,
-                                             info.timeIndex,
-                                             context_.weekFirstTimeStep);
+    const auto capacity = context_.indirectCapacity(info.component, info.timeIndex);
     if (!capacity)
     {
         return;
@@ -561,10 +526,7 @@ void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& inf
 // Skipped when the area is unknown to the context.
 void LegacyExtraOutputEmitter::hydroActualInflows(const LegacyVariableInfo& info) const
 {
-    const auto inflows = ContextValueAtHour(context_.hydro.inflowsByArea,
-                                            info.component,
-                                            info.timeIndex,
-                                            context_.weekFirstTimeStep);
+    const auto inflows = context_.inflows(info.component, info.timeIndex);
     if (!inflows)
     {
         return;

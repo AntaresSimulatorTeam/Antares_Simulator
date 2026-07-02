@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <optional>
+#include <string>
+
 #include "antares/solver/optimisation/HydroOutputsContext.h"
 #include "antares/solver/optimisation/LinksOutputsContext.h"
 #include "antares/solver/optimisation/ThermalOutputsContext.h"
@@ -40,6 +43,17 @@ struct LegacyExtraOutputsContext
     // the snapshotted data is week-wide and constant across the week's
     // daily/weekly blocks.
     explicit LegacyExtraOutputsContext(const PROBLEME_HEBDO& problemeHebdo);
+
+    // Per-hour lookups on the sub-contexts below, keyed by component (area or
+    // link name) and absolute time index. Each converts timeIndex to
+    // hourInWeek via weekFirstTimeStep and returns nullopt when the component
+    // is unknown to the context or the hour is out of range, so the caller
+    // can skip the row.
+    std::optional<double> load(const std::string& component, unsigned timeIndex) const;
+    std::optional<double> inflows(const std::string& component, unsigned timeIndex) const;
+    std::optional<double> loopFlow(const std::string& component, unsigned timeIndex) const;
+    std::optional<double> directCapacity(const std::string& component, unsigned timeIndex) const;
+    std::optional<double> indirectCapacity(const std::string& component, unsigned timeIndex) const;
 
     HydroOutputsContext hydro;
     LinksOutputsContext links;
