@@ -14,8 +14,6 @@
 #include "antares/study/area/ReserveOpt.h"
 #include "antares/study/fwd.h"
 
-struct PROBLEME_HEBDO;
-
 namespace Antares::Data
 {
 
@@ -75,7 +73,6 @@ public:
     bool loadFromStudy(Study& study);
 
     void initializeRandomNumberGenerators(const Parameters& parameters);
-    void initializeReservesIndexMaps(const Study& study, const PROBLEME_HEBDO& problem);
 
 public:
     //! The number of years to process
