@@ -68,7 +68,7 @@ std::string Namer::linkLocation() const
 
 std::string Namer::areaLocation() const
 {
-    return LocationIdentifier(area_, AREA);
+    return LocationIdentifier(area_.value(), AREA);
 }
 
 std::vector<std::string>& Namer::names() const
@@ -80,9 +80,17 @@ void Namer::RecordLegacyVariableInfo(unsigned index,
                                      const std::string& output,
                                      const std::string& component) const
 {
+    RecordLegacyVariableInfo(index, output, component, area_);
+}
+
+void Namer::RecordLegacyVariableInfo(unsigned index,
+                                     const std::string& output,
+                                     const std::string& component,
+                                     std::optional<std::string> area) const
+{
     if (legacyInfo_ != nullptr)
     {
-        (*legacyInfo_)[index] = {output, component, timeStep(), area()};
+        (*legacyInfo_)[index] = {output, component, timeStep(), std::move(area)};
     }
 }
 
@@ -92,7 +100,13 @@ void Namer::SetLinkElementName(unsigned elementIndex, const std::string& element
     std::string time = TimeIdentifier(HOUR);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
-    RecordLegacyVariableInfo(elementIndex, elementType, origin_ + AREA_SEP + destination_);
+    // Link variables have no single area; record explicitly rather than via the
+    // namer's current area_, which may hold a stale value left over from a prior
+    // area-anchored variable earlier in the same namer's lifetime.
+    RecordLegacyVariableInfo(elementIndex,
+                             elementType,
+                             origin_ + AREA_SEP + destination_,
+                             std::nullopt);
 }
 
 void Namer::SetAreaElementNameHour(unsigned elementIndex, const std::string& elementType) const
@@ -109,11 +123,11 @@ void Namer::SetAreaElementName(unsigned elementIndex,
                                const std::string& elementType,
                                const std::string& timeGranularity) const
 {
-    std::string location = LocationIdentifier(area_, AREA);
+    std::string location = LocationIdentifier(area_.value(), AREA);
     std::string time = TimeIdentifier(timeGranularity);
     std::string name = BuildName(elementType, location, time);
     names_[elementIndex] = name;
-    RecordLegacyVariableInfo(elementIndex, elementType, area_);
+    RecordLegacyVariableInfo(elementIndex, elementType, area_.value());
 }
 
 void VariableNamer::SetAreaVariableName(unsigned varIndex,

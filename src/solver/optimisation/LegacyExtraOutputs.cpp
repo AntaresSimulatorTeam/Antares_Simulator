@@ -166,7 +166,7 @@ private:
     // qualifier is folded in (see AREA_SEP in opt_rename_problem.cpp).
     [[nodiscard]] std::string clusterKey(const LegacyVariableInfo& info) const
     {
-        return info.area + "$$" + info.component;
+        return info.area.value() + "$$" + info.component;
     }
 
     // Single cluster lookup shared by the three emitters below (thermalEmissions,
@@ -289,7 +289,7 @@ void LegacyExtraOutputEmitter::thermalProfit(
   std::size_t variableIndex,
   const ThermalClusterData& cluster) const
 {
-    const auto priceIt = priceByArea_.find(info.area);
+    const auto priceIt = priceByArea_.find(info.area.value());
     if (priceIt == priceByArea_.end())
     {
         return;

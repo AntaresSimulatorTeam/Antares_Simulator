@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(thermal_cluster_records_name_component_and_area)
     BOOST_CHECK_EQUAL(info[0]->name, "DispatchableProduction");
     BOOST_CHECK_EQUAL(info[0]->component, "gas_cluster");
     BOOST_CHECK_EQUAL(info[0]->timeIndex, 42u);
-    BOOST_CHECK_EQUAL(info[0]->area, "fr");
+    BOOST_CHECK_EQUAL(info[0]->area.value(), "fr");
 }
 
 BOOST_AUTO_TEST_CASE(nodu_records_cluster_name_and_area)
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(nodu_records_cluster_name_and_area)
     BOOST_CHECK_EQUAL(info[1]->name, "NODU");
     BOOST_CHECK_EQUAL(info[1]->component, "coal_cluster");
     BOOST_CHECK_EQUAL(info[1]->timeIndex, 100u);
-    BOOST_CHECK_EQUAL(info[1]->area, "de");
+    BOOST_CHECK_EQUAL(info[1]->area.value(), "de");
 }
 
 BOOST_AUTO_TEST_CASE(direct_flow_records_origin_destination_as_component)
@@ -75,6 +75,21 @@ BOOST_AUTO_TEST_CASE(direct_flow_records_origin_destination_as_component)
     BOOST_CHECK_EQUAL(info[2]->name, "DirectFlow");
     BOOST_CHECK_EQUAL(info[2]->component, "fr$$de");
     BOOST_CHECK_EQUAL(info[2]->timeIndex, 7u);
+    BOOST_CHECK(!info[2]->area.has_value());
+}
+
+BOOST_AUTO_TEST_CASE(direct_flow_area_is_not_left_over_from_a_prior_area_anchored_variable)
+{
+    namer.UpdateArea("fr");
+    namer.UpdateTimeStep(1);
+    namer.UnsuppliedEnergy(0);
+
+    namer.updateExtremities("fr", "de");
+    namer.UpdateTimeStep(2);
+    namer.DirectFlow(2);
+
+    BOOST_REQUIRE(info[2].has_value());
+    BOOST_CHECK(!info[2]->area.has_value());
 }
 
 BOOST_AUTO_TEST_CASE(unsupplied_energy_records_area_as_component)
@@ -87,7 +102,7 @@ BOOST_AUTO_TEST_CASE(unsupplied_energy_records_area_as_component)
     BOOST_CHECK_EQUAL(info[3]->name, "UnsuppliedEnergy");
     BOOST_CHECK_EQUAL(info[3]->component, "es");
     BOOST_CHECK_EQUAL(info[3]->timeIndex, 5u);
-    BOOST_CHECK_EQUAL(info[3]->area, "es");
+    BOOST_CHECK_EQUAL(info[3]->area.value(), "es");
 }
 
 BOOST_AUTO_TEST_CASE(hydro_level_records_area_as_component)
@@ -100,7 +115,7 @@ BOOST_AUTO_TEST_CASE(hydro_level_records_area_as_component)
     BOOST_CHECK_EQUAL(info[4]->name, "HydroLevel");
     BOOST_CHECK_EQUAL(info[4]->component, "it");
     BOOST_CHECK_EQUAL(info[4]->timeIndex, 168u);
-    BOOST_CHECK_EQUAL(info[4]->area, "it");
+    BOOST_CHECK_EQUAL(info[4]->area.value(), "it");
 }
 
 BOOST_AUTO_TEST_CASE(sts_injection_records_injection_name_and_storage_component)
@@ -113,7 +128,7 @@ BOOST_AUTO_TEST_CASE(sts_injection_records_injection_name_and_storage_component)
     BOOST_CHECK_EQUAL(info[5]->name, "Injection");
     BOOST_CHECK_EQUAL(info[5]->component, "battery");
     BOOST_CHECK_EQUAL(info[5]->timeIndex, 10u);
-    BOOST_CHECK_EQUAL(info[5]->area, "fr");
+    BOOST_CHECK_EQUAL(info[5]->area.value(), "fr");
 }
 
 BOOST_AUTO_TEST_CASE(sts_withdrawal_records_withdrawal_name_and_storage_component)
@@ -126,7 +141,7 @@ BOOST_AUTO_TEST_CASE(sts_withdrawal_records_withdrawal_name_and_storage_componen
     BOOST_CHECK_EQUAL(info[6]->name, "Withdrawal");
     BOOST_CHECK_EQUAL(info[6]->component, "battery");
     BOOST_CHECK_EQUAL(info[6]->timeIndex, 10u);
-    BOOST_CHECK_EQUAL(info[6]->area, "fr");
+    BOOST_CHECK_EQUAL(info[6]->area.value(), "fr");
 }
 
 BOOST_AUTO_TEST_CASE(cluster_names_are_unique_within_area_via_area_field)
@@ -138,8 +153,8 @@ BOOST_AUTO_TEST_CASE(cluster_names_are_unique_within_area_via_area_field)
     namer.UpdateArea("de");
     namer.DispatchableProduction(1, "cluster");
 
-    BOOST_CHECK_EQUAL(info[0]->area, "fr");
-    BOOST_CHECK_EQUAL(info[1]->area, "de");
+    BOOST_CHECK_EQUAL(info[0]->area.value(), "fr");
+    BOOST_CHECK_EQUAL(info[1]->area.value(), "de");
     BOOST_CHECK_EQUAL(info[0]->component, info[1]->component);
 }
 
@@ -159,7 +174,7 @@ BOOST_AUTO_TEST_CASE(recording_namer_stores_area_balance_entry)
     BOOST_CHECK_EQUAL(f.info[0]->name, "AreaBalance");
     BOOST_CHECK_EQUAL(f.info[0]->component, "fr");
     BOOST_CHECK_EQUAL(f.info[0]->timeIndex, 8u);
-    BOOST_CHECK_EQUAL(f.info[0]->area, "fr");
+    BOOST_CHECK_EQUAL(f.info[0]->area.value(), "fr");
 }
 
 BOOST_AUTO_TEST_CASE(non_recording_namer_leaves_entry_empty)

@@ -23,18 +23,26 @@ public:
     void updateExtremities(const std::string& origin, const std::string& destination);
 
 protected:
-    // Records the structured legacy description of a variable, parallel to the name.
-    // No-op when this namer was built without a recording target.
+    // Records the structured legacy description of a variable, parallel to the name,
+    // using the namer's current area. No-op when this namer was built without a
+    // recording target.
     void RecordLegacyVariableInfo(unsigned index,
                                   const std::string& output,
                                   const std::string& component) const;
+
+    // Same as above, but with an explicit area (e.g. nullopt for link variables,
+    // which have no single area regardless of the namer's current area).
+    void RecordLegacyVariableInfo(unsigned index,
+                                  const std::string& output,
+                                  const std::string& component,
+                                  std::optional<std::string> area) const;
 
     unsigned timeStep() const
     {
         return timeStep_;
     }
 
-    const std::string& area() const
+    const std::optional<std::string>& area() const
     {
         return area_;
     }
@@ -82,7 +90,7 @@ protected:
 private:
     std::string origin_;
     std::string destination_;
-    std::string area_;
+    std::optional<std::string> area_;
     unsigned timeStep_ = 0;
     std::vector<std::string>& names_;
     LegacyInfoVec* legacyInfo_ = nullptr;
