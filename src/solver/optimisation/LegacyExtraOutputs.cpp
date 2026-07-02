@@ -9,6 +9,8 @@
 #include <string_view>
 #include <utility>
 
+#include <antares/logs/logs.h>
+
 #include "antares/solver/optimisation/LegacyExtraOutputsContext.h"
 #include "antares/solver/optimisation/LegacySolutionView.h"
 
@@ -170,13 +172,27 @@ private:
     }
 
     // Single cluster lookup shared by the three emitters below (thermalEmissions,
-    // thermalMargins, thermalProfit), all keyed on the same cluster. Returns
-    // nullptr when the cluster is absent from the context.
+    // thermalMargins, thermalProfit), all keyed on the same cluster. Every
+    // DispatchableProduction anchor is expected to have a matching entry in
+    // context_.thermal.byCluster (it is built from the same clusters the
+    // solver dispatches over), so a miss here means the two views of the
+    // problem have drifted apart. This is the single place that checks for
+    // that, so callers can rely on the lookup instead of re-checking it
+    // themselves; a warning is logged here rather than failing silently, so
+    // the drift is visible without aborting the run. Returns nullptr when the
+    // cluster is absent from the context.
     [[nodiscard]] const ThermalClusterData* findCluster(
       const LegacyVariableInfo& info) const
     {
         const auto it = context_.thermal.byCluster.find(clusterKey(info));
-        return it == context_.thermal.byCluster.end() ? nullptr : &it->second;
+        if (it == context_.thermal.byCluster.end())
+        {
+            logs.warning() << "Extra outputs: thermal cluster '" << clusterKey(info)
+                           << "' not found in context, skipping its emissions/margins/profit "
+                              "outputs";
+            return nullptr;
+        }
+        return &it->second;
     }
 
     // Hour-in-week of the anchor, used to index the context's per-hour vectors.
@@ -508,13 +524,21 @@ void LegacyExtraOutputEmitter::linkPropCost(const LegacyVariableInfo& info,
 
 // level_percentage = HydroLevel / reservoir_capacity * 100; the reservoir
 // capacity is not an objective coefficient on any recorded variable, so it is
-// carried in LegacyExtraOutputsContext. Skipped when the area has no reservoir
-// (capacity unknown or non-positive).
+// carried in LegacyExtraOutputsContext. reservoirCapacityByArea carries an
+// entry for every area (see HydroOutputsContext), so a missing key means the
+// context and the solved problem have drifted apart; a non-positive value is
+// the normal "no reservoir" case and stays silent.
 void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& info,
                                                    std::size_t variableIndex) const
 {
     const auto it = context_.hydro.reservoirCapacityByArea.find(info.component);
-    if (it == context_.hydro.reservoirCapacityByArea.end() || it->second <= 0.)
+    if (it == context_.hydro.reservoirCapacityByArea.end())
+    {
+        logs.warning() << "Extra outputs: no reservoir capacity data found for area '"
+                       << info.component << "', skipping level_percentage";
+        return;
+    }
+    if (it->second <= 0.)
     {
         return;
     }
