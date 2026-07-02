@@ -126,6 +126,7 @@ $(document).ready(function(){initNavTree('classAntares_1_1Data_1_1ReserveLoaderM
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="classAntares_1_1Data_1_1ReserveLoaderMixin-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Antares::Data::ReserveLoaderMixin&lt; Derived, ParticipationT &gt; Class Template Reference</div>  </div>
@@ -149,18 +150,28 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>participation_type</
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a458d684102b44a3acd84ea7444ea4aa7"><td class="memItemLeft" align="right" valign="top"><a id="a458d684102b44a3acd84ea7444ea4aa7"></a>
-static std::pair&lt; ParticipationT, std::optional&lt; std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>readCapacityReservationSection</b> (const <a class="el" href="classAntares_1_1IniFile_1_1Section.html">IniFile::Section</a> &amp;section)</td></tr>
-<tr class="separator:a458d684102b44a3acd84ea7444ea4aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22004cc90051166160983a28aee16f20"><td class="memItemLeft" align="right" valign="top"><a id="a22004cc90051166160983a28aee16f20"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>validateCapacityInputs</b> (const std::string &amp;areaName, const participation_type &amp;rp, const std::optional&lt; std::string &gt; &amp;clusterName, const std::string &amp;reserveID)</td></tr>
 <tr class="separator:a22004cc90051166160983a28aee16f20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af00d0386c2f75b85e8def2c85db5ebb2"><td class="memItemLeft" align="right" valign="top"><a id="af00d0386c2f75b85e8def2c85db5ebb2"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>addCapacityReservation</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, participation_type &amp;rp, const std::optional&lt; std::string &gt; &amp;clusterName, const std::string &amp;reserveID)</td></tr>
 <tr class="separator:af00d0386c2f75b85e8def2c85db5ebb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a460b8a9b87b1bf8c2e7c5d8d59873b02"><td class="memItemLeft" align="right" valign="top"><a id="a460b8a9b87b1bf8c2e7c5d8d59873b02"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>readSymmetrySection</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const <a class="el" href="classAntares_1_1IniFile_1_1Section.html">IniFile::Section</a> &amp;section)</td></tr>
-<tr class="separator:a460b8a9b87b1bf8c2e7c5d8d59873b02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a240fa2b606ee0cb2b83552e43eda63f3"><td class="memItemLeft" align="right" valign="top"><a id="a240fa2b606ee0cb2b83552e43eda63f3"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>parsePerClusterParticipations</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const YAML::Node &amp;root)</td></tr>
+<tr class="separator:a240fa2b606ee0cb2b83552e43eda63f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a09b6b67ae67d5a0db13b0940e2884bd5"><td class="memItemLeft" align="right" valign="top"><a id="a09b6b67ae67d5a0db13b0940e2884bd5"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>duplicateParticipation</b> (const std::string &amp;areaName, const std::string &amp;clusterName, const std::string &amp;reserveID)</td></tr>
+<tr class="separator:a09b6b67ae67d5a0db13b0940e2884bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abad04035eb9e71cc2ce3752c6075aad8"><td class="memItemLeft" align="right" valign="top"><a id="abad04035eb9e71cc2ce3752c6075aad8"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>reportLackOfReserveParticipation</b> (const <a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const std::string &amp;clusterName)</td></tr>
+<tr class="separator:abad04035eb9e71cc2ce3752c6075aad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eda4bd023a1c7fb9d2159780d9b2cdd"><td class="memTemplParams" colspan="2"><a id="a6eda4bd023a1c7fb9d2159780d9b2cdd"></a>
+template&lt;class ClusterT &gt; </td></tr>
+<tr class="memitem:a6eda4bd023a1c7fb9d2159780d9b2cdd"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addGroupToResIndex</b> (<a class="el" href="classAntares_1_1Data_1_1Area.html">Area</a> &amp;area, const std::string &amp;reserveID, ClusterT *cluster)</td></tr>
+<tr class="separator:a6eda4bd023a1c7fb9d2159780d9b2cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
