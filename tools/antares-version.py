@@ -17,7 +17,7 @@ def t(path): return path.read_text()
 def w(path, text): path.write_text(text)
 
 def cur():
-    c = t(S / "CMakeLists.txt")
+    c = t(R / "CMakeLists.txt")
     return tuple(map(int, [re.search(r"HI (\d+)", c).group(1), re.search(r"LO (\d+)", c).group(1), re.search(r"REVISION (\d+)", c).group(1)]))
 
 def apply(path, rules):
@@ -73,14 +73,14 @@ def print_cmd():
 def stage_cmd(vn):
     a, b, c, tag = v(vn)
     apply(R / "sonar-project.properties", [(r"^sonar\.projectVersion=.*$", f"sonar.projectVersion={a}.{b}.{c}{tag}")])
-    apply(S / "CMakeLists.txt", [
+    apply(R / "CMakeLists.txt", [
         (r"^set\(ANTARES_VERSION_HI \d+\)$", f"set(ANTARES_VERSION_HI {a})"),
         (r"^set\(ANTARES_VERSION_LO \d+\)$", f"set(ANTARES_VERSION_LO {b})"),
         (r"^set\(ANTARES_VERSION_REVISION \d+\)$", f"set(ANTARES_VERSION_REVISION {c})"),
         (r"^set\(ANTARES_BETA \d+\)$", f"set(ANTARES_BETA {int(tag.startswith('-beta') and tag[5:] or 0)})"),
         (r"^set\(ANTARES_RC \d+\)$", f"set(ANTARES_RC {int(tag.startswith('-rc') and tag[3:] or 0)})"),
     ])
-    apply(S / "vcpkg.json", [(r'^  "version-string": ".*",$', f'  "version-string": "{a}.{b}.{c}",')])
+    apply(R / "vcpkg.json", [(r'^  "version-string": ".*",$', f'  "version-string": "{a}.{b}.{c}",')])
     if (a, b) != latest_cpp_version():
         bump_version_cpp(a, b)
 
