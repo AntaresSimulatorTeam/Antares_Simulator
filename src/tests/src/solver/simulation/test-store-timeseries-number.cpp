@@ -33,7 +33,6 @@ void initializeStudy(Study& study)
 
     study.parameters.renewableGeneration.toAggregated(); // Default
 
-    study.parameters.intraModal = 0;
     study.parameters.interModal = 0;
 }
 
