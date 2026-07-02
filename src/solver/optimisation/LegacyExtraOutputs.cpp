@@ -95,7 +95,7 @@ public:
     LegacyExtraOutputEmitter(SimulationTable& simulationTable,
                              const LegacySolutionView& solution,
                              const LegacyExtraOutputsContext& context,
-                             const std::unordered_map<std::string, double>& priceByArea,
+                             const std::vector<std::optional<LegacyVariableInfo>>& constraintsInfo,
                              const std::vector<double>& solutionValues,
                              const std::vector<double>& linearCosts,
                              const std::vector<double>& constraintDuals,
@@ -104,7 +104,7 @@ public:
         table_(simulationTable),
         solution_(solution),
         context_(context),
-        priceByArea_(priceByArea),
+        priceByArea_(BuildPriceByArea(constraintsInfo, constraintDuals)),
         values_(solutionValues),
         costs_(linearCosts),
         duals_(constraintDuals),
@@ -188,7 +188,7 @@ private:
     SimulationTable& table_;
     const LegacySolutionView& solution_;
     const LegacyExtraOutputsContext& context_;
-    const std::unordered_map<std::string, double>& priceByArea_;
+    const std::unordered_map<std::string, double> priceByArea_;
     const std::vector<double>& values_;
     const std::vector<double>& costs_;
     const std::vector<double>& duals_;
@@ -726,15 +726,10 @@ void AddLegacyExtraOutputs(SimulationTable& simulationTable,
 {
     const LegacySolutionView solution(variablesInfo, solutionValues, linearCosts);
 
-    // The area price is a constraint dual; the consumers below (thermal profit,
-    // link congestion fees) are variable-anchored, so the lookup is built up
-    // front, before the variable dispatch loop.
-    const auto priceByArea = BuildPriceByArea(constraintsInfo, constraintDuals);
-
     LegacyExtraOutputEmitter emitter(simulationTable,
                                      solution,
                                      context,
-                                     priceByArea,
+                                     constraintsInfo,
                                      solutionValues,
                                      linearCosts,
                                      constraintDuals,
