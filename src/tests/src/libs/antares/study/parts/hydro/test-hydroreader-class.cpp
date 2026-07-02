@@ -14,6 +14,7 @@
 
 #define SEP "/"
 
+using namespace Antares;
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 

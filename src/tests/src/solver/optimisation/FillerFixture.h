@@ -13,10 +13,10 @@
 struct FillerFixture
 {
     std::unique_ptr<PROBLEME_HEBDO> problemeHebdo;
-    std::unique_ptr<Solver::ModelerData> modelerData;
-    std::vector<ModelerStudy::SystemModel::Library> libraries;
-    Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
-    Optimisation::ScenarioGroupRepository scenarioGroupRepository;
+    std::unique_ptr<Antares::Solver::ModelerData> modelerData;
+    std::vector<Antares::ModelerStudy::SystemModel::Library> libraries;
+    Antares::Optimisation::LinearProblemMpsolverImpl::OrtoolsLinearProblem linearProblem;
+    Antares::Optimisation::ScenarioGroupRepository scenarioGroupRepository;
     Antares::Optimisation::LinearProblemDataImpl::LinearProblemData linearProblemData;
 
     FillerFixture();
@@ -29,7 +29,7 @@ struct FillerFixture
 
     void addModelerVariables(unsigned int ts_start,
                              unsigned int ts_end,
-                             Optimisation::OptimEntityContainer& optimEntityContainer);
+                             Antares::Optimisation::OptimEntityContainer& optimEntityContainer);
 
     void addEmptyConstraintsToLinearProblem(std::vector<std::string>& names, double rhs);
 
@@ -38,6 +38,6 @@ struct FillerFixture
     void addLegacyLp(std::vector<std::string>& constraintNames, double rhs);
 
     void fillProblemWithThermalCapacityConnectionFiller(
-      const Optimisation::LinearProblemApi::FillContext& fillCtx,
-      Optimisation::OptimEntityContainer& optimEntityContainer) const;
+      const Antares::Optimisation::LinearProblemApi::FillContext& fillCtx,
+      Antares::Optimisation::OptimEntityContainer& optimEntityContainer) const;
 };

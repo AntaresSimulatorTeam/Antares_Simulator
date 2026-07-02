@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include <cstdint>
-#include <global_JIT_manager.h>
 
 #include "fill-matrix.h"
 #include "matrix-bypass-load.h"

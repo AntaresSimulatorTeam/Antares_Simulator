@@ -8,6 +8,7 @@
 #include "antares/solver/simulation/ISimulationObserver.h"
 #include "antares/solver/simulation/sim_structure_probleme_economique.h"
 
+using namespace Antares;
 using namespace Antares::Data;
 using namespace IO::Outputs;
 

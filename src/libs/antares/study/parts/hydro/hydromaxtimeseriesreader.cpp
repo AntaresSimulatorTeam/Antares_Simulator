@@ -20,7 +20,7 @@ HydroMaxTimeSeriesReader::HydroMaxTimeSeriesReader(PartHydro& hydro,
     areaID_(areaID),
     areaName_(areaName)
 {
-    hydro_.dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR, true);
+    hydro_.dailyMaxPumpAndGen.reset(4U, DAYS_PER_YEAR);
 }
 
 static bool checkPower(const Matrix<>& dailyMaxPumpAndGen, const std::string& areaName)
@@ -72,7 +72,7 @@ void HydroMaxTimeSeriesReader::copyDailyMaxGenerationEnergy() const
     auto& dailyNbHoursAtGenPmax = hydro_.dailyNbHoursAtGenPmax;
     const auto& dailyMaxGenE = hydro_.dailyMaxPumpAndGen[genMaxE];
 
-    dailyNbHoursAtGenPmax.reset(1U, DAYS_PER_YEAR, true);
+    dailyNbHoursAtGenPmax.reset(1U, DAYS_PER_YEAR);
 
     dailyNbHoursAtGenPmax.pasteToColumn(0, dailyMaxGenE);
 }
@@ -82,7 +82,7 @@ void HydroMaxTimeSeriesReader::copyDailyMaxPumpingEnergy() const
     auto& dailyNbHoursAtPumpPmax = hydro_.dailyNbHoursAtPumpPmax;
     const auto& dailyMaxPumpE = hydro_.dailyMaxPumpAndGen[pumpMaxE];
 
-    dailyNbHoursAtPumpPmax.reset(1U, DAYS_PER_YEAR, true);
+    dailyNbHoursAtPumpPmax.reset(1U, DAYS_PER_YEAR);
 
     dailyNbHoursAtPumpPmax.pasteToColumn(0, dailyMaxPumpE);
 }
