@@ -19,7 +19,6 @@ using namespace Yuni;
 
 /*
 All loadFromCSVFile(...) entries (some directions to test this big method):
-        0. Global JIT::enabled state : on or off
         1. file to be loaded (= buffer) :
                 a. empty
                 b. contains the head banner 'size:nxm' or not
@@ -30,7 +29,6 @@ All loadFromCSVFile(...) entries (some directions to test this big method):
         2. Initial matrix state (matrix state when loadFromCSVFile(...) is called) :
                 a. empty
                 b. sized n x m
-                c. state of the jit
         3. loadFromBuffer(...) method arguments :
                 a. desired final matrix size (minWidth & maxHeight)
                 b. options :
@@ -38,7 +36,6 @@ All loadFromCSVFile(...) entries (some directions to test this big method):
                         + optFixedSize = 1,			//! The matrix can not see its size
 modified
                         + optQuiet = 2,				//! Do not produce warnings/errors
-                        + optImmediate = 4,			//! Do not postpone the loading
                         + optNoWarnIfEmpty = 16,	//! Do not warn if the file is empty
                         + optNeverFails = 32,		//! The loading never fails
         4. Error type returned by loadFromFileToBuffer(...)
@@ -543,87 +540,6 @@ BOOST_AUTO_TEST_CASE(
     BOOST_REQUIRE_EQUAL(mtx.entry[2][1], 6.);
 }
 
-// 3.b.
-BOOST_AUTO_TEST_CASE(loading_option_to_none___target_mtx_not_loaded_but_pointed_to_by_jit)
-{
-    global_JIT_manager global_JIT_to(true);
-
-    // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(1, 3, {1., -2., 3.});
-    fake_buffer_factory<double, double> buffer_factory_dd;
-    buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
-    Clob* fake_buffer = buffer_factory_dd.build_buffer();
-
-    // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 3, 1, Matrix<>::optNone, fake_buffer));
-
-    delete fake_buffer;
-
-    BOOST_REQUIRE_EQUAL(mtx.width, 0);
-    BOOST_REQUIRE_EQUAL(mtx.height, 0);
-    BOOST_CHECK((bool)(mtx.jit));
-    BOOST_REQUIRE_EQUAL(mtx.jit->sourceFilename, "path/to/a/file");
-}
-
-// 3.b.
-BOOST_AUTO_TEST_CASE(loading_option_to_immediate___target_mtx_loaded_but_not_pointed_to_by_jit)
-{
-    global_JIT_manager global_JIT_to(true);
-
-    // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(1, 3, {1.55, -2., 3.11});
-    fake_buffer_factory<double, double> buffer_factory_dd;
-    buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
-    buffer_factory_dd.set_precision(2);
-    Clob* fake_buffer = buffer_factory_dd.build_buffer();
-
-    // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 3, 1, Matrix<>::optImmediate, fake_buffer));
-
-    delete fake_buffer;
-
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 1);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.55);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.11);
-    BOOST_CHECK(not mtx.jit);
-}
-
-// 3.b.
-BOOST_AUTO_TEST_CASE(
-  loading_option_to_immediate_and_fixed_size___target_mtx_loaded_and_pointed_to_by_jit)
-{
-    global_JIT_manager global_JIT_to(true);
-
-    // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<double, double> mtx_0(1, 3, {1.55, -2., 3.11});
-    fake_buffer_factory<double, double> buffer_factory_dd;
-    buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
-    buffer_factory_dd.set_precision(2);
-    Clob* fake_buffer = buffer_factory_dd.build_buffer();
-
-    // Testing load
-    Matrix_mock_load_to_buffer<double, double> mtx;
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file",
-                                    3,
-                                    1,
-                                    Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                                    fake_buffer));
-
-    delete fake_buffer;
-
-    BOOST_REQUIRE_EQUAL(mtx.width, 3);
-    BOOST_REQUIRE_EQUAL(mtx.height, 1);
-    BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 1.55);
-    BOOST_REQUIRE_EQUAL(mtx.entry[1][0], -2.);
-    BOOST_REQUIRE_EQUAL(mtx.entry[2][0], 3.11);
-    BOOST_CHECK(mtx.jit);
-    BOOST_REQUIRE_EQUAL(mtx.jit->sourceFilename, "path/to/a/file");
-}
-
 // 4.
 BOOST_AUTO_TEST_CASE(err_not_found_when_loading___log_is_ok)
 {
@@ -814,56 +730,6 @@ BOOST_AUTO_TEST_CASE(file_contains_digits___loaded_coefs_are_rounded_to_floor_bu
     BOOST_REQUIRE_EQUAL(mtx.height, 2);
     BOOST_REQUIRE_EQUAL(mtx.entry[0][0], 12.);
     BOOST_REQUIRE_EQUAL(mtx.entry[0][1], -23.);
-}
-
-BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_AUTO_TEST_SUITE(JIT_management)
-
-BOOST_AUTO_TEST_CASE(mtx_is_marked_modified__load_is_done___mtx_no_more_modified)
-{
-    global_JIT_manager global_JIT_to(true);
-
-    // Creating a buffer mocking the result of : IO::File::LoadFromFile(...)
-    Matrix_easy_to_fill<int, int> mtx_0(2, 1, {12, -23});
-    fake_buffer_factory<int, int> buffer_factory_dd;
-    buffer_factory_dd.matrix_to_build_buffer_with(&mtx_0);
-
-    Clob* fake_buffer = buffer_factory_dd.build_buffer();
-
-    // Testing load
-    Matrix_mock_load_to_buffer<int, int> mtx;
-    mtx.jit = new JIT::Informations(); // Giving matrix a defaut jit information
-    BOOST_CHECK(mtx.loadFromCSVFile("path/to/a/file", 0, 0, Matrix<>::optImmediate, fake_buffer));
-
-    delete fake_buffer;
-
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_CHECK(not mtx.jit->modified);
-}
-
-BOOST_AUTO_TEST_CASE(
-  load_fails_so_jit_not_created_by_effective_loading___jit_created_after_load_because_size_fixed)
-{
-    global_JIT_manager global_JIT_to(true);
-
-    Clob* fake_buffer = nullptr;
-
-    // Testing load
-    Matrix_mock_load_to_buffer<int, int> mtx;
-    mtx.error_when_loading_from_file(IO::errNotFound);
-    BOOST_CHECK(not mtx.loadFromCSVFile("path/to/a/file",
-                                        1,
-                                        2,
-                                        Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                                        fake_buffer));
-
-    delete fake_buffer;
-
-    BOOST_REQUIRE_EQUAL(mtx.width, 1);
-    BOOST_REQUIRE_EQUAL(mtx.height, 2);
-    BOOST_CHECK(mtx.jit);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

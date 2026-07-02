@@ -17,9 +17,10 @@
 
 using namespace std::string_literals;
 
-using namespace Optimization;
+using namespace Antares;
+using namespace Antares::Optimization;
 using namespace Antares::ModelerStudy::SystemModel;
-using namespace Optimisation;
+using namespace Antares::Optimisation;
 using namespace LinearProblemApi;
 using namespace LinearProblemDataImpl;
 

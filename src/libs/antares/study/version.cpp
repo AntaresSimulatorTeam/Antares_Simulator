@@ -67,12 +67,13 @@ StudyVersion legacyVersionIntToVersion(unsigned version)
     case 700:
         return StudyVersion(7, 0);
     default:
-        logs.error() << "Study version " << version
-                     << " is not supported by this version of "
-                        "antares-solver";
+        Antares::logs.error() << "Study version " << version
+                              << " is not supported by this version of "
+                                 "antares-solver";
 
-        logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
-                     << " if it's the case";
+        Antares::logs.error()
+          << "Studies in version <7.0 are no longer supported. Please upgrade it first"
+          << " if it's the case";
         return StudyVersion::unknown();
     }
 }
@@ -86,7 +87,7 @@ StudyVersion parseLegacyVersion(const std::string& versionStr)
     }
     catch (std::invalid_argument&)
     {
-        logs.error() << "Invalid version number: " << versionStr;
+        Antares::logs.error() << "Invalid version number: " << versionStr;
         return StudyVersion::unknown();
     }
     return ::legacyVersionIntToVersion(versionNumber);
@@ -98,7 +99,7 @@ StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
 
     if (separator == std::string::npos)
     {
-        logs.error() << "Invalid version format, exiting";
+        Antares::logs.error() << "Invalid version format, exiting";
     }
 
     try
@@ -108,7 +109,7 @@ StudyVersion parseCurrentVersion(const std::string& s, size_t separator)
     }
     catch (std::invalid_argument&)
     {
-        logs.error() << "Invalid version format, exiting";
+        Antares::logs.error() << "Invalid version format, exiting";
         return StudyVersion::unknown();
     }
     return StudyVersion(major, minor);

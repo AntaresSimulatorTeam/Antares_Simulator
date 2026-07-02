@@ -59,14 +59,14 @@ void PartHydro::reset()
     leewayUpperBound = 1.;
     overflowSpilledCostDifference = 1.;
 
-    inflowPattern.reset(1, DAYS_PER_YEAR, true);
+    inflowPattern.reset(1, DAYS_PER_YEAR);
     inflowPattern.fillColumn(0, 1.0);
-    waterValues.reset(101, DAYS_PER_YEAR, true);
-    dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR, true);
+    waterValues.reset(101, DAYS_PER_YEAR);
+    dailyNbHoursAtGenPmax.reset(1, DAYS_PER_YEAR);
     dailyNbHoursAtGenPmax.fillColumn(0, 24.);
-    dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR, true);
+    dailyNbHoursAtPumpPmax.reset(1, DAYS_PER_YEAR);
     dailyNbHoursAtPumpPmax.fillColumn(0, 24.);
-    creditModulation.reset(101, 2, true);
+    creditModulation.reset(101, 2);
     creditModulation.fill(1);
     // reset of the hydro allocation - however we don't have any information
     // about the current area, which should be by default 1.
@@ -581,23 +581,11 @@ bool PartHydro::SaveToFolder(const AreaList& areas,
 void PartHydro::copyFrom(const PartHydro& rhs)
 {
     // credit modulations
-    {
-        creditModulation = rhs.creditModulation;
-        creditModulation.unloadFromMemory();
-        rhs.creditModulation.unloadFromMemory();
-    }
+    creditModulation = rhs.creditModulation;
     // inflow pattern
-    {
-        inflowPattern = rhs.inflowPattern;
-        inflowPattern.unloadFromMemory();
-        rhs.inflowPattern.unloadFromMemory();
-    }
+    inflowPattern = rhs.inflowPattern;
     // water values
-    {
-        waterValues = rhs.waterValues;
-        waterValues.unloadFromMemory();
-        rhs.waterValues.unloadFromMemory();
-    }
+    waterValues = rhs.waterValues;
     // values
     {
         interDailyBreakdown = rhs.interDailyBreakdown;
@@ -618,18 +606,10 @@ void PartHydro::copyFrom(const PartHydro& rhs)
     }
 
     // max daily gen
-    {
-        dailyNbHoursAtGenPmax = rhs.dailyNbHoursAtGenPmax;
-        dailyNbHoursAtGenPmax.unloadFromMemory();
-        rhs.dailyNbHoursAtGenPmax.unloadFromMemory();
-    }
+    dailyNbHoursAtGenPmax = rhs.dailyNbHoursAtGenPmax;
 
     // max daily pump
-    {
-        dailyNbHoursAtPumpPmax = rhs.dailyNbHoursAtPumpPmax;
-        dailyNbHoursAtPumpPmax.unloadFromMemory();
-        rhs.dailyNbHoursAtPumpPmax.unloadFromMemory();
-    }
+    dailyNbHoursAtPumpPmax = rhs.dailyNbHoursAtPumpPmax;
 }
 
 bool PartHydro::LoadDailyMaxEnergy(const fs::path& folder, const std::string& areaid)
