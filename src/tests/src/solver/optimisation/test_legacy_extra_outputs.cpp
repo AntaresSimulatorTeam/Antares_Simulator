@@ -131,7 +131,7 @@ struct Fixture
     // is correctly skipped.
     Fixture& withReservoirs()
     {
-        context.reservoirCapacityByArea["area1"] = 5000.;
+        context.hydro.reservoirCapacityByArea["area1"] = 5000.;
         return *this;
     }
 
@@ -142,19 +142,19 @@ struct Fixture
                                 double directArea2Area3 = 200.,
                                 double indirectArea2Area3 = 200.)
     {
-        context.directCapacityByLink["area1$$area2"] = {directArea1Area2};
-        context.indirectCapacityByLink["area1$$area2"] = {indirectArea1Area2};
-        context.directCapacityByLink["area2$$area3"] = {directArea2Area3};
-        context.indirectCapacityByLink["area2$$area3"] = {indirectArea2Area3};
+        context.links.directCapacityByLink["area1$$area2"] = {directArea1Area2};
+        context.links.indirectCapacityByLink["area1$$area2"] = {indirectArea1Area2};
+        context.links.directCapacityByLink["area2$$area3"] = {directArea2Area3};
+        context.links.indirectCapacityByLink["area2$$area3"] = {indirectArea2Area3};
         return *this;
     }
 
     // Per-area residual load, single recorded pdt like the link capacities.
     Fixture& withLoads(double area1 = 800., double area2 = 500., double area3 = 300.)
     {
-        context.loadByArea["area1"] = {area1};
-        context.loadByArea["area2"] = {area2};
-        context.loadByArea["area3"] = {area3};
+        context.hydro.loadByArea["area1"] = {area1};
+        context.hydro.loadByArea["area2"] = {area2};
+        context.hydro.loadByArea["area3"] = {area3};
         return *this;
     }
 
@@ -162,44 +162,52 @@ struct Fixture
     // anchor in the fixture).
     Fixture& withInflows(double area1 = 123.4)
     {
-        context.inflowsByArea["area1"] = {area1};
+        context.hydro.inflowsByArea["area1"] = {area1};
         return *this;
     }
 
     // Per-link loop flow, single recorded pdt.
     Fixture& withLoopFlows(double area1Area2 = 15., double area2Area3 = -8.)
     {
-        context.loopFlowByLink["area1$$area2"] = {area1Area2};
-        context.loopFlowByLink["area2$$area3"] = {area2Area3};
+        context.links.loopFlowByLink["area1$$area2"] = {area1Area2};
+        context.links.loopFlowByLink["area2$$area3"] = {area2Area3};
         return *this;
     }
 
     // Emission factors for "cluster1" (keyed "area1$$cluster1"). A few distinct
     // pollutants are set to non-zero so the ordinal-to-row mapping is checked.
+    // Mutates the same merged map entry as withThermalMargin(), so the two can
+    // be called together (in either order) without clobbering each other.
     Fixture& withEmissionFactors(double co2 = 0.5, double nox = 0.01, double op5 = 2.)
     {
-        std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX> factors{};
-        factors[Antares::Data::Pollutant::CO2] = co2;
-        factors[Antares::Data::Pollutant::NOX] = nox;
-        factors[Antares::Data::Pollutant::OP5] = op5;
-        context.emissionFactorsByCluster["area1$$cluster1"] = factors;
+        auto& cluster = context.thermal.byCluster["area1$$cluster1"];
+        cluster.emissionFactors[Antares::Data::Pollutant::CO2] = co2;
+        cluster.emissionFactors[Antares::Data::Pollutant::NOX] = nox;
+        cluster.emissionFactors[Antares::Data::Pollutant::OP5] = op5;
         return *this;
     }
 
     // Margin data for "cluster1" (keyed "area1$$cluster1"), single recorded pdt.
+    // availabilityStorage/minGenPowerStorage back the spans stored in the
+    // context entry and must outlive it, so they are kept as fixture members.
+    // Mutates the same merged map entry as withEmissionFactors().
     Fixture& withThermalMargin(double availability = 4000.,
                                double unitSize = 900.,
                                double minStablePower = 300.,
                                double minGenPower = 500.)
     {
-        LegacyExtraOutputsContext::ThermalMarginData margin;
-        margin.unitSize = unitSize;
-        margin.minStablePower = minStablePower;
-        margin.availability = {availability};
-        margin.minGenPower = {minGenPower};
-        context.thermalMarginByCluster["area1$$cluster1"] = margin;
+        availabilityStorage = {availability};
+        minGenPowerStorage = {minGenPower};
+        auto& cluster = context.thermal.byCluster["area1$$cluster1"];
+        cluster.unitSize = unitSize;
+        cluster.minStablePower = minStablePower;
+        cluster.availability = availabilityStorage;
+        cluster.minGenPower = minGenPowerStorage;
         return *this;
     }
+
+    std::vector<double> availabilityStorage;
+    std::vector<double> minGenPowerStorage;
 
     std::vector<std::optional<LegacyVariableInfo>> constraintsInfo;
     std::vector<double> duals;
@@ -356,7 +364,7 @@ BOOST_AUTO_TEST_CASE(level_percentage_is_skipped_without_a_known_capacity)
 
 BOOST_AUTO_TEST_CASE(level_percentage_is_skipped_when_capacity_is_non_positive)
 {
-    context.reservoirCapacityByArea["area1"] = 0.;
+    context.hydro.reservoirCapacityByArea["area1"] = 0.;
     fill();
     BOOST_CHECK(RowsForOutput(table, "level_percentage").empty());
 }
@@ -603,9 +611,7 @@ BOOST_AUTO_TEST_CASE(emissions_use_the_area_qualified_key)
 {
     // Same cluster name but a different area: the key "area2$$cluster1" does not
     // match the anchor's "area1$$cluster1", so nothing is emitted.
-    std::array<double, Antares::Data::Pollutant::POLLUTANT_MAX> factors{};
-    factors[Antares::Data::Pollutant::CO2] = 1.;
-    context.emissionFactorsByCluster["area2$$cluster1"] = factors;
+    context.thermal.byCluster["area2$$cluster1"].emissionFactors[Antares::Data::Pollutant::CO2] = 1.;
     fill();
     BOOST_CHECK(RowsForOutput(table, "co2_emissions").empty());
 }

@@ -153,9 +153,15 @@ public:
 private:
     // Per-output emitters, grouped by the anchor that drives them.
     void thermalPropCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void thermalEmissions(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void thermalMargins(const LegacyVariableInfo& info, std::size_t variableIndex) const;
-    void thermalProfit(const LegacyVariableInfo& info, std::size_t variableIndex) const;
+    void thermalEmissions(const LegacyVariableInfo& info,
+                          std::size_t variableIndex,
+                          const ThermalClusterData& cluster) const;
+    void thermalMargins(const LegacyVariableInfo& info,
+                        std::size_t variableIndex,
+                        const ThermalClusterData& cluster) const;
+    void thermalProfit(const LegacyVariableInfo& info,
+                       std::size_t variableIndex,
+                       const ThermalClusterData& cluster) const;
     void areaImbalanceCost(const LegacyVariableInfo& info, std::size_t variableIndex) const;
     void areaIsLossOfLoad(const LegacyVariableInfo& info, std::size_t variableIndex) const;
     void areaActualLoad(const LegacyVariableInfo& info) const;
@@ -184,6 +190,16 @@ private:
     [[nodiscard]] std::string clusterKey(const LegacyVariableInfo& info) const
     {
         return info.area + "$$" + info.component;
+    }
+
+    // Single cluster lookup shared by the three emitters below (thermalEmissions,
+    // thermalMargins, thermalProfit), all keyed on the same cluster. Returns
+    // nullptr when the cluster is absent from the context.
+    [[nodiscard]] const ThermalClusterData* findCluster(
+      const LegacyVariableInfo& info) const
+    {
+        const auto it = context_.thermal.byCluster.find(clusterKey(info));
+        return it == context_.thermal.byCluster.end() ? nullptr : &it->second;
     }
 
     // Hour-in-week of the anchor, used to index the context's per-hour vectors.
@@ -230,14 +246,15 @@ void LegacyExtraOutputEmitter::thermalPropCost(const LegacyVariableInfo& info,
 // generation_power is the DispatchableProduction value (by index, area-safe); the
 // rates come from the context keyed by "area$$cluster". Skipped for clusters
 // absent from the context.
-void LegacyExtraOutputEmitter::thermalEmissions(const LegacyVariableInfo& info,
-                                                std::size_t variableIndex) const
+void LegacyExtraOutputEmitter::thermalEmissions(
+  const LegacyVariableInfo& info,
+  std::size_t variableIndex,
+  const ThermalClusterData& cluster) const
 {
-    const auto it = context_.emissionFactorsByCluster.find(clusterKey(info));
     const double generation = values_[variableIndex];
     for (std::size_t pollutant = 0; pollutant < emissionOutputNames.size(); ++pollutant)
     {
-        emit(emissionOutputNames[pollutant], info, generation * it->second[pollutant]);
+        emit(emissionOutputNames[pollutant], info, generation * cluster.emissionFactors[pollutant]);
     }
 }
 
@@ -254,29 +271,25 @@ void LegacyExtraOutputEmitter::thermalEmissions(const LegacyVariableInfo& info,
 // differ by the same (1 - spinning/100) factor, which cancels in the formulas
 // above. Skipped when the cluster is absent from the context or its per-hour
 // vectors do not cover the anchor's hour.
-void LegacyExtraOutputEmitter::thermalMargins(const LegacyVariableInfo& info,
-                                              std::size_t variableIndex) const
+void LegacyExtraOutputEmitter::thermalMargins(
+  const LegacyVariableInfo& info,
+  std::size_t variableIndex,
+  const ThermalClusterData& cluster) const
 {
-    const auto it = context_.thermalMarginByCluster.find(clusterKey(info));
-    if (it == context_.thermalMarginByCluster.end())
-    {
-        return;
-    }
-    const auto& data = it->second;
     const unsigned pdt = hourInWeek(info);
-    if (pdt >= data.availability.size() || pdt >= data.minGenPower.size())
+    if (pdt >= cluster.availability.size() || pdt >= cluster.minGenPower.size())
     {
         return;
     }
 
     const double generation = values_[variableIndex];
-    const double available = data.availability[pdt];
-    const double minGen = data.minGenPower[pdt];
+    const double available = cluster.availability[pdt];
+    const double minGen = cluster.minGenPower[pdt];
 
     double unitFloor = 0.;
-    if (data.unitSize > 0.)
+    if (cluster.unitSize > 0.)
     {
-        unitFloor = data.minStablePower * std::ceil(available / data.unitSize);
+        unitFloor = cluster.minStablePower * std::ceil(available / cluster.unitSize);
     }
     const double clusterAvailability = std::max(available, unitFloor);
 
@@ -294,27 +307,24 @@ void LegacyExtraOutputEmitter::thermalMargins(const LegacyVariableInfo& info,
 // quantity the context carries for the margin outputs. Skipped when the area has
 // no recorded price, the cluster is absent from the context, or the per-hour
 // floor does not cover the anchor's hour.
-void LegacyExtraOutputEmitter::thermalProfit(const LegacyVariableInfo& info,
-                                             std::size_t variableIndex) const
+void LegacyExtraOutputEmitter::thermalProfit(
+  const LegacyVariableInfo& info,
+  std::size_t variableIndex,
+  const ThermalClusterData& cluster) const
 {
     const auto priceIt = priceByArea_.find(info.area);
     if (priceIt == priceByArea_.end())
     {
         return;
     }
-    const auto marginIt = context_.thermalMarginByCluster.find(clusterKey(info));
-    if (marginIt == context_.thermalMarginByCluster.end())
-    {
-        return;
-    }
     const unsigned pdt = hourInWeek(info);
-    if (pdt >= marginIt->second.minGenPower.size())
+    if (pdt >= cluster.minGenPower.size())
     {
         return;
     }
 
     const double generation = values_[variableIndex];
-    const double floor = marginIt->second.minGenPower[pdt];
+    const double floor = cluster.minGenPower[pdt];
     const double profit = (priceIt->second - costs_[variableIndex])
                           * std::max(generation - floor, 0.);
     emit("profit", info, profit);
@@ -352,7 +362,7 @@ void LegacyExtraOutputEmitter::areaIsLossOfLoad(const LegacyVariableInfo& info,
 // the context. Skipped when the area is unknown to the context.
 void LegacyExtraOutputEmitter::areaActualLoad(const LegacyVariableInfo& info) const
 {
-    const auto load = ContextValueAtHour(context_.loadByArea,
+    const auto load = ContextValueAtHour(context_.hydro.loadByArea,
                                          info.component,
                                          info.timeIndex,
                                          context_.weekFirstTimeStep);
@@ -425,7 +435,7 @@ void LegacyExtraOutputEmitter::linkMinusFlow(const LegacyVariableInfo& info,
 // per-hour in the context. Skipped when the link is unknown to the context.
 void LegacyExtraOutputEmitter::linkActualLoopFlow(const LegacyVariableInfo& info) const
 {
-    const auto loopFlow = ContextValueAtHour(context_.loopFlowByLink,
+    const auto loopFlow = ContextValueAtHour(context_.links.loopFlowByLink,
                                              info.component,
                                              info.timeIndex,
                                              context_.weekFirstTimeStep);
@@ -446,7 +456,7 @@ void LegacyExtraOutputEmitter::linkIsDirectlyCongested(const LegacyVariableInfo&
                                                        std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto capacity = ContextValueAtHour(context_.directCapacityByLink,
+    const auto capacity = ContextValueAtHour(context_.links.directCapacityByLink,
                                              info.component,
                                              info.timeIndex,
                                              context_.weekFirstTimeStep);
@@ -467,7 +477,7 @@ void LegacyExtraOutputEmitter::linkIsIndirectlyCongested(const LegacyVariableInf
                                                          std::size_t variableIndex) const
 {
     constexpr double saturationEpsilon = 1e-5;
-    const auto capacity = ContextValueAtHour(context_.indirectCapacityByLink,
+    const auto capacity = ContextValueAtHour(context_.links.indirectCapacityByLink,
                                              info.component,
                                              info.timeIndex,
                                              context_.weekFirstTimeStep);
@@ -538,8 +548,8 @@ void LegacyExtraOutputEmitter::linkPropCost(const LegacyVariableInfo& info,
 void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& info,
                                                    std::size_t variableIndex) const
 {
-    const auto it = context_.reservoirCapacityByArea.find(info.component);
-    if (it == context_.reservoirCapacityByArea.end() || it->second <= 0.)
+    const auto it = context_.hydro.reservoirCapacityByArea.find(info.component);
+    if (it == context_.hydro.reservoirCapacityByArea.end() || it->second <= 0.)
     {
         return;
     }
@@ -551,7 +561,7 @@ void LegacyExtraOutputEmitter::areaLevelPercentage(const LegacyVariableInfo& inf
 // Skipped when the area is unknown to the context.
 void LegacyExtraOutputEmitter::hydroActualInflows(const LegacyVariableInfo& info) const
 {
-    const auto inflows = ContextValueAtHour(context_.inflowsByArea,
+    const auto inflows = ContextValueAtHour(context_.hydro.inflowsByArea,
                                             info.component,
                                             info.timeIndex,
                                             context_.weekFirstTimeStep);
@@ -613,9 +623,15 @@ void LegacyExtraOutputEmitter::dispatchableProduction(const LegacyVariableInfo& 
                                                       std::size_t variableIndex) const
 {
     thermalPropCost(info, variableIndex);
-    thermalEmissions(info, variableIndex);
-    thermalMargins(info, variableIndex);
-    thermalProfit(info, variableIndex);
+
+    const auto* cluster = findCluster(info);
+    if (!cluster)
+    {
+        return;
+    }
+    thermalEmissions(info, variableIndex, *cluster);
+    thermalMargins(info, variableIndex, *cluster);
+    thermalProfit(info, variableIndex, *cluster);
 }
 
 void LegacyExtraOutputEmitter::unsuppliedEnergy(const LegacyVariableInfo& info,
