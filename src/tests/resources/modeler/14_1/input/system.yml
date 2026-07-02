@@ -1,0 +1,18 @@
+system:
+  id: sys_example_14_1
+  description: >
+    Single component with one variable x and one time series p = 1,2,3,4,5.
+    The constraint x >= sum(0 .. t+1, p) should yield x = 3, 6, 10, 15, 20
+    with the current cyclic semantics on the last time step.
+
+  model-libraries: lib_example_14_1
+
+  components:
+    - id: c1
+      model: lib_example_14_1.sum_bound_demo
+
+      parameters:
+        - id: p
+          time-dependent: true
+          scenario-dependent: false
+          value: p_14_1
