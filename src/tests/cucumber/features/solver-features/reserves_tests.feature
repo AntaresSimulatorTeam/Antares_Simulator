@@ -123,7 +123,7 @@ Feature: reserves tests
 # Dans ce premier test, on ne considère pas les contraintes associées aux paramètres de contraintes de stocks
   Scenario: ST_1UP_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_1_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_1_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -138,7 +138,7 @@ Feature: reserves tests
 # Dans ce 2nd test, on ne considère que la contrainte de power activation
   Scenario: ST_1UP_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_2_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_2_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -153,7 +153,7 @@ Feature: reserves tests
 # Dans ce 3ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio mais les deux derniers paramètres ne doivent pas impacter
   Scenario: ST_1UP_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_3_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_3_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -168,7 +168,7 @@ Feature: reserves tests
 # Dans ce 4ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1UP_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_4_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_4_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -183,7 +183,7 @@ Feature: reserves tests
 # Dans ce 5ème test, on ne considère pas la contrainte de power activation mais ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1UP_reserves_test5
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_5_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_5_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -199,7 +199,7 @@ Feature: reserves tests
 
   Scenario: ST_1UP_reserves_test6
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_6_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_6_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -215,7 +215,7 @@ Feature: reserves tests
 
   Scenario: ST_1UP_reserves_test7
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_7_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_7_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -231,7 +231,7 @@ Feature: reserves tests
 
   Scenario: ST_1UP_reserves_test8
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_8_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_8_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -246,7 +246,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur le power activation ratio pour une réserve spécifique
   Scenario: ST_1UP_reserves_test9
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_9_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_9_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -261,7 +261,7 @@ Feature: reserves tests
 # Dans ce premier test, on ne considère pas les contraintes associées aux paramètres de contraintes de stocks
   Scenario: ST_1DOWN_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_1_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_1_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -277,7 +277,7 @@ Feature: reserves tests
 # Dans ce 2nd test, on ne considère que la contrainte de power activation
   Scenario: ST_1DOWN_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-  	When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_2_down.ini"
+  	When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_2_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -292,7 +292,7 @@ Feature: reserves tests
 # Dans ce 3ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio mais les deux derniers paramètres ne doivent pas impacter
   Scenario: ST_1DOWN_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_3_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_3_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -307,7 +307,7 @@ Feature: reserves tests
 # Dans ce 4ème test, on ne considère que la contrainte de power activation ainsi que ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1DOWN_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-	  When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_4_down.ini"
+	  When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_4_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -322,7 +322,7 @@ Feature: reserves tests
 # Dans ce 5ème test, on ne considère pas la contrainte de power activation mais ref activation duration et energy activation ratio avec les deux derniers paramètres qui doivent impacter
   Scenario: ST_1DOWN_reserves_test5
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_5_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_5_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -337,7 +337,7 @@ Feature: reserves tests
 # Dans ce 6ème test, on considère la contrainte de power activation et ref activation duration mais pas energy activation ratio 
   Scenario: ST_1DOWN_reserves_test6
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_6_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_6_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -352,7 +352,7 @@ Feature: reserves tests
 # Dans ce 7ème test, on se concentre sur le energy activation ratio pour une réserve spécifique
   Scenario: ST_1DOWN_reserves_test7
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_7_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_7_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -367,7 +367,7 @@ Feature: reserves tests
 # Dans ce 8ème test, on se concentre sur le power activation ratio pour une réserve spécifique
   Scenario: ST_1DOWN_reserves_test8
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_8_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_8_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -382,7 +382,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur le power activation ratio pour une réserve spécifique
   Scenario: ST_1DOWN_reserves_test9
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_1_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_9_down.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_9_down.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -398,7 +398,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test1
   Scenario: ST_2UP_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_1_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_1_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -416,7 +416,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test2
   Scenario: ST_2UP_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_2_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_2_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -434,7 +434,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test3
   Scenario: ST_2UP_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_3_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_3_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -452,7 +452,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test4
   Scenario: ST_2UP_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_4_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_4_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -470,7 +470,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test5
   Scenario: ST_2UP_reserves_test5
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_5_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_5_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -487,7 +487,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test6
   Scenario: ST_2UP_reserves_test6
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_6_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_6_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -504,7 +504,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test7
   Scenario: ST_2UP_reserves_test7
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_7_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_7_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -522,7 +522,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test8
   Scenario: ST_2UP_reserves_test8
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_8_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_8_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -540,7 +540,7 @@ Feature: reserves tests
 # Dans ce 9ème test, on se concentre sur les mêmes critères que ST_1UP_reserves_test9
   Scenario: ST_2UP_reserves_test9
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_2_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_9_double_up.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_9_double_up.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -560,7 +560,7 @@ Feature: reserves tests
 # Lot 3 non actif
   Scenario: ST_3UP_unavailable_reserves_test1
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_1.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_1.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -578,7 +578,7 @@ Feature: reserves tests
 # reference-activation-duration = 2
   Scenario: ST_3UP_unavailable_reserves_test2
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_2.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_2.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -598,7 +598,7 @@ Feature: reserves tests
 # power-activation-ratio = 0.5 
 Scenario: ST_3UP_unavailable_reserves_test3
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_3.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_3.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
@@ -619,7 +619,7 @@ Scenario: ST_3UP_unavailable_reserves_test3
 # reference-activation-duration = 2
   Scenario: ST_3UP_unavailable_reserves_test4
     Given the solver study path is "Antares_Simulator_Tests_NR/reserves-tests/ST_3_reserves"
-    When I replace the "input/reserves/area/reserves.ini" file with "../reserves_ini_files/reserves_unavailable_prod_4.ini"
+    When I replace the "input/reserves/area/reserves.yml" file with "../reserves_yml_files/reserves_unavailable_prod_4.yml"
     When I run antares simulator
     Then the simulation succeeds
     And the simulation takes less than 20 seconds
