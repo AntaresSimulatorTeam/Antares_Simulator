@@ -21,10 +21,10 @@ public:
 
 protected:
     // Records the structured legacy description of a variable, parallel to the name.
-    // No-op in the base namer; only VariableNamer overrides this to record info.
     virtual void RecordLegacyVariableInfo(unsigned index,
                                           const std::string& output,
-                                          const std::string& component);
+                                          const std::string& component)
+      = 0;
 
     unsigned timeStep() const
     {
@@ -167,6 +167,17 @@ class ConstraintNamer: public Namer
 public:
     using Namer::Namer;
 
+    // Recording constructor: constraints named through this instance also get
+    // their structured legacy description recorded (used for constraints whose
+    // dual feeds an extra output of the simulation table).
+    ConstraintNamer(
+      std::vector<std::string>& names,
+      std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>& legacyInfo):
+        Namer(names),
+        legacyInfo_(&legacyInfo)
+    {
+    }
+
     void FlowDissociation(unsigned constrIndex);
     void AreaBalance(unsigned constrIndex);
     void FictiveLoads(unsigned constrIndex);
@@ -273,7 +284,15 @@ public:
                                     const std::string& constrIndex_name);
 
 private:
+    void RecordLegacyVariableInfo(unsigned index,
+                                  const std::string& output,
+                                  const std::string& component) override;
+
     void BindingConstraint(unsigned constrIndex,
                            const std::string& name,
                            const std::pair<std::string, std::string>& timeGranularity);
+
+    // Structured legacy description, parallel to names_. Null when this namer
+    // was built without a recording target (the default for constraints).
+    std::vector<std::optional<Antares::Optimization::LegacyVariableInfo>>* legacyInfo_ = nullptr;
 };

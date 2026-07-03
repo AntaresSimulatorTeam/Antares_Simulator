@@ -41,6 +41,7 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
     ProblemeAResoudre->NomDesVariables.resize(nbVariables);
     ProblemeAResoudre->NomDesContraintes.resize(nbConstraints);
     ProblemeAResoudre->LegacyVariablesInfo.assign(nbVariables, std::nullopt);
+    ProblemeAResoudre->LegacyConstraintsInfo.assign(nbConstraints, std::nullopt);
     // Integer variables ? (MILP)
     ProblemeAResoudre->VariablesEntieres.resize(nbVariables);
 }

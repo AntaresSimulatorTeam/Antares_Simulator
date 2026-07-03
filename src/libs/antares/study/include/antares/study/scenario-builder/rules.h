@@ -13,6 +13,8 @@
 
 #include "../fwd.h"
 #include "BindingConstraintsTSNumbersData.h"
+#include "HydroFinalLevelsData.h"
+#include "HydroInitialLevelsData.h"
 #include "HydroTSNumberData.h"
 #include "LoadTSNumberData.h"
 #include "NTCTSNumberData.h"
@@ -22,7 +24,6 @@
 #include "TSnumberData.h"
 #include "ThermalTSNumberData.h"
 #include "WindTSNumberData.h"
-#include "hydroLevelsData.h"
 #include "solarTSNumberData.h"
 
 namespace Antares::Data::ScenarioBuilder
@@ -30,9 +31,12 @@ namespace Antares::Data::ScenarioBuilder
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
 */
-class Rules final: private Yuni::NonCopyable<Rules>
+class Rules final
 {
 public:
+    Rules(const Rules&) = delete;
+    Rules& operator=(const Rules&) = delete;
+
     //! Smart pointer
     using Ptr = std::shared_ptr<Rules>;
     //! Map
@@ -94,9 +98,9 @@ public:
     std::vector<renewableTSNumberData> renewable;
 
     //! hydro initial levels
-    hydroLevelsData hydroInitialLevels{initLevelApply};
+    HydroInitialLevelsData hydroInitialLevels;
     //! hydro final levels
-    hydroLevelsData hydroFinalLevels{finalLevelApply};
+    HydroFinalLevelsData hydroFinalLevels;
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;

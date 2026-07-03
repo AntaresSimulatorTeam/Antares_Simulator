@@ -10,7 +10,7 @@ Feature: valid hydro
   # built from this tree, using the sirius linear/quadratic solver and
   # year-by-year results enabled (as the cucumber harness does at runtime).
   #
-  # Each @fast scenario anchors on "the expected value of the annual system
+  # Each @short scenario anchors on "the expected value of the annual system
   # cost" (EXP, relative tolerance 0.1%). Single-area studies with a clear
   # hydro behaviour additionally check total hydro production / pumping for
   # year 1.
@@ -28,56 +28,56 @@ Feature: valid hydro
   # Family A - one node, inflow generation / breakdown (no reservoir management)
   # ---------------------------------------------------------------------------
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-00 One node, zero inflows -> no hydro generation
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-00"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-01 Inflows every other month, ROR 25%, daily pattern = 1
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-01"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-02 Inter-daily breakdown = 1 (Wednesday = 1.5 x other days)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-02"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-03 ROR 0%, daily pattern = 10 on Tuesdays, max-power capping
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-03"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-04 Inter-daily breakdown (same output as H700-02)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-04"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-05 Intra-daily modulation = 1 (constant hourly power)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-05"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-06 Managed reservoir without reservoir management, inflows every other month
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-06"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-25 Inflows every other month with an isolated peak on Jan 2nd
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-25"
     When I run antares simulator
@@ -88,7 +88,7 @@ Feature: valid hydro
   # Family B - ready-made inflows, infinite reservoir or reservoir start-up
   # ---------------------------------------------------------------------------
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-07 Uniform inflows, infinite reservoir, no reservoir management
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-07"
     When I run antares simulator
@@ -96,7 +96,7 @@ Feature: valid hydro
     And the expected value of the annual system cost is 0
     And in area "Area 01", during year 1, total hydro production is 36374520 MWh
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-08 Managed reservoir with reservoir management, uniform inflows
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-08"
     When I run antares simulator
@@ -104,21 +104,21 @@ Feature: valid hydro
     And the expected value of the annual system cost is 0
     And in area "Area 01", during year 1, total hydro production is 36374520 MWh
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-09 Reservoir cold start, fills then stays full
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-09"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-10 Reservoir hot start, fills then stays full
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-10"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-11 Inflows on Tuesdays only, constant 100 MW output
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-11"
     When I run antares simulator
@@ -130,14 +130,14 @@ Feature: valid hydro
   # Family C - 12 zones, water value usage
   # ---------------------------------------------------------------------------
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-12 12 zones, water value defined but NOT used
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-12"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-13 12 zones, water value used
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-13"
     When I run antares simulator
@@ -148,7 +148,7 @@ Feature: valid hydro
   # Family D - one node, Monday/Tuesday inflows, fine management (UHT/WV/LW/HB)
   # ---------------------------------------------------------------------------
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-14 UHT, no water value, no load following (reference case)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-14"
     When I run antares simulator
@@ -156,21 +156,21 @@ Feature: valid hydro
     And the expected value of the annual system cost is 24960000000
     And in area "Zone 01", during year 1, total hydro production is 2600000 MWh
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-15 Intra-daily modulation effect (no output Wed->Sun)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-15"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 24960000000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-16 Leeway 1:1 lifts the intra-daily constraint
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-16"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 24960000000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-17 Load following, shedding policy = shave peaks
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-17"
     When I run antares simulator
@@ -178,42 +178,42 @@ Feature: valid hydro
     And the expected value of the annual system cost is 11440000000
     And in area "Zone 01", during year 1, total hydro production is 2598336 MWh
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-18 Load following, shedding policy = minimize duration
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-18"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 11440000000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-19 Thermal cluster present, shave peaks has no effect
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-19"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 57200000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-20 Power fluctuations = minimize excursions
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-20"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 57200000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-21 Minimize excursions (same as H700-20)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-21"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 57200000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-22 Water value with leeway 1:1
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-22"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 57200000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-23 Leeway 1:1.2 -> generation 60 GWh, level decreases
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-23"
     When I run antares simulator
@@ -221,21 +221,21 @@ Feature: valid hydro
     And the expected value of the annual system cost is 31200000
     And in area "Zone 01", during year 1, total hydro production is 3120000 MWh
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-24 Leeway 1:1.2 with hard bounds on rule curves
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-24"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 42866700
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-26 Expensive water + leeway 0.2:1.2
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-26"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 161200000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-27 Expensive water + leeway 4:5 (with spillage)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-27"
     When I run antares simulator
@@ -263,14 +263,14 @@ Feature: valid hydro
     When I run antares simulator
     Then the simulation succeeds
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-30 Pumping without losses (efficiency 1.0), hard bounds off
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-30"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 238880000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-31 Day-dependent generation/pumping credits, upper bound 60%
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-31"
     When I run antares simulator
@@ -291,7 +291,7 @@ Feature: valid hydro
     When I run antares simulator
     Then the simulation succeeds
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-33 UHT/leeway off, no hard bounds, simplex 168
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-33"
     When I run antares simulator
@@ -307,21 +307,21 @@ Feature: valid hydro
     When I run antares simulator
     Then the simulation succeeds
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-44 Variant of H700-32, initial level 30-70%
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-44"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 184575000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-45 Same as H700-44 with weekly simplex (168)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-45"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 184575000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-46 UHT/leeway off, hard bounds active, simplex 168
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-46"
     When I run antares simulator
@@ -332,14 +332,14 @@ Feature: valid hydro
   # Family E - rule-curve shapes (concave / convex / rugged)
   # ---------------------------------------------------------------------------
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-35 No inflow, lower rule curve strictly concave (UHT = NO)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-35"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 87320500
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-36 No inflow, upper rule curve strictly convex (UHT = NO)
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-36"
     When I run antares simulator
@@ -366,7 +366,7 @@ Feature: valid hydro
     When I run antares simulator
     Then the simulation fails
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-39 1 MW inflow, UHT=YES, lower rule curve concave
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-39"
     When I run antares simulator
@@ -383,21 +383,21 @@ Feature: valid hydro
   # Family F - managed reservoir, surplus requalified as overflow
   # ---------------------------------------------------------------------------
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-41 Reservoir fills to 100%, inflows requalified as overflow
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-41"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-42 Same as H700-41 with UHT = NO
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-42"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 0
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-43 Same as H700-41 with some generation/pumping on Jan 1st
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-43"
     When I run antares simulator
@@ -408,28 +408,28 @@ Feature: valid hydro
   # Family G - studies without comments.txt (config only)
   # ---------------------------------------------------------------------------
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-47 Near-infinite reservoir, leeway 1:1
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-47"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 9477570000000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-48 Near-infinite reservoir, load following on
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-48"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 9477860000000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-49 Reservoir variant, leeway 1:1
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-49"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 9477570000000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H700-50 Reservoir variant, load following = false
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H700-50"
     When I run antares simulator
@@ -448,7 +448,7 @@ Feature: valid hydro
     When I run antares simulator
     Then the simulation fails
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-52 PSP, reservoir 100000, initial level 10%
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-52"
     When I run antares simulator
@@ -457,42 +457,42 @@ Feature: valid hydro
     And in area "& PSP", during year 1, total hydro production is 1674440 MWh
     And in area "& PSP", during year 1, total hydro pumping is 2325613 MWh
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-53 PSP, reservoir 100000, initial level 90%
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-53"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 2301990000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-54 PSP, reservoir 2000000, intra-daily modulation 24
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-54"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 2299890000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-55 PSP, intra-daily modulation 1.5
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-55"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 2299890000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-56 PSP, intra-daily modulation 1
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-56"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 2299890000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-57 PSP, generation credit 2400, intra-daily modulation 2
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-57"
     When I run antares simulator
     Then the simulation succeeds
     And the expected value of the annual system cost is 2302210000
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-58 PSP, constant inflow 10 MW/h, weekly optimisation
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-58"
     When I run antares simulator
@@ -501,7 +501,7 @@ Feature: valid hydro
     And in area "& PSP", during year 1, total hydro production is 2081772 MWh
     And in area "& PSP", during year 1, total hydro pumping is 2770043 MWh
 
-  @fast @valid-hydro
+  @short @valid-hydro
   Scenario: H701-59 PSP, constant inflow 10 MW/h, daily optimisation
     Given the solver study path is "Antares_Simulator_Tests_NR/valid-hydro/H701-59"
     When I run antares simulator

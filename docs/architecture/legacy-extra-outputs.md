@@ -25,17 +25,19 @@ opt_rename_problem.cpp                       opt_appel_solveur_lineaire.cpp
 │  → problem.LegacyVariables- │ ──solve────► │  │  variable, value = X[i],      │
 │    Info[i] = {name,         │              │  │  output mapped by             │
 │    component, timeIndex}    │              │  │  LegacyNameMapper             │
-└─────────────────────────────┘              │  └─ AddLegacyExtraOutputs(...)   │
-                                             │      ├─ builds LegacySolutionView│
-                                             │      └─ derived rows             │
-                                             └──────────────────────────────────┘
+│ ConstraintNamer (recording  │              │  └─ AddLegacyExtraOutputs(...)   │
+│ ctor) → problem.Legacy-     │              │      ├─ builds LegacySolutionView│
+│   ConstraintsInfo[i]        │              │      └─ derived rows             │
+└─────────────────────────────┘              └──────────────────────────────────┘
 ```
 
 1. **Recording.** While the problem is being named, `VariableNamer::RecordLegacyVariableInfo` (a virtual hook on `Namer`, no-op in the base class) fills `PROBLEME_ANTARES_A_RESOUDRE::LegacyVariablesInfo`, a `std::vector<std::optional<LegacyVariableInfo>>` parallel to the solution vector `X` and to the linear objective coefficients `CoutLineaire` (all three are sized to `NombreDeVariables` by `resizeProbleme`). Variables that get no legacy info stay `nullopt` and are ignored by everything downstream.
 
-2. **Raw rows.** After the solve, `FillLegacySimulationTable` iterates `LegacyVariablesInfo` and pushes one `SimulationTableEntry` per recorded variable, translating the legacy variable name to its public output name through `LegacyNameMapper` (e.g. `UnsuppliedEnergy` → `unsupplied_energy`).
+   Constraints are recorded symmetrically into `LegacyConstraintsInfo` (parallel to the duals vector `CoutsMarginauxDesContraintes`, both sized to `NombreDeContraintes`), but **opt-in**: `ConstraintNamer`'s default constructor records nothing; a constraint type is recorded only where its construction site passes the recording constructor (`ConstraintNamer namer(names, legacyInfo)`), reached through `ConstraintBuilderData::LegacyConstraintsInfo`. Today three constraint types record, because their duals feed outputs: `AreaBalance`, `FlowDissociation` and `FinalStockExpression` (each in its file under `constraints/`).
 
-3. **Derived rows.** The same function then calls `AddLegacyExtraOutputs`, passing the info vector, `X`, `CoutLineaire`, the `FillContext` (block time window and scenario year) and the current block index. This is the single entry point for all extra outputs.
+2. **Raw rows.** After the solve, `FillLegacySimulationTable` iterates `LegacyVariablesInfo` and pushes one `SimulationTableEntry` per recorded variable, translating the legacy variable name to its public output name through `LegacyNameMapper` (e.g. `UnsuppliedEnergy` → `unsupplied_energy`). Recorded constraints produce no raw rows; they exist only for derived outputs.
+
+3. **Derived rows.** The same function then calls `AddLegacyExtraOutputs`, passing the variable info vector, `X`, `CoutLineaire`, the constraint info vector, the duals, the `FillContext` (block time window and scenario year) and the current block index. This is the single entry point for all extra outputs.
 
 ## 3. LegacySolutionView
 
@@ -53,7 +55,7 @@ Design points:
 
 ## 4. LegacyExtraOutputs
 
-`AddLegacyExtraOutputs` builds a `LegacySolutionView`, then makes a single pass over `LegacyVariablesInfo` and dispatches on the recorded variable name. Each derived output is implemented as a small helper that computes a value and emits a `SimulationTableEntry` via a shared `AddExtraOutputEntry` helper, which fixes the row conventions once: `block = currentBlock`, `absolute_time_index = timeIndex` (0-based, like the raw rows), `block_time_index` relative to the block's global time window, `scenario_index = fillContext.getYear()`.
+`AddLegacyExtraOutputs` builds a `LegacySolutionView`, then makes one pass over `LegacyVariablesInfo` and one over `LegacyConstraintsInfo`, dispatching on the recorded name. Each derived output is implemented as a small helper that computes a value and emits a `SimulationTableEntry` via a shared `AddExtraOutputEntry` helper, which fixes the row conventions once: `block = currentBlock + 1`, `absolute_time_index = timeIndex + 1` (1-based, like the raw rows), `block_time_index` relative to the block's global time window, `scenario_index = fillContext.getYear()`.
 
 Outputs implemented so far:
 
@@ -65,6 +67,14 @@ Outputs implemented so far:
 | `is_loss_of_load` (area) | each `UnsuppliedEnergy` variable | `X[i] > 0.5 ? 1 : 0` | by index |
 | `abs_flow` (link) | each `DirectFlow` variable | `abs(X[i])` | by index |
 | `prop_cost` (link) | each `PositiveDirectFlow` variable | `directHurdle × posDirect + indirectHurdle × posIndirect` | direct part by index; `PositiveIndirectFlow` of the same link and time through the view |
+| `price` (area) | each `AreaBalance` constraint | `-dual[i]` | dual by index |
+| `is_near_loss_of_load` (area) | each `AreaBalance` constraint | `-dual[i] > unsCost - 5 ? 1 : 0` | dual by index; the unsupplied energy cost is the objective coefficient on the area's `UnsuppliedEnergy` variable, through the view |
+| `capacity_shadow_price` (link) | each `FlowDissociation` constraint | `abs(dual[i])` | dual by index |
+| `hydro_shadow_price` (area) | each `FinalStockExpression` constraint | `dual[i]` | dual by index; one row per area and week (constraint exists only in accurate water value mode) |
+
+The `price` formula negates the stored dual: with the legacy balance-constraint sign convention, `CoutsMarginauxDesContraintes` holds the **negative** of the marginal price (the legacy outputs print `-CoutsMarginauxHoraires`, and the adequacy-patch post-processing stores `-unsuppliedEnergyCost` to mean "price = unsupplied energy cost").
+
+Outputs anchored on a recorded constraint read their own dual by index. `FlowDissociation` (hence `capacity_shadow_price`) only exists for links managed with hurdle costs, like the flow decomposition variables.
 
 The hurdle costs in the link `prop_cost` formula are the objective coefficients on the flow decomposition variables (`opt_gestion_des_couts_cas_lineaire.cpp` sets them straight from the link's `fhlHurdlesCostDirect`/`fhlHurdlesCostIndirect` series); those variables only carry legacy info for links managed with hurdle costs, so the output is naturally restricted to them. Link components are recorded as `origin$$destination`, a unique key safe for view lookups.
 
@@ -85,25 +95,29 @@ Lifting the limitation would mean adding an area qualifier to `LegacyVariableInf
 
 ## 5. How to Add a New Extra Output
 
-1. Pick the **anchor variable** — the recorded legacy variable whose component/time the row should carry — and add a branch for its name in the dispatch loop of `AddLegacyExtraOutputs`.
-2. Write a helper following the existing two: read the anchor's operands by index; fetch companion variables through `LegacySolutionView` using their **legacy** names; return early (emit nothing) if a companion lookup comes back empty.
-3. Emit through `AddExtraOutputEntry` so block/time/scenario conventions stay uniform.
-4. If the companion key may not be unique (cluster-level variables), do not use the view — extend the recorded info first.
-5. Add a case to `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` and, when the value is deterministically derivable from a test study, a row to the cucumber scenario in `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature`.
+1. Pick the **anchor** — the recorded variable or constraint whose component/time the row should carry — and add a branch for its name in the matching dispatch loop of `AddLegacyExtraOutputs`.
+2. If the anchor is a constraint type not yet recorded, switch its construction site (in `src/solver/optimisation/constraints/`) to the recording `ConstraintNamer` constructor, passing `builder.data.LegacyConstraintsInfo`.
+3. Write a helper following the existing ones: read the anchor's operands by index; fetch companion variables through `LegacySolutionView` using their **legacy** names; return early (emit nothing) if a companion lookup comes back empty.
+4. Emit through `AddExtraOutputEntry` so block/time/scenario conventions stay uniform.
+5. If the companion key may not be unique (cluster-level variables), do not use the view — extend the recorded info first.
+6. Add a case to `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` and, when the value is deterministically derivable from a test study, a row to the cucumber scenario in `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature`.
 
 ## 6. Known Limitations and Planned Extensions
 
 The full extra-output specification (area prices, thermal non-proportional costs and emissions, link congestion fees, storage profits, hydro shadow prices, ...) is being implemented incrementally. The remaining increments need capabilities this design deliberately leaves out for now:
 
-- **Constraint duals.** Outputs such as area `price` (dual of the balance constraint) or `capacity_shadow_price` require recording constraint info symmetrically to variables: a `LegacyConstraintsInfo` vector filled by a `ConstraintNamer` hook, read against `CoutsMarginauxDesContraintes`. `ConstraintNamer` records nothing today.
-- **Study data not present in the problem.** Some formulas use parameters that are not objective coefficients (emission rates, cluster availability, hurdle costs). These need plumbing from `PROBLEME_HEBDO`/study data into the fill path; `linearCost()` only covers parameters that happen to be objective coefficients — and those carry the anti-degeneracy cost noise described in §4, so the same plumbing would be needed if noise-free costs were ever required.
+- **Port-based outputs.** Outputs the specification expresses with `in_port`/`out_port` (notably `alg_congestion_fee` and `abs_congestion_fee`, where `price` is read on each end's port) are out of scope for this step. The legacy weekly problem has no port concept, and resolving `in_port`/`out_port` to the right per-area dual is a design question of its own.
+- **Profit outputs.** Thermal `profit` needs study data on top of the area price (`cluster_min_gen_modulation`, unit count, unit capacity), and the thermal anchor's component is not area-qualified, so the cluster's area price cannot even be looked up yet. STS `profit` has the same problem: the recorded component is the storage name, not its area. Both are blocked on the component-qualification item below (plus study data for thermal).
+- **`bellman_value`.** `sum(cost_layer × LayerStorage)` is computable from `CoutLineaire × X`, but `LayerStorage` variables are recorded with the layer index as component — without the area, the sum cannot be attributed. Also blocked on component qualification.
+- **MIP solves.** When the weekly problem is a MIP, OR-Tools' dual extraction is skipped and `CoutsMarginauxDesContraintes` is zero-filled (`extract_from_MPSolver`, a known TODO in `ortools_utils.cpp`), so `price` and `is_near_loss_of_load` read 0 — the same caveat as the legacy marginal-price output.
+- **Study data not present in the problem.** Some formulas use parameters that are not objective coefficients (emission rates, cluster availability, link capacities for `is_directly/indirectly_congested`, reservoir capacity for `level_percentage`). These need plumbing from `PROBLEME_HEBDO`/study data into the fill path; `linearCost()` only covers parameters that happen to be objective coefficients.
 - **Cross-time terms.** Outputs using `[t-1]` (e.g. thermal `non_prop_cost`) must define their semantics at the first timestep of a block.
 - **Component qualification.** As described in §4, cluster components are not area-qualified; an `area` field in `LegacyVariableInfo` would make all keys unique and let cluster-level outputs use the view safely.
 
 ## 7. Testing
 
 - `src/tests/src/solver/optimisation/test_legacy_solution_view.cpp` — unit tests of the index: hits, disambiguation by component, misses, unrecorded slots.
-- `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` — unit tests of the derived rows: formulas, row metadata conventions, skip-on-missing-companion, and that unrelated variables emit nothing. Both run in the `unit-tests-for-solver-optimisation` Boost test target, which compiles the two `.cpp` files directly and links `Antares::simulation-table`.
-- `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` — end-to-end scenario on the "002 Thermal fleet - Base" study at a loss-of-load hour where every cluster is provably at maximum, giving closed-form expected values for `prop_cost`, `imbalance_cost` and `is_loss_of_load`.
+- `src/tests/src/solver/optimisation/test_legacy_extra_outputs.cpp` — unit tests of the derived rows: formulas (including the dual sign negation for `price`), row metadata conventions, skip-on-missing-companion, and that unrelated variables and constraints emit nothing. Both run in the `unit-tests-for-solver-optimisation` Boost test target, which compiles the two `.cpp` files directly and links `Antares::simulation-table`.
+- `src/tests/cucumber/features/solver-features/legacy_simulation_table.feature` — end-to-end scenario on the "002 Thermal fleet - Base" study at a loss-of-load hour where every cluster is provably at maximum, giving closed-form expected values for `prop_cost`, `imbalance_cost`, `is_loss_of_load`, `price` (= the unsupplied energy cost, since the marginal MW is unserved) and `is_near_loss_of_load`.
 
-Three outputs currently have unit-test coverage only, because no fast test study exercises them: `actual_num_units_on` needs an accurate unit-commitment study (all `hybrid/` studies use `unit-commitment-mode = fast`, where NODU variables do not exist), and `abs_flow` / link `prop_cost` need a study with a configured link (with hurdle costs for the latter); no `hybrid/` study has one. Adding a small two-area study with a hurdle-cost link would close the gap.
+Several outputs currently have unit-test coverage only, because no fast test study exercises them: `actual_num_units_on` needs an accurate unit-commitment study (all `hybrid/` studies use `unit-commitment-mode = fast`, where NODU variables do not exist); `abs_flow`, link `prop_cost` and `capacity_shadow_price` need a study with a configured link (with hurdle costs for the last two) — no `hybrid/` study has one; `hydro_shadow_price` needs a study with accurate water value mode. Adding a small two-area study with a hurdle-cost link and a reservoir would close most of the gap.

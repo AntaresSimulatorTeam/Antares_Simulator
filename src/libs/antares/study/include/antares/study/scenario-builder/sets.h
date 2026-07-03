@@ -13,9 +13,12 @@ namespace Antares::Data::ScenarioBuilder
 /*!
 ** \brief Sets for TS numbers, for all years and a single timeseries
 */
-class Sets final: private Yuni::NonCopyable<Sets>
+class Sets final
 {
 public:
+    Sets(const Sets&) = delete;
+    Sets& operator=(const Sets&) = delete;
+
     //! Iterator
     using iterator = Rules::Map::iterator;
     //! Const iterator
